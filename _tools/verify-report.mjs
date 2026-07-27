@@ -9,11 +9,17 @@
 // because it is slow and depends on the network; CI runs the offline checks.
 
 import { readFile, readdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const REPORTS = path.join(ROOT, '010_research/011_company/reports');
+// Country pages hold to the same standard as company reports: sourced numbers,
+// a machine-readable claim list, and a document that renders on a phone.
+const DIRS = [
+  path.join(ROOT, '010_research/011_company/reports'),
+  path.join(ROOT, '010_research/013_geo/countries'),
+];
 const CHECK_LINKS = process.argv.includes('--links');
 
 const MIN_SOURCES = 6;
@@ -27,9 +33,15 @@ const legacy = new Set(meta.filter((r) => r.legacy).map((r) => path.basename(r.f
 const grandfathered = [];
 
 const argv = process.argv.slice(2).filter((a) => !a.startsWith('-'));
-const files = argv.length
-  ? argv.map((a) => path.resolve(a))
-  : (await readdir(REPORTS)).filter((f) => f.endsWith('.html')).map((f) => path.join(REPORTS, f));
+let files = [];
+if (argv.length) {
+  files = argv.map((a) => path.resolve(a));
+} else {
+  for (const dir of DIRS) {
+    if (!existsSync(dir)) continue;
+    files.push(...(await readdir(dir)).filter((f) => f.endsWith('.html')).map((f) => path.join(dir, f)));
+  }
+}
 
 let failed = 0;
 const allUrls = new Set();

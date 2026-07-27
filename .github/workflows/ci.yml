@@ -1,0 +1,28 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # The keyword dictionary lives outside the repo on purpose, so CI runs
+      # with built-in rules only. Those cover internal links, local paths,
+      # withheld vocabulary and credentials — the things that actually must
+      # never ship.
+      - name: leak check
+        run: node _tools/leak-check.mjs
+
+      - name: nav is in sync
+        run: node _tools/build-nav.mjs --check
+
+      - name: reports meet the quality gate
+        run: node _tools/verify-report.mjs

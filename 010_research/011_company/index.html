@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Company Research</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.7;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
+  .lead{color:var(--sub);font-size:14px;margin:0 0 26px}
+
+  .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .search{flex:1;min-width:220px;padding:9px 13px;border:1px solid var(--line);
+    border-radius:8px;font-size:14px;background:#fff;font-family:inherit}
+  .search:focus{outline:none;border-color:var(--ink)}
+  .count{font-size:13px;color:var(--sub);white-space:nowrap}
+  .toggle{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+  .toggle button{border:none;background:none;padding:9px 14px;font-size:13px;cursor:pointer;
+    color:var(--sub);font-family:inherit}
+  .toggle button.on{background:var(--ink);color:#fff}
+
+  .facets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+  .facet{border:1px solid var(--line);background:#fff;color:var(--sub);
+    font-size:12px;padding:4px 11px;border-radius:13px;cursor:pointer;font-family:inherit}
+  .facet:hover{border-color:var(--accent);color:var(--accent)}
+  .facet.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  /* table view */
+  .tbl-wrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--sub);cursor:pointer;white-space:nowrap;user-select:none}
+  th:hover{color:var(--ink)}
+  th .ar{opacity:.35;font-size:10px;margin-left:3px}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FAFAF7}
+  td.c-name a{color:var(--ink);text-decoration:none;font-weight:600}
+  td.c-name a:hover{color:var(--accent)}
+  td.c-name .full{display:block;font-size:11.5px;color:var(--sub);font-weight:400;margin-top:1px}
+  td.c-sum{color:var(--sub);font-size:13px;max-width:380px}
+  td.c-date{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--sub);font-size:13px}
+  .st{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;white-space:nowrap}
+  .st-listed{background:#DCFCE7;color:#15803d}
+  .st-private{background:var(--chip);color:var(--accent)}
+  .st-acquired{background:#FEF3C7;color:#b45309}
+  .st-defunct{background:#F3F4F6;color:#6b7280}
+  .tk{font-size:11.5px;color:var(--sub);font-variant-numeric:tabular-nums}
+
+  /* tile view */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+  .tile{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:18px;text-decoration:none;color:inherit;transition:border-color .15s}
+  .tile:hover{border-color:var(--accent)}
+  .tile .co{font-size:17px;font-weight:700;margin-bottom:6px}
+  .tile .chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+  .tile .chip{background:var(--chip);color:var(--accent);font-size:11px;padding:2px 8px;border-radius:10px}
+  .tile .sum{font-size:13px;color:var(--sub);display:-webkit-box;-webkit-line-clamp:4;
+    -webkit-box-orient:vertical;overflow:hidden}
+  .tile .foot{margin-top:12px;display:flex;justify-content:space-between;
+    font-size:12px;color:var(--sub)}
+
+  .empty{padding:50px 20px;text-align:center;color:var(--sub);font-size:14px}
+  .hide{display:none}
+
+  @media(max-width:620px){
+    .wrap{padding:28px 18px 70px}
+    td.c-sum{display:none}
+    th.h-sum{display:none}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:center;gap:4px}
+.snav-inline a{color:rgba(255,255,255,.7);text-decoration:none;font-size:12px;font-weight:500;padding:6px 12px;border-radius:4px;transition:all .15s;letter-spacing:-.01em}
+.snav-inline a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.snav-inline .sep{width:1px;height:14px;background:rgba(255,255,255,.18);margin:0 6px}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><a href="index.html">company</a><a href="../012_politics/index.html">politics</a><span class="sep"></span><a href="../../020_personal/021_profile/index.html">profile</a></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="index.html">company</a>
+    <a class="snav-a" href="../012_politics/index.html">politics</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../020_personal/021_profile/index.html">profile</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}</script>
+<footer class="snav-footer"><div class="snav-footer-txt">shogo</div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../index.html">shogo</a> / research / company</div>
+
+  <h1>Company Research</h1>
+  <p class="lead">セルサイド企業分析とスタートアップ事例研究。数値には出典と取得日を付けている。</p>
+
+  <div class="tools">
+    <input type="text" class="search" id="q" placeholder="検索（社名・ティッカー・タグ・要約）" autocomplete="off">
+    <span class="count" id="count"></span>
+    <div class="toggle">
+      <button id="btnTable" class="on" onclick="setView('table')">表</button>
+      <button id="btnTile" onclick="setView('tile')">タイル</button>
+    </div>
+  </div>
+
+  <div class="facets" id="facets"></div>
+
+  <div id="tableView">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th onclick="sortBy('company')">会社<span class="ar" data-k="company"></span></th>
+          <th onclick="sortBy('status')">区分<span class="ar" data-k="status"></span></th>
+          <th onclick="sortBy('ticker')">コード<span class="ar" data-k="ticker"></span></th>
+          <th class="h-sum">要約</th>
+          <th onclick="sortBy('date')">作成日<span class="ar" data-k="date"></span></th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="tileView" class="hide"><div class="grid" id="grid"></div></div>
+
+  <div class="empty hide" id="empty">該当なし</div>
+</div>
+
+<script src="data/manifest.js"></script>
+<script>
+const R = window.REPORTS || [];
+const STATUS_JA = { listed:'上場', private:'非上場', acquired:'買収済', defunct:'消滅' };
+
+let view = 'table';
+let sortKey = 'date';
+let sortDir = -1;
+const active = new Set();
+
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hay = r => [r.company, r.fullName, r.ticker, r.market, r.country, r.summary, STATUS_JA[r.status], ...(r.tags||[])]
+  .filter(Boolean).join(' ').toLowerCase();
+
+// ─── facets ──────────────────────────────────────────────────────────────────
+const tagCount = {};
+for (const r of R) for (const t of r.tags || []) tagCount[t] = (tagCount[t] || 0) + 1;
+const tags = Object.keys(tagCount).sort((a, b) => tagCount[b] - tagCount[a] || a.localeCompare(b));
+
+document.getElementById('facets').innerHTML = tags
+  .map(t => `<button class="facet" data-t="${esc(t)}">${esc(t)} <span style="opacity:.6">${tagCount[t]}</span></button>`)
+  .join('');
+
+document.getElementById('facets').addEventListener('click', e => {
+  const b = e.target.closest('.facet');
+  if (!b) return;
+  const t = b.dataset.t;
+  active.has(t) ? active.delete(t) : active.add(t);
+  b.classList.toggle('on', active.has(t));
+  render();
+});
+
+// ─── filter / sort ───────────────────────────────────────────────────────────
+function current() {
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  let rows = R.filter(r => {
+    if (q && !hay(r).includes(q)) return false;
+    // AND across selected tags: narrowing should narrow.
+    for (const t of active) if (!(r.tags || []).includes(t)) return false;
+    return true;
+  });
+  return rows.sort((a, b) => {
+    const x = a[sortKey] ?? '', y = b[sortKey] ?? '';
+    return String(x).localeCompare(String(y), 'ja') * sortDir;
+  });
+}
+
+function sortBy(k) {
+  sortDir = sortKey === k ? -sortDir : (k === 'date' ? -1 : 1);
+  sortKey = k;
+  render();
+}
+
+// ─── render ──────────────────────────────────────────────────────────────────
+function row(r) {
+  const code = r.ticker ? `<span class="tk">${esc(r.ticker)}</span>` +
+    (r.market ? `<br><span class="tk" style="opacity:.7">${esc(r.market)}</span>` : '') : '—';
+  return `<tr>
+    <td class="c-name"><a href="${esc(r.file)}">${esc(r.company)}</a>
+      ${r.fullName && r.fullName !== r.company ? `<span class="full">${esc(r.fullName)}</span>` : ''}</td>
+    <td><span class="st st-${esc(r.status || 'private')}">${esc(STATUS_JA[r.status] || r.status || '')}</span></td>
+    <td>${code}</td>
+    <td class="c-sum">${esc(r.summary)}</td>
+    <td class="c-date">${esc(r.date)}</td>
+  </tr>`;
+}
+
+function tile(r) {
+  const chips = [r.ticker, r.market, ...(r.tags || []).slice(0, 3)].filter(Boolean);
+  return `<a class="tile" href="${esc(r.file)}">
+    <div class="co">${esc(r.company)}</div>
+    <div class="chips">
+      <span class="chip">${esc(STATUS_JA[r.status] || '')}</span>
+      ${chips.map(c => `<span class="chip">${esc(c)}</span>`).join('')}
+    </div>
+    <div class="sum">${esc(r.summary)}</div>
+    <div class="foot"><span>${esc(r.date)}</span><span>開く ›</span></div>
+  </a>`;
+}
+
+function render() {
+  const rows = current();
+  document.getElementById('tbody').innerHTML = rows.map(row).join('');
+  document.getElementById('grid').innerHTML = rows.map(tile).join('');
+  document.getElementById('count').textContent = `${rows.length} / ${R.length} 社`;
+  document.getElementById('empty').classList.toggle('hide', rows.length > 0);
+  document.getElementById('tableView').classList.toggle('hide', view !== 'table' || !rows.length);
+  document.getElementById('tileView').classList.toggle('hide', view !== 'tile' || !rows.length);
+
+  for (const el of document.querySelectorAll('.ar'))
+    el.textContent = el.dataset.k === sortKey ? (sortDir > 0 ? '▲' : '▼') : '';
+}
+
+function setView(v) {
+  view = v;
+  document.getElementById('btnTable').classList.toggle('on', v === 'table');
+  document.getElementById('btnTile').classList.toggle('on', v === 'tile');
+  render();
+}
+
+document.getElementById('q').addEventListener('input', render);
+render();
+</script>
+</body>
+</html>

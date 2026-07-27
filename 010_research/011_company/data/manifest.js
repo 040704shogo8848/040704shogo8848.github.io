@@ -18,10 +18,10 @@ window.REPORTS = [
       "pivot"
     ],
     "date": "2026-07-27",
-    "summary": "技術は業界標準になり、会社は事業を切り売りして小さくなった事例。dotCloud（YC S10）が捨てるはずだった社内ツールを2013年にOSS公開したら本体を超え、しかしKubernetesに標準を奪われて2019年にDocker Enterprise事業をMirantisへ売却、従業員400名を60名に絞って開発者向け専業として作り直した。買収でも消滅でもない第4の類型。",
-    "file": "reports/docker_research_260727.html",
+    "summary": "YC S10 の PaaS スタートアップ dotCloud が、社内ツールだったコンテナ技術を2013年に OSS 公開して本体を入れ替えた事例。技術は業界標準になったが収益化できず、2019年11月に Docker Enterprise 事業を Mirantis へ売却して従業員を約400名から60名へ絞り、開発者向け専業として会社を作り直した。",
     "sourceCount": 30,
-    "variant": "startup-case"
+    "variant": "startup-case",
+    "file": "reports/docker_research_260727.html"
   },
   {
     "company": "三菱商事",

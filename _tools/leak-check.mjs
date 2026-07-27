@@ -104,8 +104,12 @@ for (const abs of targets) {
   const file = path.relative(ROOT, abs).split(path.sep).join('/');
   const lines = (await readFile(abs, 'utf8')).split('\n');
 
-  // Pages whose job is to discuss company finances in public.
-  const financial = file.includes('/reports/') || file === '_tools/report-template.md';
+  // Pages whose job is to discuss company finances in public — the reports
+  // themselves, their metadata (summaries quote valuations), and the spec.
+  const financial =
+    file.includes('/reports/') ||
+    file.startsWith('010_research/011_company/data/') ||
+    file === '_tools/report-template.md';
 
   const blocking = [...BLOCK, ...pii, ...(financial ? [PLACEHOLDER] : money)];
 

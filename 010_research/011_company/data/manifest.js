@@ -3,6 +3,68 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "Loopt",
+    "fullName": "Loopt, Inc.",
+    "ticker": null,
+    "market": null,
+    "country": "US",
+    "status": "defunct",
+    "cohort": "yc",
+    "tags": [
+      "location-based-services",
+      "mobile",
+      "social",
+      "consumer"
+    ],
+    "date": "2026-07-27",
+    "summary": "Sam Altman が19歳で創業した YC 第1期の位置情報共有サービス。キャリア提携という2005年当時唯一の流通経路に賭けたが、2008年の App Store 登場でその優位が消え、7年後の2012年に Green Dot へ4,340万ドルで売却しサービスを終了した。",
+    "file": "reports/loopt_research_260727.html",
+    "sourceCount": 21,
+    "variant": "postmortem"
+  },
+  {
+    "company": "Brex",
+    "fullName": "Brex Inc.",
+    "ticker": null,
+    "market": null,
+    "country": "US",
+    "status": "acquired",
+    "cohort": "yc",
+    "tags": [
+      "fintech",
+      "corporate-card",
+      "spend-management",
+      "b2b-payments",
+      "acquired"
+    ],
+    "date": "2026-07-27",
+    "summary": "VRの会社としてYC W17に入り3週間で法人カードへピボットした、Pagar.me創業者2人によるフィンテック。個人保証を取らず口座残高で与信する設計で急成長し2022年に評価額123億ドルをつけたが、インターチェンジ依存の収益構造とRampとの競争から抜け出せず、2026年4月にCapital Oneへ実質約45億ドルで売却された。",
+    "file": "reports/brex_research_260727.html",
+    "sourceCount": 25,
+    "variant": "startup-case"
+  },
+  {
+    "company": "Rippling",
+    "fullName": "Rippling People Center, Inc.",
+    "ticker": null,
+    "market": null,
+    "country": "US",
+    "status": "private",
+    "cohort": "yc",
+    "tags": [
+      "hr-tech",
+      "saas",
+      "payroll",
+      "it-management",
+      "compound-startup"
+    ],
+    "date": "2026-07-27",
+    "summary": "Zenefits のコンプライアンス問題でCEOを辞任した Parker Conrad が2016年に創業した2社目。従業員データを単一の正本とする Employee Graph の上に HR・IT・Finance を同時展開する compound startup 戦略で、2026年3月時点でARR約10億ドル（前年比78%増）、直近評価額は168億ドル（2025年5月、Series G）。",
+    "file": "reports/rippling_research_260727.html",
+    "sourceCount": 33,
+    "variant": "startup-case"
+  },
+  {
     "company": "Dropbox",
     "fullName": "Dropbox, Inc.",
     "ticker": "DBX",

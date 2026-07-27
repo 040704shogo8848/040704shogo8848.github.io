@@ -44,5 +44,15 @@ JSON
 ## 公開範囲
 
 このリポジトリは public。**push した内容は履歴から消えない。**
-`_tools/leak-check.mjs` を通してから commit すること。キーワード辞書は
-`~/System/shogo-profile/build/secrets.json` にあり、意図的にこのリポには置いていない。
+
+`.githooks/pre-push` が leak-check・nav の同期・verify-report の3つを push 前に
+走らせる。クローン直後は一度だけ以下が要る。
+
+```bash
+git config core.hooksPath .githooks
+```
+
+キーワード辞書は `~/System/shogo-profile/build/secrets.json` にあり、意図的にこの
+リポには置いていない。辞書が無い環境（CI）では組み込みルールだけが走る。組み込み側が
+見ているのは社内 Slack・tl;dv・Notion・ローカル絶対パス・非公開レイヤの語彙・認証情報で、
+これらは辞書の有無にかかわらず必ず止まる。

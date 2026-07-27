@@ -1,0 +1,8 @@
+#!/bin/bash
+# This repository is public and history is permanent. Nothing goes out without
+# passing the gates first.
+set -e
+cd "$(git rev-parse --show-toplevel)"
+node _tools/leak-check.mjs >/dev/null || { echo "pre-push: leak-check が落ちた"; node _tools/leak-check.mjs; exit 1; }
+node _tools/build-nav.mjs --check >/dev/null || { echo "pre-push: nav が古い。node _tools/build-nav.mjs を実行してコミットすること"; exit 1; }
+node _tools/verify-report.mjs >/dev/null || { echo "pre-push: verify-report が落ちた"; node _tools/verify-report.mjs; exit 1; }

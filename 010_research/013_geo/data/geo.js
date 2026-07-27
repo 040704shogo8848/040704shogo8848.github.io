@@ -54,6 +54,40 @@ window.TRIPS = [
 ];
 window.COUNTRIES = [
   {
+    "country": "アゼルバイジャン",
+    "en": "Azerbaijan",
+    "iso": "AZ",
+    "region": "コーカサス",
+    "capital": "バクー",
+    "population": 10202830,
+    "gdp_per_capita": 7295,
+    "visited": [
+      "2025-05"
+    ],
+    "lat": 40.41,
+    "lon": 49.87,
+    "summary": "輸出の87%を石油・ガスが占める資源国でありながら、ロシアを迂回する唯一の陸路である中間回廊と南ガス回廊の結節点として、2022年以降に地政学的な重みを増した。SOFAZの運用資産はGDPとほぼ同額で対外債務はGDP比7%未満だが、農業がGDPの5.6%に対し雇用の35%を抱える非資源部門の弱さは残る。",
+    "file": "countries/azerbaijan.html",
+    "sourceCount": 65
+  },
+  {
+    "country": "キルギス",
+    "en": "Kyrgyzstan",
+    "iso": "KG",
+    "region": "中央アジア",
+    "capital": "ビシュケク",
+    "population": 7300000,
+    "gdp_per_capita": 3086,
+    "visited": [
+      "2025-11"
+    ],
+    "lat": 42.87,
+    "lon": 74.59,
+    "summary": "天山山脈に阻まれた人口730万人の内陸国で、経済はクムトール金鉱・在ロシア出稼ぎ送金・中国製品の再輸出という3つの外部依存で成り立っている。CKU鉄道では3カ国のうち最も難所の260km区間と47億ドル（GDP比約21%）の建設費を引き受け、対中債務の持続可能性が最大の論点になっている。",
+    "file": "countries/kyrgyzstan.html",
+    "sourceCount": 41
+  },
+  {
     "country": "カザフスタン",
     "en": "Kazakhstan",
     "iso": "KZ",
@@ -69,6 +103,23 @@ window.COUNTRIES = [
     "summary": "世界最大の内陸国。面積272万4,900km²に人口2,059万人（2024年）で人口密度は約7.6人/km²。原油・石油製品が輸出の52.5%を占め、その約8割がロシア領を通るCPCパイプラインに依存する一方、中欧班列とホルゴス・ドライポート、カスピ海を渡る中間回廊を抱える一帯一路の陸路の要でもある。",
     "file": "countries/kazakhstan.html",
     "sourceCount": 38
+  },
+  {
+    "country": "ウズベキスタン",
+    "en": "Uzbekistan",
+    "iso": "UZ",
+    "region": "中央アジア",
+    "capital": "タシケント",
+    "population": 37000000,
+    "gdp_per_capita": 2500,
+    "visited": [
+      "2025-11"
+    ],
+    "lat": 41.31,
+    "lon": 69.24,
+    "summary": "中央アジア最大の人口3,700万人を抱える二重内陸国。海に出るのに最低2カ国を跨ぐ制約が貿易構造を規定し、CKU鉄道はその制約を緩める初の代替経路になる。2017年の通貨交換自由化と綿花モノカルチャーからの転換が進行中。",
+    "file": "countries/uzbekistan.html",
+    "sourceCount": 36
   }
 ];
 window.ISO_NAMES = {

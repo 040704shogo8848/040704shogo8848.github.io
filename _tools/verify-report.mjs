@@ -94,7 +94,7 @@ for (const abs of files) {
       facts.forEach((f, i) => {
         if (!f.as_of) bad.push(`facts[${i}] "${f.claim ?? '?'}" に as_of がない`);
         if (!f.source) bad.push(`facts[${i}] "${f.claim ?? '?'}" に source がない`);
-        if (f.confidence && !['reported', 'estimated', 'single-source'].includes(f.confidence))
+        if (f.confidence && !['reported', 'estimated', 'single-source', 'disputed'].includes(f.confidence))
           bad.push(`facts[${i}] confidence が不正: ${f.confidence}`);
       });
       facts.forEach((f) => f.source && allUrls.add(f.source));

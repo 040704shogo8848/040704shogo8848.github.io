@@ -118,22 +118,46 @@ for (const abs of files) {
 }
 
 // ─── optional link check ─────────────────────────────────────────────────────
+// Only 404/410 means the source is gone. IR sites, Crunchbase and most news
+// outlets return 403 to anything that isn't a browser, and 429 when checked in
+// a burst — treating those as broken links produces noise that trains you to
+// ignore the whole check.
 if (CHECK_LINKS) {
   console.log(`\nchecking ${allUrls.size} URLs...`);
-  let dead = 0;
+  const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36';
+  const dead = [];
+  const blocked = [];
+
   for (const u of allUrls) {
+    const hit = async (method) =>
+      fetch(u, {
+        method,
+        redirect: 'follow',
+        headers: { 'user-agent': UA, accept: 'text/html,application/xhtml+xml,*/*' },
+        signal: AbortSignal.timeout(20000),
+      });
     try {
-      let r = await fetch(u, { method: 'HEAD', redirect: 'follow', signal: AbortSignal.timeout(15000) });
-      if (r.status === 405 || r.status === 403)
-        r = await fetch(u, { method: 'GET', redirect: 'follow', signal: AbortSignal.timeout(15000) });
-      if (!r.ok) { console.error(`  ${r.status}  ${u}`); dead++; }
+      let r = await hit('HEAD');
+      if (!r.ok) r = await hit('GET');          // many hosts reject HEAD outright
+      if (r.ok) continue;
+      if (r.status === 404 || r.status === 410) dead.push(`${r.status}  ${u}`);
+      else blocked.push(`${r.status}  ${u}`);
     } catch (e) {
-      console.error(`  ERR  ${u}  (${e.name})`);
-      dead++;
+      blocked.push(`${e.name}  ${u}`);
     }
   }
-  console.log(dead ? `\n${dead} URL が 2xx を返さない` : '\nすべての URL が 2xx');
-  if (dead) failed++;
+
+  if (blocked.length) {
+    console.log(`\n${blocked.length} URL は確認できず（403/429/接続エラー。ボット遮断が大半で、リンク切れとは限らない）:`);
+    for (const b of blocked) console.log(`  ${b}`);
+  }
+  if (dead.length) {
+    console.error(`\n${dead.length} URL が 404/410 — 出典が消えている:`);
+    for (const d of dead) console.error(`  ${d}`);
+    failed++;
+  } else {
+    console.log('\n404/410 は無し');
+  }
 }
 
 if (grandfathered.length) {

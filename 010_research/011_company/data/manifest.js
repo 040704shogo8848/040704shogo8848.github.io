@@ -3,6 +3,90 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "Docker",
+    "fullName": "Docker, Inc.",
+    "ticker": null,
+    "market": null,
+    "country": "US",
+    "status": "private",
+    "cohort": "yc",
+    "tags": [
+      "developer-tools",
+      "containers",
+      "open-source",
+      "infrastructure",
+      "pivot"
+    ],
+    "date": "2026-07-27",
+    "summary": "技術は業界標準になり、会社は事業を切り売りして小さくなった事例。dotCloud（YC S10）が捨てるはずだった社内ツールを2013年にOSS公開したら本体を超え、しかしKubernetesに標準を奪われて2019年にDocker Enterprise事業をMirantisへ売却、従業員400名を60名に絞って開発者向け専業として作り直した。買収でも消滅でもない第4の類型。",
+    "file": "reports/docker_research_260727.html",
+    "sourceCount": 30,
+    "variant": "startup-case"
+  },
+  {
+    "company": "三菱商事",
+    "fullName": "三菱商事株式会社",
+    "ticker": "8058",
+    "market": "東証プライム",
+    "country": "JP",
+    "status": "listed",
+    "cohort": "jp-listed",
+    "tags": [
+      "総合商社",
+      "資源・エネルギー",
+      "LNG",
+      "事業投資",
+      "卸売業"
+    ],
+    "date": "2026-07-27",
+    "summary": "連結収益18.9兆円に対し売上総利益は1.66兆円（8.8%）、純利益8,005億円のうち58.5%が持分法投資損益という「事業投資会社」の構造を、8営業グループ別の利益で分解した。金属資源と地球環境エネルギーの資源2グループで利益の45.4%を占め、原料炭・LNG・銅の市況が最終利益を決める。",
+    "file": "reports/mitsubishi_corp_research_260727.html",
+    "sourceCount": 24,
+    "variant": "listed"
+  },
+  {
+    "company": "Twitch",
+    "fullName": "Twitch Interactive, Inc.",
+    "ticker": null,
+    "market": null,
+    "country": "US",
+    "status": "acquired",
+    "cohort": "yc",
+    "tags": [
+      "live-streaming",
+      "gaming",
+      "creator-economy",
+      "pivot",
+      "acquisition"
+    ],
+    "date": "2026-07-27",
+    "summary": "創業者の生活を24時間流すライフキャスティング Justin.tv（YC W07）が、トラフィックの3%しかなかったゲームカテゴリを2011年に Twitch として切り出し、2014年8月に本体を閉鎖したうえで Amazon へ約9.7億ドルで売却した事例。本体を捨てて枝を残す判断がなぜ効いたか、そして買収から10年以上 Amazon が単体業績を開示せず黒字化にも至っていない構造を、報道ベースの推定と明示したうえで検証する。",
+    "file": "reports/twitch_research_260727.html",
+    "sourceCount": 21,
+    "variant": "startup-case"
+  },
+  {
+    "company": "Stripe",
+    "fullName": "Stripe, Inc.",
+    "ticker": null,
+    "market": null,
+    "country": "US",
+    "status": "private",
+    "cohort": "yc",
+    "tags": [
+      "fintech",
+      "payments",
+      "developer-tools",
+      "api",
+      "infrastructure"
+    ],
+    "date": "2026-07-27",
+    "summary": "10代で1社目Auctomaticを売却したCollison兄弟が、決済の申込みと審査という外部工程を7行のコードの裏側へ引き受けることで迂回し、開発者へのボトムアップ販売とプラットフォーム経由の間接流通で拡大した事例。2021年の950億ドルから2023年に500億ドルへ約47%のダウンラウンドを経て、2026年2月のテンダーオファーで1,590億ドルまで回復した評価額推移と、長期非上場を支える流動性供給の構造を扱う。",
+    "file": "reports/stripe_research_260727.html",
+    "sourceCount": 18,
+    "variant": "startup-case"
+  },
+  {
     "company": "Loopt",
     "fullName": "Loopt, Inc.",
     "ticker": null,

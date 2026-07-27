@@ -62,6 +62,19 @@ ${src.trim()}
   if (!has(/<!--\s*snav:start\s*-->/))
     src = src.replace(/(<body[^>]*>)/i, '$1\n<!-- snav:start --><!-- snav:end -->');
 
+  // A 6-column table of Japanese text is wider than a phone. Without this the
+  // whole page scrolls sideways instead of just the table. Tables don't nest
+  // here, so a flat match is safe.
+  if (/<table[\s>]/i.test(src) && !src.includes('class="tbl-scroll"')) {
+    src = src.replace(/<table[\s\S]*?<\/table>/gi, (t) => `<div class="tbl-scroll">${t}</div>`);
+    src = src.replace(
+      /<\/style>/i,
+      '.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}\n' +
+        '.tbl-scroll>table{margin:0;min-width:min(100%,520px)}\n' +
+        '</style>'
+    );
+  }
+
   if (src !== orig) {
     await writeFile(f, src);
     console.log(`  normalized  ${path.relative(process.cwd(), f)}`);

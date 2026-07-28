@@ -54,6 +54,23 @@ window.TRIPS = [
 ];
 window.COUNTRIES = [
   {
+    "country": "カンボジア",
+    "en": "Cambodia",
+    "iso": "KH",
+    "region": "東南アジア",
+    "capital": "プノンペン",
+    "population": 17847982,
+    "gdp_per_capita": 2831,
+    "visited": [
+      "2022-08"
+    ],
+    "lat": 11.56,
+    "lon": 104.92,
+    "summary": "輸出の半分超を衣料・履物・旅行用品が占め、中国から生地を買って米国へ服を売る一工程に付加価値が集中する国。対外公的債務の31.3%を中国が握るが債務水準はGDP比26.8%と低く、論点はBOT運営権や99年リースという債務統計に載らない領域にある。",
+    "file": "countries/cambodia.html",
+    "sourceCount": 34
+  },
+  {
     "country": "スイス",
     "en": "Switzerland",
     "iso": "CH",

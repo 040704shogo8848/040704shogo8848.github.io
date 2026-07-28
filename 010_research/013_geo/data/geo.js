@@ -140,6 +140,23 @@ window.COUNTRIES = [
     "sourceCount": 38
   },
   {
+    "country": "クウェート",
+    "en": "Kuwait",
+    "iso": "KW",
+    "region": "中東",
+    "capital": "クウェート市",
+    "population": 4897263,
+    "gdp_per_capita": 32856,
+    "visited": [
+      "2025-05"
+    ],
+    "lat": 29.38,
+    "lon": 47.99,
+    "summary": "石油が政府歳入の約90%を占め、歳出の79.5%が公務員給与と補助金に固定された湾岸産油国。サウジのVision 2030やUAEの多角化に対し「New Kuwait 2035」の実行が進まなかった背景には湾岸で最も権限の強い国民議会との対立があり、2024年5月の議会停止後に公債法成立と大型港湾契約が相次いだ。",
+    "file": "countries/kuwait.html",
+    "sourceCount": 41
+  },
+  {
     "country": "エジプト",
     "en": "Egypt",
     "iso": "EG",

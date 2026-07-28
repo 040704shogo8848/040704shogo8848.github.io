@@ -54,6 +54,23 @@ window.TRIPS = [
 ];
 window.COUNTRIES = [
   {
+    "country": "スイス",
+    "en": "Switzerland",
+    "iso": "CH",
+    "region": "中欧",
+    "capital": "ベルン",
+    "population": 9005582,
+    "gdp_per_capita": 107702,
+    "visited": [
+      "2024-11"
+    ],
+    "lat": 46.95,
+    "lon": 7.45,
+    "summary": "17カ国で唯一の高所得の内陸国。輸送費が売価に対して無視できる高単価商品（医薬品・時計・精密機器）と重量ゼロの金融サービスに特化することで内陸の不利を無効化したが、輸出の52.7%が化学・医薬、財貿易額の27%が金、金融がUBS1行に集約という集中リスクは中央アジアの資源依存と構造的に同型である。",
+    "file": "countries/switzerland.html",
+    "sourceCount": 39
+  },
+  {
     "country": "オランダ",
     "en": "Netherlands",
     "iso": "NL",

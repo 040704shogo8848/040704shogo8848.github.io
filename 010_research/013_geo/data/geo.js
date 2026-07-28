@@ -242,6 +242,23 @@ window.COUNTRIES = [
     "sourceCount": 45
   },
   {
+    "country": "フィリピン",
+    "en": "Philippines",
+    "iso": "PH",
+    "region": "東南アジア",
+    "capital": "マニラ",
+    "population": 115843670,
+    "gdp_per_capita": 3985,
+    "visited": [
+      "2025-05"
+    ],
+    "lat": 14.6,
+    "lon": 120.98,
+    "summary": "1億1,584万人の労働力を国内の工場ではなく国外の職場（OFW送金、GDP比7.3%）と国外の顧客（BPO、売上400億ドル・雇用190万人）に接続して所得を得てきた国。製造業比率は2000年の25.3%から2024年の15.7%へ落ち、その代替となったBPOに生成AIが直撃しつつある一方、南シナ海では中国との係争が継続している。",
+    "file": "countries/philippines.html",
+    "sourceCount": 42
+  },
+  {
     "country": "キルギス",
     "en": "Kyrgyzstan",
     "iso": "KG",

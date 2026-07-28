@@ -1,8 +1,35 @@
 #!/bin/bash
 # This repository is public and history is permanent. Nothing goes out without
 # passing the gates first.
+#
+# The gates run over tracked files only. A page an agent is still writing sits
+# untracked in the working tree and is not being pushed, so failing on it just
+# blocks legitimate pushes while other work is in flight.
 set -e
 cd "$(git rev-parse --show-toplevel)"
-node _tools/leak-check.mjs >/dev/null || { echo "pre-push: leak-check が落ちた"; node _tools/leak-check.mjs; exit 1; }
-node _tools/build-nav.mjs --check >/dev/null || { echo "pre-push: nav が古い。node _tools/build-nav.mjs を実行してコミットすること"; exit 1; }
-node _tools/verify-report.mjs >/dev/null || { echo "pre-push: verify-report が落ちた"; node _tools/verify-report.mjs; exit 1; }
+
+TRACKED=()
+while IFS= read -r f; do TRACKED+=("$f"); done < <(git ls-files)
+
+if ! node _tools/leak-check.mjs "${TRACKED[@]}" >/dev/null; then
+  echo "pre-push: leak-check が落ちた"
+  node _tools/leak-check.mjs "${TRACKED[@]}"
+  exit 1
+fi
+
+if ! node _tools/build-nav.mjs --check >/dev/null; then
+  echo "pre-push: nav が古い。node _tools/build-nav.mjs を実行してコミットすること"
+  node _tools/build-nav.mjs --check
+  exit 1
+fi
+
+# verify-report walks its own directories, so restrict it to the tracked pages.
+PAGES=()
+while IFS= read -r f; do PAGES+=("$f"); done < <(
+  git ls-files '010_research/011_company/reports/*.html' '010_research/013_geo/countries/*.html'
+)
+if [ ${#PAGES[@]} -gt 0 ] && ! node _tools/verify-report.mjs "${PAGES[@]}" >/dev/null; then
+  echo "pre-push: verify-report が落ちた"
+  node _tools/verify-report.mjs "${PAGES[@]}"
+  exit 1
+fi

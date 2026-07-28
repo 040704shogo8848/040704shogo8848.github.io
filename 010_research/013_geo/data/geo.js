@@ -54,6 +54,23 @@ window.TRIPS = [
 ];
 window.COUNTRIES = [
   {
+    "country": "オランダ",
+    "en": "Netherlands",
+    "iso": "NL",
+    "region": "西欧",
+    "capital": "アムステルダム",
+    "population": 17993485,
+    "gdp_per_capita": 67465,
+    "visited": [
+      "2024-11"
+    ],
+    "lat": 52.37,
+    "lon": 4.9,
+    "summary": "九州程度の国土に欧州最大のロッテルダム港とEUV露光装置を独占供給するASMLを抱える中継貿易国。財輸出の49.7%（2024年）が他国産の再輸出であり、農産物輸出世界2位という数字も含め、貿易統計は再輸出込みの総額ベースで読む必要がある。",
+    "file": "countries/netherlands.html",
+    "sourceCount": 34
+  },
+  {
     "country": "インドネシア",
     "en": "Indonesia",
     "iso": "ID",

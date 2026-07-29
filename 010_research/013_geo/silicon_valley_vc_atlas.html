@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Silicon Valley Atlas — VC & Startup 地図</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#1a1c22; --sub:#5b6270; --line:#e3e6ec;
+    --vc:#7c3aed; --public:#2563eb; --private:#0d9488; --landmark:#d97706;
+    --accent:#111827;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;color:var(--ink);background:var(--bg)}
+  #app{display:flex;flex-direction:column;height:100%}
+
+  header{padding:12px 18px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  header h1{font-size:18px;margin:0;letter-spacing:.02em;font-weight:700}
+  header h1 span{color:var(--sub);font-weight:400;font-size:13px;margin-left:8px}
+  .controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-left:auto}
+  #search{border:1px solid var(--line);border-radius:8px;padding:7px 11px;font-size:13px;width:190px;outline:none;background:#fbfbfc}
+  #search:focus{border-color:#9aa2b1}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 11px;font-size:12.5px;cursor:pointer;color:var(--ink);transition:.12s}
+  .btn:hover{background:#f0f1f4}
+  .filters{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer;user-select:none;transition:.12s}
+  .chip .dot{width:9px;height:9px;border-radius:50%}
+  .chip.off{opacity:.38}
+  .chip:hover{background:#f0f1f4}
+
+  #timeline{display:flex;align-items:center;gap:12px;padding:9px 18px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+  #timeline input[type=range]{flex:1;min-width:160px;accent-color:#111;cursor:pointer}
+  #yearLabel{font-weight:700;font-size:15px;min-width:46px;text-align:right;font-variant-numeric:tabular-nums}
+  .tgl{font-size:12.5px;color:var(--sub);display:inline-flex;align-items:center;gap:5px;cursor:pointer;user-select:none}
+  .era{flex-basis:100%;font-size:12.5px;color:var(--sub);line-height:1.55}
+  .era b{color:var(--ink)}
+  .leaflet-tooltip.cog-tip{background:#111;color:#fff;border:none;font-size:10px;font-weight:700;padding:1px 7px;box-shadow:none;border-radius:5px}
+  .leaflet-tooltip-top.cog-tip::before{border-top-color:#111}
+
+  #main{flex:1;display:flex;min-height:0}
+  #map{flex:1;min-width:0}
+  aside{width:380px;max-width:44vw;background:var(--panel);border-left:1px solid var(--line);overflow-y:auto;padding:20px 20px 40px}
+
+  .count{font-size:12px;color:var(--sub)}
+  .badge{display:inline-block;font-size:11px;font-weight:700;color:#fff;padding:3px 9px;border-radius:6px;letter-spacing:.04em}
+  h2.name{font-size:20px;margin:12px 0 4px;line-height:1.3}
+  .meta{font-size:13px;color:var(--sub);margin:2px 0}
+  .metric{font-size:15px;font-weight:700;margin:10px 0 2px}
+  .headline{font-size:14px;font-weight:600;margin:14px 0 6px;color:var(--accent)}
+  .episode{font-size:14px;line-height:1.85;color:#2a2d36}
+  .people{font-size:12.5px;color:var(--sub);margin-top:14px;border-top:1px dashed var(--line);padding-top:10px}
+  .kv{display:flex;gap:8px;font-size:13px;margin:3px 0}
+  .kv b{color:var(--sub);font-weight:600;min-width:64px}
+
+  .guide h3{font-size:15px;margin:18px 0 6px}
+  .guide p{font-size:13.5px;line-height:1.8;color:#333;margin:6px 0}
+  .guide .lead{font-size:13.5px;color:var(--sub);line-height:1.75}
+  .region{border-left:3px solid var(--line);padding:2px 0 2px 12px;margin:12px 0}
+  .region b{font-size:13.5px}
+  .region small{color:var(--sub);font-size:12.5px;display:block;margin-top:2px;line-height:1.7}
+  .legend-row{display:flex;align-items:center;gap:8px;font-size:12.5px;margin:5px 0}
+  .legend-row .dot{width:11px;height:11px;border-radius:50%}
+  .hint{font-size:12px;color:var(--sub);background:#f7f8fa;border:1px solid var(--line);border-radius:8px;padding:10px 12px;line-height:1.7;margin-top:8px}
+  .back{font-size:12.5px;color:var(--public);cursor:pointer;display:inline-block;margin-bottom:4px}
+  .region-label{background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700;color:#3a3f4b;white-space:nowrap;letter-spacing:.03em}
+
+  @media (max-width:820px){
+    #main{flex-direction:column}
+    aside{width:100%;max-width:100%;height:46%;border-left:none;border-top:1px solid var(--line)}
+    #map{height:54%}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:center;gap:4px}
+.snav-inline a{color:rgba(255,255,255,.7);text-decoration:none;font-size:12px;font-weight:500;padding:6px 12px;border-radius:4px;transition:all .15s;letter-spacing:-.01em}
+.snav-inline a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.snav-inline .sep{width:1px;height:14px;background:rgba(255,255,255,.18);margin:0 6px}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><a href="../011_company/index.html">company</a><a href="../012_politics/index.html">politics</a><a href="index.html">geo</a><a href="../014_industry/index.html">industry</a><a href="../015_net/index.html">net</a><span class="sep"></span><a href="../../020_personal/021_profile/index.html">profile</a></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../011_company/index.html">company</a>
+    <a class="snav-a" href="../012_politics/index.html">politics</a>
+    <a class="snav-a" href="index.html">geo</a>
+    <a class="snav-a" href="../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../015_net/index.html">net</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../020_personal/021_profile/index.html">profile</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div id="app">
+  <header>
+    <h1>Silicon Valley Atlas<span>VC・スタートアップ地図 / 2026</span></h1>
+    <div class="controls">
+      <input id="search" placeholder="名前・地域で検索">
+      <div class="filters" id="filters"></div>
+      <button class="btn" id="randomBtn">ランダムに1つ</button>
+      <button class="btn" id="guideBtn">地理ガイド</button>
+    </div>
+  </header>
+  <div id="timeline">
+    <button class="btn" id="playBtn">再生</button>
+    <input type="range" id="yearSlider" min="1938" max="2026" value="2026" step="1">
+    <span id="yearLabel">2026</span>
+    <label class="tgl"><input type="checkbox" id="cogToggle" checked> 重心を表示</label>
+    <span class="era" id="eraLabel"></span>
+  </div>
+  <div id="main">
+    <div id="map"></div>
+    <aside id="panel"></aside>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+/* ---------- Type definitions ---------- */
+const TYPES = {
+  vc:       {label:"VC・投資家", color:"#7c3aed"},
+  public:   {label:"上場企業",   color:"#2563eb"},
+  private:  {label:"未上場SU",   color:"#0d9488"},
+  landmark: {label:"歴史・聖地", color:"#d97706"}
+};
+
+/* ---------- Region labels (geography) ---------- */
+const REGIONS = [
+  {name:"San Francisco / SoMa・Mission", lat:37.788, lng:-122.400},
+  {name:"South SF", lat:37.664, lng:-122.402},
+  {name:"Sand Hill Road", lat:37.4225, lng:-122.2050},
+  {name:"Menlo Park", lat:37.4700, lng:-122.1720},
+  {name:"Palo Alto", lat:37.4460, lng:-122.1500},
+  {name:"Mountain View", lat:37.4085, lng:-122.0560},
+  {name:"Cupertino", lat:37.3230, lng:-122.0320},
+  {name:"Santa Clara", lat:37.3820, lng:-121.9850},
+  {name:"San Jose", lat:37.3350, lng:-121.8800},
+  {name:"Redwood City / Foster City / San Mateo", lat:37.545, lng:-122.290},
+  {name:"Los Gatos", lat:37.258, lng:-121.980},
+  {name:"Los Altos", lat:37.355, lng:-122.060}
+];
+
+/* ---------- Data ---------- */
+const DATA = [
+  /* ===== VC ===== */
+  {name:"Sequoia Capital", type:"vc", lat:37.4197, lng:-122.2076, area:"Sand Hill Road, Menlo Park", founded:"1972", metric:"運用資産 約$850億 / VCの王朝", sector:"マルチステージVC",
+   headline:"Apple→Cisco→Google→WhatsApp→Stripe を連続で当てた王朝",
+   episode:"Don Valentine が1972年に設立。Atari、Apple、Cisco、Yahoo、Google、PayPal、WhatsApp、Airbnb、Stripe と、時代の勝者をほぼ全て射抜いてきた。1975年、Atari の Nolan Bushnell が「面白い若造がいる」と紹介したのが風呂に入っていない Steve Jobs で、Valentine は面食らいながらも Apple に投資したという逸話が残る。現在の代表は元 PayPal CFO の Roelof Botha。",
+   people:"Don Valentine（創業）→ Michael Moritz / Doug Leone → Roelof Botha"},
+  {name:"Andreessen Horowitz (a16z)", type:"vc", lat:37.4188, lng:-122.2098, area:"Sand Hill Road, Menlo Park", founded:"2009", metric:"運用資産 約$450億 / VCのプラットフォーム化", sector:"マルチステージVC",
+   headline:"「ソフトウェアが世界を食う」を掲げたVCの再発明",
+   episode:"22歳で Mosaic / Netscape を作った Marc Andreessen と Ben Horowitz が2009年に設立。2011年の Marc のエッセイ『Why Software Is Eating the World』は業界の合言葉になった。広報・人材紹介・政策渉外まで抱え、まるでメディア企業のような体制で創業者を支援する「VCのプラットフォーム化」を発明。SF にも大きく展開している。",
+   people:"Marc Andreessen / Ben Horowitz"},
+  {name:"Kleiner Perkins", type:"vc", lat:37.4205, lng:-122.2050, area:"Sand Hill Road, Menlo Park", founded:"1972", metric:"Google・Amazon の初期投資家", sector:"マルチステージVC",
+   headline:"John Doerr が Google と Amazon に賭けた伝説",
+   episode:"Sequoia と同じ1972年、同じ Sand Hill Road に誕生。John Doerr が Google と Amazon の初期に投資し伝説となった。バイオの元祖 Genentech も同社案件。名言は「No conflict, no interest」。2000年代のクリーンテック大博打では巨額の損失も出し、栄光と挫折の両方を体現する。",
+   people:"John Doerr / Mary Meeker（後に独立）"},
+  {name:"Greylock Partners", type:"vc", lat:37.4223, lng:-122.1990, area:"Sand Hill Road, Menlo Park", founded:"1965（西海岸移転）", metric:"Facebook・LinkedIn・Airbnb・Figma", sector:"アーリー〜グロースVC",
+   headline:"Reid Hoffman が座るネットワークの巣",
+   episode:"東海岸で創業後に Sand Hill へ移り、LinkedIn 創業者 Reid Hoffman をパートナーに迎えた。Facebook、LinkedIn、Airbnb、Figma、Discord など「ネットワーク効果」を持つ企業を得意とする。Hoffman は PayPal マフィアの中心人物でもあり、人脈が投資の源泉になっている。",
+   people:"Reid Hoffman"},
+  {name:"Lightspeed Venture Partners", type:"vc", lat:37.4243, lng:-122.1930, area:"Sand Hill Road, Menlo Park", founded:"2000", metric:"Snap・Rubrik・Anthropic", sector:"マルチステージVC",
+   headline:"Snapchat を最初に嗅ぎ当てた消費者アプリの目利き",
+   episode:"Snap（Snapchat）の最初期投資で名を上げた。近年はエンタープライズと AI に大きく舵を切り、Anthropic や Mistral など生成AIの主要ラウンドに参加。世界各地にファンドを展開する国際派でもある。",
+   people:"Barry Eggers / Ravi Mhatre"},
+  {name:"Khosla Ventures", type:"vc", lat:37.4249, lng:-122.1918, area:"Sand Hill Road, Menlo Park", founded:"2004", metric:"OpenAI 最初期の外部投資家", sector:"ディープテックVC",
+   headline:"Vinod Khosla が OpenAI に最初に賭けた",
+   episode:"Sun Microsystems 共同創業者 Vinod Khosla が2004年に設立。誰もやらない領域に賭ける「ムーンショット」志向で、クリーンテックや核融合、そして2019年に OpenAI へ最初期の大型出資を行い、生成AIブームの最大の勝者の一つになった。",
+   people:"Vinod Khosla"},
+  {name:"New Enterprise Associates (NEA)", type:"vc", lat:37.4190, lng:-122.2093, area:"Sand Hill Road, Menlo Park", founded:"1977", metric:"運用資産 約$250億の巨艦", sector:"マルチステージVC",
+   headline:"IT とヘルスケアを両輪で回す最大級のファンド",
+   episode:"世界最大級の運用資産を持つ老舗。テックとバイオ／医療機器の両方に大規模に投資する珍しい二枚看板で、Salesforce、Uber、Robinhood などを支援してきた。",
+   people:"Dick Kramlich（創業）"},
+  {name:"Benchmark", type:"vc", lat:37.4295, lng:-122.2545, area:"Woodside → San Francisco", founded:"1995", metric:"eBay で史上屈指の倍率", sector:"アーリーVC（少数精鋭）",
+   headline:"全員フラットな平等パートナーシップの伝説",
+   episode:"パートナー全員が同じ報酬・議決権を持つ「完全にフラットな」構造で知られる。1997年 eBay に約670万ドルを投資し、IPO で数十億ドルへ化けた。2011年には Bill Gurley が Uber に投資。あえてファンドを小さく保ち、少数の大当たりを狙う流儀を貫く。",
+   people:"Bill Gurley / Bruce Dunlevie / Peter Fenton"},
+  {name:"Founders Fund", type:"vc", lat:37.7996, lng:-122.4527, area:"The Presidio, San Francisco", founded:"2005", metric:"SpaceX・Palantir・Facebook", sector:"逆張りVC",
+   headline:"「空飛ぶ車が欲しかったのに、来たのは140字」",
+   episode:"Peter Thiel が2005年に設立。標語は『We wanted flying cars, instead we got 140 characters』。SpaceX、Palantir、Facebook（Thiel は最初の外部投資家で50万ドル→数十億ドル）に賭けた逆張りの雄。本拠は Presidio の元 Lucasfilm 施設 Letterman Digital Arts Center。",
+   people:"Peter Thiel / Brian Singerman / Keith Rabois"},
+  {name:"Y Combinator", type:"vc", lat:37.4003, lng:-122.0636, area:"Pioneer Way, Mountain View", founded:"2005", metric:"Airbnb・Stripe・Coinbase・DoorDash", sector:"アクセラレータ",
+   headline:"「バッチ」制アクセラレータを発明した工場",
+   episode:"Paul Graham と Jessica Livingston らが2005年に設立し、同時期に多数のスタートアップを育てる「バッチ」制を発明。標語は『Make something people want』。Airbnb、Stripe、Dropbox、Coinbase、Reddit、DoorDash、Instacart を輩出。少額を大量の会社に賭け、Demo Day で投資家に披露する方式が世界標準になった。",
+   people:"Paul Graham / Jessica Livingston / Sam Altman（元社長）"},
+  {name:"Accel", type:"vc", lat:37.4478, lng:-122.1600, area:"University Ave, Palo Alto", founded:"1983", metric:"Facebook に1270万ドル→歴史的リターン", sector:"アーリー〜グロースVC",
+   headline:"「準備された心」で Facebook を口説いた",
+   episode:"投資哲学『The Prepared Mind（準備された心）』で知られる。2005年、パートナーの Kevin Efrusy が若き Zuckerberg を口説き、Facebook に約1270万ドルを投資してVC史上屈指のリターンを得た。Slack、Dropbox、Spotify なども手掛ける。",
+   people:"Jim Swartz / Arthur Patterson（創業）"},
+  {name:"Index Ventures", type:"vc", lat:37.7880, lng:-122.3960, area:"SoMa, San Francisco", founded:"1996", metric:"欧米横断のグロース投資", sector:"マルチステージVC",
+   headline:"欧州発、SFに橋を架けたクロスボーダーVC",
+   episode:"ジュネーブ発祥で、欧州と米国をまたぐ数少ないトップVC。Figma、Notion、Roblox、Revolut などを支援。欧州の有望スタートアップをシリコンバレーの資本と結ぶ役割を担う。",
+   people:"Neil Rimer / Danny Rimer"},
+  {name:"GV (Google Ventures)", type:"vc", lat:37.4218, lng:-122.0840, area:"Mountain View", founded:"2009", metric:"Alphabet 傘下のCVC", sector:"コーポレートVC",
+   headline:"検索の巨人が持つ投資部門",
+   episode:"Alphabet（Google）傘下のベンチャー投資部門。Uber、Nest、Slack、Stripe などに出資。潤沢な親会社の資本とデータ／エンジニアリング支援を武器にする。ライフサイエンスにも積極的。",
+   people:"Bill Maris（創業）"},
+  {name:"Craft Ventures", type:"vc", lat:37.7955, lng:-122.3937, area:"SoMa, San Francisco", founded:"2017", metric:"SaaS/マーケットプレイスの目利き", sector:"アーリー〜グロースVC",
+   headline:"PayPal マフィアの David Sacks が率いる新興勢",
+   episode:"元 PayPal・Yammer の David Sacks が共同設立。SaaS とマーケットプレイスの型を熟知した実務家集団。Sacks は後に米国の AI・暗号資産政策の要職にも関わり、政治との距離の近さでも注目される。",
+   people:"David Sacks / Bill Lee"},
+
+  /* ===== Landmarks ===== */
+  {name:"HP Garage（シリコンバレー発祥の地）", type:"landmark", lat:37.4419, lng:-122.1526, area:"367 Addison Ave, Palo Alto", founded:"1938", metric:"1938年 / カリフォルニア州史跡", sector:"歴史",
+   headline:"社名の順番をコイントスで決めたガレージ",
+   episode:"1938年、Bill Hewlett と Dave Packard が賃貸ガレージで HP を創業。社名を「Hewlett-Packard」か「Packard-Hewlett」かコイントスで決め、Hewlett が勝った。最初の製品は音響発振器 HP200A で、Disney が映画『ファンタジア』の音響用に8台購入。州が正式に「シリコンバレー発祥の地」として史跡指定している。",
+   people:"Bill Hewlett / Dave Packard"},
+  {name:"Xerox PARC", type:"landmark", lat:37.4028, lng:-122.1470, area:"3333 Coyote Hill Rd, Palo Alto", founded:"1970", metric:"GUI・マウス・イーサネットの発祥", sector:"歴史（研究所）",
+   headline:"「史上最も高くついた見学」",
+   episode:"ゼロックスの研究所。GUI、マウス、イーサネット、レーザープリンタ、オブジェクト指向、WYSIWYG など現代コンピューティングの大半をここで発明した。だがゼロックスは商業化に失敗。1979年に Steve Jobs が見学して「未来を見た」と衝撃を受け、Macintosh の GUI に直結した。ゼロックスにとっては史上最も高くついた見学となった。",
+   people:"Alan Kay / Butler Lampson ら"},
+  {name:"Shockley Semiconductor（跡地）", type:"landmark", lat:37.4058, lng:-122.1088, area:"391 San Antonio Rd, Mountain View", founded:"1956", metric:"シリコンを持ち込んだ最初の会社", sector:"歴史（半導体）",
+   headline:"「裏切りの8人」が飛び出した震源地",
+   episode:"トランジスタでノーベル賞を受けた William Shockley が1956年に設立し、この地に初めて「シリコン」を持ち込んだ。だが偏執的な経営に嫌気がさした8人の若手（Robert Noyce や Gordon Moore を含む『the traitorous eight』）が1957年に集団退職して Fairchild を設立。ここがシリコンバレー全系譜の起点になった。",
+   people:"William Shockley / 裏切りの8人"},
+  {name:"Fairchild Semiconductor（原点）", type:"landmark", lat:37.4197, lng:-122.1131, area:"844 E Charleston Rd, Palo Alto", founded:"1957", metric:"集積回路の実用化", sector:"歴史（半導体）",
+   headline:"数十社に枝分かれした「家系図」の幹",
+   episode:"『裏切りの8人』が1957年に設立し、集積回路（IC）を実用化した。ここから Intel、AMD、National Semiconductor など数十社が『フェアチルドレン』として独立し、半導体産業の家系図の幹になった。Noyce と Moore は後に Intel を創業する。",
+   people:"Robert Noyce / Gordon Moore / Eugene Kleiner ら"},
+  {name:"Steve Jobs's Garage", type:"landmark", lat:37.3549, lng:-122.0489, area:"2066 Crist Drive, Los Altos", founded:"1976", metric:"Apple I 誕生の地", sector:"歴史",
+   headline:"最初の注文はたった50台",
+   episode:"Jobs の養父の家のガレージ。1976年、Steve Jobs と Steve Wozniak がここで Apple I を手組みした。最初の注文は地元の店 The Byte Shop からの50台。Jobs は部品代を工面するためワーゲンのバスを売ったと伝えられる。",
+   people:"Steve Jobs / Steve Wozniak"},
+  {name:"Google Garage（Wojcicki 邸）", type:"landmark", lat:37.4553, lng:-122.1817, area:"232 Santa Margarita Ave, Menlo Park", founded:"1998", metric:"月1,700ドルの間借りガレージ", sector:"歴史",
+   headline:"間借り相手が後の YouTube CEO",
+   episode:"1998年9月、Larry Page と Sergey Brin が Susan Wojcicki の自宅ガレージを月1,700ドルで間借りして Google を創業。Wojcicki は後に Google 16人目の社員となり、YouTube CEO まで登りつめた。Google は2006年にこの家を買い戻している。",
+   people:"Larry Page / Sergey Brin / Susan Wojcicki"},
+  {name:"Facebook 最初のオフィス", type:"landmark", lat:37.4441, lng:-122.1615, area:"471 Emerson St, Palo Alto", founded:"2004", metric:"「thefacebook」の起点", sector:"歴史",
+   headline:"ハーバードを飛び出した夏の拠点",
+   episode:"2004年夏、Zuckerberg がハーバードを離れて Palo Alto に構えた『thefacebook』最初のオフィス。Sean Parker が社長格として加わり、Peter Thiel が最初の外部資金50万ドルを入れた。ここから University Ave 周辺で急成長する。",
+   people:"Mark Zuckerberg / Sean Parker"},
+  {name:"University Ave（PayPal マフィアの巣）", type:"landmark", lat:37.4442, lng:-122.1631, area:"University Ave, Palo Alto", founded:"2002〜", metric:"1社から派生した起業家群", sector:"歴史",
+   headline:"YouTube・LinkedIn・Tesla・SpaceX の共通祖先",
+   episode:"2002年に PayPal が eBay へ売却された後、その創業者・初期社員が次々に起業した。Thiel、Musk、Levchin、Reid Hoffman、David Sacks、Chad Hurley、Jeremy Stoppelman らが YouTube、LinkedIn、Yelp、Palantir、SpaceX、Tesla、Yammer を生み、『PayPal マフィア』と呼ばれた。彼らの巣がこの Palo Alto の University Ave 周辺だった。",
+   people:"Thiel / Musk / Levchin / Hoffman / Sacks ほか"},
+  {name:"Stanford University", type:"landmark", lat:37.4275, lng:-122.1697, area:"Stanford", founded:"1885", metric:"HP・Google・Yahoo・Sun・Nvidia の母校", sector:"歴史（大学）",
+   headline:"大学が起業ハブになった世界初のモデル",
+   episode:"シリコンバレーの母。教授 Frederick Terman（『シリコンバレーの父』）が卒業生に地元での起業を奨励し、Stanford Industrial Park に HP らを誘致した。HP、Google、Yahoo、Sun、Cisco、Nvidia の創業者を輩出。大学が起業のハブとなる世界初のモデルを作った。",
+   people:"Frederick Terman ほか"},
+  {name:"Sand Hill Road", type:"landmark", lat:37.4210, lng:-122.2010, area:"Menlo Park", founded:"1972〜", metric:"全米屈指の賃料の商業地", sector:"歴史（資本の中枢）",
+   headline:"世界のVCが集まる1本の道",
+   episode:"1972年に Kleiner Perkins と Sequoia が構えて以来、世界のVCが集積した1本の道。全米で最も商業賃料が高い地区の一つ。ここにある Rosewood Sand Hill ホテルのバーは『取引が生まれる場所』として知られ、スタートアップと Stanford の中間に位置する「金の通り道」になっている。",
+   people:"—"},
+  {name:"Computer History Museum", type:"landmark", lat:37.4141, lng:-122.0770, area:"1401 N Shoreline Blvd, Mountain View", founded:"1996", metric:"計算機史の総本山", sector:"歴史（博物館）",
+   headline:"バベッジの階差機関から AI までを一望",
+   episode:"計算機の歴史を体系的に展示する世界的な博物館。バベッジの階差機関の実働レプリカ、初期のメインフレーム、パーソナルコンピュータ、そして AI までを一望できる。シリコンバレーの地理と歴史をまとめて学ぶなら最初に訪れたい場所。",
+   people:"—"},
+
+  /* ===== Public companies ===== */
+  {name:"Apple", type:"public", lat:37.3346, lng:-122.0090, area:"Apple Park, Cupertino", founded:"1976", metric:"時価総額 約$5.0兆（世界初の5兆ドル級）", sector:"ハードウェア／サービス",
+   headline:"50億ドルの「宇宙船」本社",
+   episode:"2017年完成の本社 Apple Park は Steve Jobs 最後の構想。直径約461mのリング状「宇宙船」で、Norman Foster 設計、建設費は約50億ドル。世界最大級のカーブガラスを使い、中央に Steve Jobs Theater を据える。Jobs は完成を見ずに2011年に他界した。2026年7月、Apple は世界で2社目の時価総額5兆ドルに到達。",
+   people:"Steve Jobs / Steve Wozniak / Tim Cook"},
+  {name:"Alphabet (Google)", type:"public", lat:37.4220, lng:-122.0841, area:"Googleplex, Mountain View", founded:"1998", metric:"時価総額 約$4.5兆", sector:"検索／広告／AI",
+   headline:"恐竜の骨格が立つ元 SGI 社屋",
+   episode:"本社 Googleplex は、かつて Silicon Graphics（SGI）が使っていた社屋。中庭には恐竜 T. rex の骨格レプリカ『Stan』が立ち、無料の社員食堂と屋上ソーラーで有名。検索『BackRub』から始まり、いまや Gemini で OpenAI と AI の覇権を争う。",
+   people:"Larry Page / Sergey Brin / Sundar Pichai"},
+  {name:"Meta", type:"public", lat:37.4850, lng:-122.1484, area:"1 Hacker Way, Menlo Park", founded:"2004", metric:"時価総額 約$1.9兆", sector:"SNS／広告／AI",
+   headline:"看板の裏に旧 Sun のロゴを残す戒め",
+   episode:"2011年に Palo Alto から Menlo Park の旧 Sun Microsystems キャンパスへ移転し、住所を『1 Hacker Way』にした。入口の看板の裏には破綻寸前まで行った旧 Sun のロゴをあえて残し、慢心への戒めにしている。Frank Gehry 設計の MPK20 は世界最大級のオープンオフィスで、屋上に広大な庭園を持つ。",
+   people:"Mark Zuckerberg"},
+  {name:"Nvidia", type:"public", lat:37.3705, lng:-121.9636, area:"Santa Clara", founded:"1993", metric:"時価総額 約$5.0兆（世界最大級）", sector:"半導体（GPU）",
+   headline:"デニーズのブースで生まれた5兆ドル企業",
+   episode:"1993年、Jensen Huang ら3人が San Jose の Denny's のブースで創業を決めた。GPU を発明し（1999年 GeForce 256）、ゲーム用チップが AI の心臓部へと化けた。2025年に世界初の時価総額5兆ドルに到達。Jensen の黒い革ジャンと、三角形モチーフの社屋 Endeavor／Voyager が象徴。",
+   people:"Jensen Huang / Chris Malachowsky / Curtis Priem"},
+  {name:"Broadcom", type:"public", lat:37.4092, lng:-122.1450, area:"Palo Alto", founded:"1991／2016再編", sector:"半導体", metric:"時価総額 約$1.8兆",
+   headline:"買収で膨張した半導体の巨人",
+   episode:"Hock Tan 率いる Avago が2016年に旧 Broadcom を買収し社名を継いだ。積極的な大型M&Aで通信・インフラ半導体とソフトウェアを束ね、AI 向けカスタムチップ需要で時価総額世界上位に。VMware も傘下に収めた。",
+   people:"Hock Tan"},
+  {name:"Salesforce", type:"public", lat:37.7897, lng:-122.3972, area:"Salesforce Tower, San Francisco", founded:"1999", metric:"時価総額 約$1,340億", sector:"クラウド／CRM（SaaS）",
+   headline:"「No Software」で殴り込んだ SaaS の元祖",
+   episode:"元 Oracle 幹部の Marc Benioff が1999年に創業。『ソフトはもう売らない、クラウドで貸す』という SaaS モデルを提唱し、赤い禁止マークの『No Software』ロゴで業界に殴り込んだ。2018年完成の Salesforce Tower（高さ326m）は長らく SF 西海岸最高層で、街のスカイラインを塗り替えた。",
+   people:"Marc Benioff"},
+  {name:"Cisco Systems", type:"public", lat:37.4090, lng:-121.9540, area:"San Jose", founded:"1984", metric:"時価総額 約$2,600億", sector:"ネットワーク機器",
+   headline:"Stanford のカップルが作ったルーターの王",
+   episode:"Stanford の職員だった Leonard Bosack と Sandy Lerner 夫妻が1984年に創業。学内ネットワークをつなぐルーターを商品化し、インターネットの土管を握る巨人になった。2000年のドットコム絶頂期には一時世界一の時価総額を記録した。",
+   people:"Leonard Bosack / Sandy Lerner"},
+  {name:"Oracle", type:"public", lat:37.5304, lng:-122.2637, area:"Redwood City（本社は米南部へ移転）", founded:"1977", metric:"時価総額 約$8,000億超", sector:"データベース／クラウド",
+   headline:"CIA 案件の名を社名にした男",
+   episode:"Larry Ellison が1977年に創業。初期に関わった CIA 向けデータベース案件のコード名『Oracle』を社名にした。長年 Redwood City の円筒ビル群が本社だったが、2020年に本社を Texas（後に Nashville）へ移転。ただし巨大キャンパスは今も残る。近年は AI 向けクラウドで再評価されている。",
+   people:"Larry Ellison"},
+  {name:"Adobe", type:"public", lat:37.3305, lng:-121.8920, area:"San Jose", founded:"1982", metric:"時価総額 約$1,800億", sector:"クリエイティブ／文書ソフト",
+   headline:"社名は創業者の家の裏を流れる小川",
+   episode:"元 Xerox PARC の John Warnock と Charles Geschke が1982年に創業。PostScript で印刷を、Photoshop / PDF でデジタル表現を定義した。社名は Warnock 宅の裏を流れる小川『Adobe Creek』に由来する。",
+   people:"John Warnock / Charles Geschke"},
+  {name:"Intel", type:"public", lat:37.3878, lng:-121.9645, area:"Santa Clara", founded:"1968", metric:"時価総額 約$1,200億（往時から縮小）", sector:"半導体（CPU）",
+   headline:"「ムーアの法則」を生んだ会社の苦境",
+   episode:"Fairchild を出た Robert Noyce と Gordon Moore が1968年に創業。『ムーアの法則』の生みの親で、PC 時代の CPU を独占した。しかしモバイルと AI の波に乗り遅れ、製造の遅れも重なって近年は往時の勢いを失い、再建の途上にある。",
+   people:"Robert Noyce / Gordon Moore / Andy Grove"},
+  {name:"AMD", type:"public", lat:37.3862, lng:-121.9776, area:"Santa Clara", founded:"1969", metric:"時価総額 約$3,500億", sector:"半導体（CPU／GPU）",
+   headline:"Intel の永遠のライバルが逆転する日",
+   episode:"1969年創業、長く Intel の後塵を拝したが、Lisa Su の下で Ryzen / EPYC により CPU で逆転劇を演じた。近年は Nvidia を追う AI 向け GPU（MI シリーズ）で存在感を高めている。",
+   people:"Lisa Su"},
+  {name:"Netflix", type:"public", lat:37.2588, lng:-121.9640, area:"Los Gatos", founded:"1997", metric:"時価総額 約$5,000億", sector:"動画配信",
+   headline:"「延滞料への怒り」から始まった神話",
+   episode:"1997年、Reed Hastings が Los Gatos で創業。『レンタルビデオの延滞料40ドルに腹を立てて創業した』という逸話は本人談で、半ば神話化している。2007年にストリーミングへ転換し、DVD 時代の王者 Blockbuster を葬った。自由と責任を掲げる過激な企業文化でも知られる。",
+   people:"Reed Hastings / Marc Randolph"},
+  {name:"Visa", type:"public", lat:37.5480, lng:-122.2650, area:"Foster City", founded:"1958", metric:"時価総額 約$6,500億", sector:"決済ネットワーク",
+   headline:"銀行カードを1枚のブランドに束ねた発明",
+   episode:"Bank of America のクレジットカード計画を起源に、Dee Hock が各行を横断する分散型ネットワークとして再設計した。世界の決済の裏側を走る土管で、Foster City に本社を置く。",
+   people:"Dee Hock（設計）"},
+  {name:"eBay", type:"public", lat:37.2967, lng:-121.9330, area:"San Jose", founded:"1995", metric:"時価総額 約$300億", sector:"eコマース／オークション",
+   headline:"PayPal を生み、手放した母艦",
+   episode:"1995年 Pierre Omidyar が創業したオークションサイト。2002年に PayPal を買収し、後にそれが独立して PayPal マフィアを生んだ。Meg Whitman 時代に消費者ネットの巨人に成長した。",
+   people:"Pierre Omidyar / Meg Whitman"},
+  {name:"PayPal", type:"public", lat:37.3820, lng:-121.9290, area:"San Jose", founded:"1998", metric:"時価総額 約$750億", sector:"オンライン決済",
+   headline:"シリコンバレー最強の「同窓会」の母体",
+   episode:"Confinity（Thiel / Levchin）と Elon Musk の X.com が2000年に合併して誕生。2002年に eBay へ売却されたが、その卒業生たちが YouTube、LinkedIn、Tesla、SpaceX、Palantir を創業し『PayPal マフィア』となった。決済会社そのもの以上に、人材の母体として歴史を変えた。",
+   people:"Peter Thiel / Max Levchin / Elon Musk"},
+  {name:"Zoom", type:"public", lat:37.3315, lng:-121.8896, area:"San Jose", founded:"2011", metric:"時価総額 約$250億", sector:"ビデオ会議",
+   headline:"Cisco を飛び出した男のリベンジ",
+   episode:"Eric Yuan は Cisco の WebEx 開発を率いたが、使いにくさへの不満から2011年に独立して Zoom を創業。パンデミックで爆発的に普及し、動詞になった。ブーム後は AI 機能への転換を進める。",
+   people:"Eric Yuan"},
+  {name:"Roblox", type:"public", lat:37.5560, lng:-122.2760, area:"San Mateo", founded:"2004", metric:"時価総額 約$700億", sector:"ゲーム／UGCプラットフォーム",
+   headline:"子どもが作り、子どもが遊ぶ経済圏",
+   episode:"ユーザーがゲームを作り、他のユーザーが遊ぶ UGC プラットフォーム。仮想通貨 Robux を軸に若年層の巨大な経済圏を築いた。メタバース銘柄の代表格として San Mateo に本社を構える。",
+   people:"David Baszucki"},
+  {name:"Uber", type:"public", lat:37.7720, lng:-122.3893, area:"Mission Bay, San Francisco", founded:"2009", metric:"時価総額 約$1,900億", sector:"配車／配達",
+   headline:"雪の夜にタクシーを拾えなかった苛立ちから",
+   episode:"2009年、Travis Kalanick と Garrett Camp が創業。パリで雪の夜にタクシーを拾えなかった経験が着想という。規制と衝突しながら世界の移動を塗り替え、Mission Bay に鏡張りの本社を構える。Benchmark の Bill Gurley が初期投資家。",
+   people:"Travis Kalanick / Garrett Camp / Dara Khosrowshahi"},
+  {name:"Airbnb", type:"public", lat:37.7700, lng:-122.4050, area:"SoMa, San Francisco", founded:"2008", metric:"時価総額 約$850億", sector:"民泊マーケットプレイス",
+   headline:"家賃が払えずエアマットを貸したのが起源",
+   episode:"2008年、家賃に困った創業者が自宅にエアマットレスを敷き、朝食付きで貸した『Air Bed & Breakfast』が起源。YC 2009バッチ在籍中、資金繰りのため大統領選にちなんだシリアル『Obama O's』を売って食いつないだ逸話は有名。",
+   people:"Brian Chesky / Joe Gebbia / Nathan Blecharczyk"},
+  {name:"Pinterest", type:"public", lat:37.7745, lng:-122.4020, area:"SoMa, San Francisco", founded:"2010", metric:"時価総額 約$250億", sector:"画像ディスカバリー",
+   headline:"「収集」という人間の欲を製品化",
+   episode:"欲しいものや憧れの画像を『ピン』して集めるビジュアル発見サービス。ローンチ直後は伸び悩んだが、地道な招待制で火が付いた。SoMa に本社を置く。",
+   people:"Ben Silbermann / Evan Sharp"},
+  {name:"Dropbox", type:"public", lat:37.7680, lng:-122.3930, area:"SoMa, San Francisco", founded:"2007", metric:"時価総額 約$100億", sector:"クラウドストレージ",
+   headline:"デモ動画1本で行列ができたYC発",
+   episode:"MIT 出身の Drew Houston が USB メモリを忘れた苛立ちから2007年に創業。YC 出身で、製品公開前にデモ動画1本を公開しただけで待機リストが数万人に膨らんだ逸話が有名。Steve Jobs から買収を打診され断ったことでも知られる。",
+   people:"Drew Houston / Arash Ferdowsi"},
+  {name:"Reddit", type:"public", lat:37.7870, lng:-122.3958, area:"SoMa, San Francisco", founded:"2005", metric:"時価総額 約$350億", sector:"掲示板／コミュニティ",
+   headline:"YC 第1期生が作った「インターネットのトップページ」",
+   episode:"Steve Huffman と Alexis Ohanian が YC の第1バッチ（2005年）で創業。『the front page of the internet（インターネットのトップページ）』を掲げ、無数のサブコミュニティが自治する巨大掲示板に育った。2024年に上場し、AI 学習データの供給元としても再評価されている。",
+   people:"Steve Huffman / Alexis Ohanian"},
+  {name:"Instacart (Maplebear)", type:"public", lat:37.7910, lng:-122.3960, area:"SoMa, San Francisco", founded:"2012", metric:"時価総額 約$130億", sector:"食料品配達",
+   headline:"元 Amazon エンジニアが自分で買い物代行から",
+   episode:"元 Amazon の Apoorva Mehta が2012年に創業。当初は自らアプリで注文を受けて買い物を代行した。パンデミックで需要が急増し、2023年に上場。小売のラストワンマイルを担う。",
+   people:"Apoorva Mehta"},
+  {name:"Figma", type:"public", lat:37.7876, lng:-122.4050, area:"SoMa, San Francisco", founded:"2012", metric:"IPO 2025 / 時価総額 約$400億", sector:"デザインツール（SaaS）",
+   headline:"Adobe による200億ドル買収が破談→独立上場",
+   episode:"ブラウザ上で複数人が同時にデザインできる協働ツール。2022年に Adobe が約200億ドルでの買収を発表したが、欧州の規制当局の反対で2023年に破談。独立路線を貫き、2025年7月に NYSE 上場、初日に株価が3倍超に跳ねた。株主には Greylock、Index、Kleiner Perkins、Sequoia が名を連ねる。",
+   people:"Dylan Field / Evan Wallace"},
+
+  /* ===== Private / startups ===== */
+  {name:"OpenAI", type:"private", lat:37.7625, lng:-122.4155, area:"Mission District, San Francisco", founded:"2015", metric:"評価額 $8,520億（2026 / IPO準備）", sector:"生成AI",
+   headline:"元トランク工場から世界を変えた",
+   episode:"2015年に非営利として設立され、後に営利部門を持つ独特の構造に。SF ミッション地区の Pioneer Building（元トランク工場）が象徴的本社。2022年の ChatGPT で世界を一変させ、2026年3月には Amazon・Nvidia・SoftBank から総額1,220億ドルを調達し評価額8,520億ドルに。年内の IPO を準備する。代表の Sam Altman は元 YC 社長。",
+   people:"Sam Altman / Greg Brockman / Ilya Sutskever（離脱）"},
+  {name:"Anthropic", type:"private", lat:37.7885, lng:-122.3970, area:"SoMa, San Francisco", founded:"2021", metric:"評価額 $9,650億（2026 / IPO申請済）", sector:"生成AI（安全性重視）",
+   headline:"2026年、評価額でついに OpenAI を抜く",
+   episode:"2021年、安全性をめぐる方針対立で OpenAI を去った Dario・Daniela Amodei 兄妹らが設立。AI アシスタント Claude を開発する。2026年5月の Series H で評価額9,650億ドルに達し、私企業の評価額で OpenAI を上回った。同年6月には IPO を秘密裏に申請済み。SoMa に本拠を置く。",
+   people:"Dario Amodei / Daniela Amodei"},
+  {name:"Databricks", type:"private", lat:37.7925, lng:-122.3940, area:"SoMa, San Francisco", founded:"2013", metric:"評価額 $1,880億（2026）", sector:"データ／AI基盤",
+   headline:"UC Berkeley の研究室から生まれた「第二幕の本命」",
+   episode:"UC Berkeley の AMPLab で Apache Spark を作った研究者ら（Ali Ghodsi ら）が2013年に創業。データウェアハウスとデータレイクを統合する『レイクハウス』を提唱した。2026年7月に評価額1,880億ドルへ。ARR は54億ドルを超え、AI 時代の『第二幕の本命』と呼ばれる。",
+   people:"Ali Ghodsi / Matei Zaharia / Ion Stoica"},
+  {name:"Scale AI", type:"private", lat:37.7868, lng:-122.3955, area:"SoMa, San Francisco", founded:"2016", metric:"評価額 約$290億（Meta が49%取得）", sector:"AI学習データ",
+   headline:"19歳が始め、Meta が創業者ごと迎えた",
+   episode:"2016年、当時19歳で MIT を中退した Alexandr Wang が創業。AI 学習用データのラベリングで急成長した。2025年、Meta が約143億ドルで議決権のない49%株式を取得し、Wang 自身は Meta の AI 部門トップへ移籍。人材ごと取り込む異例のディールとして話題になった。",
+   people:"Alexandr Wang"},
+  {name:"xAI", type:"private", lat:37.4180, lng:-122.1470, area:"Palo Alto（＋Memphis）", founded:"2023", metric:"評価額 約$2,300億（2026）", sector:"生成AI",
+   headline:"Grok と巨大GPUクラスタ「Colossus」",
+   episode:"2023年に Elon Musk が設立。AI アシスタント Grok を開発し、SNS の X と統合した。Memphis に世界最大級の GPU クラスタ『Colossus』を高速で構築したことで知られる。2026年1月の Series E で約200億ドルを調達し、評価額は約2,300億ドルに達した。",
+   people:"Elon Musk"},
+  {name:"Stripe", type:"private", lat:37.6650, lng:-122.3900, area:"Oyster Point, South San Francisco", founded:"2010", metric:"評価額 $1,590億（2026）", sector:"オンライン決済（フィンテック）",
+   headline:"「7行のコードで決済」を掲げた兄弟",
+   episode:"2010年、アイルランド出身の Patrick と John Collison 兄弟（YC 出身）が創業。『たった数行のコードで決済を組み込める』ことで開発者の心をつかんだ。2026年2月のテンダーオファーで評価額1,590億ドル。世界のオンライン取引の約1.6%を処理する規模になった。上場は急がず私企業を貫く。",
+   people:"Patrick Collison / John Collison"},
+  {name:"Anysphere (Cursor)", type:"private", lat:37.7852, lng:-122.4008, area:"SoMa, San Francisco", founded:"2022", metric:"評価額 $293億（SpaceX が$60Bの買収オプション）", sector:"AIコーディング",
+   headline:"AIコードエディタが2年で数百億ドルに",
+   episode:"2022年に MIT 出身の若手が創業した AI コードエディタ Cursor。開発者の乗り換えが相次ぎ、ARR は2026年に約40億ドルへ急伸した。2025年11月の Series D で評価額293億ドル。2026年4月には SpaceX が独占協業と、600億ドルで丸ごと買収できるオプションのために巨額を投じた。",
+   people:"Michael Truell ら"},
+  {name:"Perplexity", type:"private", lat:37.7830, lng:-122.4090, area:"San Francisco", founded:"2022", metric:"評価額 約$230億（2026）", sector:"AI検索",
+   headline:"Google に真っ向勝負を挑む「答えるエンジン」",
+   episode:"2022年創業。検索結果のリンクではなく出典付きの『答え』を返す対話型検索で急伸。2023年に評価額1.2億ドルだったのが、30か月で約175倍の230億ドルへ。Nvidia や Jeff Bezos が支援する。AI ネイティブなブラウザ Comet も展開する。",
+   people:"Aravind Srinivas / Denis Yarats"},
+  {name:"Notion", type:"private", lat:37.7615, lng:-122.4130, area:"Mission District, San Francisco", founded:"2013", metric:"評価額 約$100億", sector:"生産性ツール",
+   headline:"倒産寸前から京都で書き直して復活",
+   episode:"ドキュメント・データベース・タスクを一体化した生産性ツール。初期に一度作り直しで資金が尽きかけ、創業者らが京都に移り住んでコードをゼロから書き直したという逸話で知られる。ブロック型の自由な編集体験で熱狂的ファンを獲得した。",
+   people:"Ivan Zhao / Simon Last"},
+  {name:"Rippling", type:"private", lat:37.7770, lng:-122.4000, area:"SoMa, San Francisco", founded:"2016", metric:"評価額 約$165億", sector:"HR／IT管理SaaS",
+   headline:"Zenefits の創業者が返り咲いた第二作",
+   episode:"Zenefits を創業した Parker Conrad が、規制問題で同社を去った後に再起して2016年に創業。人事・給与・デバイス・アプリ権限を一元管理する統合プラットフォームで急成長。競合 Deel とのスパイ疑惑訴訟でも話題になった。",
+   people:"Parker Conrad"},
+  {name:"Sierra", type:"private", lat:37.7900, lng:-122.4000, area:"SoMa, San Francisco", founded:"2023", metric:"評価額 約$100億", sector:"AIエージェント（顧客対応）",
+   headline:"元 Salesforce CEO と元 Google の大物が組む",
+   episode:"元 Salesforce 共同 CEO の Bret Taylor（現 OpenAI 会長）と、元 Google の Clay Bavor が2023年に設立。企業向けの対話型 AI エージェントを提供し、設立からわずか数年で評価額100億ドル規模に達した注目株。",
+   people:"Bret Taylor / Clay Bavor"},
+  {name:"Discord", type:"private", lat:37.7690, lng:-122.3990, area:"SoMa, San Francisco", founded:"2015", metric:"評価額 約$150億", sector:"コミュニケーション",
+   headline:"ゲーマー向けチャットが巨大コミュニティ基盤に",
+   episode:"2015年、ゲーマーが遊びながら音声・テキストで集まる場として誕生。低遅延の通話とサーバー制のコミュニティ設計が受け、ゲームを超えて幅広い層に拡大した。Microsoft による買収提案を断り独立を維持している。",
+   people:"Jason Citron / Stan Vishnevskiy"}
+];
+
+/* ---------- Map init ---------- */
+const map = L.map('map',{zoomControl:true, scrollWheelZoom:true}).setView([37.55,-122.15], 10);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+  attribution:'&copy; OpenStreetMap &copy; CARTO', subdomains:'abcd', maxZoom:19
+}).addTo(map);
+
+/* Region labels */
+REGIONS.forEach(r=>{
+  L.marker([r.lat,r.lng],{
+    interactive:false,
+    icon:L.divIcon({className:'', html:'<div class="region-label">'+r.name+'</div>', iconSize:[0,0]})
+  }).addTo(map);
+});
+
+/* ---------- Markers ---------- */
+const records = [];
+DATA.forEach((e,i)=>{
+  e._id = i;
+  const c = TYPES[e.type].color;
+  const m = L.circleMarker([e.lat,e.lng],{
+    radius:7, weight:2, color:'#fff', fillColor:c, fillOpacity:1
+  });
+  m.bindTooltip(e.name,{direction:'top',offset:[0,-6]});
+  m.on('click',()=>selectEntry(e._id));
+  records.push({entry:e, marker:m});
+});
+
+/* ---------- Filters ---------- */
+const active = new Set(Object.keys(TYPES));
+const filtersEl = document.getElementById('filters');
+Object.keys(TYPES).forEach(k=>{
+  const chip = document.createElement('span');
+  chip.className='chip';
+  chip.dataset.type=k;
+  chip.innerHTML='<span class="dot" style="background:'+TYPES[k].color+'"></span>'+TYPES[k].label;
+  chip.onclick=()=>{
+    if(active.has(k)){active.delete(k);chip.classList.add('off');}
+    else{active.add(k);chip.classList.remove('off');}
+    applyFilters();
+  };
+  filtersEl.appendChild(chip);
+});
+
+const searchEl = document.getElementById('search');
+searchEl.addEventListener('input', applyFilters);
+
+function applyFilters(){
+  const q = searchEl.value.trim().toLowerCase();
+  const curYear = (typeof yearSlider!=='undefined' && yearSlider) ? +yearSlider.value : 2026;
+  let count=0;
+  records.forEach(r=>{
+    const e=r.entry;
+    const inYear = (e._year==null) || (e._year<=curYear);
+    const hit = active.has(e.type) && inYear && (q===''||
+      e.name.toLowerCase().includes(q) ||
+      (e.area||'').toLowerCase().includes(q) ||
+      (e.sector||'').toLowerCase().includes(q));
+    if(hit){
+      if(!map.hasLayer(r.marker)) r.marker.addTo(map);
+      const recent = e._year && (curYear - e._year) <= 8;
+      r.marker.setRadius(recent?9:6);
+      r.marker.setStyle({weight:recent?3:2});
+      count++;
+    }
+    else{ if(map.hasLayer(r.marker)) map.removeLayer(r.marker); }
+  });
+  updateGuideCount(count);
+}
+
+/* ---------- Panel rendering ---------- */
+const panel = document.getElementById('panel');
+
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function selectEntry(id){
+  const e = DATA[id];
+  const t = TYPES[e.type];
+  map.setView([e.lat,e.lng], Math.max(map.getZoom(),12), {animate:true});
+  records[id].marker.openTooltip();
+  panel.innerHTML =
+    '<span class="back" id="backLink">&larr; 地理ガイドに戻る</span>'+
+    '<div><span class="badge" style="background:'+t.color+'">'+t.label+'</span></div>'+
+    '<h2 class="name">'+esc(e.name)+'</h2>'+
+    '<div class="metric" style="color:'+t.color+'">'+esc(e.metric)+'</div>'+
+    '<div class="kv"><b>所在</b><span>'+esc(e.area)+'</span></div>'+
+    '<div class="kv"><b>創業</b><span>'+esc(e.founded)+'</span></div>'+
+    '<div class="kv"><b>領域</b><span>'+esc(e.sector)+'</span></div>'+
+    '<div class="headline">'+esc(e.headline)+'</div>'+
+    '<div class="episode">'+esc(e.episode)+'</div>'+
+    '<div class="people"><b>キーパーソン</b>　'+esc(e.people)+'</div>';
+  document.getElementById('backLink').onclick = showGuide;
+  panel.scrollTop = 0;
+}
+
+/* ---------- Guide (default view) ---------- */
+function showGuide(){
+  let legend = '';
+  Object.keys(TYPES).forEach(k=>{
+    const n = DATA.filter(d=>d.type===k).length;
+    legend += '<div class="legend-row"><span class="dot" style="background:'+TYPES[k].color+'"></span>'+TYPES[k].label+'　<span style="color:var(--sub)">'+n+'件</span></div>';
+  });
+  panel.innerHTML =
+    '<div class="guide">'+
+    '<h2 class="name" style="margin-top:0">シリコンバレーの地理を読む</h2>'+
+    '<p class="lead">地図を<b>南から北へ</b>眺めると、そのまま産業史の時間軸になる。半導体は南で生まれ、ソフトウェアは北へ上った。</p>'+
+    '<div class="region"><b>サウスベイ ＝ ハードウェアの起源</b><small>Stanford を源流に、Palo Alto → Mountain View → Santa Clara → San Jose へ半導体企業が帯状に広がった。Shockley → Fairchild → Intel の系譜はこの帯で生まれた。</small></div>'+
+    '<div class="region" style="border-color:var(--vc)"><b>Sand Hill Road ＝ 資本の中枢</b><small>1972年に Kleiner Perkins と Sequoia が構えて以来、世界のVCが1本の道に集積。スタートアップと Stanford の中間に位置する「金の通り道」。</small></div>'+
+    '<div class="region"><b>San Jose ＝ シリコンバレーの首都</b><small>人口最大の市。Cisco・Adobe・eBay・PayPal・Zoom など実務の中心が集まる。</small></div>'+
+    '<div class="region"><b>Cupertino ＝ Apple の城下町</b><small>Apple Park（宇宙船）を中心に据える。</small></div>'+
+    '<div class="region" style="border-color:var(--private)"><b>San Francisco（北）＝ ソフトウェアとAIの現在地</b><small>2010年前後、若い技術者が郊外の広大なキャンパスより都市生活を選び、重心が北のSFへ移った。SoMa・Mission に OpenAI・Anthropic・Databricks・Stripe・Uber・Airbnb が集積し、いま最もホット。</small></div>'+
+    '<h3>凡例</h3>'+ legend +
+    '<h3>使い方</h3>'+
+    '<div class="hint">・地図上の点をクリックすると、時価総額／評価額と<b>ニッチな逸話</b>が出ます。<br>・上のチップで種別を絞り込み、検索で名前・地域を絞れます。<br>・<b>「ランダムに1つ」</b>で毎回ちがう1社を引いて学べます（スペースドリピティション向き）。<br>・<b>タイムライン（再生）</b>で 1938→2026 を再生すると、拠点が創業順に灯り、黒い<b>重心マーカー</b>が南→北へドリフトします。直近8年の新拠点は大きめの点で強調されます。<br>・数字は2026年時点の概算です。</div>'+
+    '<div class="count" style="margin-top:12px">表示中：<span id="cnt">'+DATA.length+'</span> / '+DATA.length+' 件</div>'+
+    '</div>';
+}
+function updateGuideCount(n){
+  const el = document.getElementById('cnt');
+  if(el) el.textContent = n;
+}
+
+/* ---------- Buttons ---------- */
+document.getElementById('guideBtn').onclick = showGuide;
+document.getElementById('randomBtn').onclick = ()=>{
+  const visible = records.filter(r=>map.hasLayer(r.marker));
+  const pool = visible.length? visible : records;
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  selectEntry(pick.entry._id);
+};
+
+/* ---------- Timeline (1938 -> 2026) ---------- */
+function parseYear(s){ const m=(s||'').match(/\d{4}/); return m?+m[0]:null; }
+DATA.forEach(e=>{ e._year = parseYear(e.founded); });
+
+const T_START=1938, T_END=2026;
+const centroidByYear={};
+for(let y=T_START;y<=T_END;y++){
+  const pts=DATA.filter(d=>d._year && d._year<=y);
+  if(pts.length){
+    const la=pts.reduce((a,d)=>a+d.lat,0)/pts.length;
+    const ln=pts.reduce((a,d)=>a+d.lng,0)/pts.length;
+    centroidByYear[y]=[la,ln];
+  }
+}
+
+const cogTrail=L.polyline([],{color:'#111',weight:2,opacity:.5,dashArray:'4 5',interactive:false});
+const cogDot=L.circleMarker([37.42,-122.1],{radius:8,color:'#fff',weight:3,fillColor:'#111',fillOpacity:.9,interactive:false});
+cogDot.bindTooltip('重心',{permanent:true,direction:'top',offset:[0,-8],className:'cog-tip'});
+
+const yearSlider=document.getElementById('yearSlider');
+const yearLabel=document.getElementById('yearLabel');
+const eraLabel=document.getElementById('eraLabel');
+const playBtn=document.getElementById('playBtn');
+const cogToggle=document.getElementById('cogToggle');
+
+function eraFor(y){
+  if(y<1956) return '<b>発祥</b>　Stanford とガレージ（HP）から始まった';
+  if(y<1970) return '<b>半導体の誕生</b>　Shockley→Fairchild→Intel、シリコンが谷の名になる（重心が南へ）';
+  if(y<1980) return '<b>VCとパソコン</b>　Sand Hill Road が生まれ、Apple・Xerox PARC の時代';
+  if(y<1995) return '<b>ネットワークとワークステーション</b>　Cisco・Adobe・Oracle が南で育つ';
+  if(y<2005) return '<b>ドットコム</b>　eBay・PayPal・Google と検索の時代';
+  if(y<2012) return '<b>Web2.0とソーシャル、SFへ北上開始</b>　YC・Facebook・Uber・Airbnb';
+  if(y<2020) return '<b>モバイル/クラウド、重心がSFへ</b>　Stripe・Databricks・Figma';
+  return '<b>生成AIの爆発</b>　OpenAI・Anthropic・xAI・Cursor が北の SF に集中';
+}
+
+function renderCentroid(y){
+  const pos=centroidByYear[y]||centroidByYear[T_END];
+  const coords=[];
+  for(let yy=T_START;yy<=y;yy++){ if(centroidByYear[yy]) coords.push(centroidByYear[yy]); }
+  cogTrail.setLatLngs(coords);
+  cogDot.setLatLng(pos).setTooltipContent('重心 '+y);
+}
+function setCogVisible(on){
+  if(on){
+    if(!map.hasLayer(cogTrail)) cogTrail.addTo(map);
+    if(!map.hasLayer(cogDot)) cogDot.addTo(map);
+    renderCentroid(+yearSlider.value);
+  } else {
+    if(map.hasLayer(cogTrail)) map.removeLayer(cogTrail);
+    if(map.hasLayer(cogDot)) map.removeLayer(cogDot);
+  }
+}
+function setYear(y){
+  yearLabel.textContent=y;
+  eraLabel.innerHTML=eraFor(y);
+  applyFilters();
+  if(cogToggle.checked) renderCentroid(y);
+}
+
+let playTimer=null;
+function stopPlay(){ if(playTimer){clearInterval(playTimer);playTimer=null;playBtn.textContent='再生';} }
+playBtn.onclick=()=>{
+  if(playTimer){ stopPlay(); return; }
+  if(+yearSlider.value>=T_END){ yearSlider.value=T_START; }
+  playBtn.textContent='停止';
+  setYear(+yearSlider.value);
+  playTimer=setInterval(()=>{
+    let y=+yearSlider.value;
+    if(y>=T_END){ stopPlay(); return; }
+    y++; yearSlider.value=y; setYear(y);
+  },110);
+};
+yearSlider.addEventListener('input',()=>{ stopPlay(); setYear(+yearSlider.value); });
+cogToggle.addEventListener('change',()=>setCogVisible(cogToggle.checked));
+
+/* ---------- Boot ---------- */
+showGuide();
+setCogVisible(true);
+setYear(T_END);
+setTimeout(()=>map.invalidateSize(), 150);
+window.addEventListener('resize', ()=>map.invalidateSize());
+window.addEventListener('load', ()=>{ map.invalidateSize(); });
+</script>
+</body>
+</html>

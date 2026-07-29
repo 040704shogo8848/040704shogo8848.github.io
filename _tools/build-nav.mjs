@@ -17,6 +17,9 @@ const CHECK = process.argv.includes('--check');
 
 const START = '<!-- snav:start -->';
 const END = '<!-- snav:end -->';
+// A page carrying this marker stands alone — no nav, and not reported as
+// missing one. Use it for material that should not link back into the site.
+const NONE = '<!-- snav:none -->';
 const SKIP_DIRS = new Set(['.git', 'node_modules', '_tools']);
 
 const nav = JSON.parse(await readFile(path.join(ROOT, '_tools/nav.json'), 'utf8'));
@@ -132,11 +135,14 @@ async function* htmlFiles(dir = ROOT) {
 let changed = 0;
 let missing = 0;
 let total = 0;
+let standalone = 0;
 
 for await (const abs of htmlFiles()) {
   const file = path.relative(ROOT, abs).split(path.sep).join('/');
   const src = await readFile(abs, 'utf8');
   total++;
+
+  if (src.includes(NONE)) { standalone++; continue; }
 
   const i = src.indexOf(START);
   const j = src.indexOf(END);
@@ -158,7 +164,8 @@ for await (const abs of htmlFiles()) {
 }
 
 const label = CHECK ? 'check' : 'build';
-console.log(`\nsnav ${label}: ${total} files, ${changed} ${CHECK ? 'stale' : 'updated'}, ${missing} missing markers`);
+console.log(`\nsnav ${label}: ${total} files, ${changed} ${CHECK ? 'stale' : 'updated'}, `
+  + `${missing} missing markers, ${standalone} standalone`);
 
 if (missing > 0) {
   console.error('\nEvery page needs `<!-- snav:start --><!-- snav:end -->` right after <body>.');

@@ -1,0 +1,3752 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新フロンティア技術の商社</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --mid: #444444;
+  --muted: #888888;
+  --border: #d8d8d8;
+  --surface: #f5f5f5;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 15px;
+  line-height: 1.8;
+}
+.page { max-width: 820px; margin: 0 auto; padding: 60px 28px 120px; }
+
+/* ── TOC（左固定目次） ── */
+.toc {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  width: 240px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  font-size: 12px;
+  padding: 14px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  z-index: 50;
+}
+.toc-title {
+  font-family: 'Poppins', monospace;
+  font-size: 10px;
+  letter-spacing: .15em;
+  color: var(--muted);
+  text-transform: uppercase;
+  padding: 0 8px 8px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.toc a {
+  display: block;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 3px 8px;
+  border-left: 2px solid transparent;
+  line-height: 1.45;
+  transition: color 0.15s, border-color 0.15s;
+}
+.toc a:hover { color: var(--text); }
+.toc a.lvl-h2 { font-weight: 700; font-size: 12px; }
+.toc a.lvl-h3 { padding-left: 22px; font-size: 11.5px; color: var(--muted); }
+.toc a.lvl-h4 { padding-left: 36px; font-size: 11px; color: var(--muted); }
+.toc a.active { color: var(--text); border-left-color: var(--text); font-weight: 700; }
+@media (max-width: 1300px) {
+  .toc { display: none; }
+}
+
+/* local-only banner / tabs */
+.local-only { display: none; }
+.local-mode .local-only { display: inline-flex; }
+
+/* Section toggle (collapsible h3 sections) */
+h3.collapsible {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+h3.collapsible .check-mark {
+  display: none;
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+}
+h3.collapsible.understood .check-mark { display: inline-block; }
+h3.collapsible .toggle-arrow {
+  font-family: 'Poppins', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  transition: transform 0.15s ease;
+  display: inline-block;
+  width: 14px;
+  text-align: center;
+}
+h3.collapsible.collapsed .toggle-arrow { transform: rotate(-90deg); }
+h3.collapsible:hover .toggle-arrow { color: var(--text); }
+.section-body[data-collapsed="true"] { display: none; }
+.section-body.collapsed-hint {
+  padding: 10px 16px;
+  background: var(--surface);
+  border-radius: 4px;
+  margin: 8px 0;
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* 4-Frame Summary */
+.frame-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0 32px;
+}
+.frame-box {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 20px;
+  background: var(--bg);
+}
+.frame-label {
+  font-family: 'Poppins', monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.frame-box ul { margin-left: 18px; margin-bottom: 0; }
+.frame-box ul li { font-size: 13px; line-height: 1.65; margin-bottom: 5px; color: var(--mid); }
+.frame-box ul li strong { color: var(--text); }
+
+.frame-premise {
+  background: #f4f4f4;
+  border-color: #cccccc;
+}
+.frame-premise .frame-label { color: var(--text); }
+
+.frame-row {
+  display: grid;
+  grid-template-columns: 1fr 24px 1fr 24px 1fr;
+  gap: 0;
+  align-items: stretch;
+}
+.frame-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', monospace;
+  font-size: 18px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.frame-issue {
+  background: #fef4f4;
+  border-color: #f5d0d0;
+}
+.frame-issue .frame-label { color: #8a2a2a; }
+.frame-solution {
+  background: #f4f8ed;
+  border-color: #d0e0b0;
+}
+.frame-solution .frame-label { color: #4a6010; }
+.frame-vision {
+  background: #f0f4fa;
+  border-color: #c0d0e8;
+}
+.frame-vision .frame-label { color: #1e3a6e; }
+@media (max-width: 1000px) {
+  .frame-row { grid-template-columns: 1fr; gap: 12px; }
+  .frame-arrow { transform: rotate(90deg); height: 24px; }
+}
+
+/* QA tab toolbar */
+.qa-toolbar {
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 14px 18px;
+  margin: 16px 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+.qa-filter-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.qa-filter-label {
+  font-family: 'Poppins', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  min-width: 50px;
+}
+.qa-filter-btn, .qa-sort-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 3px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 600;
+  color: var(--mid);
+}
+.qa-filter-btn:hover, .qa-sort-btn:hover { background: var(--surface); }
+.qa-filter-btn.active, .qa-sort-btn.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+.qa-toolbar-progress {
+  font-family: 'Poppins', monospace;
+  font-size: 11.5px;
+  color: var(--mid);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* QA card enhancements */
+.knowledge-card.qa-checked {
+  background: #f4f8f4;
+  border-color: #c8e0ce;
+}
+.knowledge-card.qa-checked .knowledge-q { color: var(--muted); }
+.qa-check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+}
+.qa-check-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--text);
+}
+.qa-check-row .qa-num {
+  font-family: 'Poppins', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--muted);
+}
+.qa-check-row .qa-toggle-btn {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 2px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 10.5px;
+  font-family: 'Poppins', monospace;
+  color: var(--mid);
+}
+.knowledge-card.qa-collapsed .knowledge-a { display: none; }
+
+.tag {
+  font-family: 'Poppins', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: .12em;
+  margin-bottom: 12px;
+}
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.subtitle {
+  color: var(--mid);
+  font-size: 14px;
+  margin-bottom: 48px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 48px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  color: var(--mid);
+}
+p { margin-bottom: 14px; }
+ul, ol { margin-left: 20px; margin-bottom: 14px; }
+li { margin-bottom: 4px; }
+
+.callout {
+  background: var(--surface);
+  border-left: 3px solid var(--text);
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+.question-block {
+  background: var(--surface);
+  padding: 18px 22px;
+  border-radius: 4px;
+  margin-bottom: 18px;
+}
+.question-block h3 { margin-top: 0; color: var(--text); }
+
+.label {
+  font-family: 'Poppins', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+/* ── Phase Diagrams ── */
+.phase-diagram {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  margin: 24px 0;
+  font-size: 13px;
+}
+.phase-col {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 14px;
+}
+.phase-col-title {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+.phase-col-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  letter-spacing: .04em;
+}
+.phase-col ul {
+  margin: 0 0 0 16px;
+  padding: 0;
+}
+.phase-col li {
+  margin-bottom: 3px;
+  font-size: 12.5px;
+}
+.phase-center {
+  flex: 0.9;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 4px;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.phase-center-title {
+  font-family: 'Poppins', monospace;
+  font-size: 11px;
+  letter-spacing: .15em;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 6px;
+}
+.phase-center-main {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.phase-center-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,.7);
+  line-height: 1.5;
+}
+.phase-arrow {
+  display: flex;
+  align-items: center;
+  font-family: 'Poppins', monospace;
+  color: var(--muted);
+  font-size: 18px;
+}
+.industry-group {
+  margin-bottom: 10px;
+}
+.industry-label {
+  font-family: 'Poppins', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.industry-companies {
+  font-size: 12.5px;
+  margin-bottom: 6px;
+}
+
+/* ── Per Table ── */
+.per-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13.5px;
+}
+.per-table th,
+.per-table td {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.per-table th {
+  background: var(--surface);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--mid);
+}
+.per-table td:last-child {
+  font-family: 'Poppins', monospace;
+  color: var(--text);
+  font-weight: 700;
+}
+.milestone-table {
+  font-size: 12.5px;
+}
+.milestone-table th,
+.milestone-table td {
+  padding: 8px 10px;
+  white-space: nowrap;
+}
+.milestone-table td:last-child {
+  background: var(--surface);
+}
+@media (max-width: 720px) {
+  .phase-diagram { flex-direction: column; }
+  .phase-arrow { justify-content: center; transform: rotate(90deg); }
+}
+
+/* ── Matching Tree ── */
+.industry-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+.industry-header {
+  background: var(--text);
+  color: var(--bg);
+  padding: 14px 20px;
+}
+.industry-name {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+.industry-tag {
+  font-family: 'Poppins', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.55);
+}
+.industry-note {
+  font-size: 12px;
+  color: rgba(255,255,255,.7);
+  margin-top: 4px;
+  font-style: italic;
+}
+.tech-block {
+  padding: 18px 20px;
+  border-top: 1px solid var(--border);
+}
+.tech-block:first-of-type { border-top: none; }
+.tech-header {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+.tech-tag {
+  font-family: 'Poppins', monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.supply-demand {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+.side {
+  background: var(--surface);
+  border-radius: 4px;
+  padding: 12px 14px;
+}
+.side-label {
+  font-family: 'Poppins', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.side-supply { border-left: 3px solid var(--text); }
+.side-demand { border-left: 3px solid var(--muted); }
+.company-row {
+  font-size: 13px;
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+.company-row:last-child { margin-bottom: 0; }
+.company-row strong { display: inline-block; min-width: fit-content; }
+.company-role {
+  color: var(--mid);
+  font-size: 12px;
+}
+@media (max-width: 720px) {
+  .supply-demand { grid-template-columns: 1fr; }
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+  margin-top: 8px;
+}
+.tab-button {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 18px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  letter-spacing: .02em;
+  margin-bottom: -1px;
+}
+.tab-button:hover { color: var(--mid); }
+.tab-button.active {
+  color: var(--text);
+  border-bottom-color: var(--text);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── Knowledge cards ── */
+.knowledge-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+  background: var(--bg);
+}
+.knowledge-q {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.knowledge-q::before {
+  content: 'Q. ';
+  font-family: 'Poppins', monospace;
+  color: var(--muted);
+  margin-right: 4px;
+}
+.knowledge-a {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--mid);
+}
+.knowledge-a p { margin-bottom: 12px; }
+.knowledge-a strong { color: var(--text); }
+.case-box {
+  background: var(--surface);
+  border-left: 3px solid var(--text);
+  padding: 12px 16px;
+  margin: 14px 0;
+  font-size: 13.5px;
+}
+.case-label {
+  font-family: 'Poppins', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:center;gap:4px}
+.snav-inline a{color:rgba(255,255,255,.7);text-decoration:none;font-size:12px;font-weight:500;padding:6px 12px;border-radius:4px;transition:all .15s;letter-spacing:-.01em}
+.snav-inline a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.snav-inline .sep{width:1px;height:14px;background:rgba(255,255,255,.18);margin:0 6px}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><span class="sep"></span><a href="index.html">frontier trading</a><span class="sep"></span><a href="../../020_personal/021_profile/index.html">profile</a></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="index.html">frontier trading</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../020_personal/021_profile/index.html">profile</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div style="max-width:900px;margin:0 auto;padding:16px 22px;background:#FEF9C3;border:1px solid #E5E2DA;border-radius:10px;font-size:13.5px;line-height:1.8;color:#1a1a1a">
+  <strong>これは西川京（Kyo Nishikawa）が書いた事業構想の写しです。</strong><br>
+  本文の「私」は原著者を指します。久保田翔己の事業計画ではありません。<br>
+  原典: <a href="https://kyo24111.github.io/01_business_ideas/260608_frontier_trading/260608_frontier_trading.html" target="_blank" rel="noopener" style="color:#2563EB">kyo24111.github.io — 新フロンティア技術の商社</a>（2026-06-08）<br>
+  <span style="color:#555">原典では file:// でのみ表示される3章（Hiring / Term Study / Company Name）があり、この写しにも含まれていません。</span>
+</div>
+
+
+<aside class="toc" id="toc">
+  <div class="toc-title">CONTENTS</div>
+  <div id="toc-links"></div>
+</aside>
+
+<div class="page">
+
+<div class="tag">BUSINESS IDEA / 260608</div>
+<h1>新フロンティア技術の商社</h1>
+<div class="subtitle">21世紀型のトレーディングカンパニー — 参考：東京エレクトロン、TSMC</div>
+
+<nav class="tabs">
+  <button class="tab-button active" data-tab="main">メイン</button>
+  <button class="tab-button" data-tab="knowledge">ナレッジ</button>
+  <button class="tab-button" data-tab="qa">QA</button>
+  <button class="tab-button local-only" data-tab="hiring">Hiring 🔒</button>
+  <button class="tab-button local-only" data-tab="term">Term 🔒</button>
+  <button class="tab-button local-only" data-tab="company-name">Company Name 🔒</button>
+</nav>
+
+<div id="tab-main" class="tab-content active">
+
+<h2>事業全体像（4-Frame Summary）</h2>
+<p>METI / GLOBIS 流の <strong>「現状認識 → 課題 → 施策 → 目指すべき姿」</strong> 4フレームで本事業を整理。</p>
+
+<div class="frame-grid">
+  <div class="frame-box frame-premise">
+    <div class="frame-label">① 前提（現状認識・日本の強み）</div>
+    <ul>
+      <li>米国はディープテック R&D（半導体・宇宙・核融合・防衛）の世界最先端、対抗馬は中国</li>
+      <li><strong>新自由主義の終焉</strong>、米中デカップリング、CHIPS Act ($52B) / IRA ($369B) / EU Chips Act 等で国家インフラ投資が加熱</li>
+      <li>日本は <strong>精密素材・部品で世界独占的シェア</strong>：AGC（フッ素冷媒）/ 東レ（CFRP）/ 信越化学（シリコン）/ Nidec（モーター）/ Murata（MLCC）/ Harmonic Drive Systems（波動歯車）</li>
+      <li>総合商社（三菱商事等）は資本力あるが、ディープテック × 米SU文化 × 精密ニッチには踏み込めず</li>
+      <li>US Soil 製造のサプライチェーン需要（CFIUS / DoD / Hyperscaler）が指数関数的に拡大中</li>
+    </ul>
+  </div>
+
+  <div class="frame-row">
+    <div class="frame-box frame-issue">
+      <div class="frame-label">② 課題（ボトルネック）</div>
+      <ul>
+        <li>日本の素材・部品メーカーは <strong>米国 SU・Hyperscaler への直接営業ルートが薄い</strong></li>
+        <li>米国は製造業空洞化、Hyperscaler サプライチェーンは台湾・中国依存で CFIUS リスク</li>
+        <li>米SU調達担当は <strong>日本の精密素材を理解できず、Foxconn / Quanta 任せ</strong></li>
+        <li>商社モデル単体は「2回目以降の中抜き」リスクで永続的価値創出が困難</li>
+        <li>既存商社は利益相反・稟議速度・PER圧力で踏み込めない</li>
+      </ul>
+    </div>
+
+    <div class="frame-arrow">→</div>
+
+    <div class="frame-box frame-solution">
+      <div class="frame-label">③ ソリューション（施策）</div>
+      <ul>
+        <li><strong>Phase 1（Y1-3）：</strong>商社機能スタート。<strong>冷却（AGC × Nidec × Daikin × Fuji Electric）</strong>から開始、DC SU と直接接続</li>
+        <li><strong>Phase 2（Y3-5）：</strong>Margin + Tolling、半導体・防衛・宇宙へ拡張、<strong>Capital × Trading（SU 出資 + 顧客 Consortium）</strong> モデル</li>
+        <li><strong>Phase 3（Y5-10）：</strong>自社製造（<strong>Pure-play Foundry ODM</strong>）。LA → Texas、日本素材 × US Soil × CFIUS で組立</li>
+        <li><strong>Year 10+：</strong>モーター・エンジン・マテリアル領域へ、Germany 拠点でグローバル3拠点化</li>
+        <li>日米同盟インサイダー、中国完全デカップリング、台湾・韓国とは住み分け</li>
+        <li>三菱商事と JV / CVC、Founders Fund / a16z から $30M Seed @ $300M Val</li>
+      </ul>
+    </div>
+
+    <div class="frame-arrow">→</div>
+
+    <div class="frame-box frame-vision">
+      <div class="frame-label">④ 目指すべき姿（Vision）</div>
+      <ul>
+        <li><strong>Year 30：時価総額 $1 Trillion</strong>（売上 $130B / OP $40B / PER 25x、ASML / TSMC帯）</li>
+        <li><strong>日本のGDP上昇に直接寄与</strong> — 日本メーカーの売上を年間数兆円規模で米国に流し、外貨獲得</li>
+        <li><strong>日米同盟の経済的バックボーン</strong> — CFIUS準拠サプライチェーンで西側諸国の安全保障インフラを支える</li>
+        <li><strong>21世紀の三菱商事</strong> — Trading Company + Pure-play Foundry のハイブリッド</li>
+        <li>Industry 5領域（DC / Defense / Space / Fusion / Robotics）で日本×米国の絶対王者</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<h2>仮説</h2>
+<p>新フロンティア技術（Fusion、Semiconductor、Robotics、Space、Defenseなど）の最先端R&Dは、ほとんどアメリカで行われる。対抗馬は中国。日本は強くない。</p>
+<p>日本人としてこれをどう統合するかを考えたとき、真正面から1アジェンダで勝負するよりも、労働集約的に日本のトラディショナルな攻め方をした方がいい。</p>
+<div class="callout">それが「商社」。</div>
+
+<h2>Target Industries（ターゲット産業）</h2>
+<ul>
+  <li>Space</li>
+  <li>Fusion</li>
+  <li>Semiconductor</li>
+  <li>Data Center</li>
+  <li>Shipbuilding</li>
+  <li>Welding</li>
+  <li>Bio (potential)</li>
+</ul>
+
+<h2>入り方：まず「宇宙の商社」</h2>
+<p>宇宙ビジネスはSpaceXをはじめ、以下のような産業が発展している：</p>
+<ol>
+  <li>宇宙に物資を調達するサプライチェーンの会社</li>
+  <li>宇宙でデータセンターを作る会社</li>
+  <li>宇宙で科学の実験をする会社</li>
+</ol>
+<p>5年後、10年後の宇宙の未来を考えたとき、日本の材料、物資、技術は必須になる。</p>
+<p>まずは宇宙で始めるが、その後、半導体、データセンター、ロボット、造船、防衛、バイオなど、さまざまな産業に展開していく。</p>
+<div class="callout">三菱商事を超える、21世紀の新しい商社。</div>
+
+<h2>最初の参入候補：3つの選択肢</h2>
+<p>Space以外の最初の候補としては、Cooling と Defense Manufacturing。これら2つに Space を合わせた3つが、最初の戦略として考えられる候補。</p>
+
+<h3>1. Space</h3>
+<p>長期的な未来は確実だが、<strong>キャッシュのサイクルが長すぎる</strong>。Year 1〜3 の Broker/Tolling フェーズでは資金回収が遅延し、商社的な「労働集約 + 高回転」モデルが機能しない。</p>
+
+<h3>2. Cooling Tech</h3>
+<p>熱とエネルギーに密接に関わっており、現在のLLMの発展にともなう熱・エネルギー問題に直結している。AI Data Center の CAPEX 加熱と完全に重なるため、<strong>キャッシュサイクルが最短</strong>。</p>
+
+<h3>3. Defense Manufacturing</h3>
+<p>ドローンや戦車の製造において、日本の精密機器は欠かせない。</p>
+
+<div class="callout" style="margin-top: 24px;">
+  <strong>最終結論：Data Center / Cooling から始める。Space は Phase 2 以降。</strong>
+  <ul style="margin-top: 8px;">
+    <li>Space は <strong>キャッシュサイクルが長すぎる</strong>（5〜10年の開発リードタイム）— Phase 1 の労働集約モデルと合わない</li>
+    <li>DC冷却は <strong>Hyperscaler の CAPEX 加熱（年間 $33-53B / 社）</strong>と直結 — 即金キャッシュフロー</li>
+    <li>重要な4社：<strong>AGC（フッ素冷媒）/ Nidec（液冷ポンプ・ファン）/ Shin-Etsu Chemical（放熱シリコーン）/ Fuji Electric（電力統合）</strong></li>
+    <li>この4社を握れば、AWS / Microsoft / Google / Meta の全DCサプライチェーンに食い込める</li>
+  </ul>
+</div>
+
+<h2>参考企業</h2>
+
+<h3 class="collapsible collapsed understood" data-target="tel-section">東京エレクトロン</h3>
+<div class="section-body" data-collapsed="true" id="tel-section">
+<p>もともとはアメリカの半導体技術を日本につなげる動きをしていた。アメリカの半導体技術は日本の製造メーカーとつながりたく、その仲介とFD（フォワードディプロイドエンジニア）的なポジションを担っていたのが東京エレクトロン。</p>
+<p>しかし途中から自身がメーカーへと化け、転身を遂げた。</p>
+</div>
+
+<h3 class="collapsible collapsed understood" data-target="tsmc-section">TSMC</h3>
+<div class="section-body" data-collapsed="true" id="tsmc-section">
+<p>相手の戦略を逆手に取った点が参考になる。</p>
+<p>当時、IPや発明はインテルやヒューレット・パッカードが担っていた。ファブレスを好むトレンドに逆らって、TSMCは台湾で1980年代後半に製造をすべて引き受けるという、あえて逆の動きをすることでものにしていった。</p>
+
+<div class="callout" style="margin-top: 12px;">
+  <strong>TSMC は「Foundry」であって、ODM / EMS ではない。</strong>
+  <p style="margin-top: 8px;">差は <strong>2軸</strong>：</p>
+  <ul style="margin-top: 4px;">
+    <li><strong>① 完成品を作るか？</strong> — Foundry は <strong>コンポーネント（半導体チップウェハ）</strong> のみ。ODM / EMS は完成品（サーバー、PC、スマホ等）を作る</li>
+    <li><strong>② 設計からやるか？</strong> — Foundry / EMS は <strong>顧客の設計通り</strong>。ODM / OEM は自社設計</li>
+  </ul>
+  <p style="margin-top: 8px;">本事業の Phase 3 は厳密には <strong>「DC冷却ラック / 軍用部品の Foundry」</strong> に近い — 完成品ではなく <strong>顧客スペックのモジュール / アセンブリ</strong> を作る。TSMC モデルがそのまま参考になる。</p>
+</div>
+</div>
+
+<h3 class="collapsible collapsed understood" data-target="kaga-section">加賀電子（Kaga Electronics）</h3>
+<div class="section-body" data-collapsed="true" id="kaga-section">
+<p>本事業に最も近い <strong>日本国内の "商社 → EMS 転身" の成功事例</strong>。Phase 1→3 の進化を実証済み。</p>
+<ul>
+  <li><strong>もともと電子部品の商社</strong>（1968年創業）。全国の販売ネットワークと幅広いメーカーとの取引関係を武器に成長</li>
+  <li>2010年代半ばに <strong>EMS（電子機器受託製造）に変身</strong> — EXCEL買収など M&A を通じて製造能力を内部化、商社時代のネットワークを <strong>「顧客アクセス資産」</strong> として活用</li>
+  <li><strong>大量生産は Foxconn / Quanta 等の台湾勢に勝てないため、ニッチな部品・カスタム電子機器に特化</strong> — 産業機器、自動車（車載）、医療電子、防衛など高単価・低ボリューム領域</li>
+  <li>東証プライム上場、売上 $3-4B 規模、安定した利益率</li>
+</ul>
+
+<div class="callout" style="margin-top: 12px;">
+  <strong>本事業との合致点：</strong>
+  <ul style="margin-top: 8px;">
+    <li><strong>商社→EMS（→ODM）の転身パス</strong>：本事業の Phase 1 (Trading) → Phase 3 (Pure-play Foundry ODM) と <strong>完全同一のパターン</strong></li>
+    <li><strong>量産競争を避ける戦略</strong>：Foxconn / Quanta と正面衝突せず、ニッチに特化する戦略がそのまま参考になる</li>
+    <li><strong>差別化：</strong>加賀電子は日本国内ニッチで止まったが、本事業は <strong>「日本素材 × US Soil × CFIUS」</strong> でグローバル + 政府市場まで広げる</li>
+  </ul>
+</div>
+
+<div class="callout" style="margin-top: 12px; background: #fef0f0; border-left-color: #b00020;">
+  <strong>重要インサイト：クライアントの分散は利益率の低下を招く</strong>
+  <ul style="margin-top: 8px;">
+    <li>加賀電子は <strong>多数の中小クライアントを商社時代から抱えていた結果</strong>、EMS転換後も顧客が分散しすぎて利益率が伸びにくい構造に</li>
+    <li>逆に <strong>TSMC は Apple / NVIDIA / AMD など少数の超大口に絞る</strong> ことで、ASML/TSMC帯の高利益率（25-30%）を維持</li>
+    <li><strong>本事業の示唆：</strong>Phase 1〜2 の Broker 期にあらゆる SU・メーカーに分散せず、<strong>「DC冷却の Top 10 Hyperscaler/SU + 防衛 Top 5」</strong> に集中する。クライアント数 = 利益率の上限を決める</li>
+    <li>採用・営業リソースも分散させない。<strong>「数より深さ」</strong> が Foundry 化への正しい道</li>
+  </ul>
+</div>
+</div>
+
+<h2>競合プレイヤー（既存の参考企業）</h2>
+<p>データセンター・インフラ領域ですでに巨大なポジションを持つ既存プレイヤー。直接の競合 / ベンチマーク対象。</p>
+
+<h3>Vertiv</h3>
+<p>米国の重要デジタルインフラ企業。<strong>データセンターの冷却・電力・統合管理</strong> で世界トップティア。ハイパースケーラー向けのラックインフラ、UPS、液冷システムなどを供給。NYSE上場、時価総額 $30B+ 規模。</p>
+<div class="callout"><strong>示唆：</strong>自社が狙うレイヤーをすでに押さえている。差別化は「日本のCore素材（フッ素冷媒・精密ポンプ）の独占供給」と「US Soil製造」。</div>
+
+<h3>Schneider Electric</h3>
+<p>フランスの巨大電力・制御機器メーカー。<strong>データセンターの電力管理（APC）、配電、UPS</strong> に強い。ヨーロッパ・グローバルでの存在感が圧倒的。</p>
+<div class="callout"><strong>示唆：</strong>Phase 2以降のヨーロッパ展開時の直接競合。日本の高効率変圧（富士電機等）+ US/Japan同盟というポジショニングで差別化。</div>
+
+<h3>Foxconn（鴻海精密工業）</h3>
+<p>台湾の世界最大のEMS（電子機器受託製造）。Apple製品の組立で知られるが、近年は <strong>AIサーバー・GPU基板・液冷ラック</strong> の組立で急成長。NVIDIAのGB200プラットフォームの主要パートナー。</p>
+<div class="callout"><strong>示唆：</strong>「Pure-play Foundry」モデルの最強の体現者。スケール・コスト競争では正面衝突せず、<strong>「日本素材独占 × US Soil製造 × CFIUSセキュア」</strong> の3要素で勝負する。</div>
+
+<h3>Quanta Computer</h3>
+<p>台湾のサーバーODMトップ。<strong>ハイパースケーラー向けカスタムサーバーの設計・製造</strong> で世界シェア上位。Meta、Google、AWSの主力サプライヤー。</p>
+<div class="callout"><strong>示唆：</strong>Foxconnと同じく台湾系の巨大ODM。地政学リスク（中国・台湾依存）を米政府が嫌う文脈で、自社が「US Soil代替」として刺さる余地がある。</div>
+
+<h2>Partner Candidates（日本企業）</h2>
+
+<h3>Glass</h3>
+<ul>
+  <li><strong>AGC</strong>: World top share in advanced glass technology.</li>
+</ul>
+
+<h3>HVAC & Cooling</h3>
+<ul>
+  <li><strong>Daikin</strong>: World-class HVAC and refrigerant systems.</li>
+  <li><strong>Fuji Electric</strong>: High-efficiency power conversion and cooling.</li>
+</ul>
+
+<h3>Robotics / Defense / Precision Engineering</h3>
+<ul>
+  <li><strong>Fanuc</strong>: Industrial robots, CNC, servos.</li>
+  <li><strong>Nidec</strong> (旧 Nihon Densan): Precision motors.</li>
+</ul>
+
+<h3>Next-gen Computing (Advanced Comms Semiconductor etc.)</h3>
+<ul>
+  <li><strong>Ibiden</strong>: Advanced semiconductor packaging substrates.</li>
+  <li><strong>Tokyo Electron</strong>: Semiconductor manufacturing equipment.</li>
+</ul>
+
+<h3>Frontier Biomaterials & Advanced Materials</h3>
+<ul>
+  <li><strong>Toray</strong>: Carbon fiber & composites.</li>
+  <li><strong>Fujifilm</strong>: High-purity films, photoresists, bio.</li>
+  <li><strong>Kaneka</strong>: High-performance polymers and bio.</li>
+</ul>
+
+<h2>Target Customers (US DeepTech)</h2>
+<p>Potential US Frontier / DeepTech buyers (megacaps + key startups).</p>
+
+<h3>Space</h3>
+<ul>
+  <li><strong>SpaceX</strong> (rockets & satellites)</li>
+  <li><strong>Blue Origin</strong> (rockets)</li>
+  <li><strong>Anduril</strong> (defense / space)</li>
+  <li><strong>Starcloud</strong> (orbital data center)</li>
+  <li><strong>Astranis</strong> (small comm satellites)</li>
+  <li><strong>Varda Space</strong> (orbital manufacturing)</li>
+  <li><strong>ThinkOrbital</strong> (orbital infrastructure)</li>
+  <li><strong>Apex</strong> (satellite bus)</li>
+  <li><strong>Hermeus</strong> (hypersonic)</li>
+  <li><strong>Stoke Space</strong> (reusable rockets)</li>
+</ul>
+
+<h3>Semiconductor</h3>
+<ul>
+  <li><strong>NVIDIA</strong> (GPUs / AI chips)</li>
+  <li><strong>AMD</strong> (GPUs / CPUs)</li>
+  <li><strong>Intel</strong> (CPUs / foundry)</li>
+  <li><strong>Broadcom</strong> (networking silicon)</li>
+  <li><strong>Cerebras</strong> (AI chips)</li>
+  <li><strong>Groq</strong> (inference chips)</li>
+  <li><strong>Tenstorrent</strong> (AI chips)</li>
+  <li><strong>Lightmatter</strong> (photonic compute)</li>
+  <li><strong>Etched</strong> (Transformer ASIC)</li>
+  <li><strong>SambaNova</strong> (AI chips)</li>
+</ul>
+
+<h3>Robotics</h3>
+<ul>
+  <li><strong>Boston Dynamics</strong> (general robotics)</li>
+  <li><strong>Tesla (Optimus)</strong> (humanoid)</li>
+  <li><strong>Figure</strong> (humanoid)</li>
+  <li><strong>1X</strong> (humanoid)</li>
+  <li><strong>Apptronik</strong> (humanoid)</li>
+  <li><strong>Path Robotics</strong> (welding robotics)</li>
+  <li><strong>Skydio</strong> (autonomous drones)</li>
+  <li><strong>Saildrone</strong> (autonomous ocean drones)</li>
+</ul>
+
+<h3>Fusion & Advanced Nuclear</h3>
+<ul>
+  <li><strong>Commonwealth Fusion Systems</strong> (tokamak fusion)</li>
+  <li><strong>Helion Energy</strong> (direct electric fusion)</li>
+  <li><strong>TerraPower</strong> (next-gen fission, Na-cooled)</li>
+  <li><strong>Type One Energy</strong> (stellarator fusion)</li>
+  <li><strong>Oklo</strong> (small modular reactor)</li>
+  <li><strong>Radiant Nuclear</strong> (micro reactor)</li>
+  <li><strong>Valar Atomics</strong> (high-temp gas reactor)</li>
+</ul>
+
+<h3>Data Center</h3>
+<ul>
+  <li><strong>Heron Power</strong> (power conversion)</li>
+  <li><strong>Crusoe Energy</strong> (mobile data centers)</li>
+</ul>
+
+<h3>Bio</h3>
+<ul>
+  <li><strong>Moderna</strong> (mRNA)</li>
+  <li><strong>Vertex Pharmaceuticals</strong></li>
+  <li><strong>Retro Biosciences</strong> (longevity)</li>
+  <li><strong>Verge Genomics</strong> (AI drug discovery)</li>
+  <li><strong>Eikon Therapeutics</strong> (next-gen drug discovery)</li>
+</ul>
+
+<h2>技術マッチング・ツリー（Industry × Technology × Company）</h2>
+<p>「日本のどの会社のどの技術が、US側のどの会社に刺さるか」を <strong>Industry → Technology → Supply / Demand</strong> の3階層で整理する。網羅版ではなく、フォーマットのイメージ。</p>
+
+<!-- Industry 1 -->
+<div class="industry-card">
+  <div class="industry-header">
+    <div class="industry-tag">INDUSTRY 01</div>
+    <div class="industry-name">AI Data Center</div>
+    <div class="industry-note">Currently the largest concentration of CAPEX in the world</div>
+  </div>
+
+  <div class="tech-block">
+    <div class="tech-header">Technology A: Immersion & Liquid Cooling</div>
+    <div class="tech-tag">COOLING / THERMAL MGMT</div>
+    <div class="supply-demand">
+      <div class="side side-supply">
+        <div class="side-label">Supply (Japan)</div>
+        <div class="company-row"><strong>AGC</strong> — <span class="company-role">Non-conductive fluorinated coolants</span></div>
+        <div class="company-row"><strong>Nidec</strong> — <span class="company-role">Ultra-durable liquid cooling pump modules</span></div>
+        <div class="company-row"><strong>Daikin</strong> — <span class="company-role">Heat rejection & HVAC integration</span></div>
+      </div>
+      <div class="side side-demand">
+        <div class="side-label">Demand (US)</div>
+        <div class="company-row"><strong>NVIDIA</strong> — <span class="company-role">Mandatory liquid cooling for GB200 / Rubin</span></div>
+        <div class="company-row"><strong>Crusoe Energy</strong> — <span class="company-role">Thermal mgmt for mobile DC</span></div>
+        <div class="company-row"><strong>Heron Power</strong> — <span class="company-role">High-density rack cooling integration</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tech-block">
+    <div class="tech-header">Technology B: Power Distribution & Management</div>
+    <div class="tech-tag">POWER / GRID</div>
+    <div class="supply-demand">
+      <div class="side side-supply">
+        <div class="side-label">Supply (Japan)</div>
+        <div class="company-row"><strong>Fuji Electric</strong> — <span class="company-role">Ultra-efficient transformers & switchgear</span></div>
+      </div>
+      <div class="side side-demand">
+        <div class="side-label">Demand (US)</div>
+        <div class="company-row"><strong>Heron Power</strong> — <span class="company-role">High-efficiency power conversion</span></div>
+        <div class="company-row"><strong>Crusoe Energy</strong> — <span class="company-role">Distributed DC power</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Industry 2 -->
+<div class="industry-card">
+  <div class="industry-header">
+    <div class="industry-tag">INDUSTRY 02</div>
+    <div class="industry-name">Defense & Aerospace</div>
+    <div class="industry-note">Phase 2 target — where government national security CAPEX is deployed</div>
+  </div>
+
+  <div class="tech-block">
+    <div class="tech-header">Technology C: Autonomous Precision Components</div>
+    <div class="tech-tag">PRECISION / ACTUATION</div>
+    <div class="supply-demand">
+      <div class="side side-supply">
+        <div class="side-label">Supply (Japan)</div>
+        <div class="company-row"><strong>Fanuc</strong> — <span class="company-role">Robot arms & automation lines</span></div>
+        <div class="company-row"><strong>Nidec</strong> — <span class="company-role">Ultra-small drone motors</span></div>
+      </div>
+      <div class="side side-demand">
+        <div class="side-label">Demand (US)</div>
+        <div class="company-row"><strong>Anduril</strong> — <span class="company-role">Autonomous weapons mass production</span></div>
+        <div class="company-row"><strong>Skydio</strong> — <span class="company-role">Autonomous drone actuation</span></div>
+        <div class="company-row"><strong>Saronic</strong> — <span class="company-role">Unmanned vessel precision drive</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tech-block">
+    <div class="tech-header">Technology D: Advanced Structural Materials</div>
+    <div class="tech-tag">MATERIALS / COMPOSITES</div>
+    <div class="supply-demand">
+      <div class="side side-supply">
+        <div class="side-label">Supply (Japan)</div>
+        <div class="company-row"><strong>Toray</strong> — <span class="company-role">Extreme-environment carbon fiber (CFRP)</span></div>
+        <div class="company-row"><strong>Kaneka</strong> — <span class="company-role">High-performance polyimide film</span></div>
+      </div>
+      <div class="side side-demand">
+        <div class="side-label">Demand (US)</div>
+        <div class="company-row"><strong>SpaceX</strong> — <span class="company-role">Starship structure</span></div>
+        <div class="company-row"><strong>Hermeus</strong> — <span class="company-role">Hypersonic airframe materials</span></div>
+        <div class="company-row"><strong>Anduril</strong> — <span class="company-role">UAV weight reduction</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Industry 3 -->
+<div class="industry-card">
+  <div class="industry-header">
+    <div class="industry-tag">INDUSTRY 03</div>
+    <div class="industry-name">Fusion & Advanced Nuclear</div>
+    <div class="industry-note">Long-term bet — government grant magnet</div>
+  </div>
+
+  <div class="tech-block">
+    <div class="tech-header">Technology E: High-purity Specialty Materials</div>
+    <div class="tech-tag">SPECIALTY MATERIALS</div>
+    <div class="supply-demand">
+      <div class="side side-supply">
+        <div class="side-label">Supply (Japan)</div>
+        <div class="company-row"><strong>Toray</strong> — <span class="company-role">CFRP supports for superconducting magnets</span></div>
+        <div class="company-row"><strong>Fujifilm</strong> — <span class="company-role">High-purity films & coatings</span></div>
+        <div class="company-row"><strong>AGC</strong> — <span class="company-role">Radiation-resistant specialty glass</span></div>
+      </div>
+      <div class="side side-demand">
+        <div class="side-label">Demand (US)</div>
+        <div class="company-row"><strong>Commonwealth Fusion</strong> — <span class="company-role">Tokamak magnet assembly</span></div>
+        <div class="company-row"><strong>Helion Energy</strong> — <span class="company-role">Plasma confinement parts</span></div>
+        <div class="company-row"><strong>TerraPower</strong> — <span class="company-role">High-temp core materials</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="color: var(--muted); font-size: 13px; margin-top: -8px;">※ これはフォーマットのデモ。実際は Industry × Technology のセル数を増やし、社内データベースとして運用するイメージ。</p>
+
+<h2>法人・拠点・株主</h2>
+<ul>
+  <li><strong>法人：</strong>アメリカのデラウェア州で設立
+    <ul>
+      <li><strong>これは非常に重要。</strong>日本企業である三菱商事は、米政府の深いコントラクトやグラントに入り込めない。USの商社であることによって、そういった非常に深いところにも入り込んでいける。<strong>アメリカ政府から大きいグラントを獲得することは必須。</strong></li>
+    </ul>
+  </li>
+  <li><strong>拠点：</strong>LAもしくはサンフランシスコ
+    <ul><li>製造業に強いエルセグンド、テキサスも検討余地あり</li></ul>
+  </li>
+  <li><strong>株主：</strong>
+    <ul>
+      <li>一流VC（後述「バッカー候補」参照）</li>
+      <li>日本の大手企業（三菱商事など）</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>バッカー候補：US Top Tier VC</h2>
+<p>まずトップティアのUS VCをリード投資家として入れる。America First（米国第一主義）の文脈を踏まえると、明確な役割分担が必要。</p>
+
+<h3>Founders Fund</h3>
+<p><strong>最優先のLead候補。</strong>ピーター・ティールはトランプ政権（J.D.バンス副大統領など）への最強のパイプを持つ。彼らがLeadに入れば、米政府の極秘コントラクト（国防・宇宙・エネルギー）へのアクセスが一気に開ける。</p>
+
+<h3>a16z (Andreessen Horowitz)</h3>
+<p><strong>America Great Again文脈の王様。</strong>彼らは「American Dynamism」というファンドを組み、米国の製造業、防衛、インフラへの投資を猛烈に強化している。ロビング力とPR力は全VCでNo.1。</p>
+
+<h3>Thrive Capital</h3>
+<p><strong>Tech界のニューロイヤル。</strong>ジョシュ・クシュナー（トランプの娘婿ジャレッド・クシュナーの弟）が率いるファンド。ホワイトハウスや政権中枢への「裏のルート」として、これ以上ないバックボーンになる。</p>
+
+<h3>SoftBank</h3>
+<p><strong>「デカい営業」のターボエンジン。</strong>孫正義氏の持つトランプ本人へのダイレクトパス、そして彼らの持つグローバルなAI・テックポートフォリオは魅力的。</p>
+<p>ただし、<strong>「Late stage（Series BやC以降）」</strong>で <strong>数十億ドルスケール（$Bn+）</strong>のCAPEX（設備投資資金）が必要になったタイミングで巨大な一撃（メガ・ラウンド）として引き入れるのがベスト。最初から入れると、米国VCが警戒する可能性がある。</p>
+
+<h3>日本の大企業からの直接出資</h3>
+<p>その上で、日本の大企業に直接出資をさせる。</p>
+<p>彼らがリードになると意思決定が遅くなるので、意思決定が遅くならないよう最大限の配慮をした上で、彼らに出資をさせる。</p>
+
+<h2>戦略の順番（実行シーケンス）</h2>
+<p>戦略の順番はこうだ：</p>
+<ol>
+  <li><strong>日本の企業から出資を受ける</strong></li>
+  <li><strong>それを材料にUSの会社を設立する</strong></li>
+  <li><strong>USのTier 1 VCから調達を受ける</strong></li>
+</ol>
+<div class="callout">これがスタート地点。</div>
+
+<h3>ステップ1：日本の大企業から「実利」と「LoI」を握る</h3>
+<p>いきなりFounders Fundに行っても「で、日本のメーカーを本当に動かせるの？」と突っ込まれる。まずは前述の10社（三菱商事、ファナック、AGCなど）にアプローチし、出資の前にLoI（意向表明書）や「JDA（共同開発・供給契約）」を締結する。</p>
+<p>彼らには「米国の最先端ディープテックの日本独占代理店権を一緒に作ろう。まずはデラウェア法人にCVC（コーポレートベンチャーキャピタル）からマイノリティ（数%〜10%未満）で出資してくれ」と交渉する。</p>
+<div class="callout"><strong>大企業の出資は「金」ではなく「日本のサプライチェーンを独占したという証明（実績）」として使う。</strong></div>
+
+<h3>ステップ2：米国のTop VCを競わせる（Frictionを起こす）</h3>
+<p>日本のサプライチェーンをガチガチにホールドした状態で、Founders Fundやa16zにピッチする。</p>
+<p>「SpaceXやAndurilが喉から手が出るほど欲しがっている、日本の精密加工と素材の全ルートを独占的にグリップした。Delaware法人をLeadしてくれ。ティールやマーク・アンドリーセンのロビング力で、米政府のGrant（補助金）やContract（政府契約）を引っ張ってきてくれ」</p>
+<p>彼らは今、米国内での製造サプライチェーン構築に必死。日本のコア技術が手に入ると分かれば、VC間でTerm sheet（投資条件合意書）の奪い合いが起き、バリュエーション（企業価値評価）は跳ね上がる。</p>
+
+<h2>シードラウンド戦略</h2>
+<div class="tbl-scroll"><table class="per-table">
+  <tbody>
+    <tr><td><strong>Pre-money Valuation</strong></td><td><strong>$300M</strong></td></tr>
+    <tr><td><strong>Seed Raise</strong></td><td><strong>$30M</strong>（10% dilution）</td></tr>
+  </tbody>
+</table></div>
+<p>これを達成するために必要な要素：</p>
+<ol>
+  <li><strong>理想的なファウンディングチーム（創業メンバー）</strong></li>
+  <li><strong>三菱商事のような一流企業からのLOI / MOUの締結</strong></li>
+</ol>
+
+<h2>事業の柱</h2>
+
+<h3>1. To G / To B 営業</h3>
+<ul>
+  <li>(a) 日本の企業とアメリカの新しいスタートアップを繋ぐ</li>
+  <li>(b) 特にブレイクスルー・エナジーなどとは緊密に連携</li>
+</ul>
+
+<h3>2. 政府とのリレーション構築</h3>
+<ul>
+  <li>(a) 孫正義氏のように、トランプ大統領をはじめとした米政府要人と良好な関係を築く</li>
+  <li>(b) 日本政府とも連携を深める</li>
+</ul>
+
+<h2>地政学的スタンス：日米同盟の完全なインサイダー</h2>
+<p>中国との関係性は完全に断ち切る必要がある。中国の技術に頼らずに西側諸国で戦うという、非常に強い決心が必要。</p>
+<p>これはもう日米の会社であり、中国とは完全にデカップリングする必要がある。</p>
+
+<div class="callout">
+  <strong>なぜか：</strong>
+  <ul style="margin-top:8px;">
+    <li>中国側に少しでも足をつけると、米政府のCFIUS（対米外国投資委員会）に一発でブロックされる</li>
+    <li>防衛や宇宙のコントラクトはすべて失う</li>
+    <li>現在は完全な冷戦構造</li>
+  </ul>
+</div>
+
+<p>状況を見るのではなく、<strong>「日米同盟の完全なインサイダー」</strong>として、西側諸国のサプライチェーンを独占するポジショニングにフルコミットすべき。</p>
+
+<h3>台湾・韓国は「外す」のではなく「住み分ける」</h3>
+<div class="callout">
+  <p>中国とは完全デカップリングだが、<strong>台湾・韓国を「外そう」とはしない。</strong>彼らにも明確な強みがあり、日本だけで勝とうとするのは無理。</p>
+  <ul style="margin-top: 8px;">
+    <li><strong>台湾</strong>：TSMC（半導体ファウンドリ）、Foxconn / Quanta（EMS/ODM）が圧倒的</li>
+    <li><strong>韓国</strong>：Samsung / SK Hynix（メモリ）、LG（電池・素材）が世界トップ</li>
+    <li>彼らの得意領域に踏み込まず、<strong>日本が独占する「先端素材・精密機械」のニッチにベットしきる</strong></li>
+    <li>むしろ <strong>台湾 / 韓国は「顧客」「補完パートナー」</strong> として位置付ける（Samsung HBM ラインに日本素材を流す、TSMC Arizona に日本部品を供給する等）</li>
+  </ul>
+</div>
+
+<h2>ゲームの本質</h2>
+<p>金融とロビング、そしてデカい営業。サイエンスのバックグラウンドがある程度あるメンバーを集め、金融ゲームへと戦いは移っていく。</p>
+<p>重要要素：</p>
+<ol>
+  <li>どれだけのCAPEXを積めるか</li>
+  <li>どれだけ大きいコントラクトを巻けるか</li>
+  <li>どれくらい大きいグラントを得られるか</li>
+</ol>
+<p>ファンドとしての動きにも近い。CVCとして、三菱商事や東京エレクトロン、AGCなどの大きいメーカーを巻き込むことは必須。</p>
+
+<h2>Finance視点（TAM, Valuation, Business Model）</h2>
+
+<h3>1. TAM（Total Addressable Market = 獲得可能な最大市場規模）</h3>
+<p><strong>規模：</strong>Trillions of USD。AIデータセンターの冷却インフラ、防衛ドローン、宇宙産業のハードウェア調達市場を合わせれば、ターゲットとする「コンポーネント・素材」の市場だけでも <strong>$100B+ は確実にある。</strong></p>
+
+<h3>2. 最初のBusiness Model（マネタイズの仕組み）</h3>
+<ul>
+  <li><strong>Phase 1（NRE & Retainer）：</strong>最初から工場は作れない。まずは米スタートアップから「NRE（初期開発費用）」や「リテーナー（月額顧問料）」をもらい、日本の最適な工場を探索・マッチングする。</li>
+  <li><strong>Phase 2（Margin & Tolling）：</strong>部品の調達が始まったら、そこにMargin（利益）を乗せて卸す。将来的には自社工場でのTolling fee（組み立て加工代）がメインの巨大な収益源になる。</li>
+</ul>
+
+<h3>3. Valuation（PER想定）</h3>
+<p>Fundraiseラウンドはおいておき、<strong>IPO時およびその後のマーケットでのPERは25〜30xを想定</strong>。比較的普通の水準。</p>
+
+<p><strong>類似企業のPERベンチマーク（参考）</strong></p>
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr>
+      <th>企業</th>
+      <th>カテゴリ</th>
+      <th>想定PERレンジ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>ASML</strong></td><td>Semiconductor mfg equipment (monopoly)</td><td>30〜40x</td></tr>
+    <tr><td><strong>TSMC</strong></td><td>Semiconductor foundry</td><td>20〜30x</td></tr>
+    <tr><td><strong>Tokyo Electron</strong></td><td>Semiconductor mfg equipment</td><td>25〜35x</td></tr>
+    <tr><td><strong>NVIDIA</strong></td><td>AI semiconductors</td><td>40〜60x</td></tr>
+    <tr><td><strong>Lockheed Martin</strong></td><td>Defense prime</td><td>15〜20x</td></tr>
+    <tr><td><strong>Mitsubishi Corporation</strong></td><td>Traditional trading house</td><td>8〜12x</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout">
+  <strong>示唆：</strong>
+  <ul style="margin-top:8px;">
+    <li>「伝統的商社」のPER（〜10x）に張り付かず、「Semi mfg equipment monopolies」（ASML、Tokyo Electron）のPER帯（25〜35x）を狙う。</li>
+    <li>そのためには <strong>Trading Companyではなく Deep Tech Foundry / Pure-play Foundry</strong> としてのストーリー（後述「事業モデルの転換」参照）が必須。</li>
+  </ul>
+</div>
+
+<h2>グローバルで見たときの私の強み</h2>
+
+<h3>1. 日本人としてのバックグラウンド</h3>
+<p>日本生まれ日本育ちの日本人であり、日本の産業と強い結びつきがある。日本の技術を世界に広めるという意味では、日本で生まれ育っていることは必須。</p>
+
+<h3>2. 専門性と知見</h3>
+<p>今の会社で日本のB2B向けにDXやAIのソリューションを提供しているため、比較的広いジャンルでAIや日本の大企業を理解している。また、三菱商事と強いパートナーシップを持っているため、日本の商社（トレーディングカンパニー）への理解も深い。</p>
+
+<h3>3. 国際性とポテンシャル</h3>
+<p>英語が話せるため、国際的にも勝負ができる。加えて、新しいフロンティアに挑戦し、新しい技術に対してもキャッチアップできるだけのサイエンスの素養がある。これらには時間がかかるため、若さも武器。</p>
+
+<div class="callout">これらの点から、自分は非常に優れていると考える。</div>
+
+<h2>個人的フィット（なぜこの事業か）</h2>
+<p><strong>高単価商材の卸は、不動産と同じで自分の性に合っている。</strong></p>
+<p>ただそれだけだと <strong>$70B+ スケール</strong> には届かないので、そこから <strong>製造メーカーに化ける</strong> 必要がある。</p>
+<div class="callout">Broker（高単価商材の卸） → Pure-play Foundry（製造メーカー）への転身が、個人的なフィットとスケールの両立を成立させる唯一のルート。</div>
+
+<h2>理想のFounding Team（Required Talent）</h2>
+<p>$70B+（〜$1T への軌道）を目指すなら、自分一人では不可能。最強の経営チーム（C-Suite）を組む。</p>
+<ol>
+  <li><strong>CEO（自分）：</strong>圧倒的なビジョンでVCから金を引っ張り、日米のトップと握るHustler。</li>
+  <li><strong>COO（Chief Operating Officer）：</strong>日本のドロドロした伝統的製造業や工場と交渉し、泥臭いオペレーションを完璧に回し切る人間。</li>
+  <li><strong>CTO / CXO（Tech & Experience）：</strong>ディープテックの物理や化学、素材の特性を深く理解し、米国の天才エンジニアたちと対等に技術要件のディスカッションができる人間。</li>
+</ol>
+
+<h2>課題：ブローカーで終わるリスク</h2>
+<p>ブローカーで終わるという欠点がある。</p>
+<p>右から左に流すというビジネスでは限界があり、途中で自社のアセット（IP）を構築する必要がある。これは一つ大きな課題。</p>
+
+<h2>事業モデルの転換：ブローカー → Pure-play Foundry</h2>
+<p>内製化・転換はこの事業における最大のテーマ。この事業の転換点は、ブローカーから自社内製へと切り替わるモデル。</p>
+
+<h3>TSMCの真の勝因：「Customerと絶対に競合しない」</h3>
+<p>TSMCは「ブローカーから自社製品を作る会社になった」わけではない。彼らのビジネスの絶対的なルールは <strong>「We do not compete with our customers（私たちは顧客と競合しない）」</strong>。</p>
+<ul>
+  <li>サムスンは自社でスマートフォンやチップを設計・販売しながら、他社のチップの製造も請け負っている。だからAppleは、一番のライバルであるサムスンに最新チップの設計図を渡すのをとても嫌がった。</li>
+  <li>一方でTSMCは、「我々は絶対に自社のチップを作らない。ひたすら他社の設計図を預かって『製造』だけを極める」と宣言した。だからこそ、アメリカのトップ企業は安心して彼らに極秘のIPを託せた。</li>
+</ul>
+
+<h3>我々の「内製化」の正しい形</h3>
+<div class="callout"><strong>SpaceXの競合になるような自社のロケットを作るわけではない。OEMにもならない。</strong></div>
+<p>目指すべきは、TSMCと同じ「他社のための純粋な製造・組み立て特化企業（<strong>Pure-play Foundry ODM</strong>）」。</p>
+<p>具体的には：</p>
+<div class="callout" style="border-left-color: var(--text); background: var(--surface);">
+  <strong>日本の最強素材を Black Box 内部で組み込んだ、世界一クオリティが高く、CFIUS（安全保障）的に完全にクリアな、顧客の設計通りの特注ラック / モジュールを組み立てる工場。</strong>
+  <ul style="margin-top: 10px;">
+    <li><strong>顧客設計（Customer-spec）通り</strong>に作る — OEM のように自社ブランドで売らない</li>
+    <li><strong>Black Box</strong> — IP・素材ルート・製造ノウハウは全て中で完結、外には漏れない</li>
+    <li><strong>CFIUS クリア</strong> — US Soil × US Citizens × 日米同盟内素材で防衛・宇宙コントラクトも取れる</li>
+    <li><strong>世界一クオリティ</strong> — 日本素材 + 精密加工のアドバンテージで Foxconn / Quanta と差別化</li>
+  </ul>
+</div>
+
+<h3>段階的な進化</h3>
+<ol>
+  <li><strong>現状のフロー（商社）</strong><br>材料を調達し、彼らに渡す。アメリカの企業は日本の一流の材料を自社で製造できるという状況になる。</li>
+  <li><strong>将来の展望（卸への移行 / Pure-play Foundry）</strong><br>規模が大きくなったら、我々が製造して、その製造したものを出荷するという「卸」の形態になる。</li>
+</ol>
+
+<p>具体的なステップ：</p>
+<ol>
+  <li>最初は日本の部品メーカーとアメリカのスタートアップを繋ぐ「商社」としてスタートする。</li>
+  <li>取引の規模が大きくなってきたら、自社がアメリカや日本に「最新鋭のセキュリティで守られた組み立て工場（Black Box）」を持つ。</li>
+  <li>日本の各メーカーからはバラバラの部品や素材だけを仕入れ、自社の工場で最終的な形に組み上げて、アメリカの顧客に納品する。</li>
+</ol>
+
+<h3>到達点</h3>
+<p>我々は中間に入り、日本の最先端の技術を使った工場をアメリカに建て、それらの製造を行い、アメリカの企業に輸出をするという形態を取る。</p>
+<div class="callout"><strong>アメリカに日本企業がバックについた、非常に大きな製造業の会社が立ち上がる。</strong></div>
+<p>これは非常にイケてるシナリオ。</p>
+
+<h2>Phase別 展開ロードマップ</h2>
+
+<h3>Phase 1：Space Domain Matching（Broker / Trading Company）</h3>
+<div class="phase-diagram">
+  <div class="phase-col">
+    <div class="phase-col-title">Japan Manufacturers</div>
+    <div class="phase-col-sub">Precision / Materials / Components</div>
+    <ul>
+      <li>AGC (glass)</li>
+      <li>Toray (carbon fiber & materials)</li>
+      <li>Fujifilm (materials)</li>
+      <li>Kaneka (advanced materials)</li>
+      <li>Fanuc (precision machinery)</li>
+      <li>Nidec (precision motors)</li>
+      <li>Ibiden (semi packaging)</li>
+    </ul>
+  </div>
+  <div class="phase-arrow">─►</div>
+  <div class="phase-center">
+    <div class="phase-center-title">MATCHING ZONE</div>
+    <div class="phase-center-main">Self (Broker)</div>
+    <div class="phase-center-sub">Trading Company<br>Pure Matching</div>
+  </div>
+  <div class="phase-arrow">─►</div>
+  <div class="phase-col">
+    <div class="phase-col-title">US Frontier (Space)</div>
+    <div class="phase-col-sub">SPACE</div>
+    <ul>
+      <li>SpaceX</li>
+      <li>Starcloud</li>
+      <li>Astranis</li>
+      <li>ThinkOrbital</li>
+      <li>Varda Space</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Phase 2：Beyond Space — Multi-Industry Matching</h3>
+<p>Left side (Japan) stays similar; right side (US) expands across industries.</p>
+<div class="phase-diagram">
+  <div class="phase-col">
+    <div class="phase-col-title">Japan Manufacturers</div>
+    <div class="phase-col-sub">Precision / Materials / Components</div>
+    <ul>
+      <li>AGC</li>
+      <li>Toray</li>
+      <li>Fujifilm</li>
+      <li>Kaneka</li>
+      <li>Fanuc</li>
+      <li>Nidec</li>
+      <li>Ibiden</li>
+      <li>Daikin</li>
+      <li>Fuji Electric</li>
+    </ul>
+  </div>
+  <div class="phase-arrow">─►</div>
+  <div class="phase-center">
+    <div class="phase-center-title">MATCHING ZONE</div>
+    <div class="phase-center-main">Self (Broker)</div>
+    <div class="phase-center-sub">Multi-industry<br>Trading</div>
+  </div>
+  <div class="phase-arrow">─►</div>
+  <div class="phase-col">
+    <div class="phase-col-title">US Frontier (Multi-Industry)</div>
+    <div class="phase-col-sub">EXPANDED INDUSTRIES</div>
+    <div class="industry-group">
+      <div class="industry-label">Space</div>
+      <div class="industry-companies">SpaceX / Starcloud / Astranis / ThinkOrbital / Varda Space</div>
+    </div>
+    <div class="industry-group">
+      <div class="industry-label">Defense</div>
+      <div class="industry-companies">Anduril / Saronic / Skydio / Saildrone / Hadrian</div>
+    </div>
+    <div class="industry-group">
+      <div class="industry-label">Fusion</div>
+      <div class="industry-companies">TerraPower / Helion Energy / Commonwealth Fusion / Oklo / Radiant Nuclear</div>
+    </div>
+    <div class="industry-group">
+      <div class="industry-label">Data Center</div>
+      <div class="industry-companies">Heron Power</div>
+    </div>
+    <div class="industry-group">
+      <div class="industry-label">Energy</div>
+      <div class="industry-companies">Antora Energy / Form Energy / Panthalassa</div>
+    </div>
+    <div class="industry-group">
+      <div class="industry-label">Robotics</div>
+      <div class="industry-companies">Figure / Boston Dynamics</div>
+    </div>
+  </div>
+</div>
+<p>Phase 1・2 では、自社が仲介会社として「Matching Zone」に位置する。</p>
+
+<h3>Phase 3：In-house Manufacturing (LA / Texas)</h3>
+<p>Phase 3からはCAPEXを投資し、Matching Zoneから「Manufacturing」へ変わる。</p>
+<div class="phase-diagram">
+  <div class="phase-col">
+    <div class="phase-col-title">Japan Manufacturers</div>
+    <div class="phase-col-sub">Supply components & materials</div>
+    <ul>
+      <li>AGC / Toray / Fujifilm</li>
+      <li>Kaneka / Fanuc</li>
+      <li>Nidec / Ibiden</li>
+      <li>Daikin / Fuji Electric</li>
+    </ul>
+  </div>
+  <div class="phase-arrow">─►</div>
+  <div class="phase-center">
+    <div class="phase-center-title">★ MANUFACTURING</div>
+    <div class="phase-center-main">Our Factories</div>
+    <div class="phase-center-sub">LA / Texas<br>Black Box Factory<br>Pure-play Foundry</div>
+  </div>
+  <div class="phase-arrow">─►</div>
+  <div class="phase-col">
+    <div class="phase-col-title">US Frontier Buyers</div>
+    <div class="phase-col-sub">Buy finished assemblies</div>
+    <ul>
+      <li>SpaceX / Anduril</li>
+      <li>Helion / Figure</li>
+      <li>Heron Power</li>
+      <li>...</li>
+    </ul>
+  </div>
+</div>
+<p>LA・Texasに製造拠点を作ることで、日本の最先端素材・部品を活用した <strong>高精度製造企業</strong> に変換する。</p>
+<div class="callout">このタイミングで <strong>Trading Company から「技術を自社で持つ製造業企業」へとシフト</strong> する。</div>
+
+<h2>フェーズ別 利益率と内製化のトリガー</h2>
+
+<h3>利益率の段階</h3>
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr>
+      <th>フェーズ</th>
+      <th>形態</th>
+      <th>営業利益率（目安）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Phase 1</strong></td><td>Brokerフェーズ（単純マッチング、US需要に張る）</td><td>3〜5%</td></tr>
+    <tr><td><strong>Phase 2</strong></td><td>Margin + Tolling</td><td>10〜20%</td></tr>
+    <tr><td><strong>Phase 3</strong></td><td>自社製造（Pure-play Foundry ODM）</td><td>ASML / TSMC帯（25〜30%）</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout" style="margin-top: 16px;">
+  <strong>戦略修正：独占販売権思想は捨てる。</strong>
+  <ul style="margin-top: 8px;">
+    <li>当初は「独占代理権でマージン10%」を狙うルートも想定していたが、<strong>新自由主義の終焉という大マクロを踏まえると、独占にこだわる時代は終わった</strong></li>
+    <li>むしろ <strong>「US需要にひたすら張る」</strong> こと自体が勝ち筋。US が CHIPS Act / IRA で兆ドル単位の需要を生み出している今、独占争いより US 側のシェアを最大化する方が桁違いに大きい</li>
+    <li>日本メーカーに対しても「独占をくれ」ではなく、「あなた達が作りきれない分の US 需要を一緒に取りに行こう」という共闘ポジションで握る</li>
+  </ul>
+</div>
+
+<h3>タイミング戦略</h3>
+<ul>
+  <li>アメリカで工場を作るタイミングが極めて重要。<strong>3年目あたり</strong>で作る必要がある。</li>
+  <li>つまり、<strong>最初の3年で卸として大量の契約を取る</strong>必要がある。</li>
+  <li><strong>この期間は営業利益は無視していい。</strong>量とリレーション獲得に全振り。</li>
+</ul>
+
+<h3>内製化（自社工場建設）の3つのトリガー</h3>
+<p>工場を建てるべき「正しいタイミング」を見極める。</p>
+
+<h4 style="margin-top:18px; font-weight:700; font-size:14px;">Trigger 1：「PoC（概念実証）」から「Rollout（大量展開）」への切り替わり</h4>
+<p>最初はAWSやCoreWeaveの特定のデータセンターの「1ラック」や「1フロア」だけで、自社が持ち込んだ日本の冷却パッケージがテスト（PoC）される。</p>
+<p>それが成功し、彼らが「よし、次の新しいデータセンターにはこのシステムを <strong>標準採用（Standardize）</strong> する」と言った瞬間がトリガー。日本からの空輸や手作業の統合では絶対に生産が追いつかなくなる。</p>
+
+<h4 style="margin-top:18px; font-weight:700; font-size:14px;">Trigger 2：US政府・国防総省（DoD）の要件が絡んだ時</h4>
+<p>自社の冷却システムやドローン部品が、US政府の極秘プロジェクト（GovCloudやAndurilの軍事コントラクト）に採用される可能性が出た時。</p>
+<p>彼らは <strong>「US国内（US Soil）で、US市民（US Citizens）の手によって組み立てられ、監査されたハードウェア」</strong> であることを契約条件にしてくる。これが自社工場を建てる最強の理由（大義名分）になる。</p>
+
+<h4 style="margin-top:18px; font-weight:700; font-size:14px;">Trigger 3：日本のメーカーが「内製化の限界」を迎えた時</h4>
+<p>AGCやNidecが「アメリカからの注文が多すぎて、日本国内の自分達の工場だけでは作りきれない」と悲鳴を上げた時。</p>
+<p>自社は「じゃあ、IP（知的財産）とコア素材だけアメリカに送ってください。我々がUSの自社工場で組み立てて完成させます」と提案し、彼らの製造プロセスの一部を <strong>Offload（移管）</strong> させる。</p>
+
+<h2>30年後のビジョン：1 Trillion Dollar Company</h2>
+
+<h3>到達イメージ</h3>
+<p>日本の最先端技術を <strong>aggregate（集約）</strong> し、<strong>LA / Texas / Germany</strong> で組み立て、アメリカ・ヨーロッパの巨大企業に <strong>高精度な部品を卸す企業</strong> になっている。</p>
+<p>Brokerの時と違い、<strong>「組み立て」という付加価値工程が入るため、営業利益率は30%程度まで上がる。</strong></p>
+<p>基本は大手企業を顧客とするため <strong>TSMCに近い構造</strong>。多いところは <strong>1社で年間 $2B ほど発注</strong> してくれる。ターゲットはハイパースケーラー（AWS、Microsoft Azure、Google Cloud）など。</p>
+
+<h3>数字のロジック</h3>
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr>
+      <th>指標</th>
+      <th colspan="2">数値</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Revenue</td><td colspan="2"><strong>$130B</strong></td></tr>
+    <tr><td>Operating Profit（Margin 30%）</td><td colspan="2"><strong>$40B</strong></td></tr>
+    <tr><td>PER</td><td colspan="2">25x</td></tr>
+    <tr><td>Market Cap</td><td colspan="2"><strong>$1 Trillion</strong></td></tr>
+  </tbody>
+</table></div>
+
+<h4 style="margin-top:18px; font-weight:700; font-size:14px;">解説</h4>
+<ul>
+  <li><strong>Revenue $130B / OP $40B（Margin 30%）：</strong>単なる「組み立て屋」なら利益率は一桁だが、日本の代替不可能なCore Technology（中核技術）を独占し、設計から統合までを支配すれば、営業利益率30%は絶対に可能（現在のASMLやTSMCがまさにその水準）。</li>
+  <li><strong>PER 25x で $1 Trillion：</strong>OP $40B × PER 25 = $1T。Apple、Microsoft、NVIDIA、そしてTSMCが属する「神々の領域」。<strong>西側諸国のインフラを支える企業なら、PER 25 はむしろConservative（控えめ）な評価。</strong></li>
+</ul>
+
+<h3>「1社で年間 $2B の発注」は現実的か？</h3>
+<p>ターゲットは間違いなく <strong>AWS、Microsoft Azure、Google Cloudといったハイパースケーラー</strong> たち。</p>
+<p>彼らは現在、AIデータセンターの建設（CAPEX）に、<strong>1社あたり年間 $33〜53B</strong> という桁外れの資金を突っ込んでいる。</p>
+<div class="callout">LAやTexasの工場で作られた「最強の冷却・電力パッケージ」が彼らのデータセンターの <strong>Lifeline（命綱）</strong> になるなら、彼らが <strong>年間 $2B を自社1社に支払うことは、ビジネスの規模として完全に辻褄が合う</strong>。<br>むしろ「安いくらいだ」と言って喜んで買うだろう。</div>
+
+<h3>成長マイルストーン（Year 1 → Year 30）</h3>
+<div style="overflow-x: auto;">
+<div class="tbl-scroll"><table class="per-table milestone-table">
+  <thead>
+    <tr>
+      <th>年数</th>
+      <th>フェーズのテーマ</th>
+      <th>売上</th>
+      <th>営業利益（OP）</th>
+      <th>利益率</th>
+      <th>PER</th>
+      <th>時価総額</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Year 1</strong></td><td>The Wedge（独占契約と初受注）</td><td>$15M</td><td>$1.5M</td><td>10%</td><td>40x</td><td>$60M</td></tr>
+    <tr><td><strong>Year 2</strong></td><td>The Traction（US展開の死闘）</td><td>$55M</td><td>$6.5M</td><td>12%</td><td>40x</td><td>$260M</td></tr>
+    <tr><td><strong>Year 3</strong></td><td>The Unicorn（統合設計へのピボット）</td><td>$200M</td><td>$30M</td><td>15%</td><td>40x</td><td>$1.2B</td></tr>
+    <tr><td><strong>Year 5</strong></td><td>The Foundry（自社工場稼働）</td><td>$670M</td><td>$100M</td><td>15%</td><td>40x</td><td>$4B</td></tr>
+    <tr><td><strong>Year 10</strong></td><td>US Dominance（安全保障インフラ）</td><td>$5.3B</td><td>$1.05B</td><td>20%</td><td>35x</td><td>$37B</td></tr>
+    <tr><td><strong>Year 15</strong></td><td>NASDAQ IPO（欧州展開）</td><td>$13B</td><td>$3.3B</td><td>25%</td><td>30x</td><td>$100B</td></tr>
+    <tr><td><strong>Year 20</strong></td><td>Cross-Industry（防衛・宇宙）</td><td>$33B</td><td>$9.3B</td><td>28%</td><td>28x</td><td>$260B</td></tr>
+    <tr><td><strong>Year 30</strong></td><td>Absolute Monopoly（絶対王者）</td><td>$130B</td><td>$40B</td><td>30%</td><td>25x</td><td><strong>$1T</strong></td></tr>
+  </tbody>
+</table></div>
+</div>
+
+<div class="callout">
+  <strong>示唆：</strong>
+  <ul style="margin-top:8px;">
+    <li>序盤（Year 1〜5）は <strong>PER 40x</strong> の高成長期待で時価総額をブースト。</li>
+    <li>Year 5の自社工場稼働を境に、利益率がじわじわ 15% → 30% へ拡大。</li>
+    <li>Year 15のNASDAQ IPO・欧州展開で $100Bラインを突破。</li>
+    <li>Year 30に <strong>$1 Trillion（神々の領域）</strong> に到達。</li>
+  </ul>
+</div>
+
+<h2>欠点（Weaknesses）& 潰した方がいい点</h2>
+
+<h3>1. 欠点：Working Capital（運転資金）の重さ</h3>
+<p>モノを動かすビジネスは、日本の工場に先払いし、アメリカの顧客から後で回収するキャッシュフローのズレが起きる。成長すればするほど現金がショートする「黒字倒産」のリスクがある。</p>
+<div class="callout"><strong>金融機関からのデット（借入）の戦略が必須。</strong></div>
+
+<h3>2. 潰した方がいい点：「商社」というワード</h3>
+<p>アメリカのトップVCにピッチする際、<strong>「Trading company（商社）」という言葉は今すぐゴミ箱に捨ててくれ。</strong>彼らは中抜きのブローカーには投資しない。</p>
+<p>今日から会社は <strong>「Deep Tech Foundry（ディープテック特化の製造拠点）」</strong> または <strong>「Supply Chain Infrastructure（サプライチェーン・インフラ）」</strong> だ。</p>
+
+<h3>3. 潰した方がいい点：ターゲットの広さ</h3>
+<p>最初から「宇宙もデータセンターも防衛も」と広げるのはFatal（致命的）。リソースが分散する。</p>
+<p>まずは「AIデータセンターの冷却システム」など、今すぐ一番金が動く領域（One single agenda）に絞り、そこで圧倒的な成功事例（Traction）を作るべき。</p>
+
+<h2>残っている問い</h2>
+
+<div class="question-block">
+  <div class="label">Question 1</div>
+  <h3>三菱商事はなぜ今やっていないのか</h3>
+  <ul>
+    <li><strong>ブレイクスルー・エナジー</strong>（ビル・ゲイツが作ったディープテックのファンド）：シリーズCには三菱商事が基本的には入っている。核融合技術であったり、新しい技術にはどんどん三菱商事が関わっている。</li>
+    <li><strong>ファウンダーズ・ファンド</strong>：同様。</li>
+  </ul>
+  <p>彼らはなぜできないのか。深く考える必要がある。</p>
+  <p><strong>仮説：利益相反的なジレンマ</strong></p>
+  <p>三菱商事は既存のエネルギー、石炭、鉄鉱石など、イノベーションによって破壊される領域に大きくベットしている。そのため、宇宙のデータセンター事業であったり、新しいエネルギーである核融合の領域にはベットしづらいというのが現状。</p>
+</div>
+
+<div class="question-block">
+  <div class="label">Question 2</div>
+  <h3>宇宙領域の需要</h3>
+  <p>スペースXをはじめとするアメリカの宇宙トップ企業が、本当に日本の素材を必要とするか。</p>
+  <p>スペースXはエンジニアリングのほとんどを内製しているはず。テスラなどは電池でパナソニックを採用しているが、宇宙領域で実際に日本の素材が求められているかは、改めて詳しく調べる必要がある。</p>
+</div>
+
+<div class="question-block">
+  <div class="label">Question 3</div>
+  <h3>そもそも宇宙から始めるべきか（参入順序）</h3>
+  <p>$10B+ Company への最短ルートを進むなら、今まさにアメリカで狂ったような需要がある領域 — 例えば：</p>
+  <ul>
+    <li><strong>データセンター向けの次世代冷却技術・電力インフラ</strong></li>
+    <li><strong>防衛テック（ドローン量産）に必要な日本の精密加工パーツの独占供給</strong></li>
+  </ul>
+  <p>など、今すぐ大金が動く領域（Cash cow）を1つ、最初に強烈にホールドするべきではないか。</p>
+
+  <p><strong>サイクルの問題：</strong></p>
+  <p>まず最初の1年から3年で、労働集約的に何回もトレーディングカンパニーとして商い（紹介）をしなければならない。そこを宇宙から始めることによって、サイクルが長くなりすぎるという可能性はないか。</p>
+  <p>データセンター向けの次世代冷却技術やインフラなどは面白いかもしれない。これは検討の余地がある。</p>
+</div>
+
+</div><!-- /#tab-main -->
+
+<div id="tab-knowledge" class="tab-content">
+
+<h2>ナレッジ・補足</h2>
+<p>メインコンテンツに収まらない、構造理解・直感的なナレッジを蓄積する場。Q&A 形式の問答は <strong>QA タブ</strong> に分離。</p>
+
+<h2>マクロ経済の文脈：新自由主義の終焉と本事業</h2>
+<p>本事業をマクロ経済学から捉える。<strong>新自由主義（Neoliberalism）の時代が終わりに向かっており</strong>、Ray Dalio「世界秩序が変わる時」が描く通り、現在の世界経済は <strong>1920年代の世界恐慌前夜と構造的に酷似</strong> している。</p>
+
+<h3>歴史的アナロジー：1920s vs 2020s</h3>
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr><th>時代</th><th>経済思想</th><th>結末 / 結果</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>1920年代</strong></td>
+      <td>自由放任主義（Laissez-faire）</td>
+      <td>世界恐慌 → ブロック経済 → 国家インフラ投資（<strong>ニューディール政策</strong>）</td>
+    </tr>
+    <tr>
+      <td><strong>2020年代</strong></td>
+      <td>新自由主義（Neoliberalism）の終焉</td>
+      <td>地政学リスク顕在化 → 経済圏分断 → 国家インフラ投資加熱（<strong>CHIPS Act / IRA / EU Chips Act</strong>）</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<h3>現代マクロの2大テーマ</h3>
+<ol>
+  <li><strong>国家インフラへの投資加熱</strong>
+    <ul>
+      <li>CHIPS Act ($52B)、Inflation Reduction Act ($369B)、EU Chips Act (€43B)</li>
+      <li>半導体・エネルギー・防衛・宇宙への政府マネー集中</li>
+      <li>民間VCのDeep Tech巨額ベットも同方向</li>
+    </ul>
+  </li>
+  <li><strong>地政学リスクへの懸念再強化</strong>
+    <ul>
+      <li>中国デカップリング</li>
+      <li>CFIUS厳格化</li>
+      <li>サプライチェーンの「友達連合」化（Friend-shoring）</li>
+    </ul>
+  </li>
+</ol>
+
+<h3>本事業への3つの示唆</h3>
+<div class="callout">
+  <ul style="margin-top: 4px;">
+    <li><strong>① LLM / モバイルのような「開かれた世界」前提は危険</strong> — 中国製・台湾製では入れない領域が急拡大</li>
+    <li><strong>② サプライチェーンは分断される前提で設計</strong> — US Soil製造、CFIUS準拠、Friend-shoring内に閉じる</li>
+    <li><strong>③「日本の製造業 × 重厚インフラ」は最高のタイミング</strong> — 国家インフラ投資加熱 + 地政学リスク回避ニーズ、その両方が同時に追い風</li>
+  </ul>
+  <p style="margin-top: 10px;"><strong>要するに：本事業は新自由主義の終焉と次の時代（国家主導 + 地政学考慮）の境目で、最も追い風を受けるポジションにある。</strong></p>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">アメリカは製造業が弱いのか？</div>
+  <div class="knowledge-a">
+    <p>ウォール街の教えは「マージン（利益率）にフォーカスせよ」。その結果、製造はアジアに任せたのが事実。</p>
+    <p>製造は資本効率が悪く、人件費・設備・在庫リスクを抱える。米国の経営は <strong>「設計・IP・ブランド」を米国に残し、「製造」をアジアに分業</strong> させることで株主価値を最大化してきた。</p>
+    <p>結果として米国本土には製造能力が空洞化し、現在の「Reshoring（製造回帰）」と「サプライチェーン安全保障」の文脈に繋がっている。</p>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">精密機械や部品をアジアに頼るとはいえ、その大半は中国・韓国では？ 日本はそもそも必要とされているのか？</div>
+  <div class="knowledge-a">
+    <p>「ボリューム（量）」で言えば、確かに中国と韓国が圧倒的。しかし、<strong>「彼ら（中韓）も日本の素材や装置がなければ、1日も工場を動かせない」</strong>という構造になっている。</p>
+    <p>これはビジネスとしては理にかなっている。<strong>高単価・高技術の商材を扱う方がやりやすい。</strong>ASMLが分かりやすい例。</p>
+    <p>大量生産が強い中国・台湾・韓国に比べ、大量生産の体力がなかったからこそ、<strong>技術力の高さ・最先端さのみを磨いてきた</strong>のが日本のストーリー。</p>
+
+    <div class="case-box">
+      <div class="case-label">CASE 01 — 半導体メモリ（HBM）</div>
+      韓国のSamsungやSK Hynixは、AIに必須のメモリ（HBM）で世界シェアのほとんどを握っている。一見、韓国の圧勝に見える。<br><br>
+      しかし、そのメモリを作るためには、日本の <strong>東京エレクトロン</strong> の製造装置が必要で、<strong>イビデン</strong> の最先端基板が必要で、<strong>AGCやJSR</strong> の特殊な化学素材（フォトレジストやフッ素化合物）が絶対に欠かせない。
+    </div>
+
+    <div class="case-box">
+      <div class="case-label">CASE 02 — 日韓輸出管理問題（2019）</div>
+      数年前に日本政府が韓国への化学素材の輸出を少し制限しただけで、韓国の半導体産業がパニックになった事件（フッ素化ポリイミドなどの輸出管理問題）が、そのパワーバランスを証明している。
+    </div>
+
+    <div class="case-box">
+      <div class="case-label">CASE 03 — AIデータセンター冷却</div>
+      中国や台湾がどれだけ大きな液冷サーバーを組み立てようとも、その中に入れる「絶対にショートしない魔法の液体」（<strong>AGCのフッ素冷媒</strong>）や、「24時間365日ノーメンテで回り続ける超精密ポンプ」（<strong>Nidec</strong>）は、日本から仕入れるしかない。
+    </div>
+
+    <p>結論：<strong>ボリュームでは中韓、レイヤーで一段深い「素材・装置」では日本が独占</strong>。商社が握るべきは後者。</p>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">地政学リスクを気にするのはDoD（国防総省）やAndurilのような防衛企業だけだろ？ AWSやCoreWeaveのような民間企業は、安くて早ければ中国製でも台湾製でも気にしない。わざわざ高い『日本ルート』を使う理由があるのか？</div>
+  <div class="knowledge-a">
+    <p><span class="label">OPEN QUESTION</span></p>
+    <p>この問いは保留。今後のリサーチで深掘りする論点として置いておく。</p>
+  </div>
+</div>
+
+<h2>総合商社を深く理解する</h2>
+<p>三菱商事・三井物産・伊藤忠・住友商事・丸紅。本事業の <strong>「最も近い既存プレイヤー」</strong> でありながら、<strong>本事業と完全には競合しない</strong>。理解度が事業設計の精度を決める。</p>
+
+<h3>1. この事業と似たことをしているか？</h3>
+<p><strong>結論：似ているが、深さと領域が違う。</strong>商社は「日米架け橋」「投資×トレード」「素材調達」を既に大規模に実施しているが、<strong>ディープテック × 米国 SU ルート × 精密技術ニッチ</strong>には踏み込めていない。</p>
+
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr><th>軸</th><th>総合商社</th><th>本事業</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>顧客層</strong></td>
+      <td>大企業・国家・電力・自動車・素材産業</td>
+      <td>米ディープテック SU + Hyperscaler + 防衛</td>
+    </tr>
+    <tr>
+      <td><strong>商材</strong></td>
+      <td>エネルギー / 資源 / 食料 / 化学品 / インフラ</td>
+      <td>精密素材 / 部品 / モジュール / 完成ラック</td>
+    </tr>
+    <tr>
+      <td><strong>取引単位</strong></td>
+      <td>千億〜兆円規模、複数年</td>
+      <td>$2-50M / 案件、年間 $100M+ で大口</td>
+    </tr>
+    <tr>
+      <td><strong>投資形態</strong></td>
+      <td>大型M&A、JV出資（20-50%）</td>
+      <td>SU マイノリティ出資 + 自社 Foundry</td>
+    </tr>
+    <tr>
+      <td><strong>技術理解</strong></td>
+      <td>表層的（営業力でカバー）</td>
+      <td>サイエンス深層理解（CTO級必須）</td>
+    </tr>
+    <tr>
+      <td><strong>具体例</strong></td>
+      <td>三菱商事 × Breakthrough Energy（ビル・ゲイツファンド）、三井物産 × Tesla 蓄電、伊藤忠 × Tesla Energy</td>
+      <td>未着手領域（既存商社が踏み込めない隙間）</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<div class="callout" style="margin-top: 12px;">
+  <strong>重なっている部分：</strong>三菱商事はディープテックVC（Breakthrough Energy SC、Founders Fund 等）に既にLP参加。CVC（Diamond Edge Ventures）も持つ。<strong>同じ「川上」にはアクセスしている。</strong>
+  <br><br>
+  <strong>違う部分：</strong>商社は「VCに金を入れて配当をもらう」段階で止まる。<strong>「自社で SU と日本素材を統合して US で組み立てる」</strong>事業実装には踏み込めていない。
+</div>
+
+<h3>2. なぜ商社は本事業をできないか？</h3>
+
+<h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">構造的な7つの理由</h4>
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr><th>理由</th><th>内容</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>① 利益相反</strong></td>
+      <td>既存の石炭・鉄鉱石・LNG・自動車部品など、<strong>イノベーションで破壊される領域に巨額ベット中</strong>。核融合や軌道DCに本気で張ると本業を共食いする</td>
+    </tr>
+    <tr>
+      <td><strong>② 意思決定速度</strong></td>
+      <td>稟議文化、大企業官僚制。<strong>SU 案件は週単位で動くが、商社は月〜四半期単位</strong>。決裁スピードがミスマッチ</td>
+    </tr>
+    <tr>
+      <td><strong>③ PER 8-12x の評価圧力</strong></td>
+      <td>上場大企業として、赤字 SU 出資や巨額 CAPEX が <strong>株主から評価されにくい</strong>。Kioxia 型のリスクテイクは Bain Capital だからできた</td>
+    </tr>
+    <tr>
+      <td><strong>④ 専門人材の不足</strong></td>
+      <td>営業エースは商品トレーディング出身。<strong>ディープテックの技術評価 + 米国SU文化理解</strong>を併せ持つ人材が中央営業部にいない</td>
+    </tr>
+    <tr>
+      <td><strong>⑤ CFIUS / 国家安全保障</strong></td>
+      <td>日本企業が US Soil 製造を主導しようとすると、<strong>米政府から見て「外国企業」扱い</strong>。本事業は Delaware 法人で「米国企業」として扱われる優位性</td>
+    </tr>
+    <tr>
+      <td><strong>⑥ 規模の罠</strong></td>
+      <td>商社は案件単位 $100M+ でないと動かない。<strong>$1-5M レンジの SU 取引や精密部品ニッチを拾えない</strong>（売上数兆円の組織には小さすぎる）</td>
+    </tr>
+    <tr>
+      <td><strong>⑦ 既存サプライヤー関係</strong></td>
+      <td>商事は <strong>既存大手取引先（自動車・電機・素材）を切れない</strong>。新興 SU と既存大手が競合する案件で板挟み</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<div class="callout" style="margin-top: 12px;">
+  <strong>「商社にできないからこそ、本事業が成立する」</strong>のシンプルな構図。Kyo の「日本×米国×サイエンス×SU 文化」の組み合わせは、既存商社では稀少。
+</div>
+
+<h3>3. 商社との組み方</h3>
+
+<p>本事業は商社の <strong>競合ではなく補完</strong>。組み方には複数のレイヤーがある。</p>
+
+<h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">階層別の組み方マトリクス</h4>
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr><th>組み方</th><th>具体内容</th><th>本事業のフェーズ</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>① Angel 投資（個人）</strong></td>
+      <td>商事の常務クラスがエンジェルとして参加（既に三菱商事常務・イラン300億円実績の人物が決定）</td>
+      <td>Seed</td>
+    </tr>
+    <tr>
+      <td><strong>② CVC 出資</strong></td>
+      <td>Diamond Edge Ventures（三菱）、ITOCHU Tech Ventures などからマイノリティ出資（5〜10%）</td>
+      <td>Seed〜Series A</td>
+    </tr>
+    <tr>
+      <td><strong>③ 業界スポンサー</strong></td>
+      <td>商事 LP として ファンド組成に参加、または直接 Series B+ で大口出資</td>
+      <td>Series B+</td>
+    </tr>
+    <tr>
+      <td><strong>④ JV / 合弁会社</strong></td>
+      <td>Phase 3 の Foundry を商事と 50:50 で設立（DC冷却・防衛などインダストリー別）</td>
+      <td>Phase 3</td>
+    </tr>
+    <tr>
+      <td><strong>⑤ サプライチェーン補完</strong></td>
+      <td>商事の既存 US 拠点・物流網・関税処理を活用（競合せず）</td>
+      <td>全フェーズ</td>
+    </tr>
+    <tr>
+      <td><strong>⑥ クロスセル</strong></td>
+      <td>商事の Breakthrough Energy 等の SU ポートフォリオに日本素材を紹介、本事業がディール実装</td>
+      <td>Phase 1〜2</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">商社別のスタンス</h4>
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr><th>商社</th><th>強み</th><th>本事業との相性</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>三菱商事</strong></td>
+      <td>エネルギー・素材・Breakthrough Energy LP、DC事業部新設、CVC Diamond Edge</td>
+      <td>◎ <strong>最優先パートナー</strong>（既に角谷常務でエンゲージ）</td>
+    </tr>
+    <tr>
+      <td><strong>三井物産</strong></td>
+      <td>金属・電池材料・水素・LNG、Tesla 蓄電パートナー</td>
+      <td>○ 次点、防衛・宇宙領域で組む可能性</td>
+    </tr>
+    <tr>
+      <td><strong>伊藤忠商事</strong></td>
+      <td>Tesla Energy、繊維（東レ親密）、食料・繊維強い</td>
+      <td>△ 防衛弱い、繊維/素材で限定的連携</td>
+    </tr>
+    <tr>
+      <td><strong>住友商事</strong></td>
+      <td>銅・電池材料（Sumitomo Metal Mining）、不動産</td>
+      <td>△ DC・電池ルートでスポット連携</td>
+    </tr>
+    <tr>
+      <td><strong>丸紅</strong></td>
+      <td>電力・穀物、米国電力卸</td>
+      <td>△ DC電力ルートでスポット連携</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">推奨アプローチ</h4>
+<div class="callout" style="margin-top: 8px;">
+  <ol style="margin-left: 24px; margin-top: 4px;">
+    <li><strong>三菱商事をフル巻き込み</strong>：Angel + CVC + JV + サプライチェーン補完を1社で全部やる「アンカー商社」化</li>
+    <li><strong>他商社はスポット案件のみ</strong>：複数商社を平等に扱うと意思決定が複雑化、ロイヤルティが分散</li>
+    <li><strong>商社を「顧客」ではなく「パートナー」として扱う</strong>：彼らの強み（資金・既存関係・物流）を借り、我々の強み（SUルート・精密技術・US Soil）を提供</li>
+    <li><strong>商社の最大の懸念「自分達の事業領域を侵食されないか」を払拭</strong>：明確な棲み分け（彼らは大口 / 我々は精密ニッチ）をピッチで強調</li>
+  </ol>
+</div>
+
+<h2>フェーズ別 Moat（競争優位の源泉）</h2>
+<p>各フェーズで「何が会社を守る堀（Moat）」になるかは決定的に異なる。採用・組織設計・投資判断はすべて、そのフェーズのMoatに沿って行う。</p>
+
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr>
+      <th>フェーズ</th>
+      <th>形態</th>
+      <th>Moat</th>
+      <th>必要なケイパビリティ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Trading Company Phase</strong><br>(Phase 1〜2)</td>
+      <td>Broker / Matching</td>
+      <td><strong>営業力 × 政治力</strong></td>
+      <td>日米双方のトップとの関係構築、ロビング、To G、独占代理権の獲得</td>
+    </tr>
+    <tr>
+      <td><strong>Foundry Phase</strong><br>(Phase 3)</td>
+      <td>Pure-play Foundry</td>
+      <td><strong>技術力</strong></td>
+      <td>素材・部品・組立技術、Black Box工場の運営、生産歩留まり、品質管理</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<div class="callout" style="margin-top: 16px;">
+  <strong>採用への示唆：</strong>
+  <ul style="margin-top: 8px;">
+    <li><strong>Year 1〜5</strong>：営業力 × 政治力に振り切ったチーム構成（Hustler CEO + To G人材 + 日本大企業ハンドラー）</li>
+    <li><strong>Year 5〜</strong>：技術力にシフト。ASML / TSMC OB、xAI / SpaceX エンジニア、製造プロセスのプロを採用</li>
+    <li>採用候補リスト（[[hiring]]）の Joining フィールドが「Year 5+」になっているのは、このMoat転換に対応している</li>
+  </ul>
+</div>
+
+<div class="callout" style="margin-top: 16px;">
+  <strong>VC ピッチへの示唆：</strong>
+  <ul style="margin-top: 8px;">
+    <li>Seed〜Series A では <strong>「営業 × 政治」のMoat</strong> を語る（LoI / JDA、政府リレーション、Founders Fund × Thiel系の信頼）</li>
+    <li>Series C〜D では <strong>「技術 × Black Box」のMoat</strong> に語り口を変える（特許、製造プロセス、歩留まり、CAPEX回収）</li>
+    <li>このストーリーチェンジを正しく演じられないと、Series B あたりで「君たちは商社じゃないのか？」と疑われて伸び悩む</li>
+  </ul>
+</div>
+
+<h2>OEM / ODM / EMS / Foundry の違い（前提知識）</h2>
+<p>「製造業の商社」を設計する上で、サプライチェーンの階層を正確に理解しておく必要がある。4つの専門用語は混同されがちだが、<strong>価値・利益率・ポジショニング</strong>がまったく違う。</p>
+
+<h3 style="font-weight: 700; margin-top: 12px; margin-bottom: 8px;">2軸で整理する</h3>
+<p style="font-size: 13.5px;">本質的な違いは <strong>2軸</strong> に集約される：</p>
+<ul style="margin-left: 24px;">
+  <li><strong>① 設計をやるか？</strong></li>
+  <li><strong>② 完成品を作るか（それともコンポーネントだけか）？</strong></li>
+</ul>
+<div class="tbl-scroll"><table class="per-table" style="margin-top: 12px;">
+  <thead>
+    <tr><th></th><th>設計あり</th><th>設計なし（顧客設計に従う）</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>完成品を作る</strong></td>
+      <td><strong>OEM</strong>（自社ブランド）<br><strong>ODM</strong>（顧客ブランド）</td>
+      <td><strong>EMS</strong></td>
+    </tr>
+    <tr>
+      <td><strong>コンポーネントのみ</strong></td>
+      <td>—（稀、Fabless 設計企業がこの層に近い：NVIDIA等）</td>
+      <td><strong>Foundry</strong></td>
+    </tr>
+  </tbody>
+</table></div>
+
+<div class="tbl-scroll"><table class="per-table" style="margin-top: 20px;">
+  <thead>
+    <tr>
+      <th>用語</th>
+      <th>正式名</th>
+      <th>役割</th>
+      <th>価値構造</th>
+      <th>代表例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>OEM</strong></td>
+      <td>Original Equipment Manufacturer</td>
+      <td><strong>ブランドを持ち、完成品を売る企業</strong>。仕様・設計を主導し、必要に応じて自社製造 or 外注。最終ユーザーと直接接点。</td>
+      <td>営業利益率 高（ブランド・知財・サポート）</td>
+      <td>Dell, HPE, Lenovo, Supermicro, Cisco</td>
+    </tr>
+    <tr>
+      <td><strong>ODM</strong></td>
+      <td>Original Design Manufacturer</td>
+      <td><strong>設計と製造を両方引き受ける、完成品を作る</strong>。OEMの仕様を受けて設計〜組立までフル実行。OEMブランドで出荷。</td>
+      <td>営業利益率 中（設計・量産技術で差別化）</td>
+      <td>Quanta, Wiwynn, Inventec, Compal</td>
+    </tr>
+    <tr>
+      <td><strong>EMS</strong></td>
+      <td>Electronics Manufacturing Services</td>
+      <td><strong>顧客設計通りに組み立てる、完成品を作る</strong>。設計はOEM側、EMSはひたすら組立・テスト。コモディティ化しやすい。</td>
+      <td>営業利益率 低（量とコスト勝負）</td>
+      <td>Foxconn, Flex, Jabil, Sanmina</td>
+    </tr>
+    <tr>
+      <td><strong>Foundry</strong></td>
+      <td>Semiconductor / Component Foundry</td>
+      <td><strong>顧客設計通りにコンポーネント（半導体ウェハ等）を製造する</strong>。完成品は作らない。Pure-play 型は顧客と絶対競合しない。</td>
+      <td>営業利益率 非常に高（独占技術・装置投資）</td>
+      <td><strong>TSMC</strong>, GlobalFoundries, UMC, SMIC</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<div class="callout" style="margin-top: 12px;">
+  <strong>TSMC は ODM / EMS ではなく Foundry</strong>。完成品（サーバーやスマホ）は作らず、<strong>半導体チップというコンポーネント</strong>を顧客（Apple, NVIDIA, AMD）の設計通りに製造するだけ。だから顧客と絶対競合しない → 高利益率を維持できる。
+</div>
+
+<h3 style="margin-top: 32px;">階層イメージ（DCサプライチェーン）</h3>
+<div class="callout" style="font-family: 'Poppins', monospace; font-size: 13px; line-height: 1.8;">
+  <strong>Component Supplier</strong>（Kioxia / NVIDIA / Intel / AGC / Toray など）<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;↓ 部品・素材<br>
+  <strong>EMS / ODM</strong>（Foxconn / Quanta / Wiwynn など）<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;↓ 組立済みサーバー / ラック<br>
+  <strong>OEM</strong>（Dell / HPE / Lenovo / Supermicro）<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;↓ ブランド完成品<br>
+  <strong>End User / Hyperscaler</strong>（AWS / Azure / GCP / Meta）
+</div>
+
+<h3 style="margin-top: 32px;">最近の構造変化：Hyperscaler の ODM 直販</h3>
+<p>AWS / Meta / Google などのハイパースケーラーは <strong>OEMをスキップし、Quanta などのODMから直接買う</strong>動きが主流化。「White Box Server」と呼ばれる。理由：</p>
+<ul style="margin-left: 24px;">
+  <li>Dell/HPEのブランドマージン（10〜20%）を払う価値がない</li>
+  <li>自社で運用ノウハウがあるためサポートも不要</li>
+  <li>カスタム設計を ODM に直注文した方が要件にフィット</li>
+</ul>
+<p style="margin-top: 12px;">結果、<strong>OEMは「中間業者」として圧迫されつつあり、ODMが力をつけている</strong>。NVIDIAのGB200ラックも、Foxconn / Quanta が主要組立パートナー。</p>
+
+<h3 style="margin-top: 32px;">本事業のポジショニング示唆</h3>
+<div class="callout">
+  <ul style="margin-top: 4px;">
+    <li><strong>Phase 1〜2 では Component Supplier の上に立つ「Tier 0.5」</strong>：日本素材・部品を US 顧客（OEM/ODM/Hyperscaler）に届けるブローカー。価値層は Component よりやや上。</li>
+    <li><strong>Phase 3 では ODM ポジションを狙う</strong>（厳密には <strong>「DC冷却ラック / 軍用部品の Foundry」</strong> に近い — モジュール / アセンブリレベルで顧客スペック通りに製造）：自社製造（LA/Texas）で、ハイパースケーラー直販。Foxconn / Quanta と直接競合するが、<strong>「日本素材独占 × US Soil × CFIUSセキュア」</strong>で差別化。</li>
+    <li><strong>OEM になるのは避ける</strong>：自社ブランドのサーバーを作ると Dell/HPE と顧客競合する。TSMC ルール（"We do not compete with our customers"）に従う。</li>
+  </ul>
+</div>
+
+<div class="knowledge-card" style="margin-top: 24px;">
+  <div class="knowledge-q">OEM / ODM / EMS のどれに行くべきか？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：ODM 一択。ただしハイパースケーラー直販型の「次世代ODM」。</strong></p>
+
+    <div class="tbl-scroll"><table class="per-table" style="margin-top: 12px;">
+      <thead>
+        <tr><th>選択肢</th><th>利益率</th><th>事業との相性</th><th>判定</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>OEM</strong>（Dell/HPE型）</td><td>10-15%</td><td>顧客と競合する。Hyperscaler の発注先（Dell/HPE）と直接衝突。CFIUS的にも余計な摩擦</td><td>✗ 避ける</td></tr>
+        <tr><td><strong>ODM</strong>（Quanta/Foxconn型）</td><td>5-10%（量勝負）</td><td>Foundry モデルと最も親和性。設計力 + 製造力で勝負、Hyperscaler 直販可能。TSMCルール準拠</td><td>◎ <strong>Target</strong></td></tr>
+        <tr><td><strong>EMS</strong>（受託組立のみ）</td><td>3-5%（コモディティ）</td><td>付加価値が低く、スケールしても利益が出ない。中華EMSとの価格競争で消耗</td><td>✗ 避ける</td></tr>
+      </tbody>
+    </table></div>
+
+    <p style="margin-top: 12px;"><strong>「次世代ODM」とは何か：</strong></p>
+    <ul style="margin-left: 24px;">
+      <li>従来ODM（Quanta/Foxconn）は <strong>台湾・中国製造 + 低利益率</strong>、価格競争に晒される</li>
+      <li>本事業は <strong>「US Soil 製造 × 日本素材独占 × CFIUS準拠」</strong> という3つのモートを持つ</li>
+      <li>結果、ODM カテゴリにいながら <strong>利益率は ASML / TSMC 水準（25-30%）</strong> を狙える</li>
+      <li>これが Phase 3 で時価総額 $1T になる根拠</li>
+    </ul>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">途中でポジション間を往復・チェンジすることは現実的に可能か？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：原則は片道。ただし「Component → ODM」「ODM → Component-as-a-Service」は歴史的に実例あり。</strong></p>
+
+    <h4 style="font-weight: 700; margin-top: 12px; font-size: 14px;">難しい理由</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>必要なケイパビリティが完全に異なる</strong>：EMSはオペレーション、ODMは設計力、OEMはブランド・マーケ・サポート</li>
+      <li><strong>顧客との力関係がリセットされる</strong>：例えばODMがOEMに昇格しようとすると、既存OEM顧客から「裏切られた」と取引停止される（Channel Conflict）</li>
+      <li><strong>CAPEX投資のレイヤーが違う</strong>：EMS → ODMには設計人員、ODM → OEMにはブランド投資が必要</li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">歴史的な成功例 / 失敗例</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>企業</th><th>移行</th><th>結果</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>東京エレクトロン</strong></td><td>商社 → 装置メーカー</td><td>◎ 成功（業界転換期に成功、本事業の参考モデル）</td></tr>
+        <tr><td><strong>TSMC</strong></td><td>Pure-play Foundry を堅持</td><td>◎ あえてOEMに行かず、世界覇権</td></tr>
+        <tr><td><strong>Foxconn</strong></td><td>EMS → ODM（Sharp買収でOEM挑戦）</td><td>△ 混合。EMS本業は強いが、Sharpブランドは伸び悩み</td></tr>
+        <tr><td><strong>Quanta</strong></td><td>ODM → 自社ブランド挑戦</td><td>✗ Channel Conflictで撤退、ODMに専念</td></tr>
+        <tr><td><strong>Apple</strong></td><td>OEM（自社設計+自社工場）→ OEM-Fabless（Foxconn委託）</td><td>◎ 製造を切り出して身軽化、設計・ブランドに集中</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">本事業への示唆</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ul style="margin-top: 4px;">
+        <li><strong>Phase 1（Broker）→ Phase 3（ODM）の移行は実現可能</strong>。東京エレクトロンの先例がある。</li>
+        <li><strong>ODM → OEM の誘惑には絶対乗らない</strong>。Channel Conflict で顧客（Hyperscaler）を失う。</li>
+        <li>移行のタイミングは <strong>「3つのトリガー」</strong>（PoC→Rollout、DoD要件、メーカー内製限界）に従う。</li>
+        <li>逆方向（ODM → Broker）は事実上不可。一度製造を始めたら、CAPEX回収のため後戻りできない。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">Figure / Boston Dynamics などUSのロボット企業も日本のパーツを必要とするか？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：現状ほぼ全社が日本依存。特に「精密減速機」は事実上の日本独占。</strong>ただしTesla / Apptronik などは内製化を進めており、5〜10年で構造変化の可能性あり。</p>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">ヒューマノイド／ロボットの「絶対に日本」な部品</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>部品</th><th>日本企業</th><th>世界シェア</th><th>なぜ代替不可</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Harmonic Drive</strong>（波動歯車）</td>
+          <td>Harmonic Drive Systems（ニデック傘下）</td>
+          <td>世界シェア70%+</td>
+          <td>歯車のバックラッシ（遊び）がゼロに近い。ロボット関節の高精度・コンパクト化に不可欠。模倣が極めて困難</td>
+        </tr>
+        <tr>
+          <td><strong>RV減速機</strong>（サイクロイド）</td>
+          <td>Nabtesco（ナブテスコ）</td>
+          <td>世界シェア60%+</td>
+          <td>大トルク・耐久性で群を抜く。産業用ロボット関節の標準</td>
+        </tr>
+        <tr>
+          <td><strong>精密サーボ</strong></td>
+          <td>Yaskawa, Mitsubishi Electric, Nidec</td>
+          <td>全体で60%+</td>
+          <td>高速応答 + 高精度の両立、特に産業用は日本独壇場</td>
+        </tr>
+        <tr>
+          <td><strong>力センサー / トルクセンサー</strong></td>
+          <td>Wacoh-Tech, ニデック, Murata</td>
+          <td>40-50%</td>
+          <td>ヒューマノイド「触覚」の核心、米中ともに精度で日本に追いつけず</td>
+        </tr>
+        <tr>
+          <td><strong>イメージセンサー</strong></td>
+          <td>Sony</td>
+          <td>50%+</td>
+          <td>ロボットの「目」。Apple / Tesla も多くSony製を採用</td>
+        </tr>
+        <tr>
+          <td><strong>軽量構造材</strong></td>
+          <td>Toray（CFRP）</td>
+          <td>世界1位</td>
+          <td>ヒューマノイドの軽量化に必須</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">主要US企業の依存状況</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>Figure</strong>：Harmonic Drive依存度高。BMWラインで稼働している量産機にも日本製減速機が入っている可能性大</li>
+      <li><strong>Boston Dynamics</strong>：油圧→電動化の移行で日本製減速機・サーボ採用が拡大。現代自動車傘下になり、韓国系部品も併用へ</li>
+      <li><strong>Tesla（Optimus）</strong>：<strong>アクチュエータの内製化に注力中</strong>。Harmonic Driveから「Planetary Roller Screw」へ独自設計で脱却を狙う（量産時の歩留まりは未知数）</li>
+      <li><strong>1X / Apptronik</strong>：独自設計を進めつつ、初期量産品では日本部品を使う見込み</li>
+      <li><strong>Skydio / Saildrone（無人機系）</strong>：Nidec の超小型モーターに強く依存</li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">本事業への示唆</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ul style="margin-top: 4px;">
+        <li><strong>短期（〜3年）</strong>：Figure / Boston Dynamics / 1X / Apptronik への <strong>Harmonic Drive Systems + Nabtesco + Yaskawa の独占代理権</strong>取得が最強の Wedge</li>
+        <li><strong>中期（3-5年）</strong>：Tesla 内製化リスクがある一方、量産ヒューマノイドが指数関数的に増えるため、Harmonic Drive の絶対需要は急拡大</li>
+        <li><strong>長期（5-10年）</strong>：中国 Leader Drive 等の追い上げ、US内製化の進展に注意。Phase 3 で <strong>「日本素材 + US Soil 製造」</strong> で内製化代替の地位を確保</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">日本で冷却技術が強いのはどの会社？どの領域が強いか？</div>
+  <div class="knowledge-a">
+    <p>冷却は <strong>「流体（冷媒）」「機械（HVAC・チラー）」「ファン・ポンプ」「熱交換器」「電力統合」</strong> の5レイヤーに分かれ、それぞれに日本企業のチャンピオンがいる。</p>
+
+    <h4 style="font-weight: 700; margin-top: 12px; font-size: 14px;">レイヤー別 日本チャンピオン</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>レイヤー</th><th>日本企業</th><th>強み / 製品</th><th>事業との関連</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="2"><strong>① 冷媒・流体</strong></td>
+          <td><strong>AGC</strong></td>
+          <td>フッ素系液浸冷媒（Asahiklin AE3000 等）、絶縁性・低粘度・不燃</td>
+          <td><strong>DC液浸冷却の中核</strong>。代替不可</td>
+        </tr>
+        <tr>
+          <td><strong>Daikin</strong></td>
+          <td>HFO系冷媒（R32等）、世界一の冷媒IPポートフォリオ</td>
+          <td>HVAC・産業冷凍の標準</td>
+        </tr>
+        <tr>
+          <td rowspan="3"><strong>② 空調・HVAC</strong></td>
+          <td><strong>Daikin</strong></td>
+          <td>世界シェア1位、VRV/VRFシステム、業務用・家庭用とも</td>
+          <td>DC施設HVAC、米国Goodman傘下も</td>
+        </tr>
+        <tr>
+          <td><strong>Mitsubishi Electric</strong></td>
+          <td>業務用HVAC、ヒートポンプ、Mr. Slim</td>
+          <td>商業施設・データセンター</td>
+        </tr>
+        <tr>
+          <td><strong>Hitachi（Johnson Controls傘下）</strong></td>
+          <td>大型空調、産業冷凍</td>
+          <td>大規模施設向け</td>
+        </tr>
+        <tr>
+          <td rowspan="2"><strong>③ 産業冷却・チラー</strong></td>
+          <td><strong>Mayekawa（前川製作所）</strong></td>
+          <td>産業冷凍世界トップ、アンモニア・CO2自然冷媒</td>
+          <td>食品・化学プラント、半導体ライン</td>
+        </tr>
+        <tr>
+          <td><strong>Mitsubishi Heavy Industries</strong></td>
+          <td>大型遠心冷凍機、ターボチラー</td>
+          <td>大型DC、産業用</td>
+        </tr>
+        <tr>
+          <td rowspan="3"><strong>④ ファン・ポンプ</strong></td>
+          <td><strong>Nidec</strong></td>
+          <td>サーバー冷却ファン世界1位、BLDCモーター、液冷ポンプ</td>
+          <td><strong>AIサーバー液冷の絶対部品</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Sanyo Denki</strong></td>
+          <td>San Ace ファン、信頼性で業界標準</td>
+          <td>サーバー・通信機器</td>
+        </tr>
+        <tr>
+          <td><strong>Minebea Mitsumi</strong></td>
+          <td>精密ベアリング + ファン</td>
+          <td>小型機器・ドローン</td>
+        </tr>
+        <tr>
+          <td rowspan="2"><strong>⑤ 熱交換器・素材</strong></td>
+          <td><strong>Resonac（旧昭和電工）</strong></td>
+          <td>アルミ熱交換器材、ヒートシンク用アルミ世界1位</td>
+          <td>サーバー・EV・産業全般</td>
+        </tr>
+        <tr>
+          <td><strong>UACJ</strong></td>
+          <td>サーモテック™、自動車・空調用アルミ</td>
+          <td>EV・HVAC</td>
+        </tr>
+        <tr>
+          <td><strong>⑥ 電力統合</strong></td>
+          <td><strong>Fuji Electric</strong></td>
+          <td>SiCパワー半導体 + 電力変換、発熱抑制から逆算</td>
+          <td>DC電力・冷却統合設計</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">具体的な実装事例・US連携・独自技術</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>企業</th><th>具体事例・独自技術</th><th>パートナー / 用途</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Nidec × Supermicro</strong></td>
+          <td>サーバー向け冷却モジュールを共同生産。「絶対に壊れないモーター」が武器</td>
+          <td>US Server OEM の中核サプライヤー</td>
+        </tr>
+        <tr>
+          <td><strong>Fujitsu</strong></td>
+          <td>サーバーを液体に沈める <strong>液浸冷却システムのパイオニア</strong></td>
+          <td>自社DC・Hyperscaler向け</td>
+        </tr>
+        <tr>
+          <td><strong>Mitsubishi Heavy × KDDI</strong></td>
+          <td>コンテナ型データセンターを共同開発、<strong>消費電力激減の実験で成功</strong></td>
+          <td>分散DC・Crusoe Energy的ユースケース</td>
+        </tr>
+        <tr>
+          <td><strong>Fuji Electric</strong></td>
+          <td>「<strong>エジェクタ冷却機</strong>」など独自冷却技術でマーケットから注目</td>
+          <td>DC・産業用</td>
+        </tr>
+        <tr>
+          <td><strong>Daikin</strong></td>
+          <td>施設HVAC〜チップ直接冷却〜液浸冷媒まで、<strong>トータルソリューション提供可能</strong></td>
+          <td>DC全レイヤー</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">本事業（DC冷却 Wedge）に必要な「黄金トリオ」</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ul style="margin-top: 4px;">
+        <li><strong>AGC</strong>（液浸冷媒）+ <strong>Nidec</strong>（液冷ポンプ・ファン）+ <strong>Daikin</strong>（HVAC統合）</li>
+        <li>この3社の独占代理権を握れば、AI Data Center 冷却の「全レイヤー」を抑えられる</li>
+        <li>NVIDIA GB200 / Rubin 世代の液冷必須化、Crusoe Energy / Heron Power のモバイル/分散DC、Hyperscalers の超大規模DCすべてに刺さる</li>
+      </ul>
+    </div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">補足：DC冷却以外で強い領域</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>EV・電池冷却</strong>：Resonac（アルミ熱交）、Daikin、Fuji Electric — Tesla Megapack や CATL に納入</li>
+      <li><strong>半導体プロセス冷却</strong>：AGC、Mayekawa — Tokyo Electron や Applied Materials の装置内部冷却</li>
+      <li><strong>核融合・特殊冷却</strong>：Mayekawa（極低温）、Toshiba ESS — 超伝導磁石用ヘリウム冷凍機</li>
+      <li><strong>宇宙機サーマル制御</strong>：JAXA協力企業（IHI Aerospace 等）、Mitsubishi Electric — 衛星熱制御</li>
+    </ul>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">商社って fee 取り続けられてるのなんで？ 直契約したいインセンティブが途中で働かない？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：商社が fee を維持できる理由は 5つの "Stickiness（粘着性）"。これらが本事業の Moat 設計にも直結する。</strong></p>
+
+    <div class="tbl-scroll"><table class="per-table" style="margin-top: 12px;">
+      <thead>
+        <tr><th>Stickiness</th><th>商社が提供する価値</th><th>直契約を阻む理由</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>① Information Asymmetry</strong><br>（情報の非対称性）</td>
+          <td>両側の社内事情・キーマン・タイミングを唯一知っている</td>
+          <td>顧客もメーカーも、商社を外すと「適切な相手・量・タイミング」がわからなくなる</td>
+        </tr>
+        <tr>
+          <td><strong>② Risk Absorption</strong><br>（リスク吸収）</td>
+          <td>信用リスク・為替リスク・在庫リスク・物流リスクを全て商社が引き受ける</td>
+          <td>直契約すると、両社が新たにリスク管理組織を作る必要がある</td>
+        </tr>
+        <tr>
+          <td><strong>③ Embedded Financing</strong><br>（埋め込み金融）</td>
+          <td>商社が前払い（Days Sales Outstanding 90日とか）してくれる</td>
+          <td>三菱商事の信用力で銀行から引いた資金が、サプライチェーン全体を回している</td>
+        </tr>
+        <tr>
+          <td><strong>④ Aggregation</strong><br>（集約）</td>
+          <td>n社の顧客 × n社のメーカーを束ねて、ボリュームディスカウントを引き出す</td>
+          <td>1対1直契約だと、誰もスケールメリットを取れない</td>
+        </tr>
+        <tr>
+          <td><strong>⑤ Operational Infra</strong><br>（オペ基盤）</td>
+          <td>通関・規制対応・物流・QC・現地サポートの統合インフラ</td>
+          <td>これを内製化するには数年と数十億円の投資が必要</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">本事業の Stickiness 設計</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ul style="margin-top: 4px;">
+        <li><strong>Phase 1（Broker）の Stickiness</strong>：LoI / JDA、通関 + QC のオペ基盤、US現地法人による信用・金融</li>
+        <li><strong>Phase 2（Margin + Tolling）の Stickiness</strong>：Tolling工程の組み込み、JIT在庫の運用、複数メーカー集約</li>
+        <li><strong>Phase 3（Pure-play Foundry ODM）の Stickiness</strong>：<strong>工場そのものが Moat</strong>。設備・歩留まり・US Soil・CFIUS準拠が直接代替不可能</li>
+      </ul>
+      <p style="margin-top: 10px;"><strong>Phase 3 で物理工場を持つことで、「直契約したいインセンティブ」自体が消える。</strong>顧客から見て「我々がいなければそもそも作れない」状態を作るのが究極のMoat。</p>
+    </div>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">Anduril や Astera Labs みたいな「小さいけど技術力のある」会社を探したい。他にあるか？</div>
+  <div class="knowledge-a">
+    <p>本事業の <strong>顧客 / M&A 対象</strong> として、Anduril（防衛・$30B+）や Astera Labs（AI 接続半導体・$10B+）級の「ハードウェア × Deep Tech × 技術力突出」スタートアップは多数存在する。</p>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">領域別：Aster級の小型技術突出企業リスト</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>領域</th><th>企業</th><th>強み</th><th>規模</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="3"><strong>DC / Compute</strong></td>
+          <td><strong>Astera Labs</strong></td>
+          <td>AIサーバー向け接続半導体（CXL / PCIe / Retimer）</td>
+          <td>$10B+ (IPO済)</td>
+        </tr>
+        <tr>
+          <td><strong>Heron Power</strong></td>
+          <td>高効率電力変換、DC専用</td>
+          <td>$100M+</td>
+        </tr>
+        <tr>
+          <td><strong>Crusoe Energy</strong></td>
+          <td>モバイル DC（フレア活用）</td>
+          <td>$3B+</td>
+        </tr>
+        <tr>
+          <td rowspan="4"><strong>Defense</strong></td>
+          <td><strong>Saronic</strong></td>
+          <td>無人艦艇（ASV）</td>
+          <td>$1B+</td>
+        </tr>
+        <tr>
+          <td><strong>Mach Industries</strong></td>
+          <td>水素推進ミサイル・ドローン</td>
+          <td>$300M+</td>
+        </tr>
+        <tr>
+          <td><strong>Hadrian</strong></td>
+          <td>防衛向け精密加工工場の自動化</td>
+          <td>$500M+</td>
+        </tr>
+        <tr>
+          <td><strong>Castelion</strong></td>
+          <td>長距離精密兵器（極超音速）</td>
+          <td>Early stage</td>
+        </tr>
+        <tr>
+          <td rowspan="4"><strong>Space</strong></td>
+          <td><strong>Apex</strong></td>
+          <td>衛星バス（モジュラー宇宙機）</td>
+          <td>$1B+</td>
+        </tr>
+        <tr>
+          <td><strong>Astranis</strong></td>
+          <td>小型通信衛星</td>
+          <td>$1.5B+</td>
+        </tr>
+        <tr>
+          <td><strong>Stoke Space</strong></td>
+          <td>完全再使用ロケット</td>
+          <td>$1B+</td>
+        </tr>
+        <tr>
+          <td><strong>ThinkOrbital</strong></td>
+          <td>軌道上製造インフラ</td>
+          <td>Early stage</td>
+        </tr>
+        <tr>
+          <td rowspan="3"><strong>Fusion / Nuclear</strong></td>
+          <td><strong>Helion Energy</strong></td>
+          <td>直接電気変換核融合</td>
+          <td>$5B+</td>
+        </tr>
+        <tr>
+          <td><strong>Radiant Nuclear</strong></td>
+          <td>マイクロ原子炉</td>
+          <td>$400M+</td>
+        </tr>
+        <tr>
+          <td><strong>Valar Atomics</strong></td>
+          <td>高温ガス炉</td>
+          <td>Early stage</td>
+        </tr>
+        <tr>
+          <td rowspan="2"><strong>Robotics</strong></td>
+          <td><strong>Figure</strong></td>
+          <td>ヒューマノイド</td>
+          <td>$2.6B+</td>
+        </tr>
+        <tr>
+          <td><strong>Apptronik</strong></td>
+          <td>ヒューマノイド</td>
+          <td>$500M+</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">スクリーニング基準</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>技術突出性</strong>：1〜2の領域で世界トップ・代替不可能な技術を持つ（Anduril の Lattice、Astera の CXL Retimer のように）</li>
+      <li><strong>サイズ</strong>：Series B〜C、$100M〜$3B 規模。Anduril 級 ($30B+) はもう買えない</li>
+      <li><strong>サプライチェーン依存</strong>：日本部品・素材を必要としている（または近い将来必要になる）</li>
+      <li><strong>政府契約有無</strong>：DoD / DOE / NASA の発注がある or 視野</li>
+    </ul>
+
+    <p style="margin-top: 12px;"><strong>本事業との関係性：</strong>これらは「Phase 1 の顧客」「Phase 2 の Tolling 共同開発相手」「Phase 3 のM&A候補（後述）」となる重要ターゲット。</p>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">小型技術企業への出資スキーム — みずほの M&A Debt は使えるか？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：YES、ただし「日本親会社経由」のストラクチャが鍵。</strong>みずほ / MUFG / SMBC は <strong>日本ブルーチップに対する US M&A Debt</strong> を大量に供給した実績がある（武田・Shire 買収、Renesas・Dialog 買収など）。</p>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">3つのスキーム案</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>スキーム</th><th>構造</th><th>Pros</th><th>Cons</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>① 戦略 M&A（買収）</strong></td>
+          <td>DJM 親会社（Delaware Inc.）がターゲットを100%買収。M&A Debt は親会社債務</td>
+          <td>事業統合で歩留まり最大、Foundryに直接組込</td>
+          <td>大型 ($300M+) は時期尚早、Phase 2-3 で実行</td>
+        </tr>
+        <tr>
+          <td><strong>② CVC ＋ Commercial Agreement</strong></td>
+          <td>マイノリティ出資（5-20%）+ 独占供給契約。CVC ファンドから出資</td>
+          <td>柔軟、リスク低、関係性構築</td>
+          <td>M&A Debt は使いにくい（純粋エクイティ）</td>
+        </tr>
+        <tr>
+          <td><strong>③ Roll-up（連続買収）</strong></td>
+          <td>精密加工系の中堅企業を 3-5社連続買収して規模化</td>
+          <td>みずほ系が好む構造、PEファンドと組める</td>
+          <td>PMI 負荷大、本業 Foundry とのシナジー要設計</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">みずほ M&A Debt の現実性</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>金利</strong>：USD建てで SOFR + 200-400bp（=現状 6〜8%）、JPY建てなら 1〜2%</li>
+      <li><strong>調達規模</strong>：Phase 2 で $50-200M、Phase 3 で $500M-2B クラスを狙える</li>
+      <li><strong>借り手要件</strong>：日本親会社の信用力 + 三菱商事等のメガクライアントの保証 or 後ろ盾</li>
+      <li><strong>CFIUS リスク</strong>：日本銀行債務での US 買収は CFIUS 通過実績豊富、ブロックされにくい</li>
+      <li><strong>ベスト相手</strong>：みずほ コーポレートバンキング部門 + Mizuho Securities USA + 三菱UFJ M&A Advisory</li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">推し戦略</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ul style="margin-top: 4px;">
+        <li><strong>Year 1〜3：</strong>CVCマイノリティ出資（スキーム②）— Aster級の3-5社にチェックを書いて関係構築</li>
+        <li><strong>Year 5〜：</strong>みずほ M&A Debt でロールアップ開始（スキーム③）— 日本側の精密加工中堅 + US側の小型 Deep Tech</li>
+        <li><strong>Year 7〜：</strong>戦略 M&A（スキーム①）— Foundry に直接組み込める Aster / Heron Power 級を $500M-1B で買収</li>
+      </ul>
+      <p style="margin-top: 8px;"><strong>これは Mitsubishi Corp が Breakthrough Energy で日本資金を US Deep Tech に流したのと同じ構造。我々はそれを「Trading Foundry」という事業母体で行う。</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">そもそも US で ODM は成立するのか？ TSMC Arizona / Hadrian から何が見えるか？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：成立する。ただし「Asian 人材移植」「政府補助金」「差別化勝負」の3条件付き。</strong></p>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">Case 1: TSMC Arizona</h4>
+    <ul style="margin-left: 24px;">
+      <li>2024年から N4 ノード量産開始（Apple A16、Qualcomm 等）</li>
+      <li><strong>Pros：</strong>CHIPS Act 補助金 ($6.6B)、Apple/Qualcomm 直接需要、米政府の戦略支援</li>
+      <li><strong>Cons：</strong>初期遅延4年 / <strong>台湾人スタッフが大量配置必須</strong>（米国人だけでは技術運営不可）/ コスト構造が台湾比1.5-2倍 / 米労組摩擦</li>
+      <li><strong>教訓：</strong>US で先端製造はできるが、<strong>Asian expertise の移植が前提</strong></li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">Case 2: Hadrian</h4>
+    <ul style="margin-left: 24px;">
+      <li>高精度航空宇宙パーツの自動化マイクロファクトリー、LA / Torrance</li>
+      <li>Anduril / SpaceX / 防衛向け CNC加工、a16z / Founders Fund 出資</li>
+      <li><strong>Pros：</strong>Vertical Integration、防衛SC、AI制御自動化、CFIUS準拠</li>
+      <li><strong>Cons：</strong>スケールはまだ初期段階、1工場から複数工場展開がこれから</li>
+      <li><strong>教訓：</strong>US で精密製造 ODM は成立、ただし <strong>高単価・高精度ニッチ</strong> が条件</li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">US で ODM が成立する3条件</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ol style="margin-left: 24px; margin-top: 4px;">
+        <li><strong>Asian Talent Transplant：</strong>日本 / 台湾 / 韓国の精密製造人材を US に派遣・移住</li>
+        <li><strong>Government Subsidy：</strong>CHIPS Act / IRA / DoD 契約による初期 CAPEX 補助 + 需要保証</li>
+        <li><strong>Differentiation, not Cost：</strong>価格競争で台湾・中国に勝とうとせず、<strong>Quality × CFIUS × Mission-Critical</strong> で差別化</li>
+      </ol>
+    </div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">本事業への適用 & 避けるべき罠</h4>
+    <ul style="margin-left: 24px;">
+      <li>日本人技術者を Year 5+ で US に派遣（Stanford 帆立さん級）</li>
+      <li>CHIPS Act / IRA / DoD のグラント・契約を Founders Fund / Thiel ネットワーク経由で獲得</li>
+      <li><strong>避ける罠：</strong>価格勝負（Foxconn 真似 → 必ず負け）/ 大量生産（高品質ニッチに徹する）/ 米国人だけ運営（必ず Asian技術者を組込）/ 政府補助金なしの単独CAPEX</li>
+    </ul>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">Trading → Foundry 移行のセンターピンは？ 他ODM との差別化は？</div>
+  <div class="knowledge-a">
+    <h4 style="font-weight: 700; margin-top: 4px; font-size: 14px;">センターピン（最重要トリガー）</h4>
+    <p>Phase 2 → Phase 3 移行の単一最重要トリガー：</p>
+    <div class="callout" style="margin-top: 8px;">
+      <strong>「Hyperscaler または DoD から、年間 $500M 以上の長期契約（3-5年）」</strong><br>
+      この契約が取れた瞬間に Foundry 投資（CAPEX $1-3B）が経済合理性を持つ。
+    </div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">Foxconn / Quanta との差別化マトリクス</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>差別化軸</th><th>Foxconn / Quanta</th><th>本事業</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>製造地</strong></td><td>台湾・中国・東南アジア</td><td><strong>US Soil（LA / Texas）</strong></td></tr>
+        <tr><td><strong>CFIUS</strong></td><td>NG（中国系資本・スタッフ）</td><td><strong>完全準拠</strong></td></tr>
+        <tr><td><strong>素材調達</strong></td><td>グローバル価格優先、中国製多用</td><td><strong>日本素材独占ルート</strong></td></tr>
+        <tr><td><strong>IP保護</strong></td><td>中国情報漏洩リスク懸念</td><td><strong>Black Box工場、US Citizen運営</strong></td></tr>
+        <tr><td><strong>価格</strong></td><td>コスト最優先、薄利</td><td><strong>高単価・高品質、ASML/TSMC帯マージン</strong></td></tr>
+        <tr><td><strong>顧客層</strong></td><td>価格重視のOEM/Hyperscaler</td><td><strong>CFIUS必須の防衛/政府/高信頼Hyperscaler</strong></td></tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">4つの組み合わせ Moat</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ol style="margin-top: 4px;">
+        <li><strong>日本素材独占</strong> — AGC / Toray / Nidec のサプライチェーン契約権</li>
+        <li><strong>US Soil 製造</strong> — LA / Texas の Black Box Factory</li>
+        <li><strong>CFIUS 完全準拠</strong> — 防衛・宇宙コントラクトへの参入資格</li>
+        <li><strong>品質</strong> — 日本精密加工 × Asian 製造文化 × Western 経営</li>
+      </ol>
+      <p style="margin-top: 8px;">このうち1〜3を同時に満たすODMは現存しない。<strong>これが永続的なMoat。</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">素材大企業はクライアントと継続接点を持ちたがる？ 我々はどう介入し、2回目以降のFeeを取るのか？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：YES、メーカーは絶対に直接接点を欲しがる。だが「接点」と「実運用」は別。我々は実運用役を握る。</strong></p>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">大企業が直接接点を欲しがる4つの理由</h4>
+    <ul style="margin-left: 24px;">
+      <li>マージン最大化（中抜きカット）</li>
+      <li>R&D フィードバックを直接得たい（次世代製品開発の血液）</li>
+      <li>長期戦略パートナーシップ（10年単位の関係）</li>
+      <li>ブランド露出（Tier 1顧客の事例化）</li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">介入ポイント：「接点はメーカーに残し、実運用を握る」</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>レイヤー</th><th>誰が担うか</th><th>我々の位置付け</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>エグゼクティブ接点</td><td>メーカー役員 ⇄ クライアントCxO</td><td>阻害しない、むしろ繋ぐ</td></tr>
+        <tr><td>R&D ディスカッション</td><td>メーカー研究部門 ⇄ クライアント技術部門</td><td>JDA で構造化</td></tr>
+        <tr><td>見積・契約交渉</td><td>メーカー営業 ⇄ クライアント調達</td><td>初期にお膳立て、徐々に当事者へ</td></tr>
+        <tr><td>物流・関税・コンプライアンス</td><td>—</td><td><strong>我々が独占的に運営</strong></td></tr>
+        <tr><td>検収・品質保証・FDA/CFIUS監査</td><td>—</td><td><strong>我々が独占的に運営</strong></td></tr>
+        <tr><td>US Soil 倉庫・組立・現地サポート</td><td>—</td><td><strong>我々が独占的に運営</strong></td></tr>
+        <tr><td>複数顧客 Volume 集約・価格交渉</td><td>—</td><td><strong>我々が独占的に運営</strong></td></tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">2回目以降の Fee を確保する仕組み</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>Continuing Service Fee 契約条項：</strong>物流・コンプライアンス代行を継続サービス化</li>
+      <li><strong>JDA / Tolling Agreement：</strong>単発取引でなく、開発段階から組込まれる構造</li>
+      <li><strong>Volume Discount の交換：</strong>10社束ね発注で、メーカーが我々経由のほうが得な単価</li>
+      <li><strong>株式 Warrant：</strong>SU側からは株式で取る</li>
+      <li><strong>暗黙のスイッチングコスト：</strong>SCMシステム・API連携・監査ログでロックイン</li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">実例の対比</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>悪い例：</strong>Salesforce のように紹介マッチング後に手を引く → 確実に外される</li>
+      <li><strong>良い例：</strong>三菱商事のエネルギー契約 → 投資 × トレード連動で20年以上の継続関係</li>
+      <li><strong>目指す型：</strong>ASML の Service Engineering → 装置販売後のメンテ・チューニング契約で50%以上の利益を継続取得</li>
+    </ul>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">DC に絞ったとき、Hyperscaler は仲介者を必要としているのか？ AWS / GCP など数社しかなく、日本大企業もリーチできているのでは？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：Hyperscaler「本体」とは直接接点済み。だが、商機は別レイヤーにある。</strong></p>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">事実として、Hyperscaler と日本大企業は既に繋がっている</h4>
+    <ul style="margin-left: 24px;">
+      <li>AGC・Daikin・Murata の北米法人は AWS / Azure / GCP の調達部隊と <strong>直接の長期契約</strong>を持っている</li>
+      <li>Hyperscaler は数社しかないので、Tier 1 メーカーは「リーチできていない」わけではない</li>
+      <li>もし Phase 1 のバリュープロポジションが「Hyperscaler との接点を提供」なら、<strong>それは既に提供価値が薄い</strong></li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">では本当の商機はどこにあるか</h4>
+    <p>Hyperscaler は数社だが、その <strong>サプライチェーンの周辺</strong> には仲介価値が残っている：</p>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>レイヤー</th><th>既存状況</th><th>商機の有無</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Hyperscaler 本体（5社）</strong></td>
+          <td>日本Tier 1とは直接接点済み</td>
+          <td>✗ 仲介価値薄い</td>
+        </tr>
+        <tr>
+          <td><strong>急成長 DC スタートアップ（30〜50社）</strong></td>
+          <td>Crusoe / Heron Power / Lambda / CoreWeave / 等。Hyperscaler 級の CAPEX を投下し始めているが、<strong>日本サプライチェーンへのアクセスが薄い</strong></td>
+          <td>◎ <strong>Phase 1 の主戦場</strong></td>
+        </tr>
+        <tr>
+          <td><strong>ODM / EMS（Foxconn / Quanta）</strong></td>
+          <td>Hyperscaler の実質的な発注先。NVIDIA GB200 ラックを組み立てる側</td>
+          <td>○ 中央集約的に部品を売り込める</td>
+        </tr>
+        <tr>
+          <td><strong>新興 AI ラボ（OpenAI / Anthropic / xAI / SSI）</strong></td>
+          <td>自社で巨大DC を建てる動き、日本素材ルートはほぼ未開拓</td>
+          <td>◎ 出資 × 調達のハイブリッド</td>
+        </tr>
+        <tr>
+          <td><strong>Hyperscaler 内の新規プロジェクト・新規材料</strong></td>
+          <td>「液浸冷却」「光半導体」「次世代電源」など。本体接点があっても、新規要件は別ルート</td>
+          <td>○ 既存契約とは別の購買ライン</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">戦略修正：「Hyperscaler 本体狙い」ではなく「次世代Hyperscaler候補」狙い</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ul style="margin-top: 4px;">
+        <li><strong>Phase 1 のターゲット顧客を再定義：</strong>AWS / GCP / Azure 本体ではなく、<strong>「3年後のAWSになる」急成長DC SU</strong> をターゲットに</li>
+        <li><strong>具体的には：</strong>Crusoe Energy、Heron Power、Lambda、CoreWeave、Voltage Park、Together AI など。年間 $1-10B CAPEX を投下し始めている層</li>
+        <li><strong>彼らのペイン：</strong>NVIDIA GB200 を確保したくても、ラック組立も冷却も電源も<strong>全部Foxconn/Quanta任せ</strong>。日本のチョイス（AGC冷媒・Nidec ポンプ）を統合した最強パッケージへのアクセスがない</li>
+        <li><strong>本事業の刺さり方：</strong>「日本最強素材 + US Soil 組立 + CFIUSセキュア」のラックを丸ごと供給。Foxconn の上位互換</li>
+      </ul>
+    </div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">Hyperscaler 本体への食い込み方（Phase 2-3）</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>新規要件で入る：</strong>液浸冷却の次世代仕様、軌道上DC（Starcloud連携）、量子データセンターなど、既存サプライヤーが対応できない新規ニーズで攻める</li>
+      <li><strong>ODM 化して入る：</strong>Phase 3 で自社が ODM になれば、Hyperscaler の WhiteBox Server 発注に直接食い込める</li>
+      <li><strong>政府要件で入る：</strong>AWS GovCloud、Azure Government など。CFIUS準拠が必須な領域で日本メーカー直販より優位</li>
+    </ul>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">Broker Phase で「2回目以降の取引から仲介者が外される」問題をどう避けるか？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：単純マッチングだけなら必ず外される。「仲介できない構造」を組み込む必要あり。</strong></p>
+    <p>西島氏（Headline Asia）と深川氏（GCP）が独立に同じ懸念を指摘。「初回ディスカバリーは価値あるが、継続取引では中抜きされる」「大口になるほど仲介者の価値が低下する」。</p>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">「中抜きされない」5つの構造</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>戦略</th><th>内容</th><th>本事業での実装</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>① Embed in Workflow</strong></td>
+          <td>検収・QA・コンプライアンス・物流・現地組立を巻き取る</td>
+          <td>関税処理 / FDA・CFIUS 監査 / US Soil 倉庫運営を提供</td>
+        </tr>
+        <tr>
+          <td><strong>② Volume Aggregator</strong></td>
+          <td>複数顧客の発注を束ねて価格交渉力をメーカー側に提供</td>
+          <td>SU 10社の冷却部品をまとめ AGC に発注、単価ディスカウントをメーカー直取引より優位に</td>
+        </tr>
+        <tr>
+          <td><strong>③ Capital Connection（深川示唆）</strong></td>
+          <td>SU に出資して株主になる、利害一致で永続関係</td>
+          <td>Breakthrough Energy 型。Tier 1 米SU には初回からマイノリティ出資、フィー放棄も検討</td>
+        </tr>
+        <tr>
+          <td><strong>④ Integration Value</strong></td>
+          <td>単なる紹介ではなく、設計統合・カスタマイズ・特急対応で「仲介以上の価値」</td>
+          <td>Phase 2 から JDA + Tolling Fee で「組立・統合」工程を取り込む</td>
+        </tr>
+        <tr>
+          <td><strong>⑤ Switching Cost</strong></td>
+          <td>一度仕組みを使い始めると別ルートに移すコストが大きい</td>
+          <td>在庫管理・API連携・SOC2 認証プロセス・CFIUS 監査ログを自社プラットフォームで提供</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <p style="margin-top: 12px;"><strong>結論：純粋マッチングは Phase 1 の Year 1 だけ。Year 2 から ②〜⑤ を組み込んで「外せない構造」に進化する必要がある。</strong></p>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">手数料は両ドリか？ Enterprise（メーカー）と Startup（買い手）どっちから取るべきか？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：両ドリにする。ただし対価の「形」を変える。</strong></p>
+    <ul style="margin-left: 24px; margin-top: 4px;">
+      <li><strong>Enterprise（日本メーカー）から：現金マージン（3〜5%）</strong></li>
+      <li><strong>Startup（米SU 買い手）から：株式 / Warrant（フィー放棄と引換）</strong></li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">なぜこの構造なのか</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>側</th><th>ペイン</th><th>支払能力</th><th>取るべき対価</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Enterprise（日本メーカー）</strong></td>
+          <td>海外営業のブレイクスルーが欲しい（信越・Murata・三菱ケミカル等が共通ペイン）</td>
+          <td>大企業で資金体力あり、3〜5% のマージンに抵抗感少ない</td>
+          <td><strong>現金マージン</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Startup（米SU 買い手）</strong></td>
+          <td>日本素材への即時アクセス + サプライチェーン構築</td>
+          <td>資金繊細、初期は手数料を嫌う。一方で株式は「未来の価値」として喜んで渡す</td>
+          <td><strong>株式 / Warrant</strong></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">この構造の3つのメリット</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ul style="margin-top: 4px;">
+        <li><strong>① 両ドリの利益相反問題を回避：</strong>SU側にフィーを請求しないので「中立な調達代行」として信頼される</li>
+        <li><strong>② SUとの長期関係を株式で固定：</strong>株主は外せない。Breakthrough Energy 型の「投資×トレード連動」を実現</li>
+        <li><strong>③ Foundry 転換時に Sales Pipeline を確保：</strong>株式保有先 = Phase 3 の Foundry の最初の顧客リスト</li>
+      </ul>
+    </div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">三菱商事モデルとの対比</h4>
+    <p>三菱商事はエネルギー分野で <strong>「投資 × トレード連動」</strong> で複数年契約を維持してきた（深川氏言及）。本事業は同モデルを <strong>ディープテック領域</strong> に持ち込むことで、商社モデルの構造的脆弱性を克服する。</p>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">SU 側の出資条件（暫定）</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>初期紹介：</strong>フィー放棄 + 0.5〜2% の Warrant（Pre-Seed〜Series A 期）</li>
+      <li><strong>サプライチェーン構築フル支援：</strong>Series B 以降のラウンドに $2-10M 出資（マイノリティ）</li>
+      <li><strong>独占調達契約付き：</strong>株式 + 5年独占代理権をパッケージで握る</li>
+    </ul>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">マクニカ（Macnica）とどう差別化するか？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：方向・顧客・深さ の3軸で完全に住み分け。同じ "技術商社" だが、ぶつからない。</strong></p>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">マクニカの基本</h4>
+    <ul style="margin-left: 24px;">
+      <li>1972年創業の <strong>「技術商社」</strong>。半導体・ネットワーク機器・サイバーセキュリティの distributor</li>
+      <li>2015年に富士エレクトロニクスと統合し Macnica Holdings、売上 $8B+ 規模、TSE上場</li>
+      <li>NVIDIA / Cisco / Microchip などの <strong>米国半導体メーカーの製品を日本企業に売る</strong> 代理店ビジネスがコア</li>
+      <li>近年は AI / 自動運転（TIER IV と提携）/ IoT などソリューションへ拡張</li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">差別化の3軸</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>軸</th><th>マクニカ</th><th>本事業</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>① 方向</strong></td>
+          <td><strong>US 半導体 → 日本顧客</strong>へ売る輸入代理店</td>
+          <td><strong>日本素材・部品 → 米国DeepTech顧客</strong>へ売る輸出商社</td>
+        </tr>
+        <tr>
+          <td><strong>② 顧客層</strong></td>
+          <td>日本の自動車・産業・家電・通信などの <strong>B2B 大手</strong></td>
+          <td>米SU（Anduril/SpaceX/Helion等）+ Hyperscaler + DoD</td>
+        </tr>
+        <tr>
+          <td><strong>③ 深さ</strong></td>
+          <td>Distributor + ソリューション統合（半導体販売 → AI/自動運転実装まで）</td>
+          <td>Phase 3 で <strong>Pure-play Foundry ODM</strong>（自社製造、US Soil、CFIUS）まで深く垂直統合</td>
+        </tr>
+        <tr>
+          <td><strong>地理・法人</strong></td>
+          <td>日本本社、グローバル拠点あり</td>
+          <td><strong>Delaware 法人（米国企業として扱われる）</strong></td>
+        </tr>
+        <tr>
+          <td><strong>領域</strong></td>
+          <td>幅広い電子機器・IT・セキュリティ</td>
+          <td><strong>DC冷却 → 防衛 → 宇宙 → 核融合</strong>の DeepTech ニッチ集中</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">共通点・学べる点</h4>
+    <ul style="margin-left: 24px;">
+      <li>「技術商社」→「ソリューション統合」への進化パスは <strong>本事業の Phase 1 → 3 と同じパターン</strong>。マクニカは既に Phase 2 相当を実行中</li>
+      <li>マクニカの強み = <strong>「技術理解 × 営業力 × 長期メーカー関係」</strong>。これは本事業も同じく必要なケイパビリティ</li>
+      <li>マクニカは <strong>日本国内市場</strong> で完結。本事業は <strong>米国 DeepTech 市場 + US Soil 製造</strong> でグローバル + 政府市場まで広げる</li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">補完関係・潜在パートナー</h4>
+    <div class="callout" style="margin-top: 8px;">
+      マクニカは <strong>競合ではなく、潜在的なパートナー候補</strong>。彼らの日本顧客網（自動車・産業）からの新興デバイス需要を、我々が逆ルートで日本素材調達して米国へ流すなど、<strong>双方向の流通網形成</strong>もあり得る。Phase 2-3 で具体検討。
+    </div>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">Foundry はどこに作るべきか？ — Texas / LA / Chicago</div>
+  <div class="knowledge-a">
+    <p><strong>結論：LA（El Segundo / Gundo）でスタート、Phase 3 のスケール時に Texas（Austin or Houston）に拡張。Chicago は戦略的に外れ。</strong></p>
+
+    <div class="tbl-scroll"><table class="per-table" style="margin-top: 12px;">
+      <thead>
+        <tr><th>候補地</th><th>Pros</th><th>Cons</th><th>判定</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>LA（El Segundo / Gundo）</strong></td>
+          <td>
+            ・<strong>Gundo（El Segundo）= 防衛テックの聖地</strong>（Anduril, Mach, Apex, Hadrian）<br>
+            ・SpaceX HQ（Hawthorne）<br>
+            ・Aerospace ecosystem（Northrop, Boeing, Lockheed）<br>
+            ・Port of LA / Long Beach から日本素材の直輸入が最短<br>
+            ・Founders Fund / a16z 西海岸拠点<br>
+            ・Caltech / UCLA / USC 人材
+          </td>
+          <td>
+            ・CA高税率（法人税 8.84%）<br>
+            ・厳しい環境・労働規制<br>
+            ・人件費・不動産が全米トップクラス<br>
+            ・地震リスク
+          </td>
+          <td>◎ <strong>Phase 1（Year 1〜）スタート拠点</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Texas（Austin / Houston / Dallas）</strong></td>
+          <td>
+            ・<strong>州法人税ゼロ</strong><br>
+            ・Pro-business / 低規制<br>
+            ・Samsung Austin、TI Dallas、Tesla Giga Texas<br>
+            ・SpaceX Starbase（Boca Chica）<br>
+            ・Lockheed Fort Worth、BAE<br>
+            ・電力安価（天然ガス + 太陽光急拡大）<br>
+            ・CHIPS Act の主要恩恵地<br>
+            ・労働力・土地が LA の 1/3
+          </td>
+          <td>
+            ・電力グリッド信頼性（2021年寒波で大停電）<br>
+            ・暑い気候 = DC冷却負荷増<br>
+            ・西海岸 VC からは遠い
+          </td>
+          <td>◎ <strong>Phase 3 スケール（Year 5〜）拡張拠点</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Chicago（IL）</strong></td>
+          <td>
+            ・中央立地で全米物流ハブ<br>
+            ・Argonne National Lab（核融合・原子力研究）<br>
+            ・工業ヘリテージ<br>
+            ・寒冷気候は DC冷却に有利
+          </td>
+          <td>
+            ・<strong>フロンティアテックの集積がない</strong><br>
+            ・IL州政治の複雑性、税負担重い<br>
+            ・VC・主要顧客から遠い<br>
+            ・防衛・宇宙クラスター薄い
+          </td>
+          <td>✗ <strong>外す</strong>（核融合特化なら例外あり）</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 18px; font-size: 14px;">推し戦略：LA → Texas の2拠点ロールアウト</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <strong>Phase 1〜2（Year 1〜5）：LA El Segundo</strong>
+      <ul style="margin-top: 6px;">
+        <li>初期は小規模アセンブリ + R&D拠点（5〜20億円規模の Capex）</li>
+        <li>Anduril、SpaceX、Mach、Apex などの「Gundo defense ecosystem」と物理的に近接</li>
+        <li>Founders Fund / Thiel系のVC リレーション構築に有利</li>
+        <li>港湾アクセスで AGC / Toray / Nidec の日本素材を即時輸入</li>
+      </ul>
+      <p style="margin-top: 10px;"><strong>Phase 3（Year 5〜）：Texas Austin（or Houston）拡張</strong></p>
+      <ul style="margin-top: 6px;">
+        <li>本格 Black Box Factory（数億〜数十億ドル規模 CapEx）</li>
+        <li>州税ゼロ + 低人件費 + CHIPS Act 補助金で利益率を最大化</li>
+        <li>Tesla / Samsung / TI が築いた製造エコシステム活用</li>
+        <li>Hyperscaler（AWS Texas Region、Meta DC）への直送圏</li>
+      </ul>
+    </div>
+
+    <h4 style="font-weight: 700; margin-top: 18px; font-size: 14px;">補足：他の候補</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>Phoenix, Arizona</strong>：TSMC Fab、Intel Ocotillo。半導体に特化するなら最強の候補</li>
+      <li><strong>Columbus, Ohio</strong>：Intel Mega Fab。CHIPS Act の中心地、中西部からの政治支援</li>
+      <li><strong>Atlanta, Georgia</strong>：NVIDIA / Hyundai EV、CFIUS文脈に親和的</li>
+      <li><strong>Boise, Idaho</strong>：Micron HQ、メモリ特化なら検討余地</li>
+      <li><strong>Bay Area</strong>：人件費高すぎ、製造拠点として現実的でない（R&Dオフィスのみ）</li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">最終 Phase（Year 15+）：3拠点グローバル展開</h4>
+    <p>LA（米西海岸）+ Texas（米中南部）+ <strong>Germany（欧州）</strong> の3拠点で、TSMC Arizona / Japan / Europe と同じグローバル分散モデル。Germany 拠点は、Phase 2 後半に Bosch / Siemens / Anduril Europe との連携で検討。</p>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">どの Industry から攻めるか？ — 3軸フレームワーク（Geminiの示唆）</div>
+  <div class="knowledge-a">
+    <p>この問いは常に持っておきたい。Geminiから受けた切り口：<strong>3つの軸でハードウェア市場を分類</strong>すれば、必要な素材・技術・営業ルートが明確になる。</p>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">軸 ①：Physics Bound（物理的な制約）</h4>
+    <p>ハードウェアは「物理の壁」で分類すると、必要な素材と技術が明確になる。</p>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>分類</th><th>該当領域</th><th>核心課題</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Stationary & Thermal-bound</strong>（固定式・熱が限界）</td>
+          <td>Data Center、Fusion、SMR（小型原子炉）</td>
+          <td>重くても動かなくていい。とにかく<strong>「熱」をどう逃すか</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Mobile & Weight-bound</strong>（移動式・重さと電力が限界）</td>
+          <td>Robot、Drone、EV</td>
+          <td>バッテリー駆動。モーターの <strong>「小型化・軽量化・省電力化」</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Extreme Environment</strong>（極限環境）</td>
+          <td>Space、Deep Sea</td>
+          <td>熱・電力に加え、<strong>真空・放射線・絶対零度に耐える「異常な耐久性」</strong></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 18px; font-size: 14px;">軸 ②：Geopolitical Trust（顧客の機密レベル）</h4>
+    <p>日本の独占技術をUSで組み立てるFoundryにおいて、最も意識すべき「顧客の性質」による切り方。</p>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>分類</th><th>代表顧客</th><th>特性</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Commercial</strong>（純・民間）</td>
+          <td>AWS、Google、Apple</td>
+          <td>利益率と性能が最優先の市場</td>
+        </tr>
+        <tr>
+          <td><strong>Dual-Use</strong>（軍民両用）</td>
+          <td>SpaceX、Anduril、Figure</td>
+          <td>表向きは民間だが、技術はそのまま防衛転用。<strong>今USで最もお金が集まっているHotな領域</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Classified</strong>（国家機密）</td>
+          <td>DoD、Lockheed Martin</td>
+          <td>最高度のセキュリティ・クリアランス必要。一度入れば <strong>絶対にひっくり返らない最強の市場</strong></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 18px; font-size: 14px;">軸 ③：Integration Layer（統合の深さ）</h4>
+    <p>「何をどこまで組み合わせて売るか」というバリューチェーンの切り方。</p>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>Layer</th><th>内容</th><th>例</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Layer 1: Material</strong>（素材）</td>
+          <td>原料・化学素材を売る</td>
+          <td>AGCのフッ素冷媒、Torayのカーボン</td>
+        </tr>
+        <tr>
+          <td><strong>Layer 2: Component & Module</strong>（部品・モジュール）</td>
+          <td>機能を持った部品単位</td>
+          <td>Nidecのモーター、冷却ポンプ、ロボット関節ユニット</td>
+        </tr>
+        <tr>
+          <td><strong>Layer 3: System Architecture</strong>（システム全体）</td>
+          <td>完成済みの統合システム</td>
+          <td>「完成済みAIラック」「ロボットアーム全体」</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 18px; font-size: 14px;">Geminiの最終問い：AWSに Layer 3 (System) でパッケージ売りが最大利益か？</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <p><strong>仮説：YES（条件付き）。</strong></p>
+      <ul style="margin-top: 8px;">
+        <li><strong>Phase 1（Broker）では Layer 1 〜 2</strong>：AGCのフッ素冷媒、Nidecのポンプを単体でAWSに紹介。マージン3〜10%、まずは取引実績作り</li>
+        <li><strong>Phase 2（独占代理）でも Layer 2 まで</strong>：「日本部品の独占供給」がMoat、Layer 3はまだ他社（Foxconn等）が組み立てる</li>
+        <li><strong>Phase 3（自社Foundry）で Layer 3 へ昇格</strong>：LA/Texasの自社工場で「AGC冷媒 + Nidec ポンプ + Daikin HVAC + Murata 電源」を統合した「完成済み AI冷却ラック」をAWSに納品。マージン 25-30%</li>
+      </ul>
+      <p style="margin-top: 8px;"><strong>結論：Geminiの仮説は正しいが、最初からLayer 3はNG。3年かけて Layer 1→2→3 と段階的に昇格するのが現実解。</strong></p>
+    </div>
+
+    <h4 style="font-weight: 700; margin-top: 18px; font-size: 14px;">3軸マッピング：本事業のフェーズ別ターゲット</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>フェーズ</th><th>Physics</th><th>Trust</th><th>Layer</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Phase 1（Year 1〜3）</strong></td>
+          <td>Stationary（DC冷却）</td>
+          <td>Commercial（AWS / Google）</td>
+          <td>L1〜L2</td>
+        </tr>
+        <tr>
+          <td><strong>Phase 2（Year 3〜5）</strong></td>
+          <td>+ Mobile（Robot / Drone）</td>
+          <td>+ Dual-Use（SpaceX / Anduril / Figure）</td>
+          <td>L2 中心、L3 試作</td>
+        </tr>
+        <tr>
+          <td><strong>Phase 3（Year 5〜10）</strong></td>
+          <td>+ Extreme（Space / Fusion）</td>
+          <td>+ Classified（DoD / Lockheed）</td>
+          <td>L3 主軸（Pure-play Foundry）</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">プロジェクト単位の収益イメージ（そろばん）</div>
+  <div class="knowledge-a">
+    <p>各社の素材・部品を「バラ売りの個数」ではなく、<strong>USハイパースケーラーが1回に発注する「プロジェクト単位のパッケージ」</strong>として収益を試算したケース。</p>
+
+    <div class="tbl-scroll"><table class="per-table" style="margin-top: 12px;">
+      <thead>
+        <tr><th>パートナー</th><th>製品</th><th>Price / Project</th><th>Volume / Year</th><th>Subtotal / Year</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>AGC</strong></td>
+          <td>フッ素冷媒液</td>
+          <td>$10M</td>
+          <td>4 件</td>
+          <td><strong>$40M</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Toray</strong></td>
+          <td>構造体・特殊カーボン</td>
+          <td>$3.3M</td>
+          <td>6 件</td>
+          <td><strong>$20M</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Shin-Etsu Chemical</strong></td>
+          <td>超高放熱シリコーン</td>
+          <td>$2M</td>
+          <td>10 件</td>
+          <td><strong>$20M</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Murata</strong></td>
+          <td>大容量・高密度電源モジュール</td>
+          <td>$5.3M</td>
+          <td>5 件</td>
+          <td><strong>$27M</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Mitsubishi Chemical</strong></td>
+          <td>耐熱高機能樹脂パーツ</td>
+          <td>$6.7M</td>
+          <td>3 件</td>
+          <td><strong>$20M</strong></td>
+        </tr>
+        <tr style="background: #f0f0f0;">
+          <td colspan="4"><strong>Total Pass-through GMV</strong></td>
+          <td><strong>$127M</strong></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <p style="font-size: 12.5px; color: var(--muted); margin-top: 6px;">※ 元データは JPY ベース（AGC 60億 / Toray 30億 / 信越 30億 / Murata 40億 / 三菱ケミカル 30億 = 190億円）。USD換算 (150 JPY/USD)。</p>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">本事業の取り分（Brokerフェーズ）</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ul style="margin-top: 4px;">
+        <li><strong>5社 Pass-through GMV：$127M / 年</strong>（≒ 190億円）</li>
+        <li><strong>Brokerマージン 5%：</strong>$6.3M / 年（≒ 9.5億円）</li>
+        <li><strong>独占代理 10%：</strong>$12.7M / 年（≒ 19億円）</li>
+        <li><strong>Margin + Tolling 15-20%：</strong>$19-25M / 年（≒ 28-38億円）</li>
+      </ul>
+      <p style="margin-top: 8px;"><strong>Year 3 想定の売上 $200M</strong>（Milestone表）と整合：5社 Pass-through $127M に加えて、Phase 2拡張（防衛・宇宙領域）で残り $70M を埋めるイメージ。</p>
+    </div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">スケール時の試算</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>Year 5（Foundry稼働）</strong>：パートナー10社 × 平均 Volume 2倍 × Toll fee統合 = Revenue $670M</li>
+      <li><strong>Year 10</strong>：パートナー30社 + 防衛・宇宙拡張 + 自社加工 = Revenue $5.3B</li>
+      <li><strong>Year 30</strong>：全 Tier 1 日本メーカー + LA/Texas/Germany 3拠点 = Revenue $130B</li>
+    </ul>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">AGC / Toray に続く、次に握るべきパートナーは？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：信越化学工業 / Murata / Mitsubishi Chemical の3社。</strong>いずれも部品・素材単体では世界一だが、<strong>「完成品モジュールへの統合力がなく、海外営業のブレイクスルーを求めている」</strong>という共通点があり、本事業が完璧にフィットする。</p>
+
+    <div class="tbl-scroll"><table class="per-table" style="margin-top: 12px;">
+      <thead>
+        <tr><th>企業</th><th>強み</th><th>世界シェア</th><th>本事業の解決ペイン</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>信越化学工業</strong></td>
+          <td><strong>放熱材</strong>（サーマルグリス・サーマルパッド・シリコーン系熱伝導材）<br>シリコンウェハ・希土類磁石・フォトレジストも世界1位</td>
+          <td>各セグメントで1位</td>
+          <td>NVIDIA GB200の液冷ラックに「モジュール化された熱インターフェース」を売りたいが、自社では統合できない</td>
+        </tr>
+        <tr>
+          <td><strong>Murata（村田製作所）</strong></td>
+          <td><strong>MLCC（コンデンサ）・電源モジュール</strong>、RF部品、センサー</td>
+          <td>MLCC世界1位</td>
+          <td>AIサーバー / EVに「電源 + コンデンサ + センサー一体型」モジュールを売りたいが、自社統合は不得手</td>
+        </tr>
+        <tr>
+          <td><strong>Mitsubishi Chemical</strong></td>
+          <td><strong>宇宙・防衛用カーボン繊維</strong>（Toray と並ぶ）、機能化学</td>
+          <td>炭素繊維世界2位</td>
+          <td>SpaceX / Anduril / 核融合企業に「完成構造材」を直接届けたいが、米国営業ルートが薄い</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">3社に共通する「商社が刺さるペイン」</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ul style="margin-top: 4px;">
+        <li><strong>① 部品・素材単体では世界一</strong> — 製品力は十分</li>
+        <li><strong>② 「完成品モジュール」への統合力がない</strong> — 我々の Phase 3 自社工場で組み立てる価値が高い</li>
+        <li><strong>③ 海外営業のブレイクスルーを求めている</strong> — Hyperscaler / 防衛 / 宇宙への直接ルートを欲している</li>
+      </ul>
+      <p style="margin-top: 8px;"><strong>= 本事業の「Tier 0.5 Broker + Phase 3 Foundry」のバリュープロポジションと完全一致。</strong></p>
+    </div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">アプローチ戦略</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>信越化学</strong>：放熱材ラインの責任者 + DC領域責任者にアプローチ。NVIDIA / Hyperscaler への直販ルートを共同開拓する提案</li>
+      <li><strong>Murata</strong>：京都本社 + 横浜開発拠点。AIサーバー向け「電源モジュール統合」をJDAで握る</li>
+      <li><strong>Mitsubishi Chemical</strong>：炭素繊維事業部 + 米国子会社（MCC USA）。SpaceX / Anduril への独占代理権を交渉</li>
+    </ul>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">Tokyo Electron（TEL）は本事業の顧客 / パートナーとして向くか？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：NO。TELは別レイヤーの巨人で、本事業の直接パートナーには不向き。</strong></p>
+
+    <p style="margin-top: 10px;">TELは <strong>半導体を作る「巨大な装置」そのものを売るKing</strong>。Intel / TSMC / Samsung などに直接、完成されたシステム（コータ・デベロッパ・エッチャ等）を納品しており、営業で困ることはない。<strong>商社的な仲介の余地が極めて薄い</strong>。</p>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">なぜパートナーに向かないか</h4>
+    <ul style="margin-left: 24px;">
+      <li><strong>顧客に直接アクセスできる</strong>：Intel・TSMC・Samsung・Hyperscaler の SemiFab 部隊と直接交渉ルートを持つ</li>
+      <li><strong>取引単位が桁違い</strong>：1台数十億円の装置販売、商社の数%マージンを払う動機がない</li>
+      <li><strong>FDE（Forward Deployed Engineer）が完備</strong>：自社で技術サポート部隊を持ち、現地統合まで完結している</li>
+      <li><strong>ASMLとの直接競合関係</strong>：露光以外の前工程は自社で押さえ、商社経由でレイヤーを増やしたくない</li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">それでも"Must-Know"な理由</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <ul style="margin-top: 4px;">
+        <li><strong>業界転身のロールモデル</strong>：商社 → メーカーへの転身という、本事業が辿る道の最重要参考企業</li>
+        <li><strong>取引相手のリトマス試験</strong>：TELを語れない人物は半導体業界では信用されない</li>
+        <li><strong>将来の提携相手としては「あり」</strong>：Phase 3で自社製造（Pure-play Foundry）を始める際、装置調達でTELとの直接関係が必要</li>
+      </ul>
+    </div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">類似する「別レイヤーの巨人」</h4>
+    <p>同じ理由で <strong>直接パートナーに向かない</strong> が、業界知識としては必須の企業群：</p>
+    <ul style="margin-left: 24px;">
+      <li><strong>Advantest</strong>：半導体テスター世界1位、NVIDIA / TSMC に直販</li>
+      <li><strong>Lasertec</strong>：EUVマスク検査独占、ASMLと直結</li>
+      <li><strong>Disco</strong>：ウェハダイシング・グラインダー世界1位、Apple / TSMC 直販</li>
+      <li><strong>SCREEN</strong>：洗浄装置、ファウンドリ直販</li>
+    </ul>
+    <p style="margin-top: 8px;">これらは <strong>「Mega-Tool Vendor」</strong> として、商社の介入余地が薄い。狙うべきは <strong>「素材・部品の独占供給者」（AGC、Nidec、Toray、Ibiden等）</strong> の方。</p>
+  </div>
+</div>
+
+
+<div class="knowledge-card">
+  <div class="knowledge-q">Kioxia はすでに US で売れまくっているのでは？ なぜうまく行った？ Bain Capital の add value は？ 我々の助けは要るのか？</div>
+  <div class="knowledge-a">
+    <p><strong>結論：Kioxia は主要パートナー候補の中で「最も我々の助けを必要としていない」。Bain Capital のオーケストレーションが完璧に効いている例外ケース。我々の付加価値は CFIUS / 防衛ニッチに限定される。</strong></p>
+
+    <h4 style="font-weight: 700; margin-top: 14px; font-size: 14px;">なぜ Kioxia は US で成功したか</h4>
+    <ol style="margin-left: 24px;">
+      <li><strong>Toshiba 時代の R&D / IP 継承</strong>：NAND 発明元（東芝）の技術が DNA に残る</li>
+      <li><strong>Bain Consortium の構造設計が天才的</strong>：2018年の $18B 買収で <strong>Apple / Dell / Seagate / SK Hynix を共同投資家として入れた</strong>。彼らが自動的に顧客になる</li>
+      <li><strong>NAND は元々グローバル商品</strong>：仕様標準化されており、地理的障壁が低い</li>
+      <li><strong>AI/DC 需要爆発</strong>：Hyperscaler のサーバーSSD需要が指数関数的、Kioxia が乗れた</li>
+      <li><strong>Kioxia America Inc.（San Jose）が機能</strong>：北米営業組織がきちんと稼働</li>
+      <li><strong>IPO 完了（2024年）で資本ベース確立</strong>：Bain の Exit と同時に独立資本市場アクセスを得た</li>
+    </ol>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">Bain Capital の Add Value（=完璧な PE 介入）</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>項目</th><th>Bain の動き</th><th>結果</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>顧客連携</strong></td>
+          <td>Apple / Dell / Seagate を Consortium 共同投資家として組成</td>
+          <td>大口顧客が同時に株主、需要保証</td>
+        </tr>
+        <tr>
+          <td><strong>戦略パートナー</strong></td>
+          <td>SK Hynix も投資家に（後に分離）</td>
+          <td>HBM など隣接領域の連携余地</td>
+        </tr>
+        <tr>
+          <td><strong>マージン規律</strong></td>
+          <td>PE 流のコスト最適化・選択と集中</td>
+          <td>DC向け45%へとmix shift（高利益率セグメント集中）</td>
+        </tr>
+        <tr>
+          <td><strong>取締役会・米国経営者派遣</strong></td>
+          <td>Bain US パートナーが取締役、米国経営感覚を移植</td>
+          <td>Yokkaichi 工場の運営合理化、US的KPI</td>
+        </tr>
+        <tr>
+          <td><strong>IPO Exit 設計</strong></td>
+          <td>6年で東証IPO、Bainの利益確定 + Kioxia の独立資本市場アクセス</td>
+          <td>独立企業として永続化</td>
+        </tr>
+      </tbody>
+    </table></div>
+    <p style="margin-top: 8px;"><strong>「Capital + Customer Consortium」</strong> モデルの教科書的成功例。深川氏も別文脈で指摘した「投資 × トレード連動」の理想形。</p>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">では我々の付加価値はあるか？</h4>
+    <div class="callout" style="margin-top: 8px;">
+      <p><strong>結論：限定的だが、ニッチで効く。</strong></p>
+      <ul style="margin-top: 8px;">
+        <li><strong>✗ 通常の NAND / SSD 販売：</strong>Bain が既に完璧にレールを敷いた。我々の介入余地ゼロ</li>
+        <li><strong>✗ Hyperscaler への基本契約：</strong>Apple / Dell / Seagate ルート完備</li>
+        <li><strong>○ CFIUS 厳格領域：</strong>DoD / GovCloud / 軍事 / 宇宙向けの <strong>US Soil 製造 NAND モジュール</strong>。Kioxia は日本国内製造のみ、US Soil 化のニーズはある</li>
+        <li><strong>○ AI ラック統合：</strong>Kioxia の NAND を <strong>AGC 冷媒 / Nidec ポンプ / Murata 電源</strong> と統合した「完成 AI Server Rack」として Foundry で組み立てる価値</li>
+        <li><strong>○ 軌道上 DC（Starcloud 等）向けの宇宙対応 NAND モジュール</strong>：新規・特殊用途で Kioxia 単体では対応難しい</li>
+      </ul>
+    </div>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">本事業への学び — Bain モデルを我々の SU 戦略に適用する</h4>
+    <p>Kioxia の成功パターン（Capital + Customer Consortium）は、まさに我々が <strong>米ディープテック SU との関係構築</strong> で再現すべきモデル：</p>
+    <ul style="margin-left: 24px;">
+      <li>少額出資（Bain 型）+ 顧客 Consortium 組成（Apple/Dell型）= 投資 × 顧客の二重ロック</li>
+      <li>具体的には、<strong>「我々が出資し、日本メーカー（AGC等）を共同投資家として入れる」</strong>SUラウンドを設計</li>
+      <li>SU は資本も得るし、日本サプライチェーンも自動的に確保できる</li>
+      <li>これが本事業の <strong>「Capital × Trading × Customer Consortium」</strong> の進化形 = Kioxia / Bain の鏡像</li>
+    </ul>
+
+    <h4 style="font-weight: 700; margin-top: 16px; font-size: 14px;">Tier 区分け（パートナーごとの「我々の必要度」）</h4>
+    <div class="tbl-scroll"><table class="per-table">
+      <thead>
+        <tr><th>パートナー</th><th>US Soil 製造</th><th>米国営業</th><th>我々への必要度</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Kioxia</strong></td><td>無し（日本のみ）</td><td>強（Apple/Dellルート）</td><td>低〜中（ニッチのみ）</td></tr>
+        <tr><td><strong>AGC</strong></td><td>無し</td><td>中（DC冷媒一部）</td><td><strong>高</strong></td></tr>
+        <tr><td><strong>Toray</strong></td><td>無し</td><td>中（航空宇宙限定）</td><td><strong>高</strong></td></tr>
+        <tr><td><strong>Shin-Etsu</strong></td><td>無し</td><td>強（半導体材料）</td><td>中</td></tr>
+        <tr><td><strong>Murata</strong></td><td>無し</td><td>中</td><td><strong>高</strong></td></tr>
+        <tr><td><strong>Nidec</strong></td><td>米国一部あり</td><td>中</td><td>中〜高</td></tr>
+        <tr><td><strong>Mitsubishi Chemical</strong></td><td>無し</td><td>弱</td><td><strong>非常に高</strong></td></tr>
+      </tbody>
+    </table></div>
+    <p style="margin-top: 8px;"><strong>戦略示唆：</strong>本事業は Kioxia ではなく、<strong>AGC / Toray / Murata / 三菱ケミカル</strong>のような「素材一級・米営業未熟」企業から攻めるべき。Kioxia は Phase 2-3 の CFIUS ニッチで初めて関わる。</p>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">Kioxia の主要クライアントはどこか？</div>
+  <div class="knowledge-a">
+    <p>Kioxia は <strong>「NANDフラッシュメモリ」の専業</strong>。売却先は3つに綺麗に分かれる：</p>
+    <div class="tbl-scroll"><table class="per-table" style="margin-top: 10px;">
+      <thead>
+        <tr><th>セグメント</th><th>比率（目安）</th><th>顧客例</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>データセンター向け</strong></td><td><strong>約45%</strong></td><td>Hyperscalers (AWS / Azure / GCP / Meta)、Server OEM (Dell / HPE / Supermicro)、NVIDIA AIサーバー向け</td></tr>
+        <tr><td><strong>スマホ向け</strong></td><td>約35%</td><td>Apple、Samsung、中華スマホ各社</td></tr>
+        <tr><td><strong>PC・コンシューマ向け</strong></td><td>約20%</td><td>PC OEM、リテール SSD</td></tr>
+      </tbody>
+    </table></div>
+    <p style="margin-top: 10px;"><strong>現在はAIブームで、最も利益率の高いデータセンター向け比率が急拡大中。</strong>NVIDIAのAIサーバー向けSSD需要が牽引。</p>
+    <p style="margin-top: 6px;">この事業にとって：<strong>狙うべきは45%のDC向け</strong>。ハイパースケーラーとの関係構築・US Soil 製造の文脈と完全に重なる。スマホ向けは Apple 直営業が確立しており参入余地が薄い。</p>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">それらに対してセールス活動をしている部隊がいるか？</div>
+  <div class="knowledge-a">
+    <p><span class="label">OPEN QUESTION</span></p>
+    <p>Kioxia America Inc.（San Jose 拠点）が北米営業を担当しているはず。Hyperscalers 向けに直販 + Server OEM経由の間接販売の両輪と思われる。<strong>「日本本社の営業企画」と「Kioxia America の現地営業」のレポートライン、人員規模、決裁権の所在</strong>が要確認ポイント。</p>
+  </div>
+</div>
+
+<div class="knowledge-card">
+  <div class="knowledge-q">本プロジェクトがヘルプしようとした時、Kioxia はニーズを感じるか？</div>
+  <div class="knowledge-a">
+    <p><span class="label">OPEN QUESTION</span></p>
+    <p>仮説：YES、ただし条件付き。</p>
+    <ul style="margin-left: 24px; margin-top: 8px;">
+      <li><strong>正：</strong>Samsung / SK Hynix との価格競争で米国シェアを取り戻したい。Hyperscalers との直接交渉力、CFIUS 完全準拠の US Soil 製造、政府グラント獲得が魅力。</li>
+      <li><strong>負：</strong>すでに自社で米国営業組織を持っており、商社的な仲介に高い手数料を払う動機が薄い可能性。</li>
+    </ul>
+    <p style="margin-top: 8px;"><strong>検証アプローチ：</strong>Kioxia America の元幹部 / 退任者へのヒアリング、ベイン・キャピタル（株主）経由でのアプローチ、IR 開示の「課題」セクション精読。</p>
+  </div>
+</div>
+
+<h2>Japanese Major Manufacturers — Ranking (must-know)</h2>
+<p>This trading-company business demands deep knowledge of <strong>"who holds which irreplaceable tech"</strong> at the major Japanese manufacturers. Ranked by relevance to Semi / DC / Defense / Space / Robotics.</p>
+
+<h3>Tier S: Absolute Must-Know (5)</h3>
+<p>For these five, know the current head of technology + their title cold.</p>
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr><th>#</th><th>Company</th><th>Strength</th><th>Why must-know</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td><strong>AGC</strong></td><td>Fluorinated coolants, specialty glass, photoresist precursors</td><td>Irreplaceable materials for liquid-cooled DC & semi process</td></tr>
+    <tr><td>2</td><td><strong>Tokyo Electron</strong></td><td>Semi mfg equipment (coater/developer, etcher, etc.)</td><td>Choke point of global semi mfg — even China & Korea depend on it</td></tr>
+    <tr><td>3</td><td><strong>Shin-Etsu Chemical</strong></td><td>Silicon wafers, photoresists, rare-earth magnets</td><td>World #1 in semi materials; magnets central to Defense/EV/Robotics</td></tr>
+    <tr><td>4</td><td><strong>Toray</strong></td><td>Carbon fiber (CFRP), advanced composites</td><td>Structure of SpaceX Starship, Anduril UAVs, fusion vessels</td></tr>
+    <tr><td>5</td><td><strong>Mitsubishi Corporation</strong></td><td>Trading house / DeepTech VC network (Breakthrough Energy etc.)</td><td>Competitor, partner candidate, supply-chain hub all-in-one</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Tier A: Essential (10)</h3>
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr><th>#</th><th>Company</th><th>Strength</th><th>Related Industry</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>6</td><td><strong>Fujifilm</strong></td><td>Photoresists, high-purity films</td><td>Semi, Bio</td></tr>
+    <tr><td>7</td><td><strong>JSR</strong></td><td>Photoresists (EUV / ArF)</td><td>Semi (heavy China/Korea dependence)</td></tr>
+    <tr><td>8</td><td><strong>Ibiden</strong></td><td>FC-BGA substrates (advanced AI server packaging)</td><td>Core substrate of NVIDIA GB200</td></tr>
+    <tr><td>9</td><td><strong>Fanuc</strong></td><td>Industrial robots, CNC, servos</td><td>Defense mass production, automation</td></tr>
+    <tr><td>10</td><td><strong>Nidec</strong></td><td>Precision motors (HDD / EV / drone)</td><td>Robotics, drones, DC cooling</td></tr>
+    <tr><td>11</td><td><strong>Daikin</strong></td><td>Cooling, HVAC, fluorochemistry</td><td>DC liquid cooling, HVAC integration</td></tr>
+    <tr><td>12</td><td><strong>Fuji Electric</strong></td><td>High-efficiency transformers, SiC power devices</td><td>DC power infrastructure</td></tr>
+    <tr><td>13</td><td><strong>Murata</strong></td><td>MLCC, RF & communication modules</td><td>Mandatory parts across all electronics</td></tr>
+    <tr><td>14</td><td><strong>SUMCO</strong></td><td>Silicon wafers (300mm)</td><td>Semi (Shin-Etsu's duopoly partner)</td></tr>
+    <tr><td>15</td><td><strong>Mitsubishi Heavy Industries</strong></td><td>Defense, space, nuclear</td><td>Government contracts, defense supply chain core</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Tier B: Important (15)</h3>
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr><th>#</th><th>Company</th><th>Strength</th><th>Related Industry</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>16</td><td><strong>Kyocera</strong></td><td>Ceramic electronic components & packaging</td><td>Semi, Comms</td></tr>
+    <tr><td>17</td><td><strong>TDK</strong></td><td>Electronic components, sensors, batteries</td><td>EV, Defense, Robotics</td></tr>
+    <tr><td>18</td><td><strong>IHI</strong></td><td>Aero engines, rocket engines</td><td>Space, Defense</td></tr>
+    <tr><td>19</td><td><strong>Kawasaki Heavy Industries</strong></td><td>Defense equipment, hydrogen, heavy industry</td><td>Defense, Hydrogen energy</td></tr>
+    <tr><td>20</td><td><strong>Mitsubishi Electric</strong></td><td>Power semi, defense electronics, satellites</td><td>Defense, Space, Power</td></tr>
+    <tr><td>21</td><td><strong>Hitachi</strong></td><td>Heavy electric, nuclear, OT</td><td>Power, Nuclear</td></tr>
+    <tr><td>22</td><td><strong>Yaskawa Electric</strong></td><td>Servo motors, robots</td><td>Robotics, mass-production automation</td></tr>
+    <tr><td>23</td><td><strong>Renesas</strong></td><td>Automotive & industrial MCU</td><td>Semi, Defense</td></tr>
+    <tr><td>24</td><td><strong>Rohm</strong></td><td>SiC power semiconductors</td><td>Power conversion, EV</td></tr>
+    <tr><td>25</td><td><strong>Canon / Nikon</strong></td><td>Semi lithography & optics</td><td>Semi (ASML challenger)</td></tr>
+    <tr><td>26</td><td><strong>Lasertec</strong></td><td>EUV mask inspection (monopoly)</td><td>Semi (monopoly tech)</td></tr>
+    <tr><td>27</td><td><strong>Disco</strong></td><td>Wafer dicing & grinding</td><td>Semi back-end</td></tr>
+    <tr><td>28</td><td><strong>Tokyo Ohka Kogyo (TOK)</strong></td><td>Photoresists</td><td>Semi materials</td></tr>
+    <tr><td>29</td><td><strong>Advantest</strong></td><td>Semi testers</td><td>Semi inspection</td></tr>
+    <tr><td>30</td><td><strong>SCREEN</strong></td><td>Semi cleaning equipment</td><td>Semi process</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Tier C: Peripheral / Future (10)</h3>
+<div class="tbl-scroll"><table class="per-table">
+  <thead>
+    <tr><th>#</th><th>Company</th><th>Strength</th><th>Related Industry</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>31</td><td><strong>Kaneka</strong></td><td>High-performance polyimide, bio</td><td>Materials, Bio</td></tr>
+    <tr><td>32</td><td><strong>Asahi Kasei</strong></td><td>Electronic materials, fibers</td><td>Materials</td></tr>
+    <tr><td>33</td><td><strong>Sumitomo Chemical</strong></td><td>Chemicals, agrochemicals, electronic materials</td><td>Materials</td></tr>
+    <tr><td>34</td><td><strong>Mitsubishi Chemical</strong></td><td>Carbon fiber, functional chemistry</td><td>Materials (rival of Toray)</td></tr>
+    <tr><td>35</td><td><strong>Furukawa Electric</strong></td><td>Specialty cables, rare-earth processing</td><td>Magnets, Power</td></tr>
+    <tr><td>36</td><td><strong>Sumitomo Metal Mining</strong></td><td>Battery materials (NCA cathode)</td><td>EV, Energy Storage</td></tr>
+    <tr><td>37</td><td><strong>Kobe Steel</strong></td><td>Specialty steel, titanium</td><td>Aerospace</td></tr>
+    <tr><td>38</td><td><strong>Mitsui & Co / Itochu / Sumitomo Corp</strong></td><td>Trading houses</td><td>Rivals to Mitsubishi Corp, also partner candidates</td></tr>
+    <tr><td>39</td><td><strong>Subaru</strong></td><td>Aircraft center wing (Boeing 787)</td><td>Space, Defense</td></tr>
+    <tr><td>40</td><td><strong>Taiyo Yuden</strong></td><td>MLCC, electronic components</td><td>Rival of Murata</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout">
+  <strong>How to use:</strong><br>
+  Tier S・A: be able to <strong>recite the current head of technology + their last 5 years of overseas partnerships</strong>. Tier B: know <strong>their world ranking by domain</strong> at a glance. Tier C: deep-dive when a deal triggers it.
+</div>
+
+</div><!-- /#tab-knowledge -->
+
+<div id="tab-qa" class="tab-content">
+  <h2>Q&A</h2>
+  <p>事業に関する Q&A。チェックボックスで「対応済み/理解済み」を管理し、Sort・Filter で整理可能。</p>
+
+  <div class="qa-toolbar">
+    <div class="qa-filter-row">
+      <span class="qa-filter-label">Filter:</span>
+      <button class="qa-filter-btn active" data-filter="all">All</button>
+      <button class="qa-filter-btn" data-filter="unchecked">未対応のみ</button>
+      <button class="qa-filter-btn" data-filter="checked">対応済みのみ</button>
+    </div>
+    <div class="qa-filter-row">
+      <span class="qa-filter-label">Sort:</span>
+      <button class="qa-sort-btn active" data-sort="original">追加順</button>
+      <button class="qa-sort-btn" data-sort="status">対応状態順</button>
+      <button class="qa-sort-btn" data-sort="alpha">アルファベット順</button>
+    </div>
+    <div class="qa-toolbar-progress">
+      <span id="qa-progress">0 / 0 addressed</span>
+      &nbsp;・&nbsp;
+      <button class="qa-filter-btn" data-reset>Reset Checks</button>
+    </div>
+  </div>
+
+  <div id="qa-cards"></div>
+</div>
+
+<div id="tab-hiring" class="tab-content">
+  <h2>Hiring 🔒（LOCAL ONLY）</h2>
+  <p style="color: var(--muted); font-size: 13px;">このタブは file:// プロトコル経由でのみ表示されます。GitHub Pages には公開されません。</p>
+  <iframe src="260608_hiring_local.html" style="width: 100%; height: 1400px; border: 1px solid var(--border); border-radius: 6px; margin-top: 16px;"></iframe>
+</div>
+
+<div id="tab-term" class="tab-content">
+  <h2>Term Study 🔒（LOCAL ONLY）</h2>
+  <p style="color: var(--muted); font-size: 13px;">このタブは file:// プロトコル経由でのみ表示されます。GitHub Pages には公開されません。</p>
+  <iframe src="260608_term_local.html" style="width: 100%; height: 1400px; border: 1px solid var(--border); border-radius: 6px; margin-top: 16px;"></iframe>
+</div>
+
+<div id="tab-company-name" class="tab-content">
+  <h2>Company Name 🔒（LOCAL ONLY）</h2>
+  <p style="color: var(--muted); font-size: 13px;">このタブは file:// プロトコル経由でのみ表示されます。GitHub Pages には公開されません。</p>
+  <iframe src="260608_company_name_local.html" style="width: 100%; height: 1400px; border: 1px solid var(--border); border-radius: 6px; margin-top: 16px;"></iframe>
+</div>
+
+<script>
+// ── Local-only mode: show hidden tabs when opened via file:// ──
+if (window.location.protocol === 'file:') {
+  document.body.classList.add('local-mode');
+}
+
+// ── Section toggle (collapsible h3) ──
+document.querySelectorAll('h3.collapsible').forEach(h => {
+  // Inject toggle-arrow and check-mark spans on the LEFT of the title
+  if (!h.querySelector('.toggle-arrow')) {
+    const arrow = document.createElement('span');
+    arrow.className = 'toggle-arrow';
+    arrow.textContent = '▼';
+    h.prepend(arrow);
+  }
+  if (!h.querySelector('.check-mark')) {
+    const check = document.createElement('span');
+    check.className = 'check-mark';
+    check.textContent = '✅';
+    h.prepend(check); // prepend after arrow → final DOM order: check, arrow, text
+  }
+
+  h.addEventListener('click', () => {
+    const targetId = h.dataset.target;
+    const target = targetId ? document.getElementById(targetId) : h.nextElementSibling;
+    if (!target) return;
+    const isCollapsed = target.dataset.collapsed === 'true';
+    target.dataset.collapsed = isCollapsed ? 'false' : 'true';
+    h.classList.toggle('collapsed', !isCollapsed);
+  });
+});
+
+// ── Move all knowledge-cards from #tab-knowledge to #qa-cards ──
+(function migrateQACards() {
+  const qaContainer = document.getElementById('qa-cards');
+  const STORAGE_KEY = 'frontier-trading-qa-checks';
+  const checks = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
+  const cards = Array.from(document.querySelectorAll('#tab-knowledge .knowledge-card'));
+  cards.forEach((card, idx) => {
+    const qElem = card.querySelector('.knowledge-q');
+    const qText = qElem ? qElem.textContent.trim() : '';
+    const id = 'qa-' + (idx + 1).toString().padStart(2, '0');
+    card.dataset.qaId = id;
+    card.dataset.qaIdx = idx + 1;
+    card.dataset.qaText = qText;
+
+    // Build header row
+    const headerRow = document.createElement('div');
+    headerRow.className = 'qa-check-row';
+    const isChecked = !!checks[qText];
+    headerRow.innerHTML = `
+      <input type="checkbox" data-qa-text="${qText.replace(/"/g, '&quot;')}" ${isChecked ? 'checked' : ''}>
+      <span class="qa-num">${id.toUpperCase()}</span>
+      <button class="qa-toggle-btn" data-toggle>折りたたみ</button>
+    `;
+    card.insertBefore(headerRow, card.firstChild);
+    if (isChecked) card.classList.add('qa-checked');
+
+    qaContainer.appendChild(card);
+  });
+
+  // Wire up checkboxes
+  qaContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', e => {
+      const text = e.target.dataset.qaText;
+      const card = e.target.closest('.knowledge-card');
+      checks[text] = e.target.checked;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(checks));
+      card.classList.toggle('qa-checked', e.target.checked);
+      updateProgress();
+      applyFilter();
+    });
+  });
+
+  // Wire up toggle buttons (collapse/expand answer)
+  qaContainer.querySelectorAll('[data-toggle]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const card = btn.closest('.knowledge-card');
+      const collapsed = card.classList.toggle('qa-collapsed');
+      btn.textContent = collapsed ? '展開' : '折りたたみ';
+    });
+  });
+
+  // Filter
+  let currentFilter = 'all';
+  function applyFilter() {
+    qaContainer.querySelectorAll('.knowledge-card').forEach(card => {
+      const isChecked = card.classList.contains('qa-checked');
+      let show = true;
+      if (currentFilter === 'unchecked') show = !isChecked;
+      if (currentFilter === 'checked') show = isChecked;
+      card.style.display = show ? '' : 'none';
+    });
+  }
+  document.querySelectorAll('.qa-filter-btn[data-filter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.qa-filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      applyFilter();
+    });
+  });
+
+  // Sort
+  function applySort(key) {
+    const cards = Array.from(qaContainer.querySelectorAll('.knowledge-card'));
+    cards.sort((a, b) => {
+      if (key === 'status') {
+        const aChecked = a.classList.contains('qa-checked') ? 1 : 0;
+        const bChecked = b.classList.contains('qa-checked') ? 1 : 0;
+        return aChecked - bChecked || parseInt(a.dataset.qaIdx) - parseInt(b.dataset.qaIdx);
+      }
+      if (key === 'alpha') {
+        return (a.dataset.qaText || '').localeCompare(b.dataset.qaText || '');
+      }
+      return parseInt(a.dataset.qaIdx) - parseInt(b.dataset.qaIdx);
+    });
+    cards.forEach(c => qaContainer.appendChild(c));
+  }
+  document.querySelectorAll('.qa-sort-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.qa-sort-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applySort(btn.dataset.sort);
+    });
+  });
+
+  // Reset
+  document.querySelector('.qa-filter-btn[data-reset]').addEventListener('click', () => {
+    if (!confirm('全てのQAチェックをリセットしますか？')) return;
+    qaContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.checked = false;
+      const card = cb.closest('.knowledge-card');
+      card.classList.remove('qa-checked');
+    });
+    Object.keys(checks).forEach(k => delete checks[k]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(checks));
+    updateProgress();
+    applyFilter();
+  });
+
+  // Progress counter
+  function updateProgress() {
+    const total = qaContainer.querySelectorAll('.knowledge-card').length;
+    const done = qaContainer.querySelectorAll('.knowledge-card.qa-checked').length;
+    document.getElementById('qa-progress').textContent = `${done} / ${total} addressed`;
+  }
+  updateProgress();
+})();
+
+// ── Tab switching ──
+document.querySelectorAll('.tab-button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    document.querySelectorAll('.tab-button').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + target));
+    window.scrollTo({top: 0, behavior: 'instant'});
+    buildTOC();
+  });
+});
+
+// ── Dynamic TOC ──
+function buildTOC() {
+  const tocLinks = document.getElementById('toc-links');
+  if (!tocLinks) return;
+  tocLinks.innerHTML = '';
+  const activeTab = document.querySelector('.tab-content.active');
+  if (!activeTab) return;
+  const headers = activeTab.querySelectorAll('h2, h3');
+  headers.forEach((h, i) => {
+    if (!h.id) h.id = 'sec-' + activeTab.id + '-' + i;
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    a.className = 'lvl-' + h.tagName.toLowerCase();
+    a.dataset.targetId = h.id;
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.getElementById(h.id).scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+    tocLinks.appendChild(a);
+  });
+  observeSections();
+}
+
+let observer;
+function observeSections() {
+  if (observer) observer.disconnect();
+  const activeTab = document.querySelector('.tab-content.active');
+  if (!activeTab) return;
+  const headers = activeTab.querySelectorAll('h2, h3');
+  observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const link = document.querySelector('.toc a[data-target-id="' + entry.target.id + '"]');
+      if (!link) return;
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.toc a').forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  headers.forEach(h => observer.observe(h));
+}
+
+buildTOC();
+</script>
+
+</div>
+</body>
+</html>

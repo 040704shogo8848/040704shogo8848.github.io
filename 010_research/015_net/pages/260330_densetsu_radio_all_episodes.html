@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>伝説���ジオ — 全エピソード分析</title>
+<style>
+  :root {
+    --bg: #fafafa;
+    --text: #1a1a2e;
+    --accent: #1b1b1b;
+    --accent2: #c9a227;
+    --highlight: #f5f0e1;
+    --border: #d0d7de;
+    --gold: #c9a227;
+    --dark: #1b1b1b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; padding: 40px 20px; max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; color: var(--dark); border-bottom: 3px solid var(--gold); padding-bottom: 12px; margin-bottom: 8px; }
+  .subtitle { color: #666; font-size: 0.9rem; margin-bottom: 40px; }
+  h2 { font-size: 1.3rem; color: var(--dark); margin: 36px 0 16px; padding: 8px 12px; background: var(--highlight); border-left: 4px solid var(--gold); }
+  h3 { font-size: 1.1rem; color: var(--accent); margin: 24px 0 12px; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+  .stat { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .stat .num { font-size: 2rem; font-weight: 700; color: var(--gold); }
+  .stat .label { font-size: 0.8rem; color: #666; }
+
+  .ep-card { background: white; border: 1px solid var(--border); border-radius: 12px; margin: 20px 0; overflow: hidden; }
+  .ep-header { background: var(--dark); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+  .ep-num { font-size: 0.75rem; color: var(--gold); font-weight: 700; }
+  .ep-title { font-size: 1rem; font-weight: 700; margin-top: 4px; }
+  .ep-date { font-size: 0.75rem; color: #999; }
+  .ep-body { padding: 20px; }
+  .ep-guest { display: flex; gap: 20px; margin-bottom: 16px; }
+  .ep-guest-info { flex: 1; }
+  .ep-guest-name { font-size: 1.1rem; font-weight: 700; color: var(--dark); }
+  .ep-guest-role { font-size: 0.8rem; color: #666; margin-bottom: 8px; }
+  .ep-guest-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .ep-stat-chip { display: inline-block; background: var(--highlight); border: 1px solid #e0d9c8; border-radius: 4px; padding: 2px 8px; font-size: 0.7rem; font-weight: 600; }
+  .ep-topics { font-size: 0.85rem; }
+  .ep-topics ul { padding-left: 18px; }
+  .ep-topics li { margin-bottom: 4px; }
+  .ep-shogo { background: #fffde7; border: 1px solid #fff9c4; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.85rem; }
+  .ep-shogo-title { font-weight: 700; color: #f57f17; font-size: 0.8rem; margin-bottom: 4px; }
+
+  .relevance { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; color: white; }
+  .relevance-critical { background: #d32f2f; }
+  .relevance-high { background: #e65100; }
+  .relevance-med { background: #1565c0; }
+  .relevance-low { background: #757575; }
+
+  .network-box { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; }
+  .network-box h4 { color: var(--dark); margin-bottom: 12px; }
+  .connection { display: flex; align-items: center; gap: 8px; margin: 8px 0; font-size: 0.85rem; }
+  .connection .arrow { color: var(--gold); font-weight: 700; }
+
+  .insight-box { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 16px 0; }
+  .insight-box h4 { color: var(--dark); margin-bottom: 8px; }
+  .insight-box ul { padding-left: 20px; }
+  .insight-box li { margin-bottom: 6px; font-size: 0.9rem; }
+
+  .learning-path { background: linear-gradient(135deg, #1b1b1b 0%, #333 100%); color: white; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .learning-path h3 { color: var(--gold); margin-top: 0; }
+  .learning-path .phase { background: rgba(255,255,255,0.1); border-radius: 6px; padding: 12px 16px; margin: 12px 0; border-left: 3px solid var(--gold); }
+  .learning-path .phase-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; color: var(--gold); }
+  .learning-path li { margin-bottom: 6px; font-size: 0.9rem; }
+  .learning-path ol { padding-left: 20px; }
+
+  @media (max-width: 600px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    body { padding: 20px 12px; }
+    .ep-guest { flex-direction: column; }
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:center;gap:4px}
+.snav-inline a{color:rgba(255,255,255,.7);text-decoration:none;font-size:12px;font-weight:500;padding:6px 12px;border-radius:4px;transition:all .15s;letter-spacing:-.01em}
+.snav-inline a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.snav-inline .sep{width:1px;height:14px;background:rgba(255,255,255,.18);margin:0 6px}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../index.html">net</a><span class="sep"></span><a href="../../../020_personal/021_profile/index.html">profile</a></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../index.html">net</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<h1>��説ラジオ — 全エピソード分析</h1>
+<p class="subtitle">2025年6月〜2026年3月 | 全13エピソード | ホスト: 伝説君 (81RAVENS) + 上地レン (Solafune CEO)</p>
+
+<div class="stats">
+  <div class="stat"><div class="num">13</div><div class="label">エピソード</div></div>
+  <div class="stat"><div class="num">~3h</div><div class="label">平均尺</div></div>
+  <div class="stat"><div class="num">12</div><div class="label">ゲスト</div></div>
+  <div class="stat"><div class="num">9ヶ月</div><div class="label">配信期��</div></div>
+</div>
+
+<h2>1. チャンネルの特性</h2>
+
+<div class="insight-box">
+  <h4>起業の履歴書との違い</h4>
+  <ul>
+    <li><strong>フォーマット:</strong> 1ゲスト × 3時間のロングインタビュー（起業の履歴書は30-60分 × テーマ解説型）</li>
+    <li><strong>ゲスト:</strong> 全員が日本の現役経営者・投資家（起業の履歴書は海外テック人物の解説が中心）</li>
+    <li><strong>深さ:</strong> 生い立ち〜現在まで、私生活含む全人格的なインタビュー</li>
+    <li><strong>Shogoへの価値:</strong> 日本のスタートアップエコシステムの「地図」と「人脈図」が手に入る。M&Aロールアップの対象企業・キーパーソンの理解に直結</li>
+  </ul>
+</div>
+
+<h2>2. 全エピソード詳細 × Shogo関連度</h2>
+
+<!-- Ep.13 吉村英毅 -->
+<div class="ep-card">
+  <div class="ep-header">
+    <div>
+      <div class="ep-num">Ep.13</div>
+      <div class="ep-title">企業群時価総額5000億円。ミダスキャピタル吉村英毅が仕掛ける超買収</div>
+    </div>
+    <div>
+      <div class="ep-date">2026/03/25</div>
+      <span class="relevance relevance-critical">CRITICAL</span>
+    </div>
+  </div>
+  <div class="ep-body">
+    <div class="ep-guest">
+      <div class="ep-guest-info">
+        <div class="ep-guest-name">吉���英毅</div>
+        <div class="ep-guest-role">ミダスキャピタル代表 / エアトリ創業者</div>
+        <div class="ep-guest-stats">
+          <span class="ep-stat-chip">30億→2,000億（8年）</span>
+          <span class="ep-stat-chip">企業群時価総額 5,000億</span>
+          <span class="ep-stat-chip">目標: 50年で100兆円</span>
+          <span class="ep-stat-chip">永久保有ファンド</span>
+        </div>
+      </div>
+    </div>
+    <div class="ep-topics">
+      <strong>キーポイント:</strong>
+      <ul>
+        <li><strong>永久保有モデル:</strong> 外部LP不在、自己資金のみ、償還期限なし。マジョリティ取得→IPO→上場後も~30%保有</li>
+        <li><strong>GENDA:</strong> ゲームセンター運営からM&Aで急拡大。連続的買収による価値創造の実例</li>
+        <li><strong>BuySell Technologies:</strong> ミダス第1号案件。2017年買収→2019年上場</li>
+        <li><strong>LP構造:</strong> 約70名の起業家・経営者が個人資金・自社株で参加</li>
+        <li>「今後2年で合計時価総額1兆円は達成できる」</li>
+      </ul>
+    </div>
+    <div class="ep-shogo">
+      <div class="ep-shogo-title">Shogoへの直接的示唆</div>
+      <strong>これはShogoのロールアップ戦略の「10年後の姿」そのもの。</strong><br>
+      吉村は30億スタート→8年で2,000億。Shogoは23歳スタート→30歳で1,000億目標。<br>
+      学ぶべき核心: (1) 永久保有の設計 (2) マジョリティ取得→IPOの出口設計 (3) LP構造（起業家の個人マネーで組成）(4) GENDAの連続M&Aモデル<br>
+      <strong>最優先で全3時間聴くべき。</strong>
+    </div>
+  </div>
+</div>
+
+<!-- Ep.6 小澤隆生 -->
+<div class="ep-card">
+  <div class="ep-header">
+    <div>
+      <div class="ep-num">Ep.6</div>
+      <div class="ep-title">元ヤフー社長！PayPayや楽天イーグルスを作った小澤隆生の伝���</div>
+    </div>
+    <div>
+      <div class="ep-date">2025/09/27</div>
+      <span class="relevance relevance-high">HIGH</span>
+    </div>
+  </div>
+  <div class="ep-body">
+    <div class="ep-guest">
+      <div class="ep-guest-info">
+        <div class="ep-guest-name">小澤隆生</div>
+        <div class="ep-guest-role">元Yahoo社長 / Boost Capital代表</div>
+        <div class="ep-guest-stats">
+          <span class="ep-stat-chip">60億借金→事業家</span>
+          <span class="ep-stat-chip">楽天イーグルス 5ヶ月立ち上げ</span>
+          <span class="ep-stat-chip">PayPay 1ヶ月3,000人採用</span>
+          <span class="ep-stat-chip">孫正義+三木谷の右腕</span>
+        </div>
+      </div>
+    </div>
+    <div class="ep-topics">
+      <strong>キーポイント:</strong>
+      <ul>
+        <li><strong>2人の天才に仕えた男:</strong> 孫正義と三木谷浩史の経営スタイルの違いを体感で知る唯一の人物</li>
+        <li><strong>60億借金:</strong> 家業の負債返済のため事業家の道へ。逆境からのスタート</li>
+        <li><strong>異次元のスピード:</strong> 楽天イーグルス5ヶ月、PayPay立ち上げ1ヶ月で3,000人採用</li>
+        <li><strong>ビズシーク→楽天売却:</strong> M&A（売り手側）の実体験</li>
+        <li>現在Boost Capitalで投資家に転身</li>
+      </ul>
+    </div>
+    <div class="ep-shogo">
+      <div class="ep-shogo-title">Shogoへの示唆</div>
+      「凡人の事業論」= 天才でなくても勝てる方法論。M&Aロールアップは「天才的アイデア」ではなく「実行の速度と精度」で勝つゲーム。PayPayの1ヶ月3,000人採用は、PMI（買収後統合）の組織設計で参考になるスピード感。孫正義のビジョン駆動経営はロールアップの「ビジョンで束ねる」思想と一致。
+    </div>
+  </div>
+</div>
+
+<!-- Ep.9 藤野英人 -->
+<div class="ep-card">
+  <div class="ep-header">
+    <div>
+      <div class="ep-num">Ep.9</div>
+      <div class="ep-title">【藤野英人】一兆円以上の運用資産を誇る、レオス・キャピタルワークス代表の伝説</div>
+    </div>
+    <div>
+      <div class="ep-date">2026/02/18</div>
+      <span class="relevance relevance-high">HIGH</span>
+    </div>
+  </div>
+  <div class="ep-body">
+    <div class="ep-guest">
+      <div class="ep-guest-info">
+        <div class="ep-guest-name">藤野英人</div>
+        <div class="ep-guest-role">レオス・キャピタルワークス代表 / ひふみ投信</div>
+        <div class="ep-guest-stats">
+          <span class="ep-stat-chip">運用資産 1兆円超</span>
+          <span class="ep-stat-chip">GS出身</span>
+          <span class="ep-stat-chip">プレミアムウォーター創業</span>
+          <span class="ep-stat-chip">ファンド大賞4年連続</span>
+        </div>
+      </div>
+    </div>
+    <div class="ep-topics">
+      <strong>キーポイント:</strong>
+      <ul>
+        <li><strong>GS→独立:</strong> ゴールドマン・サックスAMから2003年にレオス創業</li>
+        <li><strong>プレミアムウォーター:</strong> 倒産寸前のウォーターダイレクトを事実上の創業者として立て直し→上場</li>
+        <li><strong>投資哲学:</strong> 「売るのは将来の夢や希望、投信はあくまでおまけ」</li>
+        <li>スタートアップ投資、政策提言にも関与</li>
+      </ul>
+    </div>
+    <div class="ep-shogo">
+      <div class="ep-shogo-title">Shogoへの示唆</div>
+      GS出身の投資家がどう日本市場を見ているか。「ゼロからイチが大好き」= 起業家気質の投資家の思考法。プレミアムウォーターの「倒産寸前→立て直し→上場」はターンアラウンド型M&Aの教科書。ma-trainingのGSパースペクティブと直結。
+    </div>
+  </div>
+</div>
+
+<!-- Ep.11 小泉文明 -->
+<div class="ep-card">
+  <div class="ep-header">
+    <div>
+      <div class="ep-num">Ep.11</div>
+      <div class="ep-title">メルカリ会長・小泉文明の��説</div>
+    </div>
+    <div>
+      <div class="ep-date">2026/03/05</div>
+      <span class="relevance relevance-high">HIGH</span>
+    </div>
+  </div>
+  <div class="ep-body">
+    <div class="ep-guest">
+      <div class="ep-guest-info">
+        <div class="ep-guest-name">小泉文明</div>
+        <div class="ep-guest-role">メルカリ取締役会長 / 鹿島アントラーズ社長</div>
+        <div class="ep-guest-stats">
+          <span class="ep-stat-chip">大和証券IPO担当</span>
+          <span class="ep-stat-chip">ミクシィCFO</span>
+          <span class="ep-stat-chip">メルカリCOO→会長</span>
+          <span class="ep-stat-chip">鹿島アントラーズ社長</span>
+        </div>
+      </div>
+    </div>
+    <div class="ep-topics">
+      <strong>キーポイント:</strong>
+      <ul>
+        <li><strong>IPOの裏側:</strong> 大和証券でミクシィ・DeNA等のIPOを担当。上場プロセスの実務を知る</li>
+        <li><strong>メルカリの競争:</strong> 10社以上のフリマアプリとの競争をどう勝ち抜いたか</li>
+        <li><strong>CM戦略:</strong> 「検討はずれ」と言われたテレビCMが奏功</li>
+        <li><strong>メルカリUS:</strong> 海外展開の実情</li>
+        <li><strong>鹿島アントラーズ:</strong> スポーツ×テック×地域の「街づくり」構想</li>
+      </ul>
+    </div>
+    <div class="ep-shogo">
+      <div class="ep-shogo-title">Shogoへの示唆</div>
+      IPO担当→CFO→COO→会長のキャリアパスは、M&Aロールアップで「上場を設計する」人材像の参考。メルカリの競争戦略（10社との戦い）はレッドオーシャンでの勝ち方。鹿島アントラーズの経営は「非テック企業のDX」= Wanderlustのコンサル案件と同型。
+    </div>
+  </div>
+</div>
+
+<!-- Ep.10 宮田昇始 -->
+<div class="ep-card">
+  <div class="ep-header">
+    <div>
+      <div class="ep-num">Ep.10</div>
+      <div class="ep-title">真のユニコーン！SmartHR創業者・宮田昇始の伝説</div>
+    </div>
+    <div>
+      <div class="ep-date">2026/02/23</div>
+      <span class="relevance relevance-high">HIGH</span>
+    </div>
+  </div>
+  <div class="ep-body">
+    <div class="ep-guest">
+      <div class="ep-guest-info">
+        <div class="ep-guest-name">宮田��始</div>
+        <div class="ep-guest-role">SmartHR創業者 / Nstock CEO</div>
+        <div class="ep-guest-stats">
+          <span class="ep-stat-chip">10回ピ��ット</span>
+          <span class="ep-stat-chip">156億円調達</span>
+          <span class="ep-stat-chip">ユニコーン</span>
+          <span class="ep-stat-chip">10億円寄付</span>
+        </div>
+      </div>
+    </div>
+    <div class="ep-topics">
+      <strong>キーポイント:</strong>
+      <ul>
+        <li><strong>10回のピボット:</strong> 2年間で10回方向転換してSmartHRに辿り着いた</li>
+        <li><strong>156億円シリーズD:</strong> 海外投資家からの大型調達の裏側</li>
+        <li><strong>CEO交代:</strong> 創業者がCEOを降りた理由と、Nstock創業の背景</li>
+        <li><strong>Nstock:</strong> スタートアップの非上場株式2次流通。日本のスタートアップエコシステムのインフラ</li>
+      </ul>
+    </div>
+    <div class="ep-shogo">
+      <div class="ep-shogo-title">Shogoへ���示唆</div>
+      「10回ピボット」= 諦めない限り失敗ではない。Nstockの非上場株2次流通は、M&Aロールアップの「出口設計の選択肢」として知っておくべきインフラ。CEO交代の判断力は組織スケーリングの教訓。
+    </div>
+  </div>
+</div>
+
+<!-- Ep.8 島田亨 -->
+<div class="ep-card">
+  <div class="ep-header">
+    <div>
+      <div class="ep-num">Ep.8</div>
+      <div class="ep-title">楽天・U-NEXT・インテリジェンスで副社長を歴任した島田亨の伝説</div>
+    </div>
+    <div>
+      <div class="ep-date">2025/12/17</div>
+      <span class="relevance relevance-med">MED</span>
+    </div>
+  </div>
+  <div class="ep-body">
+    <div class="ep-guest">
+      <div class="ep-guest-info">
+        <div class="ep-guest-name">島田亨</div>
+        <div class="ep-guest-role">元楽天副社長 / エンジェル投資家</div>
+        <div class="ep-guest-stats">
+          <span class="ep-stat-chip">330社にエンジェル投資</span>
+          <span class="ep-stat-chip">インテリジェンス共同創業</span>
+          <span class="ep-stat-chip">楽天イーグルス球団社長</span>
+          <span class="ep-stat-chip">リクルート全国トップ営業</span>
+        </div>
+      </div>
+    </div>
+    <div class="ep-topics">
+      <strong>キーポイント:</strong>
+      <ul>
+        <li>父蒸発→借金地獄からのスタート</li>
+        <li>インテリジェンス（現パーソルキャリア）の共同創業→上場</li>
+        <li>楽天・U-NEXTの副社長として大企業経営を経験</li>
+        <li>330社へのエンジェル投資</li>
+      </ul>
+    </div>
+    <div class="ep-shogo">
+      <div class="ep-shogo-title">Shogo��の示唆</div>
+      「副社長」という立場で3社を渡り歩いた経営幹部のキャリア設計。330社投資のポートフォリオ思考はロールアップの案件選定に参考。人材系（パーソルキャリア）はM&A対象業界として関連。
+    </div>
+  </div>
+</div>
+
+<!-- Ep.7 片石貴展 -->
+<div class="ep-card">
+  <div class="ep-header">
+    <div>
+      <div class="ep-num">Ep.7</div>
+      <div class="ep-title">最年少上場！アパレルの革命児・yutori片石貴展の伝説</div>
+    </div>
+    <div>
+      <div class="ep-date">2025/11/18</div>
+      <span class="relevance relevance-med">MED</span>
+    </div>
+  </div>
+  <div class="ep-body">
+    <div class="ep-guest">
+      <div class="ep-guest-info">
+        <div class="ep-guest-name">片石貴展</div>
+        <div class="ep-guest-role">yutori代表取締役 / 最年少上場</div>
+        <div class="ep-guest-stats">
+          <span class="ep-stat-chip">30歳で上場</span>
+          <span class="ep-stat-chip">Instagram起業</span>
+          <span class="ep-stat-chip">Forbes 30 Under 30</span>
+          <span class="ep-stat-chip">社員平均23.8歳</span>
+        </div>
+      </div>
+    </div>
+    <div class="ep-topics">
+      <strong>キーポイント:</strong>
+      <ul>
+        <li><strong>インスタ0円起業:</strong> 「古着女子」アカウントから会社設立</li>
+        <li>ZOZO傘下→独立→グロース上場</li>
+        <li>複数D2Cブランド展開（9090、Younger Song等）</li>
+        <li>「努力は夢中に勝てない」= 採用哲学</li>
+      </ul>
+    </div>
+    <div class="ep-shogo">
+      <div class="ep-shogo-title">Shogoへの示唆</div>
+      同世代（30歳）での上場事例。ZOZOへの売却→買い戻しの経験はM&Aの「売り手→独立」パターン。若い組織（平均23.8歳）の経営は、Wanderlustのチーム設計に参考。D2Cブランドの連続立ち上げ = 小規模M&Aの代替戦略。
+    </div>
+  </div>
+</div>
+
+<!-- Ep.2, 5 さくらインターネット組 -->
+<div class="ep-card">
+  <div class="ep-header">
+    <div>
+      <div class="ep-num">Ep.2 + Ep.5</div>
+      <div class="ep-title">さくらインターネット共同創業者ペア — 田中邦裕 + 小笠原治</div>
+    </div>
+    <div>
+      <div class="ep-date">2025/06/29, 07/26</div>
+      <span class="relevance relevance-med">MED</span>
+    </div>
+  </div>
+  <div class="ep-body">
+    <div class="ep-guest">
+      <div class="ep-guest-info">
+        <div class="ep-guest-name">田中邦裕 / 小笠原治</div>
+        <div class="ep-guest-role">さくらインターネット代表 / DMM.make AKIBA創設者</div>
+        <div class="ep-guest-stats">
+          <span class="ep-stat-chip">18歳で創業</span>
+          <span class="ep-stat-chip">時価総額 1,090億円</span>
+          <span class="ep-stat-chip">GPU 1万個導入予定</span>
+          <span class="ep-stat-chip">エンジェル80社</span>
+          <span class="ep-stat-chip">awabar創設</span>
+        </div>
+      </div>
+    </div>
+    <div class="ep-topics">
+      <strong>キーポイント:</strong>
+      <ul>
+        <li>18歳創業→バブル崩壊→3度の上場失敗→27歳上場</li>
+        <li>政府1,000億円GPU投資の受け皿（国策企業化）</li>
+        <li>小笠原: さくら共同創業→DMM.make→awabar→京都芸大教授</li>
+        <li>「田中ブラザーズ・シスターズ」80社のエンジェル投資</li>
+      </ul>
+    </div>
+    <div class="ep-shogo">
+      <div class="ep-shogo-title">Shogoへの示唆</div>
+      さくらインターネットのGPU/データセンター投資は、AI投資テーマとしてPKSHAホールドの文脈で理解すべき。小笠原のawabar = 「場の設計」によるネットワーク構築はVCやM&Aのディール発掘に応用可能。
+    </div>
+  </div>
+</div>
+
+<!-- Ep.4 中嶋汰朗 -->
+<div class="ep-card">
+  <div class="ep-header">
+    <div>
+      <div class="ep-num">Ep.4</div>
+      <div class="ep-title">革ジャンで上場したROXX中嶋汰朗さんの伝説</div>
+    </div>
+    <div>
+      <div class="ep-date">2025/07/12</div>
+      <span class="relevance relevance-med">MED</span>
+    </div>
+  </div>
+  <div class="ep-body">
+    <div class="ep-guest">
+      <div class="ep-guest-info">
+        <div class="ep-guest-name">中嶋汰朗</div>
+        <div class="ep-guest-role">ROXX代表取締役 / back check</div>
+        <div class="ep-guest-stats">
+          <span class="ep-stat-chip">大学中退起業</span>
+          <span class="ep-stat-chip">2度のピボット</span>
+          <span class="ep-stat-chip">Forbes 30 Under 30 Asia 2021</span>
+          <span class="ep-stat-chip">HR Tech</span>
+        </div>
+      </div>
+    </div>
+    <div class="ep-topics">
+      <ul>
+        <li>バンドマン挫折→時給850円→起業→2度のピボット→上場</li>
+        <li>「back check」= リファレンスチェックSaaS。HR Tech市場</li>
+        <li>上場直前のセカンダリー取引を実施した理由</li>
+      </ul>
+    </div>
+    <div class="ep-shogo">
+      <div class="ep-shogo-title">Shogoへの示唆</div>
+      HR Tech = M&A対象として有望な業界。セカンダリー取引の判断は、ロールアップの出口戦略設計で参考。同世代起業家のリアルな苦戦と突破。
+    </div>
+  </div>
+</div>
+
+<!-- Remaining episodes -->
+<div class="ep-card">
+  <div class="ep-header">
+    <div>
+      <div class="ep-num">Ep.3 / Ep.12 / Ep.1</div>
+      <div class="ep-title">その他のエピソード</div>
+    </div>
+    <div><span class="relevance relevance-low">補足</span></div>
+  </div>
+  <div class="ep-body">
+    <div class="ep-topics">
+      <ul>
+        <li><strong>Ep.3 島川敏明（IVS/Headline Asia）:</strong> 日本最大のスタートアップカンファレンスの裏側。VCファンド220億円。ネットワーキング戦略を学ぶ</li>
+        <li><strong>Ep.12 鈴木おさむ:</strong> テレビ業界→VC転身。異業種からのスタートアップ参入。コンテンツ制作×投資の視点</li>
+        <li><strong>Ep.1 パイロット回:</strong> ホスト2人の紹介。上地レン（Solafune）の衛星データ事業</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<h2>3. ゲスト間ネットワーク</h2>
+
+<div class="network-box">
+  <h4>伝説ラジオのゲストは相互に繋がっている</h4>
+  <div class="connection">田中邦裕 <span class="arrow">←共同創業→</span> 小笠原治（さくらインターネット）</div>
+  <div class="connection">小澤隆生 <span class="arrow">←楽天で同僚→</span> 島田亨（楽天副社長同士）</div>
+  <div class="connection">島田亨 <span class="arrow">←インテリジェンス創業→</span> 宇野康秀（U-NEXT）</div>
+  <div class="connection">小泉文明 <span class="arrow">←大和証券IPO担当→</span> ミクシィ / DeNA</div>
+  <div class="connection">藤野英人 <span class="arrow">←GS出身→</span> 日本の投資業界全体</div>
+  <div class="connection">吉村英毅 <span class="arrow">←GENDA / BuySell→</span> 上場スタートアップ群</div>
+  <div class="connection">全ゲスト <span class="arrow">←出演→</span> IVS（島川敏明）のカンファレンス</div>
+</div>
+
+<h2>4. M&Aロールアップに直結するインサイト</h2>
+
+<div class="insight-box">
+  <h4>伝説ラジオから抽出すべき4つのモデル</h4>
+  <ul>
+    <li>
+      <strong>1. ミダスキャピタル型（吉村）:</strong> 永久保有 × マジョリティ取得 × IPO出口<br>
+      = Shogoの戦略に最も近い。違いは「自己資金のみ」vs「外部調達あり」。30億→2,000億の軌跡を完全に模倣すべき
+    </li>
+    <li>
+      <strong>2. 凡人の事業論型（小澤）:</strong> 天才のビジョン × 凡人の実行力<br>
+      = 孫正義・三木谷のビジョンを「実行する側」の方法論。PMIのスピード感（PayPay: 1ヶ月3,000人）
+    </li>
+    <li>
+      <strong>3. ターンアラウンド型（藤野）:</strong> 倒産寸前の企業を立て直し→上場<br>
+      = プレミアムウォーターの事例。割安な企業を買収→DXで再生するWanderlust型
+    </li>
+    <li>
+      <strong>4. エコシステム型（島田/田中）:</strong> エンジェル投資 × ネットワーク構築<br>
+      = 330社投資（島田）、80社投資（田中）。ディール発掘のためのエコシステム設計
+    </li>
+  </ul>
+</div>
+
+<h2>5. 推奨リスニングパス</h2>
+
+<div class="learning-path">
+  <h3>Shogo向け — 伝説ラジオ 聴く順番</h3>
+
+  <div class="phase">
+    <div class="phase-title">Phase 1: M&Aの実践知（最優先）</div>
+    <ol>
+      <li><strong>Ep.13 吉村英毅</strong> — ロールアップ戦略の完成形。全3時間必聴</li>
+      <li><strong>Ep.6 小澤隆生</strong> — 実行力の鬼。PMIスピードの参考</li>
+      <li><strong>Ep.9 藤野英人</strong> — ターンアラウンド+投資哲学</li>
+    </ol>
+  </div>
+
+  <div class="phase">
+    <div class="phase-title">Phase 2: スケーリングの知恵</div>
+    <ol>
+      <li><strong>Ep.11 小泉文明</strong> — IPO実務 + メルカリの競争戦略</li>
+      <li><strong>Ep.10 宮田昇始</strong> — ピボット + ユニコーン + CEO交代</li>
+      <li><strong>Ep.8 島田亨</strong> — 330社投資のポートフォリオ思考</li>
+    </ol>
+  </div>
+
+  <div class="phase">
+    <div class="phase-title">Phase 3: エコシステム理解</div>
+    <ol>
+      <li><strong>Ep.2+5 田中邦裕+小笠原治</strong> — インフラ企業経営 + 場の設計</li>
+      <li><strong>Ep.7 片石貴展</strong> — 同世代の上場経験</li>
+      <li><strong>Ep.4 中嶋汰朗</strong> — HR Tech + ピボット</li>
+      <li><strong>Ep.3 島川敏明</strong> — VC + カンファレンス設計</li>
+    </ol>
+  </div>
+</div>
+
+<h2>6. 吉村英毅 vs Shogo — 戦略比較</h2>
+
+<div class="tbl-scroll"><table>
+  <tr>
+    <th>項目</th><th>吉村英毅（ミダスキャピタル）</th><th>Shogo（Wanderlust）</th>
+  </tr>
+  <tr>
+    <td>開始年齢</td><td>36歳（ミダス創業時）</td><td>23歳（現在）</td>
+  </tr>
+  <tr>
+    <td>初期資本</td><td>~30億（エアトリ売却益）</td><td>事業収益から積み上げ</td>
+  </tr>
+  <tr>
+    <td>目標</td><td>50年で100兆円</td><td>30歳で1,000億円</td>
+  </tr>
+  <tr>
+    <td>手法</td><td>マジョリティ取得→IPO</td><td>AI/DXコンサル→ロールアップ</td>
+  </tr>
+  <tr>
+    <td>LP構造</td><td>起業家70名の個人マネー</td><td>設計中</td>
+  </tr>
+  <tr>
+    <td>保有期間</td><td>永久保有（ファンド償還なし）</td><td>未定</td>
+  </tr>
+  <tr>
+    <td>強み</td><td>エアトリ上場の実績・資金力</td><td>AI/DXの技術力・若さ・時間</td>
+  </tr>
+  <tr>
+    <td>8年後の姿</td><td>企業群時価総額5,000億円（実績）</td><td>1,000億円（目標）</td>
+  </tr>
+</table></div>
+
+<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); color: #999; font-size: 0.75rem;">
+  Generated: 2026-03-28 | Source: 伝説ラジオ RSS + Web Research | 13/13 episodes analyzed
+</div>
+
+</body>
+</html>

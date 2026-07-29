@@ -104,15 +104,13 @@ for (const abs of targets) {
   const file = path.relative(ROOT, abs).split(path.sep).join('/');
   const lines = (await readFile(abs, 'utf8')).split('\n');
 
-  // Pages whose job is to discuss money in public: company reports and the hub
-  // that lists them, country pages (ODA and debt figures are the subject), and
-  // the two specs. The dictionary was built to spot an internal deck, so its
-  // financial vocabulary fires on all of these by design.
+  // Everything under 010_research exists to discuss money, deals and public
+  // finance. The dictionary was built to spot an internal deck, so its financial
+  // vocabulary fires on all of it by design. The built-in rules below — internal
+  // links, local paths, withheld vocabulary, credentials — still apply here.
   const financial =
-    file.startsWith('010_research/011_company/') ||
-    file.startsWith('010_research/013_geo/') ||
-    file === '_tools/report-template.md' ||
-    file === '_tools/geo-template.md';
+    file.startsWith('010_research/') ||
+    file.startsWith('_tools/') && file.endsWith('-template.md');
 
   const blocking = [...BLOCK, ...pii, ...(financial ? [PLACEHOLDER] : money)];
 

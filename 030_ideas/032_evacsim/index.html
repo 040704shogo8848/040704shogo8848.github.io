@@ -1,0 +1,3169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EVACSIM — 建物避難動線シミュレーター</title>
+<style>
+:root{
+  --bg:#f4f5f7; --panel:#ffffff; --panel2:#fafbfc; --line:#d7dbdf; --line2:#e8ebee;
+  --ink:#1b2126; --ink2:#3d474f; --muted:#6d767e;
+  --accent:#1a4f8a; --accent-soft:#e7eef6;
+  --ok:#0f7a5a; --warn:#a86a00; --bad:#a52a2a;
+  --plan-bg:#ffffff; --wall:#2b3238; --grid:#eef1f3;
+  --h-head:46px; --h-tabs:36px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+  font-size:12.5px; line-height:1.55; overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+button,select,input,textarea{font:inherit;color:inherit}
+
+/* ---------- header ---------- */
+header{
+  height:var(--h-head); display:flex; align-items:center; gap:14px;
+  padding:0 14px; background:#fff; border-bottom:1px solid var(--line);
+}
+.homelink{
+  font-size:11px;letter-spacing:.14em;color:var(--muted);text-decoration:none;
+  border:1px solid var(--line);border-radius:2px;padding:3px 8px;white-space:nowrap
+}
+.homelink:hover{color:var(--accent);border-color:var(--accent)}
+.brand{display:flex;align-items:baseline;gap:8px}
+.brand b{font-size:14.5px;letter-spacing:.06em}
+.brand span{font-size:10.5px;color:var(--muted);letter-spacing:.02em}
+.hsep{width:1px;height:22px;background:var(--line)}
+.bldg{font-size:11.5px;color:var(--ink2)}
+.bldg b{font-weight:600}
+.hright{margin-left:auto;display:flex;align-items:center;gap:8px}
+.verdict{
+  font-size:11px;padding:3px 9px;border-radius:2px;border:1px solid var(--line);
+  background:var(--panel2);color:var(--muted);letter-spacing:.02em;white-space:nowrap
+}
+.verdict.ok{background:#eaf5f0;border-color:#bfdfd2;color:var(--ok)}
+.verdict.ng{background:#fbeded;border-color:#e6c7c7;color:var(--bad)}
+.verdict.mid{background:#fdf5e8;border-color:#e8d6b0;color:var(--warn)}
+
+/* ---------- tabs ---------- */
+nav.tabs{height:var(--h-tabs);display:flex;align-items:stretch;background:#fff;border-bottom:1px solid var(--line);padding:0 10px;gap:2px}
+nav.tabs button{
+  background:none;border:none;border-bottom:2px solid transparent;padding:0 14px;
+  font-size:12px;color:var(--muted);cursor:pointer;letter-spacing:.02em
+}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+nav.tabs .spacer{flex:1}
+nav.tabs .navnote{display:flex;align-items:center;font-size:10.5px;color:var(--muted);padding-right:4px}
+
+main{height:calc(100% - var(--h-head) - var(--h-tabs));overflow:hidden}
+.view{display:none;height:100%}
+.view.on{display:grid}
+
+/* ---------- generic panel ---------- */
+.panel{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;overflow-x:hidden}
+.panel.right{border-right:none;border-left:1px solid var(--line)}
+.sect{border-bottom:1px solid var(--line2);padding:10px 12px}
+.sect>h3{
+  margin:0 0 8px;font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--muted);
+  text-transform:uppercase
+}
+.row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.row:last-child{margin-bottom:0}
+.row label{flex:0 0 96px;font-size:11px;color:var(--ink2)}
+.row .val{margin-left:auto;font-size:11px;color:var(--ink);min-width:52px;text-align:right}
+input[type=range]{flex:1;min-width:0;accent-color:var(--accent);height:16px}
+input[type=number],input[type=text],select{
+  flex:1;min-width:0;background:#fff;border:1px solid var(--line);border-radius:2px;
+  padding:3px 6px;font-size:11.5px
+}
+input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
+select{padding:3px 4px}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
+.btn{
+  border:1px solid var(--line);background:#fff;border-radius:2px;padding:4px 10px;
+  font-size:11.5px;cursor:pointer;white-space:nowrap
+}
+.btn:hover{background:var(--panel2);border-color:#bcc3c9}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.btn.pri:hover{background:#16436f}
+.btn.dim{color:var(--muted)}
+.btn.danger{color:var(--bad);border-color:#e2c6c6}
+.btn:disabled{opacity:.45;cursor:default}
+.btnrow{display:flex;gap:6px;flex-wrap:wrap}
+.seg{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.seg button{flex:1;border:none;background:#fff;padding:4px 0;font-size:11px;cursor:pointer;color:var(--muted)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.hint{font-size:10.5px;color:var(--muted);line-height:1.5}
+.chip{display:inline-block;font-size:10px;padding:1px 6px;border:1px solid var(--line);border-radius:9px;color:var(--muted)}
+
+/* ---------- editor view ---------- */
+#view-editor{grid-template-columns:264px 1fr 292px}
+.canvaswrap{position:relative;background:var(--bg);overflow:hidden;min-width:0;min-height:0}
+.simcenter>.canvaswrap{flex:1 1 auto}
+.canvaswrap canvas{display:block;position:absolute;inset:0;width:100%;height:100%}
+.canvastools{
+  position:absolute;top:10px;left:10px;z-index:3;display:flex;gap:6px;
+  background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:2px;padding:4px
+}
+.canvastools button{border:none;background:none;padding:4px 9px;font-size:11px;cursor:pointer;color:var(--ink2);border-radius:2px}
+.canvastools button.on{background:var(--accent);color:#fff}
+.canvasinfo{
+  position:absolute;bottom:10px;left:10px;z-index:3;font-size:10.5px;color:var(--muted);
+  background:rgba(255,255,255,.9);border:1px solid var(--line);padding:3px 8px;border-radius:2px
+}
+.legend{
+  position:absolute;top:10px;right:10px;z-index:3;background:rgba(255,255,255,.94);
+  border:1px solid var(--line);border-radius:2px;padding:7px 9px;font-size:10.5px;min-width:132px
+}
+.legend div{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.legend div:last-child{margin-bottom:0}
+.sw{width:11px;height:11px;border:1px solid rgba(0,0,0,.22);flex:0 0 auto}
+.sw.dot{border-radius:50%;width:8px;height:8px;border:none}
+
+/* ---------- list rows ---------- */
+.list{border:1px solid var(--line2);border-radius:2px;overflow:hidden}
+.list .it{
+  display:flex;align-items:center;gap:7px;padding:4px 7px;font-size:11px;cursor:pointer;
+  border-bottom:1px solid var(--line2);background:#fff
+}
+.list .it:last-child{border-bottom:none}
+.list .it:hover{background:var(--panel2)}
+.list .it.on{background:var(--accent-soft)}
+.list .it .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.list .it .mt{color:var(--muted);font-size:10px;font-variant-numeric:tabular-nums}
+
+/* ---------- sim view ---------- */
+#view-sim{grid-template-columns:288px 1fr 330px}
+.simcenter{display:flex;flex-direction:column;min-width:0;background:var(--bg)}
+.runbar{
+  height:40px;display:flex;align-items:center;gap:8px;padding:0 10px;
+  background:#fff;border-bottom:1px solid var(--line)
+}
+.clock{font-size:15px;font-weight:600;letter-spacing:.04em;min-width:66px;font-variant-numeric:tabular-nums}
+.clocklbl{font-size:10px;color:var(--muted);margin-left:-4px}
+.prog{flex:1;min-width:60px;height:5px;background:var(--line2);border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);width:0}
+.mini{display:flex;gap:12px;margin-left:auto;font-size:10.5px;color:var(--muted)}
+.mini b{display:block;font-size:13px;color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.mini span{display:block;text-align:right}
+
+/* ---------- metrics ---------- */
+.kpi{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2)}
+.kpi>div{background:#fff;padding:7px 9px}
+.kpi .k{font-size:10px;color:var(--muted);letter-spacing:.02em}
+.kpi .v{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.35}
+.kpi .v small{font-size:10px;font-weight:400;color:var(--muted);margin-left:2px}
+.kpi .v.bad{color:var(--bad)} .kpi .v.warn{color:var(--warn)} .kpi .v.ok{color:var(--ok)}
+table.t{width:100%;border-collapse:collapse;font-size:11px}
+table.t th,table.t td{padding:3px 6px;border-bottom:1px solid var(--line2);text-align:right}
+table.t th{color:var(--muted);font-weight:600;font-size:10px;letter-spacing:.04em;background:var(--panel2)}
+table.t th:first-child,table.t td:first-child{text-align:left}
+table.t td.n{font-variant-numeric:tabular-nums}
+table.t tr.tot td{font-weight:600;border-top:1px solid var(--line);background:var(--panel2)}
+.bar{height:4px;background:var(--line2);border-radius:2px;overflow:hidden;min-width:34px}
+.bar i{display:block;height:100%;background:var(--accent)}
+
+/* ---------- report ---------- */
+#view-report{grid-template-columns:1fr;overflow-y:auto;background:var(--bg)}
+.rep{max-width:1180px;margin:0 auto;padding:18px 22px 60px}
+.rep h1{font-size:17px;margin:0 0 3px;letter-spacing:.02em}
+.rep .sub{font-size:11px;color:var(--muted);margin-bottom:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:3px;margin-bottom:14px}
+.card>h2{
+  margin:0;padding:9px 13px;font-size:11.5px;letter-spacing:.06em;border-bottom:1px solid var(--line2);
+  color:var(--ink2);font-weight:700
+}
+.card>.body{padding:12px 13px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line2)}
+.grid4>div{background:#fff;padding:10px 12px}
+.grid4 .k{font-size:10px;color:var(--muted)}
+.grid4 .v{font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.grid4 .v small{font-size:11px;font-weight:400;color:var(--muted)}
+.grid4 .d{font-size:10px;color:var(--muted);margin-top:2px}
+.rec{margin:0;padding-left:0;list-style:none}
+.rec li{padding:7px 0 7px 26px;border-bottom:1px solid var(--line2);position:relative;font-size:11.5px}
+.rec li:last-child{border-bottom:none}
+.rec li::before{
+  content:attr(data-n);position:absolute;left:0;top:7px;width:17px;height:17px;border-radius:50%;
+  background:var(--accent-soft);color:var(--accent);font-size:9.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:center
+}
+.rec li b{display:block;margin-bottom:1px}
+.rec li span{color:var(--ink2)}
+.rec li.hi::before{background:#fbeded;color:var(--bad)}
+canvas.chart{display:block;width:100%}
+.empty{padding:28px;text-align:center;color:var(--muted);font-size:11.5px}
+
+/* ---------- misc ---------- */
+#err{
+  display:none;position:fixed;left:12px;bottom:12px;z-index:99;max-width:520px;
+  background:#fbeded;border:1px solid #e0bcbc;color:#7d1f1f;padding:8px 11px;font-size:11px;border-radius:2px
+}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#c9ced3;border-radius:5px;border:2px solid #fff}
+::-webkit-scrollbar-track{background:transparent}
+</style>
+</head>
+<body>
+<!-- snav:none -->
+<div id="err"></div>
+
+<header>
+  <a class="homelink" href="../../index.html" title="サイトトップへ">shogo</a>
+  <div class="brand"><b>EVACSIM</b><span>建物避難動線シミュレーター v1.0</span></div>
+  <div class="hsep"></div>
+  <div class="bldg">対象建物：<b id="hd-bldg">—</b><span id="hd-spec" class="num"></span></div>
+  <div class="hright">
+    <span class="chip" id="hd-design">設計案：現況案</span>
+    <span class="verdict" id="hd-verdict">未計算</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="sim" class="on">シミュレーション</button>
+  <button data-tab="editor">設計エディタ</button>
+  <button data-tab="report">分析レポート</button>
+  <div class="spacer"></div>
+  <div class="navnote" id="hd-note"></div>
+</nav>
+
+<main>
+
+<!-- ================= SIMULATION ================= -->
+<section class="view on" id="view-sim">
+
+  <!-- left: parameters -->
+  <div class="panel">
+    <div class="sect">
+      <h3>災害シナリオ</h3>
+      <div class="row"><label>種別</label><select id="p-scenario"></select></div>
+      <div class="hint" id="sc-desc"></div>
+    </div>
+
+    <div class="sect" id="sc-fire">
+      <h3>火災条件</h3>
+      <div class="row"><label>出火階</label><select id="p-fire-floor"></select></div>
+      <div class="row"><label>出火室</label><select id="p-fire-room"></select></div>
+      <div class="row"><label>火災成長</label><select id="p-fire-growth">
+        <option value="0.0029">遅い（木製家具主体）</option>
+        <option value="0.0117" selected>中間（一般オフィス）</option>
+        <option value="0.0469">速い（可燃物多量）</option>
+      </select></div>
+      <div class="row"><label>排煙設備</label><select id="p-smoke-ex">
+        <option value="1">機械排煙 作動</option>
+        <option value="0.55" selected>自然排煙のみ</option>
+        <option value="0.2">排煙不良</option>
+      </select></div>
+      <div class="row"><label>避難方式</label><select id="p-phased">
+        <option value="0">全館一斉避難</option>
+        <option value="1" selected>出火階＋直上階を先行</option>
+      </select></div>
+    </div>
+
+    <div class="sect" id="sc-quake" style="display:none">
+      <h3>地震条件</h3>
+      <div class="row"><label>震度</label><select id="p-quake-int">
+        <option value="5">震度5強</option>
+        <option value="6" selected>震度6弱</option>
+        <option value="6.5">震度6強</option>
+        <option value="7">震度7</option>
+      </select></div>
+      <div class="row"><label>強震動</label><input type="range" id="p-quake-dur" min="20" max="120" step="5" value="45"><span class="val num" id="v-quake-dur">45 秒</span></div>
+      <div class="row"><label>余震</label><select id="p-quake-after">
+        <option value="0">なし</option>
+        <option value="180" selected>3分後に発生</option>
+        <option value="360">6分後に発生</option>
+      </select></div>
+      <div class="hint">階段・扉の一部が閉塞、エレベーターは全基停止し閉じ込めが発生します。</div>
+    </div>
+
+    <div class="sect" id="sc-flood" style="display:none">
+      <h3>浸水条件</h3>
+      <div class="row"><label>浸水速度</label><select id="p-flood-rate">
+        <option value="0.6">緩慢（内水氾濫）</option>
+        <option value="1" selected>標準</option>
+        <option value="2">急激（外水・堤防決壊）</option>
+      </select></div>
+      <div class="hint">地下階から順に浸水し、地下在館者は上階へ避難します。</div>
+    </div>
+
+    <div class="sect">
+      <h3>在館者</h3>
+      <div class="row"><label>時間帯想定</label><select id="p-timeband">
+        <option value="weekday" selected>平日 日中（ピーク）</option>
+        <option value="lunch">平日 昼休み</option>
+        <option value="night">平日 夜間</option>
+        <option value="holiday">休日（商業中心）</option>
+        <option value="custom">カスタム</option>
+      </select></div>
+      <div class="row"><label>総人数</label><input type="range" id="p-pop" min="200" max="12000" step="100" value="3600"><span class="val num" id="v-pop">3,600 人</span></div>
+      <div class="hint" id="pop-note"></div>
+      <div style="height:8px"></div>
+      <div class="row"><label>一般</label><input type="range" id="p-mix-general" min="0" max="100" step="1" value="70"><span class="val num" id="v-mix-general">70%</span></div>
+      <div class="row"><label>従業員・誘導員</label><input type="range" id="p-mix-staff" min="0" max="100" step="1" value="6"><span class="val num" id="v-mix-staff">6%</span></div>
+      <div class="row"><label>来館者（不慣れ）</label><input type="range" id="p-mix-visitor" min="0" max="100" step="1" value="10"><span class="val num" id="v-mix-visitor">10%</span></div>
+      <div class="row"><label>高齢者・要配慮</label><input type="range" id="p-mix-elderly" min="0" max="100" step="1" value="12"><span class="val num" id="v-mix-elderly">12%</span></div>
+      <div class="row"><label>車椅子利用者</label><input type="range" id="p-mix-wheel" min="0" max="100" step="1" value="2"><span class="val num" id="v-mix-wheel">2%</span></div>
+      <div class="hint">合計は自動で正規化されます。車椅子利用者は階段を使用せず一時待避スペースへ移動します。</div>
+    </div>
+
+    <div class="sect">
+      <h3>避難行動パラメータ</h3>
+      <div class="row"><label>歩行速度</label><input type="range" id="p-v0" min="0.8" max="1.6" step="0.05" value="1.25"><span class="val num" id="v-v0">1.25 m/s</span></div>
+      <div class="row"><label>階段流量</label><input type="range" id="p-sflow" min="0.6" max="1.5" step="0.05" value="1.1"><span class="val num" id="v-sflow">1.10</span></div>
+      <div class="row"><label>階段下降</label><input type="range" id="p-sspeed" min="0.12" max="0.4" step="0.01" value="0.22"><span class="val num" id="v-sspeed">0.22 m/s</span></div>
+      <div class="row"><label>開口部流量</label><input type="range" id="p-dflow" min="0.8" max="2" step="0.05" value="1.3"><span class="val num" id="v-dflow">1.30</span></div>
+      <div class="row"><label>行動開始遅れ</label><input type="range" id="p-pre" min="0" max="240" step="5" value="60"><span class="val num" id="v-pre">60 秒</span></div>
+      <div class="row"><label>乱数シード</label><input type="number" id="p-seed" value="20260730" step="1"></div>
+      <div class="hint">階段流量は 人/(m·s)、開口部流量は 1m 当たりの通過人数/秒。既定値は避難計算の一般値に準拠しています。</div>
+    </div>
+
+    <div class="sect">
+      <h3>表示</h3>
+      <div class="row"><label>表示階</label><select id="p-view-floor"></select></div>
+      <div class="row"><label>密度ヒートマップ</label><input type="checkbox" id="p-heat" style="margin-left:auto"></div>
+      <div class="row"><label>経路ベクトル</label><input type="checkbox" id="p-flow" style="margin-left:auto"></div>
+      <div class="row"><label>混雑最大値を残す</label><input type="checkbox" id="p-peak" style="margin-left:auto"></div>
+      <div class="row"><label>室名ラベル</label><input type="checkbox" id="p-labels" checked style="margin-left:auto"></div>
+    </div>
+  </div>
+
+  <!-- center: plan -->
+  <div class="simcenter">
+    <div class="runbar">
+      <button class="btn pri" id="btn-run">シミュレーション開始</button>
+      <button class="btn" id="btn-pause" disabled>一時停止</button>
+      <button class="btn dim" id="btn-reset">リセット</button>
+      <select id="p-speed" style="flex:0 0 74px">
+        <option value="1">1×</option><option value="2">2×</option>
+        <option value="4" selected>4×</option><option value="8">8×</option><option value="16">16×</option>
+      </select>
+      <div class="hsep"></div>
+      <div class="clock num" id="clock">00:00</div><div class="clocklbl">経過</div>
+      <div class="prog"><i id="prog"></i></div>
+      <div class="mini">
+        <span><b class="num" id="m-safe">0</b>避難完了</span>
+        <span><b class="num" id="m-inside">0</b>建物内</span>
+        <span><b class="num" id="m-stair">0</b>階段内</span>
+        <span><b class="num" id="m-risk">0</b>要救助</span>
+      </div>
+    </div>
+    <div class="canvaswrap" id="planwrap">
+      <canvas id="plan"></canvas>
+      <div class="canvasinfo" id="plan-info">—</div>
+      <div class="legend" id="plan-legend"></div>
+    </div>
+  </div>
+
+  <!-- right: section + metrics -->
+  <div class="panel right">
+    <div class="sect" style="padding:8px 10px">
+      <h3>縦動線・階別在館状況</h3>
+      <canvas id="section" style="width:100%;display:block"></canvas>
+    </div>
+    <div class="sect" style="padding:0">
+      <div class="kpi" id="kpi"></div>
+    </div>
+    <div class="sect">
+      <h3>階段別 利用状況</h3>
+      <table class="t" id="tbl-stair"><tbody></tbody></table>
+    </div>
+    <div class="sect">
+      <h3>避難完了曲線</h3>
+      <canvas id="curve-live" class="chart"></canvas>
+    </div>
+    <div class="sect">
+      <h3>滞留ボトルネック（実測）</h3>
+      <table class="t" id="tbl-neck"><tbody></tbody></table>
+    </div>
+    <div class="sect">
+      <div class="btnrow">
+        <button class="btn" id="btn-save-run" disabled>この結果を保存して比較</button>
+        <button class="btn dim" id="btn-csv" disabled>CSV出力</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EDITOR ================= -->
+<section class="view" id="view-editor">
+
+  <div class="panel">
+    <div class="sect">
+      <h3>設計案</h3>
+      <div class="row"><label>プリセット</label><select id="e-preset">
+        <option value="base">現況案（階段4／出口4）</option>
+        <option value="planA">改善案A：避難階段2箇所増設</option>
+        <option value="planB">改善案B：コア分散＋出口拡幅</option>
+        <option value="planC">改善案C：低層部 大階段追加</option>
+      </select></div>
+      <div class="btnrow" style="margin-top:8px">
+        <button class="btn" id="e-save">案を保存</button>
+        <button class="btn" id="e-export">JSON書き出し</button>
+        <button class="btn" id="e-import">読み込み</button>
+      </div>
+    </div>
+
+    <div class="sect">
+      <h3>階構成</h3>
+      <div class="row"><label>地上階数</label><input type="number" id="e-above" value="34" min="2" max="60"></div>
+      <div class="row"><label>地下階数</label><input type="number" id="e-below" value="4" min="0" max="5"></div>
+      <div class="row"><label>商業階 最上</label><input type="number" id="e-retailtop" value="6" min="1" max="12"></div>
+      <div class="row"><label>基準階高</label><input type="number" id="e-hoffice" value="4.1" step="0.1"></div>
+      <div class="row"><label>商業階高</label><input type="number" id="e-hretail" value="5" step="0.1"></div>
+      <div class="row"><label>基準階 幅×奥行</label>
+        <input type="number" id="e-pw" value="78" min="30" max="140" style="flex:1">
+        <input type="number" id="e-ph" value="54" min="30" max="120" style="flex:1"></div>
+      <div class="hint">丸の内パークビルディング（地上34階・地下4階・高さ約170m）を想定した既定値です。階高・平面寸法は編集できます。</div>
+    </div>
+
+    <div class="sect">
+      <h3>編集対象レイアウト</h3>
+      <div class="seg" id="e-tmpl">
+        <button data-t="ground" class="on">1F</button>
+        <button data-t="retail">商業階</button>
+        <button data-t="office">オフィス階</button>
+        <button data-t="basement">地下階</button>
+      </div>
+      <div class="hint" style="margin-top:7px" id="e-tmpl-note"></div>
+    </div>
+
+    <div class="sect">
+      <h3>室リスト</h3>
+      <div class="list" id="e-rooms"></div>
+      <div class="btnrow" style="margin-top:7px">
+        <button class="btn" id="e-add-room">室を追加</button>
+        <button class="btn danger" id="e-del-room" disabled>削除</button>
+      </div>
+    </div>
+
+    <div class="sect">
+      <h3>縦動線コア（全階共通）</h3>
+      <div class="list" id="e-cores"></div>
+      <div class="btnrow" style="margin-top:7px">
+        <button class="btn" id="e-add-stair">避難階段を追加</button>
+        <button class="btn danger" id="e-del-core" disabled>削除</button>
+      </div>
+    </div>
+
+    <div class="sect">
+      <h3>避難出口（1F）</h3>
+      <div class="list" id="e-exits"></div>
+      <div class="btnrow" style="margin-top:7px">
+        <button class="btn" id="e-add-exit">出口を追加</button>
+        <button class="btn danger" id="e-del-exit" disabled>削除</button>
+      </div>
+    </div>
+
+    <div class="sect">
+      <h3>静的評価</h3>
+      <table class="t" id="e-static"><tbody></tbody></table>
+      <div class="hint" style="margin-top:6px">歩行距離は障害物を考慮した実測経路長です。二方向避難は各室から異なる階段への到達可否で判定します。</div>
+    </div>
+  </div>
+
+  <div class="canvaswrap" id="ewrap">
+    <canvas id="eplan"></canvas>
+    <div class="canvastools" id="e-tools">
+      <button data-m="select" class="on">選択・移動</button>
+      <button data-m="room">室を描く</button>
+      <button data-m="door">扉を置く</button>
+      <button data-m="pan">画面移動</button>
+    </div>
+    <div class="canvasinfo" id="e-info">—</div>
+    <div class="legend" id="e-legend"></div>
+  </div>
+
+  <div class="panel right">
+    <div class="sect">
+      <h3>プロパティ</h3>
+      <div id="e-props"><div class="hint">図面上の要素を選択してください。</div></div>
+    </div>
+    <div class="sect">
+      <h3>収容人数（設計値）</h3>
+      <table class="t" id="e-cap"><tbody></tbody></table>
+    </div>
+    <div class="sect">
+      <h3>操作</h3>
+      <div class="hint">
+        ドラッグ：移動 ／ 四隅ハンドル：寸法変更 ／ Delete：削除<br>
+        ホイール：拡大縮小 ／ 中ボタンドラッグ：画面移動 ／ 1mグリッドにスナップします。<br>
+        コアと出口の変更は全階に反映されます。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REPORT ================= -->
+<section class="view" id="view-report">
+  <div class="rep" id="rep"></div>
+</section>
+
+</main>
+<script>
+"use strict";
+/* =====================================================================
+   EVACSIM — 建物避難動線シミュレーター
+   平面：グリッド距離場 + エージェント歩行モデル
+   縦動線：階段の流量・合流・移動時間モデル（水力学モデル）
+   ===================================================================== */
+
+/* ---------------- error surface ---------------- */
+function showErr(m){
+  const e=document.getElementById('err');
+  e.style.display='block';
+  e.textContent='内部エラー: '+m+' （リセットで復帰できます）';
+}
+window.addEventListener('error',ev=>showErr(ev.message));
+
+/* ---------------- utils ---------------- */
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const fmtN=n=>Math.round(n).toLocaleString('ja-JP');
+const fmt1=n=>(Math.round(n*10)/10).toLocaleString('ja-JP',{minimumFractionDigits:1,maximumFractionDigits:1});
+const fmt2=n=>(Math.round(n*100)/100).toFixed(2);
+function mmss(s){ if(!isFinite(s))return'--:--'; s=Math.max(0,Math.round(s)); const m=Math.floor(s/60); return String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function lognorm(rnd,med,sigma){ return med*Math.exp(sigma*(Math.sqrt(-2*Math.log(1-rnd()))*Math.cos(6.283185307*rnd()))); }
+const $=id=>document.getElementById(id);
+function el(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!=null)n.textContent=txt;return n;}
+function levelLabel(l){ return l<0? 'B'+(-l)+'F' : l+'F'; }
+
+/* ---------------- binary heap (Dijkstra) ---------------- */
+class Heap{
+  constructor(){this.d=[];this.i=[];this.n=0;}
+  push(dist,idx){let n=this.n++;this.d[n]=dist;this.i[n]=idx;
+    while(n>0){const p=(n-1)>>1;if(this.d[p]<=this.d[n])break;
+      const td=this.d[p],ti=this.i[p];this.d[p]=this.d[n];this.i[p]=this.i[n];this.d[n]=td;this.i[n]=ti;n=p;}}
+  pop(){const rd=this.d[0],ri=this.i[0];this.n--;
+    if(this.n>0){this.d[0]=this.d[this.n];this.i[0]=this.i[this.n];
+      let n=0;for(;;){const l=2*n+1,r=l+1;let m=n;
+        if(l<this.n&&this.d[l]<this.d[m])m=l;
+        if(r<this.n&&this.d[r]<this.d[m])m=r;
+        if(m===n)break;
+        const td=this.d[m],ti=this.i[m];this.d[m]=this.d[n];this.i[m]=this.i[n];this.d[n]=td;this.i[n]=ti;n=m;}}
+    this._d=rd;return ri;}
+}
+
+/* ---------------- domain constants ---------------- */
+const K={
+  CORRIDOR:0, WALL:1, ROOM:2, DOOR:3, STAIRDOOR:4, EXIT:5, CORE:6, VOID:7
+};
+const CELL_CAP=4.0;              // 人/m2（ジャム密度）
+const NB=[[1,0,1],[-1,0,1],[0,1,1],[0,-1,1],[1,1,1.4142],[1,-1,1.4142],[-1,1,1.4142],[-1,-1,1.4142]];
+
+const ROOM_TYPES={
+  office :{label:'オフィス',      dens:0.10 , fill:'#eef2f6'},
+  meeting:{label:'会議室',        dens:0.40 , fill:'#e4edf7'},
+  retail :{label:'物販店舗',      dens:0.18 , fill:'#f5efe5'},
+  food   :{label:'飲食店舗',      dens:0.35 , fill:'#f7ebe4'},
+  lobby  :{label:'ロビー・受付',  dens:0.08 , fill:'#eef4f0'},
+  back   :{label:'バックヤード',  dens:0.05 , fill:'#f1f2f3'},
+  parking:{label:'駐車場',        dens:0.015, fill:'#eceff1'},
+  machine:{label:'機械室',        dens:0.005, fill:'#e7e9ea'},
+  void   :{label:'吹抜け',        dens:0    , fill:'#dde5ea', solid:true}
+};
+
+const ATTR={
+  general  :{label:'一般',            v0:1.00, pre:1.00, color:'#2f6fb5', stairs:true , familiar:true },
+  staff    :{label:'従業員・誘導員',  v0:1.10, pre:0.45, color:'#0f7a5a', stairs:true , familiar:true },
+  visitor  :{label:'来館者（不慣れ）',v0:0.94, pre:1.65, color:'#c07a10', stairs:true , familiar:false},
+  elderly  :{label:'高齢者・要配慮',  v0:0.60, pre:1.45, color:'#8a5a2f', stairs:true , familiar:true },
+  wheelchair:{label:'車椅子利用者',   v0:0.70, pre:1.20, color:'#7a3fa0', stairs:false, familiar:true }
+};
+const ATTR_KEYS=Object.keys(ATTR);
+
+const SCENARIOS={
+  drill:{label:'避難訓練（基準ケース）',
+    desc:'外乱のない理想条件。設計上の最短避難時間（ベンチマーク）を測定します。エレベーターは使用しません。',
+    preScale:0.55, speed:1.0, ev:false},
+  fire:{label:'火災',
+    desc:'指定した室から出火。火源は t²火災成長則で拡大し、煙は出火階の水平方向と階段室経由で上階へ拡散します。煙に汚染された階段は使用不能となります。',
+    preScale:1.0, speed:1.0, ev:false},
+  quake:{label:'地震',
+    desc:'強震動中は在館者が退避行動をとり移動しません。収束後に扉・通路の閉塞、負傷者の発生、エレベーター閉じ込めが生じます。',
+    preScale:1.15, speed:0.92, ev:false},
+  blackout:{label:'停電・暗所避難',
+    desc:'非常照明のみの環境。歩行速度が低下し、不慣れな在館者は経路探索に迷いが生じます。エレベーターは全停止します。',
+    preScale:1.35, speed:0.58, ev:false},
+  flood:{label:'地下浸水',
+    desc:'地下階から浸水が進行。地下在館者は上階へ避難し、地上階の在館者と1Fで合流します。',
+    preScale:1.0, speed:0.9, ev:false}
+};
+
+/* ---------------- default building ---------------- */
+function defaultBuilding(){
+  return {
+    name:'丸の内パークビルディング（想定モデル）',
+    designName:'現況案',
+    plate:{w:78,h:54},
+    floorsAbove:34, floorsBelow:4, retailTop:6,
+    hOffice:4.1, hRetail:5.0, hBasement:4.0,
+    // コアは x26..50 / y17..36 の一体ブロック。階段の扉は外周のリング通路側に開く
+    cores:[
+      {id:'S1',kind:'stair',name:'避難階段A',x:26,y:17,w:6,h:10,width:1.6,door:'W',top:34,bottom:-4},
+      {id:'S2',kind:'stair',name:'避難階段B',x:45,y:17,w:6,h:10,width:1.6,door:'E',top:34,bottom:-4},
+      {id:'S3',kind:'stair',name:'避難階段C',x:26,y:27,w:6,h:10,width:1.6,door:'W',top:34,bottom:-4},
+      {id:'S4',kind:'stair',name:'避難階段D',x:45,y:27,w:6,h:10,width:1.6,door:'E',top:34,bottom:-4},
+      {id:'V1',kind:'elevator',name:'EVバンク（低層）',x:32,y:17,w:13,h:10},
+      {id:'V2',kind:'elevator',name:'EVバンク（高層）',x:32,y:27,w:13,h:10}
+    ],
+    exits:[
+      {id:'X1',name:'正面エントランス',side:'S',pos:0.50,w:8,on:true},
+      {id:'X2',name:'東口',              side:'E',pos:0.50,w:4,on:true},
+      {id:'X3',name:'西口',              side:'W',pos:0.50,w:4,on:true},
+      {id:'X4',name:'北口（サービス）',  side:'N',pos:0.32,w:2.5,on:true}
+    ],
+    tmpl:{
+      ground:{rooms:[
+        {name:'物販A',type:'retail',x:5,y:5,w:20,h:9},
+        {name:'物販B',type:'retail',x:27,y:5,w:22,h:9},
+        {name:'物販C',type:'retail',x:51,y:5,w:22,h:9},
+        {name:'飲食A',type:'food',x:5,y:41,w:20,h:8},
+        {name:'飲食B',type:'food',x:27,y:41,w:22,h:8},
+        {name:'飲食C',type:'food',x:51,y:41,w:22,h:8},
+        {name:'防災センター',type:'back',x:5,y:20,w:14,h:8},
+        {name:'インフォメーション',type:'lobby',x:5,y:30,w:14,h:6},
+        {name:'物販D',type:'retail',x:59,y:20,w:14,h:8},
+        {name:'物販E',type:'retail',x:59,y:30,w:14,h:6}
+      ]},
+      retail:{rooms:[
+        {name:'店舗N1',type:'retail',x:1,y:1,w:18,h:12},
+        {name:'店舗N2',type:'retail',x:20,y:1,w:18,h:12},
+        {name:'店舗N3',type:'food',x:39,y:1,w:18,h:12},
+        {name:'店舗N4',type:'food',x:58,y:1,w:18,h:12},
+        {name:'店舗S1',type:'retail',x:1,y:41,w:18,h:12},
+        {name:'店舗S2',type:'retail',x:20,y:41,w:18,h:12},
+        {name:'店舗S3',type:'retail',x:39,y:41,w:18,h:12},
+        {name:'店舗S4',type:'food',x:58,y:41,w:18,h:12},
+        {name:'店舗W1',type:'retail',x:1,y:17,w:21,h:9},
+        {name:'店舗W2',type:'retail',x:1,y:27,w:21,h:10},
+        {name:'店舗E1',type:'retail',x:56,y:17,w:20,h:9},
+        {name:'店舗E2',type:'food',x:56,y:27,w:20,h:10}
+      ]},
+      office:{rooms:[
+        {name:'執務室 北西',type:'office',x:1,y:1,w:25,h:12},
+        {name:'執務室 北',type:'office',x:27,y:1,w:24,h:12},
+        {name:'執務室 北東',type:'office',x:52,y:1,w:24,h:12},
+        {name:'執務室 南西',type:'office',x:1,y:41,w:25,h:12},
+        {name:'執務室 南',type:'office',x:27,y:41,w:24,h:12},
+        {name:'執務室 南東',type:'office',x:52,y:41,w:24,h:12},
+        {name:'会議室ゾーン 西',type:'meeting',x:1,y:17,w:21,h:9},
+        {name:'執務室 西',type:'office',x:1,y:27,w:21,h:10},
+        {name:'執務室 東',type:'office',x:56,y:17,w:20,h:9},
+        {name:'会議室ゾーン 東',type:'meeting',x:56,y:27,w:20,h:10}
+      ]},
+      basement:{rooms:[
+        {name:'駐車場A',type:'parking',x:1,y:1,w:36,h:12},
+        {name:'駐車場B',type:'parking',x:39,y:1,w:37,h:12},
+        {name:'駐車場C',type:'parking',x:1,y:41,w:36,h:12},
+        {name:'駐車場D',type:'parking',x:39,y:41,w:37,h:12},
+        {name:'機械室',type:'machine',x:1,y:17,w:21,h:20},
+        {name:'倉庫',type:'back',x:56,y:17,w:20,h:20}
+      ]}
+    }
+  };
+}
+
+/* ---------------- 階層とコアの対応 ---------------- */
+function tmplRange(b,k){
+  if(k==='basement')return[-b.floorsBelow,-1];
+  if(k==='ground')return[1,1];
+  if(k==='retail')return[2,b.retailTop];
+  return[b.retailTop+1,b.floorsAbove];
+}
+function coreIn(b,c,k){
+  const r=tmplRange(b,k);
+  if(r[0]>r[1])return false;
+  if(c.kind!=='stair')return true;                       // EV・シャフトは全階を貫通
+  const top=c.top==null?b.floorsAbove:c.top;
+  const bot=c.bottom==null?-b.floorsBelow:c.bottom;
+  return !(top<r[0]||bot>r[1]);
+}
+
+/* ---------------- presets ---------------- */
+/* コアと重なる室を自動で切り詰める（残らない場合は削除） */
+function carveRooms(b){
+  for(const k in b.tmpl){
+    const rects=b.cores.filter(c=>coreIn(b,c,k)).map(c=>({x:c.x,y:c.y,w:c.w,h:c.h}));
+    const keep=[];
+    for(const r of b.tmpl[k].rooms){
+      let ok=true;
+      for(const c of rects){
+        const ox=Math.min(r.x+r.w,c.x+c.w)-Math.max(r.x,c.x);
+        const oy=Math.min(r.y+r.h,c.y+c.h)-Math.max(r.y,c.y);
+        if(ox<=0||oy<=0)continue;
+        const hor=[
+          {x:c.x+c.w, y:r.y, w:r.x+r.w-(c.x+c.w), h:r.h},   // 左を削る
+          {x:r.x,     y:r.y, w:c.x-r.x,           h:r.h}    // 右を削る
+        ];
+        const ver=[
+          {x:r.x, y:c.y+c.h, w:r.w, h:r.y+r.h-(c.y+c.h)},   // 上を削る
+          {x:r.x,     y:r.y, w:r.w, h:c.y-r.y}              // 下を削る
+        ];
+        // 重なりが浅い軸から削る（囲まれた死角が生まれにくい）
+        const opts=(oy<=ox?ver.concat(hor):hor.concat(ver)).filter(o=>o.w>=4&&o.h>=4);
+        if(!opts.length){ ok=false; break; }
+        opts.sort((p,q)=>q.w*q.h-p.w*p.h);
+        Object.assign(r,opts[0]);
+        if(r.doors)delete r.doors;
+      }
+      if(ok)keep.push(r);
+    }
+    b.tmpl[k].rooms=keep;
+  }
+  return b;
+}
+function applyPreset(b,key){
+  const d=defaultBuilding();
+  b.cores=JSON.parse(JSON.stringify(d.cores));
+  b.exits=JSON.parse(JSON.stringify(d.exits));
+  b.tmpl=JSON.parse(JSON.stringify(d.tmpl));
+  if(key==='base'){ b.designName='現況案'; }
+  if(key==='planA'){
+    b.designName='改善案A：避難階段2箇所増設';
+    // リング通路に直接面する位置に増設する（動線が実際に分散するように）
+    b.cores.push({id:'S5',kind:'stair',name:'避難階段E（北西）',x:14,y:4,w:6,h:8,width:1.4,door:'S',top:34,bottom:-4});
+    b.cores.push({id:'S6',kind:'stair',name:'避難階段F（南東）',x:58,y:41,w:6,h:8,width:1.4,door:'N',top:34,bottom:-4});
+  }
+  if(key==='planB'){
+    b.designName='改善案B：コア分散＋出口拡幅';
+    b.cores[0].x=10; b.cores[0].y=17; b.cores[0].door='N'; b.cores[0].width=1.8;
+    b.cores[3].x=62; b.cores[3].y=27; b.cores[3].door='S'; b.cores[3].width=1.8;
+    b.exits[0].w=12; b.exits[1].w=6; b.exits[2].w=6;
+  }
+  if(key==='planC'){
+    b.designName='改善案C：低層部 大階段追加';
+    b.cores.push({id:'S7',kind:'stair',name:'低層 大階段',x:32,y:37,w:13,h:8,width:3.6,door:'W',top:6,bottom:1});
+    b.exits[0].w=10;
+  }
+  return carveRooms(b);
+}
+
+/* =====================================================================
+   GRID BUILD
+   ===================================================================== */
+function sideCells(rect,side,pos,widthM,W,H){
+  // returns array of [x,y] cells on the given side of rect (inclusive bounds in cells)
+  const x0=rect.x,y0=rect.y,x1=rect.x+rect.w-1,y1=rect.y+rect.h-1;
+  const n=Math.max(1,Math.round(widthM));
+  const out=[];
+  if(side==='N'||side==='S'){
+    const y=side==='N'?y0:y1;
+    const span=x1-x0-1;
+    let sx=Math.round(x0+1+pos*span-n/2);
+    sx=clamp(sx,x0+1,Math.max(x0+1,x1-1-n+1));
+    for(let i=0;i<n;i++){const x=sx+i;if(x>x0&&x<x1)out.push([x,y]);}
+  }else{
+    const x=side==='W'?x0:x1;
+    const span=y1-y0-1;
+    let sy=Math.round(y0+1+pos*span-n/2);
+    sy=clamp(sy,y0+1,Math.max(y0+1,y1-1-n+1));
+    for(let i=0;i<n;i++){const y=sy+i;if(y>y0&&y<y1)out.push([x,y]);}
+  }
+  return out.filter(([x,y])=>x>=0&&y>=0&&x<W&&y<H);
+}
+function borderCells(side,pos,widthM,W,H){
+  const n=Math.max(1,Math.round(widthM)),out=[];
+  if(side==='N'||side==='S'){
+    const y=side==='N'?0:H-1;
+    let sx=clamp(Math.round(pos*(W-2)-n/2)+1,1,W-1-n);
+    for(let i=0;i<n;i++)out.push([sx+i,y]);
+  }else{
+    const x=side==='W'?0:W-1;
+    let sy=clamp(Math.round(pos*(H-2)-n/2)+1,1,H-1-n);
+    for(let i=0;i<n;i++)out.push([x,sy+i]);
+  }
+  return out;
+}
+/* 室の外側に空きがある面・位置を探す（扉がコアや隣室に埋もれるのを防ぐ） */
+function freeRuns(room,side,cores,rooms,W,H){
+  const pts=[];
+  if(side==='N'||side==='S'){
+    const y=side==='N'?room.y-1:room.y+room.h;
+    for(let x=room.x+1;x<=room.x+room.w-2;x++)pts.push([x,y,x]);
+  }else{
+    const x=side==='W'?room.x-1:room.x+room.w;
+    for(let y=room.y+1;y<=room.y+room.h-2;y++)pts.push([x,y,y]);
+  }
+  const runs=[]; let cur=null;
+  for(const [x,y,t] of pts){
+    let ok=!(x<1||y<1||x>W-2||y>H-2);
+    if(ok)for(const c of cores||[])if(x>=c.x&&x<c.x+c.w&&y>=c.y&&y<c.y+c.h){ok=false;break;}
+    if(ok)for(const r of rooms||[])if(r!==room&&x>=r.x&&x<r.x+r.w&&y>=r.y&&y<r.y+r.h){ok=false;break;}
+    if(ok){ if(cur)cur.b=t+1; else cur={a:t,b:t+1}; }
+    else if(cur){ runs.push(cur); cur=null; }
+  }
+  if(cur)runs.push(cur);
+  for(const r of runs)r.len=r.b-r.a;
+  return runs.sort((p,q)=>q.len-p.len);
+}
+function autoDoors(room,W,H,cores,rooms){
+  if(room.doors&&room.doors.length)return room.doors;
+  const cx=room.x+room.w/2, cy=room.y+room.h/2, px=W/2, py=H/2;
+  const dx=px-cx, dy=py-cy;
+  const pref = Math.abs(dx)>Math.abs(dy)
+    ? [dx>0?'E':'W', dy>0?'S':'N', dy>0?'N':'S', dx>0?'W':'E']
+    : [dy>0?'S':'N', dx>0?'E':'W', dx>0?'W':'E', dy>0?'N':'S'];
+  const wide=room.w*room.h>190;
+  const cand=pref.map(sd=>({sd,run:(freeRuns(room,sd,cores,rooms,W,H)[0]||null)}));
+  const usable=cand.filter(c=>c.run&&c.run.len>=1);
+  const pick=(c,want)=>{
+    const span=(c.sd==='N'||c.sd==='S')?room.w-2:room.h-2;
+    const base=(c.sd==='N'||c.sd==='S')?room.x+1:room.y+1;
+    const w=Math.max(1,Math.min(want,c.run.len));
+    const center=(c.run.a+c.run.b)/2;
+    return {side:c.sd,pos:span>0?clamp((center-base)/span,0,1):0.5,w};
+  };
+  if(!usable.length)return [{side:pref[0],pos:0.5,w:wide?1.8:1.2}];
+  const doors=[pick(usable[0],wide?1.8:1.2)];
+  if(room.w*room.h>230){
+    const alt=usable.find(c=>c.sd!==doors[0].side);
+    if(alt)doors.push(pick(alt,1.2));
+  }
+  return doors;
+}
+
+/* 避難目標（階段の扉・出口）から4近傍で到達できるセルを塗る */
+function floodReach(g){
+  const {W,H,N,walk,stairAt,exitAt}=g;
+  const reach=new Uint8Array(N), st=[];
+  for(let i=0;i<N;i++)if(walk[i]&&(stairAt[i]>=0||exitAt[i]>=0)){reach[i]=1;st.push(i);}
+  while(st.length){
+    const i=st.pop(), x=i%W, y=(i-x)/W;
+    for(let k=0;k<4;k++){
+      const nx=x+NB[k][0], ny=y+NB[k][1];
+      if(nx<0||ny<0||nx>=W||ny>=H)continue;
+      const j=ny*W+nx;
+      if(walk[j]&&!reach[j]){reach[j]=1;st.push(j);}
+    }
+  }
+  return reach;
+}
+function repairDoors(g,rooms){
+  for(let pass=0;pass<4;pass++){
+    const reach=floodReach(g);
+    let fixed=0;
+    rooms.forEach((r,ri)=>{
+      const t=ROOM_TYPES[r.type]||ROOM_TYPES.office;
+      if(t.solid)return;
+      let any=false, ok=false;
+      for(let y=r.y+1;y<r.y+r.h-1&&!ok;y++)for(let x=r.x+1;x<r.x+r.w-1;x++){
+        const i=y*g.W+x;
+        if(g.walk[i]){ any=true; if(reach[i]){ok=true;break;} }
+      }
+      if(!any||ok)return;
+      for(const sd of ['N','S','W','E']){
+        const vert=(sd==='N'||sd==='S');
+        const wall = sd==='N'?r.y : sd==='S'?r.y+r.h-1 : sd==='W'?r.x : r.x+r.w-1;
+        const outs = sd==='N'?r.y-1 : sd==='S'?r.y+r.h : sd==='W'?r.x-1 : r.x+r.w;
+        if(outs<1||outs>(vert?g.H:g.W)-2)continue;
+        const lo=vert?r.x+1:r.y+1, hi=vert?r.x+r.w-2:r.y+r.h-2;
+        let hit=-1;
+        for(let p=lo;p<=hi;p++){
+          const wi = vert? wall*g.W+p : p*g.W+wall;
+          const oi = vert? outs*g.W+p : p*g.W+outs;
+          if(g.kind[wi]===K.CORE||g.kind[wi]===K.STAIRDOOR||g.kind[wi]===K.EXIT)continue;
+          if(g.walk[oi]&&reach[oi]){hit=p;break;}
+        }
+        if(hit<0)continue;
+        const wi = vert? wall*g.W+hit : hit*g.W+wall;
+        g.kind[wi]=K.DOOR; g.walk[wi]=1; g.roomAt[wi]=ri; g.gate[wi]=1;
+        const span=Math.max(1,(vert?r.w:r.h)-2);
+        r._doors=(r._doors||[]).concat([{side:sd,pos:clamp((hit-lo+0.5)/span,0,1),w:1.2,auto:1}]);
+        fixed++; break;
+      }
+    });
+    if(!fixed)break;
+  }
+}
+
+function buildGrid(b,tmplKey){
+  const W=Math.round(b.plate.w), H=Math.round(b.plate.h), N=W*H;
+  const kind=new Uint8Array(N), walk=new Uint8Array(N);
+  const roomAt=new Int16Array(N).fill(-1);
+  const stairAt=new Int8Array(N).fill(-1);
+  const exitAt=new Int8Array(N).fill(-1);
+  const gate=new Float32Array(N);        // 0 = 制限なし
+  const rooms=b.tmpl[tmplKey].rooms;
+
+  // 1. 全面通路 + 外周壁
+  walk.fill(1);
+  for(let x=0;x<W;x++){ walk[x]=0;kind[x]=K.WALL; walk[(H-1)*W+x]=0;kind[(H-1)*W+x]=K.WALL; }
+  for(let y=0;y<H;y++){ walk[y*W]=0;kind[y*W]=K.WALL; walk[y*W+W-1]=0;kind[y*W+W-1]=K.WALL; }
+
+  // 2. 室
+  rooms.forEach((r,ri)=>{
+    const t=ROOM_TYPES[r.type]||ROOM_TYPES.office;
+    const x0=clamp(r.x,0,W-1),y0=clamp(r.y,0,H-1);
+    const x1=clamp(r.x+r.w-1,0,W-1),y1=clamp(r.y+r.h-1,0,H-1);
+    for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
+      const i=y*W+x, edge=(x===x0||x===x1||y===y0||y===y1);
+      if(edge){ kind[i]=K.WALL; walk[i]=0; }
+      else if(t.solid){ kind[i]=K.VOID; walk[i]=0; }
+      else { kind[i]=K.ROOM; walk[i]=1; roomAt[i]=ri; }
+    }
+    if(t.solid)return;
+    const doors=autoDoors(r,W,H,b.cores.filter(c=>coreIn(b,c,tmplKey)),rooms);
+    r._doors=doors.slice();
+    for(const d of doors){
+      for(const [x,y] of sideCells({x:x0,y:y0,w:x1-x0+1,h:y1-y0+1},d.side,d.pos,d.w,W,H)){
+        const i=y*W+x; kind[i]=K.DOOR; walk[i]=1; roomAt[i]=ri; gate[i]=1;
+      }
+    }
+  });
+
+  // 3. コア（室より優先）※その階に存在しない階段は無視
+  b.cores.forEach((c,ci)=>{
+    if(!coreIn(b,c,tmplKey))return;
+    const x0=clamp(c.x,0,W-1),y0=clamp(c.y,0,H-1);
+    const x1=clamp(c.x+c.w-1,0,W-1),y1=clamp(c.y+c.h-1,0,H-1);
+    for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
+      const i=y*W+x; kind[i]=K.CORE; walk[i]=0; roomAt[i]=-1;
+    }
+    if(c.kind!=='stair')return;
+    for(const [x,y] of sideCells({x:x0,y:y0,w:x1-x0+1,h:y1-y0+1},c.door||'E',0.5,Math.max(1.2,c.width),W,H)){
+      const i=y*W+x; kind[i]=K.STAIRDOOR; walk[i]=1; stairAt[i]=ci; gate[i]=1;
+    }
+  });
+
+  // 4. 出口（1Fのみ）
+  if(tmplKey==='ground'){
+    b.exits.forEach((e,ei)=>{
+      if(!e.on)return;
+      for(const [x,y] of borderCells(e.side,e.pos,e.w,W,H)){
+        const i=y*W+x; kind[i]=K.EXIT; walk[i]=1; exitAt[i]=ei; gate[i]=1;
+        // 内側1セルを確実に通行可能にする
+        const ix=x===0?1:x===W-1?W-2:x, iy=y===0?1:y===H-1?H-2:y;
+        const j=iy*W+ix;
+        if(kind[j]===K.WALL){kind[j]=K.CORRIDOR;walk[j]=1;}
+      }
+    });
+  }
+
+  // 5. 到達性の修復（扉が袋小路に開いている室に、到達可能な側へ扉を開ける）
+  repairDoors({W,H,N,kind,walk,roomAt,stairAt,exitAt,gate},rooms);
+
+  // 6. 特徴点ラベル（ボトルネック命名用）
+  const feats=[];
+  rooms.forEach((r,ri)=>{ if(r._doors)for(const d of r._doors){
+    const cs=sideCells({x:r.x,y:r.y,w:r.w,h:r.h},d.side,d.pos,d.w,W,H);
+    if(cs.length)feats.push({x:cs[0][0],y:cs[0][1],name:r.name+' 出入口'});
+  }});
+  b.cores.forEach(c=>{ if(c.kind==='stair'&&coreIn(b,c,tmplKey))feats.push({x:c.x+c.w/2,y:c.y+c.h/2,name:c.name+'前'}); });
+  if(tmplKey==='ground')b.exits.forEach(e=>{ if(e.on){
+    const cs=borderCells(e.side,e.pos,e.w,W,H);
+    if(cs.length)feats.push({x:cs[0][0],y:cs[0][1],name:e.name});
+  }});
+
+  return {W,H,N,kind,walk,roomAt,stairAt,exitAt,gate,rooms,feats,tmplKey};
+}
+
+/* ---------------- distance field ---------------- */
+function computeField(g,sources,blocked){
+  const {W,H,N,walk}=g;
+  const dist=new Float32Array(N).fill(Infinity);
+  const h=new Heap();
+  for(const s of sources){ if(walk[s]&&!(blocked&&blocked[s])){ dist[s]=0; h.push(0,s); } }
+  while(h.n>0){
+    const i=h.pop(), d=h._d;
+    if(d>dist[i]+1e-6)continue;
+    const x=i%W, y=(i-x)/W;
+    for(let k=0;k<8;k++){
+      const dx=NB[k][0],dy=NB[k][1],c=NB[k][2];
+      const nx=x+dx, ny=y+dy;
+      if(nx<0||ny<0||nx>=W||ny>=H)continue;
+      const j=ny*W+nx;
+      if(!walk[j]||(blocked&&blocked[j]))continue;
+      if(dx&&dy){
+        const a=y*W+nx, bb=ny*W+x;
+        if(!walk[a]||!walk[bb]||(blocked&&(blocked[a]||blocked[bb])))continue;
+      }
+      const nd=d+c;
+      // dist は Float32 なので、丸めた「格納値」をそのままヒープへ入れる
+      // （倍精度の nd を入れると pop 時の d>dist[i] 判定で正当なノードが捨てられる）
+      if(nd<dist[j]-1e-6){dist[j]=nd;h.push(dist[j],j);}
+    }
+  }
+  return dist;
+}
+function stairSources(g,ci){
+  const out=[];for(let i=0;i<g.N;i++)if(g.stairAt[i]===ci)out.push(i);return out;
+}
+function exitSources(g,ei){
+  const out=[];for(let i=0;i<g.N;i++)if(g.exitAt[i]===ei)out.push(i);return out;
+}
+/* =====================================================================
+   SIMULATION
+   ===================================================================== */
+const ST={PRE:0,MOVE:1,QUEUE:2,STAIR:3,REFUGE:4,SAFE:5,DEAD:6,TRAP:7};
+
+class Sim{
+  constructor(b,cfg){
+    this.b=b; this.cfg=cfg;
+    this.t=0; this.done=false; this.rnd=mulberry32(cfg.seed|0);
+    this.sc=SCENARIOS[cfg.scenario];
+    this.series=[]; this.lastSample=-1;
+    this.build();
+  }
+
+  /* ---------- geometry & floors ---------- */
+  build(){
+    const b=this.b;
+    this.levels=[];
+    for(let l=-b.floorsBelow;l<0;l++)this.levels.push(l);
+    for(let l=1;l<=b.floorsAbove;l++)this.levels.push(l);
+    this.groundIdx=b.floorsBelow;
+    this.tmplGrid={};
+    for(const k of ['ground','retail','office','basement'])this.tmplGrid[k]=buildGrid(b,k);
+    for(const k in this.tmplGrid){
+      const g=this.tmplGrid[k];
+      g.gateList=[]; for(let i=0;i<g.N;i++)if(g.gate[i]>0)g.gateList.push(i);
+      g.srcS={}; g.srcX={};
+      b.cores.forEach((c,ci)=>{ if(c.kind==='stair')g.srcS[ci]=stairSources(g,ci); });
+      if(k==='ground')b.exits.forEach((e,ei)=>{ if(e.on)g.srcX[ei]=exitSources(g,ei); });
+      g.field={};
+    }
+    this.floors=this.levels.map((lv,idx)=>{
+      const tk=this.tmplKey(lv), g=this.tmplGrid[tk];
+      return {idx,lv,tk,g,
+        occ:new Uint16Array(g.N), tok:new Float32Array(g.N), peak:new Float32Array(g.N),
+        blk:null, own:{}, smoke:0, aset:Infinity, fireR:0, agents:[], remain:0, total:0,
+        h:this.floorH(lv), rset:0};
+    });
+    this.stairIdx=[]; b.cores.forEach((c,ci)=>{ if(c.kind==='stair')this.stairIdx.push(ci); });
+    this.stairs={};
+    for(const ci of this.stairIdx){
+      const c=b.cores[ci], nf=this.floors.length;
+      this.stairs[ci]={ci,core:c,
+        q:Array.from({length:nf},()=>[]), thr:Array.from({length:nf},()=>[]),
+        transit:[], tok:new Float32Array(nf), usable:new Uint8Array(nf).fill(1),
+        passed:0, peakQ:0, inside:0,
+        cap:this.cfg.sflow*Math.max(0.6,c.width-0.3)};
+      // 階段の存在範囲
+      for(let i=0;i<nf;i++){
+        const lv=this.levels[i];
+        const top=c.top==null?b.floorsAbove:c.top, bot=c.bottom==null?-b.floorsBelow:c.bottom;
+        if(lv>top||lv<bot)this.stairs[ci].usable[i]=0;
+      }
+    }
+    this.spawn();
+    this.hazardInit();
+  }
+  tmplKey(lv){
+    if(lv<0)return'basement';
+    if(lv===1)return'ground';
+    if(lv<=this.b.retailTop)return'retail';
+    return'office';
+  }
+  floorH(lv){ const b=this.b; return lv<0?b.hBasement:(lv<=b.retailTop?b.hRetail:b.hOffice); }
+
+  /* ---------- fields ---------- */
+  field(f,key){
+    if(f.blk){ if(!f.own[key])f.own[key]=this.compute(f,key,f.blk); return f.own[key]; }
+    const g=f.g;
+    if(!g.field[key])g.field[key]=this.compute(f,key,null);
+    return g.field[key];
+  }
+  compute(f,key,blk){
+    const g=f.g, t=key[0], n=+key.slice(1);
+    const src = t==='S' ? (g.srcS[n]||[]) : (g.srcX[n]||[]);
+    return computeField(g,src,blk);
+  }
+  invalidate(f){ f.own={}; }
+
+  /* ---------- population ---------- */
+  spawn(){
+    const b=this.b, rnd=this.rnd, cfg=this.cfg;
+    // 階ごとの収容重み
+    const wOf={};
+    for(const k in this.tmplGrid){
+      let w=0;
+      for(const r of b.tmpl[k].rooms){
+        const t=ROOM_TYPES[r.type]||ROOM_TYPES.office;
+        w+=Math.max(0,(r.w-2))*Math.max(0,(r.h-2))*t.dens;
+      }
+      wOf[k]=w;
+    }
+    let tw=0; for(const f of this.floors)tw+=wOf[f.tk]*(cfg.band[f.tk]||1);
+    this.agents=[];
+    let id=0;
+    const mix=cfg.mix, keys=ATTR_KEYS;
+    const cum=[]; let s=0; for(const k of keys){s+=mix[k]||0;cum.push(s);}
+    for(const f of this.floors){
+      const share=(wOf[f.tk]*(cfg.band[f.tk]||1))/tw;
+      const n=Math.round(cfg.pop*share);
+      f.total=n;
+      // 室ごとの配置人数（用途別の収容密度で按分）
+      const rooms=f.g.rooms;
+      const wts=rooms.map(r=>{
+        const t=ROOM_TYPES[r.type]||ROOM_TYPES.office;
+        return Math.max(0,(r.w-2))*Math.max(0,(r.h-2))*t.dens;
+      });
+      const ws=wts.reduce((a,v)=>a+v,0);
+      const quota=wts.map(v=>ws>0?Math.floor(n*v/ws):0);
+      let rest=n-quota.reduce((a,v)=>a+v,0);
+      for(let i=0;rest>0&&wts.length;i=(i+1)%wts.length){ if(wts[i]>0){quota[i]++;rest--;} else if(ws===0){quota[0]++;rest--;} }
+      // 室ごとに配置可能セルを集め、均等に散らす（初期配置で密度が偏らないように）
+      const pool=rooms.map(()=>[]), corridor=[];
+      for(let i=0;i<f.g.N;i++){
+        if(!f.g.walk[i])continue;
+        const ri=f.g.roomAt[i];
+        if(ri>=0&&f.g.kind[i]===K.ROOM)pool[ri].push(i);
+        else if(f.g.kind[i]===K.CORRIDOR)corridor.push(i);
+      }
+      const shuffle=p=>{for(let i=p.length-1;i>0;i--){const j=(rnd()*(i+1))|0;const t=p[i];p[i]=p[j];p[j]=t;}};
+      pool.forEach(shuffle); shuffle(corridor);
+      const plan=[];
+      rooms.forEach((r,ri)=>{
+        const cells=pool[ri].length?pool[ri]:corridor;
+        for(let k=0;k<quota[ri];k++)if(cells.length)plan.push(cells[k%cells.length]);
+      });
+      for(const ci of plan){
+        const x=(ci%f.g.W)+0.15+rnd()*0.7, y=((ci-ci%f.g.W)/f.g.W)+0.15+rnd()*0.7;
+        const u=rnd(); let ai=0; while(ai<cum.length-1&&cum[ai]<u)ai++;
+        const ak=keys[ai], A=ATTR[ak];
+        const preMed=cfg.pre*A.pre*this.sc.preScale;
+        const a={id:id++,lv:f.idx,x,y,ci,ak,
+          v0:cfg.v0*A.v0*(0.88+0.24*rnd()),
+          pre:Math.max(2,lognorm(rnd,Math.max(3,preMed),0.42)),
+          st:ST.PRE, tgt:null, tRe:0, fed:0, hurt:0, dx:0, dy:0, evac:0, stuck:0};
+        a.home=f.idx;
+        this.agents.push(a); f.agents.push(a); f.occ[ci]++;
+      }
+      f.total=f.agents.length; f.remain=f.agents.length;
+    }
+    this.N=this.agents.length;
+    // 段階避難（火災時）の行動開始遅延
+    if(cfg.scenario==='fire'&&cfg.phased){
+      const oi=this.fireFloorIdx();
+      for(const a of this.agents){
+        const d=a.lv-oi;
+        let delay;
+        if(d===0||d===1)delay=0;
+        else if(d>1)delay=Math.ceil((d-1)/2)*80;
+        else delay=140+(-d)*15;
+        a.pre+=delay;
+      }
+    }
+    // エレベーター閉じ込め（地震）
+    if(cfg.scenario==='quake'){
+      const nt=Math.round(this.N*0.008);
+      for(let k=0;k<nt&&k<this.agents.length;k++){
+        const a=this.agents[(this.rnd()*this.agents.length)|0];
+        if(a.st===ST.PRE){a.st=ST.TRAP;a.trapEV=1;this.floors[a.lv].occ[a.ci]--;this.floors[a.lv].remain--;}
+      }
+    }
+  }
+  fireFloorIdx(){
+    const lv=this.cfg.fireLevel;
+    const i=this.levels.indexOf(lv);
+    return i<0?this.groundIdx:i;
+  }
+
+  /* ---------- hazard ---------- */
+  hazardInit(){
+    const cfg=this.cfg;
+    this.shakeEnd=0; this.afterAt=-1; this.afterEnd=-1;
+    this.fire=null; this.floodT={};
+    if(cfg.scenario==='fire'){
+      const fi=this.fireFloorIdx(), f=this.floors[fi];
+      const rooms=f.g.rooms, r=rooms[clamp(cfg.fireRoom,0,rooms.length-1)]||rooms[0];
+      this.fire={fi, x:r.x+r.w/2, y:r.y+r.h/2, room:r.name,
+        rate:cfg.fireGrowth<0.005?0.012:(cfg.fireGrowth<0.02?0.026:0.052),
+        ex:cfg.smokeEx};
+      // 火源に最も近い階段を煙汚染対象に
+      let best=null,bd=1e9;
+      for(const ci of this.stairIdx){
+        const c=this.b.cores[ci];
+        const d=Math.hypot(c.x+c.w/2-this.fire.x,c.y+c.h/2-this.fire.y);
+        if(d<bd){bd=d;best=ci;}
+      }
+      this.fire.badStair=best;
+    }
+    if(cfg.scenario==='quake'){
+      this.shakeEnd=cfg.quakeDur;
+      if(cfg.quakeAfter>0)this.afterAt=cfg.quakeAfter;
+    }
+  }
+  applyQuakeDamage(scale){
+    const cfg=this.cfg, rnd=this.rnd, sev=Math.max(0,cfg.quakeInt-4.5)*scale;
+    for(const f of this.floors){
+      const g=f.g;
+      if(!f.blk)f.blk=new Uint8Array(g.N);
+      let changed=false;
+      for(let i=0;i<g.N;i++){
+        if(!g.walk[i]||f.blk[i])continue;
+        const k=g.kind[i];
+        let p=0;
+        if(k===K.CORRIDOR)p=0.0035*sev;
+        else if(k===K.ROOM)p=0.006*sev;
+        else if(k===K.DOOR)p=0.020*sev;
+        else if(k===K.STAIRDOOR)p=0.010*sev;
+        if(p>0&&rnd()<p){f.blk[i]=1;changed=true;}
+      }
+      if(changed)this.invalidate(f);
+    }
+    // 階段の部分閉塞
+    for(const ci of this.stairIdx){
+      const S=this.stairs[ci];
+      if(rnd()<0.10*sev){
+        const i=this.groundIdx+1+((rnd()*(this.floors.length-this.groundIdx-1))|0);
+        for(let j=i;j<this.floors.length;j++)S.usable[j]=0;
+        S.damaged=this.levels[i];
+      }
+    }
+    // 負傷
+    const frac=clamp(0.012*Math.pow(sev,1.4),0,0.2);
+    for(const a of this.agents){
+      if(a.st===ST.SAFE||a.st===ST.DEAD||a.st===ST.TRAP)continue;
+      if(rnd()<frac){
+        if(rnd()<0.22){ a.hurt=2; this.drop(a,ST.TRAP); }
+        else { a.hurt=1; a.v0*=0.42; }
+      }
+    }
+    this.reroute();
+  }
+  reroute(){ for(const a of this.agents)a.tRe=0; }
+
+  /* 在館者を平面／待ち行列／階段室から取り除いて状態遷移させる */
+  drop(a,newSt){
+    const f=this.floors[a.lv];
+    if(a.st===ST.MOVE||a.st===ST.PRE){
+      if(f.occ[a.ci]>0)f.occ[a.ci]--;
+      if(f.remain>0)f.remain--;
+    }else if(a.st===ST.QUEUE){
+      for(const ci of this.stairIdx){
+        const q=this.stairs[ci].q[a.lv], k=q.indexOf(a);
+        if(k>=0){q.splice(k,1);break;}
+      }
+    }else if(a.st===ST.STAIR){
+      for(const ci of this.stairIdx){
+        const T=this.stairs[ci].transit, k=T.findIndex(e=>e.a===a);
+        if(k>=0){T.splice(k,1);break;}
+      }
+    }
+    a.st=newSt;
+  }
+
+  hazardStep(dt){
+    const cfg=this.cfg, t=this.t;
+    if(cfg.scenario==='fire'&&this.fire){
+      const F=this.fire, f=this.floors[F.fi], g=f.g;
+      const r=Math.min(20,F.rate*Math.max(0,t-15));
+      if(r>F.r0+0.9||F.r0==null){
+        F.r0=r; f.fireR=r;
+        if(!f.blk)f.blk=new Uint8Array(g.N);
+        let ch=false;
+        const x0=Math.max(0,(F.x-r)|0),x1=Math.min(g.W-1,(F.x+r)|0);
+        const y0=Math.max(0,(F.y-r)|0),y1=Math.min(g.H-1,(F.y+r)|0);
+        for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
+          if(Math.hypot(x+.5-F.x,y+.5-F.y)<=r){const i=y*g.W+x;if(!f.blk[i]){f.blk[i]=1;ch=true;}}
+        }
+        if(ch)this.invalidate(f);
+      }
+      // 煙：出火階
+      const spd=1/(90/Math.max(.2,F.ex));
+      f.smoke=clamp((t-25)*spd*0.9,0,1);
+      if(f.smoke>0.5&&!isFinite(f.aset))f.aset=t;
+      // 上階への伝播（階段室経由）
+      for(const fl of this.floors){
+        if(fl.idx<=F.fi)continue;
+        const d=fl.idx-F.fi;
+        const st=70+22*d;
+        fl.smoke=clamp((t-st)/(260/Math.max(.3,F.ex))*0.85,0,0.92);
+        if(fl.smoke>0.5&&!isFinite(fl.aset))fl.aset=t;
+      }
+      // 汚染階段の使用不能化
+      if(t>95&&F.badStair!=null&&!F.stairKilled){
+        const S=this.stairs[F.badStair];
+        for(let j=F.fi;j<this.floors.length;j++)S.usable[j]=0;
+        S.damaged=this.levels[F.fi]; S.cause='煙汚染';
+        F.stairKilled=1; this.reroute();
+      }
+    }
+    if(cfg.scenario==='quake'){
+      if(!this.qDone&&t>=this.shakeEnd){ this.qDone=1; this.applyQuakeDamage(1); }
+      if(this.afterAt>0&&!this.qDone2&&t>=this.afterAt){ this.qDone2=1; this.afterEnd=t+12; this.applyQuakeDamage(0.55); }
+    }
+    if(cfg.scenario==='flood'){
+      const rr=cfg.floodRate;
+      for(const f of this.floors){
+        if(f.lv>=0)continue;
+        const tf=(f.lv===-1?300:120)/rr;
+        if(t>=tf&&!f.flooded){
+          f.flooded=1;
+          for(const a of f.agents)
+            if(a.lv===f.idx&&(a.st===ST.MOVE||a.st===ST.PRE||a.st===ST.QUEUE))this.drop(a,ST.DEAD);
+        }
+        f.smoke=clamp((t-(f.lv===-1?300:120)/rr+90)/120,0,0.7);
+      }
+    }
+    // 曝露
+    if(cfg.scenario==='fire'||cfg.scenario==='flood'){
+      for(const a of this.agents){
+        if(a.st!==ST.MOVE&&a.st!==ST.PRE&&a.st!==ST.QUEUE)continue;
+        const sm=this.floors[a.lv].smoke;
+        if(sm>0.15){
+          a.fed+=Math.pow(sm,1.6)*dt/240;
+          if(a.fed>=1)this.drop(a,ST.DEAD);
+        }
+      }
+    }
+  }
+
+  frozen(){
+    const t=this.t;
+    if(this.cfg.scenario!=='quake')return false;
+    if(t<this.shakeEnd)return true;
+    if(this.afterEnd>0&&t<this.afterEnd&&t>=this.afterAt)return true;
+    return false;
+  }
+
+  /* ---------- target choice ---------- */
+  pickTarget(a){
+    const f=this.floors[a.lv];
+    if(f.idx===this.groundIdx){
+      let best=null,bc=Infinity;
+      this.b.exits.forEach((e,ei)=>{
+        if(!e.on)return;
+        const fl=this.field(f,'X'+ei), d=fl[a.ci];
+        if(!isFinite(d))return;
+        const load=(this.exLoad&&this.exLoad[ei])||0;
+        const c=d/a.v0+load/(this.cfg.dflow*e.w);
+        if(c<bc){bc=c;best='X'+ei;}
+      });
+      if(best)return best;
+      // 到達不能：任意の出口
+      for(let ei=0;ei<this.b.exits.length;ei++)if(this.b.exits[ei].on)return'X'+ei;
+      return null;
+    }
+    let best=null,bc=Infinity;
+    for(const ci of this.stairIdx){
+      const S=this.stairs[ci];
+      if(!S.usable[a.lv])continue;
+      const fl=this.field(f,'S'+ci), d=fl[a.ci];
+      if(!isFinite(d))continue;
+      const q=S.q[a.lv].length;
+      const vt=Math.abs(this.levels[a.lv]===1?0:(this.levels[a.lv]>0?this.levels[a.lv]-1:-this.levels[a.lv]))*(f.h/this.cfg.sspeed);
+      const unfam=ATTR[a.ak].familiar?1:1.35;
+      const c=(d/a.v0)*unfam+q/S.cap+vt*0.35;
+      if(c<bc){bc=c;best='S'+ci;}
+    }
+    return best;
+  }
+
+  /* ---------- main step ---------- */
+  step(dt){
+    this.t+=dt;
+    this.hazardStep(dt);
+    const froze=this.frozen();
+    const cfg=this.cfg, W0=this.sc.speed;
+
+    // ゲート補充
+    for(const f of this.floors){
+      if(f.remain<=0)continue;
+      const gl=f.g.gateList, tok=f.tok, add=cfg.dflow*dt;
+      for(let k=0;k<gl.length;k++){ const i=gl[k]; tok[i]=Math.min(1.6,tok[i]+add); }
+    }
+    // 出口負荷の集計
+    this.exLoad={};
+
+    for(const a of this.agents){
+      if(a.st===ST.SAFE||a.st===ST.DEAD||a.st===ST.TRAP||a.st===ST.STAIR||a.st===ST.REFUGE)continue;
+      const f=this.floors[a.lv];
+      if(a.st===ST.PRE){
+        if(froze)continue;
+        a.pre-=dt;
+        if(a.pre<=0){ a.st=ST.MOVE; a.tgt=this.pickTarget(a); a.tRe=this.t+8+this.rnd()*8; }
+        continue;
+      }
+      if(a.st===ST.QUEUE)continue;
+      if(froze)continue;
+
+      // 経路再選択
+      if(this.t>=a.tRe){ const nt=this.pickTarget(a); if(nt)a.tgt=nt; a.tRe=this.t+9+this.rnd()*9; }
+      if(!a.tgt){ a.st=ST.REFUGE; continue; }
+      if(a.tgt[0]==='X')this.exLoad[+a.tgt.slice(1)]=(this.exLoad[+a.tgt.slice(1)]||0)+1;
+
+      const g=f.g;
+      let fl=this.field(f,a.tgt);
+      if(!isFinite(fl[a.ci])){
+        const nt=this.pickTarget(a);
+        if(nt&&nt!==a.tgt){ a.tgt=nt; fl=this.field(f,a.tgt); }
+        if(!isFinite(fl[a.ci])){
+          a.stuck+=dt;
+          if(a.stuck>30)this.drop(a,ST.REFUGE);   // 経路が完全に失われた
+          continue;
+        }
+      }
+      a.stuck=0;
+      // 勾配方向
+      const cx=a.ci%g.W, cy=(a.ci-cx)/g.W;
+      let bd=fl[a.ci], bx=0, by=0;
+      for(let k=0;k<8;k++){
+        const nx=cx+NB[k][0], ny=cy+NB[k][1];
+        if(nx<0||ny<0||nx>=g.W||ny>=g.H)continue;
+        const j=ny*g.W+nx;
+        if(!g.walk[j]||(f.blk&&f.blk[j]))continue;
+        if(fl[j]<bd){bd=fl[j];bx=NB[k][0];by=NB[k][1];}
+      }
+      if(bx!==0||by!==0){
+        const m=Math.hypot(bx,by);
+        let nx=bx/m, ny=by/m;
+        if(!ATTR[a.ak].familiar||cfg.scenario==='blackout'){
+          const w=(cfg.scenario==='blackout'?0.30:0.12)*(ATTR[a.ak].familiar?0.4:1);
+          const ang=(this.rnd()-0.5)*2*w;
+          const c=Math.cos(ang),s=Math.sin(ang);
+          const tx=nx*c-ny*s, ty=nx*s+ny*c; nx=tx; ny=ty;
+        }
+        a.dx=a.dx*0.55+nx*0.45; a.dy=a.dy*0.55+ny*0.45;
+        const dm=Math.hypot(a.dx,a.dy)||1; a.dx/=dm; a.dy/=dm;
+      }
+      // 局所密度
+      let sum=0,cnt=0;
+      for(let yy=-1;yy<=1;yy++)for(let xx=-1;xx<=1;xx++){
+        const nx=cx+xx, ny=cy+yy;
+        if(nx<0||ny<0||nx>=g.W||ny>=g.H)continue;
+        const j=ny*g.W+nx; if(!g.walk[j])continue;
+        sum+=f.occ[j]; cnt++;
+      }
+      const rho=cnt?sum/cnt:0;
+      const fd=rho<=0.6?1:Math.max(0.10,1-0.255*(rho-0.6));
+      const smk=f.smoke>0.2?(1-0.45*f.smoke):1;
+      const v=a.v0*fd*smk*W0*(a.hurt?0.5:1);
+      const step=v*dt;
+      if(step<=0){ continue; }
+
+      // 移動試行
+      let moved=false;
+      for(let att=0;att<4&&!moved;att++){
+        let ang=0;
+        if(att===1)ang=0.7854*(this.rnd()<0.5?1:-1);
+        if(att===2)ang=-0.7854*(this.rnd()<0.5?1:-1);
+        if(att===3)ang=1.5708*(this.rnd()<0.5?1:-1);
+        const c=Math.cos(ang),s=Math.sin(ang);
+        const ux=a.dx*c-a.dy*s, uy=a.dx*s+a.dy*c;
+        const nxp=a.x+ux*step, nyp=a.y+uy*step;
+        const gx=nxp|0, gy=nyp|0;
+        if(gx<0||gy<0||gx>=g.W||gy>=g.H)continue;
+        const nj=gy*g.W+gx;
+        if(nj===a.ci){ a.x=nxp; a.y=nyp; moved=true; break; }
+        if(!g.walk[nj]||(f.blk&&f.blk[nj]))continue;
+        if(f.occ[nj]>=CELL_CAP)continue;
+        if(g.gate[nj]>0){ if(f.tok[nj]<1)continue; f.tok[nj]-=1; }
+        f.occ[a.ci]--; f.occ[nj]++;
+        a.ci=nj; a.x=nxp; a.y=nyp; moved=true;
+        // 到達判定
+        const kk=g.kind[nj];
+        if(kk===K.EXIT){ this.drop(a,ST.SAFE); a.evac=this.t; }
+        else if(kk===K.STAIRDOOR&&f.idx!==this.groundIdx){
+          const sc=g.stairAt[nj], S=this.stairs[sc];
+          if(!ATTR[a.ak].stairs){ this.drop(a,ST.REFUGE); }
+          else if(S&&S.usable[a.lv]){ this.drop(a,ST.QUEUE); S.q[a.lv].push(a); }
+        }
+      }
+    }
+
+    if(!froze)this.stairStep(dt);
+    this.sample();
+    // 終了判定
+    let act=0;
+    for(const a of this.agents)if(a.st!==ST.SAFE&&a.st!==ST.DEAD&&a.st!==ST.TRAP&&a.st!==ST.REFUGE)act++;
+    this.active=act;
+    if(act===0)this.done=true;
+    if(this.t>5400&&!this.done){ this.done=true; this.timeout=true; }
+  }
+
+  /* ---------- stairs ---------- */
+  stairStep(dt){
+    const gi=this.groundIdx, cfg=this.cfg;
+    for(const ci of this.stairIdx){
+      const S=this.stairs[ci];
+      // 到着処理（避難階が満杯なら階段室内で待機＝背圧）
+      for(let k=S.transit.length-1;k>=0;k--){
+        const e=S.transit[k];
+        if(this.t<e.t)continue;
+        if(e.to===gi){
+          if(this.discharge(e.a,ci))S.transit.splice(k,1);
+          else e.t=this.t+0.4;
+        }else{
+          S.transit.splice(k,1);
+          S.thr[e.to].push(e.a);
+        }
+      }
+      // 各階の流れ（1F方向へ）
+      const order=[];
+      for(let i=this.floors.length-1;i>gi;i--)order.push(i);
+      for(let i=0;i<gi;i++)order.push(i);
+      for(const i of order){
+        const next = i>gi ? i-1 : i+1;
+        S.tok[i]=Math.min(S.cap*2,S.tok[i]+S.cap*dt);
+        let alt=0;
+        while(S.tok[i]>=1&&(S.thr[i].length||S.q[i].length)){
+          let a=null,fromQ=false;
+          if(S.thr[i].length&&(alt%2===0||!S.q[i].length))a=S.thr[i].shift();
+          else if(S.q[i].length){a=S.q[i].shift();fromQ=true;}
+          else a=S.thr[i].shift();
+          alt++;
+          if(!a)break;
+          S.tok[i]-=1;
+          if(fromQ)S.passed++;          // 階段を利用した人数（階間の通過回数ではない）
+          S.flights=(S.flights||0)+1;
+          a.st=ST.STAIR; a.lvS=i;
+          S.transit.push({a,to:next,t:this.t+this.floors[i].h/cfg.sspeed});
+        }
+        if(S.q[i].length>S.peakQ)S.peakQ=S.q[i].length;
+      }
+      S.inside=S.transit.length;
+      let qs=0; for(let i=0;i<S.q.length;i++)qs+=S.q[i].length;
+      S.qlen=qs;
+    }
+  }
+  dischargeCells(ci){
+    if(!this._dc)this._dc={};
+    if(this._dc[ci])return this._dc[ci];
+    const g=this.floors[this.groundIdx].g, out=[], seen=new Set();
+    for(let i=0;i<g.N;i++)if(g.stairAt[i]===ci){
+      const x=i%g.W, y=(i-x)/g.W;
+      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+        const nx=x+dx, ny=y+dy;
+        if(nx<1||ny<1||nx>=g.W-1||ny>=g.H-1)continue;
+        const j=ny*g.W+nx;
+        if(!g.walk[j]||seen.has(j))continue;
+        seen.add(j); out.push(j);
+      }
+    }
+    this._dc[ci]=out; return out;
+  }
+  discharge(a,ci){
+    const f=this.floors[this.groundIdx], g=f.g;
+    const cands=this.dischargeCells(ci);
+    if(!cands.length){ a.st=ST.SAFE; a.evac=this.t; return true; }
+    let cell=-1;
+    for(const j of cands)if(!(f.blk&&f.blk[j])&&f.occ[j]<CELL_CAP){cell=j;break;}
+    if(cell<0)return false;                       // 避難階が飽和 → 階段室で待機
+    const x=cell%g.W, y=(cell-x)/g.W;
+    a.lv=f.idx; a.ci=cell; a.x=x+0.5; a.y=y+0.5;
+    a.st=ST.MOVE; a.tgt=this.pickTarget(a); a.tRe=this.t+4; a.dx=0; a.dy=0; a.stuck=0;
+    f.occ[cell]++; f.remain++; f.agents.push(a);
+    return true;
+  }
+
+  /* ---------- sampling ---------- */
+  sample(){
+    const s=Math.floor(this.t);
+    if(s===this.lastSample)return;
+    this.lastSample=s;
+    let safe=0,ins=0,stair=0,pre=0,ref=0,dead=0,trap=0,q=0;
+    for(const a of this.agents){
+      switch(a.st){
+        case ST.SAFE:safe++;break;
+        case ST.STAIR:stair++;break;
+        case ST.QUEUE:q++;break;
+        case ST.REFUGE:ref++;break;
+        case ST.DEAD:dead++;break;
+        case ST.TRAP:trap++;break;
+        case ST.PRE:pre++;ins++;break;
+        default:ins++;
+      }
+    }
+    this.stat={safe,inside:ins+q,stair,pre,refuge:ref,dead,trap,queue:q};
+    this.series.push({t:s,safe,inside:ins+q,stair,dead,refuge:ref});
+    for(const f of this.floors){
+      if(f.remain>0)f.rset=this.t;
+      // 初期配置直後は避難行動による滞留ではないので計上しない
+      if(f.remain>0&&this.t>3){
+        const occ=f.occ,pk=f.peak;
+        for(let i=0;i<occ.length;i++){ if(occ[i]>pk[i])pk[i]=occ[i]; }
+      }
+    }
+  }
+
+  /* ---------- results ---------- */
+  pct(p){
+    const tgt=this.N*p;
+    for(const s of this.series)if(s.safe>=tgt)return s.t;
+    return Infinity;
+  }
+  bottlenecks(n){
+    const out=[];
+    for(const f of this.floors){
+      const pk=f.peak,g=f.g;
+      let bi=-1,bv=0;
+      const local=[];
+      for(let i=0;i<pk.length;i++)if(pk[i]>=2.5)local.push([pk[i],i]);
+      local.sort((a,b)=>b[0]-a[0]);
+      const used=[];
+      for(const [v,i] of local){
+        const x=i%g.W,y=(i-x)/g.W;
+        if(used.some(u=>Math.hypot(u[0]-x,u[1]-y)<7))continue;
+        used.push([x,y]);
+        let nm='通路',nd=1e9;
+        for(const ft of g.feats){const d=Math.hypot(ft.x-x,ft.y-y);if(d<nd){nd=d;nm=ft.name;}}
+        out.push({lv:f.lv,name:(nd<9?nm:'通路（'+Math.round(x)+','+Math.round(y)+'）'),v,cell:i,fi:f.idx});
+        if(used.length>=3)break;
+      }
+    }
+    out.sort((a,b)=>b.v-a.v);
+    return out.slice(0,n||8);
+  }
+  summary(){
+    const st=this.stat||{safe:0,inside:this.N,stair:0,dead:0,refuge:0,trap:0};
+    const nb=this.bottlenecks(10);
+    const stairs=this.stairIdx.map(ci=>{
+      const S=this.stairs[ci];
+      return {name:S.core.name,width:S.core.width,passed:S.passed,peakQ:S.peakQ,
+        share:this.N?S.passed/this.N:0,damaged:S.damaged||null,cause:S.cause||'閉塞',
+        dead:!S.usable.some(v=>v)};
+    });
+    // 階別：その階を退出した時刻（clear）と、その階の在館者が屋外へ到達した時刻（rset）
+    const hR=new Array(this.floors.length).fill(0), hU=new Array(this.floors.length).fill(0);
+    for(const a of this.agents){
+      if(a.st===ST.SAFE){ if(a.evac>hR[a.home])hR[a.home]=a.evac; }
+      else hU[a.home]++;
+    }
+    const perFloor=this.floors.map(f=>({lv:f.lv,total:f.total,
+      // 避難階は上階からの流入で在館が続くため、当該階の在館者自身の退出時刻を用いる
+      clear:(f.idx===this.groundIdx?(hR[f.idx]||f.rset):f.rset),
+      rset:hR[f.idx]||f.rset, unsafe:hU[f.idx],
+      aset:f.aset,smoke:f.smoke}));
+    let aset=Infinity;
+    for(const f of this.floors)if(isFinite(f.aset)&&f.total>0)aset=Math.min(aset,f.aset);
+    const rset=this.done?this.t:(this.series.length?this.series[this.series.length-1].t:0);
+    let maxD=0; for(const f of this.floors)for(let i=0;i<f.peak.length;i++)if(f.peak[i]>maxD)maxD=f.peak[i];
+    // 余裕時間は階ごとに ASET−RSET を比較し、最も厳しい階を採用する
+    let margin=Infinity, worstLv=null;
+    for(const f of this.floors){
+      if(f.total<=0||!isFinite(f.aset))continue;
+      const m=f.aset-f.rset;
+      if(m<margin){margin=m;worstLv=f.lv;}
+    }
+    return {
+      design:this.b.designName, scenario:this.sc.label, scKey:this.cfg.scenario,
+      pop:this.N, rset, p90:this.pct(0.9), p50:this.pct(0.5),
+      safe:st.safe, dead:st.dead, refuge:st.refuge, trap:st.trap,
+      maxDensity:maxD, aset, margin, worstLv,
+      stairs, perFloor, bottlenecks:nb, series:this.series, done:this.done,
+      timeout:!!this.timeout, seed:this.cfg.seed
+    };
+  }
+}
+/* =====================================================================
+   RENDERING
+   ===================================================================== */
+function fitCanvas(cv){
+  const r=cv.getBoundingClientRect(), dpr=Math.min(2,window.devicePixelRatio||1);
+  const w=Math.max(10,Math.round(r.width)), h=Math.max(10,Math.round(r.height));
+  if(cv.width!==w*dpr||cv.height!==h*dpr){cv.width=w*dpr;cv.height=h*dpr;}
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,w,h};
+}
+function viewFit(v,W,H,w,h){
+  const s=Math.min(w/W,h/H)*0.93;
+  v.s=s; v.ox=(w-W*s)/2; v.oy=(h-H*s)/2;
+}
+const TX=(v,x)=>v.ox+x*v.s, TY=(v,y)=>v.oy+y*v.s;
+const IX=(v,px)=>(px-v.ox)/v.s, IY=(v,py)=>(py-v.oy)/v.s;
+
+function doorSpans(r,doors,W,H){
+  const out=[];
+  if(!doors)return out;
+  for(const d of doors){
+    const cs=sideCells({x:r.x,y:r.y,w:r.w,h:r.h},d.side,d.pos,d.w,W,H);
+    if(!cs.length)continue;
+    if(d.side==='N'||d.side==='S'){
+      let a=1e9,b=-1e9; for(const c of cs){a=Math.min(a,c[0]);b=Math.max(b,c[0]+1);}
+      out.push({side:d.side,a,b});
+    }else{
+      let a=1e9,b=-1e9; for(const c of cs){a=Math.min(a,c[1]);b=Math.max(b,c[1]+1);}
+      out.push({side:d.side,a,b});
+    }
+  }
+  return out;
+}
+function strokeWithGaps(ctx,v,x0,y0,x1,y1,axis,gaps){
+  // axis: 'x' → horizontal line at y0 ; 'y' → vertical line at x0
+  const segs=[];
+  if(axis==='x'){
+    let cur=x0; const gs=gaps.slice().sort((p,q)=>p.a-q.a);
+    for(const g of gs){ if(g.b<=cur)continue; if(g.a>cur)segs.push([cur,Math.min(g.a,x1)]); cur=Math.max(cur,g.b); }
+    if(cur<x1)segs.push([cur,x1]);
+    for(const s of segs){ ctx.moveTo(TX(v,s[0]),TY(v,y0)); ctx.lineTo(TX(v,s[1]),TY(v,y0)); }
+  }else{
+    let cur=y0; const gs=gaps.slice().sort((p,q)=>p.a-q.a);
+    for(const g of gs){ if(g.b<=cur)continue; if(g.a>cur)segs.push([cur,Math.min(g.a,y1)]); cur=Math.max(cur,g.b); }
+    if(cur<y1)segs.push([cur,y1]);
+    for(const s of segs){ ctx.moveTo(TX(v,x0),TY(v,s[0])); ctx.lineTo(TX(v,x0),TY(v,s[1])); }
+  }
+}
+
+function heatColor(t){ // 0..1
+  const stops=[[0.00,232,238,244],[0.25,168,205,229],[0.50,246,215,130],[0.75,231,142,72],[1.00,178,42,42]];
+  t=clamp(t,0,1);
+  for(let i=0;i<stops.length-1;i++){
+    const a=stops[i],b=stops[i+1];
+    if(t>=a[0]&&t<=b[0]){
+      const u=(t-a[0])/(b[0]-a[0]);
+      return 'rgb('+Math.round(a[1]+(b[1]-a[1])*u)+','+Math.round(a[2]+(b[2]-a[2])*u)+','+Math.round(a[3]+(b[3]-a[3])*u)+')';
+    }
+  }
+  return 'rgb(178,42,42)';
+}
+
+function drawPlan(cv,o){
+  const {ctx,w,h}=fitCanvas(cv);
+  const b=o.b, g=o.grid, v=o.view;
+  const W=g.W, H=g.H;
+  if(!v.s||v.dirty){ viewFit(v,W,H,w,h); v.dirty=false; }
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#eceef0'; ctx.fillRect(0,0,w,h);
+
+  // plate
+  ctx.fillStyle='#fff';
+  ctx.fillRect(TX(v,0),TY(v,0),W*v.s,H*v.s);
+  // 1m grid (faint)
+  if(v.s>5.5){
+    ctx.strokeStyle='#f1f3f5'; ctx.lineWidth=1; ctx.beginPath();
+    for(let x=0;x<=W;x+=5){ctx.moveTo(TX(v,x),TY(v,0));ctx.lineTo(TX(v,x),TY(v,H));}
+    for(let y=0;y<=H;y+=5){ctx.moveTo(TX(v,0),TY(v,y));ctx.lineTo(TX(v,W),TY(v,y));}
+    ctx.stroke();
+  }
+
+  // rooms
+  const rooms=b.tmpl[g.tmplKey].rooms;
+  rooms.forEach((r,i)=>{
+    const t=ROOM_TYPES[r.type]||ROOM_TYPES.office;
+    ctx.fillStyle=t.fill;
+    ctx.fillRect(TX(v,r.x),TY(v,r.y),r.w*v.s,r.h*v.s);
+  });
+
+  // 通路（薄い着色）
+  ctx.save();
+  ctx.globalAlpha=0.5;
+  ctx.fillStyle='#fbfcfd';
+  ctx.restore();
+
+  // cores
+  for(const c of b.cores){
+    const px=TX(v,c.x),py=TY(v,c.y),pw=c.w*v.s,ph=c.h*v.s;
+    ctx.fillStyle=c.kind==='stair'?'#dde7ef':'#e6e6e8';
+    ctx.fillRect(px,py,pw,ph);
+    ctx.save();
+    ctx.beginPath();ctx.rect(px,py,pw,ph);ctx.clip();
+    ctx.strokeStyle=c.kind==='stair'?'rgba(26,79,138,.30)':'rgba(0,0,0,.14)';
+    ctx.lineWidth=1;ctx.beginPath();
+    if(c.kind==='stair'){ const st=Math.max(4,v.s*0.9);
+      for(let yy=py;yy<py+ph;yy+=st){ctx.moveTo(px,yy);ctx.lineTo(px+pw,yy);} }
+    else { const st=Math.max(5,v.s*1.4);
+      for(let k=-ph;k<pw;k+=st){ctx.moveTo(px+k,py+ph);ctx.lineTo(px+k+ph,py);} }
+    ctx.stroke();ctx.restore();
+  }
+
+  // hazard: 閉塞・火・煙
+  const f=o.floor;
+  if(f&&f.blk&&v.s>2){
+    ctx.fillStyle='rgba(150,80,40,.55)';
+    for(let i=0;i<f.blk.length;i++)if(f.blk[i]){
+      const x=i%W,y=(i-x)/W;
+      ctx.fillRect(TX(v,x),TY(v,y),v.s,v.s);
+    }
+  }
+  if(o.showHeat&&f){
+    const src=o.showPeak?f.peak:f.occ;
+    for(let i=0;i<src.length;i++){
+      const q=src[i]; if(!q)continue;
+      ctx.globalAlpha=0.62;
+      ctx.fillStyle=heatColor(q/CELL_CAP);
+      ctx.fillRect(TX(v,i%W),TY(v,(i-i%W)/W),v.s+0.5,v.s+0.5);
+    }
+    ctx.globalAlpha=1;
+  }
+
+  // walls
+  ctx.strokeStyle='#2b3238';
+  ctx.lineWidth=Math.max(1.1,v.s*0.16);
+  ctx.beginPath();
+  // 外周（出口は開口）
+  const exGaps={N:[],S:[],E:[],W:[]};
+  if(g.tmplKey==='ground'){
+    b.exits.forEach(e=>{ if(!e.on)return;
+      const cs=borderCells(e.side,e.pos,e.w,W,H);
+      if(!cs.length)return;
+      if(e.side==='N'||e.side==='S'){let a=1e9,bb=-1e9;for(const c of cs){a=Math.min(a,c[0]);bb=Math.max(bb,c[0]+1);}exGaps[e.side].push({a,b:bb});}
+      else{let a=1e9,bb=-1e9;for(const c of cs){a=Math.min(a,c[1]);bb=Math.max(bb,c[1]+1);}exGaps[e.side].push({a,b:bb});}
+    });
+  }
+  strokeWithGaps(ctx,v,0,0.5,W,0.5,'x',exGaps.N);
+  strokeWithGaps(ctx,v,0,H-0.5,W,H-0.5,'x',exGaps.S);
+  strokeWithGaps(ctx,v,0.5,0,0.5,H,'y',exGaps.W);
+  strokeWithGaps(ctx,v,W-0.5,0,W-0.5,H,'y',exGaps.E);
+  // 室壁
+  rooms.forEach(r=>{
+    const t=ROOM_TYPES[r.type]||ROOM_TYPES.office;
+    const ds=t.solid?[]:doorSpans(r,r._doors||autoDoors(r,W,H),W,H);
+    const gN=ds.filter(d=>d.side==='N'),gS=ds.filter(d=>d.side==='S');
+    const gW=ds.filter(d=>d.side==='W'),gE=ds.filter(d=>d.side==='E');
+    strokeWithGaps(ctx,v,r.x,r.y+0.5,r.x+r.w,r.y+0.5,'x',gN);
+    strokeWithGaps(ctx,v,r.x,r.y+r.h-0.5,r.x+r.w,r.y+r.h-0.5,'x',gS);
+    strokeWithGaps(ctx,v,r.x+0.5,r.y,r.x+0.5,r.y+r.h,'y',gW);
+    strokeWithGaps(ctx,v,r.x+r.w-0.5,r.y,r.x+r.w-0.5,r.y+r.h,'y',gE);
+  });
+  // コア壁
+  for(const c of b.cores){
+    const ds=c.kind==='stair'?doorSpans(c,[{side:c.door||'E',pos:0.5,w:Math.max(1.2,c.width)}],W,H):[];
+    const gN=ds.filter(d=>d.side==='N'),gS=ds.filter(d=>d.side==='S');
+    const gW=ds.filter(d=>d.side==='W'),gE=ds.filter(d=>d.side==='E');
+    strokeWithGaps(ctx,v,c.x,c.y+0.5,c.x+c.w,c.y+0.5,'x',gN);
+    strokeWithGaps(ctx,v,c.x,c.y+c.h-0.5,c.x+c.w,c.y+c.h-0.5,'x',gS);
+    strokeWithGaps(ctx,v,c.x+0.5,c.y,c.x+0.5,c.y+c.h,'y',gW);
+    strokeWithGaps(ctx,v,c.x+c.w-0.5,c.y,c.x+c.w-0.5,c.y+c.h,'y',gE);
+  }
+  ctx.stroke();
+
+  // 出口マーク
+  if(g.tmplKey==='ground'){
+    b.exits.forEach(e=>{
+      if(!e.on)return;
+      const cs=borderCells(e.side,e.pos,e.w,W,H); if(!cs.length)return;
+      let mx=0,my=0; for(const c of cs){mx+=c[0]+0.5;my+=c[1]+0.5;} mx/=cs.length;my/=cs.length;
+      ctx.strokeStyle='#0f7a5a'; ctx.lineWidth=Math.max(1.6,v.s*0.28);
+      ctx.beginPath();
+      if(e.side==='N'||e.side==='S'){ctx.moveTo(TX(v,mx-e.w/2),TY(v,my));ctx.lineTo(TX(v,mx+e.w/2),TY(v,my));}
+      else{ctx.moveTo(TX(v,mx),TY(v,my-e.w/2));ctx.lineTo(TX(v,mx),TY(v,my+e.w/2));}
+      ctx.stroke();
+      const dx=e.side==='E'?1:e.side==='W'?-1:0, dy=e.side==='S'?1:e.side==='N'?-1:0;
+      ctx.fillStyle='#0f7a5a';
+      const ax=TX(v,mx+dx*2.2),ay=TY(v,my+dy*2.2), sz=Math.max(3,v.s*0.7);
+      ctx.beginPath();
+      ctx.moveTo(ax+dx*sz,ay+dy*sz);
+      ctx.lineTo(ax-dy*sz*0.6-dx*sz*0.2,ay+dx*sz*0.6-dy*sz*0.2);
+      ctx.lineTo(ax+dy*sz*0.6-dx*sz*0.2,ay-dx*sz*0.6-dy*sz*0.2);
+      ctx.closePath();ctx.fill();
+    });
+  }
+
+  // 火災・煙
+  if(f&&o.sim&&o.sim.fire&&o.sim.fire.fi===f.idx&&f.fireR>0){
+    const F=o.sim.fire;
+    const gr=ctx.createRadialGradient(TX(v,F.x),TY(v,F.y),0,TX(v,F.x),TY(v,F.y),Math.max(2,f.fireR*v.s));
+    gr.addColorStop(0,'rgba(220,60,10,.85)');gr.addColorStop(0.6,'rgba(230,120,20,.5)');gr.addColorStop(1,'rgba(230,150,40,0)');
+    ctx.fillStyle=gr;
+    ctx.beginPath();ctx.arc(TX(v,F.x),TY(v,F.y),Math.max(2,f.fireR*v.s),0,6.2832);ctx.fill();
+  }
+  if(f&&f.smoke>0.03){
+    ctx.fillStyle='rgba(60,64,68,'+(f.smoke*0.42).toFixed(3)+')';
+    ctx.fillRect(TX(v,0),TY(v,0),W*v.s,H*v.s);
+  }
+  if(f&&f.flooded){
+    ctx.fillStyle='rgba(30,90,150,.30)';
+    ctx.fillRect(TX(v,0),TY(v,0),W*v.s,H*v.s);
+  }
+
+  // 経路ベクトル
+  if(o.showFlow&&f&&o.sim){
+    const key=o.flowKey;
+    if(key){
+      const fl=o.sim.field(f,key);
+      ctx.strokeStyle='rgba(26,79,138,.42)';ctx.lineWidth=1;ctx.beginPath();
+      const stp=Math.max(2,Math.round(4/Math.max(0.4,v.s/8)));
+      for(let y=1;y<H-1;y+=stp)for(let x=1;x<W-1;x+=stp){
+        const i=y*W+x; if(!g.walk[i]||!isFinite(fl[i]))continue;
+        let bd=fl[i],bx=0,by=0;
+        for(let k=0;k<8;k++){
+          const nx=x+NB[k][0],ny=y+NB[k][1];
+          if(nx<0||ny<0||nx>=W||ny>=H)continue;
+          const j=ny*W+nx;if(!g.walk[j]||(f.blk&&f.blk[j]))continue;
+          if(fl[j]<bd){bd=fl[j];bx=NB[k][0];by=NB[k][1];}
+        }
+        if(!bx&&!by)continue;
+        const m=Math.hypot(bx,by),L=Math.min(2.2,stp*0.75);
+        const cx=TX(v,x+0.5),cy=TY(v,y+0.5);
+        const ex=TX(v,x+0.5+bx/m*L),ey=TY(v,y+0.5+by/m*L);
+        ctx.moveTo(cx,cy);ctx.lineTo(ex,ey);
+        const a=Math.atan2(ey-cy,ex-cx),hl=Math.max(2,v.s*0.28);
+        ctx.moveTo(ex,ey);ctx.lineTo(ex-hl*Math.cos(a-0.5),ey-hl*Math.sin(a-0.5));
+        ctx.moveTo(ex,ey);ctx.lineTo(ex-hl*Math.cos(a+0.5),ey-hl*Math.sin(a+0.5));
+      }
+      ctx.stroke();
+    }
+  }
+
+  // 室名
+  if(o.showLabels&&v.s>4.2){
+    ctx.font='500 '+clamp(v.s*0.95,8,12).toFixed(1)+'px -apple-system,"Hiragino Kaku Gothic ProN",sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    rooms.forEach(r=>{
+      if(r.w*v.s<38||r.h*v.s<14)return;
+      ctx.fillStyle='rgba(50,60,68,.82)';
+      ctx.fillText(r.name,TX(v,r.x+r.w/2),TY(v,r.y+r.h/2)-(v.s>7?v.s*0.55:0));
+      if(v.s>7){
+        ctx.fillStyle='rgba(110,120,128,.9)';
+        ctx.font='400 '+clamp(v.s*0.78,7,10).toFixed(1)+'px sans-serif';
+        ctx.fillText((ROOM_TYPES[r.type]||ROOM_TYPES.office).label+' '+Math.round(r.w*r.h)+'m²',TX(v,r.x+r.w/2),TY(v,r.y+r.h/2)+v.s*0.65);
+        ctx.font='500 '+clamp(v.s*0.95,8,12).toFixed(1)+'px -apple-system,sans-serif';
+      }
+    });
+    ctx.fillStyle='rgba(26,79,138,.95)';
+    ctx.font='600 '+clamp(v.s*0.9,8,11).toFixed(1)+'px sans-serif';
+    for(const c of b.cores){
+      if(c.w*v.s<26)continue;
+      const nm=c.kind==='stair'?c.name.replace('避難階段','階段'):'EV';
+      ctx.fillStyle=c.kind==='stair'?'rgba(26,79,138,.95)':'rgba(110,116,122,.9)';
+      ctx.fillText(nm,TX(v,c.x+c.w/2),TY(v,c.y+c.h/2));
+      if(c.kind==='stair'&&v.s>7){
+        ctx.fillStyle='rgba(26,79,138,.6)';
+        ctx.font='400 '+clamp(v.s*0.7,7,9).toFixed(1)+'px sans-serif';
+        ctx.fillText('有効幅 '+fmt1(c.width)+'m',TX(v,c.x+c.w/2),TY(v,c.y+c.h/2)+v.s*0.95);
+        ctx.font='600 '+clamp(v.s*0.9,8,11).toFixed(1)+'px sans-serif';
+      }
+    }
+  }
+
+  // エージェント
+  if(f&&o.sim){
+    const rad=Math.max(1.2,v.s*0.30);
+    for(const a of f.agents){
+      if(a.lv!==f.idx)continue;
+      let col;
+      switch(a.st){
+        case ST.PRE:col='#a8b0b7';break;
+        case ST.MOVE:col=ATTR[a.ak].color;break;
+        case ST.REFUGE:col='#7a3fa0';break;
+        case ST.DEAD:col='#a52a2a';break;
+        case ST.TRAP:col='#c2185b';break;
+        default:continue;
+      }
+      ctx.fillStyle=col;
+      ctx.beginPath();ctx.arc(TX(v,a.x),TY(v,a.y),rad,0,6.2832);ctx.fill();
+    }
+    // 階段待ち行列（コア前に積む）
+    for(const ci of o.sim.stairIdx){
+      const S=o.sim.stairs[ci], q=S.q[f.idx];
+      if(!q||!q.length)continue;
+      const c=b.cores[ci];
+      ctx.fillStyle='#c9820b';
+      const n=Math.min(q.length,140);
+      for(let k=0;k<n;k++){
+        const ring=Math.floor(k/10), pos=k%10;
+        const ox=(c.door==='E')?c.x+c.w+0.7+ring*0.8:(c.door==='W')?c.x-0.7-ring*0.8:c.x+c.w/2;
+        const oy=(c.door==='N')?c.y-0.7-ring*0.8:(c.door==='S')?c.y+c.h+0.7+ring*0.8:c.y+1+pos*(c.h-2)/9;
+        const px=(c.door==='N'||c.door==='S')?c.x+1+pos*(c.w-2)/9:ox;
+        const py=(c.door==='N'||c.door==='S')?oy:oy;
+        ctx.beginPath();ctx.arc(TX(v,px),TY(v,py),rad,0,6.2832);ctx.fill();
+      }
+      if(q.length>0){
+        ctx.fillStyle='#8a5a00';
+        ctx.font='600 '+clamp(v.s*0.85,8,11).toFixed(1)+'px sans-serif';
+        ctx.textAlign='center';
+        ctx.fillText(q.length+'人待ち',TX(v,c.x+c.w/2),TY(v,c.y+c.h+2.4));
+      }
+    }
+  }
+
+  // 編集：選択表示
+  if(o.sel){
+    const s=o.sel;
+    ctx.strokeStyle='#1a4f8a';ctx.lineWidth=1.6;
+    ctx.setLineDash([4,3]);
+    ctx.strokeRect(TX(v,s.x)-1,TY(v,s.y)-1,s.w*v.s+2,s.h*v.s+2);
+    ctx.setLineDash([]);
+    ctx.fillStyle='#fff';ctx.strokeStyle='#1a4f8a';ctx.lineWidth=1.4;
+    for(const [hx,hy] of [[0,0],[1,0],[0,1],[1,1],[0.5,0],[0.5,1],[0,0.5],[1,0.5]]){
+      const px=TX(v,s.x+s.w*hx),py=TY(v,s.y+s.h*hy);
+      ctx.beginPath();ctx.rect(px-3.5,py-3.5,7,7);ctx.fill();ctx.stroke();
+    }
+  }
+  // スケールバー
+  ctx.strokeStyle='#5b646c';ctx.lineWidth=1;ctx.beginPath();
+  const sbx=w-100,sby=h-18;
+  ctx.moveTo(sbx,sby);ctx.lineTo(sbx+10*v.s,sby);
+  ctx.moveTo(sbx,sby-4);ctx.lineTo(sbx,sby+4);
+  ctx.moveTo(sbx+10*v.s,sby-4);ctx.lineTo(sbx+10*v.s,sby+4);
+  ctx.stroke();
+  ctx.fillStyle='#5b646c';ctx.font='10px sans-serif';ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  ctx.fillText('10m',sbx+10*v.s+5,sby+3.5);
+}
+
+/* ---------------- section view ---------------- */
+function drawSection(cv,sim,b,focusIdx){
+  const r=cv.getBoundingClientRect();
+  const nf=sim?sim.floors.length:(b.floorsAbove+b.floorsBelow);
+  const rowH=clamp(Math.floor(380/nf),7,15);
+  const need=nf*rowH+26;
+  cv.style.height=need+'px';
+  const {ctx,w,h}=fitCanvas(cv);
+  ctx.clearRect(0,0,w,h);
+  const labelW=26, stairs=sim?sim.stairIdx:[];
+  const colW=Math.min(11,Math.max(6,Math.floor(74/Math.max(1,stairs.length))));
+  const stairW=stairs.length*colW+4;
+  const barX=labelW+2, barW=w-labelW-stairW-8;
+
+  ctx.font='9px sans-serif';ctx.textBaseline='middle';
+  // ヘッダ
+  ctx.fillStyle='#6d767e';ctx.textAlign='left';
+  ctx.fillText('階',2,9);
+  ctx.fillText('在館者',barX+2,9);
+  ctx.textAlign='center';
+  stairs.forEach((ci,k)=>{
+    ctx.fillText(String.fromCharCode(65+k),w-stairW+4+k*colW+colW/2,9);
+  });
+
+  const maxT=sim?Math.max(1,...sim.floors.map(f=>f.total)):1;
+  for(let i=nf-1;i>=0;i--){
+    const f=sim?sim.floors[i]:null;
+    const lv=sim?sim.levels[i]:i;
+    const y=18+(nf-1-i)*rowH;
+    if(f&&f.idx===focusIdx){ ctx.fillStyle='#eaf0f7'; ctx.fillRect(0,y,w,rowH); }
+    ctx.fillStyle= (lv%5===0||lv===1||lv<0) ? '#3d474f':'#aeb5bb';
+    ctx.textAlign='right';
+    if(rowH>=10||lv%5===0||lv===1||lv===-1)ctx.fillText(levelLabel(lv),labelW-3,y+rowH/2);
+    // bar
+    ctx.fillStyle='#eef1f3';ctx.fillRect(barX,y+1,barW,rowH-2);
+    if(f){
+      const wRem=barW*clamp(f.remain/maxT,0,1);
+      ctx.fillStyle= f.smoke>0.45?'#a52a2a':(f.remain>0?'#2f6fb5':'#cfd6db');
+      ctx.fillRect(barX,y+1,wRem,rowH-2);
+      if(f.smoke>0.05){ ctx.fillStyle='rgba(60,64,68,'+(f.smoke*0.5).toFixed(2)+')'; ctx.fillRect(barX,y+1,barW,rowH-2); }
+      if(f.flooded){ ctx.fillStyle='rgba(30,90,150,.45)'; ctx.fillRect(barX,y+1,barW,rowH-2); }
+      if(f.remain>0&&rowH>=10){
+        ctx.font='9px sans-serif';
+        const lb=String(f.remain), tw=ctx.measureText(lb).width;
+        if(wRem+4+tw<barW){ ctx.fillStyle='#3d474f';ctx.textAlign='left';ctx.fillText(lb,barX+wRem+3,y+rowH/2); }
+        else { ctx.fillStyle='#fff';ctx.textAlign='right';ctx.fillText(lb,barX+wRem-3,y+rowH/2); }
+      }
+      // 階段列
+      stairs.forEach((ci,k)=>{
+        const S=sim.stairs[ci];
+        const x=w-stairW+4+k*colW;
+        const q=S.q[i].length, inTr=S.transit.filter(e=>e.to===i).length;
+        if(!S.usable[i]){ ctx.fillStyle='#e4e6e8'; ctx.fillRect(x,y+1,colW-2,rowH-2);
+          ctx.strokeStyle='#b9bfc4';ctx.lineWidth=1;ctx.beginPath();
+          ctx.moveTo(x,y+1);ctx.lineTo(x+colW-2,y+rowH-1);ctx.stroke(); return; }
+        const load=clamp((q+inTr)/12,0,1);
+        ctx.fillStyle= load>0.02?heatColor(load):'#f2f5f7';
+        ctx.fillRect(x,y+1,colW-2,rowH-2);
+      });
+    }
+  }
+  ctx.textAlign='left';
+}
+
+/* ---------------- charts ---------------- */
+function drawCurve(cv,runs,hNominal){
+  const H=hNominal||140;
+  cv.style.height=H+'px';
+  const {ctx,w,h}=fitCanvas(cv);
+  ctx.clearRect(0,0,w,h);
+  const pad={l:34,r:8,t:8,b:18};
+  const PW=w-pad.l-pad.r, PH=h-pad.t-pad.b;
+  let tmax=60,ymax=1;
+  for(const r of runs){
+    ymax=Math.max(ymax,r.pop||1);
+    if(r.series&&r.series.length)tmax=Math.max(tmax,r.series[r.series.length-1].t);
+  }
+  tmax=Math.ceil(tmax/60)*60;
+  ctx.strokeStyle='#e8ebee';ctx.lineWidth=1;ctx.beginPath();
+  for(let k=0;k<=4;k++){const y=pad.t+PH*k/4;ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+PW,y);}
+  ctx.stroke();
+  ctx.fillStyle='#9aa2a9';ctx.font='9px sans-serif';ctx.textAlign='right';ctx.textBaseline='middle';
+  for(let k=0;k<=4;k++){ctx.fillText(fmtN(ymax*(1-k/4)),pad.l-4,pad.t+PH*k/4);}
+  ctx.textAlign='center';ctx.textBaseline='top';
+  const tstep=tmax<=300?60:tmax<=900?180:300;
+  for(let t=0;t<=tmax;t+=tstep){
+    const x=pad.l+PW*t/tmax;
+    ctx.fillText(mmss(t),x,pad.t+PH+4);
+    ctx.strokeStyle='#f1f3f5';ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,pad.t+PH);ctx.stroke();
+  }
+  const cols=['#1a4f8a','#0f7a5a','#a86a00','#a52a2a','#6b4fa0','#0b6b7a'];
+  runs.forEach((r,i)=>{
+    if(!r.series||!r.series.length)return;
+    ctx.strokeStyle=cols[i%cols.length];ctx.lineWidth=1.7;ctx.beginPath();
+    r.series.forEach((s,k)=>{
+      const x=pad.l+PW*clamp(s.t/tmax,0,1), y=pad.t+PH*(1-clamp(s.safe/ymax,0,1));
+      k?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    });
+    ctx.stroke();
+    if(r.dead+r.refuge+r.trap>0){
+      ctx.strokeStyle=cols[i%cols.length];ctx.setLineDash([3,3]);ctx.lineWidth=1;ctx.beginPath();
+      r.series.forEach((s,k)=>{
+        const x=pad.l+PW*clamp(s.t/tmax,0,1), y=pad.t+PH*(1-clamp((s.dead+s.refuge)/ymax,0,1));
+        k?ctx.lineTo(x,y):ctx.moveTo(x,y);
+      });
+      ctx.stroke();ctx.setLineDash([]);
+    }
+  });
+}
+
+function drawFloorBars(cv,sum){
+  const rows=sum.perFloor.filter(p=>p.total>0);
+  const rowH=clamp(Math.floor(420/Math.max(1,rows.length)),7,16);
+  cv.style.height=(rows.length*rowH+24)+'px';
+  const {ctx,w,h}=fitCanvas(cv);
+  ctx.clearRect(0,0,w,h);
+  const L=34,R=48,PW=w-L-R;
+  const tmax=Math.max(60,...rows.map(r=>Math.max(r.rset,r.clear||0)));
+  ctx.font='9px sans-serif';ctx.textBaseline='middle';
+  for(let k=0;k<=4;k++){
+    const x=L+PW*k/4;
+    ctx.strokeStyle='#eef1f3';ctx.beginPath();ctx.moveTo(x,14);ctx.lineTo(x,h-4);ctx.stroke();
+    ctx.fillStyle='#9aa2a9';ctx.textAlign='center';ctx.fillText(mmss(tmax*k/4),x,7);
+  }
+  rows.slice().reverse().forEach((p,i)=>{
+    const y=16+i*rowH;
+    ctx.fillStyle='#6d767e';ctx.textAlign='right';
+    if(rowH>=9||p.lv%5===0||p.lv<0)ctx.fillText(levelLabel(p.lv),L-4,y+rowH/2);
+    const bw=PW*clamp(p.rset/tmax,0,1);
+    const cw=PW*clamp((p.clear!=null?p.clear:p.rset)/tmax,0,1);
+    const over=isFinite(p.aset)&&(p.clear!=null?p.clear:p.rset)>p.aset;
+    ctx.fillStyle='#bcd3e8';                       // 屋外到達まで
+    ctx.fillRect(L,y+1,bw,rowH-2);
+    ctx.fillStyle=over?'#a52a2a':'#2f6fb5';        // 当該階を退出するまで
+    ctx.fillRect(L,y+1,cw,rowH-2);
+    if(p.unsafe>0){ ctx.fillStyle='#7a3fa0'; ctx.fillRect(L+PW,y+1,4,rowH-2); }
+    if(isFinite(p.aset)){
+      const ax=L+PW*clamp(p.aset/tmax,0,1);
+      ctx.strokeStyle='#a52a2a';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(ax,y);ctx.lineTo(ax,y+rowH);ctx.stroke();
+    }
+    ctx.fillStyle='#3d474f';ctx.textAlign='left';
+    if(rowH>=9)ctx.fillText(mmss(p.rset),L+bw+4,y+rowH/2);
+  });
+}
+/* =====================================================================
+   APP STATE & SIMULATION TAB
+   ===================================================================== */
+const APP={
+  b:defaultBuilding(),
+  sim:null, playing:false, tab:'sim',
+  viewSim:{s:0,ox:0,oy:0,dirty:true},
+  viewEd:{s:0,ox:0,oy:0,dirty:true},
+  focus:0,            // 表示階 index
+  runs:[],            // 保存済み結果
+  last:null,          // 最新サマリ
+  edTmpl:'ground', edSel:null, edMode:'select'
+};
+
+const BANDS={
+  weekday :{ground:0.55,retail:0.5 ,office:1.0 ,basement:0.25, label:'平日 日中'},
+  lunch   :{ground:1.10,retail:1.2 ,office:0.72,basement:0.30, label:'平日 昼休み'},
+  night   :{ground:0.10,retail:0.12,office:0.22,basement:0.10, label:'平日 夜間'},
+  holiday :{ground:1.40,retail:1.5 ,office:0.10,basement:0.45, label:'休日'},
+  custom  :{ground:0.6 ,retail:0.6 ,office:1.0 ,basement:0.3 , label:'カスタム'}
+};
+
+function readMix(){
+  const raw={
+    general:+$('p-mix-general').value, staff:+$('p-mix-staff').value,
+    visitor:+$('p-mix-visitor').value, elderly:+$('p-mix-elderly').value,
+    wheelchair:+$('p-mix-wheel').value
+  };
+  let s=0; for(const k in raw)s+=raw[k];
+  const out={}; for(const k in raw)out[k]=s>0?raw[k]/s:0.2;
+  return out;
+}
+function readCfg(){
+  return {
+    scenario:$('p-scenario').value,
+    pop:+$('p-pop').value,
+    band:BANDS[$('p-timeband').value]||BANDS.weekday,
+    mix:readMix(),
+    v0:+$('p-v0').value, sflow:+$('p-sflow').value, sspeed:+$('p-sspeed').value,
+    dflow:+$('p-dflow').value, pre:+$('p-pre').value, seed:+$('p-seed').value|0,
+    fireLevel:+$('p-fire-floor').value, fireRoom:+$('p-fire-room').value,
+    fireGrowth:+$('p-fire-growth').value, smokeEx:+$('p-smoke-ex').value,
+    phased:+$('p-phased').value===1,
+    quakeInt:+$('p-quake-int').value, quakeDur:+$('p-quake-dur').value, quakeAfter:+$('p-quake-after').value,
+    floodRate:+$('p-flood-rate').value
+  };
+}
+
+/* ---------------- selects ---------------- */
+function fillScenario(){
+  const s=$('p-scenario'); s.innerHTML='';
+  for(const k in SCENARIOS)s.appendChild(new Option(SCENARIOS[k].label,k));
+  s.value='fire';
+}
+function fillFloorSelects(){
+  const b=APP.b;
+  const lv=[]; for(let l=-b.floorsBelow;l<0;l++)lv.push(l); for(let l=1;l<=b.floorsAbove;l++)lv.push(l);
+  const ff=$('p-fire-floor'), vf=$('p-view-floor');
+  const keepF=ff.value, keepV=vf.value;
+  ff.innerHTML=''; vf.innerHTML='';
+  for(const l of lv){ ff.appendChild(new Option(levelLabel(l),l)); }
+  for(let i=lv.length-1;i>=0;i--){ vf.appendChild(new Option(levelLabel(lv[i]),i)); }
+  ff.value= lv.includes(+keepF)?keepF:(lv.includes(9)?9:lv[Math.min(lv.length-1,8)]);
+  vf.value= keepV!==''&&+keepV<lv.length?keepV:String(Math.min(lv.length-1,b.floorsBelow+8));
+  APP.focus=+vf.value;
+  fillFireRooms();
+}
+function fillFireRooms(){
+  const lvl=+$('p-fire-floor').value;
+  const tk= lvl<0?'basement':(lvl===1?'ground':(lvl<=APP.b.retailTop?'retail':'office'));
+  const s=$('p-fire-room'); const keep=s.value; s.innerHTML='';
+  APP.b.tmpl[tk].rooms.forEach((r,i)=>s.appendChild(new Option(r.name,i)));
+  s.value= keep&&+keep<APP.b.tmpl[tk].rooms.length?keep:'0';
+}
+
+/* ---------------- header ---------------- */
+function updHeader(){
+  const b=APP.b;
+  $('hd-bldg').textContent=b.name;
+  const nst=b.cores.filter(c=>c.kind==='stair').length;
+  const hh=(b.floorsAbove-b.retailTop)*b.hOffice+b.retailTop*b.hRetail;
+  $('hd-spec').textContent=`　地上${b.floorsAbove}階／地下${b.floorsBelow}階　基準階 ${fmtN(b.plate.w*b.plate.h)}m²　避難階段 ${nst}箇所　軒高 約${Math.round(hh)}m`;
+  $('hd-design').textContent='設計案：'+b.designName;
+  const s=APP.last;
+  const v=$('hd-verdict');
+  if(!s){ v.className='verdict'; v.textContent='未計算'; return; }
+  if(isFinite(s.margin)){
+    const at=s.worstLv!=null?levelLabel(s.worstLv)+' ':'';
+    if(s.margin>=120){v.className='verdict ok';v.textContent='適合：余裕 '+mmss(s.margin)+'（'+at+'最小）';}
+    else if(s.margin>0){v.className='verdict mid';v.textContent='要注意：余裕 '+mmss(s.margin)+'（'+at+'）';}
+    else{v.className='verdict ng';v.textContent='不適合：'+at+mmss(-s.margin)+' 不足';}
+  }else{
+    const bad=s.dead+s.trap;
+    if(bad===0&&s.refuge===0){v.className='verdict ok';v.textContent='全員避難完了 '+mmss(s.rset);}
+    else if(bad===0){v.className='verdict mid';v.textContent='要救助 '+fmtN(s.refuge)+'人（待避）';}
+    else{v.className='verdict ng';v.textContent='避難困難者 '+fmtN(bad)+'人';}
+  }
+}
+
+/* ---------------- legend ---------------- */
+function buildLegend(){
+  const L=$('plan-legend'); L.innerHTML='';
+  const add=(c,t,dot)=>{const d=el('div');const s=el('span','sw'+(dot?' dot':''));s.style.background=c;d.appendChild(s);d.appendChild(el('span',null,t));L.appendChild(d);};
+  for(const k of ATTR_KEYS)add(ATTR[k].color,ATTR[k].label,1);
+  add('#c9820b','階段待ち',1);
+  add('#a8b0b7','行動開始前',1);
+  add('#7a3fa0','一時待避',1);
+  add('#a52a2a','避難困難',1);
+  const E=$('e-legend'); E.innerHTML='';
+  const add2=(c,t)=>{const d=el('div');const s=el('span','sw');s.style.background=c;d.appendChild(s);d.appendChild(el('span',null,t));E.appendChild(d);};
+  for(const k in ROOM_TYPES)add2(ROOM_TYPES[k].fill,ROOM_TYPES[k].label);
+  add2('#dde7ef','避難階段'); add2('#e6e6e8','EV／シャフト');
+}
+
+/* ---------------- run control ---------------- */
+function newSim(){
+  const cfg=readCfg();
+  APP.sim=new Sim(APP.b,cfg);
+  APP.focus=clamp(APP.focus,0,APP.sim.floors.length-1);
+  APP.last=null;
+  $('btn-save-run').disabled=true; $('btn-csv').disabled=true;
+  updHeader(); updPanels(); drawSim();
+}
+function resetSim(){ APP.playing=false; $('btn-pause').disabled=true; $('btn-run').textContent='シミュレーション開始'; newSim(); }
+
+let acc=0, lastT=0;
+function loop(ts){
+  requestAnimationFrame(loop);
+  const dtReal=lastT?Math.min(0.1,(ts-lastT)/1000):0; lastT=ts;
+  if(APP.playing&&APP.sim&&!APP.sim.done){
+    const spd=+$('p-speed').value;
+    acc+=dtReal*spd;
+    const DT=0.25;
+    let guard=0;
+    while(acc>=DT&&guard<160){ APP.sim.step(DT); acc-=DT; guard++; if(APP.sim.done)break; }
+    if(APP.sim.done){ APP.playing=false; finishRun(); }
+    updPanels();
+  }
+  if(APP.tab==='sim')drawSim();
+  else if(APP.tab==='editor')drawEd();
+}
+function finishRun(){
+  $('btn-pause').disabled=true;
+  $('btn-run').textContent='再実行';
+  APP.last=APP.sim.summary();
+  $('btn-save-run').disabled=false; $('btn-csv').disabled=false;
+  updHeader(); renderReport();
+}
+
+/* ---------------- panels ---------------- */
+function updPanels(){
+  const sim=APP.sim; if(!sim)return;
+  const st=sim.stat||{safe:0,inside:sim.N,stair:0,dead:0,refuge:0,trap:0,queue:0};
+  $('clock').textContent=mmss(sim.t);
+  $('prog').style.width=(100*st.safe/Math.max(1,sim.N)).toFixed(1)+'%';
+  $('m-safe').textContent=fmtN(st.safe);
+  $('m-inside').textContent=fmtN(st.inside);
+  $('m-stair').textContent=fmtN(st.stair);
+  $('m-risk').textContent=fmtN(st.refuge+st.dead+st.trap);
+
+  // KPI
+  const p90=sim.pct(0.9), p50=sim.pct(0.5);
+  let maxD=0,mf=null;
+  for(const f of sim.floors)for(let i=0;i<f.peak.length;i++)if(f.peak[i]>maxD){maxD=f.peak[i];mf=f.lv;}
+  let aset=Infinity; for(const f of sim.floors)if(isFinite(f.aset)&&f.total>0)aset=Math.min(aset,f.aset);
+  const cells=[
+    ['避難完了率',(100*st.safe/Math.max(1,sim.N)).toFixed(1)+'<small>%</small>',''],
+    ['50%完了',mmss(p50),''],
+    ['90%完了',mmss(p90),''],
+    [sim.done?'全館完了(RSET)':'経過時間',mmss(sim.t),sim.done?'ok':''],
+    ['最大滞留密度',fmt1(maxD)+'<small>人/m²'+(mf!=null?' '+levelLabel(mf):'')+'</small>',maxD>3.5?'bad':maxD>2.5?'warn':''],
+    ['許容避難時間(ASET)',isFinite(aset)?mmss(aset):'—',''],
+    ['一時待避・要救助',fmtN(st.refuge+st.trap)+'<small>人</small>',st.refuge+st.trap>0?'warn':''],
+    ['避難困難者',fmtN(st.dead)+'<small>人</small>',st.dead>0?'bad':'ok']
+  ];
+  $('kpi').innerHTML=cells.map(c=>`<div><div class="k">${c[0]}</div><div class="v ${c[2]}">${c[1]}</div></div>`).join('');
+
+  // 階段テーブル
+  const tb=$('tbl-stair').querySelector('tbody');
+  let html='<tr><th>階段</th><th>有効幅</th><th>通過</th><th>待ち</th><th>最大待ち</th></tr>';
+  let tot=0;
+  for(const ci of sim.stairIdx){
+    const S=sim.stairs[ci]; tot+=S.passed;
+    const dead=!S.usable.some(v=>v);
+    html+=`<tr><td>${S.core.name.replace('避難階段','階段')}${dead?' <span class="chip">使用不能</span>':(S.damaged?' <span class="chip">'+levelLabel(S.damaged)+'以上不可</span>':'')}</td>`+
+      `<td class="n">${fmt1(S.core.width)}m</td><td class="n">${fmtN(S.passed)}</td>`+
+      `<td class="n">${fmtN(S.qlen||0)}</td><td class="n">${fmtN(S.peakQ)}</td></tr>`;
+  }
+  html+=`<tr class="tot"><td>合計</td><td></td><td class="n">${fmtN(tot)}</td><td></td><td></td></tr>`;
+  tb.innerHTML=html;
+
+  // ボトルネック
+  const nb=sim.bottlenecks(6);
+  const tb2=$('tbl-neck').querySelector('tbody');
+  if(!nb.length)tb2.innerHTML='<tr><th>地点</th><th>密度</th></tr><tr><td colspan="2" style="color:#9aa2a9">滞留は検出されていません</td></tr>';
+  else tb2.innerHTML='<tr><th>地点</th><th>最大密度</th></tr>'+nb.map(n=>
+    `<tr><td>${levelLabel(n.lv)} ${n.name}</td><td class="n" style="color:${n.v>3.5?'#a52a2a':n.v>2.5?'#a86a00':'#3d474f'}">${fmt1(n.v)}</td></tr>`).join('');
+
+  drawCurve($('curve-live'),[{series:sim.series,pop:sim.N,dead:st.dead,refuge:st.refuge,trap:st.trap}],132);
+  drawSection($('section'),sim,APP.b,APP.focus);
+}
+
+/* ---------------- plan draw (sim) ---------------- */
+function drawSim(){
+  const sim=APP.sim; if(!sim)return;
+  const f=sim.floors[clamp(APP.focus,0,sim.floors.length-1)];
+  drawPlan($('plan'),{
+    b:APP.b, grid:f.g, floor:f, sim, view:APP.viewSim,
+    showHeat:$('p-heat').checked, showPeak:$('p-peak').checked,
+    showFlow:$('p-flow').checked, showLabels:$('p-labels').checked,
+    flowKey: f.idx===sim.groundIdx?('X'+(APP.b.exits.findIndex(e=>e.on))):('S'+sim.stairIdx[0])
+  });
+  const parts=[levelLabel(f.lv)+'（'+({ground:'1F 商業・エントランス',retail:'商業基準階',office:'オフィス基準階',basement:'地下階'}[f.tk])+'）',
+    '在館 '+fmtN(f.remain)+' / '+fmtN(f.total)+'人'];
+  if(f.smoke>0.03)parts.push('煙濃度 '+Math.round(f.smoke*100)+'%');
+  if(isFinite(f.aset))parts.push('ASET '+mmss(f.aset));
+  if(f.flooded)parts.push('浸水');
+  $('plan-info').textContent=parts.join('　｜　');
+}
+
+/* ---------------- pan / zoom ---------------- */
+function attachNav(cv,v,onClick){
+  let drag=null;
+  cv.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const r=cv.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+    const k=Math.exp(-e.deltaY*0.0016);
+    const ns=clamp(v.s*k,1,60);
+    v.ox=mx-(mx-v.ox)*(ns/v.s); v.oy=my-(my-v.oy)*(ns/v.s); v.s=ns;
+  },{passive:false});
+  cv.addEventListener('mousedown',e=>{
+    const r=cv.getBoundingClientRect();
+    if(e.button===1||e.shiftKey||APP.edMode==='pan'&&cv.id==='eplan'){
+      drag={x:e.clientX,y:e.clientY,ox:v.ox,oy:v.oy}; e.preventDefault(); return;
+    }
+    if(onClick)onClick(IX(v,e.clientX-r.left),IY(v,e.clientY-r.top),e,'down');
+  });
+  window.addEventListener('mousemove',e=>{
+    if(drag){ v.ox=drag.ox+(e.clientX-drag.x); v.oy=drag.oy+(e.clientY-drag.y); return; }
+    const r=cv.getBoundingClientRect();
+    if(onClick&&e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom)
+      onClick(IX(v,e.clientX-r.left),IY(v,e.clientY-r.top),e,'move');
+  });
+  window.addEventListener('mouseup',e=>{
+    if(drag){drag=null;return;}
+    if(onClick)onClick(0,0,e,'up');
+  });
+  cv.addEventListener('dblclick',()=>{ v.dirty=true; });
+}
+
+/* ---------------- CSV ---------------- */
+function download(name,text){
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('﻿'+text);
+  a.download=name; a.click();
+}
+function exportCSV(){
+  const s=APP.last; if(!s)return;
+  const L=[];
+  L.push('# EVACSIM 避難シミュレーション結果');
+  L.push('# 設計案,'+s.design);
+  L.push('# シナリオ,'+s.scenario);
+  L.push('# 在館者数,'+s.pop);
+  L.push('# RSET(秒),'+Math.round(s.rset));
+  L.push('# 90%完了(秒),'+(isFinite(s.p90)?Math.round(s.p90):''));
+  L.push('# 最大滞留密度,'+fmt2(s.maxDensity));
+  L.push('');
+  L.push('経過秒,避難完了,建物内,階段内,避難困難,一時待避');
+  for(const r of s.series)L.push([r.t,r.safe,r.inside,r.stair,r.dead,r.refuge].join(','));
+  L.push('');
+  L.push('階,在館者数,退出完了(秒),屋外到達(秒),未避難,ASET(秒)');
+  for(const p of s.perFloor)L.push([levelLabel(p.lv),p.total,Math.round(p.clear),Math.round(p.rset),p.unsafe,isFinite(p.aset)?Math.round(p.aset):''].join(','));
+  L.push('');
+  L.push('階段,有効幅,通過人数,分担率,最大待ち行列');
+  for(const st of s.stairs)L.push([st.name,st.width,st.passed,(st.share*100).toFixed(1)+'%',st.peakQ].join(','));
+  L.push('');
+  L.push('滞留地点,階,最大密度');
+  for(const n of s.bottlenecks)L.push([n.name,levelLabel(n.lv),fmt2(n.v)].join(','));
+  download('evacsim_'+s.scKey+'_'+Math.round(s.rset)+'s.csv',L.join('\n'));
+}
+/* =====================================================================
+   DESIGN EDITOR
+   ===================================================================== */
+function edGrid(){
+  if(!APP._eg||APP._egKey!==APP.edTmpl+'|'+APP._ver)
+    { APP._eg=buildGrid(APP.b,APP.edTmpl); APP._egKey=APP.edTmpl+'|'+APP._ver; }
+  return APP._eg;
+}
+function markDirty(rebuildSim){
+  APP._ver=(APP._ver||0)+1;
+  APP._eg=null;
+  fillFireRooms(); updHeader();
+  renderEdLists(); renderEdProps(); staticEval();
+  if(rebuildSim!==false){ APP.playing=false; $('btn-pause').disabled=true; $('btn-run').textContent='シミュレーション開始'; newSim(); }
+}
+function drawEd(){
+  const g=edGrid();
+  let sel=null;
+  if(APP.edSel){
+    const s=APP.edSel;
+    if(s.kind==='room'){const r=APP.b.tmpl[APP.edTmpl].rooms[s.idx]; if(r)sel={x:r.x,y:r.y,w:r.w,h:r.h};}
+    if(s.kind==='core'){const c=APP.b.cores[s.idx]; if(c)sel={x:c.x,y:c.y,w:c.w,h:c.h};}
+    if(s.kind==='exit'){
+      const e=APP.b.exits[s.idx];
+      if(e){const cs=borderCells(e.side,e.pos,e.w,g.W,g.H);
+        if(cs.length){const xs=cs.map(c=>c[0]),ys=cs.map(c=>c[1]);
+          sel={x:Math.min(...xs)-0.4,y:Math.min(...ys)-0.4,w:Math.max(...xs)-Math.min(...xs)+1.8,h:Math.max(...ys)-Math.min(...ys)+1.8};}}
+    }
+  }
+  drawPlan($('eplan'),{b:APP.b,grid:g,view:APP.viewEd,sel,showLabels:true});
+}
+
+/* ---------------- lists ---------------- */
+function renderEdLists(){
+  const rooms=APP.b.tmpl[APP.edTmpl].rooms;
+  const L=$('e-rooms'); L.innerHTML='';
+  rooms.forEach((r,i)=>{
+    const it=el('div','it'+(APP.edSel&&APP.edSel.kind==='room'&&APP.edSel.idx===i?' on':''));
+    const sw=el('span','sw'); sw.style.background=(ROOM_TYPES[r.type]||ROOM_TYPES.office).fill;
+    it.appendChild(sw); it.appendChild(el('span','nm',r.name));
+    it.appendChild(el('span','mt',Math.round(r.w*r.h)+'m²'));
+    it.onclick=()=>{APP.edSel={kind:'room',idx:i};renderEdLists();renderEdProps();};
+    L.appendChild(it);
+  });
+  $('e-del-room').disabled=!(APP.edSel&&APP.edSel.kind==='room');
+
+  const C=$('e-cores'); C.innerHTML='';
+  APP.b.cores.forEach((c,i)=>{
+    const it=el('div','it'+(APP.edSel&&APP.edSel.kind==='core'&&APP.edSel.idx===i?' on':''));
+    const sw=el('span','sw'); sw.style.background=c.kind==='stair'?'#dde7ef':'#e6e6e8';
+    it.appendChild(sw); it.appendChild(el('span','nm',c.name));
+    it.appendChild(el('span','mt',c.kind==='stair'?fmt1(c.width)+'m':'—'));
+    it.onclick=()=>{APP.edSel={kind:'core',idx:i};renderEdLists();renderEdProps();};
+    C.appendChild(it);
+  });
+  $('e-del-core').disabled=!(APP.edSel&&APP.edSel.kind==='core');
+
+  const X=$('e-exits'); X.innerHTML='';
+  APP.b.exits.forEach((e,i)=>{
+    const it=el('div','it'+(APP.edSel&&APP.edSel.kind==='exit'&&APP.edSel.idx===i?' on':''));
+    const sw=el('span','sw'); sw.style.background=e.on?'#0f7a5a':'#dfe3e6';
+    it.appendChild(sw); it.appendChild(el('span','nm',e.name));
+    it.appendChild(el('span','mt',fmt1(e.w)+'m'));
+    it.onclick=()=>{APP.edSel={kind:'exit',idx:i};renderEdLists();renderEdProps();};
+    X.appendChild(it);
+  });
+  $('e-del-exit').disabled=!(APP.edSel&&APP.edSel.kind==='exit');
+
+  $('e-tmpl-note').textContent={
+    ground:'1F（避難階）。出口の位置と幅はこの階で設定します。',
+    retail:'2F〜'+APP.b.retailTop+'F の商業基準階。同一レイアウトが全階に適用されます。',
+    office:(APP.b.retailTop+1)+'F〜'+APP.b.floorsAbove+'F のオフィス基準階。同一レイアウトが全階に適用されます。',
+    basement:'B1〜B'+APP.b.floorsBelow+'。地下在館者は階段で1Fへ上がって避難します。'
+  }[APP.edTmpl];
+
+  // 収容人数表
+  const rowsHtml=[];
+  let tot=0;
+  for(const k of ['basement','ground','retail','office']){
+    const n={basement:'地下階',ground:'1F',retail:'商業基準階',office:'オフィス基準階'}[k];
+    let cap=0;
+    for(const r of APP.b.tmpl[k].rooms){
+      const t=ROOM_TYPES[r.type]||ROOM_TYPES.office;
+      cap+=Math.max(0,r.w-2)*Math.max(0,r.h-2)*t.dens;
+    }
+    const cnt= k==='basement'?APP.b.floorsBelow: k==='ground'?1: k==='retail'?Math.max(0,APP.b.retailTop-1):Math.max(0,APP.b.floorsAbove-APP.b.retailTop);
+    tot+=cap*cnt;
+    rowsHtml.push(`<tr><td>${n}</td><td class="n">${cnt}</td><td class="n">${fmtN(cap)}</td><td class="n">${fmtN(cap*cnt)}</td></tr>`);
+  }
+  $('e-cap').querySelector('tbody').innerHTML=
+    '<tr><th>区分</th><th>階数</th><th>1階当たり</th><th>合計</th></tr>'+rowsHtml.join('')+
+    `<tr class="tot"><td>設計収容</td><td></td><td></td><td class="n">${fmtN(tot)}</td></tr>`;
+  APP.designCap=tot;
+  $('pop-note').textContent='設計収容 約'+fmtN(tot)+'人（'+(BANDS[$('p-timeband').value]||BANDS.weekday).label+'想定の在館率を適用）';
+}
+
+/* ---------------- props ---------------- */
+function propRow(label,node){
+  const r=el('div','row'); r.appendChild(el('label',null,label)); r.appendChild(node); return r;
+}
+function numInput(val,step,on){
+  const i=document.createElement('input'); i.type='number'; i.value=val; i.step=step||1;
+  i.oninput=()=>on(+i.value); return i;
+}
+function renderEdProps(){
+  const P=$('e-props'); P.innerHTML='';
+  const s=APP.edSel;
+  if(!s){P.appendChild(el('div','hint','図面上の要素を選択してください。')); return;}
+  if(s.kind==='room'){
+    const r=APP.b.tmpl[APP.edTmpl].rooms[s.idx]; if(!r)return;
+    const nm=document.createElement('input'); nm.type='text'; nm.value=r.name;
+    nm.oninput=()=>{r.name=nm.value;markDirty(false);};
+    P.appendChild(propRow('室名',nm));
+    const ty=document.createElement('select');
+    for(const k in ROOM_TYPES)ty.appendChild(new Option(ROOM_TYPES[k].label,k));
+    ty.value=r.type; ty.onchange=()=>{r.type=ty.value;markDirty();};
+    P.appendChild(propRow('用途',ty));
+    P.appendChild(propRow('X / Y',(()=>{const w=el('div','row');w.style.flex='1';w.style.margin='0';
+      w.appendChild(numInput(r.x,1,v=>{r.x=clamp(Math.round(v),1,APP.b.plate.w-3);markDirty();}));
+      w.appendChild(numInput(r.y,1,v=>{r.y=clamp(Math.round(v),1,APP.b.plate.h-3);markDirty();}));return w;})()));
+    P.appendChild(propRow('幅 / 奥行',(()=>{const w=el('div','row');w.style.flex='1';w.style.margin='0';
+      w.appendChild(numInput(r.w,1,v=>{r.w=clamp(Math.round(v),3,APP.b.plate.w-1);markDirty();}));
+      w.appendChild(numInput(r.h,1,v=>{r.h=clamp(Math.round(v),3,APP.b.plate.h-1);markDirty();}));return w;})()));
+    const t=ROOM_TYPES[r.type]||ROOM_TYPES.office;
+    P.appendChild(el('div','hint','面積 '+Math.round(r.w*r.h)+'m²　／　収容 約'+fmtN(Math.max(0,r.w-2)*Math.max(0,r.h-2)*t.dens)+'人（'+t.dens+'人/m²）'));
+    const dl=el('div'); dl.style.marginTop='6px';
+    dl.appendChild(el('div','hint','出入口'));
+    const doors=r.doors||autoDoors(r,APP.b.plate.w,APP.b.plate.h);
+    doors.forEach((d,di)=>{
+      const row=el('div','row');
+      const sd=document.createElement('select');
+      [['N','上'],['S','下'],['W','左'],['E','右']].forEach(([k,l])=>sd.appendChild(new Option(l,k)));
+      sd.value=d.side; sd.onchange=()=>{r.doors=doors;d.side=sd.value;markDirty();};
+      const ps=document.createElement('input'); ps.type='range'; ps.min=0;ps.max=1;ps.step=0.02;ps.value=d.pos;
+      ps.oninput=()=>{r.doors=doors;d.pos=+ps.value;markDirty();};
+      const wd=numInput(d.w,0.2,v=>{r.doors=doors;d.w=clamp(v,0.8,12);markDirty();});
+      wd.style.maxWidth='58px';
+      row.appendChild(sd);row.appendChild(ps);row.appendChild(wd);
+      const rm=el('button','btn danger','×'); rm.onclick=()=>{r.doors=doors.filter((_,k)=>k!==di);markDirty();};
+      row.appendChild(rm);
+      dl.appendChild(row);
+    });
+    const ad=el('button','btn','出入口を追加');
+    ad.onclick=()=>{r.doors=(r.doors||doors).concat([{side:'S',pos:0.5,w:1.2}]);markDirty();};
+    dl.appendChild(ad);
+    P.appendChild(dl);
+  }
+  if(s.kind==='core'){
+    const c=APP.b.cores[s.idx]; if(!c)return;
+    const nm=document.createElement('input'); nm.type='text'; nm.value=c.name;
+    nm.oninput=()=>{c.name=nm.value;markDirty(false);};
+    P.appendChild(propRow('名称',nm));
+    const kd=document.createElement('select');
+    kd.appendChild(new Option('避難階段','stair')); kd.appendChild(new Option('EV／シャフト','elevator'));
+    kd.value=c.kind; kd.onchange=()=>{c.kind=kd.value;markDirty();};
+    P.appendChild(propRow('種別',kd));
+    P.appendChild(propRow('X / Y',(()=>{const w=el('div','row');w.style.flex='1';w.style.margin='0';
+      w.appendChild(numInput(c.x,1,v=>{c.x=clamp(Math.round(v),1,APP.b.plate.w-3);markDirty();}));
+      w.appendChild(numInput(c.y,1,v=>{c.y=clamp(Math.round(v),1,APP.b.plate.h-3);markDirty();}));return w;})()));
+    P.appendChild(propRow('幅 / 奥行',(()=>{const w=el('div','row');w.style.flex='1';w.style.margin='0';
+      w.appendChild(numInput(c.w,1,v=>{c.w=clamp(Math.round(v),3,30);markDirty();}));
+      w.appendChild(numInput(c.h,1,v=>{c.h=clamp(Math.round(v),3,30);markDirty();}));return w;})()));
+    if(c.kind==='stair'){
+      P.appendChild(propRow('階段有効幅',numInput(c.width,0.1,v=>{c.width=clamp(v,0.9,6);markDirty();})));
+      const dd=document.createElement('select');
+      [['N','上'],['S','下'],['W','左'],['E','右']].forEach(([k,l])=>dd.appendChild(new Option(l,k)));
+      dd.value=c.door||'E'; dd.onchange=()=>{c.door=dd.value;markDirty();};
+      P.appendChild(propRow('出入口の向き',dd));
+      P.appendChild(propRow('上端階',numInput(c.top==null?APP.b.floorsAbove:c.top,1,v=>{c.top=Math.round(v);markDirty();})));
+      P.appendChild(propRow('下端階',numInput(c.bottom==null?-APP.b.floorsBelow:c.bottom,1,v=>{c.bottom=Math.round(v);markDirty();})));
+      P.appendChild(el('div','hint','有効幅 '+fmt1(c.width)+'m の階段流量 ≒ '+fmt2(1.1*Math.max(0.6,c.width-0.3))+' 人/秒'));
+    }
+  }
+  if(s.kind==='exit'){
+    const e=APP.b.exits[s.idx]; if(!e)return;
+    const nm=document.createElement('input'); nm.type='text'; nm.value=e.name;
+    nm.oninput=()=>{e.name=nm.value;markDirty(false);};
+    P.appendChild(propRow('名称',nm));
+    const sd=document.createElement('select');
+    [['N','北面'],['S','南面'],['W','西面'],['E','東面']].forEach(([k,l])=>sd.appendChild(new Option(l,k)));
+    sd.value=e.side; sd.onchange=()=>{e.side=sd.value;markDirty();};
+    P.appendChild(propRow('面',sd));
+    const ps=document.createElement('input'); ps.type='range';ps.min=0.02;ps.max=0.98;ps.step=0.01;ps.value=e.pos;
+    ps.oninput=()=>{e.pos=+ps.value;markDirty();};
+    P.appendChild(propRow('位置',ps));
+    P.appendChild(propRow('有効幅',numInput(e.w,0.5,v=>{e.w=clamp(v,1,30);markDirty();})));
+    const ck=document.createElement('input'); ck.type='checkbox'; ck.checked=e.on;
+    ck.onchange=()=>{e.on=ck.checked;markDirty();};
+    P.appendChild(propRow('使用可能',ck));
+    P.appendChild(el('div','hint','通過能力 ≒ '+fmt1(1.3*e.w)+' 人/秒'));
+  }
+  const del=el('button','btn danger','この要素を削除');
+  del.style.marginTop='8px';
+  del.onclick=()=>delSel();
+  P.appendChild(del);
+}
+function delSel(){
+  const s=APP.edSel; if(!s)return;
+  if(s.kind==='room')APP.b.tmpl[APP.edTmpl].rooms.splice(s.idx,1);
+  if(s.kind==='core')APP.b.cores.splice(s.idx,1);
+  if(s.kind==='exit')APP.b.exits.splice(s.idx,1);
+  APP.edSel=null; markDirty();
+}
+
+/* ---------------- static evaluation ---------------- */
+function staticEval(){
+  const b=APP.b, out=[];
+  const stairs=b.cores.filter(c=>c.kind==='stair');
+  const sw=stairs.reduce((s,c)=>s+c.width,0);
+  const xw=b.exits.filter(e=>e.on).reduce((s,e)=>s+e.w,0);
+  const rows=[];
+  for(const tk of ['ground','retail','office','basement']){
+    const g=buildGrid(b,tk);
+    const idxs=[]; b.cores.forEach((c,i)=>{if(c.kind==='stair')idxs.push(i);});
+    // 階段ごとの距離場と、全階段への合成距離場
+    const per={}; let src=[];
+    for(const i of idxs){ const s=stairSources(g,i); per[i]=computeField(g,s,null); src=src.concat(s); }
+    const fAll=computeField(g,src,null);
+    let maxD=0, unreach=0, twoWay=0, roomN=0, cells=0, reach=0;
+    for(let i=0;i<g.N;i++){
+      if(!g.walk[i])continue;
+      if(g.kind[i]!==K.ROOM&&g.kind[i]!==K.CORRIDOR&&g.kind[i]!==K.DOOR)continue;
+      cells++;
+      if(!isFinite(fAll[i])){unreach++;continue;}
+      reach++;
+      if(fAll[i]>maxD)maxD=fAll[i];
+    }
+    g.rooms.forEach((r,ri)=>{
+      const ds=doorSpans(r,r._doors||autoDoors(r,g.W,g.H),g.W,g.H);
+      let cell=-1;
+      for(let i=0;i<g.N;i++)if(g.roomAt[i]===ri&&g.kind[i]===K.DOOR){cell=i;break;}
+      if(cell<0)for(let i=0;i<g.N;i++)if(g.roomAt[i]===ri){cell=i;break;}
+      if(cell<0)return;
+      roomN++;
+      let n=0; for(const i of idxs)if(isFinite(per[i][cell]))n++;
+      if(n>=2)twoWay++;
+    });
+    let xmax=null;
+    if(tk==='ground'){
+      let s2=[]; b.exits.forEach((e,ei)=>{ if(e.on)s2=s2.concat(exitSources(g,ei)); });
+      const fx=computeField(g,s2,null);
+      xmax=0; for(let i=0;i<g.N;i++)if(g.walk[i]&&isFinite(fx[i])&&fx[i]>xmax)xmax=fx[i];
+    }
+    rows.push({tk,maxD,unreach,cells,twoWay,roomN,xmax});
+  }
+  const nm={ground:'1F',retail:'商業階',office:'オフィス階',basement:'地下階'};
+  let html='<tr><th>区分</th><th>最大歩行距離</th><th>二方向避難</th><th>孤立</th></tr>';
+  for(const r of rows){
+    const lim= r.tk==='office'?50:60;
+    const bad=r.maxD>lim, tw=r.roomN?r.twoWay/r.roomN:1;
+    html+=`<tr><td>${nm[r.tk]}</td>`+
+      `<td class="n" style="color:${bad?'#a52a2a':'#3d474f'}">${fmt1(r.maxD)}m</td>`+
+      `<td class="n" style="color:${tw<1?'#a86a00':'#0f7a5a'}">${Math.round(tw*100)}%</td>`+
+      `<td class="n" style="color:${r.unreach>0?'#a52a2a':'#3d474f'}">${r.unreach>0?fmtN(r.unreach)+'m²':'なし'}</td></tr>`;
+  }
+  html+=`<tr class="tot"><td>階段 合計有効幅</td><td class="n">${fmt1(sw)}m</td><td>出口 合計</td><td class="n">${fmt1(xw)}m</td></tr>`;
+  const gr=rows.find(r=>r.tk==='ground');
+  if(gr&&gr.xmax!=null)html+=`<tr><td>1F 出口までの最大距離</td><td class="n">${fmt1(gr.xmax)}m</td><td>階段数</td><td class="n">${stairs.length}</td></tr>`;
+  $('e-static').querySelector('tbody').innerHTML=html;
+  APP.staticRows=rows;
+}
+
+/* ---------------- canvas interaction ---------------- */
+let edDrag=null;
+function edHit(x,y){
+  const g=edGrid();
+  // exits
+  for(let i=APP.b.exits.length-1;i>=0;i--){
+    const e=APP.b.exits[i];
+    const cs=borderCells(e.side,e.pos,e.w,g.W,g.H); if(!cs.length)continue;
+    const xs=cs.map(c=>c[0]),ys=cs.map(c=>c[1]);
+    const x0=Math.min(...xs)-1,x1=Math.max(...xs)+2,y0=Math.min(...ys)-1,y1=Math.max(...ys)+2;
+    if(x>=x0&&x<=x1&&y>=y0&&y<=y1)return{kind:'exit',idx:i};
+  }
+  for(let i=APP.b.cores.length-1;i>=0;i--){
+    const c=APP.b.cores[i];
+    if(x>=c.x&&x<=c.x+c.w&&y>=c.y&&y<=c.y+c.h)return{kind:'core',idx:i};
+  }
+  const rooms=APP.b.tmpl[APP.edTmpl].rooms;
+  for(let i=rooms.length-1;i>=0;i--){
+    const r=rooms[i];
+    if(x>=r.x&&x<=r.x+r.w&&y>=r.y&&y<=r.y+r.h)return{kind:'room',idx:i};
+  }
+  return null;
+}
+function selRect(){
+  const s=APP.edSel; if(!s)return null;
+  if(s.kind==='room'){const r=APP.b.tmpl[APP.edTmpl].rooms[s.idx];return r?{x:r.x,y:r.y,w:r.w,h:r.h,o:r}:null;}
+  if(s.kind==='core'){const c=APP.b.cores[s.idx];return c?{x:c.x,y:c.y,w:c.w,h:c.h,o:c}:null;}
+  return null;
+}
+function handleAt(x,y){
+  const r=selRect(); if(!r)return null;
+  const tol=Math.max(1.2,4/APP.viewEd.s);
+  const hs=[['nw',0,0],['ne',1,0],['sw',0,1],['se',1,1],['n',.5,0],['s',.5,1],['w',0,.5],['e',1,.5]];
+  for(const [k,hx,hy] of hs){
+    const px=r.x+r.w*hx, py=r.y+r.h*hy;
+    if(Math.abs(x-px)<=tol&&Math.abs(y-py)<=tol)return k;
+  }
+  return null;
+}
+function onEdCanvas(x,y,e,phase){
+  const b=APP.b, g=edGrid();
+  if(phase==='down'){
+    if(APP.edMode==='pan')return;
+    if(APP.edMode==='door'){
+      const rooms=b.tmpl[APP.edTmpl].rooms;
+      let best=null,bd=2.0;
+      rooms.forEach((r,ri)=>{
+        const cands=[['N',Math.abs(y-r.y),x>=r.x&&x<=r.x+r.w,(x-r.x)/r.w],
+                     ['S',Math.abs(y-(r.y+r.h)),x>=r.x&&x<=r.x+r.w,(x-r.x)/r.w],
+                     ['W',Math.abs(x-r.x),y>=r.y&&y<=r.y+r.h,(y-r.y)/r.h],
+                     ['E',Math.abs(x-(r.x+r.w)),y>=r.y&&y<=r.y+r.h,(y-r.y)/r.h]];
+        for(const [sd,d,ok,pos] of cands)if(ok&&d<bd){bd=d;best={ri,sd,pos:clamp(pos,0.06,0.94)};}
+      });
+      if(best){
+        const r=rooms[best.ri];
+        const ds=(r.doors||autoDoors(r,g.W,g.H)).slice();
+        const ex=ds.findIndex(d=>d.side===best.sd);
+        if(ex>=0)ds[ex]={side:best.sd,pos:best.pos,w:ds[ex].w};
+        else ds.push({side:best.sd,pos:best.pos,w:1.2});
+        r.doors=ds; APP.edSel={kind:'room',idx:best.ri}; markDirty();
+      }
+      return;
+    }
+    if(APP.edMode==='room'){
+      edDrag={mode:'new',x0:Math.round(x),y0:Math.round(y)};
+      return;
+    }
+    const h=handleAt(x,y);
+    if(h){ const r=selRect(); edDrag={mode:'resize',h,o:r.o,x0:x,y0:y,ox:r.x,oy:r.y,ow:r.w,oh:r.h}; return; }
+    const hit=edHit(x,y);
+    APP.edSel=hit; renderEdLists(); renderEdProps();
+    if(hit&&hit.kind!=='exit'){
+      const r=selRect();
+      edDrag={mode:'move',o:r.o,x0:x,y0:y,ox:r.x,oy:r.y};
+    }else if(hit&&hit.kind==='exit'){
+      edDrag={mode:'exit',o:b.exits[hit.idx],x0:x,y0:y,pos0:b.exits[hit.idx].pos};
+    }
+    return;
+  }
+  if(phase==='move'&&edDrag){
+    const d=edDrag;
+    if(d.mode==='move'){
+      d.o.x=clamp(Math.round(d.ox+(x-d.x0)),1,b.plate.w-d.o.w-1);
+      d.o.y=clamp(Math.round(d.oy+(y-d.y0)),1,b.plate.h-d.o.h-1);
+      APP._eg=null;
+    }else if(d.mode==='resize'){
+      let nx=d.ox,ny=d.oy,nw=d.ow,nh=d.oh;
+      const dx=Math.round(x-d.x0), dy=Math.round(y-d.y0);
+      if(d.h.includes('w')){nx=d.ox+dx;nw=d.ow-dx;}
+      if(d.h.includes('e')){nw=d.ow+dx;}
+      if(d.h.includes('n')){ny=d.oy+dy;nh=d.oh-dy;}
+      if(d.h.includes('s')){nh=d.oh+dy;}
+      if(nw>=3&&nh>=3&&nx>=1&&ny>=1&&nx+nw<=b.plate.w-1&&ny+nh<=b.plate.h-1){
+        d.o.x=nx;d.o.y=ny;d.o.w=nw;d.o.h=nh;APP._eg=null;
+      }
+    }else if(d.mode==='exit'){
+      const e=d.o;
+      const span=(e.side==='N'||e.side==='S')?b.plate.w:b.plate.h;
+      const delta=((e.side==='N'||e.side==='S')?(x-d.x0):(y-d.y0))/span;
+      e.pos=clamp(d.pos0+delta,0.03,0.97); APP._eg=null;
+    }else if(d.mode==='new'){
+      d.x1=Math.round(x); d.y1=Math.round(y);
+    }
+    return;
+  }
+  if(phase==='up'&&edDrag){
+    const d=edDrag; edDrag=null;
+    if(d.mode==='new'&&d.x1!=null){
+      const x0=Math.min(d.x0,d.x1),y0=Math.min(d.y0,d.y1);
+      const w=Math.abs(d.x1-d.x0),h=Math.abs(d.y1-d.y0);
+      if(w>=4&&h>=4){
+        const rooms=b.tmpl[APP.edTmpl].rooms;
+        rooms.push({name:'新規室'+(rooms.length+1),type:APP.edTmpl==='office'?'office':APP.edTmpl==='basement'?'back':'retail',
+          x:clamp(x0,1,b.plate.w-5),y:clamp(y0,1,b.plate.h-5),
+          w:Math.min(w,b.plate.w-1-x0),h:Math.min(h,b.plate.h-1-y0)});
+        APP.edSel={kind:'room',idx:rooms.length-1};
+        setEdMode('select');
+      }
+    }
+    markDirty();
+    return;
+  }
+  if(phase==='move'){
+    $('e-info').textContent='X '+x.toFixed(1)+'m　Y '+y.toFixed(1)+'m　／　'+
+      {select:'選択・移動',room:'室を描く（ドラッグ）',door:'扉を置く（壁をクリック）',pan:'画面移動'}[APP.edMode];
+  }
+}
+function setEdMode(m){
+  APP.edMode=m;
+  document.querySelectorAll('#e-tools button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+}
+/* =====================================================================
+   REPORT
+   ===================================================================== */
+function recommend(s){
+  const b=APP.b, R=[];
+  const stairs=b.cores.filter(c=>c.kind==='stair');
+  const swTot=stairs.reduce((a,c)=>a+Math.max(0.6,c.width-0.3),0);
+  const need=s.pop/(1.1*swTot);          // 全員が階段を通過するのに要する理論時間
+  if(isFinite(s.margin)&&s.margin<0){
+    const wl=s.worstLv!=null?levelLabel(s.worstLv):'—';
+    R.push({hi:1,t:`${wl} で煙の危険域到達までに避難が完了していない`,
+      d:`${wl} の許容避難時間に対し ${mmss(-s.margin)} 不足（当該階の避難完了は ${mmss((s.perFloor.find(p=>p.lv===s.worstLv)||{}).rset||0)}）。階段有効幅の拡大（現状合計 ${fmt1(stairs.reduce((a,c)=>a+c.width,0))}m）、当該階の階段までの歩行距離短縮、または排煙設備の強化が必要。`});
+  }
+  const top=s.stairs.slice().sort((a,b2)=>b2.share-a.share)[0];
+  if(top&&top.share>0.34){
+    R.push({hi:top.share>0.45,t:`${top.name} に避難者が集中している（分担率 ${Math.round(top.share*100)}%）`,
+      d:`4方向に分散していれば1箇所あたり25%が目安。集中の原因は歩行距離の偏りにあるため、コア配置の分散、または反対側の階段への誘導サインの追加を検討する。`});
+  }
+  const dead=s.stairs.filter(x=>x.dead||x.damaged);
+  if(dead.length){
+    R.push({hi:1,t:`${dead.map(d=>d.name).join('・')} が途中で使用不能になった`,
+      d:`使用不能となった階段の受け持ち人数が他の階段に転嫁され、待ち行列が増加した。1箇所が失われても成立する配置（特別避難階段の付室加圧、または階段の相互距離の確保）が要件となる。`});
+  }
+  if(s.maxDensity>3.2){
+    const n=s.bottlenecks[0];
+    R.push({hi:s.maxDensity>3.8,t:`滞留密度が ${fmt1(s.maxDensity)} 人/m² に達した`,
+      d:`最悪地点は ${n?levelLabel(n.lv)+' '+n.name:'—'}。4人/m² を超えると歩行が停止する。当該開口部の有効幅の拡大、または上流側の分散が必要。`});
+  }
+  if(s.refuge>0){
+    R.push({hi:0,t:`階段を使用できない在館者 ${fmtN(s.refuge)}人 が一時待避となった`,
+      d:`車椅子利用者は自力での階段避難ができないため、各階に一時待避スペース（付室・バルコニー）と、非常用エレベーターによる救助動線の運用計画が必要。待避人数に対する面積（1人あたり2m²目安）を確保する。`});
+  }
+  if(s.trap>0){
+    R.push({hi:1,t:`エレベーター閉じ込め・負傷による自力避難不能者 ${fmtN(s.trap)}人`,
+      d:`地震時管制運転で最寄り階停止しても閉じ込めは発生する。救助隊到着までの安否確認手段と、閉じ込め位置の即時把握（かご内通話・監視）の整備が前提となる。`});
+  }
+  if(isFinite(s.p90)&&s.rset-s.p90>s.rset*0.28){
+    const late=s.perFloor.slice().sort((a,b2)=>b2.rset-a.rset)[0];
+    R.push({hi:0,t:`最後の10%に全体時間の ${Math.round(100*(s.rset-s.p90)/s.rset)}% を要している`,
+      d:`最も遅い階は ${levelLabel(late.lv)}（${mmss(late.rset)}）。全体の完了時間はこの階に律速されるため、当該階の階段までの動線と行動開始の遅れを重点的に改善する。`});
+  }
+  if(APP.staticRows){
+    for(const r of APP.staticRows){
+      const nm={ground:'1F',retail:'商業階',office:'オフィス階',basement:'地下階'}[r.tk];
+      const lim=r.tk==='office'?50:60;
+      if(r.maxD>lim)R.push({hi:0,t:`${nm} の歩行距離が ${fmt1(r.maxD)}m（目安 ${lim}m 以内）`,
+        d:'避難階段までの実測経路長が目安を超えている。階段の増設または位置変更で短縮する。'});
+      if(r.roomN&&r.twoWay/r.roomN<1)R.push({hi:1,t:`${nm} の一部の室が二方向避難を満たしていない`,
+        d:`${r.roomN-r.twoWay}室が到達できる階段が1箇所のみ。一方が使用不能になった場合に避難経路が失われる。`});
+      if(r.unreach>0)R.push({hi:1,t:`${nm} に階段へ到達できない領域が ${fmtN(r.unreach)}m² ある`,
+        d:'室配置により通路が分断されている。開口部の追加が必要。'});
+    }
+  }
+  R.push({hi:0,t:`階段の理論所要時間は ${mmss(need)}（有効幅合計 ${fmt1(swTot)}m・${fmtN(s.pop)}人）`,
+    d:`階段の総流量で決まる下限値。実測 ${mmss(s.rset)} との差 ${mmss(Math.max(0,s.rset-need))} は、平面上の動線と行動開始の遅れに由来する。目標時間を短縮する場合は、まず下限値そのものを下げる（＝有効幅を増やす）検討が必要。`});
+  return R;
+}
+
+function renderReport(){
+  const R=$('rep');
+  const s=APP.last;
+  if(!s){
+    R.innerHTML='<div class="card"><div class="empty">シミュレーションを実行すると、ここに分析レポートが生成されます。</div></div>';
+    return;
+  }
+  const verdict=(()=>{
+    if(isFinite(s.margin))
+      return s.margin>=120?['適合','ok']:s.margin>0?['要注意','warn']:['不適合','bad'];
+    const bad=s.dead+s.trap;
+    return bad>0?['不適合','bad']:(s.refuge>0?['要注意','warn']:['適合','ok']);
+  })();
+  const recs=recommend(s);
+  const runs=APP.runs.concat([s]);
+
+  R.innerHTML=`
+  <h1>避難シミュレーション 分析レポート</h1>
+  <div class="sub">${APP.b.name}　／　設計案：<b>${s.design}</b>　／　シナリオ：<b>${s.scenario}</b>　／　在館者 ${fmtN(s.pop)}人　／　乱数シード ${s.seed}</div>
+
+  <div class="card"><h2>総括</h2>
+    <div class="grid4">
+      <div><div class="k">全館避難完了（RSET）</div><div class="v">${mmss(s.rset)}</div><div class="d">90%完了 ${mmss(s.p90)}／50%完了 ${mmss(s.p50)}</div></div>
+      <div><div class="k">許容避難時間（ASET）</div><div class="v">${isFinite(s.aset)?mmss(s.aset):'—'}</div><div class="d">${isFinite(s.margin)?(s.margin>=0?'余裕時間 ':'不足 ')+mmss(Math.abs(s.margin))+(s.worstLv!=null?'（'+levelLabel(s.worstLv)+'が最小）':''):'煙・浸水条件なし'}</div></div>
+      <div><div class="k">最大滞留密度</div><div class="v">${fmt1(s.maxDensity)}<small> 人/m²</small></div><div class="d">${s.bottlenecks[0]?levelLabel(s.bottlenecks[0].lv)+' '+s.bottlenecks[0].name:'—'}</div></div>
+      <div><div class="k">判定</div><div class="v ${verdict[1]}">${verdict[0]}</div><div class="d">避難困難 ${fmtN(s.dead+s.trap)}人／一時待避 ${fmtN(s.refuge)}人</div></div>
+    </div>
+    <div class="body"><table class="t">
+      <tr><th>区分</th><th>人数</th><th>比率</th><th>内容</th></tr>
+      <tr><td>避難完了</td><td class="n">${fmtN(s.safe)}</td><td class="n">${(100*s.safe/s.pop).toFixed(1)}%</td><td style="text-align:left">屋外の安全な場所へ到達</td></tr>
+      <tr><td>一時待避</td><td class="n">${fmtN(s.refuge)}</td><td class="n">${(100*s.refuge/s.pop).toFixed(1)}%</td><td style="text-align:left">階段を使用できず待避スペースで救助待ち</td></tr>
+      <tr><td>自力避難不能</td><td class="n">${fmtN(s.trap)}</td><td class="n">${(100*s.trap/s.pop).toFixed(1)}%</td><td style="text-align:left">EV閉じ込め・負傷により移動不能</td></tr>
+      <tr><td>避難困難</td><td class="n">${fmtN(s.dead)}</td><td class="n">${(100*s.dead/s.pop).toFixed(1)}%</td><td style="text-align:left">煙・浸水への曝露が許容量を超過</td></tr>
+    </table></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h2>避難完了曲線</h2><div class="body">
+      <canvas id="rep-curve" class="chart"></canvas>
+      <div class="hint" style="margin-top:6px">実線：避難完了人数の累積　破線：避難困難者・一時待避者の累積${APP.runs.length?'　／　色の違いは保存済みケース':''}</div>
+    </div></div>
+    <div class="card"><h2>階段別 負荷</h2><div class="body">
+      <table class="t">
+        <tr><th>階段</th><th>有効幅</th><th>通過人数</th><th>分担率</th><th>最大待ち</th><th>状態</th></tr>
+        ${s.stairs.map(x=>`<tr><td>${x.name}</td><td class="n">${fmt1(x.width)}m</td><td class="n">${fmtN(x.passed)}</td>
+          <td class="n">${(x.share*100).toFixed(1)}%</td><td class="n">${fmtN(x.peakQ)}</td>
+          <td>${x.dead?'<span style="color:#a52a2a">使用不能</span>':(x.damaged?'<span style="color:#a86a00">'+levelLabel(x.damaged)+'以上 '+(x.cause||'閉塞')+'</span>':'健全')}</td></tr>`).join('')}
+      </table>
+      <div class="hint" style="margin-top:6px">分担率が均等（階段数の逆数）に近いほど、コア配置と動線が均衡していることを示します。</div>
+    </div></div>
+  </div>
+
+  <div class="card"><h2>階別 避難完了時間</h2><div class="body">
+    <canvas id="rep-floor" class="chart"></canvas>
+    <div class="hint" style="margin-top:6px">
+      濃い横棒：その階の在館者が全員その階を退出した時刻（＝煙に曝露しなくなる時刻）　薄い横棒：その階の在館者が屋外へ到達した時刻<br>
+      縦線：その階の許容避難時間（ASET）。濃い棒が縦線を超えた階は赤で表示されます。右端の紫は未避難者（一時待避・要救助）がいる階です。</div>
+  </div></div>
+
+  <div class="grid2">
+    <div class="card"><h2>滞留ボトルネック</h2><div class="body">
+      <table class="t">
+        <tr><th>順位</th><th>階</th><th>地点</th><th>最大密度</th><th>状態</th></tr>
+        ${s.bottlenecks.map((n,i)=>`<tr><td class="n">${i+1}</td><td>${levelLabel(n.lv)}</td><td style="text-align:left">${n.name}</td>
+          <td class="n">${fmt1(n.v)}</td><td>${n.v>3.8?'<span style="color:#a52a2a">歩行停止</span>':n.v>2.5?'<span style="color:#a86a00">著しい低速</span>':'流動'}</td></tr>`).join('')}
+      </table>
+      <div class="hint" style="margin-top:6px">1.5人/m² を超えると歩行速度が低下し、4人/m² 前後で流れが停止します。</div>
+    </div></div>
+    <div class="card"><h2>ケース比較</h2><div class="body">
+      ${runs.length<2?'<div class="hint">シミュレーション画面の「この結果を保存して比較」で複数ケースを登録すると、ここに比較表が出ます。</div>':`
+      <table class="t">
+        <tr><th>ケース</th><th>人数</th><th>RSET</th><th>90%</th><th>最大密度</th><th>避難困難</th></tr>
+        ${runs.map((r,i)=>{
+          const base=runs[0];
+          const d=i===0?'':(r.rset-base.rset);
+          return `<tr><td style="text-align:left">${r.design}／${r.scenario}</td><td class="n">${fmtN(r.pop)}</td>
+            <td class="n">${mmss(r.rset)}${i>0?` <span style="color:${d<0?'#0f7a5a':'#a52a2a'}">${d<0?'−':'+'}${mmss(Math.abs(d))}</span>`:''}</td>
+            <td class="n">${mmss(r.p90)}</td><td class="n">${fmt1(r.maxDensity)}</td><td class="n">${fmtN(r.dead+r.trap)}</td></tr>`;
+        }).join('')}
+      </table>`}
+    </div></div>
+  </div>
+
+  <div class="card"><h2>改善提案</h2><div class="body">
+    <ul class="rec">
+      ${recs.map((r,i)=>`<li data-n="${i+1}" class="${r.hi?'hi':''}"><b>${r.t}</b><span>${r.d}</span></li>`).join('')}
+    </ul>
+  </div></div>
+
+  <div class="card"><h2>計算条件</h2><div class="body">
+    <div class="grid2">
+      <table class="t">
+        <tr><th>項目</th><th>設定値</th></tr>
+        <tr><td>歩行速度（自由流）</td><td class="n">${fmt2(+$('p-v0').value)} m/s</td></tr>
+        <tr><td>階段流量係数</td><td class="n">${fmt2(+$('p-sflow').value)} 人/(m·s)</td></tr>
+        <tr><td>階段下降速度</td><td class="n">${fmt2(+$('p-sspeed').value)} m/s</td></tr>
+        <tr><td>開口部通過流量</td><td class="n">${fmt2(+$('p-dflow').value)} 人/(m·s)</td></tr>
+        <tr><td>行動開始遅れ（中央値）</td><td class="n">${$('p-pre').value} 秒</td></tr>
+        <tr><td>在館者構成</td><td class="n">${ATTR_KEYS.map(k=>ATTR[k].label+' '+Math.round((readMix()[k]||0)*100)+'%').join('／')}</td></tr>
+      </table>
+      <table class="t">
+        <tr><th>モデル</th><th>内容</th></tr>
+        <tr><td style="text-align:left">平面動線</td><td style="text-align:left">1mグリッド上の最短経路距離場に沿った歩行。局所密度による速度低下（密度－速度関係）と開口部の通過流量制限を反映。</td></tr>
+        <tr><td style="text-align:left">縦動線</td><td style="text-align:left">階段室ごとに階段流量・階間移動時間・各階からの合流を計算する流量モデル。</td></tr>
+        <tr><td style="text-align:left">経路選択</td><td style="text-align:left">歩行距離・待ち行列長・降下時間から期待所要時間を算出し、9〜18秒間隔で再選択。不慣れな在館者は距離を割増評価。</td></tr>
+        <tr><td style="text-align:left">危険度</td><td style="text-align:left">煙濃度の累積曝露量が許容量に達した時点で避難困難と判定。</td></tr>
+      </table>
+    </div>
+    <div class="hint" style="margin-top:8px">
+      本モデルは設計比較を目的とした簡略モデルです。法令上の避難安全検証（避難時間・煙降下時間の算定）に用いる場合は、告示に定める計算法との整合確認が必要です。
+    </div>
+  </div></div>`;
+
+  drawCurve($('rep-curve'),runs.map(r=>({series:r.series,pop:r.pop,dead:r.dead,refuge:r.refuge,trap:r.trap})),260);
+  drawFloorBars($('rep-floor'),s);
+}
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+function setTab(t){
+  APP.tab=t;
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='view-'+t));
+  APP.viewSim.dirty=true; APP.viewEd.dirty=true;
+  if(t==='report')renderReport();
+  if(t==='sim'&&APP.sim)updPanels();
+}
+function bindRange(id,fmt,after){
+  const i=$(id), o=$('v-'+id.slice(2));
+  const upd=()=>{ if(o)o.textContent=fmt(+i.value); };
+  i.addEventListener('input',()=>{upd(); if(after)after();});
+  upd();
+}
+function applyFloorCfg(){
+  const b=APP.b;
+  b.floorsAbove=clamp(Math.round(+$('e-above').value),2,60);
+  b.floorsBelow=clamp(Math.round(+$('e-below').value),0,5);
+  b.retailTop=clamp(Math.round(+$('e-retailtop').value),1,b.floorsAbove-1);
+  b.hOffice=clamp(+$('e-hoffice').value,2.5,8);
+  b.hRetail=clamp(+$('e-hretail').value,2.5,10);
+  b.plate.w=clamp(Math.round(+$('e-pw').value),30,140);
+  b.plate.h=clamp(Math.round(+$('e-ph').value),30,120);
+  for(const c of b.cores){ if(c.top!=null)c.top=Math.min(c.top,b.floorsAbove); }
+  fillFloorSelects(); markDirty();
+}
+function boot(){
+  fillScenario();
+  fillFloorSelects();
+  buildLegend();
+
+  // tabs
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+
+  // scenario
+  const scSync=()=>{
+    const v=$('p-scenario').value;
+    $('sc-desc').textContent=SCENARIOS[v].desc;
+    $('sc-fire').style.display=v==='fire'?'':'none';
+    $('sc-quake').style.display=v==='quake'?'':'none';
+    $('sc-flood').style.display=v==='flood'?'':'none';
+    $('hd-note').textContent=SCENARIOS[v].label+'　｜　'+(BANDS[$('p-timeband').value]||BANDS.weekday).label;
+  };
+  $('p-scenario').onchange=()=>{scSync();resetSim();};
+  scSync();
+  $('p-fire-floor').onchange=()=>{fillFireRooms();resetSim();};
+  ['p-fire-room','p-fire-growth','p-smoke-ex','p-phased','p-quake-int','p-quake-after','p-flood-rate','p-timeband']
+    .forEach(id=>$(id).onchange=()=>{renderEdLists();scSync();resetSim();});
+
+  bindRange('p-pop',v=>fmtN(v)+' 人',()=>{});
+  bindRange('p-quake-dur',v=>v+' 秒');
+  bindRange('p-v0',v=>fmt2(v)+' m/s');
+  bindRange('p-sflow',v=>fmt2(v));
+  bindRange('p-sspeed',v=>fmt2(v)+' m/s');
+  bindRange('p-dflow',v=>fmt2(v));
+  bindRange('p-pre',v=>v+' 秒');
+  for(const k of ['general','staff','visitor','elderly','wheel'])
+    bindRange('p-mix-'+k,v=>v+'%');
+  ['p-pop','p-v0','p-sflow','p-sspeed','p-dflow','p-pre','p-quake-dur',
+   'p-mix-general','p-mix-staff','p-mix-visitor','p-mix-elderly','p-mix-wheel']
+   .forEach(id=>$(id).addEventListener('change',()=>resetSim()));
+  $('p-seed').onchange=()=>resetSim();
+
+  $('p-view-floor').onchange=()=>{APP.focus=+$('p-view-floor').value;APP.viewSim.dirty=true;};
+
+  // run controls
+  $('btn-run').onclick=()=>{
+    if(!APP.sim||APP.sim.done)newSim();
+    APP.playing=true; $('btn-pause').disabled=false; $('btn-run').textContent='実行中';
+  };
+  $('btn-pause').onclick=()=>{
+    APP.playing=!APP.playing;
+    $('btn-pause').textContent=APP.playing?'一時停止':'再開';
+    $('btn-run').textContent=APP.playing?'実行中':'再開';
+  };
+  $('btn-reset').onclick=()=>resetSim();
+  $('btn-save-run').onclick=()=>{
+    if(!APP.last)return;
+    APP.runs.push(APP.last);
+    $('btn-save-run').disabled=true;
+    renderReport(); setTab('report');
+  };
+  $('btn-csv').onclick=exportCSV;
+
+  // editor
+  document.querySelectorAll('#e-tmpl button').forEach(b=>b.onclick=()=>{
+    APP.edTmpl=b.dataset.t; APP.edSel=null; APP.viewEd.dirty=true;
+    document.querySelectorAll('#e-tmpl button').forEach(x=>x.classList.toggle('on',x===b));
+    renderEdLists(); renderEdProps();
+  });
+  document.querySelectorAll('#e-tools button').forEach(b=>b.onclick=()=>setEdMode(b.dataset.m));
+  $('e-add-room').onclick=()=>setEdMode('room');
+  $('e-del-room').onclick=()=>delSel();
+  $('e-del-core').onclick=()=>delSel();
+  $('e-del-exit').onclick=()=>delSel();
+  $('e-add-stair').onclick=()=>{
+    const b=APP.b, n=b.cores.filter(c=>c.kind==='stair').length;
+    b.cores.push({id:'S'+(n+1)+'_'+Date.now().toString(36).slice(-3),kind:'stair',
+      name:'避難階段'+String.fromCharCode(65+n),x:8,y:8,w:6,h:9,width:1.4,door:'E',
+      top:b.floorsAbove,bottom:-b.floorsBelow});
+    APP.edSel={kind:'core',idx:b.cores.length-1}; markDirty();
+  };
+  $('e-add-exit').onclick=()=>{
+    APP.b.exits.push({id:'X'+(APP.b.exits.length+1),name:'出口'+(APP.b.exits.length+1),side:'S',pos:0.2,w:3,on:true});
+    APP.edSel={kind:'exit',idx:APP.b.exits.length-1}; markDirty();
+  };
+  ['e-above','e-below','e-retailtop','e-hoffice','e-hretail','e-pw','e-ph']
+    .forEach(id=>$(id).onchange=applyFloorCfg);
+  $('e-preset').onchange=()=>{
+    applyPreset(APP.b,$('e-preset').value);
+    APP.edSel=null; APP.runs=APP.runs; markDirty();
+  };
+  $('e-save').onclick=()=>{
+    try{ localStorage.setItem('evacsim.design',JSON.stringify(APP.b));
+      $('e-save').textContent='保存しました'; setTimeout(()=>$('e-save').textContent='案を保存',1400);
+    }catch(e){ showErr('保存に失敗しました'); }
+  };
+  $('e-export').onclick=()=>{
+    const a=document.createElement('a');
+    a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(APP.b,null,2));
+    a.download='evacsim_design.json'; a.click();
+  };
+  $('e-import').onclick=()=>{
+    const inp=document.createElement('input'); inp.type='file'; inp.accept='.json';
+    inp.onchange=()=>{
+      const f=inp.files[0]; if(!f)return;
+      const rd=new FileReader();
+      rd.onload=()=>{ try{
+        const o=JSON.parse(rd.result);
+        if(!o.tmpl||!o.cores)throw 0;
+        APP.b=o; APP.edSel=null;
+        $('e-above').value=o.floorsAbove;$('e-below').value=o.floorsBelow;
+        $('e-retailtop').value=o.retailTop;$('e-hoffice').value=o.hOffice;$('e-hretail').value=o.hRetail;
+        $('e-pw').value=o.plate.w;$('e-ph').value=o.plate.h;
+        fillFloorSelects(); markDirty();
+      }catch(e){ showErr('JSONの読み込みに失敗しました'); } };
+      rd.readAsText(f);
+    };
+    inp.click();
+  };
+
+  window.addEventListener('keydown',e=>{
+    if(e.key==='Delete'||e.key==='Backspace'){
+      if(APP.tab==='editor'&&APP.edSel&&document.activeElement.tagName!=='INPUT'){ e.preventDefault(); delSel(); }
+    }
+    if(e.key===' '&&APP.tab==='sim'&&document.activeElement.tagName!=='INPUT'){
+      e.preventDefault(); $(APP.playing?'btn-pause':'btn-run').click();
+    }
+  });
+  window.addEventListener('resize',()=>{APP.viewSim.dirty=true;APP.viewEd.dirty=true;});
+
+  attachNav($('plan'),APP.viewSim,null);
+  attachNav($('eplan'),APP.viewEd,onEdCanvas);
+
+  // 保存済み案の復元
+  try{
+    const raw=localStorage.getItem('evacsim.design');
+    if(raw){ const o=JSON.parse(raw);
+      if(o&&o.tmpl&&o.cores){ APP.b=o;
+        $('e-above').value=o.floorsAbove;$('e-below').value=o.floorsBelow;
+        $('e-retailtop').value=o.retailTop;$('e-hoffice').value=o.hOffice;$('e-hretail').value=o.hRetail;
+        $('e-pw').value=o.plate.w;$('e-ph').value=o.plate.h;
+        fillFloorSelects();
+      } }
+  }catch(e){}
+
+  renderEdLists(); renderEdProps(); staticEval(); updHeader();
+  newSim(); renderReport();
+
+  // ディープリンク（#editor / #report / #run）
+  const hs=(location.hash||'').replace('#','').split(/[&,]/);
+  for(const h of hs)if(h==='editor'||h==='report'||h==='sim')setTab(h);
+  if(hs.includes('run')){ $('p-speed').value='16'; $('btn-run').click(); }
+
+  requestAnimationFrame(loop);
+}
+boot();
+</script>
+</body>
+</html>

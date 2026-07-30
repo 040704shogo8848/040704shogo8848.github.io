@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GDDR/HBM とAIチップサプライチェーン</title>
+<style>
+  :root{
+    --bg:#f7f8fa;
+    --panel:#ffffff;
+    --ink:#1a2027;
+    --sub:#5b6570;
+    --line:#e2e5ea;
+    --accent:#2f5d8a;
+    --accent2:#b8542e;
+    --accent-bg:#eaf1f8;
+    --accent2-bg:#f7ece5;
+    --mono:#3d4550;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171b;
+      --panel:#1c2126;
+      --ink:#e6e9ec;
+      --sub:#9aa4ad;
+      --line:#2c3339;
+      --accent:#6fa3d6;
+      --accent2:#e0916a;
+      --accent-bg:#1c2b3a;
+      --accent2-bg:#33231b;
+      --mono:#c7ced4;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f7f8fa; --panel:#ffffff; --ink:#1a2027; --sub:#5b6570; --line:#e2e5ea;
+    --accent:#2f5d8a; --accent2:#b8542e; --accent-bg:#eaf1f8; --accent2-bg:#f7ece5; --mono:#3d4550;
+  }
+  :root[data-theme="dark"]{
+    --bg:#14171b; --panel:#1c2126; --ink:#e6e9ec; --sub:#9aa4ad; --line:#2c3339;
+    --accent:#6fa3d6; --accent2:#e0916a; --accent-bg:#1c2b3a; --accent2-bg:#33231b; --mono:#c7ced4;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Hiragino Sans","Yu Gothic",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.7;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:40px 20px 80px;}
+
+  header.top{margin-bottom:36px;}
+  header.top .eyebrow{font-size:12px; letter-spacing:.12em; color:var(--sub); text-transform:uppercase;}
+  header.top h1{font-size:26px; margin:6px 0 8px; font-weight:700;}
+  header.top p{color:var(--sub); font-size:14px; margin:0;}
+
+  section{margin-bottom:44px;}
+  h2{
+    font-size:16px; font-weight:700; margin:0 0 16px;
+    padding-bottom:8px; border-bottom:2px solid var(--line);
+    display:flex; align-items:baseline; gap:8px;
+  }
+  h2 .no{color:var(--accent); font-size:13px; font-weight:700;}
+
+  p.lead{color:var(--sub); font-size:13.5px; margin:0 0 18px;}
+
+  .panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:20px 22px;
+  }
+
+  /* ---- compare cards ---- */
+  .cmp-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:640px){ .cmp-grid{grid-template-columns:1fr;} }
+  .cmp-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:18px 20px;
+  }
+  .cmp-card .tag{
+    display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px;
+    margin-bottom:10px; letter-spacing:.03em;
+  }
+  .cmp-card.gddr .tag{background:var(--accent-bg); color:var(--accent);}
+  .cmp-card.hbm .tag{background:var(--accent2-bg); color:var(--accent2);}
+  .cmp-card h3{margin:0 0 8px; font-size:15px;}
+  .cmp-card ul{margin:0; padding-left:18px; font-size:13.5px; color:var(--sub);}
+  .cmp-card ul li{margin-bottom:4px;}
+
+  /* ---- lane diagram ---- */
+  .lane-box{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:22px 22px 18px; margin-top:16px;
+  }
+  .lane-row{display:flex; align-items:center; gap:16px; margin-bottom:20px;}
+  .lane-row:last-child{margin-bottom:0;}
+  .lane-label{width:150px; flex-shrink:0; font-size:13px;}
+  .lane-label b{display:block; font-size:13.5px;}
+  .lane-label span{color:var(--sub); font-size:12px;}
+  .lanes{display:flex; gap:6px; flex:1; align-items:center; height:40px;}
+  .lane{
+    height:10px; border-radius:5px; position:relative; overflow:hidden;
+  }
+  .lane.thick{background:var(--accent); flex:1; height:22px;}
+  .lane.thin{background:var(--accent2); flex:1; height:8px;}
+  @keyframes flow{ from{transform:translateX(-100%);} to{transform:translateX(100%);} }
+  .lane::after{
+    content:""; position:absolute; inset:0; width:40%;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+    animation:flow 1.4s linear infinite;
+  }
+  .lane.thin::after{ animation-duration:2.6s; }
+  .lane-note{font-size:12px; color:var(--sub); margin-top:10px; text-align:center;}
+
+  /* ---- cpu/gpu ---- */
+  .duo{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:640px){ .duo{grid-template-columns:1fr;} }
+  .duo .card{border:1px solid var(--line); border-radius:10px; padding:18px 20px; background:var(--panel);}
+  .duo .card h3{margin:0 0 10px; font-size:15px;}
+  .pill-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;}
+  .pill{
+    font-size:12px; padding:4px 10px; border-radius:20px;
+    border:1px solid var(--line); color:var(--sub);
+  }
+  .core-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:5px; margin:12px 0;}
+  .core{aspect-ratio:1; border-radius:3px;}
+  .cpu-core{background:var(--accent); grid-column:span 2; grid-row:span 2;}
+  .gpu-core{background:var(--accent2);}
+
+  /* ---- precision spectrum ---- */
+  .spectrum{margin-top:18px;}
+  .spec-bar{
+    display:flex; height:38px; border-radius:8px; overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .spec-seg{display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff;}
+  .spec-labels{display:flex; justify-content:space-between; margin-top:8px; font-size:11.5px; color:var(--sub);}
+  .spec-note{display:flex; justify-content:space-between; margin-top:4px;}
+  .spec-note div{font-size:12px; color:var(--sub); max-width:23%;}
+
+  /* ---- timeline ---- */
+  .timeline{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:6px;}
+  @media (max-width:640px){ .timeline{grid-template-columns:1fr;} }
+  .tl-card{border:1px solid var(--line); border-radius:10px; padding:18px 20px; background:var(--panel);}
+  .tl-card h3{margin:0 0 4px; font-size:14.5px;}
+  .tl-card .period{font-size:11.5px; color:var(--sub); margin-bottom:10px;}
+  .tl-card p{margin:0; font-size:13.5px; color:var(--ink);}
+  .tl-result{
+    margin-top:12px; font-size:12.5px; padding:8px 10px; border-radius:6px;
+    background:var(--accent-bg); color:var(--accent);
+  }
+  .tl-card.hynix .tl-result{background:var(--accent2-bg); color:var(--accent2);}
+
+  /* ---- supply chain flow ---- */
+  .flow{margin-top:10px;}
+  .flow-inputs{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:640px){ .flow-inputs{grid-template-columns:1fr;} }
+  .fnode{
+    border:1px solid var(--line); border-radius:10px; padding:14px 16px; background:var(--panel);
+    text-align:center;
+  }
+  .fnode .role{font-size:10.5px; letter-spacing:.06em; color:var(--sub); text-transform:uppercase;}
+  .fnode .name{font-size:14.5px; font-weight:700; margin:3px 0 4px;}
+  .fnode .desc{font-size:12px; color:var(--sub);}
+  .arrow-down{
+    display:flex; justify-content:center; align-items:center; height:34px; color:var(--sub); font-size:20px;
+  }
+  .converge{
+    display:flex; justify-content:center; align-items:center; gap:0; margin:2px 0;
+  }
+  .converge svg{display:block;}
+  .fnode.main{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset;}
+  .fnode.final{border-color:var(--accent2); box-shadow:0 0 0 1px var(--accent2) inset;}
+  .fnode.end{background:var(--accent-bg);}
+
+  .footnote{margin-top:30px; font-size:12px; color:var(--sub); border-top:1px dashed var(--line); padding-top:14px;}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:center;gap:4px}
+.snav-inline a{color:rgba(255,255,255,.7);text-decoration:none;font-size:12px;font-weight:500;padding:6px 12px;border-radius:4px;transition:all .15s;letter-spacing:-.01em}
+.snav-inline a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.snav-inline .sep{width:1px;height:14px;background:rgba(255,255,255,.18);margin:0 6px}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../index.html">industry</a><a href="../../015_net/index.html">net</a><span class="sep"></span><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><span class="sep"></span><a href="../../../020_personal/021_profile/index.html">profile</a></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">Semiconductor Notes — 260730</div>
+    <h1>GDDR / HBM とAIチップのサプライチェーン</h1>
+    <p>Slackメモの整理 — メモリ設計思想の違いから、ASML→TSMC→SK hynix→NVIDIAの供給網まで</p>
+  </header>
+
+  <!-- 1: GDDR基本 -->
+  <section>
+    <h2><span class="no">01</span>GDDRとは何か</h2>
+    <div class="panel">
+      <p style="margin:0 0 10px; font-size:14px;"><b>GDDR（Graphics Double Data Rate）</b> ＝ グラフィックス用途に最適化されたDRAM</p>
+      <ul style="margin:0; padding-left:18px; font-size:13.5px; color:var(--sub);">
+        <li>ゲーミングPCのグラフィックボード（GeForce RTXなど）に搭載されるメモリ</li>
+        <li>現行世代は <b style="color:var(--ink);">GDDR6 / GDDR7</b></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 2: GDDR vs HBM -->
+  <section>
+    <h2><span class="no">02</span>GDDR と HBM — 配置思想の違い</h2>
+    <p class="lead">両者の差はメモリチップの「置き方」の思想にある</p>
+
+    <div class="cmp-grid">
+      <div class="cmp-card gddr">
+        <div class="tag">GDDR</div>
+        <h3>平面配置 × 少ない配線</h3>
+        <ul>
+          <li>GPUチップの周りに複数のメモリチップを平面上に並べる</li>
+          <li>基板の配線でチップ同士をつなぐ</li>
+          <li>安価で量産しやすい</li>
+          <li>配線本数（バス幅）に限界があり、帯域を上げるには動作周波数を無理に上げるしかない</li>
+        </ul>
+      </div>
+      <div class="cmp-card hbm">
+        <div class="tag">HBM</div>
+        <h3>垂直積層 × 超多数の配線</h3>
+        <ul>
+          <li>チップを縦に積み、超多数の配線で一気につなぐ</li>
+          <li>シリコンインターポーザ経由でGPUと直結</li>
+          <li>周波数を上げなくても圧倒的な帯域が出る</li>
+          <li>コスト・製造難度は高い</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="lane-box">
+      <div class="lane-row">
+        <div class="lane-label"><b>GDDR</b><span>少ない車線を高速で走らせる</span></div>
+        <div class="lanes">
+          <div class="lane thick"></div>
+          <div class="lane thick"></div>
+        </div>
+      </div>
+      <div class="lane-row">
+        <div class="lane-label"><b>HBM</b><span>車線を桁違いに増やし、ゆっくり大量に流す</span></div>
+        <div class="lanes">
+          <div class="lane thin"></div><div class="lane thin"></div><div class="lane thin"></div>
+          <div class="lane thin"></div><div class="lane thin"></div><div class="lane thin"></div>
+          <div class="lane thin"></div><div class="lane thin"></div>
+        </div>
+      </div>
+      <div class="lane-note">AI用途（学習・推論の大量データ転送）では帯域勝負 → HBMが圧勝</div>
+    </div>
+  </section>
+
+  <!-- 3: CPU vs GPU -->
+  <section>
+    <h2><span class="no">03</span>CPU と GPU — 処理思想の違い</h2>
+    <div class="duo">
+      <div class="card">
+        <h3>CPU</h3>
+        <div class="core-grid">
+          <div class="core cpu-core"></div>
+          <div class="core cpu-core"></div>
+        </div>
+        <div class="pill-row">
+          <span class="pill">Serial（逐次処理）</span>
+          <span class="pill">Latency 重視</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>GPU</h3>
+        <div class="core-grid">
+          <div class="core gpu-core"></div><div class="core gpu-core"></div><div class="core gpu-core"></div>
+          <div class="core gpu-core"></div><div class="core gpu-core"></div><div class="core gpu-core"></div>
+          <div class="core gpu-core"></div><div class="core gpu-core"></div><div class="core gpu-core"></div>
+          <div class="core gpu-core"></div><div class="core gpu-core"></div><div class="core gpu-core"></div>
+        </div>
+        <div class="pill-row">
+          <span class="pill">Parallel（並列処理）</span>
+          <span class="pill">Throughput 重視</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4: 精度 -->
+  <section>
+    <h2><span class="no">04</span>演算精度のトレードオフ</h2>
+    <p class="lead">HPC（科学技術計算）は高精度を要求、AI推論は精度を落として速度を稼ぐ</p>
+    <div class="spectrum">
+      <div class="spec-bar">
+        <div class="spec-seg" style="flex:4; background:#2f5d8a;">FP64</div>
+        <div class="spec-seg" style="flex:3; background:#4d7ba3;">FP32</div>
+        <div class="spec-seg" style="flex:2; background:#7a9bb8;">FP16</div>
+        <div class="spec-seg" style="flex:1.4; background:#b8542e;">FP8</div>
+        <div class="spec-seg" style="flex:1; background:#d97b4f;">FP4</div>
+      </div>
+      <div class="spec-labels">
+        <span>高精度・低速</span>
+        <span>低精度・高速</span>
+      </div>
+      <div class="spec-note">
+        <div><b style="color:var(--ink);">HPC</b> — FP64で厳密計算（科学技術計算・シミュレーション）</div>
+        <div style="text-align:right;"><b style="color:var(--ink);">Tensor Core</b> — 時にFP4まで落として高速化（AI学習・推論）</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5: Samsung vs SK hynix -->
+  <section>
+    <h2><span class="no">05</span>Samsung と SK hynix — 投資対象の分岐</h2>
+    <p class="lead">2010年代初頭、HBMという当時ニッチな規格への賭け方に差が出た</p>
+    <div class="timeline">
+      <div class="tl-card">
+        <h3>Samsung</h3>
+        <div class="period">2010年代〜</div>
+        <p>DRAM / NANDの汎用プロセス微細化と量産スケールに軸足。メモリ全体のシェア首位を維持する戦略を継続。</p>
+        <div class="tl-result">HBM参入・量産立ち上げはSK hynixに対して後手に回った</div>
+      </div>
+      <div class="tl-card hynix">
+        <h3>SK hynix</h3>
+        <div class="period">2013年〜（HBM1開発期）</div>
+        <p>TSV（シリコン貫通電極）による積層技術への先行投資。当時は市場規模の小さいニッチ規格だったHBMに早期から集中。</p>
+        <div class="tl-result">生成AIブームでHBM需要が急増 → NVIDIA向け主要サプライヤーの地位を獲得</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6: サプライチェーン -->
+  <section>
+    <h2><span class="no">06</span>AIチップのサプライチェーン全体像</h2>
+    <p class="lead">GPUダイの製造ラインと、HBMの製造ラインが CoWoS で合流する</p>
+
+    <div class="flow">
+      <div class="flow-inputs">
+        <div class="fnode">
+          <div class="role">Step 1a</div>
+          <div class="name">ASML</div>
+          <div class="desc">EUV露光機を独占供給</div>
+        </div>
+        <div class="fnode">
+          <div class="role">Step 1b</div>
+          <div class="name">SK hynix 等</div>
+          <div class="desc">HBM（積層メモリ）を供給</div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <div class="flow-inputs">
+        <div class="fnode">
+          <div class="role">Step 2a</div>
+          <div class="name">TSMC</div>
+          <div class="desc">EUV露光機でGPUダイを製造</div>
+        </div>
+        <div class="fnode" style="opacity:0; pointer-events:none;"></div>
+      </div>
+
+      <div class="arrow-down">↓ ↓</div>
+
+      <div class="fnode main" style="max-width:340px; margin:0 auto;">
+        <div class="role">Step 3 — 合流</div>
+        <div class="name">TSMC — CoWoS パッケージング</div>
+        <div class="desc">GPUダイ と HBM を1パッケージに統合</div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <div class="fnode final" style="max-width:340px; margin:0 auto;">
+        <div class="role">Step 4</div>
+        <div class="name">NVIDIA</div>
+        <div class="desc">GPU完成品として設計・製品化</div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <div class="fnode end" style="max-width:340px; margin:0 auto;">
+        <div class="role">Step 5</div>
+        <div class="name">最終ユーザー</div>
+        <div class="desc">データセンター（AI学習・推論基盤）</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footnote">
+    Source: Slack memo（久保田翔己, 2026-07-29〜30）を基に構成
+  </div>
+
+</div>
+</body>
+</html>

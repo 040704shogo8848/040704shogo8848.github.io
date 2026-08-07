@@ -3,6 +3,26 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "エルピクセル",
+    "fullName": "エルピクセル株式会社",
+    "ticker": null,
+    "market": null,
+    "country": "JP",
+    "status": "private",
+    "cohort": "shosha-cvc",
+    "tags": [
+      "medical-AI",
+      "大学発",
+      "ガバナンス",
+      "商社CVC"
+    ],
+    "date": "2026-08-07",
+    "summary": "東京大学発の医療画像診断支援AI。2020年に元取締役による約33億5,000万円の横領が発覚して一人代表体制が破綻したが、既存株主の追加出資と二人代表体制で再建した。2025年7月に丸紅ベンチャーズとちゅうぎんインフィニティファンド2号が出資。EIRLは累計1,000施設超・総解析1,200万件超（2025年6月）。",
+    "sourceCount": 10,
+    "variant": "startup-case",
+    "file": "reports/lpixel_research_260807.html"
+  },
+  {
     "company": "ログラス",
     "fullName": "株式会社ログラス",
     "ticker": null,

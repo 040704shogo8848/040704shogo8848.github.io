@@ -3,6 +3,27 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "Commonwealth Fusion Systems",
+    "fullName": "Commonwealth Fusion Systems, LLC",
+    "ticker": null,
+    "market": null,
+    "country": "US",
+    "status": "private",
+    "cohort": "shosha-cvc",
+    "tags": [
+      "fusion",
+      "energy",
+      "deep-tech",
+      "climate-tech",
+      "商社CVC"
+    ],
+    "date": "2026-08-07",
+    "summary": "MIT発の核融合スタートアップ。2025年8月のシリーズB2 8.63億ドルを三井物産・三菱商事が主導する日本企業12社のコンソーシアムが支え、2026年7月の追加10億ドルで累計調達額は約40億ドルに達した。装置が動く十数年前にGoogleと売電契約を結び、それを担保に建設資金を集める構造を分解した。",
+    "sourceCount": 9,
+    "variant": "startup-case",
+    "file": "reports/commonwealth_fusion_systems_research_260807.html"
+  },
+  {
     "company": "Heirloom Carbon Technologies",
     "fullName": "Heirloom Carbon Technologies, Inc.",
     "ticker": null,

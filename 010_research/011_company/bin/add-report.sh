@@ -34,7 +34,10 @@ node "$ROOT/_tools/leak-check.mjs" "$HUB/reports/$BASE"
 
 cd "$ROOT"
 git pull --rebase --autostash -q origin main || true
-git add -A
+# このハブが触ったものだけを stage する。`git add -A` にすると、別セッションが
+# 同じリポで書きかけているファイルまでレポート追加コミットに巻き込む。
+# 実際に巻き込んで作業を消したことがあるので、対象を明示すること。
+git add "$HUB/reports/$BASE" "$HUB/data" "$HUB/index.html"
 git -c user.email="s.kubota@wander-lust.io" -c user.name="040704shogo8848" \
   commit -q -m "Add report: $BASE" || { echo "nothing to commit"; }
 git push -q origin main

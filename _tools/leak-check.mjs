@@ -51,6 +51,23 @@ const BLOCK = [
 // Placeholders are fine in consulting decks but never in a research report.
 const PLACEHOLDER = { re: /\b(XX,XXX|XX\.X%|TBD|TODO|FIXME|Lorem ipsum)\b/i, why: 'プレースホルダー' };
 
+// ─── reviewed exceptions ─────────────────────────────────────────────────────
+// One rule firing on one file, looked at and deliberately allowed. Exceptions
+// live here rather than in `git push --no-verify`, because --no-verify turns
+// the whole gate off for the whole push — the next genuine leak would ship with
+// it. Narrow by file AND by the matched text: the same name in a different file
+// still blocks. Every entry needs a date and a reason, and the run prints them
+// so an exception stays visible instead of quietly becoming the norm.
+const ACCEPTED = [
+  {
+    file: '010_research/011_company/reports/mitsubishi_corp_research_260727.html',
+    hit: '小島信明',
+    why: '本人は公開人物（Wikipedia・公開講演あり）。実名掲載は 2026-08-02 に Shogo が判断済み',
+  },
+];
+
+const accepted = (file, hit) => ACCEPTED.some((a) => a.file === file && a.hit === hit);
+
 // ─── dictionary rules ────────────────────────────────────────────────────────
 
 // Third-party names are a hard block anywhere. The rest of the dictionary is
@@ -95,6 +112,7 @@ else for await (const f of files()) targets.push(f);
 
 const findings = [];
 const warnings = [];
+const allowed = [];
 
 for (const abs of targets) {
   // The scanner's own rule list is full of the strings it looks for.
@@ -117,7 +135,10 @@ for (const abs of targets) {
   lines.forEach((line, i) => {
     for (const r of blocking) {
       const m = line.match(r.re);
-      if (m) findings.push({ file, line: i + 1, why: r.why, hit: m[0].slice(0, 60), hard: !!r.hard });
+      if (!m) continue;
+      const hit = m[0].slice(0, 60);
+      if (accepted(file, hit)) { allowed.push({ file, line: i + 1, why: r.why, hit }); continue; }
+      findings.push({ file, line: i + 1, why: r.why, hit, hard: !!r.hard });
     }
     if (!financial) return;
     for (const r of money) {
@@ -130,6 +151,16 @@ for (const abs of targets) {
 // ─── report ──────────────────────────────────────────────────────────────────
 
 console.log(`scanned ${targets.length} files`);
+
+if (allowed.length) {
+  const byFile = {};
+  for (const a of allowed) byFile[a.file] = (byFile[a.file] || 0) + 1;
+  console.log(`\n${allowed.length} 件はレビュー済みの例外として通した:`);
+  for (const [file, n] of Object.entries(byFile)) {
+    const e = ACCEPTED.find((x) => x.file === file);
+    console.log(`   ${String(n).padStart(4)}  ${file}\n         "${e.hit}" — ${e.why}`);
+  }
+}
 
 if (warnings.length) {
   const byWhy = {};

@@ -1,15 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Africa Cities — Infrastructure Brief</title>
-<meta name="description" content="アフリカ54カ国の首都データブック。インフラ・水道・道路ビジネスのための都市プロファイル。">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-<link rel="stylesheet" href="css/style.css">
+<meta name="description" content="アフリカ54カ国・67都市のインフラデータブック。電力・水・衛生の未充足人口を世界銀行の実データから算出。">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 28px 80px}
+  header.top{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px}
+  p{margin:10px 0}
+  a{color:var(--accent)}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:22px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .note{border-left:4px solid var(--warn);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;white-space:nowrap}
+  th.sortable{cursor:pointer;user-select:none}
+  th.sortable:hover{color:var(--accent)}
+  th.sortable::after{content:"";font-size:10px;margin-left:4px;color:var(--sub)}
+  th.sortable.asc::after{content:"\25B2"}
+  th.sortable.desc::after{content:"\25BC"}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  tbody tr:hover{background:#FFFDF5}
+  tbody tr.sel{background:#FEF9C3}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+  .tbl-scroll>table{margin:0;min-width:820px}
+  .bar{display:inline-block;height:8px;border-radius:4px;background:var(--accent);vertical-align:middle}
+  .bar-bg{display:inline-block;width:56px;height:8px;border-radius:4px;background:#E9E6DE;
+    vertical-align:middle;margin-right:6px;overflow:hidden}
+  .bar-bg>i{display:block;height:100%;border-radius:4px}
+  #map{height:520px;border:1px solid var(--line);border-radius:10px;background:#EDEBE4}
+  #mapFallback{display:none;padding:20px;background:#fff;border:1px solid var(--line);border-radius:10px;color:var(--sub);font-size:14px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--sub);margin-top:10px}
+  .legend .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0 8px}
+  .tools input[type=search]{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:14px;background:#fff;font-family:inherit;color:var(--ink)}
+  .tools input[type=search]:focus{outline:none;border-color:var(--accent)}
+  .chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+  .chip{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:12px;padding:3px 11px;
+    border-radius:12px;cursor:pointer;font-family:inherit}
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .count{font-size:12.5px;color:var(--sub);white-space:nowrap}
+  #detail{min-height:60px}
+  .dt-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .dt-head h3{margin:0;font-size:18px}
+  .dt-head .sub{color:var(--sub);font-size:13px}
+  .dt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+  .dt-grid .c{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px}
+  .dt-grid .c .k{font-size:11.5px;color:var(--sub)}
+  .dt-grid .c .v{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+  .dt-grid .c .y{font-size:10.5px;color:var(--sub)}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  @media print{
+    body{background:#fff}
+    .wrap{max-width:100%}
+    #map,.tools,.chips{display:none}
+    h2{page-break-after:avoid}
+    table,.box,.callout{page-break-inside:avoid}
+  }
+  @media(max-width:760px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .dt-grid{grid-template-columns:repeat(2,1fr)}
+    #map{height:380px}
+  }
+</style>
 </head>
 <body>
 <!-- snav:start -->
@@ -76,56 +160,340 @@ body{padding-top:56px!important;padding-bottom:68px!important}
 <script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}</script>
 <footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
 <!-- snav:end -->
+<div class="wrap">
 
-<header class="site-header">
-  <div class="container">
-    <div class="brand">
-      <span class="brand-mark">AC</span>
-      <div>
-        <h1>Africa Cities — Infrastructure Brief</h1>
-        <p class="tagline">54カ国の首都プロファイル / Built for infra, water &amp; road business intelligence</p>
-      </div>
-    </div>
-    <nav class="header-meta">
-      <a href="https://github.com/040704shogo8848/africa-cities-infra" target="_blank" rel="noopener">GitHub</a>
-      <span class="last-updated" id="lastUpdated"></span>
-    </nav>
-  </div>
+<header class="top">
+  <h1>Africa Cities — Infrastructure Brief</h1>
+  <div class="meta">アフリカ54カ国・67都市／電力・水・衛生の未充足人口を世界銀行の実データから算出／更新日 2026年8月8日</div>
 </header>
+<p class="lead">
+  <span class="tag">databook</span><span class="tag">africa</span><span class="tag">infrastructure</span><span class="tag">water</span><span class="tag">energy</span>
+</p>
 
-<section class="hero" id="hero">
-  <div class="container">
-    <div class="hero-inner">
-      <p class="eyebrow">TAP A CITY</p>
-      <h2>地図上の都市をタップして、プロファイルを開く。</h2>
-      <p class="hero-sub">アフリカ54カ国の首都＋主要経済都市 (60都市)。インフラ・水道・道路ビジネスのための国別＋都市別データブック。</p>
-    </div>
-  </div>
-</section>
+<h2><span class="num">①</span>大陸の全体像<span class="en">Continental Snapshot</span></h2>
+<div class="kpi" id="kpi"></div>
+<div class="callout">
+<strong>この資料の使い方：</strong>インフラ・水道・道路のビジネス機会は<strong class="hit">「サービスが届いていない人の数」</strong>で決まる。普及率が低い国が有望とは限らない。普及率90%でも人口が1億人いれば未充足は1,000万人になり、普及率20%でも人口が100万人なら80万人にしかならない。本ページは各指標を<strong>率と未充足人口の両方</strong>で並べ、この取り違えを起こさないようにしてある。
+</div>
 
-<section class="map-wrap" id="mapWrap">
-  <div class="container">
-    <div id="map" role="application" aria-label="Africa cities map"></div>
-    <div class="map-legend">
-      <span><span class="legend-dot"></span>Full data (詳細)</span>
-      <span><span class="legend-dot stub"></span>基本データ</span>
-      <span style="margin-left:auto;color:var(--text-mute);">Tip: マウスホイールでズーム · ドラッグで移動 · マーカーをタップで詳細</span>
-    </div>
-  </div>
-</section>
+<h2><span class="num">②</span>都市マップ<span class="en">City Map — 首都54＋主要経済・港湾都市13</span></h2>
+<p class="lead">マーカーをクリックすると、その都市が属する国のインフラ指標が下に開く。色は電力アクセス率の帯。</p>
+<div id="map" role="application" aria-label="Africa cities map"></div>
+<div id="mapFallback">地図ライブラリ（Leaflet CDN）の読み込みに失敗した。地図は表示できないが、以下の都市一覧と国別テーブルはそのまま使える。</div>
+<div class="legend">
+  <span><span class="dot" style="background:#b91c1c"></span>電力アクセス 40%未満</span>
+  <span><span class="dot" style="background:#b45309"></span>40〜70%</span>
+  <span><span class="dot" style="background:#2563EB"></span>70〜90%</span>
+  <span><span class="dot" style="background:#15803d"></span>90%以上</span>
+  <span style="margin-left:auto">大きい丸＝首都／小さい丸＝経済・港湾都市</span>
+</div>
 
-<main class="container" id="main">
-  <article id="cityDetail" class="city-detail hidden"></article>
-</main>
+<h2><span class="num">③</span>都市プロファイル<span class="en">City Profile</span></h2>
+<div class="box" id="detail"><p class="lead" style="margin:0">上の地図か下の都市一覧から都市を選ぶと、ここに国別のインフラ指標が出る。</p></div>
 
-<footer class="site-footer">
-  <div class="container">
-    <p>Data: World Bank, UN DESA, IMF, 各国統計局, OpenStreetMap, Köppen-Geiger, Boston U Global Development Policy Center (China-Africa Loans), SAIS CARI。最新値は <a href="https://github.com/040704shogo8848/africa-cities-infra" target="_blank" rel="noopener">GitHub</a> で随時更新。</p>
-    <p class="disclaimer">本資料はビジネス意思決定のサポートを目的とした概観。最新の現地確認は必須。</p>
-  </div>
-</footer>
+<h3>都市一覧</h3>
+<div class="tools">
+  <input type="search" id="cityQ" placeholder="都市名・国名で絞り込む（例: ラゴス, Kenya, 港湾）" aria-label="都市検索">
+  <span class="count" id="cityCount"></span>
+</div>
+<div class="tbl-scroll"><table id="cityTbl">
+  <thead><tr>
+    <th>都市</th><th>English</th><th>国</th><th>地域</th><th>種別</th><th class="num">緯度</th><th class="num">経度</th>
+  </tr></thead>
+  <tbody></tbody>
+</table></div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="js/app.js"></script>
+<h2><span class="num">④</span>国別インフラ指標<span class="en">Country Indicators — World Bank 実測値</span></h2>
+<div class="chips" id="regionChips"></div>
+<div class="tools">
+  <input type="search" id="ctryQ" placeholder="国名で絞り込む（例: ナイジェリア, Kenya）" aria-label="国検索">
+  <button class="chip" id="llToggle">内陸国のみ</button>
+  <span class="count" id="ctryCount"></span>
+</div>
+<div class="tbl-scroll"><table id="ctryTbl">
+  <thead><tr>
+    <th class="sortable" data-k="ja">国</th>
+    <th class="sortable" data-k="region">地域</th>
+    <th class="sortable num" data-k="pop">人口</th>
+    <th class="sortable num" data-k="gdppc">1人当たりGDP<br><span style="font-weight:400;font-size:11px">USD</span></th>
+    <th class="sortable num" data-k="elec">電力<br><span style="font-weight:400;font-size:11px">アクセス率</span></th>
+    <th class="sortable num" data-k="noElec">無電化人口</th>
+    <th class="sortable num" data-k="water">基本的<br><span style="font-weight:400;font-size:11px">飲料水</span></th>
+    <th class="sortable num" data-k="noWater">水 未充足</th>
+    <th class="sortable num" data-k="san">基本的<br><span style="font-weight:400;font-size:11px">衛生</span></th>
+    <th class="sortable num" data-k="noSan">衛生 未充足</th>
+    <th class="sortable num" data-k="urb">都市化率</th>
+  </tr></thead>
+  <tbody></tbody>
+</table></div>
+<p class="fn">列見出しをクリックで並べ替え。未充足人口＝人口×(100−アクセス率)/100 として本ページで算出した値。世界銀行が公表している数値ではない。指標の取得年は国ごとに異なるため、③の都市プロファイルで年次を確認すること。</p>
+
+<h2><span class="num">⑤</span>未充足人口ランキング<span class="en">Where the Gap Actually Is</span></h2>
+<div class="chips" id="gapChips"></div>
+<div class="tbl-scroll"><table id="gapTbl">
+  <thead><tr><th class="num">#</th><th>国</th><th class="num">未充足人口</th><th>大陸内シェア</th><th class="num">アクセス率</th><th class="num">人口</th></tr></thead>
+  <tbody></tbody>
+</table></div>
+<div class="note" id="gapNote"></div>
+
+<h2><span class="num">⑥</span>この資料の限界<span class="en">Limitations</span></h2>
+<div class="box">
+<p><strong>1. 指標はすべて国単位であり、都市単位ではない。</strong>地図上の都市マーカーは位置と国の対応を示すためのもので、指標はその都市の値ではなく国全体の値である。都市部と農村部でアクセス率は大きく違うため、都市案件の検討には現地の配水区・配電区単位のデータが別途要る。</p>
+<p><strong>2. 取得年が国ごとに揃っていない。</strong>世界銀行APIの「直近の非欠損値」を採ったため、エリトリアのGDPは2011年、南スーダンのGDPは2015年など、10年以上前の値が混ざる。年次は③のプロファイルに明示してある。</p>
+<p><strong>3. 「基本的（basic）」は安全に管理された水準ではない。</strong>本ページの水・衛生はWHO/UNICEF JMPの basic サービス基準であり、safely managed 基準ではない。実際に飲用可能な水質・下水処理まで含めた充足率はこれより低い。</p>
+<p><strong>4. 道路・港湾の指標は含めていない。</strong>初版の資料は道路網を扱う想定だったが、世界銀行の道路指標（舗装率・道路密度）は多くのアフリカ諸国で更新が10年以上止まっており、現時点で並べる意味のある実データが取れなかった。掲載していないのは重要でないからではなく、数字が無いからである。</p>
+</div>
+
+<h2><span class="num">⑦</span>出典<span class="en">Sources — 取得日 2026年8月8日</span></h2>
+<ol class="sources">
+  <li>World Bank Open Data API（World Development Indicators）。各指標とも <code>mrnev=1</code>（直近の非欠損値）を取得 https://api.worldbank.org/v2/</li>
+  <li>人口 SP.POP.TOTL https://data.worldbank.org/indicator/SP.POP.TOTL</li>
+  <li>名目GDP（現行USドル）NY.GDP.MKTP.CD https://data.worldbank.org/indicator/NY.GDP.MKTP.CD</li>
+  <li>電力アクセス率 EG.ELC.ACCS.ZS https://data.worldbank.org/indicator/EG.ELC.ACCS.ZS</li>
+  <li>基本的飲料水サービス利用率 SH.H2O.BASW.ZS https://data.worldbank.org/indicator/SH.H2O.BASW.ZS</li>
+  <li>基本的衛生サービス利用率 SH.STA.BASS.ZS https://data.worldbank.org/indicator/SH.STA.BASS.ZS</li>
+  <li>都市人口比率 SP.URB.TOTL.IN.ZS https://data.worldbank.org/indicator/SP.URB.TOTL.IN.ZS</li>
+  <li>水・衛生指標の定義（basic / safely managed）WHO/UNICEF Joint Monitoring Programme https://washdata.org/monitoring/drinking-water</li>
+  <li>地図タイルおよび都市座標 OpenStreetMap contributors https://www.openstreetmap.org/copyright</li>
+  <li>地図ライブラリ Leaflet 1.9.4 https://leafletjs.com/</li>
+</ol>
+<p class="fn">1人当たりGDP、無電化人口、水・衛生の未充足人口、都市人口は、上記の実測値から本ページで算出した派生値。国名の日本語表記・地域区分（北部／西部／中部／東部／南部）・内陸国の別は国連の地域分類および地理的事実に基づく。</p>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script id="afdata" type="application/json">{"countries":[{"iso":"NGA","ja":"ナイジェリア","en":"Nigeria","region":"西部","landlocked":false,"pop":237527782,"gdp":290794361542.112,"gdpY":2025,"gdppc":1224.2541023774306,"elec":62.5,"elecY":2024,"water":82.25,"waterY":2024,"san":47.9,"sanY":2024,"urb":63.78,"noElec":89072918,"noWater":42161181,"noSan":123751974,"urbanPop":151495219},{"iso":"ETH","ja":"エチオピア","en":"Ethiopia","region":"東部","landlocked":true,"pop":135472051,"gdp":126358758448.356,"gdpY":2025,"gdppc":932.7293527751788,"elec":56.6,"elecY":2024,"water":55.6,"waterY":2024,"san":10.36,"sanY":2024,"urb":24.11,"noElec":58794870,"noWater":60149591,"noSan":121437147,"urbanPop":32662311},{"iso":"EGY","ja":"エジプト","en":"Egypt","region":"北部","landlocked":false,"pop":118365995,"gdp":365254630179.737,"gdpY":2025,"gdppc":3085.8071203620348,"elec":100,"elecY":2024,"water":97.3,"waterY":2024,"san":97.09,"sanY":2024,"urb":42.9,"noElec":0,"noWater":3195882,"noSan":3444450,"urbanPop":50779012},{"iso":"COD","ja":"コンゴ民主共和国","en":"Congo, Dem. Rep.","region":"中部","landlocked":false,"pop":112832473,"gdp":91030531316.9936,"gdpY":2025,"gdppc":806.7760007085337,"elec":22.5,"elecY":2024,"water":35.68,"waterY":2024,"san":16.3,"sanY":2024,"urb":45.11,"noElec":87445167,"noWater":72573847,"noSan":94440780,"urbanPop":50898729},{"iso":"TZA","ja":"タンザニア","en":"Tanzania","region":"東部","landlocked":false,"pop":70545865,"gdp":90143496090.4411,"gdpY":2025,"gdppc":1277.7998553202387,"elec":52.4,"elecY":2024,"water":64.61,"waterY":2024,"san":37.22,"sanY":2024,"urb":36.88,"noElec":33579832,"noWater":24966182,"noSan":44288694,"urbanPop":26017315},{"iso":"ZAF","ja":"南アフリカ","en":"South Africa","region":"南部","landlocked":false,"pop":64747319,"gdp":427184325997.307,"gdpY":2025,"gdppc":6597.714509187739,"elec":90.2,"elecY":2024,"water":90.19,"waterY":2024,"san":77.38,"sanY":2024,"urb":63.82,"noElec":6345237,"noWater":6351712,"noSan":14645844,"urbanPop":41321739},{"iso":"KEN","ja":"ケニア","en":"Kenya","region":"東部","landlocked":false,"pop":57532493,"gdp":135941278878.815,"gdpY":2025,"gdppc":2362.860911986119,"elec":77,"elecY":2024,"water":65.6,"waterY":2024,"san":40.88,"sanY":2024,"urb":32.21,"noElec":13232473,"noWater":19791178,"noSan":34013210,"urbanPop":18531216},{"iso":"SDN","ja":"スーダン","en":"Sudan","region":"北部","landlocked":false,"pop":51662147,"gdp":60162634574.4689,"gdpY":2025,"gdppc":1164.5399594884993,"elec":66,"elecY":2024,"water":64.89,"waterY":2024,"san":65.71,"sanY":2024,"urb":34.93,"noElec":17565130,"noWater":18138580,"noSan":17714950,"urbanPop":18045588},{"iso":"UGA","ja":"ウガンダ","en":"Uganda","region":"東部","landlocked":true,"pop":51384894,"gdp":61985829288.1496,"gdpY":2025,"gdppc":1206.3045082500237,"elec":55.3,"elecY":2024,"water":63.01,"waterY":2024,"san":23.9,"sanY":2024,"urb":31.94,"noElec":22969048,"noWater":19007272,"noSan":39103904,"urbanPop":16412335},{"iso":"DZA","ja":"アルジェリア","en":"Algeria","region":"北部","landlocked":false,"pop":47435312,"gdp":287031225987.736,"gdpY":2025,"gdppc":6051.00322704183,"elec":100,"elecY":2024,"water":92.42,"waterY":2024,"san":85.91,"sanY":2024,"urb":75.82,"noElec":0,"noWater":3595597,"noSan":6683635,"urbanPop":35965454},{"iso":"AGO","ja":"アンゴラ","en":"Angola","region":"中部","landlocked":false,"pop":39040039,"gdp":122174889423.635,"gdpY":2025,"gdppc":3129.476623310622,"elec":55.5,"elecY":2024,"water":67.96,"waterY":2024,"san":50.3,"sanY":2022,"urb":71.46,"noElec":17372817,"noWater":12508428,"noSan":19402899,"urbanPop":27898012},{"iso":"MAR","ja":"モロッコ","en":"Morocco","region":"北部","landlocked":false,"pop":38430770,"gdp":182374250612.28,"gdpY":2025,"gdppc":4745.526842482729,"elec":100,"elecY":2024,"water":92.21,"waterY":2024,"san":87.78,"sanY":2024,"urb":63.13,"noElec":0,"noWater":2993757,"noSan":4696240,"urbanPop":24261345},{"iso":"MOZ","ja":"モザンビーク","en":"Mozambique","region":"東部","landlocked":false,"pop":35631653,"gdp":22337997046.1913,"gdpY":2025,"gdppc":626.9144192157265,"elec":36.9,"elecY":2024,"water":66.63,"waterY":2024,"san":38.59,"sanY":2024,"urb":37.21,"noElec":22483573,"noWater":11890283,"noSan":21881398,"urbanPop":13258538},{"iso":"GHA","ja":"ガーナ","en":"Ghana","region":"西部","landlocked":false,"pop":35064272,"gdp":114209905278.717,"gdpY":2025,"gdppc":3257.158890357598,"elec":91.9,"elecY":2024,"water":89.92,"waterY":2024,"san":31.58,"sanY":2024,"urb":58.92,"noElec":2840206,"noWater":3534479,"noSan":23990975,"urbanPop":20659869},{"iso":"MDG","ja":"マダガスカル","en":"Madagascar","region":"東部","landlocked":false,"pop":32740678,"gdp":19620352035.7899,"gdpY":2025,"gdppc":599.2652942553573,"elec":42.5,"elecY":2024,"water":55.34,"waterY":2024,"san":15.37,"sanY":2024,"urb":32.9,"noElec":18825890,"noWater":14621987,"noSan":27708436,"urbanPop":10771683},{"iso":"CIV","ja":"コートジボワール","en":"Côte d'Ivoire","region":"西部","landlocked":false,"pop":32711547,"gdp":99773555666.1988,"gdpY":2025,"gdppc":3050.102022573216,"elec":72.9,"elecY":2024,"water":77.25,"waterY":2024,"san":40.41,"sanY":2024,"urb":54.55,"noElec":8864829,"noWater":7441877,"noSan":19492811,"urbanPop":17844149},{"iso":"CMR","ja":"カメルーン","en":"Cameroon","region":"中部","landlocked":false,"pop":29879337,"gdp":58933453923.761,"gdpY":2025,"gdppc":1972.3815800786008,"elec":72,"elecY":2024,"water":71.41,"waterY":2024,"san":47.07,"sanY":2024,"urb":55.67,"noElec":8366214,"noWater":8542502,"noSan":15815133,"urbanPop":16633827},{"iso":"NER","ja":"ニジェール","en":"Niger","region":"西部","landlocked":true,"pop":27917831,"gdp":21646191388.2507,"gdpY":2025,"gdppc":775.3536221438801,"elec":21.3,"elecY":2024,"water":53.43,"waterY":2024,"san":16.34,"sanY":2024,"urb":18.37,"noElec":21971333,"noWater":13001334,"noSan":23356057,"urbanPop":5128506},{"iso":"MLI","ja":"マリ","en":"Mali","region":"西部","landlocked":true,"pop":25198821,"gdp":30069148580.7688,"gdpY":2025,"gdppc":1193.2760100470098,"elec":49.5,"elecY":2024,"water":86.36,"waterY":2024,"san":47.76,"sanY":2024,"urb":32.21,"noElec":12725405,"noWater":3437119,"noSan":13163864,"urbanPop":8116540},{"iso":"BFA","ja":"ブルキナファソ","en":"Burkina Faso","region":"西部","landlocked":true,"pop":24074580,"gdp":27627297461.3181,"gdpY":2025,"gdppc":1147.5713163560113,"elec":34,"elecY":2024,"water":50.0,"waterY":2024,"san":31.8,"sanY":2024,"urb":28.92,"noElec":15889223,"noWater":12037290,"noSan":16418864,"urbanPop":6962369},{"iso":"MWI","ja":"マラウイ","en":"Malawi","region":"東部","landlocked":true,"pop":22216120,"gdp":14918276698.303,"gdpY":2025,"gdppc":671.5068472038772,"elec":15.6,"elecY":2024,"water":73.05,"waterY":2024,"san":49.23,"sanY":2024,"urb":17.59,"noElec":18750405,"noWater":5987244,"noSan":11279124,"urbanPop":3907816},{"iso":"ZMB","ja":"ザンビア","en":"Zambia","region":"東部","landlocked":true,"pop":21913874,"gdp":28879806220.1264,"gdpY":2025,"gdppc":1317.877716195977,"elec":53.6,"elecY":2024,"water":73.41,"waterY":2024,"san":37.48,"sanY":2024,"urb":45.92,"noElec":10168038,"noWater":5826899,"noSan":13700554,"urbanPop":10062851},{"iso":"TCD","ja":"チャド","en":"Chad","region":"中部","landlocked":true,"pop":21003705,"gdp":21472835225.4338,"gdpY":2025,"gdppc":1022.3355939075416,"elec":13.4,"elecY":2024,"water":52.21,"waterY":2024,"san":13.14,"sanY":2024,"urb":27.57,"noElec":18189209,"noWater":10037671,"noSan":18243818,"urbanPop":5790721},{"iso":"SOM","ja":"ソマリア","en":"Somalia","region":"東部","landlocked":false,"pop":19654739,"gdp":12995200000.2658,"gdpY":2025,"gdppc":661.1738777231182,"elec":54.4,"elecY":2024,"water":75.29,"waterY":2024,"san":44.46,"sanY":2024,"urb":55.14,"noElec":8962561,"noWater":4856686,"noSan":10916242,"urbanPop":10837623},{"iso":"SEN","ja":"セネガル","en":"Senegal","region":"西部","landlocked":false,"pop":18931966,"gdp":37006536238.3731,"gdpY":2025,"gdppc":1954.7117419486756,"elec":82.9,"elecY":2024,"water":88.04,"waterY":2024,"san":62.52,"sanY":2024,"urb":55.77,"noElec":3237366,"noWater":2264263,"noSan":7095701,"urbanPop":10558357},{"iso":"ZWE","ja":"ジンバブエ","en":"Zimbabwe","region":"東部","landlocked":true,"pop":16950795,"gdp":51215643905.5886,"gdpY":2025,"gdppc":3021.4301987363187,"elec":62,"elecY":2024,"water":67.21,"waterY":2024,"san":34.64,"sanY":2024,"urb":40.5,"noElec":6441302,"noWater":5558166,"noSan":11079040,"urbanPop":6865072},{"iso":"GIN","ja":"ギニア","en":"Guinea","region":"西部","landlocked":false,"pop":15099727,"gdp":28346024753.2924,"gdpY":2025,"gdppc":1877.254122097201,"elec":53.8,"elecY":2024,"water":74.19,"waterY":2024,"san":32.65,"sanY":2024,"urb":38.52,"noElec":6976074,"noWater":3897240,"noSan":10169666,"urbanPop":5816415},{"iso":"BEN","ja":"ベナン","en":"Benin","region":"西部","landlocked":false,"pop":14814460,"gdp":24566420903.5337,"gdpY":2025,"gdppc":1658.2731266299074,"elec":59,"elecY":2024,"water":69.59,"waterY":2024,"san":22.25,"sanY":2024,"urb":53.36,"noElec":6073929,"noWater":4505077,"noSan":11518243,"urbanPop":7904996},{"iso":"RWA","ja":"ルワンダ","en":"Rwanda","region":"東部","landlocked":true,"pop":14569341,"gdp":16372132990.2271,"gdpY":2025,"gdppc":1123.7387463322534,"elec":72,"elecY":2024,"water":61.39,"waterY":2024,"san":81.33,"sanY":2024,"urb":30.91,"noElec":4079415,"noWater":5625223,"noSan":2720096,"urbanPop":4503383},{"iso":"BDI","ja":"ブルンジ","en":"Burundi","region":"東部","landlocked":true,"pop":14390003,"gdp":3364713864.08488,"gdpY":2025,"gdppc":233.8230133853954,"elec":20.1,"elecY":2024,"water":65.92,"waterY":2024,"san":44.63,"sanY":2024,"urb":25.69,"noElec":11497612,"noWater":4904113,"noSan":7967745,"urbanPop":3696792},{"iso":"TUN","ja":"チュニジア","en":"Tunisia","region":"北部","landlocked":false,"pop":12348573,"gdp":57502836548.0878,"gdpY":2025,"gdppc":4656.6381838685165,"elec":100,"elecY":2024,"water":96.73,"waterY":2024,"san":98.54,"sanY":2024,"urb":70.7,"noElec":0,"noWater":403798,"noSan":180289,"urbanPop":8730441},{"iso":"SSD","ja":"南スーダン","en":"South Sudan","region":"東部","landlocked":true,"pop":12188788,"gdp":11997800760.2242,"gdpY":2015,"gdppc":984.3309080627376,"elec":5.4,"elecY":2024,"water":39.75,"waterY":2024,"san":14.43,"sanY":2024,"urb":21.68,"noElec":11530593,"noWater":7343745,"noSan":10429946,"urbanPop":2642529},{"iso":"SLE","ja":"シエラレオネ","en":"Sierra Leone","region":"西部","landlocked":false,"pop":8819794,"gdp":7464157904.43509,"gdpY":2025,"gdppc":846.2961724996173,"elec":39.2,"elecY":2024,"water":68.08,"waterY":2024,"san":24.91,"sanY":2024,"urb":45.93,"noElec":5362435,"noWater":2815278,"noSan":6622783,"urbanPop":4050931},{"iso":"TGO","ja":"トーゴ","en":"Togo","region":"西部","landlocked":false,"pop":8591626,"gdp":11889949067.4697,"gdpY":2025,"gdppc":1383.8997492988753,"elec":61.1,"elecY":2024,"water":64.79,"waterY":2024,"san":25.17,"sanY":2024,"urb":44.39,"noElec":3342143,"noWater":3025112,"noSan":6429114,"urbanPop":3813823},{"iso":"LBY","ja":"リビア","en":"Libya","region":"北部","landlocked":false,"pop":7458555,"gdp":48098909613.6316,"gdpY":2025,"gdppc":6448.824150741209,"elec":77.4,"elecY":2024,"water":96.35,"waterY":2024,"san":88.5,"sanY":2024,"urb":87.91,"noElec":1685633,"noWater":272237,"noSan":857734,"urbanPop":6556816},{"iso":"COG","ja":"コンゴ共和国","en":"Congo, Rep.","region":"中部","landlocked":false,"pop":6484437,"gdp":16306633778.765,"gdpY":2025,"gdppc":2514.733935847476,"elec":53,"elecY":2024,"water":73.49,"waterY":2021,"san":20.55,"sanY":2021,"urb":64.12,"noElec":3047685,"noWater":1719024,"noSan":5151885,"urbanPop":4157821},{"iso":"LBR","ja":"リベリア","en":"Liberia","region":"西部","landlocked":false,"pop":5731206,"gdp":5245938900,"gdpY":2025,"gdppc":915.3289726455479,"elec":34.9,"elecY":2024,"water":78.83,"waterY":2024,"san":23.34,"sanY":2024,"urb":56.08,"noElec":3731015,"noWater":1213296,"noSan":4393543,"urbanPop":3214060},{"iso":"CAF","ja":"中央アフリカ","en":"Central African Rep.","region":"中部","landlocked":true,"pop":5513282,"gdp":3066109226.40165,"gdpY":2025,"gdppc":556.1313980314538,"elec":18.2,"elecY":2024,"water":36.5,"waterY":2024,"san":14.04,"sanY":2024,"urb":44.55,"noElec":4509865,"noWater":3500934,"noSan":4739217,"urbanPop":2456167},{"iso":"MRT","ja":"モーリタニア","en":"Mauritania","region":"西部","landlocked":false,"pop":5315065,"gdp":11679910946.4371,"gdpY":2025,"gdppc":2197.510462513083,"elec":52.2,"elecY":2024,"water":77.28,"waterY":2024,"san":58.68,"sanY":2024,"urb":61.49,"noElec":2540601,"noWater":1207583,"noSan":2196185,"urbanPop":3268233},{"iso":"ERI","ja":"エリトリア","en":"Eritrea","region":"東部","landlocked":false,"pop":3607003,"gdp":2065001626.01626,"gdpY":2011,"gdppc":572.4978953486482,"elec":55.3,"elecY":2024,"water":51.85,"waterY":2016,"san":11.94,"sanY":2016,"urb":34.54,"noElec":1612330,"noWater":1736772,"noSan":3176327,"urbanPop":1245859},{"iso":"NAM","ja":"ナミビア","en":"Namibia","region":"南部","landlocked":false,"pop":3092816,"gdp":15080340653.5276,"gdpY":2025,"gdppc":4875.92558158248,"elec":59.3,"elecY":2024,"water":86.51,"waterY":2024,"san":38.72,"sanY":2024,"urb":50.87,"noElec":1258776,"noWater":417221,"noSan":1895278,"urbanPop":1573315},{"iso":"GMB","ja":"ガンビア","en":"Gambia","region":"西部","landlocked":false,"pop":2822093,"gdp":2593673987.53306,"gdpY":2025,"gdppc":919.0604234279523,"elec":69,"elecY":2024,"water":87.1,"waterY":2024,"san":48.17,"sanY":2024,"urb":64.99,"noElec":874849,"noWater":364050,"noSan":1462691,"urbanPop":1834078},{"iso":"GAB","ja":"ガボン","en":"Gabon","region":"中部","landlocked":false,"pop":2593130,"gdp":21427119323.2764,"gdpY":2025,"gdppc":8263.033215949992,"elec":95.1,"elecY":2024,"water":88.6,"waterY":2024,"san":57.4,"sanY":2024,"urb":92.09,"noElec":127063,"noWater":295617,"noSan":1104673,"urbanPop":2388013},{"iso":"BWA","ja":"ボツワナ","en":"Botswana","region":"南部","landlocked":true,"pop":2562122,"gdp":19928479839.4476,"gdpY":2025,"gdppc":7778.115109057102,"elec":80.2,"elecY":2024,"water":91.77,"waterY":2024,"san":72.12,"sanY":2024,"urb":67.96,"noElec":507300,"noWater":210863,"noSan":714320,"urbanPop":1741218},{"iso":"LSO","ja":"レソト","en":"Lesotho","region":"南部","landlocked":true,"pop":2363325,"gdp":2573572920.05159,"gdpY":2025,"gdppc":1088.9627622318512,"elec":60.6,"elecY":2024,"water":78.08,"waterY":2024,"san":47.89,"sanY":2024,"urb":44.67,"noElec":931150,"noWater":518041,"noSan":1231529,"urbanPop":1055697},{"iso":"GNB","ja":"ギニアビサウ","en":"Guinea-Bissau","region":"西部","landlocked":false,"pop":2249515,"gdp":2527930272.92988,"gdpY":2025,"gdppc":1123.766799923486,"elec":43.7,"elecY":2024,"water":61.81,"waterY":2024,"san":28.94,"sanY":2024,"urb":46.65,"noElec":1266477,"noWater":859090,"noSan":1598505,"urbanPop":1049399},{"iso":"GNQ","ja":"赤道ギニア","en":"Equatorial Guinea","region":"中部","landlocked":false,"pop":1938431,"gdp":12823210425.9217,"gdpY":2025,"gdppc":6615.25245207165,"elec":65.1,"elecY":2024,"water":64.67,"waterY":2017,"san":66.31,"sanY":2017,"urb":71.58,"noElec":676512,"noWater":684848,"noSan":653057,"urbanPop":1387529},{"iso":"SWZ","ja":"エスワティニ","en":"Eswatini","region":"南部","landlocked":true,"pop":1256174,"gdp":5160679612.81734,"gdpY":2025,"gdppc":4108.252210933629,"elec":89.3,"elecY":2024,"water":80.37,"waterY":2024,"san":64.46,"sanY":2024,"urb":26.72,"noElec":134411,"noWater":246587,"noSan":446444,"urbanPop":335650},{"iso":"MUS","ja":"モーリシャス","en":"Mauritius","region":"東部","landlocked":false,"pop":1243741,"gdp":16157804491.7614,"gdpY":2025,"gdppc":12991.293598716615,"elec":100,"elecY":2024,"water":99.93,"waterY":2024,"san":97.37,"sanY":2024,"urb":39.04,"noElec":0,"noWater":871,"noSan":32710,"urbanPop":485556},{"iso":"DJI","ja":"ジブチ","en":"Djibouti","region":"東部","landlocked":false,"pop":1184076,"gdp":4624533092.31886,"gdpY":2025,"gdppc":3905.6049546810004,"elec":69.2,"elecY":2024,"water":79.66,"waterY":2024,"san":67.02,"sanY":2023,"urb":72.98,"noElec":364695,"noWater":240841,"noSan":390508,"urbanPop":864139},{"iso":"COM","ja":"コモロ","en":"Comoros","region":"東部","landlocked":false,"pop":882847,"gdp":1814920856.27026,"gdpY":2025,"gdppc":2055.7592156628048,"elec":91.7,"elecY":2024,"water":85.05,"waterY":2024,"san":57.22,"sanY":2024,"urb":33.94,"noElec":73276,"noWater":131986,"noSan":377682,"urbanPop":299638},{"iso":"CPV","ja":"カーボベルデ","en":"Cabo Verde","region":"西部","landlocked":false,"pop":527326,"gdp":3056630435.32463,"gdpY":2025,"gdppc":5796.472078609114,"elec":98.4,"elecY":2024,"water":92.28,"waterY":2024,"san":83.13,"sanY":2024,"urb":77.63,"noElec":8437,"noWater":40710,"noSan":88960,"urbanPop":409363},{"iso":"STP","ja":"サントメ・プリンシペ","en":"São Tomé and Príncipe","region":"中部","landlocked":false,"pop":240254,"gdp":981293586.906408,"gdpY":2025,"gdppc":4084.4006214523292,"elec":77.7,"elecY":2024,"water":77.96,"waterY":2024,"san":48.68,"sanY":2024,"urb":69.17,"noElec":53577,"noWater":52952,"noSan":123298,"urbanPop":166184},{"iso":"SYC","ja":"セーシェル","en":"Seychelles","region":"東部","landlocked":false,"pop":122730,"gdp":2387022853.48583,"gdpY":2025,"gdppc":19449.38363469266,"elec":100,"elecY":2024,"water":97.73,"waterY":2024,"san":99.7,"sanY":2024,"urb":45.48,"noElec":0,"noWater":2786,"noSan":368,"urbanPop":55818}],"cities":[{"iso":"DZA","ja":"アルジェ","en":"Algiers","lat":36.7538,"lon":3.0588,"kind":"capital"},{"iso":"EGY","ja":"カイロ","en":"Cairo","lat":30.0444,"lon":31.2357,"kind":"capital"},{"iso":"EGY","ja":"アレクサンドリア","en":"Alexandria","lat":31.2001,"lon":29.9187,"kind":"hub"},{"iso":"LBY","ja":"トリポリ","en":"Tripoli","lat":32.8872,"lon":13.1913,"kind":"capital"},{"iso":"MAR","ja":"ラバト","en":"Rabat","lat":34.0209,"lon":-6.8416,"kind":"capital"},{"iso":"MAR","ja":"カサブランカ","en":"Casablanca","lat":33.5731,"lon":-7.5898,"kind":"hub"},{"iso":"SDN","ja":"ハルツーム","en":"Khartoum","lat":15.5007,"lon":32.5599,"kind":"capital"},{"iso":"TUN","ja":"チュニス","en":"Tunis","lat":36.8065,"lon":10.1815,"kind":"capital"},{"iso":"BEN","ja":"ポルトノボ","en":"Porto-Novo","lat":6.4969,"lon":2.6289,"kind":"capital"},{"iso":"BEN","ja":"コトヌー","en":"Cotonou","lat":6.3703,"lon":2.3912,"kind":"hub"},{"iso":"BFA","ja":"ワガドゥグ","en":"Ouagadougou","lat":12.3714,"lon":-1.5197,"kind":"capital"},{"iso":"CPV","ja":"プライア","en":"Praia","lat":14.933,"lon":-23.5133,"kind":"capital"},{"iso":"CIV","ja":"ヤムスクロ","en":"Yamoussoukro","lat":6.8276,"lon":-5.2893,"kind":"capital"},{"iso":"CIV","ja":"アビジャン","en":"Abidjan","lat":5.36,"lon":-4.0083,"kind":"hub"},{"iso":"GMB","ja":"バンジュール","en":"Banjul","lat":13.4549,"lon":-16.579,"kind":"capital"},{"iso":"GHA","ja":"アクラ","en":"Accra","lat":5.6037,"lon":-0.187,"kind":"capital"},{"iso":"GIN","ja":"コナクリ","en":"Conakry","lat":9.6412,"lon":-13.5784,"kind":"capital"},{"iso":"GNB","ja":"ビサウ","en":"Bissau","lat":11.8636,"lon":-15.5977,"kind":"capital"},{"iso":"LBR","ja":"モンロビア","en":"Monrovia","lat":6.3005,"lon":-10.7969,"kind":"capital"},{"iso":"MLI","ja":"バマコ","en":"Bamako","lat":12.6392,"lon":-8.0029,"kind":"capital"},{"iso":"MRT","ja":"ヌアクショット","en":"Nouakchott","lat":18.0735,"lon":-15.9582,"kind":"capital"},{"iso":"NER","ja":"ニアメ","en":"Niamey","lat":13.5116,"lon":2.1254,"kind":"capital"},{"iso":"NGA","ja":"アブジャ","en":"Abuja","lat":9.0765,"lon":7.3986,"kind":"capital"},{"iso":"NGA","ja":"ラゴス","en":"Lagos","lat":6.5244,"lon":3.3792,"kind":"hub"},{"iso":"SEN","ja":"ダカール","en":"Dakar","lat":14.7167,"lon":-17.4677,"kind":"capital"},{"iso":"SLE","ja":"フリータウン","en":"Freetown","lat":8.4657,"lon":-13.2317,"kind":"capital"},{"iso":"TGO","ja":"ロメ","en":"Lomé","lat":6.1319,"lon":1.2228,"kind":"capital"},{"iso":"AGO","ja":"ルアンダ","en":"Luanda","lat":-8.839,"lon":13.2894,"kind":"capital"},{"iso":"CMR","ja":"ヤウンデ","en":"Yaoundé","lat":3.848,"lon":11.5021,"kind":"capital"},{"iso":"CMR","ja":"ドゥアラ","en":"Douala","lat":4.0511,"lon":9.7679,"kind":"hub"},{"iso":"CAF","ja":"バンギ","en":"Bangui","lat":4.3947,"lon":18.5582,"kind":"capital"},{"iso":"TCD","ja":"ンジャメナ","en":"N'Djamena","lat":12.1348,"lon":15.0557,"kind":"capital"},{"iso":"COG","ja":"ブラザビル","en":"Brazzaville","lat":-4.2634,"lon":15.2429,"kind":"capital"},{"iso":"COG","ja":"ポワントノワール","en":"Pointe-Noire","lat":-4.7761,"lon":11.8635,"kind":"hub"},{"iso":"COD","ja":"キンシャサ","en":"Kinshasa","lat":-4.4419,"lon":15.2663,"kind":"capital"},{"iso":"GNQ","ja":"マラボ","en":"Malabo","lat":3.7523,"lon":8.7742,"kind":"capital"},{"iso":"GAB","ja":"リーブルビル","en":"Libreville","lat":0.4162,"lon":9.4673,"kind":"capital"},{"iso":"STP","ja":"サントメ","en":"São Tomé","lat":0.3302,"lon":6.7333,"kind":"capital"},{"iso":"BDI","ja":"ギテガ","en":"Gitega","lat":-3.4271,"lon":29.9246,"kind":"capital"},{"iso":"BDI","ja":"ブジュンブラ","en":"Bujumbura","lat":-3.3614,"lon":29.3599,"kind":"hub"},{"iso":"COM","ja":"モロニ","en":"Moroni","lat":-11.7172,"lon":43.2473,"kind":"capital"},{"iso":"DJI","ja":"ジブチ市","en":"Djibouti","lat":11.5721,"lon":43.1456,"kind":"capital"},{"iso":"ERI","ja":"アスマラ","en":"Asmara","lat":15.3229,"lon":38.9251,"kind":"capital"},{"iso":"ETH","ja":"アディスアベバ","en":"Addis Ababa","lat":9.03,"lon":38.74,"kind":"capital"},{"iso":"KEN","ja":"ナイロビ","en":"Nairobi","lat":-1.2864,"lon":36.8172,"kind":"capital"},{"iso":"KEN","ja":"モンバサ","en":"Mombasa","lat":-4.0435,"lon":39.6682,"kind":"hub"},{"iso":"MDG","ja":"アンタナナリボ","en":"Antananarivo","lat":-18.8792,"lon":47.5079,"kind":"capital"},{"iso":"MWI","ja":"リロングウェ","en":"Lilongwe","lat":-13.9626,"lon":33.7741,"kind":"capital"},{"iso":"MUS","ja":"ポートルイス","en":"Port Louis","lat":-20.1609,"lon":57.5012,"kind":"capital"},{"iso":"MOZ","ja":"マプト","en":"Maputo","lat":-25.9692,"lon":32.5732,"kind":"capital"},{"iso":"RWA","ja":"キガリ","en":"Kigali","lat":-1.9441,"lon":30.0619,"kind":"capital"},{"iso":"SYC","ja":"ビクトリア","en":"Victoria","lat":-4.6191,"lon":55.4513,"kind":"capital"},{"iso":"SOM","ja":"モガディシュ","en":"Mogadishu","lat":2.0469,"lon":45.3182,"kind":"capital"},{"iso":"SSD","ja":"ジュバ","en":"Juba","lat":4.8594,"lon":31.5713,"kind":"capital"},{"iso":"TZA","ja":"ドドマ","en":"Dodoma","lat":-6.163,"lon":35.7516,"kind":"capital"},{"iso":"TZA","ja":"ダルエスサラーム","en":"Dar es Salaam","lat":-6.7924,"lon":39.2083,"kind":"hub"},{"iso":"UGA","ja":"カンパラ","en":"Kampala","lat":0.3476,"lon":32.5825,"kind":"capital"},{"iso":"ZMB","ja":"ルサカ","en":"Lusaka","lat":-15.3875,"lon":28.3228,"kind":"capital"},{"iso":"ZWE","ja":"ハラレ","en":"Harare","lat":-17.8252,"lon":31.0335,"kind":"capital"},{"iso":"BWA","ja":"ハボローネ","en":"Gaborone","lat":-24.6282,"lon":25.9231,"kind":"capital"},{"iso":"SWZ","ja":"ムババーネ","en":"Mbabane","lat":-26.3054,"lon":31.1367,"kind":"capital"},{"iso":"LSO","ja":"マセル","en":"Maseru","lat":-29.3151,"lon":27.4869,"kind":"capital"},{"iso":"NAM","ja":"ウィントフック","en":"Windhoek","lat":-22.5609,"lon":17.0658,"kind":"capital"},{"iso":"ZAF","ja":"プレトリア","en":"Pretoria","lat":-25.7479,"lon":28.2293,"kind":"capital"},{"iso":"ZAF","ja":"ヨハネスブルグ","en":"Johannesburg","lat":-26.2041,"lon":28.0473,"kind":"hub"},{"iso":"ZAF","ja":"ケープタウン","en":"Cape Town","lat":-33.9249,"lon":18.4241,"kind":"hub"},{"iso":"ZAF","ja":"ダーバン","en":"Durban","lat":-29.8587,"lon":31.0218,"kind":"hub"}]}</script>
+<script>
+(function(){
+"use strict";
+var DATA = JSON.parse(document.getElementById('afdata').textContent);
+var C = DATA.countries, CITIES = DATA.cities;
+var byIso = {}; C.forEach(function(c){ byIso[c.iso] = c; });
+
+// ---- helpers ----------------------------------------------------------
+function nf(n){ return Math.round(n).toLocaleString('en-US'); }
+function human(n){
+  if(n>=1e8) return (n/1e8).toFixed(2)+'億';
+  if(n>=1e4) return (n/1e4).toFixed(0)+'万';
+  return nf(n);
+}
+function usd(n){
+  if(n>=1e12) return '$'+(n/1e12).toFixed(2)+'T';
+  if(n>=1e9) return '$'+(n/1e9).toFixed(1)+'B';
+  if(n>=1e6) return '$'+(n/1e6).toFixed(0)+'M';
+  return '$'+nf(n);
+}
+function pct(n){ return n.toFixed(1)+'%'; }
+function band(v){
+  if(v<40) return '#b91c1c';
+  if(v<70) return '#b45309';
+  if(v<90) return '#2563EB';
+  return '#15803d';
+}
+function bar(v){
+  return '<span class="bar-bg"><i style="width:'+Math.max(0,Math.min(100,v))+'%;background:'+band(v)+'"></i></span>';
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, function(m){
+  return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m]; }); }
+
+// ---- ① KPI ------------------------------------------------------------
+var totPop = 0, noElec = 0, noWater = 0, noSan = 0, elecs = [];
+C.forEach(function(c){ totPop+=c.pop; noElec+=c.noElec; noWater+=c.noWater; noSan+=c.noSan; elecs.push(c.elec); });
+elecs.sort(function(a,b){return a-b;});
+var med = elecs.length%2 ? elecs[(elecs.length-1)/2] : (elecs[elecs.length/2-1]+elecs[elecs.length/2])/2;
+document.getElementById('kpi').innerHTML =
+  card('対象', '54カ国', '首都54＋経済・港湾都市13＝67都市') +
+  card('総人口', human(totPop)+'人', '世界銀行 2025年') +
+  card('無電化人口', human(noElec)+'人', '電力アクセス率の中央値 '+pct(med)) +
+  card('基本的衛生が未充足', human(noSan)+'人', '基本的飲料水の未充足は '+human(noWater)+'人');
+function card(k,v,s){
+  return '<div class="card"><div class="k">'+k+'</div><div class="v">'+v+
+         '<small><br>'+s+'</small></div></div>';
+}
+
+// ---- ② map ------------------------------------------------------------
+var map = null, markers = {};
+if (typeof L === 'undefined') {
+  document.getElementById('map').style.display = 'none';
+  document.getElementById('mapFallback').style.display = 'block';
+} else {
+  map = L.map('map', {scrollWheelZoom:true}).setView([2.0, 19.0], 3);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 12, attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+  CITIES.forEach(function(ct, i){
+    var c = byIso[ct.iso];
+    var m = L.circleMarker([ct.lat, ct.lon], {
+      radius: ct.kind === 'capital' ? 7 : 5,
+      color: '#fff', weight: ct.kind === 'capital' ? 2 : 1,
+      fillColor: band(c.elec), fillOpacity: 0.9
+    }).addTo(map);
+    m.bindTooltip(ct.ja + ' / ' + c.ja, {direction:'top'});
+    m.on('click', function(){ showCity(i); });
+    markers[i] = m;
+  });
+}
+
+// ---- ③ detail ---------------------------------------------------------
+function showCity(i){
+  var ct = CITIES[i], c = byIso[ct.iso];
+  var kind = ct.kind === 'capital' ? '首都' : '経済・港湾都市';
+  var h = '<div class="dt-head"><h3>'+esc(ct.ja)+'</h3>'+
+    '<span class="sub">'+esc(ct.en)+' · '+esc(c.ja)+'（'+esc(c.en)+'） · '+kind+
+    ' · '+c.region+'アフリカ · '+(c.landlocked?'内陸国':'沿岸国')+
+    ' · '+ct.lat.toFixed(4)+', '+ct.lon.toFixed(4)+'</span></div>';
+  h += '<p class="lead" style="margin:2px 0 0">以下は<strong>'+esc(c.ja)+'全体</strong>の指標であり、'+esc(ct.ja)+'単体の値ではない。</p>';
+  h += '<div class="dt-grid">'+
+    dc('人口', human(c.pop)+'人', '2025年') +
+    dc('名目GDP', usd(c.gdp), c.gdpY+'年') +
+    dc('1人当たりGDP', '$'+nf(c.gdppc), c.gdpY+'年 / 人口2025年で算出') +
+    dc('都市化率', pct(c.urb), '2025年 · 都市人口 '+human(c.urbanPop)+'人') +
+    dc('電力アクセス率', pct(c.elec), c.elecY+'年') +
+    dc('無電化人口', human(c.noElec)+'人', '算出値') +
+    dc('基本的飲料水', pct(c.water), c.waterY+'年') +
+    dc('水 未充足人口', human(c.noWater)+'人', '算出値') +
+    dc('基本的衛生', pct(c.san), c.sanY+'年') +
+    dc('衛生 未充足人口', human(c.noSan)+'人', '算出値') +
+    dc('大陸内の人口順位', '第'+(C.findIndex(function(x){return x.iso===ct.iso;})+1)+'位', '54カ国中') +
+    dc('同国の掲載都市', CITIES.filter(function(x){return x.iso===ct.iso;}).map(function(x){return x.ja;}).join('、'), '') +
+  '</div>';
+  document.getElementById('detail').innerHTML = h;
+  if (map) { map.setView([ct.lat, ct.lon], Math.max(map.getZoom(), 5)); markers[i].openTooltip(); }
+  var tb = document.querySelector('#cityTbl tbody');
+  Array.prototype.forEach.call(tb.rows, function(r){ r.classList.toggle('sel', +r.dataset.i === i); });
+  document.getElementById('detail').scrollIntoView({behavior:'smooth', block:'center'});
+}
+function dc(k,v,y){
+  return '<div class="c"><div class="k">'+k+'</div><div class="v">'+v+'</div>'+
+         (y?'<div class="y">'+y+'</div>':'')+'</div>';
+}
+
+// ---- city table -------------------------------------------------------
+var cityQ = document.getElementById('cityQ');
+function renderCities(){
+  var q = cityQ.value.trim().toLowerCase();
+  var tb = document.querySelector('#cityTbl tbody');
+  var html = '', n = 0;
+  CITIES.forEach(function(ct, i){
+    var c = byIso[ct.iso];
+    var kind = ct.kind === 'capital' ? '首都' : '経済・港湾';
+    var hay = (ct.ja+ct.en+c.ja+c.en+c.region+kind+(ct.kind==='hub'?'港湾':'')).toLowerCase();
+    if (q && hay.indexOf(q) === -1) return;
+    n++;
+    html += '<tr data-i="'+i+'"><td>'+esc(ct.ja)+'</td><td>'+esc(ct.en)+'</td><td>'+esc(c.ja)+
+      '</td><td>'+c.region+'</td><td>'+kind+'</td><td class="num">'+ct.lat.toFixed(4)+
+      '</td><td class="num">'+ct.lon.toFixed(4)+'</td></tr>';
+  });
+  tb.innerHTML = html;
+  document.getElementById('cityCount').textContent = n + ' / ' + CITIES.length + ' 都市';
+  Array.prototype.forEach.call(tb.rows, function(r){
+    r.style.cursor = 'pointer';
+    r.onclick = function(){ showCity(+r.dataset.i); };
+  });
+}
+cityQ.addEventListener('input', renderCities);
+renderCities();
+
+// ---- ④ country table --------------------------------------------------
+var REGIONS = ['北部','西部','中部','東部','南部'];
+var activeRegions = {}, llOnly = false;
+var sortKey = 'pop', sortDir = -1;
+var chipBox = document.getElementById('regionChips');
+REGIONS.forEach(function(r){
+  var b = document.createElement('button');
+  b.className = 'chip'; b.textContent = r + 'アフリカ';
+  b.onclick = function(){
+    activeRegions[r] = !activeRegions[r];
+    b.classList.toggle('on', !!activeRegions[r]);
+    renderCountries();
+  };
+  chipBox.appendChild(b);
+});
+var llBtn = document.getElementById('llToggle');
+llBtn.onclick = function(){ llOnly = !llOnly; llBtn.classList.toggle('on', llOnly); renderCountries(); };
+var ctryQ = document.getElementById('ctryQ');
+ctryQ.addEventListener('input', renderCountries);
+Array.prototype.forEach.call(document.querySelectorAll('#ctryTbl th.sortable'), function(th){
+  th.onclick = function(){
+    var k = th.dataset.k;
+    if (sortKey === k) sortDir = -sortDir; else { sortKey = k; sortDir = (k==='ja'||k==='region') ? 1 : -1; }
+    renderCountries();
+  };
+});
+function renderCountries(){
+  var q = ctryQ.value.trim().toLowerCase();
+  var anyRegion = REGIONS.some(function(r){ return activeRegions[r]; });
+  var rows = C.filter(function(c){
+    if (anyRegion && !activeRegions[c.region]) return false;
+    if (llOnly && !c.landlocked) return false;
+    if (q && (c.ja+c.en+c.iso).toLowerCase().indexOf(q) === -1) return false;
+    return true;
+  });
+  rows.sort(function(a,b){
+    var x = a[sortKey], y = b[sortKey];
+    if (typeof x === 'string') return x.localeCompare(y, 'ja') * sortDir;
+    return (x - y) * sortDir;
+  });
+  var tb = document.querySelector('#ctryTbl tbody');
+  tb.innerHTML = rows.map(function(c){
+    return '<tr><td>'+esc(c.ja)+(c.landlocked?' <span style="color:#b45309;font-size:11px">内陸</span>':'')+
+      '</td><td>'+c.region+'</td>'+
+      '<td class="num">'+human(c.pop)+'</td>'+
+      '<td class="num">'+nf(c.gdppc)+'</td>'+
+      '<td class="num">'+bar(c.elec)+pct(c.elec)+'</td>'+
+      '<td class="num">'+human(c.noElec)+'</td>'+
+      '<td class="num">'+bar(c.water)+pct(c.water)+'</td>'+
+      '<td class="num">'+human(c.noWater)+'</td>'+
+      '<td class="num">'+bar(c.san)+pct(c.san)+'</td>'+
+      '<td class="num">'+human(c.noSan)+'</td>'+
+      '<td class="num">'+pct(c.urb)+'</td></tr>';
+  }).join('');
+  Array.prototype.forEach.call(document.querySelectorAll('#ctryTbl th.sortable'), function(th){
+    th.classList.remove('asc','desc');
+    if (th.dataset.k === sortKey) th.classList.add(sortDir > 0 ? 'asc' : 'desc');
+  });
+  document.getElementById('ctryCount').textContent = rows.length + ' / 54 カ国';
+}
+renderCountries();
+
+// ---- ⑤ gap ranking ----------------------------------------------------
+var GAPS = [
+  {k:'noElec', rate:'elec', label:'電力', tot:noElec},
+  {k:'noWater', rate:'water', label:'基本的飲料水', tot:noWater},
+  {k:'noSan', rate:'san', label:'基本的衛生', tot:noSan}
+];
+var gapIdx = 0;
+var gapBox = document.getElementById('gapChips');
+GAPS.forEach(function(g, i){
+  var b = document.createElement('button');
+  b.className = 'chip' + (i === 0 ? ' on' : ''); b.textContent = g.label;
+  b.onclick = function(){
+    gapIdx = i;
+    Array.prototype.forEach.call(gapBox.children, function(x, j){ x.classList.toggle('on', i === j); });
+    renderGap();
+  };
+  gapBox.appendChild(b);
+});
+function renderGap(){
+  var g = GAPS[gapIdx];
+  var rows = C.slice().sort(function(a,b){ return b[g.k] - a[g.k]; }).slice(0, 10);
+  var top10 = rows.reduce(function(s,c){ return s + c[g.k]; }, 0);
+  document.querySelector('#gapTbl tbody').innerHTML = rows.map(function(c, i){
+    var sh = c[g.k] / g.tot * 100;
+    return '<tr><td class="num">'+(i+1)+'</td><td>'+esc(c.ja)+'</td>'+
+      '<td class="num">'+human(c[g.k])+'人</td>'+
+      '<td>'+bar(sh)+sh.toFixed(1)+'%</td>'+
+      '<td class="num">'+pct(c[g.rate])+'</td>'+
+      '<td class="num">'+human(c.pop)+'</td></tr>';
+  }).join('');
+  document.getElementById('gapNote').innerHTML =
+    '<strong>'+g.label+'：</strong>大陸全体の未充足人口 '+human(g.tot)+'人のうち、上位10カ国で <strong class="hit">'+
+    (top10/g.tot*100).toFixed(1)+'%</strong>（'+human(top10)+'人）を占める。'+
+    '需要は普及率の低い国ではなく、人口の大きい国に集中している。';
+}
+renderGap();
+})();
+</script>
 </body>
 </html>

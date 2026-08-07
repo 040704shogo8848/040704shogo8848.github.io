@@ -150,7 +150,16 @@ function frontMatter(src) {
 
 // ─── page ────────────────────────────────────────────────────────────────────
 
+// Chapters are written from research notes. Whether a second pass checked the
+// numbers against their sources is a fact about the page, so the page says it.
+// Front matter carries `verified: true` once that pass has run; until then the
+// notice stands. Silence would read as "checked".
+const UNVERIFIED = `<p class="tb-warn"><strong>この章はまだ出典照合を通していない。</strong>
+数値は執筆時に調べたまま入っており、第三者による検証を経ていない。
+本文中の出典リンクから各自で確かめること。</p>`;
+
 function page(meta, body, headings, nav) {
+  const verified = String(meta.verified ?? '').toLowerCase() === 'true';
   const toc = headings.length
     ? `<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol>${headings
         .map((h) => `<li><a href="#${h.id}">${esc(h.text)}</a></li>`).join('')}</ol></nav>`
@@ -182,7 +191,10 @@ function page(meta, body, headings, nav) {
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
   h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
   .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 26px}
+    padding:6px 0 6px 14px;margin:0 0 22px}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
     padding:16px 20px;margin:0 0 34px}
@@ -236,6 +248,8 @@ function page(meta, body, headings, nav) {
   <h1>${esc(meta.title)}</h1>
   <p class="tb-thesis">${esc(meta.thesis)}</p>
 
+${verified ? '' : UNVERIFIED}
+
 ${toc}
 
 ${body}
@@ -261,21 +275,30 @@ const INDEX_STYLE = `<style>
 .tbk-t{font-size:15px;font-weight:600;color:#1a1a1a;letter-spacing:-.01em;margin-top:2px}
 .tbk-item:hover .tbk-t{color:#2563EB}
 .tbk-s{font-size:13px;color:#666;margin-top:4px}
+.tbk-warn{font-size:12.5px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+  border-radius:8px;padding:10px 14px;margin:0 0 14px;line-height:1.7}
+.tbk-b{display:inline-block;font-size:10px;letter-spacing:.06em;color:#7A4A00;
+  background:#FDF6E7;border:1px solid #EBD9AE;border-radius:4px;padding:0 6px;margin-left:8px}
 </style>`;
 
 function indexBlock(chapters) {
   const items = chapters.map((c) => `    <a class="tbk-item" href="chapters/${esc(c.file)}">
-      <div class="tbk-n">CHAPTER ${esc(c.chapter)}</div>
+      <div class="tbk-n">CHAPTER ${esc(c.chapter)}${c.verified ? '' : '<span class="tbk-b">未検証</span>'}</div>
       <div class="tbk-t">${esc(c.title)}</div>
       <div class="tbk-s">${esc(c.thesis)}</div>
     </a>`).join('\n');
+
+  const n = chapters.filter((c) => !c.verified).length;
+  const warn = n
+    ? `  <p class="tbk-warn">${n} 章はまだ出典照合を通していない。数値は執筆時に調べたまま入っている。各章の出典リンクから確かめること。</p>\n`
+    : '';
 
   return `${START}
 ${INDEX_STYLE}
 <section class="tbk">
   <h2>教科書</h2>
   <p class="tbk-lead">上の論点に答えを出して章にまとめたもの。前の章が後の章の前提になる順に並べてある。</p>
-  <div class="tbk-list">
+${warn}  <div class="tbk-list">
 ${items}
   </div>
 </section>
@@ -348,7 +371,9 @@ for (const [section, list] of Object.entries(bySection)) {
 
   const manifest = list.map((x, k) => ({
     chapter: Number(x.meta.chapter), slug: x.meta.slug, title: x.meta.title,
-    thesis: x.meta.thesis ?? '', file: files[k],
+    thesis: x.meta.thesis ?? '',
+    verified: String(x.meta.verified ?? '').toLowerCase() === 'true',
+    file: files[k],
   }));
   await writeFile(path.join(dir, 'data', 'chapters.json'), JSON.stringify(manifest, null, 2) + '\n');
 

@@ -3,6 +3,26 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "ログラス",
+    "fullName": "株式会社ログラス",
+    "ticker": null,
+    "market": null,
+    "country": "JP",
+    "status": "private",
+    "cohort": "shosha-cvc",
+    "tags": [
+      "SaaS",
+      "経営管理",
+      "FP&A",
+      "商社CVC"
+    ],
+    "date": "2026-08-07",
+    "summary": "経営企画部門のExcelを置き換える経営管理クラウド。2024年7月のシリーズB 70億円をSequoia HeritageとALL STAR SAAS FUNDが共同リードし、住商ベンチャー・パートナーズが14社のうち1社として参加した。累計調達額100億円、従業員344名（2026年5月）。事業シナジーを前提としない財務リターン型の商社出資の典型例。",
+    "sourceCount": 10,
+    "variant": "startup-case",
+    "file": "reports/loglass_research_260807.html"
+  },
+  {
     "company": "EVERSTEEL",
     "fullName": "株式会社EVERSTEEL",
     "ticker": null,

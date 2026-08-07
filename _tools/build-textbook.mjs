@@ -35,10 +35,12 @@ const DIR = {
   industry: '010_research/014_industry',
   finance: '010_research/016_finance',
   science: '010_research/017_science',
+  computing: '010_research/018_computing',
 };
 const LABEL = {
   company: '企業・スタートアップ', politics: '政治・政策', geo: '地域・地政学',
-  industry: '業界構造・技術', finance: '市場・資本・マクロ', science: '科学・数学',
+  industry: '業界構造・製造', finance: '市場・資本・マクロ', science: '科学・数学',
+  computing: '計算とソフトウェア',
 };
 
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

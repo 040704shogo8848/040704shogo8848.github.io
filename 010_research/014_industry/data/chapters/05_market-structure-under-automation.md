@@ -1,6 +1,6 @@
 ---
 section: industry
-chapter: 6
+chapter: 5
 slug: market-structure-under-automation
 title: 自動化が入る市場の構造
 thesis: AIが入っても市場構造は自動化率ではなく参入障壁の所在で決まり、置き換わるのは業務そのものではなく課金単位である。

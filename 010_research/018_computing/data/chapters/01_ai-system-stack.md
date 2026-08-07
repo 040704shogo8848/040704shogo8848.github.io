@@ -1,6 +1,6 @@
 ---
-section: industry
-chapter: 5
+section: computing
+chapter: 1
 slug: ai-system-stack
 title: AIシステムの層構造
 thesis: 生成AIの実用性能は基盤モデルの規模ではなく、事後学習・検索・状態管理という周辺層の設計で決まり、失敗はモデル本体ではなく層の接合部で起きる。

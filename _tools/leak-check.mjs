@@ -117,7 +117,12 @@ const allowed = [];
 for (const abs of targets) {
   // The scanner's own rule list is full of the strings it looks for.
   if (abs === fileURLToPath(import.meta.url)) continue;
-  if (!(await stat(abs)).isFile()) continue;
+  // pre-push feeds this `git ls-files`, which still lists a file whose deletion
+  // has not been staged yet. A file that is not there cannot leak, so skip it
+  // rather than crashing and reporting the gate as failed for the wrong reason.
+  let st;
+  try { st = await stat(abs); } catch { continue; }
+  if (!st.isFile()) continue;
 
   const file = path.relative(ROOT, abs).split(path.sep).join('/');
   const lines = (await readFile(abs, 'utf8')).split('\n');

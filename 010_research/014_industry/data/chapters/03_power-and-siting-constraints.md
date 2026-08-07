@@ -1,0 +1,323 @@
+---
+section: industry
+chapter: 3
+slug: power-and-siting-constraints
+title: 計算需要を支える物理層
+thesis: AI需要の律速はチップではなく、送電網・変圧器・水・排熱という調達リードタイムが年単位の物理資産に移り、その増設速度は制度設計が決めている。
+---
+
+AIの議論はチップの供給で止まりがちである。しかし完成したチップを箱に詰めても、電気が来なければ1トークンも出力しない。米国では2025年末時点で2,060GW超の発電・蓄電容量が系統接続を待っており、2025年に運転開始した案件では接続申込から商業運転までの期間の中央値が5年を超えた[出典](https://emp.lbl.gov/queues)。大型電力用変圧器の納期は2025年第2四半期の米国調査で128週である[出典](https://www.powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/)。半導体の設計サイクルが2年前後で回るのに対し、電気を運ぶ側の資産は年単位でしか増えない。この時間差を知らないまま計算需要の伸びを語ると、供給されない電力を前提に計画を立てることになる。この章は、その物理層がどこで詰まり、誰の意思決定がその速度を決めているかを扱う。
+
+## 需要ショックの歪みは発電量ではなく系統に出る
+
+まず規模感を正しく置く。世界のデータセンター電力消費は2024年で415TWh、世界電力消費の約1.5%である[出典](https://www.iea.org/reports/energy-and-ai/executive-summary)。2030年には約945TWh、世界電力消費の3%弱になる見通しである[出典](https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai)。国際エネルギー機関の整理では、データセンターは2030年までの世界電力需要増の約1割にとどまり、産業用モーター、家庭とオフィスの空調、電気自動車のいずれよりも小さい。世界の電力システムを壊す規模ではない。
+
+一方で米国だけを見ると様相が変わる。米国のデータセンター電力消費は2018年の76TWhから2023年の176TWhへ増え、米国電力消費に占める比率は1.9%から4.4%になった[出典](https://escholarship.org/uc/item/32d6m0d1)。2018年から2023年の年平均成長率は18%である。2014年から2016年は約60TWhで横ばいだった。効率改善が需要増を吸収した時期が実在し、2017年以降にそれが止まった。効率戦略が失敗したのではなく、GPU加速サーバーの増加が効率改善の速度を上回った。
+
+歪みは全国平均の需給ではなく、局所指標に先に出る。順序は次の4つである。
+
+第一に容量価格である。PJMの2025/2026年度基本容量オークションはRTO全域で269.92ドル/MW-dayで清算し、前年度の28.92ドル/MW-dayの9.3倍になった。需要側の総費用は22億ドルから147億ドルへ増えた[出典](https://www.pjm.com/-/media/DotCom/markets-ops/rpm/rpm-auction-info/2025-2026/2025-2026-base-residual-auction-report.pdf)。同じオークションで、バージニア州のデータセンター集積地を含むDOM区域は444.26ドル/MW-dayで清算した。全域価格の1.65倍である。全国平均に余裕があっても区域で足りないという構図が、価格に先に現れた。
+
+第二に系統接続の待ち行列である。国際エネルギー機関は、系統接続の遅延によって計画中のデータセンターの約20%がリスクにさらされるとし、先進国での送電インフラ建設に4年から8年かかるとしている[出典](https://www.iea.org/reports/energy-and-ai/executive-summary)。米国の待ち行列の実績値はさらに厳しい。2000年から2020年に接続申込を出した容量のうち、2025年末までに商業運転へ到達したのは13%で、75%は取り下げられた[出典](https://emp.lbl.gov/queues)。
+
+第三に燃料構成である。2024年から2030年にかけて、データセンターの追加需要の40%超を天然ガスと石炭が満たす見通しであり、米国では天然ガスが130TWh超と最大の増分を担う[出典](https://www.iea.org/reports/energy-and-ai/energy-supply-for-ai)。
+
+第四に一国単位の構成比である。アイルランドではデータセンターが計量済み電力消費の22%を占める。2015年は5%で、17ポイント上昇した。同期間に都市部住宅の比率は22%から18%へ下がった[出典](https://www.cso.ie/en/releasesandpublications/ep/p-dcmec/datacentresmeteredelectricityconsumption2024/)。ここまで来ると、電力は技術問題ではなく誰に配分するかという政治問題になる。
+
+先例としては暗号資産マイニングが速度と可視性の点で近い。米国エネルギー情報局は2023年の米国内マイニング電力消費を25TWhから91TWhと推計した。推計幅が3.6倍あることが、この種の需要の把握しにくさを示す。同時に21州の137施設を個別に特定し、うち101施設で合計10,275MWの容量を確認している[出典](https://www.eia.gov/todayinenergy/detail.php?id=61364)。総量が推計でしか出せない一方、個別施設は特定できる。データセンター需要の予測が広い幅を持つ理由も同じ構造にある。
+
+もう1つの先例は予測が外れた側にある。ワシントン公営電力供給システムは1970年代に大型原子力5基の建設に着手し、コスト超過と需要成長の鈍化により1982年に2基を中止、1983年7月に22.5億ドルの地方債を債務不履行にした[出典](https://en.wikipedia.org/wiki/Washington_Public_Power_Supply_System)。この出典は二次資料であり、当時の需要予測の前提成長率は確認できていない。需要予測に先行して電源を建てる構造が、需要鈍化時に費用回収の主体を欠くという型だけを取り出しておく。
+
+## 高電圧送電と変電階層の仕組み
+
+送電線で失われる電力は、電流の2乗と抵抗の積で決まる。送る電力が一定なら電流は電圧に反比例するので、損失は電圧の2乗に反比例する。電圧を2倍にすれば損失は4分の1になる。日本の電力系統が275,000Vから500,000Vという電圧で送るのはこのためである[出典](https://www.fepc.or.jp/resource_sw/INFOBASE_2025_b.pdf)。
+
+ここで誤解が生じやすい。高電圧化の直接の効果は容量拡大ではなく損失削減である。送れる量そのものは電圧と電流の積で決まる。
+
+日本の系統は発電所出口で275,000Vから500,000Vに昇圧され、超高圧変電所、一次変電所の154,000V、中間変電所の66,000Vと22,000V、配電用変電所の3,300Vから6,600V、柱上変圧器の100Vと200Vへと段階的に降圧される[出典](https://www.fepc.or.jp/resource_sw/INFOBASE_2025_b.pdf)。この階層は効率のためだけにあるのではない。電圧階級ごとに接続できる需要家の規模が決まる。一次変電所からは鉄道と大工場が154,000Vで直接受電し、中間変電所からは大工場とビルが受電する。電圧階層は顧客セグメントの階層でもある。大規模データセンターがどの階層に接続するかで、必要な設備も工期も変わる。
+
+500,000Vより上の交流送電が日本で実用化されていない理由は物理の限界ではない。昇圧の便益は電圧の2乗で効くが、便益の絶対額は単位長さあたりの損失削減に亘長を掛けたものである。距離が短ければ削減できる絶対額は小さい。日本の送電線亘長は2024年度で架空88,567km、地中27,590kmであり、これが10エリアに分散している[出典](https://www.fepc.or.jp/resource_sw/INFOBASE_2025_b.pdf)。1本のルートで1,000km級の区間は限られる。他方で昇圧のコストは絶縁距離、鉄塔寸法、碍子連数、変圧器と遮断器の仕様に効き、電圧に対して単調に増える。距離が短い系統では増分コストが便益を上回る。
+
+日本で最長の広域送電ニーズが生じた北海道と本州の間では、交流のさらなる昇圧ではなく海底直流送電が選ばれた。長距離かつ海底という条件では充電電流の問題から交流ケーブルが成立しにくい。500,000Vより上の答えは超高圧交流ではなく直流に向かった。
+
+なお、1000kV設計で建設された基幹送電線が500kV運用にとどまっているという広く流通した理解については、ノート作成時点で一次資料を取得できていない。断定はしない。
+
+いま不足しているのは変電所単体ではなく、地域間連系線を含む基幹送電網である。電気事業連合会は容量面の系統制約を、送電線の容量不足、変電設備の容量不足、配電線の容量不足の3つとして並列に図示している[出典](https://www.fepc.or.jp/resource_sw/INFOBASE_2025_g.pdf)。どれか1つだけが足りないという構図ではない。投資の重心で判断すると、2023年3月29日策定の広域連系系統のマスタープランの必要投資額は概算で約6.0兆円から7.0兆円であり、エリア間の合計が約4.0兆円から5.0兆円、エリア内の合計が約2.7兆円である。エリア間はエリア内の1.5倍から1.9倍にあたる。最大の項目は北海道から東北を経て東京への新設で約2.5兆円から3.4兆円である[出典](https://www.fepc.or.jp/resource_sw/INFOBASE_2025_g.pdf)。ただし内訳の単純合計は約6.7兆円から7.7兆円となり、公表総額と一致しない。いずれも概算値である。
+
+停電の原因が容量不足だという理解も実績に合わない。2024年度の電気事故は10電力計で14,518件、最多原因は他物接触と鳥獣の4,613件、次いで設備不備と保守不備の2,756件、風雨と水害の2,584件である。需給不足も系統容量超過も原因分類に存在しない。停電実績は1軒あたり年間0.13回、24分である[出典](https://www.fepc.or.jp/resource_sw/INFOBASE_2025_b.pdf)。
+
+では容量超過はどこに出るのか。出力制御である。優先給電ルールは、揚水運転による吸収と火力の出力制御、連系線を活用した他地域への送電、バイオマスの出力制御、太陽光と風力の出力制御という順序を定める[出典](https://www.fepc.or.jp/resource_sw/INFOBASE_2025_g.pdf)。容量が足りないときに落とされるのは需要家ではなく発電側である。系統容量超過のコストは停電ではなく、捨てられる電気として発電事業者に転嫁される。
+
+送電の物理層に革命が起きにくいのは、制約が導体の性能ではなく工期と許認可にあるためである。運用層は別である。国際エネルギー機関は、AIを用いた系統運用ツールを適用すれば新規送電線を1本も建設せずに最大175GWの送電容量を解放できるとしている[出典](https://www.iea.org/reports/energy-and-ai/executive-summary)。同じ報告書が示す米国データセンター需要の2024年から2030年の増分240TWhは、8760時間で割ると平均27.4GWに相当する。175GWはこれを大きく上回る。ただし175GWは世界全体の数字であり、地域別内訳は確認できていない。既設線の熱容量と潮流制御で吸収するアプローチが、新設に比べて時間軸の短い打ち手である。
+
+## 変圧器の納期がボトルネック化した要因
+
+系統増強の遅れは、送電線の建設だけでなく機器調達で起きている。ここで詰まっているのが変圧器である。
+
+まず納期の実測値を機種別に置く。混ぜて語ると打ち手を誤る。
+
+| 機種 | リードタイム | 時点 | 出典URL |
+| --- | --- | --- | --- |
+| 発電機昇圧変圧器 | 144週 | 2025年Q2 | https://www.powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/ |
+| 電力用変圧器 | 128週 | 2025年Q2 | https://www.powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/ |
+| 開閉装置 | 44週 | 2025年Q2 | https://www.powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/ |
+| 配電用変圧器 | 30週 | 2025年Q2 | https://www.woodmac.com/press-releases/power-transformers-and-distribution-transformers-will-face-supply-deficits-of-30-and-10-in-2025/ |
+
+電力用と配電用でリードタイムは4倍以上違う。2025年の供給不足率も電力用が30%、配電用が10%と3倍の開きがある[出典](https://www.woodmac.com/press-releases/power-transformers-and-distribution-transformers-will-face-supply-deficits-of-30-and-10-in-2025/)。データセンターと基幹送電の議論は電力用、住宅と商業の配電網更新の議論は配電用である。国際エネルギー機関の2024年サプライヤー調査では、大型電力用変圧器のリードタイムは2021年から2022年の平均比で1.8倍に伸び、特殊仕様では4年に達する[出典](https://iea.blob.core.windows.net/assets/6fbf940a-d4e8-4156-b8e0-07c2f793c094/BuildingtheFutureTransmissionGrid.pdf)。
+
+128週を製造期間だと理解すると対策を誤る。実際には製造着手までの待ち行列が大部分を占める。買い手が予約しているのは製品ではなく製造スロットである。
+
+供給側は集中している。10MVA超の電力用変圧器の世界貿易額は2023年で135億USドル、中国・韓国・トルコ・イタリアの4か国で世界貿易額の50%を占め、中国単独で4分の1である[出典](https://iea.blob.core.windows.net/assets/6fbf940a-d4e8-4156-b8e0-07c2f793c094/BuildingtheFutureTransmissionGrid.pdf)。米国市場では2025年時点で電力用変圧器の80%、配電用変圧器の50%が輸入とみられる[出典](https://www.woodmac.com/press-releases/power-transformers-and-distribution-transformers-will-face-supply-deficits-of-30-and-10-in-2025/)。
+
+なぜ増産が効かないのか。制約は設備、人材、素材の3つすべてに存在するが、効き方の順序が違う。
+
+設備が第一の律速である。変圧器工場は乾燥炉と高電圧試験設備を要する専用設備で、新設に3年から4年かかる。しかも物理的な建設期間の前に、投資判断が止まる区間がある。国際エネルギー機関は、メーカーが将来需要の規模に不確実性を見ており、新設能力の稼働率を確保できると確信するには長期の受注可視性が要ると整理している。2010年代の系統投資停滞期に能力を絞った経験が、ブームの持続性への疑いを残している。この構造を崩すために買い手側が長期枠組み契約へ移りつつあり、従来2年から3年だった枠組み契約の期間は大型機器で5年程度まで伸びている。
+
+人材が第二である。世界で系統の建設・保守・運用に従事するのは約800万人で、現行政策前提でも2030年までに150万人の追加が必要と見積もられている[出典](https://iea.blob.core.windows.net/assets/6fbf940a-d4e8-4156-b8e0-07c2f793c094/BuildingtheFutureTransmissionGrid.pdf)。工場を建てる側にも熟練労働が要るため、人材不足は設備投資そのものの制約にもなる。
+
+素材が第三である。方向性電磁鋼板は変圧器コアに使われ、単体で総コストの20%超を占める。銅とアルミと絶縁材を足すと材料費は総コストの50%超になる。方向性電磁鋼板の価格は2021年から2023年半ばにかけて2倍になった。要因は変圧器需要の増加に加え、電気自動車モーター用の無方向性電磁鋼板へ生産を振り向けたメーカーが出たことである。ここで注意すべきは、素材はグローバルには価格制約として効いており、数量が世界の生産台数を直接止めているという記述は国際エネルギー機関の報告書に見当たらないことである。
+
+ただし米国は例外である。方向性電磁鋼板の国内生産者はクリーブランド・クリフスのバトラー工場1社に限られる[出典](https://www.clevelandcliffs.com/operations/steelmaking/butler-works)。この単一供給源が規制判断を動かした。米国エネルギー省は2024年4月4日の配電用変圧器の省エネ基準最終規則で、当初案では市場の約95%をアモルファス合金へ移行させる内容を、約75%が方向性電磁鋼板のままで基準を満たせる形に修正し、遵守期限も3年から5年に延ばした[出典](https://www.energy.gov/articles/doe-finalizes-energy-efficiency-standards-distribution-transformers-protect-domestic)。規制当局が供給制約を悪化させない側に舵を切った事例である。
+
+需給の逼迫度は受注残に最もよく現れる。シーメンスエナジーのグリッドテクノロジーズ部門の受注残は2025会計年度末で420億ユーロである[出典](https://www.siemens-energy.com/global/en/home/press-releases/earnings-release-q4-fy-2025.html)。GEベルノバの電化部門の機器受注残は2026年6月30日締めの四半期末で406億USドル、前年同期比69%増である[出典](https://www.gevernova.com/sites/default/files/gev_webcast_pressrelease_07222026.pdf)。増産投資も動いてはいる。2023年以降に北米で発表された変圧器製造能力への投資は合計で約18億USドルにのぼる。ただしこれらが稼働するのは2027年から2028年である。発表と稼働の間に3年前後の空白がある以上、2026年から2027年の需給は緩まない。
+
+## 総括原価からレベニューキャップへ、三層市場は投資を引き出せるか
+
+物理資産が年単位でしか増えないなら、次の問いは誰がその投資に踏み切るのかになる。答えは制度が決めている。
+
+日本の送配電料金は2023年度に総括原価方式からレベニューキャップ方式へ移行した。電気事業法第17条の2第1項は、一般送配電事業者が省令で定める期間ごとに、業務を能率的かつ適正に運営するために通常必要と見込まれる収入を算定し、経済産業大臣の承認を受けることを定める[出典](https://laws.e-gov.go.jp/api/1/lawdata/339AC0000000170)。承認された収入上限の範囲内で単価を設定するため、費用を削れば差額が事業者に残る。設計の前提は、5年間の規制期間中に収入上限を動かさないことだった。
+
+制度の入口ではインセンティブが働いた。関西電力送配電の第一規制期間の承認収入上限は7,154億円/年で、前回の料金改定時の7,123億円/年から31億円の増加にとどまった。見積費用には551億円/年の効率化額が織り込まれ、内訳は要員効率化58億円、資機材調達218億円、工事275億円である[出典](https://www.kansai-td.co.jp/new-consignment-fee/index.html)。同社は2026・2027年度の投資計画で鉄塔を52基削減し期初計画比13.8%減、架空送電線を60km削減し同19.4%減とした[出典](https://www.kansai-td.co.jp/corporate/press-release/2026/pdf/0710_1j_01.pdf)。総括原価方式では設備物量の削減は報酬基礎の縮小を意味する。事業者が自ら物量を落とした点が制度前と異なる行動である。
+
+制度の出口では弱まった。2025年12月16日の料金制度専門会合で、第一規制期間も物価上昇の制度措置の対象とし、対象年度を2026・2027年度とすることが整理された。費用項目には消費者物価指数、投資項目には建設工事費デフレーターを適用する。事業報酬も公社債利回り実績を直近5年平均に置き換えて差分を措置する。この措置を使い、関西電力送配電は5か年見積費用を3兆6,130億円から3兆7,626億円へ1,496億円増やす変更承認を申請した。年換算では7,244億円/年から8,300億円/年である。内訳は原材料費と労務費の上昇が1,135億円、金利上昇による事業報酬の増が365億円である。2026年7月10日には10社が一斉に変更承認を申請した[出典](https://www.tdgc.jp/information/2026/07/10_1730.html)。
+
+つまりインセンティブは、事業者が制御できる物量と単価には働き、制御できない物価と金利には働かない。5年間の価格固定を前提とした強い誘因は、第一規制期間の後半で17か月分の料金改定に置き換わった。レベニューキャップは5年間料金を固定する制度ではない。
+
+送配電の外側には、キロワット時を取引する卸電力市場、キロワットを取引する容量市場、調整力を取引する需給調整市場という三層がある。投資を引き出すかを日米で比較すると、逼迫の出方が違う。
+
+| 論点 | 米国PJM | 日本 |
+| --- | --- | --- |
+| 容量価格 | 2027/2028年度BRAは333.44ドル/MW日で一時的な価格上限に張り付いた | 2029年度メインオークションの東京エリアプライスは15,111円/kW、上限張り付きの記載なし |
+| 調達量 | 約定量134,478.1MW、FRR分を加えても信頼度必要量を6,516.6MW下回った | 約定総容量166,079,863kW、約定総額は経過措置控除後で2兆2,093億円 |
+| 予備率 | 約定した設備予備率14.4%、目標20%を5.6ポイント下回る | 2028年度以降、東北・東京・中部から四国・九州で年間EUEが目標停電量を超過する見通し |
+| 需要増 | 信頼度必要量を146,105MWから152,400MWへ引き上げ、うち5,249.9MWは大口負荷が主因 | 8月最大3日平均電力は2035年度16,460万kW、2025年度実績から年平均0.4%増 |
+| 出典 | https://www.pjm.com/-/media/DotCom/markets-ops/rpm/rpm-auction-info/2027-2028/2027-2028-bra-report.pdf | http://www.occto.or.jp/assets/various/kyoukei/torimatome/260330_kyokyukeikaku_torimatome/260330_kyokei_torimatome.pdf |
+
+差は3点にまとまる。第一に需要増の速度である。PJMは1回のオークションで信頼度必要量を6,295MW引き上げた。日本の全国需要は年平均0.4%増である。第二に逼迫の出方である。米国は価格として現れ、日本は数量として現れる。しかも日本の2028年度以降の供給信頼度の悪化は火力の休廃止が主因であり、需要側ではない。第三に不確実性の向きである。米国ではデータセンターの接続が確定的な負荷として需要想定に積み上がる。日本ではデータセンターの運開時期の後ろ倒しにより蓋然性の高い需要の見極めが困難になっており、発電事業者が座礁資産リスクを意識して新設とリプレースの投資に踏み込みにくい状況が報告されている。事業者ヒアリングでは、長期脱炭素電源オークションの現行の対象と条件ではインセンティブとして不十分だという意見が多い。
+
+日本の論点は価格上限ではなく、容量市場と長期脱炭素電源オークションの対象と条件の設計にある。ここが動かない限り、需要が来ても電源は建たない。
+
+## 自家発電と系統購入を組み合わせるモデルの採算
+
+系統が間に合わないなら自前で発電すればよい、という発想は自然に出てくる。ただし採算は4つの変数で決まり、そのうち1つが構造的な弱点になる。
+
+第一にスパークスプレッドである。燃料単価から自家発1kWhあたりの燃料費を出し、系統から買う場合の従量単価との差を取る。この差が正でなければ設備投資の議論に入れない。
+
+第二に稼働率である。設備費は固定費であり、稼働率が下がるほど1kWhあたりの償却負担が上がる。データセンターは負荷率が高いため、この点では自家発に向く。
+
+第三に熱の使い道である。コージェネレーションは排熱を給湯や冷房に回して総合効率を上げる。ガスエンジン等のコージェネは低位発熱量基準で発電効率50%以上、排熱回収効率35%以上を達成しており、両者を足すと投入エネルギーの85%程度を回収する計算になる[出典](https://www.ace.or.jp/web/chp/chp_0010.html)。日本国内の累積導入は2025年3月末時点で22,819台、発電容量14,239MW、内訳は民生用2,875MW、産業用11,364MWである[出典](https://www.ace.or.jp/web/works/works_0010.html)。熱需要が年間を通じて安定する病院、ホテル、食品工場では成立しやすく、熱需要が薄いオフィスビルでは成立しにくい。
+
+第四に基本料金の削減幅である。ここが不足分だけ買うモデルの弱点にあたる。日本の高圧と特別高圧の料金は基本料金と従量料金の二部制で、基本料金は契約電力に比例する。自家発が停止したときのバックアップを系統に求める以上、契約電力を自家発の出力分だけ引き下げることはできない。従量料金は減るが基本料金は残る。削減額は従量料金部分に偏る。日本の料金メニューの実データを取得できていないため、削減幅は数値で示せない。
+
+制度面では自家発に有利な要素が1つある。再生可能エネルギー発電促進賦課金は系統から買った電力量に課され、自家消費分にはかからない。賦課金単価は2012年度の0.22円/kWhから2025年度の3.98円/kWhへ18倍になった。2025年度の買取費用の総額は約4.9兆円である[出典](https://www.fepc.or.jp/resource_sw/INFOBASE_2025_g.pdf)。自家発の相対優位はこの13年で拡大している。
+
+区域独占の外で電気を供給する枠も確認しておく。電気事業法の現行の類型は特定送配電事業と特定供給に分かれる。前者は第27条の13第1項の届出、後者は第27条の33第1項の許可である。特定供給の許可基準は2点に尽きる。供給者が需要家と省令で定める密接な関係を有すること、そして供給場所が一般送配電事業者または配電事業者の供給区域内にある場合、その区域内の電気の使用者の利益が阻害されるおそれがないことである[出典](https://laws.e-gov.go.jp/api/1/lawdata/339AC0000000170)。施行規則第45条の24は密接な関係を3つに限定し、生産工程や資本関係や人的関係におけるもの、取引等により一の企業に準ずる関係を有し長期継続が見込まれるもの、自ら維持運用する電線路で供給する場合に共同して組合を設立し長期存続が見込まれるものを挙げる[出典](https://laws.e-gov.go.jp/api/1/articles;lawId=407M50000400077;article=第四十五条の二十四)。
+
+この2要件が守っているものは明確である。1つは、規制を受けない小売供給が事実上の一般供給へ拡大することの防止である。もう1つは、区域内の他の需要家への費用転嫁の防止である。特定供給が既存の託送料金負担を回避すると、残った需要家が固定費を負担することになる。大口需要家が系統から離脱する構図は、この審査の対象になる。
+
+## 燃料調達の契約構造が電力料金へ伝わる経路
+
+データセンター需要の追加分の相当部分を天然ガスが担う以上、燃料の契約構造が電気料金にどう伝わるかを押さえる必要がある。日本は自国にガス田をほとんど持たず、価値連鎖の下流側だけを国内に持つ。
+
+価値連鎖のなかで最も重い固定費を負うのは液化工程である。ただし工程別の単位投資額を示す一次資料はノート作成時点で取得できておらず、以下は間接証拠による判断である。第一に稼働率の非対称がある。世界の再ガス化能力は1,247MTPAに対し、2025年の世界LNG輸入量は428MTだった[出典](https://giignl.org/annual-report/)。受入基地は名目能力の約34%しか使われていない。設備投資が最も重い工程であれば、この過剰能力を受入基地事業者は負担しきれない。第二に運転コストの構造がある。液化工程では投入ガスの7%から15%が消費される[出典](https://www.eia.gov/energyexplained/natural-gas/liquefied-natural-gas.php)。マイナス162度まで冷却するために大型の圧縮機と駆動タービンが要る。再ガス化は海水や燃焼熱で温める工程であり、必要な機械は小さい。再ガス化能力が足りないから受入がボトルネックだという理解は、能力が輸入量の約2.9倍あるという事実と整合しない。
+
+価格形成は二層構造である。日本の買主22社を対象とした調査では、FY2024の長期契約数量70MTのうち原油指標に連動するものが49MTで70%、米国のヘンリーハブ指標に連動するものが12MTで16%、両者の組み合わせが4%である[出典](https://journal.jogmec.go.jp/oilgas/nglng-en/survey/2025-results.html)。原油指標連動は、ガスの需給と無関係な変数で価格が動くことを意味する。この構成はFY2035に原油指標35%、米国現物指標45%へ入れ替わる見通しである。長期契約は固定価格ではない。固定されているのは数量と算式であって価格ではない。
+
+スポットは別の指標で動く。2026年1月21日終了週の平均で、米国ヘンリーハブが4.98ドル/MMBtu、東アジアのJKMが10.73ドル/MMBtu、欧州TTFが12.40ドル/MMBtuである[出典](https://www.eia.gov/naturalgas/weekly/)。JKMは2026年7月31日時点で21ドル台前半まで上昇した[出典](https://journal.jogmec.go.jp/oilgas/nglng-en/index.html)。同じ年のうちに2倍になった。世界のLNG輸入428MTのうち35%がスポットベースである[出典](https://giignl.org/annual-report/)。
+
+引き取り義務の有無が第三の違いである。日本の長期契約はFY2024で数量の94%にテイク・オア・ペイ条項が付く。買主は引き取らなくても代金を払う。未引取分を翌期に持ち越すメイクアップ条項はFY2024で74%に付くが、FY2035では44%に下がる見通しである。
+
+仕向地条項は転売の可否を通じて交渉力を変えた。日本の買主が持つ長期契約のうち仕向地制限付きの数量は、FY2024が70MT中28MTで40%、FY2035が45MT中13MTで30%である。制限付き数量は28MTから13MTへ減る一方、比率は40%から30%への低下にとどまる。契約総量自体が70MTから45MTへ縮むためである。条項は撤廃されたのではなく段階的に減っている。転売できれば需要の読み違いを市場で解消でき、できなければタンク容量が制約になって引き取りを断るか他の調達を止めるしかない。日本企業のFY2024のLNG取扱量109.66MTのうち43.79MTが国内輸入ではない海外取引であり、この数量は転売の自由なしには成立しない[出典](https://journal.jogmec.go.jp/oilgas/nglng-en/handling-volume/2025-results.html)。
+
+電気料金への伝達は3段階である。第一段階は輸入価格で、長期契約の70%が原油指標に連動するため原油価格が遅れて効く。第二段階は燃料費調整制度で、小売電気事業者が貿易統計に基づく平均燃料価格の変動を一定の遅れを置いて料金に転嫁する。ただし算定式、換算係数、基準燃料価格、反映までの月数についてはノート作成時点で一次資料を確認できておらず、この章では具体的な遅れの月数を示さない。第三段階は数量である。日本の2026年上期のLNG輸入は30.88MTで、2025年上期の32.15MTから1.27MT減った[出典](https://eneken.ieej.or.jp/data/13460.pdf)。減少の理由が需要減なのか価格による買い控えなのかは、この資料だけでは切り分けられない。
+
+供給途絶リスクもこの経路に乗る。2026年にホルムズ海峡でカタール籍LNG船が被弾し、カタールの不可抗力宣言が続いている。中東と北アフリカからの輸出は2026年上期に前年同期比で約20MT減り、北米からの15MT増でその大半が埋め合わされた。産地が入れ替わると輸送距離と船腹需給が変わり、着地渡し契約の価格に反映される。
+
+## 新規電源としてのSMRの時間軸と規制工程
+
+小型モジュール炉は電気出力300MWe以下の原子炉を工場でモジュール製造し、現地では組み立てに近い工程で建設する構想である[出典](https://world-nuclear.org/information-library/nuclear-fuel-cycle/nuclear-power-reactors/small-nuclear-power-reactors)。データセンター向けの電源として頻繁に名前が挙がる。問うべきは規制工程が何年で終わるか、量産効果がどの段階で単価に現れるか、量産を支える需要が実在するかの3点である。
+
+規制工程は3段が直列に積み上がる。設計の承認、サイトごとの建設許可、運転認可である。設計承認が最も長い。NuScaleの50MWe設計は2017年1月の設計認証申請から2023年1月20日の規則発効まで約72か月を要した。同社が出力を77MWeに増強した設計の標準設計承認は2023年1月申請、2025年5月29日承認で約29か月である[出典](https://en.wikipedia.org/wiki/NuScale_Power)。同一事業者の後続申請で審査期間が半分以下になっている。建設許可は設計承認より短く、Kairos PowerのHermes 2は2023年7月申請、2024年11月許可で約16か月である[出典](https://en.wikipedia.org/wiki/Kairos_Power)。短縮の背景には、規制当局が技術報告書を本申請の外で先行承認する運用がある。カナダのOPGは建設許可申請を2022年10月に提出し、最終投資決定が2025年5月で約31か月である[出典](https://en.wikipedia.org/wiki/BWRX-300)。
+
+制度側の目標値としては、2025年5月の大統領令14300が新規炉の許認可判断を18か月以内に出すことを求めている[出典](https://en.wikipedia.org/wiki/Nuclear_Regulatory_Commission)。ただし2026年8月時点で商用SMRが米国で運転に入った実績はない。新規設計を米国で商用運転させる場合、設計承認と建設許可を並行させても規制手続きだけで5年前後を見込むのが実績に沿う。既に承認済みの設計を使う事業者はこの最初の段を省ける。ここに挙げた個別案件の日付はWikipedia経由の二次情報であり、一次資料での再確認を要する。
+
+コスト優位は1基あたりの単価では出ていない。Vogtle 3・4号機は正味出力1,117MWeが2基で最終費用368億ドル、合計2,234MWeで割ると約16,500ドル/kWである[出典](https://en.wikipedia.org/wiki/Vogtle_Electric_Generating_Plant)。NuScaleのCarbon Free Power Projectは2023年1月時点で462MWeに対し93億ドル、20,130ドル/kWとなり、同年11月9日に中止された。SMRの初号機が大型軽水炉の実績単価を上回った。OPGのDarlington計画は初号機のBWRX-300 1基が77億カナダドル、追加3基の合計が132億カナダドルである。1基300MWeで単純除算すると初号機は約25,700カナダドル/kW、2号機から4号機は約14,700カナダドル/kWとなり、2号機以降の単価は初号機の約57%である。初号機側に共用設備の費用がどれだけ配賦されているかは公表資料から確認できていない。優位が出るとすれば同一設計の連続建設によってである。
+
+需要側は契約ベースで積み上がっている。国際エネルギー機関は、成熟度に差はあるものの最大25GWのSMR計画が存在し、その大部分がデータセンターの電力需要増に向けたものだと整理している[出典](https://www.iea.org/reports/the-path-to-a-new-era-for-nuclear-energy/executive-summary)。25GWは300MWe級に換算すると約83基である。2017年の調査では単価の経済性が成立するには40基から70基が必要という整理が示されており[出典](https://en.wikipedia.org/wiki/Small_modular_reactor)、25GWは量産閾値を上回る。
+
+ただし25GWは計画段階の積み上げである。Okloとの最大12GWの合意は非拘束的と明記されている。拘束力のある契約に限ると数量は下がる。GoogleとKairos Powerの最大500MW、初号機2030年、全数2035年配備[出典](https://blog.google/outreach-initiatives/sustainability/google-kairos-power-nuclear-energy-agreement/)、AmazonとEnergy Northwestの初期320MW、最大960MWまでの拡張オプション[出典](https://www.aboutamazon.com/news/sustainability/amazon-nuclear-small-modular-reactor-net-carbon-zero)といった数百MW単位が、現時点で確度の高い層である。
+
+供給側の見通しは需要側の表明値と一致しない。国際エネルギー機関のSMR導入見通しは、現行政策の延長で2050年に40GW、政策支援と産業側の実行が伴う場合に120GW、2040年までに大型炉とのコスト同等が達成される場合に190GWである。需要側に25GW分の表明があることと、供給側が2050年に40GWにとどまりうることは併存する。
+
+## 水と排水処理という第二の立地変数
+
+立地の議論が電力に一元化されるのは、電力が可視化されているからである。系統接続の待ち行列は容量と待ち時間が公開され、比較しやすい。水はそうではない。取水は河川管理者、地下水は自治体条例と個別法、排水は下水道管理者と都道府県が別々に握る。制約が単一の数値に集約されないため議論から漏れる。
+
+まず規模感を正す。データセンターは水を大量に消費する産業だという理解は、比較対象を置くと崩れる。米国のデータセンター全体の2023年の直接水使用は660億リットル、1日あたり約181,000立方メートルである[出典](https://escholarship.org/uc/item/32d6m0d1)。これに対しサムスン電子1社の2023年の取水量は177,361千トン、1日あたり約486,000立方メートルである[出典](https://www.samsung.com/global/sustainability/media/pdf/Samsung_Electronics_Sustainability_Report_2024_ENG.pdf)。半導体大手1社の取水が、米国のデータセンター全体の直接水使用の2.7倍にあたる。この倍率はノート筆者による除算である。同社の半導体部門であるDS Divisionだけで全社取水の90.3%を占め、その供給源は表流水が160,090千トン、地下水は0トンである。
+
+取水量と水消費量は別物である。水消費は取水から排水を引いた値で、蒸発や製品への取り込みで水循環から失われた分を指す。サムスン電子の2023年は取水177,361千トンに対し排水142,995千トン、差分は34,366千トンである。取水の8割は処理後に戻り、2割が失われる。取水量を消費量とみなすと、失われる量を約5.2倍に見積もることになる。
+
+なお先端ファブの超純水の日次生産量を工場単位で開示している先端ロジックメーカーの一次資料は、ノート作成時点で取得できていない。工場単位の一般的な水準として先端ファブが1日あたり数百万ガロンの超純水を消費するという記述はあるが、これは二次資料に基づく。
+
+制約は3つの段階で別々に効く。
+
+第一に、候補地のロングリストを作る段階で水源が効く。日本では工業用水法により、政令で定める指定地域内で井戸により地下水を採取して工業の用に供する者は都道府県知事の許可を受けなければならない[出典](https://laws.e-gov.go.jp/api/1/lawdata/331AC0000000146)。対象は吐出口の断面積が6平方センチメートルを超える井戸であり、工場規模の井戸は実質すべて含まれる。指定地域では自社井戸による大量取水を前提にした計画が成立せず、工業用水道の受水可能量が候補地の上限を決める。米国アリゾナ州では、7つのActive Management Area内の開発に対しAssured Water Supplyプログラムが100年分の水供給の証明を求める[出典](https://www.azwater.gov/aaws)。証明には水の物理的な存在、100年間の継続供給、水源に対する法的権原、水質、供給設備を建設する財務能力、管理計画との整合、管理目標との整合の7要件すべてが必要である。水があっても法的権原がなければ立地できない。
+
+第二に、基本設計と許認可の段階で排水が効く。日本では水質汚濁防止法により、特定施設を設置する者は施設の種類、構造、汚水等の処理方法、排出水の汚染状態と量を都道府県知事に届け出る必要があり、同法第9条は届出受理から60日を経過した後でなければ設置または変更をしてはならないと定める[出典](https://laws.e-gov.go.jp/api/1/lawdata/345AC0000000138)。都道府県は同法第3条第3項により、国の排水基準では不十分と認める区域について条例でより厳しい許容限度を定められる。同じ設備でも立地により排水処理設備の仕様が変わる。米国では点源から公共水域に排出する者はNPDES許可を要し、許可期間は5年、更新申請は失効の180日以上前に提出する必要がある[出典](https://www.epa.gov/npdes/npdes-permit-basics)。市の下水道に排出する場合はNPDES許可の対象外となり、自治体の受け入れ条件が制約になる。
+
+第三に、着工後は排水の受け入れ先容量が効く。下水道に放流する設計を選ぶと、下水処理場の残容量が増設ペースを縛る。
+
+ではデータセンターについて、電力と水のどちらが先に上限を決めるのか。米国では電力が先に効く。接続待ちが2,060GW超、商業運転までの中央値が5年超という数字は、需要側の設備投資判断より長い時間軸である。水は絶対量で見て電力ほどの希少性を示していない。一方で先端ファブについては水が先に効く場合がある。指定地域の許可制やアリゾナ州の100年証明は量の問題ではなく可否の問題であり、代替手段がない。電力は送電線の増強や自家発電で時間をかければ緩むが、流域に水がない土地に水は引けない。
+
+したがって答えは条件付きになる。水は候補地の集合を先に切り、電力はその集合の中で稼働開始時期を決める。ただし両者は独立ではない。米国データセンターの2023年の間接水フットプリントは約8,000億リットルで、直接水の660億リットルの約12倍である。電力1kWhあたりの間接水消費は全米平均で4.52リットルであり、サイトWUEの0.36リットル/kWhの12.6倍にあたる。電力を多く引く立地は、発電側を通じて流域の水にも負荷をかける。
+
+## 液冷への移行と排熱二次利用が成立する境界
+
+データセンターの電力のうち冷却と環境制御が占める割合は、効率の高いハイパースケールで約7%、効率の低い企業内データセンターで30%超と幅がある[出典](https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai)。冷却は全体の一割前後の話であり、ここだけを改善しても総電力は動かない。それでも冷却方式が論点になるのは、効率の問題から成立可否の問題に変わったからである。GPUは1モジュールあたり2kWを超え、ラック電力は200kWを超える見通しにある[出典](https://journal.uptimeinstitute.com/investments-back-two-phase-cooling-as-water-cold-plate-successor/)。この密度では空冷は選択肢として残らない。
+
+液冷が空冷に対して経済性で逆転する水準は、ラックあたり20kWから30kWである[出典](https://journal.uptimeinstitute.com/lower-density-brings-server-efficiency-and-cooling-gains/)。これは単一の閾値ではなく、性質の異なる3本の曲線が交差する帯として理解するのが正しい。
+
+第一の曲線は建屋の資本費である。密度を上げれば同じIT容量をより小さい床面積に収容でき、建屋と配電の単位あたり費用が下がる。ただしこの削減効果はラック20kWから25kWで平坦になる。したがって25kWを超えてさらに密度を上げる判断は、資本費の節約では説明できない。ラックスケール設計が液冷を前提にするのは、床面積の節約に加えてGPU間の高帯域かつ低遅延の接続を成立させるためである[出典](https://www.nvidia.com/en-us/data-center/gb200-nvl72/)。密度を上げる動機が、ある点から資本費ではなく通信レイテンシに移る。
+
+第二の曲線は液冷側の追加設備費である。新設案件において直接液冷が積み増す資本費は、試運転を含めておよそ5%から10%と見積もられている。比較対象が建屋全体の投資額である点に注意がいる。既存の空冷施設への後付けでは配管と冷却分配ユニットの新設が加わるため、この水準は当てはまらない。
+
+第三の曲線は運用費である。ここで効いているのは冷却機そのものよりサーバー内部のファン電力である。構成が同一のシングルプロセッサ機で1Uと2Uのあいだに30Wから60Wの消費電力差が生じ、低稼働時には1U機が2U機より約30%多く電力を使う。空冷のまま密度だけを上げると、冷却の仕事の一部がIT電力として計上されるだけで総電力は減らない。ここに測り方の落とし穴がある。PUEは分母がIT電力なので、内部ファン電力が増えるとPUEは見かけ上よくなる。液冷の効果を測るならPUEではなく施設総電力で比較する必要がある。
+
+逆転を遅らせる側の要素もある。液冷は熱容量の余裕が小さい。10kW未満の低密度施設では冷却が止まってから温度超過までに数分から数十分の猶予があるのに対し、高密度の冷却板方式では循環停止を数秒しか許容できない。この差を埋める冗長化と運用体制の費用が、密度の低い用途で液冷の事業性を崩す[出典](https://journal.uptimeinstitute.com/liquid-cooling-will-not-outgrow-its-high-density-niche/)。水量の制約もある。水冷却板は温度上昇10度の条件で1kWあたり毎分1.5リットル未満に流量を抑える設計とされ、次世代機では1系統あたり毎分数百リットルが必要になる。既存建屋では配管径と揚程がこの水量を通せない場合がある。
+
+液冷は水を使う技術だから空冷より水消費が多い、という理解は成立しない。液冷は高い施設水温で運転でき、waterside economizerが年間の多くの時間で冷却要求を満たせるため、キロワット時あたりの水を下げられる[出典](https://escholarship.org/uc/item/32d6m0d1)。同時に、液冷でも最終的な排熱は蒸発式の冷却塔で捨てるため蒸発量はゼロにならない。米国データセンターの平均サイトWUEは2023年時点で0.36リットル/kWh、2028年に0.45から0.48リットル/kWhへ上がると推計されるが、これは液冷単独の効果ではなく冷却方式構成とIT負荷の変化の合成である。水の絶対量は気候と運転条件で1桁変わる。冷却塔を用いるデータセンターはサーバー電力1kWhあたり約1リットルから9リットルを蒸発させ、大型商用データセンターの夏季月平均は約9リットル/kWhに達する[出典](https://arxiv.org/abs/2304.03271)。冷却方式の選択より気候帯の選択のほうが水使用への影響が大きい場合がある。
+
+排熱の二次利用は、データセンター側の技術ではなく熱を買う相手がいるかどうかで決まる。成立している事例は地域熱供給網が先に存在する地域に集中している。
+
+| 事例 | 内容 | 出典URL |
+| --- | --- | --- |
+| ストックホルム | Stockholm Exergiは約3,000kmの地域熱供給網で80万人超に熱を供給し、余熱回収で約11,000戸の集合住宅を暖房。熱出力1MW相当の供給に年間約200万スウェーデンクローナを支払う目安を公開 | https://www.stockholmexergi.se/varmeatervinning/ |
+| エスポー | Microsoftのデータセンターからの排熱回収が、最終規模でエスポー供給区域の年間地域熱需要の約40%を賄う見込み。ヒートポンプ設備と50MWの電気ボイラー、800MWhの蓄熱設備を併設 | https://www.fortum.com/fi/en/espoo-clean-heat |
+| マンチェスター | Deep Greenが拠点DG01からレジャーセンターへ熱を供給し、年間約8万ポンドの地域熱費用削減と年間100から150トンのCO2削減。同拠点のPUEは1.07 | https://deepgreen.energy/ |
+
+ストックホルムの例が示すのは、冷却が費用項目から収入項目に転換する条件である。日本で同じ構図が再現しにくい理由は需要側にある。国内の熱供給事業の登録地域は133地域にとどまり[出典](https://www.jdhc.or.jp/)、データセンターが立地する内陸や郊外の造成地に熱供給網は通っていない。さらに液冷の供給水温は45度前後が想定されており、日本の地域熱供給が想定する温水温度帯に届かせるにはヒートポンプによる昇温が要る。エスポー案件がヒートポンプ設備を前提にしているのはこのためである。日本国内でデータセンター排熱の二次利用が事業として成立している具体事例は、ノート作成時点で一次資料を取得できていない。
+
+## 地上の制約から逃げる選択肢としての軌道上計算
+
+系統接続待ちと水の許認可が地上の立地を縛りはじめたことを受けて、2025年後半に軌道上計算資源の構想が複数表面化した。Googleは自社製アクセラレータを積んだ衛星群の設計を公開し、2027年初頭にPlanetとの共同で試作機の打ち上げを予定している[出典](https://research.google/blog/exploring-a-space-based-scalable-ai-infrastructure-system-design/)。Starcloudは2025年11月2日に60kgの実証機を打ち上げ、NVIDIA H100を軌道上で稼働させた[出典](https://www.datacenterfrontier.com/site-selection/article/55337494/starcloud-launches-orbital-ai-data-center-with-nvidia-h100-gpu)。主張されている利点は3つある。軌道上の太陽電池パネルが地上比で最大8倍の年間発電量を持つこと、放射冷却により地上の冷却設備に依存しないこと、地上の許認可と立地制約を回避できることである。
+
+この3つのうち、冷却の主張は物理を確認すると弱くなる。宇宙は冷たいから冷却が楽になるという理解は逆で、真空は断熱材として働く。対流と伝導が使えず放射だけが残る。Starcloudの白書は、放射率0.92の板を20度に保った場合に両面から770.48W/m2を放出し、太陽光吸収122.94W/m2と地球アルベド由来14.46W/m2を差し引いて正味633.08W/m2になると計算している[出典](https://starcloudinc.github.io/wp.pdf)。IEEE Spectrumは60度維持を前提に、700WのH100 1枚に1.4m2のラジエータが要ると見積もっており、これは約500W/m2に相当する[出典](https://spectrum.ieee.org/orbital-data-centers-heat)。
+
+ここから2つの帰結が出る。第一に、発電した電力はほぼ全量が熱になるため、ラジエータ面積は太陽電池面積と同オーダーになる。Starcloud自身もラジエータは太陽電池アレイの半分未満のサイズと書いており、同オーダーであることを認めている。第二に、質量が効く。ISS世代のラジエータの面密度は14kg/m2程度、NASAが目標とする水準でも3.5kg/m2とされる。この面密度と正味633W/m2を組み合わせると、100MWの排熱に必要なラジエータは数百トンから2千トン超の規模になる。この試算はノート筆者によるもので、出典のある値ではない。太陽光が8倍だから電力が8倍安いという理解も成立しない。8倍は年間発電量の比であって瞬間出力の比ではなく、発電量が増えればそのぶん排熱も増える。
+
+打ち上げコストの分岐点は明示されている。Googleは、累積打ち上げ質量の倍増ごとに約20%の価格低下が続けば2030年代半ばに1kgあたり200ドル以下に届くとし、この価格で衛星寿命を通じて償却すると電力あたり価格は約810ドル/kW/年になると分析している。米国の地上データセンターの電力コストは570ドルから3,000ドル/kW/年とされ、810ドルはこの範囲に収まる[出典](https://arxiv.org/abs/2511.19468)。現状との差は大きい。SpaceXの相乗り価格は2026年2月時点で50kgまで350,000ドル、超過分が7,000ドル/kgである[出典](https://newspaceeconomy.ca/2026/02/27/spacex-rideshare-pricing-as-of-february-2026/)。200ドル/kgはこの35分の1である。
+
+打ち上げコストだけを見るのは不十分である。ラジエータと太陽電池アレイの質量が計算モジュールと同オーダーで乗ること、加速器の陳腐化サイクルが3年から5年であり更新のたびに打ち上げ費が再発生すること、軌道上では現地修理ができずモジュール単位の交換と再突入処分が前提になることが残る。反対の結論も出ている。IEEE Spectrumは、一般用途の宇宙データセンターは今日の時点では経済的に正当化しにくいとしている。
+
+帯域のボトルネックは対地ではなく衛星間にある。NASAのTBIRDは6U CubeSatから200Gbpsの下り回線を実証し、5分程度の1パスで最大4.8TBを誤りなく地上に転送した[出典](https://ntrs.nasa.gov/citations/20230007959)。推論を主用途とするならやり取りされるのはトークン列であり、この容量で足りる。学習は別である。大規模モデルの学習には衛星群を1台の機械として扱えるだけの帯域が要り、Googleは1リンクあたり10Tbpsを目標としている。ベンチ規模での実証は1台のトランシーバ対で双方向1.6Tbpsである。受信電力は距離の2乗に反比例するため、この帯域は距離で決まる。結果として設計は近接編隊に追い込まれる。Googleの例示構成は高度650km、半径1kmのクラスタに81機を配置し、隣接衛星の距離を100mから200mの範囲で振動させる。帯域の問題は編隊制御と衝突回避の問題に変換される。
+
+成立条件は安い打ち上げではなく、軽いラジエータと近接編隊の維持の2点に収束する。時間軸の面では、Googleの試作機打ち上げが2027年初頭、経済性の前提が2030年代半ばである。2030年までの需給ギャップにこの選択肢は寄与しない。
+
+同じことは核融合にも言える。コモンウェルス・フュージョン・システムズは商用機ARCをバージニア州に建設して2030年代前半に約400MWを系統に供給する計画で、Googleが第1号機の出力の半分を購入する契約を結んでいる[出典](https://cfs.energy/technology/arc)。一方で米国のデータセンター電力消費は2024年から2030年で240TWh増える見通しであり、8760時間で割ると平均27.4GWに相当する。400MW級のプラント約68基分である。この除算はノート筆者による算術である。2030年前後の需給計画に核融合を織り込む根拠はない。量子計算についても、現行の量子プロセッサが大規模言語モデルの学習や推論を代替できるという検証済みの結果は確認できていない。国際エネルギー機関は2035年のデータセンター消費を700TWhから1,700TWhという2.4倍の幅で置いており、技術破壊はこの幅の中で扱うのが妥当である。なお同機関の別資料は2035年の見通しを約1,200TWhとしており、これはシナリオ幅の中位に位置する基準ケースの値と読むのが整合的である。
+
+## この章の要点
+
+- 世界全体で見るとデータセンターは2030年までの電力需要増の約1割で、産業用モーターや空調や電気自動車より小さい。一方で米国のデータセンター消費は2018年の76TWhから2023年の176TWhへ増え、増分が特定の系統と特定の郡に集中する。マクロで小さくミクロで大きい二重構造として扱う。
+- 歪みは全国平均の需給ではなく、容量価格と系統接続待ちに先に出る。PJMの2025/2026年度容量オークションは全域269.92ドル/MW-dayに対しDOM区域が444.26ドル/MW-day、米国の接続待ちは2,060GW超で商業運転までの中央値は5年超である。
+- 送電の物理層に短期の突破口はない。制約は導体の性能ではなく工期と許認可にあり、先進国の送電インフラ建設に4年から8年かかる。運用層は別で、系統運用ツールにより新設なしで最大175GWの容量を解放できるとされる。
+- 変圧器のリードタイムは電力用128週、発電機昇圧144週で、配電用の30週と4倍以上違う。律速は設備投資の意思決定の遅さと熟練工の不足であり、どちらも需要が続くかという同じ不確実性から出ている。北米の増産投資が稼働するのは2027年から2028年である。
+- 制度が投資速度を決めている。日本のレベニューキャップは物量と単価にはインセンティブを与えたが、物価と金利には与えず、第一規制期間の途中で10社が一斉に収入上限の変更を申請した。米国は価格として逼迫が現れ、日本は数量として現れる。
+- 水は電力と別の変数として働く。水は候補地の集合を先に切り、電力はその集合の中で稼働開始時期を決める。ただし電力1kWhあたり4.52リットルの間接水があるため、両者は独立ではない。
+- 液冷が経済性で逆転するのはラック20kWから30kWである。それ以下では冗長化コストを回収できず、それ以上では液冷は比較対象ではなく成立条件になる。排熱の二次利用は地域熱供給網が先にある地域でのみ成立し、日本の熱供給登録地域は133地域にとどまる。
+- SMR、核融合、軌道上計算はいずれも2030年までの需給に寄与しない。SMRの規制手続きだけで5年前後、核融合の商用機は2030年代前半で約400MW、軌道上計算の経済性の前提は2030年代半ばの打ち上げコストである。
+
+## 残っている問い
+
+- 1000kV設計で建設された基幹送電線が500kV運用にとどまっているという理解について、一次資料を確認できていない。設計電圧と運用電圧を記載した送電設備の技術資料または広域機関の系統図が必要である。
+- 日本のマスタープランのエリア内増強のうち、変電設備単独の投資額を分解できていない。広域系統整備計画の個別案件資料に当たれば分解できる。
+- 2026年時点の変圧器リードタイムの実測値を確認できていない。本章の128週と144週は2025年第2四半期の調査値である。4年へ延びたとする報道はあるが、一次調査に当たれていない。
+- 変圧器メーカーの世界市場シェアと工場稼働率の数値を確認できていない。各社が変圧器事業単独の生産能力を開示すれば算出できる。
+- 燃料費調整制度の算定式、換算係数、基準燃料価格、反映までの月数を確認できていない。各社の小売供給約款の燃料費調整条項が必要である。
+- 自家発電と系統購入を組み合わせるモデルについて、基本料金と従量料金の比を確認できていないため、削減幅を数値で示せていない。託送供給等約款と高圧料金メニューがあれば判定できる。
+- LNGの工程別の単位設備投資額を確認できていない。液化1トンあたり建設費、LNG船建造費、受入基地建設費の3組が揃えば、液化がボトルネックであるという判断を直接の数値で裏付けられる。
+- 液冷と空冷の総保有費用を年数と割引率つきで比較した公開モデルを取得できていない。回収年数はこの章では答えていない。回答には対象地域の電力単価、想定稼働率、施設寿命、冷凍機の運転時間が要る。
+- 日本国内でデータセンター排熱の二次利用が事業として成立している具体事例を確認できていない。事業者の統合報告書と熱供給事業者側の受入実績の開示が必要である。
+- SMRの個別案件の日付と金額は二次資料に依拠している。TVAのClinch River案件の建設許可の申請日と発給日、規制当局の審査期間の公式統計は取得できていない。
+- 先端ロジックメーカーの工場単位の超純水日次生産量を確認できていない。単位ウェハーマスク層あたり水消費量も同様である。
+- 量子計算がAIワークロードの電力を代替しうるかを示す検証済みデータを確認できていない。量子優位が示されたワークロードと、そのワークロードが現在GPUで消費している電力量の2つが揃えば定量化できる。
+
+## 出典
+
+1. IEA, Energy and AI, Executive summary. https://www.iea.org/reports/energy-and-ai/executive-summary
+2. IEA, Energy and AI, Energy demand from AI. https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai
+3. IEA, Energy and AI, Energy supply for AI. https://www.iea.org/reports/energy-and-ai/energy-supply-for-ai
+4. IEA, Building the Future Transmission Grid. https://iea.blob.core.windows.net/assets/6fbf940a-d4e8-4156-b8e0-07c2f793c094/BuildingtheFutureTransmissionGrid.pdf
+5. IEA, The Path to a New Era for Nuclear Energy, Executive Summary. https://www.iea.org/reports/the-path-to-a-new-era-for-nuclear-energy/executive-summary
+6. Lawrence Berkeley National Laboratory, 2024 United States Data Center Energy Usage Report. https://escholarship.org/uc/item/32d6m0d1
+7. LBNL Electricity Markets and Policy, Queued Up. https://emp.lbl.gov/queues
+8. PJM, 2025/2026 Base Residual Auction Report. https://www.pjm.com/-/media/DotCom/markets-ops/rpm/rpm-auction-info/2025-2026/2025-2026-base-residual-auction-report.pdf
+9. PJM, 2027/2028 Base Residual Auction Report. https://www.pjm.com/-/media/DotCom/markets-ops/rpm/rpm-auction-info/2027-2028/2027-2028-bra-report.pdf
+10. Central Statistics Office Ireland, Data Centres Metered Electricity Consumption 2024. https://www.cso.ie/en/releasesandpublications/ep/p-dcmec/datacentresmeteredelectricityconsumption2024/
+11. U.S. Energy Information Administration, Tracking electricity consumption from U.S. cryptocurrency mining operations. https://www.eia.gov/todayinenergy/detail.php?id=61364
+12. U.S. Energy Information Administration, Natural Gas Weekly Update. https://www.eia.gov/naturalgas/weekly/
+13. U.S. Energy Information Administration, Energy Explained: Liquefied Natural Gas. https://www.eia.gov/energyexplained/natural-gas/liquefied-natural-gas.php
+14. Wikipedia, Washington Public Power Supply System. 二次資料 https://en.wikipedia.org/wiki/Washington_Public_Power_Supply_System
+15. 電気事業連合会, FEPC INFOBASE 2025 テーマb 電力設備. https://www.fepc.or.jp/resource_sw/INFOBASE_2025_b.pdf
+16. 電気事業連合会, FEPC INFOBASE 2025 テーマa 電力需給. https://www.fepc.or.jp/resource_sw/INFOBASE_2025_a.pdf
+17. 電気事業連合会, FEPC INFOBASE 2025 テーマg 再生可能エネルギー. https://www.fepc.or.jp/resource_sw/INFOBASE_2025_g.pdf
+18. POWER Magazine, Transformers in 2026: Shortage, Scramble, or Self-Inflicted Crisis?. https://www.powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/
+19. Wood Mackenzie, Power transformers and distribution transformers will face supply deficits of 30% and 10% in 2025. https://www.woodmac.com/press-releases/power-transformers-and-distribution-transformers-will-face-supply-deficits-of-30-and-10-in-2025/
+20. Siemens Energy, Earnings Release Q4 FY 2025. https://www.siemens-energy.com/global/en/home/press-releases/earnings-release-q4-fy-2025.html
+21. GE Vernova, Second quarter 2026 financial results press release. https://www.gevernova.com/sites/default/files/gev_webcast_pressrelease_07222026.pdf
+22. Cleveland-Cliffs, Butler Works. https://www.clevelandcliffs.com/operations/steelmaking/butler-works
+23. U.S. Department of Energy, DOE Finalizes Energy Efficiency Standards for Distribution Transformers. https://www.energy.gov/articles/doe-finalizes-energy-efficiency-standards-distribution-transformers-protect-domestic
+24. e-Gov法令検索, 電気事業法. https://laws.e-gov.go.jp/api/1/lawdata/339AC0000000170
+25. e-Gov法令検索, 電気事業法施行規則 第45条の24. https://laws.e-gov.go.jp/api/1/articles;lawId=407M50000400077;article=第四十五条の二十四
+26. e-Gov法令検索, 工業用水法. https://laws.e-gov.go.jp/api/1/lawdata/331AC0000000146
+27. e-Gov法令検索, 水質汚濁防止法. https://laws.e-gov.go.jp/api/1/lawdata/345AC0000000138
+28. 関西電力送配電, 新たな託送料金制度の導入に伴う収入の見通し等の概要. https://www.kansai-td.co.jp/new-consignment-fee/index.html
+29. 関西電力送配電, 託送料金における収入の見通しの変更承認申請について. https://www.kansai-td.co.jp/corporate/press-release/2026/pdf/0710_1j_01.pdf
+30. 送配電網協議会, 一般送配電事業者による託送供給等に係る収入の見通しの変更承認申請について. https://www.tdgc.jp/information/2026/07/10_1730.html
+31. 電力広域的運営推進機関, 2026年度供給計画の取りまとめ. http://www.occto.or.jp/assets/various/kyoukei/torimatome/260330_kyokyukeikaku_torimatome/260330_kyokei_torimatome.pdf
+32. 電力広域的運営推進機関, 容量確保契約の結果 メインオークション 対象実需給年度2029年度. http://www.occto.or.jp/various/capacity-market/jitsujukyukanren/yoryokakuhokeiyaku/mainauction_keiyakukekka_2029.pdf
+33. GIIGNL Annual Report 2026. https://giignl.org/annual-report/
+34. IEEJ, LNG Review July 2026. https://eneken.ieej.or.jp/data/13460.pdf
+35. JOGMEC, Results of the Survey on Destination Clauses etc. 2025. https://journal.jogmec.go.jp/oilgas/nglng-en/survey/2025-results.html
+36. JOGMEC, LNG Handling Volume Survey FY2024 Results. https://journal.jogmec.go.jp/oilgas/nglng-en/handling-volume/2025-results.html
+37. JOGMEC, Natural Gas and LNG 週次情報. https://journal.jogmec.go.jp/oilgas/nglng-en/index.html
+38. World Nuclear Association, Small Nuclear Power Reactors. https://world-nuclear.org/information-library/nuclear-fuel-cycle/nuclear-power-reactors/small-nuclear-power-reactors
+39. Google, Google and Kairos Power Nuclear Energy Agreement. https://blog.google/outreach-initiatives/sustainability/google-kairos-power-nuclear-energy-agreement/
+40. Amazon, Amazon Nuclear Small Modular Reactor Investment. https://www.aboutamazon.com/news/sustainability/amazon-nuclear-small-modular-reactor-net-carbon-zero
+41. Wikipedia, NuScale Power. 二次資料 https://en.wikipedia.org/wiki/NuScale_Power
+42. Wikipedia, Kairos Power. 二次資料 https://en.wikipedia.org/wiki/Kairos_Power
+43. Wikipedia, BWRX-300. 二次資料 https://en.wikipedia.org/wiki/BWRX-300
+44. Wikipedia, Vogtle Electric Generating Plant. 二次資料 https://en.wikipedia.org/wiki/Vogtle_Electric_Generating_Plant
+45. Wikipedia, Small Modular Reactor. 二次資料 https://en.wikipedia.org/wiki/Small_modular_reactor
+46. Wikipedia, Nuclear Regulatory Commission. 二次資料 https://en.wikipedia.org/wiki/Nuclear_Regulatory_Commission
+47. Samsung Electronics Sustainability Report 2024. https://www.samsung.com/global/sustainability/media/pdf/Samsung_Electronics_Sustainability_Report_2024_ENG.pdf
+48. Arizona Department of Water Resources, Assured and Adequate Water Supply. https://www.azwater.gov/aaws
+49. U.S. Environmental Protection Agency, NPDES Permit Basics. https://www.epa.gov/npdes/npdes-permit-basics
+50. Li et al., Making AI Less "Thirsty", arXiv:2304.03271. https://arxiv.org/abs/2304.03271
+51. Uptime Institute Journal, Lower density brings server efficiency and cooling gains. https://journal.uptimeinstitute.com/lower-density-brings-server-efficiency-and-cooling-gains/
+52. Uptime Institute Journal, Investments back two-phase cooling as water cold plate successor. https://journal.uptimeinstitute.com/investments-back-two-phase-cooling-as-water-cold-plate-successor/
+53. Uptime Institute Journal, Liquid cooling will not outgrow its high-density niche. https://journal.uptimeinstitute.com/liquid-cooling-will-not-outgrow-its-high-density-niche/
+54. NVIDIA, GB200 NVL72. https://www.nvidia.com/en-us/data-center/gb200-nvl72/
+55. Stockholm Exergi, Värmeåtervinning. https://www.stockholmexergi.se/varmeatervinning/
+56. Fortum, Espoo Clean Heat. https://www.fortum.com/fi/en/espoo-clean-heat
+57. Deep Green. https://deepgreen.energy/
+58. コージェネレーション・エネルギー高度利用センター, コージェネとは. https://www.ace.or.jp/web/chp/chp_0010.html
+59. コージェネレーション・エネルギー高度利用センター, 導入実績. https://www.ace.or.jp/web/works/works_0010.html
+60. 日本熱供給事業協会. https://www.jdhc.or.jp/
+61. Google Research, Exploring a space-based, scalable AI infrastructure system design. https://research.google/blog/exploring-a-space-based-scalable-ai-infrastructure-system-design/
+62. Towards a future space-based, highly scalable AI infrastructure system design, arXiv:2511.19468. https://arxiv.org/abs/2511.19468
+63. Starcloud 白書, Why we should train AI in Space. https://starcloudinc.github.io/wp.pdf
+64. IEEE Spectrum, Why Thermodynamics Rules Future Orbital Data Centers. https://spectrum.ieee.org/orbital-data-centers-heat
+65. NASA NTRS, Operations and Results from the 200 Gbps TBIRD Laser Communication Mission. https://ntrs.nasa.gov/citations/20230007959
+66. New Space Economy, SpaceX Rideshare Pricing as of February 2026. https://newspaceeconomy.ca/2026/02/27/spacex-rideshare-pricing-as-of-february-2026/
+67. Data Center Frontier, Starcloud Launches Orbital AI Data Center With NVIDIA H100 GPU. https://www.datacenterfrontier.com/site-selection/article/55337494/starcloud-launches-orbital-ai-data-center-with-nvidia-h100-gpu
+68. Commonwealth Fusion Systems, ARC. https://cfs.energy/technology/arc

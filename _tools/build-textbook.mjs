@@ -307,6 +307,15 @@ ${END}`;
 
 // ─── run ─────────────────────────────────────────────────────────────────────
 
+const SNAV_RE = /<!-- snav:start -->[\s\S]*?<!-- snav:end -->/;
+
+/** Keep the nav build-nav.mjs already wrote, so the two tools do not fight. */
+function carrySnav(next, cur) {
+  if (!cur) return next;
+  const m = cur.match(SNAV_RE);
+  return m ? next.replace(SNAV_RE, () => m[0]) : next;
+}
+
 const list = async (dir) => {
   try { return (await readdir(dir)).filter((f) => f.endsWith('.md')).sort(); }
   catch { return []; }
@@ -361,8 +370,11 @@ for (const [section, list] of Object.entries(bySection)) {
       next: k < list.length - 1 ? { file: files[k + 1], title: list[k + 1].meta.title } : null,
     };
     const abs = path.join(dir, 'chapters', files[k]);
-    const next = page(meta, html, headings, nav);
     const cur = existsSync(abs) ? await readFile(abs, 'utf8') : null;
+    // page() emits empty snav markers; build-nav fills them afterwards. Carry the
+    // existing nav across so rebuilding a chapter does not strip it, and so
+    // --check compares the part this tool actually owns.
+    const next = carrySnav(page(meta, html, headings, nav), cur);
     if (cur === next) continue;
     if (CHECK) { console.error(`  WOULD CHANGE     ${DIR[section]}/chapters/${files[k]}`); stale++; continue; }
     await writeFile(abs, next);

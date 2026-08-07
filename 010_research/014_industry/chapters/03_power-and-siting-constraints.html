@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>計算需要を支える物理層｜業界構造・技術</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
+    padding:6px 0 6px 14px;margin:0 0 22px}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 20px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:8px}
+  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
+  .tb-toc li{margin:3px 0}
+  .tb-toc a{color:var(--ink);text-decoration:none}
+  .tb-toc a:hover{color:var(--accent)}
+
+  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:70px}
+  h3{font-size:16px;margin:28px 0 6px}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:12px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:12px 0;padding-left:24px}
+  li{margin:4px 0}
+
+  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  td a{word-break:break-all}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:center;gap:4px}
+.snav-inline a{color:rgba(255,255,255,.7);text-decoration:none;font-size:12px;font-weight:500;padding:6px 12px;border-radius:4px;transition:all .15s;letter-spacing:-.01em}
+.snav-inline a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.snav-inline .sep{width:1px;height:14px;background:rgba(255,255,255,.18);margin:0 6px}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><span class="sep"></span><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><span class="sep"></span><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/024_method/index.html">method</a></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / 010 research /
+    <a href="../index.html">014_industry</a> / chapter 3</div>
+
+  <div class="tb-ch">Chapter 3 — 業界構造・技術</div>
+  <h1>計算需要を支える物理層</h1>
+  <p class="tb-thesis">AI需要の律速はチップではなく、送電網・変圧器・水・排熱という調達リードタイムが年単位の物理資産に移り、その増設速度は制度設計が決めている。</p>
+
+<p class="tb-warn"><strong>この章はまだ出典照合を通していない。</strong>
+数値は執筆時に調べたまま入っており、第三者による検証を経ていない。
+本文中の出典リンクから各自で確かめること。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">需要ショックの歪みは発電量ではなく系統に出る</a></li><li><a href="#s2">高電圧送電と変電階層の仕組み</a></li><li><a href="#s3">変圧器の納期がボトルネック化した要因</a></li><li><a href="#s4">総括原価からレベニューキャップへ、三層市場は投資を引き出せるか</a></li><li><a href="#s5">自家発電と系統購入を組み合わせるモデルの採算</a></li><li><a href="#s6">燃料調達の契約構造が電力料金へ伝わる経路</a></li><li><a href="#s7">新規電源としてのSMRの時間軸と規制工程</a></li><li><a href="#s8">水と排水処理という第二の立地変数</a></li><li><a href="#s9">液冷への移行と排熱二次利用が成立する境界</a></li><li><a href="#s10">地上の制約から逃げる選択肢としての軌道上計算</a></li><li><a href="#s11">この章の要点</a></li><li><a href="#s12">残っている問い</a></li><li><a href="#s13">出典</a></li></ol></nav>
+
+<p>AIの議論はチップの供給で止まりがちである。しかし完成したチップを箱に詰めても、電気が来なければ1トークンも出力しない。米国では2025年末時点で2,060GW超の発電・蓄電容量が系統接続を待っており、2025年に運転開始した案件では接続申込から商業運転までの期間の中央値が5年を超えた<a href="https://emp.lbl.gov/queues" target="_blank" rel="noopener">出典</a>。大型電力用変圧器の納期は2025年第2四半期の米国調査で128週である<a href="https://www.powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/" target="_blank" rel="noopener">出典</a>。半導体の設計サイクルが2年前後で回るのに対し、電気を運ぶ側の資産は年単位でしか増えない。この時間差を知らないまま計算需要の伸びを語ると、供給されない電力を前提に計画を立てることになる。この章は、その物理層がどこで詰まり、誰の意思決定がその速度を決めているかを扱う。</p>
+<h2 id="s1">需要ショックの歪みは発電量ではなく系統に出る</h2>
+<p>まず規模感を正しく置く。世界のデータセンター電力消費は2024年で415TWh、世界電力消費の約1.5%である<a href="https://www.iea.org/reports/energy-and-ai/executive-summary" target="_blank" rel="noopener">出典</a>。2030年には約945TWh、世界電力消費の3%弱になる見通しである<a href="https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai" target="_blank" rel="noopener">出典</a>。国際エネルギー機関の整理では、データセンターは2030年までの世界電力需要増の約1割にとどまり、産業用モーター、家庭とオフィスの空調、電気自動車のいずれよりも小さい。世界の電力システムを壊す規模ではない。</p>
+<p>一方で米国だけを見ると様相が変わる。米国のデータセンター電力消費は2018年の76TWhから2023年の176TWhへ増え、米国電力消費に占める比率は1.9%から4.4%になった<a href="https://escholarship.org/uc/item/32d6m0d1" target="_blank" rel="noopener">出典</a>。2018年から2023年の年平均成長率は18%である。2014年から2016年は約60TWhで横ばいだった。効率改善が需要増を吸収した時期が実在し、2017年以降にそれが止まった。効率戦略が失敗したのではなく、GPU加速サーバーの増加が効率改善の速度を上回った。</p>
+<p>歪みは全国平均の需給ではなく、局所指標に先に出る。順序は次の4つである。</p>
+<p>第一に容量価格である。PJMの2025/2026年度基本容量オークションはRTO全域で269.92ドル/MW-dayで清算し、前年度の28.92ドル/MW-dayの9.3倍になった。需要側の総費用は22億ドルから147億ドルへ増えた<a href="https://www.pjm.com/-/media/DotCom/markets-ops/rpm/rpm-auction-info/2025-2026/2025-2026-base-residual-auction-report.pdf" target="_blank" rel="noopener">出典</a>。同じオークションで、バージニア州のデータセンター集積地を含むDOM区域は444.26ドル/MW-dayで清算した。全域価格の1.65倍である。全国平均に余裕があっても区域で足りないという構図が、価格に先に現れた。</p>
+<p>第二に系統接続の待ち行列である。国際エネルギー機関は、系統接続の遅延によって計画中のデータセンターの約20%がリスクにさらされるとし、先進国での送電インフラ建設に4年から8年かかるとしている<a href="https://www.iea.org/reports/energy-and-ai/executive-summary" target="_blank" rel="noopener">出典</a>。米国の待ち行列の実績値はさらに厳しい。2000年から2020年に接続申込を出した容量のうち、2025年末までに商業運転へ到達したのは13%で、75%は取り下げられた<a href="https://emp.lbl.gov/queues" target="_blank" rel="noopener">出典</a>。</p>
+<p>第三に燃料構成である。2024年から2030年にかけて、データセンターの追加需要の40%超を天然ガスと石炭が満たす見通しであり、米国では天然ガスが130TWh超と最大の増分を担う<a href="https://www.iea.org/reports/energy-and-ai/energy-supply-for-ai" target="_blank" rel="noopener">出典</a>。</p>
+<p>第四に一国単位の構成比である。アイルランドではデータセンターが計量済み電力消費の22%を占める。2015年は5%で、17ポイント上昇した。同期間に都市部住宅の比率は22%から18%へ下がった<a href="https://www.cso.ie/en/releasesandpublications/ep/p-dcmec/datacentresmeteredelectricityconsumption2024/" target="_blank" rel="noopener">出典</a>。ここまで来ると、電力は技術問題ではなく誰に配分するかという政治問題になる。</p>
+<p>先例としては暗号資産マイニングが速度と可視性の点で近い。米国エネルギー情報局は2023年の米国内マイニング電力消費を25TWhから91TWhと推計した。推計幅が3.6倍あることが、この種の需要の把握しにくさを示す。同時に21州の137施設を個別に特定し、うち101施設で合計10,275MWの容量を確認している<a href="https://www.eia.gov/todayinenergy/detail.php?id=61364" target="_blank" rel="noopener">出典</a>。総量が推計でしか出せない一方、個別施設は特定できる。データセンター需要の予測が広い幅を持つ理由も同じ構造にある。</p>
+<p>もう1つの先例は予測が外れた側にある。ワシントン公営電力供給システムは1970年代に大型原子力5基の建設に着手し、コスト超過と需要成長の鈍化により1982年に2基を中止、1983年7月に22.5億ドルの地方債を債務不履行にした<a href="https://en.wikipedia.org/wiki/Washington_Public_Power_Supply_System" target="_blank" rel="noopener">出典</a>。この出典は二次資料であり、当時の需要予測の前提成長率は確認できていない。需要予測に先行して電源を建てる構造が、需要鈍化時に費用回収の主体を欠くという型だけを取り出しておく。</p>
+<h2 id="s2">高電圧送電と変電階層の仕組み</h2>
+<p>送電線で失われる電力は、電流の2乗と抵抗の積で決まる。送る電力が一定なら電流は電圧に反比例するので、損失は電圧の2乗に反比例する。電圧を2倍にすれば損失は4分の1になる。日本の電力系統が275,000Vから500,000Vという電圧で送るのはこのためである<a href="https://www.fepc.or.jp/resource_sw/INFOBASE_2025_b.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>ここで誤解が生じやすい。高電圧化の直接の効果は容量拡大ではなく損失削減である。送れる量そのものは電圧と電流の積で決まる。</p>
+<p>日本の系統は発電所出口で275,000Vから500,000Vに昇圧され、超高圧変電所、一次変電所の154,000V、中間変電所の66,000Vと22,000V、配電用変電所の3,300Vから6,600V、柱上変圧器の100Vと200Vへと段階的に降圧される<a href="https://www.fepc.or.jp/resource_sw/INFOBASE_2025_b.pdf" target="_blank" rel="noopener">出典</a>。この階層は効率のためだけにあるのではない。電圧階級ごとに接続できる需要家の規模が決まる。一次変電所からは鉄道と大工場が154,000Vで直接受電し、中間変電所からは大工場とビルが受電する。電圧階層は顧客セグメントの階層でもある。大規模データセンターがどの階層に接続するかで、必要な設備も工期も変わる。</p>
+<p>500,000Vより上の交流送電が日本で実用化されていない理由は物理の限界ではない。昇圧の便益は電圧の2乗で効くが、便益の絶対額は単位長さあたりの損失削減に亘長を掛けたものである。距離が短ければ削減できる絶対額は小さい。日本の送電線亘長は2024年度で架空88,567km、地中27,590kmであり、これが10エリアに分散している<a href="https://www.fepc.or.jp/resource_sw/INFOBASE_2025_b.pdf" target="_blank" rel="noopener">出典</a>。1本のルートで1,000km級の区間は限られる。他方で昇圧のコストは絶縁距離、鉄塔寸法、碍子連数、変圧器と遮断器の仕様に効き、電圧に対して単調に増える。距離が短い系統では増分コストが便益を上回る。</p>
+<p>日本で最長の広域送電ニーズが生じた北海道と本州の間では、交流のさらなる昇圧ではなく海底直流送電が選ばれた。長距離かつ海底という条件では充電電流の問題から交流ケーブルが成立しにくい。500,000Vより上の答えは超高圧交流ではなく直流に向かった。</p>
+<p>なお、1000kV設計で建設された基幹送電線が500kV運用にとどまっているという広く流通した理解については、ノート作成時点で一次資料を取得できていない。断定はしない。</p>
+<p>いま不足しているのは変電所単体ではなく、地域間連系線を含む基幹送電網である。電気事業連合会は容量面の系統制約を、送電線の容量不足、変電設備の容量不足、配電線の容量不足の3つとして並列に図示している<a href="https://www.fepc.or.jp/resource_sw/INFOBASE_2025_g.pdf" target="_blank" rel="noopener">出典</a>。どれか1つだけが足りないという構図ではない。投資の重心で判断すると、2023年3月29日策定の広域連系系統のマスタープランの必要投資額は概算で約6.0兆円から7.0兆円であり、エリア間の合計が約4.0兆円から5.0兆円、エリア内の合計が約2.7兆円である。エリア間はエリア内の1.5倍から1.9倍にあたる。最大の項目は北海道から東北を経て東京への新設で約2.5兆円から3.4兆円である<a href="https://www.fepc.or.jp/resource_sw/INFOBASE_2025_g.pdf" target="_blank" rel="noopener">出典</a>。ただし内訳の単純合計は約6.7兆円から7.7兆円となり、公表総額と一致しない。いずれも概算値である。</p>
+<p>停電の原因が容量不足だという理解も実績に合わない。2024年度の電気事故は10電力計で14,518件、最多原因は他物接触と鳥獣の4,613件、次いで設備不備と保守不備の2,756件、風雨と水害の2,584件である。需給不足も系統容量超過も原因分類に存在しない。停電実績は1軒あたり年間0.13回、24分である<a href="https://www.fepc.or.jp/resource_sw/INFOBASE_2025_b.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>では容量超過はどこに出るのか。出力制御である。優先給電ルールは、揚水運転による吸収と火力の出力制御、連系線を活用した他地域への送電、バイオマスの出力制御、太陽光と風力の出力制御という順序を定める<a href="https://www.fepc.or.jp/resource_sw/INFOBASE_2025_g.pdf" target="_blank" rel="noopener">出典</a>。容量が足りないときに落とされるのは需要家ではなく発電側である。系統容量超過のコストは停電ではなく、捨てられる電気として発電事業者に転嫁される。</p>
+<p>送電の物理層に革命が起きにくいのは、制約が導体の性能ではなく工期と許認可にあるためである。運用層は別である。国際エネルギー機関は、AIを用いた系統運用ツールを適用すれば新規送電線を1本も建設せずに最大175GWの送電容量を解放できるとしている<a href="https://www.iea.org/reports/energy-and-ai/executive-summary" target="_blank" rel="noopener">出典</a>。同じ報告書が示す米国データセンター需要の2024年から2030年の増分240TWhは、8760時間で割ると平均27.4GWに相当する。175GWはこれを大きく上回る。ただし175GWは世界全体の数字であり、地域別内訳は確認できていない。既設線の熱容量と潮流制御で吸収するアプローチが、新設に比べて時間軸の短い打ち手である。</p>
+<h2 id="s3">変圧器の納期がボトルネック化した要因</h2>
+<p>系統増強の遅れは、送電線の建設だけでなく機器調達で起きている。ここで詰まっているのが変圧器である。</p>
+<p>まず納期の実測値を機種別に置く。混ぜて語ると打ち手を誤る。</p>
+<div class="tb-tw"><table><thead><tr><th>機種</th><th>リードタイム</th><th>時点</th><th>出典URL</th></tr></thead><tbody><tr><td>発電機昇圧変圧器</td><td>144週</td><td>2025年Q2</td><td>https://www.powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/</td></tr><tr><td>電力用変圧器</td><td>128週</td><td>2025年Q2</td><td>https://www.powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/</td></tr><tr><td>開閉装置</td><td>44週</td><td>2025年Q2</td><td>https://www.powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/</td></tr><tr><td>配電用変圧器</td><td>30週</td><td>2025年Q2</td><td>https://www.woodmac.com/press-releases/power-transformers-and-distribution-transformers-will-face-supply-deficits-of-30-and-10-in-2025/</td></tr></tbody></table></div>
+<p>電力用と配電用でリードタイムは4倍以上違う。2025年の供給不足率も電力用が30%、配電用が10%と3倍の開きがある<a href="https://www.woodmac.com/press-releases/power-transformers-and-distribution-transformers-will-face-supply-deficits-of-30-and-10-in-2025/" target="_blank" rel="noopener">出典</a>。データセンターと基幹送電の議論は電力用、住宅と商業の配電網更新の議論は配電用である。国際エネルギー機関の2024年サプライヤー調査では、大型電力用変圧器のリードタイムは2021年から2022年の平均比で1.8倍に伸び、特殊仕様では4年に達する<a href="https://iea.blob.core.windows.net/assets/6fbf940a-d4e8-4156-b8e0-07c2f793c094/BuildingtheFutureTransmissionGrid.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>128週を製造期間だと理解すると対策を誤る。実際には製造着手までの待ち行列が大部分を占める。買い手が予約しているのは製品ではなく製造スロットである。</p>
+<p>供給側は集中している。10MVA超の電力用変圧器の世界貿易額は2023年で135億USドル、中国・韓国・トルコ・イタリアの4か国で世界貿易額の50%を占め、中国単独で4分の1である<a href="https://iea.blob.core.windows.net/assets/6fbf940a-d4e8-4156-b8e0-07c2f793c094/BuildingtheFutureTransmissionGrid.pdf" target="_blank" rel="noopener">出典</a>。米国市場では2025年時点で電力用変圧器の80%、配電用変圧器の50%が輸入とみられる<a href="https://www.woodmac.com/press-releases/power-transformers-and-distribution-transformers-will-face-supply-deficits-of-30-and-10-in-2025/" target="_blank" rel="noopener">出典</a>。</p>
+<p>なぜ増産が効かないのか。制約は設備、人材、素材の3つすべてに存在するが、効き方の順序が違う。</p>
+<p>設備が第一の律速である。変圧器工場は乾燥炉と高電圧試験設備を要する専用設備で、新設に3年から4年かかる。しかも物理的な建設期間の前に、投資判断が止まる区間がある。国際エネルギー機関は、メーカーが将来需要の規模に不確実性を見ており、新設能力の稼働率を確保できると確信するには長期の受注可視性が要ると整理している。2010年代の系統投資停滞期に能力を絞った経験が、ブームの持続性への疑いを残している。この構造を崩すために買い手側が長期枠組み契約へ移りつつあり、従来2年から3年だった枠組み契約の期間は大型機器で5年程度まで伸びている。</p>
+<p>人材が第二である。世界で系統の建設・保守・運用に従事するのは約800万人で、現行政策前提でも2030年までに150万人の追加が必要と見積もられている<a href="https://iea.blob.core.windows.net/assets/6fbf940a-d4e8-4156-b8e0-07c2f793c094/BuildingtheFutureTransmissionGrid.pdf" target="_blank" rel="noopener">出典</a>。工場を建てる側にも熟練労働が要るため、人材不足は設備投資そのものの制約にもなる。</p>
+<p>素材が第三である。方向性電磁鋼板は変圧器コアに使われ、単体で総コストの20%超を占める。銅とアルミと絶縁材を足すと材料費は総コストの50%超になる。方向性電磁鋼板の価格は2021年から2023年半ばにかけて2倍になった。要因は変圧器需要の増加に加え、電気自動車モーター用の無方向性電磁鋼板へ生産を振り向けたメーカーが出たことである。ここで注意すべきは、素材はグローバルには価格制約として効いており、数量が世界の生産台数を直接止めているという記述は国際エネルギー機関の報告書に見当たらないことである。</p>
+<p>ただし米国は例外である。方向性電磁鋼板の国内生産者はクリーブランド・クリフスのバトラー工場1社に限られる<a href="https://www.clevelandcliffs.com/operations/steelmaking/butler-works" target="_blank" rel="noopener">出典</a>。この単一供給源が規制判断を動かした。米国エネルギー省は2024年4月4日の配電用変圧器の省エネ基準最終規則で、当初案では市場の約95%をアモルファス合金へ移行させる内容を、約75%が方向性電磁鋼板のままで基準を満たせる形に修正し、遵守期限も3年から5年に延ばした<a href="https://www.energy.gov/articles/doe-finalizes-energy-efficiency-standards-distribution-transformers-protect-domestic" target="_blank" rel="noopener">出典</a>。規制当局が供給制約を悪化させない側に舵を切った事例である。</p>
+<p>需給の逼迫度は受注残に最もよく現れる。シーメンスエナジーのグリッドテクノロジーズ部門の受注残は2025会計年度末で420億ユーロである<a href="https://www.siemens-energy.com/global/en/home/press-releases/earnings-release-q4-fy-2025.html" target="_blank" rel="noopener">出典</a>。GEベルノバの電化部門の機器受注残は2026年6月30日締めの四半期末で406億USドル、前年同期比69%増である<a href="https://www.gevernova.com/sites/default/files/gev_webcast_pressrelease_07222026.pdf" target="_blank" rel="noopener">出典</a>。増産投資も動いてはいる。2023年以降に北米で発表された変圧器製造能力への投資は合計で約18億USドルにのぼる。ただしこれらが稼働するのは2027年から2028年である。発表と稼働の間に3年前後の空白がある以上、2026年から2027年の需給は緩まない。</p>
+<h2 id="s4">総括原価からレベニューキャップへ、三層市場は投資を引き出せるか</h2>
+<p>物理資産が年単位でしか増えないなら、次の問いは誰がその投資に踏み切るのかになる。答えは制度が決めている。</p>
+<p>日本の送配電料金は2023年度に総括原価方式からレベニューキャップ方式へ移行した。電気事業法第17条の2第1項は、一般送配電事業者が省令で定める期間ごとに、業務を能率的かつ適正に運営するために通常必要と見込まれる収入を算定し、経済産業大臣の承認を受けることを定める<a href="https://laws.e-gov.go.jp/api/1/lawdata/339AC0000000170" target="_blank" rel="noopener">出典</a>。承認された収入上限の範囲内で単価を設定するため、費用を削れば差額が事業者に残る。設計の前提は、5年間の規制期間中に収入上限を動かさないことだった。</p>
+<p>制度の入口ではインセンティブが働いた。関西電力送配電の第一規制期間の承認収入上限は7,154億円/年で、前回の料金改定時の7,123億円/年から31億円の増加にとどまった。見積費用には551億円/年の効率化額が織り込まれ、内訳は要員効率化58億円、資機材調達218億円、工事275億円である<a href="https://www.kansai-td.co.jp/new-consignment-fee/index.html" target="_blank" rel="noopener">出典</a>。同社は2026・2027年度の投資計画で鉄塔を52基削減し期初計画比13.8%減、架空送電線を60km削減し同19.4%減とした<a href="https://www.kansai-td.co.jp/corporate/press-release/2026/pdf/0710_1j_01.pdf" target="_blank" rel="noopener">出典</a>。総括原価方式では設備物量の削減は報酬基礎の縮小を意味する。事業者が自ら物量を落とした点が制度前と異なる行動である。</p>
+<p>制度の出口では弱まった。2025年12月16日の料金制度専門会合で、第一規制期間も物価上昇の制度措置の対象とし、対象年度を2026・2027年度とすることが整理された。費用項目には消費者物価指数、投資項目には建設工事費デフレーターを適用する。事業報酬も公社債利回り実績を直近5年平均に置き換えて差分を措置する。この措置を使い、関西電力送配電は5か年見積費用を3兆6,130億円から3兆7,626億円へ1,496億円増やす変更承認を申請した。年換算では7,244億円/年から8,300億円/年である。内訳は原材料費と労務費の上昇が1,135億円、金利上昇による事業報酬の増が365億円である。2026年7月10日には10社が一斉に変更承認を申請した<a href="https://www.tdgc.jp/information/2026/07/10_1730.html" target="_blank" rel="noopener">出典</a>。</p>
+<p>つまりインセンティブは、事業者が制御できる物量と単価には働き、制御できない物価と金利には働かない。5年間の価格固定を前提とした強い誘因は、第一規制期間の後半で17か月分の料金改定に置き換わった。レベニューキャップは5年間料金を固定する制度ではない。</p>
+<p>送配電の外側には、キロワット時を取引する卸電力市場、キロワットを取引する容量市場、調整力を取引する需給調整市場という三層がある。投資を引き出すかを日米で比較すると、逼迫の出方が違う。</p>
+<div class="tb-tw"><table><thead><tr><th>論点</th><th>米国PJM</th><th>日本</th></tr></thead><tbody><tr><td>容量価格</td><td>2027/2028年度BRAは333.44ドル/MW日で一時的な価格上限に張り付いた</td><td>2029年度メインオークションの東京エリアプライスは15,111円/kW、上限張り付きの記載なし</td></tr><tr><td>調達量</td><td>約定量134,478.1MW、FRR分を加えても信頼度必要量を6,516.6MW下回った</td><td>約定総容量166,079,863kW、約定総額は経過措置控除後で2兆2,093億円</td></tr><tr><td>予備率</td><td>約定した設備予備率14.4%、目標20%を5.6ポイント下回る</td><td>2028年度以降、東北・東京・中部から四国・九州で年間EUEが目標停電量を超過する見通し</td></tr><tr><td>需要増</td><td>信頼度必要量を146,105MWから152,400MWへ引き上げ、うち5,249.9MWは大口負荷が主因</td><td>8月最大3日平均電力は2035年度16,460万kW、2025年度実績から年平均0.4%増</td></tr><tr><td>出典</td><td>https://www.pjm.com/-/media/DotCom/markets-ops/rpm/rpm-auction-info/2027-2028/2027-2028-bra-report.pdf</td><td>http://www.occto.or.jp/assets/various/kyoukei/torimatome/260330_kyokyukeikaku_torimatome/260330_kyokei_torimatome.pdf</td></tr></tbody></table></div>
+<p>差は3点にまとまる。第一に需要増の速度である。PJMは1回のオークションで信頼度必要量を6,295MW引き上げた。日本の全国需要は年平均0.4%増である。第二に逼迫の出方である。米国は価格として現れ、日本は数量として現れる。しかも日本の2028年度以降の供給信頼度の悪化は火力の休廃止が主因であり、需要側ではない。第三に不確実性の向きである。米国ではデータセンターの接続が確定的な負荷として需要想定に積み上がる。日本ではデータセンターの運開時期の後ろ倒しにより蓋然性の高い需要の見極めが困難になっており、発電事業者が座礁資産リスクを意識して新設とリプレースの投資に踏み込みにくい状況が報告されている。事業者ヒアリングでは、長期脱炭素電源オークションの現行の対象と条件ではインセンティブとして不十分だという意見が多い。</p>
+<p>日本の論点は価格上限ではなく、容量市場と長期脱炭素電源オークションの対象と条件の設計にある。ここが動かない限り、需要が来ても電源は建たない。</p>
+<h2 id="s5">自家発電と系統購入を組み合わせるモデルの採算</h2>
+<p>系統が間に合わないなら自前で発電すればよい、という発想は自然に出てくる。ただし採算は4つの変数で決まり、そのうち1つが構造的な弱点になる。</p>
+<p>第一にスパークスプレッドである。燃料単価から自家発1kWhあたりの燃料費を出し、系統から買う場合の従量単価との差を取る。この差が正でなければ設備投資の議論に入れない。</p>
+<p>第二に稼働率である。設備費は固定費であり、稼働率が下がるほど1kWhあたりの償却負担が上がる。データセンターは負荷率が高いため、この点では自家発に向く。</p>
+<p>第三に熱の使い道である。コージェネレーションは排熱を給湯や冷房に回して総合効率を上げる。ガスエンジン等のコージェネは低位発熱量基準で発電効率50%以上、排熱回収効率35%以上を達成しており、両者を足すと投入エネルギーの85%程度を回収する計算になる<a href="https://www.ace.or.jp/web/chp/chp_0010.html" target="_blank" rel="noopener">出典</a>。日本国内の累積導入は2025年3月末時点で22,819台、発電容量14,239MW、内訳は民生用2,875MW、産業用11,364MWである<a href="https://www.ace.or.jp/web/works/works_0010.html" target="_blank" rel="noopener">出典</a>。熱需要が年間を通じて安定する病院、ホテル、食品工場では成立しやすく、熱需要が薄いオフィスビルでは成立しにくい。</p>
+<p>第四に基本料金の削減幅である。ここが不足分だけ買うモデルの弱点にあたる。日本の高圧と特別高圧の料金は基本料金と従量料金の二部制で、基本料金は契約電力に比例する。自家発が停止したときのバックアップを系統に求める以上、契約電力を自家発の出力分だけ引き下げることはできない。従量料金は減るが基本料金は残る。削減額は従量料金部分に偏る。日本の料金メニューの実データを取得できていないため、削減幅は数値で示せない。</p>
+<p>制度面では自家発に有利な要素が1つある。再生可能エネルギー発電促進賦課金は系統から買った電力量に課され、自家消費分にはかからない。賦課金単価は2012年度の0.22円/kWhから2025年度の3.98円/kWhへ18倍になった。2025年度の買取費用の総額は約4.9兆円である<a href="https://www.fepc.or.jp/resource_sw/INFOBASE_2025_g.pdf" target="_blank" rel="noopener">出典</a>。自家発の相対優位はこの13年で拡大している。</p>
+<p>区域独占の外で電気を供給する枠も確認しておく。電気事業法の現行の類型は特定送配電事業と特定供給に分かれる。前者は第27条の13第1項の届出、後者は第27条の33第1項の許可である。特定供給の許可基準は2点に尽きる。供給者が需要家と省令で定める密接な関係を有すること、そして供給場所が一般送配電事業者または配電事業者の供給区域内にある場合、その区域内の電気の使用者の利益が阻害されるおそれがないことである<a href="https://laws.e-gov.go.jp/api/1/lawdata/339AC0000000170" target="_blank" rel="noopener">出典</a>。施行規則第45条の24は密接な関係を3つに限定し、生産工程や資本関係や人的関係におけるもの、取引等により一の企業に準ずる関係を有し長期継続が見込まれるもの、自ら維持運用する電線路で供給する場合に共同して組合を設立し長期存続が見込まれるものを挙げる<a href="https://laws.e-gov.go.jp/api/1/articles;lawId=407M50000400077;article=第四十五条の二十四" target="_blank" rel="noopener">出典</a>。</p>
+<p>この2要件が守っているものは明確である。1つは、規制を受けない小売供給が事実上の一般供給へ拡大することの防止である。もう1つは、区域内の他の需要家への費用転嫁の防止である。特定供給が既存の託送料金負担を回避すると、残った需要家が固定費を負担することになる。大口需要家が系統から離脱する構図は、この審査の対象になる。</p>
+<h2 id="s6">燃料調達の契約構造が電力料金へ伝わる経路</h2>
+<p>データセンター需要の追加分の相当部分を天然ガスが担う以上、燃料の契約構造が電気料金にどう伝わるかを押さえる必要がある。日本は自国にガス田をほとんど持たず、価値連鎖の下流側だけを国内に持つ。</p>
+<p>価値連鎖のなかで最も重い固定費を負うのは液化工程である。ただし工程別の単位投資額を示す一次資料はノート作成時点で取得できておらず、以下は間接証拠による判断である。第一に稼働率の非対称がある。世界の再ガス化能力は1,247MTPAに対し、2025年の世界LNG輸入量は428MTだった<a href="https://giignl.org/annual-report/" target="_blank" rel="noopener">出典</a>。受入基地は名目能力の約34%しか使われていない。設備投資が最も重い工程であれば、この過剰能力を受入基地事業者は負担しきれない。第二に運転コストの構造がある。液化工程では投入ガスの7%から15%が消費される<a href="https://www.eia.gov/energyexplained/natural-gas/liquefied-natural-gas.php" target="_blank" rel="noopener">出典</a>。マイナス162度まで冷却するために大型の圧縮機と駆動タービンが要る。再ガス化は海水や燃焼熱で温める工程であり、必要な機械は小さい。再ガス化能力が足りないから受入がボトルネックだという理解は、能力が輸入量の約2.9倍あるという事実と整合しない。</p>
+<p>価格形成は二層構造である。日本の買主22社を対象とした調査では、FY2024の長期契約数量70MTのうち原油指標に連動するものが49MTで70%、米国のヘンリーハブ指標に連動するものが12MTで16%、両者の組み合わせが4%である<a href="https://journal.jogmec.go.jp/oilgas/nglng-en/survey/2025-results.html" target="_blank" rel="noopener">出典</a>。原油指標連動は、ガスの需給と無関係な変数で価格が動くことを意味する。この構成はFY2035に原油指標35%、米国現物指標45%へ入れ替わる見通しである。長期契約は固定価格ではない。固定されているのは数量と算式であって価格ではない。</p>
+<p>スポットは別の指標で動く。2026年1月21日終了週の平均で、米国ヘンリーハブが4.98ドル/MMBtu、東アジアのJKMが10.73ドル/MMBtu、欧州TTFが12.40ドル/MMBtuである<a href="https://www.eia.gov/naturalgas/weekly/" target="_blank" rel="noopener">出典</a>。JKMは2026年7月31日時点で21ドル台前半まで上昇した<a href="https://journal.jogmec.go.jp/oilgas/nglng-en/index.html" target="_blank" rel="noopener">出典</a>。同じ年のうちに2倍になった。世界のLNG輸入428MTのうち35%がスポットベースである<a href="https://giignl.org/annual-report/" target="_blank" rel="noopener">出典</a>。</p>
+<p>引き取り義務の有無が第三の違いである。日本の長期契約はFY2024で数量の94%にテイク・オア・ペイ条項が付く。買主は引き取らなくても代金を払う。未引取分を翌期に持ち越すメイクアップ条項はFY2024で74%に付くが、FY2035では44%に下がる見通しである。</p>
+<p>仕向地条項は転売の可否を通じて交渉力を変えた。日本の買主が持つ長期契約のうち仕向地制限付きの数量は、FY2024が70MT中28MTで40%、FY2035が45MT中13MTで30%である。制限付き数量は28MTから13MTへ減る一方、比率は40%から30%への低下にとどまる。契約総量自体が70MTから45MTへ縮むためである。条項は撤廃されたのではなく段階的に減っている。転売できれば需要の読み違いを市場で解消でき、できなければタンク容量が制約になって引き取りを断るか他の調達を止めるしかない。日本企業のFY2024のLNG取扱量109.66MTのうち43.79MTが国内輸入ではない海外取引であり、この数量は転売の自由なしには成立しない<a href="https://journal.jogmec.go.jp/oilgas/nglng-en/handling-volume/2025-results.html" target="_blank" rel="noopener">出典</a>。</p>
+<p>電気料金への伝達は3段階である。第一段階は輸入価格で、長期契約の70%が原油指標に連動するため原油価格が遅れて効く。第二段階は燃料費調整制度で、小売電気事業者が貿易統計に基づく平均燃料価格の変動を一定の遅れを置いて料金に転嫁する。ただし算定式、換算係数、基準燃料価格、反映までの月数についてはノート作成時点で一次資料を確認できておらず、この章では具体的な遅れの月数を示さない。第三段階は数量である。日本の2026年上期のLNG輸入は30.88MTで、2025年上期の32.15MTから1.27MT減った<a href="https://eneken.ieej.or.jp/data/13460.pdf" target="_blank" rel="noopener">出典</a>。減少の理由が需要減なのか価格による買い控えなのかは、この資料だけでは切り分けられない。</p>
+<p>供給途絶リスクもこの経路に乗る。2026年にホルムズ海峡でカタール籍LNG船が被弾し、カタールの不可抗力宣言が続いている。中東と北アフリカからの輸出は2026年上期に前年同期比で約20MT減り、北米からの15MT増でその大半が埋め合わされた。産地が入れ替わると輸送距離と船腹需給が変わり、着地渡し契約の価格に反映される。</p>
+<h2 id="s7">新規電源としてのSMRの時間軸と規制工程</h2>
+<p>小型モジュール炉は電気出力300MWe以下の原子炉を工場でモジュール製造し、現地では組み立てに近い工程で建設する構想である<a href="https://world-nuclear.org/information-library/nuclear-fuel-cycle/nuclear-power-reactors/small-nuclear-power-reactors" target="_blank" rel="noopener">出典</a>。データセンター向けの電源として頻繁に名前が挙がる。問うべきは規制工程が何年で終わるか、量産効果がどの段階で単価に現れるか、量産を支える需要が実在するかの3点である。</p>
+<p>規制工程は3段が直列に積み上がる。設計の承認、サイトごとの建設許可、運転認可である。設計承認が最も長い。NuScaleの50MWe設計は2017年1月の設計認証申請から2023年1月20日の規則発効まで約72か月を要した。同社が出力を77MWeに増強した設計の標準設計承認は2023年1月申請、2025年5月29日承認で約29か月である<a href="https://en.wikipedia.org/wiki/NuScale_Power" target="_blank" rel="noopener">出典</a>。同一事業者の後続申請で審査期間が半分以下になっている。建設許可は設計承認より短く、Kairos PowerのHermes 2は2023年7月申請、2024年11月許可で約16か月である<a href="https://en.wikipedia.org/wiki/Kairos_Power" target="_blank" rel="noopener">出典</a>。短縮の背景には、規制当局が技術報告書を本申請の外で先行承認する運用がある。カナダのOPGは建設許可申請を2022年10月に提出し、最終投資決定が2025年5月で約31か月である<a href="https://en.wikipedia.org/wiki/BWRX-300" target="_blank" rel="noopener">出典</a>。</p>
+<p>制度側の目標値としては、2025年5月の大統領令14300が新規炉の許認可判断を18か月以内に出すことを求めている<a href="https://en.wikipedia.org/wiki/Nuclear_Regulatory_Commission" target="_blank" rel="noopener">出典</a>。ただし2026年8月時点で商用SMRが米国で運転に入った実績はない。新規設計を米国で商用運転させる場合、設計承認と建設許可を並行させても規制手続きだけで5年前後を見込むのが実績に沿う。既に承認済みの設計を使う事業者はこの最初の段を省ける。ここに挙げた個別案件の日付はWikipedia経由の二次情報であり、一次資料での再確認を要する。</p>
+<p>コスト優位は1基あたりの単価では出ていない。Vogtle 3・4号機は正味出力1,117MWeが2基で最終費用368億ドル、合計2,234MWeで割ると約16,500ドル/kWである<a href="https://en.wikipedia.org/wiki/Vogtle_Electric_Generating_Plant" target="_blank" rel="noopener">出典</a>。NuScaleのCarbon Free Power Projectは2023年1月時点で462MWeに対し93億ドル、20,130ドル/kWとなり、同年11月9日に中止された。SMRの初号機が大型軽水炉の実績単価を上回った。OPGのDarlington計画は初号機のBWRX-300 1基が77億カナダドル、追加3基の合計が132億カナダドルである。1基300MWeで単純除算すると初号機は約25,700カナダドル/kW、2号機から4号機は約14,700カナダドル/kWとなり、2号機以降の単価は初号機の約57%である。初号機側に共用設備の費用がどれだけ配賦されているかは公表資料から確認できていない。優位が出るとすれば同一設計の連続建設によってである。</p>
+<p>需要側は契約ベースで積み上がっている。国際エネルギー機関は、成熟度に差はあるものの最大25GWのSMR計画が存在し、その大部分がデータセンターの電力需要増に向けたものだと整理している<a href="https://www.iea.org/reports/the-path-to-a-new-era-for-nuclear-energy/executive-summary" target="_blank" rel="noopener">出典</a>。25GWは300MWe級に換算すると約83基である。2017年の調査では単価の経済性が成立するには40基から70基が必要という整理が示されており<a href="https://en.wikipedia.org/wiki/Small_modular_reactor" target="_blank" rel="noopener">出典</a>、25GWは量産閾値を上回る。</p>
+<p>ただし25GWは計画段階の積み上げである。Okloとの最大12GWの合意は非拘束的と明記されている。拘束力のある契約に限ると数量は下がる。GoogleとKairos Powerの最大500MW、初号機2030年、全数2035年配備<a href="https://blog.google/outreach-initiatives/sustainability/google-kairos-power-nuclear-energy-agreement/" target="_blank" rel="noopener">出典</a>、AmazonとEnergy Northwestの初期320MW、最大960MWまでの拡張オプション<a href="https://www.aboutamazon.com/news/sustainability/amazon-nuclear-small-modular-reactor-net-carbon-zero" target="_blank" rel="noopener">出典</a>といった数百MW単位が、現時点で確度の高い層である。</p>
+<p>供給側の見通しは需要側の表明値と一致しない。国際エネルギー機関のSMR導入見通しは、現行政策の延長で2050年に40GW、政策支援と産業側の実行が伴う場合に120GW、2040年までに大型炉とのコスト同等が達成される場合に190GWである。需要側に25GW分の表明があることと、供給側が2050年に40GWにとどまりうることは併存する。</p>
+<h2 id="s8">水と排水処理という第二の立地変数</h2>
+<p>立地の議論が電力に一元化されるのは、電力が可視化されているからである。系統接続の待ち行列は容量と待ち時間が公開され、比較しやすい。水はそうではない。取水は河川管理者、地下水は自治体条例と個別法、排水は下水道管理者と都道府県が別々に握る。制約が単一の数値に集約されないため議論から漏れる。</p>
+<p>まず規模感を正す。データセンターは水を大量に消費する産業だという理解は、比較対象を置くと崩れる。米国のデータセンター全体の2023年の直接水使用は660億リットル、1日あたり約181,000立方メートルである<a href="https://escholarship.org/uc/item/32d6m0d1" target="_blank" rel="noopener">出典</a>。これに対しサムスン電子1社の2023年の取水量は177,361千トン、1日あたり約486,000立方メートルである<a href="https://www.samsung.com/global/sustainability/media/pdf/Samsung_Electronics_Sustainability_Report_2024_ENG.pdf" target="_blank" rel="noopener">出典</a>。半導体大手1社の取水が、米国のデータセンター全体の直接水使用の2.7倍にあたる。この倍率はノート筆者による除算である。同社の半導体部門であるDS Divisionだけで全社取水の90.3%を占め、その供給源は表流水が160,090千トン、地下水は0トンである。</p>
+<p>取水量と水消費量は別物である。水消費は取水から排水を引いた値で、蒸発や製品への取り込みで水循環から失われた分を指す。サムスン電子の2023年は取水177,361千トンに対し排水142,995千トン、差分は34,366千トンである。取水の8割は処理後に戻り、2割が失われる。取水量を消費量とみなすと、失われる量を約5.2倍に見積もることになる。</p>
+<p>なお先端ファブの超純水の日次生産量を工場単位で開示している先端ロジックメーカーの一次資料は、ノート作成時点で取得できていない。工場単位の一般的な水準として先端ファブが1日あたり数百万ガロンの超純水を消費するという記述はあるが、これは二次資料に基づく。</p>
+<p>制約は3つの段階で別々に効く。</p>
+<p>第一に、候補地のロングリストを作る段階で水源が効く。日本では工業用水法により、政令で定める指定地域内で井戸により地下水を採取して工業の用に供する者は都道府県知事の許可を受けなければならない<a href="https://laws.e-gov.go.jp/api/1/lawdata/331AC0000000146" target="_blank" rel="noopener">出典</a>。対象は吐出口の断面積が6平方センチメートルを超える井戸であり、工場規模の井戸は実質すべて含まれる。指定地域では自社井戸による大量取水を前提にした計画が成立せず、工業用水道の受水可能量が候補地の上限を決める。米国アリゾナ州では、7つのActive Management Area内の開発に対しAssured Water Supplyプログラムが100年分の水供給の証明を求める<a href="https://www.azwater.gov/aaws" target="_blank" rel="noopener">出典</a>。証明には水の物理的な存在、100年間の継続供給、水源に対する法的権原、水質、供給設備を建設する財務能力、管理計画との整合、管理目標との整合の7要件すべてが必要である。水があっても法的権原がなければ立地できない。</p>
+<p>第二に、基本設計と許認可の段階で排水が効く。日本では水質汚濁防止法により、特定施設を設置する者は施設の種類、構造、汚水等の処理方法、排出水の汚染状態と量を都道府県知事に届け出る必要があり、同法第9条は届出受理から60日を経過した後でなければ設置または変更をしてはならないと定める<a href="https://laws.e-gov.go.jp/api/1/lawdata/345AC0000000138" target="_blank" rel="noopener">出典</a>。都道府県は同法第3条第3項により、国の排水基準では不十分と認める区域について条例でより厳しい許容限度を定められる。同じ設備でも立地により排水処理設備の仕様が変わる。米国では点源から公共水域に排出する者はNPDES許可を要し、許可期間は5年、更新申請は失効の180日以上前に提出する必要がある<a href="https://www.epa.gov/npdes/npdes-permit-basics" target="_blank" rel="noopener">出典</a>。市の下水道に排出する場合はNPDES許可の対象外となり、自治体の受け入れ条件が制約になる。</p>
+<p>第三に、着工後は排水の受け入れ先容量が効く。下水道に放流する設計を選ぶと、下水処理場の残容量が増設ペースを縛る。</p>
+<p>ではデータセンターについて、電力と水のどちらが先に上限を決めるのか。米国では電力が先に効く。接続待ちが2,060GW超、商業運転までの中央値が5年超という数字は、需要側の設備投資判断より長い時間軸である。水は絶対量で見て電力ほどの希少性を示していない。一方で先端ファブについては水が先に効く場合がある。指定地域の許可制やアリゾナ州の100年証明は量の問題ではなく可否の問題であり、代替手段がない。電力は送電線の増強や自家発電で時間をかければ緩むが、流域に水がない土地に水は引けない。</p>
+<p>したがって答えは条件付きになる。水は候補地の集合を先に切り、電力はその集合の中で稼働開始時期を決める。ただし両者は独立ではない。米国データセンターの2023年の間接水フットプリントは約8,000億リットルで、直接水の660億リットルの約12倍である。電力1kWhあたりの間接水消費は全米平均で4.52リットルであり、サイトWUEの0.36リットル/kWhの12.6倍にあたる。電力を多く引く立地は、発電側を通じて流域の水にも負荷をかける。</p>
+<h2 id="s9">液冷への移行と排熱二次利用が成立する境界</h2>
+<p>データセンターの電力のうち冷却と環境制御が占める割合は、効率の高いハイパースケールで約7%、効率の低い企業内データセンターで30%超と幅がある<a href="https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai" target="_blank" rel="noopener">出典</a>。冷却は全体の一割前後の話であり、ここだけを改善しても総電力は動かない。それでも冷却方式が論点になるのは、効率の問題から成立可否の問題に変わったからである。GPUは1モジュールあたり2kWを超え、ラック電力は200kWを超える見通しにある<a href="https://journal.uptimeinstitute.com/investments-back-two-phase-cooling-as-water-cold-plate-successor/" target="_blank" rel="noopener">出典</a>。この密度では空冷は選択肢として残らない。</p>
+<p>液冷が空冷に対して経済性で逆転する水準は、ラックあたり20kWから30kWである<a href="https://journal.uptimeinstitute.com/lower-density-brings-server-efficiency-and-cooling-gains/" target="_blank" rel="noopener">出典</a>。これは単一の閾値ではなく、性質の異なる3本の曲線が交差する帯として理解するのが正しい。</p>
+<p>第一の曲線は建屋の資本費である。密度を上げれば同じIT容量をより小さい床面積に収容でき、建屋と配電の単位あたり費用が下がる。ただしこの削減効果はラック20kWから25kWで平坦になる。したがって25kWを超えてさらに密度を上げる判断は、資本費の節約では説明できない。ラックスケール設計が液冷を前提にするのは、床面積の節約に加えてGPU間の高帯域かつ低遅延の接続を成立させるためである<a href="https://www.nvidia.com/en-us/data-center/gb200-nvl72/" target="_blank" rel="noopener">出典</a>。密度を上げる動機が、ある点から資本費ではなく通信レイテンシに移る。</p>
+<p>第二の曲線は液冷側の追加設備費である。新設案件において直接液冷が積み増す資本費は、試運転を含めておよそ5%から10%と見積もられている。比較対象が建屋全体の投資額である点に注意がいる。既存の空冷施設への後付けでは配管と冷却分配ユニットの新設が加わるため、この水準は当てはまらない。</p>
+<p>第三の曲線は運用費である。ここで効いているのは冷却機そのものよりサーバー内部のファン電力である。構成が同一のシングルプロセッサ機で1Uと2Uのあいだに30Wから60Wの消費電力差が生じ、低稼働時には1U機が2U機より約30%多く電力を使う。空冷のまま密度だけを上げると、冷却の仕事の一部がIT電力として計上されるだけで総電力は減らない。ここに測り方の落とし穴がある。PUEは分母がIT電力なので、内部ファン電力が増えるとPUEは見かけ上よくなる。液冷の効果を測るならPUEではなく施設総電力で比較する必要がある。</p>
+<p>逆転を遅らせる側の要素もある。液冷は熱容量の余裕が小さい。10kW未満の低密度施設では冷却が止まってから温度超過までに数分から数十分の猶予があるのに対し、高密度の冷却板方式では循環停止を数秒しか許容できない。この差を埋める冗長化と運用体制の費用が、密度の低い用途で液冷の事業性を崩す<a href="https://journal.uptimeinstitute.com/liquid-cooling-will-not-outgrow-its-high-density-niche/" target="_blank" rel="noopener">出典</a>。水量の制約もある。水冷却板は温度上昇10度の条件で1kWあたり毎分1.5リットル未満に流量を抑える設計とされ、次世代機では1系統あたり毎分数百リットルが必要になる。既存建屋では配管径と揚程がこの水量を通せない場合がある。</p>
+<p>液冷は水を使う技術だから空冷より水消費が多い、という理解は成立しない。液冷は高い施設水温で運転でき、waterside economizerが年間の多くの時間で冷却要求を満たせるため、キロワット時あたりの水を下げられる<a href="https://escholarship.org/uc/item/32d6m0d1" target="_blank" rel="noopener">出典</a>。同時に、液冷でも最終的な排熱は蒸発式の冷却塔で捨てるため蒸発量はゼロにならない。米国データセンターの平均サイトWUEは2023年時点で0.36リットル/kWh、2028年に0.45から0.48リットル/kWhへ上がると推計されるが、これは液冷単独の効果ではなく冷却方式構成とIT負荷の変化の合成である。水の絶対量は気候と運転条件で1桁変わる。冷却塔を用いるデータセンターはサーバー電力1kWhあたり約1リットルから9リットルを蒸発させ、大型商用データセンターの夏季月平均は約9リットル/kWhに達する<a href="https://arxiv.org/abs/2304.03271" target="_blank" rel="noopener">出典</a>。冷却方式の選択より気候帯の選択のほうが水使用への影響が大きい場合がある。</p>
+<p>排熱の二次利用は、データセンター側の技術ではなく熱を買う相手がいるかどうかで決まる。成立している事例は地域熱供給網が先に存在する地域に集中している。</p>
+<div class="tb-tw"><table><thead><tr><th>事例</th><th>内容</th><th>出典URL</th></tr></thead><tbody><tr><td>ストックホルム</td><td>Stockholm Exergiは約3,000kmの地域熱供給網で80万人超に熱を供給し、余熱回収で約11,000戸の集合住宅を暖房。熱出力1MW相当の供給に年間約200万スウェーデンクローナを支払う目安を公開</td><td>https://www.stockholmexergi.se/varmeatervinning/</td></tr><tr><td>エスポー</td><td>Microsoftのデータセンターからの排熱回収が、最終規模でエスポー供給区域の年間地域熱需要の約40%を賄う見込み。ヒートポンプ設備と50MWの電気ボイラー、800MWhの蓄熱設備を併設</td><td>https://www.fortum.com/fi/en/espoo-clean-heat</td></tr><tr><td>マンチェスター</td><td>Deep Greenが拠点DG01からレジャーセンターへ熱を供給し、年間約8万ポンドの地域熱費用削減と年間100から150トンのCO2削減。同拠点のPUEは1.07</td><td>https://deepgreen.energy/</td></tr></tbody></table></div>
+<p>ストックホルムの例が示すのは、冷却が費用項目から収入項目に転換する条件である。日本で同じ構図が再現しにくい理由は需要側にある。国内の熱供給事業の登録地域は133地域にとどまり<a href="https://www.jdhc.or.jp/" target="_blank" rel="noopener">出典</a>、データセンターが立地する内陸や郊外の造成地に熱供給網は通っていない。さらに液冷の供給水温は45度前後が想定されており、日本の地域熱供給が想定する温水温度帯に届かせるにはヒートポンプによる昇温が要る。エスポー案件がヒートポンプ設備を前提にしているのはこのためである。日本国内でデータセンター排熱の二次利用が事業として成立している具体事例は、ノート作成時点で一次資料を取得できていない。</p>
+<h2 id="s10">地上の制約から逃げる選択肢としての軌道上計算</h2>
+<p>系統接続待ちと水の許認可が地上の立地を縛りはじめたことを受けて、2025年後半に軌道上計算資源の構想が複数表面化した。Googleは自社製アクセラレータを積んだ衛星群の設計を公開し、2027年初頭にPlanetとの共同で試作機の打ち上げを予定している<a href="https://research.google/blog/exploring-a-space-based-scalable-ai-infrastructure-system-design/" target="_blank" rel="noopener">出典</a>。Starcloudは2025年11月2日に60kgの実証機を打ち上げ、NVIDIA H100を軌道上で稼働させた<a href="https://www.datacenterfrontier.com/site-selection/article/55337494/starcloud-launches-orbital-ai-data-center-with-nvidia-h100-gpu" target="_blank" rel="noopener">出典</a>。主張されている利点は3つある。軌道上の太陽電池パネルが地上比で最大8倍の年間発電量を持つこと、放射冷却により地上の冷却設備に依存しないこと、地上の許認可と立地制約を回避できることである。</p>
+<p>この3つのうち、冷却の主張は物理を確認すると弱くなる。宇宙は冷たいから冷却が楽になるという理解は逆で、真空は断熱材として働く。対流と伝導が使えず放射だけが残る。Starcloudの白書は、放射率0.92の板を20度に保った場合に両面から770.48W/m2を放出し、太陽光吸収122.94W/m2と地球アルベド由来14.46W/m2を差し引いて正味633.08W/m2になると計算している<a href="https://starcloudinc.github.io/wp.pdf" target="_blank" rel="noopener">出典</a>。IEEE Spectrumは60度維持を前提に、700WのH100 1枚に1.4m2のラジエータが要ると見積もっており、これは約500W/m2に相当する<a href="https://spectrum.ieee.org/orbital-data-centers-heat" target="_blank" rel="noopener">出典</a>。</p>
+<p>ここから2つの帰結が出る。第一に、発電した電力はほぼ全量が熱になるため、ラジエータ面積は太陽電池面積と同オーダーになる。Starcloud自身もラジエータは太陽電池アレイの半分未満のサイズと書いており、同オーダーであることを認めている。第二に、質量が効く。ISS世代のラジエータの面密度は14kg/m2程度、NASAが目標とする水準でも3.5kg/m2とされる。この面密度と正味633W/m2を組み合わせると、100MWの排熱に必要なラジエータは数百トンから2千トン超の規模になる。この試算はノート筆者によるもので、出典のある値ではない。太陽光が8倍だから電力が8倍安いという理解も成立しない。8倍は年間発電量の比であって瞬間出力の比ではなく、発電量が増えればそのぶん排熱も増える。</p>
+<p>打ち上げコストの分岐点は明示されている。Googleは、累積打ち上げ質量の倍増ごとに約20%の価格低下が続けば2030年代半ばに1kgあたり200ドル以下に届くとし、この価格で衛星寿命を通じて償却すると電力あたり価格は約810ドル/kW/年になると分析している。米国の地上データセンターの電力コストは570ドルから3,000ドル/kW/年とされ、810ドルはこの範囲に収まる<a href="https://arxiv.org/abs/2511.19468" target="_blank" rel="noopener">出典</a>。現状との差は大きい。SpaceXの相乗り価格は2026年2月時点で50kgまで350,000ドル、超過分が7,000ドル/kgである<a href="https://newspaceeconomy.ca/2026/02/27/spacex-rideshare-pricing-as-of-february-2026/" target="_blank" rel="noopener">出典</a>。200ドル/kgはこの35分の1である。</p>
+<p>打ち上げコストだけを見るのは不十分である。ラジエータと太陽電池アレイの質量が計算モジュールと同オーダーで乗ること、加速器の陳腐化サイクルが3年から5年であり更新のたびに打ち上げ費が再発生すること、軌道上では現地修理ができずモジュール単位の交換と再突入処分が前提になることが残る。反対の結論も出ている。IEEE Spectrumは、一般用途の宇宙データセンターは今日の時点では経済的に正当化しにくいとしている。</p>
+<p>帯域のボトルネックは対地ではなく衛星間にある。NASAのTBIRDは6U CubeSatから200Gbpsの下り回線を実証し、5分程度の1パスで最大4.8TBを誤りなく地上に転送した<a href="https://ntrs.nasa.gov/citations/20230007959" target="_blank" rel="noopener">出典</a>。推論を主用途とするならやり取りされるのはトークン列であり、この容量で足りる。学習は別である。大規模モデルの学習には衛星群を1台の機械として扱えるだけの帯域が要り、Googleは1リンクあたり10Tbpsを目標としている。ベンチ規模での実証は1台のトランシーバ対で双方向1.6Tbpsである。受信電力は距離の2乗に反比例するため、この帯域は距離で決まる。結果として設計は近接編隊に追い込まれる。Googleの例示構成は高度650km、半径1kmのクラスタに81機を配置し、隣接衛星の距離を100mから200mの範囲で振動させる。帯域の問題は編隊制御と衝突回避の問題に変換される。</p>
+<p>成立条件は安い打ち上げではなく、軽いラジエータと近接編隊の維持の2点に収束する。時間軸の面では、Googleの試作機打ち上げが2027年初頭、経済性の前提が2030年代半ばである。2030年までの需給ギャップにこの選択肢は寄与しない。</p>
+<p>同じことは核融合にも言える。コモンウェルス・フュージョン・システムズは商用機ARCをバージニア州に建設して2030年代前半に約400MWを系統に供給する計画で、Googleが第1号機の出力の半分を購入する契約を結んでいる<a href="https://cfs.energy/technology/arc" target="_blank" rel="noopener">出典</a>。一方で米国のデータセンター電力消費は2024年から2030年で240TWh増える見通しであり、8760時間で割ると平均27.4GWに相当する。400MW級のプラント約68基分である。この除算はノート筆者による算術である。2030年前後の需給計画に核融合を織り込む根拠はない。量子計算についても、現行の量子プロセッサが大規模言語モデルの学習や推論を代替できるという検証済みの結果は確認できていない。国際エネルギー機関は2035年のデータセンター消費を700TWhから1,700TWhという2.4倍の幅で置いており、技術破壊はこの幅の中で扱うのが妥当である。なお同機関の別資料は2035年の見通しを約1,200TWhとしており、これはシナリオ幅の中位に位置する基準ケースの値と読むのが整合的である。</p>
+<h2 id="s11">この章の要点</h2>
+<ul>
+<li>世界全体で見るとデータセンターは2030年までの電力需要増の約1割で、産業用モーターや空調や電気自動車より小さい。一方で米国のデータセンター消費は2018年の76TWhから2023年の176TWhへ増え、増分が特定の系統と特定の郡に集中する。マクロで小さくミクロで大きい二重構造として扱う。</li>
+<li>歪みは全国平均の需給ではなく、容量価格と系統接続待ちに先に出る。PJMの2025/2026年度容量オークションは全域269.92ドル/MW-dayに対しDOM区域が444.26ドル/MW-day、米国の接続待ちは2,060GW超で商業運転までの中央値は5年超である。</li>
+<li>送電の物理層に短期の突破口はない。制約は導体の性能ではなく工期と許認可にあり、先進国の送電インフラ建設に4年から8年かかる。運用層は別で、系統運用ツールにより新設なしで最大175GWの容量を解放できるとされる。</li>
+<li>変圧器のリードタイムは電力用128週、発電機昇圧144週で、配電用の30週と4倍以上違う。律速は設備投資の意思決定の遅さと熟練工の不足であり、どちらも需要が続くかという同じ不確実性から出ている。北米の増産投資が稼働するのは2027年から2028年である。</li>
+<li>制度が投資速度を決めている。日本のレベニューキャップは物量と単価にはインセンティブを与えたが、物価と金利には与えず、第一規制期間の途中で10社が一斉に収入上限の変更を申請した。米国は価格として逼迫が現れ、日本は数量として現れる。</li>
+<li>水は電力と別の変数として働く。水は候補地の集合を先に切り、電力はその集合の中で稼働開始時期を決める。ただし電力1kWhあたり4.52リットルの間接水があるため、両者は独立ではない。</li>
+<li>液冷が経済性で逆転するのはラック20kWから30kWである。それ以下では冗長化コストを回収できず、それ以上では液冷は比較対象ではなく成立条件になる。排熱の二次利用は地域熱供給網が先にある地域でのみ成立し、日本の熱供給登録地域は133地域にとどまる。</li>
+<li>SMR、核融合、軌道上計算はいずれも2030年までの需給に寄与しない。SMRの規制手続きだけで5年前後、核融合の商用機は2030年代前半で約400MW、軌道上計算の経済性の前提は2030年代半ばの打ち上げコストである。</li>
+</ul>
+<h2 id="s12">残っている問い</h2>
+<ul>
+<li>1000kV設計で建設された基幹送電線が500kV運用にとどまっているという理解について、一次資料を確認できていない。設計電圧と運用電圧を記載した送電設備の技術資料または広域機関の系統図が必要である。</li>
+<li>日本のマスタープランのエリア内増強のうち、変電設備単独の投資額を分解できていない。広域系統整備計画の個別案件資料に当たれば分解できる。</li>
+<li>2026年時点の変圧器リードタイムの実測値を確認できていない。本章の128週と144週は2025年第2四半期の調査値である。4年へ延びたとする報道はあるが、一次調査に当たれていない。</li>
+<li>変圧器メーカーの世界市場シェアと工場稼働率の数値を確認できていない。各社が変圧器事業単独の生産能力を開示すれば算出できる。</li>
+<li>燃料費調整制度の算定式、換算係数、基準燃料価格、反映までの月数を確認できていない。各社の小売供給約款の燃料費調整条項が必要である。</li>
+<li>自家発電と系統購入を組み合わせるモデルについて、基本料金と従量料金の比を確認できていないため、削減幅を数値で示せていない。託送供給等約款と高圧料金メニューがあれば判定できる。</li>
+<li>LNGの工程別の単位設備投資額を確認できていない。液化1トンあたり建設費、LNG船建造費、受入基地建設費の3組が揃えば、液化がボトルネックであるという判断を直接の数値で裏付けられる。</li>
+<li>液冷と空冷の総保有費用を年数と割引率つきで比較した公開モデルを取得できていない。回収年数はこの章では答えていない。回答には対象地域の電力単価、想定稼働率、施設寿命、冷凍機の運転時間が要る。</li>
+<li>日本国内でデータセンター排熱の二次利用が事業として成立している具体事例を確認できていない。事業者の統合報告書と熱供給事業者側の受入実績の開示が必要である。</li>
+<li>SMRの個別案件の日付と金額は二次資料に依拠している。TVAのClinch River案件の建設許可の申請日と発給日、規制当局の審査期間の公式統計は取得できていない。</li>
+<li>先端ロジックメーカーの工場単位の超純水日次生産量を確認できていない。単位ウェハーマスク層あたり水消費量も同様である。</li>
+<li>量子計算がAIワークロードの電力を代替しうるかを示す検証済みデータを確認できていない。量子優位が示されたワークロードと、そのワークロードが現在GPUで消費している電力量の2つが揃えば定量化できる。</li>
+</ul>
+<h2 id="s13">出典</h2>
+<ol>
+<li>IEA, Energy and AI, Executive summary. https://www.iea.org/reports/energy-and-ai/executive-summary</li>
+<li>IEA, Energy and AI, Energy demand from AI. https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai</li>
+<li>IEA, Energy and AI, Energy supply for AI. https://www.iea.org/reports/energy-and-ai/energy-supply-for-ai</li>
+<li>IEA, Building the Future Transmission Grid. https://iea.blob.core.windows.net/assets/6fbf940a-d4e8-4156-b8e0-07c2f793c094/BuildingtheFutureTransmissionGrid.pdf</li>
+<li>IEA, The Path to a New Era for Nuclear Energy, Executive Summary. https://www.iea.org/reports/the-path-to-a-new-era-for-nuclear-energy/executive-summary</li>
+<li>Lawrence Berkeley National Laboratory, 2024 United States Data Center Energy Usage Report. https://escholarship.org/uc/item/32d6m0d1</li>
+<li>LBNL Electricity Markets and Policy, Queued Up. https://emp.lbl.gov/queues</li>
+<li>PJM, 2025/2026 Base Residual Auction Report. https://www.pjm.com/-/media/DotCom/markets-ops/rpm/rpm-auction-info/2025-2026/2025-2026-base-residual-auction-report.pdf</li>
+<li>PJM, 2027/2028 Base Residual Auction Report. https://www.pjm.com/-/media/DotCom/markets-ops/rpm/rpm-auction-info/2027-2028/2027-2028-bra-report.pdf</li>
+<li>Central Statistics Office Ireland, Data Centres Metered Electricity Consumption 2024. https://www.cso.ie/en/releasesandpublications/ep/p-dcmec/datacentresmeteredelectricityconsumption2024/</li>
+<li>U.S. Energy Information Administration, Tracking electricity consumption from U.S. cryptocurrency mining operations. https://www.eia.gov/todayinenergy/detail.php?id=61364</li>
+<li>U.S. Energy Information Administration, Natural Gas Weekly Update. https://www.eia.gov/naturalgas/weekly/</li>
+<li>U.S. Energy Information Administration, Energy Explained: Liquefied Natural Gas. https://www.eia.gov/energyexplained/natural-gas/liquefied-natural-gas.php</li>
+<li>Wikipedia, Washington Public Power Supply System. 二次資料 https://en.wikipedia.org/wiki/Washington_Public_Power_Supply_System</li>
+<li>電気事業連合会, FEPC INFOBASE 2025 テーマb 電力設備. https://www.fepc.or.jp/resource_sw/INFOBASE_2025_b.pdf</li>
+<li>電気事業連合会, FEPC INFOBASE 2025 テーマa 電力需給. https://www.fepc.or.jp/resource_sw/INFOBASE_2025_a.pdf</li>
+<li>電気事業連合会, FEPC INFOBASE 2025 テーマg 再生可能エネルギー. https://www.fepc.or.jp/resource_sw/INFOBASE_2025_g.pdf</li>
+<li>POWER Magazine, Transformers in 2026: Shortage, Scramble, or Self-Inflicted Crisis?. https://www.powermag.com/transformers-in-2026-shortage-scramble-or-self-inflicted-crisis/</li>
+<li>Wood Mackenzie, Power transformers and distribution transformers will face supply deficits of 30% and 10% in 2025. https://www.woodmac.com/press-releases/power-transformers-and-distribution-transformers-will-face-supply-deficits-of-30-and-10-in-2025/</li>
+<li>Siemens Energy, Earnings Release Q4 FY 2025. https://www.siemens-energy.com/global/en/home/press-releases/earnings-release-q4-fy-2025.html</li>
+<li>GE Vernova, Second quarter 2026 financial results press release. https://www.gevernova.com/sites/default/files/gev_webcast_pressrelease_07222026.pdf</li>
+<li>Cleveland-Cliffs, Butler Works. https://www.clevelandcliffs.com/operations/steelmaking/butler-works</li>
+<li>U.S. Department of Energy, DOE Finalizes Energy Efficiency Standards for Distribution Transformers. https://www.energy.gov/articles/doe-finalizes-energy-efficiency-standards-distribution-transformers-protect-domestic</li>
+<li>e-Gov法令検索, 電気事業法. https://laws.e-gov.go.jp/api/1/lawdata/339AC0000000170</li>
+<li>e-Gov法令検索, 電気事業法施行規則 第45条の24. https://laws.e-gov.go.jp/api/1/articles;lawId=407M50000400077;article=第四十五条の二十四</li>
+<li>e-Gov法令検索, 工業用水法. https://laws.e-gov.go.jp/api/1/lawdata/331AC0000000146</li>
+<li>e-Gov法令検索, 水質汚濁防止法. https://laws.e-gov.go.jp/api/1/lawdata/345AC0000000138</li>
+<li>関西電力送配電, 新たな託送料金制度の導入に伴う収入の見通し等の概要. https://www.kansai-td.co.jp/new-consignment-fee/index.html</li>
+<li>関西電力送配電, 託送料金における収入の見通しの変更承認申請について. https://www.kansai-td.co.jp/corporate/press-release/2026/pdf/0710_1j_01.pdf</li>
+<li>送配電網協議会, 一般送配電事業者による託送供給等に係る収入の見通しの変更承認申請について. https://www.tdgc.jp/information/2026/07/10_1730.html</li>
+<li>電力広域的運営推進機関, 2026年度供給計画の取りまとめ. http://www.occto.or.jp/assets/various/kyoukei/torimatome/260330_kyokyukeikaku_torimatome/260330_kyokei_torimatome.pdf</li>
+<li>電力広域的運営推進機関, 容量確保契約の結果 メインオークション 対象実需給年度2029年度. http://www.occto.or.jp/various/capacity-market/jitsujukyukanren/yoryokakuhokeiyaku/mainauction_keiyakukekka_2029.pdf</li>
+<li>GIIGNL Annual Report 2026. https://giignl.org/annual-report/</li>
+<li>IEEJ, LNG Review July 2026. https://eneken.ieej.or.jp/data/13460.pdf</li>
+<li>JOGMEC, Results of the Survey on Destination Clauses etc. 2025. https://journal.jogmec.go.jp/oilgas/nglng-en/survey/2025-results.html</li>
+<li>JOGMEC, LNG Handling Volume Survey FY2024 Results. https://journal.jogmec.go.jp/oilgas/nglng-en/handling-volume/2025-results.html</li>
+<li>JOGMEC, Natural Gas and LNG 週次情報. https://journal.jogmec.go.jp/oilgas/nglng-en/index.html</li>
+<li>World Nuclear Association, Small Nuclear Power Reactors. https://world-nuclear.org/information-library/nuclear-fuel-cycle/nuclear-power-reactors/small-nuclear-power-reactors</li>
+<li>Google, Google and Kairos Power Nuclear Energy Agreement. https://blog.google/outreach-initiatives/sustainability/google-kairos-power-nuclear-energy-agreement/</li>
+<li>Amazon, Amazon Nuclear Small Modular Reactor Investment. https://www.aboutamazon.com/news/sustainability/amazon-nuclear-small-modular-reactor-net-carbon-zero</li>
+<li>Wikipedia, NuScale Power. 二次資料 https://en.wikipedia.org/wiki/NuScale_Power</li>
+<li>Wikipedia, Kairos Power. 二次資料 https://en.wikipedia.org/wiki/Kairos_Power</li>
+<li>Wikipedia, BWRX-300. 二次資料 https://en.wikipedia.org/wiki/BWRX-300</li>
+<li>Wikipedia, Vogtle Electric Generating Plant. 二次資料 https://en.wikipedia.org/wiki/Vogtle_Electric_Generating_Plant</li>
+<li>Wikipedia, Small Modular Reactor. 二次資料 https://en.wikipedia.org/wiki/Small_modular_reactor</li>
+<li>Wikipedia, Nuclear Regulatory Commission. 二次資料 https://en.wikipedia.org/wiki/Nuclear_Regulatory_Commission</li>
+<li>Samsung Electronics Sustainability Report 2024. https://www.samsung.com/global/sustainability/media/pdf/Samsung_Electronics_Sustainability_Report_2024_ENG.pdf</li>
+<li>Arizona Department of Water Resources, Assured and Adequate Water Supply. https://www.azwater.gov/aaws</li>
+<li>U.S. Environmental Protection Agency, NPDES Permit Basics. https://www.epa.gov/npdes/npdes-permit-basics</li>
+<li>Li et al., Making AI Less &quot;Thirsty&quot;, arXiv:2304.03271. https://arxiv.org/abs/2304.03271</li>
+<li>Uptime Institute Journal, Lower density brings server efficiency and cooling gains. https://journal.uptimeinstitute.com/lower-density-brings-server-efficiency-and-cooling-gains/</li>
+<li>Uptime Institute Journal, Investments back two-phase cooling as water cold plate successor. https://journal.uptimeinstitute.com/investments-back-two-phase-cooling-as-water-cold-plate-successor/</li>
+<li>Uptime Institute Journal, Liquid cooling will not outgrow its high-density niche. https://journal.uptimeinstitute.com/liquid-cooling-will-not-outgrow-its-high-density-niche/</li>
+<li>NVIDIA, GB200 NVL72. https://www.nvidia.com/en-us/data-center/gb200-nvl72/</li>
+<li>Stockholm Exergi, Värmeåtervinning. https://www.stockholmexergi.se/varmeatervinning/</li>
+<li>Fortum, Espoo Clean Heat. https://www.fortum.com/fi/en/espoo-clean-heat</li>
+<li>Deep Green. https://deepgreen.energy/</li>
+<li>コージェネレーション・エネルギー高度利用センター, コージェネとは. https://www.ace.or.jp/web/chp/chp_0010.html</li>
+<li>コージェネレーション・エネルギー高度利用センター, 導入実績. https://www.ace.or.jp/web/works/works_0010.html</li>
+<li>日本熱供給事業協会. https://www.jdhc.or.jp/</li>
+<li>Google Research, Exploring a space-based, scalable AI infrastructure system design. https://research.google/blog/exploring-a-space-based-scalable-ai-infrastructure-system-design/</li>
+<li>Towards a future space-based, highly scalable AI infrastructure system design, arXiv:2511.19468. https://arxiv.org/abs/2511.19468</li>
+<li>Starcloud 白書, Why we should train AI in Space. https://starcloudinc.github.io/wp.pdf</li>
+<li>IEEE Spectrum, Why Thermodynamics Rules Future Orbital Data Centers. https://spectrum.ieee.org/orbital-data-centers-heat</li>
+<li>NASA NTRS, Operations and Results from the 200 Gbps TBIRD Laser Communication Mission. https://ntrs.nasa.gov/citations/20230007959</li>
+<li>New Space Economy, SpaceX Rideshare Pricing as of February 2026. https://newspaceeconomy.ca/2026/02/27/spacex-rideshare-pricing-as-of-february-2026/</li>
+<li>Data Center Frontier, Starcloud Launches Orbital AI Data Center With NVIDIA H100 GPU. https://www.datacenterfrontier.com/site-selection/article/55337494/starcloud-launches-orbital-ai-data-center-with-nvidia-h100-gpu</li>
+<li>Commonwealth Fusion Systems, ARC. https://cfs.energy/technology/arc</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="02_chip-industry-formation.html">← 半導体産業はどう形づくられたか</a><a class="tb-nav-a" href="04_critical-materials.html">素材と資源の寡占構造 →</a></div>
+</div>
+</body>
+</html>

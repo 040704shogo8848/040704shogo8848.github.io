@@ -139,6 +139,27 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .sgrid .sf label{font-size:10.5px;color:var(--sub);display:block;margin-bottom:2px}
 .sgrid .sf input{padding:6px 8px;font-size:13px}
+.sgrid .sf input.flag{border-color:var(--hot);background:#fdf5f4}
+.sgrid .sf input.got{border-color:var(--ok);background:var(--ok-w)}
+
+/* screenshot upload */
+.drop{border:1.5px dashed var(--line);border-radius:10px;padding:22px 14px;text-align:center;
+  cursor:pointer;color:var(--sub);font-size:12px;transition:border-color .15s,background .15s}
+.drop:hover,.drop:focus,.drop.over{border-color:var(--accent);background:var(--accent-w);outline:none}
+.drop b{font-size:13px;color:var(--accent)}
+.shot{width:100%;max-width:300px;height:auto;display:block;margin:10px auto 0;
+  border:1px solid var(--line);border-radius:8px}
+.cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
+.cell{border:1px solid var(--line);border-radius:7px;padding:6px 8px;background:#fff}
+.cell .cl{display:block;font-size:10.5px;color:var(--sub)}
+.cell img{display:block;width:100%;height:auto;max-height:34px;object-fit:contain;object-position:left;margin:3px 0;image-rendering:crisp-edges}
+.cell .cv{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.cell .cv.ng{color:var(--hot);font-weight:500}
+input[type=range]{padding:0;height:22px}
+.ocrbar{height:5px;background:var(--line2);border-radius:3px;overflow:hidden;margin:8px 0}
+.ocrbar>i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.warnbox{border:1px solid #e6c4bd;background:#fdf5f4;border-radius:8px;padding:9px 11px;margin-top:8px;font-size:12px;color:var(--hot);line-height:1.7}
+.warnbox ul{margin:4px 0 0 16px}
 
 .inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
 .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
@@ -409,6 +430,42 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <!-- ══ 体組成 ══ -->
 <section id="scale">
   <div class="card">
+    <h2>スクショから読み取る<span class="r">端末内だけで処理する</span></h2>
+    <p class="note" style="margin-bottom:10px">
+      体組成計アプリのスクリーンショットを渡すと、数値を拾ってフォームに入れる。
+      画像はこのブラウザの中だけで処理され、どこにも送信されない。
+      読み取りは自動保存しないので、必ず値を確認してから保存する。
+    </p>
+    <div class="drop" id="sDrop" tabindex="0">
+      <b>画像を選ぶ</b><br>
+      <span>ドラッグ＆ドロップ、または Cmd+V で貼り付け</span>
+      <input type="file" id="sFile" accept="image/*" hidden>
+    </div>
+    <div id="sPrevWrap" style="display:none;margin-top:12px">
+      <div class="row">
+        <button class="btn sm" id="sOcr">読み取る</button>
+        <button class="btn sm gr" id="sDrop2">別の画像</button>
+        <div class="sp"></div>
+        <span class="note" id="sOcrMsg"></span>
+      </div>
+      <div class="ocrbar" id="sBar" style="display:none"><i></i></div>
+      <div id="sWarn"></div>
+      <div id="sCells"></div>
+      <div id="sAdjust" style="display:none">
+        <hr>
+        <h3>位置合わせ</h3>
+        <p class="note">切り出しが数字からずれている場合に動かす。合わせたら再読取を押す。位置は次回以降も使う。</p>
+        <div class="row" style="margin-top:8px">
+          <div class="fg"><label class="f">縦 <span id="sDyV" class="mono"></span></label><input type="range" id="sDy" min="-60" max="60" value="0"></div>
+          <div class="fg"><label class="f">横 <span id="sDxV" class="mono"></span></label><input type="range" id="sDx" min="-60" max="60" value="0"></div>
+          <button class="btn sm gh" id="sReOcr">再読取</button>
+        </div>
+      </div>
+      <img id="sShot" class="shot" alt="読み込んだスクリーンショット">
+    </div>
+  </div>
+
+  <div class="card">
     <h2>まとめて貼り付け<span class="r">スケールの表示順</span></h2>
     <p class="note" style="margin-bottom:8px">
       体組成計アプリの数値を、画面に並んでいる順（体重 → BMI → 除脂肪体重 → 皮下脂肪 → 体水分量 → 骨格筋 → 筋肉量 → 骨量 → 基礎代謝 → 体脂肪 → 内臓脂肪 → タンパク質 → 体内年齢）にスペースか改行区切りで貼る。
@@ -585,6 +642,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
 <script src="data.js"></script>
 <script src="body.js"></script>
+<script src="ocr.js"></script>
 <script>
 "use strict";
 
@@ -607,7 +665,8 @@ function defaults(){
     profile:{bmr:1678, act:1.4, goal:300, pr:1.8, fr:24},
     target:{kcal:2600, p:120, f:70, c:375},
     menus: menus, activeMenu:"vshape60", editMenu:"vshape60",
-    sessions:{}, meals:{}, myfoods:[], recent:[], body:[]
+    sessions:{}, meals:{}, myfoods:[], recent:[], body:[],
+    scaleOffset:{dx:0, dy:0}
   };
 }
 const EXMAP = {}; EXERCISES.forEach(e=>EXMAP[e.id]=e);
@@ -1131,12 +1190,116 @@ function renderScaleGrid(){
   $("#sGrid").innerHTML = SCALE_FIELDS.map(f=>
     '<div class="sf"><label>'+f[1]+(f[2]?" "+f[2]:"")+'</label><input type="number" step="0.01" id="sf_'+f[0]+'" inputmode="decimal"></div>').join("");
 }
+/* 読み取り結果をフォームに流し込み、範囲外を赤くする */
+function applyScaleValues(res){
+  SCALE_FIELDS.forEach(f=>{
+    const el = $("#sf_"+f[0]);
+    el.classList.remove("flag","got");
+    const v = res.values[f[0]];
+    if(v == null) return;
+    el.value = v;
+    const bad = f[3]!=null && (v<f[3] || v>f[4]);
+    el.classList.add(bad ? "flag" : "got");
+  });
+  const box = $("#sWarn");
+  if(res.warnings.length){
+    box.innerHTML = '<div class="warnbox"><b>確認してほしい点</b><ul>'
+      + res.warnings.map(w=>'<li>'+esc(w)+'</li>').join("")+'</ul></div>';
+  }else box.innerHTML = "";
+  const n = Object.keys(res.values).length;
+  $("#sMsg").textContent = n+" 項目を入力した。値を確認して保存する。";
+  return n;
+}
 $("#sParse").onclick = ()=>{
-  const nums = ($("#sPaste").value.match(/-?\d+(\.\d+)?/g)||[]).map(Number);
-  if(!nums.length){ $("#sParseMsg").textContent = "数値が見つからない"; return; }
-  SCALE_FIELDS.forEach((f,i)=>{ if(i<nums.length) $("#sf_"+f[0]).value = nums[i]; });
-  $("#sParseMsg").textContent = nums.length+" 個の数値を読み込んだ。上のフォームで確認して保存する。";
+  const res = parseNumberList($("#sPaste").value, SCALE_FIELDS);
+  if(!Object.keys(res.values).length){ $("#sParseMsg").textContent = "数値が見つからない"; return; }
+  const n = applyScaleValues(res);
+  $("#sParseMsg").textContent = n+" 項目を読み込んだ。下のフォームで確認して保存する。";
 };
+
+/* 切り出し画像を値の横に並べる。位置ずれは目で見れば一発でわかる */
+function renderCells(cells, values){
+  if(!cells){ $("#sCells").innerHTML = ""; return; }
+  $("#sCells").innerHTML = '<h3>切り出した数字</h3><div class="cells">'
+    + SCALE_FIELDS.map((f,i)=>{
+        const v = values[f[0]];
+        return '<div class="cell"><span class="cl">'+f[1]+'</span>'
+          + '<img src="'+cells[i]+'" alt="">'
+          + '<span class="cv'+(v==null?" ng":"")+'">'+(v==null?"読めず":v)+'</span></div>';
+      }).join("") + '</div>';
+}
+
+/* ── スクショ読み取り ── */
+let shotImg = null;
+function openPicker(){ $("#sFile").click(); }
+$("#sDrop").onclick = openPicker;
+$("#sDrop").onkeydown = e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openPicker(); } };
+$("#sDrop2").onclick = openPicker;
+$("#sFile").onchange = e=>{ if(e.target.files[0]) loadShot(e.target.files[0]); };
+["dragenter","dragover"].forEach(ev=> $("#sDrop").addEventListener(ev, e=>{ e.preventDefault(); $("#sDrop").classList.add("over"); }));
+["dragleave","drop"].forEach(ev=> $("#sDrop").addEventListener(ev, e=>{ e.preventDefault(); $("#sDrop").classList.remove("over"); }));
+$("#sDrop").addEventListener("drop", e=>{
+  const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if(f) loadShot(f);
+});
+document.addEventListener("paste", e=>{
+  if(!$("#scale").classList.contains("on")) return;
+  const items = (e.clipboardData && e.clipboardData.items) || [];
+  for(let i=0;i<items.length;i++){
+    if(items[i].type.indexOf("image")===0){ const f = items[i].getAsFile(); if(f){ loadShot(f); e.preventDefault(); } return; }
+  }
+});
+function loadShot(file){
+  if(!/^image\//.test(file.type)){ $("#sOcrMsg").textContent = "画像ファイルではない"; return; }
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = ()=>{
+    shotImg = img;
+    $("#sShot").src = url;
+    $("#sPrevWrap").style.display = "block";
+    $("#sOcrMsg").textContent = img.naturalWidth+"×"+img.naturalHeight+" を読み込んだ。読み取るを押す。";
+    $("#sWarn").innerHTML = ""; $("#sCells").innerHTML = "";
+  };
+  img.onerror = ()=>{ $("#sOcrMsg").textContent = "画像を開けなかった"; URL.revokeObjectURL(url); };
+  img.src = url;
+}
+function shotOffset(){
+  return { dx: (+$("#sDx").value||0)/1000, dy: (+$("#sDy").value||0)/1000 };
+}
+function paintOffset(){
+  $("#sDxV").textContent = (+$("#sDx").value/10).toFixed(1)+"%";
+  $("#sDyV").textContent = (+$("#sDy").value/10).toFixed(1)+"%";
+}
+$("#sDx").oninput = paintOffset; $("#sDy").oninput = paintOffset;
+async function runOcr(){
+  if(!shotImg) return;
+  const btn = $("#sOcr"), bar = $("#sBar");
+  btn.disabled = true; $("#sReOcr").disabled = true; bar.style.display = "block";
+  $("#sOcrMsg").textContent = "ライブラリを読み込み中";
+  try{
+    const res = await readScaleImage(shotImg, shotOffset(), (i, total)=>{
+      bar.firstElementChild.style.width = Math.round(i/total*100)+"%";
+      $("#sOcrMsg").textContent = "読み取り中 "+(i+1)+"/"+total;
+    });
+    const n = applyScaleValues(res);
+    renderCells(res.cells, res.values);
+    S.scaleOffset = { dx:+$("#sDx").value, dy:+$("#sDy").value }; save();
+    // 半分以上おかしいときは切り出し位置がずれている可能性が高い
+    const bad = SCALE_FIELDS.length - n + res.warnings.filter(w=>w.indexOf("想定は")>=0).length;
+    $("#sAdjust").style.display = bad >= 3 ? "block" : "none";
+    $("#sOcrMsg").textContent = n === SCALE_FIELDS.length && !res.warnings.length
+      ? "13項目すべて読めた。値を確認して保存する"
+      : (n ? n+"/13 項目を読んだ。切り出し画像と見比べて直す" : "数値を拾えなかった。位置合わせを試すか手で入れる");
+    if(bad >= 3) $("#sAdjust").scrollIntoView({block:"nearest"});
+  }catch(err){
+    $("#sOcrMsg").textContent = "読み取りに失敗した（"+(err && err.message ? err.message : "原因不明")+"）。貼り付けか手入力を使う";
+  }finally{
+    btn.disabled = false; $("#sReOcr").disabled = false;
+    setTimeout(()=>{ bar.style.display="none"; bar.firstElementChild.style.width="0"; }, 800);
+  }
+}
+$("#sOcr").onclick = runOcr;
+$("#sReOcr").onclick = runOcr;
 $("#sSave").onclick = ()=>{
   const d = $("#sDate").value;
   if(!d){ alert("測定日が必要"); return; }
@@ -1149,7 +1312,10 @@ $("#sSave").onclick = ()=>{
   save(); renderScale(); updateHeader();
   $("#sMsg").textContent = d+" を保存した";
 };
-$("#sClear").onclick = ()=>{ SCALE_FIELDS.forEach(f=>$("#sf_"+f[0]).value=""); $("#sPaste").value=""; $("#sParseMsg").textContent=""; };
+$("#sClear").onclick = ()=>{
+  SCALE_FIELDS.forEach(f=>{ const el=$("#sf_"+f[0]); el.value=""; el.classList.remove("flag","got"); });
+  $("#sPaste").value=""; $("#sParseMsg").textContent=""; $("#sWarn").innerHTML=""; $("#sMsg").textContent="";
+};
 function renderScale(){
   const b = S.body;
   if(b.length){
@@ -1366,6 +1532,9 @@ function boot(){
   ["#tDate","#mDate","#sDate"].forEach(s=>{ if(!$(s).value) $(s).value = t; });
   $("#tDate").value = t; $("#mDate").value = t; $("#sDate").value = t;
   clearWC(); fillMenuSelects(); renderScaleGrid();
+  $("#sDx").value = (S.scaleOffset||{}).dx || 0;
+  $("#sDy").value = (S.scaleOffset||{}).dy || 0;
+  paintOffset();
   renderTrain(); renderCats(); renderFoodList(); renderQuick(); renderMyFoods(); renderMeal();
   riceCalc(); renderConf(); updateHeader();
 }

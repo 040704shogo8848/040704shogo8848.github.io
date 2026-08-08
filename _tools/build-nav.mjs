@@ -47,10 +47,15 @@ body{padding-top:56px!important;padding-bottom:68px!important}
 .snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
 .snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
 .snav-logo:hover{opacity:.6}
-.snav-inline{display:none;align-items:center;gap:4px}
-.snav-inline a{color:rgba(255,255,255,.7);text-decoration:none;font-size:12px;font-weight:500;padding:6px 12px;border-radius:4px;transition:all .15s;letter-spacing:-.01em}
-.snav-inline a:hover{color:#fff;background:rgba(255,255,255,.08)}
-.snav-inline .sep{width:1px;height:14px;background:rgba(255,255,255,.18);margin:0 6px}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
 .snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
 .snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
 .snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
@@ -76,9 +81,16 @@ function buildSnav(file) {
   const home = rel(file, nav.home);
   const flat = nav.sections.flatMap((s) => s.links);
 
+  // Desktop nav shows only the section names; the pages appear on hover. Tapping
+  // the name works too, for pointer-less screens wide enough to skip the burger.
   const inline = nav.sections
-    .map((s) => s.links.map((l) => `<a href="${esc(rel(file, l.href))}">${esc(l.text)}</a>`).join(''))
-    .join('<span class="sep"></span>');
+    .map(
+      (s) => `<div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">${esc(s.label)}</button>` +
+        `<div class="snav-drop">` +
+        s.links.map((l) => `<a href="${esc(rel(file, l.href))}">${esc(l.text)}</a>`).join('') +
+        `</div></div>`
+    )
+    .join('');
 
   const panel = nav.sections
     .map(
@@ -116,7 +128,10 @@ ${STYLE}
   <a class="snav-a" href="${esc(home)}" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
 ${panel}
 </nav>
-<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}</script>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
 <footer class="snav-footer">${footerInner}</footer>
 ${END}`;
 }

@@ -1,0 +1,1380 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>fitness</title>
+<style>
+:root{
+  --bg:#fafafa; --card:#fff; --line:#e3e3e6; --line2:#f0f0f2;
+  --fg:#1a1a1c; --sub:#6b6b73; --mute:#9a9aa2;
+  --accent:#2f5d8f; --accent-w:#eaf1f8;
+  --ok:#2e7d5b; --ok-w:#e6f2ec;
+  --warn:#a8622a; --warn-w:#f7efe7;
+  --hot:#c0392b;
+  --r:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);
+  font-family:'Poppins',-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  font-size:14px;line-height:1.6}
+.wrap{max-width:780px;margin:0 auto;padding:0 14px 40px}
+
+.apphd{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:56px;z-index:60}
+.apphd .in{max-width:780px;margin:0 auto;padding:11px 14px;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.apphd h1{font-size:14px;font-weight:700;letter-spacing:.02em}
+.apphd .meta{font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums}
+.tabs{display:flex;max-width:780px;margin:0 auto;padding:0 8px;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:0 0 auto;background:none;border:none;border-bottom:2px solid transparent;
+  padding:9px 12px;font:inherit;font-size:13px;color:var(--sub);cursor:pointer;white-space:nowrap}
+.tabs button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+
+section{display:none;padding-top:16px}
+section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.card>h2{font-size:13px;font-weight:700;margin-bottom:10px;letter-spacing:.02em;display:flex;align-items:baseline;gap:8px}
+.card>h2 .r{margin-left:auto;font-weight:400;color:var(--sub);font-size:11px}
+h3{font-size:12px;font-weight:700;margin:16px 0 8px;color:var(--sub);letter-spacing:.04em}
+p.note{font-size:12px;color:var(--sub);line-height:1.75}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sp{flex:1}
+hr{border:none;border-top:1px solid var(--line2);margin:12px 0}
+
+button.btn{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer}
+button.btn:active{opacity:.75}
+button.btn.gh{background:var(--card);color:var(--accent);border:1px solid var(--accent)}
+button.btn.gr{background:var(--card);color:var(--sub);border:1px solid var(--line)}
+button.btn.sm{padding:5px 10px;font-size:12px}
+button.btn.xs{padding:3px 8px;font-size:11px}
+
+input,select,textarea{font:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);
+  border-radius:7px;background:#fff;color:var(--fg);width:100%;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent-w);border-color:var(--accent)}
+input[type=number]{font-variant-numeric:tabular-nums}
+label.f{display:block;font-size:11px;color:var(--sub);margin-bottom:3px}
+.fg{flex:1;min-width:0}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 6px;text-align:left;border-bottom:1px solid var(--line2);vertical-align:top}
+th{font-size:11px;color:var(--sub);font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+
+.tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:20px;background:var(--line2);color:var(--sub);white-space:nowrap}
+.tag.a{background:var(--accent-w);color:var(--accent)}
+.tag.o{background:var(--ok-w);color:var(--ok)}
+.tag.h{background:#fbeae8;color:var(--hot)}
+.empty{color:var(--mute);font-size:12px;padding:16px 0;text-align:center}
+
+/* body map */
+.bodypair{display:flex;gap:4px;justify-content:center}
+.bodysvg{width:100%;max-width:118px;height:auto;display:block}
+.bodysvg path{transition:fill .2s}
+.mlegend{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;justify-content:center}
+.mchip{font-size:10.5px;padding:2px 7px;border-radius:20px;border:1px solid var(--line);color:var(--sub);background:#fff}
+.mchip.p{background:var(--hot);border-color:var(--hot);color:#fff}
+.mchip.s{background:#fbeae8;border-color:#f0cdc7;color:var(--hot)}
+.exbody{flex:0 0 96px}
+.exbody .bodysvg{max-width:46px}
+
+/* training */
+.block{border:1px solid var(--line);border-radius:var(--r);background:var(--card);margin-bottom:12px;overflow:hidden}
+.block>.bh{padding:10px 14px;background:#fbfbfc;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.block>.bh .bt{font-size:13px;font-weight:700}
+.block>.bb{padding:2px 14px 12px}
+.ex{padding:12px 0;border-bottom:1px solid var(--line2);display:flex;gap:12px}
+.ex:last-child{border-bottom:none}
+.exmain{flex:1;min-width:0}
+.exh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:3px}
+.exn{font-size:13px;font-weight:700}
+.exd{font-size:11px;color:var(--sub);margin:4px 0 8px;line-height:1.65}
+.sets{display:flex;flex-direction:column;gap:6px}
+.set{display:grid;grid-template-columns:20px 1fr 1fr 34px;gap:6px;align-items:center}
+.set .si{font-size:11px;color:var(--mute);text-align:center}
+.set select,.set input{padding:6px 7px;font-size:13px}
+.set .chk{width:34px;height:32px;border:1px solid var(--line);border-radius:7px;background:#fff;
+  cursor:pointer;color:var(--mute);font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center}
+.set .chk.on{background:var(--ok-w);border-color:var(--ok);color:var(--ok)}
+.prev{font-size:11px;color:var(--mute);margin-top:6px;font-variant-numeric:tabular-nums}
+@media(max-width:560px){.ex{flex-direction:column-reverse}.exbody{flex:none}.exbody .bodypair{justify-content:flex-start}.exbody .bodysvg{max-width:52px}}
+
+/* rest timer */
+.timer{position:fixed;left:0;right:0;bottom:62px;background:var(--accent);color:#fff;
+  padding:10px 14px;display:none;z-index:9996;align-items:center;gap:12px;justify-content:center}
+.timer.on{display:flex}
+.timer .tv{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;min-width:60px;text-align:center}
+.timer button{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:5px 11px;font:inherit;font-size:12px;cursor:pointer}
+
+/* meals */
+.bar{height:7px;background:var(--line2);border-radius:4px;overflow:hidden;margin-top:4px}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .25s}
+.bar>i.over{background:var(--warn)}
+.macro{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.macro .ml{font-size:11px;color:var(--sub)}
+.macro .mv{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.macro .mg{font-size:10.5px;color:var(--mute);font-variant-numeric:tabular-nums}
+.flist{max-height:250px;overflow-y:auto;border:1px solid var(--line);border-radius:7px;margin-top:8px}
+.fitem{padding:8px 10px;border-bottom:1px solid var(--line2);cursor:pointer;display:flex;gap:8px;align-items:baseline}
+.fitem:last-child{border-bottom:none}
+.fitem:hover{background:var(--accent-w)}
+.fitem .fn{flex:1;font-size:12.5px}
+.fitem .fk{font-size:10.5px;color:var(--sub);font-variant-numeric:tabular-nums;white-space:nowrap}
+.quick{display:flex;flex-wrap:wrap;gap:6px}
+.quick button{font-size:11.5px;padding:5px 10px;border:1px solid var(--line);border-radius:20px;background:#fff;cursor:pointer;font-family:inherit;color:var(--fg)}
+.quick button:hover{border-color:var(--accent);color:var(--accent)}
+
+/* charts */
+.chart{width:100%;height:170px;display:block}
+.chart text{font-size:9px;fill:var(--mute)}
+.lg{display:flex;gap:14px;font-size:11px;color:var(--sub);margin-top:6px;flex-wrap:wrap}
+.lg i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:5px}
+.hbar{display:grid;grid-template-columns:112px 1fr 42px;gap:8px;align-items:center;font-size:12px;margin-bottom:5px}
+.hbar .hl{color:var(--sub);font-size:11.5px}
+.hbar .ht{height:14px;background:var(--line2);border-radius:3px;overflow:hidden}
+.hbar .ht>i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.hbar .ht>i.v{background:var(--hot)}
+.hbar .hn{text-align:right;font-variant-numeric:tabular-nums;color:var(--sub);font-size:11.5px}
+
+/* scale grid */
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sgrid .sf label{font-size:10.5px;color:var(--sub);display:block;margin-bottom:2px}
+.sgrid .sf input{padding:6px 8px;font-size:13px}
+
+.inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chip{font-size:11px;padding:3px 8px;border:1px solid var(--line);border-radius:20px;color:var(--sub);font-variant-numeric:tabular-nums;background:#fff}
+
+/* menu editor */
+.medit{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.medit .mh{padding:9px 12px;background:#fbfbfc;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.medit .mrow{padding:9px 12px;border-bottom:1px solid var(--line2);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.medit .mrow:last-child{border-bottom:none}
+.medit .mname{font-size:12.5px;font-weight:600;flex:1;min-width:120px}
+.medit .msp{display:flex;gap:4px;align-items:center}
+.medit .msp input{width:52px;padding:4px 6px;font-size:12px;text-align:center}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9998;display:none;align-items:flex-start;justify-content:center;padding:70px 12px 24px;overflow-y:auto}
+.modal.on{display:flex}
+.mbox{background:#fff;border-radius:12px;max-width:640px;width:100%;padding:16px;max-height:100%;overflow-y:auto}
+.libitem{padding:10px;border:1px solid var(--line);border-radius:8px;margin-bottom:7px;cursor:pointer;display:flex;gap:10px;align-items:center}
+.libitem:hover{border-color:var(--accent);background:var(--accent-w)}
+.libitem .li1{flex:1;min-width:0}
+.libitem .lin{font-size:13px;font-weight:600}
+.libitem .lim{font-size:11px;color:var(--sub);margin-top:2px}
+.libitem .bodysvg{max-width:34px}
+.filt{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.filt button{font-size:11px;padding:4px 9px;border:1px solid var(--line);border-radius:20px;background:#fff;cursor:pointer;font-family:inherit;color:var(--sub)}
+.filt button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../021_profile/index.html">profile</a><a href="../024_method/index.html">method</a><a href="index.html">fitness</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../024_method/index.html">method</a>
+    <a class="snav-a" href="index.html">fitness</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="apphd">
+  <div class="in">
+    <h1>fitness</h1>
+    <div class="meta" id="hdMeta"></div>
+  </div>
+  <div class="tabs">
+    <button data-t="train" class="on">トレーニング</button>
+    <button data-t="menu">メニュー</button>
+    <button data-t="meal">食事</button>
+    <button data-t="scale">体組成</button>
+    <button data-t="rec">記録</button>
+    <button data-t="conf">設定</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="card" id="noStore" style="display:none;border-color:#e0b8b0;background:#fdf4f2">
+  <b style="font-size:13px">この環境では記録を保存できない</b>
+  <p class="note" style="margin-top:6px">
+    ブラウザのローカル保存が無効になっている。プライベートブラウズか、ローカルファイルを直接開いた場合に起きる。
+    画面は動くが再読み込みで消えるので、公開URLから開くか、通常のウィンドウで開き直す。
+  </p>
+</div>
+
+<!-- ══ トレーニング ══ -->
+<section id="train" class="on">
+  <div class="card">
+    <div class="row">
+      <div class="fg" style="max-width:160px"><label class="f">セッション日</label><input type="date" id="tDate"></div>
+      <div class="fg"><label class="f">メニュー</label><select id="tMenu"></select></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <span class="tag" id="tProgress"></span>
+      <span class="tag" id="tVol"></span>
+      <span class="tag" id="tTime"></span>
+      <div class="sp"></div>
+      <button class="btn xs gr" id="tClear">この日を消去</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>今日鍛える部位<span class="r">濃い赤＝主働筋／薄い赤＝補助筋</span></h2>
+    <div id="tBody"></div>
+    <div class="mlegend" id="tLegend"></div>
+  </div>
+
+  <div id="tBlocks"></div>
+
+  <div class="card">
+    <label class="f">メモ（体感・不調・環境）</label>
+    <textarea id="tMemo" rows="2" placeholder="例: 3セット目で肩の前が張った"></textarea>
+  </div>
+</section>
+
+<!-- ══ メニュー ══ -->
+<section id="menu">
+  <div class="card">
+    <h2>メニューを選ぶ</h2>
+    <div class="row">
+      <div class="fg"><select id="eMenu"></select></div>
+      <button class="btn sm gh" id="eDup">複製して編集</button>
+      <button class="btn sm gr" id="eDel">削除</button>
+    </div>
+    <p class="note" id="eDesc" style="margin-top:10px"></p>
+  </div>
+
+  <div class="card">
+    <h2>このメニューが叩く部位</h2>
+    <div id="eBody"></div>
+    <div class="mlegend" id="eLegend"></div>
+    <hr>
+    <h3>部位別セット数</h3>
+    <div id="eSets"></div>
+  </div>
+
+  <div id="eBlocks"></div>
+
+  <div class="card">
+    <div class="row">
+      <button class="btn sm gh" id="eAddBlock">ブロックを追加</button>
+      <div class="sp"></div>
+      <span class="note" id="eLock"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 食事 ══ -->
+<section id="meal">
+  <div class="card">
+    <div class="row" style="margin-bottom:12px">
+      <div class="fg" style="max-width:160px"><label class="f">日付</label><input type="date" id="mDate"></div>
+    </div>
+    <div class="macro">
+      <div><div class="ml">カロリー</div><div class="mv" id="mKcal">0</div><div class="mg" id="mKcalG"></div><div class="bar"><i id="mKcalB"></i></div></div>
+      <div><div class="ml">P たんぱく</div><div class="mv" id="mP">0</div><div class="mg" id="mPG"></div><div class="bar"><i id="mPB"></i></div></div>
+      <div><div class="ml">F 脂質</div><div class="mv" id="mF">0</div><div class="mg" id="mFG"></div><div class="bar"><i id="mFB"></i></div></div>
+      <div><div class="ml">C 炭水化物</div><div class="mv" id="mC">0</div><div class="mg" id="mCG"></div><div class="bar"><i id="mCB"></i></div></div>
+    </div>
+    <p class="note" id="mAdvice" style="margin-top:12px"></p>
+  </div>
+
+  <div class="card">
+    <h2>よく使う</h2>
+    <div class="quick" id="mQuick"></div>
+  </div>
+
+  <div class="card">
+    <h2>ごはん換算<span class="r">1合＝生米150g・炊飯で約2.2倍</span></h2>
+    <div class="row">
+      <div class="fg" style="max-width:110px"><label class="f">炊いた合数</label><input type="number" step="0.5" id="rGo" value="3"></div>
+      <div class="fg"><label class="f">食べた量</label>
+        <select id="rPortion">
+          <option value="110">茶碗 小盛 110g</option>
+          <option value="150" selected>茶碗 普通盛 150g</option>
+          <option value="200">茶碗 大盛 200g</option>
+          <option value="280">どんぶり 280g</option>
+          <option value="half">炊いた量の半分</option>
+          <option value="third">炊いた量の1/3</option>
+          <option value="all">炊いた量の全部</option>
+        </select>
+      </div>
+      <div class="fg" style="max-width:80px"><label class="f">杯数</label><input type="number" step="0.5" id="rCups" value="1"></div>
+    </div>
+    <p class="note" id="rOut" style="margin-top:10px"></p>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="rAdd">この量を記録に追加</button></div>
+  </div>
+
+  <div class="card">
+    <h2>食品を探す</h2>
+    <div class="row">
+      <div class="fg"><input type="search" id="mSearch" placeholder="鶏むね / 餃子 / プロテイン …"></div>
+    </div>
+    <div class="filt" id="mCats"></div>
+    <div class="flist" id="mResults"></div>
+  </div>
+
+  <div class="card">
+    <h2>マイ食品を登録<span class="r">パッケージの栄養成分表示をそのまま入れる</span></h2>
+    <div class="row">
+      <div class="fg"><label class="f">名前</label><input id="xN" placeholder="例: セブン サラダチキン ハーブ"></div>
+      <div class="fg" style="max-width:110px"><label class="f">単位</label><input id="xU" placeholder="1個"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="fg"><label class="f">kcal</label><input type="number" step="0.1" id="xK" inputmode="decimal"></div>
+      <div class="fg"><label class="f">P(g)</label><input type="number" step="0.1" id="xP" inputmode="decimal"></div>
+      <div class="fg"><label class="f">F(g)</label><input type="number" step="0.1" id="xF" inputmode="decimal"></div>
+      <div class="fg"><label class="f">C(g)</label><input type="number" step="0.1" id="xC" inputmode="decimal"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="xSave">マイ食品に登録</button>
+      <button class="btn sm gh" id="xOnce">今日だけ追加</button>
+      <span class="note">kcal を空欄にすると P/F/C から計算する</span>
+    </div>
+    <div id="xList" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <h2>この日の記録<span class="r" id="mCount"></span></h2>
+    <div id="mLog"></div>
+  </div>
+</section>
+
+<!-- ══ 体組成 ══ -->
+<section id="scale">
+  <div class="card">
+    <h2>まとめて貼り付け<span class="r">スケールの表示順</span></h2>
+    <p class="note" style="margin-bottom:8px">
+      体組成計アプリの数値を、画面に並んでいる順（体重 → BMI → 除脂肪体重 → 皮下脂肪 → 体水分量 → 骨格筋 → 筋肉量 → 骨量 → 基礎代謝 → 体脂肪 → 内臓脂肪 → タンパク質 → 体内年齢）にスペースか改行区切りで貼る。
+      数値以外の文字が混ざっていても数字だけを拾う。
+    </p>
+    <textarea id="sPaste" rows="3" placeholder="66.00 21.6 57.96 10.7 63.3 56.6 55.00 2.89 1678 12.1 4 20.0 20"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" id="sParse">読み込む</button>
+      <span class="note" id="sParseMsg"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>入力</h2>
+    <div class="row" style="margin-bottom:10px">
+      <div class="fg" style="max-width:170px"><label class="f">測定日</label><input type="date" id="sDate"></div>
+    </div>
+    <div class="sgrid" id="sGrid"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn sm" id="sSave">保存</button>
+      <button class="btn sm gr" id="sClear">クリア</button>
+      <div class="sp"></div>
+      <span class="note" id="sMsg"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>推移<span class="r" id="bTrend"></span></h2>
+    <svg class="chart" id="bChart"></svg>
+    <div class="lg"><span><i style="background:#2f5d8f"></i>体重</span><span><i style="background:#2e7d5b"></i>除脂肪体重</span><span><i style="background:#a8622a"></i>体脂肪率</span></div>
+  </div>
+
+  <div class="card">
+    <h2>測定履歴</h2>
+    <div id="sHist"></div>
+  </div>
+</section>
+
+<!-- ══ 記録 ══ -->
+<section id="rec">
+  <div class="card">
+    <h2>部位別 週間セット数<span class="r">主働1・補助0.5で換算</span></h2>
+    <div class="row" style="margin-bottom:10px">
+      <div class="fg" style="max-width:150px"><label class="f">集計範囲</label>
+        <select id="vRange"><option value="28">直近4週</option><option value="56">直近8週</option><option value="9999">全期間</option></select>
+      </div>
+    </div>
+    <div id="vSets"></div>
+    <p class="note" style="margin-top:10px">赤い行が逆三角形のシルエットに直接効く筋群。ここが他より低いままなら、メニューの配分を見直す。</p>
+  </div>
+
+  <div class="card">
+    <h2>総挙上量<span class="r">重量種目のみ</span></h2>
+    <svg class="chart" id="vChart"></svg>
+  </div>
+
+  <div class="card">
+    <h2>種目別ベスト</h2>
+    <div id="bBest"></div>
+  </div>
+
+  <div class="card">
+    <h2>セッション履歴</h2>
+    <div id="bHist"></div>
+  </div>
+</section>
+
+<!-- ══ 設定 ══ -->
+<section id="conf">
+  <div class="card">
+    <h2>プレート在庫<span class="r">28mm スタンダード</span></h2>
+    <div class="inv" id="cInv"></div>
+    <hr>
+    <div class="row">
+      <div class="fg"><label class="f">ダンベルシャフト1本 kg</label><input type="number" step="0.1" id="cDb"></div>
+      <div class="fg"><label class="f">バーベルシャフト kg</label><input type="number" step="0.5" id="cBb"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="fg"><label class="f">ダンベル 片側に載る枚数</label><input type="number" min="1" id="cDbMax"></div>
+      <div class="fg"><label class="f">バーベル 片側に載る枚数</label><input type="number" min="1" id="cBbMax"></div>
+    </div>
+    <div class="row" style="margin-top:10px"><span class="note">合計プレート重量 <b id="cTotal"></b></span></div>
+  </div>
+
+  <div class="card">
+    <h2>実現可能な重量</h2>
+    <div id="cReal"></div>
+  </div>
+
+  <div class="card">
+    <h2>栄養目標</h2>
+    <div class="row">
+      <div class="fg"><label class="f">基礎代謝 kcal</label><input type="number" id="cBmr" inputmode="numeric"></div>
+      <div class="fg"><label class="f">活動係数</label>
+        <select id="cAct">
+          <option value="1.2">1.2 ほぼ座位</option>
+          <option value="1.375">1.375 軽い活動</option>
+          <option value="1.4">1.4 デスクワーク+週1トレ</option>
+          <option value="1.55">1.55 中程度</option>
+        </select>
+      </div>
+      <div class="fg"><label class="f">方針</label>
+        <select id="cGoal">
+          <option value="300">増量 +300 kcal</option>
+          <option value="150">緩やか増量 +150 kcal</option>
+          <option value="0">維持 ±0</option>
+          <option value="-300">減量 -300 kcal</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="fg"><label class="f">体重あたりP g/kg</label><input type="number" step="0.1" id="cPr" inputmode="decimal"></div>
+      <div class="fg"><label class="f">脂質 kcal比 %</label><input type="number" id="cFr" inputmode="numeric"></div>
+    </div>
+    <hr>
+    <div class="row"><span class="note" id="cCalc"></span><div class="sp"></div><button class="btn sm" id="cApply">目標に反映</button></div>
+    <div class="row" style="margin-top:10px">
+      <div class="fg"><label class="f">目標 kcal</label><input type="number" id="cTk" inputmode="numeric"></div>
+      <div class="fg"><label class="f">P g</label><input type="number" id="cTp" inputmode="numeric"></div>
+      <div class="fg"><label class="f">F g</label><input type="number" id="cTf" inputmode="numeric"></div>
+      <div class="fg"><label class="f">C g</label><input type="number" id="cTc" inputmode="numeric"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>方針</h2>
+    <p class="note">
+      逆三角形のシルエットは三角筋中部の張り出しと広背筋の広がりが幅を決め、ウエストが分母になる。大胸筋は正面の厚みを作るが幅には寄与しない。
+      優先順位は 三角筋中部 → 広背筋 → 食事 → 大胸筋。
+    </p>
+    <table style="margin-top:10px">
+      <tr><th>制約</th><th>対処</th></tr>
+      <tr><td>プレートが28mmスタンダード規格</td><td>追加購入は同規格に限る。50mmオリンピックは使えない</td></tr>
+      <tr><td>5・10・15kgが各2枚のみ</td><td>両手ダンベルは左右対称に4枚必要なため使えず、上限は1本9kg。プレス系は自重の角度調整に置き換え、重量が要る引く動作は片手ダンベルに寄せる</td></tr>
+      <tr><td>ラックにセーフティが無い</td><td>ソロでの高重量バーベルベンチは行わない。スピンロックカラーは毎セット締め直す</td></tr>
+      <tr><td>懸垂・ラットプルが無い</td><td>バーをラック低位置にセットしインバーテッドロウで代替</td></tr>
+      <tr><td>最小増分が2.5kg／ダンベル1本</td><td>軽量種目は重量ではなくレップ数で漸進させる</td></tr>
+      <tr><td>プレートを買い足す場合</td><td>重いプレートより2.5kgを4枚。両手種目の刻みが増える</td></tr>
+    </table>
+    <p class="note" style="margin-top:10px">
+      漸進のルール — 全セットでレップ範囲の上限に達したら次回に重量を1段上げる。上げた直後はレップが下限まで落ちてよい。
+      重量を上げられない種目は上限そのものを2回引き上げる。2セッション連続で下限を割ったら1段戻す。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>データ</h2>
+    <div class="row">
+      <button class="btn sm gh" id="cExp">書き出し（JSON）</button>
+      <button class="btn sm gh" id="cImpBtn">読み込み</button>
+      <input type="file" id="cImp" accept="application/json" style="display:none">
+      <div class="sp"></div>
+      <button class="btn sm gr" id="cReset">全消去</button>
+    </div>
+    <p class="note" style="margin-top:8px">記録はこの端末のブラウザ内にのみ保存され、サーバーには送られない。端末を変えるときは書き出して移す。</p>
+  </div>
+</section>
+
+</div>
+
+<div class="timer" id="timer">
+  <span style="font-size:12px;opacity:.85">レスト</span>
+  <span class="tv" id="tvVal">1:30</span>
+  <button id="tvAdd">+30s</button>
+  <button id="tvSkip">終了</button>
+</div>
+
+<div class="modal" id="lib"><div class="mbox">
+  <div class="row" style="margin-bottom:10px"><b style="font-size:14px">種目を選ぶ</b><div class="sp"></div><button class="btn sm gr" id="libClose">閉じる</button></div>
+  <input type="search" id="libSearch" placeholder="種目名で絞る" style="margin-bottom:10px">
+  <div class="filt" id="libFilt"></div>
+  <div id="libList"></div>
+</div></div>
+
+<script src="data.js"></script>
+<script src="body.js"></script>
+<script>
+"use strict";
+
+/* ─── storage ─────────────────────────────────────────────────────────── */
+const KEY = "fit_v2";
+function defaults(){
+  const menus = {};
+  for(const k in PRESETS){
+    menus[k] = {
+      label: PRESETS[k].label, desc: PRESETS[k].desc, preset: true,
+      blocks: PRESETS[k].blocks.map(b => ({
+        name: b.name, rest: b.rest,
+        items: b.items.map(id => { const e = ex(id); return {id:id, sets:e.sets, lo:e.lo, hi:e.hi}; })
+      }))
+    };
+  }
+  return {
+    inventory:{"15":2,"10":2,"5":2,"2.5":6,"1.25":4},
+    dbShaft:1.5, bbShaft:7, dbMax:2, bbMax:4,
+    profile:{bmr:1678, act:1.4, goal:300, pr:1.8, fr:24},
+    target:{kcal:2600, p:120, f:70, c:375},
+    menus: menus, activeMenu:"vshape60", editMenu:"vshape60",
+    sessions:{}, meals:{}, myfoods:[], recent:[], body:[]
+  };
+}
+const EXMAP = {}; EXERCISES.forEach(e=>EXMAP[e.id]=e);
+function ex(id){ return EXMAP[id] || {id:id, n:id, eq:"bw", sets:3, lo:8, hi:12, pri:[], sec:[], d:""}; }
+
+/* localStorage はプライベートブラウズや file:// の不透明オリジンで例外を投げる。
+   そこで落とすと全操作が壊れるので、握りつぶしてメモリだけで動かし続ける。 */
+let storageOK = true;
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ storageOK = false; return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ storageOK = false; return false; } }
+function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){ storageOK = false; } }
+
+let S;
+function load(){
+  try{
+    const raw = lsGet(KEY);
+    const base = defaults();
+    if(!raw) return base;
+    const o = JSON.parse(raw);
+    const m = Object.assign(base, o);
+    // プリセットが増えたときに既存データへ流し込む
+    for(const k in base.menus) if(!m.menus[k]) m.menus[k] = base.menus[k];
+    return m;
+  }catch(e){ return defaults(); }
+}
+function save(){
+  const ok = lsSet(KEY, JSON.stringify(S));
+  if(!ok) warnStorage();
+}
+let warned = false;
+function warnStorage(){
+  if(warned) return;
+  warned = true;
+  const el = document.getElementById("noStore");
+  if(el) el.style.display = "block";
+}
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const today = () => new Date().toLocaleDateString("sv-SE");
+const r1 = n => Math.round(n*10)/10;
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+/* ─── プレート計算 ─────────────────────────────────────────────────────── */
+const DENS = [15,10,5,2.5,1.25];
+function achievable(nBars, shaft, cap){
+  const inv = S.inventory, out = new Map();
+  cap = cap || 99;
+  const maxc = DENS.map(d => Math.min(cap, Math.floor((inv[String(d)]||0)/(2*nBars))));
+  const picked = new Array(DENS.length).fill(0);
+  (function dfs(i, sum, used){
+    if(used > cap) return;
+    if(i === DENS.length){
+      const t = r1(shaft + sum*2);
+      if(!out.has(t)) out.set(t, picked.slice());
+      return;
+    }
+    for(let c=0;c<=maxc[i];c++){ picked[i]=c; dfs(i+1, sum+DENS[i]*c, used+c); }
+    picked[i]=0;
+  })(0,0,0);
+  return Array.from(out.entries()).sort((a,b)=>a[0]-b[0]);
+}
+function comboText(counts){
+  const p=[]; counts.forEach((c,i)=>{ if(c>0) p.push(DENS[i]+"×"+c); });
+  return p.length ? p.join(" / ")+" 片側" : "シャフトのみ";
+}
+let wcache = {};
+function weightsFor(eq){
+  if(wcache[eq]) return wcache[eq];
+  let l = [];
+  if(eq==="db2") l = achievable(2, S.dbShaft, S.dbMax);
+  else if(eq==="db1") l = achievable(1, S.dbShaft, S.dbMax);
+  else if(eq==="bb") l = achievable(1, S.bbShaft, S.bbMax);
+  wcache[eq] = l; return l;
+}
+function clearWC(){ wcache = {}; }
+function volMult(e){ return e.vm || (e.eq==="db2" ? 2 : 1); }
+const UNIT = e => e.eq==="time" ? "秒" : "回";
+
+/* ─── タブ ────────────────────────────────────────────────────────────── */
+$$(".tabs button").forEach(b=>{
+  b.onclick = ()=>{
+    $$(".tabs button").forEach(x=>x.classList.remove("on"));
+    $$("section").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); $("#"+b.dataset.t).classList.add("on");
+    if(b.dataset.t==="scale"){ renderScale(); }
+    if(b.dataset.t==="rec"){ renderRec(); }
+    if(b.dataset.t==="conf"){ renderConf(); }
+    if(b.dataset.t==="menu"){ renderMenuTab(); }
+    window.scrollTo(0,0);
+  };
+});
+
+/* ─── レストタイマー ───────────────────────────────────────────────────── */
+let th=null, tl=0;
+function startTimer(sec){
+  tl=sec; $("#timer").classList.add("on"); paintTimer();
+  if(th) clearInterval(th);
+  th = setInterval(()=>{ tl--; paintTimer(); if(tl<=0){ clearInterval(th); th=null; setTimeout(stopTimer,2500);} },1000);
+}
+function paintTimer(){
+  const m=Math.floor(Math.max(tl,0)/60), s=Math.max(tl,0)%60;
+  $("#tvVal").textContent = tl<=0 ? "完了" : m+":"+String(s).padStart(2,"0");
+}
+function stopTimer(){ if(th) clearInterval(th); th=null; $("#timer").classList.remove("on"); }
+$("#tvSkip").onclick = stopTimer;
+$("#tvAdd").onclick = ()=>{ tl+=30; paintTimer(); };
+
+/* ─── 筋肉図まわり ─────────────────────────────────────────────────────── */
+function legendHTML(level){
+  const keys = Object.keys(MUSCLES).filter(k=>level[k]);
+  keys.sort((a,b)=>(level[b]-level[a]));
+  if(!keys.length) return '<span class="mchip">種目が未設定</span>';
+  return keys.map(k=>'<span class="mchip '+(level[k]===2?"p":"s")+'">'+MUSCLES[k][0]+'</span>').join("");
+}
+function menuExercises(menu){
+  const list = [];
+  (menu.blocks||[]).forEach(b => b.items.forEach(it => list.push(ex(it.id))));
+  return list;
+}
+/* 部位別セット数。主働1.0 / 補助0.5 */
+function setsByMuscle(blocks){
+  const agg = {};
+  (blocks||[]).forEach(b => b.items.forEach(it=>{
+    const e = ex(it.id), n = it.sets || e.sets || 0;
+    (e.pri||[]).forEach(m => agg[m] = (agg[m]||0) + n);
+    (e.sec||[]).forEach(m => agg[m] = (agg[m]||0) + n*0.5);
+  }));
+  return agg;
+}
+function setsBarHTML(agg){
+  const keys = Object.keys(MUSCLES).filter(k=>agg[k]);
+  if(!keys.length) return '<div class="empty">まだ集計できるセットがない</div>';
+  keys.sort((a,b)=>agg[b]-agg[a]);
+  const max = agg[keys[0]] || 1;
+  return keys.map(k=>{
+    const v = agg[k], hot = VSHAPE.indexOf(k)>=0;
+    return '<div class="hbar"><span class="hl">'+MUSCLES[k][0]+'</span>'
+      + '<span class="ht"><i class="'+(hot?"v":"")+'" style="width:'+(v/max*100).toFixed(1)+'%"></i></span>'
+      + '<span class="hn">'+r1(v)+'</span></div>';
+  }).join("");
+}
+
+/* ─── トレーニング ─────────────────────────────────────────────────────── */
+function activeMenu(){ return S.menus[S.activeMenu] || S.menus[Object.keys(S.menus)[0]]; }
+function sessionOf(date, create){
+  if(!S.sessions[date] && create) S.sessions[date] = {menu:S.activeMenu, ex:{}, memo:""};
+  return S.sessions[date];
+}
+function prevSession(date, id){
+  const ds = Object.keys(S.sessions).filter(d=>d<date).sort().reverse();
+  for(const d of ds){
+    const s = S.sessions[d];
+    if(s.ex && s.ex[id] && s.ex[id].some(x=>x.done)) return {date:d, sets:s.ex[id]};
+  }
+  return null;
+}
+function suggest(e, it, prev){
+  if(!prev) return null;
+  const done = prev.sets.filter(x=>x.done);
+  if(!done.length) return null;
+  const allTop = done.length >= it.sets && done.every(x=>Number(x.r) >= it.hi);
+  if(e.eq==="bw" || e.eq==="time"){
+    const mr = Math.max.apply(null, done.map(x=>Number(x.r)||0));
+    return allTop ? {txt:"目標達成。"+(it.hi+2)+UNIT(e)+"まで伸ばすか、強度を上げる"}
+                  : {txt:"前回最高 "+mr+UNIT(e)};
+  }
+  const mw = Math.max.apply(null, done.map(x=>Number(x.w)||0));
+  if(!allTop) return {txt:"前回 "+mw+"kg"};
+  const list = weightsFor(e.eq).map(x=>x[0]);
+  const nx = list.find(w=>w>mw);
+  return nx ? {txt:"全セット上限達成。"+nx+"kg に上げる"} : {txt:"全セット上限達成。在庫の上限なのでレップで伸ばす"};
+}
+
+function renderTrain(){
+  const date = $("#tDate").value, menu = activeMenu();
+  const lv = levelsOf(menuExercises(menu));
+  $("#tBody").innerHTML = bodyPair(lv);
+  $("#tLegend").innerHTML = legendHTML(lv);
+
+  const wrap = $("#tBlocks"); wrap.innerHTML = "";
+  let total=0, done=0, vol=0, estSec=0;
+
+  (menu.blocks||[]).forEach(bl=>{
+    const el = document.createElement("div"); el.className="block";
+    el.innerHTML = '<div class="bh"><span class="bt">'+esc(bl.name)+'</span>'
+      + '<span class="tag">レスト'+bl.rest+'秒</span><span class="sp" style="flex:1"></span>'
+      + '<button class="btn xs gh" data-rest="'+bl.rest+'">タイマー</button></div>';
+    const bb = document.createElement("div"); bb.className="bb";
+
+    bl.items.forEach(it=>{
+      const e = ex(it.id);
+      const rec = (S.sessions[date] && S.sessions[date].ex && S.sessions[date].ex[it.id]) || [];
+      const sug = suggest(e, it, prevSession(date, it.id));
+      const d = document.createElement("div"); d.className="ex";
+
+      let rows = '<div class="sets">';
+      for(let i=0;i<it.sets;i++){
+        const r = rec[i] || {w:"",r:"",done:false};
+        total++;
+        if(r.done){ done++; vol += (Number(r.w)||0)*(Number(r.r)||0)*volMult(e); }
+        estSec += 40 + bl.rest;
+        let wf;
+        if(e.eq==="bw"||e.eq==="time"){
+          wf = '<input type="text" value="自重" disabled style="color:var(--mute)">';
+        }else{
+          let o = '<option value="">重量</option>';
+          weightsFor(e.eq).forEach(function(p){
+            o += '<option value="'+p[0]+'"'+(String(r.w)===String(p[0])?" selected":"")+'>'+p[0]+' kg</option>';
+          });
+          wf = '<select data-ex="'+it.id+'" data-i="'+i+'" data-k="w">'+o+'</select>';
+        }
+        rows += '<div class="set"><span class="si">'+(i+1)+'</span>'+wf
+          + '<input type="number" inputmode="numeric" placeholder="'+UNIT(e)+'" value="'+(r.r==null?"":r.r)+'" data-ex="'+it.id+'" data-i="'+i+'" data-k="r">'
+          + '<button class="chk'+(r.done?" on":"")+'" data-ex="'+it.id+'" data-i="'+i+'" data-k="done">'+(r.done?"✓":"")+'</button></div>';
+      }
+      rows += '</div>';
+
+      const exlv = levelsOf([e]);
+      d.innerHTML =
+        '<div class="exmain"><div class="exh"><span class="exn">'+esc(e.n)+'</span>'
+        + '<span class="tag">'+it.sets+'セット '+it.lo+'-'+it.hi+UNIT(e)+'</span></div>'
+        + '<div class="exd">'+esc(e.d)+'</div>' + rows
+        + '<div class="prev">'+(sug ? esc(sug.txt) : "初回。フォームが崩れない重量から始める")+'</div></div>'
+        + '<div class="exbody">'+bodyPair(exlv)+'</div>';
+      bb.appendChild(d);
+    });
+    el.appendChild(bb); wrap.appendChild(el);
+  });
+
+  $("#tProgress").textContent = done+" / "+total+" セット";
+  $("#tVol").textContent = "総挙上 "+Math.round(vol)+" kg";
+  $("#tTime").textContent = "所要 約"+Math.round(estSec/60)+"分";
+  $("#tMemo").value = (S.sessions[date] && S.sessions[date].memo) || "";
+
+  wrap.querySelectorAll("[data-rest]").forEach(b=> b.onclick = ()=> startTimer(Number(b.dataset.rest)));
+  wrap.querySelectorAll("select[data-ex],input[data-ex]").forEach(el2=>{
+    el2.onchange = ()=> setSet(el2.dataset.ex, +el2.dataset.i, el2.dataset.k, el2.value);
+  });
+  wrap.querySelectorAll("button.chk").forEach(b=>{
+    b.onclick = ()=>{
+      const on = !b.classList.contains("on");
+      const blk = (activeMenu().blocks||[]).find(x=>x.items.some(y=>y.id===b.dataset.ex));
+      setSet(b.dataset.ex, +b.dataset.i, "done", on);
+      renderTrain();
+      if(on && blk) startTimer(blk.rest);
+    };
+  });
+}
+function setSet(id, i, k, v){
+  const date = $("#tDate").value, s = sessionOf(date, true);
+  s.menu = S.activeMenu;
+  if(!s.ex[id]) s.ex[id] = [];
+  while(s.ex[id].length <= i) s.ex[id].push({w:"",r:"",done:false});
+  s.ex[id][i][k] = v;
+  save();
+  if(k!=="done") renderTrain();
+  updateHeader();
+}
+$("#tDate").onchange = renderTrain;
+$("#tMenu").onchange = ()=>{ S.activeMenu = $("#tMenu").value; save(); renderTrain(); };
+$("#tMemo").oninput = ()=>{ sessionOf($("#tDate").value,true).memo = $("#tMemo").value; save(); };
+$("#tClear").onclick = ()=>{
+  if(!confirm("この日のトレーニング記録を消去する")) return;
+  delete S.sessions[$("#tDate").value]; save(); renderTrain(); updateHeader();
+};
+
+/* ─── メニュー編集 ─────────────────────────────────────────────────────── */
+function editMenu(){ return S.menus[S.editMenu] || activeMenu(); }
+function fillMenuSelects(){
+  const opts = Object.keys(S.menus).map(k=>'<option value="'+k+'">'+esc(S.menus[k].label)+'</option>').join("");
+  $("#tMenu").innerHTML = opts; $("#tMenu").value = S.activeMenu;
+  $("#eMenu").innerHTML = opts; $("#eMenu").value = S.editMenu;
+}
+function renderMenuTab(){
+  fillMenuSelects();
+  const m = editMenu();
+  $("#eDesc").textContent = m.desc || "";
+  const lv = levelsOf(menuExercises(m));
+  $("#eBody").innerHTML = bodyPair(lv);
+  $("#eLegend").innerHTML = legendHTML(lv);
+  $("#eSets").innerHTML = setsBarHTML(setsByMuscle(m.blocks));
+  $("#eLock").textContent = m.preset ? "プリセットは直接編集できる。元に戻したいときは設定から全消去するか、複製して使う。" : "カスタムメニュー";
+
+  const wrap = $("#eBlocks"); wrap.innerHTML = "";
+  (m.blocks||[]).forEach((bl,bi)=>{
+    const el = document.createElement("div"); el.className="medit";
+    let h = '<div class="mh"><input value="'+esc(bl.name)+'" data-bn="'+bi+'" style="flex:1;min-width:140px;font-weight:600">'
+      + '<span class="msp"><span class="note">レスト</span><input type="number" value="'+bl.rest+'" data-br="'+bi+'"><span class="note">秒</span></span>'
+      + '<button class="btn xs gr" data-bdel="'+bi+'">ブロック削除</button></div>';
+    bl.items.forEach((it,ii)=>{
+      const e = ex(it.id);
+      h += '<div class="mrow"><span class="mname">'+esc(e.n)+'</span>'
+        + '<span class="tag">'+({bw:"自重",db1:"ダンベル1本",db2:"ダンベル2本",bb:"バーベル",time:"秒数"}[e.eq]||e.eq)+'</span>'
+        + '<span class="msp"><span class="note">セット</span><input type="number" min="1" value="'+it.sets+'" data-s="'+bi+'.'+ii+'"></span>'
+        + '<span class="msp"><span class="note">下限</span><input type="number" value="'+it.lo+'" data-lo="'+bi+'.'+ii+'"></span>'
+        + '<span class="msp"><span class="note">上限</span><input type="number" value="'+it.hi+'" data-hi="'+bi+'.'+ii+'"></span>'
+        + '<button class="btn xs gr" data-up="'+bi+'.'+ii+'">↑</button>'
+        + '<button class="btn xs gr" data-dn="'+bi+'.'+ii+'">↓</button>'
+        + '<button class="btn xs gr" data-xdel="'+bi+'.'+ii+'">削除</button></div>';
+    });
+    h += '<div class="mrow"><button class="btn xs gh" data-add="'+bi+'">種目を追加</button></div>';
+    el.innerHTML = h; wrap.appendChild(el);
+  });
+
+  const at = (k)=>{ const p = k.split("."); return [+p[0], +p[1]]; };
+  wrap.querySelectorAll("[data-bn]").forEach(i=> i.onchange = ()=>{ m.blocks[+i.dataset.bn].name = i.value; save(); });
+  wrap.querySelectorAll("[data-br]").forEach(i=> i.onchange = ()=>{ m.blocks[+i.dataset.br].rest = +i.value||60; save(); renderMenuTab(); });
+  wrap.querySelectorAll("[data-bdel]").forEach(b=> b.onclick = ()=>{ m.blocks.splice(+b.dataset.bdel,1); save(); renderMenuTab(); });
+  wrap.querySelectorAll("[data-s]").forEach(i=> i.onchange = ()=>{ const a=at(i.dataset.s); m.blocks[a[0]].items[a[1]].sets = Math.max(1,+i.value||1); save(); renderMenuTab(); });
+  wrap.querySelectorAll("[data-lo]").forEach(i=> i.onchange = ()=>{ const a=at(i.dataset.lo); m.blocks[a[0]].items[a[1]].lo = +i.value||1; save(); });
+  wrap.querySelectorAll("[data-hi]").forEach(i=> i.onchange = ()=>{ const a=at(i.dataset.hi); m.blocks[a[0]].items[a[1]].hi = +i.value||1; save(); });
+  wrap.querySelectorAll("[data-xdel]").forEach(b=> b.onclick = ()=>{ const a=at(b.dataset.xdel); m.blocks[a[0]].items.splice(a[1],1); save(); renderMenuTab(); });
+  wrap.querySelectorAll("[data-up]").forEach(b=> b.onclick = ()=>{ const a=at(b.dataset.up); const L=m.blocks[a[0]].items; if(a[1]>0){ const t=L[a[1]-1]; L[a[1]-1]=L[a[1]]; L[a[1]]=t; save(); renderMenuTab(); } });
+  wrap.querySelectorAll("[data-dn]").forEach(b=> b.onclick = ()=>{ const a=at(b.dataset.dn); const L=m.blocks[a[0]].items; if(a[1]<L.length-1){ const t=L[a[1]+1]; L[a[1]+1]=L[a[1]]; L[a[1]]=t; save(); renderMenuTab(); } });
+  wrap.querySelectorAll("[data-add]").forEach(b=> b.onclick = ()=> openLib(+b.dataset.add));
+}
+$("#eMenu").onchange = ()=>{ S.editMenu = $("#eMenu").value; save(); renderMenuTab(); };
+$("#eAddBlock").onclick = ()=>{
+  editMenu().blocks.push({name:"新しいブロック", rest:90, items:[]}); save(); renderMenuTab();
+};
+$("#eDup").onclick = ()=>{
+  const src = editMenu();
+  const name = prompt("新しいメニュー名", src.label+" のコピー");
+  if(!name) return;
+  const key = "c"+Object.keys(S.menus).length+"_"+Math.abs(name.length*97+name.charCodeAt(0));
+  S.menus[key] = {label:name, desc:"カスタム", preset:false, blocks:JSON.parse(JSON.stringify(src.blocks))};
+  S.editMenu = key; save(); renderMenuTab();
+};
+$("#eDel").onclick = ()=>{
+  if(Object.keys(S.menus).length<=1){ alert("最後の1つは消せない"); return; }
+  if(!confirm(editMenu().label+" を削除する")) return;
+  const k = S.editMenu; delete S.menus[k];
+  const first = Object.keys(S.menus)[0];
+  S.editMenu = first; if(S.activeMenu===k) S.activeMenu = first;
+  save(); renderMenuTab(); renderTrain();
+};
+
+/* 種目ライブラリのモーダル */
+let libTarget = 0, libFilter = "all";
+const MUSCLE_GROUPS = [
+  ["all","すべて",null],
+  ["shoulder","肩",["delt_ant","delt_lat","delt_post"]],
+  ["back","背中",["lats","upperback","traps","erector"]],
+  ["chest","胸",["chest"]],
+  ["arm","腕",["biceps","triceps","forearm"]],
+  ["core","体幹",["abs","oblique"]],
+  ["leg","脚",["quads","hams","glutes","calves"]]
+];
+function openLib(bi){
+  libTarget = bi; libFilter = "all"; $("#libSearch").value="";
+  $("#libFilt").innerHTML = MUSCLE_GROUPS.map(g=>'<button data-g="'+g[0]+'"'+(g[0]==="all"?' class="on"':'')+'>'+g[1]+'</button>').join("");
+  $("#libFilt").querySelectorAll("button").forEach(b=> b.onclick = ()=>{
+    libFilter = b.dataset.g;
+    $("#libFilt").querySelectorAll("button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); renderLib();
+  });
+  renderLib(); $("#lib").classList.add("on");
+}
+function renderLib(){
+  const q = $("#libSearch").value.trim();
+  const grp = MUSCLE_GROUPS.find(g=>g[0]===libFilter);
+  const list = EXERCISES.filter(e=>{
+    if(q && e.n.indexOf(q) < 0) return false;
+    if(grp && grp[2]) return e.pri.some(m=>grp[2].indexOf(m)>=0);
+    return true;
+  });
+  $("#libList").innerHTML = list.length ? list.map(e=>{
+    const eqn = {bw:"自重",db1:"ダンベル1本",db2:"ダンベル2本",bb:"バーベル",time:"秒数"}[e.eq]||e.eq;
+    return '<div class="libitem" data-id="'+e.id+'">'
+      + bodySVG(levelsOf([e]),"front") + bodySVG(levelsOf([e]),"back")
+      + '<div class="li1"><div class="lin">'+esc(e.n)+'</div>'
+      + '<div class="lim">'+eqn+' ・ '+e.pri.map(m=>MUSCLES[m][0]).join("・")+'</div></div></div>';
+  }).join("") : '<div class="empty">該当なし</div>';
+  $("#libList").querySelectorAll(".libitem").forEach(el=>{
+    el.onclick = ()=>{
+      const e = ex(el.dataset.id);
+      editMenu().blocks[libTarget].items.push({id:e.id, sets:e.sets, lo:e.lo, hi:e.hi});
+      save(); $("#lib").classList.remove("on"); renderMenuTab();
+    };
+  });
+}
+$("#libSearch").oninput = renderLib;
+$("#libClose").onclick = ()=> $("#lib").classList.remove("on");
+$("#lib").onclick = e=>{ if(e.target.id==="lib") $("#lib").classList.remove("on"); };
+
+/* ─── 食事 ────────────────────────────────────────────────────────────── */
+function allFoods(){ return FOODS.concat(S.myfoods||[]); }
+let mCat = "all";
+function renderCats(){
+  const cats = ["all"].concat(allFoods().map(f=>f[6]).filter((v,i,a)=>a.indexOf(v)===i));
+  $("#mCats").innerHTML = cats.map(c=>'<button data-c="'+esc(c)+'"'+(c===mCat?' class="on"':'')+'>'+(c==="all"?"すべて":esc(c))+'</button>').join("");
+  $("#mCats").querySelectorAll("button").forEach(b=> b.onclick = ()=>{ mCat = b.dataset.c; renderCats(); renderFoodList(); });
+}
+function renderFoodList(){
+  const q = $("#mSearch").value.trim().toLowerCase();
+  let list = allFoods();
+  if(mCat!=="all") list = list.filter(f=>f[6]===mCat);
+  if(q) list = list.filter(f=>f[0].toLowerCase().indexOf(q)>=0);
+  const box = $("#mResults");
+  if(!list.length){ box.innerHTML = '<div class="empty">該当なし。マイ食品に登録する</div>'; return; }
+  box.innerHTML = list.map(f=>'<div class="fitem" data-n="'+esc(f[0])+'"><span class="fn">'+esc(f[0])+'</span>'
+    + '<span class="fk">'+f[1]+'kcal P'+f[2]+' F'+f[3]+' C'+f[4]+'</span></div>').join("");
+  box.querySelectorAll(".fitem").forEach(el=> el.onclick = ()=> pickFood(el.dataset.n));
+}
+function pickFood(name){
+  const f = allFoods().find(x=>x[0]===name); if(!f) return;
+  const a = prompt(f[0]+"\n何"+(f[5]||"人前")+"分か", "1");
+  if(a===null) return;
+  const m = parseFloat(a); if(!(m>0)) return;
+  addMeal({name:f[0]+(m!==1?" ×"+m:""), kcal:r1(f[1]*m), p:r1(f[2]*m), f:r1(f[3]*m), c:r1(f[4]*m)});
+  S.recent = [f[0]].concat((S.recent||[]).filter(x=>x!==f[0])).slice(0,10);
+  save(); renderQuick();
+}
+function renderQuick(){
+  const rec = (S.recent||[]).filter(n=>allFoods().some(f=>f[0]===n));
+  const seed = ["エクスプロージョン WPC ミルクチョコレート 30g","納豆 小粒 1パック45g","ごはん 茶碗普通盛 150g","トップバリュ ギョーザ 12個 324g（1袋）","卵 1個50g"];
+  const list = rec.concat(seed.filter(s=>rec.indexOf(s)<0)).slice(0,10);
+  $("#mQuick").innerHTML = list.map(n=>'<button data-n="'+esc(n)+'">'+esc(n.length>22?n.slice(0,21)+"…":n)+'</button>').join("");
+  $("#mQuick").querySelectorAll("button").forEach(b=> b.onclick = ()=> pickFood(b.dataset.n));
+}
+function addMeal(item){
+  const d = $("#mDate").value;
+  if(!S.meals[d]) S.meals[d] = [];
+  S.meals[d].push(item); save(); renderMeal();
+}
+function renderMeal(){
+  const d = $("#mDate").value, log = S.meals[d]||[], t = S.target;
+  const sum = log.reduce((a,x)=>({kcal:a.kcal+ +x.kcal, p:a.p+ +x.p, f:a.f+ +x.f, c:a.c+ +x.c}), {kcal:0,p:0,f:0,c:0});
+  const set = (id,v,g)=>{
+    $("#m"+id).textContent = Math.round(v);
+    $("#m"+id+"G").textContent = "目標 "+g;
+    const b = $("#m"+id+"B"), pct = g>0 ? Math.min(v/g*100,100) : 0;
+    b.style.width = pct+"%"; b.classList.toggle("over", v>g*1.05);
+  };
+  set("Kcal",sum.kcal,t.kcal); set("P",sum.p,t.p); set("F",sum.f,t.f); set("C",sum.c,t.c);
+  $("#mCount").textContent = log.length+" 件";
+
+  const dk = Math.round(t.kcal-sum.kcal), dp = Math.round(t.p-sum.p);
+  const adv = [];
+  if(!log.length) adv.push("まだ記録がない。");
+  else{
+    if(dk>150) adv.push("あと <b>"+dk+" kcal</b>。");
+    else if(dk<-150) adv.push("目標を <b>"+(-dk)+" kcal</b> 超過。");
+    else adv.push("カロリーは目標圏内。");
+    if(dp>20) adv.push("たんぱく質が <b>"+dp+"g</b> 不足。プロテイン1杯で21g、納豆1パックで7.4g補える。");
+    else if(dp>0) adv.push("たんぱく質はあと "+dp+"g。");
+    else adv.push("たんぱく質は充足。");
+  }
+  adv.push("増量期なのでカロリーを削るより先にたんぱく質を満たす。");
+  $("#mAdvice").innerHTML = adv.join(" ");
+
+  const box = $("#mLog");
+  if(!log.length){ box.innerHTML = '<div class="empty">記録なし</div>'; return; }
+  box.innerHTML = '<table><tr><th>食品</th><th class="n">kcal</th><th class="n">P</th><th class="n">F</th><th class="n">C</th><th></th></tr>'
+    + log.map((x,i)=>'<tr><td>'+esc(x.name)+'</td><td class="n">'+Math.round(x.kcal)+'</td><td class="n">'+r1(x.p)+'</td><td class="n">'+r1(x.f)+'</td><td class="n">'+r1(x.c)+'</td>'
+      + '<td class="n"><button class="btn xs gr" data-del="'+i+'">削除</button></td></tr>').join("")
+    + '<tr><td><b>合計</b></td><td class="n"><b>'+Math.round(sum.kcal)+'</b></td><td class="n"><b>'+r1(sum.p)+'</b></td><td class="n"><b>'+r1(sum.f)+'</b></td><td class="n"><b>'+r1(sum.c)+'</b></td><td></td></tr></table>';
+  box.querySelectorAll("[data-del]").forEach(b=> b.onclick = ()=>{ S.meals[d].splice(+b.dataset.del,1); save(); renderMeal(); });
+}
+$("#mDate").onchange = renderMeal;
+$("#mSearch").oninput = renderFoodList;
+
+/* 米の換算 */
+function riceCalc(){
+  const go = parseFloat($("#rGo").value)||0;
+  const raw = go*RICE.goRaw, cooked = raw*RICE.cookRatio;
+  const sel = $("#rPortion").value, cups = parseFloat($("#rCups").value)||0;
+  let grams;
+  if(sel==="all") grams = cooked;
+  else if(sel==="half") grams = cooked/2;
+  else if(sel==="third") grams = cooked/3;
+  else grams = parseFloat(sel)*cups;
+  const k = RICE.per100, f = grams/100;
+  const out = {g:Math.round(grams), kcal:Math.round(k.kcal*f), p:r1(k.p*f), fat:r1(k.f*f), c:r1(k.c*f)};
+  $("#rOut").innerHTML = go+"合 = 生米 "+Math.round(raw)+"g → 炊き上がり 約"+Math.round(cooked)+"g"
+    + "（全量なら "+Math.round(k.kcal*cooked/100)+" kcal・P"+r1(k.p*cooked/100)+"・C"+r1(k.c*cooked/100)+"）<br>"
+    + "<b>食べた分 "+out.g+"g = "+out.kcal+" kcal ・ P"+out.p+" ・ F"+out.fat+" ・ C"+out.c+"</b>";
+  return out;
+}
+["#rGo","#rPortion","#rCups"].forEach(s=>{ $(s).oninput = riceCalc; $(s).onchange = riceCalc; });
+$("#rAdd").onclick = ()=>{
+  const o = riceCalc();
+  if(!o.g) return;
+  addMeal({name:"ごはん "+o.g+"g", kcal:o.kcal, p:o.p, f:o.fat, c:o.c});
+};
+
+/* マイ食品 */
+function renderMyFoods(){
+  const l = S.myfoods||[];
+  $("#xList").innerHTML = l.length
+    ? '<table><tr><th>マイ食品</th><th class="n">kcal</th><th class="n">P</th><th class="n">F</th><th class="n">C</th><th></th></tr>'
+      + l.map((f,i)=>'<tr><td>'+esc(f[0])+'</td><td class="n">'+f[1]+'</td><td class="n">'+f[2]+'</td><td class="n">'+f[3]+'</td><td class="n">'+f[4]+'</td>'
+        + '<td class="n"><button class="btn xs gr" data-mfd="'+i+'">削除</button></td></tr>').join("")+'</table>'
+    : '<p class="note">まだ登録がない。よく食べるものを入れておくと、次から一覧とよく使うに出る。</p>';
+  $("#xList").querySelectorAll("[data-mfd]").forEach(b=> b.onclick = ()=>{
+    S.myfoods.splice(+b.dataset.mfd,1); save(); renderMyFoods(); renderCats(); renderFoodList(); renderQuick();
+  });
+}
+function readManual(){
+  const n = $("#xN").value.trim() || "手入力";
+  const u = $("#xU").value.trim() || "1食";
+  const p = +$("#xP").value||0, f = +$("#xF").value||0, c = +$("#xC").value||0;
+  let k = +$("#xK").value; if(!k) k = Math.round(p*4+f*9+c*4);
+  if(!k && !p && !f && !c) return null;
+  return [n,k,p,f,c,u,"マイ食品"];
+}
+$("#xSave").onclick = ()=>{
+  const r = readManual(); if(!r) return;
+  S.myfoods.push(r); save();
+  ["#xN","#xU","#xK","#xP","#xF","#xC"].forEach(s=>$(s).value="");
+  renderMyFoods(); renderCats(); renderFoodList(); renderQuick();
+};
+$("#xOnce").onclick = ()=>{
+  const r = readManual(); if(!r) return;
+  addMeal({name:r[0], kcal:r[1], p:r[2], f:r[3], c:r[4]});
+  ["#xN","#xU","#xK","#xP","#xF","#xC"].forEach(s=>$(s).value="");
+};
+
+/* ─── 体組成 ──────────────────────────────────────────────────────────── */
+function renderScaleGrid(){
+  $("#sGrid").innerHTML = SCALE_FIELDS.map(f=>
+    '<div class="sf"><label>'+f[1]+(f[2]?" "+f[2]:"")+'</label><input type="number" step="0.01" id="sf_'+f[0]+'" inputmode="decimal"></div>').join("");
+}
+$("#sParse").onclick = ()=>{
+  const nums = ($("#sPaste").value.match(/-?\d+(\.\d+)?/g)||[]).map(Number);
+  if(!nums.length){ $("#sParseMsg").textContent = "数値が見つからない"; return; }
+  SCALE_FIELDS.forEach((f,i)=>{ if(i<nums.length) $("#sf_"+f[0]).value = nums[i]; });
+  $("#sParseMsg").textContent = nums.length+" 個の数値を読み込んだ。上のフォームで確認して保存する。";
+};
+$("#sSave").onclick = ()=>{
+  const d = $("#sDate").value;
+  if(!d){ alert("測定日が必要"); return; }
+  const rec = {date:d};
+  SCALE_FIELDS.forEach(f=>{ const v = $("#sf_"+f[0]).value; if(v!=="") rec[f[0]] = +v; });
+  if(rec.w == null){ alert("体重は必須"); return; }
+  if(rec.lbm == null && rec.fat != null) rec.lbm = r1(rec.w*(1-rec.fat/100));
+  S.body = S.body.filter(x=>x.date!==d);
+  S.body.push(rec); S.body.sort((a,b)=>a.date<b.date?-1:1);
+  save(); renderScale(); updateHeader();
+  $("#sMsg").textContent = d+" を保存した";
+};
+$("#sClear").onclick = ()=>{ SCALE_FIELDS.forEach(f=>$("#sf_"+f[0]).value=""); $("#sPaste").value=""; $("#sParseMsg").textContent=""; };
+function renderScale(){
+  const b = S.body;
+  if(b.length){
+    const pts = b.map(x=>({ts:new Date(x.date).getTime(), d:x.date, w:x.w,
+      lbm: x.lbm!=null ? x.lbm : (x.fat!=null ? r1(x.w*(1-x.fat/100)) : null), fat:x.fat}));
+    const lb = [];
+    lb.push({x:pts[0].ts,t:pts[0].d.slice(5)});
+    if(pts.length>1) lb.push({x:pts[pts.length-1].ts,t:pts[pts.length-1].d.slice(5)});
+    lineChart($("#bChart"), [
+      {color:"#2f5d8f", pts:pts.map(p=>({x:p.ts,y:p.w}))},
+      {color:"#2e7d5b", pts:pts.filter(p=>p.lbm!=null).map(p=>({x:p.ts,y:p.lbm}))},
+      {color:"#a8622a", right:true, pts:pts.filter(p=>p.fat!=null).map(p=>({x:p.ts,y:p.fat}))}
+    ], {labels:lb});
+    const f0=pts[0], l0=pts[pts.length-1];
+    let tr = "体重 "+(l0.w>=f0.w?"+":"")+r1(l0.w-f0.w)+"kg";
+    if(f0.lbm!=null && l0.lbm!=null) tr += " / 除脂肪 "+(l0.lbm>=f0.lbm?"+":"")+r1(l0.lbm-f0.lbm)+"kg";
+    $("#bTrend").textContent = tr;
+  }else{ lineChart($("#bChart"),[]); $("#bTrend").textContent=""; }
+
+  $("#sHist").innerHTML = b.length
+    ? '<div style="overflow-x:auto"><table><tr><th>日付</th>'+SCALE_FIELDS.map(f=>'<th class="n">'+f[1]+'</th>').join("")+'<th></th></tr>'
+      + b.slice().reverse().map(r=>'<tr><td>'+r.date+'</td>'
+        + SCALE_FIELDS.map(f=>'<td class="n">'+(r[f[0]]!=null?r[f[0]]:"—")+'</td>').join("")
+        + '<td class="n"><button class="btn xs gr" data-bd="'+r.date+'">削除</button></td></tr>').join("")+'</table></div>'
+    : '<div class="empty">記録なし</div>';
+  $("#sHist").querySelectorAll("[data-bd]").forEach(x=> x.onclick = ()=>{
+    S.body = S.body.filter(r=>r.date!==x.dataset.bd); save(); renderScale(); updateHeader();
+  });
+}
+
+/* ─── 記録 ────────────────────────────────────────────────────────────── */
+function lineChart(svg, series, opt){
+  opt = opt||{};
+  const W = svg.clientWidth || 700, H = 170, pl = 34, pr = 34, pt = 12, pb = 20;
+  const all = series.filter(s=>s.pts.length);
+  if(!all.length){ svg.setAttribute("viewBox","0 0 700 170"); svg.innerHTML = '<text x="12" y="86">データがありません</text>'; return; }
+  const xs = all.flatMap(s=>s.pts.map(p=>p.x));
+  const xMin = Math.min.apply(null,xs), xMax = Math.max.apply(null,xs);
+  const X = v => pl + (xMax===xMin ? (W-pl-pr)/2 : (v-xMin)/(xMax-xMin)*(W-pl-pr));
+  let out = "";
+  const sc = {};
+  [["left",all.filter(s=>!s.right)],["right",all.filter(s=>s.right)]].forEach(a=>{
+    if(!a[1].length) return;
+    const ys = a[1].flatMap(s=>s.pts.map(p=>p.y));
+    let lo = Math.min.apply(null,ys), hi = Math.max.apply(null,ys);
+    if(hi===lo){ hi=lo+1; lo=lo-1; }
+    const pad=(hi-lo)*0.18; lo-=pad; hi+=pad;
+    sc[a[0]] = {Y: v => pt + (1-(v-lo)/(hi-lo))*(H-pt-pb)};
+    for(let i=0;i<=2;i++){
+      const v = lo+(hi-lo)*i/2, y = sc[a[0]].Y(v);
+      if(a[0]==="left"){
+        out += '<line x1="'+pl+'" y1="'+y.toFixed(1)+'" x2="'+(W-pr)+'" y2="'+y.toFixed(1)+'" stroke="#f0f0f2"/>';
+        out += '<text x="'+(pl-5)+'" y="'+(y+3).toFixed(1)+'" text-anchor="end">'+v.toFixed(1)+'</text>';
+      }else out += '<text x="'+(W-pr+5)+'" y="'+(y+3).toFixed(1)+'">'+v.toFixed(1)+'</text>';
+    }
+  });
+  all.forEach(s=>{
+    const y = sc[s.right?"right":"left"];
+    out += '<path d="'+s.pts.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+y.Y(p.y).toFixed(1)).join(" ")
+      + '" fill="none" stroke="'+s.color+'" stroke-width="1.8" stroke-linejoin="round"'+(s.right?' stroke-dasharray="3 3"':'')+'/>';
+    s.pts.forEach(p=>{ out += '<circle cx="'+X(p.x).toFixed(1)+'" cy="'+y.Y(p.y).toFixed(1)+'" r="2.5" fill="'+s.color+'"/>'; });
+  });
+  (opt.labels||[]).forEach(l=>{ out += '<text x="'+X(l.x).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle">'+l.t+'</text>'; });
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  svg.innerHTML = out;
+}
+function sessionVol(){
+  return Object.keys(S.sessions).sort().map(d=>{
+    const s = S.sessions[d]; let v = 0;
+    for(const id in (s.ex||{})){
+      const e = ex(id), m = volMult(e);
+      s.ex[id].forEach(x=>{ if(x.done) v += (Number(x.w)||0)*(Number(x.r)||0)*m; });
+    }
+    return {d:d, x:new Date(d).getTime(), y:v};
+  });
+}
+function renderRec(){
+  // 部位別セット数（実施したセットのみ）
+  const days = +$("#vRange").value;
+  const cutoff = new Date(Date.now() - days*86400000).toLocaleDateString("sv-SE");
+  const agg = {};
+  let weeks = Math.max(1, days>=9999 ? 1 : days/7);
+  Object.keys(S.sessions).filter(d=>days>=9999 || d>=cutoff).forEach(d=>{
+    const s = S.sessions[d];
+    for(const id in (s.ex||{})){
+      const e = ex(id), n = s.ex[id].filter(x=>x.done).length;
+      if(!n) continue;
+      (e.pri||[]).forEach(m=>agg[m]=(agg[m]||0)+n);
+      (e.sec||[]).forEach(m=>agg[m]=(agg[m]||0)+n*0.5);
+    }
+  });
+  for(const k in agg) agg[k] = agg[k]/weeks;
+  $("#vSets").innerHTML = setsBarHTML(agg);
+
+  const vol = sessionVol().filter(v=>v.y>0);
+  const lb = [];
+  if(vol.length){ lb.push({x:vol[0].x,t:vol[0].d.slice(5)}); if(vol.length>1) lb.push({x:vol[vol.length-1].x,t:vol[vol.length-1].d.slice(5)}); }
+  lineChart($("#vChart"), [{color:"#2f5d8f", pts:vol.map(v=>({x:v.x,y:v.y}))}], {labels:lb});
+
+  const best = {};
+  for(const d in S.sessions){
+    const s = S.sessions[d];
+    for(const id in (s.ex||{})) s.ex[id].forEach(x=>{
+      if(!x.done) return;
+      const w = Number(x.w)||0, r = Number(x.r)||0;
+      if(!best[id]) best[id] = {w:0,r:0,d:d};
+      if(w>best[id].w || (w===best[id].w && r>best[id].r)) best[id] = {w:w,r:r,d:d};
+    });
+  }
+  const ks = Object.keys(best);
+  $("#bBest").innerHTML = ks.length
+    ? '<table><tr><th>種目</th><th class="n">重量</th><th class="n">回数</th><th class="n">日付</th></tr>'
+      + ks.map(k=>'<tr><td>'+esc(ex(k).n)+'</td><td class="n">'+(best[k].w?best[k].w+" kg":"自重")+'</td><td class="n">'+best[k].r+'</td><td class="n">'+best[k].d.slice(5)+'</td></tr>').join("")+'</table>'
+    : '<div class="empty">記録なし</div>';
+
+  const hs = Object.keys(S.sessions).sort().reverse();
+  $("#bHist").innerHTML = hs.length
+    ? '<table><tr><th>日付</th><th>メニュー</th><th class="n">完了セット</th><th class="n">総挙上</th></tr>'
+      + hs.map(d=>{
+          const s = S.sessions[d]; let c=0;
+          for(const id in (s.ex||{})) c += s.ex[id].filter(x=>x.done).length;
+          const v = (sessionVol().find(x=>x.d===d)||{y:0}).y;
+          const mn = (S.menus[s.menu]||{}).label || "—";
+          return '<tr><td>'+d+'</td><td>'+esc(mn)+'</td><td class="n">'+c+'</td><td class="n">'+Math.round(v)+' kg</td></tr>';
+        }).join("")+'</table>'
+    : '<div class="empty">記録なし</div>';
+}
+$("#vRange").onchange = renderRec;
+
+/* ─── 設定 ────────────────────────────────────────────────────────────── */
+function renderConf(){
+  $("#cInv").innerHTML = DENS.map(d=>
+    '<div><label class="f">'+d+' kg プレート</label><input type="number" min="0" data-den="'+d+'" value="'+(S.inventory[String(d)]||0)+'"></div>').join("");
+  $("#cInv").querySelectorAll("[data-den]").forEach(el=> el.onchange = ()=>{
+    S.inventory[el.dataset.den] = Math.max(0,+el.value||0); save(); clearWC(); renderConf(); renderTrain();
+  });
+  const bind = (sel,key)=>{ $(sel).value = S[key]; $(sel).onchange = ()=>{ S[key] = +$(sel).value||0; save(); clearWC(); renderConf(); renderTrain(); }; };
+  bind("#cDb","dbShaft"); bind("#cBb","bbShaft"); bind("#cDbMax","dbMax"); bind("#cBbMax","bbMax");
+  $("#cTotal").textContent = r1(DENS.reduce((a,d)=>a+d*(S.inventory[String(d)]||0),0))+" kg";
+
+  const mk = (t,s,l)=>'<h3>'+t+' <span class="tag">'+s+'</span></h3><div class="chips">'
+    + (l.map(p=>'<span class="chip" title="'+comboText(p[1])+'">'+p[0]+'</span>').join("") || '<span class="note">組めない</span>')+'</div>';
+  const d2 = achievable(2,S.dbShaft,S.dbMax), d1 = achievable(1,S.dbShaft,S.dbMax), bb = achievable(1,S.bbShaft,S.bbMax);
+  const dead = DENS.filter(d=>(S.inventory[String(d)]||0)>0 && (S.inventory[String(d)]||0)<4);
+  let diag = "";
+  if(dead.length) diag = '<p class="note" style="margin-top:10px"><b>制約の理由</b> — ダンベル2本を左右対称に組むには同じプレートが4枚必要になる。'
+    + dead.map(d=>d+"kg（"+(S.inventory[String(d)]||0)+"枚）").join("・")
+    + ' は枚数が足りず両手種目では使えないため、上限が1本 <b>'+(d2.length?d2[d2.length-1][0]:0)+'kg</b> で頭打ちになっている。'
+    + '買い足すなら重いプレートより <b>2.5kg を4枚</b> のほうが刻みが増える。</p>';
+  $("#cReal").innerHTML = mk("ダンベル2本（1本あたり kg）","両手種目",d2)
+    + mk("ダンベル1本（kg）","片手ロウ・プルオーバー",d1)
+    + mk("バーベル（kg）","セーフティ無しのため単独での高重量は避ける",bb) + diag
+    + '<p class="note" style="margin-top:8px">各値にカーソルを合わせるとプレートの組み合わせが出る。</p>';
+
+  const p = S.profile;
+  $("#cBmr").value=p.bmr; $("#cAct").value=p.act; $("#cGoal").value=p.goal; $("#cPr").value=p.pr; $("#cFr").value=p.fr;
+  const t = S.target;
+  $("#cTk").value=t.kcal; $("#cTp").value=t.p; $("#cTf").value=t.f; $("#cTc").value=t.c;
+  updateCalc();
+}
+function curW(){ return S.body.length ? S.body[S.body.length-1].w : 66; }
+function updateCalc(){
+  const p = S.profile, w = curW();
+  const tdee = Math.round(p.bmr*p.act), kcal = tdee + Number(p.goal);
+  const P = Math.round(w*p.pr), F = Math.round(kcal*(p.fr/100)/9), C = Math.round((kcal-P*4-F*9)/4);
+  $("#cCalc").innerHTML = "維持 <b>"+tdee+"</b> kcal（基礎代謝 "+p.bmr+" × "+p.act+"） → 目標 <b>"+kcal+"</b> kcal ／ P "+P+"g・F "+F+"g・C "+C+"g";
+  return {kcal:kcal,p:P,f:F,c:C};
+}
+document.addEventListener("change", e=>{
+  const pm = {cBmr:"bmr",cAct:"act",cGoal:"goal",cPr:"pr",cFr:"fr"};
+  const tm = {cTk:"kcal",cTp:"p",cTf:"f",cTc:"c"};
+  if(pm[e.target.id]){ S.profile[pm[e.target.id]] = +e.target.value; save(); updateCalc(); }
+  if(tm[e.target.id]){ S.target[tm[e.target.id]] = +e.target.value||0; save(); renderMeal(); }
+});
+$("#cApply").onclick = ()=>{ S.target = updateCalc(); save(); renderConf(); renderMeal(); };
+$("#cExp").onclick = ()=>{
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));
+  a.download = "fitness_"+today().replace(/-/g,"")+".json"; a.click(); URL.revokeObjectURL(a.href);
+};
+$("#cImpBtn").onclick = ()=> $("#cImp").click();
+$("#cImp").onchange = e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const rd = new FileReader();
+  rd.onload = ()=>{
+    try{
+      const o = JSON.parse(rd.result);
+      if(!confirm("現在のデータを上書きする")) return;
+      S = Object.assign(defaults(), o); save(); clearWC(); boot();
+    }catch(err){ alert("読み込めなかった"); }
+  };
+  rd.readAsText(f);
+};
+$("#cReset").onclick = ()=>{
+  if(!confirm("すべての記録を消去する。元に戻せない")) return;
+  localStorage.removeItem(KEY); S = load(); clearWC(); boot();
+};
+
+/* ─── ヘッダ・起動 ─────────────────────────────────────────────────────── */
+function updateHeader(){
+  const b = S.body.length ? S.body[S.body.length-1] : null;
+  const n = Object.keys(S.sessions).filter(d=>{
+    const s = S.sessions[d];
+    for(const id in (s.ex||{})) if(s.ex[id].some(x=>x.done)) return true;
+    return false;
+  }).length;
+  const p = [];
+  if(b){ p.push(b.w.toFixed(1)+"kg"); if(b.fat!=null) p.push(b.fat.toFixed(1)+"%"); }
+  p.push(n+"セッション");
+  $("#hdMeta").textContent = p.join(" ・ ");
+}
+function boot(){
+  const t = today();
+  ["#tDate","#mDate","#sDate"].forEach(s=>{ if(!$(s).value) $(s).value = t; });
+  $("#tDate").value = t; $("#mDate").value = t; $("#sDate").value = t;
+  clearWC(); fillMenuSelects(); renderScaleGrid();
+  renderTrain(); renderCats(); renderFoodList(); renderQuick(); renderMyFoods(); renderMeal();
+  riceCalc(); renderConf(); updateHeader();
+}
+S = load();
+boot();
+window.addEventListener("resize", ()=>{
+  if($("#scale").classList.contains("on")) renderScale();
+  if($("#rec").classList.contains("on")) renderRec();
+});
+</script>
+</body>
+</html>

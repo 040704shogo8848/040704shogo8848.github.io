@@ -130,6 +130,22 @@ function buildAgenda(items) {
     })
     .join('\n');
 
+  // A section whose questions have all been answered still keeps its markers, so
+  // the next batch lands without touching the page. Until then, printing the
+  // search box and facet row over an empty list reads as broken rather than done.
+  if (!items.length) {
+    return `${START}
+${STYLE}
+<section class="agd">
+  <div class="agd-head">
+    <h2>未着手の論点</h2>
+    <span class="agd-n">0 論点</span>
+  </div>
+  <p class="agd-lead">積み上がっていた論点はすべて章にした。次に読んだもの・聞いた話からまた溜まる。</p>
+</section>
+${END}`;
+  }
+
   return `${START}
 ${STYLE}
 <section class="agd">

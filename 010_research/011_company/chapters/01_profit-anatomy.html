@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -158,37 +265,70 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">売上区分ではなく工程単位で損益を割り直す</a></li><li><a href="#s2">市況に連動する利益と、契約で固定される利益を分ける</a></li><li><a href="#s3">損益分岐点の置き場所から経営の前提を読む</a></li><li><a href="#s4">本業の外に置いた資産が利益構成をどう歪めるか</a></li><li><a href="#s5">開示情報から工程別の粗利を復元する手順</a></li><li><a href="#s6">この章の要点</a></li><li><a href="#s7">残っている問い</a></li><li><a href="#s8">出典</a></li></ol></nav>
 
 <p>企業を「海運会社」「銅の製錬会社」「カラオケ会社」と呼ぶとき、その呼び名は事業の外形を指しているだけで、利益がどこで生まれているかを何も言っていない。銅の製錬会社と呼ばれるJX金属の営業利益は、製錬の加工賃ではなく南米の鉱山持分から来ている。海運会社と呼ばれる川崎汽船の2025年度の最大の利益源はコンテナ船ではなく自動車船だった。基板とEMSを両方やるグループでは、同じ「ものづくり」でも営業利益率が一桁違う。</p>
-<p>この食い違いは、社名や報告セグメントの名前が、価格を誰が決めているかという境界と一致していないことから生まれる。利益は事業名についてくるのではなく、価格決定力を持つ工程についてくる。だから損益を工程単位に割り直さないと、看板事業に投資しているつもりで実際には別の工程の変動に賭けている、という状態になる。この章は、公開されている決算資料だけを材料に、その割り直しをどうやるかを扱う。</p>
+<p>この食い違いは、社名や報告セグメントの名前が、価格を誰が決めているかという境界と一致していないことから生まれる。<strong class="hit">利益は事業名についてくるのではなく、価格決定力を持つ工程についてくる</strong>。だから損益を工程単位に割り直さないと、看板事業に投資しているつもりで実際には別の工程の変動に賭けている、という状態になる。この章は、公開されている決算資料だけを材料に、その割り直しをどうやるかを扱う。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 246" role="img" aria-label="住友金属鉱山の売上構成と利益構成で資源と製錬の順位が逆転する">
+  <text x="12" y="18" font-size="11" fill="var(--muted)">住友金属鉱山 2025年度 報告セグメント合計に占める比率</text>
+
+  <text x="12" y="52" font-size="12" fill="var(--ink)">売上</text>
+  <rect x="72" y="38" width="99" height="26" rx="4" fill="var(--accent)"/>
+  <text x="121" y="56" font-size="11.5" fill="#fff" text-anchor="middle">15.6%</text>
+  <rect x="173" y="38" width="535" height="26" rx="4" fill="var(--dim)" stroke="var(--line)"/>
+  <text x="440" y="56" font-size="11.5" fill="var(--sub)" text-anchor="middle">製錬ほか　84.4%</text>
+
+  <text x="12" y="106" font-size="12" fill="var(--ink)">利益</text>
+  <rect x="72" y="92" width="388" height="26" rx="4" fill="var(--accent)"/>
+  <text x="266" y="110" font-size="11.5" fill="#fff" text-anchor="middle">資源　61.1%</text>
+  <rect x="462" y="92" width="246" height="26" rx="4" fill="var(--dim)" stroke="var(--line)"/>
+  <text x="585" y="110" font-size="11.5" fill="var(--sub)" text-anchor="middle">製錬ほか　38.9%</text>
+
+  <path d="M121 68 L266 88" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"/>
+  <path d="M171 68 L462 88" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="486" y="80" font-size="10.5" fill="var(--muted)">同じ「資源」が売上と利益で位置を入れ替える</text>
+
+  <line x1="12" y1="140" x2="708" y2="140" stroke="var(--grid)"/>
+  <text x="12" y="162" font-size="11" fill="var(--muted)">同じ型が他社にも出る</text>
+  <g font-size="11.5" fill="var(--ink)">
+    <text x="12" y="188">川崎汽船</text>
+    <text x="140" y="188" fill="var(--sub)">コンテナ船の売上は668億円だが、経常利益では240億円を占める</text>
+    <text x="12" y="212">JX金属</text>
+    <text x="140" y="212" fill="var(--sub)">連結営業利益1,749億円のうち65.4%が南米鉱山の持分法投資利益</text>
+    <text x="12" y="236">古河電工</text>
+    <text x="140" y="236" fill="var(--sub)">増収403億円のうち約300億円が地金価格と為替の通過分、利益増は9億円</text>
+  </g>
+</svg>
+<figcaption>売上構成比は工程の重要度をほとんど表さない。地金価格をそのまま売上に通す工程は数字が膨らみ、価格決定力を持つ工程は売上が小さいまま利益を集める。</figcaption>
+</figure>
 <h2 id="s1">売上区分ではなく工程単位で損益を割り直す</h2>
-<p>まず、売上高の構成比は工程の重要度をほとんど表さない。川崎汽船のコンテナ船セグメントの売上高は668億円しかないが、これは代理店やターミナルなど周辺事業の規模である。コンテナ船の運航そのものは2018年4月に日本郵船、商船三井との統合会社Ocean Network Expressへ移り、川崎汽船は議決権31.0%を持つ持分法適用関連会社として損益だけを取り込む。連結売上高1兆183億円にONEの運賃収入は入らない。それでも2025年度の経常利益ではコンテナ船が240億円を占めた <a href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100YC6B.pdf" target="_blank" rel="noopener">出典</a>。売上を見ると小さく、利益を見ると大きい。</p>
-<p>逆の歪みもある。住友金属鉱山は鉱山と製錬を1社で持つ。2025年度の資源セグメントは売上高3,025億77百万円に対しセグメント利益1,678億31百万円、製錬セグメントは売上高1兆3,500億58百万円に対しセグメント利益915億93百万円である <a href="https://www.smm.co.jp/news/release/uploaded_files/20260511_1_JP.pdf" target="_blank" rel="noopener">出典</a>。資源は報告セグメント売上合計の15.6%にすぎないのに、報告セグメント利益合計2,747億14百万円の61.1%を出している。売上の大きい製錬工程は、地金価格をそのまま売上に通しているために売上が膨らんでいるだけである。</p>
-<p>同じことが銅のバリューチェーン全体で起きている。銅は鉱山、精錬、加工の3工程に分かれ、地金価格はロンドン金属取引所が決める。鉱山と精錬所の取り分は、精錬所が受け取る加工賃であるTC/RCで配分される。加工段の電線メーカーは地金価格を銅建値スライドで顧客に転嫁する。したがって地金価格が上がっても、加工段の利益は原則として動かない。古河電工の2025年度の電装エレクトロニクス材料は売上高3,673億円で前年度比403億円の増収だが、同社はこのうち約300億円を銅価と為替の影響と注記している。同じ区分の営業利益は59億円で、増加は9億円にとどまった <a href="https://www.furukawaelectric.com/ir/library/finalreport/pdf/2026/20260512_pre.pdf" target="_blank" rel="noopener">出典</a>。増収額の約74%が地金の通過分であり、利益は加工賃部分でしか決まっていない。</p>
-<p>では鉱山と精錬のどちらに利益が溜まっているか。JX金属の2025年度の連結営業利益は1,749億67百万円、うち持分法投資利益が1,144億91百万円で、営業利益の65.4%にあたる。持分法投資利益の出どころはチリの銅鉱山会社SCM Minera Lumina Copper Chileの持分である。同社の基礎材料セグメントの営業利益1,394億65百万円から持分法投資損益1,147億1百万円を差し引くと247億64百万円になり、これは連結営業利益の14.2%である <a href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/disclosure/20260511/20260510521173.pdf" target="_blank" rel="noopener">出典</a>。同じ決算短信で同社は、銅精鉱の買鉱条件の悪化を理由にグループの製錬所で減産措置を実施する方向で検討していると記載している。製錬という看板の工程は、利益源ではなく縮小の検討対象になっている。</p>
-<p>工程差は素材だけの話ではない。プリント基板専業のメイコーは2025年度通期予想で基板事業を売上高1,820億円、営業利益205億円、営業利益率11.3%、電子機器事業を売上高410億円、営業利益30億円、営業利益率7.3%としている <a href="https://www.meiko-elec.com/pdf/ir/presentation/2026/H1.pdf" target="_blank" rel="noopener">出典</a>。加賀電子ではこの差がさらに開く。商社機能を担う加賀電子単体は2025年度に売上高3,486億93百万円、売上総利益率15.8%、営業利益率6.2%、EMSを担う加賀FEIは売上高2,422億41百万円、売上総利益率8.2%、営業利益率1.4%である <a href="https://assets.minkabu.jp/news/article_media_content/urn:newsml:tdnet.info:20260514532223/140120260514532223.pdf" target="_blank" rel="noopener">出典</a>。自社工場を持つ受託製造の利益率が、部品を流す商社機能の4分の1以下になっている。設計と部品を顧客が指定する工程では、作っていても価格を決めていない。</p>
-<p>工程の中でも粒度がある。メイコーの2025年度上期の仕様別売上は、ビルドアップ10層以上が233億円で構成比20.9%、前年同期比58.5%増、ビルドアップ8層以下が264億円で構成比23.7%、前年同期比5.6%増、多層貫通4層以下が211億円で前年同期比4.5%減である。同社は増益要因として付加価値の高いビルドアップ基板の増加、工場稼働率の向上、生産性改善を挙げている <a href="https://www.meiko-elec.com/pdf/ir/statements/2026/Q4.pdf" target="_blank" rel="noopener">出典</a>。層数と配線密度が上がる工程に利益が寄っている。</p>
-<div class="tb-tw"><table><thead><tr><th>工程</th><th>主体</th><th>売上規模</th><th>営業利益率</th><th>出典</th></tr></thead><tbody><tr><td>鉱山持分</td><td>住友金属鉱山 資源</td><td>3,025億77百万円</td><td>セグメント利益率55.5%</td><td><a href="https://www.smm.co.jp/news/release/uploaded_files/20260511_1_JP.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>製錬</td><td>住友金属鉱山 製錬</td><td>1兆3,500億58百万円</td><td>セグメント利益率6.8%</td><td><a href="https://www.smm.co.jp/news/release/uploaded_files/20260511_1_JP.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>電線加工</td><td>古河電工 連結</td><td>1兆3,076億円</td><td>4.9%</td><td><a href="https://www.furukawaelectric.com/ir/library/finalreport/pdf/2026/20260512.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>基板製造</td><td>メイコー 基板事業</td><td>1,820億円</td><td>11.3%</td><td><a href="https://www.meiko-elec.com/pdf/ir/presentation/2026/H1.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>部品流通</td><td>加賀電子単体</td><td>3,486億93百万円</td><td>6.2%</td><td><a href="https://assets.minkabu.jp/news/article_media_content/urn:newsml:tdnet.info:20260514532223/140120260514532223.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>受託組立</td><td>加賀FEI</td><td>2,422億41百万円</td><td>1.4%</td><td><a href="https://assets.minkabu.jp/news/article_media_content/urn:newsml:tdnet.info:20260514532223/140120260514532223.pdf" target="_blank" rel="noopener">出典</a></td></tr></tbody></table></div>
+<p>まず、売上高の構成比は工程の重要度をほとんど表さない。川崎汽船のコンテナ船セグメントの売上高は668億円しかないが、これは代理店やターミナルなど周辺事業の規模である。コンテナ船の運航そのものは2018年4月に日本郵船、商船三井との統合会社Ocean Network Expressへ移り、川崎汽船は議決権31.0%を持つ持分法適用関連会社として損益だけを取り込む。連結売上高1兆183億円にONEの運賃収入は入らない。それでも2025年度の経常利益ではコンテナ船が240億円を占めた <a class="tb-src" href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100YC6B.pdf" target="_blank" rel="noopener">出典</a>。売上を見ると小さく、利益を見ると大きい。</p>
+<p>逆の歪みもある。住友金属鉱山は鉱山と製錬を1社で持つ。2025年度の資源セグメントは売上高3,025億77百万円に対しセグメント利益1,678億31百万円、製錬セグメントは売上高1兆3,500億58百万円に対しセグメント利益915億93百万円である <a class="tb-src" href="https://www.smm.co.jp/news/release/uploaded_files/20260511_1_JP.pdf" target="_blank" rel="noopener">出典</a>。資源は報告セグメント売上合計の15.6%にすぎないのに、報告セグメント利益合計2,747億14百万円の61.1%を出している。売上の大きい製錬工程は、地金価格をそのまま売上に通しているために売上が膨らんでいるだけである。</p>
+<p>同じことが銅のバリューチェーン全体で起きている。銅は鉱山、精錬、加工の3工程に分かれ、地金価格はロンドン金属取引所が決める。鉱山と精錬所の取り分は、精錬所が受け取る加工賃であるTC/RCで配分される。加工段の電線メーカーは地金価格を銅建値スライドで顧客に転嫁する。したがって地金価格が上がっても、加工段の利益は原則として動かない。古河電工の2025年度の電装エレクトロニクス材料は売上高3,673億円で前年度比403億円の増収だが、同社はこのうち約300億円を銅価と為替の影響と注記している。同じ区分の営業利益は59億円で、増加は9億円にとどまった <a class="tb-src" href="https://www.furukawaelectric.com/ir/library/finalreport/pdf/2026/20260512_pre.pdf" target="_blank" rel="noopener">出典</a>。増収額の約74%が地金の通過分であり、利益は加工賃部分でしか決まっていない。</p>
+<p>では鉱山と精錬のどちらに利益が溜まっているか。JX金属の2025年度の連結営業利益は1,749億67百万円、うち持分法投資利益が1,144億91百万円で、営業利益の65.4%にあたる。持分法投資利益の出どころはチリの銅鉱山会社SCM Minera Lumina Copper Chileの持分である。同社の基礎材料セグメントの営業利益1,394億65百万円から持分法投資損益1,147億1百万円を差し引くと247億64百万円になり、これは連結営業利益の14.2%である <a class="tb-src" href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/disclosure/20260511/20260510521173.pdf" target="_blank" rel="noopener">出典</a>。同じ決算短信で同社は、銅精鉱の買鉱条件の悪化を理由にグループの製錬所で減産措置を実施する方向で検討していると記載している。<strong class="hit">製錬という看板の工程は、利益源ではなく縮小の検討対象になっている</strong>。</p>
+<p>工程差は素材だけの話ではない。プリント基板専業のメイコーは2025年度通期予想で基板事業を売上高1,820億円、営業利益205億円、営業利益率11.3%、電子機器事業を売上高410億円、営業利益30億円、営業利益率7.3%としている <a class="tb-src" href="https://www.meiko-elec.com/pdf/ir/presentation/2026/H1.pdf" target="_blank" rel="noopener">出典</a>。加賀電子ではこの差がさらに開く。商社機能を担う加賀電子単体は2025年度に売上高3,486億93百万円、売上総利益率15.8%、営業利益率6.2%、EMSを担う加賀FEIは売上高2,422億41百万円、売上総利益率8.2%、営業利益率1.4%である <a class="tb-src" href="https://assets.minkabu.jp/news/article_media_content/urn:newsml:tdnet.info:20260514532223/140120260514532223.pdf" target="_blank" rel="noopener">出典</a>。自社工場を持つ受託製造の利益率が、部品を流す商社機能の4分の1以下になっている。<strong class="hit">設計と部品を顧客が指定する工程では、作っていても価格を決めていない</strong>。</p>
+<p>工程の中でも粒度がある。メイコーの2025年度上期の仕様別売上は、ビルドアップ10層以上が233億円で構成比20.9%、前年同期比58.5%増、ビルドアップ8層以下が264億円で構成比23.7%、前年同期比5.6%増、多層貫通4層以下が211億円で前年同期比4.5%減である。同社は増益要因として付加価値の高いビルドアップ基板の増加、工場稼働率の向上、生産性改善を挙げている <a class="tb-src" href="https://www.meiko-elec.com/pdf/ir/statements/2026/Q4.pdf" target="_blank" rel="noopener">出典</a>。層数と配線密度が上がる工程に利益が寄っている。</p>
+<div class="tb-tw"><table><thead><tr><th>工程</th><th>主体</th><th>売上規模</th><th>営業利益率</th><th>出典</th></tr></thead><tbody><tr><td>鉱山持分</td><td>住友金属鉱山 資源</td><td>3,025億77百万円</td><td>セグメント利益率55.5%</td><td><a class="tb-src" href="https://www.smm.co.jp/news/release/uploaded_files/20260511_1_JP.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>製錬</td><td>住友金属鉱山 製錬</td><td>1兆3,500億58百万円</td><td>セグメント利益率6.8%</td><td><a class="tb-src" href="https://www.smm.co.jp/news/release/uploaded_files/20260511_1_JP.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>電線加工</td><td>古河電工 連結</td><td>1兆3,076億円</td><td>4.9%</td><td><a class="tb-src" href="https://www.furukawaelectric.com/ir/library/finalreport/pdf/2026/20260512.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>基板製造</td><td>メイコー 基板事業</td><td>1,820億円</td><td>11.3%</td><td><a class="tb-src" href="https://www.meiko-elec.com/pdf/ir/presentation/2026/H1.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>部品流通</td><td>加賀電子単体</td><td>3,486億93百万円</td><td>6.2%</td><td><a class="tb-src" href="https://assets.minkabu.jp/news/article_media_content/urn:newsml:tdnet.info:20260514532223/140120260514532223.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>受託組立</td><td>加賀FEI</td><td>2,422億41百万円</td><td>1.4%</td><td><a class="tb-src" href="https://assets.minkabu.jp/news/article_media_content/urn:newsml:tdnet.info:20260514532223/140120260514532223.pdf" target="_blank" rel="noopener">出典</a></td></tr></tbody></table></div>
 <p>利益率の計算基準が売上収益ベースとセグメント利益ベースで揃っていないため、この表は工程間の順位を見るために使い、水準を厳密に比較する用途には使えない。</p>
 <h2 id="s2">市況に連動する利益と、契約で固定される利益を分ける</h2>
 <p>工程を切り分けたら、次はそれぞれの工程の価格が誰によって決まっているかを見る。ここで有効な区別は、市況に連動する利益と契約で固定される利益の2つである。</p>
-<p>川崎汽船はこの区別を数値で開示している。2026年度の運航規模のうち市況にさらされている比率は、ケープサイズ13%、中小型バルカー15%であり、チップ船、超大型原油タンカー、LPG船、電力炭船はいずれも0%である。エネルギー資源セグメントのLNG船53隻と電力炭船26隻は長期契約で、市況エクスポージャーは0%と示されている <a href="https://www.kline.co.jp/ja/ir/library/presentation/main/01111111111111/teaserItems1/0/linkList/01/link/2026_1_presentation_j.pdf" target="_blank" rel="noopener">出典</a>。2026年5月時点の同じ表ではケープサイズ22%、中小型17%だったので、期初から固定化が進んだと読める <a href="https://www.kline.co.jp/ja/ir/library/presentation/main/0111111111119/teaserItems1/0/linkList/01/link/2025_4_presentation_j.pdf" target="_blank" rel="noopener">出典</a>。スポット市況が下がったときに連動して減益になるのは、船隊の1割台に限られる。</p>
+<p>川崎汽船はこの区別を数値で開示している。2026年度の運航規模のうち市況にさらされている比率は、ケープサイズ13%、中小型バルカー15%であり、チップ船、超大型原油タンカー、LPG船、電力炭船はいずれも0%である。エネルギー資源セグメントのLNG船53隻と電力炭船26隻は長期契約で、市況エクスポージャーは0%と示されている <a class="tb-src" href="https://www.kline.co.jp/ja/ir/library/presentation/main/01111111111111/teaserItems1/0/linkList/01/link/2026_1_presentation_j.pdf" target="_blank" rel="noopener">出典</a>。2026年5月時点の同じ表ではケープサイズ22%、中小型17%だったので、期初から固定化が進んだと読める <a class="tb-src" href="https://www.kline.co.jp/ja/ir/library/presentation/main/0111111111119/teaserItems1/0/linkList/01/link/2025_4_presentation_j.pdf" target="_blank" rel="noopener">出典</a>。スポット市況が下がったときに連動して減益になるのは、船隊の1割台に限られる。</p>
 <p>この区別は、利益の年ごとのぶれ方に直結する。同社が社内管理で使う自営事業とコンテナ船事業の二分法では、経常利益は2022年度が820億円と6,088億円、2023年度が868億円と458億円、2024年度が1,020億円と2,060億円、2025年度が850億円と240億円、2026年度計画が740億円と260億円である。自営事業は4年間で740億円から1,020億円のレンジに収まり、コンテナ船事業は240億円から6,088億円まで動く。変動幅の桁が違う。したがって「海運大手の利益はコンテナ船市況で決まる」という理解は、上振れについては正しく、下値については誤っている。下値を支えているのは契約で固定された自営事業のほうである。</p>
-<p>固定されているのは価格だけではない。工程の価格決定力そのものが、契約の枠組みごと壊れることがある。銅のTC/RCがその例である。丸紅経済研究所は、2025年の年次契約で日本の主要製錬所がTC25ドル/トン、RC2.5セント/ポンドと前年から7割程度低い水準で合意したこと、これが中国で先行決着したTC21.25ドル、RC2.125セントに事実上追随した結果であることを指摘している。同レポートは、2026年に向けた交渉で中国の加工賃が事実上ゼロに近い水準まで低下し、日本勢は統一的なベンチマーク形成を断念して鉱山別の個別交渉へ軸足を移しつつあるとしている <a href="https://www.marubeni.com/jp/research/report/data/20260428_li.pdf" target="_blank" rel="noopener">出典</a>。年次ベンチマークという価格決定の仕組み自体が機能しなくなった。</p>
+<p>固定されているのは価格だけではない。工程の価格決定力そのものが、契約の枠組みごと壊れることがある。銅のTC/RCがその例である。丸紅経済研究所は、2025年の年次契約で日本の主要製錬所がTC25ドル/トン、RC2.5セント/ポンドと前年から7割程度低い水準で合意したこと、これが中国で先行決着したTC21.25ドル、RC2.125セントに事実上追随した結果であることを指摘している。同レポートは、2026年に向けた交渉で中国の加工賃が事実上ゼロに近い水準まで低下し、日本勢は統一的なベンチマーク形成を断念して鉱山別の個別交渉へ軸足を移しつつあるとしている <a class="tb-src" href="https://www.marubeni.com/jp/research/report/data/20260428_li.pdf" target="_blank" rel="noopener">出典</a>。年次ベンチマークという価格決定の仕組み自体が機能しなくなった。</p>
 <p>この崩れ方の背景も工程の話である。中国は世界の銅製錬能力の半分以上を持ち、世界の銅精鉱貿易量の約7割を輸入する。中国の製錬所は硫酸などの副産物収入で操業を維持できるため、加工賃がマイナスでも精鉱を取りにいける。規模が小さく副産物販売力も限定的な日本や欧州の製錬所ではマイナス加工賃を受け入れられず、操業縮小や能力削減が現実化していると同レポートは述べている。精鉱を売る側は高く買う相手に売るので、日本の製錬所の存続は取引上の判断材料にならない。</p>
-<p>固定と連動の区別は、材料側の価格決定力を見るときにも使える。大同特殊鋼は2022年5月契約分から構造用鋼、ばね鋼、軸受鋼を1トンあたり15,000円引き上げると発表し、理由を鉄スクラップ価格の再上昇とエネルギーコストの高騰と明記した。2021年初からの累計値上げ幅は1トンあたり70,000円としている <a href="https://www.daido.co.jp/about/release/2022/220509_price.html" target="_blank" rel="noopener">出典</a>。値上げの根拠が自社製品の希少性ではなく投入コストである点に、この転嫁の性格が出ている。これは価格決定力ではなく原料連動の転嫁である。</p>
-<p>一方、同じ会社の磁性材料では価格決定力の相手がはっきりしている。中国商務部は2025年4月にサマリウム、ジスプロシウム、テルビウムなど7種の中重希土類を輸出管理の対象に加えた。中国から日本向けの永久磁石輸出量は2025年4月に92,214kg、5月に25,719kg、6月に131,947kgと推移し、輸出許可の取得は申請から約3カ月以上かかる場合が多いと報告されている <a href="https://www.jetro.go.jp/biz/areareports/special/2026/0101/5229e687b7a111eb.html" target="_blank" rel="noopener">出典</a>。大同特殊鋼の2025年度の機能材料・磁性材料セグメントは売上収益1,997億53百万円で前期比0.6%減、営業利益148億84百万円で前期比34.9%増だった <a href="https://www.daido.co.jp/common/pdf/pages/ir/library/result/2603_4q.pdf" target="_blank" rel="noopener">出典</a>。同社は重希土類フリーが特徴の自社磁石への需要が上向いたと記述している。売上が減って利益が3割超伸びる形は、数量ではなく価格と製品構成で取ったことを意味する。</p>
+<p>固定と連動の区別は、材料側の価格決定力を見るときにも使える。大同特殊鋼は2022年5月契約分から構造用鋼、ばね鋼、軸受鋼を1トンあたり15,000円引き上げると発表し、理由を鉄スクラップ価格の再上昇とエネルギーコストの高騰と明記した。2021年初からの累計値上げ幅は1トンあたり70,000円としている <a class="tb-src" href="https://www.daido.co.jp/about/release/2022/220509_price.html" target="_blank" rel="noopener">出典</a>。値上げの根拠が自社製品の希少性ではなく投入コストである点に、この転嫁の性格が出ている。<strong class="hit">これは価格決定力ではなく原料連動の転嫁である</strong>。</p>
+<p>一方、同じ会社の磁性材料では価格決定力の相手がはっきりしている。中国商務部は2025年4月にサマリウム、ジスプロシウム、テルビウムなど7種の中重希土類を輸出管理の対象に加えた。中国から日本向けの永久磁石輸出量は2025年4月に92,214kg、5月に25,719kg、6月に131,947kgと推移し、輸出許可の取得は申請から約3カ月以上かかる場合が多いと報告されている <a class="tb-src" href="https://www.jetro.go.jp/biz/areareports/special/2026/0101/5229e687b7a111eb.html" target="_blank" rel="noopener">出典</a>。大同特殊鋼の2025年度の機能材料・磁性材料セグメントは売上収益1,997億53百万円で前期比0.6%減、営業利益148億84百万円で前期比34.9%増だった <a class="tb-src" href="https://www.daido.co.jp/common/pdf/pages/ir/library/result/2603_4q.pdf" target="_blank" rel="noopener">出典</a>。同社は重希土類フリーが特徴の自社磁石への需要が上向いたと記述している。<strong class="hit">売上が減って利益が3割超伸びる形は、数量ではなく価格と製品構成で取ったことを意味する</strong>。</p>
 <p>価格決定力は「強い会社が持つもの」ではなく、「代替供給を絶たれた特定の顧客に対して、特定の期間だけ成立するもの」である。材料認証の切替に時間がかかる用途と、輸出管理で供給源を失った用途がその条件を満たす。それ以外の量産用途では、同じ会社の同じ工程でも原料連動の転嫁しかできない。</p>
 <h2 id="s3">損益分岐点の置き場所から経営の前提を読む</h2>
 <p>工程ごとの損益を分けたら、次に見るのは各工程の損益分岐点である。ただしこれは開示されないことが多い。川崎汽船は船種別、セグメント別の損益分岐点用船料や損益分岐運賃を、決算説明会資料にも有価証券報告書にも記載していない。一次資料では確認できない。</p>
-<p>代替になるのは感応度の開示である。同社は2025年度実績について、為替が153円から150円へ3円円高に振れた影響を経常利益に対し△32億円、燃料油価格が610米ドルから528米ドルへ82米ドル下がった影響を△1億円と開示している <a href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100YC6B.pdf" target="_blank" rel="noopener">出典</a>。燃料の影響が小さいのは、長期契約の燃料費調整とヘッジで転嫁されているためと読める。ただし2026年度は残り9か月ベースで為替1円あたり±13億円、燃料10米ドルあたり±6.4億円とされており、2026年5月公表の12か月ベースの燃料10米ドルあたり±0.7億円から一桁上がっている。感応度が変わった理由は資料に記載がない。感応度は毎期同じ前提で作られているとは限らないので、時点を確認せずに使ってはいけない。</p>
-<p>もう1つの代替は、市況前提と利益予想の対応関係から逆算する方法である。2025年度のケープサイズ市況は通期平均23,800米ドル/日、パナマックス14,800米ドル/日で、ドライバルクの経常利益は109億円だった。2026年度はケープサイズ30,200米ドル/日、パナマックス16,700米ドル/日を前提に215億円を見込む。この対応関係を線形に外挿すると、ケープサイズが18,000米ドル/日を割る水準まで戻ればドライバルクの経常利益はゼロ近辺になる。これは為替と船隊構成を一定と置いた推定であり、会社の開示ではない。同様に、ONEの四半期実績では2025年度第3四半期が税引後損益△88百万米ドルで運賃指数が北米往航119、欧州往航142、第4四半期が＋55百万米ドルで北米往航120、欧州往航154だった <a href="https://www.kline.co.jp/ja/ir/library/presentation/main/0111111111119/teaserItems1/0/linkList/02/link/2025_4_ONE%20presentation_j.pdf" target="_blank" rel="noopener">出典</a>。2018年度第1四半期を100とする指数で、北米往航120前後かつ欧州往航150前後が黒字と赤字の境目にあたると読めるが、これも四半期表からの推定であってONEが分岐点として示した数値ではない。</p>
-<p>分岐点は市況企業だけの論点ではない。固定費を増やす投資をした企業は、分岐点を自分で押し上げている。コシダカホールディングスの2026年8月期第3四半期累計は売上高593億54百万円で前年同期比15.6%増だが、営業利益は75億71百万円で前年同期比9.8%減、営業利益率は16.3%から12.8%へ3.5ポイント低下した。売上原価の増加要因は地代家賃が+2,188百万円で25.2%増、人件費が+2,214百万円で18.1%増、商品原価が+1,051百万円で27.2%増である <a href="https://www.koshidakaholdings.co.jp/ja/ir/news/auto_20260709590654/pdfFile.pdf" target="_blank" rel="noopener">出典</a>。売上が15.6%増える一方で家賃が25.2%増えている。出店で獲得した売上が家賃の上昇に食われる構図であり、増収しながら分岐点が上に動いている。</p>
-<p>この会社の増収の中身も工程の話に落ちる。増収80億円の内訳は、新店が+3,197百万円、買収したスタンダードとマレーシアの連結が+5,681百万円、既存店が+259百万円、閉店等が△1,196百万円である。既存店の寄与は増収額の3.2%にとどまる。既存店売上高は前年同期比100.5%で、客数96.9%、客単価103.7%である <a href="https://www.koshidakaholdings.co.jp/ja/ir/news/auto_20260709590662/pdfFile.pdf" target="_blank" rel="noopener">出典</a>。増収の質は出店と買収であって需要の拡大ではない。買収した事業の採算も別物で、スタンダードの2025年11月から2026年8月までの寄与見込みは売上高70億円、営業利益2億円、営業利益率2.9%であり、カラオケセグメント通期予想の16.4%を13.5ポイント下回る。</p>
-<p>分岐点を割ったときに何が起きるかは、三菱マテリアルの判断に出ている。同社は2026年3月25日、鉱山会社から銅精鉱を購入する際の条件が悪化しており今後の見通しも不透明であることを理由に、2027年3月末を目途に小名浜製錬所における銅精鉱の処理と関連する製錬設備の稼働を停止すると決定した。2025年度第4四半期に計210億円の減損損失を計上している <a href="https://ir.mmc.co.jp/ja/ir/news/auto_20260325588628/pdfFile.pdf" target="_blank" rel="noopener">出典</a>。止めるのは精鉱を原料とする一次製錬の工程だけで、電解工場、白金族金属のリサイクル工場、鋳造工場は稼働を続ける。工程単位で分岐点を割ったので、工程単位で止めた。稼働率の調整ではなく設備を止める判断である点が、分岐点の恒久的な悪化を示している。</p>
+<p>代替になるのは感応度の開示である。同社は2025年度実績について、為替が153円から150円へ3円円高に振れた影響を経常利益に対し△32億円、燃料油価格が610米ドルから528米ドルへ82米ドル下がった影響を△1億円と開示している <a class="tb-src" href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100YC6B.pdf" target="_blank" rel="noopener">出典</a>。燃料の影響が小さいのは、長期契約の燃料費調整とヘッジで転嫁されているためと読める。ただし2026年度は残り9か月ベースで為替1円あたり±13億円、燃料10米ドルあたり±6.4億円とされており、2026年5月公表の12か月ベースの燃料10米ドルあたり±0.7億円から一桁上がっている。感応度が変わった理由は資料に記載がない。感応度は毎期同じ前提で作られているとは限らないので、時点を確認せずに使ってはいけない。</p>
+<p>もう1つの代替は、市況前提と利益予想の対応関係から逆算する方法である。2025年度のケープサイズ市況は通期平均23,800米ドル/日、パナマックス14,800米ドル/日で、ドライバルクの経常利益は109億円だった。2026年度はケープサイズ30,200米ドル/日、パナマックス16,700米ドル/日を前提に215億円を見込む。この対応関係を線形に外挿すると、ケープサイズが18,000米ドル/日を割る水準まで戻ればドライバルクの経常利益はゼロ近辺になる。これは為替と船隊構成を一定と置いた推定であり、会社の開示ではない。同様に、ONEの四半期実績では2025年度第3四半期が税引後損益△88百万米ドルで運賃指数が北米往航119、欧州往航142、第4四半期が＋55百万米ドルで北米往航120、欧州往航154だった <a class="tb-src" href="https://www.kline.co.jp/ja/ir/library/presentation/main/0111111111119/teaserItems1/0/linkList/02/link/2025_4_ONE%20presentation_j.pdf" target="_blank" rel="noopener">出典</a>。2018年度第1四半期を100とする指数で、北米往航120前後かつ欧州往航150前後が黒字と赤字の境目にあたると読めるが、これも四半期表からの推定であってONEが分岐点として示した数値ではない。</p>
+<p>分岐点は市況企業だけの論点ではない。固定費を増やす投資をした企業は、分岐点を自分で押し上げている。コシダカホールディングスの2026年8月期第3四半期累計は売上高593億54百万円で前年同期比15.6%増だが、営業利益は75億71百万円で前年同期比9.8%減、営業利益率は16.3%から12.8%へ3.5ポイント低下した。売上原価の増加要因は地代家賃が+2,188百万円で25.2%増、人件費が+2,214百万円で18.1%増、商品原価が+1,051百万円で27.2%増である <a class="tb-src" href="https://www.koshidakaholdings.co.jp/ja/ir/news/auto_20260709590654/pdfFile.pdf" target="_blank" rel="noopener">出典</a>。売上が15.6%増える一方で家賃が25.2%増えている。出店で獲得した売上が家賃の上昇に食われる構図であり、増収しながら分岐点が上に動いている。</p>
+<p>この会社の増収の中身も工程の話に落ちる。増収80億円の内訳は、新店が+3,197百万円、買収したスタンダードとマレーシアの連結が+5,681百万円、既存店が+259百万円、閉店等が△1,196百万円である。既存店の寄与は増収額の3.2%にとどまる。既存店売上高は前年同期比100.5%で、客数96.9%、客単価103.7%である <a class="tb-src" href="https://www.koshidakaholdings.co.jp/ja/ir/news/auto_20260709590662/pdfFile.pdf" target="_blank" rel="noopener">出典</a>。<strong class="hit">増収の質は出店と買収であって需要の拡大ではない</strong>。買収した事業の採算も別物で、スタンダードの2025年11月から2026年8月までの寄与見込みは売上高70億円、営業利益2億円、営業利益率2.9%であり、カラオケセグメント通期予想の16.4%を13.5ポイント下回る。</p>
+<p>分岐点を割ったときに何が起きるかは、三菱マテリアルの判断に出ている。同社は2026年3月25日、鉱山会社から銅精鉱を購入する際の条件が悪化しており今後の見通しも不透明であることを理由に、2027年3月末を目途に小名浜製錬所における銅精鉱の処理と関連する製錬設備の稼働を停止すると決定した。2025年度第4四半期に計210億円の減損損失を計上している <a class="tb-src" href="https://ir.mmc.co.jp/ja/ir/news/auto_20260325588628/pdfFile.pdf" target="_blank" rel="noopener">出典</a>。止めるのは精鉱を原料とする一次製錬の工程だけで、電解工場、白金族金属のリサイクル工場、鋳造工場は稼働を続ける。工程単位で分岐点を割ったので、工程単位で止めた。<strong class="hit">稼働率の調整ではなく設備を止める判断である点が、分岐点の恒久的な悪化を示している</strong>。</p>
 <h2 id="s4">本業の外に置いた資産が利益構成をどう歪めるか</h2>
 <p>工程別に損益を割り直しても、連結の利益にはもう1つ別の層が乗る。営業の工程ではないところから来る利益である。これを分けないと、工程の実力を読み違える。</p>
 <p>第1の型は持分法投資利益である。JX金属の営業利益の65.4%が持分法投資利益であることは前に見た。同社は2024年7月にSCM Minera Lumina Copper Chile株式の一部をLundin Miningへ譲渡して30%を保有し、2026年3月10日の取締役会でさらに5%とフロンテラ地域の銅鉱山開発プロジェクト権益の売却を決議して、総額341億9百万円の対価で2026年4月7日に譲渡を完了した。売却後も25%を保有し持分法適用を継続する。営業利益の3分の2が、自社が操業していない鉱山の持分比率という一本の数字に依存している。持分比率が下がれば、工程が何も変わらなくても利益は減る。</p>
 <p>持分法は取り込み額の読み方にも注意がいる。川崎汽船の有価証券報告書に載るONEの要約財務諸表では2025年度の当期純利益は68,080百万円だが、同年度の製品物流セグメントの持分法投資利益は16,103百万円である。議決権比率31.0%を単純に掛けた21,105百万円とは一致せず、差の内訳は有価証券報告書では説明されていない。持分比率と取り込み額を掛け算で結びつけるのは、この事例では成り立たない。</p>
-<p>第2の型は資産売却益である。コシダカホールディングスは厚木ホテルビスタを2025年10月24日付で売却し、固定資産売却益994百万円を第1四半期の特別利益に計上した。その結果、2026年8月期第3四半期累計の営業利益と経常利益がいずれも前年同期比9.8%減である一方、純利益は55億31百万円で前年同期比2.3%増となっている。純利益だけを見ると増益に見えるが、営業段階では減益である。売却益は同じ資産から翌期も出るものではない。</p>
+<p>第2の型は資産売却益である。コシダカホールディングスは厚木ホテルビスタを2025年10月24日付で売却し、固定資産売却益994百万円を第1四半期の特別利益に計上した。その結果、2026年8月期第3四半期累計の営業利益と経常利益がいずれも前年同期比9.8%減である一方、純利益は55億31百万円で前年同期比2.3%増となっている。純利益だけを見ると増益に見えるが、営業段階では減益である。<strong class="hit">売却益は同じ資産から翌期も出るものではない</strong>。</p>
 <p>第3の型は、本業の外に置いた資産が分散として機能していないケースである。コシダカホールディングスの2026年8月期通期予想では、売上高820億46百万円のうちカラオケが800億37百万円で構成比97.6%を占める。営業利益はカラオケ131億21百万円に対し、不動産管理2億08百万円とその他△67百万円の合計が1億41百万円で、全社営業利益118億31百万円の1.2%にとどまる。温浴事業は2026年8月期に2施設を閉店して終了した。不動産と飲食を持っているという事実は、事業が分散していることを意味しない。利益構成比で見ると分散はむしろ縮小している。</p>
 <p>第4の型はのれんである。コシダカSPは2025年11月1日付でスタンダードから73店舗の事業を吸収分割で承継した。取得対価は現金35億円、受け入れた資産合計は3,682,345千円、引き受けた負債合計は3,164,023千円で、差額518,322千円に対し35億円を払った結果、のれんが2,981,677千円発生した。13年間の均等償却であり、年間の償却負担は約2億29百万円になる。この年額は除算による概算である。買収で増えた売上は工程の損益に入るが、のれん償却は工程の外から利益を削る。買収の採算を工程の利益率だけで判定すると、この分を見落とす。</p>
 <p>第5の型は逆方向で、資産を止めるときの一括損失である。三菱マテリアルの210億円の減損がこれにあたる。これは過去に積んだ設備が将来キャッシュを生まないと判断したことの表明であり、将来の工程損益からは償却負担が消える。損失計上の年の利益だけを見ると悪化に見えるが、工程の分岐点は下がる。</p>
@@ -197,11 +337,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p>第1に、報告セグメントを取る。有価証券報告書のセグメント情報が最も粒度と定義が安定している。川崎汽船の2025年度はドライバルク10,906百万円、エネルギー資源9,676百万円、製品物流90,877百万円、その他2,253百万円、調整額△4,612百万円、合計109,100百万円である。合計が全社数値と一致することを必ず確認する。一致しないときは調整額の中身を先に読む。</p>
 <p>第2に、報告セグメントの中を決算説明会資料で割る。川崎汽船の製品物流908億円は、決算説明会資料では自動車船512億円、コンテナ船240億円、残る物流・港湾・近海内航などが156億円に分かれる。ここで注意がある。自動車船の2025年度実績は決算説明会資料では512億円と示される一方、2026年度予想を説明する資料では前年実績を511億円と記載している。1億円の差は端数処理か区分の微差と考えられるが、確認できないため511億円から512億円の幅として扱うのが安全である。</p>
 <p>第3に、持分法投資損益をセグメント利益から抜く。JX金属の基礎材料は営業利益1,394億65百万円から持分法投資損益1,147億1百万円を引いて247億64百万円になった。この操作をしないと、操業から出た利益と持分から出た利益が混ざる。</p>
-<p>第4に、会社が社内管理で使っている区分を探す。川崎汽船の自営事業とコンテナ船事業の二分法がその例である。報告セグメントは会計基準に沿った区分で、必ずしも経営が意思決定に使っている単位ではない。社内管理ベースの区分が資料に出ていれば、そちらのほうが工程に近いことが多い。</p>
+<p>第4に、会社が社内管理で使っている区分を探す。川崎汽船の自営事業とコンテナ船事業の二分法がその例である。<strong class="hit">報告セグメントは会計基準に沿った区分で、必ずしも経営が意思決定に使っている単位ではない</strong>。社内管理ベースの区分が資料に出ていれば、そちらのほうが工程に近いことが多い。</p>
 <p>第5に、増減要因の分解表を探す。コシダカホールディングスの増収80億円の新店、連結、既存店、閉店への分解や、加賀電子の営業利益増42億円に対する販売数量+92億円、販売ミックスの粗利率良化+23億円、スポット販売+22億円、販管費増△95億円という内訳がこれにあたる。加賀電子は第4四半期に一部半導体の供給不足に対応したスポット販売が約411億円あり、2026年度は売上高6,450億円で前期比2.1%減と予想している。需給の歪みから出た利益は、工程から出た利益と分けて数える。</p>
 <p>第6に、価格と数量に割る。古河電工の増収403億円のうち約300億円が銅価と為替の影響であるという注記や、コシダカホールディングスの既存店客数96.9%と客単価103.7%という開示がこれにあたる。この分解ができないと、名目売上の伸びを需要の伸びと取り違える。</p>
 <p>第7に、利益率を設備投資と突き合わせる。メイコーの2025年度上期の設備投資は241億円で、同期売上高1,115億円の21.6%にあたる。同社の2025年度は営業活動によるキャッシュ・フロー275億34百万円に対し投資活動によるキャッシュ・フローが△554億83百万円で、差を長期借入れによる収入478億41百万円で埋めている。営業利益率10%台は、その工程に投資を続けることと不可分である。利益率だけを取り出してキャッシュ創出力と読むと外す。</p>
-<p>第8に、復元できなかった箇所を空欄のまま残す。Proterialは非上場で事業別の売上と利益を開示していないため、特殊鋼と磁性材料それぞれの利益率は一次資料では確認できない。同社は2026年4月1日付で磁性材料事業をプロテリアルマグネティクスへ分社し、特殊鋼、ロール、パワーエレクトロニクスを親会社に統合したうえで再編する <a href="https://www.proterial.com/press/2025/pdf/20251215jp.pdf" target="_blank" rel="noopener">出典</a>。価格決定力の強い用途と弱い用途を法人単位で分けにいっていると読めるが、これは組織設計からの推測であって同社の説明ではない。同様に、日本の総合商社が銅精鉱トレードから得ている損益は、各社が鉱山持分の損益と精鉱トレードの損益を分けて開示していないため特定できない。空欄を推測で埋めると、以降の分析全体がその推測の上に乗る。</p>
+<p>第8に、復元できなかった箇所を空欄のまま残す。Proterialは非上場で事業別の売上と利益を開示していないため、特殊鋼と磁性材料それぞれの利益率は一次資料では確認できない。同社は2026年4月1日付で磁性材料事業をプロテリアルマグネティクスへ分社し、特殊鋼、ロール、パワーエレクトロニクスを親会社に統合したうえで再編する <a class="tb-src" href="https://www.proterial.com/press/2025/pdf/20251215jp.pdf" target="_blank" rel="noopener">出典</a>。価格決定力の強い用途と弱い用途を法人単位で分けにいっていると読めるが、これは組織設計からの推測であって同社の説明ではない。同様に、日本の総合商社が銅精鉱トレードから得ている損益は、各社が鉱山持分の損益と精鉱トレードの損益を分けて開示していないため特定できない。空欄を推測で埋めると、以降の分析全体がその推測の上に乗る。</p>
 <h2 id="s6">この章の要点</h2>
 <ul>
 <li>売上高の構成比は工程の重要度を表さない。持分法や地金の通過分があると、売上と利益の順位が逆転する。川崎汽船のコンテナ船は売上高668億円で経常利益240億円、住友金属鉱山の資源は売上構成比15.6%で利益構成比61.1%である。</li>
@@ -253,5 +393,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
   <div class="tb-nav"><span></span><a class="tb-nav-a" href="02_chokepoint-power.html">価格決定力はどこに宿るか →</a></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

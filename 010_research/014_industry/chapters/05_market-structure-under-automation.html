@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -157,84 +264,114 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
 <nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">技術路線の分岐が寡占のドライバーになる条件</a></li><li><a href="#s2">社会実装の後に生まれる市場と消える市場</a></li><li><a href="#s3">量産速度と要素技術のどちらが障壁になるか</a></li><li><a href="#s4">貿易制度の変更が需要を移す産業</a></li><li><a href="#s5">層構造のどこに利益が溜まるかの読み方</a></li><li><a href="#s6">人月を売る事業に市場がつける倍率</a></li><li><a href="#s7">自動化が削る工程と残る工程の切り分け</a></li><li><a href="#s8">獲得コストと継続率で決まる消費者向け市場</a></li><li><a href="#s9">物流条件が上限を決める輸出産業</a></li><li><a href="#s10">この章の要点</a></li><li><a href="#s11">残っている問い</a></li><li><a href="#s12">出典</a></li></ol></nav>
 
-<p>産業の話をするとき、多くの人は「この仕事はAIに置き換わるか」という問いから入る。この入り方は、問いの立て方として答えが出ない。仕事が置き換わるかどうかを議論しても、その産業で誰が儲かり、誰が退場するかは決まらないからである。実際の市場では、自動化が進んだ工程を持つ会社が沈み、自動化とほぼ無関係な会社が寡占を取る事例が並んで観測される。分かれ目は、自動化率ではなく、参入障壁がどこに置かれているかにある。障壁の位置は技術ではなく、規制の許可、量産の歩留まり、納期の空き枠、流通のマージン構造といった、技術の外側の条件で決まることが多い。</p>
-<p>この章では、自動運転、ロボティクス、造船、宇宙、コンサルティング、ソフトウェアテスト、法人支出管理、英会話、日本酒輸出という9つの産業を横に並べる。業種はばらばらだが、どれも同じ構造を持つ。すなわち、置き換わっているのは作業ではなく、その作業に対して誰が何の単位で課金するかである。この読み方を身につけると、新しい技術のニュースを見たときに、それが誰の利益になるのかを自分で判定できるようになる。</p>
+<p>産業の話をするとき、多くの人は「この仕事はAIに置き換わるか」という問いから入る。この入り方は、問いの立て方として答えが出ない。仕事が置き換わるかどうかを議論しても、その産業で誰が儲かり、誰が退場するかは決まらないからである。実際の市場では、自動化が進んだ工程を持つ会社が沈み、自動化とほぼ無関係な会社が寡占を取る事例が並んで観測される。<strong class="hit">分かれ目は、自動化率ではなく、参入障壁がどこに置かれているかにある</strong>。障壁の位置は技術ではなく、規制の許可、量産の歩留まり、納期の空き枠、流通のマージン構造といった、技術の外側の条件で決まることが多い。</p>
+<p>この章では、自動運転、ロボティクス、造船、宇宙、コンサルティング、ソフトウェアテスト、法人支出管理、英会話、日本酒輸出という9つの産業を横に並べる。業種はばらばらだが、どれも同じ構造を持つ。すなわち、<strong class="hit">置き換わっているのは作業ではなく、その作業に対して誰が何の単位で課金するかである</strong>。この読み方を身につけると、新しい技術のニュースを見たときに、それが誰の利益になるのかを自分で判定できるようになる。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 244" role="img" aria-label="自動化が変えるのは作業ではなく課金単位である">
+  <rect x="12" y="30" width="300" height="184" rx="8" fill="var(--dim)" stroke="var(--line)"/>
+  <rect x="408" y="30" width="300" height="184" rx="8" fill="#EEF2FF" stroke="#D5DDF7"/>
+  <text x="26" y="20" font-size="11" fill="var(--muted)">自動化前の課金単位</text>
+  <text x="422" y="20" font-size="11" fill="var(--muted)">自動化後の課金単位</text>
+  <g font-size="12" fill="var(--ink)">
+    <text x="30" y="60">運転者の時間</text>
+    <text x="422" y="60">走行1回あたりの運賃</text>
+    <text x="30" y="90">技師の工数</text>
+    <text x="422" y="90">機体1台あたりの価格</text>
+    <text x="30" y="120">コンサルタントの人日</text>
+    <text x="422" y="120">成果物と成果連動</text>
+    <text x="30" y="150">テスト実行の人月</text>
+    <text x="422" y="150">実行回数と環境利用料</text>
+    <text x="30" y="180">経費精算ソフトの利用料</text>
+    <text x="422" y="180">決済額に対する手数料</text>
+    <text x="30" y="206" font-size="11" fill="var(--muted)">投入した労力で課金する</text>
+    <text x="422" y="206" font-size="11" fill="var(--deep)">生じた結果や取引で課金する</text>
+  </g>
+  <g>
+    <path d="M330 122 L392 122" stroke="var(--accent)" stroke-width="1.5"/>
+    <path d="M384 117 L392 122 L384 127" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+  </g>
+  <text x="12" y="238" font-size="11" fill="var(--muted)">同じ仕事が残っていても、課金単位が移ると誰が利益を取るかが変わる。</text>
+</svg>
+<figcaption>自動化の争点は作業が消えるかどうかではない。労力に対して課金していた事業者が、結果や取引に対して課金する側へ移れるかどうかである。</figcaption>
+</figure>
 <h2 id="s1">技術路線の分岐が寡占のドライバーになる条件</h2>
 <p>自動運転は長く「LiDARを使うか使わないか」という二項対立で語られてきた。この立て方が意味を持ったのは、どの路線も無人での商用運行に到達していなかった時期までである。2026年時点では、無人での有料運行が複数都市で日常的に行われ、走行距離と事故率が公開データとして蓄積されている。問いは、どのセンサが優れているかから、どの構成なら規制当局に安全性を論証できるかへ移った。</p>
-<p>センサ構成には3つの立場がある。第1に、LiDARとレーダーとカメラを併用する立場である。WaymoはJaguar I-PACEに29台のカメラを載せ、これにLiDARとレーダーを組み合わせている <a href="https://waymo.com/waymo-driver/" target="_blank" rel="noopener">出典</a>。第2に、Mobileyeが掲げるTrue Redundancyである。これはカメラのみで完結する認識系と、レーダーおよびLiDARで完結する認識系を並列に走らせる構成で、単なるセンサ追加ではない <a href="https://www.mobileye.com/technology/" target="_blank" rel="noopener">出典</a>。第3に、カメラを主とし、センサ点数を減らして量産車の原価に載せる立場である。</p>
+<p>センサ構成には3つの立場がある。第1に、LiDARとレーダーとカメラを併用する立場である。WaymoはJaguar I-PACEに29台のカメラを載せ、これにLiDARとレーダーを組み合わせている <a class="tb-src" href="https://waymo.com/waymo-driver/" target="_blank" rel="noopener">出典</a>。第2に、Mobileyeが掲げるTrue Redundancyである。これはカメラのみで完結する認識系と、レーダーおよびLiDARで完結する認識系を並列に走らせる構成で、単なるセンサ追加ではない <a class="tb-src" href="https://www.mobileye.com/technology/" target="_blank" rel="noopener">出典</a>。第3に、カメラを主とし、センサ点数を減らして量産車の原価に載せる立場である。</p>
 <p>この分岐は、安全論証の作り方の違いに還元できる。センサを重ねる側は、冗長性という設計上の性質から安全性を演繹する。カメラ主体の側は、走行実績という統計から安全性を帰納する。前者は規制当局に説明しやすく、後者は原価を下げやすい。この非対称が路線を分けている。</p>
-<p>ところが、寡占を作っているのはセンサ構成そのものではない。カリフォルニア州の許可データがそれを直接示す。</p>
+<p><strong class="hit">ところが、寡占を作っているのはセンサ構成そのものではない</strong>。カリフォルニア州の許可データがそれを直接示す。</p>
 <div class="tb-tw"><table><thead><tr><th>許可の段階</th><th>事業者数</th><th>時点</th><th>出典</th></tr></thead><tbody><tr><td>セーフティドライバー同乗のテスト許可</td><td>27社</td><td>2026年5月8日</td><td><a href="https://www.dmv.ca.gov/portal/vehicle-industry-services/autonomous-vehicles/autonomous-vehicle-testing-permit-holders/" target="_blank" rel="noopener">California DMV</a></td></tr><tr><td>無人テスト許可</td><td>6社</td><td>2026年4月3日</td><td>同上</td></tr><tr><td>配備許可</td><td>3社</td><td>2025年11月21日</td><td>同上</td></tr></tbody></table></div>
-<p>段階を1つ上がるごとに事業者数が桁で落ちる。この絞り込みを生んでいるのは資本ではなく、安全性の論証に必要な走行データである。Waymoは2026年3月までに無人走行2億2,060万マイルを積み上げ、人間の運転と比べて重傷以上の事故が94%少ないと公表している <a href="https://waymo.com/safety/impact/" target="_blank" rel="noopener">出典</a>。後発が同等の統計的な信頼区間を得るには、同等の距離が要る。距離は買えない。</p>
+<p>段階を1つ上がるごとに事業者数が桁で落ちる。<strong class="hit">この絞り込みを生んでいるのは資本ではなく、安全性の論証に必要な走行データである</strong>。Waymoは2026年3月までに無人走行2億2,060万マイルを積み上げ、人間の運転と比べて重傷以上の事故が94%少ないと公表している <a class="tb-src" href="https://waymo.com/safety/impact/" target="_blank" rel="noopener">出典</a>。後発が同等の統計的な信頼区間を得るには、同等の距離が要る。距離は買えない。</p>
 <p>ここで注意が要る。走行距離は安全性そのものではなく、安全性の主張に必要な検出力を与える資源である。94%という数値は人間の運転を比較基準に置いた相対値であり、比較基準の設定次第で動く。絶対的な安全水準を示す数値ではない。</p>
-<p>障壁の第2の源泉は運用網である。Waymoは2026年6月時点で週400万マイル以上を走行し、2026年5月時点で11都市、1,400平方マイル以上を運行区域としている <a href="https://waymo.com/blog/" target="_blank" rel="noopener">出典</a>。遠隔支援、清掃、充電、事故対応の拠点が都市ごとに要る。これは製造業ではなく運行業の資産であり、模倣に時間がかかる。</p>
+<p>障壁の第2の源泉は運用網である。Waymoは2026年6月時点で週400万マイル以上を走行し、2026年5月時点で11都市、1,400平方マイル以上を運行区域としている <a class="tb-src" href="https://waymo.com/blog/" target="_blank" rel="noopener">出典</a>。遠隔支援、清掃、充電、事故対応の拠点が都市ごとに要る。<strong class="hit">これは製造業ではなく運行業の資産であり、模倣に時間がかかる</strong>。</p>
 <p>つまり、技術路線の分岐が寡占のドライバーになる条件は次のとおりである。路線の違いが規制当局への論証コストの違いに翻訳され、かつ論証に必要な資源が時間でしか蓄積できないとき、路線の選択が参入障壁に化ける。逆に、論証コストが低い産業では、路線の違いは価格差にしかならない。</p>
 <h2 id="s2">社会実装の後に生まれる市場と消える市場</h2>
 <p>技術が実装されると、市場は増えるか減るかのどちらかだと考えたくなる。実際には、同じ産業の内側で消える区画と生まれる区画が同時に走る。</p>
-<p>消える側の例が明快なのは英会話である。オンライン英会話で先行し2014年に上場したレアジョブは、2026年7月29日に上場廃止となり、7月31日付で学研ホールディングスの完全子会社になった。株式交換比率はレアジョブ1株に対し学研ホールディングス0.39株で、2026年5月14日終値を基準としたプレミアムは15.04%である。同社は単独での成長に限界があると自ら記述している <a href="https://www.rarejob.co.jp/wp-content/uploads/2026/07/2026年３月期決算補足説明資料_20260515.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>消える側の例が明快なのは英会話である。オンライン英会話で先行し2014年に上場したレアジョブは、2026年7月29日に上場廃止となり、7月31日付で学研ホールディングスの完全子会社になった。株式交換比率はレアジョブ1株に対し学研ホールディングス0.39株で、2026年5月14日終値を基準としたプレミアムは15.04%である。同社は単独での成長に限界があると自ら記述している <a class="tb-src" href="https://www.rarejob.co.jp/wp-content/uploads/2026/07/2026年３月期決算補足説明資料_20260515.pdf" target="_blank" rel="noopener">出典</a>。</p>
 <p>しかし市場全体が縮んだわけではない。外国語教室市場は2019年度3,460億円から2024年度3,009億円へ13.0%減った一方、オンライン語学市場は2019年度179億円から2025年度予測405億円へ2.26倍になっている。これらは矢野経済研究所の調査値であり、今回はレアジョブが引用した二次経路からのみ確認した。一次リリースは取得できていない。</p>
-<p>生まれる側は、生まれると言われている段階と、実際に数えられる段階を分ける必要がある。自動運転では乗車の実績が可視化されている。Waymoは2026年8月4日にダラスで全ユーザーへの開放を発表し、2026年2月のサービス開始以降、ダラスだけで約15万人が乗車したとしている <a href="https://waymo.com/blog/" target="_blank" rel="noopener">出典</a>。一方、実装後に生まれると語られがちな駐車場転用とマイクロモビリティについては、定量的な一次資料に到達できていない。都心の駐車場面積、その転用可能量、転用時の地価影響を示す政府統計は本稿の調査範囲では見つからなかった。したがって「駐車場が何平方メートル余る」という記述はできない。</p>
+<p>生まれる側は、生まれると言われている段階と、実際に数えられる段階を分ける必要がある。自動運転では乗車の実績が可視化されている。Waymoは2026年8月4日にダラスで全ユーザーへの開放を発表し、2026年2月のサービス開始以降、ダラスだけで約15万人が乗車したとしている <a class="tb-src" href="https://waymo.com/blog/" target="_blank" rel="noopener">出典</a>。一方、実装後に生まれると語られがちな駐車場転用とマイクロモビリティについては、定量的な一次資料に到達できていない。都心の駐車場面積、その転用可能量、転用時の地価影響を示す政府統計は本稿の調査範囲では見つからなかった。したがって「駐車場が何平方メートル余る」という記述はできない。</p>
 <p>構造だけを述べる。運転者のいない車両は、乗客を降ろした後に目的地の近くに留まる必要がない。都心の駐車需要は、目的地の近くという制約から外れる。制約が外れれば駐車場は郊外の集約拠点へ移り、都心の駐車床が別用途に開くという順序になる。これは仮説であり、都市ごとの駐車場供給面積と無人運行の乗車シェアの時系列を突き合わせるまで検証されない。</p>
-<p>渋滞についても、消える部分と残る部分が分かれる。Sternらは周長260メートルの単車線円形コースに21台から22台の車両を走らせ、1台だけを自動制御に切り替えた。波が存在する場合と比べて燃料消費が最大40%減り、通過台数が最大15%増えた。著者らは、大多数が自動運転になるはるか前に、全体の5%未満の車両で流れを制御できると結論している <a href="https://arxiv.org/abs/1705.01693" target="_blank" rel="noopener">出典</a>。ただしこの実験は台数を固定している。道路容量が需要に足りない渋滞はこの機構では改善しない。加えて、移動費用の低下は走行台数を増やす方向に働く。正味効果を実測した資料は取得できていない。</p>
-<p>実装の順序が国によって違う点も押さえておく。米国では都市部の有料ロボタクシーが先行している。日本の公開事例は、福井県永平寺町、茨城県日立市、北海道上士幌町、埼玉県和光市、東京都大田区、長野県塩尻市という6地域で、地方部の移動手段確保から入っている <a href="https://www.road-to-the-l4.go.jp/" target="_blank" rel="noopener">出典</a>。制度面では2022年の道路交通法改正により特定自動運行の許可制度が創設され、2023年4月に施行された <a href="https://www.npa.go.jp/bureau/traffic/selfdriving/index.html" target="_blank" rel="noopener">出典</a>。参照すべき先行事例が米国と日本で異なる。</p>
+<p>渋滞についても、消える部分と残る部分が分かれる。Sternらは周長260メートルの単車線円形コースに21台から22台の車両を走らせ、1台だけを自動制御に切り替えた。波が存在する場合と比べて燃料消費が最大40%減り、通過台数が最大15%増えた。著者らは、大多数が自動運転になるはるか前に、全体の5%未満の車両で流れを制御できると結論している <a class="tb-src" href="https://arxiv.org/abs/1705.01693" target="_blank" rel="noopener">出典</a>。ただしこの実験は台数を固定している。道路容量が需要に足りない渋滞はこの機構では改善しない。加えて、移動費用の低下は走行台数を増やす方向に働く。正味効果を実測した資料は取得できていない。</p>
+<p>実装の順序が国によって違う点も押さえておく。米国では都市部の有料ロボタクシーが先行している。日本の公開事例は、福井県永平寺町、茨城県日立市、北海道上士幌町、埼玉県和光市、東京都大田区、長野県塩尻市という6地域で、地方部の移動手段確保から入っている <a class="tb-src" href="https://www.road-to-the-l4.go.jp/" target="_blank" rel="noopener">出典</a>。制度面では2022年の道路交通法改正により特定自動運行の許可制度が創設され、2023年4月に施行された <a class="tb-src" href="https://www.npa.go.jp/bureau/traffic/selfdriving/index.html" target="_blank" rel="noopener">出典</a>。参照すべき先行事例が米国と日本で異なる。</p>
 <h2 id="s3">量産速度と要素技術のどちらが障壁になるか</h2>
 <p>ヒューマノイドロボットは、新しい機械としてではなく、既存のサプライチェーンをどこまで安く速く回せるかという量産力の競争として立ち上がっている。</p>
-<p>価格の水準は公開されている。UnitreeのG1は税送料別で1万3,500ドル、自由度は標準機で23、EDU仕様で23から43である <a href="https://www.unitree.com/g1" target="_blank" rel="noopener">出典</a>。原価については、Goldman Sachs Researchが1台あたり製造原価の推計を2023年時点の5万ドルから25万ドルの幅から、2024年時点で3万ドルから15万ドルの幅へ改定した。年間の原価低下率について、15%から20%を見込んでいたところ実際には40%だったと明記している <a href="https://www.goldmansachs.com/insights/articles/the-global-market-for-robots-could-reach-38-billion-by-2035" target="_blank" rel="noopener">出典</a>。</p>
+<p>価格の水準は公開されている。UnitreeのG1は税送料別で1万3,500ドル、自由度は標準機で23、EDU仕様で23から43である <a class="tb-src" href="https://www.unitree.com/g1" target="_blank" rel="noopener">出典</a>。原価については、Goldman Sachs Researchが1台あたり製造原価の推計を2023年時点の5万ドルから25万ドルの幅から、2024年時点で3万ドルから15万ドルの幅へ改定した。年間の原価低下率について、15%から20%を見込んでいたところ実際には40%だったと明記している <a class="tb-src" href="https://www.goldmansachs.com/insights/articles/the-global-market-for-robots-could-reach-38-billion-by-2035" target="_blank" rel="noopener">出典</a>。</p>
 <p>押さえるべきは、原価低下の主因が単一部品の値下げではなく調達構造にあるとされている点である。ヒューマノイドの原価は関節アクチュエータの個数に比例する。自由度23から43という数字は、そのまま減速機、モータ、エンコーダ、トルクセンサの必要個数になる。部品単価が40%下がれば機体価格もほぼ同じ率で下がる。</p>
-<p>完成品レイヤーの内製化はすでに進んでいる。中国系サプライヤーの中国国内シェアは2020年の30%から2024年の57%へ上がり、金属・機械分野では85%に達した <a href="https://ifr.org/ifr-press-releases/news/china-makes-ai-powered-robots-core-of-national-strategy" target="_blank" rel="noopener">出典</a>。産業用ロボットの世界設置台数は2024年に54万2,000台で、うち中国が29万5,000台、世界の54%を占める。日本の設置台数は4万4,500台で前年比4%減である <a href="https://ifr.org/ifr-press-releases/news/global-robot-demand-in-factories-doubles-over-10-years" target="_blank" rel="noopener">出典</a>。</p>
+<p>完成品レイヤーの内製化はすでに進んでいる。中国系サプライヤーの中国国内シェアは2020年の30%から2024年の57%へ上がり、金属・機械分野では85%に達した <a class="tb-src" href="https://ifr.org/ifr-press-releases/news/china-makes-ai-powered-robots-core-of-national-strategy" target="_blank" rel="noopener">出典</a>。産業用ロボットの世界設置台数は2024年に54万2,000台で、うち中国が29万5,000台、世界の54%を占める。日本の設置台数は4万4,500台で前年比4%減である <a class="tb-src" href="https://ifr.org/ifr-press-releases/news/global-robot-demand-in-factories-doubles-over-10-years" target="_blank" rel="noopener">出典</a>。</p>
 <p>日本勢の防衛線は減速機とセンサだとされる。ここで、その防衛線が売上に変換されているかを確かめる。</p>
 <div class="tb-tw"><table><thead><tr><th>企業</th><th>指標</th><th>値</th><th>期</th><th>出典</th></tr></thead><tbody><tr><td>ハーモニック・ドライブ・システムズ</td><td>営業利益</td><td>25億6,764万円</td><td>2026年3月期</td><td><a href="https://irbank.net/6324/results" target="_blank" rel="noopener">IR BANK</a></td></tr><tr><td>ハーモニック・ドライブ・システムズ</td><td>営業利益</td><td>102億2,480万円</td><td>2023年3月期</td><td>同上</td></tr><tr><td>ナブテスコ</td><td>売上高</td><td>3,079億円</td><td>2025年12月期</td><td><a href="https://irbank.net/6268/results" target="_blank" rel="noopener">IR BANK</a></td></tr><tr><td>FANUC</td><td>売上高</td><td>8,578億円</td><td>2026年3月期</td><td><a href="https://irbank.net/6954/results" target="_blank" rel="noopener">IR BANK</a></td></tr></tbody></table></div>
 <p>ヒューマノイドの話題性と要素技術メーカーの収益は、2026年3月期時点で連動していない。したがって「日本の部品は代替されにくい」という命題は、現時点で検証されていないと言うのが正確である。</p>
 <p>なぜ産業用で成立した障壁がそのまま持ち越せないのかは、搭載個数で説明できる。産業用ロボットは1台あたりの関節数が6前後で、減速機の単価が総原価に占める比率は限定される。自由度23から43のヒューマノイドでは、同じ単価でも機体価格への影響が大きい。単価に対する感度が違えば、高価格を正当化してきた寿命と精度の議論が通らなくなる。</p>
-<p>なお、部品別の原価構成比を示す一次資料は取得できていない。減速機が原価の何%を占めるかは確認済みの事実として書けない。センサ領域についても、日本勢のシェアや採用実績を裏づける開示に到達していない。</p>
-<p>量産の実態についても抑制的な見方が一次情報として存在する。IFRは、中国のヒューマノイドについて実運用での能力はデモンストレータかパイロットに限られるとし、工場や家庭への広範な普及は近中期には見込まれないとしている <a href="https://ifr.org/ifr-press-releases/news/china-makes-ai-powered-robots-core-of-national-strategy" target="_blank" rel="noopener">出典</a>。</p>
+<p>原価構成の水準は、部品単位ではなく機能単位でなら把握できる。関節アクチュエータはヒューマノイドの部品表原価の30%超を占め、基本構成では50%に達する。ハンドは単一項目として最大で31%であり、リニアとロータリーのアクチュエータを合算すると2030年時点の部品表の半分を超えると見積もられている<a class="tb-src" href="https://institute.bankofamerica.com/content/dam/transformation/physical-ai-part-2.pdf" target="_blank" rel="noopener">出典</a>。ただしこの区分は駆動機能のまとまりであって、減速機を単体で切り出した数値ではない。減速機が原価の何%を占めるかは依然として確認済みの事実として書けない。センサ領域についても、日本勢のシェアや採用実績を裏づける開示に到達していない。</p>
+<p>量産の実態についても抑制的な見方が一次情報として存在する。IFRは、中国のヒューマノイドについて実運用での能力はデモンストレータかパイロットに限られるとし、工場や家庭への広範な普及は近中期には見込まれないとしている <a class="tb-src" href="https://ifr.org/ifr-press-releases/news/china-makes-ai-powered-robots-core-of-national-strategy" target="_blank" rel="noopener">出典</a>。</p>
 <h2 id="s4">貿易制度の変更が需要を移す産業</h2>
 <p>制度が変われば需要が移る、という推論は成り立つ場合と成り立たない場合がある。造船はその線引きを学ぶのに向いている。</p>
-<p>米通商代表部は中国の海事・物流・造船分野を対象とした通商法301条の措置として、中国建造船を運航する事業者への入港料を2025年10月14日から課した。料率は純トンあたり18米ドル、コンテナあたり120米ドル、中国事業者が所有または運航する船には純トンあたり50米ドルである <a href="https://www.govinfo.gov/content/pkg/FR-2025-04-23/html/2025-06927.htm" target="_blank" rel="noopener">出典</a>。この措置は2025年11月10日から2026年11月9日まで1年間停止されている <a href="https://www.govinfo.gov/content/pkg/FR-2025-11-13/html/2025-19873.htm" target="_blank" rel="noopener">出典</a>。撤回ではなく停止であるため、2026年11月10日以降の扱いは未定である。</p>
-<p>需要が日本に移ったかを統計で確認する。日本船舶輸出組合の2026年度4月から6月の輸出船受注は67隻、2,738,320総トンで、前年同期比95.5%である。船主別にトン数を見ると、邦船系が88.2%、ギリシャ系が5.5%、その他が6.3%で、欧米系は0隻である。前年同期の欧米系は2隻、50千総トンだった <a href="https://www.jsea.or.jp/wp_2022/wp-content/uploads/2026/07/156ef75f5b7b5a0e86ef99d194cdaa5f.pdf" target="_blank" rel="noopener">出典</a>。措置が発動された2025年10月から2026年8月までの間に、欧米系船主から日本の造船所への発注が増えた形跡はない。</p>
-<p>移らない理由は3つある。第1に納期枠がない。2026年6月末の輸出船手持工事量は628隻、3,010万総トンである。2026年度4月から6月に受注した船の納期はトン数ベースで2028年度が32.5%、2029年度が45.6%、2030年度が20.6%で、2027年度は1.3%しか残っていない。第2に建造能力が足りない。日本の2024年建造量は908万総トンで、2019年の1,600万総トンから減っている。国土交通省は2035年までに1,800万総トンを目標に掲げるが、これは現在の能力の倍増を要する <a href="https://www.mlit.go.jp/maritime/content/001975728.pdf" target="_blank" rel="noopener">出典</a>。第3に船種が偏っている。2022年から2024年の受注はトン数ベースでバラ積船が64%、コンテナ船が17%、タンカーが12%、自動車運搬船が6%で、LNG運搬船は直近での建造実績がない。韓国はLNG運搬船が41%を占める <a href="https://www.mlit.go.jp/maritime/content/001982378.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>受け皿の内訳を見るときの注意点もある。JMUは今治造船とは別の受け皿ではない。2025年6月に子会社化が合意され、株主は今治造船が60%、JFEホールディングスが20%、IHIが20%である <a href="https://www.jmuc.co.jp/company/profile/" target="_blank" rel="noopener">出典</a>。両社合算の2024年建造量は469万総トン、94隻で国内シェア52%となるが、これは能力の追加ではなく既存能力の集約である。</p>
-<p>上場企業の業績が何で動いているかも確認しておく。名村造船所の2026年4月から6月の連結売上高は435億85百万円で前年同期比19.5%増、営業利益は98億05百万円で同70.3%増である。会社が挙げた増益要因は、売上高平均レートが145.36円/US$から158.87円/US$へ円安方向に動いたこと、ハンディ型撒積運搬船中心から大型撒積運搬船中心へプロダクトミックスが移ったこと、ドック期間と艤装期間の短縮による増産と原価削減の3点である。同短信の経営成績の説明に通商法301条への言及はない <a href="https://data.swcms.net/file/namura/dam/jcr:072d6b41-a881-4ecd-ada1-9a8e08d7a28d/140120260805509916.pdf" target="_blank" rel="noopener">出典</a>。効いているマクロ要因は為替と船価であって、通商政策ではない。</p>
-<p>制度変更が需要を移すのは、供給側に空き容量があるときだけである。造船のように受注から竣工まで3年から4年かかり、納期枠が3年半以上先まで埋まっている産業では、制度の変更は需要の行き先ではなく価格に出る。</p>
+<p>米通商代表部は中国の海事・物流・造船分野を対象とした通商法301条の措置として、中国建造船を運航する事業者への入港料を2025年10月14日から課した。料率は純トンあたり18米ドル、コンテナあたり120米ドル、中国事業者が所有または運航する船には純トンあたり50米ドルである <a class="tb-src" href="https://www.govinfo.gov/content/pkg/FR-2025-04-23/html/2025-06927.htm" target="_blank" rel="noopener">出典</a>。この措置は2025年11月10日から2026年11月9日まで1年間停止されている <a class="tb-src" href="https://www.govinfo.gov/content/pkg/FR-2025-11-13/html/2025-19873.htm" target="_blank" rel="noopener">出典</a>。撤回ではなく停止であるため、2026年11月10日以降の扱いは未定である。</p>
+<p>需要が日本に移ったかを統計で確認する。日本船舶輸出組合の2026年度4月から6月の輸出船受注は67隻、2,738,320総トンで、前年同期比95.5%である。船主別にトン数を見ると、邦船系が88.2%、ギリシャ系が5.5%、その他が6.3%で、欧米系は0隻である。前年同期の欧米系は2隻、50千総トンだった <a class="tb-src" href="https://www.jsea.or.jp/wp_2022/wp-content/uploads/2026/07/156ef75f5b7b5a0e86ef99d194cdaa5f.pdf" target="_blank" rel="noopener">出典</a>。措置が発動された2025年10月から2026年8月までの間に、欧米系船主から日本の造船所への発注が増えた形跡はない。</p>
+<p>移らない理由は3つある。第1に納期枠がない。2026年6月末の輸出船手持工事量は628隻、3,010万総トンである。2026年度4月から6月に受注した船の納期はトン数ベースで2028年度が32.5%、2029年度が45.6%、2030年度が20.6%で、2027年度は1.3%しか残っていない。第2に建造能力が足りない。日本の2024年建造量は908万総トンで、2019年の1,600万総トンから減っている。国土交通省は2035年までに1,800万総トンを目標に掲げるが、これは現在の能力の倍増を要する <a class="tb-src" href="https://www.mlit.go.jp/maritime/content/001975728.pdf" target="_blank" rel="noopener">出典</a>。第3に船種が偏っている。2022年から2024年の受注はトン数ベースでバラ積船が64%、コンテナ船が17%、タンカーが12%、自動車運搬船が6%で、LNG運搬船は直近での建造実績がない。韓国はLNG運搬船が41%を占める <a class="tb-src" href="https://www.mlit.go.jp/maritime/content/001982378.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>受け皿の内訳を見るときの注意点もある。JMUは今治造船とは別の受け皿ではない。2025年6月に子会社化が合意され、株主は今治造船が60%、JFEホールディングスが20%、IHIが20%である <a class="tb-src" href="https://www.jmuc.co.jp/company/profile/" target="_blank" rel="noopener">出典</a>。両社合算の2024年建造量は469万総トン、94隻で国内シェア52%となるが、これは能力の追加ではなく既存能力の集約である。</p>
+<p>上場企業の業績が何で動いているかも確認しておく。名村造船所の2026年4月から6月の連結売上高は435億85百万円で前年同期比19.5%増、営業利益は98億05百万円で同70.3%増である。会社が挙げた増益要因は、売上高平均レートが145.36円/US$から158.87円/US$へ円安方向に動いたこと、ハンディ型撒積運搬船中心から大型撒積運搬船中心へプロダクトミックスが移ったこと、ドック期間と艤装期間の短縮による増産と原価削減の3点である。同短信の経営成績の説明に通商法301条への言及はない <a class="tb-src" href="https://data.swcms.net/file/namura/dam/jcr:072d6b41-a881-4ecd-ada1-9a8e08d7a28d/140120260805509916.pdf" target="_blank" rel="noopener">出典</a>。<strong class="hit">効いているマクロ要因は為替と船価であって、通商政策ではない</strong>。</p>
+<p>制度変更が需要を移すのは、供給側に空き容量があるときだけである。造船のように受注から竣工まで3年から4年かかり、納期枠が3年半以上先まで埋まっている産業では、<strong class="hit">制度の変更は需要の行き先ではなく価格に出る</strong>。</p>
 <h2 id="s5">層構造のどこに利益が溜まるかの読み方</h2>
 <p>産業を「層」に分けて見る訓練をすると、技術ニュースの読み方が変わる。宇宙ビジネスは打ち上げ、衛星製造、地上局と端末、軌道上サービス、データ利用という5層の積み重ねである。層ごとに資本の重さと回収期間が違う。</p>
+<p>層別の市場規模を先に置く。2025年の商業衛星産業は3,030億ドルで、世界の宇宙ビジネスの71%を占めた。内訳は衛星サービスが1,050億ドル、衛星製造が204億ドル、商業打ち上げが124億ドルである。打ち上げは前年比33%増と最も伸びが速く、製造は微増にとどまった。同年の打ち上げは325回、商業調達された衛星は4,434機で、米国企業が機数の83%を製造した一方、製造売上では47%の取り分にとどまる<a class="tb-src" href="https://sia.org/news-resources/state-of-the-satellite-industry-report/" target="_blank" rel="noopener">出典</a>。</p>
+<p>注目すべきは規模の順序である。話題の中心にある打ち上げは124億ドルで、サービスの1,050億ドルの8分の1にすぎない。機数で8割を作る国が金額では5割を切るという事実も、製造の単価が下がっていることを示している。ニュースの量と金額の量は一致しない。</p>
 <div class="tb-tw"><table><thead><tr><th>層</th><th>企業</th><th>粗利率</th><th>営業損益</th><th>期</th><th>出典</th></tr></thead><tbody><tr><td>サービス</td><td>Iridium</td><td>71.6%</td><td>2億3,598万ドル</td><td>FY2025</td><td><a href="https://stockanalysis.com/stocks/irdm/financials/" target="_blank" rel="noopener">StockAnalysis</a></td></tr><tr><td>データ利用</td><td>Planet Labs</td><td>56.1%</td><td>マイナス9,507万ドル</td><td>FY2026</td><td><a href="https://stockanalysis.com/stocks/pl/financials/" target="_blank" rel="noopener">StockAnalysis</a></td></tr><tr><td>打ち上げ</td><td>Rocket Lab</td><td>34.4%</td><td>マイナス2億2,884万ドル</td><td>FY2025</td><td><a href="https://stockanalysis.com/stocks/rklb/financials/" target="_blank" rel="noopener">StockAnalysis</a></td></tr><tr><td>地上機器</td><td>Gilat</td><td>29.5%</td><td>2,344万ドル</td><td>FY2025</td><td><a href="https://stockanalysis.com/stocks/gilt/financials/" target="_blank" rel="noopener">StockAnalysis</a></td></tr><tr><td>製造</td><td>Redwire</td><td>5.2%</td><td>マイナス2億2,968万ドル</td><td>FY2025</td><td><a href="https://stockanalysis.com/stocks/rdw/financials/" target="_blank" rel="noopener">StockAnalysis</a></td></tr></tbody></table></div>
-<p>利益は軌道上インフラを自社保有して継続課金するサービス層に溜まっている。Iridiumの営業利益率は27.1%である。同じ構造を大規模に再現したのがStarlinkで、2025年の売上は114億ドル、営業利益は44億ドルと報じられている。加入者は2024年12月の440万人から2026年6月の1,200万人へ増えた。ただしStarlinkの数値の出典は二次資料であり、一次開示では確認していない <a href="https://en.wikipedia.org/wiki/Starlink" target="_blank" rel="noopener">出典</a>。</p>
+<p>利益は軌道上インフラを自社保有して継続課金するサービス層に溜まっている。Iridiumの営業利益率は27.1%である。同じ構造を大規模に再現したのがStarlinkで、2025年の売上は114億ドル、営業利益は44億ドルと報じられている。加入者は2024年12月の440万人から2026年6月の1,200万人へ増えた。ただしStarlinkの数値の出典は二次資料であり、一次開示では確認していない <a class="tb-src" href="https://en.wikipedia.org/wiki/Starlink" target="_blank" rel="noopener">出典</a>。</p>
 <p>この表から2つの読み方が引き出せる。第1に、打ち上げコストが下がると打ち上げ企業が儲かるという理解は逆である。コスト低下の便益は打ち上げを買う側に移る。Rocket Labは営業赤字が4期連続で、打ち上げを大量に使うStarlinkが利益を出している。第2に、粗利率が高い層に利益があるという理解も外れる。Planet Labsは粗利率56.1%で営業赤字である。固定費を割る母数が足りなければ、粗利率が高くても赤字になる。</p>
-<p>連結値は層別の実態を隠す。SpaceXはFY2025に売上186億7,400万ドル、粗利率49.4%を計上したが、営業損益はマイナス25億8,900万ドル、フリーキャッシュフローはマイナス140億300万ドルだった <a href="https://stockanalysis.com/stocks/spcx/financials/" target="_blank" rel="noopener">出典</a>。この連結赤字はStarshipとAIセグメントへの投資によるもので、Starlink単体の収益性とは分けて読む必要がある。</p>
-<p>法人支出管理の領域も、同じ層の読み方が使える。Navanの2026年4月期TTM売上7億6,504万ドルの内訳は、従量課金が6億9,938万ドル、サブスクリプションが6,565万ドルで、サブスク比率は8.6%である <a href="https://stockanalysis.com/stocks/navn/financials/" target="_blank" rel="noopener">出典</a>。経費精算ソフトの月額課金それ自体は、上場企業の売上構成として1割に届いていない。</p>
-<p>ただし、ここから直ちにカード決済が本丸だと結論すると誤る。Navanは2026年1月31日時点のLTMで旅行総取扱高91億ドル、決済額41億ドルと開示している <a href="https://investors.navan.com/" target="_blank" rel="noopener">出典</a>。従量売上を旅行総取扱高で割ると7.7%で、旅行予約の手数料率の水準に近い。決済額41億ドルにインターチェンジの取り分を仮に1.5%と置けば6,000万ドル台で、従量売上の1割弱にしかならない。Navanは従量課金を旅行手数料とインターチェンジに分けて開示していないため断定はできないが、従量収益の主体は旅行取扱高だと見るのが自然である。</p>
-<p>本丸はカードでもソフトでもなく、支出が通る流路である。BILL Holdingsの場合、TTM 16.0億ドルの売上のうち1億5,011万ドルが顧客預り金の運用収益で、比率は9.4%になる <a href="https://stockanalysis.com/stocks/bill/financials/" target="_blank" rel="noopener">出典</a>。流路の種類は違っても、金額に比例して取れる収益がソフトの月額課金を上回る点は共通している。</p>
-<p>買い手の顔ぶれも同じ方向を指す。Capital Oneは2026年1月22日にBrexの買収を発表した。対価は51.5億ドルで現金と株式がほぼ半々である。この価格はBrexが2021年10月に付けた評価額123億ドルの半分未満である。ただし51.5億ドルという金額と発表日について、Capital OneのIRサイトの一次リリースは取得できず、二次資料に依拠している <a href="https://en.wikipedia.org/wiki/Brex" target="_blank" rel="noopener">出典</a>。買い手はソフトウェア企業ではなくカード発行体だった。ソフトウェアは流路を握るための入口として機能しており、単独では値付けされていない。</p>
-<p>日本で同じ構造が再現されるかは、インターチェンジ水準と規制に依存する。日本ではインターチェンジ水準が米国より低く、法人向けの与信付きカード発行は割賦販売法上の登録を要する。この2つが、ソフトウェアを無償で配って決済で回収するモデルの成立条件を狭めている。結果として、マネーフォワード、freee、LayerXのようなサブスク課金型と、UPSIDERのようなカード発行型が分かれたまま残っている <a href="https://up-sider.com/" target="_blank" rel="noopener">出典</a>。なお、日本の法人カード決済額の統計とSAP Concurの国内シェアは、いずれも一次資料で確認できていない。日本クレジット協会は信用供与額を公表しているが、法人カードを分離した区分がない <a href="https://www.j-credit.or.jp/information/statistics/" target="_blank" rel="noopener">出典</a>。</p>
+<p>連結値は層別の実態を隠す。SpaceXはFY2025に売上186億7,400万ドル、粗利率49.4%を計上したが、営業損益はマイナス25億8,900万ドル、フリーキャッシュフローはマイナス140億300万ドルだった <a class="tb-src" href="https://stockanalysis.com/stocks/spcx/financials/" target="_blank" rel="noopener">出典</a>。この連結赤字はStarshipとAIセグメントへの投資によるもので、Starlink単体の収益性とは分けて読む必要がある。</p>
+<p>法人支出管理の領域も、同じ層の読み方が使える。Navanの2026年4月期TTM売上7億6,504万ドルの内訳は、従量課金が6億9,938万ドル、サブスクリプションが6,565万ドルで、サブスク比率は8.6%である <a class="tb-src" href="https://stockanalysis.com/stocks/navn/financials/" target="_blank" rel="noopener">出典</a>。経費精算ソフトの月額課金それ自体は、上場企業の売上構成として1割に届いていない。</p>
+<p>ただし、ここから直ちにカード決済が本丸だと結論すると誤る。Navanは2026年1月31日時点のLTMで旅行総取扱高91億ドル、決済額41億ドルと開示している <a class="tb-src" href="https://investors.navan.com/" target="_blank" rel="noopener">出典</a>。従量売上を旅行総取扱高で割ると7.7%で、旅行予約の手数料率の水準に近い。決済額41億ドルにインターチェンジの取り分を仮に1.5%と置けば6,000万ドル台で、従量売上の1割弱にしかならない。Navanは従量課金を旅行手数料とインターチェンジに分けて開示していないため断定はできないが、従量収益の主体は旅行取扱高だと見るのが自然である。</p>
+<p>本丸はカードでもソフトでもなく、支出が通る流路である。BILL Holdingsの場合、TTM 16.0億ドルの売上のうち1億5,011万ドルが顧客預り金の運用収益で、比率は9.4%になる <a class="tb-src" href="https://stockanalysis.com/stocks/bill/financials/" target="_blank" rel="noopener">出典</a>。流路の種類は違っても、金額に比例して取れる収益がソフトの月額課金を上回る点は共通している。</p>
+<p>買い手の顔ぶれも同じ方向を指す。Capital Oneは2026年1月22日にBrexの買収を発表した。対価は51.5億ドルで現金と株式がほぼ半々である。この価格はBrexが2021年10月に付けた評価額123億ドルの半分未満である。ただし51.5億ドルという金額と発表日について、Capital OneのIRサイトの一次リリースは取得できず、二次資料に依拠している <a class="tb-src" href="https://en.wikipedia.org/wiki/Brex" target="_blank" rel="noopener">出典</a>。<strong class="hit">買い手はソフトウェア企業ではなくカード発行体だった</strong>。ソフトウェアは流路を握るための入口として機能しており、単独では値付けされていない。</p>
+<p>日本で同じ構造が再現されるかは、インターチェンジ水準と規制に依存する。日本ではインターチェンジ水準が米国より低く、法人向けの与信付きカード発行は割賦販売法上の登録を要する。この2つが、ソフトウェアを無償で配って決済で回収するモデルの成立条件を狭めている。結果として、マネーフォワード、freee、LayerXのようなサブスク課金型と、UPSIDERのようなカード発行型が分かれたまま残っている <a class="tb-src" href="https://up-sider.com/" target="_blank" rel="noopener">出典</a>。なお、日本の法人カード決済額は、日本クレジット協会の信用供与額の統計には法人カードを分離した区分がない <a class="tb-src" href="https://www.j-credit.or.jp/information/statistics/" target="_blank" rel="noopener">出典</a>。別系統としてキャッシュレス推進協議会が16社を集計した法人カード利用動向調査を公表しており、金額はこちらで追える <a class="tb-src" href="https://paymentsjapan.or.jp/b2b-cards/20250512/" target="_blank" rel="noopener">出典</a>。SAP Concurは国内の経費精算市場で11年連続の首位とされるが、公表されているのは順位であって金額シェアではない。</p>
 <h2 id="s6">人月を売る事業に市場がつける倍率</h2>
 <p>コンサルティングの売上は単価と稼働時間の積で決まる。人員を増やさずに売上を伸ばす経路が構造的に狭いため、成長率は採用数の上限に律速される。株式市場はこの制約を織り込んで倍率をつける。したがって、利益率が高いほど高倍率という素朴な関係は成立しない。</p>
 <p>2026年8月6日時点のIRBANK掲載値で確認する。数値はいずれも会社予想ベースである。</p>
 <div class="tb-tw"><table><thead><tr><th>企業</th><th>PER</th><th>ROE</th><th>営業利益率</th><th>出典</th></tr></thead><tbody><tr><td>エクサウィザーズ</td><td>51.85倍</td><td>記載なし</td><td>記載なし</td><td><a href="https://irbank.net/4259" target="_blank" rel="noopener">IRBANK</a></td></tr><tr><td>PKSHA Technology</td><td>31.2倍</td><td>7.98%</td><td>記載なし</td><td><a href="https://irbank.net/3993" target="_blank" rel="noopener">IRBANK</a></td></tr><tr><td>野村総合研究所</td><td>22.28倍</td><td>31.87%</td><td>記載なし</td><td><a href="https://irbank.net/4307" target="_blank" rel="noopener">IRBANK</a></td></tr><tr><td>ベイカレント</td><td>21.96倍</td><td>43.75%</td><td>34.34%</td><td><a href="https://irbank.net/6532" target="_blank" rel="noopener">IRBANK</a></td></tr><tr><td>船井総研HD</td><td>15.17倍</td><td>24.71%</td><td>26.44%</td><td><a href="https://irbank.net/9757" target="_blank" rel="noopener">IRBANK</a></td></tr><tr><td>山田コンサルティンググループ</td><td>10.89倍</td><td>14.69%</td><td>記載なし</td><td><a href="https://irbank.net/4792" target="_blank" rel="noopener">IRBANK</a></td></tr><tr><td>シグマクシスHD</td><td>9.52倍</td><td>34.28%</td><td>25.45%</td><td><a href="https://irbank.net/6088" target="_blank" rel="noopener">IRBANK</a></td></tr></tbody></table></div>
 <p>ROEが高い部類のシグマクシスHDが最も低いPERで、ROEが1桁のPKSHA Technologyが3倍以上のPERを得ている。PERとROEに正の相関はない。営業利益率とも相関しない。利益率で9ポイントしか違わない3社に、倍率は2.3倍の差がついている。</p>
-<p>ここで頻出する誤読を1つ潰しておく。PBRがROEに連動して見えるのは、PBR = PER × ROE という恒等式の結果である。ベイカレントのPBR9.61倍は21.96倍と43.75%の積であり、9社すべてで同じ関係が成立する。PBRの高さから「市場が資本効率を評価している」と読むのは二重計上であって、市場が決めているのはPERの側だけである。</p>
-<p>PERの序列とおおむね一致するのは翌期の利益成長率見通しである。エクサウィザーズは2026年3月期の売上約120億円に対し2027年3月期予想156億円で増収率30%、PERは51.85倍である <a href="https://irbank.net/4259/results" target="_blank" rel="noopener">出典</a>。ベイカレントは純利益378億円に対し翌期予想481億円で増益率27%、PERは21.96倍である。船井総研HDは増収率11%でPER15.17倍、シグマクシスHDは増収率6%でPER9.52倍である。順序が一致する。</p>
-<p>ただし例外がある。ヘッドウォータースは2025年12月期売上39.0億円に対し2026年12月期予想85.6億円で増収率119%だが、PERは20.24倍にとどまる。同社の時価総額は79億円で、時価総額1兆950億円のベイカレントとの差は138倍である <a href="https://irbank.net/4011" target="_blank" rel="noopener">出典</a>。成長率が倍率に変換されるには一定の時価総額が要る。この閾値がどこにあるかは、9社のサンプルでは特定できない。</p>
-<p>AI受託への参入が粗利率を上げるかも確かめておく。アクセンチュアの売上総利益率はFY2023で32.34%、FY2024で32.61%、FY2025で31.91%と、変動幅は0.70ポイントにとどまる <a href="https://stockanalysis.com/stocks/acn/financials/" target="_blank" rel="noopener">出典</a>。同社はFY2025決算で人工知能への早期投資が業績に寄与したと説明しているが、粗利率の水準は動いていない <a href="https://newsroom.accenture.com/news/2025/accenture-reports-fourth-quarter-and-full-year-fiscal-2025-results" target="_blank" rel="noopener">出典</a>。ヘッドウォータースは売上が2023年12月期23.2億円から2025年12月期39.0億円へ1.68倍になる過程で、営業利益率は2020年12月期の14.7%を下回り続けた <a href="https://irbank.net/4011/results" target="_blank" rel="noopener">出典</a>。エクサウィザーズは売上原価率が2026年3月期に33.29%へ低下し、営業利益率が0.23%から13.29%へ13.06ポイント上がったが、この改善がプロダクト構成比の上昇によるものか受託単価の上昇によるものかは、公開情報から特定できなかった <a href="https://irbank.net/4259/results" target="_blank" rel="noopener">出典</a>。</p>
+<p>ここで頻出する誤読を1つ潰しておく。PBRがROEに連動して見えるのは、PBR = PER × ROE という恒等式の結果である。ベイカレントのPBR9.61倍は21.96倍と43.75%の積であり、9社すべてで同じ関係が成立する。<strong class="hit">PBRの高さから「市場が資本効率を評価している」と読むのは二重計上であって、市場が決めているのはPERの側だけである</strong>。</p>
+<p>PERの序列とおおむね一致するのは翌期の利益成長率見通しである。エクサウィザーズは2026年3月期の売上約120億円に対し2027年3月期予想156億円で増収率30%、PERは51.85倍である <a class="tb-src" href="https://irbank.net/4259/results" target="_blank" rel="noopener">出典</a>。ベイカレントは純利益378億円に対し翌期予想481億円で増益率27%、PERは21.96倍である。船井総研HDは増収率11%でPER15.17倍、シグマクシスHDは増収率6%でPER9.52倍である。順序が一致する。</p>
+<p>ただし例外がある。ヘッドウォータースは2025年12月期売上39.0億円に対し2026年12月期予想85.6億円で増収率119%だが、PERは20.24倍にとどまる。同社の時価総額は79億円で、時価総額1兆950億円のベイカレントとの差は138倍である <a class="tb-src" href="https://irbank.net/4011" target="_blank" rel="noopener">出典</a>。成長率が倍率に変換されるには一定の時価総額が要る。この閾値がどこにあるかは、9社のサンプルでは特定できない。</p>
+<p>AI受託への参入が粗利率を上げるかも確かめておく。アクセンチュアの売上総利益率はFY2023で32.34%、FY2024で32.61%、FY2025で31.91%と、変動幅は0.70ポイントにとどまる <a class="tb-src" href="https://stockanalysis.com/stocks/acn/financials/" target="_blank" rel="noopener">出典</a>。同社はFY2025決算で人工知能への早期投資が業績に寄与したと説明しているが、粗利率の水準は動いていない <a class="tb-src" href="https://newsroom.accenture.com/news/2025/accenture-reports-fourth-quarter-and-full-year-fiscal-2025-results" target="_blank" rel="noopener">出典</a>。ヘッドウォータースは売上が2023年12月期23.2億円から2025年12月期39.0億円へ1.68倍になる過程で、営業利益率は2020年12月期の14.7%を下回り続けた <a class="tb-src" href="https://irbank.net/4011/results" target="_blank" rel="noopener">出典</a>。エクサウィザーズは売上原価率が2026年3月期に33.29%へ低下し、営業利益率が0.23%から13.29%へ13.06ポイント上がったが、この改善がプロダクト構成比の上昇によるものか受託単価の上昇によるものかは、公開情報から特定できなかった <a class="tb-src" href="https://irbank.net/4259/results" target="_blank" rel="noopener">出典</a>。</p>
 <p>つまり、AI受託に参入すること自体は粗利率を動かす要因ではない。粗利が改善するとすれば、それは受託の外側、つまり原価が売上に比例しない収益源の構成比が上がったときである。</p>
-<p>市場のつけた倍率を経営側が拒否する動きも同時に出ている。フューチャーはPER18.39倍の水準でMBOの実施および応募の推奨を発表し、期末配当予想を無配に修正した <a href="https://irbank.net/4722" target="_blank" rel="noopener">出典</a>。ブレインパッドは2026年3月16日に上場廃止に関するお知らせを公表している <a href="https://irbank.net/3655" target="_blank" rel="noopener">出典</a>。</p>
+<p>市場のつけた倍率を経営側が拒否する動きも同時に出ている。フューチャーはPER18.39倍の水準でMBOの実施および応募の推奨を発表し、期末配当予想を無配に修正した <a class="tb-src" href="https://irbank.net/4722" target="_blank" rel="noopener">出典</a>。ブレインパッドは2026年3月16日に上場廃止に関するお知らせを公表している <a class="tb-src" href="https://irbank.net/3655" target="_blank" rel="noopener">出典</a>。</p>
 <h2 id="s7">自動化が削る工程と残る工程の切り分け</h2>
 <p>「AIで自動化される」という言い方は工程を丸めすぎている。実際の削減は工程単位で不均一に起きる。ソフトウェアテストは、開示が比較的そろっているため切り分けの練習に使える。</p>
-<p>削られているのはテスト設計工程である。バルテスのTestScapeは、社内検証で従来手法比約40%のテスト設計工数削減の可能性を確認したとしている。2026年5月11日に追加したシナリオテスト支援機能は、フロー図作成、基本シナリオ作成、パターン作成、テストケース作成の4段階のうち前半2段階をAI生成の対象とした。後半2段階はAI生成対象として挙げられていない <a href="https://prtimes.jp/main/html/rd/p/000000409.000030691.html" target="_blank" rel="noopener">出典</a>。SHIFTのTD AI Assistantは1億2,211万件のテストケースと200万件超の不具合データを学習した設計支援機能で、開示されている効果はテスト観点の網羅が約70%向上したという品質側の数値であり、工数削減率ではない <a href="https://ai.shiftinc.jp/example/ai%E3%81%AB%E3%82%88%E3%82%8B%E3%83%86%E3%82%B9%E3%83%88%E8%A8%AD%E8%A8%88%E8%87%AA%E5%8B%95%E5%8C%96%E3%83%84%E3%83%BC%E3%83%AB%E3%82%92%E9%96%8B%E7%99%BA%E3%81%97%E3%80%81%E3%83%86%E3%82%B9%E3%83%88/" target="_blank" rel="noopener">出典</a>。</p>
+<p>削られているのはテスト設計工程である。バルテスのTestScapeは、社内検証で従来手法比約40%のテスト設計工数削減の可能性を確認したとしている。2026年5月11日に追加したシナリオテスト支援機能は、フロー図作成、基本シナリオ作成、パターン作成、テストケース作成の4段階のうち前半2段階をAI生成の対象とした。後半2段階はAI生成対象として挙げられていない <a class="tb-src" href="https://prtimes.jp/main/html/rd/p/000000409.000030691.html" target="_blank" rel="noopener">出典</a>。SHIFTのTD AI Assistantは1億2,211万件のテストケースと200万件超の不具合データを学習した設計支援機能で、開示されている効果はテスト観点の網羅が約70%向上したという品質側の数値であり、工数削減率ではない <a class="tb-src" href="https://ai.shiftinc.jp/example/ai%E3%81%AB%E3%82%88%E3%82%8B%E3%83%86%E3%82%B9%E3%83%88%E8%A8%AD%E8%A8%88%E8%87%AA%E5%8B%95%E5%8C%96%E3%83%84%E3%83%BC%E3%83%AB%E3%82%92%E9%96%8B%E7%99%BA%E3%81%97%E3%80%81%E3%83%86%E3%82%B9%E3%83%88/" target="_blank" rel="noopener">出典</a>。</p>
 <p>実行と結果判定、および進行管理はまだ削られていない。ここは断定できる根拠が薄い点を明示しておく。2つのツールがいずれも設計支援として設計されていること、そしてテスト実行の自動化率に関する各社の数値開示が見つからなかったことから、実行と管理は未着手だと判断している。実行工程の削減率を示す一次資料は取得できていない。</p>
-<p>さらに重要なのは、工程が削られる前に前段の需要が減る場合があることである。デジタルハーツホールディングスは2026年3月期のAGESTグループ事業について、AIの普及拡大等を背景に受託開発をはじめとする案件受注が減少したと明記した。同セグメントの売上高は15,994百万円で前期比1.0%減、セグメント利益は380百万円で同22.1%減である <a href="https://pdf.irpocket.com/C3676/Kdx3/MOPc/PyCk.pdf" target="_blank" rel="noopener">出典</a>。減っているのはテストではなく、その前段の受託開発である。</p>
-<p>削減効果の大きさも数字で押さえる。SHIFTは単体従業員の約90%が生成AIを利用し、2025年8月期の削減効果を約1.5億円としている。同期の連結売上高は129,819百万円なので、削減額は売上の0.1%程度にあたる <a href="https://production-mkdd-news.s3.ap-northeast-1.amazonaws.com/urn:newsml:tdnet.info:20251014573005/140120251014573005.pdf" target="_blank" rel="noopener">出典</a>。工数削減は現時点で損益計算書を動かす規模になっていない。</p>
-<p>ここで課金単位の話に戻る。国内上場4社の売上はいずれも人月課金の受託が主体で、ツール販売を単独の収益セグメントとして開示している会社はない。SHIFTは決算短信でライセンス販売や教育サービスをKPI算定から除外しており、KPIとして開示しているのはエンジニア単価とエンジニア数である。2025年8月期第4四半期の連結エンジニア単価は月999千円、コンサルタント・エンジニア数は連結13,274人だった <a href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/disclosure/20251014/20251014572712.pdf" target="_blank" rel="noopener">出典</a>。バルテス・ホールディングスのソフトウェアテスト単価は月852千円、稼働エンジニアは連結1,342名である <a href="https://finance.logmi.jp/articles/385161" target="_blank" rel="noopener">出典</a>。</p>
-<p>つまりAIツールは、売上の性質をストックに変えたのではなく、人月単価を上げる手段として使われている。SHIFTはエンジニア単価を月110万円から月125万円へ引き上げる計画を示しており、人数ではなく単価で伸ばす設計になっている。自動化が入っても課金単位は人月のままで、変わったのはその単位に載る金額である。</p>
-<p>なお市場規模の数字を扱うときは対象の定義に注意が要る。日本能率協会の紹介する調査ではソフトウェアテストサービス市場が2027年に1,850億円とされる一方、バルテスは開発工程に埋もれた内製分を含めて6.2兆円と置いている <a href="https://www.valtes.co.jp/company/performance.html" target="_blank" rel="noopener">出典</a>。前者は外部委託された分、後者は工程全体を数えており、直接比較できない。日本能率協会側の一次ページは2026年8月8日時点でHTTP 404を返した。</p>
+<p>さらに重要なのは、工程が削られる前に前段の需要が減る場合があることである。デジタルハーツホールディングスは2026年3月期のAGESTグループ事業について、AIの普及拡大等を背景に受託開発をはじめとする案件受注が減少したと明記した。同セグメントの売上高は15,994百万円で前期比1.0%減、セグメント利益は380百万円で同22.1%減である <a class="tb-src" href="https://pdf.irpocket.com/C3676/Kdx3/MOPc/PyCk.pdf" target="_blank" rel="noopener">出典</a>。<strong class="hit">減っているのはテストではなく、その前段の受託開発である</strong>。</p>
+<p>削減効果の大きさも数字で押さえる。SHIFTは単体従業員の約90%が生成AIを利用し、2025年8月期の削減効果を約1.5億円としている。同期の連結売上高は129,819百万円なので、削減額は売上の0.1%程度にあたる <a class="tb-src" href="https://production-mkdd-news.s3.ap-northeast-1.amazonaws.com/urn:newsml:tdnet.info:20251014573005/140120251014573005.pdf" target="_blank" rel="noopener">出典</a>。工数削減は現時点で損益計算書を動かす規模になっていない。</p>
+<p>ここで課金単位の話に戻る。国内上場4社の売上はいずれも人月課金の受託が主体で、ツール販売を単独の収益セグメントとして開示している会社はない。SHIFTは決算短信でライセンス販売や教育サービスをKPI算定から除外しており、KPIとして開示しているのはエンジニア単価とエンジニア数である。2025年8月期第4四半期の連結エンジニア単価は月999千円、コンサルタント・エンジニア数は連結13,274人だった <a class="tb-src" href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/disclosure/20251014/20251014572712.pdf" target="_blank" rel="noopener">出典</a>。バルテス・ホールディングスのソフトウェアテスト単価は月852千円、稼働エンジニアは連結1,342名である <a class="tb-src" href="https://finance.logmi.jp/articles/385161" target="_blank" rel="noopener">出典</a>。</p>
+<p><strong class="hit">つまりAIツールは、売上の性質をストックに変えたのではなく、人月単価を上げる手段として使われている</strong>。SHIFTはエンジニア単価を月110万円から月125万円へ引き上げる計画を示しており、人数ではなく単価で伸ばす設計になっている。自動化が入っても課金単位は人月のままで、変わったのはその単位に載る金額である。</p>
+<p>なお市場規模の数字を扱うときは対象の定義に注意が要る。日本能率協会の紹介する調査ではソフトウェアテストサービス市場が2027年に1,850億円とされる一方、バルテスは開発工程に埋もれた内製分を含めて6.2兆円と置いている <a class="tb-src" href="https://www.valtes.co.jp/company/performance.html" target="_blank" rel="noopener">出典</a>。前者は外部委託された分、後者は工程全体を数えており、直接比較できない。日本能率協会側の一次ページは2026年8月8日時点でHTTP 404を返した。</p>
 <h2 id="s8">獲得コストと継続率で決まる消費者向け市場</h2>
 <p>消費者向けサービスでは、参入障壁が供給側ではなく需要側に置かれる。教室も講師もソフトウェアも外部調達できる英会話市場が、それでも同じ社名で埋まってきたのはこのためだと説明される。</p>
 <p>この説明が正しいなら、顧客獲得コストと平均継続月数が事業の生死を決めているはずである。ところが日本の主要事業者はこの2つを直接開示していない。使える代理指標は3つある。</p>
-<p>第1に、営業とマーケティング費の対売上高比率である。プログリット単体のS&amp;M比率は2026年8月期の第1四半期から第3四半期にかけて45%、46%、42%と推移した。会社は通期予想の前提として30%から40%程度を置いている。第3四半期のS&amp;Mは750百万円で、同四半期の売上高1,808百万円に対応する <a href="https://contents.xj-storage.jp/xcontents/AS71305/84520b21/8028/479d/a0ac/bc567d64b1ff/140120260709590560.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>第1に、営業とマーケティング費の対売上高比率である。プログリット単体のS&amp;M比率は2026年8月期の第1四半期から第3四半期にかけて45%、46%、42%と推移した。会社は通期予想の前提として30%から40%程度を置いている。第3四半期のS&amp;Mは750百万円で、同四半期の売上高1,808百万円に対応する <a class="tb-src" href="https://contents.xj-storage.jp/xcontents/AS71305/84520b21/8028/479d/a0ac/bc567d64b1ff/140120260709590560.pdf" target="_blank" rel="noopener">出典</a>。</p>
 <p>第2に、広告に頼らないチャネルの比率である。同社の新規契約者数に占める友人紹介の割合は16%から21%の範囲で推移している。対象は個人名義の契約に限る。</p>
 <p>第3に、継続の代理指標である。通常コース卒業生のうち継続コースまたはサブスクリプション型サービスに入会した割合が開示されている。この値については資料内に60%から74%という記述と65%から74%という記述の両方があり、会社の通期前提は65%から70%程度である。直近の第3四半期は72%だった。範囲の下限が一致しないため、ここでは幅を広く取って60%台から70%台前半と書く。会社前提の65%から70%が最も狭い区間だが、それは将来の想定値であって実績の幅ではないため、実績の記述には採らない。</p>
 <p>平均継続月数はこれらから復元できない。復元には期首会員数と期中の新規獲得数、または解約率のいずれかが必要で、どちらも開示されていない。</p>
-<p>獲得コストが障壁として働いていることを示す間接証拠はある。プログリットは売上の40%前後をS&amp;Mに投じながら2025年8月期に営業利益率20.9%を確保した。同じ期間にレアジョブは連結売上高9,600百万円に対して営業利益78百万円、営業利益率0.8%である <a href="https://www.rarejob.co.jp/wp-content/uploads/2026/07/2026年３月期決算補足説明資料_20260515.pdf" target="_blank" rel="noopener">出典</a>。同じ市場で、高単価側は獲得コストを吸収でき、低単価側は吸収できていない。</p>
+<p>獲得コストが障壁として働いていることを示す間接証拠はある。プログリットは売上の40%前後をS&amp;Mに投じながら2025年8月期に営業利益率20.9%を確保した。同じ期間にレアジョブは連結売上高9,600百万円に対して営業利益78百万円、営業利益率0.8%である <a class="tb-src" href="https://www.rarejob.co.jp/wp-content/uploads/2026/07/2026年３月期決算補足説明資料_20260515.pdf" target="_blank" rel="noopener">出典</a>。同じ市場で、高単価側は獲得コストを吸収でき、低単価側は吸収できていない。</p>
 <p>AIがこの構造をどう動かしたかも、価格帯で見ると分かる。</p>
 <div class="tb-tw"><table><thead><tr><th>サービス</th><th>月額または月換算</th><th>種別</th></tr></thead><tbody><tr><td>ディアトーク</td><td>4,380円</td><td>AI英会話</td></tr><tr><td>スピフル</td><td>5,478円</td><td>スピーキング教材</td></tr><tr><td>レアジョブ英会話 日常英会話 毎日25分</td><td>7,980円</td><td>人間講師</td></tr><tr><td>レアジョブ英会話 ビジネス英会話</td><td>12,980円</td><td>人間講師</td></tr><tr><td>シャドテン</td><td>21,780円</td><td>添削</td></tr><tr><td>プログリット 英語コーチング3か月</td><td>約210,800円</td><td>人間による伴走</td></tr></tbody></table></div>
 <p>価格は税込で、レアジョブの価格は <a href="https://www.rarejob.com/" target="_blank" rel="noopener">レアジョブ英会話公式サイト</a>、それ以外はプログリットの決算説明資料による。</p>
@@ -242,17 +379,17 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p>価格圧力は「人間講師が均一のレッスン枠を売る層」に集中し、「人間が学習計画に伴走する層」には届いていない。ただし、レアジョブ自身は減収要因としてAIアプリ台頭と社会活動の正常化を並記しており、AI単独の寄与を分離できる数値は開示されていない。プログリットが示す「ビジネス目的の需要はAIの進化に関わらず高まる」という見立ては、自社に有利な立場からの主張であって事実ではない。</p>
 <h2 id="s9">物流条件が上限を決める輸出産業</h2>
 <p>最後に、技術でもソフトウェアでもなく、温度と日数が制約になる産業を見る。ここでも、制約がどこにあるかを取り違えると打ち手を外す。</p>
-<p>日本酒の輸出は10年で単価が上がった。2015年の平均輸出単価771円/Lに対し、2025年は1,368円/Lで約1.8倍である。2025年の輸出額は458.8億円で前年比5.5%増、数量は3.35万kLで同8.0%増である <a href="https://prtimes.jp/main/html/rd/p/000000104.000083559.html" target="_blank" rel="noopener">出典</a>。単価が上がるほど品質劣化の金額インパクトが大きくなるため、低温物流の議論が持ち上がる。</p>
+<p>日本酒の輸出は10年で単価が上がった。2015年の平均輸出単価771円/Lに対し、2025年は1,368円/Lで約1.8倍である。2025年の輸出額は458.8億円で前年比5.5%増、数量は3.35万kLで同8.0%増である <a class="tb-src" href="https://prtimes.jp/main/html/rd/p/000000104.000083559.html" target="_blank" rel="noopener">出典</a>。単価が上がるほど品質劣化の金額インパクトが大きくなるため、低温物流の議論が持ち上がる。</p>
 <p>温度管理の失敗がどの工程で起きているかを、工程別の失敗率で示した公開調査は見つからなかった。以下は所要時間と冷蔵設備の有無から導いた構造の説明である。</p>
-<p>ジェトロと国税庁の実測ヒアリングによると、米国向けの所要日数は生産者から問屋まで2日から3日、問屋から輸出業者まで5日から7日、輸出業者から出船まで7日から10日で、合計14日から20日である。航海そのものは14日、米国通関は3日である <a href="https://www.nta.go.jp/taxes/sake/yushutsu/handbook/pdf/05.pdf" target="_blank" rel="noopener">出典</a>。船に乗っている期間より、日本国内で待っている期間のほうが長い。この国内区間は常温のトラックと常温倉庫を通ることが多く、リーファーコンテナを手配しても保護されない。</p>
-<p>もう一方の端は仕向地である。冷蔵で輸出しても倉庫や店頭で常温のまま置かれる事例が報告されている <a href="https://www.logix.co.jp/column/nihonshu_taiwan" target="_blank" rel="noopener">出典</a>。南部美人は、海外流通における冷蔵が0度前後なのか5度前後なのか定義が曖昧であることを記録している <a href="https://www.nanbubijin.co.jp/tsumikasane/superfrozen/" target="_blank" rel="noopener">出典</a>。</p>
-<p>劣化の速度には目安がある。老香の主成分であるジメチルトリスルフィドの生成ポテンシャルは、生酒を25度で7日間保存すると製成酒で約9μg/Lから約22μg/Lへ上昇した <a href="https://www.nrib.go.jp/data/kouen/pdf/52kou02.pdf" target="_blank" rel="noopener">出典</a>。7日という単位で測れる変化であり、14日から20日の国内滞留は無視できない長さである。ただしこれは生酒を想定した試験であり、二度火入れした清酒にそのまま適用できない。</p>
-<p>次にコストを分解する。海上区間をリーファー化する追加費用は、地中海から東京港の実例で40フィートのリーファーが44万円から48万円、同区間のドライが15万円から18.5万円で、差は約26万円から33万円である <a href="https://hunade.com/reefer-container-ryoukin" target="_blank" rel="noopener">出典</a>。日本発米国向けの水準ではないため、倍率のオーダーを見る目的にとどめる。</p>
+<p>ジェトロと国税庁の実測ヒアリングによると、米国向けの所要日数は生産者から問屋まで2日から3日、問屋から輸出業者まで5日から7日、輸出業者から出船まで7日から10日で、合計14日から20日である。航海そのものは14日、米国通関は3日である <a class="tb-src" href="https://www.nta.go.jp/taxes/sake/yushutsu/handbook/pdf/05.pdf" target="_blank" rel="noopener">出典</a>。船に乗っている期間より、日本国内で待っている期間のほうが長い。この国内区間は常温のトラックと常温倉庫を通ることが多く、リーファーコンテナを手配しても保護されない。</p>
+<p>もう一方の端は仕向地である。冷蔵で輸出しても倉庫や店頭で常温のまま置かれる事例が報告されている <a class="tb-src" href="https://www.logix.co.jp/column/nihonshu_taiwan" target="_blank" rel="noopener">出典</a>。南部美人は、海外流通における冷蔵が0度前後なのか5度前後なのか定義が曖昧であることを記録している <a class="tb-src" href="https://www.nanbubijin.co.jp/tsumikasane/superfrozen/" target="_blank" rel="noopener">出典</a>。</p>
+<p>劣化の速度には目安がある。老香の主成分であるジメチルトリスルフィドの生成ポテンシャルは、生酒を25度で7日間保存すると製成酒で約9μg/Lから約22μg/Lへ上昇した <a class="tb-src" href="https://www.nrib.go.jp/data/kouen/pdf/52kou02.pdf" target="_blank" rel="noopener">出典</a>。7日という単位で測れる変化であり、14日から20日の国内滞留は無視できない長さである。ただしこれは生酒を想定した試験であり、二度火入れした清酒にそのまま適用できない。</p>
+<p>次にコストを分解する。海上区間をリーファー化する追加費用は、地中海から東京港の実例で40フィートのリーファーが44万円から48万円、同区間のドライが15万円から18.5万円で、差は約26万円から33万円である <a class="tb-src" href="https://hunade.com/reefer-container-ryoukin" target="_blank" rel="noopener">出典</a>。日本発米国向けの水準ではないため、倍率のオーダーを見る目的にとどめる。</p>
 <p>ここから先はノートの筆者による試算である。40フィートリーファー1本に720mLボトル12本入りカートンを1,300ケース積むと15,600本となり、追加費用30万円を割ると1本あたり19円になる。積載を1,000ケースに落とすと25円である。</p>
 <p>この19円から25円は、そのまま小売価格に乗るのではない。ジェトロと国税庁の費用表では、生産者出荷額100が輸出業者渡しで130、消費者価格で399になる。船積み段階で乗ったコストは輸入業者、卸売業者、小売業者のマージンを通過するたびに乗算され、最終価格では約3.07倍になる。1本あたり19円から25円は小売段階で58円から77円に膨らむ。平均輸出単価1,368円/Lを720mLに換算すると約985円で、これに399÷130の倍率を掛けると約3,020円となる。58円から77円はこの1.9%から2.5%にあたる。</p>
 <p>したがって、海上区間のリーファー化が小売価格を押し上げる幅は2%前後で、1割には届かない。ここで学ぶべきは温度の話ではなく乗算構造である。原価の早い段階に乗ったコストは3倍に膨らむ。逆に言えば、輸出業者段階で1円削れば小売で3円安くなる。</p>
-<p>結論として、「輸出拡大のボトルネックが低温物流にある」という仮説は、量の制約としては支持できない。低温物流は生酒と高単価帯の品質上限を決める制約であって、輸出額の伸びを止めている要因ではない。価格競争力を規定しているのは、物流費ではなくマージンの多段階構造である。</p>
-<p>ただし答えきれていない部分がある。仕向地側の冷蔵倉庫保管料、冷蔵ドレージ、小売の冷蔵什器の減価償却を含めた総コストを分解した公開資料は見つからなかった。現状では海上区間の2%前後という下限だけが言える。工程別の定量データは、秋田県総合食品研究センターらが2024年11月から2026年3月まで実施している共同研究で埋まる可能性がある <a href="https://www.hitachi-solutions.co.jp/company/press/news/2025/0110.html" target="_blank" rel="noopener">出典</a>。</p>
+<p>結論として、「輸出拡大のボトルネックが低温物流にある」という仮説は、量の制約としては支持できない。低温物流は生酒と高単価帯の品質上限を決める制約であって、輸出額の伸びを止めている要因ではない。<strong class="hit">価格競争力を規定しているのは、物流費ではなくマージンの多段階構造である</strong>。</p>
+<p>ただし答えきれていない部分がある。仕向地側の冷蔵倉庫保管料、冷蔵ドレージ、小売の冷蔵什器の減価償却を含めた総コストを分解した公開資料は見つからなかった。現状では海上区間の2%前後という下限だけが言える。工程別の定量データは、秋田県総合食品研究センターらが2024年11月から2026年3月まで実施している共同研究で埋まる可能性がある <a class="tb-src" href="https://www.hitachi-solutions.co.jp/company/press/news/2025/0110.html" target="_blank" rel="noopener">出典</a>。</p>
 <h2 id="s10">この章の要点</h2>
 <ul>
 <li>参入障壁の所在は技術ではなく制度と時間に置かれることが多い。自動運転では、カリフォルニア州のテスト許可27社が配備許可3社まで絞られており、絞り込みの原因は走行データの蓄積量である。</li>
@@ -269,14 +406,14 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <li>無人運行に対応した車両と同型量産車の価格差。冗長系の追加がソフトウェアの後付けで賄えない範囲を定量化するには、この差分の公表が要る。取得できなかった。</li>
 <li>自動運転の普及による走行台数増と、追従挙動由来の渋滞減衰の正味効果。実測した一次資料に到達していない。</li>
 <li>都心の駐車場供給面積と、無人運行の乗車シェアの時系列。両方を同一都市で公開している資料が見つからなかった。</li>
-<li>ヒューマノイドの部品別原価構成比。減速機やアクチュエータが原価の何%かは確認できていない。センサ領域における日本勢のシェアも同様である。</li>
+<li>ヒューマノイドの減速機単体の原価比率。アクチュエータで30%超、ハンドで31%という機能単位の構成比は確認したが、減速機を単体で切り出した数値はない。センサ領域における日本勢のシェアも同様である。</li>
 <li>日本の造船所別の鋼材調達コストと、厚板の内航輸送コストが船価に占める比率。製鉄所への近接が船価に何%効くかを言うには、この2つが要る。</li>
-<li>宇宙産業の層別売上構成比。Satellite Industry Associationの報告書本文を取得できなかった。アクセラレータの応募数、採択率、出資条件も公表されていない。</li>
+<li>宇宙産業のアクセラレータの応募数、採択率、出資条件は公表されていない。層別売上は2025年分を確認したが、軌道上サービス層を単独で切り出した売上は同報告書の区分に存在しない。</li>
 <li>コンサル各社の等級別チャージレート、等級別稼働率、1案件あたりの等級構成。若手の育成速度が業務境界の設計に規定されているかは、これらなしには検証できない。有価証券報告書にも決算説明資料にも記載されない項目である。</li>
 <li>ソフトウェアテストの実行工程における自動化率。各社の開示は設計工程に集中しており、実行工程の削減率を示す資料は見つからなかった。</li>
 <li>日本の英会話事業者の顧客獲得コストの実額と平均継続月数。四半期ごとの新規獲得数か解約率が開示されれば答えが出る。</li>
 <li>AI英会話サービスの継続率と、オンライン英会話からの乗り換え比率。価格押し下げの下限を決めるにはこの2つが要る。</li>
-<li>日本の法人カード決済額の統計と、SAP Concurの国内シェア。日本クレジット協会の統計には法人カードを分離した区分がない。</li>
+<li>日本の法人カード決済額の実額。キャッシュレス推進協議会が16社を集計した法人カード利用動向調査を公表しており、この原表に当たれば取扱額が出る。SAP Concurは経費精算市場で11年連続首位とされるが、順位のみで金額シェアは開示されていない。</li>
 <li>日本酒輸出における仕向地側の冷蔵保管、冷蔵配送、冷蔵什器を含めた総コスト。および輸出に占める生酒の構成比。いずれも公開資料が見つからなかった。</li>
 </ul>
 <h2 id="s12">出典</h2>
@@ -350,7 +487,33 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <li>日立ソリューションズ 輸送時の日本酒品質に関する共同研究 — https://www.hitachi-solutions.co.jp/company/press/news/2025/0110.html</li>
 </ol>
 
-  <div class="tb-nav"><a class="tb-nav-a" href="04_critical-materials.html">← 素材と資源の寡占構造</a><span></span></div>
+  <div class="tb-nav"><a class="tb-nav-a" href="04_critical-materials.html">← 素材と資源の寡占構造</a><a class="tb-nav-a" href="06_datacenter-siting.html">計算資源はどこに置かれるか →</a></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

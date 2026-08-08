@@ -54,10 +54,25 @@ const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').
 function inline(s) {
   return esc(s)
     .replace(/`([^`]+)`/g, (_, c) => `<code>${c}</code>`)
+    // ==…== marks the sentence a section turns on, matching the highlight the
+    // reports already use. It is for the judgement, not for every figure —
+    // marking a dozen numbers per chapter marks nothing.
+    .replace(/==([^=]+)==/g, '<strong class="hit">$1</strong>')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    // A chapter carries one source link per claim, so the word 出典 repeats far
+    // more often than any other. Marking it lets the stylesheet shrink it out of
+    // the reading line instead of letting it break the sentence in two.
     .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-      (_, t, u) => `<a href="${u}" target="_blank" rel="noopener">${t}</a>`);
+      (_, t, u) => `<a class="${t === '出典' ? 'tb-src' : ''}" href="${u}" target="_blank" rel="noopener">${t}</a>`)
+    .replace(/ class=""/g, '');
 }
+
+// Block-level HTML written straight into the Markdown. Figures are diagrams, and
+// a diagram is markup, not prose — there is no Markdown spelling for an SVG. The
+// opening tag must sit alone on its line and the matching close likewise, so the
+// scan stays a line scan and never has to parse HTML.
+const RAW_TAGS = 'figure|svg|div|section|aside|details|table';
+const RAW_OPEN = new RegExp(`^\\s*<(${RAW_TAGS})[\\s>]`, 'i');
 
 function splitRow(line) {
   return line.replace(/^\s*\|/, '').replace(/\|\s*$/, '').split('|').map((c) => c.trim());
@@ -78,6 +93,24 @@ function render(md) {
     if (/^\s*$/.test(line)) { closeList(listStack); i++; continue; }
 
     if (/^---+\s*$/.test(line)) { closeList(listStack); out.push('<hr>'); i++; continue; }
+
+    const raw = line.match(RAW_OPEN);
+    if (raw) {
+      closeList(listStack);
+      const tag = raw[1].toLowerCase();
+      const open = new RegExp(`<${tag}(?=[\\s>])`, 'gi');
+      const close = new RegExp(`</${tag}>`, 'gi');
+      const buf = [];
+      let depth = 0;
+      while (i < lines.length) {
+        depth += (lines[i].match(open) ?? []).length - (lines[i].match(close) ?? []).length;
+        buf.push(lines[i]);
+        i++;
+        if (depth <= 0) break;
+      }
+      out.push(buf.join('\n'));
+      continue;
+    }
 
     const h = line.match(/^(#{1,4})\s+(.*)$/);
     if (h) {
@@ -129,7 +162,8 @@ function render(md) {
 
     closeList(listStack);
     const buf = [];
-    while (i < lines.length && !/^\s*$/.test(lines[i]) && !/^(#{1,4}\s|>\s?|\s*\||\s*([-*]|\d+\.)\s|---+\s*$)/.test(lines[i])) {
+    while (i < lines.length && !/^\s*$/.test(lines[i]) && !RAW_OPEN.test(lines[i])
+      && !/^(#{1,4}\s|>\s?|\s*\||\s*([-*]|\d+\.)\s|---+\s*$)/.test(lines[i])) {
       buf.push(lines[i]); i++;
     }
     if (buf.length) out.push(`<p>${inline(buf.join(''))}</p>`);
@@ -179,6 +213,7 @@ function page(meta, body, headings, nav) {
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -186,56 +221,162 @@ function page(meta, body, headings, nav) {
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -258,6 +399,32 @@ ${body}
 
   <div class="tb-nav">${prev}${next}</div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>
 `;

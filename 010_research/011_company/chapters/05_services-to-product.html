@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -161,48 +268,48 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p>この差を「AIかどうか」で説明することはできない。Accentureが取り込んでいる需要もAI導入である。差を作っているのは、売上を1単位増やすときに何を追加で投入しなければならないかという一点だけである。人を追加しなければ増えない売上には人月の値段が付き、追加しなくても増える売上にはソフトウェアの値段が付く。この章では、その線がどこに引かれ、外からどう検証できるのかを扱う。自社を「プロダクト企業」と名乗るかどうかは、この判定に一切影響しない。</p>
 <h2 id="s1">売上構成を受託分とプロダクト分に割り直す</h2>
 <p>最初にやるべきは、公表されている売上を役務提供の対価とライセンスの対価に割り直すことである。ところが、この割り直しは多くの場合できない。</p>
-<p>Distyl AIは2022年創業のAI導入企業で、共同創業者2人はいずれもPalantir出身であり、顧客先に常駐して業務を解くforward deployed engineerの方式を持ち込んでいる。同社の主張は、常駐で解いた業務手順をDistilleryというプラットフォーム上に資産として畳み込み、次の顧客に再利用するというものである。この主張が正しければプロダクト比率は年々上がるはずだが、比率そのものが開示されていない。2025年9月23日の調達発表に売上額も構成比も記載はなく、書かれているのはエンドユーザー1億2,000万人超への到達、顧客側の営業利益改善が累計で数億ドル規模、本番稼働率100%という運用指標だけである <a href="https://www.prnewswire.com/news-releases/distyl-ai-raises-175-million-at-1-8-billion-valuation-to-help-global-enterprises-become-ai-native-302564270.html" target="_blank" rel="noopener">出典</a>。自社サイトも同様で、稼働中の導入50件超、年間10億件超の意思決定処理、対象12業種という運用指標にとどまる <a href="https://distyl.ai/" target="_blank" rel="noopener">出典</a>。</p>
+<p>Distyl AIは2022年創業のAI導入企業で、共同創業者2人はいずれもPalantir出身であり、顧客先に常駐して業務を解くforward deployed engineerの方式を持ち込んでいる。同社の主張は、常駐で解いた業務手順をDistilleryというプラットフォーム上に資産として畳み込み、次の顧客に再利用するというものである。この主張が正しければプロダクト比率は年々上がるはずだが、比率そのものが開示されていない。2025年9月23日の調達発表に売上額も構成比も記載はなく、書かれているのはエンドユーザー1億2,000万人超への到達、顧客側の営業利益改善が累計で数億ドル規模、本番稼働率100%という運用指標だけである <a class="tb-src" href="https://www.prnewswire.com/news-releases/distyl-ai-raises-175-million-at-1-8-billion-valuation-to-help-global-enterprises-become-ai-native-302564270.html" target="_blank" rel="noopener">出典</a>。自社サイトも同様で、稼働中の導入50件超、年間10億件超の意思決定処理、対象12業種という運用指標にとどまる <a class="tb-src" href="https://distyl.ai/" target="_blank" rel="noopener">出典</a>。</p>
 <p>二次情報としてLatka由来の推定年間経常収益3,100万ドルが複数のデータベースに転載されているが、算出根拠が示されていないため金額としては採用できない。この数字を分母に置くと評価額18億ドルは約58倍になるが、分母が推定である以上、倍率は幅を持った参考値にしかならない。</p>
-<p>分子と分母のどちらも不確かなときに残る手掛かりが、契約の形である。Distylの契約は12か月から36か月の常駐型で、収益モデルは時間課金ではなく成果連動を軸にし、そこにプラットフォームのライセンス料が重なる構造だとCEOのArjun Prakashが説明している。成果を顧客と共同で持つために客先に前方展開する必要があるという説明は、プロダクト単体で売る構造ではないことを本人が認めた記述である <a href="https://www.channeldive.com/news/billion-dollar-ai-startup-distyl-ai-openai-azure-anthropic/802806/" target="_blank" rel="noopener">出典</a>。契約期間と規模の下限に関する記述は二次情報であり、一次資料では裏が取れていない。</p>
-<p>比較のために、割り直しが済んでいる例を置く。Palantirの2026年第2四半期の売上高は19億3,500万ドルで、政府9億9,000万ドル、商用9億4,500万ドルに分かれる <a href="https://www.stocktitan.net/sec-filings/PLTR/10-q-palantir-technologies-inc-quarterly-earnings-report-588b13838fce.html" target="_blank" rel="noopener">出典</a>。ただしこの区分も顧客の属性による分割であって、役務とライセンスの分割ではない。同社の契約はプラットフォーム利用、ホスティング、専門サービスが一体になった複数年サブスクリプションであり、契約書の中で受託部分だけを切り出すことは外部からはできない。</p>
+<p>分子と分母のどちらも不確かなときに残る手掛かりが、契約の形である。Distylの契約は12か月から36か月の常駐型で、収益モデルは時間課金ではなく成果連動を軸にし、そこにプラットフォームのライセンス料が重なる構造だとCEOのArjun Prakashが説明している。<strong class="hit">成果を顧客と共同で持つために客先に前方展開する必要があるという説明は、プロダクト単体で売る構造ではないことを本人が認めた記述である</strong> <a class="tb-src" href="https://www.channeldive.com/news/billion-dollar-ai-startup-distyl-ai-openai-azure-anthropic/802806/" target="_blank" rel="noopener">出典</a>。契約期間と規模の下限に関する記述は二次情報であり、一次資料では裏が取れていない。</p>
+<p>比較のために、割り直しが済んでいる例を置く。Palantirの2026年第2四半期の売上高は19億3,500万ドルで、政府9億9,000万ドル、商用9億4,500万ドルに分かれる <a class="tb-src" href="https://www.stocktitan.net/sec-filings/PLTR/10-q-palantir-technologies-inc-quarterly-earnings-report-588b13838fce.html" target="_blank" rel="noopener">出典</a>。<strong class="hit">ただしこの区分も顧客の属性による分割であって、役務とライセンスの分割ではない</strong>。同社の契約はプラットフォーム利用、ホスティング、専門サービスが一体になった複数年サブスクリプションであり、契約書の中で受託部分だけを切り出すことは外部からはできない。</p>
 <p>つまり、売上構成の開示だけで受託とプロダクトを分けようとしても、多くの場合は届かない。判定は別の指標に移す必要がある。</p>
 <h2 id="s2">導入体制のスケール特性を人員数の推移で検証する</h2>
 <p>外から使える最も強い指標が、売上の伸び率と従業員数の伸び率の比である。受託であれば、この二つはほぼ同じ速度で動く。人が増えなければ売れる時間が増えないためである。</p>
-<p>Palantirの従業員数は2024年末の3,936人から2025年末の4,429人へ、12.5%増にとどまった <a href="https://axis-intelligence.com/palantir-statistics/" target="_blank" rel="noopener">出典</a>。同じ2025年通期の売上高は44億7,500万ドルで前年比56%増である <a href="https://stockanalysis.com/stocks/pltr/financials/" target="_blank" rel="noopener">出典</a>。売上の伸びが人員の伸びの4倍以上ある。2026年第2四半期には売上が前年同期比93%増まで加速している <a href="https://www.stocktitan.net/news/PLTR/palantir-reports-q2-2026-u-s-comm-revenue-growth-of-149-y-y-and-c8762wptyyap.html" target="_blank" rel="noopener">出典</a>。同社は導入作業の一部を顧客側に移し、オントロジーと呼ぶ組織データの表現を再利用することで、売上と人員の連動を切ったと説明している。なお従業員数の出典は二次集計サイトであり、一次資料との照合は行えていない。</p>
-<p>Distylは反対の動きを示している。従業員数は2025年11月23日時点で111人、2026年5月時点で159人とされ、6か月で43%増えている <a href="https://joinplank.com/research/distyl-ai" target="_blank" rel="noopener">出典</a>。売上が人員から切り離されつつあるなら、この増員速度は説明しにくい。ただしこの数値も二次情報であり、同期間の売上の伸びが分からないため、比を取ることはできない。増員そのものは、人員に比例する構造がまだ残っていることを示唆する材料にとどまる。</p>
-<p>規模の反対側にAccentureがある。2026年5月31日締めの第3四半期は売上高187億ドルで前年同期比6%増、新規受注は193億2,000万ドルで2%減、通期のローカル通貨ベース成長率見通しは3%から4%、従業員数は約79万9,000人である <a href="https://newsroom.accenture.com/content/3qfy26-earnings/accenture-reports-third-quarter-fiscal-2026-results.pdf" target="_blank" rel="noopener">出典</a>。79万人という人員を抱えたまま売上が1桁前半で伸びる構造に対し、市場は株価売上倍率1.43倍を付け、株価は52週前と比べて30.74%下落した <a href="https://stockanalysis.com/stocks/acn/statistics/" target="_blank" rel="noopener">出典</a>。</p>
+<p>Palantirの従業員数は2024年末の3,936人から2025年末の4,429人へ、12.5%増にとどまった <a class="tb-src" href="https://axis-intelligence.com/palantir-statistics/" target="_blank" rel="noopener">出典</a>。同じ2025年通期の売上高は44億7,500万ドルで前年比56%増である <a class="tb-src" href="https://stockanalysis.com/stocks/pltr/financials/" target="_blank" rel="noopener">出典</a>。売上の伸びが人員の伸びの4倍以上ある。2026年第2四半期には売上が前年同期比93%増まで加速している <a class="tb-src" href="https://www.stocktitan.net/news/PLTR/palantir-reports-q2-2026-u-s-comm-revenue-growth-of-149-y-y-and-c8762wptyyap.html" target="_blank" rel="noopener">出典</a>。同社は導入作業の一部を顧客側に移し、オントロジーと呼ぶ組織データの表現を再利用することで、売上と人員の連動を切ったと説明している。なお従業員数の出典は二次集計サイトであり、一次資料との照合は行えていない。</p>
+<p>Distylは反対の動きを示している。従業員数は2025年11月23日時点で111人、2026年5月時点で159人とされ、6か月で43%増えている <a class="tb-src" href="https://joinplank.com/research/distyl-ai" target="_blank" rel="noopener">出典</a>。売上が人員から切り離されつつあるなら、この増員速度は説明しにくい。ただしこの数値も二次情報であり、同期間の売上の伸びが分からないため、比を取ることはできない。増員そのものは、人員に比例する構造がまだ残っていることを示唆する材料にとどまる。</p>
+<p>規模の反対側にAccentureがある。2026年5月31日締めの第3四半期は売上高187億ドルで前年同期比6%増、新規受注は193億2,000万ドルで2%減、通期のローカル通貨ベース成長率見通しは3%から4%、従業員数は約79万9,000人である <a class="tb-src" href="https://newsroom.accenture.com/content/3qfy26-earnings/accenture-reports-third-quarter-fiscal-2026-results.pdf" target="_blank" rel="noopener">出典</a>。79万人という人員を抱えたまま売上が1桁前半で伸びる構造に対し、市場は株価売上倍率1.43倍を付け、株価は52週前と比べて30.74%下落した <a class="tb-src" href="https://stockanalysis.com/stocks/acn/statistics/" target="_blank" rel="noopener">出典</a>。</p>
 <p>三社を同じ軸に並べると次のようになる。</p>
 <div class="tb-tw"><table><thead><tr><th>会社</th><th>売上の伸び</th><th>人員の伸び</th><th>株価売上倍率</th><th>出典</th></tr></thead><tbody><tr><td>Palantir</td><td>2025年通期で前年比56%増</td><td>2025年通期で12.5%増</td><td>60.87倍、2026-08-07時点</td><td>https://stockanalysis.com/stocks/pltr/statistics/</td></tr><tr><td>Distyl AI</td><td>2024年に5倍と報じられる</td><td>6か月で43%増、二次情報</td><td>約58倍、推定分母による</td><td>https://news.crunchbase.com/ai/distyl-raises-valuation-175m-seriesb/</td></tr><tr><td>Accenture</td><td>2026年第3四半期で前年同期比6%増</td><td>約79万9,000人を維持</td><td>1.43倍、2026-08-06時点</td><td>https://stockanalysis.com/stocks/acn/statistics/</td></tr></tbody></table></div>
-<p>Distylの行だけ、分母も分子も検証を通っていない。同社の売上は2024年に5倍、2025年は8倍の見込みで推移したと報じられているが <a href="https://news.crunchbase.com/ai/distyl-raises-valuation-175m-seriesb/" target="_blank" rel="noopener">出典</a>、これは一次開示ではない。人月で売る事業が年5倍にならないという点は正しいが、5倍という数値自体の裏付けは取れていない。</p>
-<p>読み取るべきはこうである。市場はAI導入需要そのものを否定していない。同じ需要を、労働投入に比例する事業体と比例しない事業体に切り分け、40倍以上違う倍率を付けている。Distylに付いた倍率は現在の売上構成への評価ではなく、Palantirと同じ経路を辿るという仮説への値付けである。仮説である以上、人員の伸びが売上の伸びに追いついた瞬間に取り消される。</p>
+<p>Distylの行だけ、分母も分子も検証を通っていない。同社の売上は2024年に5倍、2025年は8倍の見込みで推移したと報じられているが <a class="tb-src" href="https://news.crunchbase.com/ai/distyl-raises-valuation-175m-seriesb/" target="_blank" rel="noopener">出典</a>、これは一次開示ではない。人月で売る事業が年5倍にならないという点は正しいが、5倍という数値自体の裏付けは取れていない。</p>
+<p>読み取るべきはこうである。市場はAI導入需要そのものを否定していない。同じ需要を、労働投入に比例する事業体と比例しない事業体に切り分け、40倍以上違う倍率を付けている。<strong class="hit">Distylに付いた倍率は現在の売上構成への評価ではなく、Palantirと同じ経路を辿るという仮説への値付けである</strong>。仮説である以上、人員の伸びが売上の伸びに追いついた瞬間に取り消される。</p>
 <h2 id="s3">顧客セグメント別の粗利差が示す事業の実態</h2>
 <p>人員の伸びが遅れて出る指標であるのに対し、売上総利益率は同じ構造をその期のうちに映す。人が客先で働いた分は売上原価に入るためである。</p>
-<p>2026年8月7日時点で、Palantirの売上総利益率は84.80%、Accentureは32.01%である <a href="https://stockanalysis.com/stocks/pltr/statistics/" target="_blank" rel="noopener">出典</a> <a href="https://stockanalysis.com/stocks/acn/statistics/" target="_blank" rel="noopener">出典</a>。Palantirは2026年第2四半期の粗利率を85%と開示しており、通期ベースの数値とほぼ一致する <a href="https://www.stocktitan.net/sec-filings/PLTR/10-q-palantir-technologies-inc-quarterly-earnings-report-588b13838fce.html" target="_blank" rel="noopener">出典</a>。この52.79ポイントの差が、受託とプロダクトの距離である。非公開企業の実態を推し量るときは、この二つの間のどこに落ちるかを問えばよい。Distylについては売上総利益率が開示されていないため、位置を特定できない。</p>
-<p>セグメント別の内訳は、同じ会社の中に速度の違う事業が同居していることを示す。Palantirの2026年第2四半期を分解すると、米国商用が7億6,400万ドルで前年同期比149%増、米国政府が8億900万ドルで90%増である <a href="https://www.stocktitan.net/news/PLTR/palantir-reports-q2-2026-u-s-comm-revenue-growth-of-149-y-y-and-c8762wptyyap.html" target="_blank" rel="noopener">出典</a>。セグメント合計から米国分を差し引くと国際政府と国際商用がいずれも1億8,100万ドルとなり、同じ手順で前年同期を復元すると国際商用は27%増、国際政府は43%増になる。この差し引きはノート筆者による算出であり、会社は国際の内訳を開示していない。</p>
-<p>米国だけが伸びる理由のうち、一次資料で確認できるのは政府側の調達構造である。米陸軍は2025年8月1日、15の主契約と60の関連契約、計75契約を1本の企業契約に統合し、上限100億ドル、期間10年の枠組みを設定した。目的は商用ソフトの納入加速とリセラーの中間手数料の排除にある <a href="https://www.washingtontechnology.com/contracts/2025/08/palantir-signs-10b-enterprise-agreement-army/407153/" target="_blank" rel="noopener">出典</a>。2026年6月22日には次世代指揮統制NGC2でFoundryが共通データ層に位置づけられた。契約金額は非開示である <a href="https://www.stocktitan.net/news/PLTR/palantir-secures-foundational-role-in-ngc2-data-oyuib538gyv0.html" target="_blank" rel="noopener">出典</a>。米国商用側の加速要因として挙げられるブートキャンプ型販売については、5日間の作業で12か月から18か月の商談期間を短縮したという説明が二次報道に依存しており、会社の一次開示では確認できない。国際商用が伸び悩む理由についても、会社の公式説明は取得できていない。</p>
-<p>粗利の源泉が顧客数ではなく単価にあることも押さえておく。Palantirの顧客数は2026年6月末で1,049社、前年同期の849社から24%増である。同期間の売上は93%増えており、差分を埋めているのは単価である。上位20顧客の直近12か月平均売上は1億2,400万ドルで、前年同期の7,500万ドルから67%増えた <a href="https://www.stocktitan.net/sec-filings/PLTR/10-q-palantir-technologies-inc-quarterly-earnings-report-588b13838fce.html" target="_blank" rel="noopener">出典</a>。成長の主因は新規獲得ではなく既存顧客内の拡張である。</p>
-<p>なお顧客数の定義には注意が必要である。10-Kベースでは2025年12月末に954社、2026年第1四半期の決算資料では商用顧客が直近12か月ベースで1,007社とされる <a href="https://axis-intelligence.com/palantir-statistics/" target="_blank" rel="noopener">出典</a>。1,049社を含めこれらは集計基準が異なり、同じ系列として比較できない。定義の照合は一次資料では行えていない。</p>
+<p>2026年8月7日時点で、Palantirの売上総利益率は84.80%、Accentureは32.01%である <a class="tb-src" href="https://stockanalysis.com/stocks/pltr/statistics/" target="_blank" rel="noopener">出典</a> <a class="tb-src" href="https://stockanalysis.com/stocks/acn/statistics/" target="_blank" rel="noopener">出典</a>。Palantirは2026年第2四半期の粗利率を85%と開示しており、通期ベースの数値とほぼ一致する <a class="tb-src" href="https://www.stocktitan.net/sec-filings/PLTR/10-q-palantir-technologies-inc-quarterly-earnings-report-588b13838fce.html" target="_blank" rel="noopener">出典</a>。この52.79ポイントの差が、受託とプロダクトの距離である。非公開企業の実態を推し量るときは、この二つの間のどこに落ちるかを問えばよい。Distylについては売上総利益率が開示されていないため、位置を特定できない。</p>
+<p>セグメント別の内訳は、同じ会社の中に速度の違う事業が同居していることを示す。Palantirの2026年第2四半期を分解すると、米国商用が7億6,400万ドルで前年同期比149%増、米国政府が8億900万ドルで90%増である <a class="tb-src" href="https://www.stocktitan.net/news/PLTR/palantir-reports-q2-2026-u-s-comm-revenue-growth-of-149-y-y-and-c8762wptyyap.html" target="_blank" rel="noopener">出典</a>。セグメント合計から米国分を差し引くと国際政府と国際商用がいずれも1億8,100万ドルとなり、同じ手順で前年同期を復元すると国際商用は27%増、国際政府は43%増になる。この差し引きはノート筆者による算出であり、会社は国際の内訳を開示していない。</p>
+<p>米国だけが伸びる理由のうち、一次資料で確認できるのは政府側の調達構造である。米陸軍は2025年8月1日、15の主契約と60の関連契約、計75契約を1本の企業契約に統合し、上限100億ドル、期間10年の枠組みを設定した。目的は商用ソフトの納入加速とリセラーの中間手数料の排除にある <a class="tb-src" href="https://www.washingtontechnology.com/contracts/2025/08/palantir-signs-10b-enterprise-agreement-army/407153/" target="_blank" rel="noopener">出典</a>。2026年6月22日には次世代指揮統制NGC2でFoundryが共通データ層に位置づけられた。契約金額は非開示である <a class="tb-src" href="https://www.stocktitan.net/news/PLTR/palantir-secures-foundational-role-in-ngc2-data-oyuib538gyv0.html" target="_blank" rel="noopener">出典</a>。米国商用側の加速要因として挙げられるブートキャンプ型販売については、5日間の作業で12か月から18か月の商談期間を短縮したという説明が二次報道に依存しており、会社の一次開示では確認できない。国際商用が伸び悩む理由についても、会社の公式説明は取得できていない。</p>
+<p><strong class="hit">粗利の源泉が顧客数ではなく単価にあることも押さえておく</strong>。Palantirの顧客数は2026年6月末で1,049社、前年同期の849社から24%増である。同期間の売上は93%増えており、差分を埋めているのは単価である。上位20顧客の直近12か月平均売上は1億2,400万ドルで、前年同期の7,500万ドルから67%増えた <a class="tb-src" href="https://www.stocktitan.net/sec-filings/PLTR/10-q-palantir-technologies-inc-quarterly-earnings-report-588b13838fce.html" target="_blank" rel="noopener">出典</a>。<strong class="hit">成長の主因は新規獲得ではなく既存顧客内の拡張である</strong>。</p>
+<p>なお顧客数の定義には注意が必要である。10-Kベースでは2025年12月末に954社、2026年第1四半期の決算資料では商用顧客が直近12か月ベースで1,007社とされる <a class="tb-src" href="https://axis-intelligence.com/palantir-statistics/" target="_blank" rel="noopener">出典</a>。1,049社を含めこれらは集計基準が異なり、同じ系列として比較できない。定義の照合は一次資料では行えていない。</p>
 <h2 id="s4">投資家が見る運用指標と事業者が出す指標のずれ</h2>
 <p>売上構成も粗利も出さない会社は、代わりに運用指標を出す。ここに事業者と投資家のずれが生じる。</p>
-<p>Decagonはカスタマーサポート向けAIエージェントの専業で、2025年6月22日にシリーズCとして1億3,100万ドルを評価額15億ドルで調達した <a href="https://www.builtinsf.com/articles/decagon-raises-131m-series-c-1b-valuation-20250625" target="_blank" rel="noopener">出典</a>。同社が調達発表で前面に出したのは、平均で70%近いdeflection rate、Duolingoでの80%超、OuraのCSATが3倍、ClassPassのサポート会話あたり費用が95%減、そして直前1年で8桁の年間経常収益に到達したことである <a href="https://decagon.ai/blog/series-c-announcement" target="_blank" rel="noopener">出典</a>。</p>
+<p>Decagonはカスタマーサポート向けAIエージェントの専業で、2025年6月22日にシリーズCとして1億3,100万ドルを評価額15億ドルで調達した <a class="tb-src" href="https://www.builtinsf.com/articles/decagon-raises-131m-series-c-1b-valuation-20250625" target="_blank" rel="noopener">出典</a>。同社が調達発表で前面に出したのは、平均で70%近いdeflection rate、Duolingoでの80%超、OuraのCSATが3倍、ClassPassのサポート会話あたり費用が95%減、そして直前1年で8桁の年間経常収益に到達したことである <a class="tb-src" href="https://decagon.ai/blog/series-c-announcement" target="_blank" rel="noopener">出典</a>。</p>
 <p>これらの指標は性質が三段階に分かれる。</p>
-<p>第一段階は自己申告の性能指標で、deflection rateがこれにあたる。定義がベンダーごとに異なるため、そのままでは値付けの分母にならない。同じ領域で課金単位まで踏み込んだ事業者は定義を明文化している。Zendeskはautomated resolutionを課金単位と定め、人間の介在なしに解決したことをLLMが検証した会話だけを計上し、Slack向けAnswer Botや記事推薦APIは計上しないと明記する <a href="https://support.zendesk.com/hc/en-us/articles/5352026794010-About-automated-resolutions-for-AI-agents" target="_blank" rel="noopener">出典</a>。Intercom Finは1件0.99ドルの成果課金で、顧客が解決を確認した場合、Finの応答後に追加の質問が来なかった場合、Finが手続きを完了した場合の三条件のいずれかを満たしたときにのみ課金し、1会話につき1回しか計上しない <a href="https://www.intercom.com/pricing" target="_blank" rel="noopener">出典</a>。Decagonには公開価格表がなく、2026年8月7日時点でdecagon.ai/pricingは存在しない。二次情報では会話単位と解決単位の二本立てとされるが、一次資料では確認できない <a href="https://sacra.com/c/decagon/" target="_blank" rel="noopener">出典</a>。</p>
-<p>第二段階は、性能が金額に変換された結果である。Decagonは2025年に100社超の新規グローバルエンタープライズを追加したと述べ、顧客名としてAvis Budget Group、Block、Deutsche Telekomを挙げている <a href="https://decagon.ai/blog/series-d-announcement" target="_blank" rel="noopener">出典</a>。収益額は同社が出していない。二次情報では2024年末の年換算収益1,000万ドルから2025年10月に3,500万ドル、2025年第3四半期のGAAP収益と年間経常収益がいずれも前年同期比3倍超とされる <a href="https://sacra.com/c/decagon/" target="_blank" rel="noopener">出典</a>。この分母を置くとシリーズCの15億ドルは約43倍、2026年1月27日のシリーズDの45億ドルは約129倍になるが、評価額と収益の時点がずれており、シリーズC時点の年間経常収益は8桁という範囲でしか開示されていないため、倍率はいずれも事後推定にすぎない。</p>
-<p>第三段階は、性能改善の担い手が人からソフトウェアに移っているかを示す指標である。Decagonは2026年6月にDuetBenchを公開し、診断タスクの通過率93%が人間平均の83%を上回ること、構築タスクの3時間以内通過率45.5%が人間の23%を上回ることを示した <a href="https://decagon.ai/blog/duetbench" target="_blank" rel="noopener">出典</a>。これは解決率そのものではなく、解決率を改善する作業を自動化できるかを測る指標である。前節までの言い方に直せば、運用チームの人員を増やさずに性能を上げられるかという問いになる。</p>
+<p>第一段階は自己申告の性能指標で、deflection rateがこれにあたる。定義がベンダーごとに異なるため、そのままでは値付けの分母にならない。同じ領域で課金単位まで踏み込んだ事業者は定義を明文化している。Zendeskはautomated resolutionを課金単位と定め、人間の介在なしに解決したことをLLMが検証した会話だけを計上し、Slack向けAnswer Botや記事推薦APIは計上しないと明記する <a class="tb-src" href="https://support.zendesk.com/hc/en-us/articles/5352026794010-About-automated-resolutions-for-AI-agents" target="_blank" rel="noopener">出典</a>。Intercom Finは1件0.99ドルの成果課金で、顧客が解決を確認した場合、Finの応答後に追加の質問が来なかった場合、Finが手続きを完了した場合の三条件のいずれかを満たしたときにのみ課金し、1会話につき1回しか計上しない <a class="tb-src" href="https://www.intercom.com/pricing" target="_blank" rel="noopener">出典</a>。Decagonには公開価格表がなく、2026年8月7日時点でdecagon.ai/pricingは存在しない。二次情報では会話単位と解決単位の二本立てとされるが、一次資料では確認できない <a class="tb-src" href="https://sacra.com/c/decagon/" target="_blank" rel="noopener">出典</a>。</p>
+<p>第二段階は、性能が金額に変換された結果である。Decagonは2025年に100社超の新規グローバルエンタープライズを追加したと述べ、顧客名としてAvis Budget Group、Block、Deutsche Telekomを挙げている <a class="tb-src" href="https://decagon.ai/blog/series-d-announcement" target="_blank" rel="noopener">出典</a>。収益額は同社が出していない。二次情報では2024年末の年換算収益1,000万ドルから2025年10月に3,500万ドル、2025年第3四半期のGAAP収益と年間経常収益がいずれも前年同期比3倍超とされる <a class="tb-src" href="https://sacra.com/c/decagon/" target="_blank" rel="noopener">出典</a>。この分母を置くとシリーズCの15億ドルは約43倍、2026年1月27日のシリーズDの45億ドルは約129倍になるが、評価額と収益の時点がずれており、シリーズC時点の年間経常収益は8桁という範囲でしか開示されていないため、倍率はいずれも事後推定にすぎない。</p>
+<p>第三段階は、性能改善の担い手が人からソフトウェアに移っているかを示す指標である。Decagonは2026年6月にDuetBenchを公開し、診断タスクの通過率93%が人間平均の83%を上回ること、構築タスクの3時間以内通過率45.5%が人間の23%を上回ることを示した <a class="tb-src" href="https://decagon.ai/blog/duetbench" target="_blank" rel="noopener">出典</a>。<strong class="hit">これは解決率そのものではなく、解決率を改善する作業を自動化できるかを測る指標である</strong>。前節までの言い方に直せば、運用チームの人員を増やさずに性能を上げられるかという問いになる。</p>
 <p>以上を整理すると、投資家が実際に分母に使っているのは解決率の絶対水準ではない。第一に、性能指標が課金単位に変換されているか。変換されていれば性能改善がそのまま収益になる。第二に、収益の伸び率と新規エンタープライズ獲得の速度。第三に、性能改善の担い手がソフトウェアに移っているか。粗利率と正味収益維持率はいずれも非開示であり、この二つが出れば第一の点は確定するが、2026年8月時点では確認できない。</p>
-<p>同じ時期に同じ水準の倍率が広く付いていた点も付け加えておく。Sierraは2025年9月に評価額100億ドルで調達し、年間経常収益1億ドルへの到達を2025年11月21日に公表した <a href="https://sierra.ai/blog/100m-arr" target="_blank" rel="noopener">出典</a>。倍率は約100倍になる。成果連動課金を掲げるエンタープライズAIの一群に共通してこの水準が付いていた時期だと理解するのが妥当である。</p>
+<p>同じ時期に同じ水準の倍率が広く付いていた点も付け加えておく。Sierraは2025年9月に評価額100億ドルで調達し、年間経常収益1億ドルへの到達を2025年11月21日に公表した <a class="tb-src" href="https://sierra.ai/blog/100m-arr" target="_blank" rel="noopener">出典</a>。倍率は約100倍になる。成果連動課金を掲げるエンタープライズAIの一群に共通してこの水準が付いていた時期だと理解するのが妥当である。</p>
 <p>なお、評価額と時価総額を同じものとして扱ってはならない。Distylの18億ドルは優先株に付いた価格であり、残余財産分配の優先権や希薄化防止条項を伴う。条件は非開示のため、普通株換算の価値は算出できない。</p>
 <h2 id="s5">既存SaaSが機能追加してきたときに残る堀</h2>
 <p>人員に比例しない構造を作れたとしても、それだけでは倍率は保てない。同じ機能を既存のSaaSが追加してきたときに何が残るかが次の問いになる。</p>
-<p>現状の数字では、既存側が規模で専業側を上回っている。Intercom Finは12,000社超に導入され、平均解決率76%、週あたり200万件の解決を処理していると公表する <a href="https://fin.ai/" target="_blank" rel="noopener">出典</a>。Salesforceは2026年1月期通期でAgentforceの年間経常収益が8億ドル、前年同期比169%増、累計成約29,000件超と開示した <a href="https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Fourth-Quarter-Fiscal-2026-Results/default.aspx" target="_blank" rel="noopener">出典</a>。これに対しDecagonの年換算収益は二次情報で3,500万ドルであり、桁が二つ違う。分布と既存契約という点では、堀を持っているのはむしろ既存側である。</p>
+<p>現状の数字では、既存側が規模で専業側を上回っている。Intercom Finは12,000社超に導入され、平均解決率76%、週あたり200万件の解決を処理していると公表する <a class="tb-src" href="https://fin.ai/" target="_blank" rel="noopener">出典</a>。Salesforceは2026年1月期通期でAgentforceの年間経常収益が8億ドル、前年同期比169%増、累計成約29,000件超と開示した <a class="tb-src" href="https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Fourth-Quarter-Fiscal-2026-Results/default.aspx" target="_blank" rel="noopener">出典</a>。これに対しDecagonの年換算収益は二次情報で3,500万ドルであり、桁が二つ違う。分布と既存契約という点では、堀を持っているのはむしろ既存側である。</p>
 <p>その上で専業側に残る差分は三つに絞られる。</p>
-<p>第一が導入速度である。Decagonは、Fortune 50企業が競合製品で9か月かかった内容を3週間で実現したこと、航空会社が3週間未満で稼働したこと、音楽配信サービスが6営業日でPoCから本番に移ったことを挙げている。同じ投稿で、音楽配信サービスが6日で会話処理成功率71%とCSAT 4.2、SNS事業者が2か月で成功率80%に到達したとしている <a href="https://decagon.ai/blog/our-bet-on-you" target="_blank" rel="noopener">出典</a>。いずれも自己申告で第三者検証はない。ただし成果課金が前提の市場では導入期間の短さが収益認識の開始時期に直結するため、差分としては意味を持つ。前節までの軸で言えば、導入速度は1件あたりに投入する人員時間を減らす要素であり、人員と売上の連動を切る方向に働く。</p>
-<p>第二が業務手順の資産化である。DecagonはAgent Operating Proceduresという形式で、自然言語の指示をコードにコンパイルして実行する構造を取り、これをシリーズCの中核として説明した <a href="https://decagon.ai/blog/series-c-announcement" target="_blank" rel="noopener">出典</a>。認証を伴う手続きや複数システムをまたぐ実行を扱う領域では、既存ヘルプデスクの記事検索型の延長では届かない。これはPalantirのオントロジーやDistylのRoutinesと同じ発想であり、一度解いた業務を次の顧客に持ち越す装置にあたる。</p>
+<p>第一が導入速度である。Decagonは、Fortune 50企業が競合製品で9か月かかった内容を3週間で実現したこと、航空会社が3週間未満で稼働したこと、音楽配信サービスが6営業日でPoCから本番に移ったことを挙げている。同じ投稿で、音楽配信サービスが6日で会話処理成功率71%とCSAT 4.2、SNS事業者が2か月で成功率80%に到達したとしている <a class="tb-src" href="https://decagon.ai/blog/our-bet-on-you" target="_blank" rel="noopener">出典</a>。いずれも自己申告で第三者検証はない。ただし成果課金が前提の市場では導入期間の短さが収益認識の開始時期に直結するため、差分としては意味を持つ。前節までの軸で言えば、導入速度は1件あたりに投入する人員時間を減らす要素であり、人員と売上の連動を切る方向に働く。</p>
+<p>第二が業務手順の資産化である。DecagonはAgent Operating Proceduresという形式で、自然言語の指示をコードにコンパイルして実行する構造を取り、これをシリーズCの中核として説明した <a class="tb-src" href="https://decagon.ai/blog/series-c-announcement" target="_blank" rel="noopener">出典</a>。認証を伴う手続きや複数システムをまたぐ実行を扱う領域では、既存ヘルプデスクの記事検索型の延長では届かない。これはPalantirのオントロジーやDistylのRoutinesと同じ発想であり、一度解いた業務を次の顧客に持ち越す装置にあたる。</p>
 <p>第三が自己改善の内製化で、DuetBenchとAutopilotがこれにあたる。</p>
-<p>一方、堀を弱める要素が二つある。ひとつは、Decagon自身が顧客データの囲い込みを否定する立場を明示したことである。同社はベンダーが顧客の顧客に関する専門家として振る舞う構造を批判し、glass boxであることを差別化として掲げた <a href="https://decagon.ai/blog/our-bet-on-you" target="_blank" rel="noopener">出典</a>。これは既存ベンダーへの攻撃であると同時に、自社への切替コストも低いと宣言していることになる。もうひとつは性能差の比較が成立しないことである。Finの76%は解決の定義を明文化した上での数字、Decagonの70%近くはdeflectionという別の定義であり、直接比較はできない。定義が揃わない限り、性能差を根拠に乗り換えを説得する構造そのものが機能しにくい。</p>
+<p>一方、堀を弱める要素が二つある。ひとつは、Decagon自身が顧客データの囲い込みを否定する立場を明示したことである。同社はベンダーが顧客の顧客に関する専門家として振る舞う構造を批判し、glass boxであることを差別化として掲げた <a class="tb-src" href="https://decagon.ai/blog/our-bet-on-you" target="_blank" rel="noopener">出典</a>。これは既存ベンダーへの攻撃であると同時に、自社への切替コストも低いと宣言していることになる。もうひとつは性能差の比較が成立しないことである。Finの76%は解決の定義を明文化した上での数字、Decagonの70%近くはdeflectionという別の定義であり、直接比較はできない。定義が揃わない限り、性能差を根拠に乗り換えを説得する構造そのものが機能しにくい。</p>
 <p>したがって、汎用チャネルの単純な問い合わせ処理には堀がない。堀が成立しうるのは、複数システムをまたぐ手続きの実行と、規制産業の音声チャネルの二つに限られる。判定に必要な正味収益維持率、解約率、既存ヘルプデスク併用時の実行環境の取り合いはいずれも一次資料で確認できず、専業側が既存側に勝っているという証拠は2026年8月時点の公開情報には存在しない。</p>
-<p>堀の弱さは、人員に比例しない構造を作れた会社にも別の形で効く。Palantirの2026年6月末の残存履行義務は49億ドルで、うち約43%が今後12か月、約36%が13か月から36か月の間に認識される見込みである。契約負債は11億ドルで、2025年末の8億ドルから増えた <a href="https://www.stocktitan.net/sec-filings/PLTR/10-q-palantir-technologies-inc-quarterly-earnings-report-588b13838fce.html" target="_blank" rel="noopener">出典</a>。ただし10-Qは多くの顧客が12か月未満の通知で任意解約できる旨を明示しており、49億ドルは2026年通期ガイダンスの中央値81億5,400万ドルの6割程度でしかない。受注残が先行して積み上がる構造ではなく、四半期ごとの新規契約に依存する。粗利85%の事業であっても、乗り換えコストの低さは受注残の拘束力として現れる。</p>
-<p>先行指標も一方向ではない。2026年第2四半期に締結した総契約価値は33億7,300万ドルで前年同期比49%増、うち米国商用が21億3,200万ドルで153%増、米国商用の残存契約価値は62億3,800万ドルで前年同期比124%増である <a href="https://www.stocktitan.net/news/PLTR/palantir-reports-q2-2026-u-s-comm-revenue-growth-of-149-y-y-and-c8762wptyyap.html" target="_blank" rel="noopener">出典</a>。総契約価値の伸び49%が売上の伸び93%を下回っている点は減速方向の材料として読めるが、総契約価値は契約更新の時期でぶれるため単一四半期では判断できない。</p>
+<p>堀の弱さは、人員に比例しない構造を作れた会社にも別の形で効く。Palantirの2026年6月末の残存履行義務は49億ドルで、うち約43%が今後12か月、約36%が13か月から36か月の間に認識される見込みである。契約負債は11億ドルで、2025年末の8億ドルから増えた <a class="tb-src" href="https://www.stocktitan.net/sec-filings/PLTR/10-q-palantir-technologies-inc-quarterly-earnings-report-588b13838fce.html" target="_blank" rel="noopener">出典</a>。ただし10-Qは多くの顧客が12か月未満の通知で任意解約できる旨を明示しており、49億ドルは2026年通期ガイダンスの中央値81億5,400万ドルの6割程度でしかない。<strong class="hit">受注残が先行して積み上がる構造ではなく、四半期ごとの新規契約に依存する</strong>。粗利85%の事業であっても、乗り換えコストの低さは受注残の拘束力として現れる。</p>
+<p>先行指標も一方向ではない。2026年第2四半期に締結した総契約価値は33億7,300万ドルで前年同期比49%増、うち米国商用が21億3,200万ドルで153%増、米国商用の残存契約価値は62億3,800万ドルで前年同期比124%増である <a class="tb-src" href="https://www.stocktitan.net/news/PLTR/palantir-reports-q2-2026-u-s-comm-revenue-growth-of-149-y-y-and-c8762wptyyap.html" target="_blank" rel="noopener">出典</a>。総契約価値の伸び49%が売上の伸び93%を下回っている点は減速方向の材料として読めるが、総契約価値は契約更新の時期でぶれるため単一四半期では判断できない。</p>
 <h2 id="s6">この章の要点</h2>
 <ul>
 <li>受託とプロダクトを分ける線は自称ではなく、売上を1単位増やすときに人員を追加する必要があるかどうかにある。</li>
@@ -259,5 +366,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
   <div class="tb-nav"><a class="tb-nav-a" href="04_intermediation-models.html">← 取引の間に立つ事業の収益条件</a><a class="tb-nav-a" href="06_pre-revenue-valuation.html">収益前の企業をどう評価するか →</a></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -157,7 +264,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
 <nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">損失の式が決めるインフラの形</a></li><li><a href="#s2">エネルギー源ごとの出力密度と副産物</a></li><li><a href="#s3">時間スケールで分けて考える安定化</a></li><li><a href="#s4">制御が失敗したときに何が残るか</a></li><li><a href="#s5">被害の測定と社会的な合意形成</a></li><li><a href="#s6">この章の要点</a></li><li><a href="#s7">残っている問い</a></li><li><a href="#s8">出典</a></li></ol></nav>
 
-<p>電力をめぐる議論には、説明抜きで数字だけが出てくる場面が多い。送電電圧が500kVであること、東西間で融通できる電力が210万kWで頭打ちになること、調整力の市場に10秒以内という応動要件があること。これらは制度が恣意的に決めた数字ではなく、いずれも高校物理の範囲にある式から出てくる制約の帰結である。逆に言えば、式を知らないまま数字だけを比べると、達成不可能な要求を政策として掲げたり、達成済みの条件を争点として扱ったりすることになる。</p>
+<p>電力をめぐる議論には、説明抜きで数字だけが出てくる場面が多い。送電電圧が500kVであること、東西間で融通できる電力が210万kWで頭打ちになること、調整力の市場に10秒以内という応動要件があること。<strong class="hit">これらは制度が恣意的に決めた数字ではなく、いずれも高校物理の範囲にある式から出てくる制約の帰結である</strong>。逆に言えば、式を知らないまま数字だけを比べると、達成不可能な要求を政策として掲げたり、達成済みの条件を争点として扱ったりすることになる。</p>
 <p>この章が扱う制約は三つある。第一に損失で、送る電気の一部が熱に変わる量が電流で決まる。第二に出力密度で、同じ熱量を取り出すのにどれだけの温度と圧力と体積が要るかが炉や燃焼器の設計を縛る。第三に応答速度で、需要の変化にどれだけ速く追随できるかが系統の安定を決める。この三つの取り合いを見れば、対立している主張のうちどれが物理の話でどれが値付けの話かを切り分けられる。</p>
 <h2 id="s1">損失の式が決めるインフラの形</h2>
 <p>送電線には抵抗がある。抵抗Rに電流Iが流れると熱が発生し、その大きさは次の式になる。</p>
@@ -165,46 +272,46 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p>ここで電圧は式に現れない。損失を決めるのは電流だけである。次に、送りたい電力をP、送電電圧をV、力率をcosθとすると、電流は I = P / (V × cosθ) と書ける。これを代入すると損失は次のようになる。</p>
 <p>P_loss = R × P² / (V × cosθ)²</p>
 <p>損失は電圧の2乗に反比例する。ここが超高圧送電の理由のすべてである。数値で確かめる。送電電力を100万kW、線路抵抗を10Ω、力率を1.0と置く。500kVで送ると電流は2,000Aとなり、損失は4万kW、送電電力に対して4.0%である。同じ条件で275kVに落とすと電流は3,636Aとなり、損失は13.2万kW、送電電力に対して13.2%になる。電圧比は1.82倍、損失比は3.30倍で、1.82の2乗である3.31とほぼ一致する。電圧降下も ΔV / V = P × R / V² となり、同じ2乗則に従う。</p>
-<p>よくある誤解は、電圧が高いこと自体が損失を減らすというものである。実際には、同じ電力を送るなら電圧が高いほど電流が少なくて済む、という一点だけが効いている。電流を一定にしたまま電圧を上げても、損失は変わらず送れる電力が増えるだけである。</p>
+<p>よくある誤解は、電圧が高いこと自体が損失を減らすというものである。<strong class="hit">実際には、同じ電力を送るなら電圧が高いほど電流が少なくて済む、という一点だけが効いている</strong>。電流を一定にしたまま電圧を上げても、損失は変わらず送れる電力が増えるだけである。</p>
 <p>では電圧を上げ続けないのはなぜか。ここで物理と費用が交差する。電圧を上げると絶縁の要求が上がり、碍子の連結数、鉄塔の高さ、導体間の離隔距離が増える。導体表面の電界強度が空気の絶縁破壊強度を超えるとコロナ放電が起き、それ自体が損失になるため多導体化が要る。損失削減で得られる額と設備費の増加額が釣り合う電圧が選ばれる。物理は方向を決めるが、水準を決めるのは費用である。この構図はこの章で繰り返し現れる。</p>
-<p>日本全体の送配電損失率は2024年で4.93%であり、2015年の3.83%から1.10ポイント上がっている <a href="https://api.worldbank.org/v2/country/JP/indicator/EG.ELC.LOSS.ZS?format=json" target="_blank" rel="noopener">出典</a>。この数値は送電段階だけでなく配電段階と計量できない分を含む。損失の多くは電圧の低い配電段階で生じる。</p>
-<p>損失の式と並ぶもう一つの制約が、交流の同期条件である。交流系統を並列に運転するには周波数と位相が一致していなければならない。日本は東側が50Hz、西側が60Hzで、境界はおおむね静岡県の富士川と新潟県の糸魚川を結ぶ線にある。分割の起点は1893年の東京電燈によるAEG製発電機の採用と、大阪電燈によるGE製発電機の採用にさかのぼる <a href="https://ja.wikipedia.org/wiki/商用電源周波数" target="_blank" rel="noopener">出典</a>。50Hzと60Hzでは位相差が毎秒10回転する計算になり、同期は原理的に取れない。遮断器を投入すれば短絡に近い事故電流が流れる。</p>
-<p>したがって東西の融通には、交流を直流に整流してから別の周波数の交流に戻す周波数変換設備が要る。佐久間が30万kW、新信濃が60万kW、東清水が30万kW、飛騨信濃が90万kWで、東京中部間の合計は210万kWとされる。飛騨信濃の運転開始は2021年3月31日で、これにより合計は120万kWから210万kWに増えた <a href="https://ja.wikipedia.org/wiki/周波数変換所" target="_blank" rel="noopener">出典</a>。300万kWへの増強計画があるとされるが、電力広域的運営推進機関の一次資料は確認できていない。周波数統一については、2011年の政府試算として設備交換に約10兆円、工期に40年以上という数字が流通しているが、試算の出所である政府文書そのものは確認できていない <a href="https://ja.wikipedia.org/wiki/商用電源周波数" target="_blank" rel="noopener">出典</a>。</p>
-<p>ここで区別すべき点が二つある。第一に、変換設備を増やしても周波数は統一されない。増強は融通量の上限を上げるだけで、東は50Hz、西は60Hzのまま運用が続く。第二に、直流連系がすべて周波数変換ではない。南福光連系所は60Hz同士を直流で背中合わせに接続する設備であり、周波数の変換は行わない。</p>
+<p>日本全体の送配電損失率は2024年で4.93%であり、2015年の3.83%から1.10ポイント上がっている <a class="tb-src" href="https://api.worldbank.org/v2/country/JP/indicator/EG.ELC.LOSS.ZS?format=json" target="_blank" rel="noopener">出典</a>。この数値は送電段階だけでなく配電段階と計量できない分を含む。損失の多くは電圧の低い配電段階で生じる。</p>
+<p>損失の式と並ぶもう一つの制約が、交流の同期条件である。交流系統を並列に運転するには周波数と位相が一致していなければならない。日本は東側が50Hz、西側が60Hzで、境界はおおむね静岡県の富士川と新潟県の糸魚川を結ぶ線にある。分割の起点は1893年の東京電燈によるAEG製発電機の採用と、大阪電燈によるGE製発電機の採用にさかのぼる <a class="tb-src" href="https://ja.wikipedia.org/wiki/商用電源周波数" target="_blank" rel="noopener">出典</a>。50Hzと60Hzでは位相差が毎秒10回転する計算になり、同期は原理的に取れない。遮断器を投入すれば短絡に近い事故電流が流れる。</p>
+<p>したがって東西の融通には、交流を直流に整流してから別の周波数の交流に戻す周波数変換設備が要る。佐久間が30万kW、新信濃が60万kW、東清水が30万kW、飛騨信濃が90万kWで、東京中部間の合計は210万kWとされる。飛騨信濃の運転開始は2021年3月31日で、これにより合計は120万kWから210万kWに増えた <a class="tb-src" href="https://ja.wikipedia.org/wiki/周波数変換所" target="_blank" rel="noopener">出典</a>。300万kWへの増強計画があるとされるが、電力広域的運営推進機関の一次資料は確認できていない。周波数統一については、2011年の政府試算として設備交換に約10兆円、工期に40年以上という数字が流通しているが、試算の出所である政府文書そのものは確認できていない <a class="tb-src" href="https://ja.wikipedia.org/wiki/商用電源周波数" target="_blank" rel="noopener">出典</a>。</p>
+<p>ここで区別すべき点が二つある。第一に、変換設備を増やしても周波数は統一されない。増強は融通量の上限を上げるだけで、東は50Hz、西は60Hzのまま運用が続く。<strong class="hit">第二に、直流連系がすべて周波数変換ではない</strong>。南福光連系所は60Hz同士を直流で背中合わせに接続する設備であり、周波数の変換は行わない。</p>
 <h2 id="s2">エネルギー源ごとの出力密度と副産物</h2>
 <p>送電の側で電圧が制約なら、発電の側では温度が制約になる。熱機関から取り出せる電力は、熱源の温度が高いほど大きい。原子炉の設計はこの一点を軸に分岐する。</p>
 <p>炉型を分ける軸は三つある。第一が中性子のエネルギー、第二が冷却材と運転圧力、第三が燃料の形態である。</p>
-<p>核分裂で飛び出す中性子は0.1MeV以上の高速中性子で、ウラン235の熱中性子核分裂は約200MeVを放出し、1回あたり平均2.45個の中性子を出す。天然ウラン中のウラン235は0.7%しかないため、軽水炉は水を減速材として中性子を約0.02eVまで落とし、核分裂しやすさを稼ぐ <a href="https://world-nuclear.org/information-library/nuclear-fuel-cycle/introduction/physics-of-nuclear-energy" target="_blank" rel="noopener">出典</a>。高速炉は減速材を持たず、高速中性子のまま連鎖反応を維持する。この結果ウラン238も燃料にでき、ウラン利用効率は軽水炉の約60倍になるとされる。熱中性子炉の転換比が約0.6であるのに対し、高速炉は1.0を超えうる <a href="https://world-nuclear.org/information-library/current-and-future-generation/fast-neutron-reactors" target="_blank" rel="noopener">出典</a>。</p>
-<p>第二軸が温度と圧力である。加圧水型軽水炉は約150気圧、約315度Cで運転する。水を液体のまま高温に保つために高圧が要る。高速炉はナトリウム、鉛、鉛ビスマス共晶、ヘリウムを冷却材に使い、おおむね500から550度C、大気圧近傍で運転する。溶融塩炉はフッ化物溶融塩を使い、加圧せずに700度C以上を取り出せる <a href="https://world-nuclear.org/information-library/current-and-future-generation/molten-salt-reactors" target="_blank" rel="noopener">出典</a>。</p>
+<p>核分裂で飛び出す中性子は0.1MeV以上の高速中性子で、ウラン235の熱中性子核分裂は約200MeVを放出し、1回あたり平均2.45個の中性子を出す。天然ウラン中のウラン235は0.7%しかないため、軽水炉は水を減速材として中性子を約0.02eVまで落とし、核分裂しやすさを稼ぐ <a class="tb-src" href="https://world-nuclear.org/information-library/nuclear-fuel-cycle/introduction/physics-of-nuclear-energy" target="_blank" rel="noopener">出典</a>。高速炉は減速材を持たず、高速中性子のまま連鎖反応を維持する。この結果ウラン238も燃料にでき、ウラン利用効率は軽水炉の約60倍になるとされる。熱中性子炉の転換比が約0.6であるのに対し、高速炉は1.0を超えうる <a class="tb-src" href="https://world-nuclear.org/information-library/current-and-future-generation/fast-neutron-reactors" target="_blank" rel="noopener">出典</a>。</p>
+<p>第二軸が温度と圧力である。加圧水型軽水炉は約150気圧、約315度Cで運転する。水を液体のまま高温に保つために高圧が要る。高速炉はナトリウム、鉛、鉛ビスマス共晶、ヘリウムを冷却材に使い、おおむね500から550度C、大気圧近傍で運転する。溶融塩炉はフッ化物溶融塩を使い、加圧せずに700度C以上を取り出せる <a class="tb-src" href="https://world-nuclear.org/information-library/current-and-future-generation/molten-salt-reactors" target="_blank" rel="noopener">出典</a>。</p>
 <div class="tb-tw"><table><thead><tr><th>炉型</th><th>中性子</th><th>冷却材と圧力</th><th>熱効率</th></tr></thead><tbody><tr><td>軽水炉</td><td>熱中性子</td><td>水、約150気圧</td><td>33から37%、最新の加圧水型で38%</td></tr><tr><td>高速炉</td><td>高速中性子</td><td>液体金属など、大気圧近傍</td><td>出典で確認できず</td></tr><tr><td>溶融塩炉</td><td>熱外が基本、高速型も存在</td><td>溶融塩、常圧</td><td>750度Cで48%、1000度Cで59%の見積もり</td></tr></tbody></table></div>
-<p>軽水炉の熱効率と溶融塩炉の見積もりは同一の情報源による <a href="https://world-nuclear.org/information-library/nuclear-fuel-cycle/nuclear-power-reactors/nuclear-power-reactors" target="_blank" rel="noopener">出典</a>。ただし前者は実績値、後者は設計上の見積もりであり、同じ確度の数字として並べてはならない。実装の差は大きい。世界の運転可能炉441基、404.3GWeのうち加圧水型が316基306.2GWe、沸騰水型が60基61.0GWeを占め、高速炉は2基1.4GWeにとどまる。商用規模で運転中の溶融塩炉は存在しない。</p>
-<p>用語の注意を二つ挙げる。高速炉の高速は中性子のエネルギーを指し、温度ではない。高速炉の冷却材温度は溶融塩炉より低い。また溶融塩炉がすべて高速炉というわけでもなく、基本設計は黒鉛減速を伴う熱外中性子領域である。</p>
-<p>高い温度は効率を生むが、同時に副産物を残す。ここで費用の議論が始まる。国際的な標準的試算では、バックエンド費用は発電コストの数%にとどまる。OECD/NEAは、フランスの実績発電コストを会計検査院が約60USD/MWhと見積もったのに対し、核燃料サイクル費用全体を13%未満、バックエンドを約6.5%と算定している。参照ケースでは直接処分のバックエンドが1.3USD2010/MWh、1回再処理では2.8USD2010/MWhとなる <a href="https://www.oecd-nea.org/upload/docs/application/pdf/2019-12/7061-ebenfc.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>日本は水準が違う。2025年度分の再処理等拠出金単価は事業者別に613から625円/g-Uで、うち再処理等に係る単価は全事業者共通で531円/g-Uである <a href="https://www.nuro.or.jp/pdf/20260622_2.pdf" target="_blank" rel="noopener">出典</a>。燃焼度と熱効率から発電量あたりに換算すると1.5から2.0円/kWhの範囲になる。この換算は素材ノートの計算であり、公的機関が公表した値ではない。またこの額に最終処分費と廃炉費は含まれていない。</p>
+<p>軽水炉の熱効率と溶融塩炉の見積もりは同一の情報源による <a class="tb-src" href="https://world-nuclear.org/information-library/nuclear-fuel-cycle/nuclear-power-reactors/nuclear-power-reactors" target="_blank" rel="noopener">出典</a>。ただし前者は実績値、後者は設計上の見積もりであり、同じ確度の数字として並べてはならない。実装の差は大きい。世界の運転可能炉441基、404.3GWeのうち加圧水型が316基306.2GWe、沸騰水型が60基61.0GWeを占め、高速炉は2基1.4GWeにとどまる。商用規模で運転中の溶融塩炉は存在しない。</p>
+<p>用語の注意を二つ挙げる。<strong class="hit">高速炉の高速は中性子のエネルギーを指し、温度ではない</strong>。高速炉の冷却材温度は溶融塩炉より低い。また溶融塩炉がすべて高速炉というわけでもなく、基本設計は黒鉛減速を伴う熱外中性子領域である。</p>
+<p>高い温度は効率を生むが、同時に副産物を残す。ここで費用の議論が始まる。国際的な標準的試算では、バックエンド費用は発電コストの数%にとどまる。OECD/NEAは、フランスの実績発電コストを会計検査院が約60USD/MWhと見積もったのに対し、核燃料サイクル費用全体を13%未満、バックエンドを約6.5%と算定している。参照ケースでは直接処分のバックエンドが1.3USD2010/MWh、1回再処理では2.8USD2010/MWhとなる <a class="tb-src" href="https://www.oecd-nea.org/upload/docs/application/pdf/2019-12/7061-ebenfc.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>日本は水準が違う。2025年度分の再処理等拠出金単価は事業者別に613から625円/g-Uで、うち再処理等に係る単価は全事業者共通で531円/g-Uである <a class="tb-src" href="https://www.nuro.or.jp/pdf/20260622_2.pdf" target="_blank" rel="noopener">出典</a>。燃焼度と熱効率から発電量あたりに換算すると1.5から2.0円/kWhの範囲になる。この換算は素材ノートの計算であり、公的機関が公表した値ではない。またこの額に最終処分費と廃炉費は含まれていない。</p>
 <p>割合として答えを出すには分母が要る。日本の原子力発電コストの公的試算値は、資源エネルギー庁と経済産業省のサーバーがHTTP 403を返したため取得できていない。したがって日本について何割かを確定した数字で示すことはできない。言えるのは、直接処分を選ぶ国ではバックエンドが発電コストの数%であること、再処理を行うとバックエンドの絶対額はNEAの試算で約2倍になること、日本の拠出金だけで1.5から2.0円/kWhに達していることの三点である。</p>
 <p>なお費用の議論が割合で揉める根本の理由は、支出が数十年から数万年先に及ぶことにある。割引率の置き方で現在価値が桁で動くため、割合を問うなら分母に何を含めるか、割引率をいくつに置くか、再処理をするかしないかを同時に指定しなければ答えが定まらない。指定なしに数字だけを比べる議論は、そもそも比較になっていない。</p>
 <h2 id="s3">時間スケールで分けて考える安定化</h2>
 <p>三つ目の制約が応答速度である。電力は貯めずに使う量が支配的なため、発電と消費は常時一致していなければならない。ずれは周波数の変化として現れる。供給が需要を下回れば周波数は下がる。</p>
 <p>この制御は単一のループでは行われない。速い順に層を分け、速い層は各発電機側で分散処理し、遅い層は中央給電指令所が集中処理する。制御工学の言葉に置けば、速い層が比例動作、次の層が積分動作、その先が経済性を含めた再配分にあたる。系統全体が一つの大きなフィードバック系として組まれている。</p>
-<p>最速の層は制御ではない。同期発電機の回転体が持つ慣性であり、需給がずれた瞬間に回転エネルギーが自動的に出入りして周波数の変化速度を抑える。これは物理的な性質であって指令ではなく、市場商品にもなっていない。次がガバナフリーで、調速機による自端制御にあたる。その次が負荷周波数制御で、電気学会の用語解説は主に数分から20分周期程度の変動成分を吸収すると定義している <a href="https://www.iee.jp/pes/termb_030/" target="_blank" rel="noopener">出典</a>。さらに長い周期は経済負荷配分制御が事前に配分する。</p>
-<p>日本の標準周波数は50Hzまたは60Hzと送配電等業務指針第57条第2号に定められ、同指針第268条は、標準周波数から0.1Hz以内、0.2Hz以内、0.3Hz以内、0.3Hz超のそれぞれに維持された時間の比率を毎年8月末までに広域機関へ報告するよう定めている <a href="https://www.occto.or.jp/assets/article/files/shishin2503.pdf" target="_blank" rel="noopener">出典</a>。制御目標がこの区分で管理されていることが読み取れる。エリア別の実績値そのものは確認できていない。</p>
-<p>2024年度からは、この階層が需給調整市場の商品区分として値付けされている。2026年度以降の要件は次のとおりである <a href="https://www.occto.or.jp/assets/iinkai/jukyuchousei/60/jukyu_shijyo_60_03.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>最速の層は制御ではない。同期発電機の回転体が持つ慣性であり、需給がずれた瞬間に回転エネルギーが自動的に出入りして周波数の変化速度を抑える。<strong class="hit">これは物理的な性質であって指令ではなく、市場商品にもなっていない</strong>。次がガバナフリーで、調速機による自端制御にあたる。その次が負荷周波数制御で、電気学会の用語解説は主に数分から20分周期程度の変動成分を吸収すると定義している <a class="tb-src" href="https://www.iee.jp/pes/termb_030/" target="_blank" rel="noopener">出典</a>。さらに長い周期は経済負荷配分制御が事前に配分する。</p>
+<p>日本の標準周波数は50Hzまたは60Hzと送配電等業務指針第57条第2号に定められ、同指針第268条は、標準周波数から0.1Hz以内、0.2Hz以内、0.3Hz以内、0.3Hz超のそれぞれに維持された時間の比率を毎年8月末までに広域機関へ報告するよう定めている <a class="tb-src" href="https://www.occto.or.jp/assets/article/files/shishin2503.pdf" target="_blank" rel="noopener">出典</a>。制御目標がこの区分で管理されていることが読み取れる。エリア別の実績値そのものは確認できていない。</p>
+<p>2024年度からは、この階層が需給調整市場の商品区分として値付けされている。2026年度以降の要件は次のとおりである <a class="tb-src" href="https://www.occto.or.jp/assets/iinkai/jukyuchousei/60/jukyu_shijyo_60_03.pdf" target="_blank" rel="noopener">出典</a>。</p>
 <div class="tb-tw"><table><thead><tr><th>商品</th><th>応動時間</th><th>指令の形</th><th>継続時間</th></tr></thead><tbody><tr><td>一次調整力</td><td>10秒以内、オフライン監視時は30秒以内</td><td>オフラインの自端制御</td><td>5分以上</td></tr><tr><td>二次調整力①</td><td>5分以内</td><td>オンライン、LFC信号</td><td>30分</td></tr><tr><td>二次調整力②</td><td>5分以内</td><td>オンライン、EDC信号</td><td>30分</td></tr><tr><td>三次調整力①</td><td>15分以内</td><td>オンライン</td><td>30分</td></tr><tr><td>三次調整力②</td><td>60分以内、指令間隔30分</td><td>オンライン</td><td>30分</td></tr></tbody></table></div>
 <p>入札時間単位は5商品とも30分で、2026年度から継続時間も30分に統一された。最低入札量は各商品1MW、刻み幅は1kWである。三次調整力②は再生可能エネルギーの発電量予測誤差に充てる長周期の層である。制御工学の時定数が、そのまま調達単位の階段になっている。</p>
-<p>この設計は現場の技術と接続している。精製・化学・パルプ紙の3業種で11,000台を超えるコントローラを調べた調査では、レギュラトリコントローラの97%がPIDフィードバックを使っていた。この数字は教科書経由の引用であり、原典本文は確認できていない <a href="https://dl1.icdst.org/pdfs/files3/087c0744b27adad72889e433017cb13f.pdf" target="_blank" rel="noopener">出典</a>。同じ章は、微分動作を使わないコントローラのほうが多いとも明言している。微分は測定ノイズを増幅するため現場で切られる。英語版Wikipediaは実装済みコントローラの25%でしか微分動作が使われていないという推定を載せるが、推定の年次と一次出典は確認できていない <a href="https://en.wikipedia.org/wiki/PID_controller" target="_blank" rel="noopener">出典</a>。PIDが古い技術で置き換えが進んでいるという理解は誤りで、モデル予測制御はPIDを代替するのではなくその上位に載る。</p>
+<p>この設計は現場の技術と接続している。精製・化学・パルプ紙の3業種で11,000台を超えるコントローラを調べた調査では、レギュラトリコントローラの97%がPIDフィードバックを使っていた。この数字は教科書経由の引用であり、原典本文は確認できていない <a class="tb-src" href="https://dl1.icdst.org/pdfs/files3/087c0744b27adad72889e433017cb13f.pdf" target="_blank" rel="noopener">出典</a>。同じ章は、微分動作を使わないコントローラのほうが多いとも明言している。微分は測定ノイズを増幅するため現場で切られる。英語版Wikipediaは実装済みコントローラの25%でしか微分動作が使われていないという推定を載せるが、推定の年次と一次出典は確認できていない <a class="tb-src" href="https://en.wikipedia.org/wiki/PID_controller" target="_blank" rel="noopener">出典</a>。PIDが古い技術で置き換えが進んでいるという理解は誤りで、<strong class="hit">モデル予測制御はPIDを代替するのではなくその上位に載る</strong>。</p>
 <p>ここで応答速度と第2節の話がつながる。太陽光と風力はインバータ経由で接続され、回転する質量を持たない。その比率が上がるとエリアの慣性が減り、周波数の変化速度が速くなる。しかも東西は同期していないため、片方で発電機が脱落しても、もう片方の慣性は応援に入らない。慣性の低下は東西それぞれで別個に問題になる。市場の側にも余裕はない。前掲の広域機関資料は、2024年4月の全商品取引開始以降、全商品で募集量に対する応札量と約定量の未達が発生し、2025年度時点でも一次調整力で募集量と応札量の乖離が続いていると記している。最速の10秒層がもっとも供給不足になりやすい。</p>
 <h2 id="s4">制御が失敗したときに何が残るか</h2>
 <p>ここまでの三つの制約は、うまくいっている状態を扱ってきた。制御が失敗したときに何が残るかを見ておく必要がある。残るものは大きく二つで、長期にわたって管理し続ける物質と、瞬間的に放出されるエネルギーである。</p>
-<p>前者は第2節で見た。燃料の副産物は、発電が止まっても消えない。日本が再処理を選び、費用を使用済燃料再処理・廃炉推進機構への拠出金として先に徴収しているのは、支出の発生時点が遠い未来にあるためである。技術的な選択の是非とは別に、負担の時点をどこに置くかという設計が入っている。</p>
-<p>後者について、記録から読み取れる構造がある。1945年の原爆投下は、意思決定が二段階に分かれていた点で参考になる。都市の選定は事前に文書化されている。1945年5月10日から11日のロスアラモス目標検討委員会の議事録は、直径3マイルを超える大都市域にある重要目標であること、爆風で有効に損害を与えられることを要件に挙げ、優先順位を京都、広島、横浜、小倉造兵廠の順で記録している。運用面では、任務は可能な限り目視爆撃とし、好条件を最大2週間待つ用意があるとされた <a href="https://www.dannen.com/decision/targets.html" target="_blank" rel="noopener">出典</a>。1945年7月25日のハンディからスパーツへの作戦命令は、目標を広島、小倉、新潟、長崎の4都市とし、実行時期を1945年8月3日ごろ以降、天候が目視爆撃を許し次第と記している <a href="https://www.dannen.com/decision/handy.html" target="_blank" rel="noopener">出典</a>。京都はこの時点で外れている。国家安全保障公文書館の解説は、除外を陸軍長官スティムソンの介入によるものとし、1945年7月24日の日記にトルーマンの同意が記録されていると述べている <a href="https://nsarchive2.gwu.edu/NSAEBB/NSAEBB162/index.htm" target="_blank" rel="noopener">出典</a>。</p>
-<p>マンハッタン管区の公式報告書は、選定の考慮事項として爆撃機の航続距離、目視爆撃の望ましさ、目標地域の予想天候、各任務に第一目標1つと予備目標2つを置くこと、戦争終結を早める軍事的効果、敵の士気への効果の6点を挙げている <a href="https://www.atomicarchive.com/resources/documents/med/med_chp5.html" target="_blank" rel="noopener">出典</a>。当日の運用はこの設計に従った。8月9日は第一目標が小倉で、前日の八幡空襲による煙と厚い雲が照準点を覆い、3回の爆撃進入でも爆撃手が視認できず、第二目標の長崎に転じた <a href="https://ahf.nuclearmuseum.org/ahf/history/bombings-hiroshima-and-nagasaki-1945/" target="_blank" rel="noopener">出典</a>。長崎の爆発は高度1,650フィート、威力21キロトンで、実際の爆発点は意図した照準点から北西へ約1.5マイル離れていた <a href="https://www.osti.gov/opennet/manhattan-project-history/Events/1945/nagasaki.htm" target="_blank" rel="noopener">出典</a>。広島は高度1,900フィート、推定威力15キロトンである <a href="https://www.osti.gov/opennet/manhattan-project-history/Events/1945/hiroshima.htm" target="_blank" rel="noopener">出典</a>。広島の照準点が相生橋であったこと、および当日の気象偵察機の報告内容は、今回参照した資料からは裏付けが取れていない。</p>
+<p>前者は第2節で見た。燃料の副産物は、発電が止まっても消えない。日本が再処理を選び、費用を使用済燃料再処理・廃炉推進機構への拠出金として先に徴収しているのは、支出の発生時点が遠い未来にあるためである。<strong class="hit">技術的な選択の是非とは別に、負担の時点をどこに置くかという設計が入っている</strong>。</p>
+<p>後者について、記録から読み取れる構造がある。1945年の原爆投下は、意思決定が二段階に分かれていた点で参考になる。都市の選定は事前に文書化されている。1945年5月10日から11日のロスアラモス目標検討委員会の議事録は、直径3マイルを超える大都市域にある重要目標であること、爆風で有効に損害を与えられることを要件に挙げ、優先順位を京都、広島、横浜、小倉造兵廠の順で記録している。運用面では、任務は可能な限り目視爆撃とし、好条件を最大2週間待つ用意があるとされた <a class="tb-src" href="https://www.dannen.com/decision/targets.html" target="_blank" rel="noopener">出典</a>。1945年7月25日のハンディからスパーツへの作戦命令は、目標を広島、小倉、新潟、長崎の4都市とし、実行時期を1945年8月3日ごろ以降、天候が目視爆撃を許し次第と記している <a class="tb-src" href="https://www.dannen.com/decision/handy.html" target="_blank" rel="noopener">出典</a>。京都はこの時点で外れている。国家安全保障公文書館の解説は、除外を陸軍長官スティムソンの介入によるものとし、1945年7月24日の日記にトルーマンの同意が記録されていると述べている <a class="tb-src" href="https://nsarchive2.gwu.edu/NSAEBB/NSAEBB162/index.htm" target="_blank" rel="noopener">出典</a>。</p>
+<p>マンハッタン管区の公式報告書は、選定の考慮事項として爆撃機の航続距離、目視爆撃の望ましさ、目標地域の予想天候、各任務に第一目標1つと予備目標2つを置くこと、戦争終結を早める軍事的効果、敵の士気への効果の6点を挙げている <a class="tb-src" href="https://www.atomicarchive.com/resources/documents/med/med_chp5.html" target="_blank" rel="noopener">出典</a>。当日の運用はこの設計に従った。8月9日は第一目標が小倉で、前日の八幡空襲による煙と厚い雲が照準点を覆い、3回の爆撃進入でも爆撃手が視認できず、第二目標の長崎に転じた <a class="tb-src" href="https://ahf.nuclearmuseum.org/ahf/history/bombings-hiroshima-and-nagasaki-1945/" target="_blank" rel="noopener">出典</a>。長崎の爆発は高度1,650フィート、威力21キロトンで、実際の爆発点は意図した照準点から北西へ約1.5マイル離れていた <a class="tb-src" href="https://www.osti.gov/opennet/manhattan-project-history/Events/1945/nagasaki.htm" target="_blank" rel="noopener">出典</a>。広島は高度1,900フィート、推定威力15キロトンである <a class="tb-src" href="https://www.osti.gov/opennet/manhattan-project-history/Events/1945/hiroshima.htm" target="_blank" rel="noopener">出典</a>。広島の照準点が相生橋であったこと、および当日の気象偵察機の報告内容は、今回参照した資料からは裏付けが取れていない。</p>
 <p>天候で決まったという説明は、この二段階を混同すると誤りになる。候補都市は事前に確定していた。天候が決めたのは、確定済みの候補のうちどれを撃つかと、照準点をどこに取れるかである。設計判断と当日の実行を分けて読むという作法は、電力インフラでも同じである。連系容量の上限は平時に決まり、逼迫時に選べるのはその上限の内側だけである。2011年の東日本大震災の時点で東京中部間の変換容量は100万kW台にとどまり、西日本の供給余力を東日本に振り向けられなかったことが計画停電の一因になったと説明されているが、この因果関係を示す政府の一次資料は確認できていない。</p>
 <h2 id="s5">被害の測定と社会的な合意形成</h2>
 <p>被害を数字にできる範囲と、できない範囲を区別する。この区別を飛ばすことが、合意形成が壊れる典型的な原因である。</p>
-<p>被曝の健康影響は、広島と長崎の被爆者を追跡した寿命調査によって定量化されている。対象は約12万人で、うち被爆者は約9万4千人、2020年12月時点で初期集団の21%が生存し平均年齢は83歳である <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12558143/" target="_blank" rel="noopener">出典</a>。固形がんについては、1958年から2009年までの発生率解析で、対象10万5,444人、固形がん2万2,538例、追跡310万人年という規模の推定が出ている。30歳被曝、到達年齢70歳の条件で、1Gyあたりの超過相対リスクは女性0.64、95%信頼区間0.52から0.77、男性0.20、95%信頼区間0.12から0.28である <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12558146/" target="_blank" rel="noopener">出典</a>。男女平均では発生率で1Gyあたり0.47、死亡率で0.42となる。線量反応の形は性別で異なり、女性は直線モデルが最もよく当てはまり、男性は上に凸の直線二次モデルが最良で、この性差は有意水準P = 0.020で統計的に有意である。被曝時年齢が10歳上がるごとに超過相対リスクは22%低下する。</p>
-<p>白血病は挙動が異なる。超過は被曝の約2年後に現れ、6年から8年後に頂点を迎えたのち急速に減少した。骨髄線量0.005Gy以上の4万9,204人で1950年から2000年までに観察された白血病死は204例、うち放射線に帰属するのは94例で、白血病死の46%にあたる <a href="https://www.rerf.or.jp/en/programs/roadmap_e/health_effects-en/late-en/leukemia/" target="_blank" rel="noopener">出典</a>。</p>
-<p>測定できない範囲もはっきりしている。統計的に有意なリスク上昇が確認できるのは0.2Gy以上である。閾値解析では閾値は認められず、閾値の95%信頼区間の上限は0.15Gyと報告されている <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4990102/" target="_blank" rel="noopener">出典</a>。これは、閾値があるとしても0.15Gyより下だということを意味するが、0.15Gy未満に閾値が存在しないことまでを示したものではない。低線量域が決着しない理由の第一に挙げられているのは統計的検出力の弱さである。リスク推定全体が1Gyから4Gyの高線量側の線量反応に依存している点も明示されている。</p>
-<p>残留放射線と内部被曝は、リスク推定の線量に含まれていない。放射線影響研究所は理由を、個人ごとの行動記録が必要で疫学解析に耐える精度の線量を作れないためと説明している。誘導放射線の試算では、爆撃翌日に爆心地から500mの地点に12時間滞在した場合の結腸線量は広島で約15mSv、長崎で約3mSvであり、1,000mでは0.5mSv未満である。長崎西山地区で内部被曝が最も高いと推定された住民50人でも、1945年から1985年までの40年間の累積線量は男性100μSv、女性80μSvと推定された。DS02による個人線量推定には約35%の誤差が見込まれている <a href="https://www.rerf.or.jp/uploads/2017/09/residualrad_ps_e.pdf" target="_blank" rel="noopener">出典</a>。なお被爆者の子については、分子レベルでも疾患レベルでも親の被曝に関連した有意な増加は検出されていない。</p>
+<p>被曝の健康影響は、広島と長崎の被爆者を追跡した寿命調査によって定量化されている。対象は約12万人で、うち被爆者は約9万4千人、2020年12月時点で初期集団の21%が生存し平均年齢は83歳である <a class="tb-src" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12558143/" target="_blank" rel="noopener">出典</a>。固形がんについては、1958年から2009年までの発生率解析で、対象10万5,444人、固形がん2万2,538例、追跡310万人年という規模の推定が出ている。30歳被曝、到達年齢70歳の条件で、1Gyあたりの超過相対リスクは女性0.64、95%信頼区間0.52から0.77、男性0.20、95%信頼区間0.12から0.28である <a class="tb-src" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12558146/" target="_blank" rel="noopener">出典</a>。男女平均では発生率で1Gyあたり0.47、死亡率で0.42となる。線量反応の形は性別で異なり、女性は直線モデルが最もよく当てはまり、男性は上に凸の直線二次モデルが最良で、この性差は有意水準P = 0.020で統計的に有意である。被曝時年齢が10歳上がるごとに超過相対リスクは22%低下する。</p>
+<p>白血病は挙動が異なる。超過は被曝の約2年後に現れ、6年から8年後に頂点を迎えたのち急速に減少した。骨髄線量0.005Gy以上の4万9,204人で1950年から2000年までに観察された白血病死は204例、うち放射線に帰属するのは94例で、白血病死の46%にあたる <a class="tb-src" href="https://www.rerf.or.jp/en/programs/roadmap_e/health_effects-en/late-en/leukemia/" target="_blank" rel="noopener">出典</a>。</p>
+<p>測定できない範囲もはっきりしている。統計的に有意なリスク上昇が確認できるのは0.2Gy以上である。閾値解析では閾値は認められず、閾値の95%信頼区間の上限は0.15Gyと報告されている <a class="tb-src" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4990102/" target="_blank" rel="noopener">出典</a>。これは、閾値があるとしても0.15Gyより下だということを意味するが、0.15Gy未満に閾値が存在しないことまでを示したものではない。低線量域が決着しない理由の第一に挙げられているのは統計的検出力の弱さである。リスク推定全体が1Gyから4Gyの高線量側の線量反応に依存している点も明示されている。</p>
+<p>残留放射線と内部被曝は、リスク推定の線量に含まれていない。放射線影響研究所は理由を、個人ごとの行動記録が必要で疫学解析に耐える精度の線量を作れないためと説明している。誘導放射線の試算では、爆撃翌日に爆心地から500mの地点に12時間滞在した場合の結腸線量は広島で約15mSv、長崎で約3mSvであり、1,000mでは0.5mSv未満である。長崎西山地区で内部被曝が最も高いと推定された住民50人でも、1945年から1985年までの40年間の累積線量は男性100μSv、女性80μSvと推定された。DS02による個人線量推定には約35%の誤差が見込まれている <a class="tb-src" href="https://www.rerf.or.jp/uploads/2017/09/residualrad_ps_e.pdf" target="_blank" rel="noopener">出典</a>。なお被爆者の子については、分子レベルでも疾患レベルでも親の被曝に関連した有意な増加は検出されていない。</p>
 <p>ここに合意形成の難所がある。測定できない範囲を安全と読むか、危険の可能性が残ると読むかで、同じデータから逆の結論が出る。放射線影響研究所は、残留線量を含めずに線量を過小評価すればリスクは過大評価となり、防護基準としては安全側に働くと説明している。つまり防護のための保守的な扱いと、科学的に確定した知見は別物であり、両者を同じ強さの主張として扱えば議論は噛み合わない。</p>
 <p>三つの制約に戻る。損失は式で計算でき、出力密度は温度と圧力で比較でき、応答速度は秒と分で階層に分けられる。この三つは物理の問題であり、議論の余地は狭い。争点になるのは、どの制約をどこまで金銭で緩めるか、負担の時点をいつに置くか、測定できない範囲をどう扱うかである。政策論の対立の多くは、この後者を前者のふりをして語ることから生まれている。</p>
 <h2 id="s6">この章の要点</h2>
@@ -268,5 +375,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
   <div class="tb-nav"><a class="tb-nav-a" href="01_structure-before-facts.html">← 構造を先に置く思考</a><a class="tb-nav-a" href="03_measuring-living-systems.html">生命と集団を測る →</a></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

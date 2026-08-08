@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -162,49 +269,49 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <h2 id="s1">買収資金の階層：シニアデット、メザニン、エクイティの出し手</h2>
 <p>上場企業を買って非上場にする取引では、買い手は自分の会社で直接株を買わない。買収専用の会社を新しく作り、そこに銀行から借りた金と出資した金を集め、その会社が公開買付けで株を買う。買収専用の会社は特別目的会社と呼ばれ、事業を持たないため、返済の当てはこれから買う会社の将来利益しかない。</p>
 <p>資金は層で積まれる。いちばん下がシニアデットで、担保が付き、返済順位が最も高く、金利が最も低い。その上にメザニンが乗る。返済順位はシニアの後ろで、金利は高い。いちばん上がエクイティで、返済順位は最後、うまくいけば取り分が最も大きく、失敗すればゼロになる。損失は上から順に食う。エクイティが吹き飛んでからメザニンが毀損し、それでも足りないときにシニアが痛む。</p>
-<p>東芝の非上場化は、この層が開示から読み取れる例である。2023年8月7日の意見表明では、資金は普通株式による出資5,200億円、優先株式2,000億円、メザニンローン2,355億円、シニアローン1兆2,000億円の合計2兆1,555億円で組まれた<a href="https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/news/20230807_5.pdf" target="_blank" rel="noopener">出典</a>。借入の合計は1兆4,355億円で、調達総額の67%にあたる。</p>
-<p>豊田自動織機の非公開化はメザニンを挟まない構成である。開示された出資は、トヨタ自動車の優先株式8,000億円、トヨタ不動産の普通株式2,000億円、豊田章男氏の普通株式10億円の合計1兆10億円である<a href="https://www.toyota-shokki.co.jp/news/item/20260114_document03.pdf" target="_blank" rel="noopener">出典</a>。銀行融資は融資証明書ベースで3兆6,425億円、内訳は三菱UFJ銀行1兆4,570億円、三井住友銀行1兆4,570億円、みずほ銀行7,285億円と報じられている<a href="https://www.bloomberg.com/jp/news/articles/2026-03-06/TBGV0RT96OSJ00" target="_blank" rel="noopener">出典</a>。この内訳はブルームバーグが訂正公開買付届出書をもとに報じたもので、一次資料である届出書そのものは確認できていない。</p>
-<p>貸し手が3行に限られている点は、公開買付者側の開示とも整合する。開示は資金調達先をトヨタ不動産からの借入と3メガバンクからの借入に限って列挙しており、地方銀行や信託銀行を含む広いシンジケート団の形跡はない<a href="https://www.toyota-shokki.co.jp/news/item/20260306_document02.pdf" target="_blank" rel="noopener">出典</a>。規模の感覚として、国内の大手銀行が抱えるLBOローン残高は2023年9月末で約6.6兆円、うち3メガバンクが約80%を占める<a href="https://www.fsa.go.jp/news/r6/ginkou/20240725/240725.pdf" target="_blank" rel="noopener">出典</a>。1件で3兆6,425億円という融資枠は、この残高の55%に相当する。</p>
-<p>ここで注意したいのは、公表される買収総額と、買い手が新たに出した現金がまったく違うという点である。豊田自動織機の取引総額は約5兆9,000億円と報じられた<a href="https://www.nikkei.com/article/DGXZQOFD03A360T00C26A3000000/" target="_blank" rel="noopener">出典</a>。一方、公開買付けに応募しなかったトヨタ自動車の保有分は、スクイーズアウト完了後に豊田自動織機自身が自己株式として1兆2,576億円で買い取る設計である<a href="https://www.toyota-shokki.co.jp/news/item/20260306_document02.pdf" target="_blank" rel="noopener">出典</a>。原資は豊田自動織機の現預金と、同社が保有するトヨタ自動車、デンソー、豊田通商、アイシンの株式を各社の自己株式公開買付けに応募して得る対価である。</p>
+<p>東芝の非上場化は、この層が開示から読み取れる例である。2023年8月7日の意見表明では、資金は普通株式による出資5,200億円、優先株式2,000億円、メザニンローン2,355億円、シニアローン1兆2,000億円の合計2兆1,555億円で組まれた<a class="tb-src" href="https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/news/20230807_5.pdf" target="_blank" rel="noopener">出典</a>。借入の合計は1兆4,355億円で、調達総額の67%にあたる。</p>
+<p>豊田自動織機の非公開化はメザニンを挟まない構成である。開示された出資は、トヨタ自動車の優先株式8,000億円、トヨタ不動産の普通株式2,000億円、豊田章男氏の普通株式10億円の合計1兆10億円である<a class="tb-src" href="https://www.toyota-shokki.co.jp/news/item/20260114_document03.pdf" target="_blank" rel="noopener">出典</a>。銀行融資は融資証明書ベースで3兆6,425億円、内訳は三菱UFJ銀行1兆4,570億円、三井住友銀行1兆4,570億円、みずほ銀行7,285億円と報じられている<a class="tb-src" href="https://www.bloomberg.com/jp/news/articles/2026-03-06/TBGV0RT96OSJ00" target="_blank" rel="noopener">出典</a>。この内訳はブルームバーグが訂正公開買付届出書をもとに報じたもので、一次資料である届出書そのものは確認できていない。</p>
+<p>貸し手が3行に限られている点は、公開買付者側の開示とも整合する。開示は資金調達先をトヨタ不動産からの借入と3メガバンクからの借入に限って列挙しており、地方銀行や信託銀行を含む広いシンジケート団の形跡はない<a class="tb-src" href="https://www.toyota-shokki.co.jp/news/item/20260306_document02.pdf" target="_blank" rel="noopener">出典</a>。規模の感覚として、国内の大手銀行が抱えるLBOローン残高は2023年9月末で約6.6兆円、うち3メガバンクが約80%を占める<a class="tb-src" href="https://www.fsa.go.jp/news/r6/ginkou/20240725/240725.pdf" target="_blank" rel="noopener">出典</a>。1件で3兆6,425億円という融資枠は、この残高の55%に相当する。</p>
+<p>ここで注意したいのは、公表される買収総額と、買い手が新たに出した現金がまったく違うという点である。豊田自動織機の取引総額は約5兆9,000億円と報じられた<a class="tb-src" href="https://www.nikkei.com/article/DGXZQOFD03A360T00C26A3000000/" target="_blank" rel="noopener">出典</a>。一方、公開買付けに応募しなかったトヨタ自動車の保有分は、スクイーズアウト完了後に豊田自動織機自身が自己株式として1兆2,576億円で買い取る設計である<a class="tb-src" href="https://www.toyota-shokki.co.jp/news/item/20260306_document02.pdf" target="_blank" rel="noopener">出典</a>。原資は豊田自動織機の現預金と、同社が保有するトヨタ自動車、デンソー、豊田通商、アイシンの株式を各社の自己株式公開買付けに応募して得る対価である。</p>
 <div class="tb-tw"><table><thead><tr><th>出し手</th><th>金額</th><th>性格</th></tr></thead><tbody><tr><td>3メガバンクの融資</td><td>3兆6,425億円</td><td>返済義務あり、担保付き</td></tr><tr><td>トヨタグループのスポンサー出資</td><td>1兆10億円</td><td>新たに出した現金</td></tr><tr><td>豊田自動織機自身の自己株式取得</td><td>1兆2,576億円</td><td>対象会社の現預金と保有株売却代金</td></tr></tbody></table></div>
 <p>3つの合計は5兆9,011億円で、報じられた取引総額とほぼ一致する。スポンサーが新たに出した現金は総額の17%であり、残る83%は借入と対象会社の資産である。買い手の持ち出しが少ないほど、失敗時に買い手が失うものは小さい。この非対称性がレバレッジの本質である。</p>
-<p>なお、豊田自動織機の株式1株あたりの価格は、公開買付けが20,600円、自己株式取得が16,972円と異なる。これは大株主の冷遇ではない。法人税法のみなし配当益金不算入が適用されるトヨタ自動車の税引後手取り額を、公開買付けに応じた場合と同水準に揃えるための調整だと開示に明記されている<a href="https://www.toyota-shokki.co.jp/news/item/20260306_document02.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>なお、豊田自動織機の株式1株あたりの価格は、公開買付けが20,600円、自己株式取得が16,972円と異なる。これは大株主の冷遇ではない。法人税法のみなし配当益金不算入が適用されるトヨタ自動車の税引後手取り額を、公開買付けに応じた場合と同水準に揃えるための調整だと開示に明記されている<a class="tb-src" href="https://www.toyota-shokki.co.jp/news/item/20260306_document02.pdf" target="_blank" rel="noopener">出典</a>。</p>
 <h2 id="s2">非上場化後のバランスシート：買収債務が事業に乗る経路</h2>
 <p>借りたのは特別目的会社であって、買われた会社ではない。ではその借金は買われた会社に無関係かというと、そうはならない。債務が事業側に届く経路は3つある。</p>
-<p>第1に保証と担保である。東芝の場合、シニアローン1兆2,000億円の借入人は公開買付者であり、東芝本体ではない。しかし東芝グループ各社は当初保証人に指定され、資産を担保に差し入れた。東芝デバイスの決算公告は、保証による潜在的な最大支払額を2024年3月31日時点でLBOローン契約等元本1兆6,105億円および利息と記載している<a href="https://www3.toshiba.co.jp/tdec/assets/pdf/public_notice_64_period.pdf" target="_blank" rel="noopener">出典</a>。同社は現金及び預金とグループ預け金を担保に供し、2024年4月以降は売掛金と商品も差し入れるとした。連結貸借対照表の借入金として載っていなくても、返せなくなれば資産を取られる立場に置かれている。</p>
+<p>第1に保証と担保である。<strong class="hit">東芝の場合、シニアローン1兆2,000億円の借入人は公開買付者であり、東芝本体ではない</strong>。しかし東芝グループ各社は当初保証人に指定され、資産を担保に差し入れた。東芝デバイスの決算公告は、保証による潜在的な最大支払額を2024年3月31日時点でLBOローン契約等元本1兆6,105億円および利息と記載している<a class="tb-src" href="https://www3.toshiba.co.jp/tdec/assets/pdf/public_notice_64_period.pdf" target="_blank" rel="noopener">出典</a>。同社は現金及び預金とグループ預け金を担保に供し、2024年4月以降は売掛金と商品も差し入れるとした。連結貸借対照表の借入金として載っていなくても、返せなくなれば資産を取られる立場に置かれている。</p>
 <p>なお、資金調達計画上のシニアとメザニンの合計1兆4,355億円と、2024年3月末の保証対象元本1兆6,105億円には1,750億円の差がある。この差の内訳は公表資料からは特定できない。</p>
-<p>第2に合併である。豊田自動織機の案件では、取引完了後に同社を存続会社、公開買付者を消滅会社とする吸収合併を検討すると開示されている。ただし時期と具体的条件は未定とされている<a href="https://www.toyota-shokki.co.jp/news/item/20260114_document03.pdf" target="_blank" rel="noopener">出典</a>。合併が実行されれば、3兆6,425億円の借入は豊田自動織機自身の債務になる。合併を待たずとも、スクイーズアウト完了後には同社と重要子会社の資産が担保に差し入れられる予定であり、実質的な負担は先に事業側へ寄る。</p>
-<p>第3に資金の吸い上げである。東芝の決算資料はフリー・キャッシュ・フローの定義について、制限付預金と親会社への貸付の影響を除いていると注記している<a href="https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/finance/pdf/tpr2025q4.pdf" target="_blank" rel="noopener">出典</a>。事業会社が稼いだ現金が親会社へ流れる構造が常態化していることを、この注記自体が示している。</p>
-<p>事業側の変化は、利払いが損益計算書に現れるより先に別の形で観測できる。豊田自動織機の2026年3月期の1株当たり配当金は0円で、前期の280円から全額が消えた。同期の営業利益は1,370億円で前期比38.2%の減益、売上高は4兆3,695億円で前期比7.0%の増収である。減益要因は取引ではなくエンジン認証関連費用と米国関税の影響と説明されている。2027年3月期の業績予想は、非公開化の手続完了後に公表するとして決算説明資料の時点では出されていない<a href="https://www.toyota-shokki.co.jp/investors/item/2026_4Q_supplementary_J.pdf" target="_blank" rel="noopener">出典</a>。開示の頻度と粒度が落ちることは、非上場化そのものの帰結である。</p>
+<p>第2に合併である。豊田自動織機の案件では、取引完了後に同社を存続会社、公開買付者を消滅会社とする吸収合併を検討すると開示されている。ただし時期と具体的条件は未定とされている<a class="tb-src" href="https://www.toyota-shokki.co.jp/news/item/20260114_document03.pdf" target="_blank" rel="noopener">出典</a>。合併が実行されれば、3兆6,425億円の借入は豊田自動織機自身の債務になる。合併を待たずとも、スクイーズアウト完了後には同社と重要子会社の資産が担保に差し入れられる予定であり、実質的な負担は先に事業側へ寄る。</p>
+<p>第3に資金の吸い上げである。東芝の決算資料はフリー・キャッシュ・フローの定義について、制限付預金と親会社への貸付の影響を除いていると注記している<a class="tb-src" href="https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/finance/pdf/tpr2025q4.pdf" target="_blank" rel="noopener">出典</a>。事業会社が稼いだ現金が親会社へ流れる構造が常態化していることを、この注記自体が示している。</p>
+<p>事業側の変化は、利払いが損益計算書に現れるより先に別の形で観測できる。豊田自動織機の2026年3月期の1株当たり配当金は0円で、前期の280円から全額が消えた。同期の営業利益は1,370億円で前期比38.2%の減益、売上高は4兆3,695億円で前期比7.0%の増収である。減益要因は取引ではなくエンジン認証関連費用と米国関税の影響と説明されている。2027年3月期の業績予想は、非公開化の手続完了後に公表するとして決算説明資料の時点では出されていない<a class="tb-src" href="https://www.toyota-shokki.co.jp/investors/item/2026_4Q_supplementary_J.pdf" target="_blank" rel="noopener">出典</a>。開示の頻度と粒度が落ちることは、非上場化そのものの帰結である。</p>
 <h2 id="s3">返済原資の検証：事業キャッシュフローで足りるかの計算</h2>
 <p>レバレッジ取引の評価は、金額の大きさではなく割り算で行う。年間いくら返せるか、残高を年間返済額で割ると何年かかるか。この2つだけで多くのことが分かる。</p>
-<p>東芝で計算してみる。保証対象のLBOローン元本は2024年3月末の1兆6,105億円から2025年3月末の1兆5,148億円へ、1年で957億円減った<a href="https://www3.toshiba.co.jp/tdec/assets/pdf/public_notice_65_period.pdf" target="_blank" rel="noopener">出典</a>。同じ年の営業キャッシュ・フローは2,705億円、フリー・キャッシュ・フローは2,034億円である。年間957億円のペースを2025年3月末残高に当てはめると、2031年までの残り6年で返せるのは5,742億円にとどまり、残高1兆5,148億円の38%にしかならない。これは筆者の試算であり、返済スケジュールの実際の元本償還額は開示されていない。</p>
-<p>実際に返済を加速させたのは本業ではなかった。2025年度の営業キャッシュ・フローは3,283億円で前年度比578億円の増加にとどまる一方、投資キャッシュ・フローがキオクシア株などの売却でプラス7,364億円に転じ、フリー・キャッシュ・フローは1兆647億円になった<a href="https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/finance/pdf/tpr2025q4.pdf" target="_blank" rel="noopener">出典</a>。増分の大半は資産売却であり、本業の増加分ではない。</p>
-<p>このキオクシア持分の扱いは、レバレッジ取引を読むうえで重要な教訓を含む。公開買付け時点で東芝はキオクシアホールディングス発行済株式の39.59%を保有していたが、経営に関与せず、株主間契約上は情報を受領する権利も持たなかった<a href="https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/news/20230807_5.pdf" target="_blank" rel="noopener">出典</a>。この情報遮断のため特別委員会はキオクシアの価値を独自に検証できず、買付価格の妥当性評価における最大の不確実要因になった。同社は2024年12月18日に東京証券取引所プライム市場へ上場し<a href="https://ssl4.eir-parts.net/doc/285A/yuho_pdf/S100W440/00.pdf" target="_blank" rel="noopener">出典</a>、東芝の保有割合は2025年3月31日の30.50%から2026年3月31日の17.59%へ下がった<a href="https://www.kioxia-holdings.com/ja-jp/ir/stock/outline.html" target="_blank" rel="noopener">出典</a>。買収時には価格算定を歪める不確実要因だった資産が、上場後は債務圧縮の主原資に転じた。</p>
+<p>東芝で計算してみる。保証対象のLBOローン元本は2024年3月末の1兆6,105億円から2025年3月末の1兆5,148億円へ、1年で957億円減った<a class="tb-src" href="https://www3.toshiba.co.jp/tdec/assets/pdf/public_notice_65_period.pdf" target="_blank" rel="noopener">出典</a>。同じ年の営業キャッシュ・フローは2,705億円、フリー・キャッシュ・フローは2,034億円である。年間957億円のペースを2025年3月末残高に当てはめると、2031年までの残り6年で返せるのは5,742億円にとどまり、残高1兆5,148億円の38%にしかならない。これは筆者の試算であり、返済スケジュールの実際の元本償還額は開示されていない。</p>
+<p>実際に返済を加速させたのは本業ではなかった。2025年度の営業キャッシュ・フローは3,283億円で前年度比578億円の増加にとどまる一方、投資キャッシュ・フローがキオクシア株などの売却でプラス7,364億円に転じ、フリー・キャッシュ・フローは1兆647億円になった<a class="tb-src" href="https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/finance/pdf/tpr2025q4.pdf" target="_blank" rel="noopener">出典</a>。<strong class="hit">増分の大半は資産売却であり、本業の増加分ではない</strong>。</p>
+<p>このキオクシア持分の扱いは、レバレッジ取引を読むうえで重要な教訓を含む。公開買付け時点で東芝はキオクシアホールディングス発行済株式の39.59%を保有していたが、経営に関与せず、株主間契約上は情報を受領する権利も持たなかった<a class="tb-src" href="https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/news/20230807_5.pdf" target="_blank" rel="noopener">出典</a>。この情報遮断のため特別委員会はキオクシアの価値を独自に検証できず、買付価格の妥当性評価における最大の不確実要因になった。同社は2024年12月18日に東京証券取引所プライム市場へ上場し<a class="tb-src" href="https://ssl4.eir-parts.net/doc/285A/yuho_pdf/S100W440/00.pdf" target="_blank" rel="noopener">出典</a>、東芝の保有割合は2025年3月31日の30.50%から2026年3月31日の17.59%へ下がった<a class="tb-src" href="https://www.kioxia-holdings.com/ja-jp/ir/stock/outline.html" target="_blank" rel="noopener">出典</a>。買収時には価格算定を歪める不確実要因だった資産が、上場後は債務圧縮の主原資に転じた。</p>
 <p>本業の改善そのものは限定的である。2025年度の売上高は3兆7,091億円で前年度比5.6%増、営業損益は3,008億円で前年度比1,023億円の増加、売上高営業利益率は8.1%である。EBITDA4,818億円に対して当初のシニアローン1兆2,000億円は倍率で2.5倍にあたり、メザニンと優先株式を含めればさらに上がる。金利水準が開示されていないため利払い後の返済余力は算定できない。最終利益1兆9,673億円という数字は再建の証拠には使えない。営業損益との差の大半は、営業外のキオクシア関連損益2兆2,770億円である。</p>
 <p>豊田自動織機については利払い額そのものが開示されていない。融資条件は各行との個別協議で定めるとされており、金利、期間、コベナンツはいずれも公表資料に存在しない。桁を測る試算として、3兆6,425億円に年1.0%を掛けると364億円、年2.0%で728億円、年3.0%で1,093億円になる。同社の2026年3月期の営業利益は1,370億円であり、年2.0%の試算値は営業利益の53%にあたる。これは筆者の試算であり、開示された利払い額ではない。</p>
-<p>事業への波及を抑える手当ては記録されている。豊田自動織機の取締役会は、多額の借入が生じることを認識したうえで、販売金融事業と物流ソリューション事業への影響を限定する施策について金融機関との協議状況の説明を受け、企業価値の毀損を回避できると確認したとしている<a href="https://www.toyota-shokki.co.jp/news/item/20260114_document03.pdf" target="_blank" rel="noopener">出典</a>。販売金融は自らの信用力で資金を調達して顧客に貸す事業であり、親会社の格付低下が調達コストに直結する。切り離しの協議があったという事実は開示されているが、施策の内容は開示されていない。</p>
+<p>事業への波及を抑える手当ては記録されている。豊田自動織機の取締役会は、多額の借入が生じることを認識したうえで、販売金融事業と物流ソリューション事業への影響を限定する施策について金融機関との協議状況の説明を受け、企業価値の毀損を回避できると確認したとしている<a class="tb-src" href="https://www.toyota-shokki.co.jp/news/item/20260114_document03.pdf" target="_blank" rel="noopener">出典</a>。販売金融は自らの信用力で資金を調達して顧客に貸す事業であり、親会社の格付低下が調達コストに直結する。切り離しの協議があったという事実は開示されているが、施策の内容は開示されていない。</p>
 <h2 id="s4">勝訴金や裏付け資産を担保にする金融の設計と目利き</h2>
 <p>裏付けが事業利益でない場合でも、構造の読み方は変わらない。誰が金を出し、何を担保に取り、外れたときに誰が損するか。この3つを順に見る。</p>
-<p>訴訟ファイナンスは、原告が負う弁護士費用や仲裁人費用を第三者が立て替え、勝訴または和解で得た金銭から回収する仕組みである。敗訴時は返済義務がないノンリコースであるため、形式は貸付ではなく訴訟結果へのエクイティ出資に近い。損失は資金提供者が全額負う。</p>
-<p>価格は金利ではなく倍率と分配率で決まる。Burford Capitalは、成功時に投下資本の回収に加えて、時間比例のリターン、時間とともに上昇しうる投下資本の倍率、純回収額に対する一定割合のいずれか1つまたは複数を受け取ると説明している<a href="https://s206.q4cdn.com/737820215/files/doc_financials/2025/q4/2026-02-26-Burford-Capital-2025-Annual-Report-on-Form-10-K-FINAL.pdf" target="_blank" rel="noopener">出典</a>。実務で多いのは倍率と割合の高い方を取る構造である。Omni Bridgewayは、100万USDを出資し、投下額の2倍と回収額の20%の高い方を受け取る契約で、回収が800万USDなら取り分は200万USDになる例を挙げている<a href="https://omnibridgeway.com/insights/blog/blog-posts/blog-details/global/2021/09/29/step-by-step-the-nuts-and-bolts-of-the-funding-process-part-one" target="_blank" rel="noopener">出典</a>。</p>
-<p>回収金の配分順序をウォーターフォールと呼ぶ。まず資金提供者が投下資本を全額回収し、次に弁護士の成功報酬と資金提供者のリターンが按分で支払われ、残余が原告に渡る。最初の200万USDは100%を資金提供者、次の100万USDは75%、次の100万USDは50%、400万USD超は25%という段階設計が例示されている<a href="https://www.rimonlaw.com/litigation-finance-waterfalls/" target="_blank" rel="noopener">出典</a>。順位を並べるという点で、シニアデットとエクイティの積み方と発想は同じである。</p>
+<p>訴訟ファイナンスは、原告が負う弁護士費用や仲裁人費用を第三者が立て替え、勝訴または和解で得た金銭から回収する仕組みである。<strong class="hit">敗訴時は返済義務がないノンリコースであるため、形式は貸付ではなく訴訟結果へのエクイティ出資に近い</strong>。損失は資金提供者が全額負う。</p>
+<p><strong class="hit">価格は金利ではなく倍率と分配率で決まる</strong>。Burford Capitalは、成功時に投下資本の回収に加えて、時間比例のリターン、時間とともに上昇しうる投下資本の倍率、純回収額に対する一定割合のいずれか1つまたは複数を受け取ると説明している<a class="tb-src" href="https://s206.q4cdn.com/737820215/files/doc_financials/2025/q4/2026-02-26-Burford-Capital-2025-Annual-Report-on-Form-10-K-FINAL.pdf" target="_blank" rel="noopener">出典</a>。実務で多いのは倍率と割合の高い方を取る構造である。Omni Bridgewayは、100万USDを出資し、投下額の2倍と回収額の20%の高い方を受け取る契約で、回収が800万USDなら取り分は200万USDになる例を挙げている<a class="tb-src" href="https://omnibridgeway.com/insights/blog/blog-posts/blog-details/global/2021/09/29/step-by-step-the-nuts-and-bolts-of-the-funding-process-part-one" target="_blank" rel="noopener">出典</a>。</p>
+<p>回収金の配分順序をウォーターフォールと呼ぶ。まず資金提供者が投下資本を全額回収し、次に弁護士の成功報酬と資金提供者のリターンが按分で支払われ、残余が原告に渡る。最初の200万USDは100%を資金提供者、次の100万USDは75%、次の100万USDは50%、400万USD超は25%という段階設計が例示されている<a class="tb-src" href="https://www.rimonlaw.com/litigation-finance-waterfalls/" target="_blank" rel="noopener">出典</a>。順位を並べるという点で、シニアデットとエクイティの積み方と発想は同じである。</p>
 <p>実績値では、Burfordの実現済みおよび部分実現済み案件の累計ROICは2025年12月31日時点で83%、IRRは26%、累計実現額は37.7億USDである。稼働中の投下資本の加重平均滞留期間は3.3年で、2024年12月31日時点の3.1年から0.2年伸びた。ROICは案件終結までの累計値であり年率ではない。同社はMOICがROICより1倍高いと定義しており、83%のROICは1.83倍のMOICに対応する。年率に相当する指標はIRRの26%である。</p>
-<p>目利きは内製の元訴訟弁護士が担う。Burfordの2025年12月31日時点の従業員は172人で、うち50人が米国、英国、アルゼンチン、オーストラリア、ドイツ、インド、スイスのいずれかで弁護士資格を持つ。案件は初期スクリーニングを経てアンダーライターに割り当てられ、社内デューデリジェンスと確率モデリングを経て、法務と金融の双方の経験を持つ内部のCommitments Committeeが承認する。持ち込み案件の5%未満しか採択しないという説明が二次情報にあるが、BurfordもOmni Bridgewayも採択率を公表していない<a href="https://inpractise.com/articles/burford-capital-and-litigation-finance-law-firm-perspective" target="_blank" rel="noopener">出典</a>。一次資料での確認は取れていない。</p>
-<p>日本にこの仕組みが広がらない理由は、単一の禁止条文ではなくスキームごとの制約の重なりである。債権を買い取って自ら訴える譲渡型は弁護士法73条に当たる<a href="https://www.mc-law.jp/mc_soudan/26130/" target="_blank" rel="noopener">出典</a>。信託型は、訴訟行為をさせることを主たる目的とする信託を禁じる信託法10条で塞がれる<a href="https://www.japaneselawtranslation.go.jp/ja/laws/view/4453" target="_blank" rel="noopener">出典</a>。弁護士の成功報酬を資金提供者と分け合う設計は弁護士職務基本規程12条に抵触する<a href="https://www.nichibenren.or.jp/library/ja/jfba_info/rules/data/rinzisoukai_syokumu.pdf" target="_blank" rel="noopener">出典</a>。英米法のchamperty and maintenanceの法理はコモン・ロー上のもので、大陸法国の日本には妥当しないと整理されている<a href="https://note.com/miuraandpartners/n/naf31fc50ba56" target="_blank" rel="noopener">出典</a>。裏返すと、債権を譲り受けず、信託を用いず、弁護士報酬を分配せず、法律事務にも関与しない純粋なノンリコース資金提供は、これらの条文に直接は当たらない。同時に、適法と明示する法令も監督枠組みも存在しない。</p>
-<p>法律以上に効いているのは回収の経済性である。日本資本で最初の訴訟仲裁ファンドであるTrailblaze Asset Managementは、2024年12月24日にケイマンでのファンド設立を公表し、運用国を米国、シンガポール、香港などとした。ファンド規模は1,000万USD、上限1,500万USDで、1件あたりの投資額は3,000万円から1.5億円である<a href="https://prtimes.jp/main/html/rd/p/000000002.000134760.html" target="_blank" rel="noopener">出典</a>。日本国内の訴訟は主軸に置かれていない。制度が塞いでいるというより、日本の訴訟の回収額が投資対象として小さい。</p>
-<p>裏付け資産に依存するという点では、円建てステーブルコインも同じ読み方が要る。発行体は無利子の負債を発行し、有利子資産で運用する。JPYCは資金移動業型で、裏付け資産を日本円の預貯金および国債で保全している<a href="https://prtimes.jp/main/html/rd/p/000000308.000054018.html" target="_blank" rel="noopener">出典</a>。運用構成は発行開始時点で国債と預金を半分ずつとし、将来は国債を8割まで引き上げる方針である。想定利回りは短期国債を中心に1%程度で、この運用益があるため発行・償還手数料を無料にしている。国債金利が極端に低下した場合は手数料が変動する可能性も示されている<a href="https://www.watch.impress.co.jp/docs/news/2058390.html" target="_blank" rel="noopener">出典</a>。手数料が無料であることは寛大さではない。利用者が預けた資金の運用益が発行体に帰属する構造の裏返しである。</p>
+<p>目利きは内製の元訴訟弁護士が担う。Burfordの2025年12月31日時点の従業員は172人で、うち50人が米国、英国、アルゼンチン、オーストラリア、ドイツ、インド、スイスのいずれかで弁護士資格を持つ。案件は初期スクリーニングを経てアンダーライターに割り当てられ、社内デューデリジェンスと確率モデリングを経て、法務と金融の双方の経験を持つ内部のCommitments Committeeが承認する。持ち込み案件の5%未満しか採択しないという説明が二次情報にあるが、BurfordもOmni Bridgewayも採択率を公表していない<a class="tb-src" href="https://inpractise.com/articles/burford-capital-and-litigation-finance-law-firm-perspective" target="_blank" rel="noopener">出典</a>。一次資料での確認は取れていない。</p>
+<p><strong class="hit">日本にこの仕組みが広がらない理由は、単一の禁止条文ではなくスキームごとの制約の重なりである</strong>。債権を買い取って自ら訴える譲渡型は弁護士法73条に当たる<a class="tb-src" href="https://www.mc-law.jp/mc_soudan/26130/" target="_blank" rel="noopener">出典</a>。信託型は、訴訟行為をさせることを主たる目的とする信託を禁じる信託法10条で塞がれる<a class="tb-src" href="https://www.japaneselawtranslation.go.jp/ja/laws/view/4453" target="_blank" rel="noopener">出典</a>。弁護士の成功報酬を資金提供者と分け合う設計は弁護士職務基本規程12条に抵触する<a class="tb-src" href="https://www.nichibenren.or.jp/library/ja/jfba_info/rules/data/rinzisoukai_syokumu.pdf" target="_blank" rel="noopener">出典</a>。英米法のchamperty and maintenanceの法理はコモン・ロー上のもので、大陸法国の日本には妥当しないと整理されている<a class="tb-src" href="https://note.com/miuraandpartners/n/naf31fc50ba56" target="_blank" rel="noopener">出典</a>。裏返すと、債権を譲り受けず、信託を用いず、弁護士報酬を分配せず、法律事務にも関与しない純粋なノンリコース資金提供は、これらの条文に直接は当たらない。同時に、適法と明示する法令も監督枠組みも存在しない。</p>
+<p>法律以上に効いているのは回収の経済性である。日本資本で最初の訴訟仲裁ファンドであるTrailblaze Asset Managementは、2024年12月24日にケイマンでのファンド設立を公表し、運用国を米国、シンガポール、香港などとした。ファンド規模は1,000万USD、上限1,500万USDで、1件あたりの投資額は3,000万円から1.5億円である<a class="tb-src" href="https://prtimes.jp/main/html/rd/p/000000002.000134760.html" target="_blank" rel="noopener">出典</a>。日本国内の訴訟は主軸に置かれていない。制度が塞いでいるというより、日本の訴訟の回収額が投資対象として小さい。</p>
+<p>裏付け資産に依存するという点では、円建てステーブルコインも同じ読み方が要る。発行体は無利子の負債を発行し、有利子資産で運用する。JPYCは資金移動業型で、裏付け資産を日本円の預貯金および国債で保全している<a class="tb-src" href="https://prtimes.jp/main/html/rd/p/000000308.000054018.html" target="_blank" rel="noopener">出典</a>。運用構成は発行開始時点で国債と預金を半分ずつとし、将来は国債を8割まで引き上げる方針である。想定利回りは短期国債を中心に1%程度で、この運用益があるため発行・償還手数料を無料にしている。国債金利が極端に低下した場合は手数料が変動する可能性も示されている<a class="tb-src" href="https://www.watch.impress.co.jp/docs/news/2058390.html" target="_blank" rel="noopener">出典</a>。<strong class="hit">手数料が無料であることは寛大さではない</strong>。利用者が預けた資金の運用益が発行体に帰属する構造の裏返しである。</p>
 <h2 id="s5">規制が線を引く場所：発行体・仲介者・賭けの対象</h2>
 <p>規制は取引の全体を丸ごと許したり禁じたりしない。誰が発行できるか、誰が仲介できるか、何を対象にできるか、という3つの位置に別々の線を引く。</p>
-<p>発行体の線が最も明確なのは日本のステーブルコインである。資金決済法上の電子決済手段として定義され、資金移動業者が発行する2号型と、信託銀行が受託者となる特定信託受益権すなわち3号型に分かれる。JPYCは2025年10月27日に2号型として、JPYSCは2026年6月24日に3号型として発行を始めた。2026年6月1日施行の改正資金決済法は、信託型の裏付け資産を要求払預貯金のみに限る規制を緩め、残存3か月以内の国債と中途解約可能な定期預金を発行額の50%を上限に認めた<a href="https://www.businesslawyers.jp/articles/1476" target="_blank" rel="noopener">出典</a>。裏付け資産から金利を取れる構造が制度として整った直後に、100億円規模の発行が起きた点は押さえておきたい。</p>
-<p>仲介者の線は流通の広さを直接決める。電子決済手段等取引業者は2026年6月24日時点でSBI VCトレード1社のみである<a href="https://www.fsa.go.jp/menkyo/menkyoj/denshikessaisyudan.pdf" target="_blank" rel="noopener">出典</a>。仲介者が1社なら、資産は事実上その1社の口座の中を回るしかない。実際、JPYSCの初日発行額100億円は、取得も保有もSBI VCトレードの口座内に限定され、外部ウォレットへの出庫はできない状態で発行された<a href="https://www.nadanews.com/357097/" target="_blank" rel="noopener">出典</a>。外部に出せない資産で決済はできないため、この100億円は決済需要ではない。続いて7月23日に開始したJPYSCレンディングは、記念条件で12週間満期の年率3%、通常時も年率1%から3%程度を予定している<a href="https://prtimes.jp/main/html/rd/p/000000213.000059421.html" target="_blank" rel="noopener">出典</a>。決済用途より運用用途が先に立ち上がった。</p>
-<p>規模を比較すると、決済側は小さい。JPYCの累計発行額は2026年5月30日時点で30億円、口座開設数は19,000件である<a href="https://prtimes.jp/main/html/rd/p/000000321.000054018.html" target="_blank" rel="noopener">出典</a>。オンチェーン流通額は2026年7月10日時点で20億円である<a href="https://prtimes.jp/main/html/rd/p/000000325.000054018.html" target="_blank" rel="noopener">出典</a>。累計発行額と流通額は別の指標であり、償還された分は前者に残り後者から消える。一方、全国銀行の総預金は2026年3月末で971兆8,836億円、前年同月比2.6%増である<a href="https://www.zenginkyo.or.jp/fileadmin/res/abstract/stats/month1_01/yokashi04363.pdf" target="_blank" rel="noopener">出典</a>。円建てステーブルコインの残高は合わせても総預金の0.002%に満たず、預金からの流出として観測できる変化はない。</p>
-<p>それでも当局と銀行界は資金シフトを先回りの論点として扱っている。2026年5月29日の中央銀行デジタル通貨に関する連絡協議会第11回会合では、全国地方銀行協会が保有制限の設定に異議はないと述べ、財務省がオートスウィング機能の重要性を挙げ、全国銀行協会が全銀ネットでのデジタル決済手段対応システムの検討開始と2030年度の稼働目標を報告し、日本銀行が日銀当座預金のトークン化の検討開始を述べている<a href="https://www.boj.or.jp/paym/digital/dig260702a.pdf" target="_blank" rel="noopener">出典</a>。銀行側は発行側に回る動きも見せている。三菱UFJ銀行、みずほ銀行、三井住友銀行は2026年度中に信託型の円建てステーブルコインを共同発行する方針で協議会を設立したと報じられている<a href="https://www.neweconomy.jp/posts/581387" target="_blank" rel="noopener">出典</a>。銀行が発行側に回れば、資金は銀行の貸借対照表から信託勘定へ移るが、銀行グループの外へは出ない。</p>
-<p>賭けの対象そのものに線を引こうとしているのが、米国の予測市場をめぐる争いである。争点は2つに絞られている。スポーツ事象契約が商品取引所法上のswapに当たるか。当たるとして州の賭博法がどこまで先取りされるか。第3巡回区は2026年4月、2対1でニュージャージー州に対するKalshiの仮差止を維持し、指定契約市場上のswapに対するCFTCの排他的管轄を根拠に先取りを認めた<a href="https://www.skadden.com/insights/publications/2026/04/third-circuit-affirms-kalshis-preliminary-injunction" target="_blank" rel="noopener">出典</a>。判決日については4月4日とする解説と4月6日とする報道があり、一次資料の判決文は確認できていない。これに対しニューヨーク南部地区は2026年7月7日、仮差止申立てを却下した。商品取引所法第5c条(c)(5)(C)が州法違反の活動やgamingを参照する契約を特別扱いしている以上、議会は指定契約市場上の全取引を州法から遮断する意図を持っていなかったと読んだ<a href="https://ag.ny.gov/sites/default/files/court-filings/kalshiex-llc-v-new-york-state-gaming-commission-et-al-opinion-and-order-2026.pdf" target="_blank" rel="noopener">出典</a>。判断が割れているため、最高裁または議会立法まで決着しない可能性が高い。第3巡回区の判断は仮差止段階の勝訴見込みの評価であり、本案判断ではない点も押さえておきたい。</p>
-<p>CFTCは訴訟と並行して規則で線を引きにいっている。2026年6月10日、第5c条(c)(5)(C)が列挙するテロ、暗殺、戦争、gaming、違法行為に契約が該当するかを判定する枠組みの規則案を公表した<a href="https://www.cftc.gov/PressRoom/PressReleases/9249-26" target="_blank" rel="noopener">出典</a>。2026年7月24日には、指定契約市場が多数の契約バリエーションを1本の雛形で自己認証することを戒める助言を出した<a href="https://www.cftc.gov/PressRoom/PressReleases/9273-26" target="_blank" rel="noopener">出典</a>。市場健全性の側でも執行が始まり、2026年7月31日には一般教書演説に関するイベント契約の相場操縦でGeorge Santos氏に35,000ドルの支払いが命じられている<a href="https://www.cftc.gov/PressRoom/PressReleases/9276-26" target="_blank" rel="noopener">出典</a>。</p>
-<p>規制の線がどこに引かれるかは、参加者の損得に直結する。予測市場の価格を確率として使えるかどうかも、参加者の構成に依存する。ロンドン・ビジネス・スクールとイェール大学の共同研究は、Polymarketの1,720,000口座、210,322市場、取引高137.6億ドルを分析し、skilledと判定された口座は3.14%であり、この層の注文が短期の価格変化と最終結果の両方を予測すると報告した。約6%はランダムより成績が悪い。技能の持続性は、第1期間でskilledとされた層の44%が第2期間でも同じ判定になる水準である<a href="https://insights.som.yale.edu/insights/wisdom-of-the-few-prediction-markets-are-driven-by-small-number-of-skilled-traders" target="_blank" rel="noopener">出典</a>。SSRN本文はアクセス制限により取得できず、数値はイェールの解説と報道に依拠している。参加者を増やすこと自体が精度を上げるわけではない。</p>
-<p>的中率そのものについては、査読を経た横断推定は見当たらない。独立に方法を公開している集計はbrier.fyiであり、2025年10月14日時点で市場期間の中間時点におけるBrierスコアの中央値は0.0256、決済1ヶ月前に解決値から30%以内に入っていた市場は63%である<a href="https://brier.fyi/" target="_blank" rel="noopener">出典</a>。キャリブレーション誤差を1つの数字で語る記事の多くは出所を示していない自社分析であり、一次資料としては使えない。</p>
-<p>仲介者の収益構造も、この産業の性格を示す。Polymarketのプラットフォーム手数料はメイカーがゼロ、テイカーのみ課金で、料率はカテゴリで異なり、暗号資産が0.07、スポーツなどが0.05、金融や政治などが0.04、地政学が0である。手数料は価格0.5で最大となり両端に向かって減る設計である<a href="https://docs.polymarket.com/trading/fees.md" target="_blank" rel="noopener">出典</a>。その上にアグリゲーターが自分の手数料を積む。注文をルーティングしたアプリは、テイカー最大100bp、メイカー最大50bpを約定元本に対して取れる<a href="https://docs.polymarket.com/programs/builders/fees.md" target="_blank" rel="noopener">出典</a>。収益はスプレッドではなく約定元本に対する固定bpに紐づく。データだけを配る事業者は購読料に頼るしかなく、執行まで通す事業者だけがフロー課金に到達する。</p>
+<p>発行体の線が最も明確なのは日本のステーブルコインである。資金決済法上の電子決済手段として定義され、資金移動業者が発行する2号型と、信託銀行が受託者となる特定信託受益権すなわち3号型に分かれる。JPYCは2025年10月27日に2号型として、JPYSCは2026年6月24日に3号型として発行を始めた。2026年6月1日施行の改正資金決済法は、信託型の裏付け資産を要求払預貯金のみに限る規制を緩め、残存3か月以内の国債と中途解約可能な定期預金を発行額の50%を上限に認めた<a class="tb-src" href="https://www.businesslawyers.jp/articles/1476" target="_blank" rel="noopener">出典</a>。裏付け資産から金利を取れる構造が制度として整った直後に、100億円規模の発行が起きた点は押さえておきたい。</p>
+<p>仲介者の線は流通の広さを直接決める。電子決済手段等取引業者は2026年6月24日時点でSBI VCトレード1社のみである<a class="tb-src" href="https://www.fsa.go.jp/menkyo/menkyoj/denshikessaisyudan.pdf" target="_blank" rel="noopener">出典</a>。仲介者が1社なら、資産は事実上その1社の口座の中を回るしかない。実際、JPYSCの初日発行額100億円は、取得も保有もSBI VCトレードの口座内に限定され、外部ウォレットへの出庫はできない状態で発行された<a class="tb-src" href="https://www.nadanews.com/357097/" target="_blank" rel="noopener">出典</a>。外部に出せない資産で決済はできないため、この100億円は決済需要ではない。続いて7月23日に開始したJPYSCレンディングは、記念条件で12週間満期の年率3%、通常時も年率1%から3%程度を予定している<a class="tb-src" href="https://prtimes.jp/main/html/rd/p/000000213.000059421.html" target="_blank" rel="noopener">出典</a>。決済用途より運用用途が先に立ち上がった。</p>
+<p>規模を比較すると、決済側は小さい。JPYCの累計発行額は2026年5月30日時点で30億円、口座開設数は19,000件である<a class="tb-src" href="https://prtimes.jp/main/html/rd/p/000000321.000054018.html" target="_blank" rel="noopener">出典</a>。オンチェーン流通額は2026年7月10日時点で20億円である<a class="tb-src" href="https://prtimes.jp/main/html/rd/p/000000325.000054018.html" target="_blank" rel="noopener">出典</a>。累計発行額と流通額は別の指標であり、償還された分は前者に残り後者から消える。一方、全国銀行の総預金は2026年3月末で971兆8,836億円、前年同月比2.6%増である<a class="tb-src" href="https://www.zenginkyo.or.jp/fileadmin/res/abstract/stats/month1_01/yokashi04363.pdf" target="_blank" rel="noopener">出典</a>。円建てステーブルコインの残高は合わせても総預金の0.002%に満たず、預金からの流出として観測できる変化はない。</p>
+<p>それでも当局と銀行界は資金シフトを先回りの論点として扱っている。2026年5月29日の中央銀行デジタル通貨に関する連絡協議会第11回会合では、全国地方銀行協会が保有制限の設定に異議はないと述べ、財務省がオートスウィング機能の重要性を挙げ、全国銀行協会が全銀ネットでのデジタル決済手段対応システムの検討開始と2030年度の稼働目標を報告し、日本銀行が日銀当座預金のトークン化の検討開始を述べている<a class="tb-src" href="https://www.boj.or.jp/paym/digital/dig260702a.pdf" target="_blank" rel="noopener">出典</a>。銀行側は発行側に回る動きも見せている。三菱UFJ銀行、みずほ銀行、三井住友銀行は2026年度中に信託型の円建てステーブルコインを共同発行する方針で協議会を設立したと報じられている<a class="tb-src" href="https://www.neweconomy.jp/posts/581387" target="_blank" rel="noopener">出典</a>。銀行が発行側に回れば、資金は銀行の貸借対照表から信託勘定へ移るが、銀行グループの外へは出ない。</p>
+<p>賭けの対象そのものに線を引こうとしているのが、米国の予測市場をめぐる争いである。争点は2つに絞られている。スポーツ事象契約が商品取引所法上のswapに当たるか。当たるとして州の賭博法がどこまで先取りされるか。第3巡回区は2026年4月、2対1でニュージャージー州に対するKalshiの仮差止を維持し、指定契約市場上のswapに対するCFTCの排他的管轄を根拠に先取りを認めた<a class="tb-src" href="https://www.skadden.com/insights/publications/2026/04/third-circuit-affirms-kalshis-preliminary-injunction" target="_blank" rel="noopener">出典</a>。判決日については4月4日とする解説と4月6日とする報道があり、一次資料の判決文は確認できていない。これに対しニューヨーク南部地区は2026年7月7日、仮差止申立てを却下した。商品取引所法第5c条(c)(5)(C)が州法違反の活動やgamingを参照する契約を特別扱いしている以上、議会は指定契約市場上の全取引を州法から遮断する意図を持っていなかったと読んだ<a class="tb-src" href="https://ag.ny.gov/sites/default/files/court-filings/kalshiex-llc-v-new-york-state-gaming-commission-et-al-opinion-and-order-2026.pdf" target="_blank" rel="noopener">出典</a>。判断が割れているため、最高裁または議会立法まで決着しない可能性が高い。第3巡回区の判断は仮差止段階の勝訴見込みの評価であり、本案判断ではない点も押さえておきたい。</p>
+<p>CFTCは訴訟と並行して規則で線を引きにいっている。2026年6月10日、第5c条(c)(5)(C)が列挙するテロ、暗殺、戦争、gaming、違法行為に契約が該当するかを判定する枠組みの規則案を公表した<a class="tb-src" href="https://www.cftc.gov/PressRoom/PressReleases/9249-26" target="_blank" rel="noopener">出典</a>。2026年7月24日には、指定契約市場が多数の契約バリエーションを1本の雛形で自己認証することを戒める助言を出した<a class="tb-src" href="https://www.cftc.gov/PressRoom/PressReleases/9273-26" target="_blank" rel="noopener">出典</a>。市場健全性の側でも執行が始まり、2026年7月31日には一般教書演説に関するイベント契約の相場操縦でGeorge Santos氏に35,000ドルの支払いが命じられている<a class="tb-src" href="https://www.cftc.gov/PressRoom/PressReleases/9276-26" target="_blank" rel="noopener">出典</a>。</p>
+<p>規制の線がどこに引かれるかは、参加者の損得に直結する。予測市場の価格を確率として使えるかどうかも、参加者の構成に依存する。ロンドン・ビジネス・スクールとイェール大学の共同研究は、Polymarketの1,720,000口座、210,322市場、取引高137.6億ドルを分析し、skilledと判定された口座は3.14%であり、この層の注文が短期の価格変化と最終結果の両方を予測すると報告した。約6%はランダムより成績が悪い。技能の持続性は、第1期間でskilledとされた層の44%が第2期間でも同じ判定になる水準である<a class="tb-src" href="https://insights.som.yale.edu/insights/wisdom-of-the-few-prediction-markets-are-driven-by-small-number-of-skilled-traders" target="_blank" rel="noopener">出典</a>。SSRN本文はアクセス制限により取得できず、数値はイェールの解説と報道に依拠している。参加者を増やすこと自体が精度を上げるわけではない。</p>
+<p>的中率そのものについては、査読を経た横断推定は見当たらない。独立に方法を公開している集計はbrier.fyiであり、2025年10月14日時点で市場期間の中間時点におけるBrierスコアの中央値は0.0256、決済1ヶ月前に解決値から30%以内に入っていた市場は63%である<a class="tb-src" href="https://brier.fyi/" target="_blank" rel="noopener">出典</a>。キャリブレーション誤差を1つの数字で語る記事の多くは出所を示していない自社分析であり、一次資料としては使えない。</p>
+<p>仲介者の収益構造も、この産業の性格を示す。Polymarketのプラットフォーム手数料はメイカーがゼロ、テイカーのみ課金で、料率はカテゴリで異なり、暗号資産が0.07、スポーツなどが0.05、金融や政治などが0.04、地政学が0である。手数料は価格0.5で最大となり両端に向かって減る設計である<a class="tb-src" href="https://docs.polymarket.com/trading/fees.md" target="_blank" rel="noopener">出典</a>。その上にアグリゲーターが自分の手数料を積む。注文をルーティングしたアプリは、テイカー最大100bp、メイカー最大50bpを約定元本に対して取れる<a class="tb-src" href="https://docs.polymarket.com/programs/builders/fees.md" target="_blank" rel="noopener">出典</a>。収益はスプレッドではなく約定元本に対する固定bpに紐づく。データだけを配る事業者は購読料に頼るしかなく、執行まで通す事業者だけがフロー課金に到達する。</p>
 <h2 id="s6">この章の要点</h2>
 <ul>
 <li>公表される買収総額と買い手が新たに出した現金は別物である。豊田自動織機の案件では、報じられた取引総額約5兆9,000億円に対し、スポンサー出資は1兆10億円で17%にあたる。</li>
@@ -279,5 +386,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
   <div class="tb-nav"><a class="tb-nav-a" href="04_market-structure-and-listing.html">← 市場という装置：流動性・上場・熱狂</a><span></span></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

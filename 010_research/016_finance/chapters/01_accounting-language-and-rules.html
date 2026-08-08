@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -158,45 +265,80 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">契約・債務・受託者責任：財務諸表の裏側にある法的関係</a></li><li><a href="#s2">収益はいつ立つか：認識のタイミングが業種ごとに違う理由</a></li><li><a href="#s3">のれんと減損：買収した将来を誰がいつ費用にするか</a></li><li><a href="#s4">課税単位という切り口：拠点の置き方が税額を動かす</a></li><li><a href="#s5">比較する前に揃えるもの：基準差・期間差・課税地差のチェック</a></li><li><a href="#s6">この章の要点</a></li><li><a href="#s7">残っている問い</a></li><li><a href="#s8">出典</a></li></ol></nav>
 
 <p>売上高が前期比で48.7%減った会社がある。三越伊勢丹ホールディングスの2022年3月期がそれにあたる。だが店頭で売れた商品の量は、それに対応するほど減っていない。減ったのは、売上高という科目に何を載せるかというルールの側である。同じ買収から生まれた同じのれんが、連結財務諸表では1,448億円、単体では665億円として並んでいる会社もある。事業は一つしかないのに、数字は二つある。</p>
-<p>利益や売上高は、事業の実態を測った物理量ではない。どの会計基準に従い、どの法人を単位に、どの国と自治体の課税権のもとで切り取ったかという、制度上の選択の結果として現れる数字である。この選択を知らずに二社の営業利益率を並べると、事業の差だと思ったものが処理の差でしかない場合がある。投資判断でも、社内の事業評価でも、比較の前提を揃える作業が最初に来る。この章はその前提を扱う。</p>
+<p><strong class="hit">利益や売上高は、事業の実態を測った物理量ではない</strong>。どの会計基準に従い、どの法人を単位に、どの国と自治体の課税権のもとで切り取ったかという、制度上の選択の結果として現れる数字である。<strong class="hit">この選択を知らずに二社の営業利益率を並べると、事業の差だと思ったものが処理の差でしかない場合がある</strong>。投資判断でも、社内の事業評価でも、比較の前提を揃える作業が最初に来る。この章はその前提を扱う。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 238" role="img" aria-label="同じ事業から制度の選択によって別々の数字が出る">
+  <rect x="12" y="46" width="176" height="52" rx="8" fill="var(--dim)" stroke="var(--line)"/>
+  <text x="100" y="70" font-size="12.5" fill="var(--ink)" text-anchor="middle">1つの事業</text>
+  <text x="100" y="88" font-size="11" fill="var(--muted)" text-anchor="middle">店頭で売れた商品の量</text>
+
+  <path d="M188 72 L246 72" stroke="var(--line)" stroke-width="1.5"/>
+  <path d="M238 67 L246 72 L238 77" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+
+  <g font-size="11.5">
+    <rect x="252" y="30" width="456" height="1" fill="var(--line)"/>
+    <text x="252" y="24" font-size="11" fill="var(--muted)">制度上の選択</text>
+
+    <rect x="252" y="38" width="216" height="38" rx="6" fill="#EEF2FF" stroke="#D5DDF7"/>
+    <text x="268" y="62" fill="var(--ink)">本人か代理人か</text>
+    <rect x="492" y="38" width="216" height="38" rx="6" fill="var(--card)" stroke="var(--line)"/>
+    <text x="508" y="62" fill="var(--ink)">売上高が48.7%減る</text>
+
+    <rect x="252" y="86" width="216" height="38" rx="6" fill="#EEF2FF" stroke="#D5DDF7"/>
+    <text x="268" y="110" fill="var(--ink)">連結か単体か</text>
+    <rect x="492" y="86" width="216" height="38" rx="6" fill="var(--card)" stroke="var(--line)"/>
+    <text x="508" y="110" fill="var(--ink)">のれんが1,448億と665億</text>
+
+    <rect x="252" y="134" width="216" height="38" rx="6" fill="#EEF2FF" stroke="#D5DDF7"/>
+    <text x="268" y="158" fill="var(--ink)">どの課税権のもとか</text>
+    <rect x="492" y="134" width="216" height="38" rx="6" fill="var(--card)" stroke="var(--line)"/>
+    <text x="508" y="158" fill="var(--ink)">税負担率が動く</text>
+
+    <path d="M468 57 L486 57M468 105 L486 105M468 153 L486 153" stroke="var(--accent)" stroke-width="1.5"/>
+  </g>
+  <text x="12" y="206" font-size="11.5" fill="var(--ink)">利益や売上高は、事業の実態を測った物理量ではない。</text>
+  <text x="12" y="226" font-size="11.5" fill="var(--sub)">前提を揃えずに営業利益率を並べると、事業の差だと思ったものが処理の差でしかない場合がある。</text>
+</svg>
+<figcaption>三越伊勢丹の売上高が前期比48.7%減ったとき、減ったのは売れた量ではなく、売上高という科目に何を載せるかというルールの側である。事業は1つでも、数字は複数ありうる。</figcaption>
+</figure>
 <h2 id="s1">契約・債務・受託者責任：財務諸表の裏側にある法的関係</h2>
 <p>財務諸表は、その会社が誰と何を約束しているかの写像である。数字を読む前に、その約束の骨格を見ておく必要がある。</p>
-<p>第一に、誰が経営判断の責任を負うかが法で決まっている。会社法330条は、株式会社と役員および会計監査人との関係を委任に関する規定に従うと定める。<a href="https://laws.e-gov.go.jp/api/1/articles;lawId=417AC0000000086;article=330" target="_blank" rel="noopener">出典</a> これにより民法644条の善良な管理者の注意をもって委任事務を処理する義務が役員に及ぶ。<a href="https://laws.e-gov.go.jp/api/1/articles;lawId=129AC0000000089;article=644" target="_blank" rel="noopener">出典</a> 責任追及の受け皿は会社法423条1項で、任務を怠ったときに会社に対して損害賠償責任を負うと規定する。<a href="https://laws.e-gov.go.jp/api/1/articles;lawId=417AC0000000086;article=423" target="_blank" rel="noopener">出典</a> 争点は常に任務懈怠の有無に収束する。</p>
-<p>この任務の中には、体制を整える義務が含まれる。会社法362条4項6号は、取締役の職務執行の法令適合性を確保する体制と、当該会社および子会社から成る企業集団の業務の適正を確保する体制の整備を、取締役会の専決事項として取締役個人に委任できないと定める。<a href="https://laws.e-gov.go.jp/api/1/articles;lawId=417AC0000000086;article=362" target="_blank" rel="noopener">出典</a> 条文に企業集団という語があるため、子会社で起きた不正が親会社取締役の責任論に接続する。連結財務諸表の中身に対する責任が、法の側からも裏打ちされているということである。なお、善管注意義務が実際に争われた個別の裁判例については、素材となった調査で一次資料に到達できていない。裁判所の裁判例検索は検索ページ本体しか取得できず、個別判例の詳細ページと判決全文は取得できなかった。<a href="https://www.courts.go.jp/app/hanrei_jp/search2" target="_blank" rel="noopener">出典</a> したがって、ここでは事件名や認容額といった事例レベルの事実は記載しない。</p>
-<p>第二に、連結の範囲は持分比率だけでは決まらない。会社法施行規則3条3項2号は、議決権比率が40%以上50%以下であっても、緊密な関係者との合算議決権が50%を超える、相手方の取締役会の構成員の50%超を自己の役員や使用人またはその経験者が占める、重要な財務および事業の方針の決定を支配する契約が存在する、自己が行う融資が資金調達総額の50%を超えるといった要件のいずれかに該当すれば子会社として扱うと定める。<a href="https://laws.e-gov.go.jp/api/1/articles;lawId=418M60000010012;article=3" target="_blank" rel="noopener">出典</a> 役員派遣と契約と融資が、持分と同じ重みで支配の判定材料になる。連結売上高がいくらかという問いは、この判定の結果に依存する。</p>
-<p>第三に、共同出資では持分と意思決定権が別々に設計される。会社法309条1項は普通決議を出席株主の議決権の過半数とし、2項は定款変更や組織再編などの特別決議を出席株主の議決権の3分の2以上とする。<a href="https://laws.e-gov.go.jp/api/1/articles;lawId=417AC0000000086;article=309" target="_blank" rel="noopener">出典</a> この結果、3分の1超で特別決議を阻止でき、過半数で普通決議を通せ、3分の2以上で特別決議も通せるという3つの閾値が生まれる。さらに会社法362条4項は、重要な財産の処分および譲受け、多額の借財、重要な使用人の選解任などを取締役会の専決事項とする。その上に、共同出資契約上の拒否権事項が乗る。年度予算の承認、一定金額を超える設備投資、増資、株式譲渡、配当方針などがよく列挙される。この第3層は会社法の規律の外にあり、当事者間の合意で自由に設計される。過半数を持っていても年度予算が通らない設計は成立する。競争法の側にも別の閾値がある。公正取引委員会の企業結合審査に関する運用指針は、議決権保有比率が50%超の場合、および20%超かつ単独第1位の場合を審査対象とし、10%以下または順位4位以下では結合関係が形成、維持、強化されないとする。<a href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin.html" target="_blank" rel="noopener">出典</a></p>
-<p>第四に、負債側の条件が損益の自由度を縛る。シンジケートローンでは、借り手に指名されたアレンジャーが銀行団を組成し、組成の対価としてアレンジメントフィーを前取りする。この手数料はプレシピウムとも呼ばれ、下位の参加行には配分されない。参加行は原則として貸出スプレッドのみを得る。<a href="https://www.bis.org/publ/qtrpdf/r_qt0412g.pdf" target="_blank" rel="noopener">出典</a> 借り手の側から見ると、同じ資金調達でも、期首に一度だけ発生する費用と、期間にわたって発生する費用が混在する。加えて、こうした融資契約には財務制限条項が付されるのが通例で、抵触すれば期限の利益を失う。後述するすかいらーくホールディングスは、シンジケートローン形式の融資契約およびコミットメントライン契約に財務制限条項が付されていることをリスク情報に記載し、2021年2月12日、2021年7月16日、2023年2月13日に条項の変更で貸付人と合意している。<a href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100QI2H.pdf" target="_blank" rel="noopener">出典</a></p>
+<p>第一に、誰が経営判断の責任を負うかが法で決まっている。会社法330条は、株式会社と役員および会計監査人との関係を委任に関する規定に従うと定める。<a class="tb-src" href="https://laws.e-gov.go.jp/api/1/articles;lawId=417AC0000000086;article=330" target="_blank" rel="noopener">出典</a> これにより民法644条の善良な管理者の注意をもって委任事務を処理する義務が役員に及ぶ。<a class="tb-src" href="https://laws.e-gov.go.jp/api/1/articles;lawId=129AC0000000089;article=644" target="_blank" rel="noopener">出典</a> 責任追及の受け皿は会社法423条1項で、任務を怠ったときに会社に対して損害賠償責任を負うと規定する。<a class="tb-src" href="https://laws.e-gov.go.jp/api/1/articles;lawId=417AC0000000086;article=423" target="_blank" rel="noopener">出典</a> 争点は常に任務懈怠の有無に収束する。</p>
+<p>この任務の中には、体制を整える義務が含まれる。会社法362条4項6号は、取締役の職務執行の法令適合性を確保する体制と、当該会社および子会社から成る企業集団の業務の適正を確保する体制の整備を、取締役会の専決事項として取締役個人に委任できないと定める。<a class="tb-src" href="https://laws.e-gov.go.jp/api/1/articles;lawId=417AC0000000086;article=362" target="_blank" rel="noopener">出典</a> 条文に企業集団という語があるため、子会社で起きた不正が親会社取締役の責任論に接続する。連結財務諸表の中身に対する責任が、法の側からも裏打ちされているということである。なお、善管注意義務が実際に争われた個別の裁判例については、素材となった調査で一次資料に到達できていない。裁判所の裁判例検索は検索ページ本体しか取得できず、個別判例の詳細ページと判決全文は取得できなかった。<a class="tb-src" href="https://www.courts.go.jp/app/hanrei_jp/search2" target="_blank" rel="noopener">出典</a> したがって、ここでは事件名や認容額といった事例レベルの事実は記載しない。</p>
+<p>第二に、連結の範囲は持分比率だけでは決まらない。会社法施行規則3条3項2号は、議決権比率が40%以上50%以下であっても、緊密な関係者との合算議決権が50%を超える、相手方の取締役会の構成員の50%超を自己の役員や使用人またはその経験者が占める、重要な財務および事業の方針の決定を支配する契約が存在する、自己が行う融資が資金調達総額の50%を超えるといった要件のいずれかに該当すれば子会社として扱うと定める。<a class="tb-src" href="https://laws.e-gov.go.jp/api/1/articles;lawId=418M60000010012;article=3" target="_blank" rel="noopener">出典</a> 役員派遣と契約と融資が、持分と同じ重みで支配の判定材料になる。連結売上高がいくらかという問いは、この判定の結果に依存する。</p>
+<p>第三に、共同出資では持分と意思決定権が別々に設計される。会社法309条1項は普通決議を出席株主の議決権の過半数とし、2項は定款変更や組織再編などの特別決議を出席株主の議決権の3分の2以上とする。<a class="tb-src" href="https://laws.e-gov.go.jp/api/1/articles;lawId=417AC0000000086;article=309" target="_blank" rel="noopener">出典</a> この結果、3分の1超で特別決議を阻止でき、過半数で普通決議を通せ、3分の2以上で特別決議も通せるという3つの閾値が生まれる。さらに会社法362条4項は、重要な財産の処分および譲受け、多額の借財、重要な使用人の選解任などを取締役会の専決事項とする。その上に、共同出資契約上の拒否権事項が乗る。年度予算の承認、一定金額を超える設備投資、増資、株式譲渡、配当方針などがよく列挙される。この第3層は会社法の規律の外にあり、当事者間の合意で自由に設計される。過半数を持っていても年度予算が通らない設計は成立する。競争法の側にも別の閾値がある。公正取引委員会の企業結合審査に関する運用指針は、議決権保有比率が50%超の場合、および20%超かつ単独第1位の場合を審査対象とし、10%以下または順位4位以下では結合関係が形成、維持、強化されないとする。<a class="tb-src" href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin.html" target="_blank" rel="noopener">出典</a></p>
+<p>第四に、負債側の条件が損益の自由度を縛る。シンジケートローンでは、借り手に指名されたアレンジャーが銀行団を組成し、組成の対価としてアレンジメントフィーを前取りする。この手数料はプレシピウムとも呼ばれ、下位の参加行には配分されない。参加行は原則として貸出スプレッドのみを得る。<a class="tb-src" href="https://www.bis.org/publ/qtrpdf/r_qt0412g.pdf" target="_blank" rel="noopener">出典</a> 借り手の側から見ると、同じ資金調達でも、期首に一度だけ発生する費用と、期間にわたって発生する費用が混在する。加えて、こうした融資契約には財務制限条項が付されるのが通例で、抵触すれば期限の利益を失う。後述するすかいらーくホールディングスは、シンジケートローン形式の融資契約およびコミットメントライン契約に財務制限条項が付されていることをリスク情報に記載し、2021年2月12日、2021年7月16日、2023年2月13日に条項の変更で貸付人と合意している。<a class="tb-src" href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100QI2H.pdf" target="_blank" rel="noopener">出典</a></p>
 <p>損益計算書の一行は、こうした条文と契約条項の上に立っている。次の節から、その一行の作り方そのものを見る。</p>
 <h2 id="s2">収益はいつ立つか：認識のタイミングが業種ごとに違う理由</h2>
 <p>売上高は、取引の総額を載せることも、手数料相当の純額だけを載せることもできる。どちらになるかを決めるのが、本人か代理人かの判定である。</p>
-<p>企業会計基準第29号「収益認識に関する会計基準」は2018年3月30日に公表され、2020年3月31日に改正された。2021年4月1日以後に開始する連結会計年度および事業年度の期首から原則適用となっている。<a href="https://www.asb-j.jp/jp/accounting_standards/y2020/2020-0331-01.html" target="_blank" rel="noopener">出典</a></p>
-<p>影響が最も大きく出た業種の一つが百貨店である。三越伊勢丹ホールディングスは、消化仕入に係る収益について、従来は顧客から受け取る対価の総額で認識していたものを、本人か代理人かの判定を経て、総額から仕入先への支払額を差し引いた純額で認識する方法に変更した。2022年3月期の決算説明資料では、旧基準ベースの総額売上高が912,114百万円、新基準の売上高が418,338百万円である。新基準の売上高は総額売上高の45.9%にあたる。前期の2021年3月期は旧基準で816,009百万円だったため、開示上は前期比48.7%減として並ぶ。<a href="https://pdf.irpocket.com/C3099/wigp/Oi3A/rj5t.pdf" target="_blank" rel="noopener">出典</a></p>
-<p>ここで動いたのは表示の単位であり、店頭で扱われた商品の金額ではない。売上高が半分以下になった一方で、純額表示に変わったことで売上高総利益率は跳ね上がる。売上高と利益率のどちらの指標も、基準変更をまたぐ2期を単純に並べると意味を持たない。</p>
-<p>同じ論点が効くのは、仲介手数料型の取引を総額で計上していた業態である。卸売業、不動産仲介業、旅行業がそれにあたる。金額の測定側でも変更がある。リベートや販売奨励金は売上高から控除され、ポイント制度は契約負債に振り替えられ、返品調整引当金は廃止された。有償支給取引については、有償支給元が支給時に収益を認識しない処理が一般的とされる一方、有償支給先の側では加工代相当額のみを純額表示する場合と、仕入高と売上高を総額表示する場合が併存している。<a href="https://pkf-hibiki-audit.com/wp-content/uploads/2022/11/hibiki-mailmagazine024.pdf" target="_blank" rel="noopener">出典</a> 同じ取引形態でも会社によって表示が割れるということである。</p>
-<p>業種別に売上高がいくら動いたかを網羅した集計値は、素材となった調査では一次資料でも報道でも見つかっていない。近いものとしてEY Japanの開示分析があり、JPX日経インデックス400採用企業のうち3月31日決算かつ日本基準採用の198社を対象に、152社が損益計算書で売上高という科目を用い、139社が収益認識関係注記で金額を記載したと報告している。<a href="https://www.ey.com/ja_jp/technical/corporate-accounting/commentary/presentation-of-financial-statements/commentary-presentation-of-financial-statements-2022-12-02-01" target="_blank" rel="noopener">出典</a> 業種別の影響額を知るには、業種分類ごとに会計方針変更注記の影響額を集計した資料が要る。</p>
+<p>企業会計基準第29号「収益認識に関する会計基準」は2018年3月30日に公表され、2020年3月31日に改正された。2021年4月1日以後に開始する連結会計年度および事業年度の期首から原則適用となっている。<a class="tb-src" href="https://www.asb-j.jp/jp/accounting_standards/y2020/2020-0331-01.html" target="_blank" rel="noopener">出典</a></p>
+<p>影響が最も大きく出た業種の一つが百貨店である。三越伊勢丹ホールディングスは、消化仕入に係る収益について、従来は顧客から受け取る対価の総額で認識していたものを、本人か代理人かの判定を経て、総額から仕入先への支払額を差し引いた純額で認識する方法に変更した。2022年3月期の決算説明資料では、旧基準ベースの総額売上高が912,114百万円、新基準の売上高が418,338百万円である。新基準の売上高は総額売上高の45.9%にあたる。前期の2021年3月期は旧基準で816,009百万円だったため、開示上は前期比48.7%減として並ぶ。<a class="tb-src" href="https://pdf.irpocket.com/C3099/wigp/Oi3A/rj5t.pdf" target="_blank" rel="noopener">出典</a></p>
+<p><strong class="hit">ここで動いたのは表示の単位であり、店頭で扱われた商品の金額ではない</strong>。売上高が半分以下になった一方で、純額表示に変わったことで売上高総利益率は跳ね上がる。売上高と利益率のどちらの指標も、基準変更をまたぐ2期を単純に並べると意味を持たない。</p>
+<p>同じ論点が効くのは、仲介手数料型の取引を総額で計上していた業態である。卸売業、不動産仲介業、旅行業がそれにあたる。金額の測定側でも変更がある。リベートや販売奨励金は売上高から控除され、ポイント制度は契約負債に振り替えられ、返品調整引当金は廃止された。有償支給取引については、有償支給元が支給時に収益を認識しない処理が一般的とされる一方、有償支給先の側では加工代相当額のみを純額表示する場合と、仕入高と売上高を総額表示する場合が併存している。<a class="tb-src" href="https://pkf-hibiki-audit.com/wp-content/uploads/2022/11/hibiki-mailmagazine024.pdf" target="_blank" rel="noopener">出典</a> 同じ取引形態でも会社によって表示が割れるということである。</p>
+<p>業種別に売上高がいくら動いたかを網羅した集計値は、素材となった調査では一次資料でも報道でも見つかっていない。近いものとしてEY Japanの開示分析があり、JPX日経インデックス400採用企業のうち3月31日決算かつ日本基準採用の198社を対象に、152社が損益計算書で売上高という科目を用い、139社が収益認識関係注記で金額を記載したと報告している。<a class="tb-src" href="https://www.ey.com/ja_jp/technical/corporate-accounting/commentary/presentation-of-financial-statements/commentary-presentation-of-financial-statements-2022-12-02-01" target="_blank" rel="noopener">出典</a> 業種別の影響額を知るには、業種分類ごとに会計方針変更注記の影響額を集計した資料が要る。</p>
 <p>前節で触れたシンジケートローンの手数料構造も、認識タイミングの問題として読み直せる。アレンジメントフィーは組成という一時点の役務に対する対価であり、ファシリティフィーやコミットメントフィーは期間にわたる与信枠の提供に対する対価である。どの時点で履行義務が充足されるかが違えば、同じ取引でも収益の載る期が違う。業種ごとに認識タイミングが違って見えるのは、業種ごとに履行義務の形が違うからである。</p>
 <h2 id="s3">のれんと減損：買収した将来を誰がいつ費用にするか</h2>
 <p>のれんは、買収対価と受け入れた純資産の時価との差額である。この差額を損益にどう反映させるかで、日本基準とIFRSは別の設計を選んだ。</p>
-<p>日本基準は規則償却を採る。企業会計基準第21号「企業結合に関する会計基準」第32項は、のれんを資産に計上し、20年以内のその効果の及ぶ期間にわたって定額法その他の合理的な方法により規則的に償却すると定める。第47項は、のれんの当期償却額を販売費及び一般管理費の区分に表示するとする。償却費は営業利益より上で控除されるということである。<a href="https://www.asb-j.jp/jp/wp-content/uploads/sites/4/ketsugou_20190422.pdf" target="_blank" rel="noopener">出典</a></p>
-<p>IFRSは償却しない。IAS 36は、企業結合で取得したのれん、耐用年数を確定できない無形資産、未使用の無形資産について、減損の兆候の有無にかかわらず毎年減損テストを求める。のれんの減損損失は戻し入れられない。<a href="https://www.ifrs.org/issued-standards/list-of-standards/ias-36-impairment-of-assets/" target="_blank" rel="noopener">出典</a></p>
-<p>差の大きさは、一社の中で観察できる。すかいらーくホールディングスの2022年12月期有価証券報告書は、連結財政状態計算書ののれん144,816百万円を非償却資産として計上する一方、同じのれんが個別財務諸表上は20年の償却期間で償却され、残高が66,479百万円であると記載している。同一の買収に起因するのれんの簿価が、連結と単体で78,337百万円ずれている。連結の簿価は単体の2.18倍である。<a href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100QI2H.pdf" target="_blank" rel="noopener">出典</a></p>
-<p>利益への影響の桁も確かめておく。武田薬品工業の2026年3月期末ののれんは5,809,010百万円、同期の営業利益は4,088億円である。<a href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/disclosure/20260513/20260513528342.pdf" target="_blank" rel="noopener">出典</a> このうち、以下の試算は開示された数値ではなく、素材ノートの筆者による単純計算である。仮に日本基準の上限である20年で定額償却すると、年間2,904億円の費用が生じる。営業利益は1,184億円まで下がり、71.0%減となる。IFRS適用企業の営業利益を日本基準適用企業とそのまま並べられない理由が、この桁にある。</p>
-<p>一方で、非償却は損失の発生時期を後ろにずらしているだけでもある。日本郵政は2017年3月期に、国際物流事業のオーストラリアのトール社について、のれんおよび商標権の全額3,923億円と有形固定資産の一部80億円、合計4,003億円を減損損失として計上した。同時に通期連結業績予想を、親会社株主に帰属する当期純利益320,000百万円から当期純損失40,000百万円へ、360,000百万円下方修正している。<a href="https://www.yuseimineika.go.jp/iinkai/dai166/siryou166_add.pdf" target="_blank" rel="noopener">出典</a> 日本基準は毎期一定額を削り、IFRSは平穏な期が続いた後に一度で削る。どちらもキャッシュフローは動かない。</p>
-<p>判定が走るタイミングにも差がある。日本基準では、減損は兆候の把握が起点となる。兆候は4類型で、営業損益またはキャッシュフローが継続してマイナスであるかその見込みであること、資産または資産グループの使用範囲や方法に回収可能価額を著しく低下させる変化が生じたか生ずる見込みであること、経営環境が著しく悪化したか悪化する見込みであること、市場価格が著しく下落したことである。兆候があれば認識の判定に進み、割引前将来キャッシュフローの総額が帳簿価額を下回る場合に減損損失を認識する。測定では帳簿価額を回収可能価額まで減額し、回収可能価額は正味売却価額と使用価値のいずれか高い方とする。<a href="https://www.asb-j.jp/jp/accounting_standards_system/details.html?topics_id=83" target="_blank" rel="noopener">出典</a> 規則償却を行う場合でも、のれんは固定資産の減損に係る会計基準の対象である。<a href="https://www.asb-j.jp/jp/wp-content/uploads/sites/4/ketsugou_20190422.pdf" target="_blank" rel="noopener">出典</a></p>
-<p>認識判定に割引前のキャッシュフローを使うという点は、金利環境と減損の関係を分ける。日本基準では割引率の上昇だけでは減損に至らない。IFRSは使用価値の算定に割引率が直接入るため、金利上昇そのものが減損の引き金になりうる。すかいらーくホールディングスののれん減損テストの税引前割引率は、2021年12月期が7.94%、2022年12月期が8.25%で、1年で0.31ポイント上がっている。同社は事業計画期間を原則5年を限度とし、5年を超える期間の成長率を0%と仮定している。感応度開示では、ガストについて回収可能価額が帳簿価額を上回る金額が38,515百万円で、予想将来キャッシュフローが21%下振れすると両者が一致するとされる。<a href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100QI2H.pdf" target="_blank" rel="noopener">出典</a></p>
-<p>のれんが資本に対してどの程度の大きさかも見ておく。すかいらーくホールディングスの2022年12月31日時点の連結貸借対照表は、のれん144,816百万円、資本合計157,708百万円、資産合計424,772百万円である。のれんは資本合計の91.8%にあたる。長期借入金は106,971百万円である。<a href="https://irbank.net/E03515/bs" target="_blank" rel="noopener">出典</a> この構造はLBOの帰結である。買収SPCが対象会社株式を取得した後にSPCを対象会社と吸収合併させると、SPCが負っていた買収借入金と、株式取得に伴って生じたのれんが、同じ貸借対照表の負債側と資産側に並ぶ。同社の沿革はこの形をそのまま記録している。SNCインベストメントが2006年の公開買付けで旧すかいらーく株式の議決権比率94.38%を取得し、2007年7月1日に対象会社を吸収合併して商号を変更した。2011年にはベインキャピタルが投資助言を行うファンドが間接保有するBCJホールディングス6が議決権比率98.7%を取得し、2012年6月1日に吸収合併している。2014年7月1日にはBCJホールディングス5が事業会社を吸収合併し、現在の上場会社となった。<a href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100QI2H.pdf" target="_blank" rel="noopener">出典</a></p>
+<p>日本基準は規則償却を採る。企業会計基準第21号「企業結合に関する会計基準」第32項は、のれんを資産に計上し、20年以内のその効果の及ぶ期間にわたって定額法その他の合理的な方法により規則的に償却すると定める。第47項は、のれんの当期償却額を販売費及び一般管理費の区分に表示するとする。償却費は営業利益より上で控除されるということである。<a class="tb-src" href="https://www.asb-j.jp/jp/wp-content/uploads/sites/4/ketsugou_20190422.pdf" target="_blank" rel="noopener">出典</a></p>
+<p>IFRSは償却しない。IAS 36は、企業結合で取得したのれん、耐用年数を確定できない無形資産、未使用の無形資産について、減損の兆候の有無にかかわらず毎年減損テストを求める。のれんの減損損失は戻し入れられない。<a class="tb-src" href="https://www.ifrs.org/issued-standards/list-of-standards/ias-36-impairment-of-assets/" target="_blank" rel="noopener">出典</a></p>
+<p>差の大きさは、一社の中で観察できる。すかいらーくホールディングスの2022年12月期有価証券報告書は、連結財政状態計算書ののれん144,816百万円を非償却資産として計上する一方、同じのれんが個別財務諸表上は20年の償却期間で償却され、残高が66,479百万円であると記載している。同一の買収に起因するのれんの簿価が、連結と単体で78,337百万円ずれている。連結の簿価は単体の2.18倍である。<a class="tb-src" href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100QI2H.pdf" target="_blank" rel="noopener">出典</a></p>
+<p>利益への影響の桁も確かめておく。武田薬品工業の2026年3月期末ののれんは5,809,010百万円、同期の営業利益は4,088億円である。<a class="tb-src" href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/disclosure/20260513/20260513528342.pdf" target="_blank" rel="noopener">出典</a> このうち、以下の試算は開示された数値ではなく、素材ノートの筆者による単純計算である。仮に日本基準の上限である20年で定額償却すると、年間2,904億円の費用が生じる。営業利益は1,184億円まで下がり、71.0%減となる。IFRS適用企業の営業利益を日本基準適用企業とそのまま並べられない理由が、この桁にある。</p>
+<p>一方で、非償却は損失の発生時期を後ろにずらしているだけでもある。日本郵政は2017年3月期に、国際物流事業のオーストラリアのトール社について、のれんおよび商標権の全額3,923億円と有形固定資産の一部80億円、合計4,003億円を減損損失として計上した。同時に通期連結業績予想を、親会社株主に帰属する当期純利益320,000百万円から当期純損失40,000百万円へ、360,000百万円下方修正している。<a class="tb-src" href="https://www.yuseimineika.go.jp/iinkai/dai166/siryou166_add.pdf" target="_blank" rel="noopener">出典</a> 日本基準は毎期一定額を削り、IFRSは平穏な期が続いた後に一度で削る。どちらもキャッシュフローは動かない。</p>
+<p>判定が走るタイミングにも差がある。日本基準では、減損は兆候の把握が起点となる。兆候は4類型で、営業損益またはキャッシュフローが継続してマイナスであるかその見込みであること、資産または資産グループの使用範囲や方法に回収可能価額を著しく低下させる変化が生じたか生ずる見込みであること、経営環境が著しく悪化したか悪化する見込みであること、市場価格が著しく下落したことである。兆候があれば認識の判定に進み、割引前将来キャッシュフローの総額が帳簿価額を下回る場合に減損損失を認識する。測定では帳簿価額を回収可能価額まで減額し、回収可能価額は正味売却価額と使用価値のいずれか高い方とする。<a class="tb-src" href="https://www.asb-j.jp/jp/accounting_standards_system/details.html?topics_id=83" target="_blank" rel="noopener">出典</a> 規則償却を行う場合でも、のれんは固定資産の減損に係る会計基準の対象である。<a class="tb-src" href="https://www.asb-j.jp/jp/wp-content/uploads/sites/4/ketsugou_20190422.pdf" target="_blank" rel="noopener">出典</a></p>
+<p>認識判定に割引前のキャッシュフローを使うという点は、金利環境と減損の関係を分ける。日本基準では割引率の上昇だけでは減損に至らない。IFRSは使用価値の算定に割引率が直接入るため、金利上昇そのものが減損の引き金になりうる。すかいらーくホールディングスののれん減損テストの税引前割引率は、2021年12月期が7.94%、2022年12月期が8.25%で、1年で0.31ポイント上がっている。同社は事業計画期間を原則5年を限度とし、5年を超える期間の成長率を0%と仮定している。感応度開示では、ガストについて回収可能価額が帳簿価額を上回る金額が38,515百万円で、予想将来キャッシュフローが21%下振れすると両者が一致するとされる。<a class="tb-src" href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100QI2H.pdf" target="_blank" rel="noopener">出典</a></p>
+<p>のれんが資本に対してどの程度の大きさかも見ておく。すかいらーくホールディングスの2022年12月31日時点の連結貸借対照表は、のれん144,816百万円、資本合計157,708百万円、資産合計424,772百万円である。のれんは資本合計の91.8%にあたる。長期借入金は106,971百万円である。<a class="tb-src" href="https://irbank.net/E03515/bs" target="_blank" rel="noopener">出典</a> この構造はLBOの帰結である。買収SPCが対象会社株式を取得した後にSPCを対象会社と吸収合併させると、SPCが負っていた買収借入金と、株式取得に伴って生じたのれんが、同じ貸借対照表の負債側と資産側に並ぶ。同社の沿革はこの形をそのまま記録している。SNCインベストメントが2006年の公開買付けで旧すかいらーく株式の議決権比率94.38%を取得し、2007年7月1日に対象会社を吸収合併して商号を変更した。2011年にはベインキャピタルが投資助言を行うファンドが間接保有するBCJホールディングス6が議決権比率98.7%を取得し、2012年6月1日に吸収合併している。2014年7月1日にはBCJホールディングス5が事業会社を吸収合併し、現在の上場会社となった。<a class="tb-src" href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100QI2H.pdf" target="_blank" rel="noopener">出典</a></p>
 <p>この形の読み方は3点ある。第一に、のれんは減価しても現金を生まないが、借入金は元利の返済という現金支出を伴う。左右は対称ではない。第二に、のれんの規模が資本にほぼ等しいため、のれんの全額減損は資本をほぼ消し、財務制限条項の純資産維持要件に直接触れる。第三に、逆さ合併により単体でものれんが立つため、日本基準の20年償却が単体の分配可能額に効く。ただし、SPC合併によるこの押し下げが常に起きるわけではない。持株会社を残して事業会社を子会社のまま置く形では、連結にのれんが立ち、事業会社単体には立たない。どちらの形をとったかは、沿革と単体貸借対照表を突き合わせないと判別できない。</p>
-<p>制度の側も動いている。2025年7月に、経済同友会他12団体、スタートアップ有志35社、企業経営者有志138名が、のれんの非償却導入とのれん償却費の計上区分変更を企業会計基準諮問会議へ提案した。2026年4月1日には財務会計基準機構が情報要請文書を公表している。この文書によれば、経済同友会の経営者アンケートで70%超の経営者がのれんの規則償却をM&amp;A検討の障害と回答し、45%超がのれん償却を理由にM&amp;Aを断念した経験があると回答している。<a href="https://www.fasf-j.jp/jp/wp-content/uploads/sites/2/noren_20260401.pdf" target="_blank" rel="noopener">出典</a> 同文書には、日本の株式市場ではアナリストカバレッジの薄さからPER依存が続き、のれん償却費が株価に影響する構造があるという財務諸表作成者の意見も記録されている。会計処理の選択が資本コストの議論に接続しているということである。</p>
+<p>制度の側も動いている。2025年7月に、経済同友会他12団体、スタートアップ有志35社、企業経営者有志138名が、のれんの非償却導入とのれん償却費の計上区分変更を企業会計基準諮問会議へ提案した。2026年4月1日には財務会計基準機構が情報要請文書を公表している。この文書によれば、経済同友会の経営者アンケートで70%超の経営者がのれんの規則償却をM&amp;A検討の障害と回答し、45%超がのれん償却を理由にM&amp;Aを断念した経験があると回答している。<a class="tb-src" href="https://www.fasf-j.jp/jp/wp-content/uploads/sites/2/noren_20260401.pdf" target="_blank" rel="noopener">出典</a> 同文書には、日本の株式市場ではアナリストカバレッジの薄さからPER依存が続き、のれん償却費が株価に影響する構造があるという財務諸表作成者の意見も記録されている。会計処理の選択が資本コストの議論に接続しているということである。</p>
 <h2 id="s4">課税単位という切り口：拠点の置き方が税額を動かす</h2>
 <p>税引後利益まで降りると、もう一つの制度が効いてくる。どの法人格で、どの自治体に事務所を置いているかである。国税は納税者の所在にかかわらず国庫に入るが、地方税は行政サービスを提供した団体が課税権を持つ。そのため、複数の自治体にまたがる法人には、課税標準を分割する仕組みが置かれている。</p>
 <p>住民税は均等割と、個人では所得割、法人では法人税割の二階建てである。この二つは配分の論理が違う。</p>
-<p>均等割は按分しない。事務所等が所在する各団体が、その団体の区域内の状況だけを見て独立に税額を出す。決定要素は2つで、資本金等の額の区分と、その団体の区域内の従業者数が50人を超えるかどうかである。東京都の税率表では、特別区と市町村の双方に事務所等を持つ法人の道府県分は、資本金等の額1千万円以下で年20,000円、1千万円超1億円以下で年50,000円、1億円超10億円以下で年130,000円、10億円超50億円以下で年540,000円、50億円超で年800,000円である。特別区分は従業者数50人以下と50人超で分かれ、1千万円以下は年50,000円と年120,000円、1千万円超1億円以下は年130,000円と年150,000円、1億円超10億円以下は年160,000円と年400,000円、10億円超50億円以下は年410,000円と年1,750,000円、50億円超は年410,000円と年3,000,000円である。<a href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/11_4_3b" target="_blank" rel="noopener">出典</a> 従業者数50人という数字は按分率ではなく税率区分の閾値であり、全社の人数ではなくその自治体の区域内の人数で判定する。</p>
-<p>期中に事務所等を設置または廃止した場合は、年額に有していた月数を乗じて12で除する。月数は暦により計算し、1月に満たない端数は切り捨てるが、期間の全部が1月に満たないときは1月とする。税額の100円未満は切り捨てる。同じ手引の計算例は、資本金等の額300万円、従業者数3人、事務所を有した期間2か月と7日の法人について、70,000円に2を乗じて12で除した11,666円から100円未満を切り捨て、11,600円としている。<a href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/11_4_3b" target="_blank" rel="noopener">出典</a></p>
-<p>法人税割は按分する。課税標準は法人税額であり、その総額を従業者数で分割する。東京都の分割基準ガイドブックの計算例は、資本金150,000,000円、法人税割の課税標準額の総額15,000,000円、県内従業者数65人、総数1,750人の法人について、15,000,000を1,750で除した8,571.4285に65を乗じて557,142円を得て、千円未満を切り捨てて557千円とし、10.4%を乗じた57,928円から100円未満を切り捨てて57,900円としている。<a href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/houjin_bunkatu" target="_blank" rel="noopener">出典</a> 税率は、令和元年10月1日以後に開始する事業年度について、23区内の標準税率が7.0%、超過税率が10.4%、市町村部の都民税分は標準税率1.0%、超過税率2.0%である。<a href="https://www.tax.metro.tokyo.lg.jp/kazei/houjinji.html" target="_blank" rel="noopener">出典</a></p>
-<p>分割基準として何を使うかは、税目によって違う。法人住民税法人税割はすべての法人で従業者数に統一されている。法人事業税は業種ごとに異なり、建設業や卸売業などその他の事業は事業所等の数と従業者数を2分の1ずつ、製造業は従業者数、倉庫業とガス供給業は固定資産の価額、鉄道事業と軌道事業は軌道の延長キロメートル数、電気供給業は区分により固定資産の価額または電線路の電力容量を用いる。資本金1億円以上の製造業について工場の従業者数に2分の1を加算する特例も、事業税にのみ適用される。<a href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/houjin_bunkatu" target="_blank" rel="noopener">出典</a></p>
-<p>従業者数の数え方も税額を左右する。原則は算定期間終了の日現在の人数だが、例外が3つある。期中に新設した事業所等は終了日現在の人数に新設日から終了日までの月数を事業年度の月数で除した値を乗じる。期中に廃止した事業所等は廃止日の前月末日現在の人数に同様の比率を乗じる。各月末日の人数のうち最多が最少の2倍を超える場合は、各月末日の人数の合計を事業年度の月数で除した平均を用いる。どの事業所に計上するかは、給与支払場所ではなく勤務場所を基準とする。派遣労働者は派遣先に含め、出向者は出向先に含める。連続して1月以上同一事業所に出張している場合は出張先に含める。<a href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/houjin_bunkatu" target="_blank" rel="noopener">出典</a></p>
-<p>拠点設計上の帰結が一つある。常駐者がいない営業所も、事業の必要から設けられた人的および物的設備であって継続して事業が行われる場所であれば事業所等に該当し、申告が必要で均等割が課される。一方、他に勤務すべき事業所等があり月に数日出張しているだけならば、その営業所の従業者数は0人となり、法人税割の配分はゼロになる。均等割の負担だけが残る構造である。<a href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/houjin_bunkatu" target="_blank" rel="noopener">出典</a></p>
-<p>個人側も同じ二階建てである。均等割は個人都民税1,000円と個人区市町村民税3,000円で、令和6年度から森林環境税が1人年額1,000円加わり、区市町村が個人住民税均等割と併せて課税する。所得割の税率は都民税4%と区市町村民税6%の合計10%である。課税されるのは1月1日現在で都内に住所がある者で、住所はないが都内に事務所や家屋敷を持つ者には均等割のみが課される。<a href="https://www.tax.metro.tokyo.lg.jp/kazei/kojin_ju.html" target="_blank" rel="noopener">出典</a></p>
+<p>均等割は按分しない。事務所等が所在する各団体が、その団体の区域内の状況だけを見て独立に税額を出す。決定要素は2つで、資本金等の額の区分と、その団体の区域内の従業者数が50人を超えるかどうかである。東京都の税率表では、特別区と市町村の双方に事務所等を持つ法人の道府県分は、資本金等の額1千万円以下で年20,000円、1千万円超1億円以下で年50,000円、1億円超10億円以下で年130,000円、10億円超50億円以下で年540,000円、50億円超で年800,000円である。特別区分は従業者数50人以下と50人超で分かれ、1千万円以下は年50,000円と年120,000円、1千万円超1億円以下は年130,000円と年150,000円、1億円超10億円以下は年160,000円と年400,000円、10億円超50億円以下は年410,000円と年1,750,000円、50億円超は年410,000円と年3,000,000円である。<a class="tb-src" href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/11_4_3b" target="_blank" rel="noopener">出典</a> <strong class="hit">従業者数50人という数字は按分率ではなく税率区分の閾値であり</strong>、全社の人数ではなくその自治体の区域内の人数で判定する。</p>
+<p>期中に事務所等を設置または廃止した場合は、年額に有していた月数を乗じて12で除する。月数は暦により計算し、1月に満たない端数は切り捨てるが、期間の全部が1月に満たないときは1月とする。税額の100円未満は切り捨てる。同じ手引の計算例は、資本金等の額300万円、従業者数3人、事務所を有した期間2か月と7日の法人について、70,000円に2を乗じて12で除した11,666円から100円未満を切り捨て、11,600円としている。<a class="tb-src" href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/11_4_3b" target="_blank" rel="noopener">出典</a></p>
+<p>法人税割は按分する。課税標準は法人税額であり、その総額を従業者数で分割する。東京都の分割基準ガイドブックの計算例は、資本金150,000,000円、法人税割の課税標準額の総額15,000,000円、県内従業者数65人、総数1,750人の法人について、15,000,000を1,750で除した8,571.4285に65を乗じて557,142円を得て、千円未満を切り捨てて557千円とし、10.4%を乗じた57,928円から100円未満を切り捨てて57,900円としている。<a class="tb-src" href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/houjin_bunkatu" target="_blank" rel="noopener">出典</a> 税率は、令和元年10月1日以後に開始する事業年度について、23区内の標準税率が7.0%、超過税率が10.4%、市町村部の都民税分は標準税率1.0%、超過税率2.0%である。<a class="tb-src" href="https://www.tax.metro.tokyo.lg.jp/kazei/houjinji.html" target="_blank" rel="noopener">出典</a></p>
+<p>分割基準として何を使うかは、税目によって違う。法人住民税法人税割はすべての法人で従業者数に統一されている。法人事業税は業種ごとに異なり、建設業や卸売業などその他の事業は事業所等の数と従業者数を2分の1ずつ、製造業は従業者数、倉庫業とガス供給業は固定資産の価額、鉄道事業と軌道事業は軌道の延長キロメートル数、電気供給業は区分により固定資産の価額または電線路の電力容量を用いる。資本金1億円以上の製造業について工場の従業者数に2分の1を加算する特例も、事業税にのみ適用される。<a class="tb-src" href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/houjin_bunkatu" target="_blank" rel="noopener">出典</a></p>
+<p>従業者数の数え方も税額を左右する。原則は算定期間終了の日現在の人数だが、例外が3つある。期中に新設した事業所等は終了日現在の人数に新設日から終了日までの月数を事業年度の月数で除した値を乗じる。期中に廃止した事業所等は廃止日の前月末日現在の人数に同様の比率を乗じる。各月末日の人数のうち最多が最少の2倍を超える場合は、各月末日の人数の合計を事業年度の月数で除した平均を用いる。<strong class="hit">どの事業所に計上するかは、給与支払場所ではなく勤務場所を基準とする</strong>。派遣労働者は派遣先に含め、出向者は出向先に含める。連続して1月以上同一事業所に出張している場合は出張先に含める。<a class="tb-src" href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/houjin_bunkatu" target="_blank" rel="noopener">出典</a></p>
+<p>拠点設計上の帰結が一つある。常駐者がいない営業所も、事業の必要から設けられた人的および物的設備であって継続して事業が行われる場所であれば事業所等に該当し、申告が必要で均等割が課される。一方、他に勤務すべき事業所等があり月に数日出張しているだけならば、その営業所の従業者数は0人となり、法人税割の配分はゼロになる。均等割の負担だけが残る構造である。<a class="tb-src" href="https://www.tax.metro.tokyo.lg.jp/documents/d/tax/houjin_bunkatu" target="_blank" rel="noopener">出典</a></p>
+<p>個人側も同じ二階建てである。均等割は個人都民税1,000円と個人区市町村民税3,000円で、令和6年度から森林環境税が1人年額1,000円加わり、区市町村が個人住民税均等割と併せて課税する。所得割の税率は都民税4%と区市町村民税6%の合計10%である。課税されるのは1月1日現在で都内に住所がある者で、住所はないが都内に事務所や家屋敷を持つ者には均等割のみが課される。<a class="tb-src" href="https://www.tax.metro.tokyo.lg.jp/kazei/kojin_ju.html" target="_blank" rel="noopener">出典</a></p>
 <p>なお、以上の税率と計算手順は東京都主税局の資料に基づく。総務省の地方税制度ページは素材となった調査で文字化けにより本文を確認できておらず、全国共通の標準税率と制限税率について一次ページでの突合はできていない。他の自治体に適用する際は、超過課税の有無を各団体の条例で確認する必要がある。</p>
 <h2 id="s5">比較する前に揃えるもの：基準差・期間差・課税地差のチェック</h2>
 <p>ここまでの内容は、二社を比較する前に確認すべき項目に落とせる。</p>
@@ -258,5 +400,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
   <div class="tb-nav"><span></span><a class="tb-nav-a" href="02_cash-flow-and-valuation.html">キャッシュフローから価値へ：何で割るかを決める →</a></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

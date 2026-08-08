@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -160,43 +267,43 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p>集中は平時には長所として説明される。ひとつの産業に資本と人材を寄せれば単位コストが下がる。ひとつの航路に船を寄せれば距離が縮み、在庫が減る。この判断は個々の企業にとって合理的であり、実際に収益を生んできた。問題は、集中の便益が企業単位で計上される一方、集中の費用が国単位で計上されることにある。産業が集中した国では、株式市場と輸出と経常収支が同じひとつの製品循環に紐づく。航路が集中した貿易では、運賃と保険料と港湾の待ち時間が同じひとつの迂回に紐づく。どちらの場合も、外部条件が反転した瞬間に、分散していたはずの指標が同時に同じ方向へ動く。この章を読む必要があるのは、集中の度合いを平時に測っておかないと、反転した後では手当ての順番を決められないからである。</p>
 <h2 id="s1">市場全体が一業種の市況に連動する状態をどう測るか</h2>
 <p>集中を測る指標は3層に分けると扱いやすい。第1層が株式市場のウェイト、第2層が輸出構成、第3層が経常収支である。3層が別々の産業に支えられていれば、ひとつが崩れても他が支える。3層が同じ製品に紐づいていれば、分散は名目だけになる。</p>
-<p>韓国は3層が揃って半導体に紐づいた例である。第1層について、MSCI Korea に連動する iShares MSCI South Korea ETF の組入は、2026年8月3日時点で Samsung Electronics が22.17パーセント、SK hynix が21.42パーセントで、2社合計43.59パーセントである。上位10銘柄の合計は61.20パーセントを占める <a href="https://stockanalysis.com/etf/ewy/holdings/" target="_blank" rel="noopener">出典</a>。ここに SK hynix 株式を主要資産とする持株会社の SK Square 3.43パーセントと、Samsung Electro-Mechanics 2.61パーセントを加えると49.63パーセントとなる。指数の約半分が DRAM と NAND という2種類の汎用部品の価格に連動している。</p>
-<p>このウェイトを浮動株調整前の生の時価総額比率と混同してはならない。時価総額の実額では Samsung Electronics が1.068兆ドル <a href="https://companiesmarketcap.com/samsung/marketcap/" target="_blank" rel="noopener">出典</a>、SK hynix が7,107.4億ドル <a href="https://companiesmarketcap.com/sk-hynix/marketcap/" target="_blank" rel="noopener">出典</a> で、2社合計1.7787兆ドルである。いずれも2026年8月時点の値である。分母となる韓国取引所の日次時価総額統計には到達できておらず、参照できた KOSPI の時価総額は2026年1月時点の4,135兆ウォン、2.815兆ドルにとどまる <a href="https://en.wikipedia.org/wiki/KOSPI" target="_blank" rel="noopener">出典</a>。1月時点の分母に8月時点の分子を当てれば63パーセントという数字が出るが、この計算は分子と分母の時点が異なるため上限側に振れた粗い値であり、実際の比率ではない。集中度を測るときに時点をそろえないと、集中を過大評価する方向へ誤差が出る。</p>
-<p>第2層と第3層も同じ製品に紐づいている。2026年7月の韓国の輸出総額は988.9億ドルで前年同月比62.8パーセント増、うち半導体が410.1億ドルで前年同月比178.8パーセント増である。半導体は輸出総額の41.5パーセントを占める <a href="https://tradingeconomics.com/south-korea/exports" target="_blank" rel="noopener">出典</a>。2019年時点の集積回路の輸出比率は15.35パーセントだった <a href="https://en.wikipedia.org/wiki/Economy_of_South_Korea" target="_blank" rel="noopener">出典</a>。7年で比率が2.7倍になっている。経常収支では2026年6月の黒字が497.3億ドル、2026年上半期の累計が1,910.1億ドルで、2025年上半期の478.7億ドルの4.0倍である <a href="https://tradingeconomics.com/south-korea/current-account" target="_blank" rel="noopener">出典</a>。</p>
-<p>3層が同じ循環に乗っているため、他の産業では指数の変動を打ち消せない。時価総額で第3位の SK Square は871.4億ドルで、第2位の SK hynix との差は8.2倍ある <a href="https://companiesmarketcap.com/south-korea/largest-companies-in-south-korea-by-market-cap/" target="_blank" rel="noopener">出典</a>。自動車と金融と造船が存在することは、集中していないことの証明にならない。集中度の判定は業種の有無ではなく、上位2社を除いた残りの規模が指数の変動を吸収できるかどうかで行う。</p>
-<p>集中の緩衝装置として通常想定されるのが為替である。想定される経路は2段ある。第1に、輸出が減るとドル建て代金の流入が減り、ウォン安になる。第2に、ウォン安は輸出企業のウォン換算売上を押し上げ、株価の下落を一部相殺する。2026年のデータはこの想定と合っていない。ウォンは2026年8月7日時点で1ドル1,418.89ウォンで、過去最高の経常黒字にもかかわらず前年同月比2.17パーセントのウォン安である。同時に、KOSPI が7月に22パーセント下落する局面で、ウォンは直近1か月で5.74パーセント上昇した <a href="https://tradingeconomics.com/south-korea/currency" target="_blank" rel="noopener">出典</a>。株安とウォン高が同時に起きており、緩衝は働いていない。この乖離の原因を示す一次資料は確認できていない。輸出代金の海外留保、年金基金の対外投資、配当送金が要因として想定されるが、いずれも裏付けが取れていない。緩衝が効かない前提で見れば、市況反転の衝撃は指数にそのまま出ることになる。</p>
+<p>韓国は3層が揃って半導体に紐づいた例である。第1層について、MSCI Korea に連動する iShares MSCI South Korea ETF の組入は、2026年8月3日時点で Samsung Electronics が22.17パーセント、SK hynix が21.42パーセントで、2社合計43.59パーセントである。上位10銘柄の合計は61.20パーセントを占める <a class="tb-src" href="https://stockanalysis.com/etf/ewy/holdings/" target="_blank" rel="noopener">出典</a>。ここに SK hynix 株式を主要資産とする持株会社の SK Square 3.43パーセントと、Samsung Electro-Mechanics 2.61パーセントを加えると49.63パーセントとなる。指数の約半分が DRAM と NAND という2種類の汎用部品の価格に連動している。</p>
+<p>このウェイトを浮動株調整前の生の時価総額比率と混同してはならない。時価総額の実額では Samsung Electronics が1.068兆ドル <a class="tb-src" href="https://companiesmarketcap.com/samsung/marketcap/" target="_blank" rel="noopener">出典</a>、SK hynix が7,107.4億ドル <a class="tb-src" href="https://companiesmarketcap.com/sk-hynix/marketcap/" target="_blank" rel="noopener">出典</a> で、2社合計1.7787兆ドルである。いずれも2026年8月時点の値である。分母となる韓国取引所の日次時価総額統計には到達できておらず、参照できた KOSPI の時価総額は2026年1月時点の4,135兆ウォン、2.815兆ドルにとどまる <a class="tb-src" href="https://en.wikipedia.org/wiki/KOSPI" target="_blank" rel="noopener">出典</a>。1月時点の分母に8月時点の分子を当てれば63パーセントという数字が出るが、この計算は分子と分母の時点が異なるため上限側に振れた粗い値であり、実際の比率ではない。集中度を測るときに時点をそろえないと、集中を過大評価する方向へ誤差が出る。</p>
+<p>第2層と第3層も同じ製品に紐づいている。2026年7月の韓国の輸出総額は988.9億ドルで前年同月比62.8パーセント増、うち半導体が410.1億ドルで前年同月比178.8パーセント増である。半導体は輸出総額の41.5パーセントを占める <a class="tb-src" href="https://tradingeconomics.com/south-korea/exports" target="_blank" rel="noopener">出典</a>。2019年時点の集積回路の輸出比率は15.35パーセントだった <a class="tb-src" href="https://en.wikipedia.org/wiki/Economy_of_South_Korea" target="_blank" rel="noopener">出典</a>。7年で比率が2.7倍になっている。経常収支では2026年6月の黒字が497.3億ドル、2026年上半期の累計が1,910.1億ドルで、2025年上半期の478.7億ドルの4.0倍である <a class="tb-src" href="https://tradingeconomics.com/south-korea/current-account" target="_blank" rel="noopener">出典</a>。</p>
+<p>3層が同じ循環に乗っているため、他の産業では指数の変動を打ち消せない。時価総額で第3位の SK Square は871.4億ドルで、第2位の SK hynix との差は8.2倍ある <a class="tb-src" href="https://companiesmarketcap.com/south-korea/largest-companies-in-south-korea-by-market-cap/" target="_blank" rel="noopener">出典</a>。自動車と金融と造船が存在することは、集中していないことの証明にならない。<strong class="hit">集中度の判定は業種の有無ではなく、上位2社を除いた残りの規模が指数の変動を吸収できるかどうかで行う</strong>。</p>
+<p>集中の緩衝装置として通常想定されるのが為替である。想定される経路は2段ある。第1に、輸出が減るとドル建て代金の流入が減り、ウォン安になる。第2に、ウォン安は輸出企業のウォン換算売上を押し上げ、株価の下落を一部相殺する。2026年のデータはこの想定と合っていない。ウォンは2026年8月7日時点で1ドル1,418.89ウォンで、過去最高の経常黒字にもかかわらず前年同月比2.17パーセントのウォン安である。同時に、KOSPI が7月に22パーセント下落する局面で、ウォンは直近1か月で5.74パーセント上昇した <a class="tb-src" href="https://tradingeconomics.com/south-korea/currency" target="_blank" rel="noopener">出典</a>。株安とウォン高が同時に起きており、緩衝は働いていない。この乖離の原因を示す一次資料は確認できていない。輸出代金の海外留保、年金基金の対外投資、配当送金が要因として想定されるが、いずれも裏付けが取れていない。緩衝が効かない前提で見れば、市況反転の衝撃は指数にそのまま出ることになる。</p>
 <div class="tb-tw"><table><thead><tr><th>集中の層</th><th>指標</th><th>値</th><th>時点</th><th>出典</th></tr></thead><tbody><tr><td>株式市場</td><td>Samsung Electronics と SK hynix の指数内ウェイト合計</td><td>43.59パーセント</td><td>2026-08-03</td><td>https://stockanalysis.com/etf/ewy/holdings/</td></tr><tr><td>株式市場</td><td>上位10銘柄の合計ウェイト</td><td>61.20パーセント</td><td>2026-08-03</td><td>https://stockanalysis.com/etf/ewy/holdings/</td></tr><tr><td>輸出</td><td>半導体が輸出総額に占める比率</td><td>41.5パーセント</td><td>2026-07</td><td>https://tradingeconomics.com/south-korea/exports</td></tr><tr><td>経常収支</td><td>上半期の経常黒字</td><td>1,910.1億ドル</td><td>2026年上半期</td><td>https://tradingeconomics.com/south-korea/current-account</td></tr><tr><td>為替</td><td>ウォン相場</td><td>1ドル1,418.89ウォン</td><td>2026-08-07</td><td>https://tradingeconomics.com/south-korea/currency</td></tr></tbody></table></div>
 <h2 id="s2">短期の急成長が構造転換なのか一時要因なのかを見分ける</h2>
 <p>集中した経済では、上向きの局面でも下向きの局面でも変化が速い。速い変化を見たときに問うべきは、動いたのが数量なのか単価なのか、そして原因が繰り返す性質のものか一度きりのものか、の2点である。</p>
-<p>まず速度の話をする。KOSPI は52週安値の3,079.27から高値の9,385.59まで3.05倍になった後、2026年6月22日の終値最高値9,114.55から8月7日の6,258.77まで31.3パーセント下落した <a href="https://en.wikipedia.org/wiki/KOSPI" target="_blank" rel="noopener">出典</a> <a href="https://www.krx.co.kr/main/main.jsp" target="_blank" rel="noopener">出典</a>。7月単月では22パーセント下落し、2008年以来の月間下落率となった <a href="https://www.investing.com/indices/kospi-news" target="_blank" rel="noopener">出典</a>。過去のメモリ市況の谷では、年間の終値ベースで2018年が17.28パーセント下落、2022年が24.89パーセント下落だった。つまり過去2回は1年かけて17から25パーセント下げたのに対し、今回は約6週間で31パーセント下げている。比較基準を年から週に置き換えると、下落幅ではなく下落速度が過去と異なることが見える。日次でも7月28日に10.84パーセント下落し、7月31日に17.91パーセント上昇した <a href="https://www.investing.com/indices/kospi-historical-data" target="_blank" rel="noopener">出典</a>。2018年と2022年の下落局面ではこの規模の日次変動は起きていない。</p>
-<p>次に、株価の動きは実現した損益より先に出る。2018年に指数が17.28パーセント下落した一方、SK hynix の営業利益が194.5億ドルから23.2億ドルへ88.1パーセント減ったのは翌2019年であり、その2019年の指数は7.67パーセント上昇した <a href="https://en.wikipedia.org/wiki/SK_Hynix" target="_blank" rel="noopener">出典</a>。2022年に指数が24.89パーセント下落した翌年の2023年に SK hynix は77.5億ドルの営業赤字となったが、指数は同年に18.73パーセント上昇している。指数は利益に約1年先行する。2026年の局面も同型である。2026年8月7日時点の DRAM スポット価格は DDR4 16Gb が86.27ドル、DDR5 16Gb が51.60ドルで高水準にある <a href="https://www.dramexchange.com/" target="_blank" rel="noopener">出典</a>。したがって7月以降の下落は実現した価格下落ではなく、将来の需給見通しの修正を反映している。なお SK hynix の年次業績はドル建ての二次情報であり、有価証券報告書のウォン建て原数値では確認できていない。</p>
-<p>数量と単価の分離が決定的になるのが、カンボジアの観光である。2025年の国際観光収入は3,878百万USDで前年比6.6パーセント増だった。同じ年の国際観光客数は5,569,752人で前年比16.9パーセント減である <a href="https://asset.cambodia.gov.kh/tourism/2026/05/CAM32026.pdf" target="_blank" rel="noopener">出典</a> <a href="https://asset.cambodia.gov.kh/tourism/2026/02/CAM122025.pdf" target="_blank" rel="noopener">出典</a>。収入を人数で割った1人あたり単価は2024年の542.8USDから2025年の696.3USDへ28.3パーセント増えている。金額指標だけを見れば成長だが、数量指標は減っている。収入の増加は単価に依存している。</p>
-<p>単価が上がった実体は入国経路の入れ替わりである。空路入国は2,396,937人から2,857,716人へ19.2パーセント増え、陸路入国は4,218,811人から2,622,305人へ37.8パーセント減った。総数に占める空路の比率は35.8パーセントから51.3パーセントへ15.5ポイント上がった <a href="https://asset.cambodia.gov.kh/tourism/2026/02/CAM122025.pdf" target="_blank" rel="noopener">出典</a>。この入れ替わりの原因は2つある。第1にタイとの国境紛争で、5月28日の衝突に始まり7月24日に武力衝突となり、12月8日に停戦が崩壊した <a href="https://en.wikipedia.org/wiki/Cambodian%E2%80%93Thai_border_dispute" target="_blank" rel="noopener">出典</a>。第2に2025年9月9日に運用を開始したプノンペンのテコ国際空港で、第1期の年間旅客処理能力は1,300万人である <a href="https://en.wikipedia.org/wiki/Techo_International_Airport" target="_blank" rel="noopener">出典</a>。</p>
-<p>減少がどこに集中したかを見ると、単一経路への依存が数字で出る。タイからの入国は2,146,674人から1,022,743人へ52.4パーセント減で、人数の減少は1,123,931人である。総数の減少1,130,373人に対してタイ1国が99.4パーセントを占める。ラオスは60.7パーセント減、ベトナムは8.8パーセント減で、陸続きの3国の減少合計は1,445,393人となり、総数の減少幅を上回る <a href="https://asset.cambodia.gov.kh/tourism/2026/02/CAM122025.pdf" target="_blank" rel="noopener">出典</a>。増えた市場は中国のみが大型で、848,952人から1,201,681人へ41.5パーセント増、人数では352,729人の増加である。ただし中国からの入国のうち業務目的が739,709人で61.6パーセントを占め、全体の業務比率27.9パーセントを33.7ポイント上回る。増加分をレジャー需要の回復として読むことはできない。</p>
-<p>一時要因か構造転換かの判定は、その後の期間を見て行う。2025年12月単月の入国者数は396,911人で前年同月比43.2パーセント減、2026年第1四半期は1,014,147人で前年同期比44.8パーセント減である <a href="https://asset.cambodia.gov.kh/tourism/2026/05/CAM32026.pdf" target="_blank" rel="noopener">出典</a>。減少は年をまたいで続いている。季節要因では説明できない。</p>
-<p>同時に、単価上昇の側には未解決の部分が残る。平均滞在日数は7.1日から6.2日へ0.9日短くなり、ホテル稼働率は77.8パーセントから59.1パーセントへ18.7ポイント下がった。滞在が短くなり客室稼働も落ちた中で1人あたり収入が28.3パーセント増えたという組み合わせは、宿泊以外の支出項目か推計方法の影響を示唆する。観光統計報告書は国際観光収入の推計方法を記載しておらず、この差の内訳は公表資料からは特定できなかった。観光セクターのGDPシェアも9.4パーセントから9.8パーセントへ0.4ポイントの上昇にとどまる。世界銀行の名目GDPは2025年で51.27十億USDであり、観光収入3,878百万USDを割ると7.6パーセントとなって9.8パーセントと一致しない <a href="https://api.worldbank.org/v2/country/KHM/indicator/NY.GDP.MKTP.CD?format=json" target="_blank" rel="noopener">出典</a>。観光省のシェアは国内観光や間接効果を含む別定義である可能性が高いが、報告書に定義の記載はなく確認できていない。</p>
+<p>まず速度の話をする。KOSPI は52週安値の3,079.27から高値の9,385.59まで3.05倍になった後、2026年6月22日の終値最高値9,114.55から8月7日の6,258.77まで31.3パーセント下落した <a class="tb-src" href="https://en.wikipedia.org/wiki/KOSPI" target="_blank" rel="noopener">出典</a> <a class="tb-src" href="https://www.krx.co.kr/main/main.jsp" target="_blank" rel="noopener">出典</a>。7月単月では22パーセント下落し、2008年以来の月間下落率となった <a class="tb-src" href="https://www.investing.com/indices/kospi-news" target="_blank" rel="noopener">出典</a>。過去のメモリ市況の谷では、年間の終値ベースで2018年が17.28パーセント下落、2022年が24.89パーセント下落だった。つまり過去2回は1年かけて17から25パーセント下げたのに対し、今回は約6週間で31パーセント下げている。<strong class="hit">比較基準を年から週に置き換えると、下落幅ではなく下落速度が過去と異なることが見える</strong>。日次でも7月28日に10.84パーセント下落し、7月31日に17.91パーセント上昇した <a class="tb-src" href="https://www.investing.com/indices/kospi-historical-data" target="_blank" rel="noopener">出典</a>。2018年と2022年の下落局面ではこの規模の日次変動は起きていない。</p>
+<p>次に、株価の動きは実現した損益より先に出る。2018年に指数が17.28パーセント下落した一方、SK hynix の営業利益が194.5億ドルから23.2億ドルへ88.1パーセント減ったのは翌2019年であり、その2019年の指数は7.67パーセント上昇した <a class="tb-src" href="https://en.wikipedia.org/wiki/SK_Hynix" target="_blank" rel="noopener">出典</a>。2022年に指数が24.89パーセント下落した翌年の2023年に SK hynix は77.5億ドルの営業赤字となったが、指数は同年に18.73パーセント上昇している。指数は利益に約1年先行する。2026年の局面も同型である。2026年8月7日時点の DRAM スポット価格は DDR4 16Gb が86.27ドル、DDR5 16Gb が51.60ドルで高水準にある <a class="tb-src" href="https://www.dramexchange.com/" target="_blank" rel="noopener">出典</a>。したがって7月以降の下落は実現した価格下落ではなく、将来の需給見通しの修正を反映している。なお SK hynix の年次業績はドル建ての二次情報であり、有価証券報告書のウォン建て原数値では確認できていない。</p>
+<p>数量と単価の分離が決定的になるのが、カンボジアの観光である。2025年の国際観光収入は3,878百万USDで前年比6.6パーセント増だった。同じ年の国際観光客数は5,569,752人で前年比16.9パーセント減である <a class="tb-src" href="https://asset.cambodia.gov.kh/tourism/2026/05/CAM32026.pdf" target="_blank" rel="noopener">出典</a> <a class="tb-src" href="https://asset.cambodia.gov.kh/tourism/2026/02/CAM122025.pdf" target="_blank" rel="noopener">出典</a>。収入を人数で割った1人あたり単価は2024年の542.8USDから2025年の696.3USDへ28.3パーセント増えている。金額指標だけを見れば成長だが、数量指標は減っている。収入の増加は単価に依存している。</p>
+<p>単価が上がった実体は入国経路の入れ替わりである。空路入国は2,396,937人から2,857,716人へ19.2パーセント増え、陸路入国は4,218,811人から2,622,305人へ37.8パーセント減った。総数に占める空路の比率は35.8パーセントから51.3パーセントへ15.5ポイント上がった <a class="tb-src" href="https://asset.cambodia.gov.kh/tourism/2026/02/CAM122025.pdf" target="_blank" rel="noopener">出典</a>。この入れ替わりの原因は2つある。第1にタイとの国境紛争で、5月28日の衝突に始まり7月24日に武力衝突となり、12月8日に停戦が崩壊した <a class="tb-src" href="https://en.wikipedia.org/wiki/Cambodian%E2%80%93Thai_border_dispute" target="_blank" rel="noopener">出典</a>。第2に2025年9月9日に運用を開始したプノンペンのテコ国際空港で、第1期の年間旅客処理能力は1,300万人である <a class="tb-src" href="https://en.wikipedia.org/wiki/Techo_International_Airport" target="_blank" rel="noopener">出典</a>。</p>
+<p>減少がどこに集中したかを見ると、単一経路への依存が数字で出る。タイからの入国は2,146,674人から1,022,743人へ52.4パーセント減で、人数の減少は1,123,931人である。総数の減少1,130,373人に対してタイ1国が99.4パーセントを占める。ラオスは60.7パーセント減、ベトナムは8.8パーセント減で、陸続きの3国の減少合計は1,445,393人となり、総数の減少幅を上回る <a class="tb-src" href="https://asset.cambodia.gov.kh/tourism/2026/02/CAM122025.pdf" target="_blank" rel="noopener">出典</a>。増えた市場は中国のみが大型で、848,952人から1,201,681人へ41.5パーセント増、人数では352,729人の増加である。ただし中国からの入国のうち業務目的が739,709人で61.6パーセントを占め、全体の業務比率27.9パーセントを33.7ポイント上回る。増加分をレジャー需要の回復として読むことはできない。</p>
+<p>一時要因か構造転換かの判定は、その後の期間を見て行う。2025年12月単月の入国者数は396,911人で前年同月比43.2パーセント減、2026年第1四半期は1,014,147人で前年同期比44.8パーセント減である <a class="tb-src" href="https://asset.cambodia.gov.kh/tourism/2026/05/CAM32026.pdf" target="_blank" rel="noopener">出典</a>。減少は年をまたいで続いている。季節要因では説明できない。</p>
+<p>同時に、単価上昇の側には未解決の部分が残る。平均滞在日数は7.1日から6.2日へ0.9日短くなり、ホテル稼働率は77.8パーセントから59.1パーセントへ18.7ポイント下がった。滞在が短くなり客室稼働も落ちた中で1人あたり収入が28.3パーセント増えたという組み合わせは、宿泊以外の支出項目か推計方法の影響を示唆する。観光統計報告書は国際観光収入の推計方法を記載しておらず、この差の内訳は公表資料からは特定できなかった。観光セクターのGDPシェアも9.4パーセントから9.8パーセントへ0.4ポイントの上昇にとどまる。世界銀行の名目GDPは2025年で51.27十億USDであり、観光収入3,878百万USDを割ると7.6パーセントとなって9.8パーセントと一致しない <a class="tb-src" href="https://api.worldbank.org/v2/country/KHM/indicator/NY.GDP.MKTP.CD?format=json" target="_blank" rel="noopener">出典</a>。観光省のシェアは国内観光や間接効果を含む別定義である可能性が高いが、報告書に定義の記載はなく確認できていない。</p>
 <p>なお同じ報告書群のなかで、2024年の陸路の人数は2つの形で出てくる。陸路と水路を合算した4,303,188人と、陸路のみの4,218,811人である。差は84,377人で、水路分に相当する。経路別の比較には陸路のみの数字を使うほうが定義が揃う。</p>
 <h2 id="s3">海上経路の狭さが運賃と保険料に転移する仕組み</h2>
 <p>産業の集中と航路の集中は、同じ構造をしている。どちらも平時には効率であり、反転すると全体に波及する。違いは波及の経路が価格として観測しやすい点にある。</p>
-<p>まず、どれだけ細いかを数量で押さえる。2024年の原油および石油液体の通過量は、マラッカ海峡が1日あたり22.5百万バレル、ホルムズ海峡が1日あたり20.7百万バレルである。以下、デンマーク海峡が4.9百万バレル、スエズ運河と SUMED パイプラインの合計が4.8百万バレル、バブエルマンデブ海峡が4.1百万バレル、トルコ海峡が3.6百万バレル、パナマ運河が2.0百万バレルと続く <a href="https://www.eia.gov/international/content/analysis/special_topics/World_Oil_Transit_Chokepoints" target="_blank" rel="noopener">出典</a>。ホルムズ海峡は海上輸送された石油の約4分の1に相当する。マラッカ海峡は2025年上期に1日あたり23.2百万バレルで、海上石油輸送の29パーセントに当たる。2024年通年の22.5百万バレルとの差は集計期間の違いによるもので、矛盾ではない。コンテナ側の集中点はスエズ運河で、世界の海上荷動き量の約10パーセント、世界のコンテナ荷動きの22パーセントを扱う <a href="https://unctad.org/system/files/official-document/rmt2024ch2_en.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>次に、価格が動く仕組みを見る。ここで重要なのは、閉塞しなくても価格は動くという点である。企業の損益を動かしているのは通航停止そのものではなく、迂回に伴う距離とスケジュールの変化である。2024年の海上荷動きは数量で2.2パーセント増にとどまった一方、トンマイルは5.9パーセント増となり、平均航海距離は2018年の4,831マイルから2024年の5,245マイルへ伸びた <a href="https://unctad.org/system/files/official-document/rmt2025overview_en.pdf" target="_blank" rel="noopener">出典</a>。数量が伸びていないのに船腹需要が伸びる。この乖離が運賃上昇の起点になる。</p>
-<p>距離の変化は具体的である。深圳からロッテルダムはスエズ運河経由で10,000海里、約31日である。喜望峰経由では13,000海里、約41日になる。距離で1.3倍、日数で10日増である。中型コンテナ船のアジア欧州往復の追加コストは、スエズ運河経由で平均100万ドル、喜望峰経由で170万ドルとされる。FEU換算では欧州着1本あたり、スエズ運河経由で160ドル、喜望峰経由で272ドルの追加となる <a href="https://unctad.org/system/files/official-document/rmt2024ch2_en.pdf" target="_blank" rel="noopener">出典</a>。喜望峰迂回は2024年6月時点で世界の船腹需要を3パーセント、コンテナ船需要を12パーセント押し上げた。加えてスケジュール維持のため速力が上がり、17,000TEU超のコンテナ船の速力は2023年比で5パーセント上がった。速力上昇は燃料消費を増やし、欧州排出量取引制度の対象費用も押し上げる。</p>
-<p>運賃の実測値も出ている。上海発コンテナ運賃指数の2024年平均は2,496ポイントで、2023年平均比149パーセント増である。2024年半ばに3,600ポイントの高値をつけ、2024年12月には7月の高値から34.1パーセント下げた。それでも2023年12月の1,230ポイントに対しては93パーセント高い水準だった <a href="https://unctad.org/system/files/official-document/rmt2025ch3_en.pdf" target="_blank" rel="noopener">出典</a>。タンカーではホルムズ海峡が事例になる。2025年6月の緊張時、中東発東アジア向け VLCC の用船料は日額5万ドル近くまで2倍超に上がり、プロダクトタンカーの収益は1週間で150から200パーセント上昇した。海峡は閉鎖されていない。閉鎖されなくても料率は動く。</p>
-<p>保険料は3つ目の経路である。戦争リスク保険料が船価の0.07パーセントから2パーセントへ上昇したと報告されている <a href="https://unctad.org/system/files/official-document/rmt2025ch3_en.pdf" target="_blank" rel="noopener">出典</a>。ただしこれは報告書が二次情報を引用した数字であり、船種と航海単位の条件は明示されていない。一次資料である引受シンジケートの料率表は公開されておらず、条件別の料率は確認できていない。この数字は幅として受け取るべきで、特定の航海に当てはまる料率として使ってはならない。</p>
-<p>通航そのものの変化も記録されている。スエズ運河の2024年の通航は13,213隻、収入は39.91億ドルで、2023年の26,000隻超、102.5億ドルから減った <a href="https://www.arabnews.com/node/2597377" target="_blank" rel="noopener">出典</a>。2025年5月時点でもスエズ運河のトン数は2023年比で70パーセント低い水準にとどまる。ただし荷が消えたわけではない。喜望峰経由の石油通過量は2023年の1日あたり6.2百万バレルから2024年の9.3百万バレルへ増えた。減ったのは運河の通航であって、荷は迂回路へ移った。</p>
-<p>制約の性質を区別する必要がある。パナマ運河は2023年11月7日に1日24隻へ削減され、2024年8月に35枠へ戻った。制限前の水準は1日34から36隻である <a href="https://www.eia.gov/todayinenergy/detail.php?id=62408" target="_blank" rel="noopener">出典</a>。2025会計年度には通航13,404隻、収入57.05億ドルとなり、2024会計年度の11,240隻、49.86億ドルから通航隻数で19.3パーセント回復した <a href="https://pancanal.com/en/panama-canal-maintains-operational-and-financial-strength/" target="_blank" rel="noopener">出典</a>。パナマ運河の制約は降水量で決まり、自然条件の回復で解消しうる。紅海の制約は安全保障で決まり、2年近く続いている。同じチョークポイントでも、回復までの時間の読み方が異なる。</p>
-<p>4つ目の経路が港湾である。港湾が詰まるのは荷動き総量が増えたときではなく、到着が束になったときである。2024年の海上荷動きは数量で2.2パーセント増にすぎない。それでもコンテナ船の平均待ち時間は2024年12月に先進国で6.4時間、途上国で10.9時間となり、2023年12月の5.2時間、10.2時間から伸びた <a href="https://unctad.org/system/files/official-document/rmt2025ch4_en.pdf" target="_blank" rel="noopener">出典</a>。コンテナ船の中央値の在港時間も2024年末に0.8日へ上昇し、それまでの低下傾向が反転した。500ムーブ未満の小口寄港では、コンテナ1個あたりの荷役時間が2024年に4分20秒を超えた。</p>
-<p>条件を特定できる事例がシンガポールである。シンガポール海事港湾庁は2024年5月30日の発表で、待ち時間の延伸の原因を喜望峰迂回によるスケジュール混乱と船舶の到着集中だと説明した。遅延した船の待ち時間は2から3日である。2024年1月から4月のコンテナ取扱量は13.36百万TEUで前年同期比8.8パーセント増となり、同庁はケッペル・ターミナルの旧バースとヤードを再稼働させて週間処理能力を77万TEUから82万TEUへ引き上げた <a href="https://www.mpa.gov.sg/media-centre/details/in-response-to-media-queries-on--vessels--extended-waiting-times-for-berths-in-the-port-of-singapore" target="_blank" rel="noopener">出典</a>。</p>
+<p>まず、どれだけ細いかを数量で押さえる。2024年の原油および石油液体の通過量は、マラッカ海峡が1日あたり22.5百万バレル、ホルムズ海峡が1日あたり20.7百万バレルである。以下、デンマーク海峡が4.9百万バレル、スエズ運河と SUMED パイプラインの合計が4.8百万バレル、バブエルマンデブ海峡が4.1百万バレル、トルコ海峡が3.6百万バレル、パナマ運河が2.0百万バレルと続く <a class="tb-src" href="https://www.eia.gov/international/content/analysis/special_topics/World_Oil_Transit_Chokepoints" target="_blank" rel="noopener">出典</a>。ホルムズ海峡は海上輸送された石油の約4分の1に相当する。マラッカ海峡は2025年上期に1日あたり23.2百万バレルで、海上石油輸送の29パーセントに当たる。2024年通年の22.5百万バレルとの差は集計期間の違いによるもので、矛盾ではない。コンテナ側の集中点はスエズ運河で、世界の海上荷動き量の約10パーセント、世界のコンテナ荷動きの22パーセントを扱う <a class="tb-src" href="https://unctad.org/system/files/official-document/rmt2024ch2_en.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>次に、価格が動く仕組みを見る。ここで重要なのは、閉塞しなくても価格は動くという点である。<strong class="hit">企業の損益を動かしているのは通航停止そのものではなく、迂回に伴う距離とスケジュールの変化である</strong>。2024年の海上荷動きは数量で2.2パーセント増にとどまった一方、トンマイルは5.9パーセント増となり、平均航海距離は2018年の4,831マイルから2024年の5,245マイルへ伸びた <a class="tb-src" href="https://unctad.org/system/files/official-document/rmt2025overview_en.pdf" target="_blank" rel="noopener">出典</a>。数量が伸びていないのに船腹需要が伸びる。この乖離が運賃上昇の起点になる。</p>
+<p>距離の変化は具体的である。深圳からロッテルダムはスエズ運河経由で10,000海里、約31日である。喜望峰経由では13,000海里、約41日になる。距離で1.3倍、日数で10日増である。中型コンテナ船のアジア欧州往復の追加コストは、スエズ運河経由で平均100万ドル、喜望峰経由で170万ドルとされる。FEU換算では欧州着1本あたり、スエズ運河経由で160ドル、喜望峰経由で272ドルの追加となる <a class="tb-src" href="https://unctad.org/system/files/official-document/rmt2024ch2_en.pdf" target="_blank" rel="noopener">出典</a>。喜望峰迂回は2024年6月時点で世界の船腹需要を3パーセント、コンテナ船需要を12パーセント押し上げた。加えてスケジュール維持のため速力が上がり、17,000TEU超のコンテナ船の速力は2023年比で5パーセント上がった。速力上昇は燃料消費を増やし、欧州排出量取引制度の対象費用も押し上げる。</p>
+<p>運賃の実測値も出ている。上海発コンテナ運賃指数の2024年平均は2,496ポイントで、2023年平均比149パーセント増である。2024年半ばに3,600ポイントの高値をつけ、2024年12月には7月の高値から34.1パーセント下げた。それでも2023年12月の1,230ポイントに対しては93パーセント高い水準だった <a class="tb-src" href="https://unctad.org/system/files/official-document/rmt2025ch3_en.pdf" target="_blank" rel="noopener">出典</a>。タンカーではホルムズ海峡が事例になる。2025年6月の緊張時、中東発東アジア向け VLCC の用船料は日額5万ドル近くまで2倍超に上がり、プロダクトタンカーの収益は1週間で150から200パーセント上昇した。海峡は閉鎖されていない。閉鎖されなくても料率は動く。</p>
+<p>保険料は3つ目の経路である。戦争リスク保険料が船価の0.07パーセントから2パーセントへ上昇したと報告されている <a class="tb-src" href="https://unctad.org/system/files/official-document/rmt2025ch3_en.pdf" target="_blank" rel="noopener">出典</a>。ただしこれは報告書が二次情報を引用した数字であり、船種と航海単位の条件は明示されていない。一次資料である引受シンジケートの料率表は公開されておらず、条件別の料率は確認できていない。この数字は幅として受け取るべきで、特定の航海に当てはまる料率として使ってはならない。</p>
+<p>通航そのものの変化も記録されている。スエズ運河の2024年の通航は13,213隻、収入は39.91億ドルで、2023年の26,000隻超、102.5億ドルから減った <a class="tb-src" href="https://www.arabnews.com/node/2597377" target="_blank" rel="noopener">出典</a>。2025年5月時点でもスエズ運河のトン数は2023年比で70パーセント低い水準にとどまる。ただし荷が消えたわけではない。喜望峰経由の石油通過量は2023年の1日あたり6.2百万バレルから2024年の9.3百万バレルへ増えた。減ったのは運河の通航であって、荷は迂回路へ移った。</p>
+<p>制約の性質を区別する必要がある。パナマ運河は2023年11月7日に1日24隻へ削減され、2024年8月に35枠へ戻った。制限前の水準は1日34から36隻である <a class="tb-src" href="https://www.eia.gov/todayinenergy/detail.php?id=62408" target="_blank" rel="noopener">出典</a>。2025会計年度には通航13,404隻、収入57.05億ドルとなり、2024会計年度の11,240隻、49.86億ドルから通航隻数で19.3パーセント回復した <a class="tb-src" href="https://pancanal.com/en/panama-canal-maintains-operational-and-financial-strength/" target="_blank" rel="noopener">出典</a>。パナマ運河の制約は降水量で決まり、自然条件の回復で解消しうる。紅海の制約は安全保障で決まり、2年近く続いている。同じチョークポイントでも、回復までの時間の読み方が異なる。</p>
+<p>4つ目の経路が港湾である。<strong class="hit">港湾が詰まるのは荷動き総量が増えたときではなく、到着が束になったときである</strong>。2024年の海上荷動きは数量で2.2パーセント増にすぎない。それでもコンテナ船の平均待ち時間は2024年12月に先進国で6.4時間、途上国で10.9時間となり、2023年12月の5.2時間、10.2時間から伸びた <a class="tb-src" href="https://unctad.org/system/files/official-document/rmt2025ch4_en.pdf" target="_blank" rel="noopener">出典</a>。コンテナ船の中央値の在港時間も2024年末に0.8日へ上昇し、それまでの低下傾向が反転した。500ムーブ未満の小口寄港では、コンテナ1個あたりの荷役時間が2024年に4分20秒を超えた。</p>
+<p>条件を特定できる事例がシンガポールである。シンガポール海事港湾庁は2024年5月30日の発表で、待ち時間の延伸の原因を喜望峰迂回によるスケジュール混乱と船舶の到着集中だと説明した。遅延した船の待ち時間は2から3日である。2024年1月から4月のコンテナ取扱量は13.36百万TEUで前年同期比8.8パーセント増となり、同庁はケッペル・ターミナルの旧バースとヤードを再稼働させて週間処理能力を77万TEUから82万TEUへ引き上げた <a class="tb-src" href="https://www.mpa.gov.sg/media-centre/details/in-response-to-media-queries-on--vessels--extended-waiting-times-for-berths-in-the-port-of-singapore" target="_blank" rel="noopener">出典</a>。</p>
 <p>ここから、港湾がボトルネックになる条件は3つに整理できる。第1に、到着間隔の分散が広がること。定時性が崩れると同じ総量でもピーク需要がバース数を超える。第2に、1寄港あたりの取扱本数が増えること。積み替え比率の高い港では迂回によって揚げ地変更が起き、1隻あたりの作業量が伸びる。第3に、空コンテナの偏在。定刻外到着は空コンテナの再配置を招き、ヤード面積を圧迫する。バースと荷役機械の物理的上限に達する前に、スケジュール分散とヤード占有率の側が先に効く。</p>
 <p>運賃、保険料、リードタイム、港湾滞船の4つは、同じ原因から派生している。原因側を見ずに企業の損益だけを追うと、費用増がいつまで続くかを読み違える。</p>
 <h2 id="s4">集中のコストを負担するのは誰か</h2>
 <p>集中の便益は分配が明確である。半導体2社の株主、陸路国境で回転していた宿泊と飲食の事業者、スエズ運河経由の定時性を前提に在庫を絞った荷主。いずれも平時には集中から利益を得ていた。反転したときの負担は、便益を得た主体と一致しない。</p>
 <p>第1に、指数を通じて負担が広がる。指数の43.59パーセントが2社である以上、韓国株のインデックスを保有する年金や個人は、半導体市況を選んだ覚えがなくても半導体市況を保有している。分散投資として国別指数を買うと、実際には単一製品の循環を買うことになる。他業種で打ち消せないことは前に見たとおりで、時価総額第3位と第2位の差は8.2倍ある。しかも損益の実現より1年前に指数が動くため、企業業績を確認してから逃げる戦略は機能しない。2018年と2022年の2回とも、指数は業績悪化の前年に下げている。</p>
 <p>第2に、緩衝が効かない相手に負担が寄る。ウォン安が起きれば輸出企業のウォン建て売上が支えられ、株価の下落は一部相殺される。2026年7月から8月にかけては、株安と1か月で5.74パーセントのウォン高が同時に起きた。想定された相殺は起きていない。この状況では、輸出企業の株主と、輸入価格の低下から利益を得る主体が、別々に扱われる。誰がどちらに属するかは為替の動き方で決まり、事前には固定できない。</p>
-<p>第3に、経路の集中では負担が地理で決まる。カンボジアで消えたのはタイからの1,123,931人であり、増えたのは中国からの352,729人である。この2つは同じ場所で消費しない。陸路国境に依存していた地域の事業者にとって、空路入国の19.2パーセント増は代替にならない。全国平均のホテル稼働率が77.8パーセントから59.1パーセントへ18.7ポイント下がったという数字は、負担が均等に配分された結果ではなく、特定の地域と業態に寄った結果を平均で見た値である。地域別の内訳は本章で参照した公表資料からは取れていない。</p>
+<p><strong class="hit">第3に、経路の集中では負担が地理で決まる</strong>。カンボジアで消えたのはタイからの1,123,931人であり、増えたのは中国からの352,729人である。この2つは同じ場所で消費しない。陸路国境に依存していた地域の事業者にとって、空路入国の19.2パーセント増は代替にならない。全国平均のホテル稼働率が77.8パーセントから59.1パーセントへ18.7ポイント下がったという数字は、負担が均等に配分された結果ではなく、特定の地域と業態に寄った結果を平均で見た値である。地域別の内訳は本章で参照した公表資料からは取れていない。</p>
 <p>第4に、海上輸送では費用が下流へ転嫁される。FEU 1本あたり272ドルの追加は船社の内部にとどまらない。運賃指数が2023年平均比149パーセント増になれば、輸入物価を通じて消費者に届く。同時に、転嫁できない部分もある。待ち時間の延伸は在庫日数の増加として荷主に残り、燃料消費の増加と欧州排出量取引制度の対象費用は船社に残る。保険料は船価に対する料率で決まるため、同じ航海でも高価な船を持つ事業者ほど絶対額の負担が大きい。ただし条件別の料率が非公開である以上、船社間の負担配分は外部から検証できない。</p>
 <p>第5に、港湾の待ち時間には非対称がある。2024年12月の平均待ち時間は先進国で6.4時間、途上国で10.9時間である。差は4.5時間で、途上国側が1.7倍長い。迂回の原因は紅海と喜望峰にあり、待ち時間の増加はそこから遠い港でも生じる。原因を作っていない側が待ち時間を負担する構造になっている。</p>
-<p>以上を通して、集中のコストには共通の性質が3つある。第1に、集計単位が上がるほど負担が見えにくくなる。指数、全国平均、世界平均のいずれも、内訳の偏りを消してしまう。第2に、負担の発生は価格ではなく期待の変化で始まる。DRAM のスポット価格が高水準のまま指数が31.3パーセント下げたのがその例である。第3に、平時に用意された緩衝装置は、必要なときに働くとはかぎらない。為替は2026年の韓国では相殺として機能せず、迂回路は紅海では代替として機能したが距離と日数の増加を伴った。集中の判断を下すときは、緩衝が働く前提を外して損益を試算しておく必要がある。</p>
+<p>以上を通して、集中のコストには共通の性質が3つある。第1に、集計単位が上がるほど負担が見えにくくなる。指数、全国平均、世界平均のいずれも、内訳の偏りを消してしまう。<strong class="hit">第2に、負担の発生は価格ではなく期待の変化で始まる</strong>。DRAM のスポット価格が高水準のまま指数が31.3パーセント下げたのがその例である。第3に、平時に用意された緩衝装置は、必要なときに働くとはかぎらない。為替は2026年の韓国では相殺として機能せず、迂回路は紅海では代替として機能したが距離と日数の増加を伴った。集中の判断を下すときは、緩衝が働く前提を外して損益を試算しておく必要がある。</p>
 <h2 id="s5">この章の要点</h2>
 <ul>
 <li>集中は株式市場のウェイト、輸出構成、経常収支の3層で測る。3層が同じ製品に紐づくと、分散は名目だけになる。韓国は指数ウェイトで2社43.59パーセント、輸出で半導体41.5パーセントである。</li>
@@ -256,5 +363,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
   <div class="tb-nav"><a class="tb-nav-a" href="02_factor-supply-labor-and-resources.html">← 生産要素の供給を握る側</a><a class="tb-nav-a" href="04_infrastructure-power-competition.html">インフラ輸出とエネルギーの覇権 →</a></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

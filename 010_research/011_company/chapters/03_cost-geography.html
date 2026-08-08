@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -157,59 +264,59 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
 <nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">工場立地を決める四条件に分解して優先順位を付ける</a></li><li><a href="#s2">装置・部材の近接が歩留まりと開発速度に効く経路</a></li><li><a href="#s3">内製範囲をどこで止めるかの判断基準</a></li><li><a href="#s4">特定国でしか成立しない原価と、それが政治リスクに転化する仕組み</a></li><li><a href="#s5">自動化投資を稼働率で回収できる条件</a></li><li><a href="#s6">この章の要点</a></li><li><a href="#s7">残っている問い</a></li><li><a href="#s8">出典</a></li></ol></nav>
 
-<p>製造業の話を聞くと、たいてい技術の話になる。どの世代のプロセスを使っているか、どの化学組成の電池か、どんなソフトウェアで工場を制御しているか。しかし決算書を開くと、粗利率を動かしているのはそこではないことが多い。CATL の2025年通期は、売上原価に対する従業員給付の比率が12.0%にとどまる。残りの88%は材料費と減価償却とエネルギー費である。つまり同社の安さを人件費で説明する言い方は、原価の8割以上を無視している。</p>
+<p>製造業の話を聞くと、たいてい技術の話になる。どの世代のプロセスを使っているか、どの化学組成の電池か、どんなソフトウェアで工場を制御しているか。<strong class="hit">しかし決算書を開くと、粗利率を動かしているのはそこではないことが多い</strong>。CATL の2025年通期は、売上原価に対する従業員給付の比率が12.0%にとどまる。残りの88%は材料費と減価償却とエネルギー費である。つまり同社の安さを人件費で説明する言い方は、原価の8割以上を無視している。</p>
 <p>原価がどこで決まるかを間違えると、二つの判断を誤る。一つは投資判断で、勝てない土地に工場を建てる。もう一つは政策判断で、補助金を出せば産業が移ると考える。この章で扱うのは、工場をどこに置くかという条件の話と、その条件からどれだけ自由になれるかという内製範囲の話である。前者は与件に見えて操作可能であり、後者は経営判断に見えて与件に縛られている。順に見ていく。</p>
 <h2 id="s1">工場立地を決める四条件に分解して優先順位を付ける</h2>
-<p>電力、水、人材、輸送の四つが工場立地の条件だとよく言われる。この四つは同格ではない。優先順位は業種と時点で変わり、しかも「豊富だから来た」のではなく「来たから後から整えた」条件が混ざっている。この混同がいちばん多い誤りである。</p>
-<p>Micron の広島工場を例に取る。この工場は日本で唯一 DRAM を量産する拠点であり、2026年7月4日に総額1兆5,000億円の新棟が着工した <a href="https://pc.watch.impress.co.jp/docs/news/2122472.html" target="_blank" rel="noopener">出典</a>。四条件のうち何が効いたのかを問うには、まず問いを二段に割る必要がある。1980年代の初期立地と、2023年以降の増設判断は別の意思決定だからである。</p>
-<p>初期立地で効いたのは政策と用地と大学である。東広島市の吉川地区工業団地は1982年度から1986年度に造成され、12社が進出した <a href="https://www.city.higashihiroshima.lg.jp/soshiki/sangyo/5/5/3603.html" target="_blank" rel="noopener">出典</a>。1984年には広島中央テクノポリス地域が指定され、先端産業と学術研究機能と住環境を一体で整備する方針が取られた <a href="https://www.chugoku-np.co.jp/articles/-/825365" target="_blank" rel="noopener">出典</a>。広島大学の統合移転は1995年に完了し、東広島に理工系の学生と教員が常駐する状態が作られた <a href="https://ja.wikipedia.org/wiki/%E5%BA%83%E5%B3%B6%E5%A4%A7%E5%AD%A6" target="_blank" rel="noopener">出典</a>。Micron 自身はこの土地を選んでいない。広島日本電気の Fab がエルピーダを経由し、2013年に Micron の完全子会社となった <a href="https://ja.wikipedia.org/wiki/%E3%83%9E%E3%82%A4%E3%82%AF%E3%83%AD%E3%83%B3%E3%83%A1%E3%83%A2%E3%83%AA%E3%82%B8%E3%83%A3%E3%83%91%E3%83%B3" target="_blank" rel="noopener">出典</a>。四条件を評価したのは40年前の日本電気であって、Micron ではない。</p>
-<p>水は強みではなく制約である。広島県水道広域連合企業団は東広島市域向けに計画水量26,000立方メートル毎日の工業用水道を整備している。水源は太田川の土師ダム、施設整備費は約30億円、整備期間は2023年度から2026年度、給水開始は2027年度である <a href="https://www.pref.hiroshima.lg.jp/uploaded/attachment/559601.pdf" target="_blank" rel="noopener">出典</a>。既存の給水能力では増産分を賄えないことが整備理由として報じられている <a href="https://www.nikkei.com/article/DGXZQOCC265XN0W3A221C2000000/" target="_blank" rel="noopener">出典</a>。水量は所与ではなく、公費で後から足された条件である。ただし水質は別で、地域の軟水を使える点は新棟着工の報道で触れられている <a href="https://pc.watch.impress.co.jp/docs/news/2122472.html" target="_blank" rel="noopener">出典</a>。水を評価するときは量と質を分けて見る必要がある。</p>
-<p>人材は現在の強みとして働いている。マイクロンメモリジャパンは国内に4,000人以上のエンジニアと技術者を擁すると自社発表しており <a href="https://prtimes.jp/main/html/rd/p/000000028.000055229.html" target="_blank" rel="noopener">出典</a>、東広島市内の西条オフィスには約300人が勤務する計画である <a href="https://newswitch.jp/p/48644" target="_blank" rel="noopener">出典</a>。広島大学は日米半導体人材連携である UPWARDS for the Future に参画しており、日米あわせて11大学が加わっている <a href="https://www.hiroshima-u.ac.jp/news/77063" target="_blank" rel="noopener">出典</a>。</p>
+<p>電力、水、人材、輸送の四つが工場立地の条件だとよく言われる。この四つは同格ではない。<strong class="hit">優先順位は業種と時点で変わり、しかも「豊富だから来た」のではなく「来たから後から整えた」条件が混ざっている</strong>。この混同がいちばん多い誤りである。</p>
+<p>Micron の広島工場を例に取る。この工場は日本で唯一 DRAM を量産する拠点であり、2026年7月4日に総額1兆5,000億円の新棟が着工した <a class="tb-src" href="https://pc.watch.impress.co.jp/docs/news/2122472.html" target="_blank" rel="noopener">出典</a>。四条件のうち何が効いたのかを問うには、まず問いを二段に割る必要がある。1980年代の初期立地と、2023年以降の増設判断は別の意思決定だからである。</p>
+<p>初期立地で効いたのは政策と用地と大学である。東広島市の吉川地区工業団地は1982年度から1986年度に造成され、12社が進出した <a class="tb-src" href="https://www.city.higashihiroshima.lg.jp/soshiki/sangyo/5/5/3603.html" target="_blank" rel="noopener">出典</a>。1984年には広島中央テクノポリス地域が指定され、先端産業と学術研究機能と住環境を一体で整備する方針が取られた <a class="tb-src" href="https://www.chugoku-np.co.jp/articles/-/825365" target="_blank" rel="noopener">出典</a>。広島大学の統合移転は1995年に完了し、東広島に理工系の学生と教員が常駐する状態が作られた <a class="tb-src" href="https://ja.wikipedia.org/wiki/%E5%BA%83%E5%B3%B6%E5%A4%A7%E5%AD%A6" target="_blank" rel="noopener">出典</a>。Micron 自身はこの土地を選んでいない。広島日本電気の Fab がエルピーダを経由し、2013年に Micron の完全子会社となった <a class="tb-src" href="https://ja.wikipedia.org/wiki/%E3%83%9E%E3%82%A4%E3%82%AF%E3%83%AD%E3%83%B3%E3%83%A1%E3%83%A2%E3%83%AA%E3%82%B8%E3%83%A3%E3%83%91%E3%83%B3" target="_blank" rel="noopener">出典</a>。四条件を評価したのは40年前の日本電気であって、Micron ではない。</p>
+<p>水は強みではなく制約である。広島県水道広域連合企業団は東広島市域向けに計画水量26,000立方メートル毎日の工業用水道を整備している。水源は太田川の土師ダム、施設整備費は約30億円、整備期間は2023年度から2026年度、給水開始は2027年度である <a class="tb-src" href="https://www.pref.hiroshima.lg.jp/uploaded/attachment/559601.pdf" target="_blank" rel="noopener">出典</a>。既存の給水能力では増産分を賄えないことが整備理由として報じられている <a class="tb-src" href="https://www.nikkei.com/article/DGXZQOCC265XN0W3A221C2000000/" target="_blank" rel="noopener">出典</a>。<strong class="hit">水量は所与ではなく、公費で後から足された条件である</strong>。ただし水質は別で、地域の軟水を使える点は新棟着工の報道で触れられている <a class="tb-src" href="https://pc.watch.impress.co.jp/docs/news/2122472.html" target="_blank" rel="noopener">出典</a>。水を評価するときは量と質を分けて見る必要がある。</p>
+<p>人材は現在の強みとして働いている。マイクロンメモリジャパンは国内に4,000人以上のエンジニアと技術者を擁すると自社発表しており <a class="tb-src" href="https://prtimes.jp/main/html/rd/p/000000028.000055229.html" target="_blank" rel="noopener">出典</a>、東広島市内の西条オフィスには約300人が勤務する計画である <a class="tb-src" href="https://newswitch.jp/p/48644" target="_blank" rel="noopener">出典</a>。広島大学は日米半導体人材連携である UPWARDS for the Future に参画しており、日米あわせて11大学が加わっている <a class="tb-src" href="https://www.hiroshima-u.ac.jp/news/77063" target="_blank" rel="noopener">出典</a>。</p>
 <p>輸送、とくに港湾は効いていない。工場は内陸の賀茂台地にあり、一次資料で港湾を立地要因に挙げた記述は見つからなかった。電力については、送電設備の増強計画も工場側の受電容量も一次資料で確認できなかった。四条件のうち二つは、この事例では評価できない。ここは正直に空欄のままにしておく。</p>
-<p>そのうえで、増設判断を動かした要因は四条件のどれでもない。経済産業省は生産設備投資に最大5,000億円、研究開発に最大360億円、あわせて最大5,360億円を支援する。生産設備分は1兆5,000億円投資の3分の1、研究開発分は開発費の2分の1にあたる <a href="https://www.nikkei.com/article/DGXZQOUA127WD0S5A910C2000000/" target="_blank" rel="noopener">出典</a>。投資額の3分の1を国が負担する条件下では、増設の主因は補助金だと見るのが自然である。四条件は既存拠点であることによって初めから満たされており、決め手にはならなかった。</p>
-<p>優先順位を一般化するとこうなる。新規立地では用地と人材が先に効き、電力と水は後から金で解ける場合がある。既存拠点への増設では四条件はすでに固定されており、補助金と装置の調達枠が判断を動かす。四条件を並列に並べるのではなく、いま論じているのが新規立地か増設かを先に確定させることが、実務上の分岐点になる。</p>
+<p>そのうえで、増設判断を動かした要因は四条件のどれでもない。経済産業省は生産設備投資に最大5,000億円、研究開発に最大360億円、あわせて最大5,360億円を支援する。生産設備分は1兆5,000億円投資の3分の1、研究開発分は開発費の2分の1にあたる <a class="tb-src" href="https://www.nikkei.com/article/DGXZQOUA127WD0S5A910C2000000/" target="_blank" rel="noopener">出典</a>。投資額の3分の1を国が負担する条件下では、増設の主因は補助金だと見るのが自然である。四条件は既存拠点であることによって初めから満たされており、決め手にはならなかった。</p>
+<p>優先順位を一般化するとこうなる。新規立地では用地と人材が先に効き、電力と水は後から金で解ける場合がある。既存拠点への増設では四条件はすでに固定されており、補助金と装置の調達枠が判断を動かす。四条件を並列に並べるのではなく、<strong class="hit">いま論じているのが新規立地か増設かを先に確定させることが、実務上の分岐点になる</strong>。</p>
 <div class="tb-tw"><table><thead><tr><th>条件</th><th>広島での位置づけ</th><th>根拠</th></tr></thead><tbody><tr><td>用地</td><td>1982年度から1986年度に造成済み、増築用地9.5ヘクタール</td><td><a href="https://www.city.higashihiroshima.lg.jp/soshiki/sangyo/5/5/3603.html" target="_blank" rel="noopener">団地</a> / <a href="https://www.chugoku-np.co.jp/articles/-/815337" target="_blank" rel="noopener">増築</a></td></tr><tr><td>人材</td><td>国内4,000人以上、大学連携あり</td><td><a href="https://prtimes.jp/main/html/rd/p/000000028.000055229.html" target="_blank" rel="noopener">人員</a> / <a href="https://www.hiroshima-u.ac.jp/news/77063" target="_blank" rel="noopener">連携</a></td></tr><tr><td>水</td><td>不足。26,000立方メートル毎日を公費で追加、給水開始2027年度</td><td><a href="https://www.pref.hiroshima.lg.jp/uploaded/attachment/559601.pdf" target="_blank" rel="noopener">県資料</a></td></tr><tr><td>電力</td><td>一次資料で確認できず</td><td>—</td></tr><tr><td>港湾</td><td>立地要因として確認できず</td><td>—</td></tr></tbody></table></div>
 <h2 id="s2">装置・部材の近接が歩留まりと開発速度に効く経路</h2>
 <p>四条件のリストに入らないが原価に効く条件がもう一つある。装置メーカーと部材メーカーがどれだけ近くにいるか、である。</p>
-<p>東広島には装置とサービスと産業ガスが揃いつつある。ASML は広島工場への EUV 露光装置1基の納入に対応して、東広島の部品倉庫を面積で2倍に拡張し、メンテナンス人員を増やした <a href="https://www.chugoku-np.co.jp/articles/-/723518" target="_blank" rel="noopener">出典</a>。市内にはアプライドマテリアルズと東京エレクトロンのサービス拠点もある <a href="https://newswitch.jp/p/49385" target="_blank" rel="noopener">出典</a>。エア・リキードは東広島の新工場を2028年末に稼働させる計画である <a href="https://www.chugoku-np.co.jp/articles/-/857972" target="_blank" rel="noopener">出典</a>。</p>
+<p>東広島には装置とサービスと産業ガスが揃いつつある。ASML は広島工場への EUV 露光装置1基の納入に対応して、東広島の部品倉庫を面積で2倍に拡張し、メンテナンス人員を増やした <a class="tb-src" href="https://www.chugoku-np.co.jp/articles/-/723518" target="_blank" rel="noopener">出典</a>。市内にはアプライドマテリアルズと東京エレクトロンのサービス拠点もある <a class="tb-src" href="https://newswitch.jp/p/49385" target="_blank" rel="noopener">出典</a>。エア・リキードは東広島の新工場を2028年末に稼働させる計画である <a class="tb-src" href="https://www.chugoku-np.co.jp/articles/-/857972" target="_blank" rel="noopener">出典</a>。</p>
 <p>この近接が効く経路は三つに分解できる。第一に、故障時の部品調達と技術者派遣にかかる時間が短くなり、装置の停止時間が減る。第二に、定期保守の頻度を上げやすくなり、装置状態のばらつきが小さくなる。第三に、プロセス条件の調整に装置メーカーの技術者を常時巻き込める。</p>
 <p>ここで踏み止まる必要がある。一次資料が示しているのは第一の経路、すなわち稼働率側の効果だけである。ASML の報道が明示しているのはバックアップ体制の強化であり、歩留まりへの言及はない。第二と第三は理屈のうえで歩留まりに効くが、Micron は広島工場の歩留まりを開示していない。近接が歩留まりを何ポイント押し上げたかは、一次資料では確認できない。</p>
 <p>この区別は実務上も重要である。稼働率の改善は装置1台あたりの償却負担を薄める効果であり、歩留まりの改善は投入ウェハあたりの良品数を増やす効果である。前者は固定費側、後者は変動費側に効く。同じ「近接のメリット」という言葉で括ると、投資対効果の計算を誤る。</p>
-<p>近接の別の側面が開発速度である。PowerX は東京都大田区平和島に自社研究開発拠点 POWERD LAB を置き、実際の交流系統と直流系統を模した構成で小規模な電力系統を再現して実機検証できる環境を作った <a href="https://power-x.jp/intl/about/powerd-lab" target="_blank" rel="noopener">出典</a>。同社は2026年7月29日にパワーコンディショナの内製化を発表し、狙いをシステム仕様の最適化、品質と保守性の向上、調達と供給体制の強化と説明している <a href="https://power-x.jp/ja/intl/newsroom/2026-07-29" target="_blank" rel="noopener">出典</a>。外部から完成品のパワーコンディショナを買う場合、仕様は供給者の製品仕様に縛られる。自社に検証環境があれば、蓄電システム側と電力変換側を同時に設計変更して確かめられる。</p>
-<p>その帰結とみられるのが2026年8月3日の発表である。同社は系統接続設備を統合した Grid Connector シリーズを発表し、蓄電システムから系統接続設備までを一体で最適化することで建設コストの低減と運転開始までの期間短縮を実現すると説明した。あわせて20フィートコンテナ型で蓄電容量4.6MWh と4.2MWh の2モデルからなる Mega Power 4000 を発表し、量産開始を2027年5月からと予定している。1台あたり最大4,680kWh は従来製品比で約1.7倍、2段積み設置時の設置面積あたり最大9,360kWh は従来比で約3.4倍としている <a href="https://power-x.jp/ja/intl/newsroom/2026-08-03" target="_blank" rel="noopener">出典</a>。</p>
-<p>ただし、研究所を持つことで開発期間が何か月短縮したという定量的な記述は一次資料では確認できない。研究開発費の水準も、上場時資料に研究開発費と人件費の合計が7億円以下と記されるのみで、単独金額は開示されていない <a href="https://qhit.daiwa.co.jp/daiwahp/cont/pdfdoc/qpdf/download/33672074-3/20251219-080000-00.PDF" target="_blank" rel="noopener">出典</a>。短縮幅を検証するには、内製化の前後で仕様確定から量産開始までの月数を比べる必要がある。</p>
+<p>近接の別の側面が開発速度である。PowerX は東京都大田区平和島に自社研究開発拠点 POWERD LAB を置き、実際の交流系統と直流系統を模した構成で小規模な電力系統を再現して実機検証できる環境を作った <a class="tb-src" href="https://power-x.jp/intl/about/powerd-lab" target="_blank" rel="noopener">出典</a>。同社は2026年7月29日にパワーコンディショナの内製化を発表し、狙いをシステム仕様の最適化、品質と保守性の向上、調達と供給体制の強化と説明している <a class="tb-src" href="https://power-x.jp/ja/intl/newsroom/2026-07-29" target="_blank" rel="noopener">出典</a>。外部から完成品のパワーコンディショナを買う場合、仕様は供給者の製品仕様に縛られる。自社に検証環境があれば、蓄電システム側と電力変換側を同時に設計変更して確かめられる。</p>
+<p>その帰結とみられるのが2026年8月3日の発表である。同社は系統接続設備を統合した Grid Connector シリーズを発表し、蓄電システムから系統接続設備までを一体で最適化することで建設コストの低減と運転開始までの期間短縮を実現すると説明した。あわせて20フィートコンテナ型で蓄電容量4.6MWh と4.2MWh の2モデルからなる Mega Power 4000 を発表し、量産開始を2027年5月からと予定している。1台あたり最大4,680kWh は従来製品比で約1.7倍、2段積み設置時の設置面積あたり最大9,360kWh は従来比で約3.4倍としている <a class="tb-src" href="https://power-x.jp/ja/intl/newsroom/2026-08-03" target="_blank" rel="noopener">出典</a>。</p>
+<p>ただし、研究所を持つことで開発期間が何か月短縮したという定量的な記述は一次資料では確認できない。研究開発費の水準も、上場時資料に研究開発費と人件費の合計が7億円以下と記されるのみで、単独金額は開示されていない <a class="tb-src" href="https://qhit.daiwa.co.jp/daiwahp/cont/pdfdoc/qpdf/download/33672074-3/20251219-080000-00.PDF" target="_blank" rel="noopener">出典</a>。短縮幅を検証するには、内製化の前後で仕様確定から量産開始までの月数を比べる必要がある。</p>
 <h2 id="s3">内製範囲をどこで止めるかの判断基準</h2>
 <p>近接が外部との距離を縮める手段だとすれば、内製は距離そのものを消す手段である。ただし内製には固定費がついてくる。どこで止めるかが問題になる。</p>
-<p>BYD の自社船隊は、この線引きを観察しやすい事例である。同社は2022年10月に自動車専用船8隻を発注した。確定6隻とオプション2隻の構成で、金額は約50億元すなわち6億8,900万ドル、1隻あたり積載は7,700台と報じられている <a href="https://www.caixinglobal.com/2022-10-29/byd-orders-689-million-of-auto-transport-ships-101957519.html" target="_blank" rel="noopener">出典</a>。当時の用船市場は逼迫しており、2023年11月時点の6,500CEU 級の用船料は日額約11万5,000ドルだった <a href="https://maritime-executive.com/article/top-electric-car-builder-byd-gets-its-first-ro-ro" target="_blank" rel="noopener">出典</a>。7,000CEU 級の LNG 対応新造船の船価は2025年時点で約9,000万ドルである <a href="https://hansa.news/pctc-newbuilding-orders-plummet-after-2024-peak/" target="_blank" rel="noopener">出典</a>。稼働350日、運航費と金利を無視した粗い試算では、日額10万ドルの用船を回避できる船は年3,500万ドルの支出を消し、船価は2.6年で回収される。これはノートの筆者による試算であり、BYD の開示ではない。</p>
-<p>ところが市況が反転した。2025年11月末の用船料は5,000CEU 級が日額30,000ドルで2024年比68%安、6,500CEU 級が日額42,500ドルで前年比64%安である。PCTC の新造発注も2025年は6隻、合計22,000CEU にとどまり、2022年から2024年の年平均612,000CEU から落ちた <a href="https://hansa.news/pctc-newbuilding-orders-plummet-after-2024-peak/" target="_blank" rel="noopener">出典</a>。日額42,500ドルで同じ試算をすると回収は6年台に伸びる。船隊は市況の高い局面で発注され、市況の低い局面で完成した。</p>
-<p>この事実から引き出すべき基準は、内製の目的を運賃節約と可用性確保に分けることである。運賃節約が目的なら、市況が下がった時点で判断は間違いだったことになる。可用性確保が目的なら、判断はいまも生きている。BYD の2026年1月から7月の海外販売は969,208台で、NEV 総販売の43.5%を占める。同期間の NEV 総販売は前年同期比10.54%減であり、成長は海外だけから出ている <a href="https://cnevpost.com/2026/08/01/byd-jul-2026-sales/" target="_blank" rel="noopener">出典</a>。輸出が唯一の成長源である企業にとって、船腹を他社と取り合う状態は営業計画そのものを縛る。</p>
-<p>止まり方も三つ観察できる。第一に、所有していない部分を残している。8隻体制の1番船 BYD Explorer No.1 は太平海運が所有し Zodiac Maritime が運航する用船であり、BYD は所有していない <a href="https://maritime-executive.com/article/top-electric-car-builder-byd-gets-its-first-ro-ro" target="_blank" rel="noopener">出典</a>。第二に、船腹に余裕があるときは他社の車両も運ぶ方針を示している。内部化ではなく外販への水平展開に近い。ただし BYD が海運を外販事業と位置づけたことを示す一次資料は確認できない。第三に、需要地では統合ではなく現地生産による分散を選んでいる。現地生産が増えるほど中国からの完成車輸送は減るため、船隊と現地工場は代替関係にある。</p>
-<p>規模の面でも自前で全量を運ぶ設計にはなっていない。8隻体制は2025年9月に完成し、年間輸送能力は100万台超と説明されている <a href="https://battery-tech.net/battery-markets-news/byd-completes-8-vessel-roro-fleet-boosting-export-capacity/" target="_blank" rel="noopener">出典</a>。一方で2026年1月から7月の海外販売969,208台を年換算すると166万台に相当する。外部船腹の併用が前提である。なお、この100万台という数字自体も航路距離に依存する。7,000台積みの船が中国から欧州へ片道30日、荷役を含む往復70日で回る場合、1隻の年間輸送は3.6万台前後にとどまり、8隻でも30万台規模になる。100万台は近距離航路の比重が高い前提でしか成立しない。これもノートの筆者の試算であり、BYD は航路別の運航計画を開示していない。</p>
-<p>線引きの原則を一般化すると、内製の範囲は「自社製品の原価と供給に直結する工程」で引かれている。BYD が自前で持つのは車載電池のブレードバッテリー、二次電池と太陽光、車載電子、都市軌道交通の雲軌と雲巴である <a href="https://static.cninfo.com.cn/finalpage/2026-03-28/1225045350.PDF" target="_blank" rel="noopener">出典</a>。一方で電子部品事業は内製部門ではなく外販事業になっている。上場子会社の BYD Electronic は2025年12月期に売上1,794.77億元を計上し、構成比はスマート端末の組立が67.55%、部品が16.34%、NEV 関連が15.06%、AI 計算基盤が0.53%で、売上の10%超を占める外部顧客が存在する <a href="https://www.hkexnews.hk/listedco/listconews/sehk/2026/0327/2026032702072.pdf" target="_blank" rel="noopener">出典</a>。原価に効く領域では内側へ、製造能力を売れる領域では外側へと、方向が分かれている。</p>
-<p>PowerX も同じ線引きをしている。同社はパワーコンディショナを内製化する一方、電池セルは外部調達のままである。セル内製化を示す一次資料はない。決算短信は、リチウム価格の高騰局面において、部品だけを仕入れる自社は完成品を仕入れる他社に比べてコスト増加の影響が限定されると述べている <a href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/disclosure/20260213/20260213560790.pdf" target="_blank" rel="noopener">出典</a>。内製の対象は、価格変動を吸収したい工程であって、いちばん高い部材ではない。</p>
+<p>BYD の自社船隊は、この線引きを観察しやすい事例である。同社は2022年10月に自動車専用船8隻を発注した。確定6隻とオプション2隻の構成で、金額は約50億元すなわち6億8,900万ドル、1隻あたり積載は7,700台と報じられている <a class="tb-src" href="https://www.caixinglobal.com/2022-10-29/byd-orders-689-million-of-auto-transport-ships-101957519.html" target="_blank" rel="noopener">出典</a>。当時の用船市場は逼迫しており、2023年11月時点の6,500CEU 級の用船料は日額約11万5,000ドルだった <a class="tb-src" href="https://maritime-executive.com/article/top-electric-car-builder-byd-gets-its-first-ro-ro" target="_blank" rel="noopener">出典</a>。7,000CEU 級の LNG 対応新造船の船価は2025年時点で約9,000万ドルである <a class="tb-src" href="https://hansa.news/pctc-newbuilding-orders-plummet-after-2024-peak/" target="_blank" rel="noopener">出典</a>。稼働350日、運航費と金利を無視した粗い試算では、日額10万ドルの用船を回避できる船は年3,500万ドルの支出を消し、船価は2.6年で回収される。これはノートの筆者による試算であり、BYD の開示ではない。</p>
+<p>ところが市況が反転した。2025年11月末の用船料は5,000CEU 級が日額30,000ドルで2024年比68%安、6,500CEU 級が日額42,500ドルで前年比64%安である。PCTC の新造発注も2025年は6隻、合計22,000CEU にとどまり、2022年から2024年の年平均612,000CEU から落ちた <a class="tb-src" href="https://hansa.news/pctc-newbuilding-orders-plummet-after-2024-peak/" target="_blank" rel="noopener">出典</a>。日額42,500ドルで同じ試算をすると回収は6年台に伸びる。船隊は市況の高い局面で発注され、市況の低い局面で完成した。</p>
+<p>この事実から引き出すべき基準は、内製の目的を運賃節約と可用性確保に分けることである。運賃節約が目的なら、市況が下がった時点で判断は間違いだったことになる。可用性確保が目的なら、判断はいまも生きている。BYD の2026年1月から7月の海外販売は969,208台で、NEV 総販売の43.5%を占める。同期間の NEV 総販売は前年同期比10.54%減であり、成長は海外だけから出ている <a class="tb-src" href="https://cnevpost.com/2026/08/01/byd-jul-2026-sales/" target="_blank" rel="noopener">出典</a>。輸出が唯一の成長源である企業にとって、船腹を他社と取り合う状態は営業計画そのものを縛る。</p>
+<p>止まり方も三つ観察できる。第一に、所有していない部分を残している。8隻体制の1番船 BYD Explorer No.1 は太平海運が所有し Zodiac Maritime が運航する用船であり、BYD は所有していない <a class="tb-src" href="https://maritime-executive.com/article/top-electric-car-builder-byd-gets-its-first-ro-ro" target="_blank" rel="noopener">出典</a>。第二に、船腹に余裕があるときは他社の車両も運ぶ方針を示している。内部化ではなく外販への水平展開に近い。ただし BYD が海運を外販事業と位置づけたことを示す一次資料は確認できない。<strong class="hit">第三に、需要地では統合ではなく現地生産による分散を選んでいる</strong>。現地生産が増えるほど中国からの完成車輸送は減るため、船隊と現地工場は代替関係にある。</p>
+<p>規模の面でも自前で全量を運ぶ設計にはなっていない。8隻体制は2025年9月に完成し、年間輸送能力は100万台超と説明されている <a class="tb-src" href="https://battery-tech.net/battery-markets-news/byd-completes-8-vessel-roro-fleet-boosting-export-capacity/" target="_blank" rel="noopener">出典</a>。一方で2026年1月から7月の海外販売969,208台を年換算すると166万台に相当する。外部船腹の併用が前提である。なお、この100万台という数字自体も航路距離に依存する。7,000台積みの船が中国から欧州へ片道30日、荷役を含む往復70日で回る場合、1隻の年間輸送は3.6万台前後にとどまり、8隻でも30万台規模になる。100万台は近距離航路の比重が高い前提でしか成立しない。これもノートの筆者の試算であり、BYD は航路別の運航計画を開示していない。</p>
+<p>線引きの原則を一般化すると、内製の範囲は「自社製品の原価と供給に直結する工程」で引かれている。BYD が自前で持つのは車載電池のブレードバッテリー、二次電池と太陽光、車載電子、都市軌道交通の雲軌と雲巴である <a class="tb-src" href="https://static.cninfo.com.cn/finalpage/2026-03-28/1225045350.PDF" target="_blank" rel="noopener">出典</a>。一方で電子部品事業は内製部門ではなく外販事業になっている。上場子会社の BYD Electronic は2025年12月期に売上1,794.77億元を計上し、構成比はスマート端末の組立が67.55%、部品が16.34%、NEV 関連が15.06%、AI 計算基盤が0.53%で、売上の10%超を占める外部顧客が存在する <a class="tb-src" href="https://www.hkexnews.hk/listedco/listconews/sehk/2026/0327/2026032702072.pdf" target="_blank" rel="noopener">出典</a>。<strong class="hit">原価に効く領域では内側へ、製造能力を売れる領域では外側へと、方向が分かれている</strong>。</p>
+<p>PowerX も同じ線引きをしている。同社はパワーコンディショナを内製化する一方、電池セルは外部調達のままである。セル内製化を示す一次資料はない。決算短信は、リチウム価格の高騰局面において、部品だけを仕入れる自社は完成品を仕入れる他社に比べてコスト増加の影響が限定されると述べている <a class="tb-src" href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/disclosure/20260213/20260213560790.pdf" target="_blank" rel="noopener">出典</a>。内製の対象は、価格変動を吸収したい工程であって、いちばん高い部材ではない。</p>
 <h2 id="s4">特定国でしか成立しない原価と、それが政治リスクに転化する仕組み</h2>
 <p>内製で消せない条件がある。その土地にしか存在しない供給者群である。ここが原価の最後の砦であり、同時に政治リスクの入口になる。</p>
-<p>CATL の2025年通期を分解する。売上高は423,701,834千元、売上原価は312,383,297千元、粗利率は26.27%で、前年の24.44%より1.83ポイント高い <a href="https://www.catl.com/en/uploads/1/file/public/202603/20260310105310_46xjbwckvn.pdf" target="_blank" rel="noopener">出典</a>。従業員給付は37,555,335千元、従業員数は2025年12月31日時点で約185,839人である。売上原価に対する従業員給付の比率は12.0%、1人あたり給付は年20.2万元となる。この二つはノートの筆者が開示値から計算した数字である。賃金は原価の1割強にすぎない。</p>
-<p>効いているのは調達構造である。2025年通期の最大仕入先からの調達額は全調達の4.04%、上位5社の合計は10.38%にとどまる。同じ年の売上では最大顧客が13.73%、上位5社が38.96%を占める <a href="https://www.catl.com/en/uploads/1/file/public/202603/20260310105310_46xjbwckvn.pdf" target="_blank" rel="noopener">出典</a>。売り先は集中し、買い先は分散している。仕入先が1社も5%に届かないということは、正極、負極、セパレータ、電解液のそれぞれで複数の供給者が価格競争をしている状態を意味する。</p>
-<p>この供給者群が中国に偏在していることは外部データで裏が取れる。IEA は LFP 用正極材の98%超が中国で生産されていると記述している <a href="https://www.iea.org/reports/global-critical-minerals-outlook-2025/beyond-nmc-batteries-supply-chain-issues-for-emerging-battery-technologies" target="_blank" rel="noopener">出典</a>。負極については、米商務省が中国産アクティブアノードマテリアルに対して2026年2月11日にアンチダンピング93.50%、相殺関税66.82%から66.86%の最終決定を出しており、米国内に代替供給が乏しいことが裏側から示されている <a href="https://www.trade.gov/final-affirmative-determinations-antidumping-and-countervailing-duty-investigations-active-anode" target="_blank" rel="noopener">出典</a>。米議会調査局は2024年の米国の完成リチウムイオン電池輸入のうち69%が中国産だったとしている <a href="https://www.everycrsreport.com/files/2025-07-30_R48538_146acfee1f5bc57da9e43f758e450a2d95048227.html" target="_blank" rel="noopener">出典</a>。</p>
-<p>結果としての地域差は BloombergNEF が測っている。2025年12月9日公表の調査では、パック価格の世界平均は108ドル/kWh、中国は84ドル/kWh、北米は中国より44%高く、欧州は56%高い <a href="https://about.bnef.com/insights/clean-transport/lithium-ion-battery-pack-prices-fall-to-108-per-kilowatt-hour-despite-rising-metal-prices-bloombergnef/" target="_blank" rel="noopener">出典</a>。この44%を人件費差で説明できないことは、原価の12.0%という比率から明らかである。</p>
-<p>ここで注意すべき点が一つある。中国立地は原価を下げる条件であって、利益率を上げる条件ではない。CATL の2025年通期の海外向け粗利率は31.44%で、国内向けの24.00%より7.44ポイント高い <a href="https://www.catl.com/en/uploads/1/file/public/202603/20260310105310_46xjbwckvn.pdf" target="_blank" rel="noopener">出典</a>。国外では原価が上がるが、販売価格はそれ以上に高い。原価の議論と利益の議論を混ぜないことが必要である。</p>
-<p>さて、この原価優位が政治リスクに転化する仕組みを見る。ここは通俗的な理解が最も外れやすい箇所である。よくある読み方は、CATL が強いから米国が締め付けているというものだが、措置の設計はそうなっていない。USTR の2024年9月18日付の最終通知では、EV 用リチウムイオン電池は2024年から25%、EV 以外の用途のリチウムイオン電池は2026年から25%、天然黒鉛は2026年から25%、電気自動車は2024年から100%、半導体は2025年から50%と定められた <a href="https://www.federalregister.gov/documents/full_text/text/2024/09/18/2024-21217.txt" target="_blank" rel="noopener">出典</a>。対象は品目であり企業ではない。税制側も同様で、2025年成立の P.L. 119-21 は45X、45Y、48E に禁止対象外国企業の規定を追加し、電池部材については禁止対象外国企業由来の材料比率が2026年に40%、2030年に15%を超えると控除対象外になるとした <a href="https://www.everycrsreport.com/files/2025-07-30_R48538_146acfee1f5bc57da9e43f758e450a2d95048227.html" target="_blank" rel="noopener">出典</a>。</p>
-<p>企業単体を狙った措置も存在はする。米国防総省は2025年1月2日に1260H リストを更新し CATL を追加した。この時点の掲載は76社である。FY2024国防授権法805条により、直接調達の禁止は2026年6月30日から、間接調達の禁止は2027年6月30日から適用される <a href="https://www.crowell.com/en/insights/client-alerts/new-year-updated-list-the-us-department-of-defense-updates-its-list-of-chinese-military-companies-with-ancillary-supply-chain-and-usg-contracting-impacts" target="_blank" rel="noopener">出典</a>。ただし対象は国防総省の調達であり、民生市場の売買を禁じるものではない。実際、フォードはミシガン州マーシャルの自社工場で CATL からライセンスを受けた LFP 技術を用い、2026年中の量産開始を目指している。工場はフォードの100%所有で、計画能力は35GWh、2026年末の従業員数は800人とされる <a href="https://www.electrive.com/2026/06/18/ford-to-produce-first-lfp-cells-this-year-thanks-to-catl/" target="_blank" rel="noopener">出典</a>。技術供与という形なら米国内で成立している。</p>
-<p>CATL 側の受け止めも読み取れる。2025年通期の海外売上は129,641,258千元で全体の30.6%だが、地域別内訳は国内と海外の2区分しかなく米国比率は一次資料では確認できない。判断材料になるのは、2025年5月20日の香港上場で1株263.00香港ドル、155,915,300株を発行して調達した410億香港ドルのうち90%がハンガリー工場に配分されていること、および年次報告書の主要リスクが技術革新、競争激化、新技術開発、原材料価格の4項目のみで米国政策を含まないことである <a href="https://www.catl.com/en/uploads/1/file/public/202603/20260310105310_46xjbwckvn.pdf" target="_blank" rel="noopener">出典</a>。会社自身が米国政策を主要リスクに数えていない。</p>
+<p>CATL の2025年通期を分解する。売上高は423,701,834千元、売上原価は312,383,297千元、粗利率は26.27%で、前年の24.44%より1.83ポイント高い <a class="tb-src" href="https://www.catl.com/en/uploads/1/file/public/202603/20260310105310_46xjbwckvn.pdf" target="_blank" rel="noopener">出典</a>。従業員給付は37,555,335千元、従業員数は2025年12月31日時点で約185,839人である。売上原価に対する従業員給付の比率は12.0%、1人あたり給付は年20.2万元となる。この二つはノートの筆者が開示値から計算した数字である。賃金は原価の1割強にすぎない。</p>
+<p>効いているのは調達構造である。2025年通期の最大仕入先からの調達額は全調達の4.04%、上位5社の合計は10.38%にとどまる。同じ年の売上では最大顧客が13.73%、上位5社が38.96%を占める <a class="tb-src" href="https://www.catl.com/en/uploads/1/file/public/202603/20260310105310_46xjbwckvn.pdf" target="_blank" rel="noopener">出典</a>。売り先は集中し、買い先は分散している。仕入先が1社も5%に届かないということは、正極、負極、セパレータ、電解液のそれぞれで複数の供給者が価格競争をしている状態を意味する。</p>
+<p>この供給者群が中国に偏在していることは外部データで裏が取れる。IEA は LFP 用正極材の98%超が中国で生産されていると記述している <a class="tb-src" href="https://www.iea.org/reports/global-critical-minerals-outlook-2025/beyond-nmc-batteries-supply-chain-issues-for-emerging-battery-technologies" target="_blank" rel="noopener">出典</a>。負極については、米商務省が中国産アクティブアノードマテリアルに対して2026年2月11日にアンチダンピング93.50%、相殺関税66.82%から66.86%の最終決定を出しており、米国内に代替供給が乏しいことが裏側から示されている <a class="tb-src" href="https://www.trade.gov/final-affirmative-determinations-antidumping-and-countervailing-duty-investigations-active-anode" target="_blank" rel="noopener">出典</a>。米議会調査局は2024年の米国の完成リチウムイオン電池輸入のうち69%が中国産だったとしている <a class="tb-src" href="https://www.everycrsreport.com/files/2025-07-30_R48538_146acfee1f5bc57da9e43f758e450a2d95048227.html" target="_blank" rel="noopener">出典</a>。</p>
+<p>結果としての地域差は BloombergNEF が測っている。2025年12月9日公表の調査では、パック価格の世界平均は108ドル/kWh、中国は84ドル/kWh、北米は中国より44%高く、欧州は56%高い <a class="tb-src" href="https://about.bnef.com/insights/clean-transport/lithium-ion-battery-pack-prices-fall-to-108-per-kilowatt-hour-despite-rising-metal-prices-bloombergnef/" target="_blank" rel="noopener">出典</a>。この44%を人件費差で説明できないことは、原価の12.0%という比率から明らかである。</p>
+<p>ここで注意すべき点が一つある。中国立地は原価を下げる条件であって、利益率を上げる条件ではない。CATL の2025年通期の海外向け粗利率は31.44%で、国内向けの24.00%より7.44ポイント高い <a class="tb-src" href="https://www.catl.com/en/uploads/1/file/public/202603/20260310105310_46xjbwckvn.pdf" target="_blank" rel="noopener">出典</a>。国外では原価が上がるが、販売価格はそれ以上に高い。原価の議論と利益の議論を混ぜないことが必要である。</p>
+<p>さて、この原価優位が政治リスクに転化する仕組みを見る。ここは通俗的な理解が最も外れやすい箇所である。よくある読み方は、CATL が強いから米国が締め付けているというものだが、措置の設計はそうなっていない。USTR の2024年9月18日付の最終通知では、EV 用リチウムイオン電池は2024年から25%、EV 以外の用途のリチウムイオン電池は2026年から25%、天然黒鉛は2026年から25%、電気自動車は2024年から100%、半導体は2025年から50%と定められた <a class="tb-src" href="https://www.federalregister.gov/documents/full_text/text/2024/09/18/2024-21217.txt" target="_blank" rel="noopener">出典</a>。対象は品目であり企業ではない。税制側も同様で、2025年成立の P.L. 119-21 は45X、45Y、48E に禁止対象外国企業の規定を追加し、電池部材については禁止対象外国企業由来の材料比率が2026年に40%、2030年に15%を超えると控除対象外になるとした <a class="tb-src" href="https://www.everycrsreport.com/files/2025-07-30_R48538_146acfee1f5bc57da9e43f758e450a2d95048227.html" target="_blank" rel="noopener">出典</a>。</p>
+<p>企業単体を狙った措置も存在はする。米国防総省は2025年1月2日に1260H リストを更新し CATL を追加した。この時点の掲載は76社である。FY2024国防授権法805条により、直接調達の禁止は2026年6月30日から、間接調達の禁止は2027年6月30日から適用される <a class="tb-src" href="https://www.crowell.com/en/insights/client-alerts/new-year-updated-list-the-us-department-of-defense-updates-its-list-of-chinese-military-companies-with-ancillary-supply-chain-and-usg-contracting-impacts" target="_blank" rel="noopener">出典</a>。ただし対象は国防総省の調達であり、民生市場の売買を禁じるものではない。実際、フォードはミシガン州マーシャルの自社工場で CATL からライセンスを受けた LFP 技術を用い、2026年中の量産開始を目指している。工場はフォードの100%所有で、計画能力は35GWh、2026年末の従業員数は800人とされる <a class="tb-src" href="https://www.electrive.com/2026/06/18/ford-to-produce-first-lfp-cells-this-year-thanks-to-catl/" target="_blank" rel="noopener">出典</a>。技術供与という形なら米国内で成立している。</p>
+<p>CATL 側の受け止めも読み取れる。2025年通期の海外売上は129,641,258千元で全体の30.6%だが、地域別内訳は国内と海外の2区分しかなく米国比率は一次資料では確認できない。判断材料になるのは、2025年5月20日の香港上場で1株263.00香港ドル、155,915,300株を発行して調達した410億香港ドルのうち90%がハンガリー工場に配分されていること、および年次報告書の主要リスクが技術革新、競争激化、新技術開発、原材料価格の4項目のみで米国政策を含まないことである <a class="tb-src" href="https://www.catl.com/en/uploads/1/file/public/202603/20260310105310_46xjbwckvn.pdf" target="_blank" rel="noopener">出典</a>。会社自身が米国政策を主要リスクに数えていない。</p>
 <p>したがって仕組みはこう整理できる。政治リスクは特定企業の強さから生まれるのではなく、依存度の集中から生まれる。LFP 正極材の98%超という集中と、完成電池輸入の69%という集中が、品目単位の措置を正当化する。強い企業はその象徴として名指しされやすいが、措置の実体は品目に向いている。この違いは実務に効く。企業を回避しても品目を回避できなければ関税と控除除外は避けられず、逆に品目を国内化できれば特定企業との取引は技術供与の形で残りうる。なお、この読みは公開情報にもとづく推定であり、政策当局の内部的な優先順位を示す一次資料は確認できていない。</p>
 <h2 id="s5">自動化投資を稼働率で回収できる条件</h2>
 <p>最後に、立地と内製の話を投資回収の側から締める。工場は建てた瞬間に固定費が立ち上がる。ソフトウェアの複製費はゼロに近い。この非対称が、自動化投資の評価を分ける。</p>
-<p>Hadrian は2020年創業の米国企業で、分散した航空宇宙・防衛部品の加工能力を自社の大型工場に集約し、Opus と呼ぶソフトウェアで図面解釈から検査までを自動化する方針を取った。背景には、リード機械工の平均年齢が50代半ばに達し技能の再生産が止まりかけているという事情がある <a href="https://a16z.com/announcement/investing-in-hadrian/" target="_blank" rel="noopener">出典</a>。ソフトウェアで工場を動かしているのだから粗利率もソフトウェア並みになる、という期待がここで生じる。</p>
-<p>上場企業の実績を並べると帯の違いが見える。航空宇宙・防衛の構造部品と電子アセンブリを手がける Ducommun の2025年通期は売上高824.7百万ドル、粗利益221.6百万ドル、粗利率26.9%であった <a href="https://www.nasdaq.com/press-release/ducommun-incorporated-reports-fourth-quarter-2025-results-2026-02-26" target="_blank" rel="noopener">出典</a>。同社の2024年通期粗利率は25.1%で、1年で1.8ポイント改善している <a href="https://stockanalysis.com/stocks/dco/financials/" target="_blank" rel="noopener">出典</a>。一方 Palantir の2025年通期は売上高44.75億ドル、粗利益36.86億ドル、粗利率82.4%である <a href="https://stockanalysis.com/stocks/pltr/financials/" target="_blank" rel="noopener">出典</a>。両者の差は55.5ポイントある。</p>
+<p>Hadrian は2020年創業の米国企業で、分散した航空宇宙・防衛部品の加工能力を自社の大型工場に集約し、Opus と呼ぶソフトウェアで図面解釈から検査までを自動化する方針を取った。背景には、リード機械工の平均年齢が50代半ばに達し技能の再生産が止まりかけているという事情がある <a class="tb-src" href="https://a16z.com/announcement/investing-in-hadrian/" target="_blank" rel="noopener">出典</a>。ソフトウェアで工場を動かしているのだから粗利率もソフトウェア並みになる、という期待がここで生じる。</p>
+<p>上場企業の実績を並べると帯の違いが見える。航空宇宙・防衛の構造部品と電子アセンブリを手がける Ducommun の2025年通期は売上高824.7百万ドル、粗利益221.6百万ドル、粗利率26.9%であった <a class="tb-src" href="https://www.nasdaq.com/press-release/ducommun-incorporated-reports-fourth-quarter-2025-results-2026-02-26" target="_blank" rel="noopener">出典</a>。同社の2024年通期粗利率は25.1%で、1年で1.8ポイント改善している <a class="tb-src" href="https://stockanalysis.com/stocks/dco/financials/" target="_blank" rel="noopener">出典</a>。一方 Palantir の2025年通期は売上高44.75億ドル、粗利益36.86億ドル、粗利率82.4%である <a class="tb-src" href="https://stockanalysis.com/stocks/pltr/financials/" target="_blank" rel="noopener">出典</a>。両者の差は55.5ポイントある。</p>
 <p>差が生まれる理由は三つある。第一に傾きである。ソフトウェアの追加1ユーザーには材料が要らない。加工の追加1部品には素材、工具摩耗、機械時間、検査時間が必ずかかる。自動化で削れるのは主に人の作業時間であり、素材費と減価償却は削れない。第二に天井である。加工業の粗利は稼働率が上がると固定費の分だけ改善するが、変動費の比率で頭打ちになる。第三に稼働率の定義である。ソフトウェアの稼働率はサーバ負荷であり粗利にほとんど効かない。加工の稼働率は機械の主軸が実際に切削している時間の比率であり、粗利に直結する。</p>
-<p>固定費の重さは投資額から逆算できる。アリゾナ州メサの F3 は約270,000平方フィート、投資額は約2億ドル、雇用は350人である <a href="https://www.prnewswire.com/news-releases/hadrian-raises-260m-to-build-ai-powered-factories-for-america-adds-full-product-manufacturing-opens-arizona-site-302508179.html" target="_blank" rel="noopener">出典</a>。アラバマ州チェロキーの施設は2.2百万平方フィート、海軍投資9億ドルと民間資本15億ドル超を合わせて24億ドル超、雇用は最大1,000人である <a href="https://seapowermagazine.org/advanced-shipbuilding-factory-of-the-future-opens-in-alabama/" target="_blank" rel="noopener">出典</a>。1平方フィートあたりの投資額はメサが約741ドル、チェロキーが約1,091ドルになる。これは公表値からノートの筆者が導出した数字である。この規模の固定費を先に置く事業では、稼働率が計画を下回ると減価償却が先に走る。</p>
-<p>マクロの水準も参考になる。米国製造業全体の設備稼働率は2026年6月時点で75.7%であり、1972年から2025年の長期平均を2.5ポイント下回る <a href="https://www.federalreserve.gov/releases/g17/current/default.htm" target="_blank" rel="noopener">出典</a>。ただしこれは業種平均であり、個別の加工工場の主軸稼働率とは別物である。中小加工工場の主軸稼働率についての一次データは確認できなかった。</p>
-<p>回収の話で見落とされやすいのが時間軸である。Hadrian の資金調達は2022年3月31日の Series A 90百万ドル <a href="https://www.hadrian.co/blog/mission" target="_blank" rel="noopener">出典</a>、2024年2月21日の Series B 117百万ドル <a href="https://www.cooley.com/news/coverage/2024/2024-02-21-hadrian-automation-announces-117-million-series-b" target="_blank" rel="noopener">出典</a>、2025年7月17日の Series C 260百万ドルと続き、累計調達額は約5億ドルに達した <a href="https://techcrunch.com/2025/07/17/hadrian-raises-260m-to-build-out-automated-factories-for-space-and-defense-parts/" target="_blank" rel="noopener">出典</a>。2026年3月20日に海軍投資9億ドルを含むチェロキー工場が開所した <a href="https://seapowermagazine.org/advanced-shipbuilding-factory-of-the-future-opens-in-alabama/" target="_blank" rel="noopener">出典</a>。創業から数えて5年6か月である。順序も見ておく価値がある。a16z は投資時点で Hadrian が最大手の宇宙顧客3社に供給していると記しており <a href="https://a16z.com/announcement/investing-in-hadrian/" target="_blank" rel="noopener">出典</a>、商業実績が先、プライムの資本参加が次、政府の直接投資が最後という並びになっている。</p>
-<p>さらに、資金が入っても部品はすぐには出ない。チェロキー工場がフル生産に達するのは認定工程と初期生産を経て18か月から24か月後とされる <a href="https://defence-industry.eu/hadrian-opens-factory-of-the-future-in-alabama/" target="_blank" rel="noopener">出典</a>。2026年3月起点で2027年9月から2028年3月にあたる。創業から防衛部品の量産までは通算で7年半から8年かかる計算になる。海軍の9億ドルは One Big Beautiful Bill Act に基づく投資であり、部品の受注額ではない <a href="https://seapowermagazine.org/advanced-shipbuilding-factory-of-the-future-opens-in-alabama/" target="_blank" rel="noopener">出典</a>。</p>
+<p>固定費の重さは投資額から逆算できる。アリゾナ州メサの F3 は約270,000平方フィート、投資額は約2億ドル、雇用は350人である <a class="tb-src" href="https://www.prnewswire.com/news-releases/hadrian-raises-260m-to-build-ai-powered-factories-for-america-adds-full-product-manufacturing-opens-arizona-site-302508179.html" target="_blank" rel="noopener">出典</a>。アラバマ州チェロキーの施設は2.2百万平方フィート、海軍投資9億ドルと民間資本15億ドル超を合わせて24億ドル超、雇用は最大1,000人である <a class="tb-src" href="https://seapowermagazine.org/advanced-shipbuilding-factory-of-the-future-opens-in-alabama/" target="_blank" rel="noopener">出典</a>。1平方フィートあたりの投資額はメサが約741ドル、チェロキーが約1,091ドルになる。これは公表値からノートの筆者が導出した数字である。この規模の固定費を先に置く事業では、稼働率が計画を下回ると減価償却が先に走る。</p>
+<p>マクロの水準も参考になる。米国製造業全体の設備稼働率は2026年6月時点で75.7%であり、1972年から2025年の長期平均を2.5ポイント下回る <a class="tb-src" href="https://www.federalreserve.gov/releases/g17/current/default.htm" target="_blank" rel="noopener">出典</a>。ただしこれは業種平均であり、個別の加工工場の主軸稼働率とは別物である。中小加工工場の主軸稼働率についての一次データは確認できなかった。</p>
+<p>回収の話で見落とされやすいのが時間軸である。Hadrian の資金調達は2022年3月31日の Series A 90百万ドル <a class="tb-src" href="https://www.hadrian.co/blog/mission" target="_blank" rel="noopener">出典</a>、2024年2月21日の Series B 117百万ドル <a class="tb-src" href="https://www.cooley.com/news/coverage/2024/2024-02-21-hadrian-automation-announces-117-million-series-b" target="_blank" rel="noopener">出典</a>、2025年7月17日の Series C 260百万ドルと続き、累計調達額は約5億ドルに達した <a class="tb-src" href="https://techcrunch.com/2025/07/17/hadrian-raises-260m-to-build-out-automated-factories-for-space-and-defense-parts/" target="_blank" rel="noopener">出典</a>。2026年3月20日に海軍投資9億ドルを含むチェロキー工場が開所した <a class="tb-src" href="https://seapowermagazine.org/advanced-shipbuilding-factory-of-the-future-opens-in-alabama/" target="_blank" rel="noopener">出典</a>。創業から数えて5年6か月である。順序も見ておく価値がある。a16z は投資時点で Hadrian が最大手の宇宙顧客3社に供給していると記しており <a class="tb-src" href="https://a16z.com/announcement/investing-in-hadrian/" target="_blank" rel="noopener">出典</a>、商業実績が先、プライムの資本参加が次、政府の直接投資が最後という並びになっている。</p>
+<p>さらに、資金が入っても部品はすぐには出ない。チェロキー工場がフル生産に達するのは認定工程と初期生産を経て18か月から24か月後とされる <a class="tb-src" href="https://defence-industry.eu/hadrian-opens-factory-of-the-future-in-alabama/" target="_blank" rel="noopener">出典</a>。2026年3月起点で2027年9月から2028年3月にあたる。創業から防衛部品の量産までは通算で7年半から8年かかる計算になる。海軍の9億ドルは One Big Beautiful Bill Act に基づく投資であり、部品の受注額ではない <a class="tb-src" href="https://seapowermagazine.org/advanced-shipbuilding-factory-of-the-future-opens-in-alabama/" target="_blank" rel="noopener">出典</a>。</p>
 <p>したがって自動化投資を回収できる条件は三つに整理できる。第一に、変動費の比率が低い製品を選ぶこと。素材費が原価の大半を占める製品では、人の作業時間を削っても粗利は動きにくい。第二に、稼働率を計画水準で埋める需要を先に確保すること。固定費は稼働率に関係なく走る。第三に、認定と立ち上げの期間を回収計画に織り込むこと。工場が完成した日から売上が立つわけではない。</p>
 <p>Hadrian が Ducommun の帯を抜けられるかは、現時点では判定できない。同社は非上場で、粗利率、部品単価、1機械あたり売上、シフト体制のいずれも開示していない。判定するには、部品1点あたりの平均単価、機械時間あたりの直接原価、設備の償却年数、1日あたりの稼働シフト数の四つが要る。この四つが揃えば、稼働率が何パーセントで粗利率が26.9%の帯を抜けるかを計算できる。</p>
-<p>同じ構造は PowerX にも現れている。同社の2025年12月期は連結売上高19,306百万円に対し連結営業損失677百万円である。BESS 事業のセグメント利益3,870百万円を含む3セグメント合計のセグメント利益は3,481百万円だが、各セグメントに配分していない全社費用4,158百万円を差し引くと営業損失になる <a href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/disclosure/20260213/20260213560790.pdf" target="_blank" rel="noopener">出典</a>。2026年12月期の会社予想は売上高38,000百万円に対し営業利益2,000百万円から2,500百万円で、営業利益率は5.3%から6.6%にとどまる。蓄電システムの年間生産能力は2025年時点で0.8GWh、2029年に6.8GWh とする計画である <a href="https://qhit.daiwa.co.jp/daiwahp/cont/pdfdoc/qpdf/download/33672074-3/20251219-080000-00.PDF" target="_blank" rel="noopener">出典</a>。生産能力を8倍にする計画の裏側で、全社費用が先に立ち上がっている。稼働率で回収する構造とは、この時間差に耐える構造のことである。</p>
+<p>同じ構造は PowerX にも現れている。同社の2025年12月期は連結売上高19,306百万円に対し連結営業損失677百万円である。BESS 事業のセグメント利益3,870百万円を含む3セグメント合計のセグメント利益は3,481百万円だが、各セグメントに配分していない全社費用4,158百万円を差し引くと営業損失になる <a class="tb-src" href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/disclosure/20260213/20260213560790.pdf" target="_blank" rel="noopener">出典</a>。2026年12月期の会社予想は売上高38,000百万円に対し営業利益2,000百万円から2,500百万円で、営業利益率は5.3%から6.6%にとどまる。蓄電システムの年間生産能力は2025年時点で0.8GWh、2029年に6.8GWh とする計画である <a class="tb-src" href="https://qhit.daiwa.co.jp/daiwahp/cont/pdfdoc/qpdf/download/33672074-3/20251219-080000-00.PDF" target="_blank" rel="noopener">出典</a>。生産能力を8倍にする計画の裏側で、全社費用が先に立ち上がっている。稼働率で回収する構造とは、この時間差に耐える構造のことである。</p>
 <h2 id="s6">この章の要点</h2>
 <ul>
 <li>立地の四条件は同格ではない。新規立地では用地と人材が先に効き、電力と水は後から公費で足せる場合がある。既存拠点への増設では四条件は固定されており、補助金が判断を動かす。</li>
@@ -225,7 +332,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <ul>
 <li>東広島の Micron 工場について、中国電力ネットワークの系統増強計画と工場側の受電容量および年間電力使用量が確認できていない。四条件のうち電力だけ評価できていない。</li>
 <li>装置メーカーの現地併設が歩留まりを何ポイント押し上げたかは確認できない。広島工場の装置稼働率と1γ立ち上げ時の歩留まり推移はいずれも非開示である。</li>
-<li>広島から国外への輸送動線が確認できない。広島空港の国際線貨物は2025年度で22トン、国内線は9,259トンであり、国際貨物ハブとして機能していない <a href="https://www.hiap.co.jp/h/hi/hiap/img/pdf/business/operational_status.pdf" target="_blank" rel="noopener">出典</a>。Micron は輸送経路を開示していない。</li>
+<li>広島から国外への輸送動線が確認できない。広島空港の国際線貨物は2025年度で22トン、国内線は9,259トンであり、国際貨物ハブとして機能していない <a class="tb-src" href="https://www.hiap.co.jp/h/hi/hiap/img/pdf/business/operational_status.pdf" target="_blank" rel="noopener">出典</a>。Micron は輸送経路を開示していない。</li>
 <li>物流費が売上原価に占める割合が分からない。Micron は物流費を独立の科目として開示しておらず、日本発の半導体空輸単価の統計も参照できていない。</li>
 <li>BYD の自社船が輸送単価を何ドル下げたか、輸出台数の何割を運んでいるかは確認できない。海運は報告セグメントに含まれていない。</li>
 <li>BYD の海外工場の稼働時期と生産能力について一次資料に当たれていない。これが分かれば船隊の必要規模が何年で頭打ちになるかを計算できる。</li>
@@ -289,5 +396,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
   <div class="tb-nav"><a class="tb-nav-a" href="02_chokepoint-power.html">← 価格決定力はどこに宿るか</a><a class="tb-nav-a" href="04_intermediation-models.html">取引の間に立つ事業の収益条件 →</a></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

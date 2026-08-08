@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -163,9 +270,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <h2 id="s1">営業CFと投資CFの差を分解する：維持投資と成長投資の切り分け</h2>
 <p>キャッシュフロー計算書は営業活動、投資活動、財務活動の3区分でできている。フリーキャッシュフロー、以下FCFは、営業活動によるキャッシュフローから設備投資を引いて求めるのが一般的な形である。ここに最初の落とし穴がある。</p>
 <p>IAS 7 は投資活動を長期資産の取得と処分と定義している。取得という行為で括る定義であり、その取得が既存の生産能力を保つためのものか、能力を増やすためのものかを区別する枠組みを持たない <a href="https://www.ifrs.org/issued-standards/list-of-standards/ias-7-statement-of-cash-flows/" target="_blank" rel="noopener">IAS 7</a>。結果として、設備を更新しただけの企業も、生産能力を2倍にしようとしている企業も、FCFは同じ形で小さくなる。投資家にとってこの2つは意味が正反対である。</p>
-<p>切り分けを最初に定式化したのは Buffett の owner earnings である。1986年の株主宛書簡の付録で、報告利益に減価償却費などの非現金費用を加え、そこから長期的な競争地位と販売数量を完全に維持するために事業が必要とする設備投資の年平均額を差し引いたものと定義されている。同じ箇所で Buffett は、この維持投資額は推測にならざるを得ず、その推測が時に難しいと明記している <a href="https://www.berkshirehathaway.com/letters/1986.html" target="_blank" rel="noopener">Berkshire Hathaway 1986 Chairman's Letter</a>。定義した本人が、定義した瞬間にその項が計測値ではないと断っている。</p>
+<p>切り分けを最初に定式化したのは Buffett の owner earnings である。1986年の株主宛書簡の付録で、報告利益に減価償却費などの非現金費用を加え、そこから長期的な競争地位と販売数量を完全に維持するために事業が必要とする設備投資の年平均額を差し引いたものと定義されている。同じ箇所で Buffett は、この維持投資額は推測にならざるを得ず、その推測が時に難しいと明記している <a href="https://www.berkshirehathaway.com/letters/1986.html" target="_blank" rel="noopener">Berkshire Hathaway 1986 Chairman's Letter</a>。<strong class="hit">定義した本人が、定義した瞬間にその項が計測値ではないと断っている</strong>。</p>
 <p>実務で使われる推計は4通りある。</p>
-<p>第1に、減価償却費を維持投資の代理変数に置く方法である。使用による価値の減少分だけ再投資すれば能力が保たれるという想定に立つ。IAS 16 は有形固定資産を取得原価で初期測定すると定めている <a href="https://www.ifrs.org/issued-standards/list-of-standards/ias-16-property-plant-and-equipment/" target="_blank" rel="noopener">IAS 16</a>。償却費は過去の取得価格を期間配分した数字であり、現在の再取得価格ではない。設備単価が上がる局面では、償却費は必要な更新投資額を下回る。単価が下がる資産では上回る。近似としては使えるが、等号ではない。</p>
+<p>第1に、減価償却費を維持投資の代理変数に置く方法である。使用による価値の減少分だけ再投資すれば能力が保たれるという想定に立つ。IAS 16 は有形固定資産を取得原価で初期測定すると定めている <a href="https://www.ifrs.org/issued-standards/list-of-standards/ias-16-property-plant-and-equipment/" target="_blank" rel="noopener">IAS 16</a>。<strong class="hit">償却費は過去の取得価格を期間配分した数字であり、現在の再取得価格ではない</strong>。設備単価が上がる局面では、償却費は必要な更新投資額を下回る。単価が下がる資産では上回る。近似としては使えるが、等号ではない。</p>
 <p>第2に、売上高との対応で分ける方法である。固定資産回転率が一定と仮定し、売上増加分に必要な固定資産増加分を成長投資、残りを維持投資とみなす。この方法は売上が横ばいまたは減少した年に破綻する。能力を積み増している最中に需要が落ちた年、設備投資が全額維持投資に分類されてしまう。</p>
 <p>第3に、企業自身の説明に依拠する方法である。セグメント別の設備投資額、新設と更新の内訳、能力増強の目的説明を使う。Amazon は2025年12月期の設備投資が前年同期比で507億ドル増えた主因を人工知能への投資と説明している <a href="https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/" target="_blank" rel="noopener">Amazon Q4 2025 Results</a>。目的が明示された増分は成長投資と読める。</p>
 <p>第4に、物理量で確かめる方法である。データセンターなら電力容量、小売なら店舗数と面積、製造なら生産能力を時系列で並べる。能力が増えていない年の投資は維持投資とみなす。金額の推計が妥当かを外側から検証する用途に向く。</p>
@@ -176,7 +283,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p>FCFがマイナスであること自体は、良い知らせでも悪い知らせでもない。判断を分けるのは、マイナスの発生源、投資の回収可能性、資金の持続性の3点である。これを6つの条件に分解する。</p>
 <p>第1に、営業CFが正であること。FCFのマイナスが投資CFだけに起因しているなら、事業そのものは現金を生んでいる。Amazon の2025年12月期は営業CFが1,395億ドル、設備投資が1,283億ドル、差引のFCFが112億ドルだった。営業CFは2024年12月期の1,159億ドルから20パーセント増え、設備投資は777億ドルから65パーセント増え、FCFは382億ドルから71パーセント減った <a href="https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/" target="_blank" rel="noopener">Amazon Q4 2025 Results</a>。設備投資を営業CFで割った比率は2024年12月期の67.0パーセントから2025年12月期の92.0パーセントへ25.0ポイント上がっている。この構造では、投資を止めれば現金が戻る。営業CFが負の企業のFCFマイナスは別種の問題であり、同じ論法では正当化できない。</p>
 <p>第2に、投資が可逆であるか、裏付け資産を伴うこと。売却可能な有形資産に化けた支出と、費用処理される販促支出とでは、失敗したときの残存価値が異なる。</p>
-<p>第3に、単位経済性が既に正であること。既存の顧客群や既存の拠点が利益を出していて、赤字が新規獲得や立ち上げ費用に由来しているなら、投資の停止は利益の回復を意味する。ここを確かめずに成長投資だから問題ないと結論するのが、最もありふれた誤りである。</p>
+<p>第3に、単位経済性が既に正であること。<strong class="hit">既存の顧客群や既存の拠点が利益を出していて、赤字が新規獲得や立ち上げ費用に由来しているなら、投資の停止は利益の回復を意味する</strong>。ここを確かめずに成長投資だから問題ないと結論するのが、最もありふれた誤りである。</p>
 <p>第4に、資金が続くこと。手元流動性、営業CFの水準、調達余地の3つで、投資計画を何年続けられるかを算定する。Amazon は2026年に約2,000億ドルの設備投資を計画すると述べている <a href="https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/" target="_blank" rel="noopener">Amazon Q4 2025 Results</a>。2025年12月期の営業CF 1,395億ドルを基準にすると、計画額はこれを605億ドル上回る。営業CFの増加か外部調達のどちらかが必要になる水準である。</p>
 <p>第5に、投下資本利益率が資本コストを上回る見込みが立つこと。ここが満たされないなら、投資を増やすほど価値は減る。FCFのマイナスは投資の量を示す数字であり、投資の質を保証しない。</p>
 <p>第6に、収益化の時期と規模が外部から追える形で示されていること。稼働開始時期、受注残、契約残高、能力指標のいずれかがあれば進捗を検証できる。追えない計画は、翌期に同じ説明が繰り返されても反証できない。</p>
@@ -191,18 +298,18 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p>分布の上端を見ておく。キーエンスの2026年3月期は売上高1兆1,692億9,000万円、営業利益5,957億5,900万円、営業利益率51.0パーセントである <a href="https://www.keyence.co.jp/investor/financial-info/" target="_blank" rel="noopener">キーエンス 業績ハイライト</a>。連結従業員数は2026年3月現在で12,784名である <a href="https://www.keyence.co.jp/company/about/" target="_blank" rel="noopener">キーエンス 会社概要</a>。一人当たり売上高は9,150万円、一人当たり営業利益は4,660万円となり、全産業平均の194万円の24倍にあたる。</p>
 <p>ここから限界が見える。一人当たり営業利益は次の恒等式で分解できる。</p>
 <p>一人当たり営業利益 ＝ 一人当たり売上高 × 売上高営業利益率</p>
-<p>積である以上、高い値は3通りの経路で出る。両方が高い企業、一人当たり売上高が突出して大きい企業、資本が人を代替している企業である。総合商社や医薬品卸は第2の類型で、利益率が数パーセントでも取扱高が大きければ人あたりでは大きな数字になる。この類型は市況で振れる。石油・石炭製品の売上高営業利益率は2023年度の2.2パーセントから2024年度の0.6パーセントへ1.6ポイント下がっている <a href="https://www.mof.go.jp/pri/reference/ssc/results/r6.pdf" target="_blank" rel="noopener">年次別法人企業統計調査（令和6年度）結果の概要</a>。不動産賃貸やインフラは第3の類型で、この指標が測っているのは人の生産性ではなく資本装備率である。</p>
-<p>3類型に共通するのは、売上や利益の発生を自社の連結従業員数に依存させない設計になっていることである。外注、資本、取扱高のいずれかが人の代わりに利益を運んでいる。キーエンスの場合、生産の大半を外部委託しているため製造工程の従業員が連結従業員数に入らない。指標の高さの一部は、事業の優劣ではなく範囲の切り方に由来する。</p>
+<p>積である以上、高い値は3通りの経路で出る。両方が高い企業、一人当たり売上高が突出して大きい企業、資本が人を代替している企業である。総合商社や医薬品卸は第2の類型で、利益率が数パーセントでも取扱高が大きければ人あたりでは大きな数字になる。この類型は市況で振れる。石油・石炭製品の売上高営業利益率は2023年度の2.2パーセントから2024年度の0.6パーセントへ1.6ポイント下がっている <a href="https://www.mof.go.jp/pri/reference/ssc/results/r6.pdf" target="_blank" rel="noopener">年次別法人企業統計調査（令和6年度）結果の概要</a>。不動産賃貸やインフラは第3の類型で、<strong class="hit">この指標が測っているのは人の生産性ではなく資本装備率である</strong>。</p>
+<p>3類型に共通するのは、売上や利益の発生を自社の連結従業員数に依存させない設計になっていることである。外注、資本、取扱高のいずれかが人の代わりに利益を運んでいる。キーエンスの場合、生産の大半を外部委託しているため製造工程の従業員が連結従業員数に入らない。<strong class="hit">指標の高さの一部は、事業の優劣ではなく範囲の切り方に由来する</strong>。</p>
 <p>分母の脆さも押さえておく。売上高と営業利益は会計基準で規律されるが、従業員数は規律の外にある。有価証券報告書の従業員数は就業人員であり、派遣社員と外注先要員は原則として含まれず、臨時従業員は外書きで別記される。雇用形態を外部化すれば、同じ利益でも指標は上がる。持分法適用会社の利益は営業利益に入らず、その従業員も分母に入らないため、持分法の比重が高い企業では分子と分母の対応が崩れる。</p>
 <p>業種別の一人当たり営業利益を直接示す公式統計表は、素材となった調査では取得できていない。必要なデータは特定されており、法人企業統計の業種別・資本金階層別の従業員数を取得できれば業種別営業利益を割るだけで分布が出る。現時点では業種別の分布は未確認である。</p>
 <p>結論として、この種の一行指標は水準の比較には使えない。同一業種内の比較か、同一企業の複数年推移に用途を限定する。総額表示と純額表示の違いだけで一人当たり売上高は変わり、その差がそのまま一人当たり営業利益の差になる。</p>
 <h2 id="s4">DCFとマルチプル：どちらが局面に耐えるか</h2>
 <p>キャッシュフローの読み方と資本効率の見方が揃ったら、次は価値への変換である。方法は大きく2つ、将来キャッシュフローを割り引くDCFと、類似会社の倍率を当てるマルチプルである。</p>
-<p>DCFが成立する条件は2つある。第1に、対象会社の事業計画を入手でき、そのキャッシュフローの符号と時期を説明できること。第2に、予測期間の終わりで定常状態を定義できることである。第2の条件は軽くない。予測期間を5年に取ると価値の大半は継続価値に載る。その継続価値の推定方法自体が実務で割れている。欧州の評価専門家356名を対象とした Bancel と Mittoo の調査では、約50パーセントが正常化キャッシュフローを永久還元し、残りは逓減キャッシュフローや出口マルチプルを使うと答えている <a href="https://doi.org/10.2139/ssrn.2420380" target="_blank" rel="noopener">Bancel and Mittoo (2014)</a>。定常状態を語れない事業では、DCFは形式だけが整い、中身は継続価値の仮定に置き換わる。</p>
+<p>DCFが成立する条件は2つある。第1に、対象会社の事業計画を入手でき、そのキャッシュフローの符号と時期を説明できること。第2に、予測期間の終わりで定常状態を定義できることである。第2の条件は軽くない。予測期間を5年に取ると価値の大半は継続価値に載る。その継続価値の推定方法自体が実務で割れている。欧州の評価専門家356名を対象とした Bancel と Mittoo の調査では、約50パーセントが正常化キャッシュフローを永久還元し、残りは逓減キャッシュフローや出口マルチプルを使うと答えている <a href="https://doi.org/10.2139/ssrn.2420380" target="_blank" rel="noopener">Bancel and Mittoo (2014)</a>。<strong class="hit">定常状態を語れない事業では、DCFは形式だけが整い、中身は継続価値の仮定に置き換わる</strong>。</p>
 <p>マルチプルが成立する条件も2つある。事業構造の近い上場会社が複数存在すること、その株価が正常に形成されていることである。同じ調査で使用される倍率は、EV/EBITDAが83パーセント、PERが68パーセント、PBRとEV/EBITとEV/売上高が各45パーセントだった <a href="https://doi.org/10.2139/ssrn.2420380" target="_blank" rel="noopener">Bancel and Mittoo (2014)</a>。</p>
 <p>局面の切り分けはこうなる。支配権を取得するM&amp;Aで買い手が事業計画とシナジーを持ち込む場合はDCFが主になる。少数株式の取得、事業計画を入手できない案件、新規上場の価格設定ではマルチプルが主になる。日本のIPOでは、想定発行価格は事業モデル、収益規模、成長性、資産内容を分析したうえで既上場類似会社の株価やバリュエーションと比較して算出される参考価格であると、日本証券業協会のワーキング・グループ報告書が2022年2月に明記している <a href="https://www.fsa.go.jp/singi/singi_kinyu/market-system/siryou/20220217/02.pdf" target="_blank" rel="noopener">公開価格の設定プロセスのあり方等に関するワーキング・グループ報告書</a>。</p>
 <p>実務では二者択一にしない。AFPの2026年コスト・オブ・キャピタル調査では、DCFとCAPMがそれぞれ83パーセントで並ぶ最頻の手法である <a href="https://www.financialprofessionals.org/about/learn-more/press-releases/Details/afp-survey-finds-1-in-2-organizations-adjust-hurdle-rates-in-response-to-market-volatility-geopolitics-and-regulation" target="_blank" rel="noopener">AFP Cost of Capital Survey</a>。DCFで水準を出し、マルチプルで市場との整合を確認する構成が標準形になる。</p>
-<p>ここで章の主題に戻る。何で割るかである。手法としての資本コストの推定はCAPMに収束しており、AFPの調査では回答295社の83パーセントがCAPMを使う。分散しているのは手法ではなく入力値である。</p>
+<p>ここで章の主題に戻る。何で割るかである。手法としての資本コストの推定はCAPMに収束しており、AFPの調査では回答295社の83パーセントがCAPMを使う。<strong class="hit">分散しているのは手法ではなく入力値である</strong>。</p>
 <p>株式リスクプレミアム、以下ERPには推奨値が併存する。Krollは米ドル建て割引率について推奨ERPを5.0パーセントとし、正規化リスクフリーレート3.5パーセントと20年米国債スポット利回りのいずれか高い方と組み合わせるよう推奨している。2024年6月5日に5.5パーセントから5.0パーセントへ引き下げられ、2025年2月28日時点で5.0パーセントが再確認された <a href="https://docs.cpuc.ca.gov/PublishedDocs/SupDoc/A2409010/8543/580327950.pdf" target="_blank" rel="noopener">Kroll March 2025 Update</a>。これに対し Damodaran のインプライドERPは2026年8月1日時点で4.28パーセント、同時点のリスクフリーレートは4.74パーセントである <a href="https://pages.stern.nyu.edu/~adamodar/New_Home_Page/home.htm" target="_blank" rel="noopener">Damodaran Online</a>。2つの数字は矛盾していない。Krollは正規化した3.5パーセントを、Damodaranはスポットの4.74パーセントをリスクフリーレートに置いているため、ERPの数値だけを並べても比較にならない。ERPは常にリスクフリーレートとの組で扱う。</p>
 <p>欧州の実績値はKPMGのCost of Capital Study 2025が示す。全業種平均のWACCは8.5パーセントで前年の8.2パーセントから0.3ポイント上昇、株主資本コストの平均は9.7パーセント、負債コストの平均は4.3パーセント、ベータの平均は1.03、負債比率の平均は23.5パーセントである <a href="https://kpmg.com/ch/en/insights/deals/cost-capital-study.html" target="_blank" rel="noopener">KPMG Cost of Capital Study 2025</a>。</p>
 <p>日本企業が自認する株主資本コストの分布は生命保険協会の2025年度調査にある。詳細数値までは算出していないが21.3パーセント、6パーセント台が16.3パーセント、7パーセント台が19.4パーセント、8パーセント台が17.5パーセント、5パーセント台が11.5パーセントである <a href="https://www.seiho.or.jp/activity/sdgs/esg/pdf/20260417_3_all.pdf" target="_blank" rel="noopener">生命保険協会 2025年度調査</a>。6パーセント台から8パーセント台の3区分で53.2パーセントを占める。回答社数は素材の記述で435社と418社の2通りが出てくる。設問ごとに有効回答数が異なるためと読むのが自然だが、どちらがこの分布の母数かは確定できていないので、ここでは社数を示さず構成比のみを示す。</p>
@@ -265,5 +372,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
   <div class="tb-nav"><a class="tb-nav-a" href="01_accounting-language-and-rules.html">← 数字の出どころ：会計基準と制度が決める利益</a><a class="tb-nav-a" href="03_rates-and-macro-prices.html">割引率はどこから来るか：政策金利・国債・実物資産 →</a></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

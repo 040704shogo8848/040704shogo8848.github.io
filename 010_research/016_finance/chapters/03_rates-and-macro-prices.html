@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -161,75 +268,75 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p>同じことが為替でも起きる。円安が利益を押し上げたという説明は、円安がなぜ起きたかを説明していない。同じことが実物資産でも起きる。地価が上がったという事実は、金利が上がっている事実と並べたときに初めて意味を持つ。</p>
 <p>この章では、政策金利という一つの起点から、国債利回り、株式の倍率、為替、金属と土地の価格までを一本の経路として追う。目的は個々の相場観を持つことではない。ある価格が動いたとき、それがどの区間で起きた変化なのかを切り分けられるようになることである。切り分けができないと、経路の途中で起きた出来事を最終価格の原因だと取り違える。</p>
 <h2 id="s1">政策金利からイールドカーブへ：伝達が切れる年限</h2>
-<p>出発点は政策金利である。日本銀行は2026年6月16日の金融政策決定会合で、無担保コールレート翌日物の誘導目標を0.75%程度から1.00%程度へ引き上げた。決定は賛成7反対1である。<a href="https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260616a.pdf" target="_blank" rel="noopener">出典</a>。その後の7月31日の会合では1.0%程度での据え置きを賛成8反対1で決めており、高田委員は1.25%程度への引き上げを提案して否決された。<a href="https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260731a.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>出発点は政策金利である。日本銀行は2026年6月16日の金融政策決定会合で、無担保コールレート翌日物の誘導目標を0.75%程度から1.00%程度へ引き上げた。決定は賛成7反対1である。<a class="tb-src" href="https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260616a.pdf" target="_blank" rel="noopener">出典</a>。その後の7月31日の会合では1.0%程度での据え置きを賛成8反対1で決めており、高田委員は1.25%程度への引き上げを提案して否決された。<a class="tb-src" href="https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260731a.pdf" target="_blank" rel="noopener">出典</a>。</p>
 <p>政策金利が動くと国債利回りも動く。ただし動き方は年限で違う。2026年8月6日時点の日本国債の利回りを、政策金利1.00%からの上乗せ幅とあわせて並べる。</p>
 <div class="tb-tw"><table><thead><tr><th>年限</th><th>利回り</th><th>政策金利1.00%からの上乗せ幅</th><th>前の年限からの年あたり傾き</th></tr></thead><tbody><tr><td>1年</td><td>1.311%</td><td>31bp</td><td>31bp</td></tr><tr><td>2年</td><td>1.565%</td><td>57bp</td><td>25bp</td></tr><tr><td>5年</td><td>2.044%</td><td>104bp</td><td>16bp</td></tr><tr><td>10年</td><td>2.773%</td><td>177bp</td><td>15bp</td></tr><tr><td>20年</td><td>3.659%</td><td>266bp</td><td>8.9bp</td></tr><tr><td>30年</td><td>3.919%</td><td>292bp</td><td>2.6bp</td></tr><tr><td>40年</td><td>3.912%</td><td>291bp</td><td>マイナス0.7bp</td></tr></tbody></table></div>
-<p>利回りの出典は財務省の国債金利情報である。<a href="https://www.mof.go.jp/jgbs/reference/interest_rate/jgbcm.csv" target="_blank" rel="noopener">出典</a>。上乗せ幅と傾きは、この利回りと誘導目標1.00%から計算した値であり、公表値ではない。</p>
-<p>この表から3つのことが読める。第1に、30年と40年の差は0.7bpしかない。カーブは30年で伸びるのをやめる。第2に、傾きが落ちる地点は30年よりずっと手前にある。10年から20年の区間ですでに年8.9bpまで落ちている。第3に、政策金利からの上乗せ幅は10年で177bpに達する。10年利回りの水準の6割強は政策金利の水準そのものではなく、上乗せ分で決まっている。</p>
-<p>上乗せ分の中身は2つに分かれる。1つは市場が予想する将来の短期金利の平均であり、これは政策金利の延長線上にある。もう1つはタームプレミアムであり、長い年限を持つことに対する対価である。日本銀行の推計によると、2024年夏の国債買入れ減額の開始以降に起きた長期金利の上昇に対して、予想短期金利成分の上昇とタームプレミアムの拡大が概ね同程度寄与している。<a href="https://www.boj.or.jp/research/wps_rev/rev_2026/rev26j11.htm" target="_blank" rel="noopener">出典</a>。10年時点では、政策金利の予想経路が説明できるのは上昇幅の半分程度である。</p>
-<p>伝達の強さは市場環境にも依存する。米国の高頻度イベントスタディでは、1bpの引き締めサプライズが1年から5年の利回りを概ね1bp動かす。10年については、金融政策の不確実性が分布の下位4分の1にあるとき10bpの引き締めショックが10年タームプレミアムを8bp押し上げ、上位4分の1にあるときは2bpにとどまる。<a href="https://www.sciencedirect.com/science/article/abs/pii/S0261560620302795" target="_blank" rel="noopener">出典</a>。同じ政策変更でも、市場が政策経路に確信を持っている局面ほど長期に届く。</p>
+<p>利回りの出典は財務省の国債金利情報である。<a class="tb-src" href="https://www.mof.go.jp/jgbs/reference/interest_rate/jgbcm.csv" target="_blank" rel="noopener">出典</a>。上乗せ幅と傾きは、この利回りと誘導目標1.00%から計算した値であり、公表値ではない。</p>
+<p>この表から3つのことが読める。第1に、30年と40年の差は0.7bpしかない。カーブは30年で伸びるのをやめる。第2に、傾きが落ちる地点は30年よりずっと手前にある。10年から20年の区間ですでに年8.9bpまで落ちている。第3に、政策金利からの上乗せ幅は10年で177bpに達する。<strong class="hit">10年利回りの水準の6割強は政策金利の水準そのものではなく、上乗せ分で決まっている</strong>。</p>
+<p>上乗せ分の中身は2つに分かれる。1つは市場が予想する将来の短期金利の平均であり、これは政策金利の延長線上にある。もう1つはタームプレミアムであり、長い年限を持つことに対する対価である。日本銀行の推計によると、2024年夏の国債買入れ減額の開始以降に起きた長期金利の上昇に対して、予想短期金利成分の上昇とタームプレミアムの拡大が概ね同程度寄与している。<a class="tb-src" href="https://www.boj.or.jp/research/wps_rev/rev_2026/rev26j11.htm" target="_blank" rel="noopener">出典</a>。10年時点では、政策金利の予想経路が説明できるのは上昇幅の半分程度である。</p>
+<p>伝達の強さは市場環境にも依存する。米国の高頻度イベントスタディでは、1bpの引き締めサプライズが1年から5年の利回りを概ね1bp動かす。10年については、金融政策の不確実性が分布の下位4分の1にあるとき10bpの引き締めショックが10年タームプレミアムを8bp押し上げ、上位4分の1にあるときは2bpにとどまる。<a class="tb-src" href="https://www.sciencedirect.com/science/article/abs/pii/S0261560620302795" target="_blank" rel="noopener">出典</a>。同じ政策変更でも、市場が政策経路に確信を持っている局面ほど長期に届く。</p>
 <p>以上をまとめると、伝達が機械的に保たれるのは2年までである。5年から10年は伝達の強さが政策不確実性に依存して振れる。20年より先はタームプレミアムの領域であり、政策金利の水準では説明できない。30年より先はカーブそのものが伸びない。</p>
 <p>この区間の切れ方が、そのまま評価の入口に影響する。株式の要求収益率は無リスク金利と株式リスクプレミアムの和である。ゴードンの定常状態では、株価はキャッシュフローを要求収益率と成長率の差で割った値になる。したがって要求収益率が1単位上がったときの株価の変化率はマイナス1を要求収益率と成長率の差で割った値になる。定常状態で成長率を長期の無リスク金利に等しく置くと、この差は株式リスクプレミアムそのものになる。弾力性はマイナス1を株式リスクプレミアムで割った値である。</p>
-<p>2026年1月1日時点のS&amp;P500は6,845.5、インプライドの株式リスクプレミアムは4.23%、米10年国債利回りは4.18%である。<a href="https://aswathdamodaran.blogspot.com/2026/01/" target="_blank" rel="noopener">出典</a>。この値を当てはめると、割引率100bp上昇あたりの理論的な株価変化率はマイナス23.6%になる。一方、同じ出典の感応度表で株式リスクプレミアムを4.23%から6%へ177bp上げると指数は30.0%下がり、100bpあたりに直すとマイナス17.0%になる。</p>
+<p>2026年1月1日時点のS&amp;P500は6,845.5、インプライドの株式リスクプレミアムは4.23%、米10年国債利回りは4.18%である。<a class="tb-src" href="https://aswathdamodaran.blogspot.com/2026/01/" target="_blank" rel="noopener">出典</a>。この値を当てはめると、割引率100bp上昇あたりの理論的な株価変化率はマイナス23.6%になる。一方、同じ出典の感応度表で株式リスクプレミアムを4.23%から6%へ177bp上げると指数は30.0%下がり、100bpあたりに直すとマイナス17.0%になる。</p>
 <p>この2つの数字は矛盾していない。マイナス23.6%は現在の点における微分であり、マイナス17.0%は177bpという幅を動かしたときの平均である。倍率は割引率の逆数に近い形をしているため、変化幅が大きくなるほど平均変化率は微分より小さくなる。加えて感応度表の基になるモデルは向こう5年を明示的な予測期間として持つため、実効的なデュレーションが定常状態より短い。したがって章としては、点の弾力性としてマイナス23.6%、100bp規模の変化に対する実務的な目安としてマイナス17.0%を、用途を分けて使う。</p>
 <p>非対称性も無視できない。同じ感応度表で株式リスクプレミアムを4.23%から2%へ223bp下げると指数は116.7%上がる。100bpあたりに直すとプラス52.3%であり、上げ方向のマイナス17.0%とは絶対値が3倍違う。点推定の弾力性を上下対称に使うと、両方向で誤る。</p>
 <h2 id="s2">自国通貨建て国債の限界はどこにあるか：制度差から考える</h2>
 <p>前節で無リスク金利として国債利回りを使った。無リスクという言葉は、その国債が確実に償還されることを前提にしている。この前提はどこまで成り立つのか。</p>
-<p>日本国債は円建てであり、円は日本銀行が発行する。財務省は2002年4月30日付の外国格付会社宛て意見書で、日本や米国など先進国の自国通貨建て国債の債務不履行は考えられないと述べている。<a href="https://www.mof.go.jp/about_mof/other/other/rating/p140430.htm" target="_blank" rel="noopener">出典</a>。支払手段の不足という経路からは不履行が起きにくい。</p>
+<p>日本国債は円建てであり、円は日本銀行が発行する。財務省は2002年4月30日付の外国格付会社宛て意見書で、日本や米国など先進国の自国通貨建て国債の債務不履行は考えられないと述べている。<a class="tb-src" href="https://www.mof.go.jp/about_mof/other/other/rating/p140430.htm" target="_blank" rel="noopener">出典</a>。支払手段の不足という経路からは不履行が起きにくい。</p>
 <p>ただし制約が消えるわけではない。制約は3つの別の経路に移る。</p>
-<p>第1は法制度上の選択である。財政法第5条は公債の日本銀行引受を原則として禁じ、ただし書で国会の議決を経た金額の範囲内での例外を認めている。<a href="https://laws.e-gov.go.jp/api/1/lawdata/322AC0000000034" target="_blank" rel="noopener">出典</a>。中央銀行が政府から独立している以上、通貨発行は自動的な支払保証ではない。この経路のリスクは財政の弱さではなく政治過程の機能不全から生じる。</p>
-<p>第2は通貨価値の毀損である。名目で全額償還しても、物価と為替が動けば実質価値は失われる。日本銀行の2026年7月の展望レポートは、消費者物価の除く生鮮食品ベースの前年比が2026年度後半以降に2%をはっきり上回る水準まで高まると予想し、物価見通しのリスクバランスを上振れの側が大きいと評価している。<a href="https://www.boj.or.jp/mopo/outlook/gor2607a.pdf" target="_blank" rel="noopener">出典</a>。自国通貨建てであることが外すのは名目の支払制約であり、実質の制約は残る。</p>
-<p>第3は借換コストである。2026年度当初予算の一般会計歳出総額は122兆3,092億円、うち国債費は31兆2,758億円、利払費等は13兆672億円である。普通国債残高は2026年度末に1,145兆円と見込まれている。<a href="https://www.mof.go.jp/policy/budget/fiscal_condition/related_data/202604_01.pdf" target="_blank" rel="noopener">出典</a>。利払費等を残高で割った平均利率は約1.1%になる。この平均利率は素材ノートの試算であり公表値ではないため、目安として扱う。新発30年債の利回りが3.919%である以上、借換が進むにつれて平均利率は市場金利へ近づいていく。</p>
-<p>制度差を見るには比較対象がいる。ギリシャはユーロの利用者であり発行者ではない。EU機能条約第123条は、欧州中央銀行および加盟国中央銀行が政府に信用供与を行うこと、および政府から債務証書を直接購入することを禁じている。<a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:12016E123" target="_blank" rel="noopener">出典</a>。支払手段を自国の判断で作れない。その帰結が2012年の民間債務再編である。2012年2月21日にユーログループが確認した共通理解は名目53.5%の削減を定め、2月24日にギリシャは額面約2,060億ユーロの債券を対象に交換の申込を開始した。ギリシャ議会は2月23日に集団行動条項を遡及的に導入する法律を可決し、S&amp;Pは2月27日に長期格付を選択的デフォルトへ引き下げた。<a href="https://ec.europa.eu/economy_finance/publications/occasional_paper/2012/pdf/ocp94_en.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>債務残高の比率では説明が付かない。日本の債務残高対GDP比は2024年に214.5%であり、イタリアの134.7%を上回る。<a href="https://www.mof.go.jp/policy/budget/fiscal_condition/related_data/202604_01.pdf" target="_blank" rel="noopener">出典</a>。それでも日本は不履行に至っていない。決定的な差は比率ではなく通貨の発行主体である。</p>
-<p>保有構造にも差がある。2026年3月末速報で日本の国債残高は1,013兆7,559億円、うち日本銀行が485兆4,280億円で47.9%、海外が82兆129億円で8.1%である。<a href="https://www.mof.go.jp/jgbs/reference/appendix/holdings01.pdf" target="_blank" rel="noopener">出典</a>。ギリシャ危機前の非居住者保有比率については、素材ノートの調査で一次資料からの数値を取得できていない。したがって保有構造の差を定量で比較することはこの章ではできない。</p>
-<p>一方で共通点もある。ギリシャ法準拠債に遡及立法で集団行動条項を入れられたのは、発行国が準拠法を支配していたからである。日本国債も日本法準拠であり、立法による条件変更という手段自体は理論上存在する。差は手段の有無ではなく、その手段を使わざるをえない理由の有無にある。</p>
-<p>では2026年の30年国債利回り3.919%は何を織り込んでいるのか。この水準は2026年1月7日に付けた当時の過去最高3.520%を0.4%ポイント上回る。<a href="https://www.nikkei.com/article/DGXZQOUB076D60X00C26A1000000/" target="_blank" rel="noopener">出典</a>。3つの要素が入っている。第1に追加利上げの期待である。政策委員の大勢見通しの中央値は消費者物価の除く生鮮食品ベースで2026年度が2.5%であり、政策金利1.0%を上回る。第2に日本銀行の買入れ減額である。日銀は2026年6月16日に、月間の長期国債買入予定額を2027年1月から3月まで四半期ごとに2,000億円程度ずつ減額し、2027年4月以降は月2兆円程度とする計画を決めた。2026年7月から9月の予定額は2.5兆円程度である。<a href="https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260616b.pdf" target="_blank" rel="noopener">出典</a>。第3に期間プレミアムの復活である。30年と10年の差は2026年8月6日で1.146%ポイントある。</p>
-<p>供給要因は逆向きに働いている。2026年度当初のカレンダーベース市中発行額は168.5兆円で、2025年度当初の172.3兆円から3.8兆円減った。年限別では40年債が3.0兆円から1.8兆円へ、30年債が9.6兆円から7.2兆円へ、20年債が12.0兆円から8.4兆円へ減額されている。<a href="https://www.mof.go.jp/jgbs/issuance_plan/fy2026/calendar251226.pdf" target="_blank" rel="noopener">出典</a>。超長期債の発行が減るなかで30年金利が上がっている以上、上昇の主因を発行計画に求めることはできない。</p>
+<p>第1は法制度上の選択である。財政法第5条は公債の日本銀行引受を原則として禁じ、ただし書で国会の議決を経た金額の範囲内での例外を認めている。<a class="tb-src" href="https://laws.e-gov.go.jp/api/1/lawdata/322AC0000000034" target="_blank" rel="noopener">出典</a>。<strong class="hit">中央銀行が政府から独立している以上、通貨発行は自動的な支払保証ではない</strong>。<strong class="hit">この経路のリスクは財政の弱さではなく政治過程の機能不全から生じる</strong>。</p>
+<p>第2は通貨価値の毀損である。名目で全額償還しても、物価と為替が動けば実質価値は失われる。日本銀行の2026年7月の展望レポートは、消費者物価の除く生鮮食品ベースの前年比が2026年度後半以降に2%をはっきり上回る水準まで高まると予想し、物価見通しのリスクバランスを上振れの側が大きいと評価している。<a class="tb-src" href="https://www.boj.or.jp/mopo/outlook/gor2607a.pdf" target="_blank" rel="noopener">出典</a>。自国通貨建てであることが外すのは名目の支払制約であり、実質の制約は残る。</p>
+<p>第3は借換コストである。2026年度当初予算の一般会計歳出総額は122兆3,092億円、うち国債費は31兆2,758億円、利払費等は13兆672億円である。普通国債残高は2026年度末に1,145兆円と見込まれている。<a class="tb-src" href="https://www.mof.go.jp/policy/budget/fiscal_condition/related_data/202604_01.pdf" target="_blank" rel="noopener">出典</a>。利払費等を残高で割った平均利率は約1.1%になる。この平均利率は素材ノートの試算であり公表値ではないため、目安として扱う。新発30年債の利回りが3.919%である以上、借換が進むにつれて平均利率は市場金利へ近づいていく。</p>
+<p>制度差を見るには比較対象がいる。<strong class="hit">ギリシャはユーロの利用者であり発行者ではない</strong>。EU機能条約第123条は、欧州中央銀行および加盟国中央銀行が政府に信用供与を行うこと、および政府から債務証書を直接購入することを禁じている。<a class="tb-src" href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:12016E123" target="_blank" rel="noopener">出典</a>。支払手段を自国の判断で作れない。その帰結が2012年の民間債務再編である。2012年2月21日にユーログループが確認した共通理解は名目53.5%の削減を定め、2月24日にギリシャは額面約2,060億ユーロの債券を対象に交換の申込を開始した。ギリシャ議会は2月23日に集団行動条項を遡及的に導入する法律を可決し、S&amp;Pは2月27日に長期格付を選択的デフォルトへ引き下げた。<a class="tb-src" href="https://ec.europa.eu/economy_finance/publications/occasional_paper/2012/pdf/ocp94_en.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>債務残高の比率では説明が付かない。日本の債務残高対GDP比は2024年に214.5%であり、イタリアの134.7%を上回る。<a class="tb-src" href="https://www.mof.go.jp/policy/budget/fiscal_condition/related_data/202604_01.pdf" target="_blank" rel="noopener">出典</a>。それでも日本は不履行に至っていない。<strong class="hit">決定的な差は比率ではなく通貨の発行主体である</strong>。</p>
+<p>保有構造にも差がある。2026年3月末速報で日本の国債残高は1,013兆7,559億円、うち日本銀行が485兆4,280億円で47.9%、海外が82兆129億円で8.1%である。<a class="tb-src" href="https://www.mof.go.jp/jgbs/reference/appendix/holdings01.pdf" target="_blank" rel="noopener">出典</a>。ギリシャ危機前の非居住者保有比率については、素材ノートの調査で一次資料からの数値を取得できていない。したがって保有構造の差を定量で比較することはこの章ではできない。</p>
+<p>一方で共通点もある。ギリシャ法準拠債に遡及立法で集団行動条項を入れられたのは、発行国が準拠法を支配していたからである。日本国債も日本法準拠であり、立法による条件変更という手段自体は理論上存在する。<strong class="hit">差は手段の有無ではなく、その手段を使わざるをえない理由の有無にある</strong>。</p>
+<p>では2026年の30年国債利回り3.919%は何を織り込んでいるのか。この水準は2026年1月7日に付けた当時の過去最高3.520%を0.4%ポイント上回る。<a class="tb-src" href="https://www.nikkei.com/article/DGXZQOUB076D60X00C26A1000000/" target="_blank" rel="noopener">出典</a>。3つの要素が入っている。第1に追加利上げの期待である。政策委員の大勢見通しの中央値は消費者物価の除く生鮮食品ベースで2026年度が2.5%であり、政策金利1.0%を上回る。第2に日本銀行の買入れ減額である。日銀は2026年6月16日に、月間の長期国債買入予定額を2027年1月から3月まで四半期ごとに2,000億円程度ずつ減額し、2027年4月以降は月2兆円程度とする計画を決めた。2026年7月から9月の予定額は2.5兆円程度である。<a class="tb-src" href="https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260616b.pdf" target="_blank" rel="noopener">出典</a>。第3に期間プレミアムの復活である。30年と10年の差は2026年8月6日で1.146%ポイントある。</p>
+<p>供給要因は逆向きに働いている。2026年度当初のカレンダーベース市中発行額は168.5兆円で、2025年度当初の172.3兆円から3.8兆円減った。年限別では40年債が3.0兆円から1.8兆円へ、30年債が9.6兆円から7.2兆円へ、20年債が12.0兆円から8.4兆円へ減額されている。<a class="tb-src" href="https://www.mof.go.jp/jgbs/issuance_plan/fy2026/calendar251226.pdf" target="_blank" rel="noopener">出典</a>。超長期債の発行が減るなかで30年金利が上がっている以上、上昇の主因を発行計画に求めることはできない。</p>
 <p>信用リスクの寄与については、素材ノートが日本国債のCDSスプレッドの一次資料を取得できていない。したがって信用リスクが利回りに寄与していないと断定はできない。</p>
-<p>量的緩和の縮小が誰に効くかも押さえておく。米国では中央銀行自身の負債側に先に効いた。連邦準備制度は2022年6月1日から2025年10月31日までに保有証券を2.2兆ドル減らし、この間に先に減ったのはオーバーナイト・リバースレポである。<a href="https://www.federalreserve.gov/monetarypolicy/May-2026-Federal-Reserve-Balance-Sheet-Developments.htm" target="_blank" rel="noopener">出典</a>。日本では市中の引き取り手に効いている。日銀の国債保有残高は2024年6月末577兆円から2026年3月末528兆円へ49兆円減り、同じ期間に預金取扱機関が36兆円、海外投資家が27兆円、年金が20兆円を引き取った。保険は5兆円減らしている。<a href="https://www.boj.or.jp/research/wps_rev/rev_2026/rev26j11.htm" target="_blank" rel="noopener">出典</a>。</p>
+<p>量的緩和の縮小が誰に効くかも押さえておく。米国では中央銀行自身の負債側に先に効いた。連邦準備制度は2022年6月1日から2025年10月31日までに保有証券を2.2兆ドル減らし、この間に先に減ったのはオーバーナイト・リバースレポである。<a class="tb-src" href="https://www.federalreserve.gov/monetarypolicy/May-2026-Federal-Reserve-Balance-Sheet-Developments.htm" target="_blank" rel="noopener">出典</a>。日本では市中の引き取り手に効いている。日銀の国債保有残高は2024年6月末577兆円から2026年3月末528兆円へ49兆円減り、同じ期間に預金取扱機関が36兆円、海外投資家が27兆円、年金が20兆円を引き取った。保険は5兆円減らしている。<a class="tb-src" href="https://www.boj.or.jp/research/wps_rev/rev_2026/rev26j11.htm" target="_blank" rel="noopener">出典</a>。</p>
 <p>ただし金利水準への寄与は限定的である。日本銀行の推計では、減額開始以降の長期金利上昇幅に対するストック効果の減少の寄与は10bp程度、フロー効果を合わせても25bp程度にとどまる。<a href="https://www.boj.or.jp/research/wps_rev/rev_2026/rev26j11.htm" target="_blank" rel="noopener">同出典</a>。</p>
 <h2 id="s3">金利差と経常収支：為替の説明力はどの期間で入れ替わるか</h2>
 <p>同じ政策金利という起点から為替へ進む。よくある推論は、経常収支が黒字なら円高になるというものである。この推論は短期では成り立たない。</p>
-<p>日本銀行のワーキングペーパーは、日次データのVARと反事実分析でドル円を分解している。2021年1月から2023年9月半ばにかけての約32%の円安のうち、約24%分が米国金利の構造ショックで説明されると推計している。同じ論文は、1995年から2023年の全期間で見ると実際のドル円と米国金利で説明される部分は方向も量も一致せず、米国金利の説明力は歴史的な平均では高くないとも述べている。<a href="https://www.boj.or.jp/research/wps_rev/wps_2025/data/wp25j02.pdf" target="_blank" rel="noopener">出典</a>。金利差が効いたのは特定の局面である。</p>
-<p>金利差の説明力が落ちる局面は直近にもある。国際通貨研究所は2026年2月2日付のレポートで、2025年4月頃から日米10年金利差の縮小にもかかわらずドル高円安が進んだと整理し、期待為替レートが円安方向へシフトしたことを要因に挙げている。<a href="https://www.iima.or.jp/docs/newsletter/2026/nl2026.4.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>日本銀行のワーキングペーパーは、日次データのVARと反事実分析でドル円を分解している。2021年1月から2023年9月半ばにかけての約32%の円安のうち、約24%分が米国金利の構造ショックで説明されると推計している。同じ論文は、1995年から2023年の全期間で見ると実際のドル円と米国金利で説明される部分は方向も量も一致せず、米国金利の説明力は歴史的な平均では高くないとも述べている。<a class="tb-src" href="https://www.boj.or.jp/research/wps_rev/wps_2025/data/wp25j02.pdf" target="_blank" rel="noopener">出典</a>。金利差が効いたのは特定の局面である。</p>
+<p>金利差の説明力が落ちる局面は直近にもある。国際通貨研究所は2026年2月2日付のレポートで、2025年4月頃から日米10年金利差の縮小にもかかわらずドル高円安が進んだと整理し、期待為替レートが円安方向へシフトしたことを要因に挙げている。<a class="tb-src" href="https://www.iima.or.jp/docs/newsletter/2026/nl2026.4.pdf" target="_blank" rel="noopener">出典</a>。</p>
 <p>経常収支で短期を説明できない理由は3つある。</p>
-<p>第1に、フローの規模が市場規模に対して小さい。2025年の日本の経常収支は31兆8,799億円の黒字である。<a href="https://www.mof.go.jp/policy/international_policy/reference/balance_of_payments/preliminary/pg2025cy.htm" target="_blank" rel="noopener">出典</a>。155円で換算して営業日を年250日とすると1日あたり約8億ドルとなる。2025年4月時点の世界のスポット取引高は1日3兆ドルである。<a href="https://www.bis.org/statistics/rpfx25_fx.htm" target="_blank" rel="noopener">出典</a>。比率にすると0.03%程度になる。この換算と割り算は素材ノートの試算であり、公表値ではない。</p>
+<p>第1に、フローの規模が市場規模に対して小さい。2025年の日本の経常収支は31兆8,799億円の黒字である。<a class="tb-src" href="https://www.mof.go.jp/policy/international_policy/reference/balance_of_payments/preliminary/pg2025cy.htm" target="_blank" rel="noopener">出典</a>。155円で換算して営業日を年250日とすると1日あたり約8億ドルとなる。2025年4月時点の世界のスポット取引高は1日3兆ドルである。<a class="tb-src" href="https://www.bis.org/statistics/rpfx25_fx.htm" target="_blank" rel="noopener">出典</a>。比率にすると0.03%程度になる。この換算と割り算は素材ノートの試算であり、公表値ではない。</p>
 <p>第2に、黒字の中身が円買いを伴わない。2025年の経常黒字31.9兆円の内訳は、第一次所得収支が41兆5,903億円の黒字、貿易収支が8,487億円の赤字である。第一次所得収支の増加要因は海外子会社からの配当と直接投資収益であり、その相当部分は現地で再投資される。同じ2025年の金融収支は30兆2,000億円の資産増、うち直接投資が25兆6,000億円である。<a href="https://www.mof.go.jp/policy/international_policy/reference/balance_of_payments/preliminary/pg2025cy.htm" target="_blank" rel="noopener">同出典</a>。経常黒字と同規模の対外資産取得が同時に起きている。</p>
-<p>第3に、水準の実例が示す。2025年末の対外純資産は561兆7,504億円で前年末比4.4%増である。<a href="https://www.mof.go.jp/policy/international_policy/reference/iip/data/2025_g.htm" target="_blank" rel="noopener">出典</a>。それでも2026年8月上旬のドル円は155円台から159円台で推移している。<a href="https://www.nikkei.com/article/DGXZQOUB020N90S6A800C2000000/" target="_blank" rel="noopener">出典</a>。ストックの対外純資産もフローの経常黒字も円高を保証していない。</p>
-<p>理論の側でも同じ結論が出ている。Meese and Rogoff の1983年の研究以降、マクロファンダメンタルズによる短期予測がランダムウォークに勝てないことが繰り返し確認されている。Itskhoki and Mukhin は国際的な裁定が働かない金融セクターを導入し、UIP条件に加わる金融ショックが為替変動の大部分を説明すると主張している。<a href="https://www.nber.org/papers/w23401" target="_blank" rel="noopener">出典</a>。</p>
+<p>第3に、水準の実例が示す。2025年末の対外純資産は561兆7,504億円で前年末比4.4%増である。<a class="tb-src" href="https://www.mof.go.jp/policy/international_policy/reference/iip/data/2025_g.htm" target="_blank" rel="noopener">出典</a>。それでも2026年8月上旬のドル円は155円台から159円台で推移している。<a class="tb-src" href="https://www.nikkei.com/article/DGXZQOUB020N90S6A800C2000000/" target="_blank" rel="noopener">出典</a>。ストックの対外純資産もフローの経常黒字も円高を保証していない。</p>
+<p>理論の側でも同じ結論が出ている。Meese and Rogoff の1983年の研究以降、マクロファンダメンタルズによる短期予測がランダムウォークに勝てないことが繰り返し確認されている。Itskhoki and Mukhin は国際的な裁定が働かない金融セクターを導入し、UIP条件に加わる金融ショックが為替変動の大部分を説明すると主張している。<a class="tb-src" href="https://www.nber.org/papers/w23401" target="_blank" rel="noopener">出典</a>。</p>
 <p>期間ごとの整理はこうなる。日次から数か月の期間では、金利差が効く局面と効かない局面が入れ替わり、効かない局面では期待の変化が残差を埋める。経常収支はこの期間帯ではほぼ効かない。経常収支が効くとすれば、フローの累積がストックを動かすだけの年数を要する期間帯である。ただしこの章の素材からは、経常収支が説明力を取り戻す具体的な年数を示せない。</p>
 <h2 id="s4">事業会社の防御手段：為替予約と現地調達、そして換算差額</h2>
 <p>為替の水準が金融取引で決まるとすると、事業会社にできるのは水準を当てることではなく、水準の変化が財務諸表に届く経路を細くすることである。手段は3つあり、対象とする時間軸が違う。</p>
 <p>為替予約は、確定した外貨建債権債務と数か月から1年程度先の予定取引を対象に、決済時点の円貨額を固定する。現地調達と現地生産は、外貨建て収入と外貨建て費用を同じ通貨で相殺し、エクスポージャーの元本そのものを減らす。建値通貨の選択は、そもそもどの通貨で契約するかを決める。</p>
-<p>村田製作所の有価証券報告書はこの使い分けを開示している。同社は海外売上収益比率が90%を超え、翌連結会計年度において米ドルに対して1円の円高が生じた場合の営業利益への影響を年間約45億円の減益と見込んでいる。対策として、海外での販売について為替変動を販売価格に反映させるよう努めること、および為替ヘッジコストを考慮しながら外貨建取引金額の一定比率に対して為替予約契約を締結することの2つを挙げている。同時に、これらの対策を講じても為替変動の影響を完全に排除することは困難であるとも記載している。<a href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/securities-report/20260624/S100YHPY.pdf" target="_blank" rel="noopener">出典</a>。予約は全額ヘッジではなく一定比率である。</p>
+<p>村田製作所の有価証券報告書はこの使い分けを開示している。同社は海外売上収益比率が90%を超え、翌連結会計年度において米ドルに対して1円の円高が生じた場合の営業利益への影響を年間約45億円の減益と見込んでいる。対策として、海外での販売について為替変動を販売価格に反映させるよう努めること、および為替ヘッジコストを考慮しながら外貨建取引金額の一定比率に対して為替予約契約を締結することの2つを挙げている。同時に、これらの対策を講じても為替変動の影響を完全に排除することは困難であるとも記載している。<a class="tb-src" href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/securities-report/20260624/S100YHPY.pdf" target="_blank" rel="noopener">出典</a>。予約は全額ヘッジではなく一定比率である。</p>
 <p>同じ報告書には別の感応度も載っている。日本円を機能通貨とする会社で円が米ドルに対して1%円高になった場合の税引前当期利益への影響は、2026年3月期で11億4,100万円の減益である。<a href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/securities-report/20260624/S100YHPY.pdf" target="_blank" rel="noopener">同出典</a>。この数字は外貨建て残高の換算に関するものであり、営業段階の1円あたり約45億円とは対象が違う。同じ会社の同じ書類に2つの感応度が並んでいる事実そのものが、為替が財務諸表の複数箇所に別々に現れることを示している。</p>
-<p>現地調達の水準は業界横断で確認できる。ジェトロの2025年度海外進出日系企業実態調査によると、アジア・オセアニアの日系製造業の原材料と部品の調達先内訳は現地が47.9%で最も多く、前年から0.6ポイント上昇した。日本からの調達は28.7%で1.0ポイント低下している。国別では中国が71.0%、タイが59.4%、ベトナムが38.1%である。<a href="https://www.jetro.go.jp/ext_images/_Reports/01/231fa237934b5b0c/20250026rev1.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>建値通貨の構成は非対称である。2026年上半期の日本からの輸出は米ドル建て51.1%、円建て34.7%、ユーロ建て6.3%である。日本への輸入は米ドル建て67.5%、円建て24.7%である。<a href="https://www.customs.go.jp/toukei/shinbun/tuuka/tuukar08fh.pdf" target="_blank" rel="noopener">出典</a>。輸出のドル建て比率51.1%に対して輸入のドル建て比率が67.5%であるから、円安時にはコスト側のほうが広く影響を受ける。</p>
+<p>現地調達の水準は業界横断で確認できる。ジェトロの2025年度海外進出日系企業実態調査によると、アジア・オセアニアの日系製造業の原材料と部品の調達先内訳は現地が47.9%で最も多く、前年から0.6ポイント上昇した。日本からの調達は28.7%で1.0ポイント低下している。国別では中国が71.0%、タイが59.4%、ベトナムが38.1%である。<a class="tb-src" href="https://www.jetro.go.jp/ext_images/_Reports/01/231fa237934b5b0c/20250026rev1.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>建値通貨の構成は非対称である。2026年上半期の日本からの輸出は米ドル建て51.1%、円建て34.7%、ユーロ建て6.3%である。日本への輸入は米ドル建て67.5%、円建て24.7%である。<a class="tb-src" href="https://www.customs.go.jp/toukei/shinbun/tuuka/tuukar08fh.pdf" target="_blank" rel="noopener">出典</a>。輸出のドル建て比率51.1%に対して輸入のドル建て比率が67.5%であるから、円安時にはコスト側のほうが広く影響を受ける。</p>
 <p>円安が利益に届く経路は4つあり、符号と時間差が違う。</p>
-<div class="tb-tw"><table><thead><tr><th>経路</th><th>内容</th><th>円安時の符号</th><th>主な証拠</th></tr></thead><tbody><tr><td>換算</td><td>外貨建ての売上と利益を円に換算した金額が増える</td><td>プラス</td><td>トヨタは対ドル1円の円安で営業利益が500億円増える。<a href="https://financial.jiji.com/main_news/article.html?number=760" target="_blank" rel="noopener">出典</a></td></tr><tr><td>輸入コスト</td><td>原材料とエネルギーの円建て調達コストが上がる</td><td>マイナス</td><td>日本への輸入の67.5%が米ドル建て。<a href="https://www.customs.go.jp/toukei/shinbun/tuuka/tuukar08fh.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>価格数量</td><td>現地通貨建て価格を据え置くか下げるかで受取と数量が動く</td><td>企業の価格政策に依存</td><td>輸出の51.1%が米ドル建てであり、現地通貨建て契約は限られる。<a href="https://www.customs.go.jp/toukei/shinbun/tuuka/tuukar08fh.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>評価</td><td>外貨建ての金銭債権債務と外貨預金の換算差額が営業外損益に出る</td><td>残高の向きに依存</td><td>任天堂の2026年3月期は為替差益443億円を計上。<a href="https://www.nintendo.co.jp/ir/pdf/2026/260508.pdf" target="_blank" rel="noopener">出典</a></td></tr></tbody></table></div>
-<p>感応度は他の条件を一定とした線形近似にすぎない。トヨタの2026年3月期は営業収益50兆6,849億円で前期比5.5%増、営業利益は3兆7,662億円で前期比21.5%減となった。米国の関税影響が1兆3,800億円のマイナス要因として効いている。<a href="https://car.watch.impress.co.jp/docs/news/2107163.html" target="_blank" rel="noopener">出典</a>。1円あたり500億円という感応度に想定レートとの乖離を掛けても、実際の増減益は再現できない。</p>
-<p>4つの経路のほかに、損益計算書を通らない経路がもう1つある。在外子会社の財務諸表を円換算する際、資産と負債は決算時レート、収益と費用は期中平均レート、純資産は発生時レートで換算する。この3つのレートの違いから生じる差額が為替換算調整勘定であり、連結貸借対照表の純資産の部に直入される。<a href="https://www.fsa.go.jp/p_mof/singikai/kaikei/tosin/1a923.htm" target="_blank" rel="noopener">出典</a>。IFRSでも扱いの方向は同じであり、村田製作所は在外営業活動体の換算差額をその他の包括利益として認識し、処分時に純損益へ振り替えると記載している。<a href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/securities-report/20260624/S100YHPY.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>金額の規模は小さくない。任天堂の為替換算調整勘定は2025年3月末の1,701億1,200万円から2026年3月末の2,374億3,800万円へ増えた。同時点の純資産合計は2兆9,551億8,000万円である。<a href="https://www.nintendo.co.jp/ir/pdf/2026/260508.pdf" target="_blank" rel="noopener">出典</a>。為替換算調整勘定は純資産の8.0%を占める。この8.0%は公表値どうしの割り算である。</p>
+<div class="tb-tw"><table><thead><tr><th>経路</th><th>内容</th><th>円安時の符号</th><th>主な証拠</th></tr></thead><tbody><tr><td>換算</td><td>外貨建ての売上と利益を円に換算した金額が増える</td><td>プラス</td><td>トヨタは対ドル1円の円安で営業利益が500億円増える。<a class="tb-src" href="https://financial.jiji.com/main_news/article.html?number=760" target="_blank" rel="noopener">出典</a></td></tr><tr><td>輸入コスト</td><td>原材料とエネルギーの円建て調達コストが上がる</td><td>マイナス</td><td>日本への輸入の67.5%が米ドル建て。<a class="tb-src" href="https://www.customs.go.jp/toukei/shinbun/tuuka/tuukar08fh.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>価格数量</td><td>現地通貨建て価格を据え置くか下げるかで受取と数量が動く</td><td>企業の価格政策に依存</td><td>輸出の51.1%が米ドル建てであり、現地通貨建て契約は限られる。<a class="tb-src" href="https://www.customs.go.jp/toukei/shinbun/tuuka/tuukar08fh.pdf" target="_blank" rel="noopener">出典</a></td></tr><tr><td>評価</td><td>外貨建ての金銭債権債務と外貨預金の換算差額が営業外損益に出る</td><td>残高の向きに依存</td><td>任天堂の2026年3月期は為替差益443億円を計上。<a class="tb-src" href="https://www.nintendo.co.jp/ir/pdf/2026/260508.pdf" target="_blank" rel="noopener">出典</a></td></tr></tbody></table></div>
+<p>感応度は他の条件を一定とした線形近似にすぎない。トヨタの2026年3月期は営業収益50兆6,849億円で前期比5.5%増、営業利益は3兆7,662億円で前期比21.5%減となった。米国の関税影響が1兆3,800億円のマイナス要因として効いている。<a class="tb-src" href="https://car.watch.impress.co.jp/docs/news/2107163.html" target="_blank" rel="noopener">出典</a>。1円あたり500億円という感応度に想定レートとの乖離を掛けても、実際の増減益は再現できない。</p>
+<p>4つの経路のほかに、損益計算書を通らない経路がもう1つある。在外子会社の財務諸表を円換算する際、資産と負債は決算時レート、収益と費用は期中平均レート、純資産は発生時レートで換算する。この3つのレートの違いから生じる差額が為替換算調整勘定であり、連結貸借対照表の純資産の部に直入される。<a class="tb-src" href="https://www.fsa.go.jp/p_mof/singikai/kaikei/tosin/1a923.htm" target="_blank" rel="noopener">出典</a>。IFRSでも扱いの方向は同じであり、村田製作所は在外営業活動体の換算差額をその他の包括利益として認識し、処分時に純損益へ振り替えると記載している。<a class="tb-src" href="https://finance-frontend-pc-dist.west.edge.storage-yahoo.jp/securities-report/20260624/S100YHPY.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>金額の規模は小さくない。任天堂の為替換算調整勘定は2025年3月末の1,701億1,200万円から2026年3月末の2,374億3,800万円へ増えた。同時点の純資産合計は2兆9,551億8,000万円である。<a class="tb-src" href="https://www.nintendo.co.jp/ir/pdf/2026/260508.pdf" target="_blank" rel="noopener">出典</a>。為替換算調整勘定は純資産の8.0%を占める。この8.0%は公表値どうしの割り算である。</p>
 <p>この勘定が持つ意味は3点である。第1に、円安局面では自己資本が増えるため、自己資本比率が上がり、ROEの分母が膨らんでROEが下がる方向に働く。第2に、この動きは損益計算書に現れないため、営業利益や当期純利益だけを見ていても把握できない。第3に、円高に転じると同じ経路で自己資本が減る。損益を経ないまま純資産が減少するため、財務制限条項に自己資本要件を持つ企業では実務上の制約になる。</p>
 <h2 id="s5">実物資産の価格：金属需給と公的地価がマネーの動きを映す経路</h2>
 <p>最後の断面は実物資産である。ここでもドルという単一の軸で束ねたくなるが、2026年の値動きはその軸で説明が付かない。</p>
-<p>2026年8月7日時点で米ドル指数は99.57、前年比1.41%高である。同じ日の金は1オンス4,340.26ドルで前年比27.7%高、銀は1オンス63.33ドルで前年比65.1%高、銅は1ポンド6.58ドルで前年比47.5%高である。<a href="https://tradingeconomics.com/commodity/gold" target="_blank" rel="noopener">出典</a>、<a href="https://tradingeconomics.com/commodity/silver" target="_blank" rel="noopener">出典</a>、<a href="https://tradingeconomics.com/commodity/copper" target="_blank" rel="noopener">出典</a>、<a href="https://tradingeconomics.com/united-states/currency" target="_blank" rel="noopener">出典</a>。ドルが上がりながら3金属がすべて上がっている。この12か月についてはドル安を主因とする説明が成り立たない。</p>
-<p>金については、World Gold Council 自身の回帰モデルが説明できない部分を残している。2025年の金の年間リターンは67%だった。同モデルは月次リターンを経済拡大、リスクと不確実性、機会費用、モメンタムの4系統に分解するが、2025年通年で明示変数が説明できたのはリターンの約60%にとどまり、約40%が残差として残った。説明できた部分では地政学リスクとオプション市場の活動が最大で、次にドル安、その次に利回り低下が続く。<a href="https://www.gold.org/goldhub/research/gold-market-commentary-december-2025" target="_blank" rel="noopener">出典</a>。残差40%が上位2要因の差より大きいため、単一の最大要因を断定できない。</p>
-<p>中央銀行の金購入をドル離脱の指標として読む見方も、数字と合わない。2025年の中銀ネット購入は863.3トンで、2024年の1,092.4トンから21%減った。2025年の買い手上位はポーランド102トン、カザフスタン57トン、ブラジル43トン、アゼルバイジャン38トン、トルコ27トン、中国27トン、チェコ20トンである。<a href="https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025/central-banks" target="_blank" rel="noopener">出典</a>。首位のポーランドと7位のチェコはEUかつNATOの加盟国である。数量を最も増やした買い手はETFの801トンと地金コインの1,374トンであり、中銀ではない。<a href="https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025" target="_blank" rel="noopener">出典</a>。</p>
-<p>外貨準備に占めるドル比率も下がっていない。IMF COFER ベースの米ドル比率は2026年Q1に57.13%となり、2025年Q4の56.42%から上昇したと報じられている。<a href="https://www.bestbrokers.com/forex-trading/us-dollar-share-of-global-currency-reserves/" target="_blank" rel="noopener">出典</a>。ただしこの数値はIMF本体のページを取得できず二次媒体経由での確認にとどまるため、断定には使わない。</p>
-<p>銀は需要側の技術変化が価格の外側で進んでいる例である。太陽光発電向けの銀需要は2024年の197.5百万オンスから2025年に186.6百万オンスへ6%減り、2026年は151百万オンスへ19%減る見通しである。減少の理由は設置量の減少ではない。世界の太陽電池生産は増え続けており、それを上回る速度でセル1枚あたりの銀量が削られた。<a href="https://www.mercomindia.com/silver-demand-forecast-to-drop-19-in-2026-on-lower-solar-cell-loadings" target="_blank" rel="noopener">出典</a>、<a href="https://www.pv-magazine.com/2026/04/15/silver-demand-from-pv-industry-expected-to-drop-19-this-year/" target="_blank" rel="noopener">出典</a>。減量の動機は価格にある。銀ペーストは太陽電池の製造コストの10%から20%を占める。銀価格は2026年1月に初めて1オンス100ドルを超えた。それでも銀の需給は緩んでいない。2026年の市場収支は67百万オンスの不足で、6年連続の不足となる見通しである。現物投資需要が2026年に227百万オンスへ20%増えるためである。<a href="https://silverinstitute.org/global-silver-investment-to-remain-strong-in-2026-against-the-backdrop-of-a-sixth-consecutive-annual-market-deficit/" target="_blank" rel="noopener">出典</a>。</p>
-<p>銅は供給側の事象がいつ価格に効くかという時間差の例である。Freeport-McMoRan は2025年9月の泥流事故を受け、PT Freeport Indonesia の2025年生産を銅約10億ポンドと見込み、2026年も段階的再稼働の期間として同程度の水準になるとした。2027年から2029年の3年平均では年間約16億ポンドへの回復を見込む。<a href="https://investors.fcx.com/investors/news-releases/news-release-details/2025/Freeport-Provides-Update-on-Restart-Plans-for-Grasberg-Minerals-District/default.aspx" target="_blank" rel="noopener">出典</a>。事故前の2026年見通しは17億ポンドだった。<a href="https://www.fastmarkets.com/insights/grasberg-mine-force-majeure-2026-output/" target="_blank" rel="noopener">出典</a>。差は約7億ポンドである。銅の前年比47.5%高という水準は、この減産をほぼ全期間にわたって織り込んだ後の価格である。これから効くのではなく、効いた後を見ている。</p>
-<p>チュキカマタは性格が違う。露天掘りから地下ブロックケーブへの移行に伴う設計能力は年間32万トンの銅であり、これは事故による一時的な喪失ではなく、鉱石品位の低下を前提に据え直した恒常水準である。<a href="https://www.mining-technology.com/projects/chuquicamata-copper/" target="_blank" rel="noopener">出典</a>。恒常水準の切り下げは市場が数年かけて織り込むため、価格に効く日付を特定できない。</p>
+<p>2026年8月7日時点で米ドル指数は99.57、前年比1.41%高である。同じ日の金は1オンス4,340.26ドルで前年比27.7%高、銀は1オンス63.33ドルで前年比65.1%高、銅は1ポンド6.58ドルで前年比47.5%高である。<a class="tb-src" href="https://tradingeconomics.com/commodity/gold" target="_blank" rel="noopener">出典</a>、<a class="tb-src" href="https://tradingeconomics.com/commodity/silver" target="_blank" rel="noopener">出典</a>、<a class="tb-src" href="https://tradingeconomics.com/commodity/copper" target="_blank" rel="noopener">出典</a>、<a class="tb-src" href="https://tradingeconomics.com/united-states/currency" target="_blank" rel="noopener">出典</a>。ドルが上がりながら3金属がすべて上がっている。この12か月についてはドル安を主因とする説明が成り立たない。</p>
+<p>金については、World Gold Council 自身の回帰モデルが説明できない部分を残している。2025年の金の年間リターンは67%だった。同モデルは月次リターンを経済拡大、リスクと不確実性、機会費用、モメンタムの4系統に分解するが、2025年通年で明示変数が説明できたのはリターンの約60%にとどまり、約40%が残差として残った。説明できた部分では地政学リスクとオプション市場の活動が最大で、次にドル安、その次に利回り低下が続く。<a class="tb-src" href="https://www.gold.org/goldhub/research/gold-market-commentary-december-2025" target="_blank" rel="noopener">出典</a>。残差40%が上位2要因の差より大きいため、単一の最大要因を断定できない。</p>
+<p>中央銀行の金購入をドル離脱の指標として読む見方も、数字と合わない。2025年の中銀ネット購入は863.3トンで、2024年の1,092.4トンから21%減った。2025年の買い手上位はポーランド102トン、カザフスタン57トン、ブラジル43トン、アゼルバイジャン38トン、トルコ27トン、中国27トン、チェコ20トンである。<a class="tb-src" href="https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025/central-banks" target="_blank" rel="noopener">出典</a>。首位のポーランドと7位のチェコはEUかつNATOの加盟国である。数量を最も増やした買い手はETFの801トンと地金コインの1,374トンであり、中銀ではない。<a class="tb-src" href="https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025" target="_blank" rel="noopener">出典</a>。</p>
+<p>外貨準備に占めるドル比率も下がっていない。IMF COFER ベースの米ドル比率は2026年Q1に57.13%となり、2025年Q4の56.42%から上昇したと報じられている。<a class="tb-src" href="https://www.bestbrokers.com/forex-trading/us-dollar-share-of-global-currency-reserves/" target="_blank" rel="noopener">出典</a>。ただしこの数値はIMF本体のページを取得できず二次媒体経由での確認にとどまるため、断定には使わない。</p>
+<p>銀は需要側の技術変化が価格の外側で進んでいる例である。太陽光発電向けの銀需要は2024年の197.5百万オンスから2025年に186.6百万オンスへ6%減り、2026年は151百万オンスへ19%減る見通しである。減少の理由は設置量の減少ではない。世界の太陽電池生産は増え続けており、それを上回る速度でセル1枚あたりの銀量が削られた。<a class="tb-src" href="https://www.mercomindia.com/silver-demand-forecast-to-drop-19-in-2026-on-lower-solar-cell-loadings" target="_blank" rel="noopener">出典</a>、<a class="tb-src" href="https://www.pv-magazine.com/2026/04/15/silver-demand-from-pv-industry-expected-to-drop-19-this-year/" target="_blank" rel="noopener">出典</a>。減量の動機は価格にある。銀ペーストは太陽電池の製造コストの10%から20%を占める。銀価格は2026年1月に初めて1オンス100ドルを超えた。それでも銀の需給は緩んでいない。2026年の市場収支は67百万オンスの不足で、6年連続の不足となる見通しである。現物投資需要が2026年に227百万オンスへ20%増えるためである。<a class="tb-src" href="https://silverinstitute.org/global-silver-investment-to-remain-strong-in-2026-against-the-backdrop-of-a-sixth-consecutive-annual-market-deficit/" target="_blank" rel="noopener">出典</a>。</p>
+<p>銅は供給側の事象がいつ価格に効くかという時間差の例である。Freeport-McMoRan は2025年9月の泥流事故を受け、PT Freeport Indonesia の2025年生産を銅約10億ポンドと見込み、2026年も段階的再稼働の期間として同程度の水準になるとした。2027年から2029年の3年平均では年間約16億ポンドへの回復を見込む。<a class="tb-src" href="https://investors.fcx.com/investors/news-releases/news-release-details/2025/Freeport-Provides-Update-on-Restart-Plans-for-Grasberg-Minerals-District/default.aspx" target="_blank" rel="noopener">出典</a>。事故前の2026年見通しは17億ポンドだった。<a class="tb-src" href="https://www.fastmarkets.com/insights/grasberg-mine-force-majeure-2026-output/" target="_blank" rel="noopener">出典</a>。差は約7億ポンドである。銅の前年比47.5%高という水準は、この減産をほぼ全期間にわたって織り込んだ後の価格である。これから効くのではなく、効いた後を見ている。</p>
+<p>チュキカマタは性格が違う。露天掘りから地下ブロックケーブへの移行に伴う設計能力は年間32万トンの銅であり、これは事故による一時的な喪失ではなく、鉱石品位の低下を前提に据え直した恒常水準である。<a class="tb-src" href="https://www.mining-technology.com/projects/chuquicamata-copper/" target="_blank" rel="noopener">出典</a>。恒常水準の切り下げは市場が数年かけて織り込むため、価格に効く日付を特定できない。</p>
 <p>土地は金属と違い、市場価格が連続して観測できない。同じものが二つとないため、課税や補償のたびに個別評価が要る。日本ではこの評価コストを下げる仕組みとして公的な価格が複数並立している。</p>
 <div class="tb-tw"><table><thead><tr><th>価格</th><th>主体</th><th>目的</th><th>評価時点</th><th>公示価格に対する水準</th></tr></thead><tbody><tr><td>地価公示</td><td>国土交通省 土地鑑定委員会</td><td>取引の指標、公共用地取得の補償額算定</td><td>毎年1月1日</td><td>基準そのもの</td></tr><tr><td>相続税路線価</td><td>国税庁</td><td>相続税と贈与税の課税価格の計算</td><td>毎年1月1日</td><td>おおむね80%</td></tr><tr><td>固定資産税評価額</td><td>市町村</td><td>固定資産税の課税標準</td><td>3年ごとの評価替え</td><td>おおむね70%</td></tr></tbody></table></div>
-<p>地価公示の根拠は地価公示法である。同法第1条は、標準地の正常な価格を公示することにより土地の取引価格に指標を与え、公共の利益となる事業の用に供する土地に対する適正な補償金の額の算定等に資することを目的とすると定める。同法第8条は不動産鑑定士が公示区域内の正常な価格を求めるときに公示価格を規準とすべきことを、第9条は土地収用が可能な事業者が公示区域内の土地を取得するときに公示価格を規準とすべきことを定める。<a href="https://laws.e-gov.go.jp/law/344AC0000000049" target="_blank" rel="noopener">出典</a>。</p>
-<p>路線価が公示価格の80%水準とされる点について、国税庁による明示の一次資料は素材ノートの調査で取得できていない。実際の数値からは近い比率が観測できる。令和8年地価公示の全国最高価格地点は中央区銀座4丁目2番4で1平方メートル当たり6,710万円、令和8年分の最高路線価は中央区銀座5丁目銀座中央通りの鳩居堂前で1平方メートル当たり5,336万円である。<a href="https://www.mlit.go.jp/totikensangyo/content/001985434.pdf" target="_blank" rel="noopener">出典</a>、<a href="https://www.zeiken.co.jp/zeikenpress/column/0020zp20260730/" target="_blank" rel="noopener">出典</a>。比は0.795になる。ただし両者は銀座4丁目と銀座5丁目であり同一地点ではない。同一の通り沿いの近接地点どうしの比較として読む必要がある。</p>
-<p>ここで金利の話に戻る。2026年の日本は、政策金利が1.0%へ上がり、10年国債利回りが2.773%へ上がっている局面である。不動産の割引率だけを見れば、地価は下がる方向に力がかかる。実際には上がっている。令和8年地価公示の全国全用途平均は前年比プラス2.8%、住宅地はプラス2.1%、商業地はプラス4.3%である。<a href="https://www.mlit.go.jp/totikensangyo/content/001985434.pdf" target="_blank" rel="noopener">出典</a>。令和8年分路線価の標準宅地の評価基準額の対前年変動率は全国平均でプラス2.9%であり、平成22年分以後で最大の引上げ幅となった。<a href="https://www.zeiken.co.jp/zeikenpress/column/0020zp20260730/" target="_blank" rel="noopener">出典</a>。</p>
+<p>地価公示の根拠は地価公示法である。同法第1条は、標準地の正常な価格を公示することにより土地の取引価格に指標を与え、公共の利益となる事業の用に供する土地に対する適正な補償金の額の算定等に資することを目的とすると定める。同法第8条は不動産鑑定士が公示区域内の正常な価格を求めるときに公示価格を規準とすべきことを、第9条は土地収用が可能な事業者が公示区域内の土地を取得するときに公示価格を規準とすべきことを定める。<a class="tb-src" href="https://laws.e-gov.go.jp/law/344AC0000000049" target="_blank" rel="noopener">出典</a>。</p>
+<p>路線価が公示価格の80%水準とされる点について、国税庁による明示の一次資料は素材ノートの調査で取得できていない。実際の数値からは近い比率が観測できる。令和8年地価公示の全国最高価格地点は中央区銀座4丁目2番4で1平方メートル当たり6,710万円、令和8年分の最高路線価は中央区銀座5丁目銀座中央通りの鳩居堂前で1平方メートル当たり5,336万円である。<a class="tb-src" href="https://www.mlit.go.jp/totikensangyo/content/001985434.pdf" target="_blank" rel="noopener">出典</a>、<a class="tb-src" href="https://www.zeiken.co.jp/zeikenpress/column/0020zp20260730/" target="_blank" rel="noopener">出典</a>。比は0.795になる。ただし両者は銀座4丁目と銀座5丁目であり同一地点ではない。同一の通り沿いの近接地点どうしの比較として読む必要がある。</p>
+<p>ここで金利の話に戻る。2026年の日本は、政策金利が1.0%へ上がり、10年国債利回りが2.773%へ上がっている局面である。不動産の割引率だけを見れば、地価は下がる方向に力がかかる。実際には上がっている。令和8年地価公示の全国全用途平均は前年比プラス2.8%、住宅地はプラス2.1%、商業地はプラス4.3%である。<a class="tb-src" href="https://www.mlit.go.jp/totikensangyo/content/001985434.pdf" target="_blank" rel="noopener">出典</a>。令和8年分路線価の標準宅地の評価基準額の対前年変動率は全国平均でプラス2.9%であり、平成22年分以後で最大の引上げ幅となった。<a class="tb-src" href="https://www.zeiken.co.jp/zeikenpress/column/0020zp20260730/" target="_blank" rel="noopener">出典</a>。</p>
 <p>割引率が上がりながら価格が上がるという事象は、分母だけでは説明できない。分子の期待賃料と、キャッシュフローの名目成長が同時に上がっている可能性が高い。日本銀行が2026年度後半以降に消費者物価の前年比が2%をはっきり上回ると予想していることは、分子側の上昇と整合する。ただしこの分解は本章の解釈であり、賃料の推計値による裏付けは取っていない。</p>
-<p>上昇の分布は一様ではない。国土交通省が地価公示と都道府県地価調査の共通地点1,587地点について集計した半年ごとの変動率では、東京圏の商業地は2025年前半がプラス4.5%、後半がプラス5.0%、年間でプラス9.8%である。同じ共通地点ベースで地方圏のその他の地域の商業地は年間プラス2.7%にとどまる。<a href="https://www.mlit.go.jp/totikensangyo/content/001985434.pdf" target="_blank" rel="noopener">出典</a>。東京圏商業地の年間上昇率は地方圏その他の商業地の3.6倍である。全標準地ベースの東京圏商業地の変動率はプラス9.3%であり共通地点ベースの9.8%と近いが、標本が違うため数値は一致しない。</p>
+<p>上昇の分布は一様ではない。国土交通省が地価公示と都道府県地価調査の共通地点1,587地点について集計した半年ごとの変動率では、東京圏の商業地は2025年前半がプラス4.5%、後半がプラス5.0%、年間でプラス9.8%である。同じ共通地点ベースで地方圏のその他の地域の商業地は年間プラス2.7%にとどまる。<a class="tb-src" href="https://www.mlit.go.jp/totikensangyo/content/001985434.pdf" target="_blank" rel="noopener">出典</a>。東京圏商業地の年間上昇率は地方圏その他の商業地の3.6倍である。全標準地ベースの東京圏商業地の変動率はプラス9.3%であり共通地点ベースの9.8%と近いが、標本が違うため数値は一致しない。</p>
 <p>この分布の差が、路線価と実勢の乖離の地域差を生む。乖離は2成分に分けられる。第1成分は水準差であり、路線価が公示価格の80%水準に設定されることから生じる。この成分は全国一律であり地域差を生まない。第2成分は時点差である。路線価の評価時点は1月1日に固定される一方、相続は年間を通じて発生する。上昇率が高い地域ほどこの成分が大きくなる。</p>
-<p>20%という控除幅がどれだけの期間で消えるかで比べると差が見える。年間プラス9.8%で上昇する市場では約2年分の上昇で消える。年間プラス2.7%の市場では約7年分に相当する。個別地点ではさらに極端になる。令和8年地価公示の商業地の変動率1位は北海道千歳市千代田町5丁目のプラス44.1%であり、住宅地の1位は長野県北安曇郡白馬村のプラス33.0%である。<a href="https://www.mlit.go.jp/totikensangyo/content/001985434.pdf" target="_blank" rel="noopener">出典</a>。年間プラス44.1%の地点では、20%の控除幅は半年に満たない上昇で消える。</p>
+<p>20%という控除幅がどれだけの期間で消えるかで比べると差が見える。年間プラス9.8%で上昇する市場では約2年分の上昇で消える。年間プラス2.7%の市場では約7年分に相当する。個別地点ではさらに極端になる。令和8年地価公示の商業地の変動率1位は北海道千歳市千代田町5丁目のプラス44.1%であり、住宅地の1位は長野県北安曇郡白馬村のプラス33.0%である。<a class="tb-src" href="https://www.mlit.go.jp/totikensangyo/content/001985434.pdf" target="_blank" rel="noopener">出典</a>。年間プラス44.1%の地点では、20%の控除幅は半年に満たない上昇で消える。</p>
 <p>逆方向もある。地方圏のその他の地域では、令和8年地価公示で住宅地の下落地点が37.6%を占める。東京圏の商業地の下落地点は2.3%である。<a href="https://www.mlit.go.jp/totikensangyo/content/001985434.pdf" target="_blank" rel="noopener">同出典</a>。下落幅が20%を超えれば、路線価が実勢を上回る。全国平均が5年連続で上昇していることと、個別地点が上昇していることは別の事実である。</p>
 <p>なお、路線価と実勢価格の乖離率を地域別に集計した公的統計は、素材ノートの調査では存在を確認できていない。上記の2成分分解は制度の設計から導いた枠組みであり、乖離率の実測ではない。</p>
 <h2 id="s6">この章の要点</h2>
@@ -318,5 +425,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
   <div class="tb-nav"><a class="tb-nav-a" href="02_cash-flow-and-valuation.html">← キャッシュフローから価値へ：何で割るかを決める</a><a class="tb-nav-a" href="04_market-structure-and-listing.html">市場という装置：流動性・上場・熱狂 →</a></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

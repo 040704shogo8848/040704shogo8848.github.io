@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -157,7 +264,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
 <nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">浮動株と板の厚み：機関投資家が入れる条件</a></li><li><a href="#s2">株主構成を設計する道具としての優待制度</a></li><li><a href="#s3">上場かM&amp;Aか：資金調達手段としての比較</a></li><li><a href="#s4">IPOとSPAC：発行体が負うコストと制度の修正</a></li><li><a href="#s5">設備投資が先行し収益が遅れる局面で市場は何を織り込むか</a></li><li><a href="#s6">この章の要点</a></li><li><a href="#s7">残っている問い</a></li><li><a href="#s8">出典</a></li></ol></nav>
 
-<p>株価を見るとき、多くの人はその数字を企業の実力の要約だと受け取る。だが値がつくには、買いたい人と売りたい人が同じ場所に出てこなければならない。誰が出てこられるかは、その企業が発行した株のうち何%が実際に市場を流れているか、どの市場区分に属しているか、どの指数に採用されているかで決まる。決算の内容が同じでも、これらの条件が違えば値のつき方は変わる。</p>
+<p>株価を見るとき、多くの人はその数字を企業の実力の要約だと受け取る。だが値がつくには、買いたい人と売りたい人が同じ場所に出てこなければならない。<strong class="hit">誰が出てこられるかは、その企業が発行した株のうち何%が実際に市場を流れているか、どの市場区分に属しているか、どの指数に採用されているかで決まる</strong>。決算の内容が同じでも、これらの条件が違えば値のつき方は変わる。</p>
 <p>この構造を知らないと、二種類の誤りを犯す。ひとつは、板が薄い銘柄の価格を実態評価と読み違えることである。もうひとつは、自分が売りたいときにその価格で売れると思い込むことである。上場の手段を選ぶ側にとっても同じで、いくら調達できるかは事業計画だけでなく、どの器を使うかで変わる。この章は、価格が形成される装置そのものを分解する。</p>
 <h2 id="s1">浮動株と板の厚み：機関投資家が入れる条件</h2>
 <p>板とは、ある時点で市場に出ている指値注文の一覧である。厚みとは各気配値に積まれた数量を指す。ここで注意すべき区別がひとつある。売買代金は約定した後の結果値であり、板の厚みは約定する前の待機注文の量である。売買代金が多い日は値が飛んだ日でもありうるので、両者は同じ方向に動くとは限らない。</p>
@@ -165,72 +272,72 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p>機関投資家が入れるかどうかは3層で決まる。第1層が取引所の上場維持基準、第2層が指数提供会社の採用基準、第3層が個々の運用会社の内規である。第1層と第2層は公開されており、第3層は原則として公開されていない。</p>
 <p>第1層について、東証は市場区分ごとに下限を置いている。</p>
 <div class="tb-tw"><table><thead><tr><th>基準</th><th>プライム</th><th>スタンダード</th><th>グロース</th><th>出典</th></tr></thead><tbody><tr><td>流通株式比率</td><td>35%以上</td><td>25%以上</td><td>25%以上</td><td><a href="https://www.jpx.co.jp/equities/listing/continue/outline/01.html" target="_blank" rel="noopener">プライム</a> <a href="https://www.jpx.co.jp/equities/listing/continue/outline/02.html" target="_blank" rel="noopener">スタンダード</a> <a href="https://www.jpx.co.jp/equities/listing/continue/outline/03.html" target="_blank" rel="noopener">グロース</a></td></tr><tr><td>流通株式時価総額</td><td>100億円以上</td><td>10億円以上</td><td>5億円以上</td><td>同上</td></tr><tr><td>売買代金など</td><td>1日平均0.2億円以上</td><td>月平均売買高10単位以上</td><td>時価総額40億円以上、2030年3月1日から上場5年経過後100億円以上</td><td>同上</td></tr></tbody></table></div>
-<p>効いてくるのは流通株式の定義である。東証は上場株式数の10%以上を所有する者の保有分を原則として除外し、役員とその近親者の保有分、自己株式、関係会社の保有分も除外する<a href="https://www.jpx.co.jp/equities/listing/continue/details/02.html" target="_blank" rel="noopener">出典</a>。創業者1人で30%を持てば、その30%はまるごと分子から消える。プライムの35%という基準は、創業者と親会社と政策保有先の合計が65%を超えた時点で不適合になることを意味する。逆に、9.9%ずつ複数の関係者に分散させれば10%基準に触れないため、実質的な支配構造と流通株式比率はずれうる。制度が機械的であることの帰結であり、この数字だけで板の厚みを推定すると外す。</p>
-<p>第2層の指数提供会社は、比率と絶対額と回転率を同時に課す。MSCIは外国人組入比率であるFIFが0.15以上であることを全市場共通の要件とする。組入対象企業の最低時価総額は2026年5月のインデックスレビュー時点でUSD 537百万であり、個別銘柄はその50%以上、すなわちUSD 268.5百万の浮動株調整後時価総額を必要とする。流動性については、先進国銘柄で3か月ATVR20%以上、3か月値付率90%以上を直近4四半期連続、かつ12か月ATVR20%以上を満たす必要がある。新興国銘柄はそれぞれ15%、80%、15%である<a href="https://www.msci.com/index/methodology/latest/GIMI" target="_blank" rel="noopener">出典</a>。</p>
+<p>効いてくるのは流通株式の定義である。東証は上場株式数の10%以上を所有する者の保有分を原則として除外し、役員とその近親者の保有分、自己株式、関係会社の保有分も除外する<a class="tb-src" href="https://www.jpx.co.jp/equities/listing/continue/details/02.html" target="_blank" rel="noopener">出典</a>。創業者1人で30%を持てば、その30%はまるごと分子から消える。<strong class="hit">プライムの35%という基準は、創業者と親会社と政策保有先の合計が65%を超えた時点で不適合になることを意味する</strong>。逆に、9.9%ずつ複数の関係者に分散させれば10%基準に触れないため、実質的な支配構造と流通株式比率はずれうる。制度が機械的であることの帰結であり、この数字だけで板の厚みを推定すると外す。</p>
+<p>第2層の指数提供会社は、比率と絶対額と回転率を同時に課す。MSCIは外国人組入比率であるFIFが0.15以上であることを全市場共通の要件とする。組入対象企業の最低時価総額は2026年5月のインデックスレビュー時点でUSD 537百万であり、個別銘柄はその50%以上、すなわちUSD 268.5百万の浮動株調整後時価総額を必要とする。流動性については、先進国銘柄で3か月ATVR20%以上、3か月値付率90%以上を直近4四半期連続、かつ12か月ATVR20%以上を満たす必要がある。新興国銘柄はそれぞれ15%、80%、15%である<a class="tb-src" href="https://www.msci.com/index/methodology/latest/GIMI" target="_blank" rel="noopener">出典</a>。</p>
 <p>ATVRは年間売買代金を浮動株調整後時価総額で割った比率である。分母が小さい銘柄ほど数値が出やすい。したがって浮動株の小さい銘柄は、回転率の比率基準は通るのに絶対額の基準で落ちるという非対称が生じる。比率だけを改善しても参入可否は変わらない、という結論はこの分母の構造から出る。</p>
-<p>FTSEはより低い水準で線を引く。FTSE Global Equity Index Seriesは、投資可能時価総額が地域別組入水準の10倍を超える場合を除き、浮動株5%以下の銘柄を除外する。流動性判定は3月と9月の年2回である<a href="https://www.lseg.com/content/dam/ftse-russell/en_us/documents/ground-rules/ftse-global-equity-index-series-ground-rules.pdf" target="_blank" rel="noopener">出典</a>。MSCIの0.15とFTSEの0.05という差は、同じ銘柄が片方の指数にだけ入る状態を生む。日本株ではTOPIXが浮動株時価総額加重で算出されるため、国内パッシブ資金の配分も浮動株比率に比例する<a href="https://www.jpx.co.jp/markets/indices/topix/index.html" target="_blank" rel="noopener">出典</a>。</p>
-<p>ここで押さえるべきは、浮動株比率が必要条件であって十分条件ではないという点である。時価総額1,000億円で浮動株比率15%の企業は、浮動株時価総額150億円となりプライムの流通株式時価総額100億円は超えるが、比率基準35%には届かない。時価総額100億円で浮動株比率50%の企業は、比率は通るが浮動株時価総額50億円にとどまりMSCIの下限に遠い。参入可否は比率と時価総額の積で決まる。</p>
-<p>買う目的によって、見るべき数字も入れ替わる。値動きを取る戦略では呼値の刻みが最初の制約になる。東証の呼値の単位は、株価1,000円以下の帯でTOPIX100構成銘柄が0.1円、それ以外が1円である。3,000円以下の帯ではそれぞれ0.5円と1円、5,000円以下では1円と5円になる<a href="https://www.jpx.co.jp/equities/trading/domestic/07.html" target="_blank" rel="noopener">出典</a>。株価800円の銘柄で最良気配が1ティック開いているとき、最小スプレッドはTOPIX100構成銘柄で0.0125%、それ以外で0.125%となり、10倍の差がつく。往復では倍になる。</p>
-<p>配当を取る戦略では、同じコストが保有期間で薄まる。保有期間5年なら往復2%のコストは年率0.4%になる。配当利回り3%ならコストを引いて2.6%が残る。保有期間1年なら往復2%は配当の3分の2を消す。したがって板の薄さを許容できるかは、板の厚みそのものではなく想定保有期間と往復コストの比で決まる。見るべき数字は1日平均売買代金そのものではなく、自分のポジションがその何日分かという建玉日数である。建玉日数が3日を超えると、解消時に価格を押し下げながら売ることになる。</p>
+<p>FTSEはより低い水準で線を引く。FTSE Global Equity Index Seriesは、投資可能時価総額が地域別組入水準の10倍を超える場合を除き、浮動株5%以下の銘柄を除外する。流動性判定は3月と9月の年2回である<a class="tb-src" href="https://www.lseg.com/content/dam/ftse-russell/en_us/documents/ground-rules/ftse-global-equity-index-series-ground-rules.pdf" target="_blank" rel="noopener">出典</a>。MSCIの0.15とFTSEの0.05という差は、同じ銘柄が片方の指数にだけ入る状態を生む。日本株ではTOPIXが浮動株時価総額加重で算出されるため、国内パッシブ資金の配分も浮動株比率に比例する<a class="tb-src" href="https://www.jpx.co.jp/markets/indices/topix/index.html" target="_blank" rel="noopener">出典</a>。</p>
+<p><strong class="hit">ここで押さえるべきは、浮動株比率が必要条件であって十分条件ではないという点である</strong>。時価総額1,000億円で浮動株比率15%の企業は、浮動株時価総額150億円となりプライムの流通株式時価総額100億円は超えるが、比率基準35%には届かない。時価総額100億円で浮動株比率50%の企業は、比率は通るが浮動株時価総額50億円にとどまりMSCIの下限に遠い。<strong class="hit">参入可否は比率と時価総額の積で決まる</strong>。</p>
+<p>買う目的によって、見るべき数字も入れ替わる。値動きを取る戦略では呼値の刻みが最初の制約になる。東証の呼値の単位は、株価1,000円以下の帯でTOPIX100構成銘柄が0.1円、それ以外が1円である。3,000円以下の帯ではそれぞれ0.5円と1円、5,000円以下では1円と5円になる<a class="tb-src" href="https://www.jpx.co.jp/equities/trading/domestic/07.html" target="_blank" rel="noopener">出典</a>。株価800円の銘柄で最良気配が1ティック開いているとき、最小スプレッドはTOPIX100構成銘柄で0.0125%、それ以外で0.125%となり、10倍の差がつく。往復では倍になる。</p>
+<p>配当を取る戦略では、同じコストが保有期間で薄まる。保有期間5年なら往復2%のコストは年率0.4%になる。配当利回り3%ならコストを引いて2.6%が残る。保有期間1年なら往復2%は配当の3分の2を消す。<strong class="hit">したがって板の薄さを許容できるかは、板の厚みそのものではなく想定保有期間と往復コストの比で決まる</strong>。<strong class="hit">見るべき数字は1日平均売買代金そのものではなく、自分のポジションがその何日分かという建玉日数である</strong>。建玉日数が3日を超えると、解消時に価格を押し下げながら売ることになる。</p>
 <p>プライムの上場維持基準である1日平均売買代金0.2億円は、維持できる最低水準である。この水準の銘柄で1,000万円の注文を出せば、その日の売買代金の5%を1人で占める。建てたい金額が1日平均売買代金の何%になるかは、戦略の種類にかかわらず先に計算すべき数字である。</p>
 <p>両方の戦略に共通する落とし穴がひとつある。決算発表や指数入替の前後では平常時に板を出している参加者が引くため、厚みは平常時の水準を下回る。平常時の売買代金で流動性を測ると、実際に売りたい局面での流動性を過大評価することになる。この点について定量的な一次資料は本章の調査範囲では取得できていない。</p>
 <h2 id="s2">株主構成を設計する道具としての優待制度</h2>
 <p>板の厚みが構造で決まるなら、企業は構造を動かしにいく。日本で使われてきた道具が株主優待である。配当が保有株数に比例するのに対し、優待は株主1人ごとに配られる設計が主流であり、単元数の少ない個人株主ほど投資額あたりの利回りが高くなる。この非線形性が制度設計の中心にある。</p>
 <p>まず範囲を正確にしておく。優待の有無そのものによる個人株主比率の差を推定したクリーンな実証値は、本章が参照できた資料の範囲では見つからなかった。優待を実施する企業は業種と規模に偏りがあり、単純比較では選択バイアスが残る。主要研究はいずれも導入または廃止の前後比較を採っている。したがって以下は状態量の効果ではなく、変化のイベント効果である。</p>
-<p>松浦義昭は2010年4月から2021年3月に優待を廃止した上場企業77社に対し、同じ東証33業種分類で規模と財務属性と株主構成が近い優待継続企業77社をマッチングし、差の差を取った。廃止前年から廃止翌年にかけて個人持株比率は継続企業対比で1.92ポイント低下し、5%水準で有意である。個人株主数は継続企業対比で5,899.75人減少し、1%水準で有意である<a href="https://www.jsri.or.jp/publish/research/pdf/123/123_02.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>松浦義昭は2010年4月から2021年3月に優待を廃止した上場企業77社に対し、同じ東証33業種分類で規模と財務属性と株主構成が近い優待継続企業77社をマッチングし、差の差を取った。廃止前年から廃止翌年にかけて個人持株比率は継続企業対比で1.92ポイント低下し、5%水準で有意である。個人株主数は継続企業対比で5,899.75人減少し、1%水準で有意である<a class="tb-src" href="https://www.jsri.or.jp/publish/research/pdf/123/123_02.pdf" target="_blank" rel="noopener">出典</a>。</p>
 <p>内訳を分けると性質が見える。廃止企業の個人株主数は廃止前年の平均12,387人から廃止翌年の8,752人へ、2年間で29.3%減った。同期間に継続企業は10,992人から13,257人へ20.6%増えている。差の差の5,900人には両方が含まれる。個人持株比率では、廃止企業が48.15%から46.14%へ2.01ポイント低下し、継続企業は43.75%から43.66%へ0.09ポイント低下している。</p>
 <p>減少のタイミングは前倒しである。廃止企業の個人株主数は廃止前年から廃止当年に12,387人から9,678人へ2,700人減り、対前年比21.87%の減少で1%水準で有意である。廃止当年から翌年は930人の減少にとどまり、有意ではない。</p>
 <p>優待の中身も効いている。廃止企業77社を自社製品群28社と非自社製品群49社に分けると、廃止前年から当年の個人株主数の減少率は自社製品群が9.83%、非自社製品群が29.93%である。減少人数では約3倍の差がつく。廃止前年の時点で両群の個人持株比率に有意差はない。離脱率を決めているのは優待の内容である。</p>
-<p>設計の細分化についても実証がある。Gao and Noseは2010年4月から2021年3月に長期保有優待を追加導入した203社を傾向スコアマッチングで比較した。短期保有株主向けの水準を下げずに長期優遇を上乗せする変更128社では個人株主比率が対照企業対比で0.23ポイント上昇し1%水準で有意、短期分を削って長期に振り替える変更75社では0.17ポイント低下し10%水準で有意である<a href="https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0300284&amp;type=printable" target="_blank" rel="noopener">出典</a>。</p>
+<p>設計の細分化についても実証がある。Gao and Noseは2010年4月から2021年3月に長期保有優待を追加導入した203社を傾向スコアマッチングで比較した。短期保有株主向けの水準を下げずに長期優遇を上乗せする変更128社では個人株主比率が対照企業対比で0.23ポイント上昇し1%水準で有意、短期分を削って長期に振り替える変更75社では0.17ポイント低下し10%水準で有意である<a class="tb-src" href="https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0300284&amp;type=printable" target="_blank" rel="noopener">出典</a>。</p>
 <p>ここで数字の読み方に注意がいる。Gao and Noseの個人株主比率は個人株主数を総株主数で割った人数ベースであり、上場企業では96%前後に張り付く。松浦の個人持株比率は個人の所有株式数を発行済株式数で割ったもので、水準は44%から48%である。0.23ポイントと1.92ポイントは母数の異なる指標であって直接は比べられない。</p>
-<p>株価反応は非対称である。Karpoff, Schonlau, Suzukiは2001年から2011年に優待を廃止した81社について、公表日を挟む3日間の累積異常収益率が-5.89%で1%水準で有意な負であると報告している。同じ研究の導入公表時は+2.06%であり、廃止の負の反応は導入の正の反応の約2.9倍である<a href="https://corpgov.law.harvard.edu/2021/04/27/shareholder-perks-and-firm-value/" target="_blank" rel="noopener">出典</a>。論文はThe Review of Financial Studies第34巻第12号5676-5722ページに掲載されている<a href="https://academic.oup.com/rfs/article-abstract/34/12/5676/6054823" target="_blank" rel="noopener">出典</a>。別系統として瀬戸・森は廃止公表の翌日にリターンが約5%低下すると報告しており、水準はおおむね整合する<a href="https://www.ritsumei.ac.jp/file.jsp?id=645959" target="_blank" rel="noopener">出典</a>。</p>
+<p>株価反応は非対称である。Karpoff, Schonlau, Suzukiは2001年から2011年に優待を廃止した81社について、公表日を挟む3日間の累積異常収益率が-5.89%で1%水準で有意な負であると報告している。同じ研究の導入公表時は+2.06%であり、廃止の負の反応は導入の正の反応の約2.9倍である<a class="tb-src" href="https://corpgov.law.harvard.edu/2021/04/27/shareholder-perks-and-firm-value/" target="_blank" rel="noopener">出典</a>。論文はThe Review of Financial Studies第34巻第12号5676-5722ページに掲載されている<a class="tb-src" href="https://academic.oup.com/rfs/article-abstract/34/12/5676/6054823" target="_blank" rel="noopener">出典</a>。別系統として瀬戸・森は廃止公表の翌日にリターンが約5%低下すると報告しており、水準はおおむね整合する<a class="tb-src" href="https://www.ritsumei.ac.jp/file.jsp?id=645959" target="_blank" rel="noopener">出典</a>。</p>
 <p>この-5.89%を優待の金銭価値の消滅と読むのは誤りである。優待利回りは通常1%から数%であり、3日間で5.89%の下落はそれを超える。Karpoffらは、優待の導入が株式の非流動性を低下させ株主資本コストを下げること、廃止では逆方向に動くことを示している。株価反応は優待そのものの価値に、株主基盤の縮小と流動性悪化と資本コスト上昇の期待を加えた合計と読むべきである。ここで前節と話がつながる。株主構成は板の厚みを通じて資本コストに接続している。</p>
-<p>制度そのものは縮小していない。2025年の廃止は68社だが、うち38社は上場廃止に伴うものであり、上場を継続する企業に限れば導入175社に対し廃止30社である<a href="https://www.tsr-net.co.jp/data/detail/1202536_1527.html" target="_blank" rel="noopener">出典</a>。ただし動機は変質した。2022年4月の市場再編でプライム市場の株主数基準が2,200人以上から800人以上へ緩和され、株主数を確保するための優待という動機は弱まっている<a href="https://www.sc.mufg.jp/learn/article/2212025.html" target="_blank" rel="noopener">出典</a>。</p>
+<p>制度そのものは縮小していない。2025年の廃止は68社だが、うち38社は上場廃止に伴うものであり、上場を継続する企業に限れば導入175社に対し廃止30社である<a class="tb-src" href="https://www.tsr-net.co.jp/data/detail/1202536_1527.html" target="_blank" rel="noopener">出典</a>。ただし動機は変質した。2022年4月の市場再編でプライム市場の株主数基準が2,200人以上から800人以上へ緩和され、株主数を確保するための優待という動機は弱まっている<a class="tb-src" href="https://www.sc.mufg.jp/learn/article/2212025.html" target="_blank" rel="noopener">出典</a>。</p>
 <h2 id="s3">上場かM&amp;Aか：資金調達手段としての比較</h2>
 <p>前の2節は、上場した後に価格がどう作られるかの話である。ここからは、そもそも上場するかどうかの選択に移る。</p>
-<p>日本では、この分岐点が経営者の選好から制度の側へ移りつつある。東京証券取引所はグロース市場の上場維持基準を、上場10年経過後に時価総額40億円以上から、上場5年経過後に時価総額100億円以上へ改めた。適用は2030年3月1日以降に最初に到来する事業年度の末日からである。経過措置として、2030年時点で新基準への適合計画を投資家に開示すれば計画期間中は例外が認められるが、その場合も現行の10年40億円基準は満たし続ける必要がある<a href="https://money-bu-jpx.com/news/article064185/" target="_blank" rel="noopener">出典</a>。</p>
-<p>この基準が分岐点として機能する理由は、上場後に伸びない企業が実際に多いからである。経済産業省の資料によれば、グロース市場において新規上場時から時価総額が10倍以上に成長した会社は全体の5%にとどまる。市場規模でも、2026年5月13日時点の時価総額はプライム市場13,213,331億円、スタンダード市場342,155億円、グロース市場100,049億円で、グロース市場はプライム市場の約132分の1である<a href="https://www.cas.go.jp/jp/seisaku/nipponseichosenryaku/startup/dai4/shiryou2.pdf" target="_blank" rel="noopener">出典</a>。第1節で見た指数採用基準に照らせば、この規模の市場に滞留する銘柄の多くは機関投資家の投資対象に入らない。</p>
-<p>分岐の結果は社数に出ている。東証の一般市場のIPOは2026年上半期に17社で、2025年上半期の28社から11社減った。グロース市場に限ると2024年上半期34社、2025年上半期18社、2026年上半期11社である<a href="https://www.obc.co.jp/special/ipo/column/list/159" target="_blank" rel="noopener">出典</a>。ただし新基準はまだ発効していない。2026年時点の減少は基準の適用ではなく、主幹事証券会社と投資家による事前の織り込みによるものである。</p>
-<p>数と金額は逆方向に動いている。2025年のIPOは66社で前年の86社から20社減った一方、ディールサイズの合計は約1兆3,000億円と前年の9,736億円を上回り、7年ぶりに1兆円を超えた<a href="https://www.obc.co.jp/special/ipo/column/list/139" target="_blank" rel="noopener">出典</a>。2026年上半期は想定時価総額100億円未満の銘柄の比率が61%から54.5%へ下がった<a href="https://www.obc.co.jp/special/ipo/column/list/159" target="_blank" rel="noopener">出典</a>。小型案件が抜けて大型案件が残る形である。</p>
-<p>抜けた案件の行き先は2つある。ひとつはM&amp;Aである。ただしM&amp;AをIPOの次善策と捉えると分岐を読み違える。2010年以降にグロース市場ないしマザーズに上場し、時価総額が10倍以上かつ1,000億円以上に成長した9社のうち、7社が上場以降にM&amp;Aを実施している。最大はSHIFTで、上場時36億円から直近3,482億円へ97.2倍である<a href="https://www.cas.go.jp/jp/seisaku/nipponseichosenryaku/startup/dai4/shiryou2.pdf" target="_blank" rel="noopener">出典</a>。M&amp;Aは上場の代替であると同時に上場後の成長手段である。</p>
-<p>もうひとつはTOKYO PRO Marketである。2025年の新規上場は46社で、東証グロース市場の41社を上回った。2026年上半期も24社が新規上場し、総上場社数は183社に達した<a href="https://www.obc.co.jp/special/ipo/column/list/139" target="_blank" rel="noopener">出典</a> <a href="https://www.obc.co.jp/special/ipo/column/list/159" target="_blank" rel="noopener">出典</a>。一般市場の基準が上がった分、プロ向け市場が受け皿になっている。</p>
-<p>売り手側の分岐条件は資本構成とガバナンスである。経済産業省のスタートアップM&amp;Aガイダンスは、複数のステークホルダー間で利害が対立するとM&amp;Aの適時の実施が難しくなるとし、M&amp;Aも視野に入れる場合は単独の株主がM&amp;Aに関する拒否権を持たない状態にすることを挙げている<a href="https://www.cas.go.jp/jp/seisaku/nipponseichosenryaku/startup/dai4/shiryou2.pdf" target="_blank" rel="noopener">出典</a>。拒否権付き優先株を1社に渡した時点で、その企業の選択肢は事実上IPO側に寄る。分岐は上場直前ではなく資金調達契約の時点で発生している。</p>
+<p>日本では、この分岐点が経営者の選好から制度の側へ移りつつある。東京証券取引所はグロース市場の上場維持基準を、上場10年経過後に時価総額40億円以上から、上場5年経過後に時価総額100億円以上へ改めた。適用は2030年3月1日以降に最初に到来する事業年度の末日からである。経過措置として、2030年時点で新基準への適合計画を投資家に開示すれば計画期間中は例外が認められるが、その場合も現行の10年40億円基準は満たし続ける必要がある<a class="tb-src" href="https://money-bu-jpx.com/news/article064185/" target="_blank" rel="noopener">出典</a>。</p>
+<p>この基準が分岐点として機能する理由は、上場後に伸びない企業が実際に多いからである。経済産業省の資料によれば、グロース市場において新規上場時から時価総額が10倍以上に成長した会社は全体の5%にとどまる。市場規模でも、2026年5月13日時点の時価総額はプライム市場13,213,331億円、スタンダード市場342,155億円、グロース市場100,049億円で、グロース市場はプライム市場の約132分の1である<a class="tb-src" href="https://www.cas.go.jp/jp/seisaku/nipponseichosenryaku/startup/dai4/shiryou2.pdf" target="_blank" rel="noopener">出典</a>。第1節で見た指数採用基準に照らせば、この規模の市場に滞留する銘柄の多くは機関投資家の投資対象に入らない。</p>
+<p>分岐の結果は社数に出ている。東証の一般市場のIPOは2026年上半期に17社で、2025年上半期の28社から11社減った。グロース市場に限ると2024年上半期34社、2025年上半期18社、2026年上半期11社である<a class="tb-src" href="https://www.obc.co.jp/special/ipo/column/list/159" target="_blank" rel="noopener">出典</a>。ただし新基準はまだ発効していない。2026年時点の減少は基準の適用ではなく、主幹事証券会社と投資家による事前の織り込みによるものである。</p>
+<p>数と金額は逆方向に動いている。2025年のIPOは66社で前年の86社から20社減った一方、ディールサイズの合計は約1兆3,000億円と前年の9,736億円を上回り、7年ぶりに1兆円を超えた<a class="tb-src" href="https://www.obc.co.jp/special/ipo/column/list/139" target="_blank" rel="noopener">出典</a>。2026年上半期は想定時価総額100億円未満の銘柄の比率が61%から54.5%へ下がった<a class="tb-src" href="https://www.obc.co.jp/special/ipo/column/list/159" target="_blank" rel="noopener">出典</a>。小型案件が抜けて大型案件が残る形である。</p>
+<p>抜けた案件の行き先は2つある。ひとつはM&amp;Aである。ただしM&amp;AをIPOの次善策と捉えると分岐を読み違える。2010年以降にグロース市場ないしマザーズに上場し、時価総額が10倍以上かつ1,000億円以上に成長した9社のうち、7社が上場以降にM&amp;Aを実施している。最大はSHIFTで、上場時36億円から直近3,482億円へ97.2倍である<a class="tb-src" href="https://www.cas.go.jp/jp/seisaku/nipponseichosenryaku/startup/dai4/shiryou2.pdf" target="_blank" rel="noopener">出典</a>。M&amp;Aは上場の代替であると同時に上場後の成長手段である。</p>
+<p>もうひとつはTOKYO PRO Marketである。2025年の新規上場は46社で、東証グロース市場の41社を上回った。2026年上半期も24社が新規上場し、総上場社数は183社に達した<a class="tb-src" href="https://www.obc.co.jp/special/ipo/column/list/139" target="_blank" rel="noopener">出典</a> <a class="tb-src" href="https://www.obc.co.jp/special/ipo/column/list/159" target="_blank" rel="noopener">出典</a>。一般市場の基準が上がった分、プロ向け市場が受け皿になっている。</p>
+<p>売り手側の分岐条件は資本構成とガバナンスである。経済産業省のスタートアップM&amp;Aガイダンスは、複数のステークホルダー間で利害が対立するとM&amp;Aの適時の実施が難しくなるとし、M&amp;Aも視野に入れる場合は単独の株主がM&amp;Aに関する拒否権を持たない状態にすることを挙げている<a class="tb-src" href="https://www.cas.go.jp/jp/seisaku/nipponseichosenryaku/startup/dai4/shiryou2.pdf" target="_blank" rel="noopener">出典</a>。拒否権付き優先株を1社に渡した時点で、その企業の選択肢は事実上IPO側に寄る。分岐は上場直前ではなく資金調達契約の時点で発生している。</p>
 <h2 id="s4">IPOとSPAC：発行体が負うコストと制度の修正</h2>
 <p>上場すると決めた後にも、器の選択が残る。器が違えば発行体に届く現金が違う。</p>
 <p>通常IPOの日本市場では、初値がどう決まるかが論点になっている。2026年に上場した銘柄を吸収金額の順に並べると、初値騰落率は次のように分布する。</p>
 <div class="tb-tw"><table><thead><tr><th>銘柄</th><th>吸収金額</th><th>公開価格</th><th>初値</th><th>初値騰落率</th><th>出典</th></tr></thead><tbody><tr><td>バトンズ</td><td>5.0億円</td><td>660円</td><td>1,674円</td><td>+153.6%</td><td><a href="https://ipoget.com/ipo2026kamiki/" target="_blank" rel="noopener">ipoget</a></td></tr><tr><td>チャットプラス</td><td>13.9億円</td><td>1,080円</td><td>2,284円</td><td>+111.5%</td><td><a href="https://kabu.bridge-salon.jp/ipo-202607-598a/" target="_blank" rel="noopener">かぶリッジ</a></td></tr><tr><td>ティアフォー</td><td>250.0億円</td><td>1,085円</td><td>1,009円</td><td>-7.0%</td><td><a href="https://www.nikkei.com/article/DGXZQOUC041LF0U6A700C2000000/" target="_blank" rel="noopener">日本経済新聞</a></td></tr><tr><td>GO</td><td>951.3億円</td><td>2,400円</td><td>2,910円</td><td>+21.3%</td><td><a href="https://ipoget.com/ipo2026kamiki/" target="_blank" rel="noopener">ipoget</a></td></tr></tbody></table></div>
-<p>バトンズの吸収金額はGOの約190分の1で、初値騰落率は約7.2倍である。上場初日に市場へ出る株数が少ないほど、同じ買い需要が価格を大きく押し上げる。第1節で見た板の厚みの議論が、上場初日という最も板が薄い局面に現れた形である。日本証券業協会のワーキング・グループも、オファリングサイズが小さい銘柄では成行注文により需給がタイト化し初値が高騰しやすいという整理を置いている<a href="https://www.jsda.or.jp/shiryoshitsu/houkokusyo/files/koukaikakaku_houkokusho.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>バトンズの吸収金額はGOの約190分の1で、初値騰落率は約7.2倍である。上場初日に市場へ出る株数が少ないほど、同じ買い需要が価格を大きく押し上げる。第1節で見た板の厚みの議論が、上場初日という最も板が薄い局面に現れた形である。日本証券業協会のワーキング・グループも、オファリングサイズが小さい銘柄では成行注文により需給がタイト化し初値が高騰しやすいという整理を置いている<a class="tb-src" href="https://www.jsda.or.jp/shiryoshitsu/houkokusyo/files/koukaikakaku_houkokusho.pdf" target="_blank" rel="noopener">出典</a>。</p>
 <p>買い手の構成も違う。同ワーキング・グループは、日本の小型IPOについて業績が不透明な企業が多いこと、個人投資家の割合が多いことを挙げている。機関投資家が主体の大型案件では公開価格そのものが機関投資家の需要表明を通じて決まる。小型案件では、公開価格の決定に関与しない個人の初日の注文が初値を作る。同じ初値という言葉でも、価格を作っている主体が違う。</p>
-<p>制度も動いた。東京証券取引所は2023年6月26日から、新規上場銘柄の新規上場日の売買における成行の売呼値と買呼値を禁止した<a href="https://www.jpx.co.jp/news/1030/20230316-02.html" target="_blank" rel="noopener">出典</a>。ただし2026年のバトンズが+153.6%、チャットプラスが+111.5%を付けている以上、小型案件の上振れそのものは消えていない。</p>
-<p>地合いも効く。2026年は年初から公開価格割れが続き、初値が公開価格を上回った最初の案件は4月6日上場のシステムエグゼで、初値1,061円は公開価格950円を12%上回った。それ以前は7連敗である<a href="https://www.nikkei.com/article/DGXZQOUB064MT0W6A400C2000000/" target="_blank" rel="noopener">出典</a>。1月から3月は下振れ、4月以降は上振れが混在している。規模は必要条件であっても十分条件ではない。</p>
-<p>公開価格の水準が適正かどうかは決着していない。政府の成長戦略実行計画には日本の初期収益率が48.8%、米国が17.2%、英国が15.8%という比較が載っており、これがワーキング・グループ設置の契機になった。同報告書では、市場の状況とリスクプレミアムを調整した分析で公開価格が過小に値付けされていたという意見が示された一方、オファリングサイズで加重した平均値や中央値では米国と同水準であり異常ではないという意見も示された。報告書は乖離の本質的な原因について見解の一致には至らなかったと明記している<a href="https://www.jsda.or.jp/shiryoshitsu/houkokusyo/files/koukaikakaku_houkokusho.pdf" target="_blank" rel="noopener">出典</a>。初値が公開価格を上回れば値付けが失敗だった、という単純な読みはできない。</p>
-<p>米国では別の器が問題になった。SPACは、資産を持たない空箱を先に上場させ、信託に資金を置いたまま買収先を探す仕組みである。2021年に613社が1,625億ドルを調達し、それ以前の全年合計を上回った。2022年のSPAC IPOは86件、同年の清算は141件である<a href="https://site.warrington.ufl.edu/ritter/files/SPACs.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>制度も動いた。東京証券取引所は2023年6月26日から、新規上場銘柄の新規上場日の売買における成行の売呼値と買呼値を禁止した<a class="tb-src" href="https://www.jpx.co.jp/news/1030/20230316-02.html" target="_blank" rel="noopener">出典</a>。ただし2026年のバトンズが+153.6%、チャットプラスが+111.5%を付けている以上、小型案件の上振れそのものは消えていない。</p>
+<p>地合いも効く。2026年は年初から公開価格割れが続き、初値が公開価格を上回った最初の案件は4月6日上場のシステムエグゼで、初値1,061円は公開価格950円を12%上回った。それ以前は7連敗である<a class="tb-src" href="https://www.nikkei.com/article/DGXZQOUB064MT0W6A400C2000000/" target="_blank" rel="noopener">出典</a>。1月から3月は下振れ、4月以降は上振れが混在している。規模は必要条件であっても十分条件ではない。</p>
+<p>公開価格の水準が適正かどうかは決着していない。政府の成長戦略実行計画には日本の初期収益率が48.8%、米国が17.2%、英国が15.8%という比較が載っており、これがワーキング・グループ設置の契機になった。同報告書では、市場の状況とリスクプレミアムを調整した分析で公開価格が過小に値付けされていたという意見が示された一方、オファリングサイズで加重した平均値や中央値では米国と同水準であり異常ではないという意見も示された。報告書は乖離の本質的な原因について見解の一致には至らなかったと明記している<a class="tb-src" href="https://www.jsda.or.jp/shiryoshitsu/houkokusyo/files/koukaikakaku_houkokusho.pdf" target="_blank" rel="noopener">出典</a>。初値が公開価格を上回れば値付けが失敗だった、という単純な読みはできない。</p>
+<p>米国では別の器が問題になった。SPACは、資産を持たない空箱を先に上場させ、信託に資金を置いたまま買収先を探す仕組みである。2021年に613社が1,625億ドルを調達し、それ以前の全年合計を上回った。2022年のSPAC IPOは86件、同年の清算は141件である<a class="tb-src" href="https://site.warrington.ufl.edu/ritter/files/SPACs.pdf" target="_blank" rel="noopener">出典</a>。</p>
 <p>発行体が負うコストの差は大きい。分母を上場後時価総額に揃えた比較で、2015年1月から2021年3月に上場した企業の中央値は、SPAC合併が15.1%、通常IPOが3.2%である。SPACが4.7倍にあたる。</p>
 <p>内訳は3つである。第一に引受手数料で、SPAC IPO時に調達額の5.5%を支払う。うち2%はIPO時、3.5%は合併完了時の繰延である。第二にスポンサーのプロモートで、スポンサーはIPO後発行済株式の20%にあたるクラスB株を総額25,000ドルで取得する。1株あたり約0.5セントであり、既存株主と新規株主の持分を直接薄める。第三に償還で、SPAC株主は合併時に信託の按分額で株式を償還できる。2015年以降にIPOし2021年3月までに合併を完了した153件の平均償還率は37%、2021年4月から2022年12月に完了した277件では63%である。</p>
 <p>この3つの結果、1株10ドルで集めた資金のうち発行体に届いた現金は平均7.46ドル、中央値8.13ドルである。償還がゼロでプロモートが20%の場合でも、信託利息と繰延引受手数料を考慮する前で8.00ドルにしかならない。引受手数料5.5%がSPACのコストだという理解は、内訳を見れば成り立たない。上場コストを15.1%まで押し上げているのはプロモートと償還である。</p>
 <p>比較には非対称もある。スポンサーはプロモート株の平均17%を放棄しており、償還率が中央値を超える案件では25%を放棄している。引受人も繰延分の一部を放棄する。一方でPIPE投資家は合併時株価に対して平均20.1%の割引で買っており、この割引も発行体側から見れば実質コストである。</p>
-<p>2021年の反省は制度に落ちた。SECの最終規則は2024年2月26日公布、89 FR 14158、施行は2024年7月1日である<a href="https://www.federalregister.gov/documents/2024/02/26/2024-01853/special-purpose-acquisition-companies-shell-companies-and-projections" target="_blank" rel="noopener">出典</a>。採用された主な内容は5つある。Regulation S-KへのSubpart 1600新設によりスポンサーの報酬と利益相反、希薄化、予測の前提と手法の開示が義務化された。Securities Act Rule 405のblank check companyの定義拡張によりSPACはPSLRAのセーフハーバーを使えなくなった。Rule 145aにより、報告義務のあるシェル会社が関与する企業結合はシェル会社株主への証券の売付けとみなされる。登録型de-SPACではターゲット企業が共同登録者となり、証券法11条の責任を負う。Regulation S-XにArticle 15が新設され、財務諸表要件が通常IPOに寄せられた。</p>
+<p>2021年の反省は制度に落ちた。SECの最終規則は2024年2月26日公布、89 FR 14158、施行は2024年7月1日である<a class="tb-src" href="https://www.federalregister.gov/documents/2024/02/26/2024-01853/special-purpose-acquisition-companies-shell-companies-and-projections" target="_blank" rel="noopener">出典</a>。採用された主な内容は5つある。Regulation S-KへのSubpart 1600新設によりスポンサーの報酬と利益相反、希薄化、予測の前提と手法の開示が義務化された。Securities Act Rule 405のblank check companyの定義拡張によりSPACはPSLRAのセーフハーバーを使えなくなった。Rule 145aにより、報告義務のあるシェル会社が関与する企業結合はシェル会社株主への証券の売付けとみなされる。登録型de-SPACではターゲット企業が共同登録者となり、証券法11条の責任を負う。Regulation S-XにArticle 15が新設され、財務諸表要件が通常IPOに寄せられた。</p>
 <p>一方で採用されなかったものが2つある。de-SPACに関与する者を引受人とみなすRule 140aと、投資会社法上のセーフハーバーであるRule 3a-10は、いずれも最終規則には入らずガイダンスにとどまった。実務家が最も警戒していた提案が落ちたことが、器が制度的に維持された理由である。将来予測の開示も禁止されていない。禁止ではなくセーフハーバーの剥奪であり、予測を出す自由は残り、外した場合の代償が上がった。</p>
-<p>取引所も両方向に動いている。Nasdaqは2026年4月15日提出の規則変更を同年5月15日から運用し、Global MarketのAcquisition CompanyのMarket Value of Listed Securitiesを7,500万ドルから1億ドルへ引き上げ、Capital Marketに新基準を設けた。新基準はMVLS 7,500万ドル、非制限公開株式の時価2,000万ドル、登録マーケットメイカー4社、公開株主400名で、公開株主は従来の300名から増えている<a href="https://www.federalregister.gov/documents/2026/04/27/2026-08112/self-regulatory-organizations-the-nasdaq-stock-market-llc-notice-of-filing-and-immediate" target="_blank" rel="noopener">出典</a>。逆方向として、2025年12月8日に承認された規則変更は、過去に取引所上場していたSPACについてReverse Merger Ruleの1年シーズニング要件と1日平均2,000株の出来高要件を免除した<a href="https://www.federalregister.gov/documents/2025/12/11/2025-22469/self-regulatory-organizations-the-nasdaq-stock-market-llc-notice-of-filing-of-amendment-no-1-and" target="_blank" rel="noopener">出典</a>。</p>
-<p>件数についてはデータの質を明示しておく必要がある。米国IPO一覧の社名文字列から機械的にSPAC型を判定した概算では、2024年通年が225件中78件、2025年通年が346件中202件、2026年は8月7日時点で222件中137件である<a href="https://stockanalysis.com/ipos/2024/" target="_blank" rel="noopener">出典</a> <a href="https://stockanalysis.com/ipos/2025/" target="_blank" rel="noopener">出典</a> <a href="https://stockanalysis.com/ipos/2026/" target="_blank" rel="noopener">出典</a>。ただし2026年分は同一ページに対する2回の抽出で110件台と137件に振れた。名称ベースの概算であり公式集計ではないため、件数の水準は根拠にできない。2024年から2025年にかけて増加したという方向のみが読み取れる。それでも、規則が2024年7月に施行された後に増えている以上、件数の増減を規則で説明することはできない。</p>
+<p>取引所も両方向に動いている。Nasdaqは2026年4月15日提出の規則変更を同年5月15日から運用し、Global MarketのAcquisition CompanyのMarket Value of Listed Securitiesを7,500万ドルから1億ドルへ引き上げ、Capital Marketに新基準を設けた。新基準はMVLS 7,500万ドル、非制限公開株式の時価2,000万ドル、登録マーケットメイカー4社、公開株主400名で、公開株主は従来の300名から増えている<a class="tb-src" href="https://www.federalregister.gov/documents/2026/04/27/2026-08112/self-regulatory-organizations-the-nasdaq-stock-market-llc-notice-of-filing-and-immediate" target="_blank" rel="noopener">出典</a>。逆方向として、2025年12月8日に承認された規則変更は、過去に取引所上場していたSPACについてReverse Merger Ruleの1年シーズニング要件と1日平均2,000株の出来高要件を免除した<a class="tb-src" href="https://www.federalregister.gov/documents/2025/12/11/2025-22469/self-regulatory-organizations-the-nasdaq-stock-market-llc-notice-of-filing-of-amendment-no-1-and" target="_blank" rel="noopener">出典</a>。</p>
+<p>件数についてはデータの質を明示しておく必要がある。米国IPO一覧の社名文字列から機械的にSPAC型を判定した概算では、2024年通年が225件中78件、2025年通年が346件中202件、2026年は8月7日時点で222件中137件である<a class="tb-src" href="https://stockanalysis.com/ipos/2024/" target="_blank" rel="noopener">出典</a> <a class="tb-src" href="https://stockanalysis.com/ipos/2025/" target="_blank" rel="noopener">出典</a> <a class="tb-src" href="https://stockanalysis.com/ipos/2026/" target="_blank" rel="noopener">出典</a>。ただし2026年分は同一ページに対する2回の抽出で110件台と137件に振れた。名称ベースの概算であり公式集計ではないため、件数の水準は根拠にできない。2024年から2025年にかけて増加したという方向のみが読み取れる。それでも、規則が2024年7月に施行された後に増えている以上、件数の増減を規則で説明することはできない。</p>
 <p>制度としての結論はこうなる。開示義務と法的責任は2021年より重くなった。しかし発行体が引き受けるコストの構造、すなわちプロモートと償還と繰延手数料には規制が入っていない。SPACが使われるかどうかは制度側ではなく需要側で決まる。市場が高い価格差を飲むだけの成長ストーリーを求めているかどうかである。</p>
 <h2 id="s5">設備投資が先行し収益が遅れる局面で市場は何を織り込むか</h2>
 <p>最後の節は、成長ストーリーへの需要そのものを扱う。ここまでの各節が示したのは、価格は誰が買えるかで変わるということだった。同じ論理を市場全体に当てはめると、いま誰がAI投資のリスクを取っているかという問いになる。</p>
 <p>比較対象は1990年代後半である。よく持ち出される類似点は、設備投資が先行して収益が遅行するという時間差だが、本質はそこではない。投資規模が営業キャッシュフローの上限を超えた瞬間に、資金調達が外部化するという構造にある。</p>
-<p>まず規模を確認する。米国のIT関連投資は2025年半ば時点でGDPの5%に達し、2000年のドットコム期のピークを上回った。データセンターとIT製造施設だけでGDPの1%に相当する。ただしAI関連投資そのものの対GDP比の増加幅は、1990年代のIT投資ブームの半分にとどまる。1980年代の日本の商業用不動産投資と2010年代の豪州の鉱業投資は、対GDP比の増加幅で今回の5倍を超えた<a href="https://www.bis.org/publ/bisbull120.pdf" target="_blank" rel="noopener">出典</a>。水準は史上最高だが増分は前例の範囲内である、というのが正確な読みである。</p>
+<p>まず規模を確認する。米国のIT関連投資は2025年半ば時点でGDPの5%に達し、2000年のドットコム期のピークを上回った。データセンターとIT製造施設だけでGDPの1%に相当する。ただしAI関連投資そのものの対GDP比の増加幅は、1990年代のIT投資ブームの半分にとどまる。1980年代の日本の商業用不動産投資と2010年代の豪州の鉱業投資は、対GDP比の増加幅で今回の5倍を超えた<a class="tb-src" href="https://www.bis.org/publ/bisbull120.pdf" target="_blank" rel="noopener">出典</a>。水準は史上最高だが増分は前例の範囲内である、というのが正確な読みである。</p>
 <p>資金調達方法は3点で当時と異なる。</p>
-<p>第一に、当時は起点から債務だった。1996年の米国電気通信法の後の5年間で、通信機器および通信事業者は光ファイバー敷設に5,000億ドル超を投じ、その大半は債務で賄われた。この数値の出典は三次資料であり、一次資料での確認は取れていない<a href="https://en.wikipedia.org/wiki/Dot-com_bubble" target="_blank" rel="noopener">出典</a>。敷設主体は営業キャッシュフローをほとんど持たない新興通信事業者が中心だった。今回は起点が自己資金である。AIハイパースケーラー5社は歴史的に他社より低い負債比率で運営され、投資を営業キャッシュフローで賄ってきた<a href="https://www.bis.org/publ/bisbull120.pdf" target="_blank" rel="noopener">出典</a>。Microsoftは2026年6月期に有形固定資産の取得へ1,159.48億ドルを投じたが、同期の営業キャッシュフローは1,829.35億ドルであり、設備投資は営業キャッシュフローの範囲内に収まっている<a href="https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast" target="_blank" rel="noopener">出典</a>。</p>
-<p>第二に、現在は移行の途中にある。ハイパースケーラー5社のフリーキャッシュフローは直近で設備投資額を下回った。差分は債務で埋められている。社債のグロス発行額は2025年に1,000億ドルを超え、大半が残存5年超の長期債である<a href="https://www.bis.org/publ/qtrpdf/r_qt2603.pdf" target="_blank" rel="noopener">出典</a>。2026年第1四半期にはクラウド関連の投資適格大手による社債発行が1,000億ドル近くに達した<a href="https://www.federalreserve.gov/publications/files/financial-stability-report-20260508.pdf" target="_blank" rel="noopener">出典</a>。Metaの長期債務は2026年6月30日時点で836.64億ドルであり、同時点の現金および市場性有価証券902.6億ドルとほぼ同規模になった<a href="https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Second-Quarter-2026-Results/default.aspx" target="_blank" rel="noopener">出典</a>。</p>
-<p>第三に、当時になかった経路が2つ増えた。ひとつはオフバランス化である。合弁会社または特別目的事業体がデータセンター資産を保有し、ハイパースケーラーは少数持分にとどめて長期のリースまたは容量引取契約を結ぶ。この構造は前払いの設備投資を複数年の営業費用に置き換え、債務の大部分を貸借対照表の外に置く。BISはこれをシャドー・ボローイングと呼んでいる<a href="https://www.bis.org/publ/qtrpdf/r_qt2603.pdf" target="_blank" rel="noopener">出典</a>。もうひとつはプライベートクレジットである。AI関連企業向けのダイレクトレンディング残高はゼロ近傍から2,000億ドル超へ増加し、ダイレクトレンディング残高全体に占める比率は1%未満から約8%へ上昇した<a href="https://www.bis.org/publ/bisbull120.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>投資主体そのものも入れ替わっている。ドットコム期の投資はITを使う側の企業が主導し、今回はITを生産する側の企業が主導している<a href="https://www.bis.org/publ/bisbull120.pdf" target="_blank" rel="noopener">出典</a>。前者は投資が失敗すれば購入者の損失で終わる。後者は投資が失敗すれば生産者の売上そのものが消える。損失の伝播経路が違う。</p>
+<p>第一に、当時は起点から債務だった。1996年の米国電気通信法の後の5年間で、通信機器および通信事業者は光ファイバー敷設に5,000億ドル超を投じ、その大半は債務で賄われた。この数値の出典は三次資料であり、一次資料での確認は取れていない<a class="tb-src" href="https://en.wikipedia.org/wiki/Dot-com_bubble" target="_blank" rel="noopener">出典</a>。敷設主体は営業キャッシュフローをほとんど持たない新興通信事業者が中心だった。今回は起点が自己資金である。AIハイパースケーラー5社は歴史的に他社より低い負債比率で運営され、投資を営業キャッシュフローで賄ってきた<a class="tb-src" href="https://www.bis.org/publ/bisbull120.pdf" target="_blank" rel="noopener">出典</a>。Microsoftは2026年6月期に有形固定資産の取得へ1,159.48億ドルを投じたが、同期の営業キャッシュフローは1,829.35億ドルであり、設備投資は営業キャッシュフローの範囲内に収まっている<a class="tb-src" href="https://www.microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast" target="_blank" rel="noopener">出典</a>。</p>
+<p>第二に、現在は移行の途中にある。ハイパースケーラー5社のフリーキャッシュフローは直近で設備投資額を下回った。差分は債務で埋められている。社債のグロス発行額は2025年に1,000億ドルを超え、大半が残存5年超の長期債である<a class="tb-src" href="https://www.bis.org/publ/qtrpdf/r_qt2603.pdf" target="_blank" rel="noopener">出典</a>。2026年第1四半期にはクラウド関連の投資適格大手による社債発行が1,000億ドル近くに達した<a class="tb-src" href="https://www.federalreserve.gov/publications/files/financial-stability-report-20260508.pdf" target="_blank" rel="noopener">出典</a>。Metaの長期債務は2026年6月30日時点で836.64億ドルであり、同時点の現金および市場性有価証券902.6億ドルとほぼ同規模になった<a class="tb-src" href="https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Second-Quarter-2026-Results/default.aspx" target="_blank" rel="noopener">出典</a>。</p>
+<p>第三に、当時になかった経路が2つ増えた。ひとつはオフバランス化である。合弁会社または特別目的事業体がデータセンター資産を保有し、ハイパースケーラーは少数持分にとどめて長期のリースまたは容量引取契約を結ぶ。この構造は前払いの設備投資を複数年の営業費用に置き換え、債務の大部分を貸借対照表の外に置く。BISはこれをシャドー・ボローイングと呼んでいる<a class="tb-src" href="https://www.bis.org/publ/qtrpdf/r_qt2603.pdf" target="_blank" rel="noopener">出典</a>。もうひとつはプライベートクレジットである。AI関連企業向けのダイレクトレンディング残高はゼロ近傍から2,000億ドル超へ増加し、ダイレクトレンディング残高全体に占める比率は1%未満から約8%へ上昇した<a class="tb-src" href="https://www.bis.org/publ/bisbull120.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>投資主体そのものも入れ替わっている。ドットコム期の投資はITを使う側の企業が主導し、今回はITを生産する側の企業が主導している<a class="tb-src" href="https://www.bis.org/publ/bisbull120.pdf" target="_blank" rel="noopener">出典</a>。前者は投資が失敗すれば購入者の損失で終わる。後者は投資が失敗すれば生産者の売上そのものが消える。損失の伝播経路が違う。</p>
 <p>では、崩れたときに何が残るか。前提として、ドットコム期の企業生存率を定量的に扱った学術研究の一次資料には到達できていない。以下は個別事例からの構造的推論であり、生存率の統計ではない。</p>
-<p>観察できる事実として、Nasdaq総合指数は2000年3月10日に5,048.62で頂点をつけ、2002年10月9日に1,114まで下落した。下落率は78%である。消滅した代表例はPets.com、Webvan、Boo.com、WorldCom、NorthPoint Communications、Global Crossingであり、市場シェアを伸ばして生き残った代表例はAmazon、eBay、Cisco Systems、Nvidiaである。出典は三次資料である<a href="https://en.wikipedia.org/wiki/Dot-com_bubble" target="_blank" rel="noopener">出典</a>。</p>
+<p>観察できる事実として、Nasdaq総合指数は2000年3月10日に5,048.62で頂点をつけ、2002年10月9日に1,114まで下落した。下落率は78%である。消滅した代表例はPets.com、Webvan、Boo.com、WorldCom、NorthPoint Communications、Global Crossingであり、市場シェアを伸ばして生き残った代表例はAmazon、eBay、Cisco Systems、Nvidiaである。出典は三次資料である<a class="tb-src" href="https://en.wikipedia.org/wiki/Dot-com_bubble" target="_blank" rel="noopener">出典</a>。</p>
 <p>この対比から読み取れる点は3つある。第一に、負債で資産を買った主体が消え、資産は残った。消滅した側の中核はWorldComとGlobal Crossingという通信インフラ保有者であり、債務主導投資の担い手だった。敷設された光ファイバーは物理的に残り、後年に別の主体へ承継された。生死を分けたのは技術の正誤ではなく資産と負債の組み合わせである。第二に、株価下落そのものは倒産要因ではない。Ciscoは株価が80%下落しながら事業として存続した。倒産要因は債務の返済期限であり、株価は返済期限を持たない。第三に、生き残った側には、容量ではなく顧客との関係を供給していた企業が含まれる。AmazonとeBayは自ら通信インフラを保有せず、他者が過剰に敷設した容量を安価に消費する側に立った。</p>
-<p>この3点をAIに写像すると、脆弱性が集中するのはリースまたは容量引取契約を負債として抱えたまま需要が遅行した場合の中間層、すなわちデータセンター保有体とネオクラウド事業者である。オフバランス車両の債務はリース料キャッシュフローで返済される設計であり、引取契約が履行されるかどうかに生死が直結する<a href="https://www.bis.org/publ/qtrpdf/r_qt2603.pdf" target="_blank" rel="noopener">出典</a>。これは推論であり、実証ではない。</p>
+<p>この3点をAIに写像すると、脆弱性が集中するのはリースまたは容量引取契約を負債として抱えたまま需要が遅行した場合の中間層、すなわちデータセンター保有体とネオクラウド事業者である。オフバランス車両の債務はリース料キャッシュフローで返済される設計であり、引取契約が履行されるかどうかに生死が直結する<a class="tb-src" href="https://www.bis.org/publ/qtrpdf/r_qt2603.pdf" target="_blank" rel="noopener">出典</a>。これは推論であり、実証ではない。</p>
 <p>最後に、いま誰がリスクを取っているかを株式側と負債側に分けて見る。</p>
-<p>株式側では、Magnificent 7がS&amp;P 500指数に占める比率が2026年3月時点で約35%に達した<a href="https://www.bis.org/publ/qtrpdf/r_qt2603.pdf" target="_blank" rel="noopener">出典</a>。この水準になると、特定の投資家層が能動的にAI株を買っているというより、米国株指数を保有するすべての主体が自動的にAIエクスポージャーを持つ。個別株を選好する層の判断とは独立に需要が発生する構造である。第1節で見たとおり、指数採用は誰が買えるかを決める制度であり、その帰結がここに現れている。価格形成の状態としては、S&amp;P 500の予想PERが1990年以降の中央値16.00を上回り、株式リスクプレミアムの推計値は20年ぶりの低水準近辺にある。いずれも2026年4月時点である<a href="https://www.federalreserve.gov/publications/files/financial-stability-report-20260508.pdf" target="_blank" rel="noopener">出典</a>。ただし過熱は特定銘柄より指数全体に分布している。市場全体のPERがドットコム期の水準に接近する一方で、大手テック企業自身のPERは市場全体より低い<a href="https://www.bis.org/publ/qtrpdf/r_qt2603.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>負債側の担い手は個人である。プライベートクレジットの運用資産は世界で2.2兆ドルを超え、2010年の約1,000億ドルから増加した。運用資産に占める個人投資家の比率はほぼゼロから13%、金額で2,800億ドルへ上昇した<a href="https://www.bis.org/publ/bisbull106.pdf" target="_blank" rel="noopener">出典</a>。米国では、四半期ごとの償還に応じるパーペチュアルBDCと期間限定型ファンドを合わせたセミリキッド車両が純資産2,410億ドルを持ち、プライベートクレジット車両の純運用資産の約20%を占める<a href="https://www.federalreserve.gov/publications/files/financial-stability-report-20260508.pdf" target="_blank" rel="noopener">出典</a>。ここにAI関連向け貸出が約8%含まれる。</p>
-<p>株式と負債で織り込まれている内容は一致していない。AI関連企業向けプライベートクレジットのスプレッドは6.2パーセントポイント、その他業種向けは6.1パーセントポイントである。貸し手はAI向け貸出を平均的な借り手と同程度のリスクとしか見ていない。これは巨額の将来収益を織り込んだ株式評価と整合しない。BISは、貸し手がリスクを過小評価しているか、株式市場が将来キャッシュフローを過大評価しているかのどちらかだと指摘している<a href="https://www.bis.org/publ/bisbull120.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>株式側では、Magnificent 7がS&amp;P 500指数に占める比率が2026年3月時点で約35%に達した<a class="tb-src" href="https://www.bis.org/publ/qtrpdf/r_qt2603.pdf" target="_blank" rel="noopener">出典</a>。この水準になると、特定の投資家層が能動的にAI株を買っているというより、米国株指数を保有するすべての主体が自動的にAIエクスポージャーを持つ。個別株を選好する層の判断とは独立に需要が発生する構造である。第1節で見たとおり、指数採用は誰が買えるかを決める制度であり、その帰結がここに現れている。価格形成の状態としては、S&amp;P 500の予想PERが1990年以降の中央値16.00を上回り、株式リスクプレミアムの推計値は20年ぶりの低水準近辺にある。いずれも2026年4月時点である<a class="tb-src" href="https://www.federalreserve.gov/publications/files/financial-stability-report-20260508.pdf" target="_blank" rel="noopener">出典</a>。ただし過熱は特定銘柄より指数全体に分布している。市場全体のPERがドットコム期の水準に接近する一方で、大手テック企業自身のPERは市場全体より低い<a class="tb-src" href="https://www.bis.org/publ/qtrpdf/r_qt2603.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>負債側の担い手は個人である。プライベートクレジットの運用資産は世界で2.2兆ドルを超え、2010年の約1,000億ドルから増加した。運用資産に占める個人投資家の比率はほぼゼロから13%、金額で2,800億ドルへ上昇した<a class="tb-src" href="https://www.bis.org/publ/bisbull106.pdf" target="_blank" rel="noopener">出典</a>。米国では、四半期ごとの償還に応じるパーペチュアルBDCと期間限定型ファンドを合わせたセミリキッド車両が純資産2,410億ドルを持ち、プライベートクレジット車両の純運用資産の約20%を占める<a class="tb-src" href="https://www.federalreserve.gov/publications/files/financial-stability-report-20260508.pdf" target="_blank" rel="noopener">出典</a>。ここにAI関連向け貸出が約8%含まれる。</p>
+<p>株式と負債で織り込まれている内容は一致していない。AI関連企業向けプライベートクレジットのスプレッドは6.2パーセントポイント、その他業種向けは6.1パーセントポイントである。貸し手はAI向け貸出を平均的な借り手と同程度のリスクとしか見ていない。これは巨額の将来収益を織り込んだ株式評価と整合しない。BISは、貸し手がリスクを過小評価しているか、株式市場が将来キャッシュフローを過大評価しているかのどちらかだと指摘している<a class="tb-src" href="https://www.bis.org/publ/bisbull120.pdf" target="_blank" rel="noopener">出典</a>。</p>
 <p>ドットコム期は個人が株式で直接リスクを取った。今回は個人が株式と負債の両方でリスクを取っており、しかも負債側は日次の価格が付かない。誰が買えるかという構造が価格を作るという本章の主張は、個別銘柄の板だけでなく、資産クラス全体の水準にも同じ形で当てはまる。</p>
 <h2 id="s6">この章の要点</h2>
 <ul>
@@ -305,5 +412,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
   <div class="tb-nav"><a class="tb-nav-a" href="03_rates-and-macro-prices.html">← 割引率はどこから来るか：政策金利・国債・実物資産</a><a class="tb-nav-a" href="05_leverage-and-new-finance.html">レバレッジと新しい器：リスクは誰のバランスシートに乗るか →</a></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

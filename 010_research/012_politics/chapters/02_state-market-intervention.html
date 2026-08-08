@@ -8,6 +8,7 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -15,56 +16,162 @@
     line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
 
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:28px;margin:4px 0 10px;letter-spacing:-.015em;line-height:1.4}
-  .tb-thesis{font-size:14.5px;color:var(--sub);border-left:3px solid var(--accent);
-    padding:6px 0 6px 14px;margin:0 0 22px}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px 20px;margin:0 0 34px}
+    padding:18px 20px 14px;margin:0 0 34px}
   .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--muted);margin-bottom:8px}
-  .tb-toc ol{margin:0;padding-left:20px;font-size:13.5px}
-  .tb-toc li{margin:3px 0}
-  .tb-toc a{color:var(--ink);text-decoration:none}
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
   .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
 
-  h2{font-size:20px;margin:44px 0 10px;padding-top:16px;border-top:1px solid var(--line);
-    letter-spacing:-.01em;scroll-margin-top:70px}
-  h3{font-size:16px;margin:28px 0 6px}
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
   h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
-  p{margin:12px 0}
+  p{margin:13px 0}
   a{color:var(--accent)}
   strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
   code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
   hr{border:none;border-top:1px solid var(--line);margin:30px 0}
   blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
     color:var(--sub)}
-  ul,ol{margin:12px 0;padding-left:24px}
-  li{margin:4px 0}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
 
-  .tb-tw{overflow-x:auto;margin:18px 0;background:var(--card);
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
     border:1px solid var(--line);border-radius:10px}
   table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
-  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line);
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
     vertical-align:top;line-height:1.7}
   th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
   tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
   td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
 
   .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
     padding-top:20px;border-top:1px solid var(--line);font-size:13px}
   .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
   .tb-nav-a:hover{text-decoration:underline}
 
-  @media(max-width:640px){ .wrap{padding:28px 18px 70px} h1{font-size:23px} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -159,67 +266,67 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
 <p>国が半導体に10兆円を投じる、という文が新聞に載る。この文だけでは、企業の口座にいつ何円が入るのかも、企業が何を約束させられるのかも決まらない。金を配るという手段を選んだ場合、企業は補助金の公募に応募し、交付規程に沿って精算し、事業が終われば関係は切れる。株式を持つという手段を選んだ場合、国側は株主総会の議決権を通じて経営に継続的に関与し、出口は株式の売却になる。取引を止めるという手段を選んだ場合、国は一円も出さずに企業の成長経路そのものを書き換える。同じ産業を強くするという目的でも、この三つは企業に別の行動をとらせる。政策を評価するときに目的と金額だけを見て手段を見ないと、実際に何が起きるかを読み違える。この章は、日本の制度に即して三つの手段の内部構造を分解する。</p>
 <h2 id="s1">概算要求から執行までの各段階で金額が動く場所</h2>
-<p>予算は1年かけて6段階を進む。6月の骨太方針、8月上旬の概算要求基準の閣議了解、8月末の概算要求提出、9月から12月の財務省主計局による査定、12月下旬の政府案閣議決定、翌年1月からの国会審議と成立である。令和8年度予算では、概算要求基準の閣議了解が2025年8月8日、政府案の閣議決定が2025年12月26日、成立が2026年4月7日だった <a href="https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2026/index.html" target="_blank" rel="noopener">出典</a>。</p>
+<p>予算は1年かけて6段階を進む。6月の骨太方針、8月上旬の概算要求基準の閣議了解、8月末の概算要求提出、9月から12月の財務省主計局による査定、12月下旬の政府案閣議決定、翌年1月からの国会審議と成立である。令和8年度予算では、概算要求基準の閣議了解が2025年8月8日、政府案の閣議決定が2025年12月26日、成立が2026年4月7日だった <a class="tb-src" href="https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2026/index.html" target="_blank" rel="noopener">出典</a>。</p>
 <p>金額が動く場所は、この6段階に均等に分布していない。</p>
-<p>第1に、天井は8月の閣議了解で決まる。令和8年度の閣議了解は、年金や医療等について前年度当初予算額に自然増4,000億円を加算した範囲内での要求とし、その他の経費については前年度当初予算相当額の範囲内で要求したうえで、その額に100分の20を乗じた額の範囲内でのみ要望を認めた <a href="https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2026/sy250808a.pdf" target="_blank" rel="noopener">出典</a>。各省が積み上げた希望額が出発点になるのではなく、閣議了解の枠が要求できる額を先に規定する。</p>
-<p>第2に、配分の実質は年末の査定で決まる。令和8年度政府案の一般会計歳出総額は122兆3,092億円で、内訳は一般歳出70兆1,557億円、地方交付税交付金等20兆8,778億円、国債費31兆2,758億円である。社会保障関係費は39兆559億円、防衛力整備計画対象経費は8兆8,093億円だった <a href="https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2026/seifuan2026/01.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>第3に、国会段階では金額はほとんど動かない。令和8年度総予算は2026年4月7日の参議院本会議で可決成立したが、立憲民主党等および国民民主党等が提出した修正案はいずれも否決され、政府案がそのまま議決された <a href="https://www.sangiin.go.jp/japanese/ugoki/r8/260407.html" target="_blank" rel="noopener">出典</a>。予算審議を金額交渉の場と考えると、交渉はすでに4か月前に終わっている。</p>
-<p>第4に、着金するかどうかは執行段階で決まる。令和6年度一般会計の支出済歳出額は123兆239億円で、歳出予算現額を14兆5,542億円下回った。下回った比率は10.5%である。内訳は翌年度繰越額10兆2,432億円と不用額4兆3,109億円だった <a href="https://www.mof.go.jp/policy/budget/budger_workflow/account/fy2024/kessan_06_01.pdf" target="_blank" rel="noopener">出典</a>。分野による差は小さくない。公共事業関係費は予算現額12兆7,640億円に対して支出済歳出額が8兆3,868億円、翌年度繰越額が4兆2,806億円で、繰越が予算現額の33.5%を占めた。同じ年度の中小企業対策費は予算現額1兆1,227億円に対して支出済歳出額7,869億円、繰越2,378億円、不用979億円である <a href="https://www.mof.go.jp/policy/budget/budger_workflow/account/fy2024/kessan_06_01.pdf" target="_blank" rel="noopener">出典</a>。予算がついた金額と年度内に出た金額のあいだには、分野ごとに異なる幅の落差がある。</p>
+<p>第1に、天井は8月の閣議了解で決まる。令和8年度の閣議了解は、年金や医療等について前年度当初予算額に自然増4,000億円を加算した範囲内での要求とし、その他の経費については前年度当初予算相当額の範囲内で要求したうえで、その額に100分の20を乗じた額の範囲内でのみ要望を認めた <a class="tb-src" href="https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2026/sy250808a.pdf" target="_blank" rel="noopener">出典</a>。<strong class="hit">各省が積み上げた希望額が出発点になるのではなく、閣議了解の枠が要求できる額を先に規定する</strong>。</p>
+<p>第2に、配分の実質は年末の査定で決まる。令和8年度政府案の一般会計歳出総額は122兆3,092億円で、内訳は一般歳出70兆1,557億円、地方交付税交付金等20兆8,778億円、国債費31兆2,758億円である。社会保障関係費は39兆559億円、防衛力整備計画対象経費は8兆8,093億円だった <a class="tb-src" href="https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2026/seifuan2026/01.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>第3に、国会段階では金額はほとんど動かない。令和8年度総予算は2026年4月7日の参議院本会議で可決成立したが、立憲民主党等および国民民主党等が提出した修正案はいずれも否決され、政府案がそのまま議決された <a class="tb-src" href="https://www.sangiin.go.jp/japanese/ugoki/r8/260407.html" target="_blank" rel="noopener">出典</a>。予算審議を金額交渉の場と考えると、交渉はすでに4か月前に終わっている。</p>
+<p>第4に、着金するかどうかは執行段階で決まる。令和6年度一般会計の支出済歳出額は123兆239億円で、歳出予算現額を14兆5,542億円下回った。下回った比率は10.5%である。内訳は翌年度繰越額10兆2,432億円と不用額4兆3,109億円だった <a class="tb-src" href="https://www.mof.go.jp/policy/budget/budger_workflow/account/fy2024/kessan_06_01.pdf" target="_blank" rel="noopener">出典</a>。分野による差は小さくない。公共事業関係費は予算現額12兆7,640億円に対して支出済歳出額が8兆3,868億円、翌年度繰越額が4兆2,806億円で、繰越が予算現額の33.5%を占めた。同じ年度の中小企業対策費は予算現額1兆1,227億円に対して支出済歳出額7,869億円、繰越2,378億円、不用979億円である <a class="tb-src" href="https://www.mof.go.jp/policy/budget/budger_workflow/account/fy2024/kessan_06_01.pdf" target="_blank" rel="noopener">出典</a>。予算がついた金額と年度内に出た金額のあいだには、分野ごとに異なる幅の落差がある。</p>
 <p>金額の天井は8月、配分は年末、着金は執行段階という3層構造になる。報道の見出しに出る数字は、ほぼ第1層か第2層の数字である。</p>
 <h2 id="s2">基金方式が単年度主義に対して買っている時間</h2>
-<p>予算は憲法86条の単年度主義と財政法12条の会計年度独立原則に縛られる。ところが産業政策は複数年度にわたる投資を企業に求める。この矛盾を吸収する装置が基金である。基金は複数年度にわたる事務または事業で、各年度の所要額をあらかじめ見込み難いものについて造成される。根拠は補助金等に係る予算の執行の適正化に関する法律施行令第4条第2項である <a href="https://dl.ndl.go.jp/view/prepareDownload?itemId=info:ndljp/pid/13741829" target="_blank" rel="noopener">出典</a>。</p>
+<p>予算は憲法86条の単年度主義と財政法12条の会計年度独立原則に縛られる。ところが産業政策は複数年度にわたる投資を企業に求める。この矛盾を吸収する装置が基金である。基金は複数年度にわたる事務または事業で、各年度の所要額をあらかじめ見込み難いものについて造成される。根拠は補助金等に係る予算の執行の適正化に関する法律施行令第4条第2項である <a class="tb-src" href="https://dl.ndl.go.jp/view/prepareDownload?itemId=info:ndljp/pid/13741829" target="_blank" rel="noopener">出典</a>。</p>
 <p>基金が単年度予算と違う点は4つある。</p>
-<p>第1に、国会の議決が入る回数が違う。単年度予算では毎年度の歳出予算を国会が議決する。基金の場合、国が基金法人へ補助金等を交付する年度の歳出予算については国会の議決を経るが、造成後に基金から企業へ交付される個別の補助金は国会の議決を経ない。国立国会図書館の整理も、基金は予算単年度主義の例外であり、一度予算として措置されると国会審議を経ずに使用でき運用実態が不透明になりやすいと指摘する <a href="https://dl.ndl.go.jp/view/prepareDownload?itemId=info:ndljp/pid/13741829" target="_blank" rel="noopener">出典</a>。議決がないのではなく、議決の粒度が造成時の1回に圧縮される。</p>
-<p>第2に、未執行の資金が現れる場所が違う。単年度予算では未執行分は繰越または不用として決算に現れる。基金では国庫から出た時点で国の歳出が完了し、残高は基金法人に滞留する。令和4年度末時点で国の基金の事業数は186、残高は約16.6兆円だった <a href="https://dl.ndl.go.jp/view/prepareDownload?itemId=info:ndljp/pid/13741829" target="_blank" rel="noopener">出典</a>。</p>
-<p>第3に、造成の器が違う。グリーンイノベーション基金は令和2年度第3次補正予算で2兆円がNEDOに造成され、令和4年度第2次補正予算で3,000億円、令和5年度当初予算で4,564億円が積み増され、2024年11月時点の総額は2兆7,564億円である <a href="https://green-innovation.nedo.go.jp/about/" target="_blank" rel="noopener">出典</a>。主たる造成が補正予算で行われている点は、当初予算の査定過程とは別のタイミングで大型の産業政策資金が決まることを意味する。</p>
-<p>第4に、統制手段が違う。基金には基金シートという別建ての点検票がある。2013年度に導入され、各府省が毎年度、執行状況と残高を点検して公表する。令和6年度からは行政事業レビュー見える化サイトで一元公表されている <a href="https://www.gyoukaku.go.jp/review/kikin/R06/index.html" target="_blank" rel="noopener">出典</a>。</p>
-<p>この統制の実態は、2024年4月の行政改革推進会議による全体点検で数字になった。対象は200基金事業152基金である。前年9月公表の基金シートでは、71事業に定量的な短期アウトカムがなく、63事業に定量的な長期アウトカムがなく、65事業に終了予定時期の設定がなかった。点検の結果、今後の予算措置は3年程度とすること、原則として10年以内の終了予定時期を設定することが確認された。国庫返納予定額は令和5年度が約4,342億円、令和6年度が約1,124億円とされた。支出が管理費のみで事業が終了している11事業は令和6年度までに廃止、ほかに4事業が令和5年度に廃止となった <a href="https://www.cas.go.jp/jp/seisakukaigi/gskaigi/dai56/siryou1-1.pdf" target="_blank" rel="noopener">出典</a>。基金方式は複数年度の時間を買う装置だが、その対価として成果目標の定量化と終期設定という規律を広い範囲で欠いていた。2024年の点検はその是正であり、制度設計が完成したことを示すものではない。</p>
-<p>配分を決める主体も3層に分かれる。第1層は財源枠を決める閣議決定と法律である。脱炭素分野ではGX推進法に基づき10年間で20兆円規模のGX経済移行債が発行され、償還財源は2028年度からの化石燃料賦課金等のカーボンプライシング収入に充てられ、償還期限は2050年度までと法定されている <a href="https://www.meti.go.jp/policy/energy_environment/global_warming/gx_budget.html" target="_blank" rel="noopener">出典</a>。AI・半導体分野では2024年11月22日の総合経済対策でAI・半導体産業基盤強化フレームが決定され、2030年度までの7年間で10兆円超の公的支援、10年間で50兆円超の官民投資が掲げられた <a href="https://www.nri.com/jp/media/column/kiuchi/20241112_2.html" target="_blank" rel="noopener">出典</a>。令和8年度の概算要求基準は、GXとAI・半導体のいずれについても特別会計において要求すると明記した <a href="https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2026/sy250808a.pdf" target="_blank" rel="noopener">出典</a>。この時点で一般会計の査定とは別のルートに乗ることが決まる。第2層は経済産業省内の局による所管と審議会での方針形式化である。グリーンイノベーション基金では産業構造審議会グリーンイノベーションプロジェクト部会での議論を経て、支援対象、成果最大化の仕組み、実施体制の方針が定められている <a href="https://www.meti.go.jp/policy/energy_environment/global_warming/gifund/" target="_blank" rel="noopener">出典</a>。第3層は執行機関による個別配分で、NEDOが公募、審査、交付決定、精算を行う <a href="https://www.nedo.go.jp/itaku-gyomu/hojo_josei_koufukitei_koufukitei.html" target="_blank" rel="noopener">出典</a>。企業から見て交渉相手になるのは第3層であり、金額の枠を決めた第1層とは接点がない。</p>
+<p>第1に、国会の議決が入る回数が違う。単年度予算では毎年度の歳出予算を国会が議決する。基金の場合、国が基金法人へ補助金等を交付する年度の歳出予算については国会の議決を経るが、造成後に基金から企業へ交付される個別の補助金は国会の議決を経ない。国立国会図書館の整理も、基金は予算単年度主義の例外であり、一度予算として措置されると国会審議を経ずに使用でき運用実態が不透明になりやすいと指摘する <a class="tb-src" href="https://dl.ndl.go.jp/view/prepareDownload?itemId=info:ndljp/pid/13741829" target="_blank" rel="noopener">出典</a>。<strong class="hit">議決がないのではなく、議決の粒度が造成時の1回に圧縮される</strong>。</p>
+<p>第2に、未執行の資金が現れる場所が違う。単年度予算では未執行分は繰越または不用として決算に現れる。基金では国庫から出た時点で国の歳出が完了し、残高は基金法人に滞留する。令和4年度末時点で国の基金の事業数は186、残高は約16.6兆円だった <a class="tb-src" href="https://dl.ndl.go.jp/view/prepareDownload?itemId=info:ndljp/pid/13741829" target="_blank" rel="noopener">出典</a>。</p>
+<p>第3に、造成の器が違う。グリーンイノベーション基金は令和2年度第3次補正予算で2兆円がNEDOに造成され、令和4年度第2次補正予算で3,000億円、令和5年度当初予算で4,564億円が積み増され、2024年11月時点の総額は2兆7,564億円である <a class="tb-src" href="https://green-innovation.nedo.go.jp/about/" target="_blank" rel="noopener">出典</a>。<strong class="hit">主たる造成が補正予算で行われている点は、当初予算の査定過程とは別のタイミングで大型の産業政策資金が決まることを意味する</strong>。</p>
+<p>第4に、統制手段が違う。基金には基金シートという別建ての点検票がある。2013年度に導入され、各府省が毎年度、執行状況と残高を点検して公表する。令和6年度からは行政事業レビュー見える化サイトで一元公表されている <a class="tb-src" href="https://www.gyoukaku.go.jp/review/kikin/R06/index.html" target="_blank" rel="noopener">出典</a>。</p>
+<p>この統制の実態は、2024年4月の行政改革推進会議による全体点検で数字になった。対象は200基金事業152基金である。前年9月公表の基金シートでは、71事業に定量的な短期アウトカムがなく、63事業に定量的な長期アウトカムがなく、65事業に終了予定時期の設定がなかった。点検の結果、今後の予算措置は3年程度とすること、原則として10年以内の終了予定時期を設定することが確認された。国庫返納予定額は令和5年度が約4,342億円、令和6年度が約1,124億円とされた。支出が管理費のみで事業が終了している11事業は令和6年度までに廃止、ほかに4事業が令和5年度に廃止となった <a class="tb-src" href="https://www.cas.go.jp/jp/seisakukaigi/gskaigi/dai56/siryou1-1.pdf" target="_blank" rel="noopener">出典</a>。基金方式は複数年度の時間を買う装置だが、その対価として成果目標の定量化と終期設定という規律を広い範囲で欠いていた。2024年の点検はその是正であり、制度設計が完成したことを示すものではない。</p>
+<p>配分を決める主体も3層に分かれる。第1層は財源枠を決める閣議決定と法律である。脱炭素分野ではGX推進法に基づき10年間で20兆円規模のGX経済移行債が発行され、償還財源は2028年度からの化石燃料賦課金等のカーボンプライシング収入に充てられ、償還期限は2050年度までと法定されている <a class="tb-src" href="https://www.meti.go.jp/policy/energy_environment/global_warming/gx_budget.html" target="_blank" rel="noopener">出典</a>。AI・半導体分野では2024年11月22日の総合経済対策でAI・半導体産業基盤強化フレームが決定され、2030年度までの7年間で10兆円超の公的支援、10年間で50兆円超の官民投資が掲げられた <a class="tb-src" href="https://www.nri.com/jp/media/column/kiuchi/20241112_2.html" target="_blank" rel="noopener">出典</a>。令和8年度の概算要求基準は、GXとAI・半導体のいずれについても特別会計において要求すると明記した <a class="tb-src" href="https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2026/sy250808a.pdf" target="_blank" rel="noopener">出典</a>。この時点で一般会計の査定とは別のルートに乗ることが決まる。第2層は経済産業省内の局による所管と審議会での方針形式化である。グリーンイノベーション基金では産業構造審議会グリーンイノベーションプロジェクト部会での議論を経て、支援対象、成果最大化の仕組み、実施体制の方針が定められている <a class="tb-src" href="https://www.meti.go.jp/policy/energy_environment/global_warming/gifund/" target="_blank" rel="noopener">出典</a>。第3層は執行機関による個別配分で、NEDOが公募、審査、交付決定、精算を行う <a class="tb-src" href="https://www.nedo.go.jp/itaku-gyomu/hojo_josei_koufukitei_koufukitei.html" target="_blank" rel="noopener">出典</a>。企業から見て交渉相手になるのは第3層であり、金額の枠を決めた第1層とは接点がない。</p>
 <h2 id="s3">所有による介入として見た民営九社体制と2012年の資本注入</h2>
 <p>第二の手段は株式の保有である。日本の電力は、この手段の使われ方が2回反転した産業である。</p>
-<p>戦前の電気事業は数百の民間事業者による競争から始まり、1930年代に5大電力の寡占へ集約した。戦時体制下では電力管理法と日本発送電株式会社法により、発電と送電を担う日本発送電と、配電を担う9配電会社に統合された <a href="https://www.timr.or.jp/library/docs/kuranonaka/lib080.pdf" target="_blank" rel="noopener">出典</a>。戦後の再編は、この国家統制をどう解くかという問題だった。</p>
-<p>1951年の民営9社体制を正当化した論理は3つある。第一は占領政策としての集中排除である。日本発送電と9配電会社はGHQの占領重要施策として過度経済力集中排除法の指定を受けた。1948年4月に日本政府が設置した電気事業民主化委員会は日本発送電から北海道と四国のみを切り離す答申を出したが、GHQはこれに納得しなかった <a href="https://www.timr.or.jp/library/docs/kuranonaka/lib080.pdf" target="_blank" rel="noopener">出典</a>。第二は発送配電一貫経営による供給責任の集中である。1949年11月に吉田茂首相が設置した電気事業再編成審議会は松永安左エ門が会長を務め、日本発送電の発電施設を電力需要に応じて分割して9つの発送配電一貫会社に再編する松永案を参考として提出した。GHQが答申本体に再考を求めたため、池田勇人通産相らは松永案を軸に政府案を作成した <a href="https://www.timr.or.jp/library/docs/kuranonaka/lib080.pdf" target="_blank" rel="noopener">出典</a>。第三は独立規制機関による監督である。政府案は公益事業委員会を総理府の外局として設ける内容で、委員会は1950年12月に設置され、株式引受比率、清算費用、発電所の帰属、新会社の役員を検討した <a href="https://www.timr.or.jp/library/docs/kuranonaka/lib080.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>ただし、この3つが国会で承認されたわけではない。電気事業再編成法案と公益事業法案は1950年4月に第7国会へ上程されたが、電力融通と電力料金格差をめぐる議論が紛糾して審議未了となった。通産省が修正案を作ろうとする間にGHQは電源開発用見返資金の提供を停止し、マッカーサー元帥は吉田首相宛書簡で第7国会上程案を基本とした早期再編成を要請した。政府は同案を踏襲した案をポツダム政令とすることを閣議決定し、電気事業再編成令として1950年11月24日に公布した <a href="https://www.timr.or.jp/library/docs/kuranonaka/lib080.pdf" target="_blank" rel="noopener">出典</a>。この政令は昭和25年政令第342号である <a href="https://hourei.ndl.go.jp/simple/detail?lawId=0000042954" target="_blank" rel="noopener">出典</a>。9電力会社の発足は1951年5月1日である <a href="https://www.fepc.or.jp/enterprise/rekishi/shouwa1946/" target="_blank" rel="noopener">出典</a>。民営9社体制の最終的な根拠は立法府の合意ではなく占領権力の指示に基づく政令であり、国営化案が理論的に論破された記録はこの経緯からは確認できない。</p>
-<p>61年後、逆方向の動きが1社に起きた。枠組みは原子力損害賠償・廃炉等支援機構法、平成23年法律第94号である。同法第41条第1項は、機構が原子力事業者に対して行う資金援助の類型として資金の交付、株式の引受け、資金の貸付け、社債の取得、債務保証を挙げる。第45条は、機構が国債の交付を必要とする場合に、当該原子力事業者と共同して特別事業計画を作成し主務大臣の認定を受けなければならないと定める <a href="https://laws.e-gov.go.jp/api/1/lawdata/423AC0000000094" target="_blank" rel="noopener">出典</a>。2012年5月9日に認定された総合特別事業計画は、機構が東京電力発行の株式を払込金額総額1兆円で引き受けること、議決権付種類株式によって総議決権の2分の1超を取得すること、これを一時的公的管理と呼ぶこと、転換権付無議決権種類株式によって潜在的には総議決権の3分の2超を確保することを定めた <a href="https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/nintei20120509.pdf" target="_blank" rel="noopener">出典</a>。払込は2012年7月31日に行われた <a href="https://www.ndf.go.jp/press/at2012/20120731.html" target="_blank" rel="noopener">出典</a>。</p>
-<p>ここで手段の性質が予算配分と分かれる。第1に、原資が歳出ではない。2012年度予算に4兆円の政府保証枠が計上され、機構はこの枠を活用して金融機関から資金を調達し株式引受けに充当した <a href="https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/nintei20120509.pdf" target="_blank" rel="noopener">出典</a>。政府の信用を使った借入であり、税金の直接投入ではない。第2に、株主は国そのものではない。機構は機構法に基づく認可法人で、設立は2011年9月12日、資本金140億円のうち政府出資は70億円、原子力事業者等12社の出資が70億円である <a href="https://www.ndf.go.jp/soshiki/kikou_gaiyou.html" target="_blank" rel="noopener">出典</a>。第3に、関係が終わらない。2026年1月26日に認定された第五次総合特別事業計画は、機構が引き続き東電経営への継続的関与を必要と判断し、2分の1超の議決権保有と役職員の派遣を現行のとおり継続すると記載する。同計画は、計画に沿った経営改革が進展していないと判断する場合には普通株式への転換の可能性を含めて議決権行使の在り方を検討するとも書いている <a href="https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/20260126.pdf" target="_blank" rel="noopener">出典</a>。議決権比率を50.11%とする数字が流通しているが、機構と主務大臣の一次文書は2分の1超という表現を使っており、本章は一次文書の表現に従う。</p>
+<p>戦前の電気事業は数百の民間事業者による競争から始まり、1930年代に5大電力の寡占へ集約した。戦時体制下では電力管理法と日本発送電株式会社法により、発電と送電を担う日本発送電と、配電を担う9配電会社に統合された <a class="tb-src" href="https://www.timr.or.jp/library/docs/kuranonaka/lib080.pdf" target="_blank" rel="noopener">出典</a>。戦後の再編は、この国家統制をどう解くかという問題だった。</p>
+<p>1951年の民営9社体制を正当化した論理は3つある。第一は占領政策としての集中排除である。日本発送電と9配電会社はGHQの占領重要施策として過度経済力集中排除法の指定を受けた。1948年4月に日本政府が設置した電気事業民主化委員会は日本発送電から北海道と四国のみを切り離す答申を出したが、GHQはこれに納得しなかった <a class="tb-src" href="https://www.timr.or.jp/library/docs/kuranonaka/lib080.pdf" target="_blank" rel="noopener">出典</a>。第二は発送配電一貫経営による供給責任の集中である。1949年11月に吉田茂首相が設置した電気事業再編成審議会は松永安左エ門が会長を務め、日本発送電の発電施設を電力需要に応じて分割して9つの発送配電一貫会社に再編する松永案を参考として提出した。GHQが答申本体に再考を求めたため、池田勇人通産相らは松永案を軸に政府案を作成した <a class="tb-src" href="https://www.timr.or.jp/library/docs/kuranonaka/lib080.pdf" target="_blank" rel="noopener">出典</a>。第三は独立規制機関による監督である。政府案は公益事業委員会を総理府の外局として設ける内容で、委員会は1950年12月に設置され、株式引受比率、清算費用、発電所の帰属、新会社の役員を検討した <a class="tb-src" href="https://www.timr.or.jp/library/docs/kuranonaka/lib080.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>ただし、この3つが国会で承認されたわけではない。電気事業再編成法案と公益事業法案は1950年4月に第7国会へ上程されたが、電力融通と電力料金格差をめぐる議論が紛糾して審議未了となった。通産省が修正案を作ろうとする間にGHQは電源開発用見返資金の提供を停止し、マッカーサー元帥は吉田首相宛書簡で第7国会上程案を基本とした早期再編成を要請した。政府は同案を踏襲した案をポツダム政令とすることを閣議決定し、電気事業再編成令として1950年11月24日に公布した <a class="tb-src" href="https://www.timr.or.jp/library/docs/kuranonaka/lib080.pdf" target="_blank" rel="noopener">出典</a>。この政令は昭和25年政令第342号である <a class="tb-src" href="https://hourei.ndl.go.jp/simple/detail?lawId=0000042954" target="_blank" rel="noopener">出典</a>。9電力会社の発足は1951年5月1日である <a class="tb-src" href="https://www.fepc.or.jp/enterprise/rekishi/shouwa1946/" target="_blank" rel="noopener">出典</a>。<strong class="hit">民営9社体制の最終的な根拠は立法府の合意ではなく占領権力の指示に基づく政令であり</strong>、国営化案が理論的に論破された記録はこの経緯からは確認できない。</p>
+<p>61年後、逆方向の動きが1社に起きた。枠組みは原子力損害賠償・廃炉等支援機構法、平成23年法律第94号である。同法第41条第1項は、機構が原子力事業者に対して行う資金援助の類型として資金の交付、株式の引受け、資金の貸付け、社債の取得、債務保証を挙げる。第45条は、機構が国債の交付を必要とする場合に、当該原子力事業者と共同して特別事業計画を作成し主務大臣の認定を受けなければならないと定める <a class="tb-src" href="https://laws.e-gov.go.jp/api/1/lawdata/423AC0000000094" target="_blank" rel="noopener">出典</a>。2012年5月9日に認定された総合特別事業計画は、機構が東京電力発行の株式を払込金額総額1兆円で引き受けること、議決権付種類株式によって総議決権の2分の1超を取得すること、これを一時的公的管理と呼ぶこと、転換権付無議決権種類株式によって潜在的には総議決権の3分の2超を確保することを定めた <a class="tb-src" href="https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/nintei20120509.pdf" target="_blank" rel="noopener">出典</a>。払込は2012年7月31日に行われた <a class="tb-src" href="https://www.ndf.go.jp/press/at2012/20120731.html" target="_blank" rel="noopener">出典</a>。</p>
+<p>ここで手段の性質が予算配分と分かれる。第1に、原資が歳出ではない。2012年度予算に4兆円の政府保証枠が計上され、機構はこの枠を活用して金融機関から資金を調達し株式引受けに充当した <a class="tb-src" href="https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/nintei20120509.pdf" target="_blank" rel="noopener">出典</a>。<strong class="hit">政府の信用を使った借入であり、税金の直接投入ではない</strong>。第2に、株主は国そのものではない。機構は機構法に基づく認可法人で、設立は2011年9月12日、資本金140億円のうち政府出資は70億円、原子力事業者等12社の出資が70億円である <a class="tb-src" href="https://www.ndf.go.jp/soshiki/kikou_gaiyou.html" target="_blank" rel="noopener">出典</a>。第3に、関係が終わらない。2026年1月26日に認定された第五次総合特別事業計画は、機構が引き続き東電経営への継続的関与を必要と判断し、2分の1超の議決権保有と役職員の派遣を現行のとおり継続すると記載する。同計画は、計画に沿った経営改革が進展していないと判断する場合には普通株式への転換の可能性を含めて議決権行使の在り方を検討するとも書いている <a class="tb-src" href="https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/20260126.pdf" target="_blank" rel="noopener">出典</a>。議決権比率を50.11%とする数字が流通しているが、機構と主務大臣の一次文書は2分の1超という表現を使っており、本章は一次文書の表現に従う。</p>
 <p>補助金であれば事業終了とともに関係が切れる。所有による介入は、経営改革の進捗という主観的な判断を条件に無期限で続きうる。企業側から見た拘束の重さが違う。</p>
 <h2 id="s4">電力とJRとNTTで民営化の設計が分かれた論理</h2>
 <p>同じ民営化という語で呼ばれる3つの事例は、設計が3つの軸で分かれる。</p>
-<p>第一の軸は出発点である。国鉄と電電公社はいずれも公共企業体であり、国が全額出資する組織から株式会社に転換した。日本電信電話株式会社等に関する法律は昭和59年12月25日に法律第85号として公布された <a href="https://laws.e-gov.go.jp/api/1/lawdata/359AC0000000085" target="_blank" rel="noopener">出典</a>。旅客鉄道株式会社及び日本貨物鉄道株式会社に関する法律は昭和61年12月4日に法律第88号として公布され、附則第5条で日本国有鉄道が会社設立時の全株式を引き受けると定めた <a href="https://laws.e-gov.go.jp/api/1/lawdata/361AC0000000088" target="_blank" rel="noopener">出典</a>。電力会社は戦前から私企業であり、戦時に国家管理へ組み込まれ、1951年にそこから解かれた。公社形態を経ていない。</p>
+<p>第一の軸は出発点である。国鉄と電電公社はいずれも公共企業体であり、国が全額出資する組織から株式会社に転換した。日本電信電話株式会社等に関する法律は昭和59年12月25日に法律第85号として公布された <a class="tb-src" href="https://laws.e-gov.go.jp/api/1/lawdata/359AC0000000085" target="_blank" rel="noopener">出典</a>。旅客鉄道株式会社及び日本貨物鉄道株式会社に関する法律は昭和61年12月4日に法律第88号として公布され、附則第5条で日本国有鉄道が会社設立時の全株式を引き受けると定めた <a class="tb-src" href="https://laws.e-gov.go.jp/api/1/lawdata/361AC0000000088" target="_blank" rel="noopener">出典</a>。電力会社は戦前から私企業であり、戦時に国家管理へ組み込まれ、1951年にそこから解かれた。公社形態を経ていない。</p>
 <p>第二の軸は、国が株式を持つ根拠法の性格である。</p>
 <div class="tb-tw"><table><thead><tr><th>事例</th><th>政府側の保有根拠</th><th>2026年時点の状態</th><th>出典URL</th></tr></thead><tbody><tr><td>NTT</td><td>法律が政府に発行済株式総数の3分の1以上の保有を義務づけ</td><td>2026年6月30日時点で財務大臣が発行済株式の35.83%を保有</td><td>https://laws.e-gov.go.jp/api/1/lawdata/359AC0000000085 、 https://group.ntt/jp/ir/shares/digest.html</td></tr><tr><td>JR</td><td>鉄道建設・運輸施設整備支援機構が保有し段階的に売却</td><td>JR東日本は平成14年6月、JR西日本は平成16年3月、JR東海は平成18年4月、JR九州は平成28年10月に売却完了。JR北海道51万株、JR四国35.8万株、JR貨物38万株は同機構が保有継続</td><td>https://www.jrtt.go.jp/settlement/share.html</td></tr><tr><td>電力</td><td>政府の保有義務を定める法律なし。東京電力については機構法第41条の資金援助としての株式引受け</td><td>機構が2分の1超の議決権を保有継続</td><td>https://laws.e-gov.go.jp/api/1/lawdata/423AC0000000094 、 https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/20260126.pdf</td></tr></tbody></table></div>
-<p>第三の軸は時間の向きと出口条件である。JRとNTTでは、国が持っていた株式を市場へ売り出す方向に動いた。電力では1951年に国家管理から民間へ戻したのち、2012年に1社だけが逆方向へ動いた。しかもその逆方向の動きには特定の債務の回収が紐づいている。第五次総合特別事業計画は、除染費用に相当する4兆円を機構保有株式の企業価値向上による売却益で支弁することを基本とし、その実現に向けた道筋は見えていないと記載する <a href="https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/20260126.pdf" target="_blank" rel="noopener">出典</a>。JRとNTTの民営化には、株式売却で特定の債務を回収するという条件が個社ごとに紐づいてはいない。</p>
-<p>なお、1951年に作られた発送配電一貫の体制は現存しない。現行の電気事業法第22条は、一般送配電事業者は小売電気事業または発電事業を営んではならないと定める <a href="https://laws.e-gov.go.jp/api/1/lawdata/339AC0000000170" target="_blank" rel="noopener">出典</a>。所有による介入の形が変わっただけでなく、規制による事業範囲の切り分けが重ねられている。</p>
+<p>第三の軸は時間の向きと出口条件である。JRとNTTでは、国が持っていた株式を市場へ売り出す方向に動いた。電力では1951年に国家管理から民間へ戻したのち、2012年に1社だけが逆方向へ動いた。しかもその逆方向の動きには特定の債務の回収が紐づいている。第五次総合特別事業計画は、除染費用に相当する4兆円を機構保有株式の企業価値向上による売却益で支弁することを基本とし、その実現に向けた道筋は見えていないと記載する <a class="tb-src" href="https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/20260126.pdf" target="_blank" rel="noopener">出典</a>。JRとNTTの民営化には、株式売却で特定の債務を回収するという条件が個社ごとに紐づいてはいない。</p>
+<p>なお、1951年に作られた発送配電一貫の体制は現存しない。現行の電気事業法第22条は、一般送配電事業者は小売電気事業または発電事業を営んではならないと定める <a class="tb-src" href="https://laws.e-gov.go.jp/api/1/lawdata/339AC0000000170" target="_blank" rel="noopener">出典</a>。所有による介入の形が変わっただけでなく、規制による事業範囲の切り分けが重ねられている。</p>
 <h2 id="s5">企業結合審査が問題ありと判断する指標と垂直統合の扱いの違い</h2>
 <p>第三の手段は取引の禁止である。国は一円も出さずに企業の成長経路を変えられる。</p>
-<p>審査は2層に分かれる。第1層は管轄、すなわち届出が必要かどうかである。日本は当事会社の国内売上高合計額が一方200億円超かつ他方50億円超という客観基準で、合併の場合は届出受理から30日間の禁止期間が課される <a href="https://www.jftc.go.jp/dk/kiketsu/kigyoketsugo/todokede/gappei2.html" target="_blank" rel="noopener">出典</a>。米国のHSR基準は2026年2月17日以降のクロージングについて取引規模1億3,390万USD超であり、1億3,390万USDから5億3,550万USDの帯では当事者規模テストが併用され、5億3,550万USD超は規模を問わず届出対象となる <a href="https://www.ftc.gov/news-events/news/press-releases/2026/01/ftc-announces-2026-update-jurisdictional-fee-thresholds-premerger-notification-filings" target="_blank" rel="noopener">出典</a>。</p>
-<p>第2層は実体判断である。日本の企業結合ガイドラインはまず一定の取引分野を画定する。画定の基準は仮定的独占者による小幅で実質的かつ一時的でない価格引上げへの需要者の振替であり、引上げ幅の目安は5%から10%程度、期間は1年程度とされる <a href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin_files/200611shisin.pdf" target="_blank" rel="noopener">出典</a>。画定した市場について、集中度の指標であるHHIと市場シェアで一次スクリーニングをかけ、単独行動と協調的行動の2観点で実体判断する。</p>
-<p>水平型のセーフハーバーは3類型である。結合後HHIが1,500以下の場合、結合後HHIが1,500超2,500以下かつHHI増分が250以下の場合、結合後HHIが2,500超かつHHI増分が150以下の場合には、通常は競争の実質的制限にならないとされる。これに該当しない場合でも、過去の事例に照らせば結合後HHIが2,500以下かつ当事会社グループの市場シェアが35%以下なら制限のおそれは小さいとされる <a href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin_files/200611shisin.pdf" target="_blank" rel="noopener">出典</a>。ただしセーフハーバーは免罪符ではない。同ガイドラインの注5は、市場シェアが小さくても競争上重要なデータや知的財産権を保有しシェアに反映されない潜在的競争力を持つ場合には、判断要素の検討が必要になりうると明記する <a href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin_files/200611shisin.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>実務上の決め手は数値の外側にある。公正取引委員会が公表した令和7年度の主要事例11件のうち、内部文書の提出を求めたものが3事例、経済分析を活用したものが2事例、海外競争当局と情報交換したものが1事例である <a href="https://www.jftc.go.jp/houdou/pressrelease/2026/jun/260624_case.html" target="_blank" rel="noopener">出典</a>。HHIは入口の篩であり、当事者間の直接競合の強さを内部文書と需要者調査で裏づける作業が審査の本体になる。</p>
+<p>審査は2層に分かれる。第1層は管轄、すなわち届出が必要かどうかである。日本は当事会社の国内売上高合計額が一方200億円超かつ他方50億円超という客観基準で、合併の場合は届出受理から30日間の禁止期間が課される <a class="tb-src" href="https://www.jftc.go.jp/dk/kiketsu/kigyoketsugo/todokede/gappei2.html" target="_blank" rel="noopener">出典</a>。米国のHSR基準は2026年2月17日以降のクロージングについて取引規模1億3,390万USD超であり、1億3,390万USDから5億3,550万USDの帯では当事者規模テストが併用され、5億3,550万USD超は規模を問わず届出対象となる <a class="tb-src" href="https://www.ftc.gov/news-events/news/press-releases/2026/01/ftc-announces-2026-update-jurisdictional-fee-thresholds-premerger-notification-filings" target="_blank" rel="noopener">出典</a>。</p>
+<p>第2層は実体判断である。日本の企業結合ガイドラインはまず一定の取引分野を画定する。画定の基準は仮定的独占者による小幅で実質的かつ一時的でない価格引上げへの需要者の振替であり、引上げ幅の目安は5%から10%程度、期間は1年程度とされる <a class="tb-src" href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin_files/200611shisin.pdf" target="_blank" rel="noopener">出典</a>。画定した市場について、集中度の指標であるHHIと市場シェアで一次スクリーニングをかけ、単独行動と協調的行動の2観点で実体判断する。</p>
+<p>水平型のセーフハーバーは3類型である。結合後HHIが1,500以下の場合、結合後HHIが1,500超2,500以下かつHHI増分が250以下の場合、結合後HHIが2,500超かつHHI増分が150以下の場合には、通常は競争の実質的制限にならないとされる。これに該当しない場合でも、過去の事例に照らせば結合後HHIが2,500以下かつ当事会社グループの市場シェアが35%以下なら制限のおそれは小さいとされる <a class="tb-src" href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin_files/200611shisin.pdf" target="_blank" rel="noopener">出典</a>。<strong class="hit">ただしセーフハーバーは免罪符ではない</strong>。同ガイドラインの注5は、市場シェアが小さくても競争上重要なデータや知的財産権を保有しシェアに反映されない潜在的競争力を持つ場合には、判断要素の検討が必要になりうると明記する <a class="tb-src" href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin_files/200611shisin.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>実務上の決め手は数値の外側にある。公正取引委員会が公表した令和7年度の主要事例11件のうち、内部文書の提出を求めたものが3事例、経済分析を活用したものが2事例、海外競争当局と情報交換したものが1事例である <a class="tb-src" href="https://www.jftc.go.jp/houdou/pressrelease/2026/jun/260624_case.html" target="_blank" rel="noopener">出典</a>。HHIは入口の篩であり、当事者間の直接競合の強さを内部文書と需要者調査で裏づける作業が審査の本体になる。</p>
 <p>垂直統合の扱いは水平統合と5点で異なる。</p>
-<p>第1に、想定される害の構造が違う。水平型は競争者が1社減るため単独行動と協調的行動の双方に直接影響する。垂直型は取引段階が異なるため競争者の数は変わらない。日本のガイドラインは垂直型の害を、当事会社グループ間でのみ取引が行われて他の事業者の取引機会が奪われる市場の閉鎖性と排他性の問題として説明する <a href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin_files/200611shisin.pdf" target="_blank" rel="noopener">出典</a>。</p>
-<p>第2に、セーフハーバーの組み方が違う。水平型は増分HHIを軸にするが、垂直型と混合型は増分の概念が使えないため水準で組む。日本の基準は、当事会社が関係するすべての一定の取引分野で結合後の市場シェアが10%以下である場合、または結合後HHIが2,500以下かつ市場シェアが25%以下である場合である <a href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin_files/200611shisin.pdf" target="_blank" rel="noopener">出典</a>。米国の2023年ガイドラインはガイドライン5で、関連商品について市場シェア50%超であれば独占力を推認するとしつつ、50%未満でも競争を実質的に減殺しうると述べる <a href="https://www.paulweiss.com/insights/client-memos/doj-and-ftc-issue-final-2023-merger-guidelines" target="_blank" rel="noopener">出典</a>。</p>
+<p>第1に、想定される害の構造が違う。水平型は競争者が1社減るため単独行動と協調的行動の双方に直接影響する。垂直型は取引段階が異なるため競争者の数は変わらない。日本のガイドラインは垂直型の害を、当事会社グループ間でのみ取引が行われて他の事業者の取引機会が奪われる市場の閉鎖性と排他性の問題として説明する <a class="tb-src" href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin_files/200611shisin.pdf" target="_blank" rel="noopener">出典</a>。</p>
+<p>第2に、セーフハーバーの組み方が違う。水平型は増分HHIを軸にするが、垂直型と混合型は増分の概念が使えないため水準で組む。日本の基準は、当事会社が関係するすべての一定の取引分野で結合後の市場シェアが10%以下である場合、または結合後HHIが2,500以下かつ市場シェアが25%以下である場合である <a class="tb-src" href="https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin_files/200611shisin.pdf" target="_blank" rel="noopener">出典</a>。米国の2023年ガイドラインはガイドライン5で、関連商品について市場シェア50%超であれば独占力を推認するとしつつ、50%未満でも競争を実質的に減殺しうると述べる <a class="tb-src" href="https://www.paulweiss.com/insights/client-memos/doj-and-ftc-issue-final-2023-merger-guidelines" target="_blank" rel="noopener">出典</a>。</p>
 <p>第3に、立証負担が違う。水平型は集中度の数値そのものが推定を生む。垂直型は、閉鎖を行う能力、行う誘因、行った場合の市場効果を順に示す必要がある。</p>
 <p>第4に、問題解消措置の型が違う。水平型は事業売却という構造的措置が原則である。垂直型はアクセス保証や供給継続の確約という行動的措置が使われるが、監視コストと回避可能性が評価されるため通りにくい。</p>
-<p>第5に、垂直型の扱いは厳格化の方向にある。欧州委員会が2026年4月30日に公表した合併ガイドライン草案は、垂直型と混合型について市場シェア30%未満のソフトセーフハーバーを削除し、HHIと市場シェアを結論ではなく初期スクリーニングの指標として位置づけ直した <a href="https://www.crowell.com/en/insights/client-alerts/a-new-playbook-for-manda-in-the-eu-the-european-commissions-draft-merger-guidelines-10-key-changes" target="_blank" rel="noopener">出典</a>。</p>
+<p>第5に、垂直型の扱いは厳格化の方向にある。欧州委員会が2026年4月30日に公表した合併ガイドライン草案は、垂直型と混合型について市場シェア30%未満のソフトセーフハーバーを削除し、HHIと市場シェアを結論ではなく初期スクリーニングの指標として位置づけ直した <a class="tb-src" href="https://www.crowell.com/en/insights/client-alerts/a-new-playbook-for-manda-in-the-eu-the-european-commissions-draft-merger-guidelines-10-key-changes" target="_blank" rel="noopener">出典</a>。</p>
 <h2 id="s6">審査基準の日米欧の食い違いが案件の可否を分けた事例</h2>
 <p>三極の数値の敷居は揃っていない。</p>
 <div class="tb-tw"><table><thead><tr><th>管轄</th><th>水平型の集中度基準</th><th>出典URL</th></tr></thead><tbody><tr><td>米国</td><td>2023年ガイドラインの構造推定は結合後HHI1,800超かつ増分100超、または結合後シェア30%超かつ増分100超。2010年ガイドラインの2,500かつ増分200から引き下げ</td><td>https://www.paulweiss.com/insights/client-memos/doj-and-ftc-issue-final-2023-merger-guidelines</td></tr><tr><td>EU</td><td>結合後HHI1,000未満、1,000から2,000で増分250未満、2,000超で増分150未満のいずれかであれば水平的懸念は通常生じない</td><td>https://www.justice.gov/archives/atr/concentration-indices-and-market-shares-eu-horizontal-merger-guidelines</td></tr><tr><td>日本</td><td>セーフハーバーの上限は結合後HHI2,500超かつ増分150以下</td><td>https://www.jftc.go.jp/dk/kiketsu/guideline/guideline/shishin_files/200611shisin.pdf</td></tr></tbody></table></div>
 <p>この表を読むときは、水準と増分を混ぜないことが要る。米国の1,800、EUの2,000、日本の2,500はいずれも結合後の水準であり、それぞれ別の増分条件と組み合わせて初めて意味を持つ。三極のうち米国が最も低い水準で介入余地を確保している。</p>
-<p>執行の強度も違う。日本は令和7年度に458件の届出を受理し、449件が第1次審査で問題なしとされ、8件が取下げ、第2次審査に移行したのは1件である <a href="https://www.jftc.go.jp/houdou/pressrelease/2026/jun/260624_case.html" target="_blank" rel="noopener">出典</a>。米国は行政手続で止めるのではなく、裁判所での差止訴訟で止める。</p>
+<p>執行の強度も違う。日本は令和7年度に458件の届出を受理し、449件が第1次審査で問題なしとされ、8件が取下げ、第2次審査に移行したのは1件である <a class="tb-src" href="https://www.jftc.go.jp/houdou/pressrelease/2026/jun/260624_case.html" target="_blank" rel="noopener">出典</a>。米国は行政手続で止めるのではなく、裁判所での差止訴訟で止める。</p>
 <p>止まった案件の決め手は、数値ではなく3種類の争点だった。</p>
-<p>第1は市場画定である。KrogerによるAlbertsonsの買収は、2024年12月10日にオレゴン連邦地裁のAdrienne Nelson判事が差止めを認めて止まった。判事はスーパーマーケットが他の食料品小売と別の市場であると認定し、両社の直接競合が除去されると判断した <a href="https://www.cnn.com/2024/12/10/business/kroger-albertsons-merger-ruling" target="_blank" rel="noopener">出典</a>。市場を広く取れば集中度は下がるため、画定の勝敗がそのまま結論になる。取引金額は246億USDと250億USDの2つの数字が流通している。CNNの見出しは250億USDだが本文の記述に基づく整理では246億USDであり、報道見出しは丸めた値と判断して本章は246億USDを採る。</p>
-<p>第2は問題解消措置の実効性である。同じKrogerの事案では579店舗をC&amp;S Wholesale Grocersへ売却する案が提示されたが、規模が競争を維持するには不十分でC&amp;Sを不利な立場に置くと判断された <a href="https://katten.com/kroger/albertsons-ruling-provides-lessons-for-merger-remedy-divestitures" target="_blank" rel="noopener">出典</a>。IlluminaによるGRAIL買収では、欧州委員会が2022年9月6日にEU合併規則8条3項に基づき禁止決定を出した。理由はIlluminaが次世代シーケンサー技術への競合他社のアクセスを遮断する能力と誘因を持つという垂直型の投入物閉鎖であり、提示された行動的措置は回避が容易で監視が困難、かつ技術サポートの質の劣化のような閉鎖戦略を網羅していないとされた <a href="https://www.nortonrosefulbright.com/en/knowledge/publications/ae6fa8a2/the-european-commission-prohibits-and-plans-to-unwind-illuminas-acquisition-of-grail" target="_blank" rel="noopener">出典</a>。</p>
-<p>第3は抗弁の失敗である。JetBlueによるSpiritの38億USDの買収は、2024年1月16日にマサチューセッツ連邦地裁のWilliam Young判事がクレイトン法7条違反のおそれを認めて差し止めた。判事はSpiritが意味のある競争圧力であると認定し、Spiritの財務悪化を根拠とする破綻会社の抗弁を退けた。両社は2024年3月に取引を断念した <a href="https://uk.practicallaw.thomsonreuters.com/w-041-9929?transitionType=Default&amp;contextData=%28sc.Default%29" target="_blank" rel="noopener">出典</a>。</p>
-<p>管轄の入口そのものが争われた例もある。欧州司法裁判所は2024年9月3日のIllumina/GRAIL判決で、EU基準にも全加盟国基準にも達しない案件について、自国法上管轄を持たない当局からの22条付託を欧州委員会が慫慂または受理する権限はないと判示した <a href="https://www.clearygottlieb.com/news-and-insights/publication-listing/illumina-grail-ecj-rules-european-commission-lacks-jurisdiction-to-review-merger-falling-below-eu-and-national-merger-thresholds" target="_blank" rel="noopener">出典</a>。この案件を、EUが違法な買収を止めた事例として記憶するのは不正確である。禁止決定の実体的当否とは別に、管轄の入口が閉じられた。</p>
-<p>判決を経ずに消える経路もある。AdobeとFigmaの200億USDの取引は、2023年11月末の英国CMAの暫定認定と欧州委員会の異議告知書を受け、2023年12月18日に両社が規制承認への明確な道筋がないとして合意を解除した。解約金は10億USDである <a href="https://www.gibsondunn.com/termination-of-adobe-figma-merger/" target="_blank" rel="noopener">出典</a>。資金は用意されていた。止めたのは審査である。</p>
-<p>日本の大型案件は止まる形が違う。ふくおかフィナンシャルグループによる十八銀行の株式取得は、平成28年6月8日の届出から平成30年8月24日の審査終了まで約2年2か月を要した <a href="https://www.jftc.go.jp/houdou/pressrelease/h30/aug/180824.html" target="_blank" rel="noopener">出典</a>。長崎県の中小企業向け貸出における合算市場シェアは約75%で第1位、シェア増分は約35%に達した。公正取引委員会は禁止せず、県南等3経済圏の事業性貸出債権のうち合計1千億円弱相当の他金融機関への譲渡、正当な理由のない金利上昇の事前確認と事後モニタリング、公正取引委員会への定期報告を条件に問題なしとした <a href="https://www.jftc.go.jp/dk/kiketsu/jirei/30nendo_files/h30jirei10.pdf" target="_blank" rel="noopener">出典</a>。日本の実質的な介入は禁止決定ではなく、届出前相談、取下げ、条件付与に吸収されている。令和7年度に第2次審査へ移行したのは458件中1件だが、同年度に8件が取り下げられ、5件が問題解消措置を前提に処理された <a href="https://www.jftc.go.jp/houdou/pressrelease/2026/jun/260624_case.html" target="_blank" rel="noopener">出典</a>。禁止件数の少なさから審査の緩さを読み取ると、結論を取り違える。</p>
-<p>三極は収斂していない。米国は2025年2月18日にFTC委員長Andrew N. Fergusonが2023年ガイドラインを維持すると表明し、司法省も同日これに合わせた <a href="https://www.ftc.gov/news-events/news/press-releases/2025/02/ftc-chairman-andrew-n-ferguson-announces-ftc-dojs-joint-2023-merger-guidelines-are-effect" target="_blank" rel="noopener">出典</a>。EUの2026年草案はイノベーション、レジリエンス、持続可能性にひもづく効率性を明示的に評価対象に加え、小規模で革新的な企業との取引についてイノベーションシールドと呼ぶ安全域を導入する <a href="https://www.crowell.com/en/insights/client-alerts/a-new-playbook-for-manda-in-the-eu-the-european-commissions-draft-merger-guidelines-10-key-changes" target="_blank" rel="noopener">出典</a>。日本も2026年7月17日に企業結合ガイドライン改定案の意見募集を開始し、供給安定性の改善と維持、環境性能の向上、投資拡大とイノベーション促進による新商品創出を競争促進効果として考慮する方針を示した。意見の提出期限は2026年8月31日である <a href="https://www.jftc.go.jp/houdou/pressrelease/2026/jul/260717kiketsu.html" target="_blank" rel="noopener">出典</a>。</p>
+<p>第1は市場画定である。KrogerによるAlbertsonsの買収は、2024年12月10日にオレゴン連邦地裁のAdrienne Nelson判事が差止めを認めて止まった。判事はスーパーマーケットが他の食料品小売と別の市場であると認定し、両社の直接競合が除去されると判断した <a class="tb-src" href="https://www.cnn.com/2024/12/10/business/kroger-albertsons-merger-ruling" target="_blank" rel="noopener">出典</a>。市場を広く取れば集中度は下がるため、画定の勝敗がそのまま結論になる。取引金額は246億USDと250億USDの2つの数字が流通している。CNNの見出しは250億USDだが本文の記述に基づく整理では246億USDであり、報道見出しは丸めた値と判断して本章は246億USDを採る。</p>
+<p>第2は問題解消措置の実効性である。同じKrogerの事案では579店舗をC&amp;S Wholesale Grocersへ売却する案が提示されたが、規模が競争を維持するには不十分でC&amp;Sを不利な立場に置くと判断された <a class="tb-src" href="https://katten.com/kroger/albertsons-ruling-provides-lessons-for-merger-remedy-divestitures" target="_blank" rel="noopener">出典</a>。IlluminaによるGRAIL買収では、欧州委員会が2022年9月6日にEU合併規則8条3項に基づき禁止決定を出した。理由はIlluminaが次世代シーケンサー技術への競合他社のアクセスを遮断する能力と誘因を持つという垂直型の投入物閉鎖であり、提示された行動的措置は回避が容易で監視が困難、かつ技術サポートの質の劣化のような閉鎖戦略を網羅していないとされた <a class="tb-src" href="https://www.nortonrosefulbright.com/en/knowledge/publications/ae6fa8a2/the-european-commission-prohibits-and-plans-to-unwind-illuminas-acquisition-of-grail" target="_blank" rel="noopener">出典</a>。</p>
+<p>第3は抗弁の失敗である。JetBlueによるSpiritの38億USDの買収は、2024年1月16日にマサチューセッツ連邦地裁のWilliam Young判事がクレイトン法7条違反のおそれを認めて差し止めた。判事はSpiritが意味のある競争圧力であると認定し、Spiritの財務悪化を根拠とする破綻会社の抗弁を退けた。両社は2024年3月に取引を断念した <a class="tb-src" href="https://uk.practicallaw.thomsonreuters.com/w-041-9929?transitionType=Default&amp;contextData=%28sc.Default%29" target="_blank" rel="noopener">出典</a>。</p>
+<p>管轄の入口そのものが争われた例もある。欧州司法裁判所は2024年9月3日のIllumina/GRAIL判決で、EU基準にも全加盟国基準にも達しない案件について、自国法上管轄を持たない当局からの22条付託を欧州委員会が慫慂または受理する権限はないと判示した <a class="tb-src" href="https://www.clearygottlieb.com/news-and-insights/publication-listing/illumina-grail-ecj-rules-european-commission-lacks-jurisdiction-to-review-merger-falling-below-eu-and-national-merger-thresholds" target="_blank" rel="noopener">出典</a>。この案件を、EUが違法な買収を止めた事例として記憶するのは不正確である。禁止決定の実体的当否とは別に、管轄の入口が閉じられた。</p>
+<p>判決を経ずに消える経路もある。AdobeとFigmaの200億USDの取引は、2023年11月末の英国CMAの暫定認定と欧州委員会の異議告知書を受け、2023年12月18日に両社が規制承認への明確な道筋がないとして合意を解除した。解約金は10億USDである <a class="tb-src" href="https://www.gibsondunn.com/termination-of-adobe-figma-merger/" target="_blank" rel="noopener">出典</a>。資金は用意されていた。止めたのは審査である。</p>
+<p>日本の大型案件は止まる形が違う。ふくおかフィナンシャルグループによる十八銀行の株式取得は、平成28年6月8日の届出から平成30年8月24日の審査終了まで約2年2か月を要した <a class="tb-src" href="https://www.jftc.go.jp/houdou/pressrelease/h30/aug/180824.html" target="_blank" rel="noopener">出典</a>。長崎県の中小企業向け貸出における合算市場シェアは約75%で第1位、シェア増分は約35%に達した。公正取引委員会は禁止せず、県南等3経済圏の事業性貸出債権のうち合計1千億円弱相当の他金融機関への譲渡、正当な理由のない金利上昇の事前確認と事後モニタリング、公正取引委員会への定期報告を条件に問題なしとした <a class="tb-src" href="https://www.jftc.go.jp/dk/kiketsu/jirei/30nendo_files/h30jirei10.pdf" target="_blank" rel="noopener">出典</a>。日本の実質的な介入は禁止決定ではなく、届出前相談、取下げ、条件付与に吸収されている。令和7年度に第2次審査へ移行したのは458件中1件だが、同年度に8件が取り下げられ、5件が問題解消措置を前提に処理された <a class="tb-src" href="https://www.jftc.go.jp/houdou/pressrelease/2026/jun/260624_case.html" target="_blank" rel="noopener">出典</a>。禁止件数の少なさから審査の緩さを読み取ると、結論を取り違える。</p>
+<p>三極は収斂していない。米国は2025年2月18日にFTC委員長Andrew N. Fergusonが2023年ガイドラインを維持すると表明し、司法省も同日これに合わせた <a class="tb-src" href="https://www.ftc.gov/news-events/news/press-releases/2025/02/ftc-chairman-andrew-n-ferguson-announces-ftc-dojs-joint-2023-merger-guidelines-are-effect" target="_blank" rel="noopener">出典</a>。EUの2026年草案はイノベーション、レジリエンス、持続可能性にひもづく効率性を明示的に評価対象に加え、小規模で革新的な企業との取引についてイノベーションシールドと呼ぶ安全域を導入する <a class="tb-src" href="https://www.crowell.com/en/insights/client-alerts/a-new-playbook-for-manda-in-the-eu-the-european-commissions-draft-merger-guidelines-10-key-changes" target="_blank" rel="noopener">出典</a>。日本も2026年7月17日に企業結合ガイドライン改定案の意見募集を開始し、供給安定性の改善と維持、環境性能の向上、投資拡大とイノベーション促進による新商品創出を競争促進効果として考慮する方針を示した。意見の提出期限は2026年8月31日である <a class="tb-src" href="https://www.jftc.go.jp/houdou/pressrelease/2026/jul/260717kiketsu.html" target="_blank" rel="noopener">出典</a>。</p>
 <p>ここで第一の手段と第三の手段が接続する。EUと日本は、産業政策で達成したい目標を競争法の実体判断の中に持ち込もうとしている。補助金で強くしたい産業を、審査で潰さないための調整である。米国は構造推定を維持しており、この調整を行っていない。方向が分岐した状態で複数管轄に届け出る案件では、最も介入的な当局の判断が取引全体の可否を決める。</p>
 <h2 id="s7">配分と規制の効果検証がどこで制度として切れているか</h2>
 <p>三つの手段は、いずれも事後の検証を制度として持っている。ただし手続としての検証と、因果推定としての検証は別である。</p>
-<p>制度化されている部分は3つある。第1に行政事業レビューである。各府省庁が予算と基金を用いた事業を毎年度自ら点検し、EBPMの手法を用いて成果指標を設定して検証し、外部有識者を入れた公開の場で点検を行い、結果を公表する。秋には公開検証を実施し、各府省の点検が十分か、概算要求への反映状況、公表内容の充実度を検証する。実施要領の最新改正は令和8年3月31日である <a href="https://www.gyoukaku.go.jp/review/review.html" target="_blank" rel="noopener">出典</a>。第2に基金シートによる基金事業の点検であり、令和6年度以降は毎年度の基金シートに定量的な成果目標を反映させることとされ、行政改革推進会議が点検の十分性を検証する <a href="https://www.cas.go.jp/jp/seisakukaigi/gskaigi/dai56/siryou1-1.pdf" target="_blank" rel="noopener">出典</a>。第3に事後の外部監査である。会計検査院の令和6年度決算検査報告は2025年11月5日に内閣へ送付された <a href="https://www.kantei.go.jp/jp/104/actions/202511/05kaikeikensa.html" target="_blank" rel="noopener">出典</a>。掲記事項の総件数を319件、指摘金額を540億8,151万円とする数字が業界紙報道として流通しているが、会計検査院の一次公表資料での照合ができていない。予算側からの検証手段としては財務省の予算執行調査があり、令和7年度の調査対象は30件だった <a href="https://lfb.mof.go.jp/kantou/zaisei/pagekthp01620251003001.html" target="_blank" rel="noopener">出典</a>。年間30件という規模は、行政事業レビューの対象となる全事業に対する選択的な抽出調査である。</p>
-<p>制度として切れているのは2点である。第1は反実仮想の設定である。政策評価の難所は相関と因果の混同であり、政策がなかった場合に何が起きたかを置く必要がある。手法としてはランダム化比較試験や差の差分析が知られるが、行政の現場では評価疲れと効果を検証されることへの抵抗が指摘される <a href="https://ebpm.jp/what-is-ebpm" target="_blank" rel="noopener">出典</a>。第2は、評価結果と予算の継続、修正、廃止との接続である。政策評価法の施行から推進体制の整備を経てなお、ロジックモデル作成の形式化、評価結果が予算判断に連動しないこと、府省横断のデータ連携の弱さが繰り返し課題とされている <a href="https://ebpm.jp/what-is-ebpm" target="_blank" rel="noopener">出典</a>。この2点は解説メディアの整理に依拠しており、政府の一次資料でこの弱点を明示した文書は本章の調査では特定できていない。</p>
+<p>制度化されている部分は3つある。第1に行政事業レビューである。各府省庁が予算と基金を用いた事業を毎年度自ら点検し、EBPMの手法を用いて成果指標を設定して検証し、外部有識者を入れた公開の場で点検を行い、結果を公表する。秋には公開検証を実施し、各府省の点検が十分か、概算要求への反映状況、公表内容の充実度を検証する。実施要領の最新改正は令和8年3月31日である <a class="tb-src" href="https://www.gyoukaku.go.jp/review/review.html" target="_blank" rel="noopener">出典</a>。第2に基金シートによる基金事業の点検であり、令和6年度以降は毎年度の基金シートに定量的な成果目標を反映させることとされ、行政改革推進会議が点検の十分性を検証する <a class="tb-src" href="https://www.cas.go.jp/jp/seisakukaigi/gskaigi/dai56/siryou1-1.pdf" target="_blank" rel="noopener">出典</a>。第3に事後の外部監査である。会計検査院の令和6年度決算検査報告は2025年11月5日に内閣へ送付された <a class="tb-src" href="https://www.kantei.go.jp/jp/104/actions/202511/05kaikeikensa.html" target="_blank" rel="noopener">出典</a>。掲記事項の総件数を319件、指摘金額を540億8,151万円とする数字が業界紙報道として流通しているが、会計検査院の一次公表資料での照合ができていない。予算側からの検証手段としては財務省の予算執行調査があり、令和7年度の調査対象は30件だった <a class="tb-src" href="https://lfb.mof.go.jp/kantou/zaisei/pagekthp01620251003001.html" target="_blank" rel="noopener">出典</a>。年間30件という規模は、行政事業レビューの対象となる全事業に対する選択的な抽出調査である。</p>
+<p>制度として切れているのは2点である。第1は反実仮想の設定である。政策評価の難所は相関と因果の混同であり、政策がなかった場合に何が起きたかを置く必要がある。手法としてはランダム化比較試験や差の差分析が知られるが、行政の現場では評価疲れと効果を検証されることへの抵抗が指摘される <a class="tb-src" href="https://ebpm.jp/what-is-ebpm" target="_blank" rel="noopener">出典</a>。第2は、評価結果と予算の継続、修正、廃止との接続である。政策評価法の施行から推進体制の整備を経てなお、ロジックモデル作成の形式化、評価結果が予算判断に連動しないこと、府省横断のデータ連携の弱さが繰り返し課題とされている <a class="tb-src" href="https://ebpm.jp/what-is-ebpm" target="_blank" rel="noopener">出典</a>。この2点は解説メディアの整理に依拠しており、政府の一次資料でこの弱点を明示した文書は本章の調査では特定できていない。</p>
 <p>第三の手段には、そもそも第一の手段に相当する事後検証の枠組みが見当たらない。企業結合審査については、届出件数、第2次審査移行件数、問題解消措置の件数が毎年度公表される。しかし、条件付きで承認した案件について、条件が意図した競争環境を実際に維持したかを事後に測る制度は、本章が参照した資料の範囲では確認できなかった。ふくおかフィナンシャルグループの事案では公正取引委員会への定期報告が条件に含まれているが、これは個別案件のモニタリングであって、審査基準そのものの妥当性を検証する仕組みではない。</p>
 <h2 id="s8">この章の要点</h2>
 <ul>
@@ -296,5 +403,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
   <div class="tb-nav"><a class="tb-nav-a" href="01_electoral-entry-to-power.html">← 誰が政治家になれるかを決めている仕組み</a><a class="tb-nav-a" href="03_cross-border-regulatory-power.html">国境を越えて効く規制と国家間対立 →</a></div>
 </div>
+<script>
+// Progress bar and the "you are here" mark in the contents. Both are read-only
+// reflections of scroll position, so the page is complete without them and the
+// script never has to run before the text is readable.
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){
+    if (!tick) { tick = true; requestAnimationFrame(draw); }
+  }, {passive:true});
+  draw();
+})();
+</script>
 </body>
 </html>

@@ -15,37 +15,37 @@ thesis: データセンターの立地は電力の安さでも気候の涼しさ
 <figure class="tb-fig">
 <svg viewBox="0 0 720 316" role="img" aria-label="立地制約が効く段階を示すふるいの図">
   <text x="12" y="20" font-size="11" fill="var(--muted)" letter-spacing="1">制約が効く順序</text>
-  <text x="600" y="20" font-size="11" fill="var(--muted)" letter-spacing="1">落ちる理由</text>
+  <text x="566" y="20" font-size="11" fill="var(--muted)" letter-spacing="1">落ちる理由</text>
 
   <g font-size="12.5" fill="var(--ink)">
     <rect x="12" y="34" width="560" height="34" rx="6" fill="var(--dim)" stroke="var(--line)"/>
     <text x="26" y="56">候補地の全体</text>
-    <text x="600" y="56" font-size="11" fill="var(--muted)">—</text>
+    <text x="566" y="56" font-size="11" fill="var(--muted)">—</text>
 
     <path d="M280 68 l0 10" stroke="var(--line)" stroke-width="1.5"/>
     <rect x="68" y="78" width="448" height="34" rx="6" fill="#EEF2FF" stroke="#D5DDF7"/>
     <text x="82" y="100">用途が許すレイテンシ帯</text>
-    <text x="600" y="100" font-size="11" fill="var(--muted)">推論は人口圏、学習は不問</text>
+    <text x="566" y="100" font-size="11" fill="var(--muted)">推論は人口圏、学習は不問</text>
 
     <path d="M280 112 l0 10" stroke="var(--line)" stroke-width="1.5"/>
     <rect x="112" y="122" width="360" height="34" rx="6" fill="#EEF2FF" stroke="#D5DDF7"/>
     <text x="126" y="144">特別高圧が届き、容量が空いている</text>
-    <text x="600" y="144" font-size="11" fill="var(--muted)">最大の脱落段</text>
+    <text x="566" y="144" font-size="11" fill="var(--muted)">最大の脱落段</text>
 
     <path d="M280 156 l0 10" stroke="var(--line)" stroke-width="1.5"/>
     <rect x="146" y="166" width="292" height="34" rx="6" fill="#EEF2FF" stroke="#D5DDF7"/>
     <text x="160" y="188">取水と排水の許認可が取れる</text>
-    <text x="600" y="188" font-size="11" fill="var(--muted)">量ではなく可否</text>
+    <text x="566" y="188" font-size="11" fill="var(--muted)">量ではなく可否</text>
 
     <path d="M280 200 l0 10" stroke="var(--line)" stroke-width="1.5"/>
     <rect x="174" y="210" width="236" height="34" rx="6" fill="#EEF2FF" stroke="#D5DDF7"/>
     <text x="188" y="232">地盤・災害・用地面積</text>
-    <text x="600" y="232" font-size="11" fill="var(--muted)">50ha級が要る</text>
+    <text x="566" y="232" font-size="11" fill="var(--muted)">50ha級が要る</text>
 
     <path d="M280 244 l0 10" stroke="var(--line)" stroke-width="1.5"/>
     <rect x="196" y="254" width="192" height="34" rx="6" fill="var(--accent)" stroke="var(--accent)"/>
     <text x="210" y="276" fill="#fff">実際に建つ場所</text>
-    <text x="600" y="276" font-size="11" fill="var(--muted)">ここで初めて単価比較</text>
+    <text x="566" y="276" font-size="11" fill="var(--muted)">ここで初めて単価比較</text>
   </g>
   <text x="12" y="306" font-size="11" fill="var(--muted)">電力単価と気候はこの図のどの段でも候補地を落とさない。落とすのは時間と許認可である。</text>
 </svg>
@@ -61,47 +61,49 @@ thesis: データセンターの立地は電力の安さでも気候の涼しさ
 <figure class="tb-fig">
 <svg viewBox="0 0 720 250" role="img" aria-label="建設期間と通電待ち時間および機器納期の比較">
   <g font-size="11" fill="var(--muted)">
-    <line x1="196" y1="30" x2="196" y2="216" stroke="var(--grid)"/>
-    <line x1="292" y1="30" x2="292" y2="216" stroke="var(--grid)"/>
-    <line x1="388" y1="30" x2="388" y2="216" stroke="var(--grid)"/>
-    <line x1="484" y1="30" x2="484" y2="216" stroke="var(--grid)"/>
-    <line x1="580" y1="30" x2="580" y2="216" stroke="var(--grid)"/>
-    <line x1="676" y1="30" x2="676" y2="216" stroke="var(--grid)"/>
-    <text x="196" y="234" text-anchor="middle">1年</text>
-    <text x="292" y="234" text-anchor="middle">2年</text>
-    <text x="388" y="234" text-anchor="middle">3年</text>
-    <text x="484" y="234" text-anchor="middle">4年</text>
-    <text x="580" y="234" text-anchor="middle">5年</text>
-    <text x="676" y="234" text-anchor="middle">6年</text>
+    <line x1="186" y1="30" x2="186" y2="216" stroke="var(--grid)"/>
+    <line x1="271" y1="30" x2="271" y2="216" stroke="var(--grid)"/>
+    <line x1="357" y1="30" x2="357" y2="216" stroke="var(--grid)"/>
+    <line x1="443" y1="30" x2="443" y2="216" stroke="var(--grid)"/>
+    <line x1="529" y1="30" x2="529" y2="216" stroke="var(--grid)"/>
+    <line x1="614" y1="30" x2="614" y2="216" stroke="var(--grid)"/>
+    <line x1="700" y1="30" x2="700" y2="216" stroke="var(--grid)"/>
+    <text x="186" y="234" text-anchor="middle">1年</text>
+    <text x="271" y="234" text-anchor="middle">2年</text>
+    <text x="357" y="234" text-anchor="middle">3年</text>
+    <text x="443" y="234" text-anchor="middle">4年</text>
+    <text x="529" y="234" text-anchor="middle">5年</text>
+    <text x="614" y="234" text-anchor="middle">6年</text>
+    <text x="700" y="234" text-anchor="middle">7年</text>
   </g>
   <g font-size="12" fill="var(--ink)">
     <text x="12" y="52">躯体工事</text>
-    <rect x="100" y="40" width="192" height="16" rx="3" fill="var(--cool)"/>
-    <text x="302" y="52" font-size="11" fill="var(--sub)">18〜24か月</text>
+    <rect x="100" y="40" width="171" height="16" rx="3" fill="var(--cool)"/>
+    <text x="281" y="52" font-size="11" fill="var(--sub)">18〜24か月</text>
 
     <text x="12" y="84">電力用変圧器</text>
-    <rect x="100" y="72" width="236" height="16" rx="3" fill="#A8A29A"/>
-    <text x="346" y="84" font-size="11" fill="var(--sub)">128週</text>
+    <rect x="100" y="72" width="211" height="16" rx="3" fill="#A8A29A"/>
+    <text x="321" y="84" font-size="11" fill="var(--sub)">128週</text>
 
     <text x="12" y="116">発電機昇圧変圧器</text>
-    <rect x="100" y="104" width="266" height="16" rx="3" fill="#A8A29A"/>
-    <text x="376" y="116" font-size="11" fill="var(--sub)">144週</text>
+    <rect x="100" y="104" width="237" height="16" rx="3" fill="#A8A29A"/>
+    <text x="347" y="116" font-size="11" fill="var(--sub)">144週</text>
 
     <text x="12" y="148">通電（全米平均）</text>
-    <rect x="100" y="136" width="384" height="16" rx="3" fill="var(--warm)"/>
-    <text x="494" y="148" font-size="11" fill="var(--sub)">4年</text>
+    <rect x="100" y="136" width="343" height="16" rx="3" fill="var(--warm)"/>
+    <text x="453" y="148" font-size="11" fill="var(--sub)">4年</text>
 
     <text x="12" y="180">通電（北バージニア100MW）</text>
-    <rect x="100" y="168" width="672" height="16" rx="3" fill="var(--warm)"/>
-    <text x="676" y="180" font-size="11" fill="#fff" text-anchor="end">7年</text>
+    <rect x="100" y="168" width="600" height="16" rx="3" fill="var(--warm)"/>
+    <text x="690" y="180" font-size="11" fill="#fff" text-anchor="end">7年</text>
 
     <text x="12" y="212">SMRの規制手続き</text>
-    <rect x="100" y="200" width="480" height="16" rx="3" fill="#A8A29A"/>
-    <text x="590" y="212" font-size="11" fill="var(--sub)">5年前後</text>
+    <rect x="100" y="200" width="429" height="16" rx="3" fill="#A8A29A"/>
+    <text x="539" y="212" font-size="11" fill="var(--sub)">5年前後</text>
   </g>
   <text x="12" y="20" font-size="11" fill="var(--muted)">着工から起算した所要期間</text>
 </svg>
-<figcaption>躯体は最短の工程である。律速は通電と機器納期にあり、この2つはいずれも事業者の投資判断より長い。北バージニアのバーは図の右端を超える。</figcaption>
+<figcaption>躯体は最短の工程である。律速は通電と機器納期にあり、この2つはいずれも事業者の投資判断より長い。北バージニアのバーは図の目盛りいっぱいに伸びる。</figcaption>
 </figure>
 
 この時間差が立地の意味を変える。==事業者が探しているのは安い電気ではなく、早い電気である==。そして==早い電気があるのは、送電網が既に敷かれていて、それを使う需要が来なかった土地である==。

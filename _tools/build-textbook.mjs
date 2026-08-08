@@ -71,7 +71,11 @@ function inline(s) {
 // a diagram is markup, not prose — there is no Markdown spelling for an SVG. The
 // opening tag must sit alone on its line and the matching close likewise, so the
 // scan stays a line scan and never has to parse HTML.
-const RAW_TAGS = 'figure|svg|div|section|aside|details|table';
+// List tags are here too: a <ul class="tb-tl"> timeline is markup, and leaving
+// it out meant the block fell through to the paragraph branch and was escaped
+// into visible source. Markdown's own "- item" lists are unaffected — the scan
+// only fires on a line that starts with the tag.
+const RAW_TAGS = 'figure|svg|div|section|aside|details|table|ul|ol|blockquote|pre';
 const RAW_OPEN = new RegExp(`^\\s*<(${RAW_TAGS})[\\s>]`, 'i');
 
 function splitRow(line) {

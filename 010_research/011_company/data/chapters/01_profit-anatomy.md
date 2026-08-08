@@ -28,7 +28,7 @@ thesis: 企業の利益は事業名ではなく工程ごとの価格決定力か
 
   <path d="M121 68 L266 88" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"/>
   <path d="M171 68 L462 88" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="486" y="80" font-size="10.5" fill="var(--muted)">同じ「資源」が売上と利益で位置を入れ替える</text>
+  <text x="466" y="80" font-size="10.5" fill="var(--muted)">同じ「資源」が売上と利益で位置を入れ替える</text>
 
   <line x1="12" y1="140" x2="708" y2="140" stroke="var(--grid)"/>
   <text x="12" y="162" font-size="11" fill="var(--muted)">同じ型が他社にも出る</text>

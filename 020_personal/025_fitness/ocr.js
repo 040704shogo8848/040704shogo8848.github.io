@@ -13,7 +13,15 @@
    機種や画面比率が変わると比率がずれるため、読み取り後は切り出した画像を値の
    横に並べて目視できるようにし、ずれた場合はオフセットで補正する。            */
 
+/* 読み取りエンジンは外部の CDN から取る。バージョンを固定し、本体には
+   SRI ハッシュを付けて改ざんされたコードが動かないようにしている。
+   ハッシュを更新せずに TESS_VER だけ上げると読み込みが失敗する（そのほうが安全）。
+   画像そのものは worker 内で処理されるだけで、どこにも送信しない。          */
 const TESS_VER = "5.1.1";
+const TESS_BASE = "https://cdn.jsdelivr.net/npm/tesseract.js@" + TESS_VER + "/dist/";
+const TESS_SRI = {
+  main: "sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F"
+};
 
 /* 値の位置。画像の幅・高さに対する比率で持つ。
    1列目〜3列目 × 1行目〜4行目の12項目と、上部の体重。表示順は SCALE_FIELDS と同じ */
@@ -89,9 +97,11 @@ function loadTesseract() {
   if (window.Tesseract) return Promise.resolve();
   return new Promise((res, rej) => {
     const s = document.createElement("script");
-    s.src = "https://cdn.jsdelivr.net/npm/tesseract.js@" + TESS_VER + "/dist/tesseract.min.js";
+    s.src = TESS_BASE + "tesseract.min.js";
+    s.integrity = TESS_SRI.main;      // 中身が1バイトでも違えばブラウザが実行を拒む
+    s.crossOrigin = "anonymous";
     s.onload = () => res();
-    s.onerror = () => rej(new Error("読み取りライブラリを取得できなかった"));
+    s.onerror = () => rej(new Error("読み取りライブラリを取得できなかった（通信不可か、配信内容が変わっている）"));
     document.head.appendChild(s);
   });
 }
@@ -105,7 +115,13 @@ async function readScaleImage(img, offset, onProgress) {
   await loadTesseract();
   const boxes = cellBoxes(offset.dx, offset.dy);
   const canvases = boxes.map(b => cropCell(img, b, 2));
-  const worker = await Tesseract.createWorker("eng", 1);
+  // worker と wasm の取得先も同じ固定バージョンに寄せる。既定のままだと
+  // 実行時に別バージョンを取りに行くことがあり、何が動いているか読めなくなる
+  const worker = await Tesseract.createWorker("eng", 1, {
+    workerPath: TESS_BASE + "worker.min.js",
+    corePath: "https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1",
+    langPath: "https://tessdata.projectnaptha.com/4.0.0"
+  });
   const nums = [];
   try {
     await worker.setParameters({

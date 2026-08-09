@@ -125,7 +125,8 @@ Decagonはカスタマーサポート向けAIエージェントの専業で、20
 - 既存ヘルプデスクと専業エージェントを併用する顧客において、実行環境をどちらが握るかを示す資料が見つからない。
 - Palantirの2026年第2四半期のGAAP純利益10億6,200万ドルが営業利益9億1,200万ドルを1億5,000万ドル上回る要因の内訳が確認できない。
 - 本章で参照したPalantirの10-Qと10-Kの内容は要約サイト経由の二次情報であり、SEC EDGARの原文と照合できていない。
-
+- Palantirの政府案件と商用案件の粗利率差を確認できていない。同社は全社の粗利率のみを開示しており、セグメント別の原価は示されていない。
+- フォワードデプロイド体制がスケールするかを、人員1人あたり売上の時系列で検証できていない。常駐人員数の開示が要る。
 ## 出典
 
 1. Palantir Reports Q2 2026 U.S. Comm. Revenue Growth of 149% Y/Y — StockTitan掲載のプレスリリース全文 — https://www.stocktitan.net/news/PLTR/palantir-reports-q2-2026-u-s-comm-revenue-growth-of-149-y-y-and-c8762wptyyap.html

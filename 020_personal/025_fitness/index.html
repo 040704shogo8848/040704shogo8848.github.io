@@ -553,6 +553,29 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   </div>
 
   <div class="card">
+    <h2>ジムの設備<span class="r">Anytime Fitness</span></h2>
+    <p class="note" style="margin-bottom:10px">
+      店舗によって置いてある器具と刻みが違う。既定値は一般的な構成を入れてあるので、
+      実際のラックとマシンを見て直す。ここを直すと重量の選択肢が変わる。
+    </p>
+    <div class="row">
+      <div class="fg"><label class="f">固定ダンベル kg（カンマ区切り）</label><input id="gDb"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="fg"><label class="f">マシン 刻み kg</label><input type="number" step="0.5" id="gMs"></div>
+      <div class="fg"><label class="f">マシン 上限 kg</label><input type="number" id="gMm"></div>
+      <div class="fg"><label class="f">ケーブル 刻み kg</label><input type="number" step="0.5" id="gCs"></div>
+      <div class="fg"><label class="f">ケーブル 上限 kg</label><input type="number" id="gCm"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="fg"><label class="f">アシスト 上限 kg</label><input type="number" id="gAm"></div>
+      <div class="fg"><label class="f">バー自重 kg</label><input type="number" step="0.5" id="gBw"></div>
+      <div class="fg"><label class="f">バーベル 刻み kg</label><input type="number" step="0.5" id="gBs"></div>
+      <div class="fg"><label class="f">バーベル 上限 kg</label><input type="number" id="gBm"></div>
+    </div>
+  </div>
+
+  <div class="card">
     <h2>実現可能な重量</h2>
     <div id="cReal"></div>
   </div>
@@ -638,6 +661,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <div class="modal" id="lib"><div class="mbox">
   <div class="row" style="margin-bottom:10px"><b style="font-size:14px">種目を選ぶ</b><div class="sp"></div><button class="btn sm gr" id="libClose">閉じる</button></div>
   <input type="search" id="libSearch" placeholder="種目名で絞る" style="margin-bottom:10px">
+  <div class="filt" id="libPlace"></div>
   <div class="filt" id="libFilt"></div>
   <div id="libList"></div>
 </div></div>
@@ -668,7 +692,8 @@ function defaults(){
     target:{kcal:2600, p:120, f:70, c:375},
     menus: menus, activeMenu:"vshape60", editMenu:"vshape60",
     sessions:{}, meals:{}, myfoods:[], recent:[], body:[],
-    scaleOffset:{dx:0, dy:0}
+    scaleOffset:{dx:0, dy:0},
+    gym: JSON.parse(JSON.stringify(GYM))
   };
 }
 const EXMAP = {}; EXERCISES.forEach(e=>EXMAP[e.id]=e);
@@ -731,18 +756,36 @@ function achievable(nBars, shaft, cap){
   return Array.from(out.entries()).sort((a,b)=>a[0]-b[0]);
 }
 function comboText(counts){
+  if(!counts) return "";
   const p=[]; counts.forEach((c,i)=>{ if(c>0) p.push(DENS[i]+"×"+c); });
   return p.length ? p.join(" / ")+" 片側" : "シャフトのみ";
 }
+/* ジム器具は「刻み」で決まるので、在庫計算ではなく等差の列を作る */
+function stepList(from, to, step){
+  const out=[];
+  for(let w=from; w<=to+1e-9; w=r1(w+step)) out.push([r1(w), null]);
+  return out;
+}
+const GYM_EQ = {dbf:1, dbf1:1, mach:1, cbl:1, cbl1:1, assist:1, gbb:1};
 let wcache = {};
 function weightsFor(eq){
   if(wcache[eq]) return wcache[eq];
+  const g = S.gym || GYM;
   let l = [];
   if(eq==="db2") l = achievable(2, S.dbShaft, S.dbMax);
   else if(eq==="db1") l = achievable(1, S.dbShaft, S.dbMax);
   else if(eq==="bb") l = achievable(1, S.bbShaft, S.bbMax);
+  else if(eq==="dbf" || eq==="dbf1") l = (g.dbList||[]).map(w=>[w,null]);
+  else if(eq==="mach") l = stepList(g.machStep, g.machMax, g.machStep);
+  else if(eq==="cbl" || eq==="cbl1") l = stepList(g.cblStep, g.cblMax, g.cblStep);
+  else if(eq==="assist") l = stepList(g.cblStep, g.assistMax, g.cblStep);
+  else if(eq==="gbb") l = stepList(g.barWeight, g.gbbMax, g.gbbStep);
   wcache[eq] = l; return l;
 }
+const EQN = {bw:"自重", db1:"ダンベル1本", db2:"ダンベル2本", bb:"バーベル", time:"秒数",
+  dbf:"固定ダンベル2本", dbf1:"固定ダンベル1本", mach:"マシン", cbl:"ケーブル",
+  cbl1:"ケーブル片手", assist:"アシスト", gbb:"バーベル（ジム）"};
+const LOCN = {home:"自宅", gym:"ジム", both:"どちらでも"};
 function clearWC(){ wcache = {}; }
 function volMult(e){ return e.vm || (e.eq==="db2" ? 2 : 1); }
 const UNIT = e => e.eq==="time" ? "秒" : "回";
@@ -838,8 +881,15 @@ function suggest(e, it, prev){
   const mw = Math.max.apply(null, done.map(x=>Number(x.w)||0));
   if(!allTop) return {txt:"前回 "+mw+"kg"};
   const list = weightsFor(e.eq).map(x=>x[0]);
+  if(e.eq==="assist"){
+    // 補助重量なので小さいほど負荷が高い。次は1段「下げる」
+    const lower = list.filter(w=>w<mw);
+    const nx = lower.length ? lower[lower.length-1] : null;
+    return nx ? {txt:"全セット上限達成。補助を "+nx+"kg に下げる"}
+              : {txt:"全セット上限達成。補助ゼロに到達。懸垂に移る"};
+  }
   const nx = list.find(w=>w>mw);
-  return nx ? {txt:"全セット上限達成。"+nx+"kg に上げる"} : {txt:"全セット上限達成。在庫の上限なのでレップで伸ばす"};
+  return nx ? {txt:"全セット上限達成。"+nx+"kg に上げる"} : {txt:"全セット上限達成。上限なのでレップで伸ばす"};
 }
 
 function renderTrain(){
@@ -961,7 +1011,7 @@ function renderMenuTab(){
     bl.items.forEach((it,ii)=>{
       const e = ex(it.id);
       h += '<div class="mrow"><span class="mname">'+esc(e.n)+'</span>'
-        + '<span class="tag">'+({bw:"自重",db1:"ダンベル1本",db2:"ダンベル2本",bb:"バーベル",time:"秒数"}[e.eq]||e.eq)+'</span>'
+        + '<span class="tag">'+(EQN[e.eq]||e.eq)+'</span>'
         + '<span class="msp"><span class="note">セット</span><input type="number" min="1" value="'+it.sets+'" data-s="'+bi+'.'+ii+'"></span>'
         + '<span class="msp"><span class="note">下限</span><input type="number" value="'+it.lo+'" data-lo="'+bi+'.'+ii+'"></span>'
         + '<span class="msp"><span class="note">上限</span><input type="number" value="'+it.hi+'" data-hi="'+bi+'.'+ii+'"></span>'
@@ -1007,7 +1057,7 @@ $("#eDel").onclick = ()=>{
 };
 
 /* 種目ライブラリのモーダル */
-let libTarget = 0, libFilter = "all";
+let libTarget = 0, libFilter = "all", libPlace = "all";
 const MUSCLE_GROUPS = [
   ["all","すべて",null],
   ["shoulder","肩",["delt_ant","delt_lat","delt_post"]],
@@ -1019,6 +1069,13 @@ const MUSCLE_GROUPS = [
 ];
 function openLib(bi){
   libTarget = bi; libFilter = "all"; $("#libSearch").value="";
+  const PLACES = [["all","場所すべて"],["gym","ジム"],["home","自宅"]];
+  $("#libPlace").innerHTML = PLACES.map(g=>'<button data-p="'+g[0]+'"'+(g[0]===libPlace?' class="on"':'')+'>'+g[1]+'</button>').join("");
+  $("#libPlace").querySelectorAll("button").forEach(b=> b.onclick = ()=>{
+    libPlace = b.dataset.p;
+    $("#libPlace").querySelectorAll("button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); renderLib();
+  });
   $("#libFilt").innerHTML = MUSCLE_GROUPS.map(g=>'<button data-g="'+g[0]+'"'+(g[0]==="all"?' class="on"':'')+'>'+g[1]+'</button>').join("");
   $("#libFilt").querySelectorAll("button").forEach(b=> b.onclick = ()=>{
     libFilter = b.dataset.g;
@@ -1032,15 +1089,16 @@ function renderLib(){
   const grp = MUSCLE_GROUPS.find(g=>g[0]===libFilter);
   const list = EXERCISES.filter(e=>{
     if(q && e.n.indexOf(q) < 0) return false;
+    if(libPlace !== "all" && e.loc !== libPlace && e.loc !== "both") return false;
     if(grp && grp[2]) return e.pri.some(m=>grp[2].indexOf(m)>=0);
     return true;
   });
   $("#libList").innerHTML = list.length ? list.map(e=>{
-    const eqn = {bw:"自重",db1:"ダンベル1本",db2:"ダンベル2本",bb:"バーベル",time:"秒数"}[e.eq]||e.eq;
+    const eqn = EQN[e.eq]||e.eq;
     return '<div class="libitem" data-id="'+e.id+'">'
       + bodySVG(levelsOf([e]),"front") + bodySVG(levelsOf([e]),"back")
       + '<div class="li1"><div class="lin">'+esc(e.n)+'</div>'
-      + '<div class="lim">'+eqn+' ・ '+e.pri.map(m=>MUSCLES[m][0]).join("・")+'</div></div></div>';
+      + '<div class="lim">'+eqn+' ・ '+(LOCN[e.loc]||"")+' ・ '+e.pri.map(m=>MUSCLES[m][0]).join("・")+'</div></div></div>';
   }).join("") : '<div class="empty">該当なし</div>';
   $("#libList").querySelectorAll(".libitem").forEach(el=>{
     el.onclick = ()=>{
@@ -1458,8 +1516,21 @@ function renderConf(){
   bind("#cDb","dbShaft"); bind("#cBb","bbShaft"); bind("#cDbMax","dbMax"); bind("#cBbMax","bbMax");
   $("#cTotal").textContent = r1(DENS.reduce((a,d)=>a+d*(S.inventory[String(d)]||0),0))+" kg";
 
+  // ジム設備のバインド
+  const gnum = (sel,key)=>{ $(sel).value = S.gym[key]; $(sel).onchange = ()=>{ S.gym[key] = +$(sel).value||0; save(); clearWC(); renderConf(); renderTrain(); }; };
+  $("#gDb").value = (S.gym.dbList||[]).join(", ");
+  $("#gDb").onchange = ()=>{
+    const l = $("#gDb").value.split(",").map(x=>parseFloat(x.trim())).filter(x=>x>0).sort((a,b)=>a-b);
+    if(l.length) S.gym.dbList = l;
+    save(); clearWC(); renderConf(); renderTrain();
+  };
+  gnum("#gMs","machStep"); gnum("#gMm","machMax");
+  gnum("#gCs","cblStep");  gnum("#gCm","cblMax");
+  gnum("#gAm","assistMax");
+  gnum("#gBw","barWeight"); gnum("#gBs","gbbStep"); gnum("#gBm","gbbMax");
+
   const mk = (t,s,l)=>'<h3>'+t+' <span class="tag">'+s+'</span></h3><div class="chips">'
-    + (l.map(p=>'<span class="chip" title="'+comboText(p[1])+'">'+p[0]+'</span>').join("") || '<span class="note">組めない</span>')+'</div>';
+    + (l.map(p=>'<span class="chip"'+(p[1]?' title="'+comboText(p[1])+'"':'')+'>'+p[0]+'</span>').join("") || '<span class="note">組めない</span>')+'</div>';
   const d2 = achievable(2,S.dbShaft,S.dbMax), d1 = achievable(1,S.dbShaft,S.dbMax), bb = achievable(1,S.bbShaft,S.bbMax);
   const dead = DENS.filter(d=>(S.inventory[String(d)]||0)>0 && (S.inventory[String(d)]||0)<4);
   let diag = "";
@@ -1467,10 +1538,18 @@ function renderConf(){
     + dead.map(d=>d+"kg（"+(S.inventory[String(d)]||0)+"枚）").join("・")
     + ' は枚数が足りず両手種目では使えないため、上限が1本 <b>'+(d2.length?d2[d2.length-1][0]:0)+'kg</b> で頭打ちになっている。'
     + '買い足すなら重いプレートより <b>2.5kg を4枚</b> のほうが刻みが増える。</p>';
-  $("#cReal").innerHTML = mk("ダンベル2本（1本あたり kg）","両手種目",d2)
+  $("#cReal").innerHTML =
+      '<div style="font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.04em">自宅（プレート在庫から計算）</div>'
+    + mk("ダンベル2本（1本あたり kg）","両手種目",d2)
     + mk("ダンベル1本（kg）","片手ロウ・プルオーバー",d1)
     + mk("バーベル（kg）","セーフティ無しのため単独での高重量は避ける",bb) + diag
-    + '<p class="note" style="margin-top:8px">各値にカーソルを合わせるとプレートの組み合わせが出る。</p>';
+    + '<p class="note" style="margin-top:8px">各値にカーソルを合わせるとプレートの組み合わせが出る。</p>'
+    + '<hr><div style="font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.04em">ジム（設備の刻みから計算）</div>'
+    + mk("固定ダンベル（kg）","ラックにある番号",weightsFor("dbf"))
+    + mk("マシン（kg）","ラットプルダウン・ロウ・プレス系",weightsFor("mach"))
+    + mk("ケーブル（kg）","サイドレイズ・フェイスプル",weightsFor("cbl"))
+    + mk("アシスト（kg）","数値が小さいほど負荷が高い",weightsFor("assist"))
+    + mk("バーベル（kg）","20kgバー＋2.5kg刻み",weightsFor("gbb"));
 
   const p = S.profile;
   $("#cBmr").value=p.bmr; $("#cAct").value=p.act; $("#cGoal").value=p.goal; $("#cPr").value=p.pr; $("#cFr").value=p.fr;

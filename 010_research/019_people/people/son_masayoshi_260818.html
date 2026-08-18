@@ -1,0 +1,2423 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>孫正義 — 無番地から10ギガワットまで</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    /* charts: dataviz の検証済みスロット（surface #fff で検証） */
+    --s1:#2a78d6; --s1-light:#86b6ef; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  /* ── charts ───────────────────────────────────────────────────────────── */
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  /* 極性チャート: 0を中央に置く */
+  .pol{display:grid;gap:8px}
+  .pol .row{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:10px}
+  .pol .yr{font-size:12.5px;color:var(--sub);font-variant-numeric:tabular-nums;text-align:right}
+  .pol .track{position:relative;height:20px;background:linear-gradient(90deg,transparent 0,transparent calc(50% - 1px),var(--line) calc(50% - 1px),var(--line) calc(50% + 1px),transparent calc(50% + 1px));}
+  .pol .seg{position:absolute;top:0;height:20px;border-radius:3px}
+  .pol .seg.p{background:var(--s1);left:50%}
+  .pol .seg.n{background:var(--neg);right:50%}
+  .pol .val{position:absolute;top:0;font-size:12px;line-height:20px;
+    font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+  .pol-legend{display:flex;gap:16px;font-size:12px;color:var(--sub);margin-top:12px}
+  .pol-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  /* ── timeline ─────────────────────────────────────────────────────────── */
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  /* ── quotes ───────────────────────────────────────────────────────────── */
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / research / <a href="../index.html">people</a> / 孫正義</div>
+
+  <header class="top">
+    <h1>孫正義</h1>
+    <div class="en">Masayoshi Son — 1957年8月11日、佐賀県鳥栖市生まれ／ソフトバンクグループ 代表取締役 会長兼社長執行役員</div>
+    <div class="tags">
+      <span class="tag">投資</span><span class="tag">AI</span><span class="tag">通信</span>
+      <span class="tag">起業</span><span class="tag">レバレッジ</span>
+    </div>
+  </header>
+
+  <p class="lead">
+    地番のない集落で生まれた人間が、69年後に米国で10ギガワットの発電所を建てる側に立っている。
+    その間に何が起きたのかを、日付が確定した出来事だけで並べ直した。
+  </p>
+  <p class="srcnote">
+    作成日 2026年8月18日。数値は原則としてソフトバンクグループの一次開示（決算説明会資料、決算データシート、株主総会招集通知、プレスリリース、アニュアルレポート）から取り、
+    報道値・評伝由来の記述はその都度出所を分けて書いた。金額は通貨・単位・時点を併記し、資料間で割れている数値は諸説として両方を残した。
+    確認できなかった論点は末尾の<a href="#open">残っている問い</a>に列挙してある。
+  </p>
+
+  <div class="kpi">
+    <div class="card"><div class="k">出生</div><div class="v">1957年<small>佐賀県鳥栖市五軒道路無番地</small></div></div>
+    <div class="card"><div class="k">創業</div><div class="v">1981年<small>日本ソフトバンク、24歳、資本金1,000万円</small></div></div>
+    <div class="card"><div class="k">SBG保有比率</div><div class="v">29.88%<small>2026年3月31日、1,703,007千株</small></div></div>
+    <div class="card"><div class="k">株主価値（NAV）</div><div class="v">72.3兆円<small>2026年6月30日。8月5日時点58.3兆円</small></div></div>
+  </div>
+
+  <div class="callout">
+    <p style="margin-top:0"><strong>先に結論を3つ置く。</strong></p>
+    <p><strong>1. 同じ一つの動作を69年繰り返している。</strong>
+    まだ値段が付いていない場所に、自分の金ではない金で、桁を間違えたように見える額を置く。
+    1978年のインベーダー筐体は1台5万円を利益後払いで仕入れて空輸費7万円を先に払った<sup><a href="#s56">56</a></sup>。
+    2006年のボーダフォン日本法人買収は自己資本2,428億円の会社が1兆7,500億円を払った<sup><a href="#s26">26</a></sup><sup><a href="#s19">19</a></sup>。
+    2026年のOpenAIは3か月ごとに100億ドルを払い込む<sup><a href="#s3">3</a></sup>。
+    金額は6桁変わったが、構造は変わっていない。</p>
+    <p><strong>2. 勝ちは2件、負けは類型で決まっている。</strong>
+    生涯の利益の実質はYahoo!・Alibaba系列とArmの2系統に集中する。Alibabaは投資額105億円に対し2015年3月末で市場価値7兆9,934億円、761倍<sup><a href="#s16">16</a></sup>。
+    Armは3.3兆円で買って2026年6月末の保有価値49.91兆円<sup><a href="#s5">5</a></sup>。
+    一方の負けはすべて同じ形をしている。レバレッジをかけて資本集約型の事業を買った案件、
+    つまりキングストン、Sprint、WeWorkで負けている<sup><a href="#s68">68</a></sup><sup><a href="#s29">29</a></sup><sup><a href="#s73">73</a></sup>。
+    銘柄選定の失敗ではなく、資金調達構造と事業の資本回転率の不一致が原因である。</p>
+    <p><strong>3. 現在は生涯で最もリスクが集中した局面にある。</strong>
+    2026年6月30日のNAV 72.3兆円のうち、Armが49.91兆円、SVF2（実質はOpenAI）が19.29兆円。この2つで84.5%を占める<sup><a href="#s5">5</a></sup>。
+    2026年3月に総額400億ドル・30金融機関超のブリッジローンを組成し、第1四半期に200億ドルを引き出した<sup><a href="#s2">2</a></sup>。
+    そのNAVは8月5日時点で58.3兆円まで、2か月で14.0兆円動いている<sup><a href="#s2">2</a></sup>。
+    2000年2月に3日間だけ世界一の富豪になり、その後98.7%下落した局面と、資産の集中度という点では同じ形である。</p>
+  </div>
+
+  <!-- ① 年表 -->
+  <h2 id="timeline"><span class="num">①</span>年表<span class="en">Timeline — 1917 to 2026</span></h2>
+
+  <p>日付が確定した出来事だけを置いた。各項目は事実、具体、そしてなぜそれが後を決めたかの3層で書いてある。
+  期をクリックすると絞り込める。</p>
+
+  <div class="tl-tools">
+    <input type="text" id="tlq" placeholder="検索（人名・社名・金額・地名）" autocomplete="off">
+    <span class="tl-count" id="tlcount"></span>
+  </div>
+  <div class="tl-eras" id="tleras"></div>
+  <div class="tl" id="tl"></div>
+  <div class="tl-empty" id="tlempty">該当なし</div>
+
+  <!-- ② 局面 -->
+  <h2><span class="num">②</span>局面ごとの解剖<span class="en">Eight Phases, Dissected</span></h2>
+
+  <h3>1. 無番地（1957〜1973）— 起業は情熱ではなく排除の帰結</h3>
+
+  <p>出生地は佐賀県鳥栖市五軒道路無番地。国鉄鳥栖駅構内の空き地に、鉄道作業員として集められた朝鮮半島出身者が戦後バラックを建てた集落で、
+  国有地の無許可占拠のため住所に地番が存在しなかった<sup><a href="#s77">77</a></sup><sup><a href="#s56">56</a></sup>。
+  家業は養豚と密造焼酎。祖母・李元照が黒ずんだリヤカーに3歳か4歳の孫正義と残飯入りのドラム缶を並べて載せ、鳥栖駅前の食堂を回って線路脇の赤豚5頭に与えていた<sup><a href="#s56">56</a></sup><sup><a href="#s50">50</a></sup>。</p>
+
+  <blockquote>
+    臭い、汁のこぼれたヌルッとした感触は忘れようがありません。
+    <span class="who">孫正義、幼少期の回想<sup><a href="#s56">56</a></sup></span>
+  </blockquote>
+
+  <p>父・孫三憲は1日18時間働いた。焼酎の行商から密造酒、養豚、消費者金融、そして1969年頃にパチンコ店へと業態を移し、
+  1980年代初には一族7人兄妹のうち6人分で佐賀と福岡に56軒を持つ規模になっていた<sup><a href="#s79">79</a></sup>。
+  規制でフィーバー機が使えなくなったときは、店の駐車場に釣り堀を併設し、黒鯉のなかに数匹だけ混ぜた赤鯉を釣った客に1万円を出す企画で客を戻している<sup><a href="#s79">79</a></sup>。
+  本業が止まったら隣接する遊びで客を引き戻すというこの型は、息子が後に本業の外側へ乗り換え続ける動きの原型として読める。</p>
+
+  <p>差別の起点は幼稚園の帰り道に置かれている。朝鮮人と罵られて投げられた石が額に当たり、血が流れた。
+  ただし本人の語りの主題は痛みではない。<strong class="hit">次第に自分が日本人の子供ではないと気づくようになりました</strong>という、認識が事後的に立ち上がる過程である<sup><a href="#s50">50</a></sup>。
+  小学校高学年で担任に憧れて教師を志したが、当時は日本国籍がなければ公立学校の教員にも公務員にもなれず、この進路は閉じた<sup><a href="#s52">52</a></sup>。</p>
+
+  <p class="note">ここが起業家・孫正義の出発点である。彼が選べたのは、制度が国籍を要求しない職業だけだった。
+  『致知』1989年11月号のインタビューでは、小さいときから事業家になるか政治家になるかのどちらかだと思っていた、と語っている<sup><a href="#s52">52</a></sup>。
+  起業は情熱の帰結ではなく、排除の帰結という側面を持つ。</p>
+
+  <p>1973年の夏に、行くことと何をやるかが別々のルートで確定する。
+  高校1年の夏休みにカリフォルニアで語学研修を受け、そこで見たカリフォルニア大学バークレー校が4年後の編入先になった<sup><a href="#s55">55</a></sup>。
+  同じ夏、藤田田の『ユダヤの商法』を1日5回読み込んだ末に面会を求め、久留米から電話で6回断られたあと、市外電話代が高いという理由でアポなしに羽田へ飛んでいる。
+  秘書に伝えた条件は<strong class="hit">顔を見るだけでいい。3分間、社長室に入れてもらえれば。話もしない</strong>だった。3分の約束は15分になり、藤田は、これからはコンピュータビジネスの時代だと答えた<sup><a href="#s56">56</a></sup><sup><a href="#s55">55</a></sup>。</p>
+
+  <p>16歳の時点で本人が語った将来像として残っている最も直接的な記録は、久留米大学附設高校の担任・阿部逸郎の証言である。
+  自分は韓国籍だから日本では認めてもらえない、アメリカで結果を出せば日本人は評価してくれる<sup><a href="#s77">77</a></sup>。
+  差別を訴えて是正を求めるのではなく、評価者を国境の外に付け替える。この選択がこの時点で決まっている。</p>
+
+  <p>渡米は本人の言葉で脱藩と呼ばれる。父は吐血して入院中で、1歳上の長兄はすでに高校1年で中退して家計を支えていた。
+  36年後、東京国際フォーラムで学生約5,000人に向けてこう説明している<sup><a href="#s53">53</a></sup>。</p>
+
+  <blockquote>
+    僕にとっての脱藩に相当するのが、病気の父親をおいてアメリカに行ってしまう、ということだった。
+    <span class="who">孫正義、2010年3月29日、孫 正義 LIVE 2011、東京国際フォーラム<sup><a href="#s53">53</a></sup></span>
+  </blockquote>
+
+  <h3>2. 米国6年（1974〜1980）— 意思決定OSがここで入る</h3>
+
+  <p>この6年を語学と学歴の助走期間として読むと本質を外す。ここで入ったのは意思決定の手続きそのものである。</p>
+
+  <p>手続きは2回、同じ形で観測できる。1回目は発明の選定。学費を自分で稼ぐために1日1つ発明するという自己ルールを課し、
+  1日5分だけノートに向かって250件超のアイデアを蓄積した。そのうえで部品単価、部品の新しさ指数、その部品に対する自分の知識量指数など約40の採点要素を掛け合わせるプログラムで機械的に順位づけし、
+  音声機能付き電子翻訳機の1件に絞った<sup><a href="#s56">56</a></sup><sup><a href="#s74">74</a></sup>。
+  2回目は事業の選定。1980年3月に帰国してから1年半、収入をゼロにして約40の事業候補を洗い出し、それぞれに人員計画と10年分の予想損益を作り、
+  約25の条件に重みを付けて合計点で並べた結果がソフトウェアの流通だった<sup><a href="#s56">56</a></sup>。
+  対象が発明から事業に変わっただけで、手続きは同一である。</p>
+
+  <p>交渉の型も同じ6年で固まる。セラモンテ高校に編入した3日後、校長に飛び級を認めさせたときの論理は自分の得ではなく、
+  すでに分かっている内容に1年かけるのは教える側の時間の浪費だという相手側の損だった<sup><a href="#s56">56</a></sup>。
+  大学入学資格の検定試験では、辞書の持ち込みと時間延長を試験官の上司、さらにその上司へと電話で遡り、最後にカリフォルニア州教育局の責任者に認めさせている。
+  認められた条件は辞書可、1科目2時間、3日間の日程で、終了時刻が明示されなかったため無期限延長と解釈して解き切った<sup><a href="#s56">56</a></sup>。</p>
+
+  <p>資金がない状態で世界水準の技術者を動かす方法も、ここで実装されている。
+  音声合成の権威であるUCバークレー物理学教授フォレスト・モーザーに前払いをゼロにした出来高払いと成功報酬で参画を求め、
+  モーザーのイニシャルを冠したM SPEECH SYSTEM INC.を設立した<sup><a href="#s56">56</a></sup>。
+  試作機は1977年夏、奈良県天理のシャープ中央研究所に持ち込まれる。松下電器と三洋電機には既に断られていた。
+  応対した専務・佐々木正が英語版の開発費2,000万円を即断で出し、他言語版込みで総額1億6,000万円を提示した<sup><a href="#s75">75</a></sup><sup><a href="#s76">76</a></sup>。</p>
+
+  <p class="note">売却額は確定しない。約1億円のうち特許契約金4,000万円とする井上篤夫『志高く』系の記述<sup><a href="#s56">56</a></sup>、1億6,000万円とする記述<sup><a href="#s76">76</a></sup><sup><a href="#s75">75</a></sup>、
+  英語圏の170万ドル、そして孫本人が1992年1月のHarvard Business Reviewで語った100万ドル近くという4つが並立している。
+  特許の売却額と開発委託費の累計が混ざっている可能性が高い。なお1979年の実勢相場は1ドル220〜250円台であり、1億6,000万円は約65万〜73万ドルにしかならない。
+  英語圏の170万ドルは近年の為替で換算した数字に見える。</p>
+
+  <p>そして時間差の裁定取引。日本でブームが冷めかけていたスペースインベーダーの筐体を、処分費用に困っていた業者から1台5万円で20台、利益が出てから払う条件で仕入れた。
+  船便の2か月を捨てて1台7万円の空輸を選び、日本の80万〜90万円と米国の約50万円という価格差の上に350台を置いた。
+  設置先とは孫6対店舗4で分け、半年の利益は1億円を超えた<sup><a href="#s56">56</a></sup>。
+  同じモノの価値が場所と時間でずれるだけで1億円が作れる、という実証がここで済んでいる。</p>
+
+  <p>1979年にはキャンパス脇の最大級のゲームセンターを買う。一度断られた翌日に現金2,000万円を持って戻った。
+  買収後に入れたのは、機種別売上を日次でグラフにして何日目で損益分岐に届くかを見る運用、3日働かせて品質が変わらない従業員の即日解雇、
+  そして時給の安い学生を雇い勤務後に無料コインを配ってゲームをさせる仕掛けだった。1か月で売上は3倍になった<sup><a href="#s56">56</a></sup>。
+  買収後に数字を毎日見て人を入れ替えるという後年の統治は、22歳のこの店から始まっている。</p>
+
+  <h3>3. 創業と病（1981〜1989）— 独占を取る側と取られる側</h3>
+
+  <p>1981年3月、福岡市雑餉隈の雑居ビル2階。父が持っていた木造トタン屋根の建物で、雇ったばかりのアルバイト2名の前に、
+  孫はみかん箱を2つ並べてその上に立った。売上は5年後に100億円、10年後に500億円、30年後には豆腐屋のように1兆、2兆と数える会社にする、と1時間話した。
+  当時の売上はゼロで、2人は数日から2週間のうちに辞めた<sup><a href="#s86">86</a></sup><sup><a href="#s56">56</a></sup>。</p>
+
+  <p>ここから3か月の間に、卸売業が成立するための3条件を同時に埋めていく。
+  10月の大阪エレクトロニクスショーで資本金の8割にあたる800万円を1回の展示会に投じ、ソニーと松下電器と同格の最大級ブースを取った。
+  出展費を負担させない条件で10社余りのソフトハウスを集め、日本のソフトが全部ここにあるという状態を1週間だけ人工的に作った<sup><a href="#s56">56</a></sup><sup><a href="#s57">57</a></sup>。
+  1か月後、その展示を見た上新電機から電話が入る。孫は社長・浄弘博光に対して、取引先はまったくない、資金もほとんどない、品揃えもこれからだと認めたうえで、
+  開店したばかりのパソコン専門店J&Pへの独占供給権を要求した<sup><a href="#s57">57</a></sup>。</p>
+
+  <blockquote>
+    お前、おもしろいやつだ。何もなくて独占させろだと。……自分の若い時を思い出したよ。お前に賭けてみようじゃないか。全部任せる。
+    <span class="who">浄弘博光（上新電機社長）、1981年11月<sup><a href="#s57">57</a></sup></span>
+  </blockquote>
+
+  <p>下流の独占を取った状態で、上流の独占を取りにいく。最大手ソフトハウスだったハドソンとの条件は、1982年1月15日までにソフト数万本を引き取り、
+  そのために1981年12月末までに現金3,000万円を用意することだった。この3,000万円を作るため、第一勧業銀行麹町支店に無担保で1億円を申し込み、
+  シャープ専務・佐々木正の個人保証で実行された。支店長の決裁枠1,000万円の10倍である<sup><a href="#s56">56</a></sup><sup><a href="#s75">75</a></sup>。
+  他人の信用と他人の金で自分のリスクを取るという資金調達様式は、この時点で完成している。</p>
+
+  <p>結果として1982年の月商は1月の150万円から5月に1億円、12月に3億2,000万円へ立ち上がり、年商20億円に達した<sup><a href="#s87">87</a></sup>。
+  出版では失敗している。5月創刊の『Oh!PC』『Oh!MZ』は初刷5万部に対し返品率85%、1誌あたり月約1,000万円の赤字を出した。
+  孫はここで撤退せずテレビCMを打ち、半年後に返送された読者カード数万枚を全数分析して、ページ数を2〜3倍に増やしつつ定価を680円から580円へ下げた。
+  値下げ後の号は3日で売り切れ、黒字化した<sup><a href="#s56">56</a></sup><sup><a href="#s83">83</a></sup>。</p>
+
+  <p>1983年春、慢性肝炎と診断される。25歳。社員は30名から125名、売上は20億円から45億円へ伸びている最中で、長女は1歳半、妻は次女を妊娠中だった。
+  医師から告げられた余命は長くても5年<sup><a href="#s58">58</a></sup>。同年4月、孫は代表取締役会長に退き、野村證券出身の大森康彦を社長に招いた。
+  電気通信事業者協会に提出された本人の略歴書は、1983年4月に会長、1986年2月に社長復帰と記録している<sup><a href="#s45">45</a></sup>。離任は約2年10か月である。</p>
+
+  <blockquote>
+    夜、病室でひとり泣きました。治療が苦しいからじゃないんです。
+    <span class="who">孫正義、1983〜1984年の闘病について<sup><a href="#s58">58</a></sup></span>
+  </blockquote>
+
+  <p>治療の転機は1984年1月、新聞記事で知った虎の門病院の熊田博光医師である。治りますかという問いに、7、80パーセントは治りますという答えが返った。
+  3月13日に虎の門病院川崎分院へ転院する<sup><a href="#s58">58</a></sup>。
+  この約3年の入退院期間に読んだのは約4,000冊とされ、『竜馬がゆく』は2度通読した。そして病床の上で、5文字×5行の孫の二乗の兵法が立案される<sup><a href="#s56">56</a></sup>。
+  公開されたのは25年後、2010年7月のソフトバンクアカデミア開校記念講演だった。</p>
+
+  <p>この期間に会社は別の失敗もしている。1984年半ばに設立した日本データネットの雑誌事業が月約1億円、半年で累計約10億円の赤字を出して廃刊になった<sup><a href="#s56">56</a></sup>。
+  この穴を埋めたのが、1987年に実用化したNCC BOXである。1985年の通信自由化で長距離電話に複数の事業者が参入したものの、
+  利用者は毎回プレフィックスを手入力しなければ安い回線を選べなかった。その選択を自動化するアダプタを無料で配り、キャリアからロイヤリティを取る設計にした。
+  累計ロイヤリティは約20億円で、サービスは2001年5月まで約14年動いた<sup><a href="#s56">56</a></sup><sup><a href="#s88">88</a></sup>。</p>
+
+  <p>そしてこの事業をめぐって、孫の原則が最も鮮明に出る場面が来る。1986年12月24日、京セラ本社で稲盛和夫は即断した。
+  50万個すべて買う、ただし他には卸さないでくれ。それでは無料配布と全キャリアからのロイヤリティという設計が壊れる。
+  7時間どちらも譲らず、疲れ切った孫と大久保秀夫は独占契約書に署名した。翌朝、孫は撤回を申し入れ、稲盛は契約書を返した<sup><a href="#s89">89</a></sup><sup><a href="#s56">56</a></sup>。</p>
+
+  <p class="note">1981年11月に上新電機から独占を取り、1986年12月に第二電電の独占を拒んでいる。
+  同じ独占という道具を、自分が握る側か握られる側かで正反対に扱う。ここに一貫しているのは商道徳ではなく、設計の保全である。</p>
+
+  <h3>4. 米国買収（1990〜1996）— 次に何が来るかを金で買う</h3>
+
+  <p>1994年7月22日の店頭公開が、この局面のすべての前提になる。公開価格11,000円に対し初値18,900円。
+  公開後の発行済株式1,425万株で計算すると時価総額は約2,693億円になる。公開前は孫の資産管理会社エムエーシーが77.4%、孫個人が5.1%を持っていた<sup><a href="#s90">90</a></sup>。
+  ここでソフトバンクは、円建てで数百億円を即座に動かせる会社に変わった。</p>
+
+  <p>買収の実務エンジンは、1994年の公開を野村證券側で担当した北尾吉孝である。1995年に44歳で常務取締役として入社し、
+  11行の銀行シンジケート団に依存した調達体制を資本市場からの直接調達へ組み替えた。約3年で市場から総額4,878億円、うち時価発行増資1,697億円を調達している<sup><a href="#s71">71</a></sup><sup><a href="#s72">72</a></sup>。
+  1995年9月には財務代理人方式で500億円の無担保社債を発行し、銀行を受託会社から外して管理手数料を2,700万円から1,200万円へ下げた。
+  主要行は激怒し、一部は北尾の解任を要求した。孫の返答が残っている<sup><a href="#s71">71</a></sup>。</p>
+
+  <blockquote>
+    私は北やんを500％信じている。
+    <span class="who">孫正義、1995年9月、臨時役員会<sup><a href="#s71">71</a></sup></span>
+  </blockquote>
+
+  <p>この調達力の上に、買収が並ぶ。1994年10月にジフ出版部門の入札でForstmann Littleに14.5億ドルで敗れると、同年12月に展示会部門だけを2億200万ドルで取った<sup><a href="#s91">91</a></sup>。
+  1995年2月14日にはシェルドン・アデルソンのThe Interface GroupからCOMDEXを含む見本市17本を8億ドルで買い、4月1日に完了する<sup><a href="#s69">69</a></sup>。
+  そして1995年11月9日、10月に負けた出版本体を、勝者から21億ドルで買い直した<sup><a href="#s70">70</a></sup>。1年で1.45倍の値段である。</p>
+
+  <p>この2件が意味するのは、米国IT業界の見本市と雑誌を同時に持つ、つまり誰が何をやっているかを一次情報で知る立場を金で買ったということである。
+  その状態で下されたのが、Yahoo!への出資だった。1995年11月、ソフトバンクとジフ・デービスが共同で200万ドルを入れ、約5%を取得する。
+  これはソフトバンク自身の1996年1月11日のリリースに明記されている<sup><a href="#s25">25</a></sup>。
+  そして4か月後の1996年3月、Yahoo!のオフィスで冷めたピザを前にした席で、1億500万ドルで33%を取ると申し出た<sup><a href="#s48">48</a></sup>。</p>
+
+  <blockquote>
+    僕らのほとんどは彼を正気じゃないと思った。1996年3月にスタートアップへ1億ドルを入れるのは極めて攻撃的だった。だがあれは運ではないと思う。マサは15年から20年の塊で先を見ている。
+    <span class="who">Jerry Yang、Forbes 1999年7月5日号<sup><a href="#s48">48</a></sup></span>
+  </blockquote>
+
+  <p class="note">200万ドルは賭けではなく偵察である。少額で先に席を取り、確信が持てた段階で桁を上げる。
+  この2段構えは1995年11月と1996年3月の4か月に初めて明確な形で現れ、2024年9月のOpenAI初回出資から2026年の646億ドルまで、同じ順序で反復されている<sup><a href="#s6">6</a></sup>。</p>
+
+  <p>同じ1996年に、明確な失敗も1件ある。8月15日に発表したキングストン・テクノロジー80%の15億ドルでの取得である。
+  メモリはデジタル産業全体の拡大のドライバーだという読み自体は間違っていない。誤ったのは実装で、
+  循環的なコモディティ・ハードウェア事業をレバレッジで買った。負債は約24億ドルから約32億ドルへ膨らみ、3年後の1999年に同じ持分を4.5億ドルで創業者に売り戻している<sup><a href="#s68">68</a></sup>。</p>
+
+  <p>1997年3月期の数字がこの局面の帰結を示している。連結売上高は3,597億円で前期の1,711億円から倍増したが、期末の長期債務は5,950億円で売上を上回った<sup><a href="#s92">92</a></sup>。
+  先見と過剰レバレッジは、同じ設計の裏表である。</p>
+
+  <h3>5. バブルと崩壊（1997〜2001）— 3日間の世界一と98.7%</h3>
+
+  <p>1998年1月16日、ソフトバンク株が東証一部で取引を開始する。店頭市場から二部を経ずに一部へ上場した最初の事例だった。
+  孫は同年7月15日付の株主宛レターでこの事実を自ら記録している<sup><a href="#s24">24</a></sup>。
+  同じアニュアルレポートで彼は、米国で成功したモデルを日本に持ち込む手法を<strong class="hit">time machine management strategy</strong>と自ら命名して説明した<sup><a href="#s24">24</a></sup>。
+  タイムマシン経営という言葉は、後の解説者が付けた呼び名ではなく、1998年時点の会社の公式文書に載っている。</p>
+
+  <p>1997年11月4日、ヤフー株式会社が設立から21か月で店頭公開する。公開価格70万円に対し初値200万円<sup><a href="#s24">24</a></sup>。
+  この株が2000年2月22日に1株1億6,790万円を付け、日本の株式史上の最高株価として2026年現在も更新されていない。
+  その1週間前の2000年2月15日、ソフトバンク株は198,000円の高値を付けている。
+  当時の発行済株式数で計算すると時価総額は20.7兆〜21.8兆円であり、報道の一時20兆円という表現はこの範囲に収まる<sup><a href="#s67">67</a></sup><sup><a href="#s22">22</a></sup>。</p>
+
+  <p>この日から週明けまでの3日間、孫の帳簿上の資産はビル・ゲイツを上回った。
+  資産額は685億ドル、700億ドル、780億ドルの3説が並立している<sup><a href="#s49">49</a></sup><sup><a href="#s50">50</a></sup>。
+  そして同じ年の12月29日、株価は分割後ベースで3,970円、高値からの下落率は94.0%になった。個人資産はForbes集計で6月に194億ドルまで縮んでいる<sup><a href="#s67">67</a></sup><sup><a href="#s49">49</a></sup>。
+  2002年11月19日の日中安値870円で計算すると、高値からの下落率は98.7%である<sup><a href="#s67">67</a></sup>。</p>
+
+  <blockquote>
+    99％下がったんですよ。ソフトバンクの全体の時価総額が20兆円だったのが、2000億円まで下がりました。……神様がワシに試練を与えてくれたと思って、これはこれでおもしろい人生じゃないかと。
+    <span class="who">孫正義、講演録<sup><a href="#s65">65</a></sup></span>
+  </blockquote>
+
+  <p>この局面で重要なのは、下落局面の行動である。孫は事業を縮めていない。
+  2000年1月19日、ヤフー株が1株1億円を超えた同じ日に、アリババへ2,000万ドルを出資している<sup><a href="#s61">61</a></sup>。
+  馬雲は初回の面会が6分間だったと2008年の講演で語り、孫は5分以内に4,000万ドルを出すと決めたが、馬雲は2,000万ドルで足りるとして受け取らなかった<sup><a href="#s61">61</a></sup>。
+  この2,000万ドルが、以後20年のソフトバンクの信用力そのものを支えることになる。</p>
+
+  <p>2000年2月24日には金融再生委員会が、ソフトバンク・オリックス・東京海上を中心とする出資グループを日本債券信用銀行の譲渡先の優先交渉先に決めた。
+  選定理由の3番目には、インターネット等を活用した21世紀に通用する新たな金融取引の導入が期待されることが挙げられている<sup><a href="#s46">46</a></sup>。
+  行政が孫のネット金融構想を政策として買った瞬間である。ただし構想は実現しない。
+  ソフトバンクは2003年にあおぞら銀行株48.87%を約1,011億円で売却し、その代金をブロードバンド事業の赤字に充てた<sup><a href="#s93">93</a></sup>。</p>
+
+  <p>2001年6月19日、Yahoo! BBを発表する。下り最大8Mbpsで月額2,280円から。当時の相場は最大1.5Mbpsで月額5,000〜6,000円だったから、速度を5倍以上にして価格を半分以下にした<sup><a href="#s63">63</a></sup>。
+  10日後の6月29日、NTTが局舎工事とダークファイバの提供に応じないため、孫は総務省に乗り込む。</p>
+
+  <blockquote>
+    ガソリンをかぶるんですよ。……（なぜかと問われて）100円ライターを持っているでしょう、それを借ります。
+    <span class="who">孫正義、2001年6月29日、総務省<sup><a href="#s59">59</a></sup></span>
+  </blockquote>
+
+  <p>その夜、総務省からNTT東日本がダークファイバを出すという連絡が入った<sup><a href="#s59">59</a></sup>。
+  通信が許認可産業であることを、孫はこの日に実務として学んでいる。
+  ただし9月1日の商用開始時点では、事前登録100万件に対して開通は約4万件で、サポートへの問い合わせの7〜8割がいつ開通するのかだった<sup><a href="#s64">64</a></sup>。
+  価格の破壊力は本物で、日本のADSLは2001年の1年間で152万5,000回線増えたが、自社のオペレーションはその速度に追いついていない<sup><a href="#s22">22</a></sup>。</p>
+
+  <h3>6. 通信キャリア化（2002〜2010）— 自己資本の7.2倍を払う技術</h3>
+
+  <p>2002年3月期に上場以来初の最終赤字887億円、2003年3月期には営業損失919億円を出す<sup><a href="#s21">21</a></sup>。
+  モデムを無料で配り、街頭にパラソルを立てて赤い紙袋を渡す費用が、そのまま損失になっていた<sup><a href="#s83">83</a></sup>。
+  それでも2004年5月に日本テレコムを3,400億円で買い、11月に福岡ダイエーホークスを200億円で買っている<sup><a href="#s80">80</a></sup><sup><a href="#s81">81</a></sup>。</p>
+
+  <p>この時期の頂点が2006年3月17日のボーダフォン日本法人買収である。金額は1兆7,500億円。
+  同じ2006年3月末のソフトバンクの自己資本は2,427億68百万円しかない。買収額は自己資本の約7.2倍にあたる<sup><a href="#s26">26</a></sup><sup><a href="#s19">19</a></sup>。
+  これを成立させたのは、返済原資を買収対象の携帯事業のキャッシュフローに限定するノンリコース設計だった。
+  発表時点の構成は、普通株式2,000億円、ヤフーによる優先株式1,200億円、ノンリコースのLBOローン1兆1,000億〜1兆2,000億円、そしてボーダフォン側からの4,000億円である<sup><a href="#s26">26</a></sup>。</p>
+
+  <p>4月27日には1.28兆円のブリッジ枠から約1.16兆円を引き出して決済を終え、発行済株式の99.5%を取得した<sup><a href="#s27">27</a></sup>。
+  発表から40日である。そして同年11月30日、ブリッジローンの金利がステップアップする前に、事業証券化で総額1兆4,500億円を調達して借り換えた。
+  トランシェは10年1兆1,500億円、13年1,250億円、13年1,750億円の3本で、当時世界最大のホールビジネス証券化と報じられた<sup><a href="#s28">28</a></sup>。</p>
+
+  <p class="note">ブリッジで買い、後で長期化して金利を下げる。この2段構えは2026年の400億ドルブリッジローンまで同じ形で使われている<sup><a href="#s2">2</a></sup>。
+  ソフトバンクの買収を胆力で説明すると実像を外す。買収額の規模を決めているのは、いつも資金調達の構造である。</p>
+
+  <p>買った資産の価値を変えたのは2つの数字だった。2007年1月のホワイトプランの月額980円と、2008年7月のiPhone 3Gの独占販売である<sup><a href="#s82">82</a></sup>。
+  iPhoneの経緯について孫が公にしたのは2014年3月10日、Charlie Roseの番組だった。発売の約2年前、キャリアを1つも持っていない状態でジョブズに会いに行った話である<sup><a href="#s62">62</a></sup>。</p>
+
+  <blockquote>
+    マサ、お前の絵はいらない。俺は自分のを持っている。……（孫が、あなたの製品ができたら日本は僕にくれと言うと）マサ、お前はクレイジーだ。まだ誰にも話していないのに、お前が最初に来た。お前にやろう。
+    <span class="who">スティーブ・ジョブズ、2005年頃。孫正義が2014年3月10日のCharlie Rose番組で証言<sup><a href="#s62">62</a></sup></span>
+  </blockquote>
+
+  <p>2010年3月期には営業利益4,658億円で5期連続の営業最高益、純有利子負債は1兆5,010億円まで減った<sup><a href="#s19">19</a></sup>。
+  ADSLで4期赤字を掘り、固定を買い、携帯を買い、iPhoneを取るという10年の連鎖が、ここで初めて財務指標として完成形を見せる。</p>
+
+  <p>その2か月後、2010年6月25日13時40分、東京国際フォーラムで新30年ビジョンが語られる。
+  理念は情報革命で人々を幸せに。300年成長し続ける企業群。そして30年後に時価総額200兆円<sup><a href="#s66">66</a></sup>。
+  当日の時価総額は約2.7兆円だから、74倍を宣言したことになる。
+  組織側では、創業から30年後に生き残る会社は0.02%にすぎないという数字を示し、答えとして戦略的シナジーグループ構想を提示した。
+  過半数の出資比率やブランド統一にこだわらず、グループ会社を約800社から2040年までに5,000社規模にするという設計である<sup><a href="#s18">18</a></sup>。</p>
+
+  <h3>7. グローバル投資家へ（2011〜2018）— 7%のクーポンが投資ペースを決めた</h3>
+
+  <p>2011年3月11日、翌朝の時点で基地局3,786局が停止した。孫はアニュアルレポートという事務的な文書に、
+  自社ネットワークの耐久性と信頼性が常に十分だったとは言えないことを深く悔いていると書いた<sup><a href="#s17">17</a></sup>。
+  3月22日に福島の避難所を回り、その12日後の4月3日、個人資産100億円の寄付と、引退までの報酬全額の寄付を発表する<sup><a href="#s37">37</a></sup>。
+  グループとしての寄付は10億円で、個人はその10倍である。</p>
+
+  <p>2011年8月に自然エネルギー財団を設立し、9月12日の設立イベントでアジアスーパーグリッド構想を発表した。
+  壇上には中国国家発展・改革委員会エネルギー研究所の副所長が並んでいる<sup><a href="#s78">78</a></sup>。
+  10月にはSBエナジーを設立し、利益の配当は40年間受け取らないと述べた<sup><a href="#s94">94</a></sup>。
+  ただし同じ時期のアニュアルレポートでは、この事業を進めても純有利子負債を6年でゼロにする目標は変えないと投資家に約束している<sup><a href="#s17">17</a></sup>。
+  理念は40年、財務規律は6年という二枚看板である。</p>
+
+  <p>2012年10月15日、Sprintを201億ドルで買うと発表する。内訳は株主への現金対価121億ドルと、Sprintの財務強化のための新規資本80億ドルだった<sup><a href="#s29">29</a></sup>。
+  つまり買収額の4割が売り手の懐ではなく買収先の設備投資に回る設計で、孫が買っていたのはSprintの現状ではなく、LTE網を作り直した後のSprintである。</p>
+
+  <p class="risk"><strong>ここで設計が壊れる。</strong>DISH Networkの対抗提案を受けて2013年6月11日に条件を修正したとき、総額は201億ドルから216億ドルへ15億ドル増えた。
+  ところが同時に、Sprintに入る新規資本は80億ドルから50億ドルへ30億ドル減っている<sup><a href="#s30">30</a></sup>。
+  競合を退けるために売り手株主への支払いを優先し、投資ロジックの原資である設備投資を自ら削った。
+  さらに2014年8月、規制当局の反対でT-Mobileとの統合を断念する<sup><a href="#s16">16</a></sup>。
+  規模でVerizonとAT&Tに対抗するという前提が消えた時点で、216億ドルの買収は設計図を失った。</p>
+
+  <p>その1か月後の2014年9月19日、アリババがニューヨーク証券取引所に上場する。公開価格は1株68ドル。
+  ソフトバンクはこの上場で1株も売っていない。計上したのは売却益ではなく、持分変動による希薄化利益5,996億68百万円である<sup><a href="#s16">16</a></sup>。
+  同じアニュアルレポートで財務責任者は、含み益を活用して検討できる資金調達手法が複数あり、それを戦略的投資の原資にすることを狙っていると述べた<sup><a href="#s16">16</a></sup>。</p>
+
+  <p>その予告は2016年6月1日に実行される。完全子会社が新設信託との間で変動前払フォワード契約を結び、
+  信託が66億ドルの強制交換証券を発行して、前受金54億ドルを受け取った。加えてアリババ本体、Alibaba Partnership、ソブリンウェルスファンドへの売却を合わせて約100億ドル相当を現金化しながら、
+  対象株を除く保有比率は約28%を維持している<sup><a href="#s32">32</a></sup>。
+  税務上はアリババ株の税務簿価が連結簿価を上回ったため、繰延税金負債3,826億円を取り崩し、2016年度の法人所得税は2,071億円の益になった<sup><a href="#s15">15</a></sup>。</p>
+
+  <p class="note">売らずに現金化し、しかも会計上の利益を出す。この一連の取引はARM買収発表の3週間前に置かれている。
+  6月21日にはSupercellの最大84%をテンセントのコンソーシアムへ売却する契約を締結し、企業価値は102億ドルとされた<sup><a href="#s33">33</a></sup>。
+  6月22日、2年で246億円の報酬を受けたNikesh Aroraが取締役を退任する<sup><a href="#s95">95</a></sup>。同期の孫の連結報酬総額は1億31百万円で、Aroraの単年報酬は孫の126倍だった<sup><a href="#s16">16</a></sup>。
+  1か月のうちに、後継者計画が消え、約200億ドルの現金が作られ、次の30年の投資対象が決まった。</p>
+
+  <p>2016年7月18日、ARM Holdingsに1株1,700ペンスを現金で払うと発表する。総額3.3兆円。
+  直前終値に対するプレミアムは43.0%で、2015年3月の史上最高値をも41.1%上回る<sup><a href="#s34">34</a></sup>。
+  ブレグジット国民投票の3週間後、ポンドが急落した局面での実行だった。孫はこの買収を自分の生涯で最も重要なものだと書いている<sup><a href="#s15">15</a></sup>。</p>
+
+  <blockquote>
+    私はこのテクノロジー業界の隠れた宝を10年以上手に入れたいと願い続け、ついに2016年9月に取得できた。いつか起業家としての長い人生を振り返ったとき、Armが私の行った最も重要な買収・投資として際立つと信じている。
+    <span class="who">孫正義、アニュアルレポート2017 CEOメッセージ<sup><a href="#s15">15</a></sup></span>
+  </blockquote>
+
+  <p>そしてARM買収完了の5週間後、1,000億ドルのファンド構想が出る。2017年5月20日のファーストクロージングは932億ドル<sup><a href="#s15">15</a></sup>。
+  孫はこの規模を、2016年に世界のベンチャーキャピタルが1年で調達した総額640億ドルと比べて説明した<sup><a href="#s15">15</a></sup>。
+  1つのファンドが業界の年間調達額の1.5倍を一度に持ったことになる。</p>
+
+  <p class="risk"><strong>このファンドの設計に、後の暴走の原因が埋め込まれている。</strong>
+  総コミットメント約986億ドルの内訳は、固定分配の優先出資400億ドルと成果連動のエクイティ586億ドルである。
+  優先出資には投資成果と無関係に年率7%が分配される<sup><a href="#s96">96</a></sup>。
+  400億ドル×7%＝年間28億ドルを、投資が当たるかどうかに関係なく払い続ける義務がファンドに埋まっていた。
+  投資期間5年のはずが、2018年3月末までの1年弱でVision FundとDelta Fundが297億ドル、本体がUberとDiDiに129億ドルを投じている<sup><a href="#s97">97</a></sup>。
+  バリュエーションを押し上げたと批判された投資ペースは、性格の問題ではなく、この7%の帰結として説明できる。</p>
+
+  <h3>8. 試練とAI再集中（2019〜2026）— 資産の総入れ替え</h3>
+
+  <p>2019年9月17日、WeWorkが上場申請を取り下げる。将来のリース債務470億ドルに対し、将来のリース収入コミットメントは40億ドルしかなかった<sup><a href="#s73">73</a></sup>。
+  評価額は1月時点の470億ドルから約100億ドルへ落ちる。10月22日の救済パッケージは約95億ドル規模で、
+  そのうち約17億ドルが創業者Adam Neumannへの支払いだった<sup><a href="#s73">73</a></sup>。
+  11月6日、ソフトバンクは投資額103億ドルに対し92億ドルの評価減を計上する。投資額の約90%である<sup><a href="#s73">73</a></sup>。</p>
+
+  <p>FY2019は営業損失1兆3,646億円、親会社帰属純損失9,615億76百万円<sup><a href="#s13">13</a></sup>。
+  ソフトバンクはこの年以降、営業損益で語ることをやめ、税引前利益とNAVで語るようになる。
+  損益計算書は投資の時価評価で振れるという自己認識の公式化である。</p>
+
+  <p>2020年3月23日、コロナ暴落の最中に最大4.5兆円の資産売却と最大2兆円の自己株買いを決議する。
+  背景には2月にSBG株を約25億ドル分取得したElliott Managementの要求があった<sup><a href="#s38">38</a></sup>。
+  結果として4月から9月の6か月で5.6兆円を売却・マネタイズし、枠を1.1兆円超えて達成した<sup><a href="#s12">12</a></sup>。
+  ここで売ったアリババ株、T-Mobile株、ソフトバンク株が、そのままAI投資の原資になっている。</p>
+
+  <p>2022年2月8日、NVIDIAへのArm売却が破談する。英CMA、EU欧州委員会、米FTCの三方面からの反対だった。
+  ソフトバンクは受領済みの前払金12.5億ドルを返さず利益に計上し、同時にArmの株式公開の準備を始めると発表した<sup><a href="#s39">39</a></sup>。
+  結果としてこの破談が、2023年以降のAIブームでArmの価値が自社に残るという最大の幸運になる。
+  2026年6月30日のArm保有価値は49.91兆円である<sup><a href="#s5">5</a></sup>。400億ドルで手放しかけた資産である。</p>
+
+  <p>2023年6月の株主総会で、ソフトバンクは守りから攻めへの転換を宣言した。会社自身が翌年の招集通知に反撃への転換と記録している<sup><a href="#s8">8</a></sup>。
+  同じ時期から公式文書にASI（人工超知能）という語が正式なキーワードとして現れる<sup><a href="#s8">8</a></sup>。
+  以後の意思決定は、モデル、CPU設計、AIチップ、ロボティクス、電力とデータセンターという5つの層を全部持つという一本の論理で説明されている。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>層</th><th>資産</th><th class="num">金額</th><th>時期</th></tr></thead>
+    <tbody>
+      <tr><td>モデル</td><td class="name">OpenAI</td><td class="num">累計646億ドル（予定）</td><td>2024年9月〜2026年10月<sup><a href="#s6">6</a></sup></td></tr>
+      <tr><td>CPU設計</td><td class="name">Arm</td><td class="num">3.3兆円で取得、保有価値49.91兆円</td><td>2016年9月／2026年6月末<sup><a href="#s34">34</a></sup><sup><a href="#s5">5</a></sup></td></tr>
+      <tr><td>AIチップ</td><td class="name">Ampere Computing</td><td class="num">65億ドル</td><td>2025年3月合意、11月完了<sup><a href="#s41">41</a></sup></td></tr>
+      <tr><td>AIチップ</td><td class="name">Graphcore</td><td class="num">のれん925億円</td><td>2024年7月子会社化<sup><a href="#s3">3</a></sup></td></tr>
+      <tr><td>半導体製造</td><td class="name">Intel</td><td class="num">20億ドル（1株23ドル）</td><td>2025年8月<sup><a href="#s42">42</a></sup></td></tr>
+      <tr><td>ロボティクス</td><td class="name">ABB ロボティクス事業</td><td class="num">53.75億ドル</td><td>2025年10月合意<sup><a href="#s43">43</a></sup></td></tr>
+      <tr><td>電力・DC</td><td class="name">Stargate ／ オハイオ10GW</td><td class="num">5,000億ドル（4年、共同）</td><td>2025年1月〜<sup><a href="#s40">40</a></sup><sup><a href="#s1">1</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>資金は資産の総入れ替えで作られている。FY2025にT-Mobile株7,540万株を162.5億ドル、NVIDIA株の全部を58.3億ドル、
+  Deutsche Telekom株の全部を7.3億ドルで売り、合計3兆4,358億円を調達した<sup><a href="#s1">1</a></sup>。
+  アリババ株を用いたプリペイド・フォワード契約もFY2025中に全額現物決済されている<sup><a href="#s1">1</a></sup>。
+  20年かけて作った遺産を全部現金に変えて、1社に入れた。</p>
+
+  <p>FY2025の親会社帰属純利益は5兆22億71百万円で過去最高。投資損益7兆2,865億円のうち、OpenAI関連が6兆7,304億円を占める<sup><a href="#s1">1</a></sup>。
+  ただしこの利益は非上場株の評価益であり、現金は伴っていない。同期の営業キャッシュフローは4,288億円のマイナス、財務キャッシュフローは6兆3,773億円のプラスである<sup><a href="#s5">5</a></sup>。</p>
+
+  <p>そして2026年8月6日のFY2026第1四半期決算で、会社は自ら2つの数字を並べた。
+  6月30日時点のNAVは72.3兆円で過去最高、1株当たり12,686円。同じ資料に載った8月5日時点のプロフォーマNAVは58.3兆円である<sup><a href="#s2">2</a></sup>。
+  差は14.0兆円で、原因はArm株のADS価格が6月30日の354.57ドルから8月5日に274ドルへ落ちたことにある<sup><a href="#s2">2</a></sup>。
+  同じ期間に孫個人の資産も、6月2日の1,007億ドルから8月18日の698億ドルへ309億ドル動いている<sup><a href="#s14">14</a></sup>。</p>
+
+  <!-- ③ 投資 -->
+  <h2><span class="num">③</span>投資の実績<span class="en">Track Record — What Actually Paid</span></h2>
+
+  <p>倍率は筆者が計算した。分子と分母の2数値を必ず併記してあるので、計算は追える。
+  金額の単位はドルと円が混在するため、ソフトバンクグループが2026年度第1四半期資料で用いた換算レート1ドル=162.39円を基準にした<sup><a href="#s2">2</a></sup>。
+  負けている案件も同じ表に入れてある。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr>
+      <th>対象</th><th class="num">投資額</th><th class="num">現在または売却時の価値</th><th class="num">倍率</th><th>実現／未実現と注記</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td class="name">アリババ</td>
+        <td class="num">2000年1月<br>2,000万ドル<br>（会社開示の累計105億円）</td>
+        <td class="num">2015年3月末<br>市場価値<br>7兆9,934億円</td>
+        <td class="num">761倍<br>IRR 76%</td>
+        <td>会社自身の投資実績表の数値。2024年までに持分をほぼゼロにして撤退した<sup><a href="#s16">16</a></sup><sup><a href="#s1">1</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">Arm</td>
+        <td class="num">約400億ドル<br>2016年9月 240億ポンド<br>＋2023年8月 約161億ドル<br>（SVF1保有25%の買戻し）</td>
+        <td class="num">2026年6月30日<br>3,272億ドル<br>（53.13兆円、調整前）</td>
+        <td class="num">約8.2倍</td>
+        <td>未実現。実現分はIPO売出の51.23億ドルのみ。8月5日のADS 274ドルで再計算すると約2,533億ドル、約6.3倍<sup><a href="#s34">34</a></sup><sup><a href="#s2">2</a></sup><sup><a href="#s99">99</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">OpenAI</td>
+        <td class="num">2024年9月〜<br>446億ドル<br>（累計取得原価）</td>
+        <td class="num">2026年6月30日<br>896億ドル<br>（公正価値）</td>
+        <td class="num">2.01倍</td>
+        <td>未実現。累積評価益450億ドル。FY2026 Q1は評価損益ゼロで、上昇は止まっている<sup><a href="#s3">3</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">Intel</td>
+        <td class="num">2025年8月<br>20億ドル<br>（8,700万株、1株23ドル）</td>
+        <td class="num">2026年6月30日<br>121.42億ドル<br>（1株139.63ドル）</td>
+        <td class="num">6.07倍</td>
+        <td>未実現。11か月で6倍。FY2026 Q1に評価益1兆3,329億円<sup><a href="#s42">42</a></sup><sup><a href="#s3">3</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">DoorDash</td>
+        <td class="num">2018〜2020年<br>6.80億ドル<br>（4ラウンド）</td>
+        <td class="num">2020年12月9日<br>上場初日始値ベース<br>115億ドル</td>
+        <td class="num">16.9倍</td>
+        <td>一部実現。2021年に50億ドル超を売却<sup><a href="#s99">99</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">Coupang</td>
+        <td class="num">2015年＋2018年<br>約30億ドル</td>
+        <td class="num">2021年3月11日上場<br>持分価値 約210億ドル</td>
+        <td class="num">約7.0倍</td>
+        <td>段階的に実現。持分は32.4%から17.39%へ<sup><a href="#s99">99</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">Supercell</td>
+        <td class="num">2013年＋2015年<br>約25億ドル</td>
+        <td class="num">2016年6月<br>売却手取り73億ドル<br>（取引総額86億ドル）</td>
+        <td class="num">2.9倍<br>IRR 93%</td>
+        <td>実現。会社開示ベースでは株式売却の税引後利益5,265億53百万円<sup><a href="#s33">33</a></sup><sup><a href="#s15">15</a></sup><sup><a href="#s99">99</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">Flipkart</td>
+        <td class="num">2017年8月<br>25億ドル（約20%）</td>
+        <td class="num">2018年5月<br>40億ドルでWalmartへ</td>
+        <td class="num">1.6倍</td>
+        <td>実現。9か月で15億ドルの利益<sup><a href="#s99">99</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">Uber</td>
+        <td class="num">2018年1月<br>コンソーシアム総額77億ドル<br>（平均取得 1株34.50ドル）</td>
+        <td class="num">2022年7月までに<br>平均売却 1株41.47ドル</td>
+        <td class="num">1.20倍</td>
+        <td>実現。4年半で20%<sup><a href="#s99">99</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">米Yahoo!</td>
+        <td class="num">1995年11月 200万ドル<br>1996年3月 1億500万ドル</td>
+        <td class="num">1996年4月12日上場<br>初日終値33ドル<br>（公開価格13ドル）</td>
+        <td class="num">—</td>
+        <td>実現。2001年から2002年にはこのヤフー株を売って会社を生き延びさせた<sup><a href="#s25">25</a></sup><sup><a href="#s48">48</a></sup><sup><a href="#s99">99</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">NVIDIA<br>（2017年取得分）</td>
+        <td class="num">2017年<br>約40億ドル（4.9%）</td>
+        <td class="num">2019年2月に全売却<br>実現益33億ドル</td>
+        <td class="num">約1.8倍</td>
+        <td>実現。ただし保有継続なら約20兆円という第三者試算がある。孫本人ももったいなかったと認めている<sup><a href="#s100">100</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">DiDi（滴滴出行）</td>
+        <td class="num">2015年〜<br>121億ドル<br>（取得原価）</td>
+        <td class="num">2026年6月30日<br>32億ドル<br>（公正価値）</td>
+        <td class="num">0.26倍</td>
+        <td>未実現の含み損。1件で89億ドルの評価損<sup><a href="#s99">99</a></sup></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p class="note">Armの倍率だけは注意して読む必要がある。分母の約400億ドルは、2016年の240億ポンドと2023年8月にVision Fund 1号から25%分を買い戻した約161億ドルの合算で、通貨も時点も違う。
+  ソフトバンクグループ自身はArmの取得原価を単一の数値で開示していない<sup><a href="#s99">99</a></sup>。</p>
+
+  <h3>Vision Fundの通算成績</h3>
+
+  <p>個別案件の倍率よりも、ファンド全体の数字のほうが構造を語る。2026年3月31日時点の会社開示は次のとおりである<sup><a href="#s101">101</a></sup>。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>ファンド</th><th class="num">取得原価</th><th class="num">累計損益</th><th class="num">公正価値</th><th class="num">TVPI</th></tr></thead>
+    <tbody>
+      <tr><td class="name">SVF1</td><td class="num">878億ドル</td><td class="num">+266億ドル</td><td class="num">1,144億ドル</td><td class="num">1.25倍</td></tr>
+      <tr><td class="name">SVF2</td><td class="num">977億ドル</td><td class="num">+210億ドル</td><td class="num">1,187億ドル</td><td class="num">—</td></tr>
+      <tr><td class="name">LatAm Funds</td><td class="num">76億ドル</td><td class="num">−8億ドル</td><td class="num">—</td><td class="num">—</td></tr>
+      <tr><td class="name">3ファンド合計</td><td class="num">1,930億ドル</td><td class="num">+469億ドル</td><td class="num">—</td><td class="num">—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p class="risk"><strong>この表の本体は2つの内訳にある。</strong>
+  第1に、SVF2の累計損益+210億ドルのうち、OpenAI1社の評価益が約450億ドルを占める。
+  つまりOpenAIを除いたSVF2は約230億ドルの損失になる（筆者の差引計算）<sup><a href="#s101">101</a></sup>。
+  第2に、SVF2で実際に売却した投資の成績は、取得原価108億ドルに対し回収65億ドル、0.60倍である<sup><a href="#s101">101</a></sup>。
+  評価額ではなく現金で回収した部分だけを見ると、4割が消えている。
+  SVF1も未実現分は原価389億ドルに対し公正価値392億ドルで、9年かけて1.01倍にとどまる<sup><a href="#s101">101</a></sup>。</p>
+
+  <p><strong>孫正義の生涯リターンは、Yahoo!とアリババ、そしてArmとOpenAIの4件で説明できる。</strong>
+  分散して大量に投じた部分は、実現ベースで見ると元本を割っている。
+  会社の規模は分散で作られ、利益は集中で作られてきた。この非対称は1996年から2026年まで変わっていない。</p>
+
+  <!-- ④ 失敗 -->
+  <h2><span class="num">④</span>失敗の解剖<span class="en">Failures, at the Same Resolution</span></h2>
+
+  <p>勝ちと同じ精度で金額を書く。ただし失敗の一覧を作る前に、1つ修正しておく必要がある。
+  <strong class="hit">Sprintは金額のリターンでは失敗ではない。</strong>
+  ソフトバンクグループは2023年12月22日の開示で、Sprint投資のエクイティIRRを25.5%、MOICを8.1倍としている<sup><a href="#s102">102</a></sup>。
+  2020年4月の合併時には支配喪失益として税前約7,500億円を計上し<sup><a href="#s134">134</a></sup>、
+  さらに2023年12月には条件達成でT-Mobile株4,875万株（75.91億ドル相当）を追加取得した<sup><a href="#s102">102</a></sup>。
+  Sprintで失敗したのは金額ではなく、規制の読みと、資本が7年拘束されたという時間である。
+  この案件を無条件に失敗と呼ぶ言説は数字に合わない。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>案件</th><th class="num">投じた額</th><th class="num">結果</th><th>類型</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="name">WeWork</td>
+        <td class="num">累計約160億ドル<br>（報道ベースの集計）</td>
+        <td class="num">累計損失143億ドル<br>（株式115億＋債権22億）<br>2023年11月にChapter 11</td>
+        <td>I＋II<sup><a href="#s73">73</a></sup><sup><a href="#s103">103</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">キングストン・テクノロジー</td>
+        <td class="num">1996年8月<br>15億ドル（80%）</td>
+        <td class="num">1999年に4.5億ドルで<br>創業者へ売り戻し</td>
+        <td>I<sup><a href="#s68">68</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">Katerra</td>
+        <td class="num">20億ドル超</td>
+        <td class="num">2021年6月に清算</td>
+        <td>I＋II<sup><a href="#s103">103</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">OneWeb</td>
+        <td class="num">約20億ドル</td>
+        <td class="num">2020年3月に破産。<br>追加出資はしなかった</td>
+        <td>I<sup><a href="#s103">103</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">Greensill Capital</td>
+        <td class="num">15億ドル</td>
+        <td class="num">2020年12月に実質ゼロ評価<br>2021年3月に破綻</td>
+        <td>II<sup><a href="#s103">103</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">View Inc.</td>
+        <td class="num">11億ドル</td>
+        <td class="num">2024年4月にChapter 11</td>
+        <td>I＋IV<sup><a href="#s103">103</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">Zume Pizza</td>
+        <td class="num">3.75億ドル<br>（評価額22.5億ドル）</td>
+        <td class="num">2023年に閉鎖</td>
+        <td>I<sup><a href="#s103">103</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">Oyo</td>
+        <td class="num">評価額100億ドル<br>（2019年ラウンド）</td>
+        <td class="num">2022年に社内評価を<br>27億ドルへ切り下げ</td>
+        <td>I＋IV<sup><a href="#s103">103</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">FTX</td>
+        <td class="num">1億ドル弱</td>
+        <td class="num">2022年11月にゼロ評価</td>
+        <td>II<sup><a href="#s103">103</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">SB Northstar</td>
+        <td class="num">上場株のトレーディング<br>（孫個人が33.3%出資）</td>
+        <td class="num">2022年4月時点で<br>60〜70億ドルの損失<br>孫個人の損失13億ドル</td>
+        <td>別枠：自己勘定の投機<sup><a href="#s103">103</a></sup><sup><a href="#s3">3</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">テレビ朝日株・JスカイB</td>
+        <td class="num">1996年<br>417.5億円（21.4%）</td>
+        <td class="num">1997年3月に<br>朝日新聞社へ全株譲渡</td>
+        <td>III<sup><a href="#s98">98</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">ナスダック・ジャパン</td>
+        <td class="num">1999年6月構想<br>資本金6億円（50:50）</td>
+        <td class="num">2002年撤退。運営会社の<br>累積損失50億円超</td>
+        <td>III<sup><a href="#s84">84</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">日本データネット</td>
+        <td class="num">1984年設立<br>月約1億円の赤字</td>
+        <td class="num">半年で累計約10億円、廃刊</td>
+        <td>I<sup><a href="#s56">56</a></sup></td>
+      </tr>
+      <tr>
+        <td class="name">ネットバブル崩壊</td>
+        <td class="num">個人資産のピーク<br>685億〜780億ドル</td>
+        <td class="num">2000年内の減少額は<br>ギネス公式で585億ドル<br>株価は2002年11月に98.7%減</td>
+        <td>V＋自己資本の毀損<sup><a href="#s103">103</a></sup><sup><a href="#s67">67</a></sup></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>類型I：資本集約かつ単位経済性が未検証</h4>
+  <p>資本を注入して規模を作れば規模が単位経済性を作る、という仮説を検証せずに実行する型である。
+  長期リース、製造設備、車両のように固定費が売上に先行して積み上がる事業では、規模の拡大が損失の拡大と同義になる。
+  該当するのはWeWork、Katerra、View、Zume、OneWeb、Oyoで、概算の合計は210億ドルを超える<sup><a href="#s103">103</a></sup>。
+  1984年の日本データネットも、1996年のキングストンも同じ形である。40年間で1度も学習されていない類型がこれである。</p>
+
+  <h4>類型II：惚れ込みが審査を代替する</h4>
+  <p>創業者への惚れ込み、あるいは一流投資家が既に入っているという事実が、独自審査の代わりになる型である。
+  孫はこれを自分の言葉で認めている。</p>
+
+  <blockquote>
+    僕がウィーワークに訪問してほれ込んでしまった。一部役員や社員の忠告が何度もあったが、多額のお金をつぎ込んでしまった。……私の人生の汚点だ。
+    <span class="who">孫正義、2023年、WeWorkの破綻をめぐって<sup><a href="#s104">104</a></sup></span>
+  </blockquote>
+
+  <p>WeWorkに加えてGreensill、FTX、Katerraがこの類型に入る。合計は約160億ドルで、そのうち143億ドルがWeWork1件である<sup><a href="#s103">103</a></sup>。
+  ここで注意すべき対比がある。OneWebは追加出資をせずに破産させ、WeWorkは上場撤回後に95億ドルを追加した。
+  金額の規模ではなく、孫が惚れ込んだ相手かどうかで分岐した可能性がある。内部の意思決定記録は非公開なので、これは仮説にとどまる。</p>
+
+  <h4>類型III：制度と既存権益を金で動かせると読む</h4>
+  <p>テレビ朝日株の取得は、株を買えばメディアを動かせるという前提が日本のメディア業界の慣行の前で通らず、約1年で撤退した<sup><a href="#s98">98</a></sup>。
+  ナスダック・ジャパンでは、孫が想定したハイブリッド方式の取引システムを証券会社側が対応コストを理由に採用せず、稼働の目処が立たなかった<sup><a href="#s84">84</a></sup>。
+  Sprintの規制読み違いとNVIDIAへのArm売却の破談も同じ類型である<sup><a href="#s39">39</a></sup>。
+  一方で2001年の総務省、2010年の光の道、そして2025年のホワイトハウスでは、同じ手法が通っている。この類型の勝敗は相手が誰かで決まっており、安定した打率はない。</p>
+
+  <h4>類型IV：評価額を作って、出口を作らない</h4>
+  <p>これは2026年3月末の会社開示で数値的に確認できる、最も定量的な類型である。
+  SVF2の実現済み投資は取得原価108億ドルに対し回収65億ドル、0.60倍<sup><a href="#s101">101</a></sup>。
+  SVF1の未実現分は原価389億ドルに対し公正価値392億ドルで、9年で1.01倍<sup><a href="#s101">101</a></sup>。
+  つまり公正価値の積み上げは、その価格で買う次の買い手を設計しない限り、売った瞬間に崩れる。
+  Oyoは3度の上場延期を経て、2026年のインドでの上場でソフトバンクは1株も売っていない<sup><a href="#s103">103</a></sup>。
+  40%を市場に出せば価格が崩れることを、自ら認めた形になる。</p>
+
+  <h4>類型V：正しいものを早く売る</h4>
+  <p>間違ったものを買った失敗ではなく、正しいものを売った失敗である。
+  2019年2月のNVIDIA株4.9%の売却は実現益33億ドルを生んだが、保有を続けていれば約20兆円という第三者試算がある<sup><a href="#s100">100</a></sup>。
+  そして2025年10月、買い戻していた3,210万株を58.3億ドルで再び全売却し、OpenAIの原資に充てた<sup><a href="#s1">1</a></sup>。同じ型の反復である。
+  機会費用は反実仮想なので確定損失と並べてはいけないが、孫自身がこの類型の存在を認めている点は事実である。</p>
+
+  <p class="risk"><strong>現在のポジションは類型IとIVの両方に該当する。</strong>
+  2026年6月30日のNAV 72.3兆円のうち84.5%がArmとSVF2の2つで、SVF2の実質はOpenAIである<sup><a href="#s5">5</a></sup>。
+  ArmはNasdaq上場株なので市場価格が付いているが、OpenAIは非上場で、FY2025の過去最高益6兆7,304億円はその評価益である<sup><a href="#s1">1</a></sup>。
+  データセンターと発電設備という、これまでで最も資本集約的な資産も同時に積み始めている<sup><a href="#s3">3</a></sup>。
+  そこに2026年3月組成の400億ドルのブリッジローンと、8月のOpenAI株の価値を参照する100億ドルのファイナンスが乗っている<sup><a href="#s2">2</a></sup>。
+  構造はキングストンやWeWorkと同じで、担保がメモリやオフィスではなくAIの評価額に替わっただけである。</p>
+
+  <!-- ⑤ 思想 -->
+  <h2><span class="num">⑤</span>思想と方法<span class="en">Doctrine and Method</span></h2>
+
+  <h3>孫の二乗の兵法</h3>
+
+  <p>1983年から1986年の入退院期間、病床で立案された5文字×5行の25文字である<sup><a href="#s56">56</a></sup>。
+  『孫子』の孫と自分の姓を掛けた命名で、25文字のうち一流攻守群と頂情略七闘は孫の創作、風林火山に海を加えたのも孫の追加である<sup><a href="#s56">56</a></sup>。
+  公開されたのは立案から約25年後、2010年7月のソフトバンクアカデミア開校記念講演だった。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>行</th><th>文字</th><th>系譜</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td class="name">道 天 地 将 法</td><td>『孫子』計篇の五事をそのまま採る</td></tr>
+      <tr><td>2</td><td class="name">頂 情 略 七 闘</td><td>孫の創作</td></tr>
+      <tr><td>3</td><td class="name">一 流 攻 守 群</td><td>孫の創作。末尾の群が群戦略に対応する</td></tr>
+      <tr><td>4</td><td class="name">智 信 仁 勇 厳</td><td>『孫子』の将の五徳</td></tr>
+      <tr><td>5</td><td class="name">風 林 火 山 海</td><td>武田信玄の風林火山に海を追加</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>各文字の意味づけは以下のとおりである。
+  <strong>ただしこの逐語の定義は、本人の講義テキストではなく公開されている解説を突き合わせたものである。</strong>
+  孫自身の言葉での定義は、ソフトバンクアカデミアの講義と書籍に依存しており、今回の調査ではそこまで到達できなかった<sup><a href="#s105">105</a></sup><sup><a href="#s56">56</a></sup>。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>段</th><th>文字</th><th>意味づけ</th></tr></thead>
+    <tbody>
+      <tr><td class="name">1 理念<br>道天地将法</td><td>道／天／地／将／法</td>
+        <td>道はブレない志。天は時代の流れとタイミング。地は地の利。将は優秀な仲間を集めること。法は継続して成功する仕組み</td></tr>
+      <tr><td class="name">2 ビジョン<br>頂情略七闘</td><td>頂／情／略／七／闘</td>
+        <td>頂は登る山の頂を期限つきで決めること。情は徹底した情報収集。略は戦略を考え抜くこと。七は<strong class="hit">勝算7割で動く</strong>こと。闘は決めたら徹底的に闘うこと</td></tr>
+      <tr><td class="name">3 戦略<br>一流攻守群</td><td>一／流／攻／守／群</td>
+        <td>一は1番にこだわること。流は時流に乗ること。攻は攻撃力を鍛えること。守はリスクに備えて資金を確保すること。群が群戦略の原型</td></tr>
+      <tr><td class="name">4 将の心得<br>智信仁勇厳</td><td>智／信／仁／勇／厳</td>
+        <td>智は知的能力。信は信頼。仁は私利私欲ではなく人々の幸福のために働くこと。勇は進む勇気と退く勇気の両方。厳は厳しい決断</td></tr>
+      <tr><td class="name">5 戦術<br>風林火山海</td><td>風／林／火／山／海</td>
+        <td>風は素早く動くこと。林は重要な交渉を静かに進めること。火は一気に攻めること。山はピンチでもブレないこと。海は勝った後に相手を包み込むこと</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>この25文字のうち、5段目の海は『孫子』軍争篇の動如雷震の雷を差し替えたものである<sup><a href="#s105">105</a></sup>。
+  戦って勝つだけでは兵法は完結せず、勝った後の統治までが一続きだという判断だった。</p>
+
+  <p>2段目の七の運用について、弟の孫泰蔵が具体的な証言を残している。</p>
+
+  <blockquote>
+    石橋を何度もたたくが、渡ると決めたらダンプカーで渡る。
+    <span class="who">孫泰蔵（孫正義の弟）、兄の意思決定について<sup><a href="#s106">106</a></sup></span>
+  </blockquote>
+
+  <p>勝算が5割から6割では一か八かになりすぎ、9割では敵も準備を終えていて遅い。だから7割で動く<sup><a href="#s106">106</a></sup>。
+  孫の側の言い方は、意地でやるヤツはバカだと思え、退却できないヤツはバカだと思え、である<sup><a href="#s106">106</a></sup>。
+  7割の裏には常に3割のリスク許容と撤退設計が置かれている。</p>
+
+  <h3>群戦略</h3>
+
+  <p>2010年6月25日の新30年ビジョンで、孫はこれを戦略的シナジーグループと呼んだ。
+  過半数の出資比率にもブランドの統一にもこだわらない自律・分散・協調型の組織で、
+  グループ会社を当時の約800社から30年以内に5,000社規模にするという設計である<sup><a href="#s18">18</a></sup><sup><a href="#s107">107</a></sup>。
+  根拠として示されたのは、創業から30年後に生き残る会社が0.02%にすぎないという数字だった<sup><a href="#s66">66</a></sup><sup><a href="#s107">107</a></sup>。
+  つまり群戦略は多角化の話ではなく、単一企業の寿命が30年しかもたないという前提に対する回答として提示されている。</p>
+
+  <p>出資比率の目安は、実務を経て狭まっている。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>時点</th><th>本人の表現</th><th class="num">比率</th></tr></thead>
+    <tbody>
+      <tr><td>2010年6月25日</td><td>20%から40%ぐらいの資本提携をした、同志的結合の集団<sup><a href="#s107">107</a></sup></td><td class="num">20〜40%</td></tr>
+      <tr><td>2018年2月7日</td><td>20、30パーセントがスイートスポット。むしろ意図的に51パーセント以上を狙わない<sup><a href="#s108">108</a></sup></td><td class="num">20〜30%</td></tr>
+      <tr><td>2018年（年次報告書）</td><td>最大株主として通常20%から30%の持分を保有する<sup><a href="#s109">109</a></sup></td><td class="num">20〜30%</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>支配しない理由は4つある。第1に、優秀な創業者は支配されることを望まない。
+  過半支配やブランド統一を要求していたら、アリババの馬雲は投資を断っていたと孫は書いている<sup><a href="#s109">109</a></sup>。
+  第2に、ブランドを統一しないことで各分野の1番を集めやすくなる<sup><a href="#s110">110</a></sup>。
+  第3に、卒業を織り込む。十分に成長しきったら卒業していくという設計で、過半支配は出口の柔軟性を失わせる<sup><a href="#s110">110</a></sup>。
+  第4に、着想源がバクテリアの自己増殖と自己進化である。300年成長する組織には自己増殖に加えて自己進化が必要で、中央集権では進化が止まる<sup><a href="#s111">111</a></sup>。</p>
+
+  <blockquote>
+    将来、私が発明したものは何かと問われたら、答えは電子翻訳機ではなく群戦略になる。
+    <span class="who">孫正義、ソフトバンクグループ アニュアルレポート2018 CEOメッセージ<sup><a href="#s109">109</a></sup></span>
+  </blockquote>
+
+  <p>19歳で作った電子翻訳機を引き合いに出して、自分の生涯の代表作を事業ではなく組織設計に置いている。
+  そして正否の判定を、自ら300年後に置いた<sup><a href="#s112">112</a></sup>。検証不能な時間軸を設定することは、短期の株価による評価を無効化する言語戦略でもある。</p>
+
+  <p class="risk"><strong>ただし2025年以降、この教義と実行が食い違っている。</strong>
+  OpenAIへの投資は2026年8月時点で累計646億ドル、持分は約13%<sup><a href="#s6">6</a></sup>。
+  比率だけを見れば20%から30%という教義の内側だが、金額の集中度では明確に逸脱している。
+  孫は2025年6月の株主総会でこれをオールインと呼んだ<sup><a href="#s113">113</a></sup>。
+  分散して支配しないという原則と、1社への4.8兆円という集中が、同じ会社の中で並存している。</p>
+
+  <h3>タイムマシン経営</h3>
+
+  <p>この言葉は解説者の造語ではない。1998年7月15日付、孫正義署名のアニュアルレポートで、
+  米国で成功したビジネスモデルを日本に持ち込む手法として自ら time machine management strategy と名付けている<sup><a href="#s24">24</a></sup>。
+  実装の速度基準は、米Yahoo!のサービス公開（1995年3月）から約1年でのYahoo! JAPAN立ち上げ、
+  そして合弁を選ぶことで本家との競合を最初から消したという2点にある<sup><a href="#s25">25</a></sup><sup><a href="#s47">47</a></sup>。</p>
+
+  <h3>人生50年計画と実績の照合</h3>
+
+  <p>1976年、19歳のときに10年刻みで立てた計画である<sup><a href="#s56">56</a></sup>。
+  以下の照合は筆者が事実を当てたもので、孫本人の自己評価ではない。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>計画（1976年、19歳）</th><th>実績</th><th class="num">年齢</th><th>判定</th></tr></thead>
+    <tbody>
+      <tr><td>20代で業界に名乗りを上げる</td><td>1984年に国内PCソフト流通シェア約50%、取引小売6,400店<sup><a href="#s87">87</a></sup></td><td class="num">27歳</td><td>達成</td></tr>
+      <tr><td>30代で軍資金を貯める</td><td>1994年7月の店頭公開。初値ベースの時価総額は約2,693億円<sup><a href="#s90">90</a></sup></td><td class="num">37歳</td><td>達成</td></tr>
+      <tr><td>40代で大きな勝負に出る</td><td>2006年3月のボーダフォン日本法人買収1兆7,500億円<sup><a href="#s26">26</a></sup></td><td class="num">48歳</td><td>達成</td></tr>
+      <tr><td>50代で事業を完成させる</td><td>2016年9月のArm取得3.3兆円。ただし本人は完成ではなく最も重要な買収と表現<sup><a href="#s15">15</a></sup></td><td class="num">59歳</td><td>解釈による</td></tr>
+      <tr><td>60代で後継者にバトンを渡す</td><td>2016年6月に後継指名を撤回。2020年8月に計画自体を修正し、2026年6月に70代へ再延長<sup><a href="#s114">114</a></sup><sup><a href="#s115">115</a></sup></td><td class="num">68歳</td><td>破棄</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>5段のうち4段は達成された。最後の1段だけが、本人によって2度書き換えられている。</p>
+
+  <p>1度目は2020年8月11日、63歳の誕生日に開いた決算説明会だった。70歳を過ぎても健康なら経営を続けたいと表明し、理由をこう説明している。
+  19歳の時よりも医学が進化して平均寿命も延びた、ゴルフに行っても1か月に3回もパーでプレーできた、まだまだわしゃ現役だ<sup><a href="#s114">114</a></sup>。
+  2度目は2026年6月24日の第46回株主総会で、根拠は卓球だった。</p>
+
+  <blockquote>
+    私1人に対して、相手の若い社員は3名で交代状態。……こちら側は私1人で1時間半、続けて卓球をするんです。……欲が出てきました。まだ元気。人生計画を70代まで延長する。
+    <span class="who">孫正義（68歳）、2026年6月24日、第46回定時株主総会<sup><a href="#s115">115</a></sup></span>
+  </blockquote>
+
+  <p>2014年に招いたNikesh Aroraは、2年で246億円の報酬を受けて2016年6月に退任した<sup><a href="#s95">95</a></sup>。
+  孫は自分の60歳の誕生日にバトンを渡すつもりだったと語っているが、あと1年になった時点でやり残したことがあると考えて続投を選んだ<sup><a href="#s116">116</a></sup>。
+  2018年に招いた佐護勝紀も3年で退任している<sup><a href="#s117">117</a></sup>。
+  2010年に開校したソフトバンクアカデミアは16年目に入り、通算定員は約300名だが、出身者がソフトバンクグループ本体のトップに就いた例はまだない<sup><a href="#s118">118</a></sup>。
+  制度と外部招聘の両方を試して、いずれも本体の承継に至っていない。</p>
+
+  <h3>AGIからASIへ</h3>
+
+  <p>2023年以降、孫の語彙が入れ替わっている。時期と定義を並べると、抽象的な予言が締切つきの投資計画に変換される過程が見える。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>時点</th><th>語</th><th>定義と時期</th></tr></thead>
+    <tbody>
+      <tr><td>2023年10月4日<br>SoftBank World</td><td class="name">AGI</td><td>10年以内に実現し、全人類の叡智の約10倍。その次の10年で約10,000倍になる<sup><a href="#s119">119</a></sup></td></tr>
+      <tr><td>2024年6月21日<br>第44回株主総会</td><td class="name">ASI</td><td>人類の叡智を1万倍上回るもの。複数のAGIが脳のニューロンのようにつながって形成される。ソフトバンクグループはASIを実現するために存在する<sup><a href="#s120">120</a></sup></td></tr>
+      <tr><td>2024年10月<br>SoftBank World</td><td class="name">ASI</td><td>実現時期を2035年と特定<sup><a href="#s121">121</a></sup></td></tr>
+      <tr><td>2025年6月27日<br>第45回株主総会</td><td class="name">超知性</td><td>超知能では不十分で、慈愛や優しさを含む超知性へ進化すべき。10年後の目標はASIのナンバーワンのプラットフォーマー、平易に言えば胴元<sup><a href="#s113">113</a></sup></td></tr>
+      <tr><td>2026年6月5日<br>CNBC</td><td class="name">超知性</td><td>今後2年で来る。従来は4年、さらに前は10年と考えていた<sup><a href="#s122">122</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>締切が2035年から2年後へ縮むと、逆算される投資額は跳ね上がる。
+  2024年9月に22億ドルだったOpenAIへの投資が、2026年10月までに累計646億ドルになる予定であることの説明は、この締切の変化にある<sup><a href="#s6">6</a></sup>。
+  1976年に19歳で登る山を決めて逆算したのと、構造は同じである。違うのは、山の高さと、山を決めてから登り切るまでに残された時間である。</p>
+
+  <h3>意思決定の型</h3>
+
+  <p>孫の意思決定は直感として語られることが多いが、記録に残っている手続きは逆である。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>時期</th><th>対象</th><th>手続き</th><th class="num">絞り込み</th></tr></thead>
+    <tbody>
+      <tr><td>1976〜1979年</td><td>発明</td><td>1日5分で250件超を蓄積し、部品単価・新しさ指数・自分の知識量など約40の採点要素でプログラム採点<sup><a href="#s56">56</a></sup></td><td class="num">250件 → 1件</td></tr>
+      <tr><td>1980〜1981年</td><td>事業</td><td>約40候補に10年分の予想損益を作り、約25条件に重みを付けて合計点で順位づけ<sup><a href="#s56">56</a></sup></td><td class="num">40件 → 1件</td></tr>
+      <tr><td>1982年</td><td>雑誌の立て直し</td><td>読者カード数万枚を全数分析してからページ数と定価を同時に変更<sup><a href="#s56">56</a></sup></td><td class="num">返品率85% → 3日で完売</td></tr>
+      <tr><td>1989年</td><td>全社管理</td><td>日次決算。1名が1日30分入力して全社の日次財務諸表を出し、指標を数千本のグラフにした<sup><a href="#s56">56</a></sup></td><td class="num">有視界飛行 → 計器飛行</td></tr>
+      <tr><td>2017年〜</td><td>Vision Fundの案件</td><td>ソーシング2,200件超に対し、承認・実行は71件<sup><a href="#s96">96</a></sup></td><td class="num">2,200件 → 71件（3%）</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>一方で、最大のリターンを生んだ2件はこの手続きを通っていない。
+  アリババは6分の面会で5分以内に決めた案件であり<sup><a href="#s61">61</a></sup>、Armは10年以上ほしいと思い続けた対象を史上最高値の41.1%上に現金で買った案件である<sup><a href="#s34">34</a></sup>。
+  <strong class="hit">手続きは規模を作り、逸脱が利益を作っている。</strong>孫の実績を手続きだけで説明することも、直感だけで説明することも、どちらも半分を落とす。</p>
+
+  <!-- ⑥ 人物像 -->
+  <h2><span class="num">⑥</span>人物像<span class="en">The Person</span></h2>
+
+  <h3>姓を守るために、行政ではなく司法を動かした</h3>
+
+  <p>1981年に本名で会社を興そうとしたとき、親戚は反対した。おまえ、それだけはやめろ<sup><a href="#s123">123</a></sup>。
+  一族の誰かが孫姓を名乗れば、他の全員の出自も知られるという理由である。孫の答えは記録に残っている。
+  10倍苦労してもいい、人間としての誇りを優先したい。本名を隠して商売はしたくない、在日韓国人にも日本人と同じ正義感と能力があることを成功によって証明する必要がある<sup><a href="#s123">123</a></sup>。
+  孫姓で日本に会社を興したのは、親戚のなかで彼が第1号だった。</p>
+
+  <p>1990年、日本国籍を取得する。ここで法務省は、孫という姓の日本人は存在しないという理由で、日本風の姓に変えるか、孫が日本の姓であることを証明せよと求めた<sup><a href="#s124">124</a></sup>。
+  孫が取った手は、行政を説得することではなかった。日本国籍を持つ妻が家庭裁判所に、実生活で使っている孫姓と戸籍上の姓が食い違って不便であるとして氏の変更を申し立て、認められた。
+  これで戸籍上に孫姓の日本人が1人生まれた。改めて法務省に問い直したときの答えが記録されている。</p>
+
+  <blockquote>
+    一人います。あなたの奥さんです。
+    <span class="who">法務省の担当官、1990年（伝聞として複数の媒体が伝える）<sup><a href="#s124">124</a></sup></span>
+  </blockquote>
+
+  <p class="note">前例がないものは通さないという行政の運用に対して、先に判例を作って前提を入れ替える。
+  1974年の検定試験で辞書と時間延長を認めさせた手順、2001年に総務省を経由してNTTを動かした手順と、順序の入れ替え方が同一である。</p>
+
+  <h3>余命5年と告げられた男の43年後</h3>
+
+  <p>1983年に25歳で慢性肝炎と診断され、余命は長くても5年と告げられた<sup><a href="#s58">58</a></sup>。
+  病室でひとり泣いた夜のあと、彼が読んだのは『竜馬がゆく』で、坂本龍馬が28歳から33歳までの5年で日本を変えたことを知って、残り5年でも大きなことはできると考え直したと語っている<sup><a href="#s125">125</a></sup>。
+  43年後の2026年6月、68歳の本人が若手社員3名を相手に1時間半卓球を続け、それを根拠に引退計画を10年から15年延長した<sup><a href="#s115">115</a></sup>。</p>
+
+  <h3>慈善は金額から選抜へ</h3>
+
+  <p>2011年の震災では個人で100億円を出した。使途の内訳は会社が公開している。
+  自治体へ計34億円、公益団体へ20億円、子ども支援6団体へ計6億円、そして自ら設立する東日本大震災復興支援財団へ40億円である<sup><a href="#s126">126</a></sup>。
+  配分の4割を自分が作る器に入れており、既存の中間団体を経由する割合を意図的に低くしている。
+  この財団は2023年9月に子ども未来支援財団へ改称して存続しており、一過性の災害対応ではなく恒久的な器として設計されていたことがわかる<sup><a href="#s127">127</a></sup>。</p>
+
+  <p>2016年12月に設立した孫正義育英財団は、性格が違う。25歳以下を対象に返済義務のない支援金を出し、
+  東京・ボストン・パロアルト・ロンドンの4拠点に共用施設を無料で使わせる。ただし2026年6月時点の累計財団生は第1期から第10期まで165名である<sup><a href="#s128">128</a></sup>。
+  震災の寄付が金額の大きさで評価されるのに対して、こちらは10年で165名という選抜の狭さで評価される種類のものである。</p>
+
+  <h3>規制当局と殴り合う男が、元首の隣に立つまで</h3>
+
+  <p>2001年に総務省へ乗り込んだ男が、2025年1月21日にはホワイトハウスでトランプ大統領の隣に立ってStargateを発表している<sup><a href="#s40">40</a></sup>。
+  その前段が2024年12月16日のマールアラーゴだった。前日に6時間ゴルフを回った翌日、孫は報道陣に4年で1,000億ドルの対米投資と10万人の雇用を告げる。
+  トランプはその場で上積みを求めた。</p>
+
+  <blockquote>
+    おいマサ、2000億ドルにしてよ。……（孫）あなたは実に素晴らしい交渉人ですね。
+    <span class="who">ドナルド・トランプと孫正義、2024年12月16日、フロリダ州パームビーチ<sup><a href="#s129">129</a></sup></span>
+  </blockquote>
+
+  <p>1か月後のホワイトハウスでは、金額は5,000億ドルになっていた<sup><a href="#s40">40</a></sup>。</p>
+
+  <p class="risk"><strong>この接近は2026年に法的な争点になった。</strong>
+  ソフトバンクは2026年1月にトランプ大統領図書館財団へ5,000万ドルを寄付し、その2か月後の3月20日、米エネルギー省と商務省との官民連携で、
+  連邦有地に最大10GWの電力を使うデータセンターを建設できることが発表された<sup><a href="#s130">130</a></sup>。
+  上院議員らは、過去のレーガン図書館やブッシュ図書館への寄付がいずれも退任後だったのに対し、今回は在任中の寄付である点を問題視して照会している<sup><a href="#s130">130</a></sup>。
+  ソフトバンクは寄付の事実を書面で認め、従来の慣行に沿うものだと説明したが、タイミングについては直接答えていない<sup><a href="#s130">130</a></sup>。
+  対価関係は立証されていない。ただし2011年に脱原発を掲げて自然エネルギー財団を作った人物が、
+  2026年にオハイオで9.2GWのガス火力を併設する電源開発の側に立っている、という事実は並べて記録しておく必要がある<sup><a href="#s131">131</a></sup><sup><a href="#s1">1</a></sup>。</p>
+
+  <h3>仕事の型</h3>
+
+  <p>2026年6月の株主総会で、本人が自分の日常をこう説明している。
+  ChatGPTを毎日おそらく10回から20回くらいは使っています、週末には1時間も2時間もAIとじっくり語り合っているほどです<sup><a href="#s115">115</a></sup>。
+  一方で会社の運営は分業になっている。2022年11月の決算説明会で、孫は自分をこう位置づけた。
+  私は攻めの男だから、アームの成長に貢献するため事業計画の深いところに集中していく。現在の経営環境は守りを固める時期で、後藤くんを中心にやってもらう<sup><a href="#s132">132</a></sup>。
+  Armを2週間で決めた2016年のトルコでの奇襲も、財務を後から合わせるCFOがいて初めて成立している<sup><a href="#s133">133</a></sup>。</p>
+
+  <!-- ⑦ 数字 -->
+  <h2><span class="num">⑦</span>数字で見るソフトバンクグループ<span class="en">The Numbers</span></h2>
+
+  <div class="chart">
+    <div class="cap">親会社の所有者に帰属する純損益（FY2019〜FY2025）</div>
+    <div class="sub">単位は兆円。青が利益、赤が損失。7期のうち4期が赤字で、黒字3期のうち2期が過去最高益</div>
+    <div class="pol" id="chartPL"></div>
+    <div class="pol-legend">
+      <span><i style="background:var(--s1)"></i>純利益</span>
+      <span><i style="background:var(--neg)"></i>純損失</span>
+    </div>
+  </div>
+
+  <p>この振れ幅そのものがソフトバンクグループの構造である。
+  FY2020の4兆9,880億円とFY2021の1兆7,080億円の損失は、同じポートフォリオの時価評価が反転した結果である<sup><a href="#s12">12</a></sup><sup><a href="#s11">11</a></sup>。
+  FY2022の9,701億円の損失は、20年前に2,000万ドルで買ったアリババ株の関連益4兆3,403億円で埋められた<sup><a href="#s10">10</a></sup>。
+  そしてFY2025の5兆22億円は、その埋め合わせ役をOpenAIに交代させた結果である<sup><a href="#s1">1</a></sup>。</p>
+
+  <div class="chart">
+    <div class="cap">保有株式価値の内訳（2026年6月30日、調整後）</div>
+    <div class="sub">単位は兆円。合計83.11兆円。ArmとSVF2の2つで84.5%を占める</div>
+    <div class="bars" id="chartNAVmix"></div>
+  </div>
+
+  <p>2025年6月末との比較で構成が入れ替わっている。Armは19.83兆円から49.91兆円へ、SVF2は5.86兆円から19.29兆円へ増え、
+  T-Mobileは2.20兆円から0円になった<sup><a href="#s5">5</a></sup>。20年分の遺産を売って1つの賭けに寄せたことが、この表の差分に出ている。</p>
+
+  <div class="chart">
+    <div class="cap">株主価値（NAV）の推移</div>
+    <div class="sub">単位は兆円。最後の1本は会社が同じ資料で示した8月5日時点のプロフォーマ値</div>
+    <div class="bars" id="chartNAV"></div>
+  </div>
+
+  <p>2026年6月30日の1株当たりNAVは12,686円、同日の株価は5,963円だった。
+  NAVに対する株価の水準は約47%で、ディスカウントは約53%になる<sup><a href="#s4">4</a></sup>。
+  会社が自ら課している財務方針は、通常時のLTVを25%未満に保ち、社債償還2年分以上の現金を持つことである。
+  2026年6月30日のLTVは13.0%で、方針の範囲内にある<sup><a href="#s2">2</a></sup>。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <thead><tr><th>時点</th><th class="num">孫正義の個人資産</th><th>出所と注記</th></tr></thead>
+    <tbody>
+      <tr><td>2000年2月</td><td class="num">685億／700億／780億ドル</td><td>3説が並立。週末を含む3日間だけ世界一とされる<sup><a href="#s49">49</a></sup><sup><a href="#s50">50</a></sup></td></tr>
+      <tr><td>2000年6月</td><td class="num">194億ドル</td><td>Forbes集計。4か月で590億ドル以上減<sup><a href="#s49">49</a></sup></td></tr>
+      <tr><td>2026年5月22日</td><td class="num">800億ドル</td><td>Forbesの年次番付で5年ぶりに日本1位。前年比で518億ドル、184%増<sup><a href="#s145">145</a></sup></td></tr>
+      <tr><td>2026年6月上旬</td><td class="num">1,007億ドル</td><td>リアルタイム番付のピーク。アジア最富裕と報じられ、SBGの時価総額はトヨタを上回った。同時期のピークを970億ドルとする記事もある<sup><a href="#s14">14</a></sup><sup><a href="#s145">145</a></sup></td></tr>
+      <tr><td>2026年8月18日</td><td class="num">698億ドル</td><td>世界27位。6月上旬のピークから309億ドル減<sup><a href="#s14">14</a></sup></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p class="note">孫の資産、SBGの時価総額、Arm株価、OpenAIの評価額は1本の鎖でつながっている。
+  2026年6月末に29.88%の株式を保有し、Son Assets Management, LLC分の1.93%を加えると約31.8%になる<sup><a href="#s1">1</a></sup>。
+  加えてSVF2の共同投資プログラムでは、孫が支配するMgmtCoがSVF2 LLCの17.25%を保有し、SBGに対する債権残高は31.5億ドルある<sup><a href="#s3">3</a></sup>。
+  会社のレバレッジと本人のレバレッジは分離していない。</p>
+
+  <!-- ⑦ 語録 -->
+  <h2><span class="num">⑧</span>語録<span class="en">In His Own Words</span></h2>
+
+  <p>日付と場所が特定できる発言だけを置いた。英語での発言は原文の要旨を日本語にし、出所を示している。
+  有名だが出典が確定できない言い回しは載せていない。</p>
+
+  <div class="q-tabs" id="qtabs"></div>
+  <div class="q-list" id="qlist"></div>
+
+  <!-- ⑧ 出典 -->
+  <h2 id="open"><span class="num">⑨</span>残っている問い<span class="en">Open Questions</span></h2>
+
+  <p>確認できなかったこと、資料間で割れていることを列挙する。本文ではこれらを断定していない。</p>
+
+  <ul style="font-size:13.5px;color:var(--sub)">
+    <li><strong>シャープへの翻訳機売却額。</strong>約1億円（うち特許契約金4,000万円）、1億6,000万円、170万ドル、100万ドル近くの4説が並立する。特許売却額と開発委託費の累計が混在している可能性が高い。契約書は非公開。</li>
+    <li><strong>孫の二乗の兵法25文字の各文字の定義。</strong>本人による定義の一次記録に到達できていない。ソフトバンクアカデミアの講演資料が最短ルート。</li>
+    <li><strong>群戦略で20〜40%の資本関係を選ぶ理由。</strong>過半数にこだわらないという方針は新30年ビジョンで確認できるが、比率の下限・上限の設計根拠を本人が説明した一次記録は未確認。</li>
+    <li><strong>2000年2月の個人資産額。</strong>685億／700億／780億ドルで割れ、当時の孫の実持株比率が公表資料で特定できないため株価からの逆算検証ができない。世界一だった期間を3日間とする数え方も評伝依拠。</li>
+    <li><strong>アリババの取得比率。</strong>30%説と34%説がある。2000年1月時点の株式数・払込条件を示す一次資料を確認できていない。</li>
+    <li><strong>ナスダック・ジャパンでソフトバンク自身が負った損失額。</strong>運営会社の累積損失50億円超と米ナスダックの償却2,010万ドルまでは判明するが、SBG側の出資・貸付・償却額の開示が見つからない。</li>
+    <li><strong>WeWorkの累計損失。</strong>投資総額160億ドル超に対し140億ドル規模とする報道があるが、一次資料で確定できていない。</li>
+    <li><strong>Vision Fund 1号・2号の設定来の累計損益とIRR。</strong>四半期ごとの断片は取れるが、通期の確定値を本稿では固めていない。</li>
+    <li><strong>投資トラックレコードの空欄。</strong>Supercellの取得額、NVIDIAの取得額と時期、DiDi・Uberの現在価値は個別開示がない。</li>
+    <li><strong>1989年の業績。</strong>売上300億円・経常利益94億円は1ソースのみで、卸売業の利益率としては不自然。経常利益は9.4億円の誤記の可能性がある。</li>
+    <li><strong>Arora退任の経緯。</strong>利益相反の申立てと特別委員会の調査に関する一次資料を確認できていない。報酬額は開示から確定できる。</li>
+    <li><strong>孫個人の担保差入れ規模。</strong>保有株の3分の1超を担保に入れているとの報道（2023年3月時点）は一次確認できていない。</li>
+  </ul>
+
+  <h2><span class="num">⑩</span>出典<span class="en">Sources</span></h2>
+  <p class="srcnote">本文の上付き番号はこの一覧に対応する。番号をクリックすると該当項目に移動する。</p>
+  <ol class="sources">
+    <li id="s1">ソフトバンクグループ 第46回定時株主総会招集通知（2026年5月29日付） — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2026/shareholders-meeting_46_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2026/shareholders-meeting_46_01_en.pdf</a></li>
+    <li id="s2">SBG 2026年度第1四半期 決算説明会 財務セクション — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-finance_q1fy2026_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-finance_q1fy2026_01_en.pdf</a></li>
+    <li id="s3">SBG 2026年度第1四半期 決算説明会 会計セクション — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-accounting_q1fy2026_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-accounting_q1fy2026_01_en.pdf</a></li>
+    <li id="s4">SBG 株主価値（SOTP）ページ — <a href="https://group.softbank/en/ir/stock/sotp" target="_blank" rel="noopener">https://group.softbank/en/ir/stock/sotp</a></li>
+    <li id="s5">SBG 2026年度第1四半期 決算データシート — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/earnings-datasheet_q1fy2026_01.xlsx" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/earnings-datasheet_q1fy2026_01.xlsx</a></li>
+    <li id="s6">SBG 2026年度第1四半期 決算説明会 SVFセクション — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-svf_q1fy2026_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-svf_q1fy2026_01_en.pdf</a></li>
+    <li id="s7">SBG 2026年度第1四半期 決算説明会 質疑応答 — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-presentation_q1fy2026_02_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-presentation_q1fy2026_02_en.pdf</a></li>
+    <li id="s8">SBG 第45回定時株主総会招集通知（2025年6月3日付） — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2025/shareholders-meeting_45_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2025/shareholders-meeting_45_01_en.pdf</a></li>
+    <li id="s9">SBG 第44回定時株主総会招集通知（2024年5月29日付） — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2024/shareholders-meeting_44_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2024/shareholders-meeting_44_01_en.pdf</a></li>
+    <li id="s10">SBG 第43回定時株主総会招集通知 — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2023/shareholders-meeting_43_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2023/shareholders-meeting_43_01_en.pdf</a></li>
+    <li id="s11">SBG 第42回定時株主総会招集通知 — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2022/shareholders-meeting_42_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2022/shareholders-meeting_42_01_en.pdf</a></li>
+    <li id="s12">SBG 第41回定時株主総会招集通知 — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2021/shareholders-meeting_41_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2021/shareholders-meeting_41_01_en.pdf</a></li>
+    <li id="s13">SBG 第40回定時株主総会招集通知 — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2020/shareholders-meeting_40_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2020/shareholders-meeting_40_01_en.pdf</a></li>
+    <li id="s14">Forbes プロフィール Masayoshi Son（2026年8月18日閲覧） — <a href="https://www.forbes.com/profile/masayoshi-son/" target="_blank" rel="noopener">https://www.forbes.com/profile/masayoshi-son/</a></li>
+    <li id="s15">SBG アニュアルレポート2017（英）CEOメッセージ — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2017_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2017_01_en.pdf</a></li>
+    <li id="s16">SBG アニュアルレポート2015（英） — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2015_02_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2015_02_en.pdf</a></li>
+    <li id="s17">SBG アニュアルレポート2011（英）CEOメッセージ — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2011_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2011_01_en.pdf</a></li>
+    <li id="s18">SBG アニュアルレポート2011（日）社長メッセージ — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2011_01_ja.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2011_01_ja.pdf</a></li>
+    <li id="s19">SBG アニュアルレポート2010（日） — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2010_01_ja.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2010_01_ja.pdf</a></li>
+    <li id="s20">SBG アニュアルレポート2007（日） — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2007_01_ja.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2007_01_ja.pdf</a></li>
+    <li id="s21">SBG アニュアルレポート2005（日） — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2005_01_ja.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2005_01_ja.pdf</a></li>
+    <li id="s22">ソフトバンク FACT BOOK 2002（日）社長メッセージ — <a href="https://group.softbank/system/files/pdf/ir/financials/annual_reports/annual-report_fy2002_02_ja.pdf" target="_blank" rel="noopener">https://group.softbank/system/files/pdf/ir/financials/annual_reports/annual-report_fy2002_02_ja.pdf</a></li>
+    <li id="s23">ソフトバンク アニュアルレポート2000（英） — <a href="https://group.softbank/system/files/pdf/ir/financials/annual_reports/annual-report_fy2000_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/system/files/pdf/ir/financials/annual_reports/annual-report_fy2000_01_en.pdf</a></li>
+    <li id="s24">ソフトバンク アニュアルレポート1998（英）1998年7月15日付 孫正義署名の株主宛レター — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy1998_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy1998_01_en.pdf</a></li>
+    <li id="s25">ソフトバンク プレスリリース 1996年1月11日「米国ヤフー社との合弁会社設立に関する件」 — <a href="https://group.softbank/news/press/19960111" target="_blank" rel="noopener">https://group.softbank/news/press/19960111</a></li>
+    <li id="s26">SBG プレスリリース 2006年3月17日 ボーダフォン日本法人買収 — <a href="https://group.softbank/en/news/press/20060317" target="_blank" rel="noopener">https://group.softbank/en/news/press/20060317</a></li>
+    <li id="s27">SBG プレスリリース 2006年4月27日 買収完了と資金調達実行 — <a href="https://group.softbank/news/press/20060427" target="_blank" rel="noopener">https://group.softbank/news/press/20060427</a></li>
+    <li id="s28">SBG プレスリリース 2006年11月17日 事業証券化1兆4,500億円 — <a href="https://group.softbank/en/news/press/20061117" target="_blank" rel="noopener">https://group.softbank/en/news/press/20061117</a></li>
+    <li id="s29">SBG プレスリリース 2012年10月15日 Sprint買収 — <a href="https://group.softbank/en/news/press/20121015" target="_blank" rel="noopener">https://group.softbank/en/news/press/20121015</a></li>
+    <li id="s30">SBG プレスリリース 2013年6月11日 Sprint買収条件の修正 — <a href="https://group.softbank/en/news/press/20130611" target="_blank" rel="noopener">https://group.softbank/en/news/press/20130611</a></li>
+    <li id="s31">SBG プレスリリース 2013年7月11日 Sprint買収完了 — <a href="https://group.softbank/en/news/press/20130711" target="_blank" rel="noopener">https://group.softbank/en/news/press/20130711</a></li>
+    <li id="s32">SBG プレスリリース 2016年6月1日 アリババ株の変動前払フォワード — <a href="https://group.softbank/en/news/press/20160601" target="_blank" rel="noopener">https://group.softbank/en/news/press/20160601</a></li>
+    <li id="s33">SBG プレスリリース 2016年6月21日 Supercell株式売却 — <a href="https://group.softbank/en/news/press/20160621" target="_blank" rel="noopener">https://group.softbank/en/news/press/20160621</a></li>
+    <li id="s34">SBG プレスリリース 2016年7月18日 ARM買収 — <a href="https://group.softbank/en/news/press/20160718" target="_blank" rel="noopener">https://group.softbank/en/news/press/20160718</a></li>
+    <li id="s35">SBG プレスリリース 2016年9月5日 ARM買収完了 — <a href="https://group.softbank/en/news/press/20160905" target="_blank" rel="noopener">https://group.softbank/en/news/press/20160905</a></li>
+    <li id="s36">SBG プレスリリース 2016年10月14日 Vision Fund設立に関するMOU — <a href="https://group.softbank/en/news/press/20161014" target="_blank" rel="noopener">https://group.softbank/en/news/press/20161014</a></li>
+    <li id="s37">SBG プレスリリース 2011年4月3日 東日本大震災への寄付 — <a href="https://group.softbank/en/news/press/20110403" target="_blank" rel="noopener">https://group.softbank/en/news/press/20110403</a></li>
+    <li id="s38">SBG プレスリリース 2020年3月23日 最大4.5兆円の資産売却・資金化プログラム — <a href="https://group.softbank/en/news/press/20200323" target="_blank" rel="noopener">https://group.softbank/en/news/press/20200323</a></li>
+    <li id="s39">SBG プレスリリース 2022年2月8日 NVIDIA向けArm売却契約の解除 — <a href="https://group.softbank/en/news/press/20220208" target="_blank" rel="noopener">https://group.softbank/en/news/press/20220208</a></li>
+    <li id="s40">SBG プレスリリース 2025年1月22日 Stargate Project — <a href="https://group.softbank/en/news/press/20250122" target="_blank" rel="noopener">https://group.softbank/en/news/press/20250122</a></li>
+    <li id="s41">SBG プレスリリース 2025年3月20日 Ampere Computing買収 — <a href="https://group.softbank/en/news/press/20250320" target="_blank" rel="noopener">https://group.softbank/en/news/press/20250320</a></li>
+    <li id="s42">SBG プレスリリース 2025年8月19日 Intelへの出資 — <a href="https://group.softbank/en/news/press/20250819" target="_blank" rel="noopener">https://group.softbank/en/news/press/20250819</a></li>
+    <li id="s43">SBG プレスリリース 2025年10月8日 ABBロボティクス事業の買収 — <a href="https://group.softbank/en/news/press/20251008" target="_blank" rel="noopener">https://group.softbank/en/news/press/20251008</a></li>
+    <li id="s44">SBG プレスリリース 2018年12月10日 ソフトバンク株式会社の公開価格決定 — <a href="https://group.softbank/en/news/press/20181210" target="_blank" rel="noopener">https://group.softbank/en/news/press/20181210</a></li>
+    <li id="s45">電気通信事業者協会 提出 孫正義 略歴書 — <a href="https://www.tca.or.jp/press_release/pdf/110311son.pdf" target="_blank" rel="noopener">https://www.tca.or.jp/press_release/pdf/110311son.pdf</a></li>
+    <li id="s46">金融再生委員会 2000年2月24日 日本債券信用銀行の譲渡先選定と買収条件 — <a href="https://www.fsa.go.jp/frc/news/n088.pdf" target="_blank" rel="noopener">https://www.fsa.go.jp/frc/news/n088.pdf</a></li>
+    <li id="s47">LINEヤフー 沿革（ヤフー株式会社） — <a href="https://www.lycorp.co.jp/ja/company/history/yahoo/" target="_blank" rel="noopener">https://www.lycorp.co.jp/ja/company/history/yahoo/</a></li>
+    <li id="s48">Forbes 1999年7月5日号（Yahoo!出資の場面、Jerry Yangの証言） — <a href="https://www.forbes.com/forbes/1999/0705/6401146a.html" target="_blank" rel="noopener">https://www.forbes.com/forbes/1999/0705/6401146a.html</a></li>
+    <li id="s49">Forbes Global 2000年7月3日号（個人資産の推移） — <a href="https://www.forbes.com/global/2000/0703/0313054a.html" target="_blank" rel="noopener">https://www.forbes.com/global/2000/0703/0313054a.html</a></li>
+    <li id="s50">日経BOOKプラス ライオネル・バーバー『勝負師 孫正義の冒険』抜粋 — <a href="https://bookplus.nikkei.com/atcl/column/070400543/070400002/" target="_blank" rel="noopener">https://bookplus.nikkei.com/atcl/column/070400543/070400002/</a></li>
+    <li id="s51">日経ビジネス 孫正義インタビュー（2015年7月17日初出、2019年5月28日再編集） — <a href="https://business.nikkei.com/atcl/seminar/19/00059/052400004/" target="_blank" rel="noopener">https://business.nikkei.com/atcl/seminar/19/00059/052400004/</a></li>
+    <li id="s52">致知 1989年11月号 孫正義インタビュー（致知出版社ウェブ） — <a href="https://www.chichi.co.jp/web/20180722sonn-1/" target="_blank" rel="noopener">https://www.chichi.co.jp/web/20180722sonn-1/</a></li>
+    <li id="s53">logmi 孫 正義 LIVE 2011（2010年3月29日、東京国際フォーラム） — <a href="https://logmi.jp/knowledge_culture/speech/12482" target="_blank" rel="noopener">https://logmi.jp/knowledge_culture/speech/12482</a></li>
+    <li id="s54">logmi トビタテ！留学JAPAN 第1期派遣留学生壮行会（2015年3月1日） — <a href="https://logmi.jp/main/career/55092" target="_blank" rel="noopener">https://logmi.jp/main/career/55092</a></li>
+    <li id="s55">PRESIDENT Online 井上篤夫『志高く 孫正義正伝 決定版』に基づく連載 — <a href="https://president.jp/articles/-/82936" target="_blank" rel="noopener">https://president.jp/articles/-/82936</a></li>
+    <li id="s56">arp-nt「ソフトバンク 孫正義」物語（梶谷通稔による連載） — <a href="https://arp-nt.co.jp/rensai2/sono001/" target="_blank" rel="noopener">https://arp-nt.co.jp/rensai2/sono001/</a></li>
+    <li id="s57">アサ芸プラス（上新電機 浄弘博光との交渉） — <a href="https://www.asagei.com/excerpt/7522" target="_blank" rel="noopener">https://www.asagei.com/excerpt/7522</a></li>
+    <li id="s58">ダイヤモンド・オンライン（慢性肝炎と虎の門病院） — <a href="https://diamond.jp/articles/-/352212" target="_blank" rel="noopener">https://diamond.jp/articles/-/352212</a></li>
+    <li id="s59">ダイヤモンド・オンライン（2001年6月29日、総務省での場面） — <a href="https://diamond.jp/articles/-/352214" target="_blank" rel="noopener">https://diamond.jp/articles/-/352214</a></li>
+    <li id="s60">PC Watch 2002年5月10日 2002年3月期決算説明会 — <a href="https://pc.watch.impress.co.jp/docs/2002/0510/softbank.htm" target="_blank" rel="noopener">https://pc.watch.impress.co.jp/docs/2002/0510/softbank.htm</a></li>
+    <li id="s61">South China Morning Post 2000年1月19日 アリババへの2,000万ドル出資 — <a href="https://www.scmp.com/article/305910/softbank-group-pumps-us20m-alibaba" target="_blank" rel="noopener">https://www.scmp.com/article/305910/softbank-group-pumps-us20m-alibaba</a></li>
+    <li id="s62">AppleInsider 2014年3月12日（Charlie Rose番組でのジョブズとのやり取り） — <a href="https://appleinsider.com/articles/14/03/12/softbanks-masayoshi-son-pitched-apple-cellphone-to-steve-jobs-two-years-before-iphone-debut" target="_blank" rel="noopener">https://appleinsider.com/articles/14/03/12/softbanks-masayoshi-son-pitched-apple-cellphone-to-steve-jobs-two-years-before-iphone-debut</a></li>
+    <li id="s63">ソフトバンク プレスリリース 2001年6月19日 Yahoo! BB — <a href="https://group.softbank/news/press/20010619" target="_blank" rel="noopener">https://group.softbank/news/press/20010619</a></li>
+    <li id="s64">INTERNET Watch インターネット30周年特集（Yahoo! BBの立ち上げ） — <a href="https://internet.watch.impress.co.jp/docs/special/30th/2087428.html" target="_blank" rel="noopener">https://internet.watch.impress.co.jp/docs/special/30th/2087428.html</a></li>
+    <li id="s65">マネー現代 孫正義 講演録（2018年6月19日掲載） — <a href="https://gendai.media/articles/-/56035" target="_blank" rel="noopener">https://gendai.media/articles/-/56035</a></li>
+    <li id="s66">日本経済新聞 2010年6月25日 新30年ビジョン — <a href="https://www.nikkei.com/article/DGXNASFL2505V_V20C10A6000000/" target="_blank" rel="noopener">https://www.nikkei.com/article/DGXNASFL2505V_V20C10A6000000/</a></li>
+    <li id="s67">96ut.com ソフトバンク株価時系列（2000年・2002年） — <a href="https://96ut.com/stock/jikei.php?code=9984&amp;year=2000" target="_blank" rel="noopener">https://96ut.com/stock/jikei.php?code=9984&amp;year=2000</a></li>
+    <li id="s68">Baltimore Sun 1996年8月16日 キングストン・テクノロジー買収 — <a href="https://www.baltimoresun.com/news/bs-xpm-1996-08-16-1996229082-story.html" target="_blank" rel="noopener">https://www.baltimoresun.com/news/bs-xpm-1996-08-16-1996229082-story.html</a></li>
+    <li id="s69">UPI 1995年2月14日 COMDEX買収 — <a href="https://www.upi.com/Archives/1995/02/14/Japans-Softbank-buys-Comdex-computer-show/1251792738000/" target="_blank" rel="noopener">https://www.upi.com/Archives/1995/02/14/Japans-Softbank-buys-Comdex-computer-show/1251792738000/</a></li>
+    <li id="s70">UPI 1995年11月9日 ジフ・デービス出版の売却合意 — <a href="https://www.upi.com/Archives/1995/11/09/Ziff-Davis-Publishing-to-be-sold/8950815893200/" target="_blank" rel="noopener">https://www.upi.com/Archives/1995/11/09/Ziff-Davis-Publishing-to-be-sold/8950815893200/</a></li>
+    <li id="s71">致知出版社 北尾吉孝インタビュー — <a href="https://www.chichi.co.jp/web/20201005_kitao_oota_/" target="_blank" rel="noopener">https://www.chichi.co.jp/web/20201005_kitao_oota_/</a></li>
+    <li id="s72">企業家倶楽部 北尾吉孝（ソフトバンク時代の資金調達） — <a href="https://kigyoka.com/archives/20231025.html" target="_blank" rel="noopener">https://kigyoka.com/archives/20231025.html</a></li>
+    <li id="s73">英語版Wikipedia WeWork（当たり付け。金額は報道値） — <a href="https://en.wikipedia.org/wiki/WeWork" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/WeWork</a></li>
+    <li id="s74">TechNode 2021年4月27日 Hong Lu（陸弘亮）インタビュー — <a href="https://technode.com/2021/04/27/an-interview-with-co-founder-of-ut-starcoms-lu-hong/" target="_blank" rel="noopener">https://technode.com/2021/04/27/an-interview-with-co-founder-of-ut-starcoms-lu-hong/</a></li>
+    <li id="s75">NetIB-News 佐々木正 追悼記事 — <a href="https://www.data-max.co.jp/article/644" target="_blank" rel="noopener">https://www.data-max.co.jp/article/644</a></li>
+    <li id="s76">WIRED.jp 佐々木正 追悼記事 — <a href="https://wired.jp/2018/02/04/rip-rocket-sasaki/" target="_blank" rel="noopener">https://wired.jp/2018/02/04/rip-rocket-sasaki/</a></li>
+    <li id="s77">Smart FLASH（担任教師らの証言） — <a href="https://smart-flash.jp/lifemoney/61859/" target="_blank" rel="noopener">https://smart-flash.jp/lifemoney/61859/</a></li>
+    <li id="s78">自然エネルギー財団 設立イベント（2011年9月12日） — <a href="https://www.renewable-ei.org/activities/events/20110912.html" target="_blank" rel="noopener">https://www.renewable-ei.org/activities/events/20110912.html</a></li>
+    <li id="s79">NEWSポストセブン（佐野眞一『あんぽん 孫正義伝』に基づく記事） — <a href="https://www.news-postseven.com/archives/20120103_78632.html" target="_blank" rel="noopener">https://www.news-postseven.com/archives/20120103_78632.html</a></li>
+    <li id="s80">ITmedia 2004年5月28日 日本テレコム買収 — <a href="https://www.itmedia.co.jp/news/articles/0405/28/news002.html" target="_blank" rel="noopener">https://www.itmedia.co.jp/news/articles/0405/28/news002.html</a></li>
+    <li id="s81">RBB TODAY 2004年11月30日 福岡ダイエーホークス取得 — <a href="https://www.rbbtoday.com/article/2004/11/30/19863.html" target="_blank" rel="noopener">https://www.rbbtoday.com/article/2004/11/30/19863.html</a></li>
+    <li id="s82">ソフトバンクモバイル プレスリリース 2008年6月10日 iPhone 3G — <a href="https://www.softbank.jp/corp/group/sbm/news/press/2008/20080610_01/" target="_blank" rel="noopener">https://www.softbank.jp/corp/group/sbm/news/press/2008/20080610_01/</a></li>
+    <li id="s83">ソフトバンクニュース（パラソル部隊と赤い紙袋） — <a href="https://www.softbank.jp/sbnews/entry/20240325_02" target="_blank" rel="noopener">https://www.softbank.jp/sbnews/entry/20240325_02</a></li>
+    <li id="s84">野村資本市場研究所 ナスダック・ジャパンの検証（2002年） — <a href="https://www.nicmr.com/nicmr/report/repo/2002/2002aut02.pdf" target="_blank" rel="noopener">https://www.nicmr.com/nicmr/report/repo/2002/2002aut02.pdf</a></li>
+    <li id="s85">英語版Wikipedia Arm Holdings（当たり付け） — <a href="https://en.wikipedia.org/wiki/Arm_Holdings" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Arm_Holdings</a></li>
+    <li id="s86">PHPオンライン衆知（みかん箱の演説） — <a href="https://shuchi.php.co.jp/article/8367" target="_blank" rel="noopener">https://shuchi.php.co.jp/article/8367</a></li>
+    <li id="s87">FundingUniverse ソフトバンク社史（1980年代の年次数値） — <a href="https://www.fundinguniverse.com/company-histories/softbank-corp-history/" target="_blank" rel="noopener">https://www.fundinguniverse.com/company-histories/softbank-corp-history/</a></li>
+    <li id="s88">フォーバル 公式沿革（NCC BOX） — <a href="https://www.forval.co.jp/sp/company_history/" target="_blank" rel="noopener">https://www.forval.co.jp/sp/company_history/</a></li>
+    <li id="s89">ダイヤモンド・オンライン（1986年12月24日、稲盛和夫との交渉。本文は有料） — <a href="https://diamond.jp/articles/-/362496" target="_blank" rel="noopener">https://diamond.jp/articles/-/362496</a></li>
+    <li id="s90">幻冬舎ゴールドオンライン（1994年の株式公開） — <a href="https://gentosha-go.com/articles/-/75967" target="_blank" rel="noopener">https://gentosha-go.com/articles/-/75967</a></li>
+    <li id="s91">company-histories ソフトバンク社史（ジフ展示会部門・COMDEX） — <a href="https://www.company-histories.com/Softbank-Corp-Company-History.html" target="_blank" rel="noopener">https://www.company-histories.com/Softbank-Corp-Company-History.html</a></li>
+    <li id="s92">encyclopedia.com Softbank Corp.（1996〜1997年の連結財務） — <a href="https://www.encyclopedia.com/social-sciences-and-law/economics-business-and-labor/businesses-and-occupations/softbank-corp" target="_blank" rel="noopener">https://www.encyclopedia.com/social-sciences-and-law/economics-business-and-labor/businesses-and-occupations/softbank-corp</a></li>
+    <li id="s93">SBG プレスリリース 2003年9月5日 あおぞら銀行株式の売却完了 — <a href="https://group.softbank/news/press/20030905" target="_blank" rel="noopener">https://group.softbank/news/press/20030905</a></li>
+    <li id="s94">日本語版Wikipedia SBエナジー（当たり付け） — <a href="https://ja.wikipedia.org/wiki/SB%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/SB%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC</a></li>
+    <li id="s95">SBG アニュアルレポート2016（英）役員報酬の開示 — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2016_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2016_01_en.pdf</a></li>
+    <li id="s96">SBG アニュアルレポート2019（英）Vision Fundの資本構成 — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2019_02_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2019_02_en.pdf</a></li>
+    <li id="s97">SBG アニュアルレポート2018（英）Vision Fundの投資実行額 — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2018_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2018_01_en.pdf</a></li>
+    <li id="s98">PRESIDENT Online（テレビ朝日株の取得とJスカイB） — <a href="https://president.jp/articles/-/12881?page=2" target="_blank" rel="noopener">https://president.jp/articles/-/12881?page=2</a></li>
+    <li id="s99">SBG 2026年度第1四半期 投資家向けプレゼンテーション（保有投資一覧。DiDiの取得原価と公正価値、Flipkart等） — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-presentation_q1fy2026_01_en.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-presentation_q1fy2026_01_en.pdf</a></li>
+    <li id="s100">Forbes 2025年11月11日 NVIDIA株の全売却 — <a href="https://www.forbes.com/sites/tylerroush/2025/11/11/nvidia-shares-dip-2-after-softbank-sells-entire-stake/" target="_blank" rel="noopener">https://www.forbes.com/sites/tylerroush/2025/11/11/nvidia-shares-dip-2-after-softbank-sells-entire-stake/</a></li>
+    <li id="s101">SBG 2025年度通期 決算説明会 SVFセクション（3ファンドの取得原価・累計損益・TVPI） — <a href="https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2025/investor-svf_q4fy2025_01_ja.pdf" target="_blank" rel="noopener">https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2025/investor-svf_q4fy2025_01_ja.pdf</a></li>
+    <li id="s102">SBG プレスリリース 2023年12月26日 T-Mobile株の追加取得（SprintのエクイティIRR 25.5%、MOIC 8.1倍を明記） — <a href="https://group.softbank/en/news/press/20231226" target="_blank" rel="noopener">https://group.softbank/en/news/press/20231226</a></li>
+    <li id="s103">Commercial Observer 2023年11月 WeWorkの累計損失143億ドル（報道値） — <a href="https://commercialobserver.com/2023/11/softbank-wework-losses/" target="_blank" rel="noopener">https://commercialobserver.com/2023/11/softbank-wework-losses/</a></li>
+    <li id="s104">ITmedia 2023年8月21日 WeWorkについての孫正義の総括 — <a href="https://www.itmedia.co.jp/business/articles/2308/21/news048.html" target="_blank" rel="noopener">https://www.itmedia.co.jp/business/articles/2308/21/news048.html</a></li>
+    <li id="s105">セミナーズ 孫の二乗の兵法25文字の解説（二次解説） — <a href="https://seminars.jp/media/1071" target="_blank" rel="noopener">https://seminars.jp/media/1071</a></li>
+    <li id="s106">日経ビジネス 2019年12月9日（勝算7割の運用と孫泰蔵の証言） — <a href="https://business.nikkei.com/atcl/seminar/19nv/120500136/120500005/" target="_blank" rel="noopener">https://business.nikkei.com/atcl/seminar/19nv/120500136/120500005/</a></li>
+    <li id="s107">新30年ビジョン 講演書き起こし（非公式。2010年6月25日） — <a href="https://www.kakiokosi.com/share/business/109" target="_blank" rel="noopener">https://www.kakiokosi.com/share/business/109</a></li>
+    <li id="s108">logmi Finance 2018年2月7日 2018年3月期第3四半期決算説明会（群戦略の出資比率） — <a href="https://finance.logmi.jp/263705" target="_blank" rel="noopener">https://finance.logmi.jp/263705</a></li>
+    <li id="s109">SBG アニュアルレポート2018 CEOメッセージ（群戦略の定義と発明の宣言） — <a href="https://group.softbank/en/ir/financials/annual_reports/2018/message/son" target="_blank" rel="noopener">https://group.softbank/en/ir/financials/annual_reports/2018/message/son</a></li>
+    <li id="s110">logmi Finance 2017年8月7日 2018年3月期第1四半期決算説明会（ブランド非統一と卒業） — <a href="https://finance.logmi.jp/articles/224959" target="_blank" rel="noopener">https://finance.logmi.jp/articles/224959</a></li>
+    <li id="s111">ソフトバンクニュース 2018年6月20日 第38回定時株主総会（自己増殖と自己進化） — <a href="https://www.softbank.jp/sbnews/entry/20180620_01" target="_blank" rel="noopener">https://www.softbank.jp/sbnews/entry/20180620_01</a></li>
+    <li id="s112">logmi Finance 2018年5月9日 2018年3月期決算説明会（300年後に歴史が証明する） — <a href="https://finance.logmi.jp/284871" target="_blank" rel="noopener">https://finance.logmi.jp/284871</a></li>
+    <li id="s113">第45回定時株主総会 書き起こし（2025年6月27日） — <a href="https://type.jp/et/feature/28743/" target="_blank" rel="noopener">https://type.jp/et/feature/28743/</a></li>
+    <li id="s114">日経クロステック 2020年8月11日（63歳の誕生日に引退計画を修正） — <a href="https://xtech.nikkei.com/atcl/nxt/news/18/08532/" target="_blank" rel="noopener">https://xtech.nikkei.com/atcl/nxt/news/18/08532/</a></li>
+    <li id="s115">第46回定時株主総会 書き起こし（2026年6月24日） — <a href="https://type.jp/et/feature/31279/" target="_blank" rel="noopener">https://type.jp/et/feature/31279/</a></li>
+    <li id="s116">東洋経済オンライン 2016年 第36回定時株主総会（Nikesh Arora退任の経緯） — <a href="https://toyokeizai.net/articles/-/124355" target="_blank" rel="noopener">https://toyokeizai.net/articles/-/124355</a></li>
+    <li id="s117">日本経済新聞 2021年3月 佐護勝紀の退任 — <a href="https://www.nikkei.com/article/DGXZQOGD05C3S0V00C21A3000000/" target="_blank" rel="noopener">https://www.nikkei.com/article/DGXZQOGD05C3S0V00C21A3000000/</a></li>
+    <li id="s118">ソフトバンクアカデミア 公式募集要項 — <a href="https://www.softbank.jp/corp/special/academia/" target="_blank" rel="noopener">https://www.softbank.jp/corp/special/academia/</a></li>
+    <li id="s119">ケータイWatch SoftBank World 2023（AGIは10年以内） — <a href="https://k-tai.watch.impress.co.jp/docs/news/1537457.html" target="_blank" rel="noopener">https://k-tai.watch.impress.co.jp/docs/news/1537457.html</a></li>
+    <li id="s120">ソフトバンクニュース 2024年6月20日 第44回定時株主総会（ASI宣言） — <a href="https://www.softbank.jp/sbnews/entry/20240620_01" target="_blank" rel="noopener">https://www.softbank.jp/sbnews/entry/20240620_01</a></li>
+    <li id="s121">SoftBank World 2024 基調講演の全文訳（非公式。ASIは2035年） — <a href="https://note.com/hiroshikinoshita/n/ndd978a2add7b" target="_blank" rel="noopener">https://note.com/hiroshikinoshita/n/ndd978a2add7b</a></li>
+    <li id="s122">CNBC独占インタビューの転載記事（2026年6月5日。超知性は今後2年） — <a href="https://cryptobriefing.com/openai-next-model-designed-by-ai/" target="_blank" rel="noopener">https://cryptobriefing.com/openai-next-model-designed-by-ai/</a></li>
+    <li id="s123">NEWSポストセブン（佐野眞一のインタビュー。孫姓での起業への親戚の反対） — <a href="https://www.news-postseven.com/archives/20120104_78634.html" target="_blank" rel="noopener">https://www.news-postseven.com/archives/20120104_78634.html</a></li>
+    <li id="s124">弁護士法人による解説（1990年の帰化と氏の変更の手続き） — <a href="https://ibarakitaiyo-law.jp/blog/%E3%82%BD%E3%83%95%E3%83%88%E3%83%90%E3%83%B3%E3%82%AF%E5%AD%AB%E6%AD%A3%E7%BE%A9%E3%81%95%E3%82%93%E3%81%AE%E6%B0%8F%E3%81%AE%E3%81%8A%E8%A9%B1/" target="_blank" rel="noopener">https://ibarakitaiyo-law.jp/blog/%E3%82%BD%E3%83%95%E3%83%88%E3%83%90%E3%83%B3%E3%82%AF%E5%AD%AB%E6%AD%A3%E7%BE%A9%E3%81%95%E3%82%93%E3%81%AE%E6%B0%8F%E3%81%AE%E3%81%8A%E8%A9%B1/</a></li>
+    <li id="s125">マネー現代 ソフトバンクキャリアLIVE（2018年6月）の講演録 — <a href="https://gendai.media/articles/-/56034" target="_blank" rel="noopener">https://gendai.media/articles/-/56034</a></li>
+    <li id="s126">SBG 孫正義個人による寄付の使途一覧（一次情報） — <a href="https://group.softbank/donations/list_son" target="_blank" rel="noopener">https://group.softbank/donations/list_son</a></li>
+    <li id="s127">子ども未来支援財団（旧 東日本大震災復興支援財団） — <a href="https://minnade-ganbaro.jp/foundation/" target="_blank" rel="noopener">https://minnade-ganbaro.jp/foundation/</a></li>
+    <li id="s128">孫正義育英財団 公式サイト — <a href="https://masason-foundation.org/" target="_blank" rel="noopener">https://masason-foundation.org/</a></li>
+    <li id="s129">日経ビジネス 連載「孫正義とトランプ」（マールアラーゴでの上積み交渉） — <a href="https://business.nikkei.com/atcl/gen/19/00762/062700001/" target="_blank" rel="noopener">https://business.nikkei.com/atcl/gen/19/00762/062700001/</a></li>
+    <li id="s130">米上院 ウォーレン議員室 プレスリリース（トランプ大統領図書館への5,000万ドル寄付とデータセンター用地リース） — <a href="https://www.warren.senate.gov/newsroom/press-releases/softbank-confirms-50-million-donation-to-trump-library-just-two-months-before-trumps-announcement-of-a-lease-for-companys-data-center/" target="_blank" rel="noopener">https://www.warren.senate.gov/newsroom/press-releases/softbank-confirms-50-million-donation-to-trump-library-just-two-months-before-trumps-announcement-of-a-lease-for-companys-data-center/</a></li>
+    <li id="s131">日本経済新聞 2011年4月20日（脱原発への転向と私財10億円） — <a href="https://www.nikkei.com/article/DGXNASDD200DB_Q1A420C1TJ1000/" target="_blank" rel="noopener">https://www.nikkei.com/article/DGXNASDD200DB_Q1A420C1TJ1000/</a></li>
+    <li id="s132">PC Watch 2022年11月11日 決算説明会（私は攻めの男だから） — <a href="https://pc.watch.impress.co.jp/docs/news/1455544.html" target="_blank" rel="noopener">https://pc.watch.impress.co.jp/docs/news/1455544.html</a></li>
+    <li id="s133">日経ビジネス（トルコ・マルマリスでArmを2週間で決めた場面） — <a href="https://business.nikkei.com/atcl/gen/19/00461/073000454/" target="_blank" rel="noopener">https://business.nikkei.com/atcl/gen/19/00461/073000454/</a></li>
+    <li id="s134">SBG プレスリリース 2020年4月13日 Sprint・T-Mobile合併完了（支配喪失益） — <a href="https://group.softbank/en/news/press/20200413" target="_blank" rel="noopener">https://group.softbank/en/news/press/20200413</a></li>
+    <li id="s135">Guinness World Records 個人資産の最大損失（585億ドル、2000年） — <a href="https://www.guinnessworldrecords.com/world-records/94151-largest-loss-of-personal-fortune" target="_blank" rel="noopener">https://www.guinnessworldrecords.com/world-records/94151-largest-loss-of-personal-fortune</a></li>
+    <li id="s136">SBG プレスリリース 2026年2月27日 OpenAIへの追加投資300億ドル — <a href="https://group.softbank/en/news/press/20260227" target="_blank" rel="noopener">https://group.softbank/en/news/press/20260227</a></li>
+    <li id="s137">X @masason 2013年1月8日の投稿 — <a href="https://x.com/masason/status/288641633187147776" target="_blank" rel="noopener">https://x.com/masason/status/288641633187147776</a></li>
+    <li id="s138">Business Insider Japan 2019年11月6日 決算説明会（真っ赤っかの大赤字） — <a href="https://www.businessinsider.jp/post-201984" target="_blank" rel="noopener">https://www.businessinsider.jp/post-201984</a></li>
+    <li id="s139">ソフトバンクニュース 2022年8月8日 決算説明会（顰像と反省） — <a href="https://www.softbank.jp/sbnews/entry/20220805_01" target="_blank" rel="noopener">https://www.softbank.jp/sbnews/entry/20220805_01</a></li>
+    <li id="s140">自動運転ラボ 2020年5月18日 決算説明会の書き起こし — <a href="https://jidounten-lab.com/u_sbg-2020-03-speech" target="_blank" rel="noopener">https://jidounten-lab.com/u_sbg-2020-03-speech</a></li>
+    <li id="s141">logmi 2016年7月18日 ARM買収 記者会見 — <a href="https://logmi.jp/business/articles/153085" target="_blank" rel="noopener">https://logmi.jp/business/articles/153085</a></li>
+    <li id="s142">SoftBank Group Report 2025 CEOメッセージ — <a href="https://group.softbank/en/ir/financials/annual_reports/2025/message/son" target="_blank" rel="noopener">https://group.softbank/en/ir/financials/annual_reports/2025/message/son</a></li>
+    <li id="s143">Al Jazeera 2019年10月7日（日経ビジネス誌インタビューの英訳） — <a href="https://www.aljazeera.com/amp/economy/2019/10/7/softbank-ceo-embarrassed-and-flustered-by-track-record" target="_blank" rel="noopener">https://www.aljazeera.com/amp/economy/2019/10/7/softbank-ceo-embarrassed-and-flustered-by-track-record</a></li>
+    <li id="s144">Outlook Business 2026年6月24日 第46回定時株主総会（英語での発言） — <a href="https://www.outlookbusiness.com/deeptech/masayoshi-son-rejects-ai-bubble-fears-outlines-softbanks-plans-of-robots-manufacturing-robots" target="_blank" rel="noopener">https://www.outlookbusiness.com/deeptech/masayoshi-son-rejects-ai-bubble-fears-outlines-softbanks-plans-of-robots-manufacturing-robots</a></li>
+    <li id="s145">Forbes 2026年6月8日 日本の富豪50人（純資産800億ドル、5年ぶり1位） — <a href="https://www.forbes.com/sites/phisanuphromchanya/2026/06/08/japans-50-richest-2026-softbanks-masayoshi-son-reclaims-top-spot-as-countrys-richest-person-amid-ai-boom/" target="_blank" rel="noopener">https://www.forbes.com/sites/phisanuphromchanya/2026/06/08/japans-50-richest-2026-softbanks-masayoshi-son-reclaims-top-spot-as-countrys-richest-person-amid-ai-boom/</a></li>
+  </ol>
+
+
+  <p class="srcnote" style="margin-top:36px">
+    この記事は2026年8月18日時点の開示と報道に基づく。ソフトバンクグループの株主価値は同年6月30日から8月5日までの約1か月で14.0兆円動いており、
+    数値の多くは短期間で変わる。読み直すときは as_of の日付を先に確認してほしい。
+  </p>
+</div>
+<script>
+/* ─── 出典レジストリ ───────────────────────────────────────────────────────
+   本文・年表の上付き番号はこの配列の添字（1始まり）に対応する。
+   一次資料（会社開示・当局資料・本人発言）を上に置き、報道・評伝を下に置いた。 */
+const SRC = [
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2026/shareholders-meeting_46_01_en.pdf','ソフトバンクグループ 第46回定時株主総会招集通知（2026年5月29日付）'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-finance_q1fy2026_01_en.pdf','SBG 2026年度第1四半期 決算説明会 財務セクション'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-accounting_q1fy2026_01_en.pdf','SBG 2026年度第1四半期 決算説明会 会計セクション'],
+ ['https://group.softbank/en/ir/stock/sotp','SBG 株主価値（SOTP）ページ'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/earnings-datasheet_q1fy2026_01.xlsx','SBG 2026年度第1四半期 決算データシート'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-svf_q1fy2026_01_en.pdf','SBG 2026年度第1四半期 決算説明会 SVFセクション'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-presentation_q1fy2026_02_en.pdf','SBG 2026年度第1四半期 決算説明会 質疑応答'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2025/shareholders-meeting_45_01_en.pdf','SBG 第45回定時株主総会招集通知（2025年6月3日付）'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2024/shareholders-meeting_44_01_en.pdf','SBG 第44回定時株主総会招集通知（2024年5月29日付）'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2023/shareholders-meeting_43_01_en.pdf','SBG 第43回定時株主総会招集通知'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2022/shareholders-meeting_42_01_en.pdf','SBG 第42回定時株主総会招集通知'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2021/shareholders-meeting_41_01_en.pdf','SBG 第41回定時株主総会招集通知'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2020/shareholders-meeting_40_01_en.pdf','SBG 第40回定時株主総会招集通知'],
+ ['https://www.forbes.com/profile/masayoshi-son/','Forbes プロフィール Masayoshi Son（2026年8月18日閲覧）'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2017_01_en.pdf','SBG アニュアルレポート2017（英）CEOメッセージ'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2015_02_en.pdf','SBG アニュアルレポート2015（英）'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2011_01_en.pdf','SBG アニュアルレポート2011（英）CEOメッセージ'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2011_01_ja.pdf','SBG アニュアルレポート2011（日）社長メッセージ'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2010_01_ja.pdf','SBG アニュアルレポート2010（日）'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2007_01_ja.pdf','SBG アニュアルレポート2007（日）'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2005_01_ja.pdf','SBG アニュアルレポート2005（日）'],
+ ['https://group.softbank/system/files/pdf/ir/financials/annual_reports/annual-report_fy2002_02_ja.pdf','ソフトバンク FACT BOOK 2002（日）社長メッセージ'],
+ ['https://group.softbank/system/files/pdf/ir/financials/annual_reports/annual-report_fy2000_01_en.pdf','ソフトバンク アニュアルレポート2000（英）'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy1998_01_en.pdf','ソフトバンク アニュアルレポート1998（英）1998年7月15日付 孫正義署名の株主宛レター'],
+ ['https://group.softbank/news/press/19960111','ソフトバンク プレスリリース 1996年1月11日「米国ヤフー社との合弁会社設立に関する件」'],
+ ['https://group.softbank/en/news/press/20060317','SBG プレスリリース 2006年3月17日 ボーダフォン日本法人買収'],
+ ['https://group.softbank/news/press/20060427','SBG プレスリリース 2006年4月27日 買収完了と資金調達実行'],
+ ['https://group.softbank/en/news/press/20061117','SBG プレスリリース 2006年11月17日 事業証券化1兆4,500億円'],
+ ['https://group.softbank/en/news/press/20121015','SBG プレスリリース 2012年10月15日 Sprint買収'],
+ ['https://group.softbank/en/news/press/20130611','SBG プレスリリース 2013年6月11日 Sprint買収条件の修正'],
+ ['https://group.softbank/en/news/press/20130711','SBG プレスリリース 2013年7月11日 Sprint買収完了'],
+ ['https://group.softbank/en/news/press/20160601','SBG プレスリリース 2016年6月1日 アリババ株の変動前払フォワード'],
+ ['https://group.softbank/en/news/press/20160621','SBG プレスリリース 2016年6月21日 Supercell株式売却'],
+ ['https://group.softbank/en/news/press/20160718','SBG プレスリリース 2016年7月18日 ARM買収'],
+ ['https://group.softbank/en/news/press/20160905','SBG プレスリリース 2016年9月5日 ARM買収完了'],
+ ['https://group.softbank/en/news/press/20161014','SBG プレスリリース 2016年10月14日 Vision Fund設立に関するMOU'],
+ ['https://group.softbank/en/news/press/20110403','SBG プレスリリース 2011年4月3日 東日本大震災への寄付'],
+ ['https://group.softbank/en/news/press/20200323','SBG プレスリリース 2020年3月23日 最大4.5兆円の資産売却・資金化プログラム'],
+ ['https://group.softbank/en/news/press/20220208','SBG プレスリリース 2022年2月8日 NVIDIA向けArm売却契約の解除'],
+ ['https://group.softbank/en/news/press/20250122','SBG プレスリリース 2025年1月22日 Stargate Project'],
+ ['https://group.softbank/en/news/press/20250320','SBG プレスリリース 2025年3月20日 Ampere Computing買収'],
+ ['https://group.softbank/en/news/press/20250819','SBG プレスリリース 2025年8月19日 Intelへの出資'],
+ ['https://group.softbank/en/news/press/20251008','SBG プレスリリース 2025年10月8日 ABBロボティクス事業の買収'],
+ ['https://group.softbank/en/news/press/20181210','SBG プレスリリース 2018年12月10日 ソフトバンク株式会社の公開価格決定'],
+ ['https://www.tca.or.jp/press_release/pdf/110311son.pdf','電気通信事業者協会 提出 孫正義 略歴書'],
+ ['https://www.fsa.go.jp/frc/news/n088.pdf','金融再生委員会 2000年2月24日 日本債券信用銀行の譲渡先選定と買収条件'],
+ ['https://www.lycorp.co.jp/ja/company/history/yahoo/','LINEヤフー 沿革（ヤフー株式会社）'],
+ ['https://www.forbes.com/forbes/1999/0705/6401146a.html','Forbes 1999年7月5日号（Yahoo!出資の場面、Jerry Yangの証言）'],
+ ['https://www.forbes.com/global/2000/0703/0313054a.html','Forbes Global 2000年7月3日号（個人資産の推移）'],
+ ['https://bookplus.nikkei.com/atcl/column/070400543/070400002/','日経BOOKプラス ライオネル・バーバー『勝負師 孫正義の冒険』抜粋'],
+ ['https://business.nikkei.com/atcl/seminar/19/00059/052400004/','日経ビジネス 孫正義インタビュー（2015年7月17日初出、2019年5月28日再編集）'],
+ ['https://www.chichi.co.jp/web/20180722sonn-1/','致知 1989年11月号 孫正義インタビュー（致知出版社ウェブ）'],
+ ['https://logmi.jp/knowledge_culture/speech/12482','logmi 孫 正義 LIVE 2011（2010年3月29日、東京国際フォーラム）'],
+ ['https://logmi.jp/main/career/55092','logmi トビタテ！留学JAPAN 第1期派遣留学生壮行会（2015年3月1日）'],
+ ['https://president.jp/articles/-/82936','PRESIDENT Online 井上篤夫『志高く 孫正義正伝 決定版』に基づく連載'],
+ ['https://arp-nt.co.jp/rensai2/sono001/','arp-nt「ソフトバンク 孫正義」物語（梶谷通稔による連載）'],
+ ['https://www.asagei.com/excerpt/7522','アサ芸プラス（上新電機 浄弘博光との交渉）'],
+ ['https://diamond.jp/articles/-/352212','ダイヤモンド・オンライン（慢性肝炎と虎の門病院）'],
+ ['https://diamond.jp/articles/-/352214','ダイヤモンド・オンライン（2001年6月29日、総務省での場面）'],
+ ['https://pc.watch.impress.co.jp/docs/2002/0510/softbank.htm','PC Watch 2002年5月10日 2002年3月期決算説明会'],
+ ['https://www.scmp.com/article/305910/softbank-group-pumps-us20m-alibaba','South China Morning Post 2000年1月19日 アリババへの2,000万ドル出資'],
+ ['https://appleinsider.com/articles/14/03/12/softbanks-masayoshi-son-pitched-apple-cellphone-to-steve-jobs-two-years-before-iphone-debut','AppleInsider 2014年3月12日（Charlie Rose番組でのジョブズとのやり取り）'],
+ ['https://group.softbank/news/press/20010619','ソフトバンク プレスリリース 2001年6月19日 Yahoo! BB'],
+ ['https://internet.watch.impress.co.jp/docs/special/30th/2087428.html','INTERNET Watch インターネット30周年特集（Yahoo! BBの立ち上げ）'],
+ ['https://gendai.media/articles/-/56035','マネー現代 孫正義 講演録（2018年6月19日掲載）'],
+ ['https://www.nikkei.com/article/DGXNASFL2505V_V20C10A6000000/','日本経済新聞 2010年6月25日 新30年ビジョン'],
+ ['https://96ut.com/stock/jikei.php?code=9984&year=2000','96ut.com ソフトバンク株価時系列（2000年・2002年）'],
+ ['https://www.baltimoresun.com/news/bs-xpm-1996-08-16-1996229082-story.html','Baltimore Sun 1996年8月16日 キングストン・テクノロジー買収'],
+ ['https://www.upi.com/Archives/1995/02/14/Japans-Softbank-buys-Comdex-computer-show/1251792738000/','UPI 1995年2月14日 COMDEX買収'],
+ ['https://www.upi.com/Archives/1995/11/09/Ziff-Davis-Publishing-to-be-sold/8950815893200/','UPI 1995年11月9日 ジフ・デービス出版の売却合意'],
+ ['https://www.chichi.co.jp/web/20201005_kitao_oota_/','致知出版社 北尾吉孝インタビュー'],
+ ['https://kigyoka.com/archives/20231025.html','企業家倶楽部 北尾吉孝（ソフトバンク時代の資金調達）'],
+ ['https://en.wikipedia.org/wiki/WeWork','英語版Wikipedia WeWork（当たり付け。金額は報道値）'],
+ ['https://technode.com/2021/04/27/an-interview-with-co-founder-of-ut-starcoms-lu-hong/','TechNode 2021年4月27日 Hong Lu（陸弘亮）インタビュー'],
+ ['https://www.data-max.co.jp/article/644','NetIB-News 佐々木正 追悼記事'],
+ ['https://wired.jp/2018/02/04/rip-rocket-sasaki/','WIRED.jp 佐々木正 追悼記事'],
+ ['https://smart-flash.jp/lifemoney/61859/','Smart FLASH（担任教師らの証言）'],
+ ['https://www.renewable-ei.org/activities/events/20110912.html','自然エネルギー財団 設立イベント（2011年9月12日）'],
+ ['https://www.news-postseven.com/archives/20120103_78632.html','NEWSポストセブン（佐野眞一『あんぽん 孫正義伝』に基づく記事）'],
+ ['https://www.itmedia.co.jp/news/articles/0405/28/news002.html','ITmedia 2004年5月28日 日本テレコム買収'],
+ ['https://www.rbbtoday.com/article/2004/11/30/19863.html','RBB TODAY 2004年11月30日 福岡ダイエーホークス取得'],
+ ['https://www.softbank.jp/corp/group/sbm/news/press/2008/20080610_01/','ソフトバンクモバイル プレスリリース 2008年6月10日 iPhone 3G'],
+ ['https://www.softbank.jp/sbnews/entry/20240325_02','ソフトバンクニュース（パラソル部隊と赤い紙袋）'],
+ ['https://www.nicmr.com/nicmr/report/repo/2002/2002aut02.pdf','野村資本市場研究所 ナスダック・ジャパンの検証（2002年）'],
+ ['https://en.wikipedia.org/wiki/Arm_Holdings','英語版Wikipedia Arm Holdings（当たり付け）'],
+ ['https://shuchi.php.co.jp/article/8367','PHPオンライン衆知（みかん箱の演説）'],
+ ['https://www.fundinguniverse.com/company-histories/softbank-corp-history/','FundingUniverse ソフトバンク社史（1980年代の年次数値）'],
+ ['https://www.forval.co.jp/sp/company_history/','フォーバル 公式沿革（NCC BOX）'],
+ ['https://diamond.jp/articles/-/362496','ダイヤモンド・オンライン（1986年12月24日、稲盛和夫との交渉。本文は有料）'],
+ ['https://gentosha-go.com/articles/-/75967','幻冬舎ゴールドオンライン（1994年の株式公開）'],
+ ['https://www.company-histories.com/Softbank-Corp-Company-History.html','company-histories ソフトバンク社史（ジフ展示会部門・COMDEX）'],
+ ['https://www.encyclopedia.com/social-sciences-and-law/economics-business-and-labor/businesses-and-occupations/softbank-corp','encyclopedia.com Softbank Corp.（1996〜1997年の連結財務）'],
+ ['https://group.softbank/news/press/20030905','SBG プレスリリース 2003年9月5日 あおぞら銀行株式の売却完了'],
+ ['https://ja.wikipedia.org/wiki/SB%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC','日本語版Wikipedia SBエナジー（当たり付け）'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2016_01_en.pdf','SBG アニュアルレポート2016（英）役員報酬の開示'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2019_02_en.pdf','SBG アニュアルレポート2019（英）Vision Fundの資本構成'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2018_01_en.pdf','SBG アニュアルレポート2018（英）Vision Fundの投資実行額'],
+ ['https://president.jp/articles/-/12881?page=2','PRESIDENT Online（テレビ朝日株の取得とJスカイB）'],
+];
+
+/* ─── 年表データ ───────────────────────────────────────────────────────────
+   d=表示日付 / e=期 / t=見出し / w=事実と具体 / y=なぜ後を決めたか
+   f=数値チップ / s=SRCの番号 */
+const ERAS = [
+ '',
+ 'I ルーツ 1957–1973',
+ 'II 米国 1974–1980',
+ 'III 創業と病 1981–1989',
+ 'IV 公開と買収 1990–1996',
+ 'V バブルと崩壊 1997–2002',
+ 'VI 通信キャリア 2002–2010',
+ 'VII 世界の投資家 2011–2018',
+ 'VIII 試練とAI 2019–2026',
+];
+
+const TL = [
+ {d:'1917年',e:1,t:'祖父が朝鮮半島から九州へ',
+  w:'孫正義の祖父は朝鮮半島から九州へ渡り、筑豊炭田の炭鉱労働者として働いた。その後、鉄道の要衝である佐賀県鳥栖の小作農に転じている。到着年を1917年とするのはライオネル・バーバーの評伝の記述で、渡航形態は小さな漁船とする記述と密航とする記述に分かれる。',
+  y:'孫家の日本での立脚点が炭鉱労働から小作農、そして鉄道用地の無許可居住という所有権の外側にあったことが、孫正義の出生地が無番地になった直接の原因である。',
+  s:[50]},
+ {d:'1957-08-11',e:1,t:'鳥栖・五軒道路無番地に誕生',
+  w:'佐賀県鳥栖市五軒道路無番地で、在日韓国人3世として生まれた。父・孫三憲と母・玉子の4人兄弟の次男。出生地は当時の国鉄鳥栖駅構内の空き地で、鉄道作業員として集められた朝鮮半島出身者が戦後にバラックを建てた集落だった。国有地の無許可占拠のため住所に地番が存在しない。家屋はトタン屋根に板を貼っただけの小屋で、線路の本線から数メートルしか離れていなかった。一家は通名として安本を使い、孫正義は16歳で渡米するまで安本正義と名乗った。',
+  y:'地番がない、つまり制度の外側から始まったという自己認識が、既存秩序への懐疑と規模で押し切る発想の源泉として、本人によって以後繰り返し語り直される。',
+  f:['4人兄弟の次男','通名は安本'],
+  s:[77,56,50]},
+ {d:'1960年頃',e:1,t:'祖母のリヤカーと赤豚5頭',
+  w:'両親が働きに出ていたため、祖母・李元照に育てられた。祖母は毎日、3歳から4歳の孫正義を黒ずんだリヤカーに乗せ、鳥栖駅前の食堂を回って残飯を集め、線路脇で飼っていた赤豚5頭に与えた。孫家はこの養豚と密造焼酎で生計を立てていた。本人の回想は、残飯でいっぱいのドラム缶と並んで荷台に乗せられ、臭い、汁のこぼれたヌルッとした感触は忘れようがありません、というものである。',
+  y:'身体記憶としての貧困と、後年の到達感の対比が、孫の語りの基本構造になる。原体験を経営の言語に翻訳するパターンはここに根がある。',
+  f:['赤豚5頭'],
+  s:[56,50]},
+ {d:'1962年頃',e:1,t:'幼稚園の帰り道、額に石が当たる',
+  w:'幼稚園からの帰り道、日本人の子どもたちに朝鮮人と罵られ、投げられた石が額に当たって血が流れた。孫はバーバーの取材に対し、この出来事を境に、次第に自分が日本人の子供ではないと気づくようになりましたと語っている。石を投げられた回数は資料により単発と複数に分かれる。',
+  y:'差別体験の起点として最も広く引用される場面である。同時に、幼稚園の時点では差別を差別として認識しておらず、認識が事後的に立ち上がったと本人が述べている点が重要である。',
+  s:[50,51]},
+ {d:'1963年頃',e:1,t:'父との相撲、オオカミの目',
+  w:'6歳の頃、父・三憲と相撲を取った。何度投げ飛ばされても立ち上がって挑み続ける息子を見て、三憲は後にその目をオオカミの目のように見えましたと証言している。三憲は4、5歳の頃から、お前は天才だ、お前は日本一の男になると繰り返し、勉強しろとは一度も言わなかった。',
+  y:'根拠のない自己肯定を親が意図的に注入した構造が、後年の異常なリスク許容度の説明に使われる。孫自身がこれを教育の一環として理解している点が、孫正義育英財団の設計思想にも接続する。',
+  s:[50,52]},
+ {d:'1968年頃',e:1,t:'教師の道が国籍で閉じる',
+  w:'小学校高学年で担任教師に憧れ、学校の先生になりたいと考えた。しかし当時は日本国籍がなければ公立学校の教員にも公務員にもなれず、両親からも日本人じゃないと教師にはなれないと告げられて進路が閉じた。『致知』1989年11月号では、小さいときから事業家になるか政治家になるか、どっちかだと思っていましたと語っている。',
+  y:'制度が国籍を要求する職業を諦め、要求しない職業を選んだという構造がここで決まった。孫の起業は情熱の帰結ではなく、排除の帰結という側面を持つ。',
+  s:[52]},
+ {d:'1969年頃',e:1,t:'父がパチンコ店を開業、一族で56軒',
+  w:'父・三憲が最初のパチンコ店を開いた。1980年代初には、一族7人兄妹のうち6人が保有する佐賀・福岡のパチンコ店だけで56軒に達している。規制でフィーバー機が使えなくなった局面では、店の駐車場に釣り堀を併設し、黒鯉のなかに数匹だけ混ぜた赤鯉を釣った客に1万円を出す企画で客を戻した。',
+  y:'本業が規制で止まったら隣接する遊びで客を戻すという父の型を、孫は後に本業の外側の成長エンジンへ乗り換える形で反復する。同時に家業がパチンコと消費者金融だったことは、日本の主流ビジネス社会から距離を置かれる要因にもなり続けた。',
+  f:['一族で56軒'],
+  s:[79]},
+ {d:'1970年頃',e:1,t:'自殺を考えるほど悩んだ時期',
+  w:'小学生から中学生の時期、出生ゆえの差別に苦しんだ。2015年のインタビューで、俺は小学生、中学生の時に自殺したいぐらい悩んだんだ、本気で自殺しようかと思ったぐらい悩んだ、それぐらい差別、人間に対する差別というのは、つらいものがあるのよ、と語っている。同じインタビューで、日本社会の中で生きていくのには安本と名乗ったほうがいいと述べている。',
+  y:'孫の差別体験は抽象的な社会問題ではなく、自死を考える水準の圧力として本人が語る。世界一になるという執念の起点として、本人も評伝もこの中学期を置いている。',
+  s:[51]},
+ {d:'1971年頃',e:1,t:'中学の担任に塾の経営を持ちかける',
+  w:'成績がオール5からオール2に落ちたことに危機感を持ち、親友のおばに直接懇願して森田塾に入塾した。同時期、担任教師にカリキュラムを持参して、塾を経営したいんですが、先生、責任者になってくださいと提案している。担任や校長に現状の給与を聞き取り、その2〜3倍を払うと約束して協力を求めた。',
+  y:'14歳前後で教師を雇って学校を作る発想に到達し、しかも相場を聞いてから2〜3倍を提示している。相手の現状より明確に上を積んで意思決定を早めるという後年の交渉スタイルの、最初の記録された実例である。',
+  f:['給与は現状の2〜3倍'],
+  s:[56,77]},
+ {d:'1972年頃',e:1,t:'父が吐血、兄が高校を中退',
+  w:'中学生のとき、働き盛りだった父が過労から吐血して倒れ、入院した。1歳年上の長兄・孫正明が高校1年で中退し、家計と父の入院費を支えた。孫は2015年3月1日のトビタテ！留学JAPAN壮行会で、働き盛りの親父は僕が中学生の時に血を吐いて倒れました、兄は高校の1年生でしたけど、高校を中退して、家計を支えるようになりましたと語っている。病名は公表されていない。',
+  y:'この一点が渡米を単なる留学から家族を置いていく決断に変える。兄が近い将来を、自分が遠い将来を担うという役割分担の言語化がここで起きた。',
+  s:[54,55]},
+ {d:'1973-04',e:1,t:'久留米大学附設高校に入学、『竜馬がゆく』',
+  w:'九州を代表する進学校である久留米大学附設高等学校に入学した。在籍は1年に満たない。入学後、家庭教師から司馬遼太郎『竜馬がゆく』を薦められ、坂本龍馬の脱藩に強く惹かれた。',
+  y:'日本の受験ルートで上に行く選択肢を手にした直後に、その選択肢を自ら破棄したという順序が重要である。制度に乗れるようになってから制度を降りている。',
+  s:[55,56]},
+ {d:'1973-08',e:1,t:'藤田田に会うため単身上京、3分が15分に',
+  w:'日本マクドナルド社長・藤田田の『ユダヤの商法』を1日5回読み込み、面会を求めた。久留米から秘書に毎日電話をかけて6回断られたが、市外電話の料金が高いという理由でアポなしに飛行機で羽田へ向かい、到着後に電話をかけて、顔を見るだけでいい、3分間、社長室に入れてもらえれば、話もしないと伝えてメモを届けさせた。3分の約束は15分になり、留学で何を学ぶべきかという問いに藤田は、これからはコンピュータビジネスの時代だと答えた。同じ夏、高校1年の夏休みにカリフォルニアで語学研修を受け、そこで見たカリフォルニア大学バークレー校が志望校になった。',
+  y:'渡米の動機と、渡米後に何をやるかが、1973年の同じ夏に別々のルートで確定した。断られ続けたら会う条件そのものを下げて突破口を作るという交渉技術も、16歳の時点で完成している。',
+  f:['6回断られて7回目','3分 → 15分'],
+  s:[56,55]},
+ {d:'1973-12',e:1,t:'アメリカで結果を出せば日本人は評価してくれる',
+  w:'夏の短期留学と韓国旅行から帰国した後、高校をやめると宣言した。久留米大学附設高校の担任・阿部逸郎は、孫が、自分は韓国籍だから日本では認めてもらえない、アメリカで結果を出せば日本人は評価してくれると言っていたと証言している。母親と親戚は渡米に反対した。',
+  y:'差別を訴えて是正を求めるのではなく、評価者を国境の外に付け替えるという戦略選択がここで確定した。米国とシリコンバレー側の評価軸を重視し続ける原点である。',
+  s:[77]},
+ {d:'1974-02',e:1,t:'高校中退、渡米。本人の言葉で脱藩',
+  w:'久留米大学附設高校を中退し、16歳で渡米した。渡米時点で父は吐血して入院中だった。母への説得は、お袋、病院の先生に聞いたら、親父は死にはせん、と言うてる、だからわしゃ行ってくる、というものだった。兄には、家族の近い将来は兄に頼りたい、遠い将来のもっと多くの苦しんでいる人達を支えるために自分はアメリカに行く、と告げている。',
+  y:'無番地、通名、国籍で閉じた教師の道、父の吐血と兄の犠牲、『竜馬がゆく』の脱藩、藤田田のコンピュータ、そして自分の目で見たバークレー。第1期の全要素が、家族を置いて未来を取るという1つの決断に圧縮された。以後の全ての賭けが、この最初の賭けの形式を反復する。',
+  s:[53,54]},
+
+ {d:'1974-02',e:2,t:'語学課程から入る、そして大野優美と出会う',
+  w:'カリフォルニア州オークランドのホーリー・ネームズ・カレッジが留学生向けに置いていた英語課程に入学した。同じ英語学校で、2歳年上の日本人留学生・大野優美と出会っている。1日1発明という自己ルールは、優美への約束として立てられたという証言がある。',
+  y:'高校から大学という制度の正面に並ばず、語学課程から編入と飛び級を連鎖させる。以後6年間の学歴形成は一貫してこの方法で構成される。',
+  s:[55,74]},
+ {d:'1974-09',e:2,t:'セラモンテ高校、3日で飛び級を交渉',
+  w:'サンフランシスコ近郊のセラモンテ高等学校2学年に編入し、3日で全科目の教科書を読み終えて校長に3年生への飛び級を認めさせ、続けて4年生への飛び級も認められた。使った論理は、すでに理解している内容に1年費やすのは教える側にも教えられる側にも浪費だという、相手側の損への翻訳だった。在籍期間は2週間とする記述と3週間とする記述がある。',
+  y:'制度は交渉可能であるという原体験である。州教育局長への電話、シャープへの持ち込み、家電メーカー50社への手紙は、いずれも決定権者に直接届けて相手の損得に翻訳するという同じ型の反復になる。',
+  s:[56,55]},
+ {d:'1974年後半',e:2,t:'検定試験で辞書持ち込みと時間延長を勝ち取る',
+  w:'大学入学資格の検定試験で、英語の問題文が読めないだけで内容は解けると主張し、辞書の持ち込みと試験時間の延長を要求した。試験官に断られると上司、さらにその上司へと遡り、最終的にカリフォルニア州の教育局責任者に電話で認めさせた。条件は辞書持ち込み可、1科目2時間、3日間の日程。終了時刻が厳密に指定されなかったため、辞書を引くのに必要なだけ延長を実質的な無期限延長と解釈して解き切った。',
+  y:'ルールは書かれていない部分に余白があるという発見である。曖昧な合意を自分に有利に解釈して実行し切る振る舞いは、以後の交渉と資金調達に一貫して現れる。',
+  f:['1科目2時間','3日間'],
+  s:[56]},
+ {d:'1975-09',e:2,t:'ホーリー・ネームズ本科、留学生初の学長賞',
+  w:'ホーリー・ネームズ・カレッジ本科に入学し、全課程を2年足らずで終えて学長賞を受賞した。留学生としての受賞は同校初とされる。当時の学生数は約800人、1クラスは15〜20人。会計学を教えたマルグリット・カーク女史は、目立ちましたね、彼は眼をきらきら輝かせていましたと証言している。なお同校は2023年春学期をもって154年の歴史を終え閉校した。',
+  y:'バークレー編入の実績をこの2年で作り込んだ。編入というルートを最短で使い切った期間である。',
+  s:[55]},
+ {d:'1976年',e:2,t:'19歳、人生50年計画',
+  w:'10年刻みの人生50年計画を作成した。20代で業界に名乗りを上げる、30代で軍資金を貯める、40代で大きな勝負に出る、50代で事業を完成させる、60代で後継者にバトンを渡すという骨格である。金額つきの記述は後年の語り直しで動いている可能性がある。',
+  y:'この時期の意思決定は目先の収益ではなく計画の逆算で説明できる。1980年に米国で儲かっていた事業を畳んで帰国した判断は、20代のうちに日本の業界で名乗りを上げるという条項があると解釈するのが最も整合する。',
+  s:[56]},
+ {d:'1976〜1979年',e:2,t:'1日1発明、250件を約40の採点要素で機械採点',
+  w:'学費と生活費を自力で稼ぐため、毎日1つ発明するという自己ルールを設定した。1日5分だけノートに向かい、蓄積した発明メモは250件を超えた。そのうえでコンピュータによる採点を導入し、部品1個あたりのコスト、部品の新しさ指数、その部品に対する自分の知識量指数など約40の採点要素を掛け合わせて点数順に並べた。最終的に音声機能付き電子翻訳機の1件に絞り込んでいる。',
+  y:'候補を大量に出し、重みづけスコアで機械的に絞るという手続きが19歳から20歳の時点で確立していた。同じ手続きが1980年から1981年の事業選定にそのまま再利用される。',
+  f:['250件超','採点要素 約40'],
+  s:[56,74]},
+ {d:'1977年',e:2,t:'UCバークレー経済学部3年に編入',
+  w:'カリフォルニア大学バークレー校経済学部の3学年に編入した。ホーリー・ネームズ・カレッジからバークレーへの編入率は約10%だった。卒業は1980年3月、学位は経済学の学士。周辺には工学系の人材が集まり始めており、アポロ宇宙船へのマイクロコンピュータ搭載を担当したハードウェア設計者チャック・カールソンも後の試作機開発に加わっている。',
+  y:'経済学部に籍を置いたまま物理学教授と工学教授を動かして製品を作るという構図がここで固まる。自分は発明と経営を担い、技術は世界最高の専門家に外注するという後年の型の最初の実装である。',
+  s:[55,56]},
+ {d:'1977〜1978年',e:2,t:'M SPEECH SYSTEM、前払いゼロで権威を動かす',
+  w:'音声機能付き電子翻訳機を実現するため、UCバークレー物理学教授で音声合成の権威フォレスト・モーザーに協力を依頼した。条件は前払いのない出来高払いと成功報酬で、モーザーのイニシャルを冠したM SPEECH SYSTEM INC.を設立している。',
+  y:'技術者に成功報酬を渡して巻き込むという資本の使い方を20歳で実装している。後にArmやOpenAIに対して金を出して最良の頭脳に乗る形を採り続ける原型がここにある。',
+  s:[56]},
+ {d:'1977年夏',e:2,t:'シャープ天理、佐々木正が即断する',
+  w:'試作機の売り込みのため日本の家電メーカー約50社に手紙を送り、返信は10社。松下電器と三洋電機には断られた。1977年夏、奈良県天理のシャープ中央研究所を訪ね、技術本部長・専務の佐々木正に試作機を持ち込んだ。当時62歳の佐々木は即断で英語版の研究開発費2,000万円を出し、英語版が完成すれば他言語版も含めて総額1億6,000万円になると示した。総額は約1億円説と1億6,000万円説に分かれる。',
+  y:'無から現金1億円級を獲得した最初の事例であり、同時に生涯の後ろ盾を得た。1982年に創業直後の日本ソフトバンクが第一勧業銀行に1億円の無担保融資を求めたとき、佐々木は自宅と退職金を差し出す覚悟で個人保証をしている。支援の理由を問われた佐々木の答えは、それはねえ、かわいいからだよ、だった。',
+  f:['手紙50社・返信10社','開発費 2,000万円'],
+  s:[75,76,56]},
+ {d:'1978-09-23',e:2,t:'正午に試作機が動く。結婚式は1週間延期',
+  w:'音声機能付き電子翻訳機の試作機が完成した。同日午後2時は結婚式の予定日だったが、孫は試作機の議論に没入し、式は9月30日午後3時に延期された。立会人は役所の受付女性と黒人のガードマンだけの略式で、孫21歳、優美23歳。結婚年は1978年説と1979年説に分かれる。',
+  y:'発明の完成日と結婚式の日が重なり、発明を選んだ。この一点が当時の優先順位を最も端的に示している。',
+  s:[56]},
+ {d:'1978〜1979年',e:2,t:'インベーダー筐体350台の時間差裁定',
+  w:'日本でブームが冷めかけていたスペースインベーダーの筐体を、倉庫で処分費用に困っていた業者から1台5万円で20台、利益が出てから払う条件で仕入れた。輸送は2か月かかる船便ではなく1台7万円の空輸を選び、最終的に350台を米国に送ってレストランなどに設置し、売上を孫6対店舗4で分けた。日本での筐体価格は80万〜90万円、米国では約50万円でまだ上昇途中だった。半年の利益は1億円を超えた。',
+  y:'同じモノの価値が場所と時間でずれるだけで1億円が作れる、という実証である。先に来る未来をまだ来ていない市場に持ち込むという型の、最初の実験になった。',
+  f:['1台5万円で20台','空輸7万円','350台','半年で1億円超'],
+  s:[56]},
+ {d:'1979年',e:2,t:'現金2,000万円でゲームセンターを買い、1か月で3倍',
+  w:'バークレー校キャンパス脇の最大級のゲームセンターを買収した。一度断られると翌日に現金2,000万円を持って再訪している。買収後は機種別の売上を日次でグラフ化して何日目で損益分岐に達するかを可視化し、不振機種を即座に減らし、3日働かせて品質が変わらない従業員は即日解雇し、時給の安い学生を採用して勤務後に無料コインを配った。1か月で売上は3倍になった。',
+  y:'買って、数字を測って、人を入れ替える。買収後の統治の原型がここにあり、日次で数字を見る癖もこの店で身についている。',
+  f:['買収 2,000万円','1か月で売上3倍'],
+  s:[56]},
+ {d:'1980-03',e:2,t:'儲かっている事業を置いて帰国',
+  w:'カリフォルニア大学バークレー校経済学部を卒業し、日本へ帰国した。米国では翻訳機とゲーム事業で現金を作り、事業は伸び続けていたが、それを置いて帰った。米国側の事業はHong Luら現地のパートナーに委ね、日本では福岡市博多区雑餉隈に企画会社ユニソン・ワールドを興している。帰国後1年半の収入はゼロだった。',
+  y:'短期の利益より計画の順序を優先した最初の判断である。以後の大型投資でも同型の選択が繰り返される。',
+  f:['無収入 1年半'],
+  s:[56]},
+ {d:'1980〜1981年',e:2,t:'40候補を約25条件で採点し、ソフト流通を選ぶ',
+  w:'帰国後1年半をかけて約40の新規事業候補を洗い出し、それぞれに人員計画、製品計画、10年分の事業計画と予想損益を作った。そのうえで約25の要因条件をリストアップして重みづけし、合計点で順位づけした。最優先の条件は50年間情熱を傾けられるかで、以下、時代の流れに合っているか、日本一から世界一になれるか、少ない資本金で始められるかなどが並ぶ。結論はソフトウェアの流通で、社名を日本ソフトバンクと決めた。',
+  y:'米国時代の発明選定と手続きが同一である。対象を発明から事業に差し替えただけで、意思決定のアルゴリズムは変わっていない。',
+  f:['40候補 → 1事業','評価条件 約25'],
+  s:[56]},
+
+ {d:'1981-03',e:3,t:'みかん箱の演説',
+  w:'福岡市南部の雑餉隈にある雑居ビル2階で、雇ったアルバイト2名を前に最初の朝礼を行った。みかん箱2つの上に立ち、売上を5年で100億円、10年で500億円、30年後には豆腐屋のように1兆、2兆と数える会社にすると宣言した。演説は1時間に及び、聞いていた2名は数日から2週間のうちに辞めた。当時の売上はゼロである。',
+  y:'創業前から売上規模そのものを目標変数に置いていたことを示す。後に本人が繰り返し引用することで社内神話になった。',
+  f:['従業員2名','30年後に1〜2兆円'],
+  s:[86,56]},
+ {d:'1981-09-03',e:3,t:'日本ソフトバンク設立、記者は5人',
+  w:'株式会社日本ソフトバンクを設立し、24歳で代表取締役社長に就任した。資本金は1,000万円とする資料と2,000万円とする資料がある。事業はパソコン用パッケージソフトの卸売。設立を告知する記者会見はパレスホテルで開いたが、来場した記者は5〜6名だった。1981年9月から12月までの売上は約200万円にとどまる。',
+  y:'この時点で仕入先も販路も資金もなく、ソフトを集める側の立場すら確立していなかった。以後の3か月は、その3つを同時に埋めるための連続した賭けになる。',
+  f:['資本金 1,000万円','9〜12月の売上 約200万円'],
+  s:[45,56]},
+ {d:'1981-10',e:3,t:'資本金の8割を1回の展示会に投じる',
+  w:'大阪の家電見本市に、資本金の8割にあたる800万円を投じてソニーや松下電器と同格の最大級ブースを借りた。国内で入手可能なパソコンソフトを一堂に集めて展示するという発想で、10社余りのソフトハウスに出展費用を負担させず、自社が全額を負担して並べさせてほしいと頼み込んだ。看板はパソコン・ソフト販売の一大革命！である。',
+  y:'卸売業は品揃えと認知が同時に立たないと成立しない。孫は日本のソフトが全部ここにあるという状態を1週間だけ人工的に作り、流通の中心にいるという既成事実を先に作った。',
+  f:['出展費 800万円'],
+  s:[56,57]},
+ {d:'1981-11',e:3,t:'上新電機J&Pの独占供給権を取る',
+  w:'展示会の約1か月後、上新電機の本部長から電話が入った。同社は同年10月に日本橋でパソコン専門店J&Pを開いたばかりで、ソフト売り場の品揃えに困っていた。孫は社長・浄弘博光に直談判し、取引先はまったくない、資金もほとんどない、品揃えもこれからだと認めた上で、他からは一切入れない代わりに自分も徹底的にやるという条件で独占供給権を獲得した。J&Pにとって日本ソフトバンクは取引第1号だった。',
+  y:'小売の出口を1店に絞って独占を取ったことで、ソフトハウスに対してうちを通せばJ&Pの棚に入るという交渉材料が生まれた。上流と下流を同時に押さえる形になり、卸としての存在理由が確定した。',
+  s:[57]},
+ {d:'1982-01',e:3,t:'ハドソン独占と、佐々木正の個人保証つき1億円',
+  w:'当時最大手のソフトハウスだったハドソンと独占的な卸契約を結んだ。条件は1982年1月15日までにソフト数万本を引き取ること、および1981年12月末までに現金3,000万円の支払いを確認できることだった。この資金を作るため第一勧業銀行麹町支店に無担保・無保証で1億円の融資を申し込み、シャープ専務・佐々木正の個人保証で実行された。支店長の決裁枠1,000万円の10倍である。',
+  y:'上流と下流の独占が同時に成立し、1982年の月商が一直線に立ち上がる。同時に、他人の信用と他人の金で自分のリスクを取るという資金調達様式が最初に確立した局面でもある。',
+  f:['前払い 3,000万円','無担保融資 1億円'],
+  s:[56,75]},
+ {d:'1982年',e:3,t:'月商150万円が12月に3億2,000万円へ',
+  w:'1982年の月商は1月150万円、5月1億円、12月3億2,000万円と推移し、通期の年商は20億円に達した。従業員は12月時点で30名。英語圏の企業史では創業1年目の月商が1万ドルから230万ドルに増えたと記述されており、桁は整合する。',
+  y:'卸売のスケール速度が棚の獲得数に比例することをこの年に体感した。この体験が出版事業への進出と全国卸網の構築につながる。',
+  f:['年商 20億円','従業員 30名'],
+  s:[87]},
+ {d:'1982-05',e:3,t:'『Oh!PC』『Oh!MZ』創刊、返品率85%',
+  w:'月刊『Oh!PC』と『Oh!MZ』を同時創刊した。初刷はいずれも5万部だったが返品率は85%に達し、1誌あたり月約1,000万円の赤字を出した。孫はここで撤退せず、手元資金を投じてテレビCMを打った。',
+  y:'ソフト卸の在庫リスクに加えて、雑誌という返品リスクを自ら抱え込んだ最初の意思決定である。認知が先、流通は後という順序を出版でも適用しようとして失敗した。',
+  f:['初刷 5万部','返品率 85%'],
+  s:[56,83]},
+ {d:'1982年後半',e:3,t:'読者カード全数分析で黒字化',
+  w:'創刊から半年後、返送された読者カード数万枚を全数分析し、ページ数を2〜3倍に増やしたうえで定価を680円から580円へ下げた。増ページと値下げを同時に行う打ち手で、値下げ後の号は発売3日で売り切れ、出版事業は黒字化した。',
+  y:'顧客データを全数見てから打ち手を決めるという行動様式が、初めて経営判断に使われた局面である。1989年の日次決算と数千本のグラフ管理は、この延長線上にある。',
+  f:['680円 → 580円'],
+  s:[56]},
+ {d:'1983年春',e:3,t:'慢性肝炎、余命は長くても5年',
+  w:'25歳で慢性肝炎と診断された。当時は不治の病とされ、医師から長くてもあと5年の命と告げられたとされる。会社は社員30名から125名、売上20億円から45億円へ増えている最中で、長女は1歳半、妻は次女を妊娠中だった。入院中も重要な記者会見にはベッドを抜け出して出席していた。病名を肝硬変とする資料もあり、診断年も1982年説と1983年説に分かれる。',
+  y:'余命宣告が時間軸を反転させた。あと5年あれば相当大きなことができるという思考に転じ、後の300年計画と孫の二乗の兵法の起点になる。同時に、自分が不在でも回る体制を作らざるを得なくなった。',
+  f:['余命 5年','社員 30名 → 125名'],
+  s:[58,56]},
+ {d:'1983-04',e:3,t:'大森康彦に社長を委ね、自らは会長へ',
+  w:'代表取締役会長に退き、野村證券で100社以上の上場を手がけた後に日本警備保障の副社長を務めた大森康彦を代表取締役社長として招いた。電気通信事業者協会に提出された本人の略歴書は、1983年4月に会長、1986年2月に社長復帰と記載している。離任は約2年10か月である。',
+  y:'24歳で立ち上げた会社に証券と上場実務のプロを据えた。結果として孫の不在期間に組織は拡大したが、後に指揮権をめぐる社内対立を生む。',
+  s:[45]},
+ {d:'1984-03-13',e:3,t:'虎の門病院川崎分院へ転院',
+  w:'1984年1月、新聞記事で虎の門病院の熊田博光医師の治療法を知って受診した。治りますかという問いに、7、80パーセントは治りますという答えが返り、孫は、いくら時間がかかってもかまいません、先生、治してくださいと応じた。3月13日に大学病院から虎の門病院川崎分院へ転院した。',
+  y:'治療法が存在するという一点で見通しが変わった。以後、断続的な入退院を続けながら3年弱の療養に入る。',
+  f:['治癒見込み 70〜80%'],
+  s:[58]},
+ {d:'1983〜1986年',e:3,t:'病床で約4,000冊、孫の二乗の兵法',
+  w:'約3年の入退院期間に約4,000冊を読んだとされる。中心は歴史書と中国古典、経営書で、『竜馬がゆく』は2度通読した。療養中のベッドの上で、5文字×5行の孫の二乗の兵法を立案している。25文字のうち一流攻守群と頂情略七闘は孫の創作で、風林火山に海を加えたのも孫の追加である。公開されたのは2010年7月28日のソフトバンクアカデミア開校記念講演だった。',
+  y:'この期間に固まった思想は、個別プロダクトではなく物が流れる空間そのものを取る、300年単位で企業を設計する、利他を軸に据えるの3つに整理できる。以後のヤフー、ブロードバンド、Armへの投資判断の共通言語になっている。',
+  f:['約4,000冊','25文字'],
+  s:[56]},
+ {d:'1984年半ば',e:3,t:'日本データネットで半年に累計10億円の赤字',
+  w:'新規事業として別会社の日本データネットを設立し、消費者向け商品の価格と販売場所をデータベース化して雑誌で売る事業を始めた。月次赤字は約1億円、半年で累計約10億円に達し、廃刊に追い込まれた。',
+  y:'この10億円の穴が、後のNCC BOX事業の直接の動機になる。需要が検証される前に規模を作るという失敗の型が、ここで最初に出ている。',
+  f:['累計赤字 約10億円'],
+  s:[56]},
+ {d:'1984年',e:3,t:'国内ソフト流通シェア約5割',
+  w:'国内パソコンソフト流通市場でシェア約50%を確保した。取引小売店は6,400店、取引ソフト会社は200社以上。1985年12月期の売上高は115億円で、正社員150名と臨時60名の陣容になった。1985年には社内を10人以下の最小単位に分けるバーチャルカンパニー制度を導入している。',
+  y:'20代で業界に名乗りを上げるという人生50年計画の第1条項が、27歳で達成された。',
+  f:['シェア 約50%','取引小売 6,400店'],
+  s:[87]},
+ {d:'1986-02',e:3,t:'社長復帰。卸の粗利は30%から10%へ',
+  w:'代表取締役社長に復帰した。復帰の手段として役員の定年を40歳とする社内規定を設けたと伝えられる。復帰後は競合との価格競争に直面し、卸売の粗利率は30%から10%へ落ち込んだ。',
+  y:'卸売の粗利が3分の1になった事実が、通信という別の収益源を探す直接の動機になっている。',
+  f:['粗利率 30% → 10%'],
+  s:[45,56]},
+ {d:'1986-12-24',e:3,t:'稲盛和夫との7時間、翌朝の撤回',
+  w:'京都市山科区の京セラ本社に稲盛和夫を訪ね、新日本工販の大久保秀夫とともに共同開発した電話回線自動選択アダプタNCC BOXを提案した。稲盛はプレゼン直後に、50万個すべて買う、ただし他には卸さないでくれと独占を要求した。装置を全国の中小企業に無料配布してキャリアからロイヤリティを取るという設計では、1社独占は成立しない。7時間譲らず、最後に疲労のなかで独占契約書に署名したが、翌朝、孫は撤回を申し入れ、稲盛は契約書を返した。',
+  y:'1981年に上新電機から独占を取り、1986年に第二電電の独占を拒んでいる。同じ独占という道具を、自分が握る側か握られる側かで正反対に扱う。一貫しているのは商道徳ではなく設計の保全である。',
+  f:['50万個の一括購入提示','交渉7時間'],
+  s:[89,56]},
+ {d:'1987年',e:3,t:'NCC BOX、累計ロイヤリティ約20億円',
+  w:'複数の新電電のうち最も安い事業者を自動選択するアダプタを、新日本工販と共同で実用化した。1985年の通信自由化で長距離電話に複数の事業者が参入したが、利用者は毎回プレフィックスを手入力しなければ安い回線を使えなかった。装置を無料で配り、キャリアからロイヤリティを取る設計で全国の中小企業に配られた。累計ロイヤリティは約20億円、サービスは2001年5月まで約14年稼働した。日本におけるこの方式の基本特許は孫正義が保有する。',
+  y:'ソフト卸と出版に加えて、規制変更の隙間に立って手数料を取るという第3の型を発明した。ここで得たキャリアとの接点が、2004年の日本テレコム買収と2006年のボーダフォン買収につながる直系の起点になる。',
+  f:['累計ロイヤリティ 約20億円','稼働14年'],
+  s:[88,56]},
+ {d:'1988-07',e:3,t:'米国進出と日次決算',
+  w:'ソフトバンク・アメリカを設立し、1989年には米Ziff-Davisの『PC Magazine』日本版を刊行した。同年、社内に日次決算システムを導入している。女性社員1名が1日30分データを入力すると全社の日次財務諸表が出る設計で、通常50〜100本程度の管理指標に対して数千本のグラフを作った。孫はこれを有視界飛行から計器飛行、さらに超計器飛行への移行と表現している。',
+  y:'米国進出と『PC Magazine』日本版は、1994年のZiff-Davis買収、1995年のCOMDEX買収、1996年のヤフー出資という米国志向の下地になる。日次決算は、1982年の読者カード全数分析と同じ型が全社の管理会計に実装された到達点である。',
+  f:['入力 1名×30分/日'],
+  s:[56,87]},
+
+ {d:'1990-07',e:4,t:'社名から日本を外す',
+  w:'株式会社日本ソフトバンクが商号をソフトバンク株式会社に変更した。同年1月には日本データネットを吸収合併している。なぜ日本という地理的限定語を外したのかを孫本人が語った一次記録は確認できていない。',
+  y:'1994年以降の米国買収攻勢を、日本法人の海外進出ではなくソフトバンクという名の世界企業として実行するための器の名前が、この時点で先に用意された。',
+  s:[92]},
+ {d:'1994-07-22',e:4,t:'店頭公開、初値18,900円',
+  w:'日本証券業協会の店頭市場に株式を公開した。公開価格1株11,000円に対し初値18,900円で、公募185万株による調達額は214.68億円。公開後の発行済株式1,425万株で計算すると時価総額は約2,693億円になる。公開前の株主構成は孫の資産管理会社エムエーシーが77.4%、孫個人が5.1%だった。調達額は214.68億円、200億円、1億4,000万ドルの3説がある。',
+  y:'円建てで数百億円を即座に動かせる企業に変わった。この直後から始まる米国での連続買収は、すべてこの公開で得た信用を担保に実行されている。',
+  f:['公開価格 11,000円','初値 18,900円','時価総額 約2,693億円'],
+  s:[90]},
+ {d:'1994-12',e:4,t:'ジフの展示会部門を2億200万ドルで取る',
+  w:'同年10月にZiff Communicationsの雑誌出版事業の入札でForstmann Littleに14.5億ドルで敗れた後、方針を切り替えて展示会部門だけを2億200万ドルで買収した。日本語報道には約127億円とする記述もあり、当時の為替では整合しない。',
+  y:'展示会は前受金でキャッシュが先に入る事業であり、負債で買い進む資金繰りと相性が良い。加えて出展企業リストと来場者データという、米国IT業界で誰が何をやっているかの一次情報が手に入る。',
+  s:[91]},
+ {d:'1995-02-14',e:4,t:'COMDEXを8億ドルで買う',
+  w:'シェルドン・アデルソンのThe Interface Groupから、COMDEXを含むコンピュータ見本市17本を8億ドルで買収すると発表した。資金は少なくとも5億ドルの借入と新株発行で調達している。当時のCOMDEXは1994年11月開催回で来場者195,000人、出展2,200社を集める世界最大級のIT見本市だった。買収は1995年4月1日に完了した。金額は8億ドル、8億300万ドル、売却側総額8億6,500万ドル、約749億円と資料間で割れる。',
+  y:'この1件で米国事業がほぼ倍になり、孫は米国の業界内でバイヤーとして認識される立場を得た。翌年の出版本体の買収交渉で単なる外国人投資家として扱われなかった土台である。',
+  f:['見本市17本','来場者 195,000人'],
+  s:[69,91]},
+ {d:'1995年',e:4,t:'北尾吉孝が野村證券から入社',
+  w:'1994年の株式公開を野村證券側で担当した事業法人三部長・北尾吉孝が、44歳で常務取締役として入社した。北尾は11行の銀行シンジケート団に依存した調達体制を資本市場からの直接調達へ切り替え、約3年で市場から総額4,878億円、うち時価発行増資1,697億円を調達している。',
+  y:'1990年代の買収攻勢を孫の胆力だけで説明すると実像を外す。銀行協調融資から社債と時価発行増資へ調達手段を組み替えたCFO機能があって初めて、年商の何倍という買収が連続できた。',
+  f:['3年で4,878億円'],
+  s:[71,72]},
+ {d:'1995-09',e:4,t:'財務代理人方式500億円、銀行団が激怒する',
+  w:'北尾が財務代理人方式による無担保社債500億円を発行した。銀行を受託会社から外したため管理手数料は2,700万円から1,200万円に下がった。孫が米国出張中に主要行から抗議が相次ぎ、一部の銀行は北尾の解任を要求した。臨時役員会で北尾が、失敗したら自分を解雇して銀行との関係を修復してほしいという趣旨を述べたのに対し、孫は、私は北やんを500％信じていると応じた。',
+  y:'調達手段の政治的コストを自分で引き受けた場面である。銀行団と正面衝突しても市場調達を選んだことで、翌年のジフ・デービス2,100億円とキングストン15億ドルという規模の連続買収が物理的に可能になった。',
+  f:['手数料 2,700万円 → 1,200万円'],
+  s:[71,72]},
+ {d:'1995-11-09',e:4,t:'負けた資産を1.45倍で買い直す',
+  w:'Forstmann Littleが、1994年10月にジフ家から14.5億ドルで取得したZiff-Davis Publishingを、21億ドルでソフトバンクへ売却することで合意した。ジフ・デービスは年商8.5億ドル、印刷媒体80タイトルを抱え、PC Magazine、PC Week、Computer Shopperを含む。買収は1996年2月に完了し、日本円での支払額は1,853億円とされる。価格は21億ドル説と18億ドル説に分かれる。',
+  y:'1996年3月期の連結売上1,711億円の会社が、年商約900億円規模の出版社を2,000億円規模で買った。売上を超える買収を負債で行うという、以後を規定する行動様式がここで確立している。',
+  f:['買収 21億ドル','年商 8.5億ドル'],
+  s:[70]},
+ {d:'1995-11',e:4,t:'米Yahoo!に200万ドル、これは偵察である',
+  w:'ソフトバンクとジフ・デービスが共同で米Yahoo!に200万ドルを出資し、株式約5%を取得した。この事実はソフトバンク自身の1996年1月11日のプレスリリースに記載されている。当時のYahoo!はSequoia Capitalから100万ドルを受け入れたばかりで、社員数名の会社だった。',
+  y:'200万ドルは当時のソフトバンクにとって誤差の範囲であり、賭けではなく偵察である。この5%を持っていたことで、翌年3月に33%超まで積み増す判断が既存株主の追加投資として実行できた。少額で先に席を取り、確信が持てた段階で桁を上げるという型が、ここで最初に観測できる。',
+  f:['200万ドル / 約5%'],
+  s:[25]},
+ {d:'1996-01-11',e:4,t:'ヤフー株式会社を設立、資本金2億円',
+  w:'米Yahoo!との合弁でヤフー株式会社を設立した。資本金2億円で、出資比率はソフトバンク60%、米Yahoo! 40%。設立時の代表取締役社長は孫正義本人が兼務し、同年7月に井上雅博へ引き継いだ。4月1日午後3時20分にYahoo! JAPANのサービスが始まる。設立からサービス開始までは81日である。',
+  y:'米国で立ち上がったモデルを本家と合弁で日本語版として最速で立てるという、タイムマシン経営の実装例の第1号である。ライセンスでも模倣でもなく合弁を選んだため、日本市場で本家と競合するリスクを最初から消していた。',
+  f:['資本金 2億円','SB 60% / Yahoo! 40%'],
+  s:[25,47]},
+ {d:'1996-03',e:4,t:'冷めたピザの席で1億500万ドル',
+  w:'Yahoo!の質素なオフィスで冷めたピザを前にした面談の席で、1億500万ドルで33%の株式を取得すると申し出た。Forbesが1999年7月5日号でこの場面を記録している。日本語報道は1996年4月に35%を約100億円で取得し、追加後の保有比率は37.02%とする。比率は33%、36%、37%で資料間が一致しない。Jerry Yangの回想は、僕らのほとんどは彼を正気じゃないと思ったから始まる。',
+  y:'5%の偵察から4か月で支配的持分へ一気に跳ねた。この投資が2000年前後に兆円単位の含み益に化け、ソフトバンクを事業会社から投資で稼ぐ会社に変える最初の実証になった。',
+  f:['1億500万ドル / 33〜37%'],
+  s:[48]},
+ {d:'1996-08-15',e:4,t:'キングストン80%を15億ドルで買う',
+  w:'メモリモジュールの世界最大手Kingston Technologyの80%を15億ドルで取得すると発表した。支払構成は社債で約8億ドル、新株発行で4.25億ドル、残りを営業キャッシュフローから。この買収でソフトバンクの負債は約24億ドルから約32億ドルへ膨らんだ。ソフトバンク側の説明は、メモリはデジタル産業全体の拡大のドライバーであり、あるセグメントで1位になれると信じられないなら入らない、というものだった。1999年に同じ持分を4.5億ドルで創業者に売り戻している。',
+  y:'この時期で唯一、明確に失敗と評価される案件である。メモリが情報革命の基盤だという洞察は正しかったが、循環的なコモディティ・ハードウェア事業をレバレッジで買うという実装が誤っていた。',
+  f:['15億ドル → 4.5億ドル'],
+  s:[68]},
+ {d:'1997-03期',e:4,t:'売上3,597億円、長期債務5,950億円',
+  w:'連結売上高は1996年3月期の1,711億円から1997年3月期の3,597億4千万円へ倍増し、税引前利益は159億8千万円から295億7千万円へ94%増えた。一方で長期債務は1997年3月期末に5,950億3千万円に達し、売上を上回った。',
+  y:'調達した金で情報産業の急所を買い、次に何が来るかを他社より先に知るという構造が完成した。同時に、外部環境が変われば財務が即座に危険水域に入る構造も完成している。先見と過剰レバレッジは同じ設計の裏表である。',
+  f:['売上 3,597億円','長期債務 5,950億円'],
+  s:[92]},
+];
+</script>
+<script>
+/* 出典 99 以降。前段の SRC 配列に追加する。 */
+SRC.push(
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-presentation_q1fy2026_01_en.pdf','SBG 2026年度第1四半期 投資家向けプレゼンテーション（保有投資一覧。DiDiの取得原価と公正価値、Flipkart等）'],
+ ['https://www.forbes.com/sites/tylerroush/2025/11/11/nvidia-shares-dip-2-after-softbank-sells-entire-stake/','Forbes 2025年11月11日 NVIDIA株の全売却'],
+ ['https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2025/investor-svf_q4fy2025_01_ja.pdf','SBG 2025年度通期 決算説明会 SVFセクション（3ファンドの取得原価・累計損益・TVPI）'],
+ ['https://group.softbank/en/news/press/20231226','SBG プレスリリース 2023年12月26日 T-Mobile株の追加取得（SprintのエクイティIRR 25.5%、MOIC 8.1倍を明記）'],
+ ['https://commercialobserver.com/2023/11/softbank-wework-losses/','Commercial Observer 2023年11月 WeWorkの累計損失143億ドル（報道値）'],
+ ['https://www.itmedia.co.jp/business/articles/2308/21/news048.html','ITmedia 2023年8月21日 WeWorkについての孫正義の総括'],
+ ['https://seminars.jp/media/1071','セミナーズ 孫の二乗の兵法25文字の解説（二次解説）'],
+ ['https://business.nikkei.com/atcl/seminar/19nv/120500136/120500005/','日経ビジネス 2019年12月9日（勝算7割の運用と孫泰蔵の証言）'],
+ ['https://www.kakiokosi.com/share/business/109','新30年ビジョン 講演書き起こし（非公式。2010年6月25日）'],
+ ['https://finance.logmi.jp/263705','logmi Finance 2018年2月7日 2018年3月期第3四半期決算説明会（群戦略の出資比率）'],
+ ['https://group.softbank/en/ir/financials/annual_reports/2018/message/son','SBG アニュアルレポート2018 CEOメッセージ（群戦略の定義と発明の宣言）'],
+ ['https://finance.logmi.jp/articles/224959','logmi Finance 2017年8月7日 2018年3月期第1四半期決算説明会（ブランド非統一と卒業）'],
+ ['https://www.softbank.jp/sbnews/entry/20180620_01','ソフトバンクニュース 2018年6月20日 第38回定時株主総会（自己増殖と自己進化）'],
+ ['https://finance.logmi.jp/284871','logmi Finance 2018年5月9日 2018年3月期決算説明会（300年後に歴史が証明する）'],
+ ['https://type.jp/et/feature/28743/','第45回定時株主総会 書き起こし（2025年6月27日）'],
+ ['https://xtech.nikkei.com/atcl/nxt/news/18/08532/','日経クロステック 2020年8月11日（63歳の誕生日に引退計画を修正）'],
+ ['https://type.jp/et/feature/31279/','第46回定時株主総会 書き起こし（2026年6月24日）'],
+ ['https://toyokeizai.net/articles/-/124355','東洋経済オンライン 2016年 第36回定時株主総会（Nikesh Arora退任の経緯）'],
+ ['https://www.nikkei.com/article/DGXZQOGD05C3S0V00C21A3000000/','日本経済新聞 2021年3月 佐護勝紀の退任'],
+ ['https://www.softbank.jp/corp/special/academia/','ソフトバンクアカデミア 公式募集要項'],
+ ['https://k-tai.watch.impress.co.jp/docs/news/1537457.html','ケータイWatch SoftBank World 2023（AGIは10年以内）'],
+ ['https://www.softbank.jp/sbnews/entry/20240620_01','ソフトバンクニュース 2024年6月20日 第44回定時株主総会（ASI宣言）'],
+ ['https://note.com/hiroshikinoshita/n/ndd978a2add7b','SoftBank World 2024 基調講演の全文訳（非公式。ASIは2035年）'],
+ ['https://cryptobriefing.com/openai-next-model-designed-by-ai/','CNBC独占インタビューの転載記事（2026年6月5日。超知性は今後2年）'],
+ ['https://www.news-postseven.com/archives/20120104_78634.html','NEWSポストセブン（佐野眞一のインタビュー。孫姓での起業への親戚の反対）'],
+ ['https://ibarakitaiyo-law.jp/blog/%E3%82%BD%E3%83%95%E3%83%88%E3%83%90%E3%83%B3%E3%82%AF%E5%AD%AB%E6%AD%A3%E7%BE%A9%E3%81%95%E3%82%93%E3%81%AE%E6%B0%8F%E3%81%AE%E3%81%8A%E8%A9%B1/','弁護士法人による解説（1990年の帰化と氏の変更の手続き）'],
+ ['https://gendai.media/articles/-/56034','マネー現代 ソフトバンクキャリアLIVE（2018年6月）の講演録'],
+ ['https://group.softbank/donations/list_son','SBG 孫正義個人による寄付の使途一覧（一次情報）'],
+ ['https://minnade-ganbaro.jp/foundation/','子ども未来支援財団（旧 東日本大震災復興支援財団）'],
+ ['https://masason-foundation.org/','孫正義育英財団 公式サイト'],
+ ['https://business.nikkei.com/atcl/gen/19/00762/062700001/','日経ビジネス 連載「孫正義とトランプ」（マールアラーゴでの上積み交渉）'],
+ ['https://www.warren.senate.gov/newsroom/press-releases/softbank-confirms-50-million-donation-to-trump-library-just-two-months-before-trumps-announcement-of-a-lease-for-companys-data-center/','米上院 ウォーレン議員室 プレスリリース（トランプ大統領図書館への5,000万ドル寄付とデータセンター用地リース）'],
+ ['https://www.nikkei.com/article/DGXNASDD200DB_Q1A420C1TJ1000/','日本経済新聞 2011年4月20日（脱原発への転向と私財10億円）'],
+ ['https://pc.watch.impress.co.jp/docs/news/1455544.html','PC Watch 2022年11月11日 決算説明会（私は攻めの男だから）'],
+ ['https://business.nikkei.com/atcl/gen/19/00461/073000454/','日経ビジネス（トルコ・マルマリスでArmを2週間で決めた場面）'],
+ ['https://group.softbank/en/news/press/20200413','SBG プレスリリース 2020年4月13日 Sprint・T-Mobile合併完了（支配喪失益）'],
+ ['https://www.guinnessworldrecords.com/world-records/94151-largest-loss-of-personal-fortune','Guinness World Records 個人資産の最大損失（585億ドル、2000年）'],
+ ['https://group.softbank/en/news/press/20260227','SBG プレスリリース 2026年2月27日 OpenAIへの追加投資300億ドル'],
+ ['https://x.com/masason/status/288641633187147776','X @masason 2013年1月8日の投稿'],
+ ['https://www.businessinsider.jp/post-201984','Business Insider Japan 2019年11月6日 決算説明会（真っ赤っかの大赤字）'],
+ ['https://www.softbank.jp/sbnews/entry/20220805_01','ソフトバンクニュース 2022年8月8日 決算説明会（顰像と反省）'],
+ ['https://jidounten-lab.com/u_sbg-2020-03-speech','自動運転ラボ 2020年5月18日 決算説明会の書き起こし'],
+ ['https://logmi.jp/business/articles/153085','logmi 2016年7月18日 ARM買収 記者会見'],
+ ['https://group.softbank/en/ir/financials/annual_reports/2025/message/son','SoftBank Group Report 2025 CEOメッセージ'],
+ ['https://www.aljazeera.com/amp/economy/2019/10/7/softbank-ceo-embarrassed-and-flustered-by-track-record','Al Jazeera 2019年10月7日（日経ビジネス誌インタビューの英訳）'],
+ ['https://www.outlookbusiness.com/deeptech/masayoshi-son-rejects-ai-bubble-fears-outlines-softbanks-plans-of-robots-manufacturing-robots','Outlook Business 2026年6月24日 第46回定時株主総会（英語での発言）'],
+ ['https://www.forbes.com/sites/phisanuphromchanya/2026/06/08/japans-50-richest-2026-softbanks-masayoshi-son-reclaims-top-spot-as-countrys-richest-person-amid-ai-boom/','Forbes 2026年6月8日 日本の富豪50人（純資産800億ドル、5年ぶり1位）']
+);
+
+/* 年表データ（第V期〜第VIII期） */
+TL.push(
+ {d:'1997-11-04',e:5,t:'ヤフー株式会社が店頭公開、初値200万円',
+  w:'ソフトバンク60%、米Yahoo! 40%の合弁として設立されたヤフー株式会社が、設立から21か月で店頭市場に公開した。公開価格70万円に対し初値200万円で約2.9倍。1998年3月末には株価450万円、時価総額304億8,700万円に達した。',
+  y:'ヤフー株は2000年2月まで一直線に上昇し、ソフトバンクの含み益と株価の主エンジンになる。時価総額20兆円という数字の実体は、このヤフー株の含み益である。',
+  f:['公開価格 70万円','初値 200万円'],
+  s:[24]},
+ {d:'1998-01-16',e:5,t:'東証一部へ、店頭から直接',
+  w:'ソフトバンク株が東京証券取引所市場第一部での取引を開始した。1994年の店頭登録から3年3か月で、東証二部を経ずに店頭市場から直接一部へ上場した最初の事例である。この事実は1998年7月15日付、孫正義署名の株主宛レターに記録されている。同じレターで、米国で成功したモデルを日本に持ち込む手法を time machine management strategy と自ら命名して説明している。',
+  y:'店頭銘柄のままでは機関投資家の買いが入らない。東証一部という器が、1999年以降の株価上昇を支えた。タイムマシン経営という言葉が会社の公式文書に載ったのもこの年である。',
+  f:['連結売上 5,133億円'],
+  s:[24]},
+ {d:'1999-06-15',e:5,t:'ナスダック・ジャパン構想',
+  w:'米ナスダックを運営する全米証券業協会とソフトバンクが、日本の新興企業向け株式市場の開設構想を発表した。両者50対50、資本金6億円の企画会社を設立し、同年12月に大阪証券取引所と提携して大証の新市場として開設する形が固まった。',
+  y:'上場の出口を自分で作れば、抱えている数百社のインターネット投資が一斉に換金できる。孫の投資モデルにとって取引所は事業ではなく出口インフラだった。',
+  s:[23,84]},
+ {d:'1999-10-01',e:5,t:'純粋持株会社へ移行',
+  w:'ソフト・ネットワーク事業部門を分割して100%子会社を設立し、純粋持株会社への移行を完了した。純粋持株会社、事業統括会社、事業会社の3層構造である。孫はこれを日本で初めての純粋持株会社制の組織と呼んだ。',
+  y:'この器がなければ、連結子会社が63社から285社へ増える局面を管理できなかった。同時に、事業会社を切り離して売れる構造を持ったことが、2000年から2003年の資産圧縮で命綱になる。',
+  f:['連結子会社 63社 → 285社'],
+  s:[22]},
+ {d:'2000-01-19',e:5,t:'アリババに2,000万ドル、6分の面会から',
+  w:'アリババに2,000万ドルを出資した。同ラウンドにはGoldman Sachs、Fidelity Capital、Transpac Capitalも参加している。アリババは1999年3月設立のB2B電子商取引で、当時の収益はほぼゼロだった。馬雲は初回の面会が6分間だったと2008年の講演で語っており、孫は5分以内に4,000万ドルを出すと決めたが、馬雲は2,000万ドルで足りるとして受け取らなかった。孫が語る決断の根拠は、目の輝きと動物的な匂いである。',
+  y:'2000年3月期の当期純利益84億円に対しても小さい金額であり、当時のプレスリリースでも大きく扱われていない。この1件が2014年の上場で数兆円の含み益に化け、以後20年のソフトバンクの信用力そのものを支えた。デューデリジェンスを省いた意思決定が最大の成功を生んだ唯一の例でもある。',
+  f:['2,000万ドル','面会 6分'],
+  s:[61]},
+ {d:'2000-02-15',e:5,t:'株価198,000円、3日間だけ世界一',
+  w:'ソフトバンク株が1株198,000円の高値を付けた。当時の発行済株式数で計算すると時価総額は20.7兆〜21.8兆円になる。この日から週明けまでの3日間、孫の帳簿上の資産はビル・ゲイツ、ウォーレン・バフェット、ルパート・マードックを上回った。資産額は685億ドル、700億ドル、780億ドルの3説が並立している。1週間後の2月22日にはヤフー株が1株1億6,790万円を付け、これが日本の株式史上の最高株価として2026年現在も残っている。',
+  y:'孫はこの3日間を、以後20年にわたって自分の物語の基準点として使い続ける。99%失ったという語りは、この日を分母に置いた言い方である。',
+  f:['株価 198,000円','時価総額 20.7〜21.8兆円','世界一 3日間'],
+  s:[67,49,50]},
+ {d:'2000-02-24',e:5,t:'日債銀の優先交渉先に選ばれる',
+  w:'金融再生委員会が、ソフトバンク、オリックス、東京海上火災保険を中心とする出資グループを日本債券信用銀行の譲渡先の優先交渉先に決定した。既存の普通株式約25億株を10億円で取得し、新規発行株を1株300円で計1,000億円引き受ける条件だった。選定理由の3番目には、インターネット等を活用した21世紀に通用する新たな金融取引の導入が期待されることが挙げられている。',
+  y:'行政が孫のネット金融構想を政策として買った瞬間である。ただし構想は実現せず、ソフトバンクは2003年にあおぞら銀行株48.87%を約1,011億円で売却し、代金をブロードバンドの赤字に充てた。',
+  f:['既存株 10億円','新規株 1,000億円'],
+  s:[46,93]},
+ {d:'2000-06-19',e:5,t:'ナスダック・ジャパン開設、2年で撤退',
+  w:'大阪証券取引所の新市場として取引を開始した。初日の上場は8社で、2年で90社を上回った。しかし孫が想定したハイブリッド方式の取引システムは証券会社側が対応コストを理由に採用せず、運営会社は人件費と開発費で2001年末に累積損失50億円を超えた。2002年8月に米ナスダックが投融資2,010万ドルを全額償却し、撤退が露見する。',
+  y:'出口を自作する構想は、市場が閉じた後には固定費の塊に変わった。構想発表から3年余、開設から2年余での幕引きである。',
+  f:['初日 8社','累積損失 50億円超'],
+  s:[23,84]},
+ {d:'2000-12-29',e:5,t:'年末3,970円、ピークから94%減',
+  w:'2000年最終取引日の終値は分割後ベースで3,970円。2月15日の高値からの下落率は94.0%になる。孫の個人資産はForbes集計で6月に194億ドルまで縮んだ。2000年中の減少額は、ギネス世界記録に個人資産の最大損失として585億ドルで登録されている。',
+  y:'この局面で孫は事業を縮めていない。資産圧縮は撤退ではなく、翌年さらに大きな固定費を抱えるブロードバンドへの原資づくりだった。',
+  f:['下落率 94.0%','資産減 585億ドル'],
+  s:[67,49,135]},
+ {d:'2001-06-19',e:5,t:'Yahoo! BB、月2,280円で8Mbps',
+  w:'下り最大8Mbps、上り最大900kbpsのADSLサービスを月額2,280円から提供すると発表した。当時の相場はプロバイダ料込みで月額5,000〜6,000円、速度は最大1.5Mbpsが主流だった。価格をほぼ半分に、速度を5倍以上に設定したことになる。2001年末までに加入者100万人を目標に置いた。',
+  y:'ナローバンドのサービス層で勝った次に、ブロードバンドのインフラ層を自前で取りにいく決断である。この発表を境に他事業者も値下げに追い込まれ、日本のADSL料金は月額3,000〜4,000円へ落ちた。',
+  f:['月2,280円','下り 8Mbps'],
+  s:[63]},
+ {d:'2001-06-29',e:5,t:'総務省で身体を賭ける',
+  w:'発表から10日後、NTTが局舎内の接続工事とダークファイバの貸し出しに応じないため、孫は総務省に乗り込んだ。2週間で50万件の申込が集まっていたが工事ができない状態だった。この場面で孫は、100円ライターを借りてガソリンをかぶるという言い方で担当官に迫ったと伝えられる。その夜、総務省からNTT東日本がダークファイバを出すという連絡が入った。',
+  y:'通信は許認可産業である。孫はここで、技術でも資本でもなく行政への圧力の掛け方を学んだ。この型は2010年の光の道、そして2025年のホワイトハウスまで反復される。なお発言の文言は媒体間でガソリンと油で揺れ、一次記録はない。場面の出所は井上篤夫の評伝である。',
+  s:[59]},
+ {d:'2001-09-01',e:5,t:'申込100万件に対し、開通は4万件',
+  w:'Yahoo! BBの商用サービスを開始した。当初計画から2か月遅れており、事前登録100万件に対して接続を終えたのは約4万人。カスタマーサポートへの問い合わせは10件のうち7〜8件がいつ開通するのかだった。街頭では赤白のパラソルを立てたブースで、赤い紙袋に入れたモデムを配った。',
+  y:'開通しない100万件は、孫の会社が初めて経験した大規模なオペレーション崩壊である。それでも価格の破壊力は本物で、日本のADSLは2001年の1年間で152万5,000回線増えた。',
+  f:['申込 100万件','開通 約4万件'],
+  s:[64,83]},
+ {d:'2002-05-10',e:5,t:'上場以来初の最終赤字887億円',
+  w:'2002年3月期の連結決算で営業損失239億1百万円、当期純損失887億55百万円を計上した。1994年の株式公開以来初の最終赤字である。孫は決算説明会で、ソフトバンクが目指すのはデジタル情報革命であり、自分が一番やりたいことができる時代に入って毎日わくわくしていると述べた。自社バックボーンについては、他社が1車線、2車線の高速道路であるのに対して100車線の道路を持っているようなものだと説明している。',
+  y:'株価は同年11月19日に日中安値870円まで沈み、2000年2月の高値からの下落率は98.7%になった。約99%下落という定説は、分割調整を正しく行えば成立する。',
+  f:['純損失 887億円','下落率 98.7%'],
+  s:[60,67]},
+
+ {d:'2003-05-09',e:6,t:'ADSL赤字の底、営業損失919億円',
+  w:'2003年3月期は売上高4,068億92百万円に対し営業損失919億97百万円、当期純損失999億89百万円。営業損失は1年で約3.8倍に膨らんだ。株主資本は1年で半減し、株主資本比率は40.0%から27.2%へ落ちた。損失の主因はモデムの無償配布と大量広告による顧客獲得費用である。',
+  y:'この4期連続赤字が、先行投資で赤字を掘り、加入者を取ってから黒字化するというソフトバンク型モデルの原型になった。孫は後年これを3,000億円の累積赤字と表現している。',
+  f:['営業損失 919億円','株主資本比率 27.2%'],
+  s:[21]},
+ {d:'2004-02-27',e:6,t:'顧客情報451万件の流出',
+  w:'Yahoo! BBの顧客情報4,517,039件が流出していたことを公表した。1月23日には242件と発表していたが、警察の捜査で規模が判明した。恐喝の要求額は30億円だった。孫は記者会見で頭を下げ、自身の報酬を6か月間50%減額し、全会員に500円の金券を配った。',
+  y:'速さで押し切るという同社の弱点が、個人情報という別の軸で露出した最初の大事故である。この年に当期純損失1,070億94百万円を出しながら、孫は投資を絞らず日本テレコム買収へ向かった。',
+  f:['451万件','報酬 50%減・6か月'],
+  s:[21]},
+ {d:'2004-05-27',e:6,t:'日本テレコムを3,400億円で買う',
+  w:'米Ripplewood Holdingsほかから日本テレコムの発行済株式100%を取得すると発表した。買収総額は約3,400億円で、内訳は普通株式1,433億円、純有利子負債の負担1,640億円、優先株325億円。取得したのは加入回線640万、全国1万2,000kmの光ファイバー網、法人顧客約17万社である。',
+  y:'個人向けADSLだけでは薄い層しか取れないという限界を、法人固定回線で埋めた。ここで得た交換設備とバックボーンと法人営業組織が、2年後のボーダフォン買収をネットワーク統合が可能な案件に変える。',
+  f:['3,400億円','640万回線'],
+  s:[80]},
+ {d:'2004-11-30',e:6,t:'福岡ダイエーホークスを200億円で取得',
+  w:'ダイエーから球団株式と興行権を総額200億円で取得することで合意した。内訳は球団株式50億円、興行権150億円。孫はプロスポーツを感動を売る商売と位置づけ、球団単体の黒字化に固執せず、ホークスの露出で通信事業の顧客獲得費用を下げてグループ全体で回収する設計を明言している。',
+  y:'ブランド認知を金で買って顧客獲得コストに転嫁する手法を、初めて大規模に使った。2年後にボーダフォンという弱いブランドを引き受けたときに機能したのは、この構図の反復である。',
+  f:['200億円'],
+  s:[81]},
+ {d:'2006-03-17',e:6,t:'自己資本の7.2倍を払う',
+  w:'ボーダフォン日本法人を1兆7,500億円で買収すると発表した。同年3月末のソフトバンクの自己資本は2,427億68百万円で、買収額は自己資本の約7.2倍にあたる。調達構成は普通株式2,000億円、ヤフーによる優先株式1,200億円、ノンリコースのLBOローン1兆1,000億〜1兆2,000億円、ボーダフォン側からの4,000億円である。孫は価格について、安くも高くもない、いい値段だと述べた。当時のボーダフォン日本はつながらない携帯電話という評価に苦しんでいた。',
+  y:'日本企業による当時最大のM&Aであり、国内最大のLBOである。成立させたのは、返済原資を買収対象の携帯事業のキャッシュフローに限定するノンリコース設計だった。これが2010年代のArm買収とVision Fundに至る資金調達の原型になる。',
+  f:['1兆7,500億円','自己資本の7.2倍'],
+  s:[26,19]},
+ {d:'2006-04-27',e:6,t:'40日で1.16兆円を引き出す',
+  w:'完全子会社がTOBの決済を完了し、発行済株式総数の99.5%を取得した。同日、普通株式2,000億円、優先株式合計4,200億円、劣後借入1,000億円に加えて、総額1.28兆円のブリッジ枠から約1.16兆円の借入を実行した。ブリッジは4月4日にマンデーテッド・リード・アレンジャー7社で組成されたもので、会社自身が日本国内最大のLBOと表現している。',
+  y:'発表から40日で1兆円超の借入実行までこぎつけた速度が、この案件の本質である。以後、ブリッジで買って後から長期化するという2段構えが標準手法になる。',
+  f:['取得 99.5%','借入 約1.16兆円'],
+  s:[27]},
+ {d:'2006-11-30',e:6,t:'事業証券化1兆4,500億円で借り換える',
+  w:'ソフトバンクモバイルが事業証券化のスキームで総額1兆4,500億円を調達し、4月に実行したブリッジを返済した。トランシェは10年1兆1,500億円、13年1,250億円、13年1,750億円の3本。動機は経済的なもので、ブリッジローンの金利がステップアップする予定だったためである。当時世界最大のホールビジネス証券化と報じられた。',
+  y:'これがノンリコース1兆4,500億円の正体である。返済原資となる移動体通信事業のEBITDAは2007年3月期に3,214億円に達し、自己資本比率6.6%という薄さを市場が許容する根拠になった。',
+  f:['1兆4,500億円','EBITDA 3,214億円'],
+  s:[28,20]},
+ {d:'2007-01-05',e:6,t:'ホワイトプラン、月額980円',
+  w:'月額基本料980円で、1時から21時のソフトバンク携帯同士の国内通話が無料になる料金プランを発表した。前年10月に投入した3プラン構成が複雑で伝わらなかった反省から、料金表を1本に絞り込んだ設計である。申込件数は2008年2月に1,100万件を突破した。',
+  y:'980円という単一の数字が、ボーダフォン時代の高いという像を上書きした。純増首位という実績が、翌年のiPhone独占という賭けを財務的に支える契約者ベースを作った。',
+  f:['月額 980円','申込 1,100万件'],
+  s:[20]},
+ {d:'2008-06-10',e:6,t:'iPhone 3Gの独占販売',
+  w:'アップルと共同で、iPhone 3Gを7月11日に日本で発売すると発表した。7月11日午前7時、ソフトバンク表参道には1,500人以上が並んだ。孫は、今日は携帯電話がインターネットマシンになる歴史的な日だと挨拶している。この独占は2011年10月にKDDIがiPhone 4Sを扱うまで約3年3か月続いた。',
+  y:'ボーダフォン買収の意味を、安い料金プランを売る器から唯一のiPhoneキャリアへ変えた一手である。データARPUは2010年1〜3月期に基本料と音声ARPUを初めて追い抜いた。孫がジョブズに自作のスケッチを持ち込んだのは発売の約2年前、まだキャリアを1つも持っていない時期だった。',
+  f:['独占 約3年3か月'],
+  s:[82,62]},
+ {d:'2010-03-31',e:6,t:'5期連続の営業最高益',
+  w:'2010年3月期は営業利益4,658億71百万円で5期連続の営業最高益、EBITDA 7,876億31百万円。純有利子負債は1兆5,010億74百万円で前期末から4,384億円減った。携帯の累計契約数はボーダフォン買収直前の1,521万件から2,188万件へ4年で667万件増えている。',
+  y:'ADSLで4期赤字を掘り、固定を買い、携帯を買い、iPhoneを取るという10年の連鎖が、ここで初めて財務指標として完成形を見せた。孫が新30年ビジョンを語る2か月前の足元がこの数字である。',
+  f:['営業利益 4,658億円','純有利子負債 1.5兆円'],
+  s:[19]},
+ {d:'2010-06-25',e:6,t:'新30年ビジョン、時価総額200兆円',
+  w:'第30回定時株主総会の後、東京国際フォーラムで135ページの資料を使って新30年ビジョンを発表した。理念は情報革命で人々を幸せに。300年成長し続ける企業群。そして30年後に時価総額200兆円。当日の時価総額は約2.7兆円である。グループ会社を約800社から5,000社規模にし、資本提携は20%から40%程度の同志的結合にすると述べた。同時に、自分の後継者問題はある意味で最大の危機かもしれないとして、孫正義2.0を作ると宣言した。',
+  y:'理念、時間軸、組織形態、技術の到達点の4つがこの日に同時に固定された。2026年に孫が語るASIとフィジカルAIも、この日の資料を起点に整合が取られている。',
+  f:['200兆円 / 当時2.7兆円','800社 → 5,000社'],
+  s:[66,18,107]},
+ {d:'2010-08-24',e:6,t:'光の道で総務省とNTTに正面から',
+  w:'総務省のタスクフォースで、委員として全世帯への光ファイバー普及を主張した。5月にはUstreamで5時間の生放送を行い、税金ゼロで光の道を整備できると説明している。8月24日の非公開ヒアリングでは、我々の案が間違っていれば頭を丸めると述べ、NTT幹部との直接対決を要求した。',
+  y:'携帯で自前のインフラを持った孫が、次に固定インフラの構造そのものを政策で動かそうとした局面である。事業と政治を同時に動かすやり方が、ここで完成形になった。',
+  s:[19]},
+
+ {d:'2011-03-11',e:7,t:'基地局3,786局が止まる',
+  w:'東北地方太平洋沖地震の翌朝、移動通信用の基地局のうち3,786局が稼働不能になった。エリアが震災前とほぼ同等に戻ったのは4月14日である。孫はアニュアルレポートに、ネットワークインフラの耐久性と信頼性がこの災害に対して常に十分だったとは言えないことを深く悔いていると書いた。',
+  y:'ライフライン事業者としての当事者性が、この後の100億円の寄付、脱原発、自然エネルギー事業という一連の行動の起点になる。通信インフラの脆弱性を認めた経営者が、電力インフラの構造そのものを問題化する側に回った。',
+  f:['停止 3,786局'],
+  s:[17]},
+ {d:'2011-04-03',e:7,t:'個人で100億円、加えて引退までの報酬全額',
+  w:'個人で100億円、グループとして10億円の寄付を発表し、さらに2011年度から引退するまでのグループ代表としての報酬全額を、災害で孤児となった子どもたちの支援に充てると表明した。3月22日には福島の避難所を回り、言葉にできない悲しみに打ちのめされたと書いている。使途の内訳は自治体へ34億円、公益団体へ20億円、子ども支援6団体へ6億円、自ら設立する財団へ40億円である。',
+  y:'配分の4割を自分が作る器に入れており、既存の中間団体を経由する割合を意図的に低くしている。器を自分で作ってから金を通すというパターンの初出で、2017年のVision Fundまで一貫する。',
+  f:['個人 100億円','財団へ 40億円'],
+  s:[37,126]},
+ {d:'2011-08〜09',e:7,t:'自然エネルギー財団とアジアスーパーグリッド',
+  w:'8月12日に自然エネルギー財団を設立し、9月12日の設立イベントでアジアスーパーグリッド構想を発表した。壇上にはスウェーデン・エネルギー庁長官だったトーマス・コーベリエル、ロッキー・マウンテン研究所のエイモリー・ロビンス、そして中国国家発展・改革委員会エネルギー研究所の副所長が並んだ。4月20日には民主党議員の会合で、原発がないと成り立たないという従来の考えを福島の事故で全面的に改めたと明言し、私財約10億円の寄付を表明している。',
+  y:'登壇者の構成が日本の脱原発論争ではなく国際的なエネルギー転換のネットワークに振られている。孫は論点を国内の脱原発から国際送電網へ拡張した。',
+  s:[78,131]},
+ {d:'2011-10-06',e:7,t:'SBエナジー設立、配当は40年受け取らない',
+  w:'資本金47億7,000万円でSBエナジーを設立した。孫は、主要株主として方向性と枠組みは示すが利益の配当は40年間は受け取らないと述べている。一方で同時期のアニュアルレポートでは、この事業を進めても純有利子負債を6年でゼロにする目標は変えないと投資家に約束している。',
+  y:'理念は40年、財務規律は6年という二枚看板である。この作法は後のVision Fundにおける、本体の成長維持とファンドのリターン最大化を両立させるという表現と同型になる。',
+  f:['資本金 47.7億円','配当放棄 40年'],
+  s:[94,17]},
+ {d:'2012-10-15',e:7,t:'Sprintを201億ドルで買うと発表',
+  w:'総額約201億ドルのうち、株主への現金対価が約121億ドル、Sprintの財務強化のための新規資本が80億ドルという構成だった。加えてクーポン1.0%、満期7年、転換価格1株5.25ドルの転換社債31億ドルを引き受けている。',
+  y:'買収額の4割が売り手の懐ではなく買収先の設備投資に回る設計で、孫が買っていたのはSprintの現状ではなくLTE網を作り直した後のSprintだった。',
+  f:['201億ドル','新規資本 80億ドル'],
+  s:[29]},
+ {d:'2013-06-11',e:7,t:'216億ドルへ引き上げ、設備投資原資を削る',
+  w:'DISH Networkの対抗提案を受けて条件を修正し、総額を約216億ドルへ15億ドル引き上げた。1株あたりの現金対価は7.30ドルから7.65ドルへ。ところが同時に、Sprintに入る新規資本は80億ドルから50億ドルへ30億ドル減っている。株主への現金対価は121億ドルから166億ドルへ増えた。',
+  y:'総額は増えたのに、買収の投資ロジックの原資である設備投資は減った。競合を退けるために売り手株主への支払いを優先し、自らネットワーク再構築の原資を削った。以後のSprintの苦戦を読む上での起点である。',
+  f:['216億ドル','新規資本 80 → 50億ドル'],
+  s:[30]},
+ {d:'2013-07-10',e:7,t:'Sprint買収完了、孫が取締役会長に',
+  w:'買収を完了し、約78%を保有した。8月から9月に約2%を追加取得し、2014年3月末の保有比率は約80%になった。孫はSprintの取締役会長に就任している。',
+  y:'78%から80%への買い増しは、連結のためではなく後のT-Mobile統合を睨んで議決権を固める動きと読める。なお金額のリターンとしてはこの投資は失敗ではない。会社は2023年12月にエクイティIRR 25.5%、MOIC 8.1倍と開示している。',
+  f:['持分 約80%','IRR 25.5% / MOIC 8.1倍'],
+  s:[31,102]},
+ {d:'2014-08',e:7,t:'T-Mobile統合を断念',
+  w:'規制当局の反対でT-Mobile USとの統合を断念し、8月11日にSprintのCEOをDan HesseからMarcelo Claureへ交代させた。孫はアニュアルレポートで統合断念そのものには触れず、事業再生を主導する新CEOの任命という書き方をしている。',
+  y:'Sprint買収の投資ロジックは、単独再建ではなくT-Mobileと統合して規模でVerizonとAT&Tに対抗することにあった。それが規制で封じられた時点で、216億ドルの買収は設計図を失った。資本配分の重心が米国通信からインターネット投資へ移る分岐点である。',
+  s:[16]},
+ {d:'2014-09-19',e:7,t:'アリババ上場、1株も売らない',
+  w:'アリババがニューヨーク証券取引所に上場した。公開価格は1株68ドル、時価総額は約2,310億ドル。ソフトバンクはこの上場で1株も売っていない。計上したのは売却益ではなく、持分変動による希薄化利益5,996億68百万円である。会社の投資実績表では、累計投資額105億円に対し2015年3月末の市場価値7兆9,934億円、IRR 76%、761倍と記載されている。',
+  y:'売らないことが戦略だった理由が会社の言葉で残っている。含み益を実現益に変えるのではなく、担保として資金調達に使う。この思想が2016年のArm買収の資金調達に直結する。',
+  f:['761倍','IRR 76%','希薄化利益 5,996億円'],
+  s:[16]},
+ {d:'2014-09〜11',e:7,t:'AroraとMisraを招く',
+  w:'9月にGoogleの最高事業責任者だったNikesh Aroraが参画し、11月にDeutsche BankとUBSで債券部門を率いたRajeev Misraが参画した。Misraは2006年のボーダフォン日本法人買収で、Deutsche Bank側から買収資金の調達に関与していた人物である。',
+  y:'2人の役割は対照的で、Aroraは投資先を見つける人、Misraは金を調達する人だった。Vision Fundの巨額調達がソフトバンクの新規能力ではなく、10年前から関係のあった金融技術者を内部化した結果であることを示す。',
+  s:[16,15]},
+ {d:'2016-06-01',e:7,t:'アリババ株を売らずに約100億ドルを作る',
+  w:'完全子会社が新設信託と変動前払フォワード契約を締結し、信託が66億ドルの強制交換証券を発行して前受金54億ドルを受け取った。同時にアリババ本体へ20億ドル、Alibaba Partnershipへ4億ドル、ソブリンウェルスファンドへ5億ドル分を売却した。対象株を除く保有比率は約28%を維持している。アリババ株の税務簿価が連結簿価を上回ったため繰延税金負債3,826億円を取り崩し、2016年度の法人所得税は2,071億円の益になった。',
+  y:'売らずに現金化し、しかも会計上の利益を出す構造の完成形である。この取引はARM買収発表の3週間前に置かれている。',
+  f:['前受金 54億ドル','法人所得税 2,071億円の益'],
+  s:[32,15]},
+ {d:'2016-06-21',e:7,t:'Supercellをテンセントへ',
+  w:'Supercellの最大84%をテンセントが設立したコンソーシアムに売却する契約を締結した。企業価値は約102億ドルで、クロージング後にソフトバンクはSupercell株を一切保有しない。取引は7月29日に完了し、株式売却の税引後利益5,265億53百万円を計上した。投資額約25億ドルに対し売却手取りは73億ドルで、内部収益率は93%とされる。',
+  y:'ARM発表の27日前である。アリババ株のマネタイズとSupercellの売却が、ARM買収発表の直前3週間に集中している。',
+  f:['企業価値 102億ドル','IRR 93%'],
+  s:[33,15,99]},
+ {d:'2016-06-22',e:7,t:'Aroraが2年で246億円を受けて退任',
+  w:'Nikesh Aroraが定時株主総会の終結をもって取締役を退任した。報酬は2015年3月期が165億56百万円、2016年3月期が80億42百万円で、2期合計246億円。同期の孫の連結報酬総額は1億31百万円であり、Aroraの単年報酬は孫の126倍だった。孫は自分の60歳の誕生日にバトンを渡すつもりだったが、あと1年になった時点でやり残したことがあると考えて続投を選んだと語っている。',
+  y:'Aroraの報酬は後継者への前払いとして設計されていたと読める。孫がその路線を撤回した結果、会社は2年で246億円を払って後継計画を白紙に戻した。同じ月にアリババ株のマネタイズとSupercellの売却があり、翌月にARM買収が発表される。',
+  f:['2期で246億円','孫の126倍'],
+  s:[95,16,116]},
+ {d:'2016-07-18',e:7,t:'ARMを史上最高値の41%上で買う',
+  w:'ARM Holdingsを1株1,700ペンス、総額3.3兆円の現金で買収すると発表した。直前終値に対するプレミアムは43.0%で、2015年3月の史上最高値をも41.1%上回る。資金は1兆円のデットファイナンスと手元資金で、エクイティ調達は行わないと明記した。買収は9月5日に完了した。決断は速い。孫は7月6日に休暇でトルコの港町マルマリスに滞在していたARM会長を訪ね、提案から合意までは約2週間だった。',
+  y:'ブレグジット国民投票の3週間後、ポンドが急落した局面での実行である。孫はこの買収を、起業家としての人生で最も重要なものとして際立つと信じていると書いた。10年以上ほしいと思い続けた対象だった。',
+  f:['1株1,700ペンス','プレミアム 43.0%','2週間で決断'],
+  s:[34,35,15,133]},
+ {d:'2016-10-14',e:7,t:'Vision Fund構想、PIFが最大450億ドル',
+  w:'サウジアラビア公共投資基金とMOUを締結し、最大1,000億ドル規模のファンド設立を発表した。ソフトバンクは5年で最低250億ドル、PIFはリードインベストメントパートナーとして5年で最大450億ドルを拠出する計画である。孫は、今後10年でこのファンドがテクノロジーセクター最大の投資家になると述べた。',
+  y:'ARM買収完了から5週間後である。320億ドルの現金買収で手元資金を使い切った直後に、1,000億ドルのファンドを構想している。自己資金での買収から他人資本を運用する立場への転換だった。',
+  f:['最大1,000億ドル','PIF 最大450億ドル'],
+  s:[36]},
+ {d:'2017-05-20',e:7,t:'932億ドルのクロージング、優先出資に固定7%',
+  w:'Vision Fundのファーストクロージングを932億ドルで完了した。総コミットメントは最終的に約986億ドルで、内訳は固定分配の優先出資400億ドルと成果連動のエクイティ586億ドル。優先出資には投資成果と無関係に年率7%が分配され、分配の順位も普通出資に優先する。ソフトバンクは全額エクイティ側にコミットしている。孫はこの規模を、2016年に世界のベンチャーキャピタルが1年で調達した総額640億ドルと比べて説明した。',
+  y:'400億ドルに年率7%は、年間28億ドルを投資の成否と無関係に払い続ける義務である。この設計が投資ペースの加速圧力になり、バリュエーションを押し上げたという批判の根源になった。投資期間5年に対し、2018年3月末までの1年弱で297億ドルが投じられている。',
+  f:['932億ドル','優先出資 400億ドル・年7%'],
+  s:[15,96,97]},
+ {d:'2018-12-19',e:7,t:'国内通信子会社を上場、2.65兆円',
+  w:'ソフトバンク株式会社が東京証券取引所第一部に上場した。公開価格は1株1,500円、オーバーアロットメントを含む調達総額は2兆6,460億95百万円。当時世界史上2番目の規模のIPOと報じられた。ただし初値は1,463円で、上場初日から公開価格を下回った。',
+  y:'2.65兆円の現金を得て、通信事業の価値を市場価格で可視化した。同時に本体は通信会社を持つ会社から、上場子会社と投資ポートフォリオを持つ持株会社へ姿を変え、以降のNAVベースの企業価値議論の前提が整った。',
+  f:['調達 2兆6,460億円'],
+  s:[44]},
+
+ {d:'2019-09-17',e:8,t:'WeWorkが上場を撤回',
+  w:'8月14日に提出した上場申請書を9月17日に取り下げた。申請書では将来のリース債務470億ドルに対して将来のリース収入コミットメントが40億ドルしかないことが露呈し、評価額は1月時点の470億ドルから約100億ドルへ落ちた。9月24日にはAdam NeumannがCEOを辞任した。',
+  y:'市場がVision Fundの付けた評価額を全否定した事件である。この不信がVision Fund 2号の外部出資者集めを壊し、2号は自己資金中心になった。',
+  f:['470億ドル → 約100億ドル'],
+  s:[73]},
+ {d:'2019-10-22',e:8,t:'救済95億ドル、Neumannに17億ドル',
+  w:'WeWorkの救済パッケージに合意した。総額はおよそ95億ドル規模で、そのうち約17億ドルがAdam Neumannへの支払いだった。内訳は保有株の買い取り9億7,000万ドル、コンサルティング料1億8,500万ドル、個人借入返済のための与信5億ドルである。救済後の評価額は約80億ドル。11月6日には投資額103億ドルに対し92億ドルの評価減を計上した。',
+  y:'創業者を退けながら17億ドルを渡す取引は、数千人規模のレイオフと対比されて激しく批判された。この四半期が孫の目利き神話が公に折れた地点であり、以後の会社はNAVとLTVという財務指標を前面に出す。',
+  f:['救済 95億ドル','評価減 92億ドル'],
+  s:[73]},
+ {d:'2020-03-23',e:8,t:'コロナ暴落のなかで4.5兆円の売却を決議',
+  w:'最大4.5兆円の資産売却と、最大2兆円の自己株買いを決議した。3月13日決議分と合わせて自己株買いは総額2.5兆円になり、会社はこれが発行済株式の45%の消却に相当すると説明した。背景には2月にSBG株を約25億ドル分取得したElliott Managementの要求と、コロナショックによる株価急落がある。結果として4月から9月の6か月で5.6兆円を売却し、枠を1.1兆円超えて達成した。',
+  y:'上場子会社株を担保に借りて割安な自社株を買い戻すという、以後の標準戦術が確立した瞬間である。ここで売ったアリババ株、T-Mobile株、ソフトバンク株が、そのままAI投資の原資になった。',
+  f:['売却枠 4.5兆円','実行 5.6兆円'],
+  s:[38,12]},
+ {d:'2020-05-18',e:8,t:'営業損失1兆3,646億円、そして反省',
+  w:'FY2019は営業損失1兆3,646億33百万円、親会社帰属純損失9,615億76百万円。Vision FundはUberとWeWorkを中心に約1.9兆円の未実現評価損を計上し、実現益は583億円にとどまった。孫は決算説明会で、コロナの谷にユニコーンが落馬している状況で大変な危機ですと述べ、同時に危機が来るほど羽ばたくユニコーンがいると信じていますと語った。ゼロ配当もあり得ますとも述べている。',
+  y:'この年以降、会社は営業損益で語ることをやめ、税引前利益とNAVで語るようになる。損益計算書は投資の時価評価で振れるという自己認識の公式化である。',
+  f:['営業損失 1兆3,646億円'],
+  s:[13,140]},
+ {d:'2020-09-13',e:8,t:'NVIDIAへArmを最大400億ドルで売る合意',
+  w:'保有するArm株の全部をNVIDIAへ売却する株式譲渡契約を締結した。取引価額は最大400億ドルで、対価の大半はNVIDIA株。クロージング時にソフトバンク側はNVIDIA発行済株式の約6.7〜8.1%を受け取る想定だった。',
+  y:'2016年に3.3兆円で買ったArmを、4年で400億ドルで売る決断である。事業を持ち続けるという姿勢が、この時点では価値が付いたら売るに傾いていたことの証拠になる。',
+  f:['最大400億ドル'],
+  s:[12,85]},
+ {d:'2021-05-12',e:8,t:'純利益4兆9,880億円、当時の過去最高',
+  w:'FY2020は税引前利益5兆6,704億56百万円、親会社帰属純利益4兆9,879億62百万円、ROE 61.9%。投資損益は合計7兆5,290億円で、Coupang、DoorDash、Uberなどの上場ポートフォリオが牽引した。',
+  y:'WeWorkの翌年に史上最高益である。この振れ幅そのものが会社の本質であり、孫が損益ではなくNAVを見ろと繰り返す根拠になった。ただしこの利益は現金ではなく時価評価であり、翌年に反転する。',
+  f:['純利益 4兆9,880億円','ROE 61.9%'],
+  s:[12]},
+ {d:'2022-02-08',e:8,t:'Arm売却が規制で破談、上場へ切り替える',
+  w:'NVIDIAとの売却契約を解除した。理由は取引の完了を妨げる重大な規制上の課題で、英CMA、EU欧州委員会、米FTCの三方面からの反対だった。受領済みの前払金12.5億ドルは返還せず第4四半期に利益計上し、同時にArmの株式公開の準備を開始すると発表した。',
+  y:'売れないなら上場させて価値を市場に認めさせるという切り替えである。結果的にこの破談が、2023年以降のAIブームでArmの価値が自社に残るという最大の幸運になった。4年後の保有価値は53兆円である。',
+  f:['前払金 12.5億ドル'],
+  s:[39]},
+ {d:'2022-08-08',e:8,t:'徳川家康の顰像を出して反省する',
+  w:'2023年3月期第1四半期の決算説明会で、孫はこの6か月間で約5兆円の赤字を出したことをしっかりと反省し戒めとして覚えておきたいと述べた。徳川家康が敗戦の記録として残した顰像に言及しながら、大きな利益が出るとちょっと浮かれる、という自分の性向を語っている。新たに投資しなくてもここに金の卵がたくさんあると信じて育てるべきだとも述べた。',
+  y:'反省と投資抑制を同時に宣言した局面である。この守りが2023年6月の反撃宣言の前提になる。',
+  f:['6か月で約5兆円の赤字'],
+  s:[139]},
+ {d:'2023-06',e:8,t:'反撃宣言とASI',
+  w:'株主総会で守りから攻めへの転換を宣言した。会社自身が翌年の招集通知に、FY2023の株主総会において反撃への転換を宣言したと記録している。同じ時期から公式文書にASI（人工超知能）という語が正式なキーワードとして現れる。',
+  y:'以後の意思決定は、モデル、CPU設計、AIチップ、ロボティクス、電力とデータセンターの5層を全部持つという一本の論理で説明される。孫個人の確信が、法人の資本配分ルールに変換された地点である。',
+  s:[8,9]},
+ {d:'2023-09-14',e:8,t:'ArmがNasdaqに上場',
+  w:'Arm Holdings plcがNasdaq Global Select Marketに上場した。公開価格はADS 1株51ドル、時価総額は約545億ドル。完全子会社が発行済普通株式の10%相当を売却し、手取り金は51.2億ドル。この処分益6,744億円は損益計算書ではなく資本剰余金として計上された。上場後の保有比率は約90%である。上場前の8月には、Vision Fund 1号が保有していた25%を約161億ドルで買い戻している。',
+  y:'売らずに一部だけ市場に出すことで、連結を維持したまま時価という担保価値を手に入れた。以後Arm株は借入余力そのものになり、2026年にはArm株担保のマージンローンが200億ドル、41金融機関という規模に達する。',
+  f:['時価総額 545億ドル','保有 約90%'],
+  s:[9,85]},
+ {d:'2023-11-06',e:8,t:'WeWorkがChapter 11、累計損失143億ドル',
+  w:'WeWorkが米連邦破産法第11章の適用を申請した。2021年10月にSPACとの合併で約90億ドルの評価で上場していたが、2年で破綻した。累計損失は株式115億ドルと債権22億ドルの合計143億ドルとされる。孫はこの投資を私の人生の汚点だと表現し、僕がウィーワークに訪問してほれ込んでしまった、一部役員や社員の忠告が何度もあったが多額のお金をつぎ込んでしまったと述べた。',
+  y:'2019年から4年かけて、最大の失敗が法的に完結した。孫はAIに全部賭けることで、この失敗を不動産に賭けたから間違えたという物語に書き換えることに成功する。',
+  f:['累計損失 143億ドル'],
+  s:[73,103,104]},
+ {d:'2024-03-31',e:8,t:'NAVが過去最高27.8兆円、しかし4期連続赤字',
+  w:'FY2023末のNAVは27.8兆円で当時の過去最高、前年度末から13.7兆円増えた。LTVは8.5%、手元流動性は4.6兆円。一方でFY2023の親会社帰属純損失は2,276億46百万円で、4期連続の赤字だった。',
+  y:'損益は赤字、NAVは最高値という乖離が最も鮮明に出た年度である。会社が投資家に見せたい指標がNAVである理由が、この年の数字に凝縮している。',
+  f:['NAV 27.8兆円','LTV 8.5%'],
+  s:[9]},
+ {d:'2024-12-16',e:8,t:'マールアラーゴで1,000億ドル、その場で上積みを求められる',
+  w:'フロリダのトランプ私邸前で、今後4年間に米国へ1,000億ドルを投資し10万人の雇用を生むと報道陣に告げた。トランプはこれを歴史的な投資と称えたうえで、その場でおいマサ、2000億ドルにしてよと上積みを求め、孫はあなたは実に素晴らしい交渉人ですねと応じた。前日、2人は6時間ゴルフを回っている。',
+  y:'2001年に総務省へ乗り込んだ男が、政権の元首の隣に立つ位置まで移動した。国家予算級の数字を口約束で積み上げる手法は、資金調達力への疑問と、政治的な特恵取引の疑いを同時に招いた。',
+  f:['1,000億ドル / 4年','雇用10万人'],
+  s:[129]},
+ {d:'2025-01-21',e:8,t:'ホワイトハウスでStargate、5,000億ドル',
+  w:'トランプ大統領の記者会見で、Stargate Projectが発表された。ソフトバンク、OpenAI、Oracle、MGXが初期出資者となり、4年間で総額5,000億ドル、直ちに1,000億ドルを投じてOpenAI向けのAIインフラを米国内に建設する。ソフトバンクが財務責任、OpenAIが運営責任を負い、孫正義が会長に就任した。着工地はテキサス州である。',
+  y:'投資会社からインフラ事業者へ踏み出した転換点である。以後バランスシートには有形固定資産とデータセンター関連の負債が急増し、2026年度第1四半期には発電とデータセンター資産の取得に1.0兆円を投じている。',
+  f:['5,000億ドル / 4年'],
+  s:[40,3]},
+ {d:'2025-03',e:8,t:'OpenAIへ最大300億ドル、そしてAmpereを65億ドル',
+  w:'3月にOpenAIへ最大400億ドルの追加出資に合意した。共同投資家へシンジケートする100億ドルを除くため、グループの実質投資額は最大300億ドルになる。同月20日には米サーバー向けCPU設計のAmpere Computingを65億ドル、全額現金で買収することに合意した。孫のコメントは、人工超知能の未来には飛躍的な計算能力が必要だ、というものである。買収は11月に完了した。',
+  y:'ArmがIPライセンスから自社チップへ踏み出すための人材と製品の基盤である。AmpereはArm系サーバーCPUの数少ない実装企業であり、買収は垂直統合の直接の準備だった。',
+  f:['OpenAI 実質最大300億ドル','Ampere 65億ドル'],
+  s:[8,41]},
+ {d:'2025-08-19',e:8,t:'Intelに20億ドル、11か月で6倍',
+  w:'Intelに20億ドルを出資した。取得価格は1株23ドル、取得株数は8,700万株。孫のコメントは、半導体はあらゆる産業の基盤である、50年以上にわたりIntelはイノベーションにおける信頼されるリーダーだった、というもの。Intel株は2026年6月30日に139.63ドルとなり、保有時価は121.42億ドルになった。',
+  y:'AIサイクルの本命はCPUとファウンドリという読みが、単一四半期で最も高いリターンを出した事例である。FY2026 Q1の評価益1兆3,329億円は、持株会社投資事業のセグメント利益の大半を占める。',
+  f:['20億ドル → 121.42億ドル','6.07倍'],
+  s:[42,3]},
+ {d:'2025-10-08',e:8,t:'ABBのロボティクス事業を53.75億ドルで',
+  w:'スイスABBのロボティクス事業を53.75億ドルで買収する確定契約を締結した。対象事業は50か国以上に販売チャネルを持ち、累計ロボット出荷台数は50万台を超える。クロージングは2026年後半の予定。孫のコメントは、ソフトバンクの次のフロンティアはフィジカルAIである、というものだった。買収の前に、グループ内に散っていた約20社のロボティクス投資を中間持株会社へ集約している。',
+  y:'モデルとチップに続く3本目の柱をフィジカルAIと定義した。Pepperの失敗を、産業用ロボットの世界上位企業を買うことで乗り越えようとしている。',
+  f:['53.75億ドル','累計50万台超'],
+  s:[43,1]},
+ {d:'2025-10〜12',e:8,t:'20年分の遺産を全部売る',
+  w:'FY2025中に、T-Mobile株7,540万株を162.5億ドル、NVIDIA株の全部を58.3億ドル、Deutsche Telekom株の全部を7.3億ドルで売却し、合計3兆4,358億円を調達した。アリババ株を用いたプリペイド・フォワード契約も全額現物決済している。',
+  y:'アリババ、Sprint由来のT-Mobile、Deutsche Telekomという20年分の遺産を全部現金化して、OpenAIとAIインフラに入れた。NVIDIAの売却は2019年2月と同じ型の反復であり、孫はこの類型の存在を自ら認めている。',
+  f:['調達 3兆4,358億円'],
+  s:[1,100]},
+ {d:'2026-02',e:8,t:'OpenAIに追加300億ドル、持分は約13%へ',
+  w:'OpenAIが1,220億ドルの資金調達ラウンドを発表し、ソフトバンクは同月、追加出資300億ドルをコミットした。2026年中に4月、7月、10月の3回に分けて各100億ドルを実行する。完了時点でVision Fund 2号のOpenAI累計投資額は646億ドル、持分は約13%になる見込みである。連結ベースでは簿価446億ドル、時価896億ドル、累積投資利益450億ドル。',
+  y:'会社のNAVをOpenAIの評価額に直結させた。ただしFY2026 Q1にOpenAI関連の評価損益は計上されておらず、上昇の慣性は止まっている。',
+  f:['追加 300億ドル','累計 646億ドル','持分 約13%'],
+  s:[3,6,136]},
+ {d:'2026-03',e:8,t:'Arm AGI CPUとオハイオ10GWの着工',
+  w:'ArmがAIデータセンター向けの自社開発チップArm AGI CPUを発表し、Meta Platformsが共同開発パートナーとして参画した。同月、米エネルギー省と商務省、ソフトバンク、AEP Ohioが、オハイオ州パイクトンで10GW級の発電設備と10GW級のAIデータセンターを開発する官民連携を発表し、着工式を実施した。うち9.2GW級の発電設備は日米政府間合意に基づく5,500億ドルの投資イニシアティブに含まれる。立地は冷戦期のウラン濃縮施設跡地である。',
+  y:'設計から製品と電力まで垂直に降りた瞬間である。ArmのIPライセンスは粗利率が極めて高いが、自社チップは在庫と供給網のリスクを抱える。孫は利益率を捨てて規模を取る選択をした。',
+  f:['発電 10GW級','データセンター 10GW級'],
+  s:[1,7]},
+ {d:'2026-05',e:8,t:'純利益5兆22億円で過去最高を更新',
+  w:'FY2025は売上高7兆7,986億50百万円、税引前利益6兆1,349億5百万円、親会社帰属純利益5兆22億71百万円で過去最高。投資損益7兆2,865億円のうち、OpenAI関連が6兆7,304億円を占める。ROE 34.3%。ただし営業キャッシュフローは4,288億円のマイナス、財務キャッシュフローは6兆3,773億円のプラスである。',
+  y:'アリババで作った利益をOpenAIで作り直した年である。利益の実質は1社の非上場株の評価益であり、現金は伴っていない。利益と現金の乖離は過去最大級になった。',
+  f:['純利益 5兆22億円','うちOpenAI 6兆7,304億円'],
+  s:[1,5]},
+ {d:'2026-06-24',e:8,t:'第46回株主総会、2042年にNAV1,000兆円',
+  w:'68歳の孫は、NAV 74兆円を今後16年で14倍の1,000兆円にすると宣言した。戦略はオセロの四隅の比喩で説明され、AIモデルがOpenAI、AIチップがArmとAmpere、AIインフラが米国10GWとフランス5GW、ロボティクスがABBである。同時に人生50年計画を再修正し、70代までもう10年か15年は頑張ると述べた。根拠は、若手社員3名を相手に1時間半続けて卓球ができるという体力だった。日常についても、ChatGPTを毎日10回から20回使い、週末は1時間も2時間もAIと語り合っていると語っている。',
+  y:'群戦略、アカデミア、NAV、逆算という道具立てのすべてが、2042年1,000兆円という単一の数値目標に集約された。1976年に19歳で登る山を決めて逆算したのと、構造は同じである。',
+  f:['NAV 74兆円 → 1,000兆円','株価6,500円 / 1株NAV13,000円'],
+  s:[115]},
+ {d:'2026-08-06',e:8,t:'NAV 72.3兆円、ただし2か月で14兆円が消える',
+  w:'FY2026 Q1は売上高2兆196億円、親会社帰属純利益3,473億30百万円。6月30日時点のNAVは72.3兆円で過去最高、1株当たり12,686円、LTV 13.0%。同じ資料に載った8月5日時点のプロフォーマNAVは58.3兆円で、差は14.0兆円。原因はArm株のADS価格が6月30日の354.57ドルから8月5日に274ドルへ落ちたことである。資金面では2026年3月に総額400億ドル、30金融機関超のブリッジローンを組成し、第1四半期に200億ドルを引き出した。8月にはOpenAI株の価値を参照する100億ドルのファイナンス契約を結んでいる。CFOは、OpenAI株自体は担保に差し入れていないと明言した。',
+  y:'NAVで見よという教義は、上げ相場では強力な説得装置だが、2か月で14兆円が消える局面では同じ指標がボラティリティの証拠になる。それでも10月に3度目の100億ドルを払い込む予定で、財務方針は通常時のLTV 25%未満のまま変えていない。',
+  f:['NAV 72.3 → 58.3兆円','ブリッジ 400億ドル'],
+  s:[2,7]},
+ {d:'2026-08-18',e:8,t:'個人資産698億ドル、6月2日の1,007億ドルから',
+  w:'Forbesの番付で、この日の純資産は698億ドル、世界27位。6月2日には1,007億ドルに達してアジア最富裕になったと報じられ、同時期にソフトバンクグループの時価総額はトヨタを上回っていた。2か月半で309億ドル減った計算になる。',
+  y:'孫の資産、会社の時価総額、Arm株価、OpenAIの評価額は1本の鎖でつながっている。2026年3月末の保有比率は29.88%で、資産管理会社分を加えると約31.8%。加えてVision Fund 2号の共同投資プログラムでは、孫が支配する会社がSVF2 LLCの17.25%を保有している。会社のレバレッジと本人のレバレッジは分離していない。',
+  f:['698億ドル','ピークから −309億ドル'],
+  s:[14,1,3]}
+);
+
+/* 語録データ。t=テーマ / q=発言 / w=いつ・どこで / s=SRCの番号 */
+const QUOTES = [
+ {t:'志',q:'諸君、わが社は売上が5年後に100億円、10年後に500億円になります。そして30年後には、豆腐屋のように、売上を一丁（1兆円）、二丁（2兆円）と数えるような会社にします',w:'1981年3月、福岡市雑餉隈の事務所で、アルバイト2名を前にした最初の朝礼。文言は複数の再現があり原文は特定できていない',s:[86]},
+ {t:'志',q:'ただ一つのために。繰り返します。情報革命で人々を幸せに',w:'2010年6月25日、新30年ビジョン発表の締め',s:[107]},
+ {t:'志',q:'個人の欲望、個人の願望を満たすのが夢です。多くの人々の夢、多くの人々の願望、多くの人々が困っていることを助けてあげたい、こういったことを指すときは志と呼ぶんです',w:'2018年6月、ソフトバンクキャリアLIVE',s:[125]},
+ {t:'志',q:'将来、私が発明したものは何かと問われたら、答えは電子翻訳機ではなく群戦略になる',w:'ソフトバンクグループ アニュアルレポート2018 CEOメッセージ',s:[109]},
+ {t:'リスク',q:'安くも高くもない、いい値段だ',w:'2006年3月17日、1兆7,500億円のボーダフォン日本法人買収についての記者会見',s:[26]},
+ {t:'リスク',q:'たかが3兆円だと言ったら怒られるかもしれませんが',w:'2016年7月18日、ARM買収の記者会見',s:[141]},
+ {t:'リスク',q:'パラダイム・シフトの入り口で常に大きな賭けをしてきた',w:'2016年7月18日、ARM買収の記者会見',s:[141]},
+ {t:'リスク',q:'赤字の未上場企業であるOpenAIに、今このタイミングで4.8兆円を投資することは、並大抵の勇気ではありません',w:'2025年6月27日、第45回定時株主総会',s:[113]},
+ {t:'リスク',q:'私はこのASIの世界にオールイン、つまり全力を賭けています',w:'2025年6月27日、第45回定時株主総会',s:[113]},
+ {t:'リスク',q:'石橋を何度もたたくが、渡ると決めたらダンプカーで渡る',w:'弟の孫泰蔵による証言。勝算7割で動くという原則の運用について',s:[106]},
+ {t:'時間',q:'僕にとっての脱藩に相当するのが、病気の父親をおいてアメリカに行ってしまう、ということだった',w:'2010年3月29日、孫 正義 LIVE 2011、東京国際フォーラム',s:[53]},
+ {t:'時間',q:'人類生命体が生まれて40億年の歴史の中で、シンギュラリティが来るのはこの10年間です',w:'2017年7月20日、SoftBank World 2017 基調講演',s:[15]},
+ {t:'時間',q:'群戦略が正しいか間違っているかは、300年後に歴史が証明する',w:'2018年5月9日、2018年3月期決算説明会',s:[112]},
+ {t:'時間',q:'欲が出てきました。まだ元気。人生計画を70代まで延長する',w:'2026年6月24日、第46回定時株主総会（68歳）',s:[115]},
+ {t:'時間',q:'2042年にNAV1,000兆円を目指します',w:'ソフトバンクグループレポート2026 トップメッセージ',s:[115]},
+ {t:'失敗',q:'今回の決算発表の内容は、ボロボロでございます。真っ赤っかの大赤字',w:'2019年11月6日、2020年3月期第2四半期決算説明会',s:[138]},
+ {t:'失敗',q:'私自身の投資判断がいろいろな意味でまずかったことを、大いに反省している',w:'2019年11月6日、同決算説明会。WeWorkについて',s:[138]},
+ {t:'失敗',q:'反省しすぎて萎縮する必要があるのかと。反省しすぎて萎縮するほどまでいく必要はないと思っている',w:'2019年11月6日、同決算説明会',s:[138]},
+ {t:'失敗',q:'コロナの谷にユニコーンが落馬している状況で大変な危機です',w:'2020年5月18日、2020年3月期決算説明会',s:[140]},
+ {t:'失敗',q:'この6カ月間で約5兆円の赤字を出したことをしっかりと反省し戒めとして覚えておきたい',w:'2022年8月8日、2023年3月期第1四半期決算説明会',s:[139]},
+ {t:'失敗',q:'大きな利益が出るとちょっと浮かれる',w:'2022年8月8日、同決算説明会。徳川家康の顰像に言及しながら自分の性向について',s:[139]},
+ {t:'失敗',q:'僕がウィーワークに訪問してほれ込んでしまった。一部役員や社員の忠告が何度もあったが、多額のお金をつぎ込んでしまった。私の人生の汚点だ',w:'2023年、WeWorkの破綻をめぐって',s:[104]},
+ {t:'AI',q:'ソフトバンクグループはASIを実現するために存在する',w:'2024年6月21日、第44回定時株主総会。ASIを人類の叡智の1万倍と定義した',s:[120]},
+ {t:'AI',q:'10年後、少数のASIリーダーが世界GDPの少なくとも5%、約1,300兆円に相当する価値を生み出すと信じている',w:'SoftBank Group Report 2025 CEOメッセージ。英語での記述',s:[142]},
+ {t:'失敗',q:'自分のトラックレコードについて、恥じ入り、うろたえている',w:'2019年10月7日に報じられた日経ビジネス誌のインタビュー。英訳のみ確認できており、日本語の原文は未確認',s:[143]},
+ {t:'AI',q:'今朝難解な方程式が解けた。1年前から考え続けていたあることへの答えが出た',w:'2024年6月21日、第44回定時株主総会の冒頭',s:[120]},
+ {t:'AI',q:'超知能では不十分だと考えています。超知性にまで進化すべきです。慈愛、優しさ、愛情といった人間性を含みます',w:'2025年6月27日、第45回定時株主総会',s:[113]},
+ {t:'AI',q:'私たちがグループ全体で目指したいのは、このASIの世界で、世界ナンバーワンのプラットフォーマーになることです。日本語で平易に言えば、胴元のような存在です',w:'2025年6月27日、第45回定時株主総会',s:[113]},
+ {t:'AI',q:'AI革命は始まったばかりだ。これほど初期段階にある産業をバブルと呼ぶのは侮辱である',w:'2026年6月24日、第46回定時株主総会。英語での発言',s:[144]},
+ {t:'AI',q:'ある工場で、われわれのフィジカルAIロボットがロボットの量産を開始しています。おそらく世界で初めて、AIがAIの量産を開始している状況です',w:'2026年6月24日、第46回定時株主総会の質疑応答',s:[115]},
+ {t:'組織',q:'20％から40％ぐらいの資本提携をした、同志的結合の集団を作りたい。支配しなくてもいいじゃないか',w:'2010年6月25日、新30年ビジョン',s:[107]},
+ {t:'組織',q:'私の後継者問題はソフトバンクにとってある意味、最大の危機かもしれない',w:'2010年6月25日、新30年ビジョン。孫正義2.0を作ると宣言した場面',s:[118]},
+ {t:'組織',q:'20、30パーセントがスイートスポット。51パーセント以上を狙わない。むしろ意図的に51パーセント以上を狙わない',w:'2018年2月7日、2018年3月期第3四半期決算説明会',s:[108]},
+ {t:'組織',q:'私は攻めの男だから、アームの成長に貢献するため、アームの事業計画の深いところに集中していく。現在の経営環境は守りを固める時期で後藤くんを中心にやってもらう',w:'2022年11月11日、2023年3月期第2四半期決算説明会',s:[132]},
+ {t:'逆境',q:'俺は小学生、中学生の時に自殺したいぐらい悩んだんだ。本気で自殺しようかと思ったぐらい悩んだ。それぐらい差別、人間に対する差別というのは、つらいものがあるのよ',w:'日経ビジネスのインタビュー。2015年7月17日初出、2019年5月28日再編集',s:[51]},
+ {t:'逆境',q:'10倍苦労してもいい。人間としての誇りを優先したい。本名を隠して商売はしたくない',w:'1981年に孫姓で起業することへの親戚の反対に対して。佐野眞一のインタビュー',s:[123]},
+ {t:'逆境',q:'夜、病室でひとり泣きました。治療が苦しいからじゃないんです',w:'1983年から1984年の闘病について、後年の述懐',s:[58]},
+ {t:'逆境',q:'地位も、金も、名誉も何もいらないと思えた',w:'2018年6月、ソフトバンクキャリアLIVE。慢性肝炎での入院中の心境について',s:[125]},
+ {t:'逆境',q:'99％下がったんですよ。ソフトバンクの全体の時価総額が20兆円だったのが、2000億円まで下がりました。神様がワシに試練を与えてくれたと思って、これはこれでおもしろい人生じゃないかと',w:'講演録。2000年から2002年の下落について',s:[65]},
+ {t:'逆境',q:'両手両足の指がジーンとしびれまして、感動しすぎて涙が止まらなくなった',w:'2016年7月18日、ARM買収の記者会見。17歳でマイクロチップの写真を見たときの反応について',s:[141]},
+ {t:'逆境',q:'髪の毛が後退しているのではない。私が前進しているのである。',w:'2013年1月8日、Xへの投稿',s:[137]},
+ {t:'数字',q:'99.98%が30年間で存続できなかった',w:'2010年6月25日、新30年ビジョン。企業の30年生存率について',s:[107]},
+ {t:'数字',q:'ビジョンファンドグループのIRRは成功報酬を加え-6%の成績です',w:'2020年5月18日、2020年3月期決算説明会',s:[140]},
+ {t:'数字',q:'1株当たりの値段が6,500円であるのに対して、われわれが保有しているArmの株、OpenAIの株、ソフトバンクジャパンの株などを全て足し、借金を差し引いた実質的な価値は、1株当たり1万3,000円分あるのです',w:'2026年6月24日、第46回定時株主総会',s:[115]},
+ {t:'数字',q:'この16年間で金の卵は増えました。実質的な株主価値は3兆円から74兆円になったのです',w:'2026年6月24日、第46回定時株主総会',s:[115]},
+ {t:'数字',q:'短期の変動に一喜一憂しない',w:'2026年8月6日、FY2026 Q1決算説明会。CFO後藤芳光の発言。英語での原文',s:[7]},
+];
+
+/* ─── 描画 ───────────────────────────────────────────────────────────────── */
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sup = arr => (arr || []).map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+
+/* 出典一覧は HTML に焼き込んである（JS 無しでも読めるようにするため）。 */
+
+/* 年表 */
+const activeEras = new Set();
+
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+/* 語録 */
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+/* チャート。単系列は1色、極性は2色。値はすべて棒に直接ラベルを置く */
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+/* 親会社帰属純損益（兆円） */
+const PL = [
+  { k: 'FY2019', v: -0.96 }, { k: 'FY2020', v: 4.99 }, { k: 'FY2021', v: -1.71 },
+  { k: 'FY2022', v: -0.97 }, { k: 'FY2023', v: -0.23 }, { k: 'FY2024', v: 1.15 },
+  { k: 'FY2025', v: 5.00 },
+];
+{
+  const m = Math.max(...PL.map(r => Math.abs(r.v)));
+  document.getElementById('chartPL').innerHTML = PL.map(r => {
+    const w = (Math.abs(r.v) / m * 50).toFixed(1);
+    const pos = r.v >= 0;
+    const label = (pos ? '+' : '−') + Math.abs(r.v).toFixed(2) + '兆円';
+    return `<div class="row">
+      <span class="yr">${r.k}</span>
+      <span class="track">
+        <span class="seg ${pos ? 'p' : 'n'}" style="width:${w}%"></span>
+        <span class="val" style="${pos ? 'left:calc(50% + ' + w + '% + 8px)' : 'right:calc(50% + ' + w + '% + 8px)'}">${label}</span>
+      </span>
+    </div>`;
+  }).join('');
+}
+
+/* 保有株式価値の内訳（兆円、2026-06-30、調整後） */
+bars('chartNAVmix', [
+  { k: 'Arm', v: 49.91, sub: '60.1%' },
+  { k: 'SVF2', v: 19.29, sub: '23.2%' },
+  { k: 'その他', v: 6.51, sub: '7.8%' },
+  { k: 'SVF1', v: 3.60, sub: '4.3%' },
+  { k: 'ソフトバンク', v: 2.79, sub: '3.4%' },
+  { k: 'LatAm Funds', v: 1.00, sub: '1.2%' },
+], '兆円');
+
+/* NAV推移（兆円） */
+bars('chartNAV', [
+  { k: '2022年3月末', v: 18.5 },
+  { k: '2023年3月末', v: 14.1 },
+  { k: '2024年3月末', v: 27.8 },
+  { k: '2025年3月末', v: 25.7 },
+  { k: '2026年3月末', v: 40.06 },
+  { k: '2026年6月末', v: 72.30 },
+  { k: '2026年8月5日', v: 58.3, est: true, sub: '（プロフォーマ）' },
+], '兆円');
+</script>
+
+<script type="application/json" id="facts">
+[
+ {"claim":"生年月日","value":"1957-08-11","unit":"date","as_of":"2026-08","source":"https://ja.wikipedia.org/wiki/%E5%AD%AB%E6%AD%A3%E7%BE%A9","confidence":"reported"},
+ {"claim":"日本ソフトバンク設立","value":"1981-09","unit":"date","as_of":"1981-09","source":"https://www.tca.or.jp/press_release/pdf/110311son.pdf","confidence":"reported"},
+ {"claim":"孫正義の持株比率","value":29.88,"unit":"%","as_of":"2026-03-31","source":"https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2026/shareholders-meeting_46_01_en.pdf","confidence":"reported"},
+ {"claim":"株主価値（NAV）","value":72.3,"unit":"兆JPY","as_of":"2026-06-30","source":"https://group.softbank/en/ir/stock/sotp","confidence":"reported"},
+ {"claim":"株主価値（NAV、プロフォーマ）","value":58.3,"unit":"兆JPY","as_of":"2026-08-05","source":"https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-finance_q1fy2026_01_en.pdf","confidence":"reported"},
+ {"claim":"LTV","value":13.0,"unit":"%","as_of":"2026-06-30","source":"https://group.softbank/en/ir/stock/sotp","confidence":"reported"},
+ {"claim":"Arm保有価値（調整後）","value":49.91,"unit":"兆JPY","as_of":"2026-06-30","source":"https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/earnings-datasheet_q1fy2026_01.xlsx","confidence":"reported"},
+ {"claim":"Arm取得原価","value":40.0,"unit":"B USD","as_of":"2023-08","source":"https://group.softbank/en/news/press/20160718","confidence":"estimated"},
+ {"claim":"OpenAI 簿価","value":44.6,"unit":"B USD","as_of":"2026-06-30","source":"https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-accounting_q1fy2026_01_en.pdf","confidence":"reported"},
+ {"claim":"OpenAI 公正価値","value":89.6,"unit":"B USD","as_of":"2026-06-30","source":"https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-accounting_q1fy2026_01_en.pdf","confidence":"reported"},
+ {"claim":"OpenAI 累計投資額（予定込み）","value":64.6,"unit":"B USD","as_of":"2026-08","source":"https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2026/investor-svf_q1fy2026_01_en.pdf","confidence":"reported"},
+ {"claim":"FY2025 親会社帰属純利益","value":5002271,"unit":"百万JPY","as_of":"2026-03","source":"https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2026/shareholders-meeting_46_01_en.pdf","confidence":"reported"},
+ {"claim":"FY2019 営業損失","value":-1364633,"unit":"百万JPY","as_of":"2020-03","source":"https://group.softbank/media/Project/sbg/sbg/pdf/ir/investors/shareholders/2020/shareholders-meeting_40_01_en.pdf","confidence":"reported"},
+ {"claim":"アリババ投資のリターン倍率","value":761,"unit":"倍","as_of":"2015-03-31","source":"https://group.softbank/media/Project/sbg/sbg/pdf/ir/financials/annual_reports/annual-report_fy2015_02_en.pdf","confidence":"reported"},
+ {"claim":"ボーダフォン日本法人の買収額","value":17500,"unit":"億JPY","as_of":"2006-03","source":"https://group.softbank/en/news/press/20060317","confidence":"reported"},
+ {"claim":"SprintのエクイティIRR","value":25.5,"unit":"%","as_of":"2023-12-22","source":"https://group.softbank/en/news/press/20231226","confidence":"reported"},
+ {"claim":"SVF2 実現済投資の回収倍率","value":0.60,"unit":"倍","as_of":"2026-03-31","source":"https://group.softbank/media/Project/sbg/sbg/pdf/ir/presentations/2025/investor-svf_q4fy2025_01_ja.pdf","confidence":"reported"},
+ {"claim":"WeWorkの累計損失","value":14.3,"unit":"B USD","as_of":"2023-11","source":"https://commercialobserver.com/2023/11/softbank-wework-losses/","confidence":"single-source"},
+ {"claim":"2000年の個人資産減少額","value":58.6,"unit":"B USD","as_of":"2000-12","source":"https://www.guinnessworldrecords.com/world-records/94151-largest-loss-of-personal-fortune","confidence":"reported"},
+ {"claim":"2000年2月の個人資産ピーク","value":"685〜780","unit":"億USD","as_of":"2000-02","source":"https://www.forbes.com/global/2000/0703/0313054a.html","confidence":"disputed"},
+ {"claim":"シャープへの翻訳機売却額","value":"1〜1.6","unit":"億JPY","as_of":"1979","source":"https://arp-nt.co.jp/rensai2/sono001/","confidence":"disputed"},
+ {"claim":"個人資産","value":69.8,"unit":"B USD","as_of":"2026-08-18","source":"https://www.forbes.com/profile/masayoshi-son/","confidence":"reported"}
+]
+</script>
+</body>
+</html>

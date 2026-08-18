@@ -19,6 +19,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIRS = [
   path.join(ROOT, '010_research/011_company/reports'),
   path.join(ROOT, '010_research/013_geo/countries'),
+  // 人物レポートも同じ基準で扱う。出典つきの数字、機械可読な claim 一覧、
+  // そしてスマホで読める文書であること。仕様は _tools/person-template.md
+  path.join(ROOT, '010_research/019_people/people'),
 ];
 const CHECK_LINKS = process.argv.includes('--links');
 

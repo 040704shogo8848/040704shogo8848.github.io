@@ -230,6 +230,33 @@ const PRESETS = {
       { name:"2種目を交互に", rest:75, items:["latpull","cablelat"] }
     ]
   },
+  back_gym: {
+    label: "背中の日（ジム）",
+    place: "gym",
+    desc: "縦引きと横引きを分けたジムの背中day。広背筋の幅と厚みを両方狙う。",
+    blocks: [
+      { name:"ブロックA 縦引き／横引き", rest:90, items:["latpull","cablerow"] },
+      { name:"ブロックB 仕上げ", rest:60, items:["facepull","cablepull"] }
+    ]
+  },
+  chest_gym: {
+    label: "胸の日（ジム）",
+    place: "gym",
+    desc: "プレス系とアイソレーションを分けたジムの胸day。",
+    blocks: [
+      { name:"ブロックA プレス", rest:90, items:["gbench","gincdb"] },
+      { name:"ブロックB 仕上げ", rest:60, items:["chestpress","pecdeck"] }
+    ]
+  },
+  legs_gym: {
+    label: "脚の日（ジム）",
+    place: "gym",
+    desc: "マシン中心の脚day。バーベルスクワット・デッドリフトを足したい場合はメニュー編集で追加する。",
+    blocks: [
+      { name:"ブロックA マシン", rest:90, items:["legpress","legext"] },
+      { name:"ブロックB 仕上げ", rest:60, items:["legcurl","calf"] }
+    ]
+  },
   vshape60: {
     label: "逆三角形 週1・60分（自宅）",
     place: "home",

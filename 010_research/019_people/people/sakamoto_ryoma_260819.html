@@ -113,6 +113,9 @@
   .tl-item summary::marker{color:var(--muted)}
   .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
     white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
   .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
   .tl-item details[open] .tl-t{color:var(--accent)}
   .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
@@ -287,7 +290,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   <h2 id="timeline"><span class="num">①</span>年表<span class="en">Timeline — 1835 to 2010</span></h2>
 
   <p>日付が確定した出来事だけを置いた。各項目は事実、具体、そしてなぜそれが後を決めたかの3層で書いてある。
-  期をクリックすると絞り込める。和暦の日付が一次史料の表記で、括弧内が西暦である。</p>
+  期をクリックすると絞り込める。和暦の日付が一次史料の表記で、括弧内が西暦である。
+  日付の右の数字は満年齢を示す。和暦表記の項目は年までしか特定していないが、龍馬の誕生日は新暦の1月3日なので、同じ西暦年の出来事はすべて誕生日以降にあたる。
+  没後の項目は没年（1867年）からの年差を示す。</p>
 
   <div class="tl-tools">
     <input type="text" id="tlq" placeholder="検索（人名・地名・金額・船名）" autocomplete="off">
@@ -1044,7 +1049,7 @@ const TL = [
   f:['満31歳11か月','3名死亡'],
   s:[34]},
 
- {d:'1868 慶応4.閏4.27',e:7,t:'海援隊が解散する',
+ {d:'1868 慶応4.閏4.27',e:7,a:'没後7か月',t:'海援隊が解散する',
   w:'梅花隊として再編されていた一派が、藩命により解散した。西暦では1868年6月17日。振遠隊を母体とする一派も明治5年2月20日に解散している。',
   y:'龍馬の死から実質半年で組織は消えた。資本を持たず、権限を隊長に集中させた設計の当然の帰結である。同じ時期に同じ土佐の岩崎弥太郎が藩営商会を自分の資本に転換していく道筋と、ここで完全に分かれた。',
   f:['死から約7か月'],
@@ -1135,6 +1140,28 @@ const QUOTES = [
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const sup = arr => (arr || []).map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
 
+/* ─── 年齢 ─────────────────────────────────────────────────────────────────
+   d の先頭にある西暦年（あれば月日）から満年齢を出す。
+   生前より前の項目は「生誕N年前」、没後の項目は「没後N年」を出す。
+   項目に a: を書いた場合はそちらを優先する（没年と同じ年の没後の出来事など）。 */
+const BORN = '1836-01-03';
+const DIED = '1867-12-10';
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: true };
+  const m = String(x.d).match(/(\d{4})(?:[-.](\d{1,2})(?:[-.](\d{1,2}))?)?/);
+  if (!m) return null;
+  const y = +m[1], mo = m[2] ? +m[2] : null, dd = m[3] ? +m[3] : null;
+  const [by, bm, bd] = BORN.split('-').map(Number);
+  if (DIED) {
+    const dy = +DIED.split('-')[0];
+    if (y > dy) return { t: '没後' + (y - dy) + '年', out: true };
+  }
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  let a = y - by;
+  if (mo !== null && (mo < bm || (mo === bm && dd !== null && dd < bd))) a -= 1;
+  return { t: a + '歳', out: false };
+}
+
 const activeEras = new Set();
 
 document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
@@ -1150,11 +1177,14 @@ document.getElementById('tleras').addEventListener('click', e => {
   filterTL();
 });
 
-document.getElementById('tl').innerHTML = TL.map((x, i) => `
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
   <div class="tl-item" data-i="${i}">
     <details>
       <summary>
         <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
         <span class="tl-t">${esc(x.t)}</span>
       </summary>
       <div class="tl-body">
@@ -1163,7 +1193,8 @@ document.getElementById('tl').innerHTML = TL.map((x, i) => `
         <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
       </div>
     </details>
-  </div>`).join('');
+  </div>`;
+}).join('');
 
 function filterTL() {
   const q = document.getElementById('tlq').value.trim().toLowerCase();
@@ -1171,7 +1202,7 @@ function filterTL() {
   for (const el of document.querySelectorAll('.tl-item')) {
     const x = TL[Number(el.dataset.i)];
     const okEra = !activeEras.size || activeEras.has(x.e);
-    const hay = [x.d, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
     const okQ = !q || hay.includes(q);
     const show = okEra && okQ;
     el.classList.toggle('hide', !show);

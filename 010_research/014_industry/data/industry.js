@@ -2,6 +2,19 @@
 // 追加は bin/add-report.sh 経由。
 window.INDUSTRY = [
   {
+    "title": "産業革命とAI｜エンタープライズは何に注力すべきか",
+    "date": "2026-08-19",
+    "tags": [
+      "ai",
+      "general-purpose-technology",
+      "productivity",
+      "enterprise"
+    ],
+    "summary": "蒸気・電化・ITの前例に照らして、企業がAIに投じる資源のどこが超過リターンを生むかを検証。技術側は年10倍で減価し組織資本だけが累積するため注力先は組織になる。ただしマクロ効果は小さく前例では既存企業が新規参入に負けたため、見返りは超過利益ではなく生存条件と結論。出典23件。",
+    "source": "Desk research",
+    "file": "reports/ai_vs_industrial_revolution_260819.html"
+  },
+  {
     "title": "GDDR / HBM とAIチップのサプライチェーン",
     "date": "2026-07-30",
     "tags": [

@@ -3,6 +3,28 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "岩崎弥太郎",
+    "nameEn": "Yataro Iwasaki",
+    "born": 1835,
+    "died": 1885,
+    "country": "JP",
+    "role": "郵便汽船三菱会社 社長（三菱財閥 創業者）",
+    "field": "founder",
+    "status": "deceased",
+    "tags": [
+      "三菱",
+      "海運",
+      "政商",
+      "社長専制",
+      "独占"
+    ],
+    "date": "2026-08-19",
+    "summary": "郷士株を売った家に生まれ、35歳で藩の船3隻を引き継ぎ、7年後に日本の汽船総トン数の73%を握った。勝ち方は一貫していて、国家が緊急に必要とする輸送力を最初に差し出し、その対価を年25万円・15年間の命令書として制度に固定する。同じ制度が明治14年の政変で向きを変え、共同運輸との2年半の運賃競争のさなかに50歳で死んだ。坂本龍馬と同じ土佐・同じ長崎で並走した1867年から書き起こしている。",
+    "sourceCount": 59,
+    "variant": "life-arc",
+    "file": "people/iwasaki_yataro_260819.html"
+  },
+  {
     "name": "坂本龍馬",
     "nameEn": "Ryoma Sakamoto",
     "born": 1836,

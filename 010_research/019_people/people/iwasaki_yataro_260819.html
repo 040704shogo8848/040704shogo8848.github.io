@@ -1,0 +1,1189 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>岩崎弥太郎 — 地下浪人から社長専制まで</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    /* charts: dataviz の検証済みスロット（surface #fff で検証） */
+    --s1:#2a78d6; --s1-light:#86b6ef; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  /* ── charts ───────────────────────────────────────────────────────────── */
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  /* 極性チャート: 0を中央に置く */
+  .pol{display:grid;gap:8px}
+  .pol .row{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:10px}
+  .pol .yr{font-size:12.5px;color:var(--sub);font-variant-numeric:tabular-nums;text-align:right}
+  .pol .track{position:relative;height:20px;background:linear-gradient(90deg,transparent 0,transparent calc(50% - 1px),var(--line) calc(50% - 1px),var(--line) calc(50% + 1px),transparent calc(50% + 1px));}
+  .pol .seg{position:absolute;top:0;height:20px;border-radius:3px}
+  .pol .seg.p{background:var(--s1);left:50%}
+  .pol .seg.n{background:var(--neg);right:50%}
+  .pol .val{position:absolute;top:0;font-size:12px;line-height:20px;
+    font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+  .pol-legend{display:flex;gap:16px;font-size:12px;color:var(--sub);margin-top:12px}
+  .pol-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  /* ── timeline ─────────────────────────────────────────────────────────── */
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  /* ── quotes ───────────────────────────────────────────────────────────── */
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+  <p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / 岩崎弥太郎</p>
+
+  <header class="top">
+    <h1>岩崎弥太郎</h1>
+    <div class="en">Yataro Iwasaki — 1835.1.9 – 1885.2.7</div>
+    <div class="tags">
+      <span class="tag">三菱</span><span class="tag">海運</span><span class="tag">政商</span>
+      <span class="tag">社長専制</span><span class="tag">独占</span>
+    </div>
+  </header>
+
+  <p class="lead">
+    郷士の資格を売り払った家に生まれ、35歳で藩の船3隻を引き継ぎ、
+    15年後に日本の汽船総トン数の73％を握って死んだ人物の50年を、
+    政府の命令書と船の隻数という2つの数字で追い直した。
+  </p>
+  <p class="srcnote">
+    作成日 2026年8月19日。日付は明治5年12月までは和暦を先に置き、西暦を併記した。
+    三菱グループの公式社史（三菱オフィシャルサイトの沿革および連載「岩崎彌太郎年表」全24回）、
+    国立国会図書館・アジア歴史資料センター・日本郵船の公開資料を上位に置き、
+    報道・二次解説はその都度出所を分けて書いた。
+    金額は円・両・ドルの単位と時点を併記し、資料間で割れている数値は諸説として両方を残した。
+    確認できなかった論点は末尾の<a href="#open">残っている問い</a>に列挙してある。
+  </p>
+
+  <div class="kpi">
+    <div class="card"><div class="k">出生</div><div class="v">1835年<small>天保5年12月11日、土佐国安芸郡井ノ口村。父は地下浪人</small></div></div>
+    <div class="card"><div class="k">創業</div><div class="v">1870年<small>明治3年、九十九商会。35歳、藩から継承した船は3隻</small></div></div>
+    <div class="card"><div class="k">汽船シェア</div><div class="v">73%<small>1877年。所有61隻、日本の汽船総トン数比</small></div></div>
+    <div class="card"><div class="k">政府助成</div><div class="v">年25万円<small>1875年9月15日の第一命令書。15年間、汽船13隻の無償下付付き</small></div></div>
+  </div>
+
+  <div class="callout">
+    <p style="margin-top:0"><strong>先に結論を3つ置く。</strong></p>
+    <p><strong>1. 同じ一つの動作を15年繰り返している。</strong>
+    国家が緊急に必要としている輸送力を、他の誰よりも早く無条件で差し出し、その対価を制度として固定する。
+    1874年の台湾出兵では、外国船会社が局外中立を理由に断り、日本国郵便蒸汽船会社も渋る中で「国あっての三菱」と応じ、
+    政府が購入した外国船13隻の運航を受託した<sup><a href="#s6">6</a></sup>。
+    1877年の西南戦争では定期航路を止めて社船38隻を軍事輸送に投入している<sup><a href="#s8">8</a></sup><sup><a href="#s32">32</a></sup>。
+    その見返りが1875年9月15日の第一命令書、すなわち汽船13隻の無償下付と年25万円・15年間の助成金である<sup><a href="#s17">17</a></sup>。
+    <strong class="hit">この人物は市場ではなく制度で勝った。</strong></p>
+    <p><strong>2. 組織原則を明文で書いた。そこが海援隊との分岐点である。</strong>
+    三菱汽船会社規則は「会社の名を命じたりといえども、その実全く一家の事業」であり、
+    会社に関する一切は社長の特裁によると定めた<sup><a href="#s29">29</a></sup>。
+    渋沢栄一の合本主義とは正面から対立する<sup><a href="#s11">11</a></sup><sup><a href="#s30">30</a></sup>。
+    同じ土佐、同じ長崎で、同じ1867年に並走していた坂本龍馬の海援隊も隊長専断を約規に書いたが、
+    海援隊は資本を持たずに藩の外郭に留まり、龍馬の死から半年で消えた。
+    <strong>弥太郎は同じ設計思想を、自分の資本の上に置いた。違いはそこだけである。</strong></p>
+    <p><strong>3. 制度で勝った会社は制度で殺されかけた。</strong>
+    1881年の明治14年の政変で後ろ盾だった大隈重信が失脚し、政府系メディアが三菱を連日糾弾した<sup><a href="#s10">10</a></sup>。
+    1882年2月28日の第三命令書は監督を強化し、海上運送に専念して商品の売買を行ってはならないと定めた<sup><a href="#s10">10</a></sup>。
+    同年7月には資本金600万円のうち政府出資260万円の共同運輸会社が設立され、
+    翌年1月の営業開始から2年半の運賃ダンピング戦争が続く<sup><a href="#s27">27</a></sup><sup><a href="#s34">34</a></sup>。
+    弥太郎はその最中の1885年2月7日に胃がんで死んだ。50歳。
+    半年後に両社は合併して日本郵船になり、<strong class="hit">彼が作った海運会社は彼の死とともに手を離れた。</strong>
+    残った鉱山・造船・金融・不動産が、その後の三菱財閥の本体になる。</p>
+  </div>
+
+  <!-- ① 年表 -->
+  <h2 id="timeline"><span class="num">①</span>年表<span class="en">Timeline — 1835 to 1893</span></h2>
+
+  <p>日付が確定した出来事だけを置いた。各項目は事実、具体、そしてなぜそれが後を決めたかの3層で書いてある。
+  期をクリックすると絞り込める。</p>
+
+  <div class="tl-tools">
+    <input type="text" id="tlq" placeholder="検索（人名・社名・金額・船名）" autocomplete="off">
+    <span class="tl-count" id="tlcount"></span>
+  </div>
+  <div class="tl-eras" id="tleras"></div>
+  <div class="tl" id="tl"></div>
+  <div class="tl-empty" id="tlempty">該当なし</div>
+
+  <!-- ② 局面 -->
+  <h2><span class="num">②</span>局面ごとの解剖<span class="en">Seven Phases, Dissected</span></h2>
+
+  <h3>1. 売り払われた身分（1835〜1854）</h3>
+
+  <p>天保5年12月11日（1835年1月9日）、土佐国安芸郡井ノ口村に、地下浪人・岩崎弥次郎と美和の長男として生まれた<sup><a href="#s15">15</a></sup><sup><a href="#s32">32</a></sup>。
+  地下浪人とは、郷士の資格を手放して農耕に従事している家をいう。
+  岩崎家は江戸中期に郷士として仕えていたが、天明の大飢饉の後、曽祖父の代に郷士株を売って地下浪人になった<sup><a href="#s32">32</a></sup><sup><a href="#s26">26</a></sup><sup><a href="#s46">46</a></sup>。
+  三菱の創業者として語られるときも、事典類はまず父が地下浪人だったことから書き起こす<sup><a href="#s44">44</a></sup><sup><a href="#s45">45</a></sup>。</p>
+
+  <p>ここが坂本家との対称点である。
+  坂本家は豪商・才谷屋の資本で郷士株を買って武士になった家であり、岩崎家は郷士株を売って武士でなくなった家である。
+  <strong class="hit">同じ土佐の同じ制度の、買った側と売った側から、1年違いで2人が出ている。</strong>
+  弥太郎が27歳で借金をして郷士株を買い戻したという事実<sup><a href="#s32">32</a></sup>は、
+  この人物にとって身分が最初から金銭で回復可能な資産だったことを示している。</p>
+
+  <h3>2. 投獄と門閥（1855〜1866）— 獄中で算術を習う</h3>
+
+  <p>安政2年、父が庄屋との喧嘩で重傷を負って投獄された。
+  弥太郎は奉行所の白壁に「官は賄賂をもってなり、獄は愛憎によって決す」と大書して自身も投獄される<sup><a href="#s32">32</a></sup>。
+  7か月後に出獄したが、名字帯刀を剥奪され、井ノ口村を追放された。</p>
+
+  <div class="note">
+    <strong>この投獄が転機になっている。</strong>
+    獄中で同房の商人から算術と商法を学んだことが、後の商業への道の起点だとされる<sup><a href="#s32">32</a></sup>。
+    幕末の志士の多くが獄中で思想を得たのに対し、この人物は獄中で複式の勘定を得た。
+    以後50年、弥太郎の判断はほぼ例外なく計算の側に立っている。
+  </div>
+
+  <p>安政5年、吉田東洋の少林塾に入門し、東洋の甥である後藤象二郎と知り合う<sup><a href="#s32">32</a></sup>。
+  <strong>この一点が弥太郎の生涯を決めた。</strong>
+  後藤は土佐藩の参政となり、弥太郎を長崎に送り込み、明治には政府高官として情報を流し、
+  最後は自分の高島炭鉱を弥太郎に売る。
+  弥太郎の事業機会は、ほぼすべてこの一本の人脈から来ている。</p>
+
+  <h3>3. 長崎の経済官僚（1867〜1869）— 藩の借金で貿易を覚える</h3>
+
+  <p>慶応3年、後藤象二郎に命じられて土佐藩営の開成館長崎商会の主任に就任した<sup><a href="#s3">3</a></sup><sup><a href="#s1">1</a></sup>。
+  32歳。藩は木材・樟脳・鰹節などを売って収支を合わせようとしていたが、財政は火の車だった<sup><a href="#s3">3</a></sup>。
+  弥太郎は金がないまま、外国商人の信用を担保に、大砲10門、小銃1,500挺、帆船、砲艦などを購入している<sup><a href="#s3">3</a></sup>。
+  主な取引相手はグラバーとウォルシュ兄弟である。</p>
+
+  <p>この時期、同じ長崎に坂本龍馬の海援隊がいた。
+  弥太郎は海援隊の資金面を後始末する側で、いろは丸事件では紀州藩と粘り強く交渉して賠償を取り付けた<sup><a href="#s4">4</a></sup>。
+  慶応3年6月3日の弥太郎の日記に龍馬の訪問が記され、
+  6月9日、龍馬らが京都へ向かうのを見送った際には「余、不覚にも数行の涙を流す」と書いている<sup><a href="#s4">4</a></sup>。
+  この5か月後に龍馬は近江屋で殺される<sup><a href="#s48">48</a></sup>。
+  <a href="sakamoto_ryoma_260819.html">坂本龍馬のレポート</a>と合わせて読むと、
+  この数か月が日本の近代の2つの型の分岐点だったことがわかる。</p>
+
+  <h3>4. 九十九商会（1870〜1873）— 藩の事業を自分の資産にする</h3>
+
+  <p>明治3年10月9日（1870年11月2日）、土佐藩営の西長堀商会を譲り受けて土佐開成商社が創設され、
+  同月18日に九十九商会と改称した<sup><a href="#s32">32</a></sup>。
+  藩の船3隻を継承し、船旗に三菱印を定めている<sup><a href="#s32">32</a></sup>。
+  翌明治4年の廃藩置県で弥太郎は藩の官職を失い、九十九商会の経営者になった<sup><a href="#s32">32</a></sup>。</p>
+
+  <div class="risk">
+    <strong>政商という評価は、ここから始まる。</strong>
+    弥太郎は10万両の資金を調達して藩札を大量に買い占め、それを新政府に買い取らせて莫大な利益を得た。
+    この情報を流したのは新政府高官になっていた後藤象二郎で、現在の基準ではインサイダー取引にあたる<sup><a href="#s32">32</a></sup>。
+    三菱の初期資本の相当部分が、市場での競争ではなく制度情報の非対称から来ている。
+    この事実を書かない三菱史は多い。
+  </div>
+
+  <p>明治5年に九十九商会は三川商会と改称する。
+  岩崎の名を出さず、経営幹部の川田小一郎・石川七財・中川亀之助の「川」を取った命名である<sup><a href="#s5">5</a></sup>。
+  ところが明治6年3月、弥太郎は幹部の慎重さに業を煮やして独裁体制を宣言し、
+  社名を船旗の三つの菱形にちなむ「三菱商会」に改めた<sup><a href="#s5">5</a></sup>。
+  <strong class="hit">合議の名前を捨てて紋章の名前を採る、というこの改称に、以後の組織原則が先取りされている。</strong>
+  明治7年春には本店を東京日本橋南茅場町に移し、三菱蒸汽船会社と改称して、初めて「社長」を名乗った<sup><a href="#s5">5</a></sup><sup><a href="#s25">25</a></sup>。
+  4年間で社名が3回変わっている<sup><a href="#s42">42</a></sup><sup><a href="#s43">43</a></sup>。</p>
+
+  <h3>5. 政商の完成（1874〜1877）— 2つの戦争で会社が変わる</h3>
+
+  <p>明治7年、政府は台湾出兵の輸送を外国船会社に依頼したが、局外中立を理由に断られた。
+  日本国郵便蒸汽船会社に委託しようとしたが、同社は三菱との競争を懸念して消極的だった<sup><a href="#s6">6</a></sup>。
+  長崎の台湾蕃地事務局長・大隈重信が弥太郎に協力を要請し、弥太郎は「国あっての三菱」と応じて引き受けた<sup><a href="#s6">6</a></sup>。
+  政府は外国船10隻を購入して運航を三菱に委託し、後に3隻を追加して計13隻とした<sup><a href="#s6">6</a></sup>。</p>
+
+  <p>翌明治8年6月に日本国郵便蒸汽船会社は解散に追い込まれる<sup><a href="#s6">6</a></sup>。
+  同年9月15日、政府は第一命令書を交付した。内容は次のとおりである<sup><a href="#s17">17</a></sup>。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>命令書</th><th class="num">日付</th><th>与えたもの</th><th>課したもの</th></tr>
+    <tr><td class="name">第一命令書</td><td class="num">1875-09-15</td><td>東京丸など汽船13隻の無償下付。年25万円を15年間給付</td><td>月次会計報告、郵便物の無賃輸送、有事の船舶提供、商船学校の設立</td></tr>
+    <tr><td class="name">第二命令書</td><td class="num">1876-09-15</td><td>汽船17隻を追加下付（保有計39隻）。助成金を国際航路と国内航路に配分</td><td>—</td></tr>
+    <tr><td class="name">第三命令書</td><td class="num">1882-02-28</td><td>—</td><td>海上運送への専念、商品売買の禁止、修繕時の事前届出。三菱保護政策への歯止め</td></tr>
+  </table>
+  <p style="font-size:12px;color:var(--muted);padding:0 14px 12px">出典：国立国会図書館レファレンス協同データベース（『日本郵船株式会社百年史』『三菱社誌』に基づく回答）<sup><a href="#s17">17</a></sup>、三菱グループサイト<sup><a href="#s10">10</a></sup>。明治初年の海運政策の全体像は同志社大学学術リポジトリ所収の研究を参照した<sup><a href="#s24">24</a></sup></p>
+  </div>
+
+  <p>この命令書と同時に社名は郵便汽船三菱会社となる<sup><a href="#s18">18</a></sup>。
+  年25万円を15年間、という条件は総額375万円にあたる。
+  <strong class="hit">創業5年の会社が、国庫から15年分の運転資金を確定させた。</strong></p>
+
+  <p>助成を背に、三菱は明治8年2月に横浜・上海航路を開設して米国のパシフィック・メイル社（PM社）と正面から競合する。
+  運賃は半値以下まで落ちた<sup><a href="#s7">7</a></sup>。
+  駅逓頭・前島密がPM社の営業権買収を主張し、三菱は78万ドルでPM社の汽船4隻と関連施設を取得した<sup><a href="#s32">32</a></sup>。
+  さらにPM関連会社の東西汽船に対しても、両社が以後30年間、日中間および日本沿岸航路に立ち入らないことを約束させている<sup><a href="#s32">32</a></sup>。
+  続いて英国のP&amp;O社が参入したが、これも撤退させた<sup><a href="#s7">7</a></sup>。</p>
+
+  <p>明治10年、西南戦争。三菱は定期航路を休止して社船38隻を軍事輸送に投入した<sup><a href="#s8">8</a></sup>。
+  戦後、無償供与された船舶30隻の代金として120万円を上納したうえで買い増し、
+  所有船61隻、日本の汽船総トン数の73％に達する<sup><a href="#s8">8</a></sup><sup><a href="#s32">32</a></sup>。</p>
+
+  <div class="chart">
+    <div class="cap">三菱が保有した汽船の隻数</div>
+    <div class="sub">単位：隻。1870年は土佐藩から継承した数、1876年は第二命令書までの下付分を含む</div>
+    <div class="bars" id="chartFleet"></div>
+    <p style="font-size:12px;color:var(--muted);margin:14px 0 0">
+      7年で3隻から61隻になった。増分の大半は政府からの無償下付と、戦争後の買い増しである。
+      自力の受注で積み上げた隻数ではない<sup><a href="#s17">17</a></sup><sup><a href="#s32">32</a></sup>。
+    </p>
+  </div>
+
+  <h3>6. 独占と多角化（1878〜1881）— 海運の利益を陸に移す</h3>
+
+  <p>明治11年、弥太郎は東京に屋敷を3つ買った。
+  現在の旧岩崎邸庭園、清澄庭園、六義園にあたる<sup><a href="#s32">32</a></sup>。
+  同じ年に三菱商業学校を設立し、前年の明治9年には三菱商船学校を設立して年末に社員へ初のボーナスを支給している<sup><a href="#s1">1</a></sup>。</p>
+
+  <p>明治12年から14年にかけて、海運以外への展開が集中する。
+  東京海上保険会社の設立を援助し、三菱為替店を設立し、千川水道会社を設立した<sup><a href="#s1">1</a></sup><sup><a href="#s9">9</a></sup>。
+  明治14年には高島炭坑を買収し、明治生命保険会社の設立を援助している<sup><a href="#s1">1</a></sup>。
+  鉱山はさらに早く、明治4年に紀州炭坑、明治6年に吉岡銅山を取得していた<sup><a href="#s9">9</a></sup>。</p>
+
+  <p>高島炭坑の取引は、後藤象二郎との関係の最終形である。
+  後藤は政府から約55万円で高島炭坑を購入していたが、経営に行き詰まった。
+  福澤諭吉の仲介で弥太郎に売却され、明治14年4月25日に譲渡が成立している。
+  金額は約97万円とする資料と、後藤の政府宛未納金25万円の肩代わりとする資料があり、諸説ある<sup><a href="#s36">36</a></sup><sup><a href="#s38">38</a></sup>。</p>
+
+  <p>この多角化が、海運を失った後の三菱を残すことになる。
+  <strong class="hit">結果論ではあるが、独占が最も強固だった時期に独占していない領域へ資本を移したことが、この人物の最大の判断である。</strong></p>
+
+  <h3>7. 消耗戦と死（1882〜1885）</h3>
+
+  <p>明治14年10月、北海道官有物払下げ問題をめぐって大隈重信が罷免された（明治14年の政変）。
+  伊藤博文は「大隈は福澤諭吉の知恵と岩崎彌太郎の財力に支えられている」と見ていた<sup><a href="#s10">10</a></sup>。
+  政府系メディアは三菱を連日糾弾し、莫大な助成金を受け取りながら高い運賃を国民に押し付けていると批判した<sup><a href="#s10">10</a></sup>。
+  明治15年2月28日の第三命令書が三菱の業務を海上運送に限定する。</p>
+
+  <p>同年7月、渋沢栄一・井上馨・品川弥二郎・益田孝・榎本武揚・浅野総一郎らが画策した共同運輸会社が設立された<sup><a href="#s34">34</a></sup>。
+  東京風帆船・北海道運輸・越中風帆船の3社を合併した会社で、
+  資本金600万円のうち政府出資が260万円を占める<sup><a href="#s27">27</a></sup>。
+  明治16年1月に営業を開始すると、三菱は運賃を2割引にして対抗し、共同運輸も対抗値下げで応じた<sup><a href="#s27">27</a></sup><sup><a href="#s31">31</a></sup><sup><a href="#s41">41</a></sup>。</p>
+
+  <p>ダンピング競争は2年半続いた。
+  旅客運賃は2割から3割引、貨物は3割引・4割引が当たり前になり、
+  当時の新聞には、ただで乗せろ、嫌なら三菱に行くと言ったらただになった、という読者投稿まで載った<sup><a href="#s12">12</a></sup>。
+  弥太郎の弟・弥之助が石炭の廉価供給で三菱を支えたとされるが、両社とも消耗した。</p>
+
+  <p>明治18年2月7日18時30分、岩崎弥太郎は胃がんで死去した。満50歳<sup><a href="#s32">32</a></sup>。
+  死の直前まで意識は明確で、激しい腹痛のなかで後継者に事業の継承を託し、
+  志したことの十のうち一か二しかできないうちに、と述べたと伝えられる<sup><a href="#s13">13</a></sup>。
+  葬儀には各界の要人を含む3万人が参列した<sup><a href="#s1">1</a></sup>。</p>
+
+  <p>同年4月、政府が仲裁に入って共同運輸の社長を更迭し、川田小一郎と井上馨の交渉で合併が決まる<sup><a href="#s12">12</a></sup>。
+  9月末に日本郵船会社が発足した（設立日は9月29日・30日・10月1日成立と資料により表記が分かれる）<sup><a href="#s12">12</a></sup><sup><a href="#s34">34</a></sup>。
+  出資比率は共同6に対して三菱5で、社長には共同運輸側の人物が就いた<sup><a href="#s34">34</a></sup><sup><a href="#s19">19</a></sup><sup><a href="#s35">35</a></sup>。
+  合併を示す二引の旗章は、当時の日本海運を代表する2社の統合を表したものである<sup><a href="#s21">21</a></sup>。
+  <strong class="hit">15年かけて築いた海運の会社で、三菱は少数株主になった。</strong></p>
+
+  <!-- ③ 実績の数字 -->
+  <h2><span class="num">③</span>実績の数字<span class="en">Track Record — What Actually Paid</span></h2>
+
+  <h3>西南戦争で三菱がいくら得たのか</h3>
+
+  <p>この論点は、資料によって数字が1桁違う。両方をそのまま置く。</p>
+
+  <div class="chart">
+    <div class="cap">西南戦争（1877年）をめぐる金額</div>
+    <div class="sub">単位：万円。同じ戦争について、資料が示す三菱の取り分が5倍以上違う</div>
+    <div class="bars" id="chartSeinan"></div>
+    <p style="font-size:12px;color:var(--muted);margin:14px 0 0">
+      薄い色は資料間で割れている値。政府の戦費は4,156万円とする資料と4,150万円とする資料がある。
+      三菱の取り分については、御用船運航収入299万円・当期利益93万円とする記述と、
+      戦費のうち1,500万円が三菱の儲けだったとする記述が併存する<sup><a href="#s32">32</a></sup><sup><a href="#s33">33</a></sup>。
+      後者は軍需品の処分まで含めた総額を指している可能性があるが、今回の調査では突き合わせられなかった。
+    </p>
+  </div>
+
+  <div class="risk">
+    <strong>この差はそのままにしておく。</strong>
+    「西南戦争で三菱は戦費の3分の1を稼いだ」という語り口は広く流通しているが、
+    運航収入299万円という数字と同時には成立しない。
+    どちらかが誤りか、あるいは対象範囲が違う。
+    一次資料である『三菱社誌』を突き合わせないと確定できないため、
+    本レポートでは<strong class="hit">確定した数字として扱わない</strong>。
+  </div>
+
+  <h3>政府から受け取ったもの</h3>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>年</th><th>項目</th><th class="num">金額・数量</th><th>出所</th></tr>
+    <tr><td class="num">1874</td><td>台湾出兵。政府が購入した外国船の運航受託</td><td class="num">13隻</td><td>三菱グループ公式<sup><a href="#s6">6</a></sup></td></tr>
+    <tr><td class="num">1875</td><td>第一命令書：汽船の無償下付</td><td class="num">13隻</td><td>国立国会図書館<sup><a href="#s17">17</a></sup></td></tr>
+    <tr><td class="num">1875</td><td>第一命令書：助成金</td><td class="num">年25万円 × 15年<br>（総額375万円）</td><td>国立国会図書館<sup><a href="#s17">17</a></sup></td></tr>
+    <tr><td class="num">1876</td><td>第二命令書：汽船の追加下付</td><td class="num">17隻（計39隻）</td><td>国立国会図書館<sup><a href="#s17">17</a></sup></td></tr>
+    <tr><td class="num">1877</td><td>西南戦争の御用船運航収入</td><td class="num">299万円</td><td>諸説あり<sup><a href="#s32">32</a></sup></td></tr>
+    <tr><td class="num">1877</td><td>無償供与船30隻の代金として上納</td><td class="num">△120万円</td><td>三菱グループ公式<sup><a href="#s8">8</a></sup></td></tr>
+    <tr><td class="num">1877</td><td>戦後の保有船</td><td class="num">61隻（汽船総トン数の73％）</td><td>三菱グループ公式<sup><a href="#s8">8</a></sup></td></tr>
+  </table>
+  </div>
+
+  <p>アジア歴史資料センターの記述では、解散した日本国郵便蒸汽船会社の汽船15隻の無償貸し下げを受けたこと、
+  西南戦争時に政府借用金を原資として汽船8隻を購入したことが記録されている<sup><a href="#s18">18</a></sup>。
+  下付・貸下・購入の区分が資料により揺れており、隻数の単純合算はできない。</p>
+
+  <h3>買ったもの、作ったもの</h3>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>年</th><th>案件</th><th class="num">金額</th><th>その後</th></tr>
+    <tr><td class="num">1871</td><td>紀州炭坑（船舶代金見合い）</td><td class="num">—</td><td>鉱山事業の起点<sup><a href="#s9">9</a></sup></td></tr>
+    <tr><td class="num">1873</td><td>吉岡銅山</td><td class="num">—</td><td>三菱金属の源流<sup><a href="#s1">1</a></sup><sup><a href="#s9">9</a></sup></td></tr>
+    <tr><td class="num">1875</td><td>パシフィック・メイル社の営業権・汽船4隻等</td><td class="num">78万ドル</td><td>上海航路から米国資本を排除<sup><a href="#s32">32</a></sup></td></tr>
+    <tr><td class="num">1879</td><td>東京海上保険の設立を援助</td><td class="num">—</td><td>日本初の損害保険会社<sup><a href="#s1">1</a></sup></td></tr>
+    <tr><td class="num">1880</td><td>三菱為替店、千川水道会社</td><td class="num">—</td><td>金融・インフラへの進出<sup><a href="#s1">1</a></sup><sup><a href="#s9">9</a></sup></td></tr>
+    <tr><td class="num">1881</td><td>高島炭坑（後藤象二郎から）</td><td class="num">約97万円<br>／未納金25万円の肩代わり</td><td>諸説あり。長崎の石炭を掌握<sup><a href="#s36">36</a></sup><sup><a href="#s38">38</a></sup></td></tr>
+    <tr><td class="num">1881</td><td>明治生命保険の設立を援助</td><td class="num">—</td><td>日本初の生命保険会社<sup><a href="#s1">1</a></sup></td></tr>
+    <tr><td class="num">1884</td><td>工部省長崎造船所を借用</td><td class="num">—</td><td>後の三菱重工業長崎造船所<sup><a href="#s1">1</a></sup><sup><a href="#s39">39</a></sup><sup><a href="#s23">23</a></sup></td></tr>
+  </table>
+  </div>
+
+  <p>1884年の長崎造船所の借用は、死の1年前である。
+  海運が共同運輸との消耗戦で削られていくのと同時に、造船へ資本を移している。
+  <strong>この時点で、弥太郎は海運を守りにいくのではなく、海運の外へ出る準備をしていた。</strong></p>
+
+  <!-- ④ 失敗 -->
+  <h2><span class="num">④</span>失敗と代償の解剖<span class="en">Failures and Externalities</span></h2>
+
+  <p>成功と同じ精度で負けを扱う。弥太郎の負けは、事業判断の誤りよりも
+  <strong class="hit">勝ち方そのものが後で請求書として戻ってくる</strong>という形をとる。</p>
+
+  <h3>類型1: 制度で勝つと、制度で殺される</h3>
+
+  <p>三菱の海運は、1875年の第一命令書という制度によって独占的地位を得た。
+  同じ経路で、1881年の明治14年の政変で後ろ盾が消え、1882年の第三命令書で業務が縛られ、
+  同年に半額政府出資の共同運輸が作られた<sup><a href="#s10">10</a></sup><sup><a href="#s27">27</a></sup>。
+  <strong>助成金を受け取った瞬間に、その助成金が攻撃材料になることは確定していた。</strong>
+  三菱を糾弾した政府系メディアの論点は、莫大な助成金を受け取りながら高い運賃を押し付けている、という一点である<sup><a href="#s10">10</a></sup>。
+  この批判は事実関係としては正しい。</p>
+
+  <h3>類型2: 消耗戦で勝者がいなくなる</h3>
+
+  <p>共同運輸との2年半の運賃競争で、旅客は2割から3割引、貨物は3割引・4割引が常態化した<sup><a href="#s12">12</a></sup><sup><a href="#s27">27</a></sup>。
+  結果として、政府が仲裁に入って両社を合併させ、
+  日本郵船の出資比率は共同6対三菱5になった<sup><a href="#s34">34</a></sup>。
+  <strong class="hit">15年かけた事業で、三菱は過半を取れなかった。</strong>
+  独占を守るための値下げが、独占そのものを消した。</p>
+
+  <h3>類型3: 独占の外部費用 — 高島炭坑</h3>
+
+  <p>三菱は1881年に高島炭坑を取得し、トン当たりコストを
+  1881年の4円64銭から1887年の1円32銭へ削減した<sup><a href="#s37">37</a></sup>。
+  6年で71.6％の削減である。手段は賃金削減と罰金制度の導入だった<sup><a href="#s37">37</a></sup>。</p>
+
+  <p>坑夫の募集と監督は納屋頭が請け負う納屋制度で行われた。
+  坑夫は借金で拘束され、食料や必需品も納屋頭から購入する構造に置かれた<sup><a href="#s37">37</a></sup>。
+  高島は江戸期から石炭を産し、明治初年にはグラバーとの合弁で日本初の蒸気機関による竪坑が開かれた島である<sup><a href="#s49">49</a></sup><sup><a href="#s50">50</a></sup>。
+  1888年6月18日、松岡好一が雑誌『日本人』に「高島炭鉱の惨状」を発表し、全国的な社会問題になる<sup><a href="#s52">52</a></sup>。
+  松岡はこの労働を「千古未曾有の圧制法」と論難し、
+  約3,000人の坑夫が休憩を許されず、怠慢と見なされると棍棒で殴打されたこと、
+  1878年のコレラ蔓延時に病人が焼き捨てられたことを報じた<sup><a href="#s37">37</a></sup>。</p>
+
+  <div class="risk">
+    <strong>この報道は弥太郎の死から3年後である。</strong>
+    したがって告発の対象は彼個人ではない。
+    しかし買収を決め、コスト削減の方針を敷いたのは弥太郎であり、
+    納屋制度は買収時点で既に稼働していた。
+    1890年に鉱業条例が制定され、納屋制度が廃止されるのは1897年である<sup><a href="#s37">37</a></sup>。
+    <strong class="hit">トン当たり71.6％のコスト削減という数字の内訳に、この制度が入っている。</strong>
+    三菱の公式社史はこの経緯に触れていない。
+  </div>
+
+  <h3>類型4: 情報の非対称に依存した初期資本</h3>
+
+  <p>明治初年の藩札買占めは、後藤象二郎が新政府高官として流した情報に基づいている<sup><a href="#s32">32</a></sup>。
+  10万両を調達して藩札を買い占め、新政府に買い取らせた。
+  当時の法制度に違反するものではないが、
+  <strong>この会社の初期資本が市場での競争から生じたものではないことは、記録として残しておく必要がある。</strong></p>
+
+  <!-- ⑤ 思想と方法 -->
+  <h2><span class="num">⑤</span>思想と方法<span class="en">Doctrine and Method</span></h2>
+
+  <h3>社長専制 — 規則に書いてある</h3>
+
+  <p>明治8年の三菱汽船会社規則は、会社の性格を次のように定義した。
+  会社の名を命じてはいるが、その実は全く一家の事業であり、会社に関する一切は社長の特裁を仰ぐべし、というものである<sup><a href="#s29">29</a></sup>。
+  会社は岩崎家が所有・運営し、社長が全権を持ち、損益はすべて社長に帰属する<sup><a href="#s29">29</a></sup>。</p>
+
+  <p>これは当時の日本で最も明快な組織原則である。
+  同じ時期、渋沢栄一は合本主義を唱え、多数の株主による会社設立を推進していた<sup><a href="#s11">11</a></sup><sup><a href="#s30">30</a></sup>。
+  向島の料亭で酒宴を張った際、経営体制に議論が及ぶと座は一気に白けたと伝えられる<sup><a href="#s11">11</a></sup>。
+  <strong class="hit">2人の対立は性格の問題ではなく、会社を誰のものと定義するかという設計思想の対立だった。</strong>
+  そして共同運輸と郵便汽船三菱会社の2年半の戦争は、その2つの設計の代理戦争でもある。</p>
+
+  <div class="note">
+    <strong>海援隊と三菱は、同じ条文を書いている。</strong>
+    海援隊約規 第2条は「凡隊中ノ事　一切隊長ノ處分ニ任ス」で、三菱汽船会社規則は「すべて社長の特裁を仰ぐべし」である。
+    差は資本の所在にある。海援隊の経費は土佐藩と自営の利益に依存し、三菱の損益は社長個人に帰属した。
+    <strong class="hit">同じ独裁でも、自分の金でやるかどうかで結果が真逆になる。</strong>
+    この対照は、<a href="sakamoto_ryoma_260819.html">坂本龍馬のレポート</a>の④失敗の解剖と対になっている<sup><a href="#s57">57</a></sup>。
+  </div>
+
+  <h3>「国あっての三菱」— 順序が逆ではない</h3>
+
+  <p>台湾出兵の輸送を引き受けた際の言葉として伝えられるのが「国あっての三菱」である<sup><a href="#s6">6</a></sup>。
+  これは愛国心の表明として引用されることが多いが、実務としては別の意味を持つ。
+  外国船会社が中立を理由に降り、競合が渋る場面で、
+  <strong>唯一引き受けられる主体になることが、その後の制度上の地位を決める。</strong>
+  この一手で、日本国郵便蒸汽船会社は翌年に解散し、三菱には第一命令書が下りた。
+  国家に賭けるという判断は、この人物においては情緒ではなく確率計算である。</p>
+
+  <h3>人を辞めさせない</h3>
+
+  <p>遺言として伝わる一節に、三菱がある限り社員を一人も暇を出してはならない、
+  老いて役に立たなくなっても食うに困らないだけのことはしてやらねばならない、
+  そうでないと三菱の事業は末永く繁昌しない、というものがある<sup><a href="#s55">55</a></sup><sup><a href="#s56">56</a></sup>。
+  出典は複数の語録集で、一次資料での確認は取れていない。</p>
+
+  <p>ただし行動としては整合する。
+  明治9年に三菱商船学校、明治11年に三菱商業学校を設立し、明治9年末には社員に初のボーナスを支給している<sup><a href="#s1">1</a></sup>。
+  <strong>専制と終身雇用を同時に置く、という日本型企業の原型が、ここで組み合わさっている。</strong></p>
+
+  <!-- ⑥ 人物像 -->
+  <h2><span class="num">⑥</span>人物像<span class="en">The Person</span></h2>
+
+  <h3>龍馬を見送って泣いている</h3>
+
+  <p>弥太郎は日記を残しており、そこに幕末期の同時代の記録がある。
+  慶応3年6月3日、坂本龍馬が訪ねてきたときのやり取りが記され、
+  同月9日、龍馬らが京都へ向かうのを見送った日には「余、不覚にも数行の涙を流す」と書いた<sup><a href="#s4">4</a></sup>。</p>
+
+  <blockquote>
+    余、不覚にも数行の涙を流す
+    <span class="who">岩崎彌太郎 日記 慶応3年6月9日<sup><a href="#s4">4</a></sup></span>
+  </blockquote>
+
+  <p>三菱の公式社史は、2人について「常に広い世界を意識していた点ではおそろしく共通していた」と書いている<sup><a href="#s4">4</a></sup>。
+  弥太郎は後藤象二郎を通じて龍馬と関わり、海援隊の活動を経済面で支援し、
+  いろは丸事件では紀州藩と交渉して賠償を取り付けている<sup><a href="#s4">4</a></sup>。
+  <strong class="hit">同じ長崎で、同じ後藤象二郎の下で、一方は仲介者になり、一方は資本家になった。</strong></p>
+
+  <h3>評価が生前から割れている</h3>
+
+  <p>国立国会図書館の略歴は、廃藩置県の際に藩の事業を引き継ぎ、
+  台湾出兵と西南戦争の軍事輸送を担当し、鉱山・造船・金融・貿易など多方面への進出も試みた、と要約したうえで、
+  新汽船会社である共同運輸の設立後の激しい競争のなかで「競争渦中の18年に病死」したと記している<sup><a href="#s15">15</a></sup>。
+  淡々とした記述だが、この人物の生涯が政府との距離で規定されていたことを正確に示している。</p>
+
+  <p>同時代の批判は、政商という一語に集約される。
+  三菱を糾弾した政府系メディアの論点は助成金と運賃であり<sup><a href="#s10">10</a></sup>、
+  渋沢栄一を中心とする実業家層の論点は、会社を一家の私有物とする組織原則そのものだった<sup><a href="#s11">11</a></sup><sup><a href="#s30">30</a></sup><sup><a href="#s40">40</a></sup>。
+  <strong>どちらの批判も、弥太郎の勝ち方の記述としては正確である。</strong>
+  この人物を擁護するなら、
+  当時の日本に外国海運と対抗できる資本が他になかった、という一点でしか擁護できない。</p>
+
+  <!-- ⑦ 数字で見る三菱 -->
+  <h2><span class="num">⑦</span>数字で見る三菱<span class="en">The Numbers</span></h2>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>年</th><th>社名</th><th class="num">船</th><th>できごと</th></tr>
+    <tr><td class="num">1870</td><td class="name">九十九商会</td><td class="num">3隻</td><td>土佐藩の海運事業を継承。船旗に三菱印<sup><a href="#s32">32</a></sup></td></tr>
+    <tr><td class="num">1872</td><td class="name">三川商会</td><td class="num">—</td><td>川田・石川・中川の「川」を採った社名<sup><a href="#s5">5</a></sup></td></tr>
+    <tr><td class="num">1873</td><td class="name">三菱商会</td><td class="num">—</td><td>社長独裁を宣言。吉岡銅山を取得<sup><a href="#s1">1</a></sup><sup><a href="#s5">5</a></sup></td></tr>
+    <tr><td class="num">1874</td><td class="name">三菱蒸汽船会社</td><td class="num">13隻を運航</td><td>本店を東京へ。台湾出兵の軍事輸送。初めて「社長」を名乗る<sup><a href="#s1">1</a></sup><sup><a href="#s5">5</a></sup></td></tr>
+    <tr><td class="num">1875</td><td class="name">郵便汽船三菱会社</td><td class="num">13隻を無償下付</td><td>2月に上海航路開設、9月15日に第一命令書<sup><a href="#s17">17</a></sup><sup><a href="#s18">18</a></sup></td></tr>
+    <tr><td class="num">1876</td><td class="name">同</td><td class="num">計39隻</td><td>第二命令書。三菱商船学校を設立、年末に初のボーナス<sup><a href="#s1">1</a></sup><sup><a href="#s17">17</a></sup></td></tr>
+    <tr><td class="num">1877</td><td class="name">同</td><td class="num">61隻（73％）</td><td>西南戦争に社船38隻を投入<sup><a href="#s8">8</a></sup></td></tr>
+    <tr><td class="num">1882</td><td class="name">同</td><td class="num">—</td><td>第三命令書。共同運輸会社が設立（資本金600万円、政府出資260万円）<sup><a href="#s10">10</a></sup><sup><a href="#s27">27</a></sup></td></tr>
+    <tr><td class="num">1885</td><td class="name">日本郵船</td><td class="num">—</td><td>2月7日に弥太郎死去、9月末に合併。出資比率は共同6対三菱5<sup><a href="#s12">12</a></sup><sup><a href="#s34">34</a></sup></td></tr>
+  </table>
+  </div>
+
+  <p>九十九商会を名乗ってから5年で、社名は4回変わっている。
+  三川商会と三菱商会は社内の権限をめぐる改称、三菱蒸汽船会社は東京移転に伴う改称、
+  郵便汽船三菱会社は第一命令書と同時の改称である。
+  <strong class="hit">最後の1回だけが政府との関係そのものを社名に刻んでいる。</strong>
+  そしてその1回が、この会社の性格を15年間規定した。</p>
+
+  <h3>死後に残ったもの</h3>
+
+  <p>弥太郎の死後、社長は弟の弥之助が引き継いだ<sup><a href="#s16">16</a></sup>。
+  海運は日本郵船として手を離れたが、
+  鉱山（吉岡銅山、高島炭坑）、造船（長崎造船所）、金融（東京海上、明治生命、三菱為替店から第百十九国立銀行へ）、
+  そして不動産が残った<sup><a href="#s1">1</a></sup><sup><a href="#s33">33</a></sup><sup><a href="#s53">53</a></sup><sup><a href="#s54">54</a></sup>。
+  1890年に弥之助が丸の内一帯を政府から取得し、三菱の中核が海運から不動産と重工業へ移る<sup><a href="#s47">47</a></sup><sup><a href="#s28">28</a></sup>。
+  三菱グループ各社の設立年を並べると、現在の中核企業の多くがこの転換期に起点を持っていることがわかる<sup><a href="#s14">14</a></sup>。</p>
+
+  <p><strong>結果として、海運を失ったことが三菱財閥を作った。</strong>
+  1885年に日本郵船で少数株主にならなければ、
+  三菱は海運会社のまま残った可能性が高い。
+  弥太郎が1878年から1884年にかけて陸に移した資本が、
+  彼の死後に本体になった。</p>
+
+  <!-- ⑧ 語録 -->
+  <h2><span class="num">⑧</span>語録<span class="en">In His Own Words — and What Isn't</span></h2>
+
+  <p>日記や規則など出所が特定できるものを本文に置き、
+  語録集にのみ現れて一次資料での確認が取れないものは「出典未確定」に隔離した。</p>
+
+  <div class="q-tabs" id="qtabs"></div>
+  <div class="q-list" id="qlist"></div>
+
+  <!-- ⑨ 残っている問い -->
+  <h2 id="open"><span class="num">⑨</span>残っている問い<span class="en">Open Questions</span></h2>
+
+  <ul>
+    <li><strong>西南戦争での三菱の取り分。</strong>
+    御用船運航収入299万円・当期利益93万円とする記述<sup><a href="#s32">32</a></sup>と、
+    戦費4,150万円のうち1,500万円が三菱の儲けだったとする記述<sup><a href="#s33">33</a></sup>が併存する。
+    軍需品の処分収入まで含めた総額かどうかで説明できる可能性があるが、『三菱社誌』を確認できていない。</li>
+    <li><strong>高島炭坑の取得金額。</strong>
+    約97万円説と、後藤の政府宛未納金25万円の肩代わり説がある<sup><a href="#s36">36</a></sup><sup><a href="#s38">38</a></sup>。
+    両者は排他ではなく、譲渡対価と債務引受を別々に記述している可能性がある。</li>
+    <li><strong>下付・貸下・購入の区分。</strong>
+    第一命令書で13隻とする資料<sup><a href="#s17">17</a></sup>と、日本国郵便蒸汽船会社の汽船15隻の無償貸し下げとする資料<sup><a href="#s18">18</a></sup>があり、
+    隻数の推移を一本の系列にできなかった。チャートは各時点の保有隻数として示してある。</li>
+    <li><strong>日本郵船の設立日。</strong>9月29日・9月30日・10月1日成立と資料により表記が分かれる<sup><a href="#s12">12</a></sup><sup><a href="#s34">34</a></sup>。
+    許可日・登記日・営業開始日の違いと思われるが確認できていない。</li>
+    <li><strong>遺産の額。</strong>
+    死亡時点の岩崎家の資産総額を示す一次資料に到達できなかった。
+    三菱の公式社史も具体的な数値を出していない<sup><a href="#s13">13</a></sup>。</li>
+    <li><strong>助成金の実際の受領総額。</strong>
+    年25万円・15年間という条件は1875年の第一命令書のものだが<sup><a href="#s17">17</a></sup>、
+    1885年の合併までに実際にいくら受領したかは確認していない。表中の375万円は契約上の総額であり、実績ではない。</li>
+    <li><strong>「国あっての三菱」の一次出典。</strong>三菱の公式連載に引用があるが<sup><a href="#s6">6</a></sup>、原典を特定できていない。</li>
+  </ul>
+
+  <!-- ⑩ 出典 -->
+  <h2><span class="num">⑩</span>出典<span class="en">Sources</span></h2>
+  <p style="font-size:13px;color:var(--sub)">
+    一次資料に近いもの（三菱グループの公式社史、国立国会図書館、アジア歴史資料センター、日本郵船、自治体）を上に、
+    事典・研究・報道・二次解説を下に置いた。本文と年表の上付き番号はこの一覧の番号に対応する。すべて2026年8月19日に閲覧。
+  </p>
+  <ol class="sources">
+    <li id="s1">三菱グループサイト 岩崎彌太郎年表（連載全24回の目次と年譜） — <a href="https://www.mitsubishi.com/ja/series/yataro/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/</a></li>
+    <li id="s2">三菱オフィシャルサイト 沿革 — <a href="https://www.mitsubishi.com/ja/profile/history/outline/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/profile/history/outline/</a></li>
+    <li id="s3">三菱グループサイト 岩崎彌太郎年表 vol.06「経済官僚、奮戦す」 — <a href="https://www.mitsubishi.com/ja/series/yataro/06/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/06/</a></li>
+    <li id="s4">三菱グループサイト 岩崎彌太郎年表 vol.07「坂本竜馬と彌太郎」（岩崎彌太郎日記 慶応3年6月3日・9日） — <a href="https://www.mitsubishi.com/ja/series/yataro/07/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/07/</a></li>
+    <li id="s5">三菱グループサイト 岩崎彌太郎年表 vol.10「『三菱』を名乗る」 — <a href="https://www.mitsubishi.com/ja/series/yataro/10/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/10/</a></li>
+    <li id="s6">三菱グループサイト 岩崎彌太郎年表 vol.12「台湾出兵と三菱」 — <a href="https://www.mitsubishi.com/ja/series/yataro/12/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/12/</a></li>
+    <li id="s7">三菱グループサイト 岩崎彌太郎年表 vol.13「上海航路の攻防」 — <a href="https://www.mitsubishi.com/ja/series/yataro/13/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/13/</a></li>
+    <li id="s8">三菱グループサイト 岩崎彌太郎年表 vol.16「西南戦争」 — <a href="https://www.mitsubishi.com/ja/series/yataro/16/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/16/</a></li>
+    <li id="s9">三菱グループサイト 岩崎彌太郎年表 vol.18「ベンチャーの旗手」 — <a href="https://www.mitsubishi.com/ja/series/yataro/18/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/18/</a></li>
+    <li id="s10">三菱グループサイト 岩崎彌太郎年表 vol.21「三菱の独占ゆるすまじ」（明治14年の政変と第三命令書） — <a href="https://www.mitsubishi.com/ja/series/yataro/21/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/21/</a></li>
+    <li id="s11">三菱グループサイト 岩崎彌太郎年表 vol.22「渋沢栄一と彌太郎」 — <a href="https://www.mitsubishi.com/ja/series/yataro/22/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/22/</a></li>
+    <li id="s12">三菱グループサイト 岩崎彌太郎年表 vol.23「共同運輸との消耗戦と日本郵船の誕生」 — <a href="https://www.mitsubishi.com/ja/series/yataro/23/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/23/</a></li>
+    <li id="s13">三菱グループサイト 岩崎彌太郎年表 vol.24「彌太郎の遺産（最終回）」 — <a href="https://www.mitsubishi.com/ja/series/yataro/24/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/24/</a></li>
+    <li id="s14">三菱広報委員会 会員会社年表 — <a href="https://www.mitsubishi.com/ja/profile/csr/mpac/companies/chronology/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/profile/csr/mpac/companies/chronology/</a></li>
+    <li id="s15">国立国会図書館「近代日本人の肖像」岩崎弥太郎 — <a href="https://www.ndl.go.jp/portrait/datas/237/" target="_blank" rel="noopener">https://www.ndl.go.jp/portrait/datas/237/</a></li>
+    <li id="s16">国立国会図書館「近代日本人の肖像」岩崎弥之助 — <a href="https://www.ndl.go.jp/portrait/datas/6405" target="_blank" rel="noopener">https://www.ndl.go.jp/portrait/datas/6405</a></li>
+    <li id="s17">国立国会図書館 レファレンス協同データベース「三菱汽船が政府から受けた命令書」（『日本郵船株式会社百年史』『三菱社誌』に基づく回答。第一〜第三命令書の内容・隻数・助成額） — <a href="https://crd.ndl.go.jp/reference/entry/index.php?page=ref_view&amp;id=1000193901" target="_blank" rel="noopener">https://crd.ndl.go.jp/reference/entry/index.php?page=ref_view&amp;id=1000193901</a></li>
+    <li id="s18">アジア歴史資料センター アジ歴グロッサリー「三菱汽船会社／郵便汽船三菱会社」 — <a href="https://www.jacar.go.jp/glossary/term3/0010-0080-0080-0020.html" target="_blank" rel="noopener">https://www.jacar.go.jp/glossary/term3/0010-0080-0080-0020.html</a></li>
+    <li id="s19">日本郵船株式会社 沿革 — <a href="https://www.nyk.com/profile/history/" target="_blank" rel="noopener">https://www.nyk.com/profile/history/</a></li>
+    <li id="s20">日本郵船歴史博物館 日本郵船の歴史 — <a href="https://museum.nyk.com/history.html" target="_blank" rel="noopener">https://museum.nyk.com/history.html</a></li>
+    <li id="s21">日本郵船歴史博物館 航跡 — <a href="https://museum.nyk.com/kouseki/200802/index.html" target="_blank" rel="noopener">https://museum.nyk.com/kouseki/200802/index.html</a></li>
+    <li id="s22">安芸市 三菱創業者『岩崎彌太郎』（生家所在地の自治体による解説） — <a href="https://www.city.aki.kochi.jp/life/dtl.php?hdnKey=1921" target="_blank" rel="noopener">https://www.city.aki.kochi.jp/life/dtl.php?hdnKey=1921</a></li>
+    <li id="s23">三菱重工 長崎造船所 史料館 — <a href="https://www.mhi.com/jp/company/overview/museum/nagasaki" target="_blank" rel="noopener">https://www.mhi.com/jp/company/overview/museum/nagasaki</a></li>
+    <li id="s24">同志社大学学術リポジトリ「明治初年の海運政策」 — <a href="https://doshisha.repo.nii.ac.jp/?action=repository_action_common_download&amp;item_id=13517&amp;item_no=1&amp;attribute_id=28&amp;file_no=1" target="_blank" rel="noopener">https://doshisha.repo.nii.ac.jp/（明治初年の海運政策）</a></li>
+    <li id="s25">コトバンク 三菱会社（日本大百科全書ほか） — <a href="https://kotobank.jp/word/%E4%B8%89%E8%8F%B1%E4%BC%9A%E7%A4%BE-872217" target="_blank" rel="noopener">https://kotobank.jp/word/三菱会社-872217</a></li>
+    <li id="s26">コトバンク 岩崎弥太郎（朝日日本歴史人物事典ほか） — <a href="https://kotobank.jp/word/%E5%B2%A9%E5%B4%8E%E5%BC%A5%E5%A4%AA%E9%83%8E-32648" target="_blank" rel="noopener">https://kotobank.jp/word/岩崎弥太郎-32648</a></li>
+    <li id="s27">コトバンク 共同運輸会社（資本金600万円・政府出資260万円・運賃競争） — <a href="https://kotobank.jp/word/%E5%85%B1%E5%90%8C%E9%81%8B%E8%BC%B8%E4%BC%9A%E7%A4%BE-829454" target="_blank" rel="noopener">https://kotobank.jp/word/共同運輸会社-829454</a></li>
+    <li id="s28">コトバンク 三菱財閥 — <a href="https://kotobank.jp/word/%E4%B8%89%E8%8F%B1%E8%B2%A1%E9%96%A5-138953" target="_blank" rel="noopener">https://kotobank.jp/word/三菱財閥-138953</a></li>
+    <li id="s29">ジャパンナレッジ 世界大百科事典 岩崎弥太郎（三菱汽船会社規則「一家の事業」「社長の特裁」の引用） — <a href="https://japanknowledge.com/introduction/keyword.html?i=1458" target="_blank" rel="noopener">https://japanknowledge.com/introduction/keyword.html?i=1458</a></li>
+    <li id="s30">渋沢栄一記念財団「曾孫が語る渋沢栄一」2. 岩崎弥太郎と渋沢栄一 — <a href="https://www.shibusawa.or.jp/eiichi/himago/himago02.html" target="_blank" rel="noopener">https://www.shibusawa.or.jp/eiichi/himago/himago02.html</a></li>
+    <li id="s31">渋沢栄一記念財団 海運A｜渋沢栄一関連会社名・団体名変遷図 — <a href="https://eiichi.shibusawa.or.jp/namechangecharts/histories/view/37" target="_blank" rel="noopener">https://eiichi.shibusawa.or.jp/namechangecharts/histories/view/37</a></li>
+    <li id="s32">日本語版Wikipedia 岩崎弥太郎（当たり付け。個別の事実は本文中で出所を明示） — <a href="https://ja.wikipedia.org/wiki/%E5%B2%A9%E5%B4%8E%E5%BC%A5%E5%A4%AA%E9%83%8E" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/岩崎弥太郎</a></li>
+    <li id="s33">日本語版Wikipedia 三菱財閥 — <a href="https://ja.wikipedia.org/wiki/%E4%B8%89%E8%8F%B1%E8%B2%A1%E9%96%A5" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/三菱財閥</a></li>
+    <li id="s34">日本語版Wikipedia 共同運輸会社 — <a href="https://ja.wikipedia.org/wiki/%E5%85%B1%E5%90%8C%E9%81%8B%E8%BC%B8%E4%BC%9A%E7%A4%BE" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/共同運輸会社</a></li>
+    <li id="s35">日本語版Wikipedia 日本郵船 — <a href="https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC%E9%83%B5%E8%88%B9" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/日本郵船</a></li>
+    <li id="s36">日本語版Wikipedia 高島炭鉱 — <a href="https://ja.wikipedia.org/wiki/%E9%AB%98%E5%B3%B6%E7%82%AD%E9%89%B1" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/高島炭鉱</a></li>
+    <li id="s37">日本語版Wikipedia 高島炭鉱事件（松岡好一「高島炭鉱の惨状」1888年6月18日、納屋制度、トン当たりコスト） — <a href="https://ja.wikipedia.org/wiki/%E9%AB%98%E5%B3%B6%E7%82%AD%E9%89%B1%E4%BA%8B%E4%BB%B6" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/高島炭鉱事件</a></li>
+    <li id="s38">日本語版Wikipedia 後藤象二郎 — <a href="https://ja.wikipedia.org/wiki/%E5%BE%8C%E8%97%A4%E8%B1%A1%E4%BA%8C%E9%83%8E" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/後藤象二郎</a></li>
+    <li id="s39">日本語版Wikipedia 三菱重工業長崎造船所 — <a href="https://ja.wikipedia.org/wiki/%E4%B8%89%E8%8F%B1%E9%87%8D%E5%B7%A5%E6%A5%AD%E9%95%B7%E5%B4%8E%E9%80%A0%E8%88%B9%E6%89%80" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/三菱重工業長崎造船所</a></li>
+    <li id="s40">東洋経済オンライン 渋沢栄一、三菱に挑む 日本郵船誕生前夜の教訓 — <a href="https://toyokeizai.net/articles/-/574480" target="_blank" rel="noopener">https://toyokeizai.net/articles/-/574480</a></li>
+    <li id="s41">歴人マガジン 渋沢栄一と岩崎弥太郎 2人の実業家の対立と日本郵船誕生の軌跡 — <a href="https://rekijin.com/?p=36661" target="_blank" rel="noopener">https://rekijin.com/?p=36661</a></li>
+    <li id="s42">manabow 先駆者たちの大地 三菱商事株式会社 創業者 岩崎彌太郎 — <a href="https://manabow.com/pioneer/mitsubishi/2.html" target="_blank" rel="noopener">https://manabow.com/pioneer/mitsubishi/2.html</a></li>
+    <li id="s43">manabow 先駆者たちの大地 日本郵船株式会社 創業者 岩崎弥太郎 — <a href="https://manabow.com/pioneer/yusen/2.html" target="_blank" rel="noopener">https://manabow.com/pioneer/yusen/2.html</a></li>
+    <li id="s44">刀剣ワールド 日本史辞典 岩崎弥太郎 — <a href="https://www.touken-world.jp/history/history-important-word/iwasaki-yataro/" target="_blank" rel="noopener">https://www.touken-world.jp/history/history-important-word/iwasaki-yataro/</a></li>
+    <li id="s45">hitopedia 岩崎弥太郎｜三菱を築いた幕末明治の政商・海運王 — <a href="https://hitopedia.net/%e5%b2%a9%e5%b4%8e%e5%bc%a5%e5%a4%aa%e9%83%8e/" target="_blank" rel="noopener">https://hitopedia.net/岩崎弥太郎/</a></li>
+    <li id="s46">幕末から維新・土佐の人物伝 岩崎弥太郎 — <a href="https://www.tosa-jin.com/iwasaki/iwasaki01.htm" target="_blank" rel="noopener">https://www.tosa-jin.com/iwasaki/iwasaki01.htm</a></li>
+    <li id="s47">幕末から維新・土佐の人物伝 岩崎弥之助 — <a href="https://www.tosa-jin.com/iwasaki/iwasaki02.htm" target="_blank" rel="noopener">https://www.tosa-jin.com/iwasaki/iwasaki02.htm</a></li>
+    <li id="s48">坂本龍馬人物伝 岩崎弥太郎 — <a href="https://www.ryoma-den.com/jinbutsu/iwasaki.html" target="_blank" rel="noopener">https://www.ryoma-den.com/jinbutsu/iwasaki.html</a></li>
+    <li id="s49">長崎市 高島地区のご紹介 — <a href="https://www.city.nagasaki.lg.jp/page/1693.html" target="_blank" rel="noopener">https://www.city.nagasaki.lg.jp/page/1693.html</a></li>
+    <li id="s50">高島観光ナビ 高島炭坑 詳細ページ — <a href="http://www.kanko-takashima.com/heritage_prologue/takashima/" target="_blank" rel="noopener">http://www.kanko-takashima.com/heritage_prologue/takashima/</a></li>
+    <li id="s51">日本郵政 前島密（駅逓頭としての海運政策） — <a href="https://www.japanpost.jp/group/about/milestone/founder/" target="_blank" rel="noopener">https://www.japanpost.jp/group/about/milestone/founder/</a></li>
+    <li id="s52">武将ジャパン 一代で三菱財閥を築いた岩崎弥太郎の豪腕 — <a href="https://bushoojapan.com/jphistory/kingendai/2025/02/06/163054" target="_blank" rel="noopener">https://bushoojapan.com/jphistory/kingendai/2025/02/06/163054</a></li>
+    <li id="s53">三菱グループサイト 岩崎彌之助 vol.05「事業の多角化と人材登用」 — <a href="https://www.mitsubishi.com/ja/series/yanosuke/05/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yanosuke/05/</a></li>
+    <li id="s54">三菱グループサイト 岩崎彌之助 vol.08「造船日本の船出 長崎造船所」 — <a href="https://www.mitsubishi.com/ja/series/yanosuke/08/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yanosuke/08/</a></li>
+    <li id="s55">名言＋Quotes 岩崎弥太郎の名言（出典未確定の語録の所在確認用） — <a href="https://meigen-ijin.com/iwasaki-yataro/" target="_blank" rel="noopener">https://meigen-ijin.com/iwasaki-yataro/</a></li>
+    <li id="s56">Histonary 岩崎弥太郎の名言集（同上） — <a href="https://histonary.com/iwasakiyataro-meigen/" target="_blank" rel="noopener">https://histonary.com/iwasakiyataro-meigen/</a></li>
+    <li id="s58">三菱グループサイト 岩崎彌之助年表（丸の内の取得、三菱合資会社の設立） — <a href="https://www.mitsubishi.com/ja/series/yanosuke/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yanosuke/</a></li>
+    <li id="s59">日本語版Wikipedia 岩崎弥之助（1890年の丸の内払下げ128万円、1893年の三菱合資会社設立） — <a href="https://ja.wikipedia.org/wiki/%E5%B2%A9%E5%B4%8E%E5%BC%A5%E4%B9%8B%E5%8A%A9" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/岩崎弥之助</a></li>
+    <li id="s57">坂本龍馬レポート（本サイト内。海援隊約規と三菱汽船会社規則の対照） — <a href="sakamoto_ryoma_260819.html">people/sakamoto_ryoma_260819.html</a></li>
+  </ol>
+
+</div>
+
+<script>
+/* ─── 年表データ ───────────────────────────────────────────────────────────
+   d=日付（西暦年＋和暦） / e=期の番号 / t=見出し / w=事実と具体 / y=なぜ効いたか
+   f=数値チップ / s=出典番号（HTMLに焼き込んだ ol.sources の id に対応）
+   出典一覧は HTML 側に静的に置いてある。JS が落ちても読める形にするため。 */
+const ERAS = [
+ '',
+ 'I 地下浪人 1835–1854',
+ 'II 投獄と門閥 1855–1866',
+ 'III 長崎の経済官僚 1867–1869',
+ 'IV 九十九商会 1870–1873',
+ 'V 政商の完成 1874–1877',
+ 'VI 独占と多角化 1878–1881',
+ 'VII 消耗戦と死 1882–1885',
+ 'VIII 遺産 1885–1897',
+];
+
+const TL = [
+ {d:'1835 天保5.12.11',e:1,t:'井ノ口村に生まれる',
+  w:'土佐国安芸郡井ノ口村で、地下浪人・岩崎弥次郎と美和の長男として生まれた。西暦では1835年1月9日。岩崎家は関ヶ原の後に山内氏が入国してから山野に隠れて農耕に従事し、江戸中期にいったん郷士として仕えたが、天明の大飢饉の後に曽祖父の代で郷士株を売り、地下浪人になっていた。',
+  y:'土佐の郷士身分は売買される株だった。坂本家がその株を買って武士になった家であるのに対し、岩崎家は売って武士でなくなった家である。同じ制度の売り手と買い手から、1年違いで2人が出ている。',
+  f:['地下浪人','長男'],
+  s:[15,32,22]},
+ {d:'1854 安政元',e:1,t:'江戸遊学に出発する',
+  w:'儒学者・奥宮慥斎の従者として江戸へ向かった。',
+  y:'土佐の外に出る最初の機会である。学問で身を立てる道を選んだ時点では、まだ商業の気配はない。',
+  s:[1,2]},
+
+ {d:'1855 安政2',e:2,t:'安積艮斎の見山塾に入る',
+  w:'江戸で儒学者・安積艮斎の見山塾に入塾した。',
+  y:'漢学の素養がこの人物の文章と交渉力の土台になる。後年の日記や商用書簡の水準は、この時期に作られている。',
+  s:[1]},
+ {d:'1855 安政2',e:2,t:'投獄され、獄中で算術を学ぶ',
+  w:'父が庄屋との喧嘩で重傷を負って投獄された。弥太郎は奉行所の白壁に墨で「官は賄賂をもってなり、獄は愛憎によって決す」と大書して自らも投獄される。7か月後に出獄したが、名字帯刀を剥奪され井ノ口村を追放された。獄中で同房の商人から算術と商法を学んだことが、商業への転機になったとされる。',
+  y:'幕末の多くの人物が獄中で思想を得たのに対し、この人物は獄中で勘定を得た。以後50年、判断はほぼ例外なく計算の側に立っている。',
+  f:['7か月','名字帯刀を剥奪'],
+  s:[32,1]},
+ {d:'1858 安政5',e:2,t:'吉田東洋の少林塾に入り、後藤象二郎と会う',
+  w:'土佐藩の実力者・吉田東洋の少林塾に入塾し、東洋の甥である後藤象二郎と知遇を得た。',
+  y:'この一点が生涯を決めた。後藤は参政として弥太郎を長崎に送り、明治には政府高官として情報を流し、最後は自分の高島炭坑を弥太郎に売る。事業機会のほぼすべてがこの一本の人脈から来ている。',
+  s:[32,1]},
+ {d:'1859 安政6',e:2,t:'長崎に派遣される',
+  w:'土佐藩から長崎に派遣された。同じ年、トマス・グラバーが貿易商として長崎に来ている。',
+  y:'外国商人と国際貿易の実務を初めて見た。8年後に同じ場所で藩の商会を任される布石になる。',
+  s:[1,2]},
+ {d:'1862頃 文久年間',e:2,t:'27歳、借金して郷士株を買い戻す',
+  w:'借財をして郷士株を買い戻し、武士身分を回復した。同じ時期に高芝重春の次女・喜勢と婚約している。',
+  y:'曽祖父が売った身分を、本人が金で買い戻した。この人物にとって身分は最初から金銭で回復可能な資産であり、その認識が後の事業判断の前提になっている。',
+  f:['27歳'],
+  s:[32]},
+ {d:'1866 慶応2春',e:2,t:'樟脳の契約不履行で交渉窓口に立つ',
+  w:'土佐藩営の開成館長崎商会で、樟脳の市場価格が暴騰したためにクニフラー商会との契約が履行できなくなった。弥太郎が交渉の窓口となった。',
+  y:'記録に残る最初の対外交渉である。相場変動による契約不履行という、後年の海運業でも繰り返す論点をここで扱っている。',
+  s:[32]},
+
+ {d:'1867 慶応3.3',e:3,t:'開成館長崎商会の主任になる',
+  w:'後藤象二郎に命じられて土佐藩営の開成館長崎商会の主任に就任した。32歳。藩は木材・樟脳・鰹節などの物産で収支を合わせようとしていたが財政は逼迫しており、弥太郎は金がないまま外国商人の信用を担保に、大砲10門、小銃1,500挺、帆船、砲艦などを購入している。主な取引相手はグラバーとウォルシュ兄弟だった。',
+  y:'資金を持たずに信用で商品を動かす、という実務をここで身につけた。三菱の初期の資金調達がすべて借入と政府助成で組み立てられているのは、この時期の経験の延長である。',
+  f:['大砲10門','小銃1,500挺'],
+  s:[3,1]},
+ {d:'1867 慶応3.6.3',e:3,t:'日記に坂本龍馬が現れる',
+  w:'弥太郎の日記に、坂本龍馬が訪ねてきたときのやり取りが記されている。弥太郎は海援隊の資金面を後始末する立場にあり、いろは丸事件では紀州藩と粘り強く交渉して賠償を取り付けた。',
+  y:'同じ長崎で、同じ後藤象二郎の下に、仲介者と資本家が並んでいた。この数か月が、日本の近代がどちらの型で走るかの分岐点になっている。',
+  s:[4]},
+ {d:'1867 慶応3.6.9',e:3,t:'龍馬を見送って泣く',
+  w:'龍馬らが京都へ向かうのを見送った際、弥太郎は日記に「余、不覚にも数行の涙を流す」と書いた。三菱の公式社史は、2人について「常に広い世界を意識していた点ではおそろしく共通していた」と記している。',
+  y:'後に社長専制を規則に明文化することになる人物が、資本を持たない脱藩浪人を見送って泣いている。5か月後に龍馬は近江屋で殺され、いろは丸の賠償金7万両は土佐藩に入った。',
+  s:[4]},
+ {d:'1869 明治2',e:3,t:'藩の大阪商会へ移る',
+  w:'長崎から大阪へ移り、藩の商会に転じた。',
+  y:'翌年の九十九商会は、この大阪の藩営商会を母体にしている。長崎で貿易を、大阪で海運を覚えた。',
+  s:[15]},
+
+ {d:'1870 明治3.10.9',e:4,t:'土佐開成商社が創設される',
+  w:'土佐藩営の西長堀商会を譲り受けて土佐開成商社が創設された。西暦では1870年11月2日。',
+  y:'藩の事業が私人の事業に転換する起点である。廃藩置県はまだ来ていない。',
+  s:[32]},
+ {d:'1870 明治3.10.18',e:4,t:'九十九商会と改称、船は3隻',
+  w:'土佐開成商社を九十九商会と改称した。土佐藩所有の船3隻を継承し、船旗に三菱印を定めている。三菱グループはこの年を創業年としている。',
+  y:'15年後に61隻・汽船総トン数の73％になる会社が、3隻から始まった。増分の大半は自力の受注ではなく政府からの下付である。',
+  f:['3隻','三菱印'],
+  s:[2,32]},
+ {d:'1871 明治4',e:4,t:'廃藩置県で経営者になる',
+  w:'廃藩置県により土佐藩の官職を失い、九十九商会の経営者となった。同年、船舶代金の見合いで紀州炭坑を取得している。',
+  y:'官の身分を失ったことで、逆に事業を私有できる立場になった。同じ廃藩置県が、多くの藩営事業を消滅させる一方で、この会社だけを民間資本に変換した。',
+  s:[32,9]},
+ {d:'1871頃 明治初年',e:4,t:'藩札を10万両で買い占める',
+  w:'10万両の資金を調達して藩札を大量に買い占め、新政府に買い取らせて莫大な利益を得た。この情報を流したのは新政府高官になっていた後藤象二郎で、現在でいう内部者取引にあたる。',
+  y:'三菱の初期資本の相当部分が、市場での競争ではなく制度情報の非対称から来ている。政商という評価はここから始まる。この事実を書かない三菱史は多い。',
+  f:['10万両'],
+  s:[32]},
+ {d:'1872 明治5',e:4,t:'三川商会に改称する',
+  w:'九十九商会を三川商会と改称した。岩崎の名を出さず、経営幹部の川田小一郎・石川七財・中川亀之助の「川」を取った命名である。',
+  y:'この時点ではまだ合議の会社を装っている。1年後にその装いを自分から捨てることになる。',
+  s:[5]},
+ {d:'1873 明治6.3',e:4,t:'三菱商会に改称し、独裁を宣言する',
+  w:'幹部の慎重さに業を煮やし、これからはすべて自分が決断すると宣言して、社名を船旗の三つの菱形にちなむ「三菱商会」に改めた。同年、吉岡銅山を取得している。',
+  y:'合議に由来する社名を捨てて紋章に由来する社名を採った。以後の組織原則がこの改称に先取りされている。鉱山への進出もこの年で、海運以外の柱づくりは創業3年目から始まっている。',
+  f:['吉岡銅山'],
+  s:[1,5]},
+
+ {d:'1874 明治7春',e:5,t:'東京へ移り、「社長」を名乗る',
+  w:'本店を東京日本橋南茅場町に移し、社名を三菱蒸汽船会社に改めて、初めて「社長」を名乗った。この年、蒸汽船13隻を運航している。',
+  y:'大阪の商会から、東京の政府に隣接する会社になった。以後の成長はすべて政府との距離で決まる。',
+  f:['13隻を運航'],
+  s:[1,5]},
+ {d:'1874 明治7.5',e:5,t:'台湾出兵の軍事輸送を引き受ける',
+  w:'政府は外国船会社に輸送を依頼したが局外中立を理由に断られ、日本国郵便蒸汽船会社も三菱との競争を懸念して消極的だった。長崎の台湾蕃地事務局長・大隈重信の要請に対し、弥太郎は「国あっての三菱」と応じて引き受けた。政府は外国船10隻を購入して運航を委託し、後に3隻を追加して計13隻になった。',
+  y:'唯一引き受けられる主体になることで、その後の制度上の地位が決まった。この一手がなければ第一命令書は下りていない。国家に賭けるという判断は、この人物においては情緒ではなく確率計算である。',
+  f:['13隻'],
+  s:[6]},
+ {d:'1874 明治7.10',e:5,t:'日清間で条約、清国から50万元',
+  w:'大久保利通が北京で交渉し、10月に条約が締結された。清国から50万元の賠償金を得ている。',
+  y:'出兵が外交的に決着したことで、輸送を引き受けた三菱の判断が結果的に正解になった。政府側にとっても、緊急時に応じる民間輸送力を持つ意味が確認された。',
+  f:['50万元'],
+  s:[6]},
+ {d:'1875 明治8.2',e:5,t:'横浜・上海航路を開設する',
+  w:'日本と上海を結ぶ定期航路を開設し、米国のパシフィック・メイル社と正面から競合した。際限のない価格競争になり、運賃は半値以下に落ちた。',
+  y:'国内の独占から国際航路の競争へ出た。この競争で消耗したことが、政府に海運保護の必要を認めさせる材料になっている。',
+  s:[7,18]},
+ {d:'1875 明治8.6',e:5,t:'日本国郵便蒸汽船会社が解散する',
+  w:'台湾出兵で協力を渋った日本国郵便蒸汽船会社が解散に追い込まれた。同社の汽船は政府を経て三菱に渡っている。',
+  y:'国難に応じた会社が生き残り、渋った会社が消えた。以後の民間企業にとって、政府の緊急要請にどう応じるかは経営判断の一級の論点になる。',
+  s:[6,18]},
+ {d:'1875 明治8',e:5,t:'パシフィック・メイル社の営業権を78万ドルで買う',
+  w:'駅逓頭・前島密がPM社の営業権買収を主張し、三菱は78万ドルでPM社の汽船4隻と関連施設を取得した。さらにPM関連会社の東西汽船に対しても、両社が以後30年間、日中間および日本の沿岸航路に立ち入らないことを約束させている。',
+  y:'競争に勝つのではなく、競争そのものを買い取って消した。30年の不参入契約という条件は、この人物の交渉の性格をよく示している。',
+  f:['78万ドル','30年間の不参入'],
+  s:[32,51]},
+ {d:'1875 明治8.9.15',e:5,t:'第一命令書、郵便汽船三菱会社になる',
+  w:'政府が第一命令書を交付した。東京丸など汽船13隻を無償で下付し、1年につき25万円を15年にわたり給付する。三菱の義務は月次会計報告、郵便物の無賃輸送、有事の船舶提供、商船学校の設立である。同時に社名は郵便汽船三菱会社になった。',
+  y:'創業5年の会社が、国庫から15年分の運転資金を確定させた。契約上の助成総額は375万円にあたる。この制度が三菱の海運を作り、6年後には同じ制度が三菱への攻撃材料になる。',
+  f:['13隻','年25万円 × 15年'],
+  s:[17,18]},
+ {d:'1876 明治9.9.15',e:5,t:'第二命令書、保有39隻へ',
+  w:'第二命令書により汽船17隻が追加下付され、保有は計39隻になった。助成金は国際航路と国内航路に配分された。同年、三菱商船学校を設立し、年末に社員へ初のボーナスを支給している。',
+  y:'2年で船が3倍になった。同時に商船学校とボーナスという、人を抱える仕組みも作っている。専制と終身雇用を同時に置く日本型企業の原型が、ここで組み合わさった。',
+  f:['計39隻','初のボーナス'],
+  s:[1,17]},
+ {d:'1877 明治10.2',e:5,t:'西南戦争、社船38隻を投入する',
+  w:'西郷隆盛が挙兵し、政府軍は7万人規模になった。三菱は定期航路を休止して社船38隻を軍事輸送に投入し、戦争終結後は残った軍需品の処分まで任された。明治天皇が広島丸で帰路に就き、弥太郎には金一封が下賜されている。',
+  y:'台湾出兵と同じ動作の2回目である。ここで三菱は一大産業資本として発展する財政的基盤を得た。ただし取り分の金額は資料により1桁違い、確定していない。',
+  f:['38隻'],
+  s:[8,32,33]},
+ {d:'1877 明治10',e:5,t:'所有61隻、汽船総トン数の73％',
+  w:'無償供与された船舶30隻の代金として120万円を上納したうえで買い増し、所有船は61隻になった。日本の汽船総トン数の73％を占める。',
+  y:'創業7年で国内海運の独占が完成した。この比率が、4年後の政治的攻撃の直接の理由になる。独占は達成した瞬間から負債でもある。',
+  f:['61隻','73%','上納120万円'],
+  s:[8,32]},
+
+ {d:'1878 明治11',e:6,t:'東京に屋敷を3つ買い、商業学校を作る',
+  w:'現在の旧岩崎邸庭園、清澄庭園、六義園にあたる屋敷を購入した。同年、三菱商業学校を設立している。',
+  y:'海運の利益を土地と教育に振り向け始めた。この年から死の前年まで、資本は一貫して海の外へ移されていく。',
+  s:[32,1]},
+ {d:'1879 明治12',e:6,t:'東京海上保険の設立を援助する',
+  w:'日本初の損害保険会社である東京海上保険会社の設立を援助した。',
+  y:'海運と補完関係にある金融へ出た。海運を失った後に三菱の柱として残るのは、この時期に作った金融と鉱山である。',
+  s:[1,2]},
+ {d:'1880 明治13',e:6,t:'三菱為替店と千川水道会社',
+  w:'三菱為替店を設立し、千川水道会社を設立した。千川水道は翌明治14年に営業を開始している。',
+  y:'金融とインフラへの同時進出である。三菱為替店は後に第百十九国立銀行を経て三菱銀行につながる。',
+  s:[1,9]},
+ {d:'1881 明治14.4.25',e:6,t:'高島炭坑を取得する',
+  w:'経営に行き詰まった後藤象二郎から高島炭坑を譲り受けた。福澤諭吉が仲介したとされる。金額は約97万円とする資料と、後藤の政府宛未納金25万円を肩代わりしたとする資料があり、諸説ある。同年、明治生命保険会社の設立も援助している。',
+  y:'長崎の石炭を掌握したことで、後の共同運輸との運賃競争で燃料コストの優位を握った。同時に、7年後に日本最初の大規模な労働問題として告発される事業を抱え込むことにもなった。',
+  f:['約97万円／25万円（諸説）'],
+  s:[36,38,1]},
+ {d:'1881 明治14.10',e:6,t:'明治14年の政変で後ろ盾を失う',
+  w:'北海道官有物払下げ問題をめぐり大隈重信が罷免された。伊藤博文は「大隈は福澤諭吉の知恵と岩崎彌太郎の財力に支えられている」と見ていた。以後、政府系メディアは三菱を連日糾弾し、莫大な助成金を受け取りながら高い運賃を国民に押し付けていると批判した。',
+  y:'制度で勝った会社が、制度の側の人事変更で立場を失った。批判の論点は事実関係としては正しく、反論の余地が小さい。助成金を受け取った瞬間に、その助成金が攻撃材料になることは確定していた。',
+  s:[10]},
+
+ {d:'1882 明治15.2.28',e:7,t:'第三命令書で業務を縛られる',
+  w:'第三命令書が交付され、監督が強化された。海上運送に専念し商品の売買を行ってはならない、修繕の際は予め政府に届け出なければならない、といった制限が加わった。',
+  y:'第一・第二命令書が与える文書だったのに対し、第三命令書は取り上げる文書である。同じ制度が7年で向きを変えた。',
+  s:[10,17]},
+ {d:'1882 明治15.7',e:7,t:'共同運輸会社が設立される',
+  w:'渋沢栄一・井上馨・品川弥二郎・益田孝・榎本武揚・浅野総一郎らが画策し、東京風帆船・北海道運輸・越中風帆船の3社を合併して共同運輸会社が設立された。資本金600万円のうち政府出資が260万円を占める、半額政府出資の企業である。',
+  y:'政府が自ら作った独占を、政府が自ら壊しにきた。三菱にとっては、相手が民間企業ではなく政府の意思そのものであることを意味する。',
+  f:['資本金600万円','政府出資260万円'],
+  s:[27,34]},
+ {d:'1883 明治16.1',e:7,t:'運賃競争が始まる',
+  w:'共同運輸が営業を開始すると、三菱は運賃を2割引にして対抗し、共同運輸も対抗値下げで応じた。旅客運賃は2割から3割引、貨物は3割引・4割引が当たり前になり、当時の新聞にはただで乗せろと言ったらただになったという読者投稿まで載った。競争は2年半続いた。',
+  y:'独占を守るための値下げが、独占そのものを消した。この2年半で両社とも消耗し、最終的に政府が仲裁して合併させることになる。',
+  f:['2割〜4割引','2年半'],
+  s:[12,27,34]},
+ {d:'1884 明治17.6',e:7,t:'工部省長崎造船所を借用する',
+  w:'政府の工部省長崎造船所を借り受けた。後の三菱重工業長崎造船所である。',
+  y:'死の1年前、海運が削られていくのと同時に造船へ資本を移している。この時点で弥太郎は海運を守りにいくのではなく、海運の外へ出る準備をしていた。',
+  s:[1,39]},
+ {d:'1885 明治18.2.7',e:7,t:'胃がんで死去する',
+  w:'午後6時30分、胃がんのため満50歳で死去した。死の直前まで意識は明確で、激しい腹痛のなかで後継者に事業の継承を託し、志したことの十のうち一か二しかできないうちに、と述べたと伝えられる。葬儀には各界の要人を含む3万人が参列した。',
+  y:'共同運輸との消耗戦の最中である。この死が政府に仲裁の口実を与え、半年後の合併につながった。当人の死が、当人の作った会社の帰趨を決めている。',
+  f:['満50歳','参列3万人'],
+  s:[32,13,1]},
+ {d:'1885 明治18.4',e:7,t:'政府が仲裁に入る',
+  w:'政府が仲裁に乗り出して共同運輸の社長を更迭し、川田小一郎と井上馨の交渉で合併が決まった。',
+  y:'2年半の消耗戦は、市場ではなく政治で終わった。始まりも終わりも制度である。',
+  s:[12]},
+ {d:'1885 明治18.9',e:7,t:'日本郵船が誕生する',
+  w:'郵便汽船三菱会社と共同運輸会社が合併し、日本郵船会社が発足した。設立日は9月29日・9月30日・10月1日成立と資料により表記が分かれる。出資比率は共同6に対して三菱5で、社長には共同運輸側の人物が就いた。',
+  y:'15年かけて築いた海運事業で、三菱は過半を取れなかった。ただし結果としては、海運を失ったことが三菱財閥を作る。1878年から1884年にかけて陸に移した資本が、死後に本体になった。',
+  f:['共同6 : 三菱5'],
+  s:[12,34,20]},
+
+ {d:'1885 明治18',e:8,t:'弥之助が2代社長になる',
+  w:'弟の岩崎弥之助が社長を引き継ぎ、川田小一郎が支えた。同年、第百十九国立銀行を買収して銀行業に本格的に進出している。',
+  y:'海運を手放した直後に金融を取りにいった。第百十九国立銀行は三菱銀行を経て現在の三菱UFJ銀行につながる。',
+  s:[16,33,53]},
+ {d:'1888 明治21.6.18',e:8,t:'「高島炭鉱の惨状」が発表される',
+  w:'松岡好一が雑誌『日本人』に「高島炭鉱の惨状」を掲載し、全国的な社会問題になった。約3,000人の坑夫が休憩を許されず、怠慢と見なされると棍棒で殴打されたこと、1878年のコレラ蔓延時に病人が焼き捨てられたことが報じられた。三菱は買収後、トン当たりコストを1881年の4円64銭から1887年の1円32銭へ下げており、手段は賃金削減と罰金制度の導入だった。',
+  y:'弥太郎の死から3年後であり、告発の対象は彼個人ではない。しかし買収を決めコスト削減の方針を敷いたのは彼であり、納屋制度は買収時点で稼働していた。トン当たり71.6％の削減という数字の内訳に、この制度が入っている。三菱の公式社史はこの経緯に触れていない。',
+  f:['坑夫3,000人','4円64銭 → 1円32銭'],
+  s:[37]},
+ {d:'1890 明治23',e:8,t:'丸の内を128万円で取得する',
+  w:'岩崎弥之助が代理人として、陸軍省の用地だった丸の内一帯を128万円で買い受けた。陸軍は麻布の兵営建設の予算を捻出する必要があった。同年、鉱業条例が制定されている。',
+  y:'三菱の中核が海運から不動産と重工業へ移る決定的な一手である。弥太郎が海運を失い、弥之助が土地を得た。この転換がなければ三菱は海運会社のまま残った可能性が高い。',
+  f:['128万円'],
+  s:[58,59,37]},
+ {d:'1893 明治26',e:8,t:'三菱合資会社が設立される',
+  w:'資本金500万円で三菱合資会社が設立され、岩崎両家が折半出資した。弥之助は総帥の座を甥の久弥に譲っている。',
+  y:'一家の事業という弥太郎の定義が、法人格として制度化された。社長専制の原則は形を変えて財閥本社に引き継がれる。',
+  f:['資本金500万円'],
+  s:[59,33]},
+ {d:'1897 明治30',e:8,t:'納屋制度が廃止される',
+  w:'高島炭坑の納屋制度が廃止された。1890年の鉱業条例制定から7年後である。',
+  y:'弥太郎が買収した1881年から16年かかった。独占の外部費用が制度として是正されるまでの時間が、この年数である。',
+  s:[37]},
+];
+
+/* 語録データ。t=テーマ / q=発言 / w=いつ・どこで / s=出典番号 */
+const QUOTES = [
+ {t:'規則',q:'会社の名を命じたりといえども、その実全く一家の事業',w:'三菱汽船会社規則（明治8年）。会社は岩崎家が所有・運営し、損益はすべて社長に帰属すると定めた',s:[29]},
+ {t:'規則',q:'会社に関する一切の事は社長の特裁を仰ぐべし',w:'三菱汽船会社規則（明治8年）。社長専制が企業の活力の源泉だという弥太郎の信念を明文化したもの',s:[29]},
+ {t:'日記と場面',q:'官は賄賂をもってなり、獄は愛憎によって決す',w:'安政2年、父の投獄に抗議して奉行所の白壁に墨で大書した。この直後に自らも投獄される',s:[32]},
+ {t:'日記と場面',q:'余、不覚にも数行の涙を流す',w:'慶応3年6月9日の日記。坂本龍馬らが京都へ向かうのを見送った日の記述',s:[4]},
+ {t:'日記と場面',q:'国あっての三菱',w:'明治7年、台湾出兵の軍事輸送を引き受けた際の言葉として三菱の公式社史が引用している。原典は特定できていない',s:[6]},
+ {t:'日記と場面',q:'ええい、まだるっこしい。これからはすべてわしが決断する',w:'明治6年3月、三川商会を三菱商会に改称した際の宣言として三菱の公式社史が再現したもの。原典は特定できていない',s:[5]},
+ {t:'日記と場面',q:'志したことの十のうち一か二しか出来ないうちに',w:'明治18年2月7日、臨終の場面として三菱の公式社史が伝える言葉',s:[13]},
+ {t:'出典未確定',q:'小事にあくせくするものは大事ならず。ひとたび着手せし事業は必ず成功を期せ。決して投機的な事業を企てるなかれ。国家的観念を持って全ての事業に当たれ',w:'複数の語録集に岩崎弥太郎の言葉として載るが、一次資料での確認は取れていない',s:[55,56]},
+ {t:'出典未確定',q:'使っている社員は三菱の有らん限り一人も暇を出してはならぬ。また老いて役に立たぬようになっても、必ず食うに困らぬだけの事はしてやらねばならぬ',w:'遺言として語録集に載る。一次資料での確認は取れていないが、商船学校・商業学校の設立や初のボーナス支給という行動とは整合する',s:[55,56,1]},
+];
+
+/* ─── 描画 ───────────────────────────────────────────────────────────────── */
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sup = arr => (arr || []).map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+
+const activeEras = new Set();
+
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+/* 語録 */
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+/* チャート。単系列は1色。値はすべて棒に直接ラベルを置く */
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+bars('chartFleet', [
+  {k:'1870 九十九商会', v:3, sub:'土佐藩から継承'},
+  {k:'1874 台湾出兵', v:13, sub:'政府購入船を運航'},
+  {k:'1876 第二命令書', v:39, sub:'13＋17隻の下付を含む'},
+  {k:'1877 西南戦争後', v:61, sub:'汽船総トン数の73%'},
+], '隻');
+
+bars('chartSeinan', [
+  {k:'政府の戦費', v:4156, sub:'4,150万円説もあり'},
+  {k:'三菱の儲け（一説）', v:1500, est:true, sub:'軍需品処分を含む可能性'},
+  {k:'御用船運航収入', v:299, est:true, sub:'別資料'},
+  {k:'当期利益', v:93, est:true, sub:'別資料'},
+], '万円');
+</script>
+
+<script type="application/json" id="facts">
+[
+ {"claim":"生年月日","value":"1835-01-09","unit":"date","as_of":"天保5年12月11日","source":"https://www.ndl.go.jp/portrait/datas/237/","confidence":"reported"},
+ {"claim":"没年月日","value":"1885-02-07","unit":"date","as_of":"明治18年2月7日18時30分","source":"https://www.ndl.go.jp/portrait/datas/237/","confidence":"reported"},
+ {"claim":"死因","value":"胃がん","unit":"—","as_of":"1885-02-07","source":"https://ja.wikipedia.org/wiki/%E5%B2%A9%E5%B4%8E%E5%BC%A5%E5%A4%AA%E9%83%8E","confidence":"reported"},
+ {"claim":"九十九商会の発足","value":"1870-11-11","unit":"date","as_of":"明治3年10月18日","source":"https://www.mitsubishi.com/ja/profile/history/outline/","confidence":"reported"},
+ {"claim":"創業時に継承した船","value":3,"unit":"隻","as_of":"1870","source":"https://ja.wikipedia.org/wiki/%E5%B2%A9%E5%B4%8E%E5%BC%A5%E5%A4%AA%E9%83%8E","confidence":"reported"},
+ {"claim":"藩札の買占め資金","value":100000,"unit":"両","as_of":"明治初年","source":"https://ja.wikipedia.org/wiki/%E5%B2%A9%E5%B4%8E%E5%BC%A5%E5%A4%AA%E9%83%8E","confidence":"single-source"},
+ {"claim":"台湾出兵で運航を受託した船","value":13,"unit":"隻","as_of":"1874","source":"https://www.mitsubishi.com/ja/series/yataro/12/","confidence":"reported"},
+ {"claim":"台湾出兵の賠償金（清国から）","value":500000,"unit":"元","as_of":"1874-10","source":"https://www.mitsubishi.com/ja/series/yataro/12/","confidence":"reported"},
+ {"claim":"第一命令書の日付","value":"1875-09-15","unit":"date","as_of":"明治8年9月15日","source":"https://crd.ndl.go.jp/reference/entry/index.php?page=ref_view&id=1000193901","confidence":"reported"},
+ {"claim":"第一命令書による無償下付","value":13,"unit":"隻","as_of":"1875-09-15","source":"https://crd.ndl.go.jp/reference/entry/index.php?page=ref_view&id=1000193901","confidence":"reported"},
+ {"claim":"政府助成金","value":250000,"unit":"円/年（15年間）","as_of":"1875-09-15","source":"https://crd.ndl.go.jp/reference/entry/index.php?page=ref_view&id=1000193901","confidence":"reported"},
+ {"claim":"第二命令書後の保有船","value":39,"unit":"隻","as_of":"1876-09-15","source":"https://crd.ndl.go.jp/reference/entry/index.php?page=ref_view&id=1000193901","confidence":"reported"},
+ {"claim":"パシフィック・メイル社の営業権買収額","value":780000,"unit":"USD","as_of":"1875","source":"https://ja.wikipedia.org/wiki/%E5%B2%A9%E5%B4%8E%E5%BC%A5%E5%A4%AA%E9%83%8E","confidence":"reported"},
+ {"claim":"西南戦争に投入した社船","value":38,"unit":"隻","as_of":"1877","source":"https://www.mitsubishi.com/ja/series/yataro/16/","confidence":"reported"},
+ {"claim":"西南戦争後の所有船","value":61,"unit":"隻","as_of":"1877","source":"https://www.mitsubishi.com/ja/series/yataro/16/","confidence":"reported"},
+ {"claim":"日本の汽船総トン数に占める比率","value":73,"unit":"%","as_of":"1877","source":"https://www.mitsubishi.com/ja/series/yataro/16/","confidence":"reported"},
+ {"claim":"西南戦争での三菱の取り分","value":"299万円（運航収入）／1,500万円（別説）","unit":"円","as_of":"1877","source":"https://ja.wikipedia.org/wiki/%E4%B8%89%E8%8F%B1%E8%B2%A1%E9%96%A5","confidence":"disputed"},
+ {"claim":"無償供与船30隻の代金として上納した額","value":1200000,"unit":"円","as_of":"1877","source":"https://www.mitsubishi.com/ja/series/yataro/16/","confidence":"reported"},
+ {"claim":"高島炭坑の取得対価","value":"約97万円／未納金25万円の肩代わり","unit":"円","as_of":"1881-04-25","source":"https://ja.wikipedia.org/wiki/%E9%AB%98%E5%B3%B6%E7%82%AD%E9%89%B1","confidence":"disputed"},
+ {"claim":"共同運輸会社の資本金","value":6000000,"unit":"円","as_of":"1882","source":"https://kotobank.jp/word/%E5%85%B1%E5%90%8C%E9%81%8B%E8%BC%B8%E4%BC%9A%E7%A4%BE-829454","confidence":"reported"},
+ {"claim":"共同運輸会社への政府出資","value":2600000,"unit":"円","as_of":"1882","source":"https://kotobank.jp/word/%E5%85%B1%E5%90%8C%E9%81%8B%E8%BC%B8%E4%BC%9A%E7%A4%BE-829454","confidence":"reported"},
+ {"claim":"日本郵船の出資比率（共同：三菱）","value":"6:5","unit":"—","as_of":"1885-10-01","source":"https://ja.wikipedia.org/wiki/%E5%85%B1%E5%90%8C%E9%81%8B%E8%BC%B8%E4%BC%9A%E7%A4%BE","confidence":"reported"},
+ {"claim":"葬儀の参列者","value":30000,"unit":"人","as_of":"1885-02","source":"https://www.mitsubishi.com/ja/series/yataro/","confidence":"single-source"},
+ {"claim":"高島炭坑のトン当たりコスト（買収後）","value":"4.64円 → 1.32円","unit":"円/トン","as_of":"1881→1887","source":"https://ja.wikipedia.org/wiki/%E9%AB%98%E5%B3%B6%E7%82%AD%E9%89%B1%E4%BA%8B%E4%BB%B6","confidence":"reported"},
+ {"claim":"高島炭坑の坑夫数","value":3000,"unit":"人","as_of":"1888","source":"https://ja.wikipedia.org/wiki/%E9%AB%98%E5%B3%B6%E7%82%AD%E9%89%B1%E4%BA%8B%E4%BB%B6","confidence":"reported"},
+ {"claim":"丸の内の取得額","value":1280000,"unit":"円","as_of":"1890","source":"https://ja.wikipedia.org/wiki/%E5%B2%A9%E5%B4%8E%E5%BC%A5%E4%B9%8B%E5%8A%A9","confidence":"reported"},
+ {"claim":"三菱合資会社の資本金","value":5000000,"unit":"円","as_of":"1893","source":"https://ja.wikipedia.org/wiki/%E5%B2%A9%E5%B4%8E%E5%BC%A5%E4%B9%8B%E5%8A%A9","confidence":"reported"}
+]
+</script>
+</body>
+</html>

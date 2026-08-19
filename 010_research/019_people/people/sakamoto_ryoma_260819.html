@@ -1,0 +1,1264 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>坂本龍馬 — 三十一年と百三十九通</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    /* charts: dataviz の検証済みスロット（surface #fff で検証） */
+    --s1:#2a78d6; --s1-light:#86b6ef; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  /* ── charts ───────────────────────────────────────────────────────────── */
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  /* 極性チャート: 0を中央に置く */
+  .pol{display:grid;gap:8px}
+  .pol .row{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:10px}
+  .pol .yr{font-size:12.5px;color:var(--sub);font-variant-numeric:tabular-nums;text-align:right}
+  .pol .track{position:relative;height:20px;background:linear-gradient(90deg,transparent 0,transparent calc(50% - 1px),var(--line) calc(50% - 1px),var(--line) calc(50% + 1px),transparent calc(50% + 1px));}
+  .pol .seg{position:absolute;top:0;height:20px;border-radius:3px}
+  .pol .seg.p{background:var(--s1);left:50%}
+  .pol .seg.n{background:var(--neg);right:50%}
+  .pol .val{position:absolute;top:0;font-size:12px;line-height:20px;
+    font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+  .pol-legend{display:flex;gap:16px;font-size:12px;color:var(--sub);margin-top:12px}
+  .pol-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  /* ── timeline ─────────────────────────────────────────────────────────── */
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  /* ── quotes ───────────────────────────────────────────────────────────── */
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+  <p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / 坂本龍馬</p>
+
+  <header class="top">
+    <h1>坂本龍馬</h1>
+    <div class="en">Ryoma Sakamoto — 1836.1.3 – 1867.12.10</div>
+    <div class="tags">
+      <span class="tag">幕末</span><span class="tag">土佐</span><span class="tag">海運</span>
+      <span class="tag">仲介</span><span class="tag">神格化</span>
+    </div>
+  </header>
+
+  <p class="lead">
+    生きて活動した期間は、脱藩から暗殺まで68か月しかない。
+    その68か月に何が起きたのかと、残りの159年で誰がこの人物を作り直したのかを、
+    日付と一次史料が確定している事実だけで並べ直した。
+  </p>
+  <p class="srcnote">
+    作成日 2026年8月19日。日付は原則として和暦を先に置き、西暦を併記した。
+    龍馬自筆と確認できる史料（宮内庁書陵部所蔵の薩長同盟裏書、国立国会図書館所蔵の新政府綱領八策、
+    宮地佐一郎編『龍馬の手紙』所収の書簡139通）を上位に置き、明治以降の伝記・小説に由来する記述はその都度出所を分けた。
+    金額は両・匁・メキシコドルの単位と時点を併記し、史料間で割れている数値は諸説として両方を残した。
+    確認できなかった論点は末尾の<a href="#open">残っている問い</a>に列挙してある。
+  </p>
+
+  <div class="kpi">
+    <div class="card"><div class="k">生没</div><div class="v">31歳11か月<small>天保6年11月15日〜慶応3年11月15日。和暦では誕生日に死んだ</small></div></div>
+    <div class="card"><div class="k">脱藩</div><div class="v">1862年<small>文久2年3月24日、27歳。以後は無禄の浪人</small></div></div>
+    <div class="card"><div class="k">現存書簡</div><div class="v">139通<small>宮地佐一郎編『龍馬の手紙』所収。青空文庫は121通を公開</small></div></div>
+    <div class="card"><div class="k">自筆の政治文書</div><div class="v">2点<small>薩長同盟裏書（宮内庁書陵部）と新政府綱領八策（国立国会図書館ほか）</small></div></div>
+  </div>
+
+  <div class="callout">
+    <p style="margin-top:0"><strong>先に結論を3つ置く。</strong></p>
+    <p><strong>1. 一度も自分の資本を持たなかった。</strong>
+    長崎の社中の運転資金は薩摩藩が出し、隊士には一人あたり月3両2分が薩摩藩から支給された<sup><a href="#s31">31</a></sup>。
+    海軍塾の資金1,000両は松平春嶽からの借入である<sup><a href="#s28">28</a></sup>。
+    いろは丸は大洲藩の船を傭船したものだった<sup><a href="#s33">33</a></sup>。
+    海援隊は土佐藩の外郭機関として置かれた<sup><a href="#s32">32</a></sup>。
+    所有せずに動かす、という一つの型を6年間繰り返している。裏返せば、資本を持たないので継続できる組織を残せなかった。</p>
+    <p><strong>2. 自筆と確認できる政治文書は2点しかない。</strong>
+    慶応2年2月5日に桂小五郎の書状の裏へ朱で書いた6か条の確認（宮内庁書陵部図書寮文庫「木戸家文書」）<sup><a href="#s1">1</a></sup>と、
+    慶応3年11月の新政府綱領八策（国立国会図書館「石田英吉関係文書」ほか）<sup><a href="#s2">2</a></sup>である。
+    一方、最も有名な「船中八策」は原本が存在しない。
+    知野文哉の2013年の研究は、この文書が1896年から1929年にかけて段階的に組み立てられた経緯を跡付けた<sup><a href="#s27">27</a></sup><sup><a href="#s29">29</a></sup>。</p>
+    <p><strong>3. 最大の実績は死後に起きている。</strong>
+    暗殺から16年後の明治16年に坂崎紫瀾が『汗血千里駒』を連載し、単行本は50版を重ねた<sup><a href="#s48">48</a></sup>。
+    明治37年2月には昭憲皇太后の夢枕に立ったという逸話が日露戦争開戦直前に広まった<sup><a href="#s22">22</a></sup>。
+    生前の龍馬は無位無官の脱藩浪人で、死亡時点で新政府の役職も財産も持っていない。
+    にもかかわらず、この人物の名前は明治・昭和・平成のそれぞれの局面で作り直され続けた。
+    龍馬を読むというのは、幕末を読むことと、日本が英雄を必要としたときに何を選んだかを読むことの2つを同時にやることである。</p>
+  </div>
+
+  <!-- ① 年表 -->
+  <h2 id="timeline"><span class="num">①</span>年表<span class="en">Timeline — 1835 to 2010</span></h2>
+
+  <p>日付が確定した出来事だけを置いた。各項目は事実、具体、そしてなぜそれが後を決めたかの3層で書いてある。
+  期をクリックすると絞り込める。和暦の日付が一次史料の表記で、括弧内が西暦である。</p>
+
+  <div class="tl-tools">
+    <input type="text" id="tlq" placeholder="検索（人名・地名・金額・船名）" autocomplete="off">
+    <span class="tl-count" id="tlcount"></span>
+  </div>
+  <div class="tl-eras" id="tleras"></div>
+  <div class="tl" id="tl"></div>
+  <div class="tl-empty" id="tlempty">該当なし</div>
+
+  <!-- ② 局面 -->
+  <h2><span class="num">②</span>局面ごとの解剖<span class="en">Seven Phases, Dissected</span></h2>
+
+  <h3>1. 買った身分の家に生まれる（1836〜1852）</h3>
+
+  <p>坂本家は土佐藩の郷士である。郷士は関ヶ原の後に土佐へ入った山内氏の下で、上士より下に置かれた層である。
+  この身分は世襲だけで決まるものではなく、株として売買の対象になっていた。坂本家は高知城下の豪商・才谷屋の分家として起こされており、
+  分家の際に才谷屋から多額の財産を分与されている<sup><a href="#s28">28</a></sup>。
+  龍馬は天保6年11月15日、その坂本家の次男として高知城下本町一丁目（現・高知市上町一丁目）に生まれた<sup><a href="#s21">21</a></sup><sup><a href="#s20">20</a></sup>。</p>
+
+  <p>ここは押さえておく価値がある。<strong class="hit">龍馬は貧しい志士ではなく、商家の資本で武士の身分を買った家の次男である。</strong>
+  家督は継がない。家に金はある。身分は下位だが、その身分自体が売買の対象だったことを家の来歴として知っている。
+  後年の龍馬が「藩」や「幕府」を所与の枠として扱わず、船と金と人の組み合わせで動く単位を作ろうとしたことの前提は、
+  思想ではなくこの出自にある。</p>
+
+  <h3>2. 江戸・黒船・勤王党（1853〜1861）— 剣術が政治に接続しない</h3>
+
+  <p>嘉永6年に江戸へ出て千葉定吉の道場（小千葉道場）に入り、北辰一刀流を学んだ<sup><a href="#s28">28</a></sup>。
+  同じ年の6月にペリーが浦賀に来る。安政5年1月に千葉定吉から与えられた免状として現存するのは
+  「北辰一刀流長刀兵法目録」で、これは薙刀術の目録である<sup><a href="#s28">28</a></sup>。
+  <strong class="hit">剣術の免許皆伝という通説は、現存する目録では裏付けられない。</strong></p>
+
+  <p>文久元年に武市半平太の土佐勤王党に加盟する。署名は9番目だった<sup><a href="#s28">28</a></sup>。
+  この時期の龍馬は、土佐勤王党の中でも中枢にいない。同年、長州萩で久坂玄瑞と面談している。
+  ここまでの8年間、龍馬は剣術と尊王攘夷という当時ありふれた2つの資源しか持っていない。
+  この2つは、どちらも単独では何も動かさなかった。</p>
+
+  <h3>3. 脱藩と勝海舟（1862〜1864）— 罪人になることで動けるようになる</h3>
+
+  <p>文久2年3月24日、沢村惣之丞とともに脱藩した<sup><a href="#s28">28</a></sup>。
+  脱藩は藩籍を一方的に離れることで、藩内では罪人となり、残された家族や友人も連座の罪に問われうる<sup><a href="#s28">28</a></sup>。
+  つまりこれは冒険ではなく、家に負債を残す行為である。</p>
+
+  <p>同年12月、松平春嶽の紹介状を持って軍艦奉行並・勝海舟の屋敷を訪ね、門人になった<sup><a href="#s28">28</a></sup>。
+  面会日は12月5日説と12月9日説があり、諸説ある。
+  斬りに行ったが逆に説得されたという有名な場面は、勝本人が明治23年の『追賛一話』で語ったもので、
+  近年は勝の誇張または記憶違いとする見方が強い<sup><a href="#s28">28</a></sup>。</p>
+
+  <p>文久3年2月25日に脱藩は赦免された。同年4月23日に将軍家茂が神戸海軍操練所の設立を許可し、
+  5月には松平春嶽から千両を借り入れている<sup><a href="#s28">28</a></sup>。
+  操練所そのものが開設されたのは元治元年5月で、勝が禁門の変の後に軍艦奉行を罷免されたことを受けて、
+  慶応元年3月12日に閉鎖された<sup><a href="#s35">35</a></sup>。<strong>開設から1年に満たない。</strong>
+  龍馬が塾頭だったという通説についても、近年は操練所の入所者名簿に龍馬が確認できないとする指摘がある<sup><a href="#s42">42</a></sup>。
+  ここは史料の解像度が低い領域で、通説をそのまま使うことはできない。</p>
+
+  <div class="note">
+    この3年で龍馬が得たものは、船の操縦技術でも軍艦でもない。
+    幕府側の最高位の海軍官僚（勝）、越前藩の前藩主（松平春嶽）、そして薩摩藩の家老（小松帯刀）への回路である。
+    龍馬の資産は最後まで一貫して、金でも船でもなく<strong class="hit">通行証としての人間関係</strong>だった。
+  </div>
+
+  <h3>4. 長崎の社中（1865〜1866）— 薩摩の金で動く傭兵商社</h3>
+
+  <p>操練所の閉鎖で行き場を失った塾生を、薩摩藩が引き取る形で長崎に置いたのが、後に亀山社中と呼ばれる集団である。
+  慶応元年閏5月とされるが、<strong class="hit">「亀山社中」という名称は当時のものではない</strong>。
+  当時の史料に現れるのは「社中」という名乗りだけで、この点は現在も指摘され続けている<sup><a href="#s31">31</a></sup>。
+  結成時、龍馬は長崎に不在だった可能性があり、実際に立ち会ったのは近藤長次郎や高松太郎だったとされる<sup><a href="#s31">31</a></sup>。</p>
+
+  <p>資金は薩摩藩から出た。メンバーには一人あたり3両2分が支給されている<sup><a href="#s31">31</a></sup><sup><a href="#s32">32</a></sup>。
+  慶応元年8月には、長州藩が薩摩藩名義でグラバー商会からミニエー銃4,300挺とゲベール銃3,000挺を購入する取引が成立した<sup><a href="#s28">28</a></sup>。
+  この取引に社中がどこまで関与したかは確定していない。伊藤博文は「鉄砲を買う方は直接外国人に買った」と述べ、
+  井上馨も薩摩藩名義の使用は小松帯刀との直接交渉で許されたとしており、社中の関与は史料上「謎」と評されている<sup><a href="#s31">31</a></sup>。</p>
+
+  <div class="risk">
+    <strong>「日本初の株式会社」という定型句は成立しない。</strong>
+    幕末史研究者の町田明広は、この集団を商社や株式会社とするのは事実誤認であり、
+    実態は「薩摩藩名義で買い上げた軍艦を運航していた土佐の脱藩浪人の集団」だと述べている<sup><a href="#s31">31</a></sup>。
+    出資も株式も配当もなく、給与の出所は薩摩藩である。組織形態としては商社ではなく<strong class="hit">被扶養の傭兵集団</strong>に近い。
+  </div>
+
+  <h3>5. 薩長同盟（1866）— 仲介者は同席していた、それ以上でも以下でもない</h3>
+
+  <p>慶応2年1月、京都・小松帯刀邸（近衛家別邸「御花畑屋敷」）で、薩摩の西郷隆盛・小松帯刀・大久保一蔵らと、
+  長州の木戸孝允（当時は木戸貫治）らが会談し、6か条が取り交わされた<sup><a href="#s30">30</a></sup>。
+  成立日は21日説が有力だが、18日説・22日説もある。</p>
+
+  <p>ここで確定しているのは、次の一点である。
+  慶応2年1月23日付で木戸が6か条を書き付けて龍馬に確認を求め、龍馬は2月5日に薩摩藩邸でその裏に朱書して、
+  内容が現地の合意と相違ないことを保証した<sup><a href="#s1">1</a></sup><sup><a href="#s19">19</a></sup>。
+  この文書は宮内庁書陵部図書寮文庫の「木戸家文書」に現存し、
+  2021年10月に高知県立坂本龍馬記念館で原本が初めて一般公開された<sup><a href="#s49">49</a></sup>。
+  <strong class="hit">龍馬の幕末における最も確実な一次史料は、これである。</strong></p>
+
+  <p>ただし、この裏書が証明するのは「龍馬が会談に同席し、内容を第三者として保証できる立場にいた」ことであって、
+  条文を起草したことでも、両藩を説得したことでもない。
+  近年の研究では、6か条に「倒幕」の文言は拡張解釈なしには読み取れず、
+  主眼は長州の政治的復権支援と一会桑政権への対抗にあったとされている<sup><a href="#s30">30</a></sup>。
+  龍馬が西郷や小松の指示を受けて動いていたとし、薩長連合における役割は小さかったと見る研究者もいる<sup><a href="#s28">28</a></sup>。</p>
+
+  <p>会談の2日後、慶応2年1月23日に伏見の寺田屋で伏見奉行の捕吏に襲撃され、両手の指を斬られた<sup><a href="#s28">28</a></sup>。
+  この負傷の療養のために西郷の勧めで薩摩の霧島温泉へ行き、83日間滞在した。
+  お龍との同行が日本最初の新婚旅行とされる<sup><a href="#s28">28</a></sup>。</p>
+
+  <h3>6. 海援隊といろは丸（1867）— 交渉技術の頂点と、その根拠の不確かさ</h3>
+
+  <p>慶応3年1月13日、長崎の清風亭で後藤象二郎と会談した。
+  土佐勤王党を弾圧して武市半平太を切腹させた側の実力者と、脱藩浪人が手を組んだ。
+  4月、社中は土佐藩の外郭機関「海援隊」として正式に位置づけられ、龍馬が隊長になる<sup><a href="#s32">32</a></sup>。
+  海援隊約規の第1条は「凡嘗テ本藩ヲ脱スル者及佗藩ヲ脱スル者　海外ノ志アル者此隊ニ入ル」で始まり、
+  業務として運輸・射利・開拓を挙げ、第2条で「凡隊中ノ事　一切隊長ノ處分ニ任ス」と隊長の専断を定めている<sup><a href="#s10">10</a></sup><sup><a href="#s11">11</a></sup>。</p>
+
+  <p>慶応3年4月23日（1867年5月26日）23時頃、大洲藩から傭船したいろは丸（160トン）が、
+  備中国六島付近で紀州藩の明光丸（880トン）と衝突し、鞆の浦へ曳航される途中で沈没した<sup><a href="#s33">33</a></sup>。
+  龍馬はこれを万国公法に基づく損害賠償交渉に持ち込み、長崎で紀州藩と対峙した。</p>
+
+  <div class="chart">
+    <div class="cap">いろは丸事件の賠償額の推移</div>
+    <div class="sub">単位：両。慶応3年4月〜11月。最終的に支払われたのは土佐藩に対してで、龍馬本人は受け取っていない</div>
+    <div class="bars" id="chartIroha"></div>
+    <p style="font-size:12px;color:var(--muted);margin:14px 0 0">
+      薄い色は請求段階、濃い色は実際に支払われた額。
+      積荷として計上されたミニエー銃400挺・金塊等は、1988年以降の海底調査で確認されていない<sup><a href="#s33">33</a></sup>。
+    </p>
+  </div>
+
+  <p>交渉の結果、積荷代を含む8万3,526両198文で一旦合意し、最終的に7万両に減額されたうえで
+  慶応3年11月7日に長崎で土佐藩へ支払われた<sup><a href="#s33">33</a></sup><sup><a href="#s46">46</a></sup><sup><a href="#s50">50</a></sup>。
+  <strong class="hit">龍馬はこの金を受け取っていない。8日後に暗殺されている。</strong></p>
+
+  <div class="risk">
+    <strong>この交渉は、勝利として語るには根拠が弱い。</strong>
+    1988年に水深27メートルで沈没船が発見されて以降、複数回の潜水調査が行われたが、
+    龍馬が賠償の根拠として主張した銃火器や金塊は確認されていない<sup><a href="#s33">33</a></sup>。
+    龍馬側の主張が誇大請求だった可能性は、現在の史料状況では否定できない。
+    交渉技術としては見事だが、<strong>その技術が何に対して行使されたかは別の問題である。</strong>
+    この章を「龍馬の痛快な勝利」として書く伝記は、海底調査の結果に触れていないことが多い。
+  </div>
+
+  <h3>7. 大政奉還と近江屋（1867）— 関与の程度をどこまで言えるか</h3>
+
+  <p>慶応3年6月9日、龍馬は後藤象二郎とともに藩船・夕顔で長崎から兵庫へ向かい、
+  船中で新国家構想を示したとされる。これがいわゆる船中八策である。
+  <strong class="hit">この文書の原本は存在しない。</strong>
+  知野文哉の2013年の研究は、その成立過程を次のように跡付けた<sup><a href="#s27">27</a></sup><sup><a href="#s29">29</a></sup><sup><a href="#s38">38</a></sup><sup><a href="#s44">44</a></sup>。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>年</th><th>誰が</th><th>何と書いたか</th></tr>
+    <tr><td class="num">1896</td><td>弘松宣枝『阪本龍馬』</td><td>龍馬が京都で書いて後藤に示した「建議案十一箇条」。船中ではない</td></tr>
+    <tr><td class="num">1897</td><td>坂崎紫瀾「後藤伯の小伝」</td><td>「建議八策の草案」を龍馬が後藤に示す場面として描く</td></tr>
+    <tr><td class="num">1900</td><td>坂崎紫瀾</td><td>「八策」の題で、京都到着後の作成とする</td></tr>
+    <tr><td class="num">1907</td><td>宮内省『殉難録稿 巻之五十四』</td><td>現在と同じ「建議案八條」の形で記載される</td></tr>
+    <tr><td class="num">1909</td><td>坂崎紫瀾（史談会例会）</td><td>「船中で協議した結果」と述べる。ここで舞台が船に移る</td></tr>
+    <tr><td class="num">1913</td><td>岡部精一（講演）</td><td>「時勢八策」を紹介。「船中八策」という語の初出</td></tr>
+    <tr><td class="num">1926</td><td>岩崎鏡川</td><td>新政府綱領八策を11月作成、船中八策を6月の下書きと位置づける</td></tr>
+    <tr><td class="num">1929</td><td>平尾道雄『坂本龍馬 海援隊始末記』</td><td>以後、史実として扱われるようになる</td></tr>
+  </table>
+  </div>
+
+  <p>つまり<strong class="hit">「船で書かれた」という設定が固まるまでに、暗殺から42年かかっている</strong>。
+  幕末史研究者の町田明広は2019年の著書で、知野の研究により船中八策は否定されていると述べている<sup><a href="#s29">29</a></sup>。
+  ただし、これは龍馬が大政奉還建白と無関係だったことも、その内容が龍馬の持論と無縁だったことも意味しない<sup><a href="#s29">29</a></sup>。
+  なお国立国会図書館の解説は、船中八策を実在の建言として扱い、新政府綱領八策をその発展形と位置づけている<sup><a href="#s2">2</a></sup>。
+  <strong>公的機関の解説と最新の史料批判は、現時点で一致していない。</strong></p>
+
+  <p>実在が確定しているのは、慶応3年11月に龍馬が自筆した新政府綱領八策のほうである。
+  自筆本2枚が国立国会図書館（石田英吉関係文書）と下関市立長府博物館に現存する<sup><a href="#s2">2</a></sup><sup><a href="#s36">36</a></sup>。
+  内容は、人材の招致、有材の諸侯の登用、外交の議定、律令の撰定、上下議政所、海陸軍局、親兵、
+  金銀物価の国際水準への調整の8項目である<sup><a href="#s12">12</a></sup>。
+  末尾には「○○○自ら盟主と為り」という伏字があり、
+  宮地佐一郎は慶喜を伏せたとされると注記するが、山内容堂説もあり通説は定まっていない<sup><a href="#s36">36</a></sup>。</p>
+
+  <p>慶応3年10月14日、徳川慶喜が大政奉還を上表する。
+  同月13日付で龍馬が後藤象二郎に宛てた手紙が現存し、
+  建白が容れられずに後藤が城から下りてこないときは、海援隊の同志とともに慶喜を路上で待ち受けて仇を討つ、という趣旨を書いている<sup><a href="#s16">16</a></sup><sup><a href="#s28">28</a></sup>。</p>
+
+  <p>慶応3年11月15日（1867年12月10日）の夜、京都河原町通蛸薬師下ルの醤油商・近江屋の2階で、
+  中岡慎太郎と会っていたところを襲撃された<sup><a href="#s34">34</a></sup>。
+  龍馬は前頭部を横に払われ、「脳をやられたから、もうだめだ」と述べて死亡。
+  従僕の山田藤吉は16日夕刻、中岡は17日夕刻に死亡した<sup><a href="#s34">34</a></sup>。
+  この日は和暦では龍馬の誕生日にあたる。享年33、満31歳11か月である。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>実行犯の説</th><th>主な根拠</th><th>弱点</th></tr>
+    <tr><td class="name">京都見廻組</td><td>明治3年に捕縛された今井信郎の供述。佐々木只三郎の指揮下で7名、うち4名が屋内で実行。動機は寺田屋事件で龍馬が同心を射殺したこと<sup><a href="#s34">34</a></sup></td><td>供述の内容が時期により変転する。渡辺篤の手記とも細部が食い違う</td></tr>
+    <tr><td class="name">新選組</td><td>当初の最有力説。現場に残された鞘が原田左之助のものとする証言<sup><a href="#s34">34</a></sup></td><td>旧隊士が一貫して否定。物証としての確度が低い</td></tr>
+    <tr><td class="name">薩摩藩黒幕</td><td>武力倒幕派が大政奉還路線の龍馬を排除したとする<sup><a href="#s34">34</a></sup></td><td>同時に襲われた中岡慎太郎は武力倒幕派であり、動機が説明できない</td></tr>
+    <tr><td class="name">紀州藩</td><td>いろは丸事件の賠償をめぐる報復<sup><a href="#s34">34</a></sup></td><td>具体的な証拠が乏しい</td></tr>
+  </table>
+  </div>
+
+  <p>現在は京都見廻組説が定説として扱われている。ただし供述以外の物証は乏しく、確定はしていない。</p>
+
+  <!-- ③ 実績の数字 -->
+  <h2><span class="num">③</span>実績の数字<span class="en">What He Actually Moved</span></h2>
+
+  <p>投資家なら投資額と回収額、経営者なら業績、政治家なら選挙結果で測れる。
+  龍馬にはそのいずれもない。財産も、役職も、議席も、企業も残していない。
+  したがってここでは、時間の配分と、動かした船と金だけを数字で置く。</p>
+
+  <div class="chart">
+    <div class="cap">生涯383か月の内訳</div>
+    <div class="sub">1836年1月3日〜1867年12月10日。脱藩は文久2年3月24日＝1862年4月22日で区切った</div>
+    <div class="bars" id="chartLife"></div>
+    <p style="font-size:12px;color:var(--muted);margin:14px 0 0">
+      いわゆる「幕末の志士」として活動した期間は68か月、全生涯の17.8％にあたる。
+      海援隊の隊長だったのは慶応3年4月から11月までの約7か月で、1.8％である。
+    </p>
+  </div>
+
+  <h3>動かした船</h3>
+
+  <p>龍馬が所有した船は1隻もない。以下はすべて他者の船を借りるか、他藩名義で運用したものである。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>船名</th><th>所有・名義</th><th class="num">規模</th><th>結末</th></tr>
+    <tr><td class="name">ユニオン号<br>（乙丑丸／桜島丸）</td><td>薩摩藩名義で購入し長州藩が代金負担、社中が運航（桜島条約）<sup><a href="#s31">31</a></sup></td><td class="num">—</td><td>代金の帰属をめぐり長州・薩摩・社中が対立</td></tr>
+    <tr><td class="name">ワイル・ウエフ号</td><td>社中が運航<sup><a href="#s52">52</a></sup></td><td class="num">—</td><td>慶応2年5月2日、五島列島沖で座礁・転覆。池内蔵太ら12名死亡<sup><a href="#s52">52</a></sup><sup><a href="#s54">54</a></sup></td></tr>
+    <tr><td class="name">いろは丸</td><td>大洲藩から傭船<sup><a href="#s33">33</a></sup></td><td class="num">160トン</td><td>慶応3年4月23日、明光丸と衝突し沈没</td></tr>
+    <tr><td class="name">大極丸</td><td>海援隊が運用<sup><a href="#s32">32</a></sup></td><td class="num">—</td><td>代金未払いのまま龍馬死去</td></tr>
+  </table>
+  </div>
+
+  <p>4隻のうち、2隻が沈み、1隻は代金をめぐって関係者が対立し、1隻は支払いが済んでいない。
+  <strong class="hit">海運事業としての成績は、記録が残る限りでは全敗である。</strong>
+  この事実は、龍馬を「日本初のビジネスマン」として語る文脈ではほぼ省略される。</p>
+
+  <h3>動かした金</h3>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>年</th><th>項目</th><th class="num">金額</th><th>出所</th></tr>
+    <tr><td class="num">1863</td><td>神戸海軍塾の運営資金</td><td class="num">1,000両</td><td>松平春嶽からの借入<sup><a href="#s28">28</a></sup></td></tr>
+    <tr><td class="num">1866</td><td>社中隊士の支給</td><td class="num">1人3両2分</td><td>薩摩藩からの支給<sup><a href="#s31">31</a></sup><sup><a href="#s32">32</a></sup></td></tr>
+    <tr><td class="num">1866</td><td>ミニエー銃4,300挺・ゲベール銃3,000挺</td><td class="num">—</td><td>長州藩が薩摩藩名義でグラバー商会から購入。社中の関与度は史料上未確定<sup><a href="#s28">28</a></sup><sup><a href="#s31">31</a></sup></td></tr>
+    <tr><td class="num">1867</td><td>いろは丸の購入契約額（大洲藩）</td><td class="num">4万メキシコドル<br>（約1万両）</td><td>慶応2年9月22日契約<sup><a href="#s33">33</a></sup></td></tr>
+    <tr><td class="num">1867</td><td>いろは丸賠償の請求額</td><td class="num">83,526両198文</td><td>積荷代を含む<sup><a href="#s33">33</a></sup></td></tr>
+    <tr><td class="num">1867</td><td>同 妥結額（土佐藩が受領）</td><td class="num">70,000両</td><td>慶応3年11月7日、長崎<sup><a href="#s33">33</a></sup></td></tr>
+  </table>
+  </div>
+
+  <p>龍馬個人の手元に残った金は確認できない。7万両は土佐藩に支払われ、龍馬はその8日後に死んだ。
+  なお当時の紀州藩と土佐藩の間の交渉では、鞆の浦の段階で龍馬が1万両を要求し、紀州藩が1,000両を提示して決裂している<sup><a href="#s45">45</a></sup>。</p>
+
+  <!-- ④ 失敗 -->
+  <h2><span class="num">④</span>失敗の解剖<span class="en">Failures, at the Same Resolution</span></h2>
+
+  <p>成功と同じ精度で負けを扱う。龍馬の負けは3つの類型に分かれ、いずれも同じ構造的欠陥から出ている。</p>
+
+  <h3>類型1: 統率の失敗 — 部下が死んでいる</h3>
+
+  <p>慶応2年1月14日、社中の中心人物だった近藤長次郎が切腹した。29歳。
+  ユニオン号購入の成功報酬を使って単独でイギリス留学を企てたことが規約違反として発覚し、
+  社中の裁定で切腹に至っている<sup><a href="#s53">53</a></sup>。
+  このとき龍馬は長崎におらず、後に「自分がいれば死なせなかった」という趣旨を述べたと伝わる。</p>
+
+  <p>同年5月2日、ワイル・ウエフ号が長崎から鹿児島へ向かう途中で暴風に遭い、
+  五島列島の中通島東・潮合崎（塩屋崎とも）沖で座礁・転覆した。
+  龍馬が弟のように可愛がっていた池内蔵太を含む12名が死亡している<sup><a href="#s52">52</a></sup><sup><a href="#s54">54</a></sup>。</p>
+
+  <div class="risk">
+    <strong>この2件は、龍馬の不在時に起きている。</strong>
+    社中は龍馬の人的な信用でつなぎとめられた集団であり、龍馬がいなければ規律も判断も機能しなかった。
+    海援隊約規の第2条が「凡隊中ノ事　一切隊長ノ處分ニ任ス」と隊長の専断を明文化しているのは、
+    この構造を組織原則として肯定したもので、属人性の解決ではなく追認である<sup><a href="#s10">10</a></sup>。
+  </div>
+
+  <h3>類型2: 資本の失敗 — 継続する組織を残せなかった</h3>
+
+  <p>社中も海援隊も、自前の資本を持たない。前者は薩摩藩の給付、後者は土佐藩の外郭という位置づけである<sup><a href="#s31">31</a></sup><sup><a href="#s32">32</a></sup>。
+  海援隊約規の第5条は経費と給与を自営の利益から配分すると定めているが<sup><a href="#s10">10</a></sup>、
+  実際には保有船が沈み、傭船が沈み、代金が未払いのまま、収益基盤は成立していない。</p>
+
+  <p>結果として、龍馬の死後、海援隊は急速に解体した。
+  一派は梅花隊として再編されたのち慶応4年閏4月27日（1868年6月17日）に藩命で解散し、
+  振遠隊を母体とする一派も明治5年2月20日に解散している<sup><a href="#s32">32</a></sup>。
+  <strong class="hit">龍馬の死から実質半年で、組織は消えている。</strong></p>
+
+  <p>同じ時期、同じ土佐藩の長崎で商会を任されていた岩崎弥太郎は、藩営の商会を明治3年に払い下げて九十九商会とし、
+  15年後には日本の汽船総トン数の過半を握る会社に育てた。
+  <strong>両者を分けたのは着想でも人望でもなく、事業体を自分の資本として保有したかどうかである。</strong>
+  同じ土佐、同じ長崎、ほぼ同年齢の2人の対比は、
+  <a href="iwasaki_yataro_260819.html">岩崎弥太郎のレポート</a>で扱っている。</p>
+
+  <h3>類型3: 根拠の失敗 — 主張が検証に耐えていない</h3>
+
+  <p>いろは丸事件の賠償請求では、積荷としてミニエー銃400挺と金塊等を計上したが、
+  1988年に沈没船が発見されて以降の複数回の調査で、これらは確認されていない<sup><a href="#s33">33</a></sup>。
+  誇大請求だった可能性は現在も否定できていない。</p>
+
+  <p>また、自身の身辺警護についても2度失敗している。
+  慶応2年1月23日の寺田屋では両手の指を斬られ、慶応3年11月15日の近江屋では死亡した。
+  近江屋では護衛を置かず、2階の表側の部屋にいた<sup><a href="#s34">34</a></sup>。
+  大政奉還の1か月後、京都に幕府側の探索が集中していた時期である。</p>
+
+  <!-- ⑤ 思想と方法 -->
+  <h2><span class="num">⑤</span>思想と方法<span class="en">Doctrine and Method</span></h2>
+
+  <h3>「せんたく」の手紙は、決意表明ではなく神頼みである</h3>
+
+  <p>最も引用される一節は、文久3年6月29日付の姉・乙女宛の手紙にある。
+  原本は京都国立博物館所蔵で、国の重要文化財に指定されている<sup><a href="#s3">3</a></sup><sup><a href="#s7">7</a></sup>。
+  問題は、引用されるとき原文の後半が落ちることである。</p>
+
+  <blockquote>
+    龍馬二三家の大名とやくそくをかたくし、同志をつのり、朝廷より先ヅ神州をたもつの大本をたて、
+    夫より江戸の同志（はたもと大名其余段々）と心を合セ、右申所の姦吏を一事に軍いたし打殺、
+    日本を今一度せんたくいたし申候事ニいたすべくとの神願にて候
+    <span class="who">文久3年6月29日 坂本乙女あて<sup><a href="#s13">13</a></sup><sup><a href="#s40">40</a></sup></span>
+  </blockquote>
+
+  <p>末尾は「神願にて候」で、<strong class="hit">「そう神に願っている」という構文である</strong>。
+  「日本を今一度せんたくいたし申候」だけを切り出すと決意表明に読めるが、
+  原文は「二三家の大名と約束を固め、同志を募り」という前提条件から始まり、
+  「神願」で終わる<sup><a href="#s40">40</a></sup>。
+  この人物の一貫した方法は、自分で実行することではなく、実行できる主体を組み合わせることだった。
+  文体はその方法を正確に反映している。</p>
+
+  <h3>海援隊約規 — 5か条に方法が全部書いてある</h3>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>条</th><th>原文（要旨）</th><th>何を定めているか</th></tr>
+    <tr><td class="num">第1</td><td>凡嘗テ本藩ヲ脱スル者及佗藩ヲ脱スル者　海外ノ志アル者此隊ニ入ル</td><td>藩籍を入隊要件から外した。<strong>身分ではなく志向で人を集める</strong></td></tr>
+    <tr><td class="num">第2</td><td>凡隊中ノ事　一切隊長ノ處分ニ任ス</td><td>隊長の専断。合議も出資者の議決権もない</td></tr>
+    <tr><td class="num">第3</td><td>凡隊中患難相救　困厄相護リ　義気相責</td><td>相互扶助と独断・派閥の禁止</td></tr>
+    <tr><td class="num">第4</td><td>凡隊中修業分課政法火技航海滊機語学等</td><td>政法・砲術・航海・機械・語学の学習義務</td></tr>
+    <tr><td class="num">第5</td><td>凡隊中所費ノ錢糧　其自營ノ功ニ取ル</td><td>経費と給与は自営の利益から。私有化の禁止</td></tr>
+  </table>
+  <p style="font-size:12px;color:var(--muted);padding:0 14px 12px">出典：海援隊約規（慶応3年4月）<sup><a href="#s10">10</a></sup><sup><a href="#s11">11</a></sup><sup><a href="#s25">25</a></sup></p>
+  </div>
+
+  <p>第1条と第4条は、当時の日本で例のない設計である。藩を単位としない人材要件と、語学・機械を含む実務教育を明文化している。
+  第2条と第5条は、その設計が組織として自立できなかった理由でもある。
+  <strong>権限は隊長に集中し、収益は自営に依存する。隊長が死ねば両方が同時に消える。</strong></p>
+
+  <h3>新政府綱領八策 — 自筆で残っている唯一の国家構想</h3>
+
+  <p>慶応3年11月、暗殺の直前に書かれた8項目である。
+  自筆本が国立国会図書館（石田英吉関係文書）と下関市立長府博物館に現存する<sup><a href="#s2">2</a></sup><sup><a href="#s36">36</a></sup>。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th class="num">義</th><th>原文</th><th>内容</th></tr>
+    <tr><td class="num">第一</td><td>天下有名ノ人材ヲ招致シ顧問ニ供フ</td><td>人材の登用</td></tr>
+    <tr><td class="num">第二</td><td>有材ノ諸侯ヲ撰用シ朝廷ノ官爵ヲ賜イ現今有名無実ノ官ヲ除ク</td><td>官制改革</td></tr>
+    <tr><td class="num">第三</td><td>外国ノ交際ヲ議定ス</td><td>外交方針の議定</td></tr>
+    <tr><td class="num">第四</td><td>律令ヲ撰シ新タニ無窮ノ大典ヲ定ム</td><td>憲法・法典の制定</td></tr>
+    <tr><td class="num">第五</td><td>上下議政所</td><td>二院制議会</td></tr>
+    <tr><td class="num">第六</td><td>海陸軍局</td><td>軍制</td></tr>
+    <tr><td class="num">第七</td><td>親兵</td><td>朝廷直属の兵</td></tr>
+    <tr><td class="num">第八</td><td>皇国今日ノ金銀物価ヲ外国ト平均ス</td><td>内外価格差の是正</td></tr>
+  </table>
+  <p style="font-size:12px;color:var(--muted);padding:0 14px 12px">出典：新政府綱領八策（慶応3年11月）<sup><a href="#s12">12</a></sup><sup><a href="#s36">36</a></sup></p>
+  </div>
+
+  <p>末尾に「○○○自ら盟主と為り」という伏字がある。
+  宮地佐一郎は慶喜を伏せたとされると注記し、山内容堂説もあるが、通説は定まっていない<sup><a href="#s36">36</a></sup>。
+  <strong class="hit">新国家の頂点を空欄にしたまま制度設計だけを書いた文書</strong>という点で、
+  この史料は龍馬の方法をそのまま示している。誰が主になるかは決めず、動く仕組みだけを置く。</p>
+
+  <!-- ⑥ 人物像 -->
+  <h2><span class="num">⑥</span>人物像<span class="en">The Person</span></h2>
+
+  <p>龍馬の人柄について確度の高い史料は、本人の手紙と、同時代人が本人と会った直後に書いた記録に限られる。
+  伝記・小説に由来する逸話は、ここでは扱わない。</p>
+
+  <h3>手紙</h3>
+
+  <p>現存する書簡は139通で、宮地佐一郎編『龍馬の手紙 坂本龍馬全書簡集・関係文書・詠草』に収録されている<sup><a href="#s26">26</a></sup>。
+  青空文庫は121点を公開し<sup><a href="#s9">9</a></sup>、Wikisourceは本文107通と年次不詳18通に整理している<sup><a href="#s17">17</a></sup>。
+  原本の所蔵は京都国立博物館・宮内庁書陵部・国立国会図書館・京都大学などに分散しており、
+  文久3年の奏状写<sup><a href="#s5">5</a></sup>や海援隊士の書簡類<sup><a href="#s6">6</a></sup>、京都大学が公開する書状<sup><a href="#s8">8</a></sup>を含めて、
+  一つの機関に集約された全集は存在しない。
+  宛先の最多は姉の乙女で、京都国立博物館所蔵の乙女宛2通（文久3年6月29日付、慶応2年12月4日付）が重要文化財である<sup><a href="#s4">4</a></sup><sup><a href="#s18">18</a></sup>。</p>
+
+  <p>幕末の武士の書簡としては、文体が異例に砕けている。
+  国家構想を書いた同じ紙面に姉への冗談が並び、絵が入る。
+  文久3年3月20日の乙女あて<sup><a href="#s14">14</a></sup>や、慶応2年12月4日の兄・権平ら一同あて<sup><a href="#s15">15</a></sup>のように、
+  同じ時期の手紙でも宛先によって文体が明確に切り替わる。
+  この使い分けは、龍馬が身分の上下を前提としない相手との交渉を仕事にしていたことと無関係ではない。</p>
+
+  <h3>岩崎弥太郎が見た龍馬</h3>
+
+  <p>同時代人による最も具体的な記録の一つが、岩崎弥太郎の日記である。
+  当時の岩崎は土佐藩の開成館長崎商会の主任として、海援隊の資金面の後始末をする側にいた<sup><a href="#s43">43</a></sup><sup><a href="#s51">51</a></sup>。
+  慶応3年6月3日の日記に龍馬が訪ねてきたときのやり取りが記され、
+  同月9日、龍馬らが京都へ向かうにあたって岩崎は日記に次のように書いた<sup><a href="#s43">43</a></sup>。</p>
+
+  <blockquote>
+    余、不覚にも数行の涙を流す
+    <span class="who">岩崎弥太郎 日記 慶応3年6月9日<sup><a href="#s43">43</a></sup></span>
+  </blockquote>
+
+  <p>後に三菱を作り、社長専制を組織原則として明文化することになる人物が、
+  資本を持たない脱藩浪人を見送って泣いている。
+  この2人が長崎で並走していた1867年の数か月は、日本の近代がどちらの型で走るかがまだ決まっていなかった時期である。</p>
+
+  <div class="note">
+    龍馬の身長・体格・容貌については、同時代の一次史料に確かな記述がない。
+    現在流布している数値は後世の推定を含む。ここでは書かない。
+  </div>
+
+  <!-- ⑦ 死後 -->
+  <h2 id="after"><span class="num">⑦</span>死後の増殖<span class="en">How the Legend Was Assembled</span></h2>
+
+  <p>龍馬は死亡時点で無位無官、財産なし、組織なし、著作なしである。
+  にもかかわらず現在の知名度は幕末の人物で最上位にある。
+  この差分は生前の行動では説明できない。誰が、いつ、何を足したのかを年で並べる。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th class="num">年</th><th>出来事</th><th>何が足されたか</th></tr>
+    <tr><td class="num">1867</td><td>近江屋で暗殺<sup><a href="#s34">34</a></sup></td><td>—</td></tr>
+    <tr><td class="num">1883</td><td>坂崎紫瀾『汗血千里駒』を『土陽新聞』に連載。板垣退助の要望による<sup><a href="#s28">28</a></sup><sup><a href="#s48">48</a></sup></td><td>自由民権運動の文脈に置かれた英雄像。単行本は50版を重ねた<sup><a href="#s48">48</a></sup></td></tr>
+    <tr><td class="num">1891</td><td>4月8日、贈正四位<sup><a href="#s28">28</a></sup></td><td>国家による公認。京都・霊山には忠魂碑が建てられた<sup><a href="#s23">23</a></sup></td></tr>
+    <tr><td class="num">1896</td><td>弘松宣枝『阪本龍馬』。著者は龍馬の長姉・千鶴の孫<sup><a href="#s29">29</a></sup></td><td>「建議案十一箇条」。船中八策の原型だが、まだ船上ではない</td></tr>
+    <tr><td class="num">1897</td><td>坂崎紫瀾「後藤伯の小伝」<sup><a href="#s29">29</a></sup></td><td>「建議八策の草案」という形になる</td></tr>
+    <tr><td class="num">1904</td><td>2月、日露戦争開戦直前。昭憲皇太后の夢枕に龍馬が立ち「誓って皇国の御為に帝国海軍を護り奉る」と奏上したとされる。翌日、側近の香川敬三が龍馬の写真を献上した<sup><a href="#s22">22</a></sup><sup><a href="#s24">24</a></sup><sup><a href="#s39">39</a></sup></td><td>海軍の守護神という属性。写真は徳富蘇峰の旧蔵品として霊山歴史館に現存する<sup><a href="#s22">22</a></sup></td></tr>
+    <tr><td class="num">1907</td><td>宮内省『殉難録稿 巻之五十四』<sup><a href="#s29">29</a></sup></td><td>現在と同じ「建議案八條」の形が官撰の記録に入る</td></tr>
+    <tr><td class="num">1909</td><td>坂崎紫瀾、史談会例会での発言<sup><a href="#s29">29</a></sup></td><td>「船中で協議した結果」。舞台が船に移る</td></tr>
+    <tr><td class="num">1913</td><td>岡部精一の講演<sup><a href="#s29">29</a></sup></td><td>「船中八策」という語の初出</td></tr>
+    <tr><td class="num">1929</td><td>平尾道雄『坂本龍馬 海援隊始末記』<sup><a href="#s29">29</a></sup></td><td>以後、船中八策は史実として扱われる</td></tr>
+    <tr><td class="num">1962</td><td>司馬遼太郎『竜馬がゆく』の連載開始（産経新聞、1962〜1966年）</td><td>戦後日本の国民的キャラクター。表記は「竜馬」で、史実の龍馬と区別されている</td></tr>
+    <tr><td class="num">2010</td><td>NHK大河ドラマ『龍馬伝』</td><td>—</td></tr>
+    <tr><td class="num">2017</td><td>11月、高大連携歴史教育研究会の用語精選第一次案の報道。高校教科書の本文用語を約3,500語から半減させる提案の中で、坂本龍馬・吉田松陰・上杉謙信などが基礎用語に含まれないことが議論を呼んだ<sup><a href="#s55">55</a></sup><sup><a href="#s56">56</a></sup><sup><a href="#s57">57</a></sup></td><td>この案は大学入試で問う「基礎用語」の精選案であり、教科書からの削除を意味しない、と研究会が説明している<sup><a href="#s55">55</a></sup></td></tr>
+  </table>
+  </div>
+
+  <div class="callout">
+    <p style="margin-top:0"><strong>この年表の読み方。</strong>
+    龍馬像の主要な部品は、1883年から1929年までの46年間に付け加えられている。
+    自由民権運動が英雄を必要とし（1883年）、日露戦争が海軍の守護神を必要とし（1904年）、
+    官撰の記録が形式を与え（1907年）、昭和初期の実証史学がそれを史実として固定した（1929年）。
+    <strong class="hit">日本が国家的な物語を必要とした局面ごとに、この人物に部品が足されている。</strong>
+    2017年の用語精選をめぐる反応は、その蓄積が現在も社会的な資産として扱われていることを示している。
+    対外発信の文脈でも、龍馬は「近代日本の幕開けに大きな功績を残した英雄」として紹介され続けている<sup><a href="#s37">37</a></sup>。</p>
+  </div>
+
+  <!-- ⑧ 語録 -->
+  <h2><span class="num">⑧</span>語録<span class="en">In His Own Words — and What Isn't</span></h2>
+
+  <p>日付と宛先が確定している自筆書簡・文書からのものだけを本文に置き、
+  出典が確定できない有名な言い回しは末尾に隔離した。タブで切り替えられる。</p>
+
+  <div class="q-tabs" id="qtabs"></div>
+  <div class="q-list" id="qlist"></div>
+
+  <!-- ⑨ 残っている問い -->
+  <h2 id="open"><span class="num">⑨</span>残っている問い<span class="en">Open Questions</span></h2>
+
+  <ul>
+    <li><strong>船中八策をめぐる公的解説と最新研究の不一致。</strong>
+    国立国会図書館の解説は船中八策を実在の建言として扱い、新政府綱領八策をその発展形と位置づけている<sup><a href="#s2">2</a></sup>。
+    一方、知野文哉の2013年の研究以降、この文書は後世の構成物とする見方が学界で強まっている<sup><a href="#s27">27</a></sup><sup><a href="#s29">29</a></sup>。
+    どちらが現時点の標準的な扱いなのかは、今回の調査では確定できなかった。</li>
+    <li><strong>神戸海軍操練所における龍馬の地位。</strong>
+    塾頭だったとする通説に対し、操練所の名簿に龍馬を確認できないとする指摘がある<sup><a href="#s42">42</a></sup>。
+    勝の私塾（勝塾）と幕府の操練所を区別しない記述が混在しており、一次史料での切り分けが必要である。</li>
+    <li><strong>薩長同盟成立日。</strong>慶応2年1月18日・21日・22日の3説がある<sup><a href="#s30">30</a></sup>。今回は21日を採ったが、確定していない。</li>
+    <li><strong>いろは丸の積荷。</strong>1988年以降の海底調査で銃火器・金塊が確認されていないことは、
+    (a)龍馬側の誇大請求、(b)衝突・沈没時の流失、(c)調査範囲の限界、のいずれとも整合する<sup><a href="#s33">33</a></sup>。
+    現時点で(a)を確定する史料は見ていない。</li>
+    <li><strong>西南戦争型の検証ができない。</strong>龍馬に関する数値（賠償額を除く）はほぼすべて後世の伝記由来で、
+    帳簿や公式記録に対応するものが乏しい。海援隊の収支は本レポートでは数字にできなかった。</li>
+    <li><strong>近江屋事件の実行犯。</strong>京都見廻組説が定説だが、根拠は今井信郎の供述と渡辺篤の手記であり、物証はない<sup><a href="#s34">34</a></sup>。</li>
+    <li><strong>現存書簡の年別分布。</strong>139通の年ごとの内訳を一次的な集計で確認できなかったため、チャート化を見送った。</li>
+  </ul>
+
+  <!-- ⑩ 出典 -->
+  <h2><span class="num">⑩</span>出典<span class="en">Sources</span></h2>
+  <p style="font-size:13px;color:var(--sub)">
+    一次資料（所蔵機関の公開情報・自筆文書の翻刻）を上に、研究書・事典・報道・二次解説を下に置いた。
+    本文と年表の上付き番号はこの一覧の番号に対応する。すべて2026年8月19日に閲覧。
+  </p>
+  <ol class="sources">
+    <li id="s1">宮内庁書陵部 図書寮文庫 所蔵資料詳細／尺牘（龍馬裏書） — <a href="https://www.kunaicho.go.jp/culture/shoryobu/syuzou-z08.html" target="_blank" rel="noopener">https://www.kunaicho.go.jp/culture/shoryobu/syuzou-z08.html</a></li>
+    <li id="s2">国立国会図書館「史料にみる日本の近代」1-2 坂本龍馬の政体構想（新政府綱領八策の所蔵情報） — <a href="https://www.ndl.go.jp/modern/cha1/description02.html" target="_blank" rel="noopener">https://www.ndl.go.jp/modern/cha1/description02.html</a></li>
+    <li id="s3">e国宝 坂本龍馬関係書状 文久三年六月二十九日 坂本乙女あて（京都国立博物館蔵、重要文化財） — <a href="https://emuseum.nich.go.jp/detail?content_base_id=101405&amp;content_part_id=7&amp;content_pict_id=0&amp;langId=ja&amp;webView=0" target="_blank" rel="noopener">https://emuseum.nich.go.jp/detail?content_base_id=101405</a></li>
+    <li id="s4">京都国立博物館 館蔵品データベース 坂本龍馬関係書状 慶応二年十二月四日 坂本乙女あて — <a href="https://knmdb.kyohaku.go.jp/477.html" target="_blank" rel="noopener">https://knmdb.kyohaku.go.jp/477.html</a></li>
+    <li id="s5">京都国立博物館 館蔵品データベース 坂本龍馬関係資料 奏状写 文久三年 — <a href="https://knmdb.kyohaku.go.jp/21159.html" target="_blank" rel="noopener">https://knmdb.kyohaku.go.jp/21159.html</a></li>
+    <li id="s6">文化遺産オンライン 坂本龍馬・海援隊士書簡類 — <a href="https://online.bunka.go.jp/heritages/detail/530708" target="_blank" rel="noopener">https://online.bunka.go.jp/heritages/detail/530708</a></li>
+    <li id="s7">文化遺産オンライン 坂本龍馬関係書状 文久三年六月二十九日 坂本乙女あて — <a href="https://online.bunka.go.jp/heritages/detail/541575" target="_blank" rel="noopener">https://online.bunka.go.jp/heritages/detail/541575</a></li>
+    <li id="s8">京都大学貴重資料デジタルアーカイブ 坂本龍馬書状 — <a href="https://rmda.kulib.kyoto-u.ac.jp/item/rb00013814" target="_blank" rel="noopener">https://rmda.kulib.kyoto-u.ac.jp/item/rb00013814</a></li>
+    <li id="s9">青空文庫 坂本龍馬 作品リスト（書簡121点および関係文書） — <a href="https://www.aozora.gr.jp/index_pages/person908.html" target="_blank" rel="noopener">https://www.aozora.gr.jp/index_pages/person908.html</a></li>
+    <li id="s10">青空文庫 坂本龍馬 海援隊約規（慶応三年四月） — <a href="https://www.aozora.gr.jp/cards/000908/files/51377_39744.html" target="_blank" rel="noopener">https://www.aozora.gr.jp/cards/000908/files/51377_39744.html</a></li>
+    <li id="s11">Wikisource 坂本龍馬／海援隊約規（全5条の翻刻） — <a href="https://ja.wikisource.org/wiki/%E5%9D%82%E6%9C%AC%E9%BE%8D%E9%A6%AC/%E6%B5%B7%E6%8F%B4%E9%9A%8A%E7%B4%84%E8%A6%8F" target="_blank" rel="noopener">https://ja.wikisource.org/wiki/坂本龍馬/海援隊約規</a></li>
+    <li id="s12">青空文庫 坂本龍馬 新政府綱領八策（慶応三年十一月） — <a href="https://www.aozora.gr.jp/cards/000908/files/52144_41457.html" target="_blank" rel="noopener">https://www.aozora.gr.jp/cards/000908/files/52144_41457.html</a></li>
+    <li id="s13">青空文庫 坂本龍馬 手紙 文久三年六月二十九日 坂本乙女あて — <a href="https://www.aozora.gr.jp/cards/000908/files/51396_39894.html" target="_blank" rel="noopener">https://www.aozora.gr.jp/cards/000908/files/51396_39894.html</a></li>
+    <li id="s14">青空文庫 坂本龍馬 手紙 文久三年三月二十日 坂本乙女あて — <a href="https://www.aozora.gr.jp/cards/000908/files/51392_39891.html" target="_blank" rel="noopener">https://www.aozora.gr.jp/cards/000908/files/51392_39891.html</a></li>
+    <li id="s15">青空文庫 坂本龍馬 手紙 慶応二年十二月四日 坂本権平、一同あて — <a href="https://www.aozora.gr.jp/cards/000908/files/51450_40044.html" target="_blank" rel="noopener">https://www.aozora.gr.jp/cards/000908/files/51450_40044.html</a></li>
+    <li id="s16">青空文庫 坂本龍馬 手紙 慶応三年十月十三日 後藤象二郎あて — <a href="https://www.aozora.gr.jp/cards/000908/files/52024_41182.html" target="_blank" rel="noopener">https://www.aozora.gr.jp/cards/000908/files/52024_41182.html</a></li>
+    <li id="s17">Wikisource 坂本龍馬の手紙（本文107通・年次不詳18通の目次） — <a href="https://ja.wikisource.org/wiki/%E5%9D%82%E6%9C%AC%E9%BE%8D%E9%A6%AC%E3%81%AE%E6%89%8B%E7%B4%99" target="_blank" rel="noopener">https://ja.wikisource.org/wiki/坂本龍馬の手紙</a></li>
+    <li id="s18">高知県立坂本龍馬記念館 所蔵品（海援隊約規、新政府綱領八策、重要文化財指定の書簡） — <a href="https://ryoma-kinenkan.jp/document/" target="_blank" rel="noopener">https://ryoma-kinenkan.jp/document/</a></li>
+    <li id="s19">高知県立坂本龍馬記念館 開館30周年記念・龍馬真筆書簡特別展示（宮内庁書陵部所蔵「薩長同盟裏書」ほか木戸家文書） — <a href="https://ryoma-kinenkan.jp/information/2021/10/30.html" target="_blank" rel="noopener">https://ryoma-kinenkan.jp/information/2021/10/30.html</a></li>
+    <li id="s20">高知県立坂本龍馬記念館 こどもページ「りょうまについて」 — <a href="https://ryoma-kinenkan.jp/children/ryoma.html" target="_blank" rel="noopener">https://ryoma-kinenkan.jp/children/ryoma.html</a></li>
+    <li id="s21">高知市 観光情報サイト 坂本龍馬 — <a href="https://www.city.kochi.kochi.jp/site/kanko/ryoma-syoukai.html" target="_blank" rel="noopener">https://www.city.kochi.kochi.jp/site/kanko/ryoma-syoukai.html</a></li>
+    <li id="s22">霊山歴史館 館蔵の逸品 坂本龍馬 献上写真（昭憲皇太后への献上、徳富蘇峰旧蔵） — <a href="https://www.ryozen-museum.or.jp/about/masterpiece/mp_015/" target="_blank" rel="noopener">https://www.ryozen-museum.or.jp/about/masterpiece/mp_015/</a></li>
+    <li id="s23">京都市 石碑データベース HU159 坂本龍馬忠魂碑 — <a href="https://www2.city.kyoto.lg.jp/somu/rekishi/fm/ishibumi/html/hu159.html" target="_blank" rel="noopener">https://www2.city.kyoto.lg.jp/somu/rekishi/fm/ishibumi/html/hu159.html</a></li>
+    <li id="s24">国立国会図書館 レファレンス協同データベース 昭憲皇太后の夢枕の逸話に関する資料 — <a href="https://crd.ndl.go.jp/reference/entry/index.php?page=ref_view&amp;id=1000047467" target="_blank" rel="noopener">https://crd.ndl.go.jp/reference/entry/index.php?page=ref_view&amp;id=1000047467</a></li>
+    <li id="s25">国立国会図書館 レファレンス協同データベース 海援隊約規の内容 — <a href="https://crd.ndl.go.jp/GENERAL/servlet/detail.reference?id=1000090811" target="_blank" rel="noopener">https://crd.ndl.go.jp/GENERAL/servlet/detail.reference?id=1000090811</a></li>
+    <li id="s26">宮地佐一郎編『龍馬の手紙 坂本龍馬全書簡集・関係文書・詠草』講談社学術文庫（底本2003年12月初版。書簡139通を収録） — <a href="https://www.kodansha.co.jp/book/products/0000151219" target="_blank" rel="noopener">https://www.kodansha.co.jp/book/products/0000151219</a></li>
+    <li id="s27">知野文哉『「坂本龍馬」の誕生 船中八策と坂崎紫瀾』人文書院、2013年 — <a href="https://www.kinokuniya.co.jp/f/dsg-01-9784409520581" target="_blank" rel="noopener">https://www.kinokuniya.co.jp/f/dsg-01-9784409520581</a></li>
+    <li id="s28">日本語版Wikipedia 坂本龍馬（当たり付け。個別の事実は本文中で出所を明示） — <a href="https://ja.wikipedia.org/wiki/%E5%9D%82%E6%9C%AC%E9%BE%8D%E9%A6%AC" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/坂本龍馬</a></li>
+    <li id="s29">日本語版Wikipedia 船中八策（成立過程の年次整理） — <a href="https://ja.wikipedia.org/wiki/%E8%88%B9%E4%B8%AD%E5%85%AB%E7%AD%96" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/船中八策</a></li>
+    <li id="s30">日本語版Wikipedia 薩長同盟 — <a href="https://ja.wikipedia.org/wiki/%E8%96%A9%E9%95%B7%E5%90%8C%E7%9B%9F" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/薩長同盟</a></li>
+    <li id="s31">日本語版Wikipedia 亀山社中 — <a href="https://ja.wikipedia.org/wiki/%E4%BA%80%E5%B1%B1%E7%A4%BE%E4%B8%AD" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/亀山社中</a></li>
+    <li id="s32">日本語版Wikipedia 海援隊 — <a href="https://ja.wikipedia.org/wiki/%E6%B5%B7%E6%8F%B4%E9%9A%8A" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/海援隊</a></li>
+    <li id="s33">日本語版Wikipedia いろは丸（船歴・事件・海底調査） — <a href="https://ja.wikipedia.org/wiki/%E3%81%84%E3%82%8D%E3%81%AF%E4%B8%B8" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/いろは丸</a></li>
+    <li id="s34">日本語版Wikipedia 近江屋事件 — <a href="https://ja.wikipedia.org/wiki/%E8%BF%91%E6%B1%9F%E5%B1%8B%E4%BA%8B%E4%BB%B6" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/近江屋事件</a></li>
+    <li id="s35">日本語版Wikipedia 神戸海軍操練所 — <a href="https://ja.wikipedia.org/wiki/%E7%A5%9E%E6%88%B8%E6%B5%B7%E8%BB%8D%E6%93%8D%E7%B7%B4%E6%89%80" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/神戸海軍操練所</a></li>
+    <li id="s36">日本語版Wikipedia 新政府綱領八策 — <a href="https://ja.wikipedia.org/wiki/%E6%96%B0%E6%94%BF%E5%BA%9C%E7%B6%B1%E9%A0%98%E5%85%AB%E7%AD%96" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/新政府綱領八策</a></li>
+    <li id="s37">nippon.com 坂本龍馬：近代日本の幕開けに大きな功績を残した英雄 — <a href="https://www.nippon.com/ja/views/b07203/" target="_blank" rel="noopener">https://www.nippon.com/ja/views/b07203/</a></li>
+    <li id="s38">PHPオンライン衆知 坂本龍馬の船中八策はフィクションだった？ — <a href="https://shuchi.php.co.jp/article/3457" target="_blank" rel="noopener">https://shuchi.php.co.jp/article/3457</a></li>
+    <li id="s39">PHPオンライン衆知 昭憲皇太后の夢にあらわれた坂本龍馬の「留魂」 — <a href="https://shuchi.php.co.jp/article/3456" target="_blank" rel="noopener">https://shuchi.php.co.jp/article/3456</a></li>
+    <li id="s40">坂本龍馬.com「日本を今一度せんたくいたし申候」原文と読解 — <a href="https://sakamotoryouma.com/meigen/sentaku.html" target="_blank" rel="noopener">https://sakamotoryouma.com/meigen/sentaku.html</a></li>
+    <li id="s41">坂本龍馬.com「世に生を得るは事を成すにあり」の出典問題（『英将秘訣』） — <a href="https://sakamotoryouma.com/meigen/yoniseiriwo.html" target="_blank" rel="noopener">https://sakamotoryouma.com/meigen/yoniseiriwo.html</a></li>
+    <li id="s42">JBpress 幕末維新史探訪2024（43）勝海舟による海軍建設の実相 — 神戸海軍操練所と勝塾 — <a href="https://jbpress.ismedia.jp/articles/-/85224" target="_blank" rel="noopener">https://jbpress.ismedia.jp/articles/-/85224</a></li>
+    <li id="s43">三菱グループサイト 岩崎彌太郎年表 vol.07「坂本竜馬と彌太郎」（岩崎彌太郎日記 慶応3年6月3日・9日） — <a href="https://www.mitsubishi.com/ja/series/yataro/07/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/07/</a></li>
+    <li id="s44">龍馬堂 知野文哉『「坂本龍馬」の誕生 船中八策と坂崎紫瀾』につき雑感 — <a href="http://ryomado.in.coocan.jp/Sakaryo/SRmedia/saryo_media02-h250309.html" target="_blank" rel="noopener">http://ryomado.in.coocan.jp/Sakaryo/SRmedia/saryo_media02-h250309.html</a></li>
+    <li id="s45">まっぷるウェブ いろは丸事件（鞆の浦での交渉経緯） — <a href="https://articles.mapple.net/bk/13339/" target="_blank" rel="noopener">https://articles.mapple.net/bk/13339/</a></li>
+    <li id="s46">坂本龍馬人物伝 いろは丸沈没・事件 — <a href="https://www.ryoma-den.com/shiryou/irohamaru.html" target="_blank" rel="noopener">https://www.ryoma-den.com/shiryou/irohamaru.html</a></li>
+    <li id="s47">坂本龍馬人物伝 薩長同盟 — <a href="https://www.ryoma-den.com/ryoma/doumei.html" target="_blank" rel="noopener">https://www.ryoma-den.com/ryoma/doumei.html</a></li>
+    <li id="s48">坂本龍馬人物伝 坂崎紫瀾（『汗血千里駒』の連載と版数） — <a href="https://www.ryoma-den.com/jinbutsu/sakazaki.html" target="_blank" rel="noopener">https://www.ryoma-den.com/jinbutsu/sakazaki.html</a></li>
+    <li id="s49">さんさんテレビ 2021年10月 薩長同盟「裏書」原本を高知県立坂本龍馬記念館で初展示 — <a href="https://www.sunsuntv.co.jp/news/2021/10/2715206" target="_blank" rel="noopener">https://www.sunsuntv.co.jp/news/2021/10/2715206</a></li>
+    <li id="s50">幕末歴史探訪 坂本龍馬 いろは丸沈没事件 — <a href="https://www.webkohbo.com/info3/ryoma/irohamaru.html" target="_blank" rel="noopener">https://www.webkohbo.com/info3/ryoma/irohamaru.html</a></li>
+    <li id="s51">三菱グループサイト 岩崎彌太郎年表（連載目次） — <a href="https://www.mitsubishi.com/ja/series/yataro/" target="_blank" rel="noopener">https://www.mitsubishi.com/ja/series/yataro/</a></li>
+    <li id="s52">日本語版Wikipedia ワイル・ウエフ号 — <a href="https://ja.wikipedia.org/wiki/%E3%83%AF%E3%82%A4%E3%83%AB%E3%83%BB%E3%82%A6%E3%82%A8%E3%83%95%E5%8F%B7" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/ワイル・ウエフ号</a></li>
+    <li id="s53">日本語版Wikipedia 近藤長次郎 — <a href="https://ja.wikipedia.org/wiki/%E8%BF%91%E8%97%A4%E9%95%B7%E6%AC%A1%E9%83%8E" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/近藤長次郎</a></li>
+    <li id="s54">日本語版Wikipedia 池内蔵太 — <a href="https://ja.wikipedia.org/wiki/%E6%B1%A0%E5%86%85%E8%94%B5%E5%A4%AA" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/池内蔵太</a></li>
+    <li id="s55">高大連携歴史教育研究会 当会提案の用語精選案とアンケートに関してよくあるご質問 — <a href="https://kodairekikyo.org/statement/faq/" target="_blank" rel="noopener">https://kodairekikyo.org/statement/faq/</a></li>
+    <li id="s56">高大連携歴史教育研究会 皆さまへのお願い（2017年11月16日） — <a href="http://kodairekikyo.blogspot.com/2017/11/blog-post_16.html" target="_blank" rel="noopener">http://kodairekikyo.blogspot.com/2017/11/blog-post_16.html</a></li>
+    <li id="s57">日本語版Wikipedia 高大連携歴史教育研究会 — <a href="https://ja.wikipedia.org/wiki/%E9%AB%98%E5%A4%A7%E9%80%A3%E6%90%BA%E6%AD%B4%E5%8F%B2%E6%95%99%E8%82%B2%E7%A0%94%E7%A9%B6%E4%BC%9A" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/高大連携歴史教育研究会</a></li>
+  </ol>
+
+</div>
+
+<script>
+/* ─── 年表データ ───────────────────────────────────────────────────────────
+   d=日付（西暦年＋和暦） / e=期の番号 / t=見出し / w=事実と具体 / y=なぜ効いたか
+   f=数値チップ / s=出典番号（HTMLに焼き込んだ ol.sources の id に対応）
+   出典一覧は HTML 側に静的に置いてある。JS が落ちても読める形にするため。 */
+const ERAS = [
+ '',
+ 'I 土佐の郷士 1836–1852',
+ 'II 江戸と黒船 1853–1861',
+ 'III 脱藩と勝海舟 1862–1864',
+ 'IV 長崎の社中 1865–1866',
+ 'V 海援隊 1867',
+ 'VI 近江屋 1867.11',
+ 'VII 死後の増殖 1868–2021',
+];
+
+const TL = [
+ {d:'1836 天保6.11.15',e:1,t:'高知城下に生まれる',
+  w:'土佐国土佐郡上街本町一丁目（現・高知市上町一丁目）で、郷士・坂本直足（八平）と幸の次男として生まれた。西暦では1836年1月3日にあたる。坂本家は高知城下の豪商・才谷屋の分家で、分家の際に才谷屋から多額の財産を分与されている。郷士は上士の下に置かれた身分で、株として売買の対象になっていた。',
+  y:'貧しい志士ではなく、商家の資本で武士の身分を買った家の次男である。身分が金で動くものだと家の来歴として知っていることが、後年この人物が藩や幕府を所与の枠として扱わなかったことの前提になっている。',
+  f:['次男','郷士（才谷屋分家）'],
+  s:[21,28]},
+ {d:'1848頃 嘉永元',e:1,t:'日根野道場に入門',
+  w:'14歳のころ、高知城下の日根野弁治の道場に入門して剣術を始めた。',
+  y:'剣術は当時の下級武士が中央に出る数少ない回路だった。ただしこの資源は、後に龍馬が実際に使った回路ではない。',
+  f:['14歳ころ'],
+  s:[21]},
+
+ {d:'1853 嘉永6.3',e:2,t:'江戸へ、千葉定吉の道場に入る',
+  w:'剣術修行のため江戸へ出て、北辰一刀流の千葉定吉の道場（小千葉道場）に入門した。',
+  y:'土佐の外に出た最初の期間である。ここで作った江戸の人脈が、9年後の脱藩後に唯一の足がかりになる。',
+  s:[28]},
+ {d:'1853 嘉永6.6',e:2,t:'ペリー来航、品川で警備につく',
+  w:'ペリー艦隊が浦賀に来航した。龍馬は江戸滞在中で、品川の土佐藩邸の警備にあたっている。',
+  y:'黒船を実際に見た世代であることが、後年の海運への執着の起点になる。ただしこの時点の反応は攘夷であって、開国でも通商でもない。',
+  s:[28]},
+ {d:'1853 嘉永6.9.23',e:2,t:'現存する最古の書簡',
+  w:'父・坂本八平直足あての手紙。青空文庫が公開している書簡121点のうち、日付が最も古いものである。',
+  y:'この人物の一次史料は、政治文書ではなく私信として残った。139通の手紙が唯一の連続した記録であり、行動よりも文体のほうが正確に残っている。',
+  f:['書簡001'],
+  s:[9,26]},
+ {d:'1858 安政5.1',e:2,t:'北辰一刀流長刀兵法目録',
+  w:'千葉定吉から「北辰一刀流長刀兵法目録」を伝授された。現存する免状はこれで、薙刀術の目録である。剣術の免許皆伝とする説もあるが、現存史料では確認できない。',
+  y:'「幕末最強の剣士」像は、この一枚の目録では支えられない。龍馬像の各部品がどこまで史料に支えられているかを測る、最初の物差しになる。',
+  f:['薙刀術の目録'],
+  s:[28]},
+ {d:'1861 文久元',e:2,t:'土佐勤王党に加盟する',
+  w:'武市半平太が結成した土佐勤王党に加盟した。署名は9番目で、国元では筆頭にあたる。同年、長州萩で久坂玄瑞と面談している。',
+  y:'ここまでの龍馬は、剣術と尊王攘夷という当時ありふれた2つの資源しか持っていない。どちらも単独では何も動かさなかった。',
+  f:['署名9番目'],
+  s:[28]},
+
+ {d:'1862 文久2.3.24',e:3,t:'脱藩する',
+  w:'沢村惣之丞とともに土佐を脱藩した。脱藩は藩籍を一方的に離れることで、本人は藩内で罪人となり、残された家族や友人も連座の罪に問われうる。まず長州下関の豪商・白石正一郎宅を訪ねている。',
+  y:'この日から暗殺までが68か月。生涯383か月の17.8%にあたる。無禄・無位・無官になることと引き換えに、藩の指揮系統の外で動く自由を得た。以後の行動はすべてこの立場を前提にしている。',
+  f:['27歳','以後68か月'],
+  s:[28]},
+ {d:'1862 文久2.12',e:3,t:'勝海舟の門人になる',
+  w:'松平春嶽の紹介状を持って、幕府軍艦奉行並・勝海舟の屋敷を訪ねて門人となった。面会日は12月5日説と12月9日説がある。斬りに行ったが逆に説得されたという場面は勝が明治23年の『追賛一話』で語ったもので、近年は勝の誇張または記憶違いとする見方が強い。',
+  y:'脱藩浪人が幕府海軍の最高位の実務者に直結した。龍馬の全キャリアで最も価値のある接続で、以後の船・金・情報はほぼこの回路から来ている。',
+  f:['日付は諸説'],
+  s:[28]},
+ {d:'1863 文久3.2.25',e:3,t:'脱藩を赦免される',
+  w:'土佐藩から脱藩の罪を赦免された。勝海舟の門人という立場が効いている。',
+  y:'罪人でなくなったことで藩との交渉窓口が開いた。4年後の海援隊が土佐藩の外郭機関として置かれる伏線になる。',
+  s:[28]},
+ {d:'1863 文久3.4.23',e:3,t:'神戸海軍操練所の設立が許可される',
+  w:'将軍・徳川家茂が神戸海軍操練所の設立を許可した。',
+  y:'幕府が海軍士官の養成機関を持つと決めた。龍馬にとっては、身分を問わずに船を扱える場所が制度として生まれたことを意味する。',
+  s:[28]},
+ {d:'1863 文久3.5',e:3,t:'松平春嶽から1,000両を借りる',
+  w:'神戸の海軍塾の運営資金として、越前藩の松平春嶽から千両を借り入れた。',
+  y:'龍馬が動かした金の最初の記録である。出所は他人で、返済の記録は確認できない。以後6年間、この形（他人の金を運用する）が一度も変わらない。',
+  f:['1,000両'],
+  s:[28]},
+ {d:'1863 文久3.6.29',e:3,t:'「せんたく」の手紙',
+  w:'姉・乙女あての手紙。二三家の大名と約束を固め、同志を募り、朝廷から国の大本を立て、江戸の同志と心を合わせて姦吏を討ち、「日本を今一度せんたくいたし申候事ニいたすべくとの神願にて候」と書いた。原本は京都国立博物館所蔵で国の重要文化財。',
+  y:'最も引用される一節だが、原文は前提条件から始まり「神願にて候」で終わる。自分が実行するとは書いていない。実行できる主体を組み合わせる、というこの人物の方法が文体にそのまま出ている。',
+  f:['重要文化財'],
+  s:[3,7,13,40]},
+ {d:'1864 元治元.5',e:3,t:'神戸海軍操練所が開設される',
+  w:'勝海舟の建議により、神戸に海軍士官の養成機関と艦船の作業場が置かれた。塾生には幕臣でない尊王攘夷派が多く含まれていた。',
+  y:'龍馬が塾頭だったとする通説に対し、操練所の名簿に龍馬を確認できないとする指摘がある。勝の私塾と幕府の操練所を区別しない記述が混在しており、一次史料での切り分けが必要な領域である。',
+  s:[35,42]},
+ {d:'1864 元治元.10',e:3,t:'勝海舟が軍艦奉行を罷免される',
+  w:'禁門の変の後、勝海舟は軍艦奉行を罷免された。塾生に尊攘派が多いことが問題視された。',
+  y:'龍馬の回路が幕府側で切れた。この直後から薩摩藩に頼る構図になり、資金の出所が幕府から薩摩へ移る。',
+  s:[35]},
+
+ {d:'1865 慶応元.3.12',e:4,t:'神戸海軍操練所が閉鎖される',
+  w:'開設から1年に満たずに閉鎖された。塾生は行き場を失った。',
+  y:'この閉鎖が長崎の社中を生んだ。制度が消えたので、制度の外に同じ機能を作り直すしかなくなった。',
+  f:['開設から10か月'],
+  s:[35]},
+ {d:'1865 慶応元.閏5',e:4,t:'長崎で「社中」が発足する',
+  w:'薩摩藩の援助により、長崎に元塾生の集団が置かれた。後に亀山社中と呼ばれるが、この名称は当時のものではない。当時の史料に現れるのは「社中」という名乗りだけである。結成時に龍馬は長崎に不在だった可能性があり、立ち会ったのは近藤長次郎や高松太郎だったとされる。',
+  y:'資金は薩摩藩から出た。日本初の商社・株式会社という定型句が使われるが、出資も株式も配当もない。町田明広は、実態は薩摩藩名義で買い上げた軍艦を運航していた土佐の脱藩浪人の集団であり、商社や株式会社とするのは事実誤認だとしている。',
+  f:['名称は後世','資金は薩摩藩'],
+  s:[31]},
+ {d:'1865 慶応元.8',e:4,t:'ミニエー銃4,300挺とゲベール銃3,000挺',
+  w:'長州藩が薩摩藩名義で、グラバー商会から小銃を購入した。ミニエー銃4,300挺、ゲベール銃3,000挺。社中が斡旋したとされてきたが、伊藤博文は「鉄砲を買う方は直接外国人に買った」と述べ、井上馨も薩摩藩名義の使用は小松帯刀との直接交渉で許されたとしている。',
+  y:'薩長が実際に武器で結びついた最初の取引である。ただし社中の関与度は史料上「謎」と評されており、龍馬がこの取引の主体だったとは断定できない。',
+  f:['ミニエー銃 4,300挺','ゲベール銃 3,000挺'],
+  s:[28,31]},
+ {d:'1865 慶応元.10',e:4,t:'ユニオン号を受領する',
+  w:'近藤長次郎が長崎でユニオン号を購入・受領した。代金はグラバーからの借金である。桜島条約により、長州藩が代金を負担し、乗組員は社中のメンバーとする取り決めがなされた。船名は乙丑丸、桜島丸とも呼ばれる。',
+  y:'船が薩摩藩名義、代金が長州藩負担、運航が社中という三重構造になった。この曖昧さが直後の紛糾を生む。所有せずに動かすという型の、最初の破綻例である。',
+  s:[31]},
+ {d:'1866 慶応2.1.14',e:4,t:'近藤長次郎が切腹する',
+  w:'社中の中心人物だった近藤長次郎が切腹した。29歳。ユニオン号購入の成功報酬を使って単独でイギリス留学を企てたことが規約違反として発覚し、社中の裁定で切腹に至った。龍馬はこのとき長崎にいなかった。',
+  y:'社中は龍馬の人的信用でつながっていた集団であり、龍馬がいないと規律も判断も機能しない。属人性の最初の代償が、最も有能な部下の死という形で出た。',
+  f:['29歳'],
+  s:[53]},
+ {d:'1866 慶応2.1.21',e:4,t:'薩長同盟が成立する',
+  w:'京都の小松帯刀邸（近衛家別邸「御花畑屋敷」）で、薩摩の西郷隆盛・小松帯刀・大久保一蔵・吉井友実ら、長州の木戸孝允・品川弥二郎・三好軍太郎らが会談し、6か条が取り交わされた。成立日は18日説・21日説・22日説がある。',
+  y:'近年の研究では、6か条に「倒幕」の文言は拡張解釈なしには読み取れず、主眼は長州の政治的復権支援と一会桑政権への対抗にあったとされる。倒幕軍事同盟という従来の説明は、条文からは支持しにくい。',
+  f:['六箇条','成立日は諸説'],
+  s:[30,47]},
+ {d:'1866 慶応2.1.23',e:4,t:'寺田屋で襲撃される',
+  w:'伏見の寺田屋で伏見奉行の捕吏に襲撃され、明け方に両手の指を斬られた。同盟成立の2日後である。',
+  y:'幕府側から見て、この時点で龍馬は捕縛対象として認識されていた。1年10か月後の近江屋で同じ失敗を繰り返すことになる。',
+  s:[28]},
+ {d:'1866 慶応2.2.5',e:4,t:'薩長同盟の裏書に朱で書く',
+  w:'慎重な木戸孝允が1月23日付で同盟の6か条を書き付けて確認を求めたのに対し、龍馬は2月5日に薩摩藩邸でその裏に朱書し、内容が現地の合意と相違ないことを保証した。文書は宮内庁書陵部図書寮文庫の「木戸家文書」に現存する。2021年10月、高知県立坂本龍馬記念館で原本が初めて一般公開された。',
+  y:'龍馬の幕末における最も確実な一次史料である。ただしこれが証明するのは、同席し第三者として保証できる立場にいたことであって、条文を起草したことでも両藩を説得したことでもない。',
+  f:['朱書','宮内庁書陵部'],
+  s:[1,19,49]},
+ {d:'1866 慶応2.3–5',e:4,t:'霧島に83日間',
+  w:'西郷隆盛の勧めで、刀傷の治療のため薩摩の霧島温泉へ向かい83日間滞在した。お龍が同行し、これが日本最初の新婚旅行とされる。',
+  y:'幕末で最も緊迫した時期の3か月を、当事者が戦線から離れて過ごしている。この期間の不在が、次の2件の事故の背景にある。',
+  f:['83日間'],
+  s:[28]},
+ {d:'1866 慶応2.5.2',e:4,t:'ワイル・ウエフ号が沈没、12名死亡',
+  w:'ユニオン号に曳航されて長崎から鹿児島へ向かっていたワイル・ウエフ号が、暴風に遭って五島列島の中通島東・潮合崎沖で座礁・転覆した。龍馬が弟のように可愛がっていた池内蔵太を含む12名が死亡した。池は26歳。',
+  y:'近藤長次郎の切腹に続く2件目である。どちらも龍馬の不在時に起きている。社中の海運事業の実績は、この時点ですでに人的損失のほうが大きい。',
+  f:['12名死亡','池内蔵太 26歳'],
+  s:[52,54]},
+ {d:'1866 慶応2.6',e:4,t:'ユニオン号で第二次長州征伐に参加',
+  w:'第二次長州征伐で、ユニオン号を指揮して実戦に参加した。',
+  y:'龍馬が実際に軍事行動をとった数少ない記録である。武器商人でも仲介者でもなく、当事者として撃った側に回っている。',
+  s:[28]},
+ {d:'1866 慶応2.10',e:4,t:'薩摩藩から一人3両2分の支給',
+  w:'龍馬ら7名が、薩摩藩から一人あたり3両2分の支給を受けた。社中の生活基盤は薩摩藩の給付である。',
+  y:'商社ではなく被扶養の集団だったことを示す具体的な数字である。自前の収益で人を養う構造は、最後まで成立していない。',
+  f:['1人 3両2分'],
+  s:[31,32]},
+ {d:'1866 慶応2.12.4',e:4,t:'乙女あての手紙（重要文化財）',
+  w:'姉・乙女あての手紙。京都国立博物館所蔵で、国の重要文化財に指定されている。',
+  y:'政治文書ではなく私信が文化財として残っているという事実そのものが、この人物の史料構成を示している。',
+  f:['重要文化財'],
+  s:[4,18]},
+
+ {d:'1867 慶応3.1.13',e:5,t:'清風亭で後藤象二郎と会う',
+  w:'長崎の清風亭で、土佐藩参政の後藤象二郎と会談した。後藤は土佐勤王党を弾圧して武市半平太を切腹させた側の実力者である。',
+  y:'脱藩浪人が旧敵側の実力者と組んだ。ここから3か月で社中は土佐藩の外郭機関になる。龍馬の一貫した方法は、正しい側につくことではなく、動かせる側につなぐことだった。',
+  s:[28]},
+ {d:'1867 慶応3.4',e:5,t:'海援隊に改称、約規を定める',
+  w:'社中は土佐藩に付属する外郭機関「海援隊」として位置づけられ、龍馬が隊長になった。海援隊約規は全5条で、第1条は「凡嘗テ本藩ヲ脱スル者及佗藩ヲ脱スル者　海外ノ志アル者此隊ニ入ル」、第2条は「凡隊中ノ事　一切隊長ノ處分ニ任ス」、第4条は政法・火技・航海・汽機・語学の修業を定める。',
+  y:'第1条は藩籍を入隊要件から外し、第4条は語学と機械を含む実務教育を明文化した。当時の日本で例のない設計である。同時に第2条の隊長専断と第5条の自営依存が、隊長が死ねば同時に消える構造も定めている。',
+  f:['全5条','隊長専断'],
+  s:[10,11,25,32]},
+ {d:'1867 慶応3.4.23',e:5,t:'いろは丸が沈没する',
+  w:'大洲藩から傭船した160トンのいろは丸が、備中国六島付近で紀州藩の明光丸（880トン）と衝突し、鞆の浦へ曳航される途中で沈没した。西暦では1867年5月26日23時頃。いろは丸は1862年英国建造のアビゾ号を出自とし、薩摩藩の安行丸を経て、慶応2年9月22日に4万メキシコパタカ（約1万両相当）で大洲藩が購入した船である。',
+  y:'海援隊が実際に運用した唯一の商船が、就航直後に沈んだ。ここから龍馬は、日本で最初期の万国公法にもとづく損害賠償交渉に入る。',
+  f:['160トン vs 880トン','約1万両'],
+  s:[33]},
+ {d:'1867 慶応3.5',e:5,t:'長崎で紀州藩と賠償交渉',
+  w:'鞆の浦での交渉では龍馬が1万両を要求し、紀州藩が1,000両を提示して決裂した。長崎に舞台を移し、万国公法を根拠に交渉を続けた結果、積荷代を含む8万3,526両198文で一旦合意した。',
+  y:'万国公法を持ち出した点で、日本の海事紛争史の中でも早い事例である。ただし請求の根拠となった積荷は、後の海底調査で確認されていない。',
+  f:['83,526両198文'],
+  s:[33,45,46]},
+ {d:'1867 慶応3.6.3',e:5,t:'岩崎弥太郎の日記に龍馬が現れる',
+  w:'土佐藩の開成館長崎商会の主任だった岩崎弥太郎の日記に、龍馬が訪ねてきたときのやり取りが記されている。岩崎は海援隊の資金面の後始末をする側にいて、紀州藩との賠償交渉にも関与した。',
+  y:'同時代人による具体的な記録である。この2人が長崎で並走していた1867年の数か月は、日本の近代がどちらの型で走るかがまだ決まっていなかった時期にあたる。',
+  s:[43]},
+ {d:'1867 慶応3.6.9',e:5,t:'夕顔で兵庫へ、岩崎が泣く',
+  w:'後藤象二郎とともに藩船・夕顔で長崎から兵庫へ向かった。この船中で新国家構想を示したとされ、後に「船中八策」と呼ばれる。見送った岩崎弥太郎は日記に「余、不覚にも数行の涙を流す」と書いた。',
+  y:'船中八策の原本は存在しない。この場面が「船の中で書かれた」という設定になるのは1909年の坂崎紫瀾の発言以降で、「船中八策」という語の初出は1913年である。暗殺から42年かかっている。',
+  f:['船中八策（原本なし）'],
+  s:[27,29,43]},
+ {d:'1867 慶応3.6.22',e:5,t:'薩土盟約が成立する',
+  w:'薩摩藩と土佐藩の間で、大政奉還を軸とする盟約が結ばれた。',
+  y:'龍馬の関与が確認できる政治的な成果としては、薩長同盟の同席に次ぐものである。ただしここでも起草者ではなく、当事者間の接点にいた人物という位置づけを超えない。',
+  s:[28]},
+ {d:'1867 慶応3.10.13',e:5,t:'後藤象二郎あての手紙',
+  w:'後藤象二郎あての手紙。建白が受け入れられず後藤が城から下りてこないときは、海援隊の同志とともに慶喜を路上で待ち受けて仇を討つ、という趣旨を書いている。',
+  y:'大政奉還の前日である。仲介者としての顔と、討ち入りを辞さない浪人としての顔が同じ手紙に同居している。',
+  s:[16,28]},
+ {d:'1867 慶応3.10.14',e:5,t:'大政奉還',
+  w:'徳川慶喜が政権の返上を上表した。土佐藩の建白がこれに先立っている。',
+  y:'龍馬がこの流れの中にいたことは確実だが、どこまで設計したかは史料上確定していない。船中八策が後世の構成物だとすると、龍馬と大政奉還を直結させる根拠は薄くなる。ただしそれは、龍馬が建白と無関係だったことも意味しない。',
+  s:[2,29]},
+ {d:'1867 慶応3.10.16',e:5,t:'新官制擬定書を作る',
+  w:'戸田雅楽とともに新官制擬定書を作成し、西郷隆盛に見せた。',
+  y:'新政府の官職案を具体的に書いている。政権構想が抽象論ではなく人事案の水準まで降りていたことがわかる。',
+  s:[28]},
+ {d:'1867 慶応3.11上旬',e:5,t:'新政府綱領八策を自筆する',
+  w:'新政府の綱領8項目を自筆で書いた。人材の招致、有材の諸侯の登用、外交の議定、律令の撰定、上下議政所、海陸軍局、親兵、金銀物価の国際水準への調整の8項目である。自筆本2枚が国立国会図書館（石田英吉関係文書）と下関市立長府博物館に現存する。末尾に「○○○自ら盟主と為り」という伏字がある。',
+  y:'龍馬の政治構想として自筆で確認できる唯一の文書である。新国家の頂点を空欄にしたまま制度設計だけを書いたという形式が、この人物の方法をそのまま示している。伏字は慶喜説と山内容堂説があり、通説は定まっていない。',
+  f:['自筆本2枚','伏字あり'],
+  s:[2,12,36]},
+ {d:'1867 慶応3.11.7',e:5,t:'賠償金7万両が土佐藩に支払われる',
+  w:'いろは丸事件の賠償金は8万3,526両198文から7万両に減額されたうえで、長崎で土佐藩に支払われた。',
+  y:'龍馬はこの金を受け取っていない。8日後に暗殺されている。生涯で最大の交渉成果が、本人の手元に一切残らなかった。',
+  f:['70,000両'],
+  s:[33,46]},
+
+ {d:'1867 慶応3.11.14',e:6,t:'現存する最後の書簡',
+  w:'坂本清次郎あての手紙。青空文庫が公開する書簡121点のうち、日付が最も新しいものである。',
+  y:'暗殺の前日である。139通の手紙は、ここで終わる。',
+  f:['書簡121'],
+  s:[9]},
+ {d:'1867 慶応3.11.15',e:6,t:'近江屋で暗殺される',
+  w:'京都河原町通蛸薬師下ルの醤油商・近江屋の2階八畳間で、中岡慎太郎と会っていたところを襲撃された。西暦では1867年12月10日、五ツ半（午後9時頃）。龍馬は前頭部を横に払われ、「脳をやられたから、もうだめだ」と述べて死亡した。従僕の山田藤吉は16日夕刻、中岡慎太郎は17日夕刻に死亡している。',
+  y:'和暦では誕生日にあたる。満31歳11か月。護衛を置かず、大政奉還の1か月後に京都の表通りに面した2階にいた。寺田屋に続く2度目の襲撃で、今度は死んだ。実行犯は京都見廻組説が定説だが、根拠は今井信郎の供述と渡辺篤の手記で、物証はない。',
+  f:['満31歳11か月','3名死亡'],
+  s:[34]},
+
+ {d:'1868 慶応4.閏4.27',e:7,t:'海援隊が解散する',
+  w:'梅花隊として再編されていた一派が、藩命により解散した。西暦では1868年6月17日。振遠隊を母体とする一派も明治5年2月20日に解散している。',
+  y:'龍馬の死から実質半年で組織は消えた。資本を持たず、権限を隊長に集中させた設計の当然の帰結である。同じ時期に同じ土佐の岩崎弥太郎が藩営商会を自分の資本に転換していく道筋と、ここで完全に分かれた。',
+  f:['死から約7か月'],
+  s:[32]},
+ {d:'1870 明治3',e:7,t:'今井信郎が供述する',
+  w:'京都見廻組の今井信郎が捕縛され、近江屋事件について供述した。佐々木只三郎の指揮下で7名が向かい、4名が屋内で実行したという内容である。動機は寺田屋事件で龍馬が同心を射殺したこととされた。',
+  y:'見廻組説の唯一の直接的根拠である。供述の内容は時期により変転し、渡辺篤の手記とも細部が食い違う。定説ではあるが確定ではない。',
+  s:[34]},
+ {d:'1883 明治16',e:7,t:'『汗血千里駒』が連載される',
+  w:'坂崎紫瀾が土陽新聞に龍馬を主人公とする小説『汗血千里駒』を連載した。板垣退助の要望による。単行本は50版を重ねるベストセラーになった。',
+  y:'龍馬像の最初の部品である。自由民権運動が英雄を必要とした局面で、無位無官の脱藩浪人が民権の先駆者として造形された。以後の龍馬像は、史料からではなくこの小説から派生していく。',
+  f:['50版'],
+  s:[28,48]},
+ {d:'1891 明治24.4.8',e:7,t:'贈正四位',
+  w:'明治政府から正四位を贈られた。死後24年である。',
+  y:'国家がこの人物を公認した。生前は無位無官で、幕府から追われる立場だった。',
+  s:[28]},
+ {d:'1896 明治29',e:7,t:'弘松宣枝『阪本龍馬』',
+  w:'龍馬の長姉・千鶴の孫にあたる弘松宣枝が『阪本龍馬』を刊行し、龍馬が京都で書いて後藤象二郎に示した「建議案十一箇条」を掲載した。船中ではなく京都である。',
+  y:'後の船中八策の原型が、ここで初めて文献に現れる。この時点では箇条の数も場所も違う。',
+  f:['十一箇条'],
+  s:[29]},
+ {d:'1904 明治37.2',e:7,t:'昭憲皇太后の夢に立つ',
+  w:'日露戦争の開戦直前、明治天皇の皇后・昭憲皇太后の夢枕に龍馬が立ち、「誓って皇国の御為に帝国海軍を護り奉る」と奏上したとされる。翌日、側近の香川敬三が龍馬の写真を献上して夢に立ったのが龍馬だと確認した。この写真は徳富蘇峰の旧蔵品として霊山歴史館に現存する。',
+  y:'龍馬に「帝国海軍の守護神」という属性が付いた瞬間である。自由民権の英雄（1883年）と海軍の守護神（1904年）は本来両立しにくいが、どちらもこの人物に積み上げられた。国家が英雄を必要とする局面ごとに部品が足されている。',
+  s:[22,24,39]},
+ {d:'1907 明治40',e:7,t:'宮内省『殉難録稿』に載る',
+  w:'宮内省が編纂した『殉難録稿 巻之五十四』に、現在と同じ「建議案八條」の形で記載された。',
+  y:'官撰の記録に入ったことで、以後の伝記が引用できる典拠になった。11箇条が8條になり、形式が固定される。',
+  s:[29]},
+ {d:'1913 大正2',e:7,t:'「船中八策」という語が現れる',
+  w:'岡部精一が講演で「時勢八策」を紹介した。これが「船中八策」という用語の初出である。1909年の坂崎紫瀾の史談会での発言で舞台が船に移り、1916年に岡部が「船内で立案」と述べ、1926年に岩崎鏡川が新政府綱領八策を11月作成・船中八策を6月の下書きと位置づけた。',
+  y:'暗殺から46年で用語が成立し、62年で史実として扱われるようになる。史料ではなく反復によって事実の地位が与えられた典型例である。',
+  s:[29]},
+ {d:'1929 昭和4',e:7,t:'平尾道雄『坂本龍馬 海援隊始末記』',
+  w:'この著作以降、船中八策は史実として扱われるようになった。',
+  y:'実証史学の手続きを経たように見える形で、後世の構成物が学術の側に取り込まれた。訂正されるまでにさらに84年かかる。',
+  s:[29]},
+ {d:'1962 昭和37',e:7,t:'司馬遼太郎『竜馬がゆく』の連載開始',
+  w:'産経新聞での連載が始まり、1966年まで続いた。表記は「竜馬」で、史実の龍馬とは区別されている。',
+  y:'戦後日本における龍馬像の決定版になった。現在一般に流通している人物像のほとんどは、史料ではなくこの小説を経由している。',
+  s:[28]},
+ {d:'1988 昭和63',e:7,t:'いろは丸の沈没船が発見される',
+  w:'水深27メートルで沈没船が発見され、朱や鮫皮などの交易品が確認された。',
+  y:'121年後に、賠償請求の根拠を物証で検証できる状態が生まれた。',
+  f:['水深27m'],
+  s:[33]},
+ {d:'2005 平成17',e:7,t:'第4次調査で銃火器が確認されない',
+  w:'第4次調査でも、龍馬が賠償の根拠として主張した銃火器や金塊は確認されなかった。',
+  y:'いろは丸事件を「龍馬の痛快な勝利」として語る記述の根拠が、物証の側から崩れた。誇大請求だった可能性は現時点で否定できない。ただし流失や調査範囲の限界とも整合するため、確定もしていない。',
+  s:[33]},
+ {d:'2013 平成25',e:7,t:'知野文哉『「坂本龍馬」の誕生』',
+  w:'知野文哉が、船中八策が1896年から1929年にかけて段階的に組み立てられた過程を実証した。幕末史研究者の町田明広は2019年の著書で、この研究により船中八策は否定されていると述べている。',
+  y:'龍馬像の最大の部品が、成立から117年目に解体された。ただし国立国会図書館の解説は現在も船中八策を実在の建言として扱っており、公的機関の記述と最新研究は一致していない。',
+  s:[2,27,29]},
+ {d:'2017 平成29.11',e:7,t:'用語精選案をめぐる報道',
+  w:'高大連携歴史教育研究会が、高校教科書の本文用語を約3,500語から半減させる第一次案を示し、坂本龍馬・吉田松陰・上杉謙信などが基礎用語に含まれないことが報道された。研究会は、これは大学入試で問う基礎用語の精選案であり、他の用語を発展用語として掲載することを否定するものではない、と説明している。',
+  y:'この報道への反応の大きさが、龍馬像が現在も社会的資産として機能していることを示した。史料的な根拠が薄い部分が学術的に整理されつつある一方で、社会的な位置は動いていない。',
+  f:['3,500語 → 約2,000語'],
+  s:[55,56,57]},
+ {d:'2021 令和3.10',e:7,t:'薩長同盟裏書の原本が初公開される',
+  w:'高知県立坂本龍馬記念館の開館30周年記念展示で、宮内庁書陵部所蔵の薩長同盟裏書の原本が初めて一般公開された。',
+  y:'龍馬の幕末における最も確実な一次史料が、暗殺から154年目に一般の目に触れた。伝説の部品が剥がれていく一方で、確実に残るものはこの朱書の百数十字である。',
+  s:[19,49]},
+];
+
+/* 語録データ。t=テーマ / q=発言 / w=いつ・どこで / s=出典番号 */
+const QUOTES = [
+ {t:'手紙',q:'日本を今一度せんたくいたし申候事ニいたすべくとの神願にて候',w:'文久3年6月29日、姉・坂本乙女あて。原本は京都国立博物館所蔵、国の重要文化財。「神願にて候」＝そう神に願っている、という構文で終わる',s:[3,13,40]},
+ {t:'手紙',q:'龍馬二三家の大名とやくそくをかたくし、同志をつのり、朝廷より先ヅ神州をたもつの大本をたて',w:'同じ手紙の前段。上の一節はこの条件節を受けている',s:[13,40]},
+ {t:'手紙',q:'（建白が容れられず後藤が下城しないときは）海援隊同志とともに慶喜を路上で待ち受けて仇を討つ',w:'慶応3年10月13日、後藤象二郎あて。大政奉還の前日。要旨',s:[16,28]},
+ {t:'綱領',q:'凡嘗テ本藩ヲ脱スル者及佗藩ヲ脱スル者　海外ノ志アル者此隊ニ入ル',w:'海援隊約規 第1条（慶応3年4月）。藩籍を入隊要件から外した',s:[10,11]},
+ {t:'綱領',q:'凡隊中ノ事　一切隊長ノ處分ニ任ス',w:'海援隊約規 第2条。隊長の専断を明文化した条項',s:[10,11]},
+ {t:'綱領',q:'凡隊中修業分課政法火技航海滊機語学等',w:'海援隊約規 第4条。政法・砲術・航海・機械・語学の修業を義務づけた',s:[10,11]},
+ {t:'綱領',q:'凡隊中所費ノ錢糧　其自營ノ功ニ取ル',w:'海援隊約規 第5条。経費と給与は自営の利益から配分し、私有化を禁じた',s:[10,11]},
+ {t:'綱領',q:'第五義　上下議政所',w:'新政府綱領八策（慶応3年11月）。二院制議会の設置。自筆本が国立国会図書館と下関市立長府博物館に現存する',s:[2,12,36]},
+ {t:'綱領',q:'第八義　皇国今日ノ金銀物価ヲ外国ト平均ス',w:'新政府綱領八策。内外価格差の是正を国家の綱領に入れている',s:[12,36]},
+ {t:'綱領',q:'○○○自ら盟主と為り',w:'新政府綱領八策の末尾。伏字は慶喜説と山内容堂説があり通説は定まっていない',s:[36]},
+ {t:'綱領',q:'表に御記成被候六条は小西両氏及老兄龍等も御同席',w:'慶応2年2月5日、薩摩藩邸で桂小五郎の書状の裏に朱書した薩長同盟裏書。宮内庁書陵部図書寮文庫「木戸家文書」に現存',s:[1,19,30]},
+ {t:'同時代の記録',q:'余、不覚にも数行の涙を流す',w:'慶応3年6月9日、岩崎彌太郎の日記。龍馬らが京都へ向かうのを見送った際の記述。龍馬本人の言葉ではない',s:[43]},
+ {t:'同時代の記録',q:'脳をやられたから、もうだめだ',w:'慶応3年11月15日、近江屋。同席していた中岡慎太郎らの証言による伝聞で、本人の自筆記録はない',s:[34]},
+ {t:'出典未確定',q:'世に生を得るは事を成すにあり',w:'『英将秘訣』所収として坂崎紫瀾が龍馬の遺墨と紹介したもの。現在は平田派の学者の筆とする説が有力で、龍馬の言葉としては確認できない',s:[41]},
+ {t:'出典未確定',q:'船中八策（八箇条）',w:'慶応3年6月に船中で書かれたとされる新国家構想。原本は存在しない。1896年から1929年にかけて段階的に成立した経緯が知野文哉により実証されている',s:[27,29]},
+ {t:'出典未確定',q:'日本の夜明けぜよ',w:'映像作品を通じて広く流通しているが、書簡にも同時代史料にも該当する記述を確認できない',s:[28]},
+];
+
+/* ─── 描画 ───────────────────────────────────────────────────────────────── */
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sup = arr => (arr || []).map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+
+const activeEras = new Set();
+
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+/* 語録 */
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+/* チャート。単系列は1色。値はすべて棒に直接ラベルを置く */
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+bars('chartIroha', [
+  {k:'龍馬の初期要求', v:10000, est:true, sub:'鞆の浦'},
+  {k:'紀州藩の提示', v:1000, est:true, sub:'鞆の浦'},
+  {k:'積荷込みの請求', v:83526, est:true, sub:'長崎・合意額'},
+  {k:'実際の支払', v:70000, sub:'11/7 土佐藩へ'},
+], '両');
+
+bars('chartLife', [
+  {k:'誕生〜江戸遊学', v:207, sub:'1836.1–1853.4'},
+  {k:'江戸と土佐の往復', v:108, sub:'1853.4–1862.4'},
+  {k:'脱藩〜暗殺', v:68, sub:'1862.4–1867.12'},
+  {k:'うち海援隊隊長', v:7, est:true, sub:'1867.4–1867.11'},
+], 'か月');
+</script>
+
+<script type="application/json" id="facts">
+[
+ {"claim":"生年月日","value":"1836-01-03","unit":"date","as_of":"天保6年11月15日","source":"https://www.city.kochi.kochi.jp/site/kanko/ryoma-syoukai.html","confidence":"reported"},
+ {"claim":"没年月日","value":"1867-12-10","unit":"date","as_of":"慶応3年11月15日","source":"https://ja.wikipedia.org/wiki/%E8%BF%91%E6%B1%9F%E5%B1%8B%E4%BA%8B%E4%BB%B6","confidence":"reported"},
+ {"claim":"脱藩","value":"1862-03-24","unit":"和暦date","as_of":"文久2年3月24日","source":"https://ja.wikipedia.org/wiki/%E5%9D%82%E6%9C%AC%E9%BE%8D%E9%A6%AC","confidence":"reported"},
+ {"claim":"現存書簡数（宮地佐一郎編）","value":139,"unit":"通","as_of":"2003","source":"https://www.kodansha.co.jp/book/products/0000151219","confidence":"reported"},
+ {"claim":"青空文庫が公開する書簡数","value":121,"unit":"点","as_of":"2026-08","source":"https://www.aozora.gr.jp/index_pages/person908.html","confidence":"reported"},
+ {"claim":"薩長同盟裏書の日付","value":"1866-02-05","unit":"和暦date","as_of":"慶応2年2月5日","source":"https://www.kunaicho.go.jp/culture/shoryobu/syuzou-z08.html","confidence":"reported"},
+ {"claim":"神戸海軍塾の借入金（松平春嶽）","value":1000,"unit":"両","as_of":"文久3年5月","source":"https://ja.wikipedia.org/wiki/%E5%9D%82%E6%9C%AC%E9%BE%8D%E9%A6%AC","confidence":"reported"},
+ {"claim":"社中隊士への薩摩藩支給","value":"3両2分","unit":"両/人","as_of":"慶応2年10月","source":"https://ja.wikipedia.org/wiki/%E4%BA%80%E5%B1%B1%E7%A4%BE%E4%B8%AD","confidence":"reported"},
+ {"claim":"ミニエー銃の購入数","value":4300,"unit":"挺","as_of":"慶応元年8月","source":"https://ja.wikipedia.org/wiki/%E5%9D%82%E6%9C%AC%E9%BE%8D%E9%A6%AC","confidence":"reported"},
+ {"claim":"ゲベール銃の購入数","value":3000,"unit":"挺","as_of":"慶応元年8月","source":"https://ja.wikipedia.org/wiki/%E5%9D%82%E6%9C%AC%E9%BE%8D%E9%A6%AC","confidence":"reported"},
+ {"claim":"いろは丸のトン数","value":160,"unit":"トン","as_of":"1867","source":"https://ja.wikipedia.org/wiki/%E3%81%84%E3%82%8D%E3%81%AF%E4%B8%B8","confidence":"reported"},
+ {"claim":"明光丸のトン数","value":880,"unit":"トン","as_of":"1867","source":"https://ja.wikipedia.org/wiki/%E3%81%84%E3%82%8D%E3%81%AF%E4%B8%B8","confidence":"reported"},
+ {"claim":"いろは丸賠償の請求額","value":"83526両198文","unit":"両","as_of":"慶応3年5月","source":"https://ja.wikipedia.org/wiki/%E3%81%84%E3%82%8D%E3%81%AF%E4%B8%B8","confidence":"reported"},
+ {"claim":"いろは丸賠償の支払額","value":70000,"unit":"両","as_of":"慶応3年11月7日","source":"https://ja.wikipedia.org/wiki/%E3%81%84%E3%82%8D%E3%81%AF%E4%B8%B8","confidence":"reported"},
+ {"claim":"いろは丸の海底調査で銃火器が確認されたか","value":"否","unit":"—","as_of":"2005","source":"https://ja.wikipedia.org/wiki/%E3%81%84%E3%82%8D%E3%81%AF%E4%B8%B8","confidence":"disputed"},
+ {"claim":"ワイル・ウエフ号沈没の死者","value":12,"unit":"名","as_of":"慶応2年5月2日","source":"https://ja.wikipedia.org/wiki/%E3%83%AF%E3%82%A4%E3%83%AB%E3%83%BB%E3%82%A6%E3%82%A8%E3%83%95%E5%8F%B7","confidence":"reported"},
+ {"claim":"薩長同盟の成立日","value":"慶応2年1月21日","unit":"和暦date","as_of":"1866","source":"https://ja.wikipedia.org/wiki/%E8%96%A9%E9%95%B7%E5%90%8C%E7%9B%9F","confidence":"disputed"},
+ {"claim":"船中八策の原本の存否","value":"不存在","unit":"—","as_of":"2013","source":"https://www.kinokuniya.co.jp/f/dsg-01-9784409520581","confidence":"disputed"},
+ {"claim":"新政府綱領八策の自筆本","value":2,"unit":"枚","as_of":"慶応3年11月","source":"https://www.ndl.go.jp/modern/cha1/description02.html","confidence":"reported"},
+ {"claim":"贈位","value":"正四位","unit":"—","as_of":"1891-04-08","source":"https://ja.wikipedia.org/wiki/%E5%9D%82%E6%9C%AC%E9%BE%8D%E9%A6%AC","confidence":"reported"},
+ {"claim":"脱藩から暗殺までの期間","value":68,"unit":"か月","as_of":"1862-04〜1867-12","source":"https://ja.wikipedia.org/wiki/%E5%9D%82%E6%9C%AC%E9%BE%8D%E9%A6%AC","confidence":"estimated"}
+]
+</script>
+</body>
+</html>

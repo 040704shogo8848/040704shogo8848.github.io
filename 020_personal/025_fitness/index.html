@@ -66,25 +66,24 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .tag.h{background:#fbeae8;color:var(--hot)}
 .empty{color:var(--mute);font-size:12px;padding:16px 0;text-align:center}
 
-/* body map */
-.bodypair{display:flex;gap:4px;justify-content:center}
-.bodysvg{width:100%;max-width:118px;height:auto;display:block}
-.bodysvg path{transition:fill .2s}
-.mlegend{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;justify-content:center}
-.mchip{font-size:10.5px;padding:2px 7px;border-radius:20px;border:1px solid var(--line);color:var(--sub);background:#fff}
-.mchip.p{background:var(--hot);border-color:var(--hot);color:#fff}
-.mchip.s{background:#fbeae8;border-color:#f0cdc7;color:var(--hot)}
-.exbody{flex:0 0 96px}
-.exbody .bodysvg{max-width:46px}
+/* 種目が使う筋群のタグ。主働は塗り、補助は枠だけ */
+.mtags{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center}
+.mt{font-size:10px;padding:1px 6px;border-radius:20px;border:1px solid var(--line);color:var(--mute);background:#fff;white-space:nowrap}
+.mt.p{background:var(--accent-w);border-color:#c5d8ea;color:var(--accent);font-weight:600}
+
+/* メニュー解説 */
+ul.coach{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+ul.coach>li{font-size:12.5px;line-height:1.8;color:var(--fg);padding-left:13px;position:relative}
+ul.coach>li::before{content:"";position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
 
 /* training */
 .block{border:1px solid var(--line);border-radius:var(--r);background:var(--card);margin-bottom:12px;overflow:hidden}
 .block>.bh{padding:10px 14px;background:#fbfbfc;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .block>.bh .bt{font-size:13px;font-weight:700}
 .block>.bb{padding:2px 14px 12px}
-.ex{padding:12px 0;border-bottom:1px solid var(--line2);display:flex;gap:12px}
+.ex{padding:12px 0;border-bottom:1px solid var(--line2)}
 .ex:last-child{border-bottom:none}
-.exmain{flex:1;min-width:0}
+.exmain{min-width:0}
 .exh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:3px}
 .exn{font-size:13px;font-weight:700}
 .exd{font-size:11px;color:var(--sub);margin:4px 0 8px;line-height:1.65}
@@ -96,7 +95,6 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
   cursor:pointer;color:var(--mute);font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center}
 .set .chk.on{background:var(--ok-w);border-color:var(--ok);color:var(--ok)}
 .prev{font-size:11px;color:var(--mute);margin-top:6px;font-variant-numeric:tabular-nums}
-@media(max-width:560px){.ex{flex-direction:column-reverse}.exbody{flex:none}.exbody .bodypair{justify-content:flex-start}.exbody .bodysvg{max-width:52px}}
 
 /* rest timer */
 .timer{position:fixed;left:0;right:0;bottom:62px;background:var(--accent);color:#fff;
@@ -173,7 +171,6 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .libitem .li1{flex:1;min-width:0}
 .libitem .lin{font-size:13px;font-weight:600}
 .libitem .lim{font-size:11px;color:var(--sub);margin-top:2px}
-.libitem .bodysvg{max-width:34px}
 .filt{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
 .filt button{font-size:11px;padding:4px 9px;border:1px solid var(--line);border-radius:20px;background:#fff;cursor:pointer;font-family:inherit;color:var(--sub)}
 .filt button.on{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -309,9 +306,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   </div>
 
   <div class="card">
-    <h2>今日鍛える部位<span class="r">濃い赤＝主働筋／薄い赤＝補助筋</span></h2>
-    <div id="tBody"></div>
-    <div class="mlegend" id="tLegend"></div>
+    <h2>この日の狙い<span class="r" id="tTargets"></span></h2>
+    <div id="tCoach"></div>
   </div>
 
   <div id="tBlocks"></div>
@@ -335,11 +331,12 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   </div>
 
   <div class="card">
-    <h2>このメニューが叩く部位</h2>
-    <div id="eBody"></div>
-    <div class="mlegend" id="eLegend"></div>
-    <hr>
-    <h3>部位別セット数</h3>
+    <h2>この組み方の意図</h2>
+    <div id="eCoach"></div>
+  </div>
+
+  <div class="card">
+    <h2>このメニューが叩く部位<span class="r">主働1・補助0.5で換算</span></h2>
     <div id="eSets"></div>
   </div>
 
@@ -658,7 +655,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 </div></div>
 
 <script src="data.js"></script>
-<script src="body.js"></script>
 <script>
 "use strict";
 
@@ -668,7 +664,7 @@ function defaults(){
   const menus = {};
   for(const k in PRESETS){
     menus[k] = {
-      label: PRESETS[k].label, desc: PRESETS[k].desc, preset: true,
+      label: PRESETS[k].label, desc: PRESETS[k].desc, coach: PRESETS[k].coach, preset: true,
       blocks: PRESETS[k].blocks.map(b => ({
         name: b.name, rest: b.rest,
         items: b.items.map(id => { const e = ex(id); return {id:id, sets:e.sets, lo:e.lo, hi:e.hi}; })
@@ -684,7 +680,7 @@ function defaults(){
     sessions:{}, meals:{}, myfoods:[], recent:[], body:[],
     gym: JSON.parse(JSON.stringify(GYM)),
     backup:{lastExport:null},
-    schedule:["","back_gym","chest_gym","legs_gym","","",""] // index0=日〜6=土。月=背中・火=胸・水=脚を確認済み。木金土日は未確認のため空のまま
+    schedule:["core_gym","back_gym","chest_gym","legs_gym","shoulder_gym","back2_gym","arms_gym"] // index0=日〜6=土
   };
 }
 const EXMAP = {}; EXERCISES.forEach(e=>EXMAP[e.id]=e);
@@ -707,6 +703,18 @@ function load(){
     const m = Object.assign(base, o);
     // プリセットが増えたときに既存データへ流し込む
     for(const k in base.menus) if(!m.menus[k]) m.menus[k] = base.menus[k];
+    /* プリセットの説明文（label/desc/coach）は「こちらが提供するもの」で、
+       画面から編集できるのはブロックの中身だけ。保存済みデータには古い版が残るので、
+       ブロックはユーザーの編集を残したまま説明文だけ最新に差し替える。 */
+    for(const k in base.menus){
+      if(m.menus[k] && m.menus[k].preset && PRESETS[k]){
+        m.menus[k].label = PRESETS[k].label;
+        m.menus[k].desc  = PRESETS[k].desc;
+        m.menus[k].coach = PRESETS[k].coach;
+      }
+    }
+    // 曜日割当が未設定のまま残っている場合は既定の週構成を入れる
+    if(!Array.isArray(m.schedule) || m.schedule.every(x=>!x)) m.schedule = base.schedule.slice();
     return m;
   }catch(e){ return defaults(); }
 }
@@ -843,12 +851,27 @@ function stopTimer(){ if(th) clearInterval(th); th=null; $("#timer").classList.r
 $("#tvSkip").onclick = stopTimer;
 $("#tvAdd").onclick = ()=>{ tl+=30; paintTimer(); };
 
-/* ─── 筋肉図まわり ─────────────────────────────────────────────────────── */
-function legendHTML(level){
-  const keys = Object.keys(MUSCLES).filter(k=>level[k]);
-  keys.sort((a,b)=>(level[b]-level[a]));
-  if(!keys.length) return '<span class="mchip">種目が未設定</span>';
-  return keys.map(k=>'<span class="mchip '+(level[k]===2?"p":"s")+'">'+MUSCLES[k][0]+'</span>').join("");
+/* ─── 部位・解説まわり ─────────────────────────────────────────────────── */
+/* そのメニューで主働になる部位を、セット数の多い順に names で返す */
+function topMuscles(menu, n){
+  const agg = setsByMuscle(menu.blocks);
+  return Object.keys(agg).sort((a,b)=>agg[b]-agg[a]).slice(0, n||4)
+    .map(k=>MUSCLES[k] ? MUSCLES[k][0] : k);
+}
+/* 種目1つが使う筋群。主働は濃く、補助は薄く出す */
+function muscleTags(e){
+  const pri = (e.pri||[]).map(m=>'<span class="mt p">'+(MUSCLES[m]?MUSCLES[m][0]:m)+'</span>');
+  const sec = (e.sec||[]).map(m=>'<span class="mt">'+(MUSCLES[m]?MUSCLES[m][0]:m)+'</span>');
+  if(!pri.length && !sec.length) return "";
+  return '<span class="mtags">'+pri.join("")+sec.join("")+'</span>';
+}
+/* メニューの解説。coach が無いメニュー（カスタム・旧プリセット）は desc にフォールバック */
+function coachHTML(menu){
+  const lines = menu.coach || [];
+  if(!lines.length){
+    return '<p class="note">'+(menu.desc ? esc(menu.desc) : "このメニューには解説がない。複製元のプリセットを見るか、自分で組んだ意図をメモに残しておく。")+'</p>';
+  }
+  return '<ul class="coach">'+lines.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ul>';
 }
 function menuExercises(menu){
   const list = [];
@@ -949,9 +972,8 @@ function suggest(e, it, prev){
 
 function renderTrain(){
   const date = $("#tDate").value, menu = activeMenu();
-  const lv = levelsOf(menuExercises(menu));
-  $("#tBody").innerHTML = bodyPair(lv);
-  $("#tLegend").innerHTML = legendHTML(lv);
+  $("#tTargets").textContent = topMuscles(menu, 4).join(" ・ ");
+  $("#tCoach").innerHTML = coachHTML(menu);
 
   const wrap = $("#tBlocks"); wrap.innerHTML = "";
   let total=0, done=0, vol=0, estSec=0;
@@ -1003,13 +1025,12 @@ function renderTrain(){
       }
       rows += '</div>';
 
-      const exlv = levelsOf([e]);
       d.innerHTML =
         '<div class="exmain"><div class="exh"><span class="exn">'+esc(e.n)+'</span>'
-        + '<span class="tag">'+it.sets+'セット '+it.lo+'-'+it.hi+UNIT(e)+'</span></div>'
+        + '<span class="tag">'+it.sets+'セット '+it.lo+'-'+it.hi+UNIT(e)+'</span>'
+        + muscleTags(e) + '</div>'
         + '<div class="exd">'+esc(e.d)+'</div>' + rows
-        + '<div class="prev">'+(sug ? esc(sug.txt) : "初回。フォームが崩れない重量から始める")+'</div></div>'
-        + '<div class="exbody">'+bodyPair(exlv)+'</div>';
+        + '<div class="prev">'+(sug ? esc(sug.txt) : "初回。フォームが崩れない重量から始める")+'</div></div>';
       bb.appendChild(d);
     });
     el.appendChild(bb); wrap.appendChild(el);
@@ -1074,9 +1095,7 @@ function renderMenuTab(){
   fillMenuSelects();
   const m = editMenu();
   $("#eDesc").textContent = m.desc || "";
-  const lv = levelsOf(menuExercises(m));
-  $("#eBody").innerHTML = bodyPair(lv);
-  $("#eLegend").innerHTML = legendHTML(lv);
+  $("#eCoach").innerHTML = coachHTML(m);
   $("#eSets").innerHTML = setsBarHTML(setsByMuscle(m.blocks));
   $("#eLock").textContent = m.preset ? "プリセットは直接編集できる。元に戻したいときは設定から全消去するか、複製して使う。" : "カスタムメニュー";
 
@@ -1174,9 +1193,9 @@ function renderLib(){
   $("#libList").innerHTML = list.length ? list.map(e=>{
     const eqn = EQN[e.eq]||e.eq;
     return '<div class="libitem" data-id="'+e.id+'">'
-      + bodySVG(levelsOf([e]),"front") + bodySVG(levelsOf([e]),"back")
       + '<div class="li1"><div class="lin">'+esc(e.n)+'</div>'
-      + '<div class="lim">'+eqn+' ・ '+(LOCN[e.loc]||"")+' ・ '+e.pri.map(m=>MUSCLES[m][0]).join("・")+'</div></div></div>';
+      + '<div class="lim">'+eqn+' ・ '+(LOCN[e.loc]||"")+'</div>'
+      + muscleTags(e) + '</div></div>';
   }).join("") : '<div class="empty">該当なし</div>';
   $("#libList").querySelectorAll(".libitem").forEach(el=>{
     el.onclick = ()=>{
@@ -1533,11 +1552,11 @@ function renderSched(){
     const opts = '<option value="">（手動選択のまま）</option>'
       + Object.keys(S.menus).map(k=>'<option value="'+k+'"'+(k===key?" selected":"")+'>'+esc(S.menus[k].label)+'</option>').join("");
     const m = key && S.menus[key];
-    const legend = m ? legendHTML(levelsOf(menuExercises(m))) : '<span class="note">未割当</span>';
-    return '<div class="row" style="margin-bottom:8px;align-items:flex-start">'
+    const targets = m ? '<span class="note">'+esc(topMuscles(m,3).join(" ・ "))+'</span>' : '<span class="note">未割当</span>';
+    return '<div class="row" style="margin-bottom:8px;align-items:center">'
       + '<span class="tag" style="min-width:26px;text-align:center">'+w+'</span>'
       + '<div class="fg" style="max-width:220px"><select data-dow="'+i+'">'+opts+'</select></div>'
-      + '<div class="mlegend" style="margin-top:0;flex:1">'+legend+'</div></div>';
+      + '<div style="flex:1;min-width:0">'+targets+'</div></div>';
   }).join("");
   $("#cSched").querySelectorAll("[data-dow]").forEach(sel=> sel.onchange = ()=>{
     S.schedule[+sel.dataset.dow] = sel.value; save(); renderSched();

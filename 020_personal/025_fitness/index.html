@@ -71,6 +71,23 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .mt{font-size:10px;padding:1px 6px;border-radius:20px;border:1px solid var(--line);color:var(--mute);background:#fff;white-space:nowrap}
 .mt.p{background:var(--accent-w);border-color:#c5d8ea;color:var(--accent);font-weight:600}
 
+/* サマリー */
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:12px}
+.kpi>div{min-width:0}
+.kpi .kl{font-size:10.5px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .kv{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.35}
+.kpi .kv.up{color:var(--ok)} .kpi .kv.dn{color:var(--hot)} .kpi .kv.na{color:var(--mute);font-weight:400;font-size:14px}
+.kpi .ks{font-size:10.5px;color:var(--mute);font-variant-numeric:tabular-nums}
+
+/* 判断リスト。深刻度で色を変える */
+ul.ins{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+ul.ins>li{font-size:12.5px;line-height:1.75;padding:9px 11px 9px 12px;border-radius:8px;border-left:3px solid var(--line)}
+ul.ins>li.bad{background:#fdf5f4;border-left-color:var(--hot)}
+ul.ins>li.warn{background:var(--warn-w);border-left-color:var(--warn)}
+ul.ins>li.ok{background:var(--ok-w);border-left-color:var(--ok)}
+ul.ins>li.info{background:#fbfbfc;border-left-color:var(--line)}
+ul.ins>li b{font-weight:700}
+
 /* メニュー解説 */
 ul.coach{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
 ul.coach>li{font-size:12.5px;line-height:1.8;color:var(--fg);padding-left:13px;position:relative}
@@ -260,10 +277,12 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
     <div class="meta" id="hdMeta"></div>
   </div>
   <div class="tabs">
-    <button data-t="train" class="on">トレーニング</button>
+    <button data-t="sum" class="on">サマリー</button>
+    <button data-t="train">トレーニング</button>
     <button data-t="menu">メニュー</button>
     <button data-t="meal">食事</button>
     <button data-t="scale">体組成</button>
+    <button data-t="sleep">睡眠</button>
     <button data-t="rec">記録</button>
     <button data-t="conf">設定</button>
   </div>
@@ -289,8 +308,88 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   </div>
 </div>
 
+<!-- ══ サマリー ══ -->
+<section id="sum" class="on">
+  <div class="card" id="sumInsightCard">
+    <h2>今週の判断<span class="r" id="sumRange"></span></h2>
+    <div id="sumInsight"></div>
+  </div>
+
+  <div class="card">
+    <h2>増量の進捗<span class="r">体重の7日平均から算出</span></h2>
+    <div id="sumBody"></div>
+  </div>
+
+  <div class="card">
+    <h2>食事<span class="r">直近7日の平均</span></h2>
+    <div id="sumMeal"></div>
+  </div>
+
+  <div class="card">
+    <h2>トレーニング<span class="r">直近7日</span></h2>
+    <div id="sumTrain"></div>
+  </div>
+
+  <div class="card">
+    <h2>睡眠<span class="r">直近7日の平均</span></h2>
+    <div id="sumSleep"></div>
+  </div>
+</section>
+
+<!-- ══ 睡眠 ══ -->
+<section id="sleep">
+  <div class="card">
+    <h2>記録する<span class="r">起きた日で記録する</span></h2>
+    <p class="note" style="margin-bottom:10px">
+      日付は「起きた日」を選ぶ。8月19日のレコードは、8月18日の夜に寝て19日の朝に起きた1回ぶんを指す。
+      日付をまたぐので、就寝時刻が起床時刻より遅い場合は前日の夜として自動で計算する。
+    </p>
+    <div class="row">
+      <div class="fg" style="max-width:150px"><label class="f">日付（起きた日）</label><input type="date" id="slDate"></div>
+      <div class="fg" style="max-width:110px"><label class="f">就寝</label><input type="time" id="slBed"></div>
+      <div class="fg" style="max-width:110px"><label class="f">起床</label><input type="time" id="slWake"></div>
+      <div class="fg" style="max-width:130px"><label class="f">体感</label>
+        <select id="slQ">
+          <option value="">—</option>
+          <option value="3">よく眠れた</option>
+          <option value="2">普通</option>
+          <option value="1">浅い・寝足りない</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn sm" id="slSave">保存</button>
+      <button class="btn sm gr" id="slClear">クリア</button>
+      <div class="sp"></div>
+      <span class="note" id="slMsg"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>なぜ測るか</h2>
+    <ul class="coach">
+      <li>週7でMRV近くまで積んでいる今、伸びを止める要因はボリュームではなく回復側にある。睡眠は回復の中で唯一、自分で伸ばせる変数。</li>
+      <li>成長ホルモンの大半は深い睡眠中に出る。筋タンパク合成はトレーニング中ではなく寝ている間に進むので、追い込むほど睡眠時間が要る。</li>
+      <li>睡眠不足はテストステロンを下げ、コルチゾールを上げる。増量期にこの組み合わせになると、増えた体重が筋肉ではなく脂肪に寄る。</li>
+      <li>目安は7〜9時間。6.5時間を下回る日が続いたら、その週はセット数を落として回復を優先したほうが結果的に伸びる。</li>
+      <li>就寝時刻のばらつきも効く。合計時間が同じでも、寝る時刻が毎日2時間ずれると体内時計が崩れて深い睡眠の割合が落ちる。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>推移<span class="r" id="slTrend"></span></h2>
+    <svg class="chart" id="slChart"></svg>
+    <div class="lg"><span><i style="background:#2f5d8f"></i>睡眠時間</span><span><i style="background:#a8622a"></i>7日平均</span></div>
+  </div>
+
+  <div class="card">
+    <h2>記録一覧</h2>
+    <div id="slHist"></div>
+  </div>
+</section>
+
 <!-- ══ トレーニング ══ -->
-<section id="train" class="on">
+<section id="train">
   <div class="card">
     <div class="row">
       <div class="fg" style="max-width:160px"><label class="f">セッション日</label><input type="date" id="tDate"></div>
@@ -678,6 +777,9 @@ function defaults(){
     target:{kcal:3150, p:139, f:70, c:480},
     menus: menus, activeMenu:"back_gym", editMenu:"back_gym",
     sessions:{}, meals:{}, myfoods:[], recent:[], body:[],
+    /* 睡眠は「起きた日」をキーにする。8/19のレコードは 8/18夜に寝て 8/19朝に起きた1回分。
+       就寝日をキーにすると日付をまたぐ入力で必ず混乱するので、この向きで固定する。 */
+    sleep:{},
     gym: JSON.parse(JSON.stringify(GYM)),
     backup:{lastExport:null},
     schedule:["core_gym","back_gym","chest_gym","legs_gym","shoulder_gym","back2_gym","arms_gym"] // index0=日〜6=土
@@ -715,6 +817,9 @@ function load(){
     }
     // 曜日割当が未設定のまま残っている場合は既定の週構成を入れる
     if(!Array.isArray(m.schedule) || m.schedule.every(x=>!x)) m.schedule = base.schedule.slice();
+    // 後から足したフィールドは、古い保存データに存在しないので補う
+    if(!m.sleep || typeof m.sleep !== "object") m.sleep = {};
+    if(!m.backup || typeof m.backup !== "object") m.backup = {lastExport:null};
     return m;
   }catch(e){ return defaults(); }
 }
@@ -828,6 +933,8 @@ $$(".tabs button").forEach(b=>{
     $$(".tabs button").forEach(x=>x.classList.remove("on"));
     $$("section").forEach(x=>x.classList.remove("on"));
     b.classList.add("on"); $("#"+b.dataset.t).classList.add("on");
+    if(b.dataset.t==="sum"){ renderSummary(); }
+    if(b.dataset.t==="sleep"){ renderSleep(); }
     if(b.dataset.t==="scale"){ renderScale(); }
     if(b.dataset.t==="rec"){ renderRec(); }
     if(b.dataset.t==="conf"){ renderConf(); }
@@ -1440,6 +1547,311 @@ function renderScale(){
   });
 }
 
+/* ─── 分析エンジン ─────────────────────────────────────────────────────────
+   サマリータブが使う集計。すべて「データが無ければ null を返す」方針で、
+   呼び出し側が判定不能と表示できるようにする。数字が無いのに断定するのが一番害がある。 */
+
+/* 今日から n 日ぶんの日付キー（新しい順） */
+function recentDates(n){
+  const out = [], base = new Date(today()+"T00:00:00");
+  for(let i=0;i<n;i++){
+    const d = new Date(base.getFullYear(), base.getMonth(), base.getDate()-i);
+    out.push(d.toLocaleDateString("sv-SE"));
+  }
+  return out;
+}
+const dayNum = s => Math.round(new Date(s+"T00:00:00").getTime()/86400000);
+
+/* 最小二乗法で「1週あたりの変化量」を出す。2点未満とばらつきゼロは null */
+function weeklySlope(pts){
+  const p = pts.filter(x=>x.y!=null && isFinite(x.y));
+  if(p.length < 2) return null;
+  const n = p.length;
+  let sx=0, sy=0, sxy=0, sxx=0;
+  p.forEach(v=>{ sx+=v.x; sy+=v.y; sxy+=v.x*v.y; sxx+=v.x*v.x; });
+  const den = n*sxx - sx*sx;
+  if(Math.abs(den) < 1e-9) return null;
+  return ((n*sxy - sx*sy)/den) * 7;
+}
+
+/* 体組成。直近 days 日の記録から週あたりの変化を出す */
+function bodyStats(days){
+  days = days || 28;
+  const cutoff = recentDates(days)[days-1];
+  const rows = S.body.filter(r=>r.date >= cutoff);
+  if(!rows.length) return {n:0};
+  const last = rows[rows.length-1];
+  const lbmOf = r => r.lbm!=null ? r.lbm : (r.fat!=null ? r1(r.w*(1-r.fat/100)) : null);
+  const st = {
+    n: rows.length,
+    last: last,
+    lbm: lbmOf(last),
+    wPerWeek:   weeklySlope(rows.map(r=>({x:dayNum(r.date), y:r.w}))),
+    lbmPerWeek: weeklySlope(rows.map(r=>({x:dayNum(r.date), y:lbmOf(r)}))),
+    fatPerWeek: weeklySlope(rows.map(r=>({x:dayNum(r.date), y:r.fat})))
+  };
+  st.pctPerWeek = (st.wPerWeek!=null && last.w) ? st.wPerWeek/last.w*100 : null;
+  return st;
+}
+
+/* 食事。記録がある日だけを平均する。0件の日を0kcalとして混ぜると平均が壊れる */
+function mealStats(days){
+  const ds = recentDates(days||7);
+  const sums = ds.map(d=>{
+    const log = S.meals[d];
+    if(!log || !log.length) return null;
+    return log.reduce((a,x)=>({kcal:a.kcal+ +x.kcal, p:a.p+ +x.p, f:a.f+ +x.f, c:a.c+ +x.c}), {kcal:0,p:0,f:0,c:0});
+  }).filter(Boolean);
+  if(!sums.length) return {n:0, loggedDays:0, totalDays:ds.length};
+  const avg = k => sums.reduce((a,s)=>a+s[k],0)/sums.length;
+  return {n:sums.length, loggedDays:sums.length, totalDays:ds.length,
+    kcal:avg("kcal"), p:avg("p"), f:avg("f"), c:avg("c")};
+}
+
+/* トレーニング。直近 days 日で実際に完了したセットのみ集計 */
+function trainStats(days){
+  const ds = recentDates(days||7);
+  const agg = {};
+  let sets = 0, vol = 0, sessions = 0;
+  ds.forEach(d=>{
+    const s = S.sessions[d]; if(!s) return;
+    let daySets = 0;
+    for(const id in (s.ex||{})){
+      const e = ex(id), done = s.ex[id].filter(x=>x.done);
+      if(!done.length) continue;
+      daySets += done.length;
+      done.forEach(x=>{ vol += (Number(x.w)||0)*(Number(x.r)||0)*volMult(e); });
+      (e.pri||[]).forEach(m=>agg[m]=(agg[m]||0)+done.length);
+      (e.sec||[]).forEach(m=>agg[m]=(agg[m]||0)+done.length*0.5);
+    }
+    if(daySets>0){ sessions++; sets += daySets; }
+  });
+  const over = Object.keys(agg).filter(m=>agg[m] > VOL_BANDS.mrv);
+  const under = Object.keys(agg).filter(m=>agg[m] > 0 && agg[m] < VOL_BANDS.mev);
+  return {sessions:sessions, sets:sets, vol:vol, byMuscle:agg, overMRV:over, underMEV:under};
+}
+
+/* 睡眠。就寝が起床より遅ければ日付をまたいだものとして +24h する */
+function sleepHours(bed, wake){
+  if(!bed || !wake) return null;
+  const toMin = t => { const p = String(t).split(":"); return (+p[0])*60 + (+p[1]||0); };
+  const b = toMin(bed); let w = toMin(wake);
+  if(!isFinite(b) || !isFinite(w)) return null;
+  if(w <= b) w += 24*60;
+  return Math.round((w-b)/6)/10;   // 0.1時間刻み
+}
+function sleepStats(days){
+  const ds = recentDates(days||7);
+  const hs = ds.map(d=>{
+    const r = S.sleep[d];
+    return r ? sleepHours(r.bed, r.wake) : null;
+  }).filter(v=>v!=null);
+  if(!hs.length) return {n:0, totalDays:ds.length};
+  const avg = hs.reduce((a,b)=>a+b,0)/hs.length;
+  const min = Math.min.apply(null, hs);
+  const short = hs.filter(h=>h < 6.5).length;
+  return {n:hs.length, totalDays:ds.length, avg:avg, min:min, shortNights:short};
+}
+
+/* ─── サマリー ────────────────────────────────────────────────────────── */
+const NA = '<span class="kv na">—</span>';
+function kpi(label, valueHTML, sub){
+  return '<div><div class="kl">'+esc(label)+'</div>'+valueHTML
+    + (sub ? '<div class="ks">'+sub+'</div>' : '')+'</div>';
+}
+const sign = v => (v>=0?"+":"")+r1(v);
+
+function renderSummary(){
+  const b = bodyStats(28), m = mealStats(7), t = trainStats(7), sl = sleepStats(7);
+  const tgt = S.target;
+  $("#sumRange").textContent = "体組成は直近4週／その他は直近7日";
+
+  /* ── 増量の進捗 ── */
+  if(!b.n){
+    $("#sumBody").innerHTML = '<p class="note">体組成の記録がまだない。体重と体脂肪率を2回以上入れると増量ペースを判定できる。</p>';
+  }else{
+    const wk = b.wPerWeek, pct = b.pctPerWeek;
+    let cls = "", note = "記録2回以上で判定";
+    if(b.n >= 2 && wk != null){
+      if(pct > 0.5){ cls="dn"; note="速い。脂肪が乗りやすい"; }
+      else if(pct >= 0.25){ cls="up"; note="適正な増量ペース"; }
+      else if(pct >= 0.1){ cls="up"; note="やや遅いが増えている"; }
+      else if(pct > -0.1){ cls=""; note="停滞している"; }
+      else { cls="dn"; note="減っている"; }
+    }
+    $("#sumBody").innerHTML = '<div class="kpi">'
+      + kpi("体重", '<div class="kv">'+r1(b.last.w)+'<span style="font-size:11px;font-weight:400"> kg</span></div>', b.last.date.slice(5))
+      + kpi("週あたり", wk!=null ? '<div class="kv '+cls+'">'+sign(wk)+'<span style="font-size:11px;font-weight:400"> kg</span></div>' : NA,
+            pct!=null ? sign(pct)+" %/週" : note)
+      + kpi("体脂肪率", b.last.fat!=null ? '<div class="kv">'+r1(b.last.fat)+'<span style="font-size:11px;font-weight:400"> %</span></div>' : NA,
+            b.fatPerWeek!=null ? sign(b.fatPerWeek)+" /週" : "")
+      + kpi("除脂肪体重", b.lbm!=null ? '<div class="kv '+(b.lbmPerWeek>0?"up":(b.lbmPerWeek<0?"dn":""))+'">'+r1(b.lbm)+'<span style="font-size:11px;font-weight:400"> kg</span></div>' : NA,
+            b.lbmPerWeek!=null ? sign(b.lbmPerWeek)+" /週" : "筋肉量の増減")
+      + '</div>'
+      + '<p class="note" style="margin-top:12px">'+esc(note)
+      + '。増量の適正ペースは体重の +0.25〜0.5 %/週。'+(b.last.w?('今の体重なら週 +'+r1(b.last.w*0.0025)+'〜'+r1(b.last.w*0.005)+' kg'):'')+'。'
+      + '体重ではなく除脂肪体重が増えているかで、筋肉が増えたか脂肪が増えたかを判断する。</p>';
+  }
+
+  /* ── 食事 ── */
+  if(!m.n){
+    $("#sumMeal").innerHTML = '<p class="note">直近7日に食事の記録がない。増量が進まない原因の大半はカロリー不足なので、まず数日ぶん記録して実績を出す。</p>';
+  }else{
+    const pc = (v,g)=> g>0 ? Math.round(v/g*100) : 0;
+    const kc = pc(m.kcal,tgt.kcal), pp = pc(m.p,tgt.p);
+    $("#sumMeal").innerHTML = '<div class="kpi">'
+      + kpi("kcal", '<div class="kv '+(kc<90?"dn":(kc>115?"dn":"up"))+'">'+Math.round(m.kcal)+'</div>', "目標 "+tgt.kcal+" / "+kc+"%")
+      + kpi("P たんぱく", '<div class="kv '+(pp<85?"dn":"up")+'">'+Math.round(m.p)+'<span style="font-size:11px;font-weight:400"> g</span></div>', "目標 "+tgt.p+" / "+pp+"%")
+      + kpi("F 脂質", '<div class="kv">'+Math.round(m.f)+'<span style="font-size:11px;font-weight:400"> g</span></div>', "目標 "+tgt.f)
+      + kpi("C 炭水化物", '<div class="kv">'+Math.round(m.c)+'<span style="font-size:11px;font-weight:400"> g</span></div>', "目標 "+tgt.c)
+      + '</div>'
+      + '<p class="note" style="margin-top:12px">記録があるのは7日中 '+m.loggedDays+' 日。'
+      + (m.loggedDays < 4 ? '記録日が少ないので平均の信頼度は低い。' : '')
+      + ' 平均は記録がある日だけで計算している（未記録日を0kcalとして混ぜると実態より低く出るため）。</p>';
+  }
+
+  /* ── トレーニング ── */
+  const NAMEOF = k => MUSCLES[k] ? MUSCLES[k][0] : k;
+  if(!t.sessions){
+    $("#sumTrain").innerHTML = '<p class="note">直近7日に完了したセットがない。セットのチェックを押すと記録として集計される。</p>';
+  }else{
+    $("#sumTrain").innerHTML = '<div class="kpi">'
+      + kpi("実施日数", '<div class="kv">'+t.sessions+'<span style="font-size:11px;font-weight:400"> 日</span></div>', "7日中")
+      + kpi("完了セット", '<div class="kv">'+t.sets+'</div>', "週あたり")
+      + kpi("総挙上量", '<div class="kv">'+Math.round(t.vol).toLocaleString()+'<span style="font-size:11px;font-weight:400"> kg</span></div>', "重量種目のみ")
+      + kpi("MRV超え", '<div class="kv '+(t.overMRV.length?"dn":"up")+'">'+t.overMRV.length+'<span style="font-size:11px;font-weight:400"> 部位</span></div>', "上限"+VOL_BANDS.mrv+"セット/週")
+      + '</div>'
+      + (t.overMRV.length ? '<p class="note" style="margin-top:12px">回復が追わない可能性がある部位 — <b>'
+          + t.overMRV.map(k=>esc(NAMEOF(k))+" "+r1(t.byMuscle[k])).join(" ・ ")+'</b></p>' : '')
+      + '<p class="note" style="margin-top:8px">部位ごとの内訳は「記録」タブで確認する。</p>';
+  }
+
+  /* ── 睡眠 ── */
+  if(!sl.n){
+    $("#sumSleep").innerHTML = '<p class="note">睡眠の記録がまだない。週7でMRV近くまで積んでいる今、伸びを決めるのは追加のセットではなく回復側なので、ここを測る価値が一番大きい。「睡眠」タブから記録する。</p>';
+  }else{
+    const okAvg = sl.avg >= 7;
+    $("#sumSleep").innerHTML = '<div class="kpi">'
+      + kpi("平均睡眠", '<div class="kv '+(okAvg?"up":"dn")+'">'+r1(sl.avg)+'<span style="font-size:11px;font-weight:400"> 時間</span></div>', "目安 7〜9")
+      + kpi("最短", '<div class="kv">'+r1(sl.min)+'<span style="font-size:11px;font-weight:400"> 時間</span></div>', "7日中")
+      + kpi("6.5h未満", '<div class="kv '+(sl.shortNights?"dn":"up")+'">'+sl.shortNights+'<span style="font-size:11px;font-weight:400"> 日</span></div>', "回復不足の夜")
+      + kpi("記録日数", '<div class="kv">'+sl.n+'<span style="font-size:11px;font-weight:400"> 日</span></div>', "7日中")
+      + '</div>';
+  }
+
+  $("#sumInsight").innerHTML = insightsHTML(b, m, t, sl);
+}
+
+/* 数字を「次に何をするか」に翻訳する。重い順に並べて上位だけ出す */
+function insightsHTML(b, m, t, sl){
+  const tgt = S.target, out = [];
+  const push = (sev, order, html)=> out.push({sev:sev, order:order, html:html});
+
+  if(!b.n || b.n < 2){
+    push("info", 90, "体組成の記録が "+(b.n||0)+" 件。<b>2件以上</b>入ると増量ペースを判定できるようになる。週2〜3回、同じ条件（起床直後・排尿後）で測ると精度が上がる。");
+  }else if(b.pctPerWeek != null){
+    const p = b.pctPerWeek;
+    if(p > 0.5){
+      push("bad", 10, "増量が<b>速すぎる（"+sign(p)+" %/週）</b>。この速度は増えたぶんの脂肪比率が上がる。摂取を <b>200〜300 kcal 減らす</b>か、この体重増加が続くか2週間見てから判断する。");
+    }else if(p < 0.1 && p > -0.1){
+      push("warn", 12, "体重が<b>停滞している（"+sign(p)+" %/週）</b>。週7で消費が増えているので、目標 "+tgt.kcal+" kcal でも足りていない可能性がある。<b>+200〜300 kcal</b> 足して2週間様子を見る。");
+    }else if(p <= -0.1){
+      push("bad", 8, "体重が<b>減っている（"+sign(p)+" %/週）</b>。増量方針と逆行している。週7のトレーニング量に対して摂取が不足している。まずカロリーを満たす。");
+    }else{
+      push("ok", 60, "増量ペースは<b>適正（"+sign(p)+" %/週）</b>。この調子を維持する。");
+    }
+    if(b.lbmPerWeek != null && b.wPerWeek != null && b.wPerWeek > 0.05 && b.lbmPerWeek <= 0){
+      push("bad", 9, "体重は増えているのに<b>除脂肪体重が増えていない</b>。増えたぶんが脂肪に寄っている。タンパク質の充足と、増量ペースが速すぎないかを先に確認する。");
+    }
+  }
+
+  if(!m.n){
+    push("warn", 30, "直近7日に<b>食事の記録がない</b>。増量が進まない原因の大半はカロリー不足で、記録が無いと原因の切り分けができない。");
+  }else{
+    const dk = tgt.kcal - m.kcal, dp = tgt.p - m.p;
+    if(dk > 300) push("bad", 11, "カロリーが平均 <b>"+Math.round(dk)+" kcal 不足</b>している（実績 "+Math.round(m.kcal)+" / 目標 "+tgt.kcal+"）。週7で追い込んでも、ここが埋まらないと筋肉は増えない。米を1合足すと約515 kcal・炭水化物122g入る。");
+    else if(dk < -300) push("warn", 40, "カロリーが平均 <b>"+Math.round(-dk)+" kcal 超過</b>している。増量中でも超過が続くと脂肪の比率が上がるので、体脂肪率の推移とあわせて見る。");
+    if(dp > 20) push("warn", 20, "たんぱく質が平均 <b>"+Math.round(dp)+" g 不足</b>（実績 "+Math.round(m.p)+" / 目標 "+tgt.p+"）。プロテイン1杯で21g、納豆1パックで7.4g、鶏むね100gで23g補える。");
+    if(m.loggedDays > 0 && m.loggedDays < 4) push("info", 70, "食事の記録が7日中 <b>"+m.loggedDays+" 日</b>しかない。平均の信頼度が低いので、判断材料にするなら記録日を増やす。");
+  }
+
+  if(!t.sessions){
+    push("warn", 35, "直近7日に<b>完了したセットがない</b>。セット右のチェックを押して初めて記録として集計される。");
+  }else{
+    if(t.overMRV.length){
+      const names = t.overMRV.map(k=>(MUSCLES[k]?MUSCLES[k][0]:k)+" "+r1(t.byMuscle[k])).join(" ・ ");
+      push("bad", 13, "<b>"+names+"</b> が回復上限（"+VOL_BANDS.mrv+"セット/週）を超えている。ここから増やしても伸びず、疲労だけが残る。セットを削るか、次週をディロードにする。");
+    }
+    if(t.sessions <= 3) push("info", 65, "直近7日の実施は <b>"+t.sessions+" 日</b>。週7の設計に対して少ないので、スケジュールが実態に合っていないなら設定タブで曜日割当を変える。");
+  }
+
+  if(!sl.n){
+    push("warn", 25, "<b>睡眠が未記録</b>。MRV近くまで積んだ状態では、伸びを決めるのは追加のセットではなく回復側になる。ここが測れていないと、停滞したときに原因を切り分けられない。");
+  }else{
+    if(sl.avg < 6.5) push("bad", 7, "平均睡眠が <b>"+r1(sl.avg)+" 時間</b>。筋タンパク合成は睡眠中に進むので、この水準が続くと週7の負荷が回復を上回る。<b>セット数を落とすより先に睡眠を伸ばす</b>ほうが効果が大きい。");
+    else if(sl.avg < 7) push("warn", 22, "平均睡眠が <b>"+r1(sl.avg)+" 時間</b>で目安の7時間を下回っている。増量期は睡眠不足がテストステロンを下げるため、増えた体重が脂肪に寄りやすくなる。");
+    else push("ok", 62, "平均睡眠 <b>"+r1(sl.avg)+" 時間</b>。回復に必要な水準を満たしている。");
+    if(sl.shortNights >= 3) push("warn", 24, "6.5時間を下回った夜が <b>"+sl.shortNights+" 日</b>ある。平均が足りていても、短い夜が続くと回復が追いつかない。");
+  }
+
+  if(!out.length) return '<p class="note">判断に使えるデータがまだない。体重・食事・睡眠を数日記録すると、ここに次にやることが出る。</p>';
+  out.sort((a,b2)=>a.order-b2.order);
+  return '<ul class="ins">'+out.slice(0,5).map(o=>'<li class="'+o.sev+'">'+o.html+'</li>').join("")+'</ul>';
+}
+
+/* ─── 睡眠タブ ────────────────────────────────────────────────────────── */
+function renderSleep(){
+  const ds = Object.keys(S.sleep).sort();
+  const pts = ds.map(d=>({d:d, x:new Date(d+"T00:00:00").getTime(), y:sleepHours(S.sleep[d].bed, S.sleep[d].wake)}))
+                .filter(p=>p.y!=null);
+  if(pts.length){
+    // 7日移動平均。日々のばらつきに埋もれる傾向を見るため
+    const ma = pts.map((p,i)=>{
+      const w = pts.slice(Math.max(0,i-6), i+1);
+      return {x:p.x, y:w.reduce((a,v)=>a+v.y,0)/w.length};
+    });
+    const lb = [{x:pts[0].x,t:pts[0].d.slice(5)}];
+    if(pts.length>1) lb.push({x:pts[pts.length-1].x,t:pts[pts.length-1].d.slice(5)});
+    lineChart($("#slChart"), [
+      {color:"#2f5d8f", pts:pts.map(p=>({x:p.x,y:p.y}))},
+      {color:"#a8622a", pts:ma}
+    ], {labels:lb});
+    const avg = pts.reduce((a,p)=>a+p.y,0)/pts.length;
+    $("#slTrend").textContent = "全"+pts.length+"日の平均 "+r1(avg)+" 時間";
+  }else{
+    lineChart($("#slChart"), []); $("#slTrend").textContent = "";
+  }
+
+  const QN = {3:"よく眠れた", 2:"普通", 1:"浅い"};
+  $("#slHist").innerHTML = ds.length
+    ? '<table><tr><th>起きた日</th><th>就寝</th><th>起床</th><th class="n">睡眠</th><th>体感</th><th></th></tr>'
+      + ds.slice().reverse().map(d=>{
+          const r = S.sleep[d], h = sleepHours(r.bed, r.wake);
+          const short = h!=null && h < 6.5;
+          return '<tr><td>'+d+'</td><td>'+esc(r.bed||"—")+'</td><td>'+esc(r.wake||"—")+'</td>'
+            + '<td class="n"'+(short?' style="color:var(--hot);font-weight:700"':'')+'>'+(h!=null?r1(h)+" h":"—")+'</td>'
+            + '<td>'+(QN[r.q]||"—")+'</td>'
+            + '<td class="n"><button class="btn xs gr" data-sld="'+d+'">削除</button></td></tr>';
+        }).join("")+'</table>'
+    : '<div class="empty">記録なし</div>';
+  $("#slHist").querySelectorAll("[data-sld]").forEach(x=> x.onclick = ()=>{
+    delete S.sleep[x.dataset.sld]; save(); renderSleep(); renderSummary();
+  });
+}
+$("#slSave").onclick = ()=>{
+  const d = $("#slDate").value;
+  if(!d){ alert("日付が必要"); return; }
+  const bed = $("#slBed").value, wake = $("#slWake").value;
+  if(!bed || !wake){ alert("就寝と起床の両方が必要"); return; }
+  const rec = {bed:bed, wake:wake};
+  const q = $("#slQ").value; if(q) rec.q = +q;
+  S.sleep[d] = rec; save(); renderSleep(); renderSummary();
+  $("#slMsg").textContent = d+" を保存した（"+r1(sleepHours(bed,wake))+" 時間）";
+};
+$("#slClear").onclick = ()=>{
+  $("#slBed").value=""; $("#slWake").value=""; $("#slQ").value=""; $("#slMsg").textContent="";
+};
+
 /* ─── 記録 ────────────────────────────────────────────────────────────── */
 function lineChart(svg, series, opt){
   opt = opt||{};
@@ -1663,12 +2075,13 @@ function updateHeader(){
 }
 function boot(){
   const t = today();
-  ["#tDate","#mDate","#sDate"].forEach(s=>{ if(!$(s).value) $(s).value = t; });
-  $("#tDate").value = t; $("#mDate").value = t; $("#sDate").value = t;
+  ["#tDate","#mDate","#sDate","#slDate"].forEach(s=>{ if(!$(s).value) $(s).value = t; });
+  $("#tDate").value = t; $("#mDate").value = t; $("#sDate").value = t; $("#slDate").value = t;
   clearWC(); fillMenuSelects(); renderScaleGrid();
   applyScheduleForDate(t);
   renderTrain(); renderCats(); renderFoodList(); renderQuick(); renderMyFoods(); renderMeal();
   riceCalc(); renderConf(); updateHeader(); checkBackupReminder();
+  renderSleep(); renderSummary();
 }
 S = load();
 boot();

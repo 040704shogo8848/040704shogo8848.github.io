@@ -129,11 +129,18 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .lg{display:flex;gap:14px;font-size:11px;color:var(--sub);margin-top:6px;flex-wrap:wrap}
 .lg i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:5px}
 .hbar{display:grid;grid-template-columns:112px 1fr 42px;gap:8px;align-items:center;font-size:12px;margin-bottom:5px}
+.hbar.band{grid-template-columns:112px 1fr 78px}
 .hbar .hl{color:var(--sub);font-size:11.5px}
-.hbar .ht{height:14px;background:var(--line2);border-radius:3px;overflow:hidden}
-.hbar .ht>i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.hbar .hl.vshape{color:var(--hot);font-weight:600}
+.hbar .ht{height:14px;background:var(--line2);border-radius:3px;overflow:hidden;position:relative}
+.hbar .ht>i{display:block;height:100%;background:var(--accent);border-radius:3px;position:relative}
 .hbar .ht>i.v{background:var(--hot)}
+.hbar.band .ht::before{content:"";position:absolute;left:var(--mev);right:calc(100% - var(--mrv));top:0;bottom:0;background:var(--ok-w)}
+.hbar .ht>i.u{background:var(--warn)}
+.hbar .ht>i.ok{background:var(--ok)}
+.hbar .ht>i.over{background:var(--hot)}
 .hbar .hn{text-align:right;font-variant-numeric:tabular-nums;color:var(--sub);font-size:11.5px}
+.hbar .hn .note{display:block;font-size:9.5px;line-height:1.3}
 
 /* scale grid */
 .sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -142,22 +149,6 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .sgrid .sf input.flag{border-color:var(--hot);background:#fdf5f4}
 .sgrid .sf input.got{border-color:var(--ok);background:var(--ok-w)}
 
-/* screenshot upload */
-.drop{border:1.5px dashed var(--line);border-radius:10px;padding:22px 14px;text-align:center;
-  cursor:pointer;color:var(--sub);font-size:12px;transition:border-color .15s,background .15s}
-.drop:hover,.drop:focus,.drop.over{border-color:var(--accent);background:var(--accent-w);outline:none}
-.drop b{font-size:13px;color:var(--accent)}
-.shot{width:100%;max-width:300px;height:auto;display:block;margin:10px auto 0;
-  border:1px solid var(--line);border-radius:8px}
-.cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
-.cell{border:1px solid var(--line);border-radius:7px;padding:6px 8px;background:#fff}
-.cell .cl{display:block;font-size:10.5px;color:var(--sub)}
-.cell img{display:block;width:100%;height:auto;max-height:34px;object-fit:contain;object-position:left;margin:3px 0;image-rendering:crisp-edges}
-.cell .cv{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
-.cell .cv.ng{color:var(--hot);font-weight:500}
-input[type=range]{padding:0;height:22px}
-.ocrbar{height:5px;background:var(--line2);border-radius:3px;overflow:hidden;margin:8px 0}
-.ocrbar>i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
 .warnbox{border:1px solid #e6c4bd;background:#fdf5f4;border-radius:8px;padding:9px 11px;margin-top:8px;font-size:12px;color:var(--hot);line-height:1.7}
 .warnbox ul{margin:4px 0 0 16px}
 
@@ -289,6 +280,16 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
     ブラウザのローカル保存が無効になっている。プライベートブラウズか、ローカルファイルを直接開いた場合に起きる。
     画面は動くが再読み込みで消えるので、公開URLから開くか、通常のウィンドウで開き直す。
   </p>
+</div>
+
+<div class="card" id="expWarn" style="display:none;border-color:#e0b8b0;background:#fdf4f2">
+  <div class="row">
+    <div class="fg">
+      <b style="font-size:13px">記録の書き出しが必要</b>
+      <p class="note" id="expWarnMsg" style="margin-top:4px"></p>
+    </div>
+    <button class="btn sm" id="expWarnBtn">今すぐ書き出す</button>
+  </div>
 </div>
 
 <!-- ══ トレーニング ══ -->
@@ -432,46 +433,23 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <!-- ══ 体組成 ══ -->
 <section id="scale">
   <div class="card">
-    <h2>スクショから読み取る<span class="r">端末内だけで処理する</span></h2>
-    <p class="note" style="margin-bottom:10px">
-      体組成計アプリのスクリーンショットを渡すと、数値を拾ってフォームに入れる。
-      画像はこのブラウザの中で処理され、サーバーには送られない。
-      ただし読み取りエンジン自体は初回だけ外部CDNから取得する（バージョン固定・改ざん検知つき）ので、
-      その1回だけ通信が発生する。読み取りは自動保存しないので、必ず値を確認してから保存する。
+    <h2>記録に必要なのは2つだけ</h2>
+    <p class="note">
+      増量期の判断に使うのは <b>体重</b> と <b>体脂肪率</b> だけ。除脂肪体重はその2つから自動計算するので、
+      下の「入力」に毎回この2つだけ入れれば十分。皮下脂肪・体内年齢などRENPHOの残り9項目は
+      生体インピーダンスの推定値で、増減しても増量方針を変える材料にはならないため任意入力にしている。
     </p>
-    <div class="drop" id="sDrop" tabindex="0">
-      <b>画像を選ぶ</b><br>
-      <span>ドラッグ＆ドロップ、または Cmd+V で貼り付け</span>
-      <input type="file" id="sFile" accept="image/*" hidden>
-    </div>
-    <div id="sPrevWrap" style="display:none;margin-top:12px">
-      <div class="row">
-        <button class="btn sm" id="sOcr">読み取る</button>
-        <button class="btn sm gr" id="sDrop2">別の画像</button>
-        <div class="sp"></div>
-        <span class="note" id="sOcrMsg"></span>
-      </div>
-      <div class="ocrbar" id="sBar" style="display:none"><i></i></div>
-      <div id="sWarn"></div>
-      <div id="sCells"></div>
-      <div id="sAdjust" style="display:none">
-        <hr>
-        <h3>位置合わせ</h3>
-        <p class="note">切り出しが数字からずれている場合に動かす。合わせたら再読取を押す。位置は次回以降も使う。</p>
-        <div class="row" style="margin-top:8px">
-          <div class="fg"><label class="f">縦 <span id="sDyV" class="mono"></span></label><input type="range" id="sDy" min="-60" max="60" value="0"></div>
-          <div class="fg"><label class="f">横 <span id="sDxV" class="mono"></span></label><input type="range" id="sDx" min="-60" max="60" value="0"></div>
-          <button class="btn sm gh" id="sReOcr">再読取</button>
-        </div>
-      </div>
-      <img id="sShot" class="shot" alt="読み込んだスクリーンショット">
-    </div>
+    <p class="note" style="margin-top:8px">
+      RENPHOアプリ自体にApple Health / Google Fit連携があるが、連携先が受け取れる型は体重・体脂肪率・
+      除脂肪体重・BMIの4つまでで、残り9項目は結局流れない。このアプリへの自動取り込みは今のところ無いので、
+      体重計に乗ったら下の「入力」にその場で2つ打ち込む運用にする。
+    </p>
   </div>
 
   <div class="card">
-    <h2>まとめて貼り付け<span class="r">スケールの表示順</span></h2>
+    <h2>まとめて貼り付け<span class="r">RENPHOの表示順・9項目まで残す場合に</span></h2>
     <p class="note" style="margin-bottom:8px">
-      体組成計アプリの数値を、画面に並んでいる順（体重 → BMI → 除脂肪体重 → 皮下脂肪 → 体水分量 → 骨格筋 → 筋肉量 → 骨量 → 基礎代謝 → 体脂肪 → 内臓脂肪 → タンパク質 → 体内年齢）にスペースか改行区切りで貼る。
+      13項目まとめて残したい日だけ使う。画面に並んでいる順（体重 → BMI → 除脂肪体重 → 皮下脂肪 → 体水分量 → 骨格筋 → 筋肉量 → 骨量 → 基礎代謝 → 体脂肪 → 内臓脂肪 → タンパク質 → 体内年齢）にスペースか改行区切りで貼る。
       数値以外の文字が混ざっていても数字だけを拾う。
     </p>
     <textarea id="sPaste" rows="3" placeholder="66.00 21.6 57.96 10.7 63.3 56.6 55.00 2.89 1678 12.1 4 20.0 20"></textarea>
@@ -479,6 +457,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
       <button class="btn sm" id="sParse">読み込む</button>
       <span class="note" id="sParseMsg"></span>
     </div>
+    <div id="sWarn"></div>
   </div>
 
   <div class="card">
@@ -577,6 +556,15 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   </div>
 
   <div class="card">
+    <h2>週間スケジュール<span class="r">曜日ごとに回すメニューを割り当てる</span></h2>
+    <p class="note" style="margin-bottom:10px">
+      週7で回す前提。曜日を選ぶと「トレーニング」タブのメニューが自動で切り替わる（未割当の曜日は手動選択のまま）。
+      その日にすでに記録がある場合は、そのとき使ったメニューを優先する。
+    </p>
+    <div id="cSched"></div>
+  </div>
+
+  <div class="card">
     <h2>実現可能な重量</h2>
     <div id="cReal"></div>
   </div>
@@ -589,8 +577,10 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
         <select id="cAct">
           <option value="1.2">1.2 ほぼ座位</option>
           <option value="1.375">1.375 軽い活動</option>
-          <option value="1.4">1.4 デスクワーク+週1トレ</option>
-          <option value="1.55">1.55 中程度</option>
+          <option value="1.4">1.4 デスクワーク+週1〜2トレ</option>
+          <option value="1.55">1.55 デスクワーク+週3〜4トレ</option>
+          <option value="1.7">1.7 デスクワーク+週6〜7トレ</option>
+          <option value="1.9">1.9 立ち仕事+週6〜7トレ</option>
         </select>
       </div>
       <div class="fg"><label class="f">方針</label>
@@ -646,7 +636,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
       <div class="sp"></div>
       <button class="btn sm gr" id="cReset">全消去</button>
     </div>
-    <p class="note" style="margin-top:8px">記録はこの端末のブラウザ内にのみ保存され、サーバーには送られない。端末を変えるときは書き出して移す。</p>
+    <p class="note" style="margin-top:8px">記録はこの端末のブラウザ内にのみ保存され、サーバーには送られない。キャッシュクリアや保存領域の上限で消えることがあるため、7日以上書き出していないと画面上部に警告が出る。端末を変えるときも書き出して移す。</p>
   </div>
 </section>
 
@@ -669,7 +659,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
 <script src="data.js"></script>
 <script src="body.js"></script>
-<script src="ocr.js"></script>
 <script>
 "use strict";
 
@@ -689,12 +678,13 @@ function defaults(){
   return {
     inventory:{"15":2,"10":2,"5":2,"2.5":6,"1.25":4},
     dbShaft:1.5, bbShaft:7, dbMax:2, bbMax:4,
-    profile:{bmr:1678, act:1.4, goal:300, pr:1.8, fr:24},
-    target:{kcal:2600, p:120, f:70, c:375},
+    profile:{bmr:1678, act:1.7, goal:300, pr:2.1, fr:24},
+    target:{kcal:3150, p:139, f:70, c:480},
     menus: menus, activeMenu:"vshape60", editMenu:"vshape60",
     sessions:{}, meals:{}, myfoods:[], recent:[], body:[],
-    scaleOffset:{dx:0, dy:0},
-    gym: JSON.parse(JSON.stringify(GYM))
+    gym: JSON.parse(JSON.stringify(GYM)),
+    backup:{lastExport:null},
+    schedule:["","","","","","",""] // index0=日〜6=土。空は手動選択のまま
   };
 }
 const EXMAP = {}; EXERCISES.forEach(e=>EXMAP[e.id]=e);
@@ -723,6 +713,7 @@ function load(){
 function save(){
   const ok = lsSet(KEY, JSON.stringify(S));
   if(!ok) warnStorage();
+  checkBackupReminder();
 }
 let warned = false;
 function warnStorage(){
@@ -731,11 +722,43 @@ function warnStorage(){
   const el = document.getElementById("noStore");
   if(el) el.style.display = "block";
 }
+
+/* ─── バックアップ状態 ────────────────────────────────────────────────────
+   localStorage は端末のキャッシュクリアで丸ごと消える。週7では入力量が
+   多く失うと痛いので、書き出しが7日以上滞ったら書き出しを促す。 */
+function daysSince(dateStr){
+  if(!dateStr) return Infinity;
+  return Math.floor((Date.now() - new Date(dateStr).getTime())/86400000);
+}
+function hasAnyData(){
+  return Object.keys(S.sessions).length>0 || Object.keys(S.meals).length>0 || S.body.length>0;
+}
+function checkBackupReminder(){
+  const el = $("#expWarn"); if(!el) return;
+  const d = daysSince(S.backup && S.backup.lastExport);
+  if(hasAnyData() && d >= 7){
+    el.style.display = "block";
+    $("#expWarnMsg").textContent = (S.backup && S.backup.lastExport)
+      ? "前回の書き出しから "+d+" 日経過。記録はこの端末にしかない。"
+      : "記録を書き出したことがない。この端末にしかない状態が続いている。";
+  }else{
+    el.style.display = "none";
+  }
+}
+function doExport(){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));
+  a.download = "fitness_"+today().replace(/-/g,"")+".json"; a.click(); URL.revokeObjectURL(a.href);
+  S.backup = S.backup || {}; S.backup.lastExport = today();
+  lsSet(KEY, JSON.stringify(S));
+  checkBackupReminder();
+}
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
 const today = () => new Date().toLocaleDateString("sv-SE");
 const r1 = n => Math.round(n*10)/10;
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+$("#expWarnBtn").onclick = doExport;
 
 /* ─── プレート計算 ─────────────────────────────────────────────────────── */
 const DENS = [15,10,5,2.5,1.25];
@@ -842,21 +865,52 @@ function setsByMuscle(blocks){
   }));
   return agg;
 }
-function setsBarHTML(agg){
+/* 週あたりセット数の目安。個人差が大きい一般値（MEV最低有効量・MAV適応上限の目安・MRV回復できる上限） */
+const VOL_BANDS = {mev:10, mav:16, mrv:22};
+const VOL_MAX = 26;
+function setsBarHTML(agg, opts){
+  opts = opts || {};
   const keys = Object.keys(MUSCLES).filter(k=>agg[k]);
   if(!keys.length) return '<div class="empty">まだ集計できるセットがない</div>';
   keys.sort((a,b)=>agg[b]-agg[a]);
-  const max = agg[keys[0]] || 1;
+  if(!opts.bands){
+    const max = agg[keys[0]] || 1;
+    return keys.map(k=>{
+      const v = agg[k], hot = VSHAPE.indexOf(k)>=0;
+      return '<div class="hbar"><span class="hl">'+MUSCLES[k][0]+'</span>'
+        + '<span class="ht"><i class="'+(hot?"v":"")+'" style="width:'+(v/max*100).toFixed(1)+'%"></i></span>'
+        + '<span class="hn">'+r1(v)+'</span></div>';
+    }).join("");
+  }
+  const b = VOL_BANDS;
+  const mevP = (b.mev/VOL_MAX*100).toFixed(1), mrvP = (b.mrv/VOL_MAX*100).toFixed(1);
   return keys.map(k=>{
     const v = agg[k], hot = VSHAPE.indexOf(k)>=0;
-    return '<div class="hbar"><span class="hl">'+MUSCLES[k][0]+'</span>'
-      + '<span class="ht"><i class="'+(hot?"v":"")+'" style="width:'+(v/max*100).toFixed(1)+'%"></i></span>'
-      + '<span class="hn">'+r1(v)+'</span></div>';
-  }).join("");
+    const cls = v < b.mev ? "u" : (v > b.mrv ? "over" : "ok");
+    const note = v < b.mev ? "不足" : (v > b.mrv ? "回復リスク" : "適正");
+    return '<div class="hbar band"><span class="hl'+(hot?" vshape":"")+'">'+MUSCLES[k][0]+'</span>'
+      + '<span class="ht" style="--mev:'+mevP+'%;--mrv:'+mrvP+'%"><i class="'+cls+'" style="width:'+Math.min(100,v/VOL_MAX*100).toFixed(1)+'%"></i></span>'
+      + '<span class="hn">'+r1(v)+' <span class="note">'+note+'</span></span></div>';
+  }).join("")
+  + '<p class="note" style="margin-top:10px">目安 — MEV(最低有効量) '+b.mev+'・MAV(適応上限の目安) '+b.mav+'・MRV(回復できる上限) '+b.mrv+' セット/週。薄い緑の帯がMEV〜MRVの範囲。個人差が大きいので、伸びが止まる／張りが抜けないなら実感で調整する。</p>';
 }
 
 /* ─── トレーニング ─────────────────────────────────────────────────────── */
 function activeMenu(){ return S.menus[S.activeMenu] || S.menus[Object.keys(S.menus)[0]]; }
+/* new Date("YYYY-MM-DD") はUTC解釈でタイムゾーンによりずれるため、年月日から直接ローカルDateを組む */
+function weekdayOf(dateStr){
+  const p = dateStr.split("-").map(Number);
+  return new Date(p[0], p[1]-1, p[2]).getDay();
+}
+/* その日にすでに記録があればそのとき使ったメニューを維持し、無ければ週間スケジュールの割当を提案する */
+function applyScheduleForDate(date){
+  if(S.sessions[date]){ S.activeMenu = S.sessions[date].menu; }
+  else{
+    const key = (S.schedule||[])[weekdayOf(date)];
+    if(key && S.menus[key]) S.activeMenu = key;
+  }
+  if($("#tMenu")) $("#tMenu").value = S.activeMenu;
+}
 function sessionOf(date, create){
   if(!S.sessions[date] && create) S.sessions[date] = {menu:S.activeMenu, ex:{}, memo:""};
   return S.sessions[date];
@@ -880,17 +934,17 @@ function suggest(e, it, prev){
                   : {txt:"前回最高 "+mr+UNIT(e)};
   }
   const mw = Math.max.apply(null, done.map(x=>Number(x.w)||0));
-  if(!allTop) return {txt:"前回 "+mw+"kg"};
+  if(!allTop) return {txt:"前回 "+mw+"kg", w:mw};
   const list = weightsFor(e.eq).map(x=>x[0]);
   if(e.eq==="assist"){
     // 補助重量なので小さいほど負荷が高い。次は1段「下げる」
     const lower = list.filter(w=>w<mw);
     const nx = lower.length ? lower[lower.length-1] : null;
-    return nx ? {txt:"全セット上限達成。補助を "+nx+"kg に下げる"}
-              : {txt:"全セット上限達成。補助ゼロに到達。懸垂に移る"};
+    return nx ? {txt:"全セット上限達成。補助を "+nx+"kg に下げる", w:nx}
+              : {txt:"全セット上限達成。補助ゼロに到達。懸垂に移る", w:mw};
   }
   const nx = list.find(w=>w>mw);
-  return nx ? {txt:"全セット上限達成。"+nx+"kg に上げる"} : {txt:"全セット上限達成。上限なのでレップで伸ばす"};
+  return nx ? {txt:"全セット上限達成。"+nx+"kg に上げる", w:nx} : {txt:"全セット上限達成。上限なのでレップで伸ばす", w:mw};
 }
 
 function renderTrain(){
@@ -911,8 +965,20 @@ function renderTrain(){
 
     bl.items.forEach(it=>{
       const e = ex(it.id);
-      const rec = (S.sessions[date] && S.sessions[date].ex && S.sessions[date].ex[it.id]) || [];
-      const sug = suggest(e, it, prevSession(date, it.id));
+      const existing = S.sessions[date] && S.sessions[date].ex && S.sessions[date].ex[it.id];
+      const prev = prevSession(date, it.id);
+      const sug = suggest(e, it, prev);
+      /* この日がまだ未着手なら、前回値を下書きとして表示するだけ（保存はしない）。
+         保存してしまうと、日付を眺めただけで「0完了セット」の記録がセッション履歴に残る。
+         実際の値はチェックを押した瞬間に確定させる（chk のクリックハンドラ側）。 */
+      let rec = existing || [];
+      if(!existing && sug && sug.w!=null && prev){
+        rec = [];
+        for(let i=0;i<it.sets;i++){
+          const pr = prev.sets[i];
+          rec.push({w:sug.w, r:(pr && pr.done) ? pr.r : "", done:false});
+        }
+      }
       const d = document.createElement("div"); d.className="ex";
 
       let rows = '<div class="sets">';
@@ -962,23 +1028,34 @@ function renderTrain(){
     b.onclick = ()=>{
       const on = !b.classList.contains("on");
       const blk = (activeMenu().blocks||[]).find(x=>x.items.some(y=>y.id===b.dataset.ex));
-      setSet(b.dataset.ex, +b.dataset.i, "done", on);
+      const patch = {done:on};
+      if(on){
+        // 前回値の下書きは保存されていないので、確定前に今表示中の値を一緒に書き込む
+        const wEl = wrap.querySelector('[data-ex="'+b.dataset.ex+'"][data-i="'+b.dataset.i+'"][data-k="w"]');
+        const rEl = wrap.querySelector('[data-ex="'+b.dataset.ex+'"][data-i="'+b.dataset.i+'"][data-k="r"]');
+        if(wEl) patch.w = wEl.value;
+        if(rEl) patch.r = rEl.value;
+      }
+      commitSet(b.dataset.ex, +b.dataset.i, patch);
       renderTrain();
       if(on && blk) startTimer(blk.rest);
     };
   });
 }
-function setSet(id, i, k, v){
+function commitSet(id, i, patch){
   const date = $("#tDate").value, s = sessionOf(date, true);
   s.menu = S.activeMenu;
   if(!s.ex[id]) s.ex[id] = [];
   while(s.ex[id].length <= i) s.ex[id].push({w:"",r:"",done:false});
-  s.ex[id][i][k] = v;
+  Object.assign(s.ex[id][i], patch);
   save();
-  if(k!=="done") renderTrain();
   updateHeader();
 }
-$("#tDate").onchange = renderTrain;
+function setSet(id, i, k, v){
+  commitSet(id, i, {[k]:v});
+  if(k!=="done") renderTrain();
+}
+$("#tDate").onchange = ()=>{ applyScheduleForDate($("#tDate").value); renderTrain(); };
 $("#tMenu").onchange = ()=>{ S.activeMenu = $("#tMenu").value; save(); renderTrain(); };
 $("#tMemo").oninput = ()=>{ sessionOf($("#tDate").value,true).memo = $("#tMemo").value; save(); };
 $("#tClear").onclick = ()=>{
@@ -1247,9 +1324,29 @@ $("#xOnce").onclick = ()=>{
 };
 
 /* ─── 体組成 ──────────────────────────────────────────────────────────── */
+/* nums は表示順の配列。null は値なし扱い */
+function assignFields(nums, fields){
+  const values = {}, warnings = [];
+  fields.forEach((f,i)=>{
+    const v = nums[i];
+    if(v==null || !isFinite(v)){ warnings.push(f[1]+" が見つからなかった"); return; }
+    values[f[0]] = v;
+    if(f[3]!=null && (v<f[3] || v>f[4])){
+      warnings.push(f[1]+" が "+v+" と読めた。想定は "+f[3]+"〜"+f[4]+" なので確認する");
+    }
+  });
+  return { values:values, warnings:warnings };
+}
+/* まとめて貼り付け用。数値以外の文字が混ざっていても数字だけを表示順で拾う */
+function parseNumberList(text, fields){
+  const nums = (String(text).match(/-?\d+(?:\.\d+)?/g) || []).map(Number);
+  return assignFields(nums, fields);
+}
 function renderScaleGrid(){
+  const KEY_FIELDS = {w:1, fat:1}; // 増量方針の判断に実際に使う項目
   $("#sGrid").innerHTML = SCALE_FIELDS.map(f=>
-    '<div class="sf"><label>'+f[1]+(f[2]?" "+f[2]:"")+'</label><input type="number" step="0.01" id="sf_'+f[0]+'" inputmode="decimal"></div>').join("");
+    '<div class="sf"><label>'+f[1]+(f[2]?" "+f[2]:"")+(KEY_FIELDS[f[0]]?' <b style="color:var(--accent)">必須</b>':'')+'</label>'
+    + '<input type="number" step="0.01" id="sf_'+f[0]+'" inputmode="decimal"></div>').join("");
 }
 /* 読み取り結果をフォームに流し込み、範囲外を赤くする */
 function applyScaleValues(res){
@@ -1278,89 +1375,6 @@ $("#sParse").onclick = ()=>{
   $("#sParseMsg").textContent = n+" 項目を読み込んだ。下のフォームで確認して保存する。";
 };
 
-/* 切り出し画像を値の横に並べる。位置ずれは目で見れば一発でわかる */
-function renderCells(cells, values){
-  if(!cells){ $("#sCells").innerHTML = ""; return; }
-  $("#sCells").innerHTML = '<h3>切り出した数字</h3><div class="cells">'
-    + SCALE_FIELDS.map((f,i)=>{
-        const v = values[f[0]];
-        return '<div class="cell"><span class="cl">'+f[1]+'</span>'
-          + '<img src="'+cells[i]+'" alt="">'
-          + '<span class="cv'+(v==null?" ng":"")+'">'+(v==null?"読めず":v)+'</span></div>';
-      }).join("") + '</div>';
-}
-
-/* ── スクショ読み取り ── */
-let shotImg = null;
-function openPicker(){ $("#sFile").click(); }
-$("#sDrop").onclick = openPicker;
-$("#sDrop").onkeydown = e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openPicker(); } };
-$("#sDrop2").onclick = openPicker;
-$("#sFile").onchange = e=>{ if(e.target.files[0]) loadShot(e.target.files[0]); };
-["dragenter","dragover"].forEach(ev=> $("#sDrop").addEventListener(ev, e=>{ e.preventDefault(); $("#sDrop").classList.add("over"); }));
-["dragleave","drop"].forEach(ev=> $("#sDrop").addEventListener(ev, e=>{ e.preventDefault(); $("#sDrop").classList.remove("over"); }));
-$("#sDrop").addEventListener("drop", e=>{
-  const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-  if(f) loadShot(f);
-});
-document.addEventListener("paste", e=>{
-  if(!$("#scale").classList.contains("on")) return;
-  const items = (e.clipboardData && e.clipboardData.items) || [];
-  for(let i=0;i<items.length;i++){
-    if(items[i].type.indexOf("image")===0){ const f = items[i].getAsFile(); if(f){ loadShot(f); e.preventDefault(); } return; }
-  }
-});
-function loadShot(file){
-  if(!/^image\//.test(file.type)){ $("#sOcrMsg").textContent = "画像ファイルではない"; return; }
-  const url = URL.createObjectURL(file);
-  const img = new Image();
-  img.onload = ()=>{
-    shotImg = img;
-    $("#sShot").src = url;
-    $("#sPrevWrap").style.display = "block";
-    $("#sOcrMsg").textContent = img.naturalWidth+"×"+img.naturalHeight+" を読み込んだ。読み取るを押す。";
-    $("#sWarn").innerHTML = ""; $("#sCells").innerHTML = "";
-  };
-  img.onerror = ()=>{ $("#sOcrMsg").textContent = "画像を開けなかった"; URL.revokeObjectURL(url); };
-  img.src = url;
-}
-function shotOffset(){
-  return { dx: (+$("#sDx").value||0)/1000, dy: (+$("#sDy").value||0)/1000 };
-}
-function paintOffset(){
-  $("#sDxV").textContent = (+$("#sDx").value/10).toFixed(1)+"%";
-  $("#sDyV").textContent = (+$("#sDy").value/10).toFixed(1)+"%";
-}
-$("#sDx").oninput = paintOffset; $("#sDy").oninput = paintOffset;
-async function runOcr(){
-  if(!shotImg) return;
-  const btn = $("#sOcr"), bar = $("#sBar");
-  btn.disabled = true; $("#sReOcr").disabled = true; bar.style.display = "block";
-  $("#sOcrMsg").textContent = "ライブラリを読み込み中";
-  try{
-    const res = await readScaleImage(shotImg, shotOffset(), (i, total)=>{
-      bar.firstElementChild.style.width = Math.round(i/total*100)+"%";
-      $("#sOcrMsg").textContent = "読み取り中 "+(i+1)+"/"+total;
-    });
-    const n = applyScaleValues(res);
-    renderCells(res.cells, res.values);
-    S.scaleOffset = { dx:+$("#sDx").value, dy:+$("#sDy").value }; save();
-    // 半分以上おかしいときは切り出し位置がずれている可能性が高い
-    const bad = SCALE_FIELDS.length - n + res.warnings.filter(w=>w.indexOf("想定は")>=0).length;
-    $("#sAdjust").style.display = bad >= 3 ? "block" : "none";
-    $("#sOcrMsg").textContent = n === SCALE_FIELDS.length && !res.warnings.length
-      ? "13項目すべて読めた。値を確認して保存する"
-      : (n ? n+"/13 項目を読んだ。切り出し画像と見比べて直す" : "数値を拾えなかった。位置合わせを試すか手で入れる");
-    if(bad >= 3) $("#sAdjust").scrollIntoView({block:"nearest"});
-  }catch(err){
-    $("#sOcrMsg").textContent = "読み取りに失敗した（"+(err && err.message ? err.message : "原因不明")+"）。貼り付けか手入力を使う";
-  }finally{
-    btn.disabled = false; $("#sReOcr").disabled = false;
-    setTimeout(()=>{ bar.style.display="none"; bar.firstElementChild.style.width="0"; }, 800);
-  }
-}
-$("#sOcr").onclick = runOcr;
-$("#sReOcr").onclick = runOcr;
 $("#sSave").onclick = ()=>{
   const d = $("#sDate").value;
   if(!d){ alert("測定日が必要"); return; }
@@ -1458,7 +1472,12 @@ function renderRec(){
   const days = +$("#vRange").value;
   const cutoff = new Date(Date.now() - days*86400000).toLocaleDateString("sv-SE");
   const agg = {};
-  let weeks = Math.max(1, days>=9999 ? 1 : days/7);
+  const allDates = Object.keys(S.sessions).sort();
+  let weeks;
+  if(days>=9999){
+    // 全期間は実際に記録がある期間の週数で割る。1固定だとMEV/MAV/MRVの帯と整合しない
+    weeks = allDates.length ? Math.max(1, (Date.now()-new Date(allDates[0]).getTime())/86400000/7) : 1;
+  }else weeks = Math.max(1, days/7);
   Object.keys(S.sessions).filter(d=>days>=9999 || d>=cutoff).forEach(d=>{
     const s = S.sessions[d];
     for(const id in (s.ex||{})){
@@ -1469,7 +1488,7 @@ function renderRec(){
     }
   });
   for(const k in agg) agg[k] = agg[k]/weeks;
-  $("#vSets").innerHTML = setsBarHTML(agg);
+  $("#vSets").innerHTML = setsBarHTML(agg, {bands:true});
 
   const vol = sessionVol().filter(v=>v.y>0);
   const lb = [];
@@ -1507,7 +1526,25 @@ function renderRec(){
 $("#vRange").onchange = renderRec;
 
 /* ─── 設定 ────────────────────────────────────────────────────────────── */
+const WEEKDAY_JA = ["日","月","火","水","木","金","土"];
+function renderSched(){
+  $("#cSched").innerHTML = WEEKDAY_JA.map((w,i)=>{
+    const key = (S.schedule||[])[i] || "";
+    const opts = '<option value="">（手動選択のまま）</option>'
+      + Object.keys(S.menus).map(k=>'<option value="'+k+'"'+(k===key?" selected":"")+'>'+esc(S.menus[k].label)+'</option>').join("");
+    const m = key && S.menus[key];
+    const legend = m ? legendHTML(levelsOf(menuExercises(m))) : '<span class="note">未割当</span>';
+    return '<div class="row" style="margin-bottom:8px;align-items:flex-start">'
+      + '<span class="tag" style="min-width:26px;text-align:center">'+w+'</span>'
+      + '<div class="fg" style="max-width:220px"><select data-dow="'+i+'">'+opts+'</select></div>'
+      + '<div class="mlegend" style="margin-top:0;flex:1">'+legend+'</div></div>';
+  }).join("");
+  $("#cSched").querySelectorAll("[data-dow]").forEach(sel=> sel.onchange = ()=>{
+    S.schedule[+sel.dataset.dow] = sel.value; save(); renderSched();
+  });
+}
 function renderConf(){
+  renderSched();
   $("#cInv").innerHTML = DENS.map(d=>
     '<div><label class="f">'+d+' kg プレート</label><input type="number" min="0" data-den="'+d+'" value="'+(S.inventory[String(d)]||0)+'"></div>').join("");
   $("#cInv").querySelectorAll("[data-den]").forEach(el=> el.onchange = ()=>{
@@ -1573,11 +1610,7 @@ document.addEventListener("change", e=>{
   if(tm[e.target.id]){ S.target[tm[e.target.id]] = +e.target.value||0; save(); renderMeal(); }
 });
 $("#cApply").onclick = ()=>{ S.target = updateCalc(); save(); renderConf(); renderMeal(); };
-$("#cExp").onclick = ()=>{
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));
-  a.download = "fitness_"+today().replace(/-/g,"")+".json"; a.click(); URL.revokeObjectURL(a.href);
-};
+$("#cExp").onclick = doExport;
 $("#cImpBtn").onclick = ()=> $("#cImp").click();
 $("#cImp").onchange = e=>{
   const f = e.target.files[0]; if(!f) return;
@@ -1614,11 +1647,9 @@ function boot(){
   ["#tDate","#mDate","#sDate"].forEach(s=>{ if(!$(s).value) $(s).value = t; });
   $("#tDate").value = t; $("#mDate").value = t; $("#sDate").value = t;
   clearWC(); fillMenuSelects(); renderScaleGrid();
-  $("#sDx").value = (S.scaleOffset||{}).dx || 0;
-  $("#sDy").value = (S.scaleOffset||{}).dy || 0;
-  paintOffset();
+  applyScheduleForDate(t);
   renderTrain(); renderCats(); renderFoodList(); renderQuick(); renderMyFoods(); renderMeal();
-  riceCalc(); renderConf(); updateHeader();
+  riceCalc(); renderConf(); updateHeader(); checkBackupReminder();
 }
 S = load();
 boot();

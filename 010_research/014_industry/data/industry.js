@@ -2,6 +2,20 @@
 // 追加は bin/add-report.sh 経由。
 window.INDUSTRY = [
   {
+    "title": "宋代の製鉄業｜「中世の産業革命」はどこまで言えるか",
+    "date": "2026-08-20",
+    "tags": [
+      "iron-and-steel",
+      "energy-transition",
+      "industrial-history",
+      "china",
+      "source-criticism"
+    ],
+    "summary": "よく引かれる「1078年に年12万5,000トン」は史料の記録ではなくHartwell 1963の推計で、一次史料にあるのは官納鉄550万斤（約3,300トン換算）のみ。Wagnerは一律10%課税という前提に証拠がないとして算出不能と結論した。石炭使用は放射性炭素年代で確定するが装入比は木炭3対石炭7の混合であり、コークス炉への転換ではない。石炭転換が高温を要求し、高温が水力送風を要求したという因果の向きも通説と逆。流通する説明9項目を成立・要修正・誤りで判定した。出典33件。",
+    "source": "Desk research",
+    "file": "reports/song_iron_industry_260820.html"
+  },
+  {
     "title": "産業革命とAI｜エンタープライズは何に注力すべきか",
     "date": "2026-08-19",
     "tags": [

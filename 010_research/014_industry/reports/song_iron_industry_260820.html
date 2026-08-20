@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>宋代の製鉄業 — 「中世の産業革命」はどこまで言えるか</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    /* charts: dataviz の検証済みスロット（surface #fff で検証） */
+    --s1:#2a78d6; --s1-light:#86b6ef; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  /* ── charts ───────────────────────────────────────────────────────────── */
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+  <p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">industry</a> / 宋代の製鉄業</p>
+
+  <header class="top">
+    <h1>宋代の製鉄業</h1>
+    <div class="en">The Song Iron Industry — How Far Does the &ldquo;Medieval Industrial Revolution&rdquo; Claim Hold?</div>
+    <div class="tags">
+      <span class="tag">製鉄</span><span class="tag">エネルギー転換</span><span class="tag">産業史</span>
+      <span class="tag">中国</span><span class="tag">史料批判</span>
+    </div>
+  </header>
+
+  <p class="lead">
+    北宋の製鉄業は「産業革命の700年先取り」としてよく引かれる。
+    その根拠になっている数字と技術を一次史料と学術論文まで遡り、どこまでが確定していて、どこからが推計なのかを分けた。
+  </p>
+  <p class="srcnote">
+    作成日 2026年8月20日。生産量の議論は Robert Hartwell（1962・1967）、吉田光邦（1966）、Donald B. Wagner（2001）、Tim Wright（2007）の一次論文に基づく。
+    宋代の史料名は『宋会要輯稿』『宋史』『文献通考』『続資治通鑑長編』のように原題で示した。
+    重量は宋の1斤＝約596.82グラム（Hartwell の換算値）で統一し、換算後の数値には「換算」と付した。
+    推計値には推計、資料間で割れている数値には諸説と本文に書いた。
+    確認できなかった論点は末尾の<a href="#open">残っている問い</a>に列挙してある。
+  </p>
+
+  <div class="kpi">
+    <div class="card"><div class="k">確定している数字</div><div class="v">550万斤<small>1078年（元豊元年）の官納鉄。『宋会要輯稿』食貨。約3,300トン換算</small></div></div>
+    <div class="card"><div class="k">最も有名な推計</div><div class="v">11.4万トン<small>Hartwell 1963。官納量の約35倍。直接の量的根拠はない</small></div></div>
+    <div class="card"><div class="k">地理的集中</div><div class="v">75%超<small>1078年の官納鉄のうち邢州・磁州の2州が占める比率</small></div></div>
+    <div class="card"><div class="k">現存する高炉</div><div class="v">高さ6m<small>河北省邯鄲市付近。旧・磁州。宋代のものとされる</small></div></div>
+  </div>
+
+  <div class="callout">
+    <p style="margin-top:0"><strong>先に結論を4つ置く。</strong></p>
+    <p><strong>1. 「年12万5,000トン」は史料に書かれた数字ではなく、推計である。</strong>
+    一次史料である『宋会要輯稿』食貨に載る1078年の数字は、官納鉄の全国合計5,501,097斤（約3,300トン換算）である<sup><a href="#s1">1</a></sup>。
+    Hartwell はこれを「生産の10%を現物納させた税」と仮定し、別年次の数字を別部門とみて合算し、さらに未課税分と違法生産を上乗せして11.4万トンを導いた<sup><a href="#s1">1</a></sup><sup><a href="#s5">5</a></sup>。
+    <strong class="hit">官納量から総生産までの倍率は、史料ではなく仮定である。</strong>
+    Wagner は2001年に「宋代を通じて鉄に一律10%の現物税があったという証拠は知られていない」と結論した<sup><a href="#s1">1</a></sup>。</p>
+    <p><strong>2. 高炉・炒鋼法・灌鋼法は宋の発明ではない。宋がやったのは規模の拡大である。</strong>
+    鋳鉄の生産は紀元前6世紀頃に始まり<sup><a href="#s3">3</a></sup>、炒鋼法は前漢初期の遺跡（下限は紀元前154年）で確認され<sup><a href="#s23">23</a></sup>、
+    灌鋼法の記載は後漢末（王粲『刀銘』）に遡り、北斉の綦毋懐文が最も早い実践者として知られる<sup><a href="#s22">22</a></sup>。
+    宋の技術的な新しさは炉の構造と燃料と動力にあり、製鋼法そのものではない。</p>
+    <p><strong>3. 石炭は確かに使われた。ただし「コークス炉への転換」ではなく「木炭との混炭」だった。</strong>
+    宋・元の鋳鉄遺物3点の炭素を放射性炭素年代測定にかけると11,540年・12,400年・13,840年前という不可能な値が出る。
+    燃料に地質年代の炭素、つまり石炭が混ざっていた証拠である<sup><a href="#s2">2</a></sup>。
+    この測定から算出された装入比は木炭3対石炭7だった<sup><a href="#s2">2</a></sup>。
+    蘇軾の詩「石炭」（元豊元年十二月＝1079年1月）は徐州で石炭が見つかり製鉄に使われた場面を詠むが、
+    「腥風」という語は硫化水素の臭いを示し、コークスではなく生石炭だった可能性が高い<sup><a href="#s2">2</a></sup>。</p>
+    <p><strong>4. それでも、この産業が異例だったことは崩れない。</strong>
+    Wagner は Hartwell の量的計算を退けつつ、質的結論、すなわち北宋初期に鉄の用途が飛躍的に広がったという結論は保持されると明言している<sup><a href="#s1">1</a></sup>。
+    1078年の官納鉄のうち75%超が邢州・磁州の2州から出ており<sup><a href="#s2">2</a></sup>、
+    徐州利国監には冶（製鉄所）が36あって各々が数百人を雇っていた<sup><a href="#s1">1</a></sup>。
+    <strong>集中した立地、大規模な民間資本、専業の賃労働者。これは18世紀の英国の製鉄業と同じ形をしている。</strong>
+    違いは、そこから先に何も起きなかったことである。</p>
+  </div>
+
+  <!-- ① 時代の枠 -->
+  <h2><span class="num">①</span>時代の枠<span class="en">The Song as an Economic Order</span></h2>
+
+  <p>製鉄業だけを切り出すと技術史の話になる。実際に起きたのは、鉄を大量に必要とする国家財政と、
+  鉄を大量に買える市場が同時に成立したことである。順に置く。</p>
+
+  <h3>人口と耕地</h3>
+
+  <p>人口は980年に約3,250万人、1086年に40,072,660人、1120年に約1億3,000万人とされる<sup><a href="#s16">16</a></sup>。
+  数字の性質が途中で変わっている（戸籍上の丁の数と総人口推計が混在する）ため、この3点を1本の系列として読むことはできない。
+  ただし Hartwell が1067年の人口を9,576万人としてひとり当たり1.2kgを算出していること<sup><a href="#s1">1</a></sup>から、
+  <strong>11世紀後半の人口を1億前後とみる推計は当時の研究者間で共有されていた</strong>。
+  耕地は7億2,000万畝（4,800万ヘクタール）に達し、後の王朝を上回った<sup><a href="#s15">15</a></sup>。</p>
+
+  <h3>貨幣 — 鉄が通貨になった</h3>
+
+  <p>銅銭の鋳造量は1080年に58.6億枚、1085年に60億枚に達した。
+  唐の天宝年間（742〜755年）の年3.27億枚と比べて桁が2つ違う<sup><a href="#s15">15</a></sup>。</p>
+
+  <p>ここで製鉄業と貨幣が直結する。銅が足りなくなったのである。
+  四川と陝西では銅銭の需要増と、遼・西夏への銅の流出防止という2つの理由から鉄銭が流通した<sup><a href="#s12">12</a></sup><sup><a href="#s18">18</a></sup>。
+  鉄銭は重い。持ち運びの不便を解決するために成都の富商16人が組合を作って発行した手形が交子で、
+  1022年から官営の発行が始まる<sup><a href="#s12">12</a></sup><sup><a href="#s16">16</a></sup><sup><a href="#s21">21</a></sup>。
+  <strong class="hit">世界最初の紙幣は、鉄が通貨として重すぎたことの副産物である。</strong>
+  12世紀初頭には紙幣の年間発行が2,600万貫に達した<sup><a href="#s15">15</a></sup>。
+  南宋は銅銭不足を解消できず、地域的な鉄銭への置換と紙幣への依存を深めた<sup><a href="#s13">13</a></sup>。
+  現存する宋代の鉄銭は金属組織分析にかけられており、鋳造技術の水準を実物から測れる<sup><a href="#s26">26</a></sup>。</p>
+
+  <div class="note">
+    この因果は Wagner の史料批判にも効いている。
+    Hartwell の方法を銅に当てはめると11世紀の年間銅生産が21万トンになってしまう。
+    吉田光邦は1966年に、それでは「銅が不足して鉄銭を使わざるをえない」という同時代の記述が成立しなくなると指摘した<sup><a href="#s1">1</a></sup>。
+    <strong>鉄銭の存在そのものが、Hartwell の倍率仮定に対する反証として機能している。</strong>
+  </div>
+
+  <h3>軍事 — 戦時経済が需要をつくった</h3>
+
+  <p>北宋は建国から滅亡まで常に戦争状態にあり、財政のほとんどを軍事費が占める戦時経済だった<sup><a href="#s16">16</a></sup>。
+  1004年の澶淵の盟で遼に対し毎年銀10万両・絹20万疋を送ることになり、1042年にさらに銀絹各10万ずつ増額された<sup><a href="#s16">16</a></sup><sup><a href="#s17">17</a></sup><sup><a href="#s20">20</a></sup>。
+  1044年の慶暦の和約では西夏に毎年銀5万両・絹13万匹・茶2万斤を贈った<sup><a href="#s20">20</a></sup>。</p>
+
+  <p>歳幣で戦争を回避しても、軍そのものは維持される。禁軍が中央軍、廂軍が地方軍にあたる<sup><a href="#s16">16</a></sup><sup><a href="#s19">19</a></sup>。
+  この常備軍が甲冑・刀剣・弩の部品・矢の鉄鏃を恒常的に消費した<sup><a href="#s9">9</a></sup>。
+  澶淵の盟から靖康の変までの北宋軍の実態については、その担い手に着目した研究がある<sup><a href="#s14">14</a></sup>。
+  蘇軾が徐州で石炭の発見を報告した詩にも、その石炭で「犀の皮を貫く」武器を作ったと書かれている<sup><a href="#s2">2</a></sup>。
+  <strong>製鉄業の最大の単一顧客は、最後まで国家だった。</strong></p>
+
+  <h3>1127年 — 産業の立地が国から切り離される</h3>
+
+  <p>1125年に金の侵攻が始まり、1126年末に開封が陥落し、1127年6月に北宋は滅んだ<sup><a href="#s16">16</a></sup>。
+  ここで決定的なのは、失われた領域が製鉄業の中心そのものだったことである。
+  1078年の官納鉄の75%超を出していた邢州・磁州は、いずれも現在の河北省南部にある<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup>。
+  南宋に残ったのは、鉄と石炭が隣り合って産出しない地域だった。
+  <strong class="hit">産業革命の前提条件のうち、資源の地理という一項目が、軍事的な理由で消えている。</strong></p>
+
+  <!-- ② 技術 -->
+  <h2><span class="num">②</span>技術はいつ生まれたか<span class="en">Dating the Technology</span></h2>
+
+  <p>「宋が高炉と製鋼法を作った」という説明は流通しているが、年代が合わない。技術ごとに初出を置く。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>技術</th><th>最も早い証拠</th><th>宋が加えたもの</th></tr>
+    <tr><td class="name">鋳鉄（銑鉄）</td><td>紀元前6世紀頃。中国の鉄器時代の開始とほぼ同時に鋳鉄の製造能力が成立している<sup><a href="#s3">3</a></sup><sup><a href="#s25">25</a></sup></td><td>炉の大型化と量産</td></tr>
+    <tr><td class="name">炒鋼法</td><td>前漢初期。江蘇省徐州の遺跡で確認され、年代の下限は紀元前154年<sup><a href="#s23">23</a></sup></td><td>—（技術としては継承）</td></tr>
+    <tr><td class="name">灌鋼法</td><td>後漢末。王粲（177〜217年）『刀銘』に記載。北斉の綦毋懐文が最も早い実践者・革新者として知られる<sup><a href="#s22">22</a></sup></td><td>—（技術としては継承）</td></tr>
+    <tr><td class="name">シーメンス・マルタン法の祖型</td><td>6世紀までに成立<sup><a href="#s3">3</a></sup></td><td>—</td></tr>
+    <tr><td class="name">高炉の構造革新</td><td><strong>宋</strong>。山腹に掘り込む型の高炉、大型竪型炉<sup><a href="#s2">2</a></sup></td><td>これは宋の新しさ</td></tr>
+    <tr><td class="name">水力ふいご</td><td><strong>宋</strong>。製鉄における水力の新たな重視<sup><a href="#s2">2</a></sup></td><td>これは宋の新しさ</td></tr>
+    <tr><td class="name">鉱物燃料（石炭）の大規模使用</td><td><strong>宋</strong>。宋以前の言及は4世紀の1件のみ<sup><a href="#s2">2</a></sup></td><td>これは宋の新しさ</td></tr>
+  </table>
+  </div>
+
+  <p>Wagner は「11世紀の中国の商業革命に、高炉設計における最後の大きな進歩が伴った」と書いている<sup><a href="#s2">2</a></sup><sup><a href="#s4">4</a></sup>。
+  <strong class="hit">最後の、である。</strong>
+  中国の高炉設計はここで完成し、19世紀・20世紀の伝統的製鉄業まで基本的に同じ形が使われた。</p>
+
+  <h3>宋・元代の高炉の実物</h3>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>遺跡</th><th>所在</th><th class="num">規模</th><th>備考</th></tr>
+    <tr><td class="name">邯鄲近郊の現存炉</td><td>河北省邯鄲市（旧・磁州）</td><td class="num">高さ6m</td><td>宋代のものとされ、現在も立っている。1959年12月13日『光明日報』に写真が掲載された<sup><a href="#s2">2</a></sup></td></tr>
+    <tr><td class="name">阿城県の製鉄遺跡群</td><td>黒龍江省阿城県</td><td class="num">高さ2〜3m<br>断面50〜80cm</td><td>12世紀、金（女真）領。鉱山1か所に対し製鉄所50か所以上が最大10km圏に分散。労働者約1,000人分の住居跡<sup><a href="#s2">2</a></sup></td></tr>
+    <tr><td class="name">安陽近郊の製鉄遺跡</td><td>河南省安陽市</td><td class="num">直径2.4〜4m<br>残存高さ約4m</td><td>宋から明まで稼働したとされる大型炉3基<sup><a href="#s2">2</a></sup></td></tr>
+  </table>
+  </div>
+
+  <p>阿城の配置には注目する価値がある。<strong>鉱山から10kmまで製鉄所を散らしたのは、燃料の森林資源を効率よく使うためだと報告者は解釈している</strong><sup><a href="#s2">2</a></sup>。
+  炉を鉱山に集めるのではなく、燃料のある場所に散らす。燃料が制約条件だったことが立地から読める。</p>
+
+  <div class="note">
+    炉内温度について。1200℃以上という数値がよく引かれるが、これは「鉄鉱石を溶かす温度」ではない。
+    鉄鉱石そのものの融点はもっと高く、高炉内で起きているのは還元と浸炭で、
+    炭素が入って融点が下がった鉄（銑鉄、融点およそ1,150〜1,200℃）が液体として出てくる。
+    炒鋼法の操業温度が1200℃以上とされるのはこの意味である<sup><a href="#s3">3</a></sup>。
+    炒鋼法の実際の炉の形については『天工開物』の「生熟煉鉄炉」図をめぐる検討がある<sup><a href="#s24">24</a></sup>。
+  </div>
+
+  <!-- ③ 燃料 -->
+  <h2><span class="num">③</span>燃料の実像<span class="en">What Actually Went Into the Furnace</span></h2>
+
+  <p>ここが「700年先取り」説の中心なので、証拠を種類ごとに分けて置く。</p>
+
+  <h3>証拠1: 文献 — 蘇軾の詩「石炭」（1079年1月）</h3>
+
+  <p>元豊元年十二月、西暦では1079年1月。徐州の知事だった蘇軾が、州の南西で石炭が見つかったことを詠んだ詩である。
+  白土鎮の北でその石炭を使って鉄を製し、「犀の皮を貫く」武器を作ったと前書きにある<sup><a href="#s2">2</a></sup>。</p>
+
+  <blockquote>
+    彭城舊無石炭、元豐元年十二月、始遣人訪獲於州之西南、白土鎭之北、以冶鐵作兵、犀利勝常云。<br>
+    ……豈料山中有遺寶、磊落如䃹萬車炭。<br>
+    流膏迸乳無人知、陣陣腥風自吹散。根苗一發浩無際、萬人鼓舞千人看。投泥潑水愈光明、爍玉流金是精悍。<br>
+    南山栗林漸可息、北山頑礦無勞鍛。
+    <span class="who">蘇軾「石炭」（『集註分類東坡先生詩』25）<sup><a href="#s2">2</a></sup></span>
+  </blockquote>
+
+  <p>この詩から3つ読める。</p>
+  <ul>
+    <li><strong>徐州では1079年1月まで石炭が使われていなかった。</strong>「彭城舊無石炭」である。
+    そのすぐ前年、1078年の蘇軾の上奏では、利国監の36の冶で労働者が「鉱石を集め、木炭のための木を切っている」と書かれている<sup><a href="#s1">1</a></sup>。
+    <strong class="hit">華北随一の製鉄地帯である徐州でも、1078年の燃料は木炭だった。</strong></li>
+    <li><strong>石炭への転換は木材制約の解決として現れた。</strong>「南山栗林漸可息」。南山の栗林はようやく息をつける。</li>
+    <li><strong>燃料はおそらくコークスではなく生石炭だった。</strong>「陣陣腥風」の腥風は硫化水素の臭いを示す。
+    Wagner は、この一句だけで断定はできないと留保しつつ、コークスより生石炭を示唆すると読んでいる<sup><a href="#s2">2</a></sup>。</li>
+  </ul>
+
+  <h3>証拠2: 化学分析 — 硫黄</h3>
+
+  <p>宋代の鉄製遺物の多くに高い硫黄値が検出されており、製錬時の石炭使用を強く示唆する<sup><a href="#s2">2</a></sup>。
+  硫黄は石炭に含まれ、木炭にはほとんど含まれない。</p>
+
+  <h3>証拠3: 放射性炭素年代 — これが決定的</h3>
+
+  <p>宋・元代の鋳鉄遺物3点に含まれる炭素を放射性炭素年代測定にかけると、
+  11,540年前・12,400年前・13,840年前という値が出る<sup><a href="#s2">2</a></sup>。
+  遺物の実年代より1万年古い。<strong class="hit">燃料に地質年代の炭素、つまり石炭が混ざっていたことの直接証拠である。</strong>
+  邱士華・蔡蓮珍はこの測定から、高炉の装入物が木炭3割・石炭7割の混合だったと算出した<sup><a href="#s2">2</a></sup>。</p>
+
+  <div class="risk">
+    <strong>ここが「コークス炉」説との分岐点である。</strong>
+    測定が示すのは石炭の混入であって、コークスへの完全転換ではない。木炭は残っている。
+    Wagner は、大規模な高炉では鉱物燃料が使われた可能性が高いとしつつ、
+    鋳物を作るための再溶解炉（キューポラ）は燃料消費がはるかに少ないため、
+    地域の生態条件が許すかぎり木炭という便利な燃料を使い続けたと考えられる、と整理している<sup><a href="#s2">2</a></sup>。
+    <strong>宋代の製鉄は「木炭から石炭へ」ではなく「木炭と石炭の併用」である。</strong>
+  </div>
+
+  <h3>コークスは知られていたのか</h3>
+
+  <p>知られていた。中国におけるコークスへの最も早い言及は4世紀初頭、陸雲が弟に送った書簡（『太平御覧』605所引）である<sup><a href="#s2">2</a></sup>。
+  なお石炭そのものの利用は青銅器時代まで遡ることが近年の研究で示されている<sup><a href="#s32">32</a></sup>。
+  Hartwell は宋代の製鉄におけるコークス使用の明確な言及を2件挙げている（『続資治通鑑長編』164、および欧陽脩「乞條制都作院」）<sup><a href="#s2">2</a></sup>。
+  19世紀・20世紀の伝統的中国高炉のいくつかもコークスを燃料にしていた<sup><a href="#s2">2</a></sup>。
+  Wagner の評価は次のとおりである。</p>
+
+  <blockquote>
+    木炭を使わなかった宋代の高炉にとって、コークスが最も一般的な燃料だった可能性は高い
+    <span class="who">Donald B. Wagner, &ldquo;Blast Furnaces in Song–Yuan China&rdquo;, EASTM 18 (2001), p.59<sup><a href="#s2">2</a></sup></span>
+  </blockquote>
+
+  <p>つまりコークスの使用そのものは否定されていない。争点は範囲と経済的な意味である。</p>
+
+  <h3>石炭転換が水力を呼んだ</h3>
+
+  <p>技術の連鎖はここでつながる。
+  石炭やコークスは木炭より反応性が低く、高炉内でより高い温度が必要になる。
+  高い温度には燃料消費の増大と送風量・送風圧の増大が伴う<sup><a href="#s2">2</a></sup>。
+  Wagner は「これが宋代の製鉄において水力が新たに重視された主要な理由かもしれない」と書いている<sup><a href="#s2">2</a></sup>。</p>
+
+  <p><strong class="hit">水車でふいごを動かしたから高温になったのではなく、石炭に変えたから水力が必要になった。</strong>
+  因果の向きが、通俗的な説明と逆である。
+  同じ制約は18世紀の英国にも現れている。コークス高炉では燃料と送風の必要量がいずれも木炭使用時のほぼ2倍になり、
+  ダービーのコールブルックデールでは利用可能な水力を増やすために相当な努力が払われた<sup><a href="#s2">2</a></sup>。</p>
+
+  <!-- ④ 生産量の論争 -->
+  <h2><span class="num">④</span>生産量の論争<span class="en">The Numbers, Dissected</span></h2>
+
+  <p>「年12万5,000トン」がどう作られたかを分解する。出発点となる一次史料の数字は1つだけである。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>史料の記述</th><th class="num">数値</th><th>典拠</th></tr>
+    <tr><td>鐵坑冶祖額總計（1078年の元額）</td><td class="num">5,482,770斤</td><td>『宋会要輯稿』食貨33:14a<sup><a href="#s1">1</a></sup></td></tr>
+    <tr><td>元豐元年收總計（1078年の受領総額）</td><td class="num">5,501,097斤<br>約3,300トン換算</td><td>『宋会要輯稿』食貨33:14a、『文献通考』18、『宋史』185<sup><a href="#s1">1</a></sup></td></tr>
+  </table>
+  </div>
+
+  <p>この5,501,097斤が、以下すべての推計の分母である。ここから先は解釈である。</p>
+
+  <div class="chart">
+    <div class="cap">同じ史料から出た1078年の鉄生産量の推計</div>
+    <div class="sub">単位：トン。いずれも『宋会要輯稿』の同一の数字を出発点にしている</div>
+    <div class="bars" id="chartEst"></div>
+    <p style="font-size:12px;color:var(--muted);margin:14px 0 0">
+      濃い色が史料に書かれた官納量、薄い色が推計。最小値と最大値で35倍開いている。
+      差はすべて「官納量は生産の何%か」という仮定の違いから来る<sup><a href="#s1">1</a></sup>。
+    </p>
+  </div>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>誰が</th><th class="num">結論</th><th>置いた仮定</th><th>弱点</th></tr>
+    <tr><td class="name">Tegengren<br>1923–24</td><td class="num">約3,300トン</td><td>官納量＝総生産</td><td>官納量は生産の一部にすぎないので明らかに誤り<sup><a href="#s1">1</a></sup></td></tr>
+    <tr><td class="name">華山<br>1982</td><td class="num">約16,500トン</td><td>現物税率20%と仮定して5倍</td><td>20%という税率の根拠が示されていない<sup><a href="#s1">1</a></sup></td></tr>
+    <tr><td class="name">Hartwell<br>1962・1963・1967</td><td class="num">11.4万トン<br>（12万5,000英トン）<br>ひとり当たり1.2kg</td><td>(a)官納はすべて10%の現物税、(b)1064〜67年と1078年の数字は別部門なので合算する、(c)未課税の官営分・記載漏れ・違法生産を上乗せ</td><td>(a)の10%は加藤繁1926が挙げた1例（信州鉄山、しかも宋建国前の話）が唯一の根拠。(b)は宋代に産業が2部門に明確に区分されていた証拠がない<sup><a href="#s1">1</a></sup></td></tr>
+    <tr><td class="name">吉田光邦<br>1966</td><td class="num">算出不能</td><td>—</td><td>Hartwell の方法を銅に適用すると年21万トンになり、銅不足で鉄銭を使ったという同時代の記述と矛盾する。1116年の広南東路では課額289万斤に対し1078年の官納は31,344斤で、税率は約1%になる<sup><a href="#s1">1</a></sup></td></tr>
+    <tr><td class="name">Wagner<br>2001</td><td class="num">算出不能</td><td>—</td><td>「宋代のいずれの時点においても、鉄生産に対する一律10%の現物税の証拠は知られていない」。11.4万トンという桁自体はもっともらしいが、直接の量的証拠はない<sup><a href="#s1">1</a></sup></td></tr>
+  </table>
+  </div>
+
+  <div class="risk">
+    <strong>Hartwell が答えなかった反証が1つある。</strong>
+    吉田光邦は1966年に、同じ史料で銅が鉄とまったく同じ扱いを受けている点を指摘した。
+    同じ方法を銅に当てはめると11世紀の中国の年間銅生産は21万トンになる。
+    これに未課税分と違法生産を足せば鉄生産の2倍を超える。
+    Hartwell は1967年の論文で長い脚注をつけて応答したが、この論点には答えていない<sup><a href="#s1">1</a></sup>。
+    <strong class="hit">銅が余っていたなら、四川と陝西で鉄銭を鋳る理由がない。</strong>
+  </div>
+
+  <p>Wagner 自身の見立ては次のとおりである。漢代の鉄生産をひとり当たり年0.1kg程度と見積もったうえで、
+  漢から宋の間に鉄の用途が大きく広がったことは Hartwell が示したとおりなので、
+  その千年で生産が1桁上がったと考えるのは正当だろう、したがってひとり当たり1.2kg・総量11.4万トンという水準は
+  <strong>十分にありうるが、直接の量的証拠は見当たらない</strong>——という位置づけである<sup><a href="#s1">1</a></sup>。</p>
+
+  <p>Tim Wright は2007年に、Hartwell の議論がその後40年でどう受容されたかを、
+  宋代経済革命論、生産量推計、そして「石炭と鉄の生産・消費は少なくともひとり当たりでは宋代にピークを打った」という命題の3点に分けて再検討している<sup><a href="#s7">7</a></sup>。
+  <strong>Hartwell の枠組みは棄却されたのではなく、数字の部分だけが外された状態で使われ続けている。</strong>
+  Hartwell の著作目録はワシントン大学が公開している<sup><a href="#s8">8</a></sup>。</p>
+
+  <!-- ⑤ 産業の地理と組織 -->
+  <h2><span class="num">⑤</span>産業の地理と組織<span class="en">Geography and Organisation</span></h2>
+
+  <p>生産量の総額は確定しないが、<strong>地理的な分布と現場の組織は史料に具体的に残っている</strong>。
+  ここが本レポートで最も確度が高い部分である。</p>
+
+  <div class="chart">
+    <div class="cap">1078年の官納鉄の集中</div>
+    <div class="sub">単位：万斤。『宋会要輯稿』食貨33の州別内訳。全国合計は5,501,097斤</div>
+    <div class="bars" id="chartConc"></div>
+    <p style="font-size:12px;color:var(--muted);margin:14px 0 0">
+      邢州と磁州はいずれも現在の河北省南部、当時の河北西路にある。
+      この2州で全国の75%超を占める<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup>。
+      残り26州の合計は差分から算出した。
+    </p>
+  </div>
+
+  <h3>徐州利国監 — 36の冶と数百人の賃労働者</h3>
+
+  <p>蘇軾は1077年から徐州の知事を務めた。1078年に提出した上奏「徐州上皇帝書」に、
+  州城の北東約70里にある利国監の記述がある<sup><a href="#s1">1</a></sup>。</p>
+
+  <blockquote>
+    冶が36あり、それぞれ富裕で有力な一家が経営していて、金庫には万貫の銭がある。
+    彼らは盗賊の恒常的な標的だが、駐屯兵は弱く、襲うのは子供の遊びのようなものだ。……<br>
+    冶は36あり、それぞれ数百人が鉱石を集め、木炭のための木を切っている。
+    彼らは大部分が貧窮した逃亡者で、強壮かつ凶暴である。
+    <span class="who">蘇軾「徐州上皇帝書」1078年（Wagner 訳からの重訳）<sup><a href="#s1">1</a></sup></span>
+  </blockquote>
+
+  <p>この短い記述から読めることが多い。</p>
+  <ul>
+    <li><strong>資本は民間、しかも大規模。</strong>36の冶がそれぞれ富裕な一家によって経営され、万貫の現金を持っている。国営ではない。</li>
+    <li><strong>労働は賃労働、しかも本籍を離れた者。</strong>数百人規模の「貧窮した逃亡者」である。
+    Wagner は、これが12世紀前の桑弘羊による漢代の製鉄労働者の描写（「祖先の墓を捨てた common bandits」）を思い起こさせると指摘し、
+    <strong class="hit">雇われた工業労働者は中国社会において明確な地位を持たなかった</strong>と述べている<sup><a href="#s1">1</a></sup>。</li>
+    <li><strong>燃料は木炭。</strong>1078年時点の徐州の話である。石炭が見つかるのはこの翌月である。</li>
+    <li><strong>市場は行政区画で分断されうる。</strong>直前に河北の転運司が利国監の鉄を河北へ入れることを禁じるよう提案し、朝廷が承認した。
+    蘇軾はこれによって冶戸が破産の危機にあると訴え、禁止の撤回を求めている<sup><a href="#s1">1</a></sup>。</li>
+  </ul>
+
+  <div class="note">
+    最後の点は産業史として重い。<strong>官納量の75%を出す磁州・邢州と隣接する市場が、行政の一声で閉じられる。</strong>
+    18世紀の英国の製鉄業が直面したのは輸送費と関税だったが、宋の製鉄業が直面したのは行政裁量だった。
+    投資の予見可能性という一点で、両者の条件は同じではない。
+  </div>
+
+  <h3>登州と韓城 — 名簿だけが残った製鉄戸</h3>
+
+  <p>包拯（999〜1062年、後に「包青天」として説話化される）が1046年頃に山東半島の登州について提出した上奏がある<sup><a href="#s1">1</a></sup>。
+  登州の18の製鉄戸は貧しく、製鉄の手段を持たない。毎年農産物を売り、
+  「空の巣に座って」市場で鉄を買い、それを政府に納めている。名簿から外してほしい、という内容である。</p>
+
+  <blockquote>
+    潜在的な利益は大きいが、富裕な者は将来の災厄を恐れて製鉄所を設けようとしない。
+    このため鉄の生産は日々減少し、長らく企業家的な活動がない。
+    <span class="who">包拯「請除登州鐵戸姓名」（Wagner 訳からの重訳）<sup><a href="#s1">1</a></sup></span>
+  </blockquote>
+
+  <p>同じ包拯の上奏集には、陝西の同州韓城県についての別の一通が続く。
+  韓城の製鉄役所は一貫して700戸を報告しているが、原料を十分に持つのは200戸である。
+  政府が受け取る鉄は10万斤（約60トン換算）にすぎないのに、木炭と職人の賃金の支出は300貫を超える<sup><a href="#s1">1</a></sup>。
+  <strong class="hit">政府の側が赤字で運営している。</strong></p>
+
+  <div class="chart">
+    <div class="cap">韓城県（陝西）の鉄の官納・課額の推移</div>
+    <div class="sub">単位：トン換算。1斤＝596.82グラムで換算した</div>
+    <div class="bars" id="chartHancheng"></div>
+    <p style="font-size:12px;color:var(--muted);margin:14px 0 0">
+      1046年頃の10万斤（約60トン）は県全体で政府が受領した量、1114年の各60万斤（約360トン）は2つの冶それぞれの課額である<sup><a href="#s1">1</a></sup>。
+      1083年に陝西転運司が韓城の鉄鉱脈は深く厚いとして銭監の設置を提案しており、
+      その後の資本と技術の投入によって水準が変わったと Wagner は推定している<sup><a href="#s1">1</a></sup>。
+    </p>
+  </div>
+
+  <p>ここで注意が必要なのは、<strong>1114年の数字が『宋会要輯稿』では600万斤と書かれていることである</strong>。
+  それでは2つの冶がそれぞれ、36年前の1078年における全国の冶の課額合計を上回ることになるので信用できない。
+  Hartwell は「六百萬」を「六十萬」の誤写として黙って訂正しており、Wagner もこれが最善の推測だとしている<sup><a href="#s1">1</a></sup>。
+  <strong class="hit">この史料は、桁を1つ間違えた写本が現存する史料である。</strong>
+  『宋会要輯稿』が「ぞっとするほどの数の写し誤りを含む」と評されるのはこのためである<sup><a href="#s1">1</a></sup>。</p>
+
+  <h3>行政は一枚岩ではなかった</h3>
+
+  <p>生産量以外で Wagner が最も強く述べているのはこの点である。
+  宋代の製鉄業の行政を全体として記述した史料は存在しない。
+  個別の逸話から見えるのは、すべての地域を同じ扱いにする一元的な行政ではなく、
+  <strong>地域の条件と慣行に強く影響されたその場しのぎの措置によって、政府が鉄の供給と地元生産者の利益の一部を確保していた姿</strong>である<sup><a href="#s1">1</a></sup>。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>地域</th><th>組織形態</th><th>政府の関与</th></tr>
+    <tr><td class="name">徐州利国監</td><td>36の冶。富裕な一家が自己資本と専門知識を提供し、数百人を雇用<sup><a href="#s1">1</a></sup></td><td>課額の徴収と、市場の開閉</td></tr>
+    <tr><td class="name">登州・莱州</td><td>18の製鉄戸。実態としては市場で鉄を買って納入<sup><a href="#s1">1</a></sup></td><td>名簿による課額の割り当て</td></tr>
+    <tr><td class="name">同州韓城県</td><td>700戸を登録、実質200戸。政府が木炭と職人を供給する問屋制に近い形<sup><a href="#s1">1</a></sup></td><td>資本と技術の両方を政府が提供</td></tr>
+    <tr><td class="name">福州（12世紀）</td><td>坑冶ごとに条件が異なる。20%の税に加えて残りを政府に強制売却する所、定額を納める所、現物ではなく貨幣で納める所<sup><a href="#s1">1</a></sup></td><td>坑冶単位で条件が違う</td></tr>
+  </table>
+  </div>
+
+  <p>製鉄戸として登録されると他の賦役から免除される利点があったため、
+  富裕な500戸が課額分を市場で買って納めることで税と賦役を回避していた形跡もある<sup><a href="#s1">1</a></sup>。
+  <strong>「官納量×倍率＝総生産」という計算が成立しないのは、この制度の非均質性そのものが理由である。</strong></p>
+
+  <!-- ⑥ 需要 -->
+  <h2><span class="num">⑥</span>何が鉄を吸ったか<span class="en">Where the Iron Went</span></h2>
+
+  <p>Hartwell の質的な結論、すなわち北宋初期に鉄の用途が大きく広がったという点は、Wagner も保持している<sup><a href="#s1">1</a></sup>。
+  用途を分けて置く。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>用途</th><th>内容</th><th>性格</th></tr>
+    <tr><td class="name">軍需</td><td>甲冑（規格サイズで量産）、刀剣、弩の部品、矢の鉄鏃<sup><a href="#s9">9</a></sup></td><td>国家需要。戦時経済が恒常化していたため途切れない<sup><a href="#s16">16</a></sup></td></tr>
+    <tr><td class="name">貨幣</td><td>四川・陝西の鉄銭。銅不足と対外流出防止の2つの理由<sup><a href="#s12">12</a></sup><sup><a href="#s18">18</a></sup></td><td>国家需要。鉄が通貨そのものになる</td></tr>
+    <tr><td class="name">農具</td><td>鉄製の犁（すき）<sup><a href="#s15">15</a></sup></td><td>民間の量産市場。農業生産性に直結する</td></tr>
+    <tr><td class="name">日用品</td><td>釘、鎖、鍋・調理器具<sup><a href="#s15">15</a></sup></td><td>民間の量産市場</td></tr>
+    <tr><td class="name">大型鋳造物</td><td>仏像、鐘、塔、吊橋の鎖<sup><a href="#s9">9</a></sup><sup><a href="#s15">15</a></sup></td><td>寺社・公共。単発だが1件が巨大</td></tr>
+    <tr><td class="name">銅の湿式製錬</td><td>鉄を使って銅を析出させる工程。安価な鉄への新規需要を生んだ<sup><a href="#s1">1</a></sup></td><td>産業内需要。1116年の広南東路では「銅の析出以外に用途はない」と報告されている<sup><a href="#s1">1</a></sup></td></tr>
+  </table>
+  </div>
+
+  <p>この一覧の意味は、<strong class="hit">需要が国家と民間の両方から来ていたことである。</strong>
+  漢代の製鉄業が国家の専売として運営されたのに対し、宋の製鉄業は民間の量産市場を持っていた。
+  Hartwell が「商業革命」の一部として製鉄業を扱ったのはこの点であり、ここは現在も有効な指摘とされている<sup><a href="#s1">1</a></sup><sup><a href="#s5">5</a></sup>。</p>
+
+  <p>ただし、最後の行は逆向きの示唆でもある。
+  1116年の広南東路の報告は、92か所の坑冶が年間課額289万斤を負っていながら、
+  その鉄には銅の析出以外に用途がないと述べている<sup><a href="#s1">1</a></sup>。
+  <strong>華南では、鉄は最終製品ではなく中間投入財だった。</strong>
+  地域によって鉄の位置づけが違う。全国を1つの「鉄の市場」として語ることはできない。</p>
+
+  <!-- ⑦ ダービーとの比較 -->
+  <h2><span class="num">⑦</span>ダービーとの比較<span class="en">Against Coalbrookdale</span></h2>
+
+  <p>「宋はダービーを約700年先取りした」という言い方が成立するかを、ダービーが実際に解いた問題から逆算して検証する。</p>
+
+  <h3>ダービーの前に失敗した人たち</h3>
+
+  <p>コークス製鉄の最初の経済的成功は1709年、シュロップシャーのコールブルックデールにおけるエイブラハム・ダービーである<sup><a href="#s2">2</a></sup>。
+  ダービーの前にも試みた者はいた。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>年</th><th>誰が</th><th>結果</th></tr>
+    <tr><td class="num">1665</td><td class="name">ダッド・ダドリー</td><td>『Metallum Martis』で鉱物燃料のみによる製鉄の成功を主張。冶金史家の現在の見解は、鉄の生産自体には成功したが経済的には成功していない、というもの。品質が劣るか不安定だったためと推定される<sup><a href="#s2">2</a></sup></td></tr>
+    <tr><td class="num">1680年代</td><td class="name">ルパート公</td><td>サセックスの高炉で石炭による製錬を試みたが失敗。炉がタールで汚れ、鉄は硫黄によって脆くなり、放棄せざるをえなかった<sup><a href="#s2">2</a></sup></td></tr>
+    <tr><td class="num">1709</td><td class="name">エイブラハム・ダービー</td><td>コークスを使用。成功<sup><a href="#s2">2</a></sup></td></tr>
+  </table>
+  </div>
+
+  <p>1744年のスウェーデン王立委員会の報告は、コールブルックデールの状況を次のように記録している<sup><a href="#s2">2</a></sup>。</p>
+
+  <blockquote>
+    のちにコールブルックデールの工場で、石炭を木炭のように用いる高炉操業の技術が完全に達成された。
+    しかしなお問題は残っている。第一に、石炭は木炭が溶かす鉱石の半分も溶かさないこと。
+    第二に、残った鉄は、良質の鉄と少量ずつ合わせる以外には鍛冶場で使えないこと。
+    他方で鋳物仕事にはかなりよく適するという。
+    <span class="who">スウェーデン王立委員会報告 1744年（Wagner の引用からの重訳）<sup><a href="#s2">2</a></sup></span>
+  </blockquote>
+
+  <p>つまり<strong class="hit">1709年のダービーが解いたのは「鋳物用の銑鉄を石炭で安く作る」問題であって、「鋼を作る」問題ではない。</strong>
+  ダービーの成功の実質は、彼が誇大な主張をせず、鉄が適する用途、すなわち薄肉の鋳鉄鍋に限って使ったことにある<sup><a href="#s2">2</a></sup>。
+  地元の鉱石がマンガンを多く含み、それが硫黄と結合して鋳鉄の中で無害化されたことも効いた<sup><a href="#s2">2</a></sup>。</p>
+
+  <p>コークス高炉が英国で標準になるのはこの後で、1788年には英国の銑鉄のほぼ8割がコークス炉から出ていた<sup><a href="#s30">30</a></sup>。
+  1790年前後の生産統計とパドル法の到来については専門の統計研究がある<sup><a href="#s28">28</a></sup>。
+  1800年以前の鉄の生産と市場の全体像については別途の整理がある<sup><a href="#s29">29</a></sup>。</p>
+
+  <p>鍛鉄と鋼の硫黄問題（高温脆性）はマンガンでは解決しない。
+  解は石灰石の増量だったが、それは鉱滓の融点を大幅に上げるため、さらに高い炉内温度が必要になる。
+  <strong>ダービーの銑鉄が鍛鉄の原料として使えるようになったのは、ニューコメン機関を導入して高炉の水力を増強し、より高い温度が出せるようになった後である</strong><sup><a href="#s2">2</a></sup>。</p>
+
+  <div class="callout">
+    <p style="margin-top:0"><strong>ここから「700年先取り」の評価が出る。</strong></p>
+    <p><strong>成立する部分。</strong>鉱物燃料を製鉄に大規模に使ったこと、コークスの存在を知っていたこと、
+    水力送風で高温を維持したこと。これらは宋が11世紀に実現しており、英国より数百年早い<sup><a href="#s2">2</a></sup>。</p>
+    <p><strong>成立しない部分。</strong>ダービー以降の英国で起きたのは、鉱物燃料の使用ではなく
+    <strong class="hit">鉱物燃料で作った銑鉄から安価な鍛鉄と鋼へ至る経路が確立したこと</strong>である。
+    その経路は石灰石の増量とニューコメン機関、さらにその後のパドル法と圧延を必要とした。
+    宋の史料と遺物からは、この経路に踏み込んだ証拠が出ていない。
+    装入物は木炭3対石炭7の混合で<sup><a href="#s2">2</a></sup>、蘇軾の詩の「腥風」は生石炭を示唆する<sup><a href="#s2">2</a></sup>。
+    <strong>宋は入口を700年早く通ったが、出口は通っていない。</strong></p>
+  </div>
+
+  <h3>その後の中国の伝統的製鉄業は、むしろ木炭に戻っている</h3>
+
+  <p>これが「先取り」説にとって最も厳しい事実である。
+  Wagner が19世紀・20世紀の中国の伝統的製鉄業を調査した結論は、
+  <strong>鋳鉄の製造に際して鉱物炭が使われることはほぼなかった</strong>というものである<sup><a href="#s3">3</a></sup>。</p>
+
+  <ul>
+    <li><strong>四川。</strong>1940年、長江沿いのある伝統的製鉄所がようやく鉱物炭を高炉燃料として使うことに成功した。
+    技師の鄧良琴が100回以上の失敗を経てのことである<sup><a href="#s3">3</a></sup>。</li>
+    <li><strong>山西。</strong>無煙炭が豊富だったが、1920年頃の時点でも坩堝製鉄で石炭を使い続けていた（高炉ではない）<sup><a href="#s3">3</a></sup>。</li>
+    <li><strong>水力。</strong>四川では18世紀から19世紀初期まで水力駆動のふいごが使われていたが、1920年頃までに人力駆動に転換した<sup><a href="#s3">3</a></sup>。</li>
+    <li><strong>技術的退行。</strong>四川では石灰石フラックスと水力という高炉操業の重要な2要素が廃止された。
+    Wagner はこれを、当時の経済不況を反映した合理的な費用削減と評価している<sup><a href="#s3">3</a></sup>。</li>
+  </ul>
+
+  <div class="risk">
+    <strong>水力と石灰石を捨てた。</strong>
+    これはダービー以後の英国が増やしていった2つの要素とまったく同じものである。
+    英国はこの2つを増やして鋼への経路を開き、中国は同じ2つを削って費用を下げた。
+    <strong class="hit">同じ技術要素に対して、逆方向の合理性が働いている。</strong>
+    Wagner の結論は、近代工業化への失敗は技術的能力の欠如ではなく、
+    西洋との経済競争と国内資本の流出による経済的圧力の結果である、というものである<sup><a href="#s3">3</a></sup>。
+  </div>
+
+  <div class="chart">
+    <div class="cap">中国の鉄輸入量</div>
+    <div class="sub">単位：トン。19世紀後半の外国鉄の流入</div>
+    <div class="bars" id="chartImport"></div>
+    <p style="font-size:12px;color:var(--muted);margin:14px 0 0">
+      24年で16倍になっている。1840年代の英国の棒鉄の利益率は50%に達しうると Wagner は計算している<sup><a href="#s3">3</a></sup>。
+      良好な輸送設備を持つ地域、つまり大規模生産に向いた地域が、最初に外国商品の侵入を受けた<sup><a href="#s3">3</a></sup>。
+    </p>
+  </div>
+
+  <!-- ⑧ なぜ -->
+  <h2><span class="num">⑧</span>なぜ次に進まなかったか<span class="en">Why It Did Not Continue</span></h2>
+
+  <p>説明は1つに絞れない。有力なものを、確度の順に並べる。</p>
+
+  <h3>1. 資源の地理が軍事的に失われた（確度が高い）</h3>
+
+  <p>1078年の官納鉄の75%超を出した邢州・磁州は現在の河北省南部にあり、
+  石炭と鉄鉱石が隣接して産出する地帯である<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup>。
+  1126年末に開封が陥落し、1127年6月に北宋が滅びると、この地帯は金の領域になる<sup><a href="#s16">16</a></sup>。
+  南宋の経済中心は江南に移るが、そこは石炭と鉄が隣り合わない。
+  <strong class="hit">産業革命の物理的前提のうち1項目が、技術や制度の問題ではなく戦争で消えた。</strong>
+  Hartwell が1967年の論文を「750〜1350年の周期」として構成したのはこの視点である<sup><a href="#s6">6</a></sup>。</p>
+
+  <h3>2. 高位均衡の罠（有力だが批判もある）</h3>
+
+  <p>Mark Elvin の説明である。宋代に農業・水運・金融・都市化・科学技術の革命が起きたが、
+  その後の中国は高位均衡の罠に捕まった。
+  可耕地に対して人口密度が高く、労働が安いので、労働集約的な技法が広く採用され、
+  資本集約・エネルギー集約的な機械化への投資が採算に乗らなくなる<sup><a href="#s10">10</a></sup>。</p>
+
+  <p>ただしこの説明には反論がある。人口・ひとり当たり耕地・所得の数値を用いた批判があり、
+  産業革命が起きなかった理由を単一の理論に絞ることはできず、
+  後の文化的・政治的な条件との組み合わせで考えるべきだという整理が一般的である<sup><a href="#s10">10</a></sup>。
+  宋代中国と英国を経済革命として比較する近年の研究も、この論点を扱っている<sup><a href="#s11">11</a></sup>。</p>
+
+  <h3>3. 制度が投資の予見可能性を与えなかった（史料の裏付けがある）</h3>
+
+  <p>これは本レポートで見た史料から直接出てくる論点である。</p>
+
+  <ul>
+    <li><strong>市場が行政の一声で閉じる。</strong>河北の転運司の提案で、利国監の鉄の河北への搬入が禁止された<sup><a href="#s1">1</a></sup>。</li>
+    <li><strong>課額が実態から乖離しても是正されない。</strong>登州の18戸は市場で鉄を買って納入していた。
+    包拯は2度上奏したが指示が来ないと書いている<sup><a href="#s1">1</a></sup>。</li>
+    <li><strong>富裕な者が製鉄への投資を避ける。</strong>「潜在的な利益は大きいが、富裕な者は将来の災厄を恐れて製鉄所を設けようとしない」<sup><a href="#s1">1</a></sup>。
+    課額の義務が子や孫まで続く構造がその理由である<sup><a href="#s1">1</a></sup>。</li>
+    <li><strong>工業賃労働者に社会的地位がない。</strong>利国監の労働者は「貧窮した逃亡者」である<sup><a href="#s1">1</a></sup>。</li>
+  </ul>
+
+  <p><strong class="hit">技術ではなく、資本の側が降りている。</strong>
+  包拯の上奏は、11世紀の中国において製鉄業が「儲かるが誰もやりたがらない事業」だったことを示している。</p>
+
+  <h3>4. 需要の性格（推論）</h3>
+
+  <p>宋の鉄需要の柱は軍需と貨幣、すなわち国家需要だった<sup><a href="#s9">9</a></sup><sup><a href="#s12">12</a></sup>。
+  農具と日用品という民間の量産市場もあったが<sup><a href="#s15">15</a></sup>、
+  華南では鉄が銅の湿式製錬用の中間投入財として扱われている<sup><a href="#s1">1</a></sup>。
+  英国の18世紀後半の鉄需要が、鉄道・機械・構造材という<strong>それ自体が生産能力を増やす用途</strong>に向かったのに対し、
+  宋の鉄需要の中心は消耗と貯蔵に向かった。これは推論であり、本レポートでは数値で裏付けていない。</p>
+
+  <div class="note">
+    この論点は、本サイトの<a href="ai_vs_industrial_revolution_260819.html">産業革命とAIのレポート</a>と対になっている。
+    そこでの結論は、汎用技術は買った時点では効かず、組織を組み直したときに効き始める、というものだった<sup><a href="#s33">33</a></sup>。
+    宋の製鉄業は技術と規模を持っていたが、その技術を使う側の組織——市場・資本・労働の制度——を組み直していない。
+    <strong>技術が先に来ても、制度が追いつかなければ止まる。宋の事例はその最も長い実験である。</strong>
+  </div>
+
+  <!-- ⑨ 通説の検証 -->
+  <h2><span class="num">⑨</span>流通している説明の検証<span class="en">Fact-Checking the Standard Account</span></h2>
+
+  <p>宋代製鉄業について広く流通している説明を項目ごとに検証する。
+  判定は「成立」「要修正」「誤り」の3段階で、いずれも本文で挙げた出典に基づく。</p>
+
+  <div class="tbl-scroll">
+  <table>
+    <tr><th>よく言われること</th><th>判定</th><th>根拠</th></tr>
+    <tr>
+      <td>11世紀の北宋の製鉄業は「中世における産業革命の先駆け」と呼べるほど高度にシステム化されていた</td>
+      <td class="name" style="color:var(--warn)">要修正</td>
+      <td>規模と組織については成立する。1078年の官納鉄の75%超が邢州・磁州の2州から出ており<sup><a href="#s1">1</a></sup>、徐州利国監では36の冶が各々数百人を雇っていた<sup><a href="#s1">1</a></sup>。ただし行政は一元的ではなく、地域ごとのその場しのぎの措置の集合だった<sup><a href="#s1">1</a></sup>。「システム化」という語は行政面には当てはまらない</td>
+    </tr>
+    <tr>
+      <td>木炭による森林枯渇のため、世界に先駆けて石炭を製鉄燃料として大規模導入した</td>
+      <td class="name" style="color:var(--good)">成立</td>
+      <td>「北宋期は燃料用木材の供給危機と鉱物炭の広範な使用を見た」<sup><a href="#s2">2</a></sup>。蘇軾の詩「石炭」の「南山栗林漸可息」も同じ因果を示す<sup><a href="#s2">2</a></sup></td>
+    </tr>
+    <tr>
+      <td>欧州がコークス炉を実用化するのは18世紀の英・ダービー父子からなので、宋は約700年先取りしていた</td>
+      <td class="name" style="color:var(--warn)">要修正</td>
+      <td>鉱物燃料の使用という点では先取りが成立する。ただしダービー以後の英国で起きたのは、鉱物燃料で作った銑鉄から安価な鍛鉄・鋼へ至る経路の確立であり、それには石灰石の増量とニューコメン機関による送風強化が必要だった<sup><a href="#s2">2</a></sup>。宋の遺物の装入比は木炭3対石炭7の混合で<sup><a href="#s2">2</a></sup>、コークス専焼への転換を示す証拠はない。なお「父子」という表記自体は、コークス銑を鍛鉄原料にできるようにしたのが後の世代の仕事だったことを踏まえれば妥当である<sup><a href="#s2">2</a></sup></td>
+    </tr>
+    <tr>
+      <td>水力を利用した巨大な水車でふいごを動かし、炉内に強力な風を送り続けた</td>
+      <td class="name" style="color:var(--good)">成立</td>
+      <td>宋代の製鉄における水力の新たな重視は Wagner も認めている。ただし因果の向きは逆で、石炭・コークスへの転換が高温を要求し、高温が送風量と送風圧の増大を要求した結果として水力が必要になった<sup><a href="#s2">2</a></sup></td>
+    </tr>
+    <tr>
+      <td>1200℃以上の超高温を維持し、鉄鉱石を完全に溶かして液状にした</td>
+      <td class="name" style="color:var(--warn)">要修正</td>
+      <td>溶けているのは鉄鉱石ではない。高炉内では還元と浸炭が進み、炭素が入って融点が下がった鉄が液体として出る。炒鋼法の操業温度が1200℃以上とされるのはこの意味である<sup><a href="#s3">3</a></sup></td>
+    </tr>
+    <tr>
+      <td>炒鋼法と灌鋼法という製鋼技術を持っていた</td>
+      <td class="name" style="color:var(--good)">成立</td>
+      <td>ただし宋の発明ではない。炒鋼法は前漢初期の遺跡で確認され、年代の下限は紀元前154年<sup><a href="#s23">23</a></sup>。灌鋼法の記載は王粲（177〜217年）『刀銘』に遡り、北斉の綦毋懐文が最も早い実践者として知られる<sup><a href="#s22">22</a></sup>。宋の貢献は技術の発明ではなく規模の拡大である</td>
+    </tr>
+    <tr>
+      <td>1078年の記録では、北宋の年間鉄生産量は約12万5,000トンに達していた</td>
+      <td class="name" style="color:var(--bad)">誤り</td>
+      <td>「記録では」が成立しない。1078年の史料に載る数字は官納鉄の全国合計5,501,097斤、約3,300トン換算である<sup><a href="#s1">1</a></sup>。12万5,000英トン（11.4万メートルトン）は Hartwell が1963年に、10%の現物税という仮定などを重ねて算出した<strong>推計</strong>である<sup><a href="#s1">1</a></sup><sup><a href="#s5">5</a></sup>。Wagner は「宋代のいずれの時点においても、鉄生産に対する一律10%の現物税の証拠は知られていない」と結論している<sup><a href="#s1">1</a></sup></td>
+    </tr>
+    <tr>
+      <td>18世紀初頭のイギリス全体の生産量の数倍、欧州全体に匹敵する水準だった</td>
+      <td class="name" style="color:var(--warn)">要修正</td>
+      <td>比較する数字を明示しないと成立しない。英国の銑鉄生産は1720年に2万トン強<sup><a href="#s27">27</a></sup>なので、Hartwell の<strong>推計</strong>11.4万トンと比べれば約5.7倍になる。一方、史料に書かれた官納量3,300トンと比べれば英国の方が多い。「数倍」という表現は推計値どうしの比較として読む必要がある</td>
+    </tr>
+    <tr>
+      <td>鉄は武器だけでなく農具、鍋、貨幣、橋や仏塔にまで供給され、民間経済と農業を支えた</td>
+      <td class="name" style="color:var(--good)">成立</td>
+      <td>犁、釘、鎖、仏像、吊橋の鎖、そして大衆市場向けの日用品まで用途が広がったことは Hartwell が示し、Wagner も質的結論として保持している<sup><a href="#s1">1</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s15">15</a></sup>。四川・陝西では鉄そのものが貨幣になった<sup><a href="#s12">12</a></sup><sup><a href="#s18">18</a></sup></td>
+    </tr>
+  </table>
+  </div>
+
+  <div class="callout">
+    <p style="margin-top:0"><strong>検証の総括。</strong>
+    9項目のうち4つが成立、4つが要修正、1つが誤りである。
+    誤りは1点、<strong class="hit">「12万5,000トン」を史料の記録として扱うこと</strong>だけである。
+    要修正の4つはいずれも、事実は正しいが帰属や因果が違う、という型をしている。
+    宋代の技術を産業革命の先駆と位置づける論考は英語圏にも多く<sup><a href="#s31">31</a></sup>、この型の混線はそこでも繰り返されている。
+    技術を宋の発明としてしまう（炒鋼・灌鋼）、因果を逆にしてしまう（水力と石炭）、
+    比較の基準を示さない（英国との倍率）、達成の範囲を広く取りすぎる（コークス炉の実用化）。</p>
+    <p>つまり<strong>宋代製鉄業を過大評価する必要はない。史料に書かれている範囲だけで十分に異例である。</strong>
+    官納量3,300トンのうち75%超を2州が出し、その1州では36の冶が数百人ずつを雇い、
+    その燃料が1079年1月に木炭から石炭へ切り替わり、それを高炉の水力送風が支えていた。
+    ここまでは全部、日付と場所と数字が確定している。</p>
+  </div>
+
+  <!-- ⑩ 残っている問い -->
+  <h2 id="open"><span class="num">⑩</span>残っている問い<span class="en">Open Questions</span></h2>
+
+  <ul>
+    <li><strong>総生産量は現在も算出できない。</strong>
+    Wagner の結論は「現時点で利用可能な史料に基づく信頼できる算出は不可能」である<sup><a href="#s1">1</a></sup>。
+    本レポートも独自の推計は出していない。Hartwell 以降、新しい方法で総量を出した研究があるかは確認できなかった。</li>
+    <li><strong>1064〜67年と1078年の数字が同一部門か別部門か。</strong>
+    Hartwell は地理的分布が大きく違うことを根拠に別部門とみたが<sup><a href="#s1">1</a></sup>、
+    Wagner は、その間に王安石の新法による税制の全面再編があったため、
+    どちらも政府の受領総額であって旧課額と改訂後課額の違いにすぎない可能性も残ると指摘している<sup><a href="#s1">1</a></sup>。決着していない。</li>
+    <li><strong>コークスの使用範囲。</strong>
+    Hartwell が挙げた宋代のコークス使用の2つの言及（『続資治通鑑長編』164、欧陽脩「乞條制都作院」）の
+    原文と文脈を本レポートでは確認できていない<sup><a href="#s2">2</a></sup>。
+    コークスが例外的だったのか一般的だったのかは、この2件の読み方に依存する。</li>
+    <li><strong>邯鄲の現存高炉の年代。</strong>
+    高さ6mの炉が宋代のものとされるが、Wagner は2001年時点で「大規模な調査が完了したと聞いているが報告が出るまで判断材料が乏しい」と書いている<sup><a href="#s2">2</a></sup>。
+    その後の報告書が出ているかは確認できなかった。</li>
+    <li><strong>禁軍・廂軍の兵力と軍事費の具体的な数値。</strong>
+    北宋の財政のほとんどを軍事費が占めたことは記述されているが<sup><a href="#s16">16</a></sup>、
+    兵力数と鉄の消費量を結びつける数値を今回の調査では見ていない。
+    需要側の定量化は本レポートでできていない。</li>
+    <li><strong>南宋の製鉄業。</strong>
+    『宋会要輯稿』には1127〜62年の調査データがあり、路ごとの坑冶の開閉数と、
+    銅の湿式製錬に関連する鉄・銅の生産の量的データを含む<sup><a href="#s1">1</a></sup>。
+    華南6県の年課額123,220斤（74トン換算）という数字も出ている<sup><a href="#s1">1</a></sup>が、
+    南宋期の全体像を本レポートでは扱っていない。</li>
+    <li><strong>『宋会要輯稿』の写し誤り。</strong>
+    現存本は写し誤りが多く、1114年の韓城の課額は600万斤と書かれているが60万斤の誤写とされる<sup><a href="#s1">1</a></sup>。
+    Wagner は全国合計については路別・州別の合計とほぼ一致するため深刻な誤写は少ないとみているが<sup><a href="#s1">1</a></sup>、
+    個別の州の数字をどこまで信用できるかは項目ごとの検討が必要である。</li>
+  </ul>
+
+  <!-- ⑪ 出典 -->
+  <h2><span class="num">⑪</span>出典<span class="en">Sources</span></h2>
+  <p style="font-size:13px;color:var(--sub)">
+    学術論文と一次史料の翻刻を上に、事典・機関資料・二次解説を下に置いた。
+    本文の上付き番号はこの一覧の番号に対応する。すべて2026年8月20日に閲覧。
+  </p>
+  <ol class="sources">
+    <li id="s1">Donald B. Wagner, &ldquo;Research note: The administration of the iron industry in eleventh-century China&rdquo;（2001年3月28日稿。<em>Journal of the Economic and Social History of the Orient</em> 44所収版の原稿。『宋会要輯稿』食貨33の州別データ、蘇軾・包拯・蔣彝の上奏、Hartwell批判の全論拠を含む） — <a href="http://donwagner.dk/SongAdmin/SongAdmin.pdf" target="_blank" rel="noopener">http://donwagner.dk/SongAdmin/SongAdmin.pdf</a></li>
+    <li id="s2">Donald B. Wagner, &ldquo;Blast Furnaces in Song&ndash;Yuan China&rdquo;, <em>East Asian Science, Technology, and Medicine</em> 18 (2001): 41&ndash;74（高炉遺跡、放射性炭素年代、蘇軾「石炭」の原文と訳、ダービー以前の英国の試み） — <a href="https://donwagner.dk/arch-iron/resources/Wagner2001.pdf" target="_blank" rel="noopener">https://donwagner.dk/arch-iron/resources/Wagner2001.pdf</a></li>
+    <li id="s3">Donald B. Wagner, &ldquo;The Traditional Chinese Iron Industry and Its Modern Fate&rdquo;, <em>Chinese Science</em> 12 (1995): 138&ndash;161（19&ndash;20世紀の伝統的製鉄業、四川の1940年の石炭使用成功、技術的退行、鉄輸入量） — <a href="https://donwagner.dk/Fate/Fate.html" target="_blank" rel="noopener">https://donwagner.dk/Fate/Fate.html</a></li>
+    <li id="s4">Donald B. Wagner, &ldquo;Chinese blast furnaces from the 10th to the 14th century&rdquo;, <em>Historical Metallurgy</em>（上記論文の英国冶金史学会誌版） — <a href="https://hmsjournal.org/index.php/home/article/download/259/248" target="_blank" rel="noopener">https://hmsjournal.org/index.php/home/article/download/259/248</a></li>
+    <li id="s5">Robert Hartwell, &ldquo;A Revolution in the Chinese Iron and Coal Industries During the Northern Sung, 960&ndash;1126 A.D.&rdquo;, <em>Journal of Asian Studies</em> 21.2 (1962): 153&ndash;62 — <a href="https://www.cambridge.org/core/journals/journal-of-asian-studies/article/abs/revolution-in-the-chinese-iron-and-coal-industries-during-the-northern-sung-9601126-ad/C4ED428E19B0A04C7225BB57822C89DF" target="_blank" rel="noopener">Cambridge Core</a></li>
+    <li id="s6">Robert Hartwell, &ldquo;A Cycle of Economic Change in Imperial China: Coal and Iron in Northeast China, 750&ndash;1350&rdquo;, <em>JESHO</em> 10.1 (1967): 102&ndash;59 — <a href="https://brill.com/view/journals/jesh/10/1/article-p102_6.xml" target="_blank" rel="noopener">https://brill.com/view/journals/jesh/10/1/article-p102_6.xml</a></li>
+    <li id="s7">Tim Wright, &ldquo;An Economic Cycle in Imperial China? Revisiting Robert Hartwell on Iron and Coal&rdquo;, <em>JESHO</em> 50.4 (2007): 398&ndash;423 — <a href="https://doi.org/10.1163/156852007783244963" target="_blank" rel="noopener">https://doi.org/10.1163/156852007783244963</a></li>
+    <li id="s8">Publications of Robert Hartwell (1932&ndash;1996)、ワシントン大学（著作目録） — <a href="http://faculty.washington.edu/ebrey/hartwell.htm" target="_blank" rel="noopener">http://faculty.washington.edu/ebrey/hartwell.htm</a></li>
+    <li id="s9">コロンビア大学 Asia for Educators &ldquo;China in 1000 CE &mdash; The Economic Revolution: Iron and Steel&rdquo; — <a href="https://afe.easia.columbia.edu/songdynasty-module/econ-rev-iron-steel.html" target="_blank" rel="noopener">https://afe.easia.columbia.edu/songdynasty-module/econ-rev-iron-steel.html</a></li>
+    <li id="s10">High-level equilibrium trap（Mark Elvin の高位均衡の罠。理論の要旨と批判） — <a href="https://en.wikipedia.org/wiki/High-level_equilibrium_trap" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/High-level_equilibrium_trap</a></li>
+    <li id="s11">Ronald A. Edwards, &ldquo;Economic Revolution: Song China &amp; England&rdquo;（東京大学CIRJE 経済史ワークショップ報告論文、2013年11月14日） — <a href="https://www.cirje.e.u-tokyo.ac.jp/research/workshops/history/history_paper2013/history1114.pdf" target="_blank" rel="noopener">https://www.cirje.e.u-tokyo.ac.jp/research/workshops/history/history_paper2013/history1114.pdf</a></li>
+    <li id="s12">日本銀行金融研究所 貨幣博物館「中国貨幣の歴史 26 宋代の貨幣④ &mdash; 地域的通貨としての鉄銭の流通」 — <a href="https://www.imes.boj.or.jp/cm/research/kinken/mod/gra_china26.pdf" target="_blank" rel="noopener">https://www.imes.boj.or.jp/cm/research/kinken/mod/gra_china26.pdf</a></li>
+    <li id="s13">日本銀行金融研究所 貨幣博物館「中国貨幣の歴史 27 宋代の貨幣⑤ &mdash; 南宋の貨幣流通」 — <a href="https://www.imes.boj.or.jp/cm/research/kinken/mod/gra_china27.pdf" target="_blank" rel="noopener">https://www.imes.boj.or.jp/cm/research/kinken/mod/gra_china27.pdf</a></li>
+    <li id="s14">京都大学人文科学研究所 漢籍セミナー「北宋最強軍団とその担い手たち &mdash; 澶淵の盟から靖康の変へ」（2021年） — <a href="http://www.kita.zinbun.kyoto-u.ac.jp/wp-content/uploads/2021/03/Kanseki_Seminar-2021No16-2.pdf" target="_blank" rel="noopener">http://www.kita.zinbun.kyoto-u.ac.jp/wp-content/uploads/2021/03/Kanseki_Seminar-2021No16-2.pdf</a></li>
+    <li id="s15">英語版Wikipedia Economy of the Song dynasty（銅銭鋳造量、耕地面積、陝西の鉄生産、紙幣発行額） — <a href="https://en.wikipedia.org/wiki/Economy_of_the_Song_dynasty" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Economy_of_the_Song_dynasty</a></li>
+    <li id="s16">日本語版Wikipedia 北宋（人口、歳幣、禁軍と廂軍、靖康の変の年月） — <a href="https://ja.wikipedia.org/wiki/%E5%8C%97%E5%AE%8B" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/北宋</a></li>
+    <li id="s17">日本語版Wikipedia 澶淵の盟 — <a href="https://ja.wikipedia.org/wiki/%E6%BE%B6%E6%B7%B5%E3%81%AE%E7%9B%9F" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/澶淵の盟</a></li>
+    <li id="s18">日本語版Wikipedia 鉄貨（四川・陝西の鉄銭） — <a href="https://ja.wikipedia.org/wiki/%E9%89%84%E8%B2%A8" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/鉄貨</a></li>
+    <li id="s19">世界史の窓 禁軍 — <a href="https://www.y-history.net/appendix/wh0303-036_2.html" target="_blank" rel="noopener">https://www.y-history.net/appendix/wh0303-036_2.html</a></li>
+    <li id="s20">世界史の窓 澶淵の盟（歳幣の額、慶暦の和約） — <a href="https://www.y-history.net/appendix/wh0303-015.html" target="_blank" rel="noopener">https://www.y-history.net/appendix/wh0303-015.html</a></li>
+    <li id="s21">世界史の窓 交子 — <a href="https://www.y-history.net/appendix/wh0303-066.html" target="_blank" rel="noopener">https://www.y-history.net/appendix/wh0303-066.html</a></li>
+    <li id="s22">人民網「揭秘中國古代冶鐵業 漢末發明『灌鋼法』節省人力」（王粲『刀銘』、綦毋懐文） — <a href="http://culture.people.com.cn/BIG5/n/2015/0416/c22219-26853996.html" target="_blank" rel="noopener">http://culture.people.com.cn/BIG5/n/2015/0416/c22219-26853996.html</a></li>
+    <li id="s23">中国钢铁新闻网「中国古代冶金技术成就：炒钢」（前漢初期の炒鋼、江蘇徐州の遺跡、下限は紀元前154年） — <a href="http://www.csteelnews.com/special/602/605/201206/t20120611_66948.html" target="_blank" rel="noopener">http://www.csteelnews.com/special/602/605/201206/t20120611_66948.html</a></li>
+    <li id="s24">CiNii Research「古代中国の炒鋼法とはいかなるものか &mdash; 『天工開物』生熟煉鉄炉図を検討する」 — <a href="https://cir.nii.ac.jp/crid/1523951030558653568" target="_blank" rel="noopener">https://cir.nii.ac.jp/crid/1523951030558653568</a></li>
+    <li id="s25">&ldquo;Invention of cast iron smelting in early China: Archaeological survey and numerical simulation&rdquo;, ScienceDirect — <a href="https://www.sciencedirect.com/science/article/pii/S2667136021000017" target="_blank" rel="noopener">https://www.sciencedirect.com/science/article/pii/S2667136021000017</a></li>
+    <li id="s26">&ldquo;Cast iron coins of Song dynasty China: a metallurgical study&rdquo;, <em>Historical Metallurgy</em>（宋代鉄銭の金属組織分析） — <a href="https://hmsjournal.org/index.php/home/article/download/258/247" target="_blank" rel="noopener">https://hmsjournal.org/index.php/home/article/download/258/247</a></li>
+    <li id="s27">Construction Physics &ldquo;The Blast Furnace: 800 Years of Technology Improvement&rdquo;（英国の銑鉄生産の推移。1720年に2万トン強、1806年に25万トン） — <a href="https://www.construction-physics.com/p/the-blast-furnace-800-years-of-technology" target="_blank" rel="noopener">https://www.construction-physics.com/p/the-blast-furnace-800-years-of-technology</a></li>
+    <li id="s28">&ldquo;Iron in 1790: production statistics 1787&ndash;96 and the arrival of puddling&rdquo;, <em>Historical Metallurgy</em> — <a href="https://hmsjournal.org/index.php/home/article/download/132/129" target="_blank" rel="noopener">https://hmsjournal.org/index.php/home/article/download/132/129</a></li>
+    <li id="s29">&ldquo;Iron Production and Markets Before 1800&rdquo;, Springer — <a href="https://link.springer.com/content/pdf/10.1007/978-1-349-06457-1_5" target="_blank" rel="noopener">https://link.springer.com/content/pdf/10.1007/978-1-349-06457-1_5</a></li>
+    <li id="s30">Construction Physics &ldquo;The Rise of Steel, Part II&rdquo;（コークス高炉の普及率） — <a href="https://www.construction-physics.com/p/the-rise-of-steel-part-ii" target="_blank" rel="noopener">https://www.construction-physics.com/p/the-rise-of-steel-part-ii</a></li>
+    <li id="s31">Grand Valley State University &ldquo;Sung Dynasty technology &mdash; a precursor to the industrial revolution&rdquo; — <a href="https://www2.gvsu.edu/koehlerj/paper3.pdf" target="_blank" rel="noopener">https://www2.gvsu.edu/koehlerj/paper3.pdf</a></li>
+    <li id="s32">John Dodson et al., &ldquo;Use of coal in the Bronze Age in China&rdquo;, <em>The Holocene</em> (2014)（中国における石炭利用の最古の証拠） — <a href="https://journals.sagepub.com/doi/10.1177/0959683614523155" target="_blank" rel="noopener">https://journals.sagepub.com/doi/10.1177/0959683614523155</a></li>
+    <li id="s33">本サイト内「産業革命とAI｜エンタープライズは何に注力すべきか」（2026年8月19日） — <a href="ai_vs_industrial_revolution_260819.html">reports/ai_vs_industrial_revolution_260819.html</a></li>
+  </ol>
+
+</div>
+
+<script>
+/* チャート。単系列は1色。値はすべて棒に直接ラベルを置く（dataviz の relief rule） */
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+/* ④ 生産量の推計。同じ史料から出た数字の幅 */
+bars('chartEst', [
+  {k:'官納量（史料）', v:3300, sub:'1078年・550万斤'},
+  {k:'Tegengren 1923', v:3300, est:true, sub:'官納＝総生産'},
+  {k:'華山 1982', v:16500, est:true, sub:'税率20%と仮定'},
+  {k:'Hartwell 1963', v:114000, est:true, sub:'税率10%＋2部門合算'},
+], 'トン');
+
+/* ⑤ 1078年の官納鉄の地理的集中 */
+bars('chartConc', [
+  {k:'邢州', v:217.32, sub:'2,173,201斤'},
+  {k:'磁州', v:197.10, sub:'1,971,001斤'},
+  {k:'残り26州の合計', v:135.69, est:true, sub:'差分から算出'},
+], '万斤');
+
+/* ⑤ 韓城県の課額の推移 */
+bars('chartHancheng', [
+  {k:'1046年頃', v:60, sub:'県全体の官納・包拯'},
+  {k:'1114年 冶A', v:360, sub:'1冶の課額・蔣彝'},
+  {k:'1114年 冶B', v:360, sub:'1冶の課額・蔣彝'},
+], 'トン');
+
+/* ⑦ 19世紀の鉄輸入 */
+bars('chartImport', [
+  {k:'1867年', v:7000, sub:'7,000トン超'},
+  {k:'1869年', v:27000},
+  {k:'1891年', v:112000},
+], 'トン');
+</script>
+
+<script type="application/json" id="facts">
+[
+ {"claim":"1078年の官納鉄の全国合計","value":5501097,"unit":"斤","as_of":"1078","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"reported"},
+ {"claim":"同 トン換算（1斤＝596.82g）","value":3300,"unit":"トン","as_of":"1078","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"estimated"},
+ {"claim":"1078年の元額（祖額）","value":5482770,"unit":"斤","as_of":"1078","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"reported"},
+ {"claim":"邢州の1078年受領額","value":2173201,"unit":"斤","as_of":"1078","source":"https://donwagner.dk/arch-iron/resources/Wagner2001.pdf","confidence":"reported"},
+ {"claim":"磁州の1078年受領額","value":1971001,"unit":"斤","as_of":"1078","source":"https://donwagner.dk/arch-iron/resources/Wagner2001.pdf","confidence":"reported"},
+ {"claim":"邢州・磁州の全国比","value":75,"unit":"%超","as_of":"1078","source":"https://donwagner.dk/arch-iron/resources/Wagner2001.pdf","confidence":"reported"},
+ {"claim":"Hartwell の年間鉄生産推計","value":114000,"unit":"メートルトン（12万5,000英トン）","as_of":"1064-78","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"estimated"},
+ {"claim":"同 ひとり当たり","value":1.2,"unit":"kg/人/年","as_of":"1067","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"estimated"},
+ {"claim":"Hartwell が用いた1067年人口","value":95760000,"unit":"人","as_of":"1067","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"estimated"},
+ {"claim":"Hartwell が用いた1斤の換算値","value":596.82,"unit":"グラム","as_of":"1963","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"reported"},
+ {"claim":"宋代の鉄に一律10%の現物税があったか","value":"証拠なし","unit":"—","as_of":"2001","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"disputed"},
+ {"claim":"Hartwell の方法を銅に適用した場合の年産（吉田光邦の反証）","value":210000,"unit":"トン","as_of":"1966","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"disputed"},
+ {"claim":"漢代の鉄生産（Wagner 推計）","value":0.1,"unit":"kg/人/年","as_of":"2001","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"estimated"},
+ {"claim":"徐州利国監の冶の数","value":36,"unit":"か所","as_of":"1078","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"reported"},
+ {"claim":"同 1冶あたりの労働者","value":"数百","unit":"人","as_of":"1078","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"reported"},
+ {"claim":"登州の製鉄戸","value":18,"unit":"戸","as_of":"1046頃","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"reported"},
+ {"claim":"韓城県の政府受領鉄","value":100000,"unit":"斤（約60トン換算）","as_of":"1046頃","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"reported"},
+ {"claim":"韓城県の1冶あたり年課額","value":600000,"unit":"斤（約360トン換算）","as_of":"1114","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"disputed"},
+ {"claim":"1116年の広南東路の坑冶数と年課額","value":"92か所・2,890,000斤","unit":"—","as_of":"1116","source":"http://donwagner.dk/SongAdmin/SongAdmin.pdf","confidence":"reported"},
+ {"claim":"邯鄲近郊の現存高炉の高さ","value":6,"unit":"メートル","as_of":"1959","source":"https://donwagner.dk/arch-iron/resources/Wagner2001.pdf","confidence":"single-source"},
+ {"claim":"阿城県（黒龍江）の製鉄所数","value":50,"unit":"か所超","as_of":"12世紀","source":"https://donwagner.dk/arch-iron/resources/Wagner2001.pdf","confidence":"reported"},
+ {"claim":"宋・元の鋳鉄遺物の放射性炭素年代","value":"11,540／12,400／13,840","unit":"年BP","as_of":"1986","source":"https://donwagner.dk/arch-iron/resources/Wagner2001.pdf","confidence":"reported"},
+ {"claim":"同 算出された高炉装入比","value":"木炭3：石炭7","unit":"—","as_of":"1986","source":"https://donwagner.dk/arch-iron/resources/Wagner2001.pdf","confidence":"estimated"},
+ {"claim":"徐州で石炭が発見された時期","value":"元豊元年十二月（1079年1月）","unit":"date","as_of":"1079-01","source":"https://donwagner.dk/arch-iron/resources/Wagner2001.pdf","confidence":"reported"},
+ {"claim":"中国におけるコークスへの最古の言及","value":"4世紀初頭（陸雲の書簡）","unit":"date","as_of":"4世紀","source":"https://donwagner.dk/arch-iron/resources/Wagner2001.pdf","confidence":"reported"},
+ {"claim":"炒鋼法の最も早い考古学的年代の下限","value":-154,"unit":"年（紀元前）","as_of":"前漢初期","source":"http://www.csteelnews.com/special/602/605/201206/t20120611_66948.html","confidence":"reported"},
+ {"claim":"ダービーのコークス製鉄の成功年","value":1709,"unit":"年","as_of":"1709","source":"https://donwagner.dk/arch-iron/resources/Wagner2001.pdf","confidence":"reported"},
+ {"claim":"英国の銑鉄生産","value":20000,"unit":"トン超","as_of":"1720","source":"https://www.construction-physics.com/p/the-blast-furnace-800-years-of-technology","confidence":"reported"},
+ {"claim":"英国の銑鉄生産","value":250000,"unit":"トン","as_of":"1806","source":"https://www.construction-physics.com/p/the-blast-furnace-800-years-of-technology","confidence":"reported"},
+ {"claim":"中国の鉄輸入量","value":112000,"unit":"トン","as_of":"1891","source":"https://donwagner.dk/Fate/Fate.html","confidence":"reported"},
+ {"claim":"四川の伝統的製鉄所が高炉で石炭使用に成功した年","value":1940,"unit":"年","as_of":"1940","source":"https://donwagner.dk/Fate/Fate.html","confidence":"reported"},
+ {"claim":"銅銭の年間鋳造量","value":6000000000,"unit":"枚","as_of":"1085","source":"https://en.wikipedia.org/wiki/Economy_of_the_Song_dynasty","confidence":"reported"},
+ {"claim":"澶淵の盟の歳幣","value":"銀10万両・絹20万疋","unit":"年","as_of":"1004","source":"https://ja.wikipedia.org/wiki/%E6%BE%B6%E6%B7%B5%E3%81%AE%E7%9B%9F","confidence":"reported"},
+ {"claim":"慶暦の和約の歳幣","value":"銀5万両・絹13万匹・茶2万斤","unit":"年","as_of":"1044","source":"https://www.y-history.net/appendix/wh0303-015.html","confidence":"reported"},
+ {"claim":"北宋の滅亡","value":"1127-06","unit":"date","as_of":"1127","source":"https://ja.wikipedia.org/wiki/%E5%8C%97%E5%AE%8B","confidence":"reported"}
+]
+</script>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>長期資本 — 永久ファンドとGP/LPの期限問題</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top img{width:64px;height:64px;object-fit:contain;border-radius:8px;background:#fff;padding:4px;border:1px solid var(--line)}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  h4{font-size:14px;margin:18px 0 6px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .note{border-left:4px solid var(--warn);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  .tl{list-style:none;padding:0;margin:14px 0}
+  .tl li{display:grid;grid-template-columns:82px 1fr;gap:14px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .tl li:last-child{border-bottom:none}
+  .tl .y{font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent);font-size:13.5px}
+  .bar{display:flex;align-items:center;gap:10px;margin:5px 0;font-size:13px}
+  .bar .lbl{min-width:132px;color:var(--sub)}
+  .bar .track{flex:1;background:#EAE7DF;border-radius:3px;height:14px;overflow:hidden}
+  .bar .fill{height:100%;background:var(--accent);border-radius:3px}
+  .bar .val{min-width:78px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk,.note{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+    .bar .lbl{min-width:92px;font-size:12px}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../011_company/index.html">company</a><a href="../012_politics/index.html">politics</a><a href="../013_geo/index.html">geo</a><a href="../014_industry/index.html">industry</a><a href="../015_net/index.html">net</a><a href="index.html">finance</a><a href="../017_science/index.html">science</a><a href="../018_computing/index.html">computing</a><a href="../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../020_personal/021_profile/index.html">profile</a><a href="../../020_personal/024_method/index.html">method</a><a href="../../020_personal/026_handbook/index.html">handbook</a><a href="../../020_personal/025_fitness/index.html">fitness</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../011_company/index.html">company</a>
+    <a class="snav-a" href="../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../015_net/index.html">net</a>
+    <a class="snav-a" href="index.html">finance</a>
+    <a class="snav-a" href="../017_science/index.html">science</a>
+    <a class="snav-a" href="../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../020_personal/025_fitness/index.html">fitness</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+  <div class="crumb"><a href="../../index.html">shogo</a> / <a href="index.html">research / finance</a> / 長期資本</div>
+
+  <header class="top">
+    <div>
+      <h1>長期資本</h1>
+      <div class="meta">永久ファンドと GP／LP の期限問題／2026年8月21日 作成／出典18件</div>
+      <div style="margin-top:8px">
+        <span class="tag">永久資本</span><span class="tag">GP／LP</span><span class="tag">ベンチャーキャピタル</span><span class="tag">財団所有</span><span class="tag">インセンティブ設計</span>
+      </div>
+    </div>
+  </header>
+  <p class="lead">「7〜10年の時間軸で見られるとリスクが低く競争相手もいない。ただし20年先は不確実すぎる」という直観を、器（ファンドの法的構造）の側から検証した。結論は直観と一致するが、器がそれに追いついていない。</p>
+
+  <div class="callout">
+    <strong>先に結論。3つある。</strong>
+    <br><br>
+    <strong>① 長期思考の優位性は実証されている。</strong>米国の大中型上場企業615社を2001年から2014年まで追跡した McKinsey の分析では、長期志向の企業群は売上成長が47%、利益成長が36%、比較群を上回った<sup>1</sup>。財団所有企業を対象にしたデンマークの実証では、<strong class="hit">存続期間が他の企業の約3倍</strong>で、経営陣の交代が少なく、レバレッジが低く、R&amp;D投資が多い<sup>3</sup>。
+    <br><br>
+    <strong>② ところが標準的なファンドの器は10年しかない。</strong>2001年から2025年に上場した米国企業の創業からの中位年数は<strong class="hit">11年</strong>である。1999年から2000年は5年だった<sup>5</sup>。2024年は14年、2025年は12年<sup>5</sup>。つまり<strong>10年満期のファンドは、いまの上場所要期間より短い</strong>。器が事業より先に満期を迎える。
+    <br><br>
+    <strong>③ その歪みは市場に数字として現れている。</strong>2025年、GP主導のセカンダリー取引は1,150億ドルに達し前年比53%増、セカンダリー市場全体の48%を占めた。うち89%が継続ファンド（continuation vehicle）である<sup>7</sup>。<strong class="hit">継続ファンドは「10年で売らなければならないが売りたくない」という矛盾を金融技術で処理する装置</strong>であり、その規模が期限ミスマッチの大きさを測っている。
+  </div>
+
+  <div class="kpi">
+    <div class="card"><div class="k">上場までの中位年数</div><div class="v">11年 <small>2001-2025</small></div></div>
+    <div class="card"><div class="k">標準ファンド満期</div><div class="v">10年 <small>＋延長2年</small></div></div>
+    <div class="card"><div class="k">GP主導セカンダリー</div><div class="v">1,150億$ <small>2025年、+53%</small></div></div>
+    <div class="card"><div class="k">財団所有企業の存続</div><div class="v">約3倍 <small>他企業比</small></div></div>
+  </div>
+
+  <h2><span class="num">①</span>長期思考が有利であることの実証<span class="en">The Evidence for Long-Termism</span></h2>
+
+  <h3>McKinsey / FCLTGlobal の Corporate Horizon Index</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>項目</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>対象</td><td>米国上場の大中型企業615社。2001年から2015年<sup>1</sup><sup>2</sup></td></tr>
+      <tr><td>測定方法</td><td>5因子の指数。投資のパターン、成長、利益の質、利益操作の程度から算出<sup>1</sup></td></tr>
+      <tr><td>売上成長</td><td>長期志向群は比較群より<strong>47%高い</strong>（2001-2014年）<sup>1</sup></td></tr>
+      <tr><td>利益成長</td><td>同<strong>36%高い</strong><sup>1</sup></td></tr>
+      <tr><td>雇用</td><td>長期経営された企業は平均で約<strong>12,000人多く</strong>雇用を増やした（2001-2015年）<sup>1</sup></td></tr>
+      <tr><td>時価総額・経済的利益</td><td>指数上位群が下位群を有意に上回った<sup>1</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="risk">
+    <strong>この研究の弱点を先に書く。</strong>因果の方向が特定されていない。「長期志向だから成長した」のか「成長していたから長期志向を維持できた」のかを分離していない。指数の構成因子（利益操作の少なさ、投資の多さ）は好業績企業に自然に備わる性質でもある。<strong>この研究は相関の提示であり、長期志向の採用が結果を生むことの証明ではない。</strong>
+  </div>
+
+  <h3>より強い証拠：財団所有企業の実証</h3>
+
+  <p>因果の識別という点で強いのは、所有構造という外生的にほぼ固定された変数を使った研究である。デンマークには約1,000社の財団支配企業があり、主要上場企業指数の構成銘柄の半分を占める<sup>3</sup>。Thomsen らはこのデータセットで長期性の指標を検証した。</p>
+
+  <div class="box">
+    <strong>財団所有企業に確認された性質<sup>3</sup></strong>
+    <ul style="margin:8px 0 0;padding-left:20px">
+      <li>経営者の交代頻度が低い（経営と所有の継続性が高い）</li>
+      <li>資本構成が保守的で、財務レバレッジが低い</li>
+      <li>財務・投資・雇用における長期性の指数が高い</li>
+      <li>リターンのボラティリティが低く、R&amp;D投資が多い</li>
+      <li><strong class="hit">存続期間が他の企業の約3倍長い</strong></li>
+    </ul>
+  </div>
+
+  <p>この結果が示すのは「長期志向が良い」という一般論ではなく、<strong class="hit">所有構造を変えると企業の行動が変わる</strong>という因果に近い関係である。財団所有は経営者が選べる戦略ではなく、創業者が所有を手放した時点で確定する構造だからである。</p>
+
+  <p>実例として最も規模が大きいのがノボ・ノルディスクである。ノボ・ノルディスク財団は同社株式の約28.1%を保有しているが、議決権では約77.3%を握っている<sup>4</sup>。A株の議決権がB株の10倍に設計されており<sup>4</sup>、そのA株は<strong>一度も取引所で売買されたことがなく、財団の定款が売却を禁じている</strong><sup>18</sup>。ロレックスのハンス・ウィルスドルフ財団（全株保有、財団の主目的は「ロレックスの存続」）<sup>16</sup>も同じ類型である（<a href="../011_company/reports/rolex_research_260821.html">ロレックスのレポート</a>）。</p>
+
+  <h2><span class="num">②</span>「7〜10年」という時間軸の検証<span class="en">Testing the 7-10 Year Horizon</span></h2>
+
+  <p>「みんな2〜3年で見るが、7〜10年で見られると有利。20年先は不確実すぎる」という直観を、上場までに実際にかかる年数で検証する。使うのはフロリダ大学 Jay Ritter の IPO データベース（2025年12月31日更新、価格5ドル未満・ユニット・ADR・SPAC・REIT・銀行等を除外した9,343件）である<sup>5</sup>。</p>
+
+  <h3>創業から上場までの中位年数</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>期間</th><th class="num">IPO件数</th><th class="num">中位年数</th><th class="num">VC出資比率</th><th>状況</th></tr></thead>
+    <tbody>
+      <tr><td>1980-1989</td><td class="num">2,047</td><td class="num">8年</td><td class="num">25%</td><td>VC出資は少数派</td></tr>
+      <tr><td>1990-1998</td><td class="num">3,616</td><td class="num">9年</td><td class="num">35%</td><td></td></tr>
+      <tr><td>1999-2000</td><td class="num">856</td><td class="num">5年</td><td class="num">61%</td><td>ドットコム期。<strong>最短</strong></td></tr>
+      <tr><td>2001-2025</td><td class="num">2,824</td><td class="num">11年</td><td class="num">52%</td><td><strong>2倍以上に伸びた</strong></td></tr>
+      <tr><th>1980-2025</th><th class="num">9,343</th><th class="num">9年</th><th class="num">40%</th><th>全期間</th></tr>
+    </tbody>
+  </table></div>
+  <p class="fn">Jay R. Ritter「Initial Public Offerings: Median Age of IPOs Through 2025」Table 4、2025年12月24日更新<sup>5</sup>。年齢は上場年から創業年を引いた値。</p>
+
+  <h3>直近年の推移</h3>
+
+  <div class="bar"><span class="lbl">2020年</span><span class="track"><span class="fill" style="width:64%"></span></span><span class="val">9年</span></div>
+  <div class="bar"><span class="lbl">2021年</span><span class="track"><span class="fill" style="width:79%"></span></span><span class="val">11年</span></div>
+  <div class="bar"><span class="lbl">2022年</span><span class="track"><span class="fill" style="width:57%"></span></span><span class="val">8年</span></div>
+  <div class="bar"><span class="lbl">2023年</span><span class="track"><span class="fill" style="width:71%"></span></span><span class="val">10年</span></div>
+  <div class="bar"><span class="lbl">2024年</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">14年</span></div>
+  <div class="bar"><span class="lbl">2025年</span><span class="track"><span class="fill" style="width:86%"></span></span><span class="val">12年</span></div>
+  <p class="fn">出典5。2024年は72件・中位14年、2025年は90件・中位12年。件数が少ない年は中位値が振れやすい。</p>
+
+  <div class="callout">
+    <strong>この数字が意味すること。</strong>「7〜10年で見るのが有利」という直観は、<strong class="hit">現実には控えめすぎる</strong>。2001年以降に上場した企業の中位は11年で、直近2年は12〜14年である<sup>5</sup>。株式のリターンを取りきるまでの期間は上場時点では終わらないので、投資家の保有期間はさらに長い。
+    <br><br>
+    そして1999-2000年の中位5年という数字が示すのは、<strong>短期で回収できた時期が例外だった</strong>ということである。10年満期のファンド構造は、上場が5〜8年で起きていた時代に定着した。その前提はもう成立していない。
+    <br><br>
+    「20年先は不確実すぎる」も部分的に修正が要る。<strong class="hit">個別企業の20年後を予測することは不確実だが、器の年限を20年に取ることは予測の話ではない</strong>。予測せずに保有し続ける構造を作るのが永久資本の考え方である（後述④）。
+  </div>
+
+  <h2><span class="num">③</span>GP／LP 構造が短期化を強制する仕組み<span class="en">Why the Standard Fund Structure Forces Short-Termism</span></h2>
+
+  <h3>標準構造の年限</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>要素</th><th>標準的な設計</th><th>そこから生じる行動</th></tr></thead>
+    <tbody>
+      <tr><td>ファンド満期</td><td>10年。多くは1年の延長を2回まで</td><td>満期の2〜3年前から売却圧力がかかる。事業の状態ではなくカレンダーが売却時期を決める</td></tr>
+      <tr><td>投資期間</td><td>最初の5年程度</td><td>後半5年は新規投資ができず、既存投資の回収に専念する</td></tr>
+      <tr><td>管理報酬</td><td>コミットメント額に対して年約2%</td><td>ファンドサイズを大きくする誘因が働く。運用成績と独立した固定収入である</td></tr>
+      <tr><td>成功報酬（キャリー）</td><td>利益の約20%。ハードルレートを超えた部分</td><td>分配が実現しないとキャリーが確定しない。<strong>実現主義がexitを急がせる</strong></td></tr>
+      <tr><td>次号ファンドの調達</td><td>3〜4年ごと</td><td>次号を売るために実現済み分配（DPI）を見せる必要がある。評価額の上昇（TVPI）では説得力が弱い</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout">
+    <strong>ここが構造の核心である。</strong>GP が短期志向になる原因は人格ではなく契約である。<strong class="hit">次のファンドを調達するために、いま実現した分配実績が必要になる</strong>。企業がまだ複利で成長している段階でも、次号ファンドの調達時期に合わせて売る誘因が働く。
+    <br><br>
+    LP 側にも同じ構造がある。LP の運用担当者も自身の評価サイクル（多くは年次）で測られるため、20年後のリターンではなく現在の分配率で判断される。<strong>GP と LP の両側で、評価期間が投資対象の成熟期間より短い。</strong>
+  </div>
+
+  <h3>期限ミスマッチの大きさを測る：セカンダリー市場</h3>
+
+  <p>この矛盾は市場に現れる。GP が「満期が来たが売りたくない」資産を、新しい器に移して保有を続ける取引が急拡大している。</p>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>指標</th><th class="num">2025年</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>GP主導のセカンダリー取引額</td><td class="num">1,150億ドル</td><td>前年比+53%。セカンダリー市場全体の48%<sup>7</sup></td></tr>
+      <tr><td>うち継続ファンド（CV）</td><td class="num">89%</td><td>GP主導取引の89%、セカンダリー市場全体の約43%<sup>7</sup></td></tr>
+      <tr><td>継続ファンドによるexit件数</td><td class="num">147件</td><td>過去最高<sup>7</sup></td></tr>
+      <tr><td>セカンダリー専用の待機資本</td><td class="num">3,270億ドル</td><td>2024年末比+14%。レバレッジと従来型LPの資金を含めると約4,770億ドル<sup>7</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box">
+    <strong>継続ファンドとは何をしている装置か。</strong>GP は満期が近いファンドの中から、多くの場合<strong>最も成績の良い保有先</strong>を選び、新しく組成した器（継続ファンド）に移す<sup>7</sup>。旧ファンドの LP は現金を受け取って退出でき、続けたい LP は新しい器に乗り換える。
+    <br><br>
+    <strong class="hit">この取引が年1,150億ドル規模で行われているという事実が、10年という満期が実態に合っていないことの最も強い証拠である。</strong>金融技術で期限を延ばしているのであって、最初から期限のない器を作れば不要な取引である。
+    <br><br>
+    ただし継続ファンドには利益相反がある。売り手も買い手も同じ GP が実質的に決めるため、価格の妥当性を誰が検証するかという問題が残る。
+  </div>
+
+  <h2><span class="num">④</span>永久資本の4類型<span class="en">Four Types of Permanent Capital</span></h2>
+
+  <p>期限を持たない資本の器は、実例を集めると4つに分かれる。それぞれ「誰が売却を止めているか」が違う。</p>
+
+  <h3>類型1：財団所有型 — 定款が売却を禁じる</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>主体</th><th>対象</th><th>構造</th></tr></thead>
+    <tbody>
+      <tr><td>ハンス・ウィルスドルフ財団</td><td>Rolex SA</td><td>1945年設立、1960年に全株が移転。株式100%保有。財団の主目的は「ロレックスの存続」。8名の理事会。年間約3億スイスフランを慈善に配分<sup>16</sup></td></tr>
+      <tr><td>ノボ・ノルディスク財団</td><td>Novo Nordisk A/S</td><td>株式約28.1%、議決権約77.3%。A株の議決権はB株の10倍。A株は取引所で売買されたことがなく、財団の定款が売却を禁じている<sup>4</sup><sup>18</sup></td></tr>
+      <tr><td>デンマークの産業財団（約1,000社）</td><td>主要上場企業指数の約半分</td><td>存続期間が他の企業の約3倍。低レバレッジ、高R&amp;D、経営陣交代が少ない<sup>3</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>類型2：同族持株会社型 — 相続人を1つの器に束ねる</h3>
+
+  <p>エルメスは2011年12月、相続人52名を持株会社 H51 に束ね、資本の50.2%を拠出して先買権を設定した。2025年3月時点で家族は H51 経由で66.72%を保有している<sup>15</sup>。この装置は LVMH による持分取得（2010年に17.1%を開示、最大約23%）への対抗として作られた（<a href="../011_company/reports/hermes_research_260821.html">エルメスのレポート</a>）。</p>
+
+  <p>類型1との違いは<strong>意思決定主体が生きた人間の合議である</strong>ことである。財団は定款が決めるが、持株会社は世代を経るごとに合意形成の難易度が上がる。</p>
+
+  <h3>類型3：オープンエンド型のファンド／ホールディングス — 満期を契約から外す</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>器</th><th>設立</th><th>構造</th></tr></thead>
+    <tbody>
+      <tr><td>The Sequoia Fund</td><td>2021年10月</td><td>「10年サイクルは時代に合わなくなった」として、投資を単一の恒久的な器に通す構造へ移行。上場株を含むオープンエンドの流動性ポートフォリオが、段階別のクローズドエンド子ファンドに資本を配分する。投資に満期日がなくなり、exit の資金は親ファンドに還流する。LP は一定のロックアップ後、年2回の払い戻し請求ができる<sup>6</sup></td></tr>
+      <tr><td>Thrive Holdings</td><td>2025年</td><td>「長期にわたって事業に投資し、取得し、運営する」ための永久資本ビークル。当初約10億ドル。会計事務所やIT サービスなど約70社を取得し、AI による内部再構築を行う。2026年には約20億ドルを評価額120億ドルで調達<sup>11</sup><sup>12</sup></td></tr>
+      <tr><td>Thrive Eternal</td><td>2026年4月</td><td>「数十年にわたって所有し受託者として管理できる少数の資産に集中する」永久資本の持株会社。第1号案件はサンフランシスコ・ジャイアンツへの出資。2026年7月には FIFA 関連事業への約20%の少数出資で投資家グループを率いる見込みと報じられている<sup>11</sup><sup>17</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout">
+    <strong>Thrive の言い方が構造を最も端的に説明している。</strong>Thrive Holdings の方針は「我々は永久に保有する。作った人々を我々と並ぶオーナーとして残し、AI が可能にしたものを軸に内部から会社を作り直す」というものである<sup>11</sup><sup>12</sup>。
+    <br><br>
+    ここで重要なのは、<strong class="hit">「永久保有」が善意ではなく取引条件になっている</strong>点である。売却されないことが確定していれば、売却先を意識した短期的な数字づくりが不要になり、被買収側の創業者が残る理由も生まれる。ロールアップ戦略において「いつか売る」ことが前提だと、優秀な経営者が残らない。永久保有はその問題への構造的な解である。
+  </div>
+
+  <h3>類型4：ソブリン永久基金 — 取り崩し率を法で固定する</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>基金</th><th class="num">規模</th><th>取り崩しの規則</th></tr></thead>
+    <tbody>
+      <tr><td>ノルウェー政府年金基金グローバル（GPFG）</td><td class="num">約21兆3,000億NOK<br>（2兆ドル超）</td><td>石油収入の支出は基金の期待実質収益率にあたる<strong>年3%</strong>まで。基金の価値を減らさずに使える水準に上限を固定している。2025年の運用リターンは15.1%<sup>13</sup></td></tr>
+      <tr><td>アラスカ永久基金</td><td class="num">863億ドル</td><td>取り崩しは市場価値の<strong>5%</strong>（POMV、法定）。直近5年間の平均市場価値を基準にする。1977年の初回入金以降の累積総リターン1,145億ドルのうち、514億ドルを配当と州サービスに分配し、631億ドルが運用に残っている<sup>14</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <p>この2つに共通するのは、<strong class="hit">取り崩し率を運用者や議会の裁量から外して規則に固定した</strong>ことである。永久性を担保しているのは資産規模ではなく、この規則である。</p>
+
+  <h3>4類型の比較</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>類型</th><th>売却を止めているもの</th><th>強み</th><th>弱み</th></tr></thead>
+    <tbody>
+      <tr><td>1. 財団所有</td><td>財団の定款と目的</td><td>最も強固。買収も相続分散も起きない</td><td>創業者が生前に持分を手放す決断をした場合しか作れない。資本市場からの調達手段が実質的に閉じる</td></tr>
+      <tr><td>2. 同族持株会社</td><td>相続人間の契約と先買権</td><td>既存の同族企業が後から作れる</td><td>世代を経るごとに合意形成が難しくなる。平時には作れない（脅威が見えている時にしか合意が成立しない）</td></tr>
+      <tr><td>3. オープンエンド・ファンド</td><td>ファンド契約に満期がない</td><td>新規に組成できる。LP に定期的な流動性を提供できる</td><td>LP が払い戻しを請求できる以上、完全な永久性ではない。評価（NAV）の算定方法が争点になる</td></tr>
+      <tr><td>4. ソブリン永久基金</td><td>法定の取り崩し率</td><td>規模が大きく、世代間の分配ルールが明示される</td><td>政治的に規則が変更されうる。原資（資源収入等）が要る</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2><span class="num">⑤</span>米国VC 3社の構造比較<span class="en">Three US Firms, Three Structures</span></h2>
+
+  <h3>Y Combinator：条件を標準化して交渉を消す</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>項目</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>投資額</td><td>50万ドル<sup>8</sup></td></tr>
+      <tr><td>内訳</td><td>12万5,000ドルがポストマネー SAFE で<strong>固定7%</strong>に転換。残り37万5,000ドルは<strong>キャップなしの MFN 条項付き SAFE</strong><sup>8</sup></td></tr>
+      <tr><td>MFN の効果</td><td>プライスドラウンドで、最も低いキャップの SAFE（またはそれ以上に有利な条件）で自動転換する<sup>8</sup></td></tr>
+      <tr><td>手数料</td><td>企業から一切徴収しない<sup>8</sup></td></tr>
+      <tr><td>マイルストーン</td><td>投資はマイルストーン達成に紐づかない。採択された日から投資が始まる<sup>8</sup></td></tr>
+      <tr><td>追加投資権</td><td>将来の資金調達ラウンドへの参加権を持ち、持分比率を維持できる<sup>8</sup></td></tr>
+      <tr><td>保有期間</td><td>公式には明示されていない<sup>8</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box">
+    <strong>YC の構造上の発明は「金額」ではなく「交渉の消去」である。</strong>全社が同一条件であるため、条件交渉のコストがゼロになる。バッチ単位で年に複数回、1回に数百社を採択する運用は、<strong class="hit">1社あたりの審査時間を短くする代わりに試行回数を増やす設計</strong>である。個別最適を捨てて件数を取る。
+    <br><br>
+    キャップなし MFN が効いているのは、<strong>YC がバリュエーションを決める立場から降りている</strong>点である。次のラウンドの投資家が決めた条件をそのまま受け入れる。値付けの責任を外部に委ねることで、投資判断を「この会社に入るかどうか」だけに単純化している。
+  </div>
+
+  <h3>Founders Fund：パートナー自身が最大のLPになる</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>ファンド</th><th class="num">規模</th><th>特徴</th></tr></thead>
+    <tbody>
+      <tr><td>Growth Fund III</td><td class="num">46億ドル</td><td>2025年4月クローズ。270名の LP。既存ポートフォリオへの追加投資が主目的<sup>9</sup></td></tr>
+      <tr><td>Growth Fund IV</td><td class="num">約60億ドル</td><td>2026年3月に約60億ドルでのクローズが近いと報じられた。<strong class="hit">うち約15億ドルがファームのパートナー自身の拠出</strong><sup>10</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout">
+    <strong>約60億ドルのうち15億ドルがパートナー拠出、つまり25%である<sup>10</sup>。</strong>これがインセンティブ設計として何を意味するか。
+    <br><br>
+    通常、GP の自己拠出（GP commit）はファンド総額の1〜3%程度である。25%まで上げると、GP の収入構造が管理報酬中心からファンドの自己勘定リターン中心へ移る。<strong class="hit">管理報酬を最大化するためにファンドサイズを膨らませる誘因が、自己資金の損失リスクによって相殺される。</strong>
+    <br><br>
+    「誰がどのインセンティブを受け取っているか」を読むとき、最も情報量が多い数字は運用報酬率ではなく<strong>GP 自身の拠出比率</strong>である。ここが1%か25%かで、GP が見ている時間軸が変わる。
+  </div>
+
+  <h3>Thrive Capital：集中と、ベンチャー外への拡張</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>ファンド</th><th class="num">年</th><th class="num">規模</th></tr></thead>
+    <tbody>
+      <tr><td>Thrive I</td><td class="num">2009</td><td class="num">500万ドル</td></tr>
+      <tr><td>Thrive II</td><td class="num">2011</td><td class="num">4,000万ドル</td></tr>
+      <tr><td>Thrive III</td><td class="num">2012</td><td class="num">1億5,000万ドル</td></tr>
+      <tr><td>Thrive IV</td><td class="num">2014</td><td class="num">4億ドル</td></tr>
+      <tr><td>Thrive V</td><td class="num">2016</td><td class="num">7億ドル</td></tr>
+      <tr><td>Thrive VI</td><td class="num">2018</td><td class="num">10億ドル</td></tr>
+      <tr><td>Thrive VII</td><td class="num">2021</td><td class="num">20億ドル</td></tr>
+      <tr><td>Thrive VIII</td><td class="num">2022</td><td class="num">30億ドル</td></tr>
+      <tr><td>Thrive IX</td><td class="num">2024</td><td class="num">50億ドル</td></tr>
+      <tr><td>Thrive X</td><td class="num">2026</td><td class="num">100億ドル超</td></tr>
+      <tr><th>AUM</th><th class="num">2026</th><th class="num">500億ドル</th></tr>
+    </tbody>
+  </table></div>
+  <p class="fn">出典11。2009年の500万ドルから2026年の100億ドル超まで、17年で2,000倍である。創業者ジョシュア・クシュナーは設立時24歳<sup>11</sup>。</p>
+
+  <p>投資方針は「より少ない企業に多く投資する」ことを明示している。創業者との関係と企業の可視性をアーリー・グロース・レイトの各段階で維持するためである<sup>11</sup>。主要投資先には OpenAI（2022年に290億ドルの評価額で1億3,000万ドル）、Stripe（2023年3月に500億ドルの評価額でのラウンドを主導、18億ドル）、Instagram、GitHub、Spotify、Twitch、Scale AI、Databricks 等が含まれる<sup>11</sup>。</p>
+
+  <h3>3社の「保有期間の設計」比較</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th></th><th>Y Combinator</th><th>Founders Fund</th><th>Thrive</th></tr></thead>
+    <tbody>
+      <tr><th>1件あたり金額</th><td>50万ドル固定<sup>8</sup></td><td>グロース段階の大型追加投資<sup>9</sup></td><td>集中投資。数億〜数十億ドル<sup>11</sup></td></tr>
+      <tr><th>件数の方針</th><td>年4バッチ、1バッチ数百社</td><td>既存ポートフォリオへの follow-on 中心<sup>9</sup></td><td>少数に集中<sup>11</sup></td></tr>
+      <tr><th>値付けの主体</th><td>放棄（キャップなし MFN）<sup>8</sup></td><td>自ら行う</td><td>自ら行う</td></tr>
+      <tr><th>GP 自己拠出</th><td>非開示</td><td>Growth IV で約25%<sup>10</sup></td><td>非開示</td></tr>
+      <tr><th>期限のない器</th><td>持たない</td><td>持たない（クローズドエンド）</td><td><strong>持つ</strong>（Thrive Holdings 2025、Thrive Eternal 2026）<sup>11</sup><sup>12</sup><sup>17</sup></td></tr>
+      <tr><th>長期化の手段</th><td>追加投資権で持分を維持<sup>8</sup></td><td>グロースファンドで後段まで追う<sup>9</sup></td><td>永久資本ビークルを別に作る<sup>11</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout">
+    <strong>ここに一つの分岐がある。</strong>クローズドエンドの器を持ちながら長期化する方法は2つしかない。<strong class="hit">①後段の大型ファンドを次々に作って追いかける（Founders Fund 型）、②期限のない器を別に作る（Sequoia 2021・Thrive 型）</strong>。
+    <br><br>
+    ①は毎回新しいファンドの調達が必要で、そのたびに実現分配を見せる圧力がかかる。②はその圧力を構造的に消すが、LP に対する流動性の提供方法（払い戻し請求権、評価方法）という新しい問題を作る。
+    <br><br>
+    「エターナルファンドを作れば10〜20年の保有で圧倒的なリターンが出る」という構想の実装上の難所は、リターンの側ではなく<strong>LP に流動性をどう与えるか</strong>である。Sequoia は年2回の払い戻し請求という形で答えを出した<sup>6</sup>。財団型（類型1）はそもそも LP を持たないことで問題を消している。
+  </div>
+
+  <h2><span class="num">⑥</span>インセンティブ設計を読む手順<span class="en">Reading Incentives</span></h2>
+
+  <p>「誰がどういうインセンティブを受け取っているのかを丁寧にリサーチする必要がある」という論点を、実際に使えるチェックリストに落とす。ファンド・企業・政策のいずれにも適用できる。</p>
+
+  <div class="box">
+    <strong>チェックリスト：5つの質問</strong>
+    <ol style="margin:8px 0 0;padding-left:20px">
+      <li><strong>意思決定者の収入は、いつ確定するか。</strong>GP のキャリーは分配が実現した時点で確定する。だから満期前に売る。政治家の評価は選挙の時点で確定する。だから任期内に成果が出る施策を選ぶ。<strong class="hit">確定時点より長い投資は構造的に選ばれない。</strong></li>
+      <li><strong>意思決定者は自分の資金を入れているか。何%か。</strong>Founders Fund の Growth IV でパートナー拠出が約25%<sup>10</sup>。この比率が高いほど、意思決定者の時間軸は資産の時間軸に近づく。</li>
+      <li><strong>売却・取り崩しを止めているのは誰か、何か。</strong>定款（ノボ・ノルディスクの A株売却禁止<sup>18</sup>）、法律（アラスカの POMV 5%<sup>14</sup>、ノルウェーの3%<sup>13</sup>）、契約（エルメス H51 の先買権<sup>15</sup>）、それとも誰の裁量でもないか。<strong>裁量で止めているものは、裁量で外れる。</strong></li>
+      <li><strong>評価指標は実現値か、評価値か。</strong>DPI（実現分配）で測られる主体は売る。TVPI（含み益込み）で測られる主体は持ち続けられる。<strong class="hit">指標の選択が保有期間を決める。</strong></li>
+      <li><strong>報酬の分母は何か。</strong>管理報酬がコミットメント額に対して掛かるなら、規模を増やす誘因が働く。成果に対して掛かるなら成果を追う。<strong>分母が規模なら規模が増える。</strong></li>
+    </ol>
+  </div>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>設計例</th><th>止めている主体</th><th>強度</th></tr></thead>
+    <tbody>
+      <tr><td>ノボ・ノルディスク財団の A株</td><td>財団の定款（売却禁止）<sup>18</sup></td><td class="up">最強。改定には財団の目的変更が必要</td></tr>
+      <tr><td>ハンス・ウィルスドルフ財団</td><td>財団の目的が「ロレックスの存続」<sup>16</sup></td><td class="up">最強</td></tr>
+      <tr><td>ノルウェー GPFG の3%規則</td><td>財政規則（法的枠組み）<sup>13</sup></td><td class="flat">強いが政治的に変更可能</td></tr>
+      <tr><td>アラスカの POMV 5%</td><td>法定。憲法化の提案が審議されている<sup>14</sup></td><td class="flat">強いが法改正で変更可能</td></tr>
+      <tr><td>エルメス H51</td><td>相続人52名の契約と先買権<sup>15</sup></td><td class="flat">世代交代で弱まる可能性</td></tr>
+      <tr><td>オープンエンド型ファンド</td><td>ファンド契約に満期がない<sup>6</sup></td><td class="down">LP の払い戻し請求で実質的に短縮されうる</td></tr>
+      <tr><td>継続ファンド（CV）</td><td>GP の判断で都度延長<sup>7</sup></td><td class="down">最弱。毎回の交渉と価格算定が必要</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2><span class="num">⑦</span>5〜10年で張れるものの条件<span class="en">What Can Actually Be Held for 5-10 Years</span></h2>
+
+  <p>ここまでの検証を、投資対象を選ぶ基準に落とす。</p>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>条件</th><th>理由</th><th>本記事内の根拠</th></tr></thead>
+    <tbody>
+      <tr><td>成熟までの期間が読める（技術の不確実性ではなく設備・人員・規制の積み上げで決まる）</td><td>個別企業の20年後は予測できないが、工房を1年に1棟建てるという制約は予測できる</td><td>エルメスの供給能力は工房数に線形で張り付き、増設計画が公表されている</td></tr>
+      <tr><td>供給側に物理的な制約がある</td><td>需要が跳ねても増産できない構造は、競争参入も遅くする</td><td>職人の訓練期間、認証の取得期間</td></tr>
+      <tr><td>既に権威ある第三者基準が存在する領域</td><td>基準を先に満たすだけで議論が終わる。マーケティング費用を要しない</td><td>ロレックスのキュー天文台 Class A（1914年）</td></tr>
+      <tr><td>保有主体の側に期限がない、または期限を延ばす装置がある</td><td>投資対象の成熟期間より器の満期が短いと、カレンダーが売却時期を決める</td><td>上場までの中位年数11年に対し標準満期10年<sup>5</sup></td></tr>
+      <tr><td>意思決定者の収入確定時点が、投資の回収時点以降にある</td><td>確定時点より長い投資は選ばれない</td><td>GP 自己拠出25%の例<sup>10</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout">
+    <strong>「長期思考はリスクが低く競争相手がいない」という命題の、正確な形。</strong>
+    <br><br>
+    競争相手がいないのは<strong class="hit">長期で見ているからではなく、長期で見られる器を持っている主体が少ないから</strong>である。器の側から数えると、期限のない資本を持つ主体は4類型しかなく、そのうち3つは新規に作ることが難しい（財団型は創業者の持分放棄が必要、同族型は既存の同族企業のみ、ソブリン型は国家のみ）。
+    <br><br>
+    したがって<strong>新規参入者が長期思考を武器にするには、類型3（オープンエンド型）を作るしかない</strong>。そしてその難所は投資判断ではなく、LP に流動性をどう与えるかである。Sequoia は年2回の払い戻し請求<sup>6</sup>、Thrive は永久資本ビークルを別法人として立てる<sup>11</sup><sup>12</sup>という形で、それぞれ別の答えを出している。
+  </div>
+
+  <h2><span class="num">⑧</span>残っている問い<span class="en">Open Questions</span></h2>
+
+  <div class="box">
+    <ol style="margin:0;padding-left:20px">
+      <li><strong>オープンエンド型のリターン実績が未検証。</strong>The Sequoia Fund（2021年）も Thrive Holdings（2025年）も、まだ従来型ファンドと比較できるだけの期間が経っていない。「構造が正しい」ことと「リターンが出る」ことは別である。</li>
+      <li><strong>財団所有の実証はデンマークに偏っている。</strong>Thomsen らの研究はデンマークのデータセットに依拠している<sup>3</sup>。デンマークの産業財団は税制と会社法の特殊な組み合わせの上に成立しており、他国で同じ効果が出るかは確認していない。</li>
+      <li><strong>継続ファンドの価格妥当性。</strong>年1,150億ドル規模<sup>7</sup>で行われているが、売り手と買い手が実質的に同一の GP である取引の価格をどう検証するかという方法論が確立していない。</li>
+      <li><strong>GP 自己拠出比率の網羅的なデータがない。</strong>本記事は Founders Fund の1例に依拠している<sup>10</sup>。この比率と長期リターンの関係を統計的に示すデータセットを見つけられなかった。</li>
+      <li><strong>「100年先を見据えた投資」の実例が特定できていない。</strong>永久資本の器は複数確認できたが、投資判断そのものを100年の期間で行っている運用主体を、公表資料から特定できなかった。財団型は保有を続けるが、それは「100年後を予測している」のではなく「予測せずに保有する」構造である。この2つは別物であり、前者の実例は本記事では確認できていない。</li>
+      <li><strong>上場までの期間が延びた原因の分解。</strong>Ritter のデータは中位年数が2001年以降11年に伸びたことを示すが<sup>5</sup>、その原因（プライベート市場の資金供給増、規制コスト、上場の必要性低下）の寄与度を分解していない。</li>
+    </ol>
+  </div>
+
+  <h2><span class="num">⑨</span>出典<span class="en">Sources</span></h2>
+  <ol class="sources">
+    <li>McKinsey Global Institute「Where companies with a long-term view outperform their peers」（Corporate Horizon Index）<a href="https://www.mckinsey.com/featured-insights/long-term-capitalism/where-companies-with-a-long-term-view-outperform-their-peers">https://www.mckinsey.com/featured-insights/long-term-capitalism/where-companies-with-a-long-term-view-outperform-their-peers</a></li>
+    <li>FCLTGlobal / McKinsey「Corporate long-term behaviors: How CEOs and boards drive sustained value creation」<a href="https://www.fcltglobal.org/wp-content/uploads/Corporate-long-term-behaviors_FCLTGlobal-McKinsey.pdf">https://www.fcltglobal.org/wp-content/uploads/Corporate-long-term-behaviors_FCLTGlobal-McKinsey.pdf</a></li>
+    <li>Steen Thomsen, Thomas Poulsen, Christa Børsting, Johan Kuhn「Industrial Foundations as Long-Term Owners」ECGI Finance Working Paper No. 556/2018（Corporate Governance: An International Review, 2018）<a href="https://www.ecgi.global/sites/default/files/working_papers/documents/finalthomsenpoulsenborstingkuhn.pdf">https://www.ecgi.global/sites/default/files/working_papers/documents/finalthomsenpoulsenborstingkuhn.pdf</a></li>
+    <li>Novo Nordisk Foundation「Ownership」（公式）<a href="https://novonordiskfonden.dk/en/who-we-are/ownership/">https://novonordiskfonden.dk/en/who-we-are/ownership/</a></li>
+    <li>Jay R. Ritter「Initial Public Offerings: Median Age of IPOs Through 2025」University of Florida, Table 4（2025年12月24日更新）<a href="https://site.warrington.ufl.edu/ritter/files/IPOs-Age-of-Companies-Going-Public.pdf">https://site.warrington.ufl.edu/ritter/files/IPOs-Age-of-Companies-Going-Public.pdf</a></li>
+    <li>Sequoia Capital「The Sequoia Capital Fund: Patient Capital for Building Enduring Companies」2021年10月<a href="https://sequoiacap.com/article/the-sequoia-fund-patient-capital-for-building-enduring-companies/">https://sequoiacap.com/article/the-sequoia-fund-patient-capital-for-building-enduring-companies/</a></li>
+    <li>Jefferies「2025 Global Secondary Market Review: Another Record-Breaking Year」<a href="https://www.jefferies.com/insights/the-big-picture/2025-global-secondary-market-review-another-record-breaking-year/">https://www.jefferies.com/insights/the-big-picture/2025-global-secondary-market-review-another-record-breaking-year/</a></li>
+    <li>Y Combinator「The Y Combinator Deal」（公式）<a href="https://www.ycombinator.com/deal">https://www.ycombinator.com/deal</a></li>
+    <li>CNBC「Peter Thiel's Founders Fund closes $4.6 billion growth fund」2025年4月11日<a href="https://www.cnbc.com/2025/04/11/peter-thiels-founders-fund-closes-4point6-billion-growth-fund.html">https://www.cnbc.com/2025/04/11/peter-thiels-founders-fund-closes-4point6-billion-growth-fund.html</a></li>
+    <li>TechCrunch「Founders Fund nears $6B close for latest growth fund, sources say」2026年3月9日<a href="https://techcrunch.com/2026/03/09/founders-fund-nears-6-billion-close-for-latest-growth-fund-sources-say/">https://techcrunch.com/2026/03/09/founders-fund-nears-6-billion-close-for-latest-growth-fund-sources-say/</a></li>
+    <li>Wikipedia「Thrive Capital」（ファンド規模の推移、AUM、Thrive Holdings、Thrive Eternal）<a href="https://en.wikipedia.org/wiki/Thrive_Capital">https://en.wikipedia.org/wiki/Thrive_Capital</a></li>
+    <li>PitchBook「Why Josh Kushner's Thrive is expanding beyond venture」<a href="https://pitchbook.com/news/articles/why-josh-kushners-thrive-is-expanding-beyond-venture">https://pitchbook.com/news/articles/why-josh-kushners-thrive-is-expanding-beyond-venture</a></li>
+    <li>Norwegian Petroleum「Management of revenues」（財政規則と3%の上限）<a href="https://www.norskpetroleum.no/en/economy/management-of-revenues/">https://www.norskpetroleum.no/en/economy/management-of-revenues/</a></li>
+    <li>Alaska Permanent Fund Corporation「Fund at a Glance」<a href="https://apfc.org/at-a-glance/">https://apfc.org/at-a-glance/</a></li>
+    <li>Wikipedia「Hermès」（H51 の設立と持株比率）<a href="https://en.wikipedia.org/wiki/Herm%C3%A8s">https://en.wikipedia.org/wiki/Herm%C3%A8s</a></li>
+    <li>Coronet Magazine「The Hans Wilsdorf Foundation」<a href="https://www.coronet.org/new-long-reads/the-hans-wilsdorf-foundation">https://www.coronet.org/new-long-reads/the-hans-wilsdorf-foundation</a></li>
+    <li>TBPN Digest「Thrive Capital launches Thrive Eternal permanent capital vehicle with San Francisco Giants as first partner」2026年4月24日<a href="https://www.tbpndigest.com/story/2026-04-24/thrive-capital-launches-thrive-eternal-permanent-capital-vehicle-with-san-francisco-giants-as-first-partner">https://www.tbpndigest.com/story/2026-04-24/thrive-capital-launches-thrive-eternal-permanent-capital-vehicle-with-san-francisco-giants-as-first-partner</a></li>
+    <li>Wikipedia「Novo Nordisk Foundation」（A株の議決権と売却禁止）<a href="https://en.wikipedia.org/wiki/Novo_Nordisk_Foundation">https://en.wikipedia.org/wiki/Novo_Nordisk_Foundation</a></li>
+  </ol>
+</div>
+
+<script type="application/json" id="facts">
+[
+ {"claim":"長期志向企業の売上成長の差","value":47,"unit":"%高い（2001-2014、615社）","as_of":"2017","source":"https://www.mckinsey.com/featured-insights/long-term-capitalism/where-companies-with-a-long-term-view-outperform-their-peers","confidence":"reported"},
+ {"claim":"長期志向企業の利益成長の差","value":36,"unit":"%高い","as_of":"2017","source":"https://www.mckinsey.com/featured-insights/long-term-capitalism/where-companies-with-a-long-term-view-outperform-their-peers","confidence":"reported"},
+ {"claim":"財団所有企業の存続期間","value":"約3倍","unit":"（他企業比）","as_of":"2018","source":"https://www.ecgi.global/sites/default/files/working_papers/documents/finalthomsenpoulsenborstingkuhn.pdf","confidence":"reported"},
+ {"claim":"創業から上場までの中位年数（2001-2025）","value":11,"unit":"年（2,824件）","as_of":"2025-12","source":"https://site.warrington.ufl.edu/ritter/files/IPOs-Age-of-Companies-Going-Public.pdf","confidence":"reported"},
+ {"claim":"創業から上場までの中位年数（1999-2000）","value":5,"unit":"年（856件）","as_of":"2025-12","source":"https://site.warrington.ufl.edu/ritter/files/IPOs-Age-of-Companies-Going-Public.pdf","confidence":"reported"},
+ {"claim":"創業から上場までの中位年数（2024年）","value":14,"unit":"年（72件）","as_of":"2025-12","source":"https://site.warrington.ufl.edu/ritter/files/IPOs-Age-of-Companies-Going-Public.pdf","confidence":"reported"},
+ {"claim":"2025年 GP主導セカンダリー取引額","value":115,"unit":"B USD（前年比+53%、市場全体の48%）","as_of":"2025-12","source":"https://www.jefferies.com/insights/the-big-picture/2025-global-secondary-market-review-another-record-breaking-year/","confidence":"reported"},
+ {"claim":"GP主導取引に占める継続ファンドの比率","value":89,"unit":"%","as_of":"2025-12","source":"https://www.jefferies.com/insights/the-big-picture/2025-global-secondary-market-review-another-record-breaking-year/","confidence":"reported"},
+ {"claim":"セカンダリー専用の待機資本","value":327,"unit":"B USD","as_of":"2025-12","source":"https://www.jefferies.com/insights/the-big-picture/2025-global-secondary-market-review-another-record-breaking-year/","confidence":"reported"},
+ {"claim":"ノボ・ノルディスク財団の議決権比率","value":77.3,"unit":"%（株式は約28.1%）","as_of":"2025","source":"https://novonordiskfonden.dk/en/who-we-are/ownership/","confidence":"reported"},
+ {"claim":"YC の標準投資条件","value":"500,000 USD","unit":"（125,000で固定7% + 375,000のキャップなしMFN SAFE）","as_of":"2026-08","source":"https://www.ycombinator.com/deal","confidence":"reported"},
+ {"claim":"Founders Fund Growth III の規模","value":4.6,"unit":"B USD（LP 270名）","as_of":"2025-04","source":"https://www.cnbc.com/2025/04/11/peter-thiels-founders-fund-closes-4point6-billion-growth-fund.html","confidence":"reported"},
+ {"claim":"Founders Fund Growth IV のパートナー拠出額","value":1.5,"unit":"B USD（総額約6.0B USD のうち）","as_of":"2026-03","source":"https://techcrunch.com/2026/03/09/founders-fund-nears-6-billion-close-for-latest-growth-fund-sources-say/","confidence":"single-source"},
+ {"claim":"Thrive Capital の運用資産","value":50,"unit":"B USD","as_of":"2026","source":"https://en.wikipedia.org/wiki/Thrive_Capital","confidence":"reported"},
+ {"claim":"Thrive Holdings の性質","value":"永久資本ビークル","unit":"（2025年設立、約70社取得）","as_of":"2026","source":"https://pitchbook.com/news/articles/why-josh-kushners-thrive-is-expanding-beyond-venture","confidence":"reported"},
+ {"claim":"Thrive Eternal の第1号案件","value":"サンフランシスコ・ジャイアンツ","unit":"（出資）","as_of":"2026-04","source":"https://www.tbpndigest.com/story/2026-04-24/thrive-capital-launches-thrive-eternal-permanent-capital-vehicle-with-san-francisco-giants-as-first-partner","confidence":"reported"},
+ {"claim":"ノルウェー GPFG の取り崩し上限","value":3,"unit":"%（期待実質収益率）","as_of":"2025","source":"https://www.norskpetroleum.no/en/economy/management-of-revenues/","confidence":"reported"},
+ {"claim":"アラスカ永久基金の残高と累積総リターン","value":"86.3 / 114.5","unit":"B USD（残高／1977年以降の累積総リターン）","as_of":"2026","source":"https://apfc.org/at-a-glance/","confidence":"reported"}
+]
+</script>
+</body>
+</html>

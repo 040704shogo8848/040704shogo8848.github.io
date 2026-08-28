@@ -5,9 +5,15 @@
 //   node _tools/leak-check.mjs a.html    scan specific files
 //
 // The keyword dictionary lives OUTSIDE this repo, at
-// ~/System/shogo-profile/build/secrets.json — committing it here would publish
-// the list of things worth hiding. When the file is absent (CI), the dictionary
-// rules are skipped and only the built-in rules below run.
+// ~/System/site-guard/secrets.json — committing it here would publish the list
+// of things worth hiding. When the file is absent (CI), the dictionary rules are
+// skipped and only the built-in rules below run.
+//
+// It used to live under ~/System/shogo-profile/, which was deleted on
+// 2026-07-29. Nothing noticed, because a missing dictionary degrades to a
+// passing run: every check below kept working and the client names simply
+// stopped being checked. The old path is still tried second so an older
+// checkout keeps working, and the run now prints which path it read.
 
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -16,7 +22,11 @@ import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const DICT = path.join(os.homedir(), 'System/shogo-profile/build/secrets.json');
+const DICT_PATHS = [
+  path.join(os.homedir(), 'System/site-guard/secrets.json'),
+  path.join(os.homedir(), 'System/shogo-profile/build/secrets.json'),
+];
+const DICT = DICT_PATHS.find((p) => existsSync(p));
 
 const SKIP_DIRS = new Set(['.git', 'node_modules', 'dist']);
 const TEXT_EXT = new Set(['.html', '.md', '.json', '.js', '.mjs', '.css', '.txt', '.sh', '.yml', '.yaml']);
@@ -64,6 +74,27 @@ const ACCEPTED = [
     hit: '小島信明',
     why: '本人は公開人物（Wikipedia・公開講演あり）。実名掲載は 2026-08-02 に Shogo が判断済み',
   },
+  // 2026-08-28、辞書を復活させたときに既存の公開済みファイルで出た3件。
+  // どれも origin/main で公開済みなので、ここで止めても新規の露出は防げず、
+  // 代わりに全 push が止まる。それは --no-verify を常用させてゲートを殺す道なので、
+  // 中身を読んだ上で例外にしてある。
+  {
+    file: '010_research/013_geo/japan_projects.html',
+    hit: '住友化学',
+    why: 'ジュロン島のエチレン工場とラービグの減損の話。JOI/JETRO の公開PDFが出典で、'
+      + '受注関係とは無関係の産業地理。2026-08-28 レビュー',
+  },
+  {
+    file: '010_research/013_geo/data/japan_projects.json',
+    hit: '住友化学',
+    why: '上と同じ内容のデータ側。2026-08-28 レビュー',
+  },
+  {
+    file: '010_research/011_company/reports/mitsubishi_corp_research_260727.html',
+    hit: '日本管財',
+    why: '人脈ドセの表内。2026-07-27 時点で公開済み。ただし現行クライアントの常務名が'
+      + '「当方ヒアリング」と併記されており、第三者情報としては要再判断（Shogo に報告済み）',
+  },
 ];
 
 const accepted = (file, hit) => ACCEPTED.some((a) => a.file === file && a.hit === hit);
@@ -74,11 +105,23 @@ const accepted = (file, hit) => ACCEPTED.some((a) => a.file === file && a.hit ==
 // financial vocabulary — "M&A", "評価額", "億円" — which flags an internal deck
 // but is the entire subject matter of a company research report. Those stay as
 // warnings on research pages and remain blocking everywhere else.
+//
+// `hardAnywhere` exists because that split left no slot for a client company
+// name. Inside 010_research the only blocking dictionary tier was
+// thirdPartyNames, a list built for people, so a current client's name in a
+// research report was a warning at most. Once x-agent started publishing there
+// on its own, a warning was indistinguishable from a pass. These are the names
+// where the leak is not the company — it is public — but the fact that it
+// appears on Shogo's site next to his work.
 const pii = [];
 const money = [];
 
-if (existsSync(DICT)) {
+if (DICT) {
   const d = JSON.parse(await readFile(DICT, 'utf8'));
+  for (const h of d.hardAnywhere ?? []) {
+    try { pii.push({ re: new RegExp(h.pattern), why: `非公開レイヤ（${h.label ?? 'hardAnywhere'}）`, hard: true }); }
+    catch { /* skip unparseable patterns rather than fail the run */ }
+  }
   for (const t of d.thirdPartyNames ?? [])
     pii.push({ re: new RegExp(escapeRe(t.pattern)), why: `第三者氏名（${t.label ?? 'thirdPartyNames'}）`, hard: true });
   for (const h of d.high ?? [])
@@ -87,9 +130,15 @@ if (existsSync(DICT)) {
     try { money.push({ re: new RegExp(r.pattern, 'i'), why: `機密パターン（${r.label ?? 'regex'}）` }); }
     catch { /* skip unparseable patterns rather than fail the run */ }
   }
-  console.log(`dictionary: ${pii.length} PII + ${money.length} financial rules from ~/System/shogo-profile/build/secrets.json`);
+  console.log(
+    `dictionary: ${pii.length} hard + ${money.length} financial rules from ` +
+      DICT.replace(os.homedir(), '~')
+  );
 } else {
-  console.log('dictionary: not found (built-in rules only)');
+  console.log(
+    'dictionary: not found (built-in rules only) — クライアント名は検査されない。\n' +
+      '            期待する場所: ' + DICT_PATHS.map((p) => p.replace(os.homedir(), '~')).join(' または ')
+  );
 }
 
 function escapeRe(s) { return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }

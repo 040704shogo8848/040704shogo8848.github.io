@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>生成AI利用率の国際比較｜総務省9.1%は調査設計で歪んでいるか</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    /* charts: dataviz の検証済みスロット（surface #fff で検証） */
+    --s1:#2a78d6; --s1-light:#86b6ef; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  /* ── charts ───────────────────────────────────────────────────────────── */
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">industry</a> / 日本の生成AI利用率9.1%の検証</p>
+
+<header class="top">
+  <h1>「日本人はAIを使わない」は本当か｜総務省9.1%の調査設計を検証する</h1>
+  <div class="en">Does Japan Really Lag in GenAI Adoption? Auditing the MIC White Paper's Cross-Country Survey Design</div>
+  <div class="tags"><span class="tag">生成AI</span><span class="tag">調査方法論</span><span class="tag">国際比較</span><span class="tag">総務省</span><span class="tag">情報通信白書</span></div>
+</header>
+
+<p class="lead">総務省情報通信白書が示した「日本の生成AI利用率9.1%」は、4か国すべてで同一のウェブモニター調査を用いており、調査手法自体は揃っている。しかし各国のオンラインパネルの母集団特性、質問の参照期間、社会的望ましさバイアスが非対称に作用するため、国際間の絶対値を直接比較することには構造的な限界がある。別手法の大規模調査（Pew、Eurostat、CNNIC）と突き合わせると、白書の数値は全ての国で実態より高めに出ている可能性が高く、日本の「突出した低さ」はやや誇張されている。</p>
+
+<p class="srcnote">作成日: 2026年8月28日。主な一次資料: 総務省情報通信白書 令和6〜8年版付注、Pew Research Center American Trends Panel調査、Eurostat ICT利用調査、CNNIC統計報告、NIRA総研ウェブ調査バイアス研究。為替換算なし。「利用率」は各調査での定義が異なるため、本文中で都度明記する。</p>
+
+<h2><span class="num">①</span>問題の所在：広く引用される数字の出どころ<span class="en">The Widely Cited Figure</span></h2>
+
+<p>2024年7月に公表された令和6年版情報通信白書は、日本の個人における生成AI利用経験率を<strong class="hit">9.1%</strong>と報告した<sup>1</sup>。同じ調査で米国46.3%、中国56.3%、ドイツ34.6%、英国39.8%と発表され、日本だけが突出して低い構図が示された<sup>1</sup>。この数字はメディアで繰り返し引用され、「日本人はAIを使わない」という通説の主たる根拠となっている。</p>
+
+<p>しかし、翌年の令和7年版（2025年7月公表）では同指標が26.7%に跳ね上がり<sup>2</sup>、さらに令和8年版（2026年7月公表）では58.8%に達した<sup>3</sup>。3年間で9.1%→26.7%→58.8%という急激な変化は、実際の普及だけでなく、調査設計の変更や質問文脈の違いが数字を動かしている可能性を示唆する。本稿では、白書の調査方法論を一次資料の付注から復元し、他国の独立調査と突き合わせることで、この通説の妥当性を検証する。</p>
+
+<h2><span class="num">②</span>白書の調査設計：付注から読む方法論<span class="en">Survey Design per the White Paper Appendix</span></h2>
+
+<p>白書の付注は、各年の調査概要を具体的に記載している。9.1%を生んだ令和6年版の調査（付注1）と、26.7%を生んだ令和7年版の調査（付注1）、58.8%を生んだ令和8年版の調査は、それぞれ以下の仕様で実施された。</p>
+
+<div class="tbl-scroll"><table>
+<thead>
+<tr><th>項目</th><th>令和6年版・付注1<sup>4</sup></th><th>令和7年版<sup>5</sup></th><th>令和8年版<sup>6</sup></th></tr>
+</thead>
+<tbody>
+<tr><td>正式名称</td><td>デジタルテクノロジーの高度化とその活用に関する調査研究</td><td>国内外における最新の情報通信技術の研究開発及びデジタル活用の動向に関する調査研究</td><td>同左</td></tr>
+<tr><td>調査手法</td><td>インターネットアンケート調査</td><td>インターネットアンケート調査</td><td>インターネットアンケート調査</td></tr>
+<tr><td>調査時期</td><td>2024年1〜2月</td><td>2025年1〜2月</td><td>2026年1〜2月</td></tr>
+<tr><td>対象国</td><td>日・米・独・英・中（5か国）</td><td>日・米・独・中（4か国）</td><td>日・米・独・中（4か国）</td></tr>
+<tr><td>対象年齢</td><td>20〜60代以上</td><td>20〜60代</td><td>15〜69歳</td></tr>
+<tr><td>日本 n</td><td class="num">1,030</td><td class="num">1,030</td><td class="num">1,236</td></tr>
+<tr><td>他国 n（各国）</td><td class="num">520</td><td class="num">520</td><td class="num">624</td></tr>
+<tr><td>合計 n</td><td class="num">3,110</td><td class="num">2,590</td><td class="num">3,108</td></tr>
+<tr><td>抽出方法</td><td>調査会社モニターから年代・性別均等割付</td><td>同左（年齢均等）</td><td>同左（年齢・性別均等）</td></tr>
+<tr><td>質問文脈</td><td>生成AI・メタバース・NFT等6技術の利用経験</td><td>デジタル活用全般＋AI活用状況</td><td>AI利活用状況</td></tr>
+</tbody>
+</table></div>
+
+<div class="callout">
+<p>令和6年版の付注1には、調査の限界が明記されている：「アンケート調査会社の登録モニターを対象とした。国や性別・年代によっては、モニターの登録者数が少ないなどの要因によって、対象者の特性や回答に偏りが生じている可能性がある」<sup>4</sup>。</p>
+</div>
+
+<p>ここで重要な点が3つある。</p>
+
+<p>第一に、<strong class="hit">9.1%と26.7%は異なる調査から出た数値</strong>である。9.1%は「デジタルテクノロジーの高度化とその活用に関する調査研究」、26.7%は「国内外における最新の情報通信技術の研究開発及びデジタル活用の動向に関する調査研究」という別の委託調査に由来する<sup>4</sup><sup>5</sup>。質問の文脈が異なり（前者は6つの先端技術を並べて聞く、後者はデジタル活用全般の中で聞く）、9.1%→26.7%という3倍増には、実際の普及増に加えて調査設計の差が含まれている可能性がある。</p>
+
+<p>第二に、<strong class="hit">全ての国で同一の手法（ウェブモニター調査）が使われている</strong>。調査会社が保有するオンラインパネルの登録者から、年齢・性別の割付で抽出する方式は4か国共通であり、手法そのものは揃っている。しかし後述するように、オンラインパネルの母集団特性は国によって大きく異なる。</p>
+
+<p>第三に、<strong class="hit">各国のサンプルサイズが非対称</strong>である。日本1,030に対し他国は各520（令和8年版では日本1,236、他国各624）であり、他国の年代あたりサンプルは約100件と統計的に粗い。</p>
+
+<h2><span class="num">③</span>ウェブモニター調査のバイアス構造<span class="en">Structural Bias in Online Panel Surveys</span></h2>
+
+<p>日本のウェブモニター調査のバイアスについては、NIRA総合研究開発機構が国勢調査および面接調査との比較研究を行っている<sup>7</sup>。主な知見は以下の通り。</p>
+
+<div class="box">
+<ul>
+<li>ウェブモニター回答者の大卒以上比率は45%超であり、国勢調査の22%のほぼ2倍に達する<sup>7</sup></li>
+<li>大都市居住者が過剰に代表され、インターネット利用時間も長く、利用目的も多岐にわたる<sup>7</sup></li>
+<li>年齢・性別のクォータ割付を行っても、回答の実質分布は面接調査と異なる<sup>7</sup></li>
+<li>デジタルサービスに関する設問では、ウェブモニターが利用率を過大推計する傾向がある<sup>8</sup></li>
+</ul>
+</div>
+
+<p>この構造は、生成AI利用率の調査においてとりわけ問題になる。オンラインパネルの登録者は定義上インターネット利用者であり、デジタルリテラシーが高い層が過剰代表される。生成AIという「デジタルツールの利用」を問う調査でウェブモニターを使えば、<strong class="hit">全ての国で利用率が実態より高めに出る</strong>のは構造的に避けられない。</p>
+
+<p>問題は、このバイアスが国ごとに対称かどうかである。以下の理由から、バイアスの大きさは国によって異なると考えられる。</p>
+
+<p><strong>中国</strong>：インターネット普及率は約76%（2025年時点）であり、オンラインパネルはネット利用者の中でもさらに都市部に偏る。NRI（野村総合研究所）の国際比較調査も、中国サンプルが北京・上海・広州・大連・南京・ハルビン・西安・成都の主要都市居住者に限定されている点を注記している<sup>9</sup>。農村部・地方都市を含む全人口ベースでは利用率が大幅に下がるはずである。</p>
+
+<p><strong>日本</strong>：インターネット普及率は約93%と高く、オンラインパネルと一般人口の乖離は中国ほど大きくない。ただし大卒比率の2倍という歪みは無視できない<sup>7</sup>。</p>
+
+<p><strong>米国・ドイツ</strong>：インターネット普及率は90%超だが、オンラインパネルの構成は確率抽出パネルとは異なる属性分布を持つ。</p>
+
+<h2><span class="num">④</span>他国の独立調査との突き合わせ<span class="en">Cross-Validation with Independent Surveys</span></h2>
+
+<p>白書の数値を、各国が独自に実施した大規模・高品質な調査と比較する。</p>
+
+<div class="tbl-scroll"><table>
+<thead>
+<tr><th>国</th><th>白書の値（時期）</th><th>独立調査の値（調査名・時期）</th><th>手法の違い</th></tr>
+</thead>
+<tbody>
+<tr><td>米国</td><td>46.3%（2024年1-2月）<sup>1</sup></td><td>23%「ChatGPT利用経験」（Pew ATS, 2024年2月）<sup>10</sup></td><td>Pew: 確率抽出パネル, n=5,000超。白書: ウェブモニター, n=520</td></tr>
+<tr><td>米国</td><td>68.8%（2025年1-2月）<sup>2</sup></td><td>34%「ChatGPT利用経験」（Pew ATS, 2025年6月）<sup>10</sup></td><td>同上。Pewは ChatGPT限定だが、白書は「生成AI全般」</td></tr>
+<tr><td>米国</td><td>75.6%（2026年1-2月）<sup>3</sup></td><td>49%「AIチャットボット利用」（Pew ATS, 2026年2月, n=5,119）<sup>11</sup></td><td>同上。白書の値はPewの約1.5倍</td></tr>
+<tr><td>ドイツ</td><td>59.2%（2025年1-2月）<sup>2</sup></td><td>32.2%「直近3か月で生成AI利用」（Eurostat, 2025年, 16-74歳, 約33万人）<sup>12</sup></td><td>Eurostat: 各国統計局が面接・電話・オンラインで実施。参照期間は直近3か月</td></tr>
+<tr><td>中国</td><td>81.2%（2025年1-2月）<sup>2</sup></td><td>36.5%浸透率「5.15億人/14.1億人」（CNNIC, 2025年6月, 電話調査, n=30,000）<sup>13</sup></td><td>CNNIC: 31省にわたる電話調査。白書: 主要都市のウェブモニター</td></tr>
+</tbody>
+</table></div>
+
+<div class="callout">
+<p>白書の値が独立調査よりも一貫して高い。特に中国では白書81.2%に対しCNNIC 36.5%と2倍以上の開きがある。これはウェブモニターの都市部バイアスと、白書の「利用経験あり（過去に1度でも使ったことがある）」という広い定義の合算効果と考えられる。</p>
+</div>
+
+<p>ただし、直接比較に際しては以下の留意が必要である。</p>
+<ul>
+<li><strong>質問の参照期間</strong>が異なる。白書は「使っている（過去使ったことがある）」という累積的定義<sup>1</sup>。Eurostatは「直近3か月以内」<sup>12</sup>。Pewは「利用経験あり」だがChatGPT限定<sup>10</sup>。参照期間の違いだけで数値に大きな差が出る。</li>
+<li><strong>対象ツールの範囲</strong>が異なる。白書は「生成AI全般」、PewはChatGPT（のちAIチャットボット全般）、EurostatはChatGPT・Copilot・Gemini等を例示<sup>12</sup>。</li>
+<li><strong>調査時期</strong>が数か月ずれている場合がある。急速に普及する技術では、半年の差が大きく効く。</li>
+</ul>
+
+<h2><span class="num">⑤</span>社会的望ましさバイアスと文化差<span class="en">Social Desirability Bias and Cultural Factors</span></h2>
+
+<p>ウェブモニターの属性バイアスに加え、回答行動自体にも国による非対称性がある。</p>
+
+<p>2026年のCHI学会で発表されたLing &amp; Imas (2026)の研究は、AI利用の<strong class="hit">過少申告</strong>が社会的望ましさバイアスによって生じることを実証した<sup>14</sup>。AIに頼ることを「知的怠惰」と見なす文化圏では、利用を控えめに報告する傾向がある。</p>
+
+<p>一方、中国に関する調査研究では逆方向のバイアスが指摘される。技術楽観主義が社会的に望ましいとされる文化的背景のもと、AI技術に対する態度調査で95%が「楽観的」と回答するなど、肯定的回答への偏りが報告されている<sup>15</sup>。Cambridge Core掲載の研究は、中国の調査データに社会的望ましさバイアスが体系的に影響している証拠を示している<sup>16</sup>。</p>
+
+<p>日本については、謙遜バイアス（自身の能力や行動を控えめに報告する傾向）が知られており、「使っている」と断定的に答えることへの心理的障壁が他国より高い可能性がある。ただしこれは仮説であり、生成AI利用に特化した実証研究は確認できなかった。</p>
+
+<h2><span class="num">⑥</span>日本は本当に「突出して低い」のか：補正の試み<span class="en">Is Japan Really an Outlier? An Attempt at Calibration</span></h2>
+
+<p>白書の数値を額面通りに受け取れないとすれば、より実態に近い比較はどうなるか。完全な補正は不可能だが、方向性を示す材料はある。</p>
+
+<p><strong>NRI（野村総合研究所）の独自調査</strong>（2025年9月実施）は、同じくウェブモニターを使いつつ、「月に数回以上」という頻度ベースの定義で比較した<sup>9</sup>。結果は日本34.9%、米国約60%、ドイツ約60%、中国86.3%であり、日本と米独の差は白書ほど大きくない。</p>
+
+<p><strong>Bick, Blandin &amp; Deming (2024)</strong>のNBER論文は、米国のReal-Time Population Survey（n=10,000超）を用いて「直近1週間にGenAIを仕事で使った」割合を39.5%と報告している<sup>17</sup>。これは「利用経験あり」よりはるかに厳しい定義で、白書の米国68.8%（R7）と大きく異なる。</p>
+
+<p>以上を総合すると、白書の数値を<strong class="hit">「ウェブモニター上の利用経験率」</strong>として読む限り、日本が4か国中最低であるという序列自体はおそらく正しい。しかし、「日本9.1%、中国56.3%」という6倍の開きは、調査手法のバイアスが増幅した数字である可能性が高い。より代表性の高い調査を基準にすれば、日本と他国の差は<strong class="hit">白書が示すほどは大きくない</strong>と推計される。</p>
+
+<div class="box">
+<p><strong>推計の方向性</strong>：Pewの確率抽出調査と白書のウェブモニター調査の比率（米国で約0.5〜0.65倍）を日本に単純適用すると、令和7年版時点の日本の「一般人口ベース利用経験率」は推計13〜17%程度となる。同じ補正を中国に適用すれば40%台前半（CNNIC電話調査の36.5%と概ね整合する）。この場合、日本と中国の差は3〜4倍ではなく2〜3倍程度に縮小する。ただしこの推計は極めて粗く、参考値にとどまる。</p>
+</div>
+
+<h2><span class="num">⑦</span>なぜこの問題が見過ごされてきたか<span class="en">Why This Has Been Overlooked</span></h2>
+
+<p>総務省の白書は政府統計としての権威があり、メディアや解説記事はその数値をそのまま引用することが多い。令和6年版の付注には「偏りが生じている可能性がある」という留意事項が明記されているにもかかわらず<sup>4</sup>、この注記が報道で言及されることはほぼない。</p>
+
+<p>また、4か国で「同一手法」を使っているという事実が、比較可能性の担保として受け取られやすい。確かに手法は揃っているが、前述の通り、ウェブモニターの母集団特性が国によって異なるため、「同一手法＝比較可能」とは限らない。</p>
+
+<p>加えて、9.1%という衝撃的に低い数字は「日本の遅れ」というわかりやすいナラティブに合致するため、検証のインセンティブが働きにくい構造がある。</p>
+
+<p>ただし、日本の生成AI普及が相対的に遅いこと自体は、複数の独立調査が示す一致した傾向であり、調査設計の問題だけで説明できるものではない。NRIの調査でも日本は4か国中最低であり<sup>9</sup>、OECDの調査でも日本の職場AI利用率は比較国中低位に位置する<sup>18</sup>。問題は「低い」こと自体ではなく、「どの程度低いか」の定量的把握が不正確であることにある。</p>
+
+<h2 id="open"><span class="num">⑧</span>残っている問い<span class="en">Open Questions</span></h2>
+<ul>
+<li>令和6年版の9.1%と令和7年版の26.7%は異なる委託調査に由来するが、白書本文は「前年度9.1%」として直接比較している。この比較が妥当かどうか、総務省内でどのような整理がなされたか、公開情報からは確認できなかった。</li>
+<li>各年版で使われた「アンケート調査会社」の具体名は付注に記載されていない。同一会社か、年度・国ごとに異なるかによって、パネルの構成バイアスが変わる。</li>
+<li>白書の質問文の正確な原文（日本語・英語・中国語・ドイツ語）は付注に掲載されていない。翻訳の際の意味のずれが回答に影響した可能性は検証できなかった。</li>
+<li>中国のオンラインパネルにおける社会的望ましさバイアスの大きさは、AI利用率に特化した定量的推計が見当たらなかった。</li>
+<li>日本の「謙遜バイアス」がAI利用の自己申告をどの程度押し下げるかについて、実証データは確認できなかった。</li>
+<li>令和6年版付注1の調査では英国（39.8%）も含まれていたが、令和7年版以降で英国が除外された理由は明示されていない。</li>
+<li>Eurostat調査（ドイツ32.2%）とMIC調査（ドイツ59.2%）の差がどの程度まで「参照期間の違い」（直近3か月 vs 累積経験）で説明でき、どの程度がパネルバイアスに帰属するかは分離できなかった。</li>
+</ul>
+
+<h2><span class="num">⑨</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+<li id="s1">総務省（2024）「令和6年版 情報通信白書」第5章第1節「国民向けアンケート」。生成AI利用経験率（日本9.1%、米国46.3%、中国56.3%、ドイツ34.6%、英国39.8%）を掲載 — <a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r06/html/nd151110.html" target="_blank" rel="noopener">https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r06/html/nd151110.html</a></li>
+<li id="s2">総務省（2025）「令和7年版 情報通信白書」個人におけるAI利用の現状。日本26.7%、米国68.8%、中国81.2%、ドイツ59.2% — <a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r07/html/nd112210.html" target="_blank" rel="noopener">https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r07/html/nd112210.html</a></li>
+<li id="s3">総務省（2026）「令和8年版 情報通信白書」報道資料。日本58.8%、米国75.6%、中国93.6%、ドイツ75.6% — <a href="https://www.soumu.go.jp/menu_news/s-news/01tsushin02_02000184.html" target="_blank" rel="noopener">https://www.soumu.go.jp/menu_news/s-news/01tsushin02_02000184.html</a></li>
+<li id="s4">総務省（2024）「令和6年版 情報通信白書」付注1「デジタルテクノロジーの高度化とその活用に関する調査研究」。調査概要（インターネットアンケート、各国520〜1,030件、20〜60代以上、2024年1-2月）および留意事項を記載 — <a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r06/pdf/01fuchuu.pdf" target="_blank" rel="noopener">https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r06/pdf/01fuchuu.pdf</a></li>
+<li id="s5">総務省（2025）「令和7年版 情報通信白書」付注1「国内外における最新の情報通信技術の研究開発及びデジタル活用の動向に関する調査研究」。調査概要（日本1,030件、他国各520件、20〜60代、2025年1-2月） — <a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r07/pdf/01fuchuu.pdf" target="_blank" rel="noopener">https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r07/pdf/01fuchuu.pdf</a></li>
+<li id="s6">総務省（2026）「令和8年版 情報通信白書」付注「国内外における最新の情報通信技術の研究開発及びデジタル活用の動向に関する調査研究」。調査概要（日本1,236件、他国各624件、15〜69歳、2026年1-2月） — <a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r08/pdf/01fuchuu.pdf" target="_blank" rel="noopener">https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r08/pdf/01fuchuu.pdf</a></li>
+<li id="s7">三輪哲・林文（2021）「インターネット調査のサンプル特性―国勢調査・面接調査との比較」NIRA総合研究開発機構。ウェブモニターの大卒比率45%超（国勢調査22%）、都市部偏重等を実証 — <a href="https://www.nira.or.jp/paper/article/2021/wp01.html" target="_blank" rel="noopener">https://www.nira.or.jp/paper/article/2021/wp01.html</a></li>
+<li id="s8">労働政策研究・研修機構（2006）「インターネット調査の測定誤差とモニター調査のサンプリング・バイアス」。ウェブ調査のバイアス構造を分析 — <a href="https://www.jil.go.jp/institute/zassi/backnumber/2006/06/pdf/032-041.pdf" target="_blank" rel="noopener">https://www.jil.go.jp/institute/zassi/backnumber/2006/06/pdf/032-041.pdf</a></li>
+<li id="s9">野村総合研究所（2026）「日・米・中・独4カ国調査にみるAI浸透時代の生活者像」2025年9月実施。日本34.9%（月数回以上）、中国86.3%、米独約60%。中国サンプルは主要都市限定と注記 — <a href="https://www.nri.com/jp/media/column/extending_society_with_ai/20260410.html" target="_blank" rel="noopener">https://www.nri.com/jp/media/column/extending_society_with_ai/20260410.html</a></li>
+<li id="s10">Pew Research Center（2025）「34% of US adults have used ChatGPT」American Trends Panel。確率抽出パネル — <a href="https://www.pewresearch.org/short-reads/2025/06/25/34-of-us-adults-have-used-chatgpt-about-double-the-share-in-2023/" target="_blank" rel="noopener">https://www.pewresearch.org/short-reads/2025/06/25/34-of-us-adults-have-used-chatgpt-about-double-the-share-in-2023/</a></li>
+<li id="s11">Pew Research Center（2026）「Americans and AI 2026」n=5,119、2026年2月17-23日実施、American Trends Panel。AIチャットボット利用49% — <a href="https://www.pewresearch.org/internet/2026/06/17/americans-and-ai-2026-chatbots-smart-devices-and-views-on-impact/" target="_blank" rel="noopener">https://www.pewresearch.org/internet/2026/06/17/americans-and-ai-2026-chatbots-smart-devices-and-views-on-impact/</a></li>
+<li id="s12">Eurostat（2025）「32.7% of EU people used generative AI tools in 2025」16-74歳、直近3か月、約33万人調査。ドイツ32.2% — <a href="https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20251216-3" target="_blank" rel="noopener">https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20251216-3</a></li>
+<li id="s13">CNNIC（2025）中国インターネット発展状況統計報告。2025年6月時点で生成AIユーザー5.15億人（浸透率36.5%）。31省対象、電話調査、n=30,000 — <a href="https://english.www.gov.cn/archive/statistics/202510/18/content_WS68f30556c6d00ca5f9a06e05.html" target="_blank" rel="noopener">https://english.www.gov.cn/archive/statistics/202510/18/content_WS68f30556c6d00ca5f9a06e05.html</a></li>
+<li id="s14">Ling, Y. &amp; Imas, A.（2026）「Underreporting of AI Use: The Role of Social Desirability Bias」CHI 2026 — <a href="https://dl.acm.org/doi/10.1145/3772318.3791073" target="_blank" rel="noopener">https://dl.acm.org/doi/10.1145/3772318.3791073</a></li>
+<li id="s15">Artificial Inquiry（2026）「The Great AI Divide: Why China Embraces What the West Fears」中国のAI楽観主義と調査回答バイアスを論じた解説記事 — <a href="https://artificialinquiry.substack.com/p/the-great-ai-divide-why-china-embraces" target="_blank" rel="noopener">https://artificialinquiry.substack.com/p/the-great-ai-divide-why-china-embraces</a></li>
+<li id="s16">Cambridge University Press（政治学研究）「The shadow of social desirability bias: evidence from reassessing the sources of political trust in China」中国の調査における社会的望ましさバイアスの体系的影響を実証 — <a href="https://www.cambridge.org/core/journals/political-science-research-and-methods/article/shadow-of-social-desirability-bias-evidence-from-reassessing-the-sources-of-political-trust-in-china/30C4BDE13FD6B2B4A2B012746DA2BF86" target="_blank" rel="noopener">https://www.cambridge.org/core/journals/political-science-research-and-methods/article/shadow-of-social-desirability-bias-evidence-from-reassessing-the-sources-of-political-trust-in-china/30C4BDE13FD6B2B4A2B012746DA2BF86</a></li>
+<li id="s17">Bick, A., Blandin, A. &amp; Deming, D.（2024）「The Rapid Adoption of Generative AI」NBER Working Paper 32966。Real-Time Population Survey、n=10,000超 — <a href="https://www.nber.org/papers/w32966" target="_blank" rel="noopener">https://www.nber.org/papers/w32966</a></li>
+<li id="s18">Brookings Institution（2025）「How are Americans using AI? Evidence from a nationwide survey」NORC AmeriSpeak Omnibus、n=1,163、2025年6月。個人利用57%、業務利用21% — <a href="https://www.brookings.edu/articles/how-are-americans-using-ai-evidence-from-a-nationwide-survey/" target="_blank" rel="noopener">https://www.brookings.edu/articles/how-are-americans-using-ai-evidence-from-a-nationwide-survey/</a></li>
+</ol>
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "日本の生成AI利用経験率（令和6年版情報通信白書）",
+  "value": "9.1",
+  "unit": "%",
+  "as_of": "2024-01",
+  "source": "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r06/html/nd151110.html",
+  "confidence": "verified"
+ },
+ {
+  "claim": "米国の生成AI利用経験率（令和6年版情報通信白書）",
+  "value": "46.3",
+  "unit": "%",
+  "as_of": "2024-01",
+  "source": "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r06/html/nd151110.html",
+  "confidence": "verified"
+ },
+ {
+  "claim": "中国の生成AI利用経験率（令和6年版情報通信白書）",
+  "value": "56.3",
+  "unit": "%",
+  "as_of": "2024-01",
+  "source": "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r06/html/nd151110.html",
+  "confidence": "verified"
+ },
+ {
+  "claim": "ドイツの生成AI利用経験率（令和6年版情報通信白書）",
+  "value": "34.6",
+  "unit": "%",
+  "as_of": "2024-01",
+  "source": "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r06/html/nd151110.html",
+  "confidence": "verified"
+ },
+ {
+  "claim": "日本の生成AI利用経験率（令和7年版情報通信白書）",
+  "value": "26.7",
+  "unit": "%",
+  "as_of": "2025-01",
+  "source": "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r07/html/nd112210.html",
+  "confidence": "verified"
+ },
+ {
+  "claim": "日本の生成AI利用経験率（令和8年版情報通信白書）",
+  "value": "58.8",
+  "unit": "%",
+  "as_of": "2026-01",
+  "source": "https://www.soumu.go.jp/menu_news/s-news/01tsushin02_02000184.html",
+  "confidence": "verified"
+ },
+ {
+  "claim": "中国の生成AI利用経験率（令和8年版情報通信白書）",
+  "value": "93.6",
+  "unit": "%",
+  "as_of": "2026-01",
+  "source": "https://www.soumu.go.jp/menu_news/s-news/01tsushin02_02000184.html",
+  "confidence": "verified"
+ },
+ {
+  "claim": "令和6年版白書調査のサンプルサイズ（日本）",
+  "value": "1030",
+  "unit": "人",
+  "as_of": "2024-01",
+  "source": "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r06/pdf/01fuchuu.pdf",
+  "confidence": "verified"
+ },
+ {
+  "claim": "令和6年版白書調査のサンプルサイズ（他国各国）",
+  "value": "520",
+  "unit": "人",
+  "as_of": "2024-01",
+  "source": "https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r06/pdf/01fuchuu.pdf",
+  "confidence": "verified"
+ },
+ {
+  "claim": "米国ChatGPT利用経験率（Pew Research, 2025年6月）",
+  "value": "34",
+  "unit": "%",
+  "as_of": "2025-06",
+  "source": "https://www.pewresearch.org/short-reads/2025/06/25/34-of-us-adults-have-used-chatgpt-about-double-the-share-in-2023/",
+  "confidence": "verified"
+ },
+ {
+  "claim": "米国AIチャットボット利用率（Pew Research, 2026年2月）",
+  "value": "49",
+  "unit": "%",
+  "as_of": "2026-02",
+  "source": "https://www.pewresearch.org/internet/2026/06/17/americans-and-ai-2026-chatbots-smart-devices-and-views-on-impact/",
+  "confidence": "verified"
+ },
+ {
+  "claim": "ドイツの生成AI利用率（Eurostat, 2025年, 直近3か月）",
+  "value": "32.2",
+  "unit": "%",
+  "as_of": "2025-06",
+  "source": "https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20251216-3",
+  "confidence": "verified"
+ },
+ {
+  "claim": "中国の生成AIユーザー浸透率（CNNIC電話調査）",
+  "value": "36.5",
+  "unit": "%",
+  "as_of": "2025-06",
+  "source": "https://english.www.gov.cn/archive/statistics/202510/18/content_WS68f30556c6d00ca5f9a06e05.html",
+  "confidence": "verified"
+ },
+ {
+  "claim": "日本ウェブモニターの大卒比率（NIRA研究）",
+  "value": "45",
+  "unit": "%超",
+  "as_of": "2021",
+  "source": "https://www.nira.or.jp/paper/article/2021/wp01.html",
+  "confidence": "verified"
+ },
+ {
+  "claim": "国勢調査の大卒比率（NIRA研究との比較）",
+  "value": "22",
+  "unit": "%",
+  "as_of": "2021",
+  "source": "https://www.nira.or.jp/paper/article/2021/wp01.html",
+  "confidence": "verified"
+ },
+ {
+  "claim": "日本の月数回以上AI利用率（NRI 4か国調査）",
+  "value": "34.9",
+  "unit": "%",
+  "as_of": "2025-09",
+  "source": "https://www.nri.com/jp/media/column/extending_society_with_ai/20260410.html",
+  "confidence": "verified"
+ },
+ {
+  "claim": "日本の一般人口ベース生成AI利用経験率の推計レンジ（R7時点）",
+  "value": "13-17",
+  "unit": "%",
+  "as_of": "2025-01",
+  "source": "Pew比率を単純適用した粗推計",
+  "confidence": "estimate"
+ }
+]
+</script>
+</body>
+</html>

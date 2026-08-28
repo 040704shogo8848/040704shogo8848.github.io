@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>グローバルサウス補助金の構造｜採択65件の一次集計と審査の実際</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;background:var(--card)}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;line-height:1.6}
+  th{background:#F3F1EB;font-weight:700;white-space:nowrap}
+  td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  caption{caption-side:bottom;font-size:11.5px;color:var(--muted);text-align:left;padding-top:6px}
+
+  .bars{margin:18px 0}
+  .bar{display:grid;grid-template-columns:130px 1fr 52px;gap:10px;align-items:center;margin-bottom:5px;font-size:13px}
+  .bar .lbl{color:var(--sub);text-align:right}
+  .bar .track{background:var(--grid);border-radius:4px;height:16px;overflow:hidden}
+  .bar .fill{background:var(--s1);height:100%;border-radius:4px}
+  .bar .fill.lite{background:var(--s1-light)}
+  .bar .val{font-variant-numeric:tabular-nums;color:var(--sub);font-size:12px}
+
+  ol.src{font-size:12.5px;color:var(--sub);line-height:1.9;padding-left:22px}
+  ol.src li{margin-bottom:3px}
+  ol.src a{color:var(--sub);word-break:break-all}
+  sup{font-size:10px;color:var(--accent);font-weight:700}
+  .updated{font-size:12px;color:var(--muted);margin-top:40px;border-top:1px solid var(--line);padding-top:14px}
+  @media (max-width:720px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:96px 1fr 46px}
+    table{font-size:12.5px}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<div class="crumb"><a href="../index.html">014_industry</a> ／ 産業政策</div>
+
+<header class="top">
+<h1>グローバルサウス補助金の構造</h1>
+<div class="en">Japan's Global South Co-creation Subsidy — What 65 Awards Reveal About the Screening</div>
+<div class="tags">
+  <span class="tag">産業政策</span>
+  <span class="tag">補助金</span>
+  <span class="tag">グローバルサウス</span>
+  <span class="tag">経済産業省</span>
+  <span class="tag">海外展開</span>
+</div>
+<p class="lead">経済産業省が3年連続で1,400億円超を投じている「グローバルサウス未来志向型共創等事業費補助金」を、公募要領と採択結果の一次資料から読む。令和7年度補正の採択65件を分野と国で集計すると、概要にAI・データ系の語を含む案件が34件、対象国はインドが最多だった。ただし制度の建て付けよりも、審査項目のどれが必須でどれが加点かという区別と、精算払い・外注40%・5年フォローアップという実務上の制約のほうが、応募の成否を決めている。</p>
+<p class="srcnote">一次資料：令和7年度補正 募集要領（TOPPAN株式会社、令和8年4月17日）／同 採択結果（令和8年6月30日）／令和6年度補正 二次公募 採択結果（令和8年2月5日）／経済産業省 令和8年度概算要求。集計は筆者。最終更新 2026-08-28</p>
+</header>
+
+<div class="kpi">
+  <div class="card"><div class="k">令和7年度補正の予算規模</div><div class="v">約1,546<small>億円（関連事業総額）</small></div></div>
+  <div class="card"><div class="k">令和7年度補正 一次公募</div><div class="v">65 / 238<small>採択 / 応募（27.3%）</small></div></div>
+  <div class="card"><div class="k">概要にAI・DX語を含む案件</div><div class="v">34件<small>65件中（52%）</small></div></div>
+  <div class="card"><div class="k">対象国の首位</div><div class="v">インド<small>主対象9件／対象国として15件</small></div></div>
+</div>
+
+<h2><span class="num">01</span>3年で4,500億円を超えた制度<span class="en">Budget trajectory</span></h2>
+
+<p>この補助金は、日本企業がグローバルサウス諸国でインフラや社会サービスの海外展開を進めるとき、その事業化可能性調査（FS）と実証事業の費用を国が半分から3分の2まで負担する制度である。令和5年度補正予算で始まり、以後3年連続で補正予算に1,400億円超が計上されてきた<sup>1,2</sup>。</p>
+
+<div class="tbl-scroll"><table>
+<thead><tr><th>年度</th><th>区分</th><th class="n">規模</th><th>位置づけ</th></tr></thead>
+<tbody>
+<tr><td>令和5年度</td><td>補正</td><td class="n">1,400億円超</td><td>制度の初年度</td></tr>
+<tr><td>令和6年度</td><td>補正</td><td class="n">1,500億円</td><td>ウクライナ復興枠を新設</td></tr>
+<tr><td>令和7年度</td><td>補正</td><td class="n">約1,546億円</td><td>2025年12月16日成立</td></tr>
+<tr><td>令和8年度</td><td>当初概算要求</td><td class="n">32億円</td><td><strong class="hit">当初予算での常設化</strong></td></tr>
+</tbody>
+<caption>出典1, 2, 8。令和8年度は「グローバルサウス未来志向型共創等事業」として新規計上の要求。</caption>
+</table></div>
+
+<div class="callout">
+<p style="margin:0"><strong>読み方が変わるのは令和8年度である。</strong>これまで補正予算に単発で積まれてきた海外展開支援が、当初予算に枠を持つようになった。金額は32億円と補正の50分の1だが、当初に載るということは、補正が編成されない年でも制度が消えないという意味になる。補正で大型資金を積み、当初で制度を維持する二段構えに移行しつつある。</p>
+</div>
+
+<h2><span class="num">02</span>4つの事業に分かれている<span class="en">Four schemes</span></h2>
+
+<div class="tbl-scroll"><table>
+<thead><tr><th>事業</th><th>対象国</th><th class="n">補助額</th><th>事業期間</th><th>事務局</th></tr></thead>
+<tbody>
+<tr><td><strong>小規模実証・FS事業</strong></td><td>グローバルサウス全域</td><td class="n">FS 上限1億円<br>実証 上限5億円</td><td>FS 12か月<br>実証 18か月</td><td>TOPPAN<br>（再委託 三菱UFJリサーチ＆コンサルティング）</td></tr>
+<tr><td>大型実証（ASEAN）</td><td>ASEAN加盟国</td><td class="n">5億円超〜40億円</td><td>3年以内</td><td>デロイト トーマツ</td></tr>
+<tr><td>大型実証（非ASEAN）</td><td>南西アジア・中央アジア・中東・アフリカ・中南米・大洋州</td><td class="n">5億円超〜40億円</td><td>最長2030年2月末</td><td>TOPPAN</td></tr>
+<tr><td>ウクライナ復興・中東欧連携</td><td>ウクライナ、ポーランド、ルーマニア等</td><td class="n">上限40億円</td><td>最長2029年9月末</td><td>TOPPAN</td></tr>
+</tbody>
+<caption>出典3, 4, 5。補助率はいずれも1/2以内、中小企業は2/3以内。</caption>
+</table></div>
+
+<p>対象分野はGX、DX、経済安保の3つで、<strong class="hit">DXが名指しで対象に入っている</strong>。これが後述する採択実績の分野分布に直結している。</p>
+
+<p>事業類型は3つあり、いずれか1つに該当する必要がある<sup>3</sup>。</p>
+
+<div class="tbl-scroll"><table>
+<thead><tr><th>類型</th><th>満たすべき3条件</th></tr></thead>
+<tbody>
+<tr><td><strong>類型1</strong><br>共創型</td><td>日本で技術的に確立済み ／ 該当国で商業的に未適用 ／ 日本へのリバースイノベーションに資する</td></tr>
+<tr><td><strong>類型2</strong><br>高度技術海外展開型</td><td>日本で技術的に確立済み ／ 該当国で商業的に未適用 ／ 該当国でのデファクト獲得と日本の雇用増につながる</td></tr>
+<tr><td><strong>類型3</strong><br>サプライチェーン強靱化型</td><td>日本の産業構造上重要な物資 ／ 該当国で商業的に未適用 ／ 一国依存度が高くサプライチェーン強靱化に資する</td></tr>
+</tbody>
+</table></div>
+
+<h2><span class="num">03</span>採択65件を分野と国で数える<span class="en">What actually gets funded</span></h2>
+
+<p>令和7年度補正の小規模実証・FS事業は、2026年4月17日から5月11日までの公募に238件の応募があり、65件が採択された（採択率27.3%）<sup>6</sup>。前年度の二次公募は234件に対し75件（32.1%）だった<sup>7</sup>。3社に1社弱は通る計算で、他の大型補助金と比べて特別に狭い門ではない。</p>
+
+<h3>分野：半分がAI・データ・DX</h3>
+
+<p>採択結果PDFの65件を、事業名と概要に含まれる語（AI、DX、デジタル、データ、IoT、衛星、ドローン、遠隔、プラットフォーム、可視化、解析、予測、センシング）で機械的に分類したところ、<strong class="hit">34件（52%）</strong>が該当した。語の出現による分類なので、「データを収集する」程度の記述でも該当する。案件の主眼がAIかどうかを人手で判定した数字ではない点に注意がいる。</p>
+
+<div class="bars">
+  <div class="bar"><span class="lbl">AI・データ・DX系</span><span class="track"><span class="fill" style="width:52%"></span></span><span class="val">34件</span></div>
+  <div class="bar"><span class="lbl">その他</span><span class="track"><span class="fill lite" style="width:48%"></span></span><span class="val">31件</span></div>
+</div>
+
+<p>「その他」に分類した31件も、脱炭素技術や製造装置にセンサーとデータ収集が組み合わさるものが多い。純粋にハードウェアだけの案件は少数である。GX分野の案件であっても、実装の中身がデータ基盤という構造になっている。</p>
+
+<h3>国：インドが最多。ただし数え方で倍近く変わる</h3>
+
+<p>採択案件の事業名称は「国名／事業名」の形式で書かれている。1つの案件が複数国を対象にするもの（「インド他3カ国」「タイ・シンガポール」など）が65件中22件あるため、集計は2通りに分かれる。</p>
+
+<h4 style="font-size:14px;margin:20px 0 4px;color:var(--sub)">主対象国ベース（事業名称の先頭に立つ国。1案件1カ国）</h4>
+<div class="bars">
+  <div class="bar"><span class="lbl">インド</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">9件</span></div>
+  <div class="bar"><span class="lbl">インドネシア</span><span class="track"><span class="fill" style="width:78%"></span></span><span class="val">7件</span></div>
+  <div class="bar"><span class="lbl">マレーシア</span><span class="track"><span class="fill" style="width:67%"></span></span><span class="val">6件</span></div>
+  <div class="bar"><span class="lbl">ベトナム</span><span class="track"><span class="fill" style="width:56%"></span></span><span class="val">5件</span></div>
+  <div class="bar"><span class="lbl">フィリピン</span><span class="track"><span class="fill" style="width:44%"></span></span><span class="val">4件</span></div>
+  <div class="bar"><span class="lbl">メキシコ</span><span class="track"><span class="fill" style="width:33%"></span></span><span class="val">3件</span></div>
+  <div class="bar"><span class="lbl">タイ</span><span class="track"><span class="fill" style="width:33%"></span></span><span class="val">3件</span></div>
+</div>
+
+<h4 style="font-size:14px;margin:20px 0 4px;color:var(--sub)">対象国として登場（複数国案件は各国に計上。合計は65を超える）</h4>
+<div class="bars">
+  <div class="bar"><span class="lbl">インド</span><span class="track"><span class="fill lite" style="width:100%"></span></span><span class="val">15件</span></div>
+  <div class="bar"><span class="lbl">インドネシア</span><span class="track"><span class="fill lite" style="width:80%"></span></span><span class="val">12件</span></div>
+  <div class="bar"><span class="lbl">マレーシア</span><span class="track"><span class="fill lite" style="width:67%"></span></span><span class="val">10件</span></div>
+  <div class="bar"><span class="lbl">タイ</span><span class="track"><span class="fill lite" style="width:53%"></span></span><span class="val">8件</span></div>
+  <div class="bar"><span class="lbl">フィリピン</span><span class="track"><span class="fill lite" style="width:47%"></span></span><span class="val">7件</span></div>
+  <div class="bar"><span class="lbl">ベトナム</span><span class="track"><span class="fill lite" style="width:40%"></span></span><span class="val">6件</span></div>
+  <div class="bar"><span class="lbl">メキシコ</span><span class="track"><span class="fill lite" style="width:33%"></span></span><span class="val">5件</span></div>
+</div>
+
+<div class="note">
+主対象国を判定できたのは65件中56件。残る9件は採択結果PDFのテキスト抽出で列が崩れ、国名を機械的に取り出せなかった。ウズベキスタンとウガンダが各2件、ジョージア・カンボジア・エジプト・トルコ・サモア・ブラジル・ナイジェリア・アルゼンチン・トーゴ・シンガポール・カザフスタン・パラオ・バヌアツ・コンゴ民主共和国・タジキスタンが各1件。<strong>「インドネシア」を「インド」として拾わないよう、国名は長い順に照合している。</strong>この処理を入れないとインドが15件から17件以上に膨らむ。
+</div>
+
+<p>インドが両方の数え方で首位に立つ背景には、2025年8月の日印首脳会談で立ち上がった日印AI協力イニシアティブ、2026年7月に署名された日印AI協力覚書、対インド民間投資目標「今後10年で10兆円」がある<sup>9,10</sup>。審査の加点項目にも「日印共同ビジョン等に該当するか」が明記されている。ただしASEAN（インドネシア・マレーシア・ベトナム・タイ・フィリピン）を合算すると主対象国ベースで25件になり、地域としてはASEANのほうが厚い。</p>
+
+<h3>申請者の顔ぶれ</h3>
+
+<p>採択企業は3層に分かれる。</p>
+
+<div class="tbl-scroll"><table>
+<thead><tr><th>層</th><th>例</th><th>典型的なテーマ</th></tr></thead>
+<tbody>
+<tr><td>大企業の海外事業部隊</td><td>本田技研工業、富士通、旭化成、ダイキン工業、コニカミノルタ、テルモ、住友電気工業、関西電力、NTTデータ、KDDI、ディー・エヌ・エー</td><td>自社技術の現地適用。車両プローブデータ、AI健診、空調のAI制御、X線動態解析</td></tr>
+<tr><td>商社</td><td>双日（3件）、豊田通商（3件）</td><td>資源・エネルギー・農業に付随するDX。リチウム塩湖のドローン計測、水処理膜の最適運転</td></tr>
+<tr><td>スタートアップ・中小</td><td>Synspective、天地人、アークエッジ・スペース、SOIK、TOTALMASTERS、アガサ、アクトインディ、調和技研</td><td>単一技術の海外展開。衛星データ、治験DX、建設遠隔施工、AI教育</td></tr>
+</tbody>
+<caption>出典6, 7。企業名は経済産業省および事務局が公表した採択結果に基づく。</caption>
+</table></div>
+
+<div class="callout">
+<p style="margin:0 0 8px"><strong>参考になるのは3層目である。</strong>単一技術しか持たない小さな会社でも、テーマの立て方次第で通っている。</p>
+<p style="margin:0">アクトインディ（インド／インド学生へのAIコーチ事業展開可能性調査）は、AI専業でもインフラ企業でもない会社が、日本で作ったAIサービスを新興国に持ち込む一点でFSを取った。調和技研（バングラデシュにおけるAI拠点拡大調査、令和5年度補正）は、北大発スタートアップが現地の若手IT人材にAI教育を提供し、育成した人材が日本向けのAI開発に従事する体制を作る調査でFSを取っている。<strong>後者は、自社の開発体制の構築そのものを調査テーマにした例</strong>として珍しい。</p>
+</div>
+
+<h2><span class="num">04</span>審査は必須10項目と加点20項目強で構成される<span class="en">Screening structure</span></h2>
+
+<p>公募要領には評価項目の一覧が掲載されている<sup>3</sup>。必須項目で落ちる案件に加点は効かないので、構造を分けて読む必要がある。</p>
+
+<h3>必須項目（抜粋）</h3>
+
+<div class="tbl-scroll"><table>
+<thead><tr><th>項目</th><th>問われていること</th></tr></thead>
+<tbody>
+<tr><td>③ 国内産業活性化と経済連携</td><td>日本国内のイノベーション創出により国内産業の活性化を目指し、同時にグローバルサウス諸国との経済連携を強化する案件か</td></tr>
+<tr><td>④ 受注・事業化可能性</td><td><strong class="hit">本事業終了後5年以内の受注・事業化が見込めるか</strong></td></tr>
+<tr><td>⑥ 費用対効果</td><td>輸出額・投資額と支援費用を比較したときの費用対効果</td></tr>
+<tr><td>⑧ 事業類型の合致</td><td>類型1〜3のいずれかに該当し、定量的な成果が見込まれるか</td></tr>
+<tr><td>⑨ 事業化に向けた工夫</td><td>FS・実証の終了から事業化に至る道筋がビジネスプランとして描けているか</td></tr>
+<tr><td>⑮ 委託・外注</td><td><strong class="hit">事業の主たる課題の解決、事業全体の企画立案、根幹に関わる部分を委託・外注していないか</strong></td></tr>
+<tr><td>⑯ 委託・外注費率</td><td>委託・外注費の合計が補助金総額の40%を超えていないか。超える場合は理由書</td></tr>
+</tbody>
+</table></div>
+
+<h3>加点項目（抜粋）</h3>
+
+<p>加点は大きく3系統ある。企業属性、政策枠、経営姿勢である。</p>
+
+<div class="tbl-scroll"><table>
+<thead><tr><th>系統</th><th>項目</th></tr></thead>
+<tbody>
+<tr><td>企業属性</td><td>⑰ 中小企業による申請か（幹事法人・共同申請者の全てが中小企業か）／⑱ J-Startup企業か／⑲ J-StarXで採択され海外派遣の経験があるか</td></tr>
+<tr><td>政策枠</td><td>⑳ IPEFのサプライチェーン協定・クリーン経済協定に関連するか／㉑ AZECの実現に資するか／<strong class="hit">㉒ 日印共同ビジョン等に該当するか</strong>／㉓ 日本と中南米の産業統合案件か／㉔ PALM10・2050年戦略に資するか／㉕㉖ アフリカでの第三国連携・日本アフリカ産業共創イニシアティブ／㉗ 中央アジアとの重点協力3分野</td></tr>
+<tr><td>経営姿勢</td><td>㉙ 賃上げの表明／㉚ えるぼし・くるみん・ユースエール等の認定、または行動計画の策定と公表（常用雇用100人以下は計画策定のみで対象）／㉛ パートナーシップ構築宣言の公表</td></tr>
+</tbody>
+</table></div>
+
+<div class="note">
+経営姿勢の3項目は、事業内容と関係なく<strong>事務手続きだけで取れる加点</strong>である。従業員100人以下の企業なら、女性活躍推進法または次世代育成支援対策推進法に基づく行動計画を策定して専用サイトに公表するだけで対象になる。パートナーシップ構築宣言も同様に、ポータルサイトで宣言を公表すればよい。応募を検討する段階で先に処理しておく類のもの。
+</div>
+
+<div class="callout">
+<p style="margin:0 0 8px"><strong>実施体制の項目（⑪⑬）が、小さい会社にとっての実質的な関門になる。</strong></p>
+<p style="margin:0">⑪は「受注や事業化を担う日本企業が参画しているか」「相手国の現地企業と連携しているか」「専門性を有する企業等と体制が組めているか」を問う。⑬は「現地法人を有している、または現地事情に精通している人材を有しているなど、十分な情報収集を行う体制を備えているか」「過去に同様の調査事業を実施した実績を有しているか」を問う。<strong>過去実績を持たない事業者は、⑬の後半で構造的に不利になる。</strong>共同申請で実績のある法人と組むか、現地パートナーを先に確保するかで埋めるほかない。</p>
+</div>
+
+<h2><span class="num">05</span>制度より重いのは実務の制約<span class="en">Four practical constraints</span></h2>
+
+<h3>1. 精算払い。前払いがない</h3>
+
+<p>補助金の支払いは原則として事業終了後の精算払いで、概算払いは機械設備の設置と支払いを完了した場合などに限られる。前払いには対応していない<sup>3</sup>。FSの上限1億円を狙うと、中小企業の補助率2/3で総事業費は1.5億円になり、その全額を12か月にわたって立て替えることになる。</p>
+
+<div class="tbl-scroll"><table>
+<thead><tr><th>取りにいく規模</th><th class="n">総事業費</th><th class="n">補助額（2/3）</th><th class="n">立替の最大額</th></tr></thead>
+<tbody>
+<tr><td>FS上限いっぱい</td><td class="n">1.50億円</td><td class="n">1.00億円</td><td class="n">1.50億円</td></tr>
+<tr><td>中規模</td><td class="n">7,500万円</td><td class="n">5,000万円</td><td class="n">7,500万円</td></tr>
+<tr><td>小規模</td><td class="n">3,000万円</td><td class="n">2,000万円</td><td class="n">3,000万円</td></tr>
+</tbody>
+<caption>補助率2/3を前提とした試算。実際には交付決定額の範囲内で、支出が確認できた費用のみが対象になる。</caption>
+</table></div>
+
+<p class="note">年商が数億円規模の事業者にとって、この立替は補助額の上限より先に効いてくる制約になる。上限1億円という数字を見て応募規模を決めると、資金繰りで詰まる。</p>
+
+<h3>2. 委託・外注費40%と「根幹の外注禁止」の二重の網</h3>
+
+<p>審査項目⑯が委託・外注費の合計を補助金総額の40%以内に抑えることを求め、⑮が事業の根幹部分を外注していないことを求める。この2つは別の制約である。<strong class="hit">金額の枠内に収まっていても、外注した部分が事業の中核だと判断されれば⑮で減点される。</strong></p>
+
+<p>専門機能を外部に頼る前提の応募では、その機能を委託・外注ではなく共同申請者として体制に組み込むほうが整合する。共同申請なら40%の計算に含まれず、人件費を直接計上でき、⑪の「専門性を有する企業等と体制が組めているか」に対しては加点方向に働く。</p>
+
+<h3>3. 交付決定前の経費は対象外</h3>
+
+<p>交付決定日以前に発生した経費は補助対象にならない<sup>3</sup>。申請書の作成にかかる工数は完全に自己負担になる。採択率27.3%を前提にすると、応募1件あたりの期待値をどう見るかという話になる。ただし委託・外注先を決めるための事前見積を交付決定日前に行い、発注を交付決定日以後に行う場合は、その費用は対象になる。</p>
+
+<h3>4. 事業終了後5年間のフォローアップ</h3>
+
+<p>補助事業の実施後も、進捗状況の把握と効果の検証のため、事業終了後5年間はフォローアップ調査に協力する義務がある。結果は必要に応じて公表される<sup>3</sup>。FS事業12か月に応募した場合、交付決定から数えて6年間この制度と関係が続く。</p>
+
+<div class="risk">
+<strong>実施期間中に稼いではいけない。</strong>事業実施期間中に補助対象経費を用いた製品・サービスの有償販売や有償提供を行う場合、補助事業に要する経費の自己負担分を超える収益が出る事業は対象外になる。実証しながら売って回収するモデルは、この制度では組めない。
+</div>
+
+<h2><span class="num">06</span>他制度との比較<span class="en">Adjacent schemes</span></h2>
+
+<div class="tbl-scroll"><table>
+<thead><tr><th>制度</th><th>所管</th><th class="n">規模</th><th>特徴</th></tr></thead>
+<tbody>
+<tr><td>グローバルサウス未来志向型共創等事業</td><td>経済産業省</td><td class="n">FS 上限1億円<br>実証 上限5億円<br>大型 40億円</td><td>DXが正式な対象分野。補正予算ベースで規模が大きい</td></tr>
+<tr><td>中小企業・SDGsビジネス支援事業</td><td>JICA</td><td class="n">ニーズ確認調査 上限1,000万円<br>ビジネス化実証 上限2,000万円<br>普及・実証 上限2億円</td><td>開発課題の解決が主目的。ODAの文脈が強い</td></tr>
+<tr><td>アジアDX等新規事業創造推進支援事業</td><td>経済産業省／JETRO</td><td class="n">上限2,000万〜4,000万円</td><td>南西アジア・インドに特化。DX分野限定だが規模は小さい</td></tr>
+</tbody>
+<caption>出典11, 12。JICAは開発効果、経産省は日本の産業活性化という評価軸の違いがある。</caption>
+</table></div>
+
+<h2><span class="num">07</span>令和8年度以降をどう見るか<span class="en">Outlook</span></h2>
+
+<p>令和8年度概算要求では「グローバルサウス未来志向型共創等事業」に32億円が新規で要求されている。あわせて「新興国との共創・技術協力」に38億円、「国際ルール形成・市場創造型標準化推進」に24億円、JETRO運営費交付金302億円の内数<sup>8</sup>。</p>
+
+<p>公募の周期は、令和6年度補正が一次（2025年5月）と二次（2025年11月4日〜26日）の2回、令和7年度補正は一次が2026年4月17日〜5月11日だった。同じ周期なら二次公募は2026年11月頃になる。</p>
+
+<div class="callout">
+<p style="margin:0"><strong>制度としての継続性は高い。</strong>3年連続で補正に1,400億円超が積まれ、当初予算にも枠ができた。一方で、公募のタイミングは補正予算の成立時期に左右されるため、応募を検討する側は年度計画ではなく<strong>補正予算の編成カレンダーで動く必要がある</strong>。12月に補正が成立し、翌年3〜4月に執行団体が決まり、4〜5月に事業者公募、6月に採択、9〜10月に交付決定という流れが定着しつつある。</p>
+</div>
+
+<h2><span class="num">08</span>出典<span class="en">Sources</span></h2>
+
+<ol class="src">
+<li>イースクエア「グローバルサウス補助金のこれまでと今後の見通し」 — https://www.e-squareinc.com/library/global_south_update/</li>
+<li>経済産業省「令和7年度補正グローバルサウス未来志向型共創等事業費補助金（大型実証／小規模実証・FS事業）に係る補助事業者の公募について」 — https://www.meti.go.jp/policy/external_economy/cooperation/oda/r7hosei_gshojo_1.html</li>
+<li>令和7年度補正グローバルサウス未来志向型共創等事業費補助金（小規模実証・ＦＳ事業）に係る補助事業者募集要領（TOPPAN株式会社、令和8年4月17日） — https://r7h-gs-hojo-web-fspoc.jp/</li>
+<li>グローバルサウス未来志向型共創等事業費補助金ポータル — https://gs-hojo-web.jp/</li>
+<li>令和7年度補正 大型実証（非ASEAN） — https://r7h-gs-hojo-web-lsna.jp/</li>
+<li>令和7年度補正「グローバルサウス未来志向型共創等事業費補助金（小規模実証・FS事業）」に係る補助事業者の採択結果について（TOPPAN株式会社、令和8年6月30日）</li>
+<li>令和6年度補正「グローバルサウス未来志向型共創等事業費補助金（小規模実証・FS事業：二次公募）」に係る補助事業者の採択結果について（TOPPAN株式会社、令和8年2月5日）</li>
+<li>経済産業省 令和8年度概算要求・税制改正要望について — https://www.meti.go.jp/main/yosangaisan/fy2026/index.html</li>
+<li>経済産業省「日印政府間でAI協力に関する覚書(MoC)に署名しました」（2026年7月3日） — https://www.meti.go.jp/press/2026/07/20260703003/20260703003.html</li>
+<li>ジェトロ「日印首脳会談、対インド民間投資目標を今後10年で10兆円に」 — https://www.jetro.go.jp/biznews/2025/09/50a2a8cf1e689543.html</li>
+<li>JICA 中小企業・SDGsビジネス支援事業（2026年度公示） — https://www.jica.go.jp/about/announce/bvs/2026/index.html</li>
+<li>JETRO アジアDX等新規事業創造推進支援事業費補助金（ビジネス共創促進事業） — https://www.jetro.go.jp/services/dx_sw_asia.html</li>
+<li>ジェトロ「グローバルサウス未来志向型共創等事業（大型実証 ASEAN加盟国）採択事業者」 — https://www.jetro.go.jp/services/grobal_south/kekka-gs1.html</li>
+<li>調和技研「経済産業省のグローバルサウス未来志向型共創等事業費補助金に採択」 — https://www.chowagiken.co.jp/news/release_globalsouth</li>
+</ol>
+
+<p class="updated">分野分類と国別集計は、採択結果PDFの65件を筆者が事業名と概要のテキストから分類したもの。分類基準は本文に記載した語の出現による。制度の解釈は公募要領の記述に基づくが、応募にあたっては事務局の最新の要領を確認すること。</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>サラリーマンの節税 — 制度の一次情報で組み直す</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top img{width:64px;height:64px;object-fit:contain;border-radius:8px;background:#fff;padding:4px;border:1px solid var(--line)}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  h4{font-size:14px;margin:18px 0 6px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .note{border-left:4px solid var(--warn);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  .tl{list-style:none;padding:0;margin:14px 0}
+  .tl li{display:grid;grid-template-columns:82px 1fr;gap:14px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .tl li:last-child{border-bottom:none}
+  .tl .y{font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent);font-size:13.5px}
+  .bar{display:flex;align-items:center;gap:10px;margin:5px 0;font-size:13px}
+  .bar .lbl{min-width:132px;color:var(--sub)}
+  .bar .track{flex:1;background:#EAE7DF;border-radius:3px;height:14px;overflow:hidden}
+  .bar .fill{height:100%;background:var(--accent);border-radius:3px}
+  .bar .val{min-width:78px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk,.note{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+    .bar .lbl{min-width:92px;font-size:12px}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / <a href="../index.html">research / net</a> / サラリーマンの節税</div>
+
+  <header class="top">
+    <div>
+      <h1>サラリーマンの節税</h1>
+      <div class="meta">起点: note「知らないと一生損するサラリーマンが必ずすべき節税」（キティー Kitty、2026年3月16日） ／ 有料記事のため本文は未取得 ／ 論点を国税庁等の一次情報で組み直したもの</div>
+      <div style="margin-top:8px">
+        <span class="tag">所得税</span><span class="tag">年末調整の限界</span><span class="tag">令和7・8年度改正</span><span class="tag">損益通算</span><span class="tag">一次情報ベース</span>
+      </div>
+    </div>
+  </header>
+  <p class="lead">元記事: <a href="https://note.com/kitty_lifehack/n/n328dd525ffb6">https://note.com/kitty_lifehack/n/n328dd525ffb6</a><br>作成 2026年8月29日／出典16件。本ページは元記事の要約ではない。<strong>有料部分（19,001字・¥2,500）は購入していない。</strong>無料で読める約4,100字から「この記事が扱うと予告している論点」だけを取り出し、その論点に対する答えを国税庁・総務省・財務省系の一次情報から自分で組み直した。</p>
+
+  <div class="callout">
+    <strong>3行まとめ。</strong>
+    <br>1. 給与所得者の税は源泉徴収で概算徴収され年末調整で精算されるが、<strong class="hit">年末調整では処理できない控除が6種類ある</strong>。医療費控除、寄附金控除、雑損控除、住宅ローン控除の初年度、特定支出控除、セルフメディケーション税制。ここは自分で確定申告しない限り一円も戻らない<sup>7</sup><sup>8</sup>。
+    <br>2. 2025年から2026年にかけて制度が大きく動いた。基礎控除は48万円から最大95万円へ、給与所得控除の最低保障額は55万円から65万円へ<sup>2</sup>。<strong class="hit">2026年分はさらに基礎控除104万円・給与所得控除の最低保障額74万円で「年収178万円の壁」になる</strong><sup>14</sup>。扶養親族の所得要件も48万円から58万円（給与123万円）へ上がった<sup>2</sup>。
+    <br>3. <strong class="hit">還付は5年遡れる</strong><sup>9</sup>。漏れに気づいた時点で過去5年分をまとめて取り返せるので、今年の分だけ考えるのは損。
+  </div>
+
+  <div class="kpi">
+    <div class="card"><div class="k">年末調整で取れない控除</div><div class="v">6種類 <small>要・確定申告</small></div></div>
+    <div class="card"><div class="k">最高限界税率</div><div class="v">55.9% <small>所得税45+復興+住民10</small></div></div>
+    <div class="card"><div class="k">iDeCo上限（2026年12月〜）</div><div class="v">月6.2万円 <small>会社員。現行2.3万円</small></div></div>
+    <div class="card"><div class="k">遡れる年数</div><div class="v">5年 <small>還付申告・更正の請求</small></div></div>
+  </div>
+
+  <h2><span class="num">①</span>起点にした記事と、取得できた範囲<span class="en">The Source and Its Paywall</span></h2>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>項目</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>タイトル</td><td>知らないと一生損するサラリーマンが必ずすべき節税<sup>1</sup></td></tr>
+      <tr><td>著者</td><td>キティー Kitty。公認会計士として租税法で所得税法を体系的に学んだと自称。所得の大部分が給与所得で、毎年の確定申告で50万円から100万円程度の還付を受けていると書いている<sup>1</sup></td></tr>
+      <tr><td>公開</td><td>2026年3月16日<sup>1</sup></td></tr>
+      <tr><td>価格</td><td>¥2,500。無料部分は約4,100字、有料部分は19,001字<sup>1</sup></td></tr>
+      <tr><td>取得範囲</td><td>「はじめに」全文と「第1部 日本の所得税体系の構造」の冒頭まで。<strong>第1部の途中で切れている</strong>。第2部（節税の一覧）と第3部（損益通算）、および優先順位チェックリストは未取得</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>無料部分から分かること</h3>
+
+  <ul>
+    <li>構成は3部。①日本の所得税の体系的な説明 ②サラリーマンができる節税の一覧と実践上のコツや注意点 ③ややハードルの高い節税の損益通算。最後に優先順位のチェックリスト<sup>1</sup></li>
+    <li>出発点は「税金は無知に対する罰金である」というXの投稿。制度は弱者の味方ではなく知っている者の味方だ、という立て方<sup>1</sup></li>
+    <li>所得税の納税者の9割は給与所得者で、税は源泉徴収で100%捕捉される一方、還付は自分から手続きしないと一円も戻らない<sup>1</sup></li>
+    <li><strong>クロヨン（9:6:4）とトーゴーサンピン（10:5:3:1）</strong>への言及。課税庁による所得捕捉率の比喩で、給与所得10割に対し自営業5割、農林水産業3割、政治家1割という不公平感を表す。記事自身も「実態を完全に示しているとは言い難い」と留保している<sup>1</sup></li>
+    <li>既存の節税本への批判。事業所得や不動産所得の赤字を給与所得と損益通算する手法は一般のサラリーマンにはハードルが高く、<strong>節税するために損をするのは本末転倒</strong>だと指摘<sup>1</sup></li>
+    <li>節税は5年遡って行える、と書いている<sup>1</sup></li>
+  </ul>
+
+  <div class="note">
+    <strong>本ページの立場。</strong>有料部分にどんな節税項目が並んでいるかは分からない。したがって<strong>記事の中身を推測して埋めることはしない</strong>。代わりに、無料部分が予告した3部構成と同じ問いを立て、それぞれを国税庁のタックスアンサーと総務省の制度説明から自分で組み直した。以下はすべて当方が一次情報から作った独立の整理である。
+  </div>
+
+  <h2><span class="num">②</span>なぜ給与所得者だけ取りっぱぐれがないのか<span class="en">Structure of Japanese Income Tax</span></h2>
+
+  <h3>前提となる4つの設計</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>設計</th><th>内容</th><th>給与所得者への効き方</th></tr></thead>
+    <tbody>
+      <tr><td>個人単位課税</td><td>所得を稼得する個人ごとに課税する</td><td>世帯で分散させる余地がない</td></tr>
+      <tr><td>暦年課税</td><td>1月1日から12月31日を1課税期間とする。法人のように事業年度を選べない</td><td>期ズラしができない。12月31日で締まる</td></tr>
+      <tr><td>応能負担</td><td>受益ではなく担税力に応じて負担する</td><td>稼ぐほど率が上がる</td></tr>
+      <tr><td>超過累進</td><td>所得を合算し、超過累進税率を適用する</td><td>所得控除1円の価値が限界税率で決まる</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>税率と、実際に効く限界税率</h3>
+
+  <p>所得税の速算表は次のとおり<sup>3</sup>。ただし節税を考えるときに見るべきは、<strong class="hit">この表に復興特別所得税（所得税額の2.1%、令和19年分まで）と住民税10%を足した合計</strong>である<sup>3</sup>。所得控除を1万円積んだときに実際に減る税額は、この合計率で決まる。</p>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>課税される所得金額</th><th class="num">所得税率</th><th class="num">控除額</th><th class="num">住民税込みの実質率</th></tr></thead>
+    <tbody>
+      <tr><td>1,000円 〜 1,949,000円</td><td class="num">5%</td><td class="num">0円</td><td class="num">15.1%</td></tr>
+      <tr><td>1,950,000円 〜 3,299,000円</td><td class="num">10%</td><td class="num">97,500円</td><td class="num">20.2%</td></tr>
+      <tr><td>3,300,000円 〜 6,949,000円</td><td class="num">20%</td><td class="num">427,500円</td><td class="num">30.4%</td></tr>
+      <tr><td>6,950,000円 〜 8,999,000円</td><td class="num">23%</td><td class="num">636,000円</td><td class="num">33.5%</td></tr>
+      <tr><td>9,000,000円 〜 17,999,000円</td><td class="num">33%</td><td class="num">1,536,000円</td><td class="num">43.7%</td></tr>
+      <tr><td>18,000,000円 〜 39,999,000円</td><td class="num">40%</td><td class="num">2,796,000円</td><td class="num">50.8%</td></tr>
+      <tr><td>40,000,000円以上</td><td class="num">45%</td><td class="num">4,796,000円</td><td class="num">55.9%</td></tr>
+    </tbody>
+  </table></div>
+  <p class="fn">実質率は「所得税率×1.021＋住民税10%」で当方が算出した概算。住民税は所得割の標準税率10%を前提とし、均等割・調整控除・自治体差を含めていない。速算表と復興特別所得税は国税庁<sup>3</sup>。元記事が「1,800万円を超える部分は住民税を含めると五公五民」と書いているのはこの50.8%を指す<sup>1</sup>。</p>
+
+  <div class="callout">
+    <strong>ここが効く。</strong>所得控除は「税金がその額だけ減る」制度ではない。<strong class="hit">減る税額は控除額×限界税率</strong>である。課税所得400万円の人がiDeCoに年24万円拠出しても減税は約7.3万円（24万×30.4%）で、24万円が戻るわけではない。逆に課税所得1,000万円の人なら同じ24万円で約10.5万円減る。<strong>同じ制度でも高所得者ほど効く</strong>のが所得控除の性質で、これが「節税は知っている者の味方」の正体でもある。
+  </div>
+
+  <h3>源泉徴収は仮払いで、年末調整は精算</h3>
+
+  <p>毎月の源泉徴収額は概算である。一年間ずっと同じ給与が続き、扶養家族にも変動がないという前提で組まれた仮の計算に過ぎない<sup>1</sup>。年末調整は、その年最後の給与支払い時に、一年分の給与総額に対する正確な所得税額とそれまでの源泉徴収合計額を突き合わせて過不足を清算する作業である<sup>1</sup>。</p>
+
+  <p>問題は<strong>年末調整でカバーされる範囲に明確な限界がある</strong>ことで、ここが本ページの本体になる（④）。</p>
+
+  <h2><span class="num">③</span>2025年から2026年で何が変わったか<span class="en">The 2025-2026 Reforms</span></h2>
+
+  <p>令和7年度税制改正が令和7年12月1日に施行され、令和7年分以後の所得税に適用された<sup>2</sup>。過去数年の節税記事はこの改正前の数字で書かれているので、そのまま使うと間違える。</p>
+
+  <h3>基礎控除</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>合計所得金額</th><th class="num">改正前</th><th class="num">令和7・8年分</th><th class="num">令和9年分以後</th></tr></thead>
+    <tbody>
+      <tr><td>132万円以下</td><td class="num">48万円</td><td class="num">95万円</td><td class="num">95万円</td></tr>
+      <tr><td>132万円超 336万円以下</td><td class="num">48万円</td><td class="num">88万円</td><td class="num">58万円</td></tr>
+      <tr><td>336万円超 489万円以下</td><td class="num">48万円</td><td class="num">68万円</td><td class="num">58万円</td></tr>
+      <tr><td>489万円超 655万円以下</td><td class="num">48万円</td><td class="num">63万円</td><td class="num">58万円</td></tr>
+      <tr><td>655万円超 2,350万円以下</td><td class="num">48万円</td><td class="num">58万円</td><td class="num">58万円</td></tr>
+    </tbody>
+  </table></div>
+  <p class="fn">出典<sup>2</sup>。令和7・8年分の88万円・68万円・63万円は2年限りの特例で、令和9年分から58万円に戻る。<strong>2年後に自動的に増税になる設計</strong>である点は押さえておく。</p>
+
+  <div class="callout">
+    <strong>実務上いちばん効く指摘。</strong>令和8年分以後の「源泉徴収税額表」の税額は<strong class="hit">基礎控除58万円への引上げだけを織り込んでおり、37万円・30万円・10万円・5万円を加算する特例は反映されていない</strong><sup>2</sup>。つまり毎月の給与から引かれる額は特例を無視した多めの金額で、<strong>特例分は年末調整または確定申告で取り返す構造</strong>になっている。年末調整の申告書を出し損ねると、この分がそのまま取り残される。
+  </div>
+
+  <h3>給与所得控除</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>給与等の収入金額</th><th class="num">給与所得控除額（令和7年分以後）</th></tr></thead>
+    <tbody>
+      <tr><td>1,900,000円まで</td><td class="num">650,000円</td></tr>
+      <tr><td>1,900,001円 〜 3,600,000円</td><td class="num">収入金額×30% ＋ 80,000円</td></tr>
+      <tr><td>3,600,001円 〜 6,600,000円</td><td class="num">収入金額×20% ＋ 440,000円</td></tr>
+      <tr><td>6,600,001円 〜 8,500,000円</td><td class="num">収入金額×10% ＋ 1,100,000円</td></tr>
+      <tr><td>8,500,001円以上</td><td class="num">1,950,000円（上限）</td></tr>
+    </tbody>
+  </table></div>
+  <p class="fn">出典<sup>4</sup>。最低保障額が55万円から65万円になり、令和6年分まであった162.5万円・180万円の区分が190万円に統合された。</p>
+
+  <h3>扶養まわりの所得要件</h3>
+
+  <ul>
+    <li>扶養親族および同一生計配偶者の合計所得金額の要件: 48万円以下 → <strong>58万円以下</strong>（給与収入なら103万円以下 → 123万円以下）<sup>2</sup></li>
+    <li><strong>特定親族特別控除の創設</strong>: 年齢19歳以上23歳未満で合計所得金額58万円超123万円以下（給与収入なら123万円超188万円以下）の親族について、1人あたり最高63万円を控除<sup>2</sup>。合計所得58万円以下なら従来どおり扶養控除（特定扶養親族63万円）の対象で、58万円を超えたところから特定親族特別控除に切り替わり、所得が増えるにつれ63→61→51→41→31→21→11→6→3万円と段階的に減る<sup>2</sup>。<strong class="hit">いわゆる学生の扶養の壁が、崖ではなく坂になった</strong></li>
+    <li>ひとり親の生計を一にする子の総所得金額等の要件: 48万円以下 → 58万円以下<sup>2</sup></li>
+    <li>勤労学生の合計所得金額の要件: 75万円以下 → 85万円以下<sup>2</sup></li>
+  </ul>
+
+  <h3>いわゆる年収の壁の推移</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>年分</th><th class="num">基礎控除</th><th class="num">給与所得控除（最低保障）</th><th class="num">所得税が発生し始める給与年収</th></tr></thead>
+    <tbody>
+      <tr><td>令和6年分まで</td><td class="num">48万円</td><td class="num">55万円</td><td class="num">103万円</td></tr>
+      <tr><td>令和7年分</td><td class="num">95万円</td><td class="num">65万円</td><td class="num">160万円</td></tr>
+      <tr><td>令和8年分</td><td class="num">104万円</td><td class="num">74万円</td><td class="num">178万円</td></tr>
+    </tbody>
+  </table></div>
+  <p class="fn">令和6年分・令和7年分の数値は国税庁<sup>2</sup><sup>4</sup>。<strong>令和8年分の104万円・74万円・178万円は令和8年度税制改正によるもので、国税庁のタックスアンサーはまだ令和7年分ベースの表示のまま</strong>のため、税理士・実務系の解説を出典としている<sup>14</sup><sup>15</sup>。内訳は基礎控除104万円（本則62万円＋特例42万円）、給与所得控除の最低保障額74万円（本則69万円＋特例5万円）とされる<sup>14</sup>。特例部分は令和8・9年分の時限措置。<strong>源泉徴収への反映は令和9年1月1日以後に支払う給与からで、令和8年中の過不足は年末調整で精算される</strong><sup>14</sup>。住民税の壁は100万円から110万円になったとされる<sup>14</sup>。</p>
+
+  <h2><span class="num">④</span>年末調整で終わるもの／確定申告しないと取れないもの<span class="en">What Year-End Adjustment Cannot Do</span></h2>
+
+  <p>ここが給与所得者にとって唯一かつ最大の分岐点である。会社が代わりにやってくれる控除と、自分で申告しない限り一円も戻らない控除がはっきり分かれている。</p>
+
+  <h3>A. 年末調整で完結するもの（会社に書類を出せば終わり）</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>控除</th><th>内容と金額</th></tr></thead>
+    <tbody>
+      <tr><td>基礎控除</td><td>合計所得金額に応じ58万〜95万円（令和7・8年分）<sup>2</sup></td></tr>
+      <tr><td>配偶者控除・配偶者特別控除</td><td>同一生計配偶者の合計所得金額58万円以下が配偶者控除の目安<sup>2</sup></td></tr>
+      <tr><td>扶養控除</td><td>一般38万円／特定扶養親族63万円／老人扶養親族48万円／同居老親等58万円<sup>5</sup></td></tr>
+      <tr><td>特定親族特別控除</td><td>19歳以上23歳未満・合計所得58万円超123万円以下で最高63万円<sup>2</sup></td></tr>
+      <tr><td>社会保険料控除</td><td>支払額の全額</td></tr>
+      <tr><td>小規模企業共済等掛金控除（iDeCo等）</td><td><strong class="hit">その年に支払った掛金の全額。上限額はない</strong><sup>6</sup></td></tr>
+      <tr><td>生命保険料控除</td><td>一般・介護医療・個人年金の3区分、新契約は各4万円・旧契約は各5万円、<strong>合計12万円が上限</strong><sup>10</sup></td></tr>
+      <tr><td>地震保険料控除</td><td>最高5万円</td></tr>
+      <tr><td>障害者控除／寡婦・ひとり親控除／勤労学生控除</td><td>該当者のみ<sup>2</sup></td></tr>
+      <tr><td>住宅ローン控除（2年目以降）</td><td>初年度に確定申告していれば2年目以降は年末調整で処理できる</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>B. 確定申告しないと取れないもの</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>控除</th><th>要点</th><th>なぜ年末調整で無理か</th></tr></thead>
+    <tbody>
+      <tr><td><strong>医療費控除</strong></td><td>（支払医療費－保険金等）－10万円。総所得金額等が200万円未満なら10万円ではなく総所得金額等の5%。<strong>控除の最高額は200万円</strong><sup>7</sup></td><td>生計を一にする家族分を本人が集計する必要があり、会社は給与データだけでは判断できない</td></tr>
+      <tr><td><strong>セルフメディケーション税制</strong></td><td>特定一般用医薬品等購入費が12,000円超の部分、88,000円が限度。<strong>通常の医療費控除との選択制で併用不可</strong><sup>7</sup></td><td>同上</td></tr>
+      <tr><td><strong>寄附金控除（ふるさと納税を含む）</strong></td><td>ワンストップ特例を使わない場合は確定申告が必要<sup>11</sup></td><td>寄附先と金額を会社が把握できない</td></tr>
+      <tr><td><strong>雑損控除</strong></td><td>災害・盗難・横領による損失</td><td>同上</td></tr>
+      <tr><td><strong>住宅ローン控除の初年度</strong></td><td>1年目だけ確定申告。2年目以降は年末調整に移行できる</td><td>登記・契約・残高証明の確認が必要</td></tr>
+      <tr><td><strong>特定支出控除</strong></td><td>後述。実務上ほぼ使えない<sup>8</sup></td><td>本人の支出であり、給与の支払者の証明を添えて申告する制度設計</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2><span class="num">⑤</span>効きの大きい順に4つ<span class="en">The Four That Matter</span></h2>
+
+  <h3>1. iDeCo — 上限が2026年12月に約2.7倍になる</h3>
+
+  <p>小規模企業共済等掛金控除は<strong class="hit">その年に支払った掛金の全額が所得控除で、上限額がない</strong><sup>6</sup>。上限がないのは控除の側で、拠出そのものには制度上の限度額がかかる。その限度額が2026年12月1日施行の改正で大きく動く<sup>12</sup>。</p>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>加入者区分</th><th class="num">現行</th><th class="num">改正後</th></tr></thead>
+    <tbody>
+      <tr><td>第1号被保険者（自営業者など）</td><td class="num">月6.8万円</td><td class="num">月7.5万円</td></tr>
+      <tr><td><strong>第2号被保険者（会社員・公務員）</strong></td><td class="num">月2.3万円</td><td class="num"><strong>月6.2万円</strong></td></tr>
+      <tr><td>第3号被保険者（専業主婦・主夫など）</td><td class="num">月2.3万円</td><td class="num">変更なし</td></tr>
+      <tr><td>60〜70歳の国民年金被保険者以外</td><td class="num">対象外</td><td class="num">月6.2万円</td></tr>
+    </tbody>
+  </table></div>
+  <p class="fn">出典<sup>12</sup>。加入可能年齢は65歳未満から70歳未満へ。施行は2026年12月1日、掛金への反映は2027年1月の掛金からとされる。企業年金がある会社員はiDeCo単独の上限が撤廃され、企業年金等との合算で月6.2万円になる。</p>
+
+  <div class="callout">
+    <strong>金額感。</strong>会社員が月6.2万円＝年74.4万円を拠出した場合、減税額は限界税率次第で次のとおり。課税所得400万円（実質30.4%）なら<strong>年約22.6万円</strong>、課税所得1,000万円（実質43.7%）なら<strong>年約32.5万円</strong>。当方の概算だが、投資リターンと違って<strong class="hit">拠出した年に減税額が確定する</strong>。ここが決定的に違う。ただし60歳まで引き出せず、受給時には退職所得控除・公的年金等控除の枠を使うので、課税の繰延べであって免除ではない。
+  </div>
+
+  <h3>2. ふるさと納税 — 2025年10月と令和9年に2回ルールが変わった</h3>
+
+  <p>控除は3階建てで、合計すると自己負担2,000円を除いた全額が戻る設計になっている<sup>11</sup>。</p>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>階層</th><th>計算式</th></tr></thead>
+    <tbody>
+      <tr><td>所得税分</td><td>（寄附金額 － 2,000円）× 所得税の限界税率</td></tr>
+      <tr><td>住民税 基本分</td><td>（寄附金額 － 2,000円）× 10%</td></tr>
+      <tr><td>住民税 特例分</td><td>残額。ただし<strong>住民税所得割額の20%が上限</strong></td></tr>
+    </tbody>
+  </table></div>
+  <p class="fn">出典<sup>11</sup>。上限を超えた分は自己負担になる。「限度額シミュレーション」が見ているのは実質この特例分の20%枠。</p>
+
+  <ul>
+    <li><strong>2025年10月1日から、仲介サイトによる寄附者へのポイント付与が全面禁止</strong>。総務省の指定基準見直しによるもので、クレジットカード決済で通常付与されるポイントは対象外<sup>13</sup></li>
+    <li>令和8年度税制改正で、住民税の特例控除額に上限が設定される。年収1億円以上の層を念頭に置いたもので、適用は令和9年から。自治体の募集費用も寄附額の5割から4割へ段階的に縮減される<sup>15</sup></li>
+    <li>ワンストップ特例は、確定申告をしないことと寄附先が5自治体以内であることが条件。<strong>医療費控除などで確定申告をする年はワンストップが無効になる</strong>ので、寄附分も確定申告に含める<sup>11</sup></li>
+  </ul>
+
+  <h3>3. 医療費控除 — 家族分を合算し、所得の高い人に寄せる</h3>
+
+  <p>計算は「（実際に支払った医療費の合計 － 保険金などで補填される金額）－ 10万円」で、その年の総所得金額等が200万円未満の人は10万円ではなく総所得金額等の5%を引く<sup>7</sup>。控除の最高額は200万円<sup>7</sup>。</p>
+
+  <p>実務上の要点は2つ。<strong>生計を一にする配偶者や親族のために支払った医療費を合算できる</strong>こと<sup>7</sup>、そして所得控除である以上<strong class="hit">限界税率の高い人が申告したほうが戻りが大きい</strong>ことである。共働き世帯で医療費を妻名義で払っていても、生計が一なら夫の申告に含められる。ただし総所得金額等が200万円未満の人が申告すると足切りが5%に下がるので、必ずしも高所得者側が有利とは限らない。両方で試算する価値がある。</p>
+
+  <p>セルフメディケーション税制は通常の医療費控除との<strong>選択制で併用できない</strong><sup>7</sup>。年間の医療費が10万円に届かない年は、こちらの1万2,000円超という低い足切りが効く。</p>
+
+  <h3>4. 特定支出控除 — 制度はあるが、ほぼ使えない</h3>
+
+  <p>給与所得者の必要経費に相当する唯一の制度。対象は7種類ある<sup>8</sup>。</p>
+
+  <ul>
+    <li>通勤費／職務上の旅費／転居費／研修費／資格取得費／帰宅旅費／勤務必要経費（図書費・衣服費・交際費等、<strong>合計65万円が上限</strong>）</li>
+  </ul>
+
+  <p>控除できるのは<strong class="hit">特定支出の合計額が給与所得控除額の2分の1を超える部分</strong>だけ<sup>8</sup>。年収600万円なら給与所得控除は600万×20%＋44万＝164万円なので、その半分の<strong>82万円を超える自腹の職務関連支出</strong>が必要になる。しかも7種類すべて、その支出が職務の遂行に直接必要であることについて<strong>給与の支払者またはキャリアコンサルタントの証明</strong>が要る<sup>8</sup>。</p>
+
+  <div class="risk">
+    <strong>この制度が使えない理由を書いておく。</strong>82万円を自腹で払っている給与所得者はまず居ないし、居たとしても勤務先に「これは職務に直接必要だった」と証明させる交渉が必要になる。<strong>節税手段として当てにするべきではない</strong>。存在だけ知っておき、転勤・単身赴任・高額な資格取得が重なった年にだけ計算してみる、という位置づけが妥当である。
+  </div>
+
+  <h2><span class="num">⑥</span>損益通算 — ハードルの高い方<span class="en">Loss Offsetting</span></h2>
+
+  <p>元記事が第3部に置いている論点。給与所得と他の所得の赤字を相殺して、源泉徴収済みの税を取り戻す手法である。</p>
+
+  <h3>通算できる所得は4つだけ</h3>
+
+  <p>損益通算の対象は<strong>不動産所得・事業所得・譲渡所得・山林所得</strong>の4つ<sup>16</sup>。この4つで生じた損失は他の所得と相殺できる。逆に言えば、<strong class="hit">雑所得の赤字は損益通算できない</strong>。副業の所得区分が事業所得か雑所得かでこの一点が決まるため、区分の判定が実務上いちばん大きな論点になる。</p>
+
+  <h3>通算できない損失</h3>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>類型</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>不動産所得のうち</td><td>別荘等の生活に通常必要でない資産の貸付けに係るもの<sup>16</sup></td></tr>
+      <tr><td>同上</td><td><strong>土地取得のための借入金利子に相当する部分</strong><sup>16</sup></td></tr>
+      <tr><td>同上</td><td>国外中古建物から生じた減価償却費相当部分<sup>16</sup></td></tr>
+      <tr><td>生活に通常必要でない資産</td><td>競走馬、別荘、ゴルフ会員権などの譲渡損失は原則対象外<sup>16</sup></td></tr>
+      <tr><td>株式等</td><td>申告分離課税の譲渡損失は株式以外の所得と相殺できない。ただし申告分離課税を選択した配当所得からは控除できる<sup>16</sup></td></tr>
+      <tr><td>配当所得・給与所得・一時所得</td><td>これらの損失は対象外<sup>16</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout">
+    <strong>ここで判断が要る。</strong>元記事の無料部分は既存の節税本を「そもそも節税するために損をしなければいけない本末転倒な手法が紹介されていた」と批判している<sup>1</sup>。この批判は正しい。<strong class="hit">現金が出ていく実損で赤字を作るなら、戻ってくるのは限界税率分だけなので必ず負ける</strong>。実質50.8%の層でも、100万円の実損で戻るのは約50万円である。
+    <br><br>この手法に意味があるのは<strong>減価償却のように現金が出ていかない費用で会計上の赤字を作る場合</strong>だけで、しかもその場合も売却時に簿価が下がっている分だけ譲渡益が増えるので、繰延べに近い。加えて土地取得の借入金利子と国外中古建物の減価償却費は通算の対象から外されている<sup>16</sup>。<strong>制度側はこの手法の実効性を段階的に潰してきている。</strong>
+  </div>
+
+  <h2><span class="num">⑦</span>優先順位チェックリスト<span class="en">Checklist</span></h2>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th class="num">順</th><th>やること</th><th>効き</th><th>手間</th><th>期限・注意</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td><strong>過去5年分の漏れを洗う</strong>。医療費控除・ふるさと納税・住宅ローン控除初年度を出していない年がないか</td><td>大。複数年まとめて戻る</td><td>中</td><td>還付申告・更正の請求は原則5年<sup>9</sup></td></tr>
+      <tr><td class="num">2</td><td><strong>iDeCoの拠出額を上限まで上げる</strong></td><td>大。年22万〜32万円の減税（会社員・上限拠出時、当方概算）</td><td>小。一度設定すれば毎年効く</td><td>2026年12月1日施行、掛金反映は2027年1月から<sup>12</sup>。60歳まで引き出せない</td></tr>
+      <tr><td class="num">3</td><td><strong>ふるさと納税を上限まで使う</strong></td><td>中。実質負担2,000円</td><td>小</td><td>12月31日締め。確定申告する年はワンストップが無効<sup>11</sup></td></tr>
+      <tr><td class="num">4</td><td><strong>医療費を家族分合算して10万円を超えるか確認</strong>。超えなければセルフメディケーションを検討</td><td>中</td><td>中。領収書の集計が要る</td><td>両制度は選択制で併用不可<sup>7</sup></td></tr>
+      <tr><td class="num">5</td><td><strong>年末調整の申告書を埋め切る</strong>。生命保険料・地震保険料・扶養・特定親族特別控除</td><td>中</td><td>小</td><td>生命保険料控除は合計12万円が上限<sup>10</sup>。2025年から扶養の所得要件が58万円に上がっている<sup>2</sup></td></tr>
+      <tr><td class="num">6</td><td><strong>2026年分の改正を前提に扶養と配偶者の働き方を見直す</strong></td><td>中</td><td>小</td><td>壁は160万円から178万円へ<sup>14</sup>。源泉への反映は2027年1月から<sup>14</sup></td></tr>
+      <tr><td class="num">7</td><td>特定支出控除が使える年か試算</td><td>小。ほぼ使えない</td><td>大。勤務先の証明が必要</td><td>給与所得控除の1/2超が条件<sup>8</sup></td></tr>
+      <tr><td class="num">8</td><td>損益通算は、実損を出さずに済む場合にのみ検討</td><td>条件次第</td><td>大</td><td>雑所得は通算不可。土地取得の借入金利子等は対象外<sup>16</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <strong>順位のつけ方について。</strong>1を先頭に置いたのは、過去5年分は<strong>すでに確定した事実に対する回収であって、行動を変える必要がないから</strong>である。2以降は今後の行動を変える話なので、実行のコストがかかる。効きの大きさだけで並べると2が先頭になるが、着手の軽さを加味すると1が先。
+  </div>
+
+  <h2><span class="num">⑧</span>周辺知識 Q&amp;A<span class="en">Glossary</span></h2>
+
+  <h4>Q. 所得控除と税額控除はどう違うか</h4>
+  <p>所得控除は課税所得を減らすので、減る税額は<strong>控除額×限界税率</strong>。税額控除は計算後の税額から直接引くので、<strong>控除額がそのまま減税額</strong>になる。住宅ローン控除は税額控除なので、同じ金額なら所得控除よりはるかに効く。</p>
+
+  <h4>Q. 合計所得金額と総所得金額等はどう違うか</h4>
+  <p>基礎控除や扶養の判定に使うのが合計所得金額、医療費控除の足切り（5%判定）に使うのが総所得金額等。総所得金額等は繰越控除を適用した後の金額を指すため一致しないことがある。どちらの基準かは条文で確認する。</p>
+
+  <h4>Q. 限界税率とは</h4>
+  <p>次の1円の所得に適用される税率。超過累進なので、課税所得700万円の人の税率は全体に23%がかかるのではなく、695万円までの部分には5〜20%が、超えた部分にだけ23%がかかる。<strong>節税の効きを測るときに見るのは平均税率ではなく限界税率</strong>。</p>
+
+  <h4>Q. クロヨン・トーゴーサンピンとは</h4>
+  <p>課税庁による所得捕捉率の格差を表す比喩。クロヨン（9:6:4）は給与所得9割・事業所得6割・農林水産業4割、トーゴーサンピン（10:5:3:1）は給与10割・自営業5割・農林水産業3割・政治家1割<sup>1</sup>。<strong>実証された数値ではなく通称</strong>で、元記事も「実態を完全に示しているとは言い難い」と留保している<sup>1</sup>。給与所得が源泉徴収と支払調書で完全に捕捉される一方、他の所得は自己申告に依存するという構造の非対称を指した言葉と理解するのが妥当。</p>
+
+  <h4>Q. 還付申告と更正の請求はどう違うか</h4>
+  <p>還付申告は、確定申告の義務がない人が還付を受けるために出すもの。更正の請求は、すでに提出した申告の内容を訂正して税額を減らすよう求める手続き。<strong>更正の請求は原則として法定申告期限から5年以内</strong>（平成23年12月2日以後に法定申告期限が到来する国税について、従来の1年から5年に延長された）<sup>9</sup>。申告義務がない還付申告の場合、5年の起算点は申告書を提出した日になる<sup>9</sup>。</p>
+
+  <h4>Q. ワンストップ特例が使えなくなるのはどんなときか</h4>
+  <p>その年に確定申告をする場合と、寄附先が6自治体以上になる場合。<strong>医療費控除や住宅ローン控除の初年度で確定申告をすると、提出済みのワンストップ申請は無効になる</strong>ので、ふるさと納税分も確定申告書に書き直すことになる<sup>11</sup>。ここが最も多い取りこぼしのパターン。</p>
+
+  <h4>Q. 所得控除を1万円積むと税金はいくら減るか</h4>
+  <p>課税所得400万円なら約3,040円（実質30.4%）、900万円なら約4,370円（実質43.7%）、2,000万円なら約5,080円（実質50.8%）。<strong>「◯万円控除」という言葉と、実際に手元に戻る金額を混同しない</strong>のが、この分野で最初に必要な補正になる。</p>
+
+  <h4>Q. iDeCoは本当に得か</h4>
+  <p>拠出時は全額所得控除、運用益は非課税、ただし<strong>受給時に課税される</strong>。退職所得控除や公的年金等控除の枠内に収まれば実質非課税だが、企業の退職金が大きい人は枠を食い合う。これは<strong>免除ではない。課税の繰延べと、控除枠の付け替え</strong>である。</p>
+
+  <h2><span class="num">⑨</span>編集メモ<span class="en">Editorial Notes</span></h2>
+
+  <ul>
+    <li><strong>元記事の有料部分（19,001字）は未取得。</strong>本ページは元記事の要約でも再構成でもなく、無料部分が予告した論点に対して当方が一次情報から独立に作った整理である。元記事に何が書かれているかは分からない</li>
+    <li>令和8年分（2026年分）の基礎控除104万円・給与所得控除の最低保障額74万円・年収178万円の壁は、<strong>国税庁のタックスアンサーにまだ反映されていない</strong>。税理士・実務系の解説を出典としており、確定申告の実務では最新の国税庁資料で再確認すること</li>
+    <li>住民税込みの実質率、iDeCoの減税額、特定支出控除の判定額（年収600万円で82万円）は<strong>すべて当方の概算</strong>。住民税は所得割の標準税率10%を前提とし、均等割・調整控除・自治体差を含めていない</li>
+    <li>ふるさと納税の令和8年度改正（住民税特例控除額の上限、募集費用5割→4割）は令和9年からの適用とされる。数値の細目は出典間で表現が揺れているため、上限の具体額は本文に書いていない</li>
+    <li>iDeCoの施行日は「2026年12月1日施行、掛金への反映は2027年1月の掛金から」と整理した。出典によって「2026年12月改正」「2027年1月から」と表記が割れるが、これは施行日と掛金反映日の違いを指している</li>
+    <li>本ページは税務アドバイスではない。個別の適用可否は税理士または所轄税務署で確認すること</li>
+  </ul>
+
+  <h2><span class="num">⑩</span>出典<span class="en">Sources</span></h2>
+  <ol class="sources">
+    <li>キティー Kitty「知らないと一生損するサラリーマンが必ずすべき節税」note、2026年3月16日（無料部分のみ参照。有料部分19,001字は未購入）<a href="https://note.com/kitty_lifehack/n/n328dd525ffb6">https://note.com/kitty_lifehack/n/n328dd525ffb6</a></li>
+    <li>国税庁「令和7年度税制改正（基礎控除の見直し等関係）Q&amp;A」令和7年5月30日（基礎控除額の表・給与所得控除の最低保障額・特定親族特別控除額の表・扶養親族等の所得要件・源泉徴収事務の取扱い）<a href="https://www.nta.go.jp/publication/pamph/gensen/0025005-051.pdf">https://www.nta.go.jp/publication/pamph/gensen/0025005-051.pdf</a></li>
+    <li>国税庁 No.2260「所得税の税率」（速算表・復興特別所得税2.1%）<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2260.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2260.htm</a></li>
+    <li>国税庁 No.1410「給与所得控除」（令和7年分以後の速算表）<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1410.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1410.htm</a></li>
+    <li>国税庁 No.1180「扶養控除」（一般38万円・特定63万円・老人48万円・同居老親等58万円）<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1180.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1180.htm</a></li>
+    <li>国税庁 No.1135「小規模企業共済等掛金控除」（iDeCoを含む、支払額の全額・上限なし）<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1135.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1135.htm</a></li>
+    <li>国税庁 No.1120「医療費を支払ったとき（医療費控除）」（計算式・200万円上限・5%判定・セルフメディケーション税制との選択）<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1120.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1120.htm</a></li>
+    <li>国税庁 No.1415「給与所得者の特定支出控除」（7種類・給与所得控除の1/2判定・支払者の証明）<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1415.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1415.htm</a></li>
+    <li>国税庁「更正の請求期間の延長等について」（法定申告期限から5年）<a href="https://www.nta.go.jp/information/other/encho/index.htm">https://www.nta.go.jp/information/other/encho/index.htm</a></li>
+    <li>国税庁 No.1140「生命保険料控除」（3区分・新旧契約・合計12万円上限）<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm</a></li>
+    <li>総務省「ふるさと納税のしくみ｜税金の控除について」（所得税分・住民税基本分・特例分と所得割20%上限、ワンストップ特例）<a href="https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/mechanism/deduction.html">https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/mechanism/deduction.html</a></li>
+    <li>楽天証券「【2026年12月制度改正】iDeCoの加入可能年齢・拠出限度額が引き上げ」<a href="https://dc.rakuten-sec.co.jp/about/revised/202505/">https://dc.rakuten-sec.co.jp/about/revised/202505/</a></li>
+    <li>ふるさと納税ナビ「【2025年9月30日で終了】ふるさと納税サイトのポイント付与が禁止に」（総務省の指定基準見直し、2025年10月1日施行）<a href="https://matome-navi.docomo.ne.jp/furusato/furusato-tax-news/point_kinshi/">https://matome-navi.docomo.ne.jp/furusato/furusato-tax-news/point_kinshi/</a></li>
+    <li>ワークスヒューマンインテリジェンス「2026年『年収の壁』とは｜178万円への引き上げはいつから？」（基礎控除104万円・給与所得控除74万円・源泉反映時期・住民税の壁）<a href="https://www.works-hi.co.jp/businesscolumn/103kabe2026">https://www.works-hi.co.jp/businesscolumn/103kabe2026</a></li>
+    <li>マネクリ（マネックス証券）「【2026年度（令和8年度）税制改正大綱】年収の壁引き上げ、NISA、暗号資産、住宅ローン控除など主な改正点を解説」<a href="https://media.monex.co.jp/articles/-/28466">https://media.monex.co.jp/articles/-/28466</a></li>
+    <li>国税庁 No.2250「損益通算」（対象4所得・通算できない損失）<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2250.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2250.htm</a></li>
+  </ol>
+</div>
+</body>
+</html>

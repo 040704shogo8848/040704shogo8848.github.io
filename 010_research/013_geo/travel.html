@@ -8,8 +8,9 @@
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
     --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
-    --panel:#0B1418; --grat:#1B2C33; --panel-ink:#EAE4D8; --panel-sub:#7C8B91;
-    --air:#F0714A; --rail:#3FBFAE; --metro:#7C9CF0; --bus:#E4B23C; --road:#8B949E;
+    --void:#070E12; --ocean:#0A141A; --landfill:#1C2C34; --coast:#38505A; --grat:#122027;
+    --panel-ink:#EDE7DB; --panel-sub:#7D8F97;
+    --air:#FF7A4D; --rail:#3FD9C4; --metro:#8AA8FF; --bus:#F2C14E; --road:#78848B;
     --mono:ui-monospace,SFMono-Regular,Menlo,"Courier New",monospace;
   }
   *{box-sizing:border-box}
@@ -26,7 +27,7 @@
   .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
     padding:2px 9px;border-radius:11px;margin-right:6px}
   h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
-  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px;font-family:var(--mono);font-size:16px}
   h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
   h3{font-size:16px;margin:26px 0 8px;color:#111}
   p{margin:10px 0}
@@ -36,10 +37,14 @@
   th{background:#F0EEE8;font-weight:600}
   td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
   .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
-  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
-  .kpi .k{font-size:12px;color:var(--sub)}
-  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
-  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .kpi{gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+  .kpi .card{background:#fff;border:0;border-left:1px solid var(--line);border-radius:0;padding:16px 18px}
+  .kpi .card:first-child{border-left:0}
+  .kpi .k{font-size:10.5px;color:var(--sub);letter-spacing:.09em;text-transform:uppercase;
+    font-family:var(--mono);line-height:1.5}
+  .kpi .v{font-size:27px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums;
+    letter-spacing:-.02em;line-height:1.1}
+  .kpi .v small{font-size:12px;font-weight:500;color:var(--sub);letter-spacing:0;margin-left:2px}
   .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
   .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
   .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
@@ -53,44 +58,69 @@
   .tbl-scroll>table{margin:0;min-width:min(100%,560px)}
 
   /* ---- 地図パネル ---- */
-  .mapzone{background:var(--panel);margin:26px -28px;padding:20px 28px 24px}
-  .mapzone .hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;margin-bottom:14px}
-  .mapzone .hd h2{border:0;margin:0;padding:0;font-size:15px;color:var(--panel-ink);letter-spacing:.02em}
-  .mapzone .hd .sub{font-size:11.5px;color:var(--panel-sub);letter-spacing:.06em;text-transform:uppercase;font-family:var(--mono)}
-  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
-  .chips button{font:inherit;font-size:12px;cursor:pointer;padding:5px 12px;border-radius:14px;
-    background:transparent;color:var(--panel-sub);border:1px solid #22343B;transition:.14s}
-  .chips button:hover{color:var(--panel-ink);border-color:#35545E}
-  .chips button[aria-pressed="true"]{background:var(--panel-ink);color:var(--panel);border-color:var(--panel-ink);font-weight:600}
-  .chips button:focus-visible{outline:2px solid var(--metro);outline-offset:2px}
-  .legend{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
-  .legend button{font:inherit;font-size:11.5px;cursor:pointer;display:flex;align-items:center;gap:6px;
-    background:transparent;border:1px solid #1E2E35;border-radius:12px;padding:4px 10px;color:var(--panel-sub);transition:.14s}
-  .legend button[aria-pressed="false"]{opacity:.34}
-  .legend button:hover{border-color:#35545E;color:var(--panel-ink)}
-  .legend .sw{width:16px;height:2.5px;border-radius:2px;display:block}
-  .legend .km{font-family:var(--mono);font-size:11px;opacity:.8}
-  .mapbox{position:relative}
-  .mapbox svg{display:block;width:100%;height:auto;overflow:visible}
-  .route{fill:none;stroke-linecap:round;transition:opacity .18s}
-  .route.hit{stroke:transparent;stroke-width:9;cursor:pointer}
-  .nd circle{transition:opacity .18s}
-  .lbl{font-family:var(--mono);font-size:9.5px;fill:var(--panel-sub);pointer-events:none;transition:opacity .18s}
-  .lbl.jp{font-family:-apple-system,"Hiragino Sans",sans-serif;font-size:10.5px;fill:var(--panel-ink)}
-  .grat{stroke:var(--grat);stroke-width:.6;fill:none}
-  .grat.eq{stroke:#2A4249;stroke-width:1;stroke-dasharray:5 4}
-  .gratlbl{font-family:var(--mono);font-size:8.5px;fill:#33474E}
-  .tip{position:absolute;pointer-events:none;background:#F6F2E9;color:#0B1418;border-radius:7px;
-    padding:7px 10px;font-size:12px;line-height:1.55;box-shadow:0 6px 22px rgba(0,0,0,.4);
-    opacity:0;transition:opacity .12s;max-width:260px;z-index:5}
-  .tip b{font-family:var(--mono)}
-  .tip .m{color:#5A6B72;font-size:11px}
-  .mapfoot{color:var(--panel-sub);font-size:11.5px;margin-top:14px;line-height:1.7}
+  .mapzone{
+    background:var(--void);
+    margin:34px calc(50% - 50vw) 30px;
+    padding:26px max(28px, calc(50vw - 470px + 28px)) 22px;
+    border-top:1px solid #16232A;border-bottom:1px solid #16232A;
+    position:relative;overflow:hidden}
+  .mapzone::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(120% 90% at 62% 30%,rgba(58,116,132,.16),transparent 62%)}
+  .mapzone>*{position:relative}
+  .mz-hd{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:16px}
+  .mz-hd h2{border:0;margin:0;padding:0;font-size:19px;color:var(--panel-ink);letter-spacing:.01em;font-weight:700}
+  .mz-hd .kick{display:block;font-size:10.5px;color:var(--air);letter-spacing:.22em;
+    text-transform:uppercase;font-family:var(--mono);margin-bottom:5px;font-weight:600}
+  .mz-hd .rhs{font-family:var(--mono);font-size:11px;color:var(--panel-sub);letter-spacing:.05em;text-align:right;line-height:1.85}
+  .mz-hd .rhs b{color:var(--panel-ink);font-size:13px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .chips button{font:inherit;font-size:12px;cursor:pointer;padding:5px 13px;border-radius:3px;
+    background:rgba(255,255,255,.03);color:var(--panel-sub);border:1px solid #1E2F36;
+    transition:.16s;font-family:var(--mono);letter-spacing:.02em}
+  .chips button:hover{color:var(--panel-ink);border-color:#3A5C67;background:rgba(255,255,255,.06)}
+  .chips button[aria-pressed="true"]{background:var(--panel-ink);color:var(--void);
+    border-color:var(--panel-ink);font-weight:700}
+  .chips button:focus-visible{outline:2px solid var(--rail);outline-offset:2px}
+  .mapbox{position:relative;border:1px solid #16262D;border-radius:4px;background:var(--ocean);overflow:hidden}
+  .mapbox svg{display:block;width:100%;height:auto}
+  .land{fill:var(--landfill);stroke:var(--coast);stroke-width:.6;stroke-linejoin:round}
+  .grat{stroke:var(--grat);stroke-width:.5;fill:none}
+  .grat.eq{stroke:#26424B;stroke-width:.9;stroke-dasharray:7 5}
+  .gratlbl{font-family:var(--mono);font-size:8px;fill:#2C4048;letter-spacing:.08em}
+  .route{fill:none;stroke-linecap:round;transition:opacity .28s ease}
+  .glow{fill:none;stroke-linecap:round;filter:url(#soft);transition:opacity .28s ease}
+  .route.hit{stroke:transparent;stroke-width:11;cursor:pointer}
+  .nd circle{transition:opacity .28s ease}
+  .lbl{font-family:var(--mono);font-size:9px;fill:#8FA3AB;pointer-events:none;
+    transition:opacity .28s ease;letter-spacing:.07em;font-weight:600;
+    paint-order:stroke;stroke:var(--ocean);stroke-width:2.6px;stroke-linejoin:round}
+  .lbl.jp{font-family:-apple-system,"Hiragino Sans",sans-serif;font-size:10.5px;
+    fill:var(--panel-ink);letter-spacing:0;stroke-width:3px}
+  .draw{animation:dash .9s ease forwards}
+  @keyframes dash{to{stroke-dashoffset:0}}
+  .legend{display:flex;flex-wrap:wrap;gap:5px;margin:14px 0 0}
+  .legend button{font:inherit;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:7px;
+    background:rgba(255,255,255,.02);border:1px solid #172830;border-radius:3px;padding:5px 11px;
+    color:var(--panel-sub);transition:.16s;font-family:var(--mono)}
+  .legend button[aria-pressed="false"]{opacity:.3}
+  .legend button:hover{border-color:#3A5C67;color:var(--panel-ink)}
+  .legend .sw{width:18px;height:2px;border-radius:2px;display:block;flex:0 0 auto}
+  .legend .km{color:var(--panel-ink);font-weight:600}
+  .legend .pc{opacity:.65;font-size:10px}
+  .tip{position:absolute;pointer-events:none;background:rgba(9,17,21,.95);color:var(--panel-ink);
+    border:1px solid #2E4A54;border-radius:4px;padding:8px 11px;font-size:12px;line-height:1.6;
+    box-shadow:0 10px 34px rgba(0,0,0,.6);opacity:0;transition:opacity .14s;max-width:270px;z-index:5}
+  .tip b{font-family:var(--mono);color:#fff;letter-spacing:.03em}
+  .tip .m{color:var(--panel-sub);font-size:11px}
+  .tip .n{color:var(--air);font-size:11px}
+  .apexlbl{fill:var(--air);font-size:9.5px;letter-spacing:.1em}
+  .mapfoot{color:#5E7078;font-size:11px;margin-top:16px;line-height:1.85;max-width:62em}
+  .mapfoot strong{color:var(--panel-sub);font-weight:600}
 
   /* ---- 日別バンド ---- */
   .band{display:flex;gap:2px;margin:10px 0 4px;overflow-x:auto;padding-bottom:4px}
-  .band .d{flex:1 0 34px;min-width:34px;border-radius:5px;background:#fff;border:1px solid var(--line);
-    padding:5px 3px;text-align:center}
+  .band .d{flex:1 0 36px;min-width:36px;border-radius:4px;background:#fff;border:1px solid var(--line);
+    padding:6px 3px;text-align:center}
   .band .d .n{font-family:var(--mono);font-size:10px;color:var(--sub)}
   .band .d .c{font-size:10.5px;line-height:1.35;margin-top:3px;word-break:break-all}
   .band .d.move{background:#FFF6EE;border-color:#EBC7AC}
@@ -201,25 +231,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p class="lead">空路・高速鉄道・地下鉄・長距離バスを区間単位で記録したもの。国の統計は国別ページに、行程の設計は現地行程に分けてあり、このページは<strong>どこからどこへ、何で動いたか</strong>だけを扱う。</p>
 <p><span class="tag">47区間</span><span class="tag">20の国と地域</span><span class="tag">大圏距離79,638km</span><span class="tag">出典はシートとGmail</span></p>
 
-<div class="kpi">
-  <div class="card"><div class="k">総移動距離（大圏距離の概算）</div><div class="v">79,638 <small>km</small></div></div>
-  <div class="card"><div class="k">地球1周（40,075km）に対して</div><div class="v">1.99 <small>周</small></div></div>
-  <div class="card"><div class="k">空路の占める割合</div><div class="v">92.8 <small>%</small></div></div>
-  <div class="card"><div class="k">交通費の合計</div><div class="v">488,593 <small>円</small></div></div>
-</div>
-
 <div class="mapzone">
-  <div class="hd">
-    <h2>走った線</h2>
-    <span class="sub">Equirectangular / great-circle arcs</span>
+  <div class="mz-hd">
+    <div>
+      <span class="kick">Every segment, 2022&#8211;2026</span>
+      <h2>走った線</h2>
+    </div>
+    <div class="rhs">
+      <b>79,638</b> km&#8195;<b>47</b> 区間&#8195;<b>20</b> の国と地域<br>
+      Equirectangular&#8195;/&#8195;great-circle arcs&#8195;/&#8195;Natural Earth 110m
+    </div>
   </div>
   <div class="chips" id="chips" role="group" aria-label="渡航の絞り込み"></div>
   <div class="mapbox" id="mapbox">
     <div class="tip" id="tip" role="status"></div>
   </div>
   <div class="legend" id="legend" role="group" aria-label="移動手段の表示切替"></div>
-  <p class="mapfoot">線は2地点間の大圏コース、つまり球面上の最短経路で、実際の航路・線路の形ではない。正距円筒図法なので緯度が高いほど東西方向が実距離より広く見える。破線は赤道。点をなぞると地点名、線をなぞると区間の詳細が出る。<br>
-  上端に余白が広く見えるのは図の余りではない。<strong>成田 - チューリッヒの最短経路が北緯65.8度・東経69.5度まで北上する</strong>ため、地点の分布より図の範囲が北に広い。
+  <p class="mapfoot">陸地と国境は<strong>Natural Earth 110m</strong>を許容誤差0.14度に簡略化したもの。線は2地点間の<strong>大圏コース</strong>、つまり球面上の最短経路で、実際の航路や線路の形ではない。<strong>正距円筒図法</strong>なので緯度が高いほど東西方向が実距離より広く見える。破線は赤道。点をなぞると地点名と座標、線をなぞると日付・区間・便名・距離が出る。上のボタンで渡航を絞り込み、下の凡例で手段を切り替えられる。<br>
+  上端に余白が広いのは図の余りではない。<strong>成田 - チューリッヒの最短経路が北緯65.8度・東経69.5度まで北上する</strong>ため、地点の分布より図の範囲が北に広い。</p>
+</div>
+
+<div class="kpi">
+  <div class="card"><div class="k">総移動距離 大圏概算</div><div class="v">79,638 <small>km</small></div></div>
+  <div class="card"><div class="k">地球1周 40,075km 換算</div><div class="v">1.99 <small>周</small></div></div>
+  <div class="card"><div class="k">空路の構成比</div><div class="v">92.8 <small>%</small></div></div>
+  <div class="card"><div class="k">交通費 合計</div><div class="v">488,593 <small>円</small></div></div>
 </div>
 
 <h2><span class="num">01</span>全体の規模<span class="en">Scale</span></h2>
@@ -287,12 +323,14 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <li>Spring Airlines / Travelfusion 旅程メール（PNR BIEFUMK）</li>
 <li>空港・駅・バスターミナルの座標は各施設の公表位置。大圏距離はhaversine式による本ページの算出値</li>
 <li>地球の赤道周長40,075kmは国際地球回転・基準系事業（IERS）のWGS84準拠値</li>
+<li>地図の陸地と国境の形状はNatural Earth 1:110mのパブリックドメインデータ。world-atlas v2 の countries-110m.json をTopoJSONから復号し、Ramer-Douglas-Peucker法で許容誤差0.14度に簡略化、面積0.30平方度未満の環を除去、経度-14〜160度・緯度-26〜80度に交差する185環4,560点に絞った — https://www.naturalearthdata.com/ ／ https://unpkg.com/world-atlas@2/countries-110m.json</li>
 </ol>
 
-<p class="fn">本ページは移動の記録であり、旅行の推奨ではない。区間の真実のソースは <code>010_research/013_geo/data/travel.json</code> で、<code>bin/build-travel.js</code> を経由して <code>data/travel.js</code> を生成している。予約番号のうち搭乗者名との組み合わせで予約照会が可能なものは記載していない。</p>
+<p class="fn">本ページは移動の記録であり、旅行の推奨ではない。区間の真実のソースは <code>010_research/013_geo/data/travel.json</code> で、<code>bin/build-travel.js</code> を経由して <code>data/travel.js</code> を生成している。地図の形状は <code>data/land.js</code> に固定してあり、外部CDNへの依存はない。予約番号のうち搭乗者名との組み合わせで予約照会が可能なものは記載していない。</p>
 
 </div>
 
+<script src="data/land.js"></script>
 <script src="data/travel.js"></script>
 <script>
 (function(){
@@ -355,51 +393,118 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   const toPath = a => 'M' + a.map(([la,lo]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join('L');
 
   const esc = s => String(s??'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  let svg = `<svg viewBox="0 0 ${W} ${H.toFixed(0)}" role="img" aria-label="渡航区間の地図">`;
+  const f1 = n => n.toFixed(1);
+  let svg = `<svg viewBox="0 0 ${W} ${H.toFixed(0)}" role="img" aria-label="渡航区間の世界地図">`
+    + `<defs><filter id="soft" x="-30%" y="-30%" width="160%" height="160%">`
+    + `<feGaussianBlur stdDeviation="3.4"/></filter>`
+    + `<clipPath id="frame"><rect x="0" y="0" width="${W}" height="${H.toFixed(0)}"/></clipPath>`
+    + `<radialGradient id="sea" cx="58%" cy="34%" r="78%">`
+    + `<stop offset="0" stop-color="#0E1D25"/><stop offset="1" stop-color="#070F14"/></radialGradient>`
+    + `</defs><g clip-path="url(#frame)">`
+    + `<rect x="0" y="0" width="${W}" height="${H.toFixed(0)}" fill="url(#sea)"/>`;
 
   // 経緯線
   for (let lat=-15; lat<=90; lat+=15){
-    if (lat < b.y0-8 || lat > b.y1+8) continue;
-    svg += `<line class="grat${lat===0?' eq':''}" x1="${PAD*0.5}" y1="${py(lat).toFixed(1)}" x2="${W-PAD*0.5}" y2="${py(lat).toFixed(1)}"/>`
-        +  `<text class="gratlbl" x="${(PAD*0.5+3).toFixed(0)}" y="${(py(lat)-4).toFixed(1)}">${lat}&#176;</text>`;
+    if (lat < b.y0-14 || lat > b.y1+14) continue;
+    svg += `<line class="grat${lat===0?' eq':''}" x1="0" y1="${f1(py(lat))}" x2="${W}" y2="${f1(py(lat))}"/>`
+        +  `<text class="gratlbl" x="7" y="${f1(py(lat)-4)}">${Math.abs(lat)}&#176;${lat>0?'N':lat<0?'S':''}</text>`;
   }
-  for (let lon=0; lon<=160; lon+=20){
-    if (lon < b.x0-10 || lon > b.x1+10) continue;
-    svg += `<line class="grat" x1="${px(lon).toFixed(1)}" y1="${(PAD*0.5).toFixed(0)}" x2="${px(lon).toFixed(1)}" y2="${(H-PAD*0.5).toFixed(1)}"/>`
-        +  `<text class="gratlbl" x="${(px(lon)+3).toFixed(1)}" y="${(H-PAD*0.5+12).toFixed(1)}">${lon}&#176;E</text>`;
+  for (let lon=-20; lon<=180; lon+=20){
+    if (lon < b.x0-18 || lon > b.x1+18) continue;
+    svg += `<line class="grat" x1="${f1(px(lon))}" y1="0" x2="${f1(px(lon))}" y2="${H.toFixed(0)}"/>`
+        +  `<text class="gratlbl" x="${f1(px(lon)+4)}" y="${f1(H-8)}">${lon}&#176;E</text>`;
   }
 
-  // 区間
+  // 陸地と国境（Natural Earth 110m）
+  const LAND = window.LAND || [];
+  let lp = '';
+  for (const ring of LAND){
+    lp += 'M' + ring.map(([la,lo]) => `${f1(px(lo))},${f1(py(la))}`).join('L') + 'Z';
+  }
+  if (lp) svg += `<path class="land" d="${lp}"/>`;
+
+  // 区間。地下鉄→陸路→バス→鉄道→空路の順に重ねる
   const order = {metro:0, road:1, bus:2, rail:3, air:4};
-  for (const s of [...all].sort((p,q)=>order[p.mode]-order[q.mode])){
-    const m = MODE[s.mode], d = toPath(arcs.get(s));
-    const meta = `data-trip="${s.trip}" data-mode="${s.mode}"`;
-    const label = `${N[s.from].ja} → ${N[s.to].ja}`;
-    const line2 = [m.ja, s.carrier, s.flight, s.km>=1?`${fmt(s.km)} km`:null].filter(Boolean).join(' / ');
-    const tip = esc(`${s.date}|${label}|${line2}${s.note?'|'+s.note:''}`);
+  const sorted = [...all].sort((x,y)=>order[x.mode]-order[y.mode]);
+  for (const g of sorted){
+    const m = MODE[g.mode], d = toPath(arcs.get(g));
+    const meta = `data-trip="${g.trip}" data-mode="${g.mode}"`;
+    svg += `<path class="glow" ${meta} d="${d}" stroke="${m.c}" stroke-width="${m.w*2.6}" opacity=".22"/>`;
+  }
+  for (const g of sorted){
+    const m = MODE[g.mode], d = toPath(arcs.get(g));
+    const meta = `data-trip="${g.trip}" data-mode="${g.mode}"`;
+    const line2 = [m.ja, g.carrier, g.flight, g.km>=1?`${fmt(g.km)} km`:null].filter(Boolean).join(' / ');
+    const tip = esc(`${g.date}|${N[g.from].ja} → ${N[g.to].ja}|${line2}${g.note?'|'+g.note:''}`);
     svg += `<path class="route" ${meta} d="${d}" stroke="${m.c}" stroke-width="${m.w}"`
-        +  (m.dash?` stroke-dasharray="${m.dash}"`:'') + ` opacity=".78"/>`
+        +  (m.dash?` stroke-dasharray="${m.dash}"`:'') + ` opacity=".9"/>`
         +  `<path class="route hit" ${meta} d="${d}" data-tip="${tip}"/>`;
   }
 
   // 地点
-  const used = new Set(all.flatMap(s=>[s.from,s.to]));
+  const used = new Set(all.flatMap(g=>[g.from,g.to]));
+  const deg = {};
+  for (const g of all){ deg[g.from]=(deg[g.from]||0)+1; deg[g.to]=(deg[g.to]||0)+1; }
   const trips4 = {};
-  for (const t of T.trips) for (const s of t.segments){ (trips4[s.from] ??= new Set()).add(t.id); (trips4[s.to] ??= new Set()).add(t.id); }
-  for (const code of used){
-    const n = N[code], isAir = n.kind === 'air';
-    const tl = [...(trips4[code]||[])].join(' ');
-    svg += `<g class="nd" data-trips="${tl}">`
-        +  `<circle cx="${px(n.lon).toFixed(1)}" cy="${py(n.lat).toFixed(1)}" r="${isAir?3.4:2.2}"`
-        +  ` fill="${isAir?'#F2EDE3':'#8FA7AE'}" stroke="var(--panel)" stroke-width="1"/>`
-        +  `<circle cx="${px(n.lon).toFixed(1)}" cy="${py(n.lat).toFixed(1)}" r="9" fill="transparent"`
-        +  ` style="cursor:pointer" data-tip="${esc(`${n.ja}|${n.en}|${code} / ${n.lat.toFixed(2)}, ${n.lon.toFixed(2)}`)}"/>`
+  for (const t of T.trips) for (const g of t.segments){
+    (trips4[g.from] ??= new Set()).add(t.id); (trips4[g.to] ??= new Set()).add(t.id); }
+  const hub = Math.max(...Object.values(deg));
+
+  for (const code of [...used].sort((x,y)=>deg[x]-deg[y])){
+    const n = N[code], isAir = n.kind === 'air', isHub = deg[code] >= hub*0.6;
+    const cx = f1(px(n.lon)), cy = f1(py(n.lat));
+    svg += `<g class="nd" data-trips="${[...(trips4[code]||[])].join(' ')}">`;
+    if (isHub) svg += `<circle cx="${cx}" cy="${cy}" r="10" fill="none" stroke="var(--air)" stroke-width="1" opacity=".45"/>`;
+    if (isAir) svg += `<circle cx="${cx}" cy="${cy}" r="4.6" fill="none" stroke="#FFF6E8" stroke-width="1.1" opacity=".85"/>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${isAir?2:1.7}" fill="${isAir?'#FFF6E8':'#7FB8AE'}"/>`
+        +  `<circle cx="${cx}" cy="${cy}" r="11" fill="transparent" style="cursor:pointer"`
+        +  ` data-tip="${esc(`${n.ja}|${n.en}|${code} / ${n.lat.toFixed(2)}, ${n.lon.toFixed(2)} / 発着${deg[code]}回`)}"/>`
         +  `</g>`;
-    const dy = n.lat > 40 ? -9 : 13;
-    svg += `<text class="lbl${isAir?'':' rl'}" data-trips="${tl}" data-air="${isAir?1:0}"`
-        +  ` x="${(px(n.lon)+5).toFixed(1)}" y="${(py(n.lat)+dy*0.62).toFixed(1)}">${esc(isAir?code:n.ja)}</text>`;
   }
-  svg += '</svg>';
+
+  // ラベルの重なり回避。重要な地点から順に空いている位置へ置く
+  const CAND = [[8,4],[8,-9],[8,15],[-8,4],[-8,-9],[-8,15],[8,26],[-8,26],[0,-14],[0,20]];
+  const placed = [];
+  const hits = (r) => placed.some(q => !(r.x1<q.x0 || r.x0>q.x1 || r.y1<q.y0 || r.y0>q.y1));
+  const labels = [];
+  for (const code of [...used].sort((x,y)=>deg[y]-deg[x])){
+    const n = N[code], isAir = n.kind === 'air', isHub = deg[code] >= hub*0.6;
+    const cx = px(n.lon), cy = py(n.lat);
+    const wCode = code.length * 6.4 + 2;
+    const wName = n.ja.length * 11 + 2;
+    let box = null, off = CAND[0], anchor = 'start';
+    for (const [dx,dy] of CAND){
+      const w = Math.max(wCode, 26);
+      const x0 = dx >= 0 ? cx+dx : cx-dx-w;
+      const r = {x0, x1:x0+w, y0:cy+dy-9, y1:cy+dy+2};
+      if (r.x0 < 2 || r.x1 > W-2 || r.y0 < 2 || r.y1 > H-14) continue;
+      if (!hits(r)){ box = r; off = [dx,dy]; anchor = dx>=0 ? 'start' : 'end'; break; }
+    }
+    if (!box){ const w=Math.max(wCode,26); box={x0:cx+8,x1:cx+8+w,y0:cy-5,y1:cy+6}; }
+    placed.push(box);
+    labels.push({code, isAir, isHub, cx, cy, off, anchor,
+      trips:[...(trips4[code]||[])].join(' '), ja:n.ja});
+  }
+  for (const L of labels){
+    svg += `<text class="lbl${L.isHub?' hub':''}" data-trips="${L.trips}" data-air="${L.isAir?1:0}"`
+        +  ` data-ja="${esc(L.ja)}" data-code="${esc(L.code)}" text-anchor="${L.anchor}"`
+        +  ` x="${f1(L.cx + L.off[0])}" y="${f1(L.cy + L.off[1])}">${L.isAir?esc(L.code):''}</text>`;
+  }
+
+  // 大圏コースの最北点。本文の指摘と地図を接続する
+  (function(){
+    let top = null;
+    for (const [g,pts] of arcs){ for (const [la,lo] of pts) if (!top || la > top[0]) top = [la,lo]; }
+    if (!top) return;
+    const x = px(top[1]), y = py(top[0]);
+    svg += `<g class="apex">`
+        +  `<circle cx="${f1(x)}" cy="${f1(y)}" r="3.2" fill="none" stroke="var(--air)" stroke-width="1.2"/>`
+        +  `<line x1="${f1(x)}" y1="${f1(y-6)}" x2="${f1(x)}" y2="${f1(y-17)}" stroke="var(--air)" stroke-width=".9" opacity=".7"/>`
+        +  `<text class="lbl apexlbl" x="${f1(x)}" y="${f1(y-22)}" text-anchor="middle">`
+        +  `${top[0].toFixed(1)}&#176;N &#183; 最北点</text></g>`;
+  })();
+
+  svg += '</g></svg>';
   document.getElementById('mapbox').insertAdjacentHTML('afterbegin', svg);
 
   /* ---------- 絞り込み ---------- */
@@ -409,46 +514,66 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   const offMode = new Set();
   let sel = 'all';
 
-  function paint(){
-    document.querySelectorAll('.route').forEach(el=>{
+  const REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function paint(animate){
+    document.querySelectorAll('.route, .glow').forEach(el=>{
       const on = (sel==='all' || el.dataset.trip===sel) && !offMode.has(el.dataset.mode);
       const hit = el.classList.contains('hit');
-      el.style.opacity = hit ? (on?1:0) : (on ? (sel==='all'?.72:.95) : .05);
-      el.style.pointerEvents = (hit && on) ? 'auto' : 'none';
-    });
-    document.querySelectorAll('.nd, .lbl').forEach(el=>{
-      const tl = (el.dataset.trips||'').split(' ');
-      const on = sel==='all' || tl.includes(sel);
-      el.style.opacity = on ? 1 : .12;
-      if (el.classList.contains('lbl')){
-        const showJa = sel !== 'all';
-        el.classList.toggle('jp', showJa);
-        el.textContent = showJa ? nameOf(el) : (el.dataset.air==='1' ? codeOf(el) : '');
-        if (!on) el.style.opacity = .1;
+      const isGlow = el.classList.contains('glow');
+      if (hit){
+        el.style.opacity = on ? 1 : 0;
+        el.style.pointerEvents = on ? 'auto' : 'none';
+      } else if (isGlow){
+        el.style.opacity = on ? (sel==='all' ? .16 : .34) : 0;
+      } else {
+        el.style.opacity = on ? (sel==='all' ? .82 : 1) : .055;
       }
     });
+    document.querySelectorAll('.nd, .lbl').forEach(el=>{
+      const on = sel==='all' || (el.dataset.trips||'').split(' ').includes(sel);
+      el.style.opacity = on ? 1 : .1;
+      if (el.classList.contains('lbl') && el.dataset.code){
+        const ja = sel !== 'all';
+        el.classList.toggle('jp', ja);
+        el.textContent = ja ? el.dataset.ja : (el.dataset.air==='1' ? el.dataset.code : '');
+      }
+    });
+    if (animate && !REDUCED && sel !== 'all') drawIn();
   }
-  const codeCache = new Map();
-  document.querySelectorAll('.lbl').forEach((el,i)=>{ codeCache.set(el, el.textContent); });
-  function codeOf(el){ return codeCache.get(el); }
-  function nameOf(el){
-    const c = codeCache.get(el);
-    if (N[c]) return N[c].ja;
-    for (const [k,v] of Object.entries(N)) if (v.ja === c) return v.ja;
-    return c;
+
+  function drawIn(){
+    document.querySelectorAll('.route:not(.hit)').forEach(el=>{
+      el.classList.remove('draw');
+      if (el.dataset.trip !== sel || offMode.has(el.dataset.mode)) return;
+      if (MODE[el.dataset.mode].dash) return;   // 破線の手段は伸ばさない
+      let L = 0;
+      try { L = el.getTotalLength(); } catch(e){ return; }
+      if (!L) return;
+      el.style.strokeDasharray = L;
+      el.style.strokeDashoffset = L;
+      void el.getBoundingClientRect();
+      el.classList.add('draw');
+      el.addEventListener('animationend', ()=>{
+        el.style.strokeDasharray = ''; el.style.strokeDashoffset = '';
+        el.classList.remove('draw');
+      }, {once:true});
+    });
   }
+
   chips.addEventListener('click', e=>{
     const btn = e.target.closest('button'); if(!btn) return;
     sel = btn.dataset.t;
     chips.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', String(x===btn)));
-    paint();
+    paint(true);
   });
 
   /* ---------- 凡例 ---------- */
   const lg = document.getElementById('legend');
   lg.innerHTML = Object.entries(MODE).filter(([k])=>byMode[k]).map(([k,m])=>
     `<button type="button" data-m="${k}" aria-pressed="true"><span class="sw" style="background:${m.c}"></span>`
-    + `${esc(m.ja)} <span class="km">${fmt(byMode[k].km)}km</span></button>`).join('');
+    + `${esc(m.ja)} <span class="km">${fmt(byMode[k].km)}km</span>`
+    + ` <span class="pc">${(byMode[k].km/total*100).toFixed(1)}%</span></button>`).join('');
   lg.addEventListener('click', e=>{
     const btn = e.target.closest('button'); if(!btn) return;
     const m = btn.dataset.m, on = btn.getAttribute('aria-pressed')==='true';

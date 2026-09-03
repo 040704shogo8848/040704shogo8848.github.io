@@ -1,0 +1,1631 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>厚真町 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / 厚真町</p>
+
+<header class="top">
+  <div>
+    <h1>厚真町 / Atsuma</h1>
+    <div class="meta">北海道 / 胆振　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">人口4,253人の町が、道内需要の約半分を担う火力発電所を抱えていた。2018年9月6日、4万年前の火山灰層がすべって発電所が止まり、北海道全域が停電した。</p>
+<p><span class="tag">胆振東部地震</span><span class="tag">ブラックアウト</span><span class="tag">苫東</span><span class="tag">ハスカップ</span><span class="tag">火山灰</span></p>
+
+<div class="kpi"><div class="card"><div class="k">人口</div><div class="v">4,253人 <small>2026年7月末・住民基本台帳</small></div></div><div class="card"><div class="k">面積</div><div class="v">404.61 km² <small>町公式値</small></div></div><div class="card"><div class="k">町制施行</div><div class="v">1960年 <small>昭和35年1月1日</small></div></div><div class="card"><div class="k">農業産出額</div><div class="v">113.1億円 <small>2024年推計</small></div></div></div>
+<iframe class="map" loading="lazy" title="厚真町の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=141.6058,42.5861,142.1658,42.8661&amp;layer=mapnik&amp;marker=42.7261,141.8858"></iframe>
+
+<h2><span class="num">01</span>町としての特徴<span class="en">Profile</span></h2>
+<p><strong>日本最大級の産業用地と日本一のハスカップ畑を同じ町域に抱えながら、道内需要の約半分を賄う火力発電所を置く、人口4千人の電力供給地。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>属性</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>位置</td>
+<td>北海道南西部、道央ベルト地帯の南端。西に安平町・苫小牧市、東にむかわ町、北に由仁町・夕張市が隣接し、南は太平洋。札幌から約65km（車約90分）、<strong>新千歳空港から約27km（約35分）</strong>、苫小牧から約34km</td>
+</tr>
+<tr>
+<td>面積</td>
+<td>404.61 km²。南北約32.5km×東西約17.3kmの細長い町域、海岸線6,545m。Wikipediaは405.38km²と記載</td>
+</tr>
+<tr>
+<td>地形</td>
+<td>全般に低平。北部は標高170〜400mの山地・丘陵（最高峰は紅葉山640m）。夕張岳南麓に発する二級河川・厚真川が北から南へ町の中央を貫き太平洋に注ぐ。支流に日高幌内川、ウクル川。南部海岸は勇払原野の一角で低湿な砂質海岸。<strong>土壌は支笏カルデラ・恵庭岳・樽前山由来の火山灰・軽石層に覆われ、吉野付近の丘陵では合計層厚が5m以上に達する</strong></td>
+</tr>
+<tr>
+<td>地目別面積</td>
+<td>山林124.63km²（30.9%）、田33.27km²（8.2%）、畑26.07km²（6.5%）、その他194.72km²（48.1%）</td>
+</tr>
+<tr>
+<td>成り立ち</td>
+<td>1800年に南部藩士・森田勘十郎らが浜厚真へ移住。1870年に新潟県出身の青木与八らが浜厚真に入植し農業町としての歴史が始まる。1906年に厚真村、1960年に町制施行</td>
+</tr>
+<tr>
+<td>地名の由来</td>
+<td>アイヌ語由来。アットマム（ar-tomam＝向こう・湿地帯）の転訛説と、アトマプ（at-oma-p＝オヒョウニレ・ある・もの）説がある</td>
+</tr>
+<tr>
+<td>産業構造</td>
+<td>第1次797人・第2次337人・第3次1,258人・その他13人＝計2,405人（2020年国勢調査）。2015年は計2,787人で5年で382人減。<strong>第1次産業比率33.1%</strong>は全国平均を大きく上回る</td>
+</tr>
+<tr>
+<td>農業</td>
+<td>水稲が中心で胆振管内随一の作付面積。水稲作付1,580ha（令和7年産）、小麦520ha、大豆513ha、てんさい274ha。大豆は納豆用の極小粒品種が主体。<strong>ハスカップは作付面積日本一</strong>で、2024年11月に「厚真産ハスカップ」が地域団体商標に登録された。畜産は鶏が産出額の柱</td>
+</tr>
+<tr>
+<td>苫東地域との関係</td>
+<td>苫小牧東部地域（苫東）10,700haは苫小牧市・厚真町・安平町の<strong>1市2町にまたがる日本最大の産業地域</strong>。厚真町域には苫東厚真発電所が立地する。石油備蓄基地も苫東地域に置かれている</td>
+</tr>
+<tr>
+<td>教育</td>
+<td>北海道厚真高等学校（町内唯一の高校）、厚真中学校・厚南中学校、厚真中央小学校・上厚真小学校</td>
+</tr>
+<tr>
+<td>名産</td>
+<td>ハスカップ（品種はゆうしげ、あつまみらい、ゆうふつ、ミエ。旬は6月末〜7月中旬）、厚真米、納豆用極小粒大豆、ホッキ貝、日本酒「かけ橋」、あつま豚丼</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>読み方。厚真町は「農村」と「重厚長大産業立地」という、通常は同一自治体に共存しない二つの性格を併せ持つ。人口4千人台の町が北海道最大の火力発電所を抱える構造は、税収と雇用の面で恩恵をもたらす一方、<strong>2018年に町域外へリスクを輸出する立場</strong>として顕在化した。</p></div>
+<h3>年表</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年</th>
+<th>事象</th>
+<th>備考</th>
+</tr></thead><tbody>
+<tr>
+<td class="num">1800</td>
+<td>南部藩士・森田勘十郎らが浜厚真へ移住</td>
+<td>和人の定着の起点</td>
+</tr>
+<tr>
+<td class="num">1870</td>
+<td>新潟県出身の青木与八らが浜厚真に入植</td>
+<td>農業町としての始まり</td>
+</tr>
+<tr>
+<td class="num">1897</td>
+<td>本町に戸長役場を設置</td>
+<td>自治の分離</td>
+</tr>
+<tr>
+<td class="num">1906</td>
+<td>二級町村制施行、厚真村成立</td>
+<td></td>
+</tr>
+<tr>
+<td class="num">1913</td>
+<td>苫小牧軽便鉄道・厚真駅開業</td>
+<td>鉄道到達</td>
+</tr>
+<tr>
+<td class="num">1951</td>
+<td>早来鉄道線廃止</td>
+<td>バス転換</td>
+</tr>
+<tr>
+<td class="num">1960</td>
+<td>町制施行、厚真町</td>
+<td></td>
+</tr>
+<tr>
+<td class="num">1972</td>
+<td>苫小牧東部開発株式会社設立</td>
+<td>苫東開発の本格着手。第3期北海道総合開発計画に位置づけ</td>
+</tr>
+<tr>
+<td class="num">1980</td>
+<td><strong>苫東厚真発電所1号機（35万kW）運転開始</strong></td>
+<td>石炭火力</td>
+</tr>
+<tr>
+<td class="num">1985</td>
+<td>同2号機（60万kW）運転開始</td>
+<td></td>
+</tr>
+<tr>
+<td class="num">1995</td>
+<td>苫小牧東部開発新計画を策定</td>
+<td>分譲面積を10,700ha→工場等用地5,500haに縮小</td>
+</tr>
+<tr>
+<td class="num">1998</td>
+<td>同3号機（PFBC、8.5万kW）運転開始。日高自動車道 厚真IC開通</td>
+<td>3号機は2005年10月に廃止</td>
+</tr>
+<tr>
+<td class="num">1999</td>
+<td>株式会社苫東設立</td>
+<td>旧開発会社は<strong>約1,800億円の負債</strong>を残し清算</td>
+</tr>
+<tr>
+<td class="num">2002</td>
+<td>同4号機（70万kW）運転開始</td>
+<td>道内最大の単機出力</td>
+</tr>
+<tr>
+<td><strong>2018.09.06</strong></td>
+<td><strong>北海道胆振東部地震（Mj6.7）。厚真町鹿沼で道内初の震度7。3時25分に北海道全域がブラックアウト</strong></td>
+<td>死者44人（道全体）、うち厚真町37人</td>
+</tr>
+<tr>
+<td class="num">2018.09-10</td>
+<td>苫東厚真1号機（9/19）、4号機（9/25）、2号機（10/10）が順次復旧</td>
+<td>1号機の復旧日は資料により9/17とも</td>
+</tr>
+<tr>
+<td class="num">2019.02</td>
+<td>余震（Mj5.8）で厚真町で震度6弱</td>
+<td></td>
+</tr>
+<tr>
+<td class="num">2019.03</td>
+<td><strong>新北海道本州間連系設備（30万kW）運転開始</strong></td>
+<td>北本容量が60万kW→90万kWへ</td>
+</tr>
+<tr>
+<td class="num">2019.11</td>
+<td>厚真町復旧・復興計画（第1期）策定</td>
+<td>第2期2020年4月、第3期2021年3月。計画期間は2019〜2025年度</td>
+</tr>
+<tr>
+<td class="num">2019-</td>
+<td>エネルギー地産地消（地産地防）事業に着手</td>
+<td>5施設で太陽光約1,249kW・蓄電池約1,935kWh</td>
+</tr>
+<tr>
+<td class="num">2024.11</td>
+<td>「厚真産ハスカップ」地域団体商標登録</td>
+<td></td>
+</tr>
+<tr>
+<td class="num">2025.04</td>
+<td>隣接する苫小牧市苫東地区でソフトバンク／IDCフロンティア「北海道苫小牧AIデータセンター」起工</td>
+<td>まず50MW、将来敷地70万m²・受電300MW超</td>
+</tr>
+<tr>
+<td class="num">2026-</td>
+<td>苫小牧市字柏原でAI Tech Tomakomaiが10MW稼働予定</td>
+<td>2027年春に50MWへ増設予定</td>
+</tr>
+<tr>
+<td class="num">2026</td>
+<td>第5次厚真町総合計画（令和8〜17年度）開始</td>
+<td>将来像「田園の風が誘う、挑戦と誇りを育むまち あつま」</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">02</span>経済規模と産業構造<span class="en">Economy</span></h2>
+<p>厚真町の市町村内総生産は公表されていない。北海道は市町村民経済計算を全市町村について継続公表しておらず、以下は代替指標による。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>値</th>
+<th>年次</th>
+</tr></thead><tbody>
+<tr>
+<td>農業産出額 総額</td>
+<td><strong>113億1,000万円</strong></td>
+<td>2024年推計</td>
+</tr>
+<tr>
+<td>耕種計</td>
+<td>41億6,000万円（米26億2,000万円、野菜6億2,000万円、豆類3億8,000万円、麦類1億6,000万円）</td>
+<td>2024年</td>
+</tr>
+<tr>
+<td>畜産計</td>
+<td><strong>71億5,000万円（うち鶏59億4,000万円）</strong>、乳用牛3億6,000万円、肉用牛2億5,000万円。豚は秘匿</td>
+<td>2024年</td>
+</tr>
+<tr>
+<td>耕地面積</td>
+<td>5,570ha（田3,170ha／畑2,410ha）</td>
+<td>2024年</td>
+</tr>
+<tr>
+<td>総農家数／経営体数</td>
+<td>340戸／290経営体。2015年は402戸</td>
+<td>2020年</td>
+</tr>
+<tr>
+<td>ハスカップ</td>
+<td>作付面積日本一。生産量の実数と全国シェアの公的統計値はN/A</td>
+<td>—</td>
+</tr>
+<tr>
+<td>製造品出荷額</td>
+<td><strong>N/A</strong>（市町村別の最新公表値を確認できず。苫東厚真発電所は電気業で計上外）</td>
+<td>—</td>
+</tr>
+<tr>
+<td>苫東厚真発電所 設備容量</td>
+<td><strong>1号機35万kW＋2号機60万kW＋4号機70万kW＝計165万kW</strong>。3号機8.5万kWは2005年10月廃止、5号機計画は凍結</td>
+<td>2026年</td>
+</tr>
+<tr>
+<td>工業用地（苫東全体）</td>
+<td>工業団地10,700ha、工場等用地5,500ha、<strong>分譲済1,129.5ha（20.5%）</strong>、分譲中4,370.5ha。分譲価格は臨空柏原9,000円/m²〜臨海臨港15,500円/m²。立地は100件以上</td>
+<td>2026年</td>
+</tr>
+<tr>
+<td>林業</td>
+<td>林野面積29,858ha（町域の約74%）、林業経営体45</td>
+<td>2020年</td>
+</tr>
+<tr>
+<td>漁業</td>
+<td>経営体12、漁業就業者3人、漁船12隻。ホッキ漁が中心</td>
+<td>2023年</td>
+</tr>
+<tr>
+<td>財政</td>
+<td>歳入126億9,206万円／歳出121億4,057万円</td>
+<td>2024年度</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>読み方。農業産出額113億円のうち畜産が71億円（63%）を占め、そのうち<strong>鶏だけで59億円</strong>に達する。「米とハスカップの町」という自己認識に対し、金額ベースの実体は養鶏が最大セクターである。製造品出荷額が把握できない一方で165万kWの発電設備を抱えるという統計上のねじれは、この町の産業を製造業の枠で測れないことを示している。</p></div>
+<h3>近隣自治体との規模比較</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>自治体</th>
+<th>人口（2020年）</th>
+<th>面積</th>
+<th>農業産出額（2024年）</th>
+<th>歳出（2024年度）</th>
+<th>高齢化率（2020年）</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>厚真町</strong></td>
+<td><strong>4,432人</strong></td>
+<td>404.61km²</td>
+<td>113億1,000万円</td>
+<td>121億4,057万円</td>
+<td class="num">36.4%</td>
+</tr>
+<tr>
+<td>苫小牧市</td>
+<td>170,113人</td>
+<td>561.57km²</td>
+<td>13億5,000万円</td>
+<td>920億6,801万円</td>
+<td class="num">29.4%</td>
+</tr>
+<tr>
+<td>安平町</td>
+<td>7,340人</td>
+<td>237.16km²</td>
+<td>296億7,000万円</td>
+<td>98億78万円</td>
+<td class="num">36.9%</td>
+</tr>
+<tr>
+<td>むかわ町</td>
+<td>7,651人</td>
+<td>711.36km²</td>
+<td>105億4,000万円</td>
+<td>109億5,325万円</td>
+<td class="num">40.8%</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>読み方。厚真町の人口は苫小牧市の2.6%にすぎないが、歳出規模は苫小牧市の13.2%あり、<strong>1人当たり歳出は苫小牧市の約5倍</strong>になる。震災復興と大規模施設立地の両方が財政規模を押し上げている。農業産出額では隣の安平町（軽種馬生産を含む）が厚真町の2.6倍で、胆振東部3町のなかで厚真町が農業規模で突出しているわけではない。</p></div>
+<h3>「厚真の経済モデル」論点</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>#</th>
+<th>論点</th>
+<th>事実</th>
+<th>評価</th>
+</tr></thead><tbody>
+<tr>
+<td class="num">1</td>
+<td>日本最大級の産業用地に隣接</td>
+<td>苫東10,700haのうち工場等用地5,500haに対し分譲済は1,129.5ha（20.5%）。新千歳空港から27km、苫小牧港・苫小牧東港に接する</td>
+<td><strong>用地は潤沢だが50年以上かけて8割が未分譲。</strong>土地があること自体は競争優位になっていない。優位は電力・工業用水・港湾・空港の同時利用可能性にある</td>
+</tr>
+<tr>
+<td class="num">2</td>
+<td>電力供給地であることの意味</td>
+<td>地震直前の北海道エリア総需要3,087MWに対し、苫東厚真1・2・4号機の実出力は計1,492MW＝<strong>約48%</strong></td>
+<td>一つの発電所が需要の半分を担う集中構造は、平時のコスト効率と引き換えに<strong>系統の単一障害点</strong>を作っていた。厚真町は「便益は道全体、リスクは町域」という非対称を負っていた</td>
+</tr>
+<tr>
+<td class="num">3</td>
+<td>2018年に露呈したリスク</td>
+<td>2・4号機の即時停止で116万kW（総需要の約37.6%）が脱落し、18分後に1号機も停止して全道295万戸のブラックアウトに至った。発電所の耐震設計値は約235Galに対し観測値は<strong>水平合成加速度386Gal</strong></td>
+<td>想定を超える地震動という「町の外の地質条件」が道内全域の電力を止めた。厚真町の産業インフラは町の意思とは無関係に道全体のリスク源だった</td>
+</tr>
+<tr>
+<td class="num">4</td>
+<td>農業の強み</td>
+<td>明治期からの厚真川水系による水稲、胆振管内随一の作付面積、納豆用極小粒大豆、作付面積日本一のハスカップ。農業産出額113億円</td>
+<td>米は厚真米として、ハスカップは商標として差別化ができている。ただしハスカップは生産量・シェアの公的統計が整備されておらず、「日本一」の定量的裏づけを外部に示しにくい</td>
+</tr>
+<tr>
+<td class="num">5</td>
+<td>人口規模と財政</td>
+<td>人口4,253人に対し歳出121億円。<strong>復興関連事業費は町分だけで242億1,680万円</strong>（2018〜2021年度）、国・道事業分は938億2,000万円（2023年7月時点）</td>
+<td>復興期の財政規模は平時の町政の想定を大きく超える。事業終了後に維持管理費だけが残る「復興後の谷」への設計が、第5次総合計画の実質的な争点になる</td>
+</tr>
+<tr>
+<td class="num">6</td>
+<td>AIデータセンター立地の影響</td>
+<td>北海道苫小牧AIデータセンター（2025年4月起工、まず50MW、将来300MW超）、AI Tech Tomakomai／Freyr Technology AI（2026年春10MW→2027年春50MW、総投資約3,500億円）。<strong>いずれも所在地は苫小牧市域（字柏原）で、厚真町域への立地は確認できない</strong></td>
+<td>大電力需要が苫東に集積する一方、厚真町が得るのは直接の固定資産税ではなく、通勤圏としての人口・雇用効果と、発電所立地地域としての存在感の再強化にとどまる可能性が高い</td>
+</tr>
+<tr>
+<td class="num">7</td>
+<td>弱点</td>
+<td>人口は2020年国勢調査4,432人まで減少し、震災後5年で震災前比316人（6.8%）減。第1次797人・第2次337人という構造で、町内に大規模な民間事業所が乏しい</td>
+<td>農業と発電所の二本足で、いずれも雇用吸収力が限られる。発電所は道内需要の半分を担いながら町内雇用は限定的で、<strong>税収以外の波及が小さい</strong></td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>読み方。厚真町の経済は「町の規模に対して過大なインフラ」を抱える構造で、その恩恵である財政力とリスクである単一障害点が表裏一体になっている。AIデータセンターの集積は電力需要側の受益を苫小牧市域に集め、厚真町には供給側の役割だけを残す可能性がある。</p></div>
+<h2><span class="num">03</span>人口推移<span class="en">Population</span></h2>
+<p>国勢調査ベース。1960年・1965年および2025年は一次情報を確認できずN/A。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年</th>
+<th>人口</th>
+<th>増減数</th>
+<th>増減率</th>
+</tr></thead><tbody>
+<tr>
+<td class="num">1970</td>
+<td>7,916人</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td class="num">1975</td>
+<td>6,976人</td>
+<td class="num">△940</td>
+<td><strong>△11.9%</strong></td>
+</tr>
+<tr>
+<td class="num">1980</td>
+<td>6,817人</td>
+<td class="num">△159</td>
+<td class="num">△2.3%</td>
+</tr>
+<tr>
+<td class="num">1985</td>
+<td>6,603人</td>
+<td class="num">△214</td>
+<td class="num">△3.1%</td>
+</tr>
+<tr>
+<td class="num">1990</td>
+<td>6,183人</td>
+<td class="num">△420</td>
+<td class="num">△6.4%</td>
+</tr>
+<tr>
+<td class="num">1995</td>
+<td>5,734人</td>
+<td class="num">△449</td>
+<td class="num">△7.3%</td>
+</tr>
+<tr>
+<td class="num">2000</td>
+<td>5,438人</td>
+<td class="num">△296</td>
+<td class="num">△5.2%</td>
+</tr>
+<tr>
+<td class="num">2005</td>
+<td>5,240人</td>
+<td class="num">△198</td>
+<td class="num">△3.6%</td>
+</tr>
+<tr>
+<td class="num">2010</td>
+<td>4,892人</td>
+<td class="num">△348</td>
+<td class="num">△6.6%</td>
+</tr>
+<tr>
+<td class="num">2015</td>
+<td>4,838人</td>
+<td class="num">△54</td>
+<td class="num">△1.1%</td>
+</tr>
+<tr>
+<td class="num">2020</td>
+<td>4,432人</td>
+<td class="num">△406</td>
+<td><strong>△8.4%</strong></td>
+</tr>
+</tbody></table></div>
+<p>1970〜2020年の50年で7,916人→4,432人、<strong>3,484人（44.0%）減</strong>。減少率が最も大きいのは1970→1975年の△11.9%（高度成長期の農村人口流出）で、次が2015→2020年の△8.4%である。後者は震災の影響期間を含む。参考として住民基本台帳では2026年7月末4,253人・2,188世帯。</p>
+<h3>2018年の地震前後（住民基本台帳・月末値）</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>時点</th>
+<th>総人口</th>
+<th>世帯数</th>
+<th>2018年8月末との比較</th>
+</tr></thead><tbody>
+<tr>
+<td>2018年8月末（震災直前）</td>
+<td>4,671人</td>
+<td>2,181世帯</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2018年9月末</td>
+<td>4,624人</td>
+<td>2,166世帯</td>
+<td>△47人（△1.0%）</td>
+</tr>
+<tr>
+<td>2018年12月末（災害対策本部廃止）</td>
+<td>4,596人</td>
+<td>2,149世帯</td>
+<td>△75人（△1.6%）</td>
+</tr>
+<tr>
+<td>2020年2月末</td>
+<td>4,481人</td>
+<td>2,110世帯</td>
+<td>△190人（△4.1%）</td>
+</tr>
+<tr>
+<td>2021年3月末</td>
+<td>4,420人</td>
+<td>2,112世帯</td>
+<td>△251人（△5.4%）</td>
+</tr>
+<tr>
+<td>2022年3月末</td>
+<td>4,384人</td>
+<td>2,121世帯</td>
+<td>△287人（△6.1%）</td>
+</tr>
+<tr>
+<td>2023年3月末</td>
+<td>4,355人</td>
+<td>2,125世帯</td>
+<td>△316人（△6.8%）</td>
+</tr>
+</tbody></table></div>
+<p>震災から3か月半で75人（1.6%）、4年半で316人（6.8%）減少した。<strong>震災直後の急落よりも、その後の継続的な流出と出生数減少の累積のほうが大きい。</strong>世帯数は2021年3月末で底を打ち、その後は横ばいから微増に転じている（災害公営住宅への入居と世帯分離の影響と考えられる）。</p>
+<p>高齢化率は<strong>36.4%</strong>（2020年国勢調査）。住民基本台帳ベースでは38.4%（2026年1月1日、老年1,623人／4,218人）。年齢3区分は0〜14歳490人（11.6%）／15〜64歳2,114人（50.1%）／65歳以上1,623人（38.4%）。<strong>20〜39歳女性は人口の6.8%</strong>（全国平均10.3%）。</p>
+<p>胆振東部3町のうち厚真町は人口規模が最小だが高齢化率は最も低い。むかわ町（40.8%）との4.4ポイント差は、新千歳空港・苫小牧への近接性と苫東関連の雇用が若年層をわずかに引き留めている効果と整合する。ただし20〜39歳女性比率6.8%は全国平均の3分の2で、次世代の再生産基盤という点では3町とも同じ困難を抱えている。</p>
+<h2><span class="num">04</span>2018年北海道胆振東部地震と全域停電<span class="en">The Blackout</span></h2>
+<h3>地震</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th>値</th>
+</tr></thead><tbody>
+<tr>
+<td>発生時刻</td>
+<td><strong>2018年9月6日 3時7分59.3秒（JST）</strong></td>
+</tr>
+<tr>
+<td>震央</td>
+<td>北海道胆振地方中東部。北緯42.69度・東経142.01度付近</td>
+</tr>
+<tr>
+<td>震源の深さ</td>
+<td>37km（気象庁暫定値）</td>
+</tr>
+<tr>
+<td>規模</td>
+<td>気象庁マグニチュード6.7、モーメントマグニチュード6.6</td>
+</tr>
+<tr>
+<td>最大震度</td>
+<td><strong>震度7（厚真町鹿沼、計測震度6.5）。</strong>安平町・むかわ町で震度6強</td>
+</tr>
+<tr>
+<td>位置づけ</td>
+<td>北海道で震度7の観測は史上初。1949年の震度階級創設以来、全国で6例目</td>
+</tr>
+<tr>
+<td>余震</td>
+<td>2019年2月21日にMj5.8・最大震度6弱。震度1以上は2019年7月末までに355回</td>
+</tr>
+<tr>
+<td>激甚災害指定</td>
+<td>2018年10月1日付</td>
+</tr>
+</tbody></table></div>
+<h3>被害（2020年9月1日現在、北海道「被害状況等 第122報」）</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>区分</th>
+<th>北海道全体</th>
+<th>厚真町</th>
+<th>安平町</th>
+<th>むかわ町</th>
+</tr></thead><tbody>
+<tr>
+<td>最大震度</td>
+<td class="num">7</td>
+<td class="num">7</td>
+<td>6強</td>
+<td>6強</td>
+</tr>
+<tr>
+<td>死者</td>
+<td>44人（災害関連死3人含む）</td>
+<td><strong>37人</strong></td>
+<td>0人</td>
+<td>1人</td>
+</tr>
+<tr>
+<td>負傷者</td>
+<td>785人</td>
+<td>61人</td>
+<td>17人</td>
+<td>277人</td>
+</tr>
+<tr>
+<td>最大避難者数</td>
+<td>13,111人（9月7日22時）</td>
+<td>1,118人</td>
+<td>718人</td>
+<td>1,033人</td>
+</tr>
+<tr>
+<td>断水戸数</td>
+<td>約68,300戸</td>
+<td>約2,000戸</td>
+<td>約3,600戸</td>
+<td>約1,000戸</td>
+</tr>
+<tr>
+<td>被害金額</td>
+<td>1,647億6,800万円</td>
+<td><strong>823億円</strong></td>
+<td>120億円</td>
+<td>193億円</td>
+</tr>
+</tbody></table></div>
+<p>住家被害は道全体で全壊491棟・半壊1,816棟・一部損壊47,105棟。厚真町は全壊235棟・半壊335棟・一部損壊1,091棟。非住家被害では厚真町が全壊686棟・半壊669棟・一部損壊813棟で<strong>いずれも道内最多</strong>である。</p>
+<p><strong>厚真町の死者37人のうち36人は土砂崩れによるもの。とくに吉野地区では住民34人のうち19人が死亡した。</strong></p>
+<h3>斜面崩壊</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th>値</th>
+</tr></thead><tbody>
+<tr>
+<td>崩壊面積</td>
+<td>推定<strong>13.4km²</strong>（国土地理院「斜面崩壊・堆積分布図」に基づく国交省値）</td>
+</tr>
+<tr>
+<td>崩壊土量</td>
+<td>3,000万m³（札幌ドーム約440個分）</td>
+</tr>
+<tr>
+<td>箇所数</td>
+<td>東西25km×南北36kmの範囲で<strong>約8,000箇所</strong>（川上ほか2021）。7,142箇所とする研究、6,000箇所以上とする報告もある</td>
+</tr>
+<tr>
+<td>明治以降の位置づけ</td>
+<td>1891年の濃尾地震、2004年の新潟県中越地震を上回り、<strong>詳細な記録が残る明治以降で最も広範囲に及んだ土砂災害</strong></td>
+</tr>
+<tr>
+<td>代表的な崩壊地</td>
+<td>吉野地区は厚真川右岸に沿って3km以上、高さ80〜130mの斜面が各所で崩壊し、延長約800mにわたり道道沿いの集落を覆った。日高幌内川では右岸で大規模な岩盤すべりが発生し、谷が完全に埋積されて河道閉塞（堰止湖）が生じた</td>
+</tr>
+<tr>
+<td>崩壊斜面の傾斜</td>
+<td>大部分が20〜40度。<strong>傾斜30度以下の緩斜面でも崩壊が発生した</strong></td>
+</tr>
+</tbody></table></div>
+<h3>すべり面となった地層の正体</h3>
+<p>厚真町周辺の地質は下位から次の順で重なる。</p>
+<ul><li><strong>新第三系中新統の海成層</strong>（1,200〜500万年前）。下位よりトニカ層、振老層、上部中新統の軽舞層、萌別層。硬質頁岩、砂岩泥岩互層、泥質岩からなる</li><li><strong>支笏第1降下火砕堆積物</strong>。約4万年前、支笏カルデラ（現・支笏湖）を形成した巨大噴火の際に火砕流に先立って噴出した直径2cm以下の軽石・細粒火山灰</li><li><strong>恵庭a軽石層（En-a）</strong>。約2万年前に始まった恵庭岳の噴火、とくに約1万5000年前のプリニー式噴火による軽石層。25km離れた千歳周辺で2m以上、150km離れた帯広周辺でも約10cmの層をなす</li><li><strong>樽前d降下火砕堆積物（Ta-d）</strong>。約9000年前、樽前山の第1活動期の噴出物。上位のd1は灰色スコリア火山礫（比重1.6〜1.8）、下位のd2は発泡のよい赤橙色軽石（比重0.4〜0.6）が主体</li><li>その上にTa-c（約2500〜2000年前）、Ta-a・Ta-b（1667年〜現在）が重なる</li></ul>
+<p>これらを合わせたテフラ層の厚さは、厚真町吉野付近の丘陵地で5m以上に達する。</p>
+<p>千木良雅弘（京都大学防災研究所）・田近淳（ドーコン）の2018年10月14〜15日の現地調査では、調査範囲内の崩壊のほとんどが<strong>Ta-d基底部の細粒軽石、またはそれと褐色火山灰土の混合物の層</strong>にすべり面をもつと結論づけられた。一見すると下位の泥岩表面にすべり面ができているように見えるが、残留する崩土の下には細粒軽石が挟在している。このすべり面形成層は著しく風化して極めて脆弱になっており、<strong>浸透水がTa-d基底に滞留して風化が進んだため</strong>と推定されている。軽石・火山灰層は透水性が高い一方、長い年月をかけた化学的風化で粘土化しており、「軽い地層の上を、すべりやすくなった重い土壌が覆う」不安定な構造になっていた。</p>
+<p>川上源太郎らのGIS解析（2021、北海道立総合研究機構）では、崩壊源の面積率はEn-aとTa-dの等層厚線の分布主軸と相関し、崩壊源の分布密度は基盤岩の<strong>褶曲構造</strong>と強い相関を示した。高密度域は背斜およびドーム構造に、低密度域は向斜およびドーム中心部に分布する。</p>
+<p>寄与したのは前年の台風ではなく<strong>同年2018年の降水</strong>である。厚真町では6月から8月にかけて<strong>平年の約1.6倍</strong>の降雨があった。直前の台風第21号による降雨量は9月4日6時〜5日9時で12.5mmと多くなかったが、9月5日2時17分に<strong>最大瞬間風速34.3m/s</strong>（当地観測史上1位）を記録する強風をもたらし、水を含んで緩んでいた土壌をさらに不安定化させた。これらが複合し、傾斜30度以下の緩斜面でも表層崩壊が一気に発生したと考えられている。</p>
+<h3>苫東厚真火力発電所の停止</h3>
+<p>地震直前の系統状態（9月6日3時7分時点、電力広域的運営推進機関）。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>発電機</th>
+<th>定格</th>
+<th>地震直前の出力</th>
+</tr></thead><tbody>
+<tr>
+<td>苫東厚真1号機</td>
+<td>350MW</td>
+<td>338MW</td>
+</tr>
+<tr>
+<td>苫東厚真2号機</td>
+<td>600MW</td>
+<td>556MW</td>
+</tr>
+<tr>
+<td>苫東厚真4号機</td>
+<td>700MW</td>
+<td>598MW</td>
+</tr>
+<tr>
+<td><strong>苫東厚真 計</strong></td>
+<td><strong>1,650MW</strong></td>
+<td><strong>1,492MW</strong></td>
+</tr>
+<tr>
+<td>北海道エリア総需要（発電端）</td>
+<td>—</td>
+<td>3,087MW</td>
+</tr>
+<tr>
+<td>北本連系設備</td>
+<td>600MW</td>
+<td>72MW</td>
+</tr>
+</tbody></table></div>
+<p>深夜需要に合わせて他の火力は最低出力または停止中で、苫東厚真をメリットオーダー上位で高出力運転していた。<strong>苫東厚真3基で道内需要の約48%</strong>を供給していた。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>号機</th>
+<th>損傷内容</th>
+<th>停止のタイミング</th>
+</tr></thead><tbody>
+<tr>
+<td>1号機 35万kW</td>
+<td>ボイラー内蒸気配管の損傷、ドラム水位異常</td>
+<td>自動停止機能を具備しておらず即時停止せず。3時8分に▲約5万kW、3時20〜23分に▲約20万kW、<strong>3時25分にトリップ</strong></td>
+</tr>
+<tr>
+<td>2号機 60万kW</td>
+<td>ボイラー内蒸気配管の損傷。微粉炭機の温度制御に不具合</td>
+<td>地震直後に<strong>タービン振動を検知して停止</strong></td>
+</tr>
+<tr>
+<td>4号機 70万kW</td>
+<td><strong>タービン出火</strong></td>
+<td>地震直後に<strong>タービン振動を検知して停止</strong></td>
+</tr>
+</tbody></table></div>
+<p>発電所の耐震設計値は約235Gal（震度5相当）だったのに対し、今回は<strong>水平合成加速度386Gal</strong>（震度6弱相当）を記録し設計値を上回った。敷地では液状化も確認された。</p>
+<h3>ブラックアウトに至る18分</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>時刻</th>
+<th>事象</th>
+</tr></thead><tbody>
+<tr>
+<td>3:07:59.3</td>
+<td>地震発生</td>
+</tr>
+<tr>
+<td>3:08</td>
+<td>2・4号機がタービン振動検知で停止（<strong>▲116万kW＝総需要の約37.6%</strong>）。1号機も▲約5万kW</td>
+</tr>
+<tr>
+<td>3:08</td>
+<td>北本連系設備のAFCが<strong>49.62Hz</strong>で動作し緊急融通。受電を7万kW→<strong>57万kW</strong>まで増加</td>
+</tr>
+<tr>
+<td>3:08</td>
+<td>周波数低下リレー（UFR）が48.5Hz・48.0Hzで作動し<strong>約130万kWの負荷遮断</strong>。うち6万kWは設定ミスで誤って自動再送電</td>
+</tr>
+<tr>
+<td>3:08</td>
+<td>狩勝幹線・新得追分線・日高幹線の送電線故障で道東・北見エリアが停電（▲約13万kW）、<strong>水力▲43万kW</strong>が停止</td>
+</tr>
+<tr>
+<td>3:08</td>
+<td>周波数低下により<strong>風力▲17万kW</strong>が停止。周波数は<strong>46.13Hz</strong>で下限に達し回復方向へ</td>
+</tr>
+<tr>
+<td>3:09</td>
+<td>北本と水力のAFC機能により一時的に50Hzでバランス。中給が奈井江2号機・伊達1号機・砂川3・4号機に起動指令</td>
+</tr>
+<tr>
+<td>3:09-3:19</td>
+<td>情報収集による需要増と推定される要因で周波数が徐々に低下</td>
+</tr>
+<tr>
+<td>3:20-3:23</td>
+<td>1号機の出力が安定せず▲約20万kW。2回目のUFR動作で▲16万kW遮断</td>
+</tr>
+<tr>
+<td>3:24-3:25</td>
+<td><strong>1号機がドラム水位を理由にトリップ</strong>（▲約10万kW）。3回目のUFR動作で▲6万kWを遮断し設定量を全量使い切る</td>
+</tr>
+<tr>
+<td>3:25</td>
+<td>過励磁で知内1号機・伊達2号機・奈井江1号機が停止（▲34万kW）。続いて水力が停止し、エリア内電源の喪失により北本連系設備が運転不能</td>
+</tr>
+<tr>
+<td><strong>3:25</strong></td>
+<td><strong>北海道エリアがブラックアウト。約295万戸が停電。日本初のブラックアウト</strong></td>
+</tr>
+</tbody></table></div>
+<p>火力発電所は出力増加にバーナーやポンプの台数追加が必要で、ゾーン切替時は約20分間出力を一定保持しなければならない。地震時の上げ調整速度は苫東厚真1号機0.35万kW/分、知内1号機1.05万kW/分、伊達2号機0.7万kW/分、奈井江1号機0.3万kW/分で、<strong>急激な供給力減少に追従できなかった。</strong></p>
+<h3>復旧</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>時点</th>
+<th>状況</th>
+</tr></thead><tbody>
+<tr>
+<td>9月6日3:25</td>
+<td>約295万戸が停電</td>
+</tr>
+<tr>
+<td>発生後約2日</td>
+<td>約99%が復旧</td>
+</tr>
+<tr>
+<td>9月8日19:00</td>
+<td>北海道電力が復旧宣言（発生から<strong>約64時間後</strong>）</td>
+</tr>
+<tr>
+<td>9月9日17:30</td>
+<td>厚真町では387戸／約2,100戸が依然停電</td>
+</tr>
+<tr>
+<td>10月5日</td>
+<td>停電が完全に解消</td>
+</tr>
+</tbody></table></div>
+<p>苫東厚真の復旧は1号機が9月19日（資料により9月17日）、4号機が9月25日、2号機が<strong>10月10日6時00分</strong>。2号機は微粉炭機の点検清掃に約3週間を要し、微粉炭機2台停止に伴い当面18万kWに出力を制限して再開した。復旧には東京電力フュエル＆パワー、メーカー、協力会社の人的支援と国による資機材輸送が投入され、東芝エネルギーシステムズは2019年5月に経済産業省から感謝状を受けた。</p>
+<h3>その後の電力系統対策</h3>
+<ul><li>2019年3月、<strong>新北海道本州間連系設備（30万kW）が運転開始</strong>。北海道と本州を結ぶ連系容量は60万kWから90万kWになった</li><li>さらに「新々北本連系線」により<strong>北本を120万kWへ増強する広域系統整備計画</strong>が策定されている（電力広域的運営推進機関、2021年5月策定・2024年2月変更）。運用開始目標は2027年度末</li><li>電力広域的運営推進機関は2018年9月21日に検証委員会を設置し、20ミリ秒間隔の周波数データ、3秒間隔の発電機出力・潮流データ、1秒間隔の状態変化ログをもとに事象を時系列で再構成した。結論は<strong>苫東厚真3基の停止と道東の送電線事故による水力脱落が重なった「複合要因」</strong>である</li><li>厚真町自身は2019年から「エネルギー地産地消（地産地防）事業」に着手し、避難所・調理施設・災害本部機能を担う5施設に太陽光約1,249kW、蓄電池約1,935kWh、木質バイオマス発電機、EV充電設備を整備した</li></ul>
+<h3>復旧・復興の規模</h3>
+<p>国・道事業分の災害復旧費（厚真町分、2023年7月時点）は<strong>938億2,000万円</strong>。内訳は勇払東部地区直轄災害復旧事業478億円、日高幌内川直轄砂防災害関連緊急事業112億円、北海道の河川関連災害復旧事業192億6,000万円、道路関連46億円、厚真町代行災害復旧事業76億6,000万円ほか。</p>
+<p>厚真町自身の震災関連事業費は2018〜2021年度の実績で<strong>242億1,680万円</strong>。分類別では町民生活の再生115億8,355万円、農業の再生42億6,583万円、住まいの再建32億7,035万円、災害に強い社会基盤の整備20億9,127万円、森林および林業の再生13億175万円ほか。</p>
+<p>復旧・復興計画は計画期間2019〜2025年度の7年間で、基本方針は「住まい・暮らしの再建」「なりわいの再生」「災害に強いまちづくり」の3本柱。災害公営住宅は本郷きずな団地8戸、新町のぞみ団地（戸数N/A）、上厚真あかり団地4戸が整備された。関連行事としては2018年9月9日に安倍晋三首相が視察、11月15日に天皇・皇后両陛下が訪問、12月15日に慰霊式。2021年9月5日に京町のつたえり公園で慰霊碑除幕式。2023年5月28日に幌内地区で第73回北海道植樹祭、7月22日に秋篠宮皇嗣同妃両殿下が吉野地区を視察している。</p>
+<h2><span class="num">05</span>日本の大企業との関連<span class="en">Corporate Links</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>企業・分野</th>
+<th>関わり方</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>北海道電力</strong></td>
+<td>苫東厚真発電所（厚真町域）を運営。計165万kWで道内最大規模。2018年9月6日の地震で3基が停止し<strong>全道ブラックアウトの直接の引き金</strong>となった。町内最大の事業所であり固定資産税の主要源</td>
+</tr>
+<tr>
+<td><strong>株式会社苫東</strong></td>
+<td>苫小牧東部地域10,700ha（1市2町）の産業用地を保有・分譲・管理する第三セクター。1972年設立の苫小牧東部開発が約1,800億円の負債を残して清算され、1999年に株式会社苫東（資本金6,210万円）が承継。立地は100件以上</td>
+</tr>
+<tr>
+<td>電源開発（J-POWER）</td>
+<td>北本連系設備を管理。2018年の地震では49.62HzでAFCが動作し、7万kWから57万kWへ受電を増やして一時は周波数を50Hzでバランスさせた</td>
+</tr>
+<tr>
+<td><strong>ソフトバンク／IDCフロンティア</strong></td>
+<td>「北海道苫小牧AIデータセンター」を苫東地区に建設中。2025年4月15日起工、2026年度に50MW規模で開業予定、将来は敷地70万m²・受電300MW超。道内の再エネ100%利用の地産地消型を掲げ、経済産業省の補助金に採択。<strong>所在地は苫小牧市域</strong></td>
+</tr>
+<tr>
+<td><strong>Freyr Technology AI／AI Tech Tomakomai</strong></td>
+<td>シンガポール拠点のサーバー機器リース会社が事業パートナーとなり、SPCが苫小牧市字柏原の約10haでコンテナ型AIデータセンターを整備。2026年春以降に10MW、2027年春に50MWへ増設予定。<strong>総投資約3,500億円</strong>のうちサーバー・機器に約3,000億円をFreyr側、建屋・受電・冷却に約500億円をSPC側が負担。NVIDIAの最新AI半導体を採用。立地理由として電力・水・土地の3条件で国内最上位級の容量と拡張性を挙げる。<strong>所在地は苫小牧市域</strong></td>
+</tr>
+<tr>
+<td>東芝エネルギーシステムズ</td>
+<td>苫東厚真発電所の早期復旧活動により2019年5月に経済産業省から感謝状を受領</td>
+</tr>
+<tr>
+<td>農協・食品関連</td>
+<td>JAとまこまい広域の厚真町ハスカップ部会が「厚真産ハスカップ」の生産・ブランド化を担い、2024年11月に地域団体商標登録。町内には養鶏（採卵鶏2経営体、ブロイラー1経営体）があり、農業産出額113.1億円のうち鶏が59.4億円を占める</td>
+</tr>
+<tr>
+<td>鵡川漁業協同組合</td>
+<td>厚真支所を通じてホッキ漁を中心とする資源管理型漁業。ホタテ増殖漁場の確保、シシャモ・マツカワガレイの種苗放流</td>
+</tr>
+<tr>
+<td>新日本海フェリー</td>
+<td>苫小牧東港（周文フェリーターミナル、苫東地域内）に秋田（約12時間）、新潟（約19時間）、敦賀（約34時間）航路を運航</td>
+</tr>
+<tr>
+<td>エーゼロ</td>
+<td>厚真町とともに「厚真町エネルギー6次産業化コンソーシアム」を構成し、エネルギー地産地消事業を推進</td>
+</tr>
+<tr>
+<td>石油備蓄基地</td>
+<td>苫東地域に国家備蓄・民間備蓄の基地が立地し備蓄量は国内最大とされる。<strong>ただし所在市町村が厚真町域か苫小牧市域かを一次情報で確認できずN/A</strong></td>
+</tr>
+</tbody></table></div>
+<p>苫小牧市とは苫東地域を共有し、厚真町の産業用地・港湾・工業用水はいずれも苫小牧市域の設備と一体で機能する。<strong>AIデータセンター2件はいずれも苫小牧市域に立地するため、厚真町は電力供給側として関与し、税収は苫小牧市に帰属する構図になる。</strong>千歳市とは新千歳空港（約27km、24時間運用）を介した関係で、苫東の臨空柏原地区は同空港に隣接し、厚真町からの通勤圏でもある。</p>
+<h2><span class="num">06</span>食<span class="en">Food</span></h2>
+<p>夕張のメロンが「産業の死」から生まれたのに対し、<strong>厚真のハスカップは「産業の到来」から生まれた。</strong></p>
+<p>1980年代、厚真町と苫小牧市にまたがる<strong>勇払原野</strong>（北海道最大のハスカップ群生地）で苫東の大規模工業開発が進み、自生株が失われる危機が広がった。そこで厚真町の農家が<strong>自生株を掘り上げて町内の畑へ移植した。厚真のハスカップは、栽培化された救出植物である。</strong></p>
+<p>ハスカップは浅根性で、乾燥地よりも保水性・排水性のよい土壌を好む。厚真の火山灰ベースの排水良好な土壌が適地だったため移植は定着し、畑地で栽培すると自生地とはまるで違う良好な生育をして果実も多く結実した。<strong>厚真の斜面崩壊を引き起こしたのと同じ火山灰層が、ここでは資源として働いている。</strong></p>
+<div class="risk"><p>ただし数字を見ると、<strong>ハスカップは厚真のアイデンティティであって収入ではない。</strong>令和6年の農業産出額113.1億円の内訳は畜産71.5億円・耕種41.6億円で、品目別最大は鶏59.4億円、次いで米26.2億円。一方<strong>2026年のハスカップの目標売上高は950万円</strong>である。町の食の看板と町の食の稼ぎは別物だという構造を押さえておく必要がある。</p></div>
+<h3>「作付面積日本一」の意味</h3>
+<p>厚真町公式は「作付面積日本一」と明記し、胆振総合振興局、JAとまこまい広域、国土交通省北海道開発局の資料も同様に記載している。<strong>行政・農協の公式表記に依拠した表現であり、全国の作付面積を悉皆調査した統計に基づく順位ではない点は留保が必要。</strong></p>
+<p>ただし文脈は明確である。<strong>全道のハスカップ栽培面積は1990年の167haをピークに、1994年108ha、2003年60ha・生産量97tへ縮小した。</strong>ナガチャコガネによる根部食害と、1994年の政府の減反緩和策による復田が主因である。<strong>全国の産地が縮小するなかで厚真が残ったため、相対的に「日本一」となった</strong>という順序になる。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年</th>
+<th>出来事</th>
+</tr></thead><tbody>
+<tr>
+<td>—</td>
+<td>語源はアイヌ語「ハシカプ」（枝の上にたくさん実の成る木）。アイヌ民族は不老長寿の薬として自生株を採取利用</td>
+</tr>
+<tr>
+<td>1933年</td>
+<td>菓子メーカーが苫小牧市沼ノ端で自生株の果実を利用。産業利用の最初とされる</td>
+</tr>
+<tr>
+<td>1977-78年</td>
+<td>農家における栽培が美唄市、次に千歳市で開始</td>
+</tr>
+<tr>
+<td><strong>1980年代</strong></td>
+<td><strong>苫東の大規模工業開発により勇払原野の群生地が縮小。厚真町の農家が町内へ移植。</strong>栽培農家約100戸</td>
+</tr>
+<tr>
+<td>1980年</td>
+<td>JAとまこまい広域 厚真町ハスカップ部会 設立</td>
+</tr>
+<tr>
+<td>1990年</td>
+<td>全道栽培面積が167haでピーク</td>
+</tr>
+<tr>
+<td>時期不明</td>
+<td>厚真の栽培農家が一時<strong>56戸</strong>まで落ち込む</td>
+</tr>
+<tr>
+<td>2018年度</td>
+<td>104戸・24.5ha・出荷18t</td>
+</tr>
+<tr>
+<td><strong>2018年9月6日</strong></td>
+<td><strong>胆振東部地震。農地155.31ha・林地3,160haが被災</strong></td>
+</tr>
+<tr>
+<td>2021年</td>
+<td>7月7日が「ハスカップの日」として日本記念日協会に登録</td>
+</tr>
+<tr>
+<td>2024年</td>
+<td>生産量4t・生産者約60軒。生産力の限界は約10t</td>
+</tr>
+<tr>
+<td><strong>2024年10月22日</strong></td>
+<td><strong>地域団体商標登録（登録番号第6856632号）</strong></td>
+</tr>
+<tr>
+<td>2026年</td>
+<td>80人・18.9ha・目標収穫量4t・目標売上高950万円</td>
+</tr>
+</tbody></table></div>
+<h3>品種</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>品種</th>
+<th>育成・登録</th>
+<th>特徴</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>ゆうふつ</strong></td>
+<td>北海道立中央農業試験場が<strong>1967年</strong>に苫小牧市の自生地から採集した株に由来する実生株から選抜。<strong>1992年品種登録</strong></td>
+<td>収穫は6月末〜7月上旬の早生。着花性がよく自家結実率も高く収量性が高い。1果重1.1gと大きい。糖度11%弱、酸度2.5g/100mL弱でハスカップとしては低い。種子が少なく酸度が低いため<strong>加工原料に適する</strong></td>
+</tr>
+<tr>
+<td><strong>ゆうしげ</strong></td>
+<td>2002年頃から優良系統を調査し、改良を進めていた4軒の農家のうち<strong>山口農園</strong>から果実の大きさと食味で最も優秀な2種を選抜。<strong>2008年6月5日出願／2009年12月21日登録</strong></td>
+<td><strong>甘みが強い。</strong>大粒。出荷基準は糖度12度以上。<strong>厚真町でのみ栽培できる地域限定品種</strong></td>
+</tr>
+<tr>
+<td><strong>あつまみらい</strong></td>
+<td>同上</td>
+<td><strong>さわやかな酸味</strong>で酸味と甘さのバランスがよい。大粒。糖度12度以上。<strong>厚真町でのみ栽培できる地域限定品種。</strong>命名は「おふくろのつくったハスカップをたくさんの人に食べに来てほしい、ハスカップで厚真町は日本一を目指したい」という想いから</td>
+</tr>
+<tr>
+<td>ミエ</td>
+<td><strong>N/A</strong></td>
+<td>町公式が4品種として挙げているが、育成主体・登録番号・特徴を記した一次情報に到達できずN/A</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>読み方。<strong>「ゆうしげ」と「あつまみらい」が厚真町限定であることが、この産地の防衛線になっている。</strong>全国の作付が縮小するなかで、厚真だけが他産地に模倣できない品種を持った。品種の囲い込みが、面積の縮小に対する答えになっている。</p></div>
+<h3>地域団体商標登録で何が変わったか</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>商標</td>
+<td>厚真産ハスカップ</td>
+</tr>
+<tr>
+<td>登録番号</td>
+<td><strong>第6856632号</strong></td>
+</tr>
+<tr>
+<td>登録日</td>
+<td><strong>2024年10月22日</strong>（町公式は「令和6年11月」と表記。経済産業省北海道経済産業局の公表2024年11月8日に対応すると考えられる）</td>
+</tr>
+<tr>
+<td>商標権者</td>
+<td>とまこまい広域農業協同組合</td>
+</tr>
+<tr>
+<td>指定商品</td>
+<td>厚真町およびその周辺で生産されたハスカップ（生鮮および冷凍）</td>
+</tr>
+<tr>
+<td>経緯</td>
+<td>2015年6月に「厚真産ハスカップブランド化推進協議会」設立 → 2016年2月に出願 → <strong>登録まで約8年。</strong>担当者の部署異動で組織間連携が滞ったが、2023年度に北海道経済産業局の支援事業を通じ弁理士の助言を受けて登録に至った</td>
+</tr>
+</tbody></table></div>
+<p>登録後の変化として日本弁理士会関東会の事例取材が挙げているのは4点。初セリが史上最高値を達成したこと、札幌などの市場からの引き合いが明らかに増えたこと、観光客の構成が変わり札幌および道外からの来訪が増えたこと、そして<strong>農園の収穫体験が有料化へシフトしたこと</strong>である。</p>
+<div class="callout"><p>読み方。4点目が構造的に大きい。<strong>無料の摘み取り体験が有料の観光商品になったことで、生産量4トンという小さな実物経済の上に、体験販売という別の収益層が乗った。</strong>生産量が2018年の18トンから4トンへ落ちたまま産地が存続している理由の一部はここにある。地震で生産が3分の1以下になった産地が、商標と体験で立て直しにかかっているということである。</p></div>
+<p>2026年の初出荷・初せりは<strong>6月18日</strong>、苫小牧市公設地方卸売市場へ56箱。卸売取引の最高値は<strong>「特Ａ大」1パック300gで1,500円。</strong>2018年6月28日の初せりでは同じ特Ａ大300gが1,000円だったので、8年で1.5倍になっている。2025年の暑さと2026年の少雨で収穫量は例年より少なく実も小ぶりだが、味が凝縮し「近年で一番おいしい」出来だという。</p>
+<p><strong>摘み取り受け入れ農園。</strong>厚真町公式は「9つの観光農園」とするが、厚真観光協会の公式サイトには<strong>10農園</strong>が掲載されている。シーズンは6月下旬〜7月中旬で<strong>期間は年間2〜3週間しかない。2026年シーズンは全農園「今季終了」。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>農園</th>
+<th>住所（厚真町）</th>
+<th>電話</th>
+<th>規模</th>
+</tr></thead><tbody>
+<tr>
+<td>さくま農園</td>
+<td>幌内195</td>
+<td class="num">080-4045-3236</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>羽入農園</td>
+<td>高丘455</td>
+<td class="num">0145-27-3331</td>
+<td>約5,000本</td>
+</tr>
+<tr>
+<td>山城農園</td>
+<td>高丘556</td>
+<td class="num">090-9520-9761</td>
+<td>約500本</td>
+</tr>
+<tr>
+<td>橋本農園</td>
+<td>富里165-3</td>
+<td class="num">090-9087-6570</td>
+<td>約1,000本</td>
+</tr>
+<tr>
+<td>畑島農園</td>
+<td>東和194</td>
+<td class="num">090-8425-2882</td>
+<td>約800本</td>
+</tr>
+<tr>
+<td>土居ハスカップ農園</td>
+<td>旭35</td>
+<td class="num">090-5952-4209</td>
+<td>約1,500本</td>
+</tr>
+<tr>
+<td>ハスカップファーム山口農園</td>
+<td>宇隆163-5</td>
+<td class="num">0145-29-8168</td>
+<td>約1,000本</td>
+</tr>
+<tr>
+<td>佐藤農園</td>
+<td>宇隆17-4</td>
+<td class="num">0145-27-3663</td>
+<td>約750本</td>
+</tr>
+<tr>
+<td>荒山農園</td>
+<td>上野209-1</td>
+<td class="num">0145-27-3001</td>
+<td>約150本</td>
+</tr>
+<tr>
+<td>佐藤農園（共栄）</td>
+<td>共栄393</td>
+<td class="num">0145-28-2411</td>
+<td>約300本</td>
+</tr>
+</tbody></table></div>
+<p><strong>料金は農園ごとに個別設定で、統一料金表は存在しない。</strong>確認できたのは土居ハスカップ農園が1,500円から、山口農園が土日営業で一般畑の入園料1人200円・自然栽培畑1人1,000円・持ち帰り1kg 2,000円。他の農園の料金・営業時間・予約要否はN/A。厚真町観光協会（0145-29-7711）への直接確認が必要。冷凍ハスカップはAコープ厚真店（0145-27-3102）で通年入手できる。</p>
+<h3>あつま豚丼は町の産物の総合カタログである</h3>
+<p>成立年はN/A（町の資料・観光協会・提供店のいずれにも記載がない）。設計は「全要素を厚真産で揃える」ことにある。<strong>厚真産の放牧豚を厚真産の高級炭でじっくり焼き、米は厚真産のさくら米、器は厚真町の陶芸家の作。</strong>素材・燃料・主食・食器のすべてを町内調達する構成で、食そのものより町の産物の総合カタログとして機能している。</p>
+<p>提供は<strong>レストランこぶし</strong>（こぶしの湯あつま内、本郷229-1、TEL 0145-26-7126）。営業11:30〜14:30／17:00〜20:00だが、<strong>あつま豚丼の販売時間は11:30〜13:30と17:00〜19:30に限定</strong>される。無休（臨時休業あり）。あつま豚丼 普通<strong>1,320円</strong>／特盛<strong>1,640円</strong>／豚丼セット<strong>1,440円</strong>（いずれも税込）。ほかにあづまジンギスカン定食1,640円、厚真産放牧豚ソースカツ丼1,340円、厚真産ハンバーグ定食1,090円。入浴せず食事のみの利用も可。</p>
+<h3>厚真米と納豆用大豆</h3>
+<p>町は「稲作を中心として農業の基礎が築かれ、<strong>道内有数の良質米生産地</strong>として発展してきた」産地である。ブランド名は<strong>さくら米</strong>（JAとまこまい広域）で、品種はななつぼしとゆめぴりか。<strong>ななつぼしは14年連続で食味ランキング最上級の特Aランク。</strong>令和7年産は「特A」「一等米」表記で流通している。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>作物</th>
+<th>作付面積</th>
+<th>収穫量</th>
+<th>年次</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>水稲</strong></td>
+<td><strong>1,580ha</strong></td>
+<td>8,510t</td>
+<td>令和7年産</td>
+</tr>
+<tr>
+<td>小麦</td>
+<td>766ha</td>
+<td>2,830t</td>
+<td>令和7年産</td>
+</tr>
+<tr>
+<td>大豆</td>
+<td><strong>604ha</strong></td>
+<td>1,510t</td>
+<td>令和7年産</td>
+</tr>
+<tr>
+<td>てんさい</td>
+<td>202ha</td>
+<td>10,700t</td>
+<td>令和7年産</td>
+</tr>
+</tbody></table></div>
+<p>大豆は令和7年産で604haである（本ページ02章の513haは2020年農林業センサスの販売目的ベースで、集計の定義が異なる）。町の過疎地域持続的発展市町村計画は「大豆は<strong>極小粒品種が主体</strong>で、<strong>納豆用として納豆実需者に好評</strong>」と記述し、品種としてトヨムスメ、スズマルを挙げている。<strong>具体的な供給先メーカー名はN/A。</strong>大手各社は「北海道産大豆使用」表記で産地を都道府県単位までしか開示しないため、公開情報から町単位の取引関係を特定するのは困難である。</p>
+<p>1戸当たり経営耕地面積は2015年で13.8haで、北海道平均26.5ha・胆振管内平均15.2haを下回る中小規模。農家戸数は1995年712戸→2015年402戸と20年で44%減っている。</p>
+<h3>ホッキは町内の外食に落ちていない</h3>
+<p>厚真町の水産業は<strong>鵡川漁業協同組合</strong>が担い、シシャモ・ホッキの資源管理やマツカワの種苗放流など資源管理型漁業で経営の安定化を図ってきた。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>区分</th>
+<th>平成27年</th>
+<th>平成28年</th>
+<th>平成29年</th>
+<th>平成30年</th>
+<th>令和元年</th>
+</tr></thead><tbody>
+<tr>
+<td>ホッキ貝 数量（t）</td>
+<td><strong>231</strong></td>
+<td class="num">134</td>
+<td class="num">108</td>
+<td class="num">80</td>
+<td><strong>110</strong></td>
+</tr>
+<tr>
+<td>ホッキ貝 金額（千円）</td>
+<td><strong>134,931</strong></td>
+<td class="num">75,249</td>
+<td class="num">59,170</td>
+<td class="num">38,282</td>
+<td><strong>35,847</strong></td>
+</tr>
+</tbody></table></div>
+<p>平成27年の231t・1億3,493万円から令和元年の110t・3,585万円へ、<strong>数量で52%減、金額で73%減。</strong>kg単価も約584円から約326円へ下落している。</p>
+<div class="risk"><p><strong>厚真町内でホッキ料理を提供している飲食店は、一次情報では確認できなかった。</strong>浜厚真のめぐみ水産が海産物販売と軽食を扱うが、公式情報にホッキの記載はない。<strong>厚真のホッキは、ふるさと納税と苫小牧市場経由の出荷が主たる流路であり、町内の外食に落ちていないと見るのが妥当である。</strong></p></div>
+<p>苫小牧市はホッキ貝の漁獲量が<strong>25年連続で日本一</strong>、2024年の水揚げ量755トンで2位の別海町579トンを176トン上回る。厚真町の110トン（令和元年）はその<strong>約7分の1</strong>にあたる。両者は同じ胆振太平洋沿岸の同一資源を分け合う関係にあり、苫小牧漁協の殻長9cm以上の選択的漁獲、産卵期（5〜6月）の禁漁、貝を傷つけず漁場を耕す噴流式桁曳網といった資源管理手法が、この海域全体のホッキを支えている。漁業者1人当たりの漁獲上限は2020年8.2t→2024年12tと引き上げられ、資源は回復基調にある。</p>
+<div class="callout"><p>読み方。<strong>ホッキという資源では厚真は苫小牧の周縁に位置し、「ホッキカレー」のような名物化・外食化はすべて水揚げ量日本一の苫小牧側で起きた。厚真がハスカップという内陸の在来資源に町の食のアイデンティティを賭けたのは、海側で苫小牧と競合できないという構造の裏返しでもある。</strong></p></div>
+<h3>実際に行ける店</h3>
+<p>厚真町の飲食セクター全体の規模は<strong>宿泊業・飲食サービス業20事業所・従業者67人</strong>（2021年経済センサス）で、夕張市の39事業所・209人の約3分の1である。人口は夕張より少ないが、事業所数の差以上に従業者数の差が大きい。観光入込は厚真15.06万人（宿泊1.23万人）に対し夕張28万人（宿泊5,500人）で、<strong>厚真は入込が少ない代わりに宿泊率が8%あり、夕張の2%より高い。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>店</th>
+<th>ジャンル</th>
+<th>住所（厚真町）</th>
+<th>電話</th>
+<th>営業時間</th>
+<th>定休日</th>
+<th>価格</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>レストランこぶし</strong></td>
+<td>郷土料理</td>
+<td>本郷229-1</td>
+<td class="num">0145-26-7126</td>
+<td>11:30〜14:30／17:00〜20:00（豚丼は11:30〜13:30、17:00〜19:30）</td>
+<td>無休（臨時休業あり）</td>
+<td>あつま豚丼1,320円、特盛1,640円、ジンギスカン定食1,640円（税込）</td>
+</tr>
+<tr>
+<td><strong>FORT by THE COAST</strong></td>
+<td>ファームレストラン</td>
+<td><strong>浜厚真472-7</strong></td>
+<td class="num">0145-28-3010</td>
+<td>11:00〜20:00（LO19:00）。平日14:30〜16:00は買い物のみ</td>
+<td>月曜・第2火曜（祝日は翌平日）</td>
+<td>カルボナーラ990円、親鶏のスパイスカレー990円。自家平飼い卵と親鶏を使ったカレー・パスタ・ピッツァ</td>
+</tr>
+<tr>
+<td><strong>めぐみ水産</strong></td>
+<td>海産物・軽食</td>
+<td><strong>浜厚真300-4</strong></td>
+<td class="num">0145-28-2838</td>
+<td>8:00〜18:00</td>
+<td>不定休</td>
+<td>干物中心の海産物販売。手作り弁当、シシャモと鶏でだしを取ったスープの極太麺ラーメン（価格N/A）</td>
+</tr>
+<tr>
+<td>ドライブイン本郷</td>
+<td>定食・麺・丼</td>
+<td>本郷270</td>
+<td class="num">0145-27-2762</td>
+<td>10:00〜18:30</td>
+<td>日曜、不定休</td>
+<td>塩ラーメン550円、小ライス100円、弁当800円。宴会・仕出し対応</td>
+</tr>
+<tr>
+<td>食空間ゆるり</td>
+<td>ブランド豚料理</td>
+<td>錦町5-1</td>
+<td class="num">0145-29-7344</td>
+<td>11:00〜14:00／17:00〜22:00</td>
+<td>日曜</td>
+<td>価格N/A</td>
+</tr>
+<tr>
+<td>カネナカ 中島食堂</td>
+<td>そば</td>
+<td>京町23</td>
+<td class="num">0145-29-7125</td>
+<td>月〜土 11:00〜15:00</td>
+<td>日曜</td>
+<td>価格N/A</td>
+</tr>
+<tr>
+<td>厚真園</td>
+<td>焼肉</td>
+<td>錦町7-3</td>
+<td class="num">0145-27-2929</td>
+<td>平日11:00〜14:00／17:00〜21:00</td>
+<td>不定休</td>
+<td>価格N/A</td>
+</tr>
+</tbody></table></div>
+<p>浜厚真海岸のサーファー層に対応するのが<strong>FORT by THE COAST</strong>と<strong>めぐみ水産</strong>である。前者は<strong>2018年の胆振東部地震で自宅と養鶏場が全壊した小林農園（テンアール株式会社）が、海から車で約5分の場所で再出発させた直営ダイナー</strong>で、2021年4月オープン。農業倉庫を改装した約50席の店内と屋外ドッグランを備える。</p>
+<div class="callout"><p>読み方。<strong>町の農業産出額の過半を占める鶏（59.4億円）の生産者が、震災復興として直営飲食業に踏み出した事例である。</strong>厚真の食の現在を1店で象徴している。ハスカップが商標と体験で立て直しにかかったのと同じ構図が、養鶏側でも起きている。</p></div>
+<h2><span class="num">07</span>訪問できる場所<span class="en">Places</span></h2>
+<p><strong>厚真町震災学習プログラム 被災地ガイド</strong>（一般社団法人厚真町観光協会）。胆振東部地震の被災地を観光協会のガイドが案内する。基本コースは約60分で吉野地区、富里地区、厚真ダム周辺などを回る。料金は<strong>ガイド1人あたり11,000円</strong>で、車両は参加者側が用意し1台に1ガイドが同乗する方式。オプションは林道コース（+5,500円、約60分）、日高幌内川砂防ダム（+5,500円、約60分）、高校生ガイド（+5,500円）。座学の講話は町内60分で33,000円。集合場所は厚真町本郷305-2。受付9:00-17:00で最終出発16:00（11〜3月は15:00）。予約は団体が1週間前、個人が最低3日前までに厚真町観光協会（0145-29-7711）へ。電話・HPでの予約対応は月〜金だが、<strong>事前予約があれば土日も体験できる。</strong>キャンセル料は1週間前まで無料、1週間前〜2日前20%、前日50%、当日100%。林道と砂防ダムのオプションは冬期の道路維持管理がないため11〜3月は利用できない。もう一つの柱として避難所運営体験があり、修学旅行・企業研修の受け入れに使われている。<strong>2022年9月時点で被災地ツアーの累計参加者は6千人を超えた。</strong></p>
+<p><strong>浜厚真海浜公園とサーフポイント</strong>。町南部の太平洋岸、浜厚真地区。厚真町観光協会は「年間6万人ものサーファーが集まる浜厚真海岸は北海道屈指のサーフスポット」と紹介する。JR日高本線の浜厚真駅が最寄りで、<strong>鉄道でアクセスできる数少ない北海道のサーフポイント</strong>でもある。町は海岸ライブカメラを公式サイトで公開しており、波と天候の事前確認ができる。駐車場・トイレ・シャワーの詳細はN/A。海岸線の延長は6,545m。</p>
+<p><strong>ハスカップ狩り</strong>。作付面積日本一の産地で、観光協会が観光摘み取りを案内している。旬は6月末から7月中旬。主要品種は甘みの強い「ゆうしげ」、さわやかな酸味の「あつまみらい」、「ゆうふつ」「ミエ」。栽培は昭和50年代に始まり、2024年11月に地域団体商標に登録された。ジャム、菓子、リキュール、ビネガーなど加工品の幅が広い。摘み取り受け入れ農園と料金は年により変動するため観光協会（0145-29-7711）への確認が必要。</p>
+<p><strong>こぶしの湯あつま</strong>（本郷229-1、TEL 0145-26-7126）。町営の温泉宿泊施設。泉質はラドン泉で、ラドン湯・泡ぶろ・打たせ湯・露天風呂・水ぶろ・サウナを備える。宿泊は本館とムービングハウス6棟。レストランで「あつま豚丼」やジンギスカン定食を提供する。EV充電器を2台無料設置。<strong>営業時間・定休日・入浴料金は公式サイトに明記がなくN/A。</strong>被災地ガイドの集合場所と同じ本郷地区にあり、学習プログラムと組み合わせやすい。</p>
+<p><strong>斜面崩壊跡（吉野・富里・幌内・日高幌内川）</strong>。吉野地区は厚真川右岸に沿って3km以上、高さ80〜130mの斜面が崩れ、延長約800mにわたって道道沿いの集落を覆った場所で、住民34人のうち19人が亡くなった。2020年5月に奈良県吉野山からシロヤマザクラが寄贈され、2021年11月にイオン環境財団によるサクラ30本、2022年10月に北海道主催の記念植樹でエゾヤマザクラ30本が植えられている。幌内地区（日高幌内川流域）は基盤の岩盤が露出する大規模な岩盤すべりが起き、谷が完全に埋積されて堰止湖が生じた地点で、2022年11月にエゾヤマザクラ500本、2023年5月28日に第73回北海道植樹祭（約750人参加）が行われた森林再生の現場でもある。<strong>いずれも生活道路と私有地・治山工事区域が混在するため、単独での立ち入りではなく観光協会のガイド同行が前提になる。</strong>冬期（11〜3月）は林道・砂防ダムへのアクセスができない。</p>
+<p><strong>厚真ダム・厚幌ダム</strong>。町北部の厚真川上流。厚真ダム貯水池は町内唯一の主要な湖沼で、被災地ガイドの基本コースの訪問先に含まれる。2018年の地震では厚真ダム・厚幌導水路を含む勇払東部地区直轄災害復旧事業に478億円が投じられ、<strong>厚幌ダム下流左岸はTa-d基底のすべり面が観察できる代表的な露頭</strong>として学術調査の対象になった。</p>
+<p><strong>大沼野営場</strong>。蓮の花が咲く大沼のほとりのキャンプ場。管理棟にトイレと炊事場があるだけの簡素な施設で、静かさを求めるリピーターが多いと観光協会は紹介している。利用期間・料金はN/A。</p>
+<p>そのほかあつまスタードーム、軽舞遺跡調査整理事務所、体験観光として田んぼのオーナー（米づくり体験）、いも掘り観光、ジャムづくり体験がある。厚真町教育委員会は「学芸員と行く！厚真のアイヌ文化を巡るツアー」も実施している。特産品には新酒「かけ橋」があり、地域イベントとして「あつマルシェ」が開かれる。</p>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>Wikipedia「厚真町」「北海道胆振東部地震」「苫東厚真発電所」「苫小牧東部地域」「勇払郡」</li>
+  <li>総務省統計局「国勢調査」（1970〜2020年各年、令和7年人口速報集計）／総務省「住民基本台帳に基づく人口、人口動態及び世帯数」</li>
+  <li>農林水産省「市町村別農業産出額（推計）」令和6年（2024年。厚真113.1億円、安平296.7億円、むかわ105.4億円、苫小牧13.5億円）</li>
+  <li>農林水産省「2020年農林業センサス」「2023年漁業センサス」「令和6年面積調査」「令和6年度市町村別決算状況調」</li>
+  <li>国土地理院「平成30年北海道胆振東部地震に関する情報」「斜面崩壊・堆積分布図」 — https://www.gsi.go.jp/BOUSAI/H30-hokkaidoiburi-east-earthquake-index.html</li>
+  <li>気象庁「災害時地震報告 平成30年北海道胆振東部地震」（平成31年2月28日）、「最大震度別地震回数表」（令和元年9月6日9時現在）</li>
+  <li>地震調査研究推進本部地震調査委員会「平成30年北海道胆振東部地震の評価」（平成30年10月12日）</li>
+  <li>資源エネルギー庁「日本初の“ブラックアウト”、その時一体何が起きたのか」 — https://www.enecho.meti.go.jp/about/special/johoteikyo/blackout.html</li>
+  <li>総合資源エネルギー調査会 レジリエンスWG 第2回資料（北海道電力「北海道胆振東部地震に伴う苫東厚真発電所・道東に至る送電線の事故・復旧状況について」2018年10月25日）</li>
+  <li>電力広域的運営推進機関「地震発生からブラックアウトに至るまでの事象について」検証委員会 資料4-1（2018年9月21日）／「北海道本州間連系設備に係る広域系統整備計画」（2021年5月策定、2024年2月変更）</li>
+  <li>北海道「平成30年北海道胆振東部地震による被害状況等（第122報）」（令和2年9月）</li>
+  <li>平成30年北海道胆振東部地震災害検証委員会「災害検証報告書」（2019年5月）</li>
+  <li>苫小牧市「企業立地ガイド 苫小牧東部地域」／国土交通省「北海道：苫小牧東部地域開発」</li>
+  <li>厚真町「位置・アクセス」「平成30年北海道胆振東部地震 災害対応及び復旧・復興に関する報告書」第1章・第5章（被災前の町概要、地目別面積、産業別人口、震災前後の人口推移、地質、崩壊メカニズム、災害復旧費938億2,000万円、町関連事業費242億1,680万円）</li>
+  <li>厚真町・安平町・むかわ町「平成30年北海道胆振東部地震記録誌」／厚真町「復旧・復興計画」第1〜3期／「第5次厚真町総合計画」／「厚真産ハスカップ紹介」／「苫小牧東部地域産業用地（苫東）」／「エネルギー地産地消事業について」</li>
+  <li>千木良雅弘・田近淳「北海道胆振東部地震による斜面崩壊の調査結果（速報）」（調査日2018年10月14・15日）</li>
+  <li>川上源太郎・輿水健一・小安浩理「褶曲構造に規制された胆振東部地震による地震地すべりの分布」エネ環地研報告 第1号 p9-20（2021年）／北海道立総合研究機構</li>
+  <li>田近淳・千木良雅弘ほか「2018年北海道胆振東部地震によるテフラ層すべりと人的被害」日本地すべり学会誌 57巻6号 p203-209（2020年）</li>
+  <li>産業技術総合研究所 地質調査総合センター「北海道厚真町における支笏降下火砕堆積物の特性」「樽前火山地質図」（平成22年2月26日）</li>
+  <li>高橋浩晃「北海道胆振東部地震の総括」北海道防災会議地震専門委員会（令和2年1月16日）</li>
+  <li>内藤淳一（電力広域的運営推進機関）「ブラックアウトとはどういう現象か」電気学会全国大会公開シンポジウム</li>
+  <li>北海道電力「苫東厚真発電所2号機の復旧について（最終報）」「新北海道本州間連系設備の運転開始について」／ほくでんネットワーク「新北本連系設備」</li>
+  <li>IDCフロンティア「北海道苫小牧データセンター起工式を開催しました」（2025年4月18日）／ソフトバンクニュース（2025年4月21日）</li>
+  <li>日本経済新聞「北海道・苫小牧に5万KWのAIデータセンター、3500億円投資」 — https://www.nikkei.com/</li>
+  <li>日本経済新聞「焦げたタービン、敷地は液状化 苫東厚真発電所を公開」（2018年9月20日）</li>
+  <li>電気新聞「苫東厚真脱落、送電線故障、水力脱落。北海道全域停電が起きた理由とは」「北海道ブラックアウトは複合要因」</li>
+  <li>東芝エネルギーシステムズ「北海道胆振東部地震における苫東厚真火力発電所の早期復旧活動で経済産業省から感謝状を受領」（2019年5月17日）</li>
+  <li>北海道新聞「＜胆振東部地震から４年＞厚真被災地ツアーに６千人超 復旧進み避難所運営体験導入」（2022年）</li>
+  <li>一般社団法人厚真町観光協会 公式サイト（被災地ガイド、震災体験プログラム、浜厚真海岸、大沼野営場）／こぶしの湯あつま公式サイト／株式会社苫東公式サイト</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく地域リサーチであり、投資助言ではない。町の域内総生産は公表されておらず、経済規模は農業産出額・耕地面積・発電設備容量で代替した。製造品出荷額は従業者4人以上の事業所が少なく秘匿の可能性があり最新値を確認できずN/Aとした。なお苫東厚真発電所は電気業なので製造品出荷額には計上されない。1人当たり歳出と各倍率は本ページによる算出値。1960年・1965年および2025年の国勢調査人口、ハスカップの生産量実数と全国シェア、苫東地域のうち厚真町域の面積・分譲済面積、石油備蓄基地の所在市町村、こぶしの湯あつまの営業時間と料金はいずれも確認できずN/Aとした。被害の数値は集計時点により異なるため、2020年9月1日現在の北海道「被害状況等 第122報」を採った。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "人口",
+  "value": 4253,
+  "unit": "人",
+  "as_of": "2026-07",
+  "source": "https://www.town.atsuma.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（国勢調査）",
+  "value": 4432,
+  "unit": "人",
+  "as_of": "2020-10",
+  "source": "https://www.stat.go.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "面積",
+  "value": 404.61,
+  "unit": "km2",
+  "as_of": "2024",
+  "source": "https://www.town.atsuma.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "農業産出額",
+  "value": 113.1,
+  "unit": "億円",
+  "as_of": "2024",
+  "source": "https://www.maff.go.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "農業産出額のうち鶏",
+  "value": 59.4,
+  "unit": "億円",
+  "as_of": "2024",
+  "source": "https://www.maff.go.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "苫東厚真発電所 設備容量",
+  "value": 165,
+  "unit": "万kW",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "地震直前の苫東厚真の実出力",
+  "value": 1492,
+  "unit": "MW",
+  "as_of": "2018-09-06",
+  "source": "https://www.occto.or.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "地震直前の北海道エリア総需要",
+  "value": 3087,
+  "unit": "MW",
+  "as_of": "2018-09-06",
+  "source": "https://www.occto.or.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "苫東厚真が担っていた需要比率",
+  "value": 48,
+  "unit": "%",
+  "as_of": "2018-09-06",
+  "source": "https://www.occto.or.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "停電戸数",
+  "value": 2950000,
+  "unit": "戸",
+  "as_of": "2018-09-06",
+  "source": "https://www.enecho.meti.go.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "厚真町の死者",
+  "value": 37,
+  "unit": "人",
+  "as_of": "2020-09",
+  "source": "https://www.pref.hokkaido.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "斜面崩壊面積",
+  "value": 13.4,
+  "unit": "km2",
+  "as_of": "2018",
+  "source": "https://www.gsi.go.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "斜面崩壊箇所数",
+  "value": 8000,
+  "unit": "箇所",
+  "as_of": "2021",
+  "source": "https://www.hro.or.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "発電所の耐震設計値",
+  "value": 235,
+  "unit": "Gal",
+  "as_of": "2018",
+  "source": "https://www.meti.go.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "観測された水平合成加速度",
+  "value": 386,
+  "unit": "Gal",
+  "as_of": "2018-09-06",
+  "source": "https://www.meti.go.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "厚真町の被害金額",
+  "value": 823,
+  "unit": "億円",
+  "as_of": "2020-09",
+  "source": "https://www.pref.hokkaido.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "国・道事業分の災害復旧費（厚真町分）",
+  "value": 938.2,
+  "unit": "億円",
+  "as_of": "2023-07",
+  "source": "https://www.town.atsuma.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "町の震災関連事業費",
+  "value": 242.168,
+  "unit": "億円",
+  "as_of": "2021",
+  "source": "https://www.town.atsuma.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "高齢化率",
+  "value": 36.4,
+  "unit": "%",
+  "as_of": "2020-10",
+  "source": "https://www.stat.go.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "苫東 工業団地面積",
+  "value": 10700,
+  "unit": "ha",
+  "as_of": "2026",
+  "source": "https://www.tomatoh.co.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "苫東 分譲済面積",
+  "value": 1129.5,
+  "unit": "ha",
+  "as_of": "2026",
+  "source": "https://www.city.tomakomai.hokkaido.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ハスカップ生産者数",
+  "value": 80,
+  "unit": "人",
+  "as_of": "2026",
+  "source": "https://hokkaido-nl.jp/article/42910",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ハスカップ作付面積",
+  "value": 18.9,
+  "unit": "ha",
+  "as_of": "2026",
+  "source": "https://hokkaido-nl.jp/article/42910",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ハスカップ目標売上高",
+  "value": 950,
+  "unit": "万円",
+  "as_of": "2026",
+  "source": "https://hokkaido-nl.jp/article/42910",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ハスカップ出荷量",
+  "value": 18,
+  "unit": "t",
+  "as_of": "2018",
+  "source": "http://www.ja-tomakomaikouiki.com/topicsinfo/3922/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ハスカップ生産量",
+  "value": 4,
+  "unit": "t",
+  "as_of": "2024",
+  "source": "https://www.jpaa-kanto.jp/intellectual-property/case/atsumahaskap/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "全道ハスカップ栽培面積ピーク",
+  "value": 167,
+  "unit": "ha",
+  "as_of": "1990",
+  "source": "https://www.japanfruit.jp/Portals/0/images/fruit/endemic/pdf/hasukappu.pdf",
+  "confidence": "reported"
+ },
+ {
+  "claim": "地域団体商標 登録番号",
+  "value": 6856632,
+  "unit": "",
+  "as_of": "2024-10-22",
+  "source": "https://www.jpaa-kanto.jp/intellectual-property/case/atsumahaskap/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "あつま豚丼の価格",
+  "value": 1320,
+  "unit": "円",
+  "as_of": "2026",
+  "source": "https://www.kobushi-atsuma.com/restaurant.html",
+  "confidence": "reported"
+ },
+ {
+  "claim": "水稲作付面積",
+  "value": 1580,
+  "unit": "ha",
+  "as_of": "2025",
+  "source": "https://www.machimura.maff.go.jp/machi/contents/01/581/details.html",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ホッキ貝漁獲量",
+  "value": 110,
+  "unit": "t",
+  "as_of": "2019",
+  "source": "https://www.town.atsuma.lg.jp/uploaded/attachment/4584.pdf",
+  "confidence": "reported"
+ },
+ {
+  "claim": "宿泊業・飲食サービス業の従業者",
+  "value": 67,
+  "unit": "人",
+  "as_of": "2021",
+  "source": "https://www.pref.hokkaido.lg.jp/",
+  "confidence": "reported"
+ }
+]
+</script>
+</body>
+</html>

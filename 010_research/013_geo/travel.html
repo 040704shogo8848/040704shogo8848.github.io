@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>渡航記録 走った線と国</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+    --panel:#0B1418; --grat:#1B2C33; --panel-ink:#EAE4D8; --panel-sub:#7C8B91;
+    --air:#F0714A; --rail:#3FBFAE; --metro:#7C9CF0; --bus:#E4B23C; --road:#8B949E;
+    --mono:ui-monospace,SFMono-Regular,Menlo,"Courier New",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .src{font-size:13px;color:var(--sub)}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  code{font-family:var(--mono);font-size:.92em}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+  .tbl-scroll>table{margin:0;min-width:min(100%,560px)}
+
+  /* ---- 地図パネル ---- */
+  .mapzone{background:var(--panel);margin:26px -28px;padding:20px 28px 24px}
+  .mapzone .hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;margin-bottom:14px}
+  .mapzone .hd h2{border:0;margin:0;padding:0;font-size:15px;color:var(--panel-ink);letter-spacing:.02em}
+  .mapzone .hd .sub{font-size:11.5px;color:var(--panel-sub);letter-spacing:.06em;text-transform:uppercase;font-family:var(--mono)}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+  .chips button{font:inherit;font-size:12px;cursor:pointer;padding:5px 12px;border-radius:14px;
+    background:transparent;color:var(--panel-sub);border:1px solid #22343B;transition:.14s}
+  .chips button:hover{color:var(--panel-ink);border-color:#35545E}
+  .chips button[aria-pressed="true"]{background:var(--panel-ink);color:var(--panel);border-color:var(--panel-ink);font-weight:600}
+  .chips button:focus-visible{outline:2px solid var(--metro);outline-offset:2px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+  .legend button{font:inherit;font-size:11.5px;cursor:pointer;display:flex;align-items:center;gap:6px;
+    background:transparent;border:1px solid #1E2E35;border-radius:12px;padding:4px 10px;color:var(--panel-sub);transition:.14s}
+  .legend button[aria-pressed="false"]{opacity:.34}
+  .legend button:hover{border-color:#35545E;color:var(--panel-ink)}
+  .legend .sw{width:16px;height:2.5px;border-radius:2px;display:block}
+  .legend .km{font-family:var(--mono);font-size:11px;opacity:.8}
+  .mapbox{position:relative}
+  .mapbox svg{display:block;width:100%;height:auto;overflow:visible}
+  .route{fill:none;stroke-linecap:round;transition:opacity .18s}
+  .route.hit{stroke:transparent;stroke-width:9;cursor:pointer}
+  .nd circle{transition:opacity .18s}
+  .lbl{font-family:var(--mono);font-size:9.5px;fill:var(--panel-sub);pointer-events:none;transition:opacity .18s}
+  .lbl.jp{font-family:-apple-system,"Hiragino Sans",sans-serif;font-size:10.5px;fill:var(--panel-ink)}
+  .grat{stroke:var(--grat);stroke-width:.6;fill:none}
+  .grat.eq{stroke:#2A4249;stroke-width:1;stroke-dasharray:5 4}
+  .gratlbl{font-family:var(--mono);font-size:8.5px;fill:#33474E}
+  .tip{position:absolute;pointer-events:none;background:#F6F2E9;color:#0B1418;border-radius:7px;
+    padding:7px 10px;font-size:12px;line-height:1.55;box-shadow:0 6px 22px rgba(0,0,0,.4);
+    opacity:0;transition:opacity .12s;max-width:260px;z-index:5}
+  .tip b{font-family:var(--mono)}
+  .tip .m{color:#5A6B72;font-size:11px}
+  .mapfoot{color:var(--panel-sub);font-size:11.5px;margin-top:14px;line-height:1.7}
+
+  /* ---- 日別バンド ---- */
+  .band{display:flex;gap:2px;margin:10px 0 4px;overflow-x:auto;padding-bottom:4px}
+  .band .d{flex:1 0 34px;min-width:34px;border-radius:5px;background:#fff;border:1px solid var(--line);
+    padding:5px 3px;text-align:center}
+  .band .d .n{font-family:var(--mono);font-size:10px;color:var(--sub)}
+  .band .d .c{font-size:10.5px;line-height:1.35;margin-top:3px;word-break:break-all}
+  .band .d.move{background:#FFF6EE;border-color:#EBC7AC}
+  .band .d.land{background:#EEF7F5;border-color:#B8DDD6}
+  .ctygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:14px 0}
+  .ctygrid a,.ctygrid span{display:block;background:#fff;border:1px solid var(--line);border-radius:8px;
+    padding:9px 11px;text-decoration:none;font-size:13.5px;color:var(--ink)}
+  .ctygrid a:hover{border-color:var(--accent)}
+  .ctygrid .iso{font-family:var(--mono);font-size:10.5px;color:var(--sub);display:block}
+  .ctygrid span{color:var(--sub);border-style:dashed}
+
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+    .mapzone{margin:22px -28px;padding:16px 14px 20px}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../011_company/index.html">company</a><a href="../012_politics/index.html">politics</a><a href="index.html">geo</a><a href="../014_industry/index.html">industry</a><a href="../015_net/index.html">net</a><a href="../016_finance/index.html">finance</a><a href="../017_science/index.html">science</a><a href="../018_computing/index.html">computing</a><a href="../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../020_personal/021_profile/index.html">profile</a><a href="../../020_personal/024_method/index.html">method</a><a href="../../020_personal/026_handbook/index.html">handbook</a><a href="../../020_personal/025_fitness/index.html">fitness</a><a href="../../020_personal/028_english/index.html">english</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../011_company/index.html">company</a>
+    <a class="snav-a" href="../012_politics/index.html">politics</a>
+    <a class="snav-a" href="index.html">geo</a>
+    <a class="snav-a" href="../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../015_net/index.html">net</a>
+    <a class="snav-a" href="../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../017_science/index.html">science</a>
+    <a class="snav-a" href="../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../020_personal/028_english/index.html">english</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../index.html">home</a> / <a href="index.html">geo</a> / 渡航記録</p>
+
+<header class="top">
+  <div>
+    <h1>渡航記録 / Travel Log</h1>
+    <div class="meta">2022年8月 - 2026年3月　渡航5回・区間47・20の国と地域</div>
+  </div>
+</header>
+<p class="lead">空路・高速鉄道・地下鉄・長距離バスを区間単位で記録したもの。国の統計は国別ページに、行程の設計は現地行程に分けてあり、このページは<strong>どこからどこへ、何で動いたか</strong>だけを扱う。</p>
+<p><span class="tag">47区間</span><span class="tag">20の国と地域</span><span class="tag">大圏距離79,638km</span><span class="tag">出典はシートとGmail</span></p>
+
+<div class="kpi">
+  <div class="card"><div class="k">総移動距離（大圏距離の概算）</div><div class="v">79,638 <small>km</small></div></div>
+  <div class="card"><div class="k">地球1周（40,075km）に対して</div><div class="v">1.99 <small>周</small></div></div>
+  <div class="card"><div class="k">空路の占める割合</div><div class="v">92.8 <small>%</small></div></div>
+  <div class="card"><div class="k">交通費の合計</div><div class="v">488,593 <small>円</small></div></div>
+</div>
+
+<div class="mapzone">
+  <div class="hd">
+    <h2>走った線</h2>
+    <span class="sub">Equirectangular / great-circle arcs</span>
+  </div>
+  <div class="chips" id="chips" role="group" aria-label="渡航の絞り込み"></div>
+  <div class="mapbox" id="mapbox">
+    <div class="tip" id="tip" role="status"></div>
+  </div>
+  <div class="legend" id="legend" role="group" aria-label="移動手段の表示切替"></div>
+  <p class="mapfoot">線は2地点間の大圏コース、つまり球面上の最短経路で、実際の航路・線路の形ではない。正距円筒図法なので緯度が高いほど東西方向が実距離より広く見える。破線は赤道。点をなぞると地点名、線をなぞると区間の詳細が出る。<br>
+  上端に余白が広く見えるのは図の余りではない。<strong>成田 - チューリッヒの最短経路が北緯65.8度・東経69.5度まで北上する</strong>ため、地点の分布より図の範囲が北に広い。
+</div>
+
+<h2><span class="num">01</span>全体の規模<span class="en">Scale</span></h2>
+
+<p>47区間の大圏距離を合計すると<strong>79,638km</strong>で、地球1周40,075kmの1.99倍にあたる。内訳は空路に大きく偏る。</p>
+
+<div class="tbl-scroll"><table>
+<thead><tr><th>手段</th><th class="num">区間数</th><th class="num">距離 km</th><th class="num">構成比</th><th>内容</th></tr></thead>
+<tbody id="modetbl"></tbody>
+</table></div>
+
+<p>渡航ごとに見ると、<strong>距離と費用は比例していない</strong>。</p>
+
+<div class="tbl-scroll"><table>
+<thead><tr><th>渡航</th><th class="num">日数</th><th class="num">区間</th><th class="num">距離 km</th><th class="num">交通費 円</th><th class="num">円/km</th><th class="num">空路比率</th></tr></thead>
+<tbody id="triptbl"></tbody>
+</table></div>
+
+<div class="callout">
+<p><strong>最も長い渡航が、最も安い。</strong>2024年11月-12月は29,918kmを98,864円で移動しており、<strong>1kmあたり3.3円</strong>になる。同じ計算で2025年11月は8.0円/km、2026年3月は8.0円/kmで、2倍以上の差がある。差を作っているのは距離ではなく<strong>1区間あたりの平均距離</strong>で、2024年の12区間は平均2,493km、2025年11月の20区間は平均690kmである。<strong>短い区間を数多くつなぐほど、1kmの単価は上がる。</strong>格安航空券の価格が距離に比例せず1区間ごとの固定費に強く引かれるためで、陸路を混ぜた2025年11月でもこの傾向は消えていない。</p>
+</div>
+
+<div class="callout">
+<p><strong>最短経路は地点の緯度より高いところを通る。</strong>成田は北緯35.8度、チューリッヒは北緯47.5度だが、この2点を結ぶ大圏コースの頂点は<strong>北緯65.8度・東経69.5度</strong>で、西シベリアの北端にあたる。北極圏の南限66.6度のすぐ手前である。地図上で最も北へ張り出す線が最も長い区間ではなく、<strong>東西に最も離れた2点を結ぶ区間</strong>だという点が、平面の地図では直感に反する。最南は北緯1.4度のシンガポールで、南半球に入るのはジャカルタの南緯6.1度だけである。</p>
+</div>
+
+<p>単一区間で最も長いのは<strong>チューリッヒ - シンガポールの10,304km</strong>（SWISS LX176、2024年11月18日）で、次が成田 - チューリッヒの9,595km。上位2区間だけで19,899kmあり、<strong>全体79,638kmの25.0%を2区間が占める</strong>。</p>
+
+<h2><span class="num">02</span>渡航ごとの動線<span class="en">Itineraries</span></h2>
+<div id="trips"></div>
+
+<h2><span class="num">03</span>行った国と地域<span class="en">Countries</span></h2>
+<p>20の国と地域。国別の統計ページがあるものはリンクしている。<strong>タイ・ベトナム・香港は渡航しているがページを作っていない。</strong></p>
+<div class="ctygrid" id="ctygrid"></div>
+
+<h2><span class="num">04</span>データの限界<span class="en">Caveats</span></h2>
+
+<div class="risk">
+<p><strong>2022年8月のカンボジアは区間の記録がない。</strong>当時使っていたメールアドレスの受信箱が残っておらず、便名・空港・費用はすべてN/A。渡航した事実と目的だけが分かる。したがって距離と費用の集計は<strong>2024年11月以降の4回分</strong>である。</p>
+</div>
+
+<p>ほかに確認できた不一致は3件ある。いずれも推定で埋めず、記録側の値をそのまま残した。</p>
+
+<div class="tbl-scroll"><table>
+<thead><tr><th>区間</th><th>不一致の内容</th><th>本ページの扱い</th></tr></thead>
+<tbody>
+<tr><td>KUL - HKT<br>2024年11月27日</td><td>シートのCity列は「Pinang」（ペナン）だが、From/To列はKUL - HKT（プーケット）で一致しない</td><td>区間はKUL - HKTとして集計し、備考に不一致を明記した</td></tr>
+<tr><td>GYD - SAW<br>2025年4月23日</td><td>シートの時刻は5:25発／7:30着だが、同じ行の予約URLは12:45発／14:45着を指す</td><td>シートの値を採り、URL側の値を備考に残した。距離の集計に影響はない</td></tr>
+<tr><td>AUH - DXB<br>2025年5月2日</td><td>アブダビからドバイへの移動手段と費用がシートに記録されていない</td><td>陸路として116kmを距離に算入し、手段と費用はN/Aとした</td></tr>
+</tbody>
+</table></div>
+
+<p>距離はすべて<strong>2地点間の大圏距離</strong>で、実際の飛行経路・線路の距離ではない。空路は迂回と待機で大圏距離を上回り、鉄道は路線形状のぶん確実に上回る。<strong>したがって79,638kmは下限の値である。</strong>地下鉄区間の102kmは駅間の直線距離なので、実際の乗車距離とはとくに離れる。</p>
+
+<p>費用はシートのFare列の合計で、<strong>宿泊費とその他の費用は含まない</strong>。含めると2024年11月-12月は追加費用41,320円と過払い返金17,140円、2025年4月-5月は宿泊費45,336円、2025年11月は宿泊費18,350円とその他22,950円が加わる。通貨は記録時点の円で、為替の時点調整はしていない。</p>
+
+<h2>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+<li>Googleスプレッドシート「travel-abroad」（5シート。2025-11-Summary／2025-05-Flight／2025-05-Lodging／2024-11-Flight／2026-03-Flight。区間・時刻・運賃・宿泊先・訪問先の一次記録。最終更新2026年3月14日）</li>
+<li>SWISS 予約確認メール 3件（RLKZVF＝LX728 チューリッヒ - アムステルダム 2024年11月17日・ゲートA84／RQJDBJ＝アムステルダム - チューリッヒ 2024年11月18日／P39QRK＝LX176 チューリッヒ - シンガポール 2024年11月18日・ゲートE42）</li>
+<li>Trip.com 航空券予約確認書（予約番号1385428612497084＝GK035 成田 - 上海／1385428612481148＝MU856 タシケント - 西安、MU2295 西安 - 上海、9C6217 上海 - 成田）および運航状況通知メール</li>
+<li>Trip.com 宿泊予約確認メール 4件（武漢 7デイズイン漢口鉄道駅 11/18-19／重慶依家青年旅舍 11/19-20／アルマトイ ホステルO2 11/22-23／ビシュケク サラブティックホテル 11/23-25）</li>
+<li>Kiwi.com 予約確認メール 3件（740569357＝東京 - バンコク 2026年3月13日／740559303＝バンコク - 香港 3月15日／740567531＝香港 - 東京 3月16日）</li>
+<li>flyadeal 予約確認メール 2件（E9TCQT／JDFBFX＝カイロ - リヤド 2025年4月29日）</li>
+<li>Spring Airlines / Travelfusion 旅程メール（PNR BIEFUMK）</li>
+<li>空港・駅・バスターミナルの座標は各施設の公表位置。大圏距離はhaversine式による本ページの算出値</li>
+<li>地球の赤道周長40,075kmは国際地球回転・基準系事業（IERS）のWGS84準拠値</li>
+</ol>
+
+<p class="fn">本ページは移動の記録であり、旅行の推奨ではない。区間の真実のソースは <code>010_research/013_geo/data/travel.json</code> で、<code>bin/build-travel.js</code> を経由して <code>data/travel.js</code> を生成している。予約番号のうち搭乗者名との組み合わせで予約照会が可能なものは記載していない。</p>
+
+</div>
+
+<script src="data/travel.js"></script>
+<script>
+(function(){
+  const T = window.TRAVEL, N = T.nodes;
+  const MODE = {
+    air:  {ja:'空路',       c:'var(--air)',   w:1.5, dash:null},
+    rail: {ja:'高速鉄道',   c:'var(--rail)',  w:2.2, dash:null},
+    metro:{ja:'地下鉄',     c:'var(--metro)', w:1.6, dash:'1 3'},
+    bus:  {ja:'長距離バス', c:'var(--bus)',   w:2.2, dash:'6 3'},
+    road: {ja:'陸路（詳細不明）', c:'var(--road)', w:1.6, dash:'2 3'}
+  };
+  const R = 6371;
+  const rad = d => d*Math.PI/180;
+
+  function gc(a,b){
+    const la1=rad(N[a].lat), lo1=rad(N[a].lon), la2=rad(N[b].lat), lo2=rad(N[b].lon);
+    const h = Math.sin((la2-la1)/2)**2 + Math.cos(la1)*Math.cos(la2)*Math.sin((lo2-lo1)/2)**2;
+    return R*2*Math.asin(Math.min(1,Math.sqrt(h)));
+  }
+  const fmt = n => Math.round(n).toLocaleString('ja-JP');
+
+  /* ---------- 集計 ---------- */
+  const all = T.trips.flatMap(t => t.segments.map(s => ({...s, trip:t.id})));
+  all.forEach(s => s.km = gc(s.from, s.to));
+  const total = all.reduce((a,s)=>a+s.km,0);
+  const byMode = {};
+  for (const s of all){ (byMode[s.mode] ??= {n:0,km:0}); byMode[s.mode].n++; byMode[s.mode].km += s.km; }
+
+  /* ---------- 地図 ---------- */
+  // 大圏コースは高緯度側に膨らむ。成田-チューリッヒはシベリア上空を通るため、
+  // 地点の座標だけで範囲を決めるとパネルの外に線が出る。弧の実際の広がりから範囲を取る。
+  function arcLL(a, c, steps){
+    const la1=rad(N[a].lat), lo1=rad(N[a].lon), la2=rad(N[c].lat), lo2=rad(N[c].lon);
+    const d = 2*Math.asin(Math.min(1,Math.sqrt(
+      Math.sin((la2-la1)/2)**2 + Math.cos(la1)*Math.cos(la2)*Math.sin((lo2-lo1)/2)**2)));
+    if (d < 1e-9) return [[N[a].lat, N[a].lon]];
+    const out = [];
+    for (let i=0;i<=steps;i++){
+      const f=i/steps, A=Math.sin((1-f)*d)/Math.sin(d), B=Math.sin(f*d)/Math.sin(d);
+      const x=A*Math.cos(la1)*Math.cos(lo1)+B*Math.cos(la2)*Math.cos(lo2);
+      const y=A*Math.cos(la1)*Math.sin(lo1)+B*Math.cos(la2)*Math.sin(lo2);
+      const z=A*Math.sin(la1)+B*Math.sin(la2);
+      out.push([Math.atan2(z,Math.hypot(x,y))*180/Math.PI, Math.atan2(y,x)*180/Math.PI]);
+    }
+    return out;
+  }
+
+  const arcs = new Map();
+  for (const s of all) arcs.set(s, arcLL(s.from, s.to, 56));
+
+  const lats = [], lons = [];
+  for (const p of Object.values(N)){ lats.push(p.lat); lons.push(p.lon); }
+  for (const a of arcs.values()) for (const [la,lo] of a){ lats.push(la); lons.push(lo); }
+  const b = {x0:Math.min(...lons), x1:Math.max(...lons), y0:Math.min(...lats), y1:Math.max(...lats)};
+  const PAD = 52, W = 1240;
+  const sc = (W - PAD*2) / (b.x1 - b.x0);
+  const H = (b.y1 - b.y0) * sc + PAD*2;
+  const px = lon => PAD + (lon - b.x0) * sc;
+  const py = lat => PAD + (b.y1 - lat) * sc;
+  const toPath = a => 'M' + a.map(([la,lo]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join('L');
+
+  const esc = s => String(s??'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let svg = `<svg viewBox="0 0 ${W} ${H.toFixed(0)}" role="img" aria-label="渡航区間の地図">`;
+
+  // 経緯線
+  for (let lat=-15; lat<=90; lat+=15){
+    if (lat < b.y0-8 || lat > b.y1+8) continue;
+    svg += `<line class="grat${lat===0?' eq':''}" x1="${PAD*0.5}" y1="${py(lat).toFixed(1)}" x2="${W-PAD*0.5}" y2="${py(lat).toFixed(1)}"/>`
+        +  `<text class="gratlbl" x="${(PAD*0.5+3).toFixed(0)}" y="${(py(lat)-4).toFixed(1)}">${lat}&#176;</text>`;
+  }
+  for (let lon=0; lon<=160; lon+=20){
+    if (lon < b.x0-10 || lon > b.x1+10) continue;
+    svg += `<line class="grat" x1="${px(lon).toFixed(1)}" y1="${(PAD*0.5).toFixed(0)}" x2="${px(lon).toFixed(1)}" y2="${(H-PAD*0.5).toFixed(1)}"/>`
+        +  `<text class="gratlbl" x="${(px(lon)+3).toFixed(1)}" y="${(H-PAD*0.5+12).toFixed(1)}">${lon}&#176;E</text>`;
+  }
+
+  // 区間
+  const order = {metro:0, road:1, bus:2, rail:3, air:4};
+  for (const s of [...all].sort((p,q)=>order[p.mode]-order[q.mode])){
+    const m = MODE[s.mode], d = toPath(arcs.get(s));
+    const meta = `data-trip="${s.trip}" data-mode="${s.mode}"`;
+    const label = `${N[s.from].ja} → ${N[s.to].ja}`;
+    const line2 = [m.ja, s.carrier, s.flight, s.km>=1?`${fmt(s.km)} km`:null].filter(Boolean).join(' / ');
+    const tip = esc(`${s.date}|${label}|${line2}${s.note?'|'+s.note:''}`);
+    svg += `<path class="route" ${meta} d="${d}" stroke="${m.c}" stroke-width="${m.w}"`
+        +  (m.dash?` stroke-dasharray="${m.dash}"`:'') + ` opacity=".78"/>`
+        +  `<path class="route hit" ${meta} d="${d}" data-tip="${tip}"/>`;
+  }
+
+  // 地点
+  const used = new Set(all.flatMap(s=>[s.from,s.to]));
+  const trips4 = {};
+  for (const t of T.trips) for (const s of t.segments){ (trips4[s.from] ??= new Set()).add(t.id); (trips4[s.to] ??= new Set()).add(t.id); }
+  for (const code of used){
+    const n = N[code], isAir = n.kind === 'air';
+    const tl = [...(trips4[code]||[])].join(' ');
+    svg += `<g class="nd" data-trips="${tl}">`
+        +  `<circle cx="${px(n.lon).toFixed(1)}" cy="${py(n.lat).toFixed(1)}" r="${isAir?3.4:2.2}"`
+        +  ` fill="${isAir?'#F2EDE3':'#8FA7AE'}" stroke="var(--panel)" stroke-width="1"/>`
+        +  `<circle cx="${px(n.lon).toFixed(1)}" cy="${py(n.lat).toFixed(1)}" r="9" fill="transparent"`
+        +  ` style="cursor:pointer" data-tip="${esc(`${n.ja}|${n.en}|${code} / ${n.lat.toFixed(2)}, ${n.lon.toFixed(2)}`)}"/>`
+        +  `</g>`;
+    const dy = n.lat > 40 ? -9 : 13;
+    svg += `<text class="lbl${isAir?'':' rl'}" data-trips="${tl}" data-air="${isAir?1:0}"`
+        +  ` x="${(px(n.lon)+5).toFixed(1)}" y="${(py(n.lat)+dy*0.62).toFixed(1)}">${esc(isAir?code:n.ja)}</text>`;
+  }
+  svg += '</svg>';
+  document.getElementById('mapbox').insertAdjacentHTML('afterbegin', svg);
+
+  /* ---------- 絞り込み ---------- */
+  const chips = document.getElementById('chips');
+  const items = [{id:'all', label:'すべて'}].concat(T.trips.map(t=>({id:t.id, label:t.label})));
+  chips.innerHTML = items.map((i,k)=>`<button type="button" data-t="${i.id}" aria-pressed="${k===0}">${esc(i.label)}</button>`).join('');
+  const offMode = new Set();
+  let sel = 'all';
+
+  function paint(){
+    document.querySelectorAll('.route').forEach(el=>{
+      const on = (sel==='all' || el.dataset.trip===sel) && !offMode.has(el.dataset.mode);
+      const hit = el.classList.contains('hit');
+      el.style.opacity = hit ? (on?1:0) : (on ? (sel==='all'?.72:.95) : .05);
+      el.style.pointerEvents = (hit && on) ? 'auto' : 'none';
+    });
+    document.querySelectorAll('.nd, .lbl').forEach(el=>{
+      const tl = (el.dataset.trips||'').split(' ');
+      const on = sel==='all' || tl.includes(sel);
+      el.style.opacity = on ? 1 : .12;
+      if (el.classList.contains('lbl')){
+        const showJa = sel !== 'all';
+        el.classList.toggle('jp', showJa);
+        el.textContent = showJa ? nameOf(el) : (el.dataset.air==='1' ? codeOf(el) : '');
+        if (!on) el.style.opacity = .1;
+      }
+    });
+  }
+  const codeCache = new Map();
+  document.querySelectorAll('.lbl').forEach((el,i)=>{ codeCache.set(el, el.textContent); });
+  function codeOf(el){ return codeCache.get(el); }
+  function nameOf(el){
+    const c = codeCache.get(el);
+    if (N[c]) return N[c].ja;
+    for (const [k,v] of Object.entries(N)) if (v.ja === c) return v.ja;
+    return c;
+  }
+  chips.addEventListener('click', e=>{
+    const btn = e.target.closest('button'); if(!btn) return;
+    sel = btn.dataset.t;
+    chips.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', String(x===btn)));
+    paint();
+  });
+
+  /* ---------- 凡例 ---------- */
+  const lg = document.getElementById('legend');
+  lg.innerHTML = Object.entries(MODE).filter(([k])=>byMode[k]).map(([k,m])=>
+    `<button type="button" data-m="${k}" aria-pressed="true"><span class="sw" style="background:${m.c}"></span>`
+    + `${esc(m.ja)} <span class="km">${fmt(byMode[k].km)}km</span></button>`).join('');
+  lg.addEventListener('click', e=>{
+    const btn = e.target.closest('button'); if(!btn) return;
+    const m = btn.dataset.m, on = btn.getAttribute('aria-pressed')==='true';
+    btn.setAttribute('aria-pressed', String(!on));
+    on ? offMode.add(m) : offMode.delete(m);
+    paint();
+  });
+
+  /* ---------- ツールチップ ---------- */
+  const tip = document.getElementById('tip'), mb = document.getElementById('mapbox');
+  mb.addEventListener('mousemove', e=>{
+    const t = e.target.closest('[data-tip]');
+    if (!t){ tip.style.opacity = 0; return; }
+    const parts = t.dataset.tip.split('|');
+    tip.innerHTML = `<b>${parts[0]}</b><br>${parts[1]||''}`
+      + (parts[2]?`<br><span class="m">${parts[2]}</span>`:'')
+      + (parts[3]?`<br><span class="m">${parts[3]}</span>`:'');
+    const r = mb.getBoundingClientRect();
+    const x = Math.min(e.clientX - r.left + 14, r.width - 250);
+    tip.style.left = Math.max(4, x) + 'px';
+    tip.style.top  = Math.max(4, e.clientY - r.top - 12) + 'px';
+    tip.style.opacity = 1;
+  });
+  mb.addEventListener('mouseleave', ()=>{ tip.style.opacity = 0; });
+
+  /* ---------- 表 ---------- */
+  const desc = {air:'国際線と国内線', rail:'中国の高速鉄道5区間', metro:'上海・杭州・重慶・成都・烏魯木斉の市内移動', bus:'中国 - カザフ - キルギス - ウズベクの国境越え3区間とプノンペン - ホーチミン', road:'アブダビ - ドバイ。手段の記録がない'};
+  document.getElementById('modetbl').innerHTML = Object.entries(byMode).sort((a,c)=>c[1].km-a[1].km)
+    .map(([k,v])=>`<tr><td><span style="display:inline-block;width:13px;height:3px;border-radius:2px;background:${MODE[k].c};vertical-align:middle;margin-right:7px"></span>${MODE[k].ja}</td>`
+      + `<td class="num">${v.n}</td><td class="num">${fmt(v.km)}</td><td class="num">${(v.km/total*100).toFixed(1)}%</td><td>${desc[k]||''}</td></tr>`).join('')
+    + `<tr><th>合計</th><th class="num">${all.length}</th><th class="num">${fmt(total)}</th><th class="num">100.0%</th><th></th></tr>`;
+
+  document.getElementById('triptbl').innerHTML = T.trips.map(t=>{
+    const ss = t.segments.map(s=>({...s, km:gc(s.from,s.to)}));
+    const km = ss.reduce((a,s)=>a+s.km,0);
+    const airkm = ss.filter(s=>s.mode==='air').reduce((a,s)=>a+s.km,0);
+    const na = '<span style="color:var(--sub)">N/A</span>';
+    return `<tr><td><b>${esc(t.label)}</b><br><span class="src">${esc(t.title)}</span></td>`
+      + `<td class="num">${t.days ?? na}</td><td class="num">${ss.length||na}</td>`
+      + `<td class="num">${km?fmt(km):na}</td><td class="num">${t.fare?fmt(t.fare):na}</td>`
+      + `<td class="num">${(t.fare&&km)?(t.fare/km).toFixed(1):na}</td>`
+      + `<td class="num">${km?(airkm/km*100).toFixed(1)+'%':na}</td></tr>`;
+  }).join('');
+
+  /* ---------- 渡航ごとの詳細 ---------- */
+  const modeCell = m => `<span style="display:inline-block;width:11px;height:3px;border-radius:2px;background:${MODE[m].c};vertical-align:middle;margin-right:6px"></span>${MODE[m].ja}`;
+  document.getElementById('trips').innerHTML = T.trips.map(t=>{
+    if (!t.detail){
+      return `<h3>${esc(t.label)}　${esc(t.title)}</h3><div class="box"><p>${esc(t.note)}</p>`
+        + `<p class="src">区間・便名・費用はすべてN/A。</p></div>`;
+    }
+    const ss = t.segments.map(s=>({...s, km:gc(s.from,s.to)}));
+    const km = ss.reduce((a,s)=>a+s.km,0);
+    const days = [...new Set(ss.map(s=>s.date))].sort();
+    const band = days.map(d=>{
+      const on = ss.filter(s=>s.date===d);
+      const air = on.some(s=>s.mode==='air');
+      return `<div class="d ${air?'move':'land'}"><div class="n">${d.slice(5).replace('-','/')}</div>`
+        + `<div class="c">${on.map(s=>esc(N[s.to].ja)).join('<br>')}</div></div>`;
+    }).join('');
+    const extra = t.extra ? Object.entries(t.extra).map(([k,v])=>`${esc(k)} ${fmt(v)}円`).join(' / ') : '';
+    const rows = ss.map(s=>`<tr>`
+      + `<td class="num">${s.date.slice(5).replace('-','/')}</td>`
+      + `<td>${esc(N[s.from].ja)} <span class="src">→</span> <b>${esc(N[s.to].ja)}</b></td>`
+      + `<td>${modeCell(s.mode)}</td>`
+      + `<td>${esc([s.carrier,s.flight].filter(Boolean).join(' ')) || '<span style="color:var(--sub)">N/A</span>'}</td>`
+      + `<td class="num">${s.dep||'-'}${s.arr?' → '+esc(s.arr):''}</td>`
+      + `<td class="num">${s.km>=1?fmt(s.km):'-'}</td>`
+      + `<td class="num">${s.fare?fmt(s.fare):'-'}</td>`
+      + `<td class="src">${esc(s.note||'')}</td></tr>`).join('');
+    return `<h3>${esc(t.label)}　${esc(t.title)}</h3>`
+      + `<p>${esc(t.note)}</p>`
+      + `<p class="src">${t.days}日 / ${ss.length}区間 / ${fmt(km)}km / 交通費${fmt(t.fare)}円`
+      + (extra?` / ${extra}`:'') + `</p>`
+      + `<div class="band">${band}</div>`
+      + `<p class="fn">帯は区間のある日だけを並べたもの。橙は空路を含む日、緑は陸路のみの日。表示は各日の到着地。</p>`
+      + `<div class="tbl-scroll"><table><thead><tr><th class="num">日付</th><th>区間</th><th>手段</th><th>便・事業者</th>`
+      + `<th class="num">時刻</th><th class="num">km</th><th class="num">運賃 円</th><th>備考</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }).join('');
+
+  /* ---------- 国 ---------- */
+  const CN = {AE:['アラブ首長国連邦','uae'],AZ:['アゼルバイジャン','azerbaijan'],CH:['スイス','switzerland'],
+    CN:['中国','china'],EG:['エジプト','egypt'],HK:['香港',null],ID:['インドネシア','indonesia'],
+    KG:['キルギス','kyrgyzstan'],KH:['カンボジア','cambodia'],KW:['クウェート','kuwait'],
+    KZ:['カザフスタン','kazakhstan'],MY:['マレーシア','malaysia'],NL:['オランダ','netherlands'],
+    PH:['フィリピン','philippines'],SA:['サウジアラビア','saudi-arabia'],SG:['シンガポール','singapore'],
+    TH:['タイ',null],TR:['トルコ','turkiye'],UZ:['ウズベキスタン','uzbekistan'],VN:['ベトナム',null]};
+  const visits = {};
+  for (const t of T.trips) for (const c of t.countries) (visits[c] ??= []).push(t.label);
+  document.getElementById('ctygrid').innerHTML = Object.keys(CN).sort().map(iso=>{
+    const [ja, slug] = CN[iso];
+    const v = (visits[iso]||[]).length;
+    const inner = `${esc(ja)}<span class="iso">${iso}　渡航${v}回${slug?'':'　ページ未作成'}</span>`;
+    return slug ? `<a href="countries/${slug}.html">${inner}</a>` : `<span>${inner}</span>`;
+  }).join('');
+
+  paint();
+})();
+</script>
+</body>
+</html>

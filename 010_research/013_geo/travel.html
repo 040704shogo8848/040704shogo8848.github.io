@@ -6,84 +6,177 @@
 <title>渡航記録</title>
 <style>
   :root{
-    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
-    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
-    --void:#070E12; --ocean:#0A141A; --landfill:#1C2C34; --coast:#38505A; --grat:#122027;
+    /* 文書側 */
+    --bg:#F7F6F2; --ink:#14171A; --sub:#5A6167; --faint:#8A9299;
+    --rule:#E2DFD7; --hair:#EDEAE2; --card:#FFFFFF; --ghost:#E4E0D6;
+    --accent:#1D4ED8; --chip:#EEF2FF;
+    /* 手段の色。地図と文書で同じ意味を持たせる */
+    --air:#C9501F; --rail:#0E7C6E; --metro:#3A5BC7; --bus:#94700F; --road:#6B7378;
+    /* 地図側 */
+    --void:#060D11; --ocean:#0A141A; --landfill:#1C2C34; --coast:#3C555F; --grat:#122027;
     --panel-ink:#EDE7DB; --panel-sub:#7D8F97;
-    --air:#FF7A4D; --rail:#3FD9C4; --metro:#8AA8FF; --bus:#F2C14E; --road:#78848B;
-    --mono:ui-monospace,SFMono-Regular,Menlo,"Courier New",monospace;
+    --m-air:#FF7A4D; --m-rail:#3FD9C4; --m-metro:#8AA8FF; --m-bus:#F2C14E; --m-road:#78848B;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
     font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
-    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
-  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
-  header.top h1{font-size:26px;margin:0 0 4px}
-  header.top .meta{color:var(--sub);font-size:13px}
-  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
-  .crumb a{color:var(--sub);text-decoration:none}
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased;
+    font-feature-settings:"palt" 1}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 100px}
+  a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px}
+  code{font-family:var(--mono);font-size:.9em;background:var(--hair);padding:1px 5px;border-radius:3px}
+  strong{font-weight:700}
+  strong.hit{background:linear-gradient(transparent 58%,#FFE9A8 58%);padding:0 2px}
+
+  /* ---- ヘッダ ---- */
+  .crumb{font-size:11.5px;color:var(--faint);margin-bottom:22px;font-family:var(--mono);letter-spacing:.04em}
+  .crumb a{color:var(--faint);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
-  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
-    padding:2px 9px;border-radius:11px;margin-right:6px}
-  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
-  h2 .num{color:var(--accent);font-weight:700;margin-right:8px;font-family:var(--mono);font-size:16px}
-  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
-  h3{font-size:16px;margin:26px 0 8px;color:#111}
-  p{margin:10px 0}
-  .lead{color:var(--sub);font-size:14px;margin-top:2px}
-  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
-  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
-  th{background:#F0EEE8;font-weight:600}
-  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
-  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
-  .kpi{gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
-  .kpi .card{background:#fff;border:0;border-left:1px solid var(--line);border-radius:0;padding:16px 18px}
+  header.top{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:14px}
+  header.top h1{font-size:34px;margin:0;letter-spacing:-.02em;line-height:1.2;font-weight:800}
+  header.top .meta{color:var(--sub);font-size:12px;margin-top:8px;font-family:var(--mono);letter-spacing:.03em}
+  .lead{color:var(--sub);font-size:15px;margin:14px 0 6px;max-width:44em}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:11px;
+    padding:3px 10px;border-radius:3px;margin:0 5px 5px 0;font-family:var(--mono);letter-spacing:.02em}
+
+  /* ---- 章見出し ---- */
+  h2{display:grid;grid-template-columns:58px 1fr;column-gap:18px;align-items:start;
+    margin:66px 0 16px;padding-top:24px;border-top:1px solid var(--ink)}
+  h2 .num{font-family:var(--mono);font-size:38px;font-weight:700;color:var(--ghost);
+    line-height:.82;letter-spacing:-.05em}
+  h2 .hd{display:flex;flex-direction:column;gap:3px}
+  h2 .en{font-size:10px;color:var(--air);letter-spacing:.2em;text-transform:uppercase;
+    font-family:var(--mono);font-weight:600;line-height:1.4}
+  h2 .t{font-size:22px;font-weight:700;letter-spacing:-.015em;line-height:1.35;text-wrap:balance}
+  h3{font-size:16.5px;margin:34px 0 8px;font-weight:700;letter-spacing:-.01em;
+    padding-left:12px;border-left:3px solid var(--air)}
+  p{margin:12px 0;max-width:46em}
+
+  /* ---- 数値ストリップ ---- */
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:22px 0 6px;
+    border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--card)}
+  .kpi .card{padding:18px 20px;border-left:1px solid var(--hair)}
   .kpi .card:first-child{border-left:0}
-  .kpi .k{font-size:10.5px;color:var(--sub);letter-spacing:.09em;text-transform:uppercase;
+  .kpi .k{font-size:10px;color:var(--faint);letter-spacing:.11em;text-transform:uppercase;
     font-family:var(--mono);line-height:1.5}
-  .kpi .v{font-size:27px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums;
-    letter-spacing:-.02em;line-height:1.1}
-  .kpi .v small{font-size:12px;font-weight:500;color:var(--sub);letter-spacing:0;margin-left:2px}
-  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
-  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
-  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
-  .src{font-size:13px;color:var(--sub)}
-  ol.sources{font-size:13px;padding-left:22px}
-  ol.sources li{margin:5px 0;word-break:break-all}
-  .fn{color:var(--sub);font-size:12px;margin-top:6px}
-  a{color:var(--accent)}
-  code{font-family:var(--mono);font-size:.92em}
-  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
-  .tbl-scroll>table{margin:0;min-width:min(100%,560px)}
+  .kpi .v{font-size:34px;font-weight:800;margin-top:8px;font-variant-numeric:tabular-nums;
+    letter-spacing:-.035em;line-height:1}
+  .kpi .v small{font-size:12px;font-weight:600;color:var(--faint);letter-spacing:0;margin-left:3px}
+
+  /* ---- 積み上げ棒（手段の構成）---- */
+  .stack{margin:8px 0 4px;border:1px solid var(--rule);border-radius:6px;background:var(--card);padding:16px 18px}
+  .stack .bar{display:flex;height:26px;border-radius:3px;overflow:hidden;background:var(--hair)}
+  .stack .bar span{display:block;position:relative;transition:filter .16s}
+  .stack .bar span:hover{filter:brightness(1.15)}
+  .stack .keys{display:flex;flex-wrap:wrap;gap:4px 20px;margin-top:14px}
+  .stack .keys div{display:flex;align-items:baseline;gap:7px;font-size:12px}
+  .stack .keys i{width:9px;height:9px;border-radius:2px;flex:0 0 auto;transform:translateY(-1px)}
+  .stack .keys b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:700}
+  .stack .keys em{font-style:normal;color:var(--faint);font-size:11px;font-family:var(--mono)}
+
+  /* ---- 順位バー ---- */
+  .rank{margin:16px 0;border:1px solid var(--rule);border-radius:6px;background:var(--card);overflow:hidden}
+  .rank .row{display:grid;grid-template-columns:22px 1fr 84px;gap:12px;align-items:center;
+    padding:9px 16px;border-top:1px solid var(--hair);font-size:13px}
+  .rank .row:first-child{border-top:0}
+  .rank .n{font-family:var(--mono);font-size:11px;color:var(--faint);text-align:right}
+  .rank .lab{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .rank .lab .txt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rank .lab .txt small{color:var(--faint);font-family:var(--mono);font-size:10.5px;margin-left:7px}
+  .rank .lab .b{height:4px;border-radius:2px}
+  .rank .km{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;font-weight:700;font-size:13px}
+
+  /* ---- 表 ---- */
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:18px 0;
+    border:1px solid var(--rule);border-radius:6px;background:var(--card)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:0;min-width:min(100%,560px)}
+  th,td{padding:10px 14px;text-align:left;vertical-align:top;border-top:1px solid var(--hair)}
+  thead th{border-top:0;background:#FBFAF7;font-weight:700;font-size:11px;color:var(--sub);
+    letter-spacing:.07em;text-transform:uppercase;font-family:var(--mono);white-space:nowrap;
+    position:sticky;top:0;box-shadow:inset 0 -1px 0 var(--rule)}
+  tbody tr:hover{background:#FCFBF8}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12.5px}
+  tbody th{font-weight:700;background:#FBFAF7}
+  .src{font-size:12px;color:var(--faint)}
+
+  /* ---- 囲み ---- */
+  .callout{border:1px solid var(--rule);border-left:4px solid var(--air);background:var(--card);
+    padding:16px 20px;margin:20px 0;border-radius:0 6px 6px 0}
+  .callout p{margin:0;max-width:none}
+  .callout p+p{margin-top:10px}
+  .risk{border:1px solid #E8CFC6;border-left:4px solid #A93B1B;background:#FDF7F4;
+    padding:16px 20px;margin:20px 0;border-radius:0 6px 6px 0}
+  .risk p{margin:0;max-width:none}
+  .fn{color:var(--faint);font-size:11.5px;margin-top:8px;line-height:1.7;max-width:52em}
+  ol.sources{font-size:12.5px;padding-left:26px;color:var(--sub)}
+  ol.sources li{margin:7px 0;word-break:break-word}
+
+  /* ---- 渡航ブロック ---- */
+  .trip{margin:34px 0 0;border:1px solid var(--rule);border-radius:8px;background:var(--card);overflow:hidden}
+  .trip>.th{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;
+    gap:8px 18px;padding:16px 20px;background:#FBFAF7;border-bottom:1px solid var(--rule)}
+  .trip>.th .l{display:flex;flex-direction:column;gap:2px}
+  .trip>.th .when{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--air);font-weight:700}
+  .trip>.th .name{font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .trip>.th .r{font-family:var(--mono);font-size:11.5px;color:var(--sub);
+    font-variant-numeric:tabular-nums;text-align:right;line-height:1.8}
+  .trip>.th .r b{color:var(--ink);font-size:13px}
+  .trip .body{padding:18px 20px}
+  .trip .body>p:first-child{margin-top:0}
+  .trip .tbl-scroll{border-left:0;border-right:0;border-radius:0;margin:16px -20px 0}
+
+  /* ---- 日別タイムライン ---- */
+  .band{display:flex;gap:2px;overflow-x:auto;padding:2px 0 8px;margin:14px 0 0}
+  .band .d{flex:1 0 30px;min-width:30px;border-radius:3px;padding:6px 2px 7px;text-align:center;
+    border:1px solid var(--hair);background:#FCFBF8}
+  .band .d .n{font-family:var(--mono);font-size:9.5px;color:var(--faint);letter-spacing:.02em}
+  .band .d .c{font-size:10px;line-height:1.4;margin-top:4px;word-break:break-all;color:var(--sub)}
+  .band .d.air{background:#FDF1EA;border-color:#EAC5B2}
+  .band .d.air .c{color:#8E3C14;font-weight:600}
+  .band .d.land{background:#EDF6F4;border-color:#B6D9D2}
+  .band .d.land .c{color:#0B5E53;font-weight:600}
+  .band .d.stay{background:repeating-linear-gradient(135deg,#F7F6F2 0 4px,#FFF 4px 8px)}
+  .band .d.stay .c{color:var(--faint)}
+
+  /* ---- 国グリッド ---- */
+  .ctygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:8px;margin:18px 0}
+  .ctygrid a,.ctygrid span{display:block;background:var(--card);border:1px solid var(--rule);
+    border-radius:6px;padding:11px 13px;text-decoration:none;font-size:13.5px;color:var(--ink);
+    font-weight:600;transition:.14s}
+  .ctygrid a:hover{border-color:var(--air);box-shadow:0 1px 0 var(--air)}
+  .ctygrid .iso{font-family:var(--mono);font-size:10px;color:var(--faint);display:block;
+    margin-top:3px;font-weight:400;letter-spacing:.04em}
+  .ctygrid span{color:var(--faint);border-style:dashed;font-weight:400}
 
   /* ---- 地図パネル ---- */
-  .mapzone{
-    background:var(--void);
-    margin:34px calc(50% - 50vw) 30px;
-    padding:26px max(28px, calc(50vw - 470px + 28px)) 22px;
-    border-top:1px solid #16232A;border-bottom:1px solid #16232A;
-    position:relative;overflow:hidden}
+  .mapzone{background:var(--void);margin:36px calc(50% - 50vw) 34px;
+    padding:28px max(28px, calc(50vw - 470px + 28px)) 24px;
+    border-top:1px solid #16232A;border-bottom:1px solid #16232A;position:relative;overflow:hidden}
   .mapzone::before{content:"";position:absolute;inset:0;pointer-events:none;
-    background:radial-gradient(120% 90% at 62% 30%,rgba(58,116,132,.16),transparent 62%)}
+    background:radial-gradient(120% 90% at 62% 28%,rgba(58,116,132,.15),transparent 62%)}
   .mapzone>*{position:relative}
-  .mz-hd{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:16px}
-  .mz-hd h2{border:0;margin:0;padding:0;font-size:19px;color:var(--panel-ink);letter-spacing:.01em;font-weight:700}
-  .mz-hd .kick{display:block;font-size:10.5px;color:var(--air);letter-spacing:.22em;
-    text-transform:uppercase;font-family:var(--mono);margin-bottom:5px;font-weight:600}
-  .mz-hd .rhs{font-family:var(--mono);font-size:11px;color:var(--panel-sub);letter-spacing:.05em;text-align:right;line-height:1.85}
-  .mz-hd .rhs b{color:var(--panel-ink);font-size:13px}
+  .mz-hd{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
+    gap:14px 24px;margin-bottom:18px}
+  .mz-hd h2{border:0;margin:0;padding:0;display:block;font-size:26px;color:var(--panel-ink);
+    letter-spacing:-.02em;font-weight:800;line-height:1.15}
+  .mz-hd .kick{display:block;font-size:10px;color:var(--m-air);letter-spacing:.22em;
+    text-transform:uppercase;font-family:var(--mono);margin-bottom:7px;font-weight:700}
+  .mz-hd .rhs{font-family:var(--mono);font-size:11px;color:var(--panel-sub);letter-spacing:.05em;
+    text-align:right;line-height:1.9}
+  .mz-hd .rhs b{color:var(--panel-ink);font-size:14px;font-weight:700}
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-  .chips button{font:inherit;font-size:12px;cursor:pointer;padding:5px 13px;border-radius:3px;
+  .chips button{font:inherit;font-size:11.5px;cursor:pointer;padding:6px 13px;border-radius:3px;
     background:rgba(255,255,255,.03);color:var(--panel-sub);border:1px solid #1E2F36;
-    transition:.16s;font-family:var(--mono);letter-spacing:.02em}
-  .chips button:hover{color:var(--panel-ink);border-color:#3A5C67;background:rgba(255,255,255,.06)}
+    transition:.16s;font-family:var(--mono);letter-spacing:.03em}
+  .chips button:hover{color:var(--panel-ink);border-color:#3A5C67;background:rgba(255,255,255,.07)}
   .chips button[aria-pressed="true"]{background:var(--panel-ink);color:var(--void);
     border-color:var(--panel-ink);font-weight:700}
-  .chips button:focus-visible{outline:2px solid var(--rail);outline-offset:2px}
-  .mapbox{position:relative;border:1px solid #16262D;border-radius:4px;background:var(--ocean);overflow:hidden}
+  .chips button:focus-visible{outline:2px solid var(--m-rail);outline-offset:2px}
+  .mapbox{position:relative;border:1px solid #17272E;border-radius:4px;background:var(--ocean);overflow:hidden}
   .mapbox svg{display:block;width:100%;height:auto}
-  .land{fill:var(--landfill);stroke:var(--coast);stroke-width:.6;stroke-linejoin:round}
+  .land{fill:var(--landfill);stroke:var(--coast);stroke-width:.45;stroke-linejoin:round}
+  .lake{fill:var(--ocean);stroke:#2E4650;stroke-width:.4}
   .grat{stroke:var(--grat);stroke-width:.5;fill:none}
   .grat.eq{stroke:#26424B;stroke-width:.9;stroke-dasharray:7 5}
   .gratlbl{font-family:var(--mono);font-size:8px;fill:#2C4048;letter-spacing:.08em}
@@ -91,11 +184,12 @@
   .glow{fill:none;stroke-linecap:round;filter:url(#soft);transition:opacity .28s ease}
   .route.hit{stroke:transparent;stroke-width:11;cursor:pointer}
   .nd circle{transition:opacity .28s ease}
-  .lbl{font-family:var(--mono);font-size:9px;fill:#8FA3AB;pointer-events:none;
+  .lbl{font-family:var(--mono);font-size:9px;fill:#93A7AF;pointer-events:none;
     transition:opacity .28s ease;letter-spacing:.07em;font-weight:600;
     paint-order:stroke;stroke:var(--ocean);stroke-width:2.6px;stroke-linejoin:round}
   .lbl.jp{font-family:-apple-system,"Hiragino Sans",sans-serif;font-size:10.5px;
     fill:var(--panel-ink);letter-spacing:0;stroke-width:3px}
+  .apexlbl{fill:var(--m-air);font-size:9.5px;letter-spacing:.1em}
   .draw{animation:dash .9s ease forwards}
   @keyframes dash{to{stroke-dashoffset:0}}
   .legend{display:flex;flex-wrap:wrap;gap:5px;margin:14px 0 0}
@@ -105,39 +199,37 @@
   .legend button[aria-pressed="false"]{opacity:.3}
   .legend button:hover{border-color:#3A5C67;color:var(--panel-ink)}
   .legend .sw{width:18px;height:2px;border-radius:2px;display:block;flex:0 0 auto}
-  .legend .km{color:var(--panel-ink);font-weight:600}
-  .legend .pc{opacity:.65;font-size:10px}
-  .tip{position:absolute;pointer-events:none;background:rgba(9,17,21,.95);color:var(--panel-ink);
-    border:1px solid #2E4A54;border-radius:4px;padding:8px 11px;font-size:12px;line-height:1.6;
-    box-shadow:0 10px 34px rgba(0,0,0,.6);opacity:0;transition:opacity .14s;max-width:270px;z-index:5}
+  .legend .km{color:var(--panel-ink);font-weight:700}
+  .legend .pc{opacity:.6;font-size:10px}
+  .tip{position:absolute;pointer-events:none;background:rgba(8,16,20,.96);color:var(--panel-ink);
+    border:1px solid #2E4A54;border-radius:4px;padding:9px 12px;font-size:12px;line-height:1.65;
+    box-shadow:0 12px 38px rgba(0,0,0,.66);opacity:0;transition:opacity .14s;max-width:270px;z-index:5}
   .tip b{font-family:var(--mono);color:#fff;letter-spacing:.03em}
   .tip .m{color:var(--panel-sub);font-size:11px}
-  .tip .n{color:var(--air);font-size:11px}
-  .apexlbl{fill:var(--air);font-size:9.5px;letter-spacing:.1em}
-  .mapfoot{color:#5E7078;font-size:11px;margin-top:16px;line-height:1.85;max-width:62em}
+  .mapfoot{color:#61737B;font-size:11px;margin-top:16px;line-height:1.9;max-width:64em}
   .mapfoot strong{color:var(--panel-sub);font-weight:600}
 
-  /* ---- 日別バンド ---- */
-  .band{display:flex;gap:2px;margin:10px 0 4px;overflow-x:auto;padding-bottom:4px}
-  .band .d{flex:1 0 36px;min-width:36px;border-radius:4px;background:#fff;border:1px solid var(--line);
-    padding:6px 3px;text-align:center}
-  .band .d .n{font-family:var(--mono);font-size:10px;color:var(--sub)}
-  .band .d .c{font-size:10.5px;line-height:1.35;margin-top:3px;word-break:break-all}
-  .band .d.move{background:#FFF6EE;border-color:#EBC7AC}
-  .band .d.land{background:#EEF7F5;border-color:#B8DDD6}
-  .ctygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:14px 0}
-  .ctygrid a,.ctygrid span{display:block;background:#fff;border:1px solid var(--line);border-radius:8px;
-    padding:9px 11px;text-decoration:none;font-size:13.5px;color:var(--ink)}
-  .ctygrid a:hover{border-color:var(--accent)}
-  .ctygrid .iso{font-family:var(--mono);font-size:10.5px;color:var(--sub);display:block}
-  .ctygrid span{color:var(--sub);border-style:dashed}
-
-  @media(max-width:640px){
+  @media(max-width:720px){
     .kpi{grid-template-columns:repeat(2,1fr)}
-    header.top{flex-wrap:wrap}
-    .mapzone{margin:22px -28px;padding:16px 14px 20px}
+    .kpi .card:nth-child(3){border-left:0}
+    .kpi .card:nth-child(n+3){border-top:1px solid var(--hair)}
+    .kpi .v{font-size:27px}
+    header.top h1{font-size:26px}
+    h2{grid-template-columns:40px 1fr;column-gap:12px;margin-top:52px}
+    h2 .num{font-size:26px}
+    h2 .t{font-size:19px}
+    .mapzone{margin:26px -28px;padding:18px 16px 20px}
+    .mz-hd h2{font-size:21px}
+    .mz-hd .rhs{text-align:left}
+    .rank .row{grid-template-columns:20px 1fr 68px;gap:9px;padding:8px 12px}
+    .trip .tbl-scroll{margin:16px -20px 0}
   }
-  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  @media print{
+    body{background:#fff}
+    .mapzone{background:#fff;margin:20px 0;padding:0;border:0}
+    .chips,.legend{display:none}
+  }
 </style>
 </head>
 <body>
@@ -249,7 +341,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   <div class="legend" id="legend" role="group" aria-label="移動手段の表示切替"></div>
   <p class="mapfoot"><strong>成田の発着は8回で、次に多いチューリッヒ・マニラ・カイロ・上海浦東の各4回の2倍。</strong>区間の記録がある4回の渡航はすべて成田発・成田着で、羽田も関西も一度も使っていない。地図の右端から扇状に線が伸びるのはそのためである。<br>
   陸地と国境は<strong>Natural Earth 110m</strong>を許容誤差0.14度に簡略化したもの。線は2地点間の<strong>大圏コース</strong>、つまり球面上の最短経路で、実際の航路や線路の形ではない。<strong>正距円筒図法</strong>なので緯度が高いほど東西方向が実距離より広く見える。破線は赤道。点をなぞると地点名と座標、線をなぞると日付・区間・便名・距離が出る。上のボタンで渡航を絞り込み、下の凡例で手段を切り替えられる。<br>
-  上端に余白が広いのは図の余りではない。<strong>成田 - チューリッヒの最短経路が北緯65.8度・東経69.5度まで北上する</strong>ため、地点の分布より図の範囲が北に広い。</p>
+  上端に余白が広いのは図の余りではない。<strong>成田 - チューリッヒの最短経路が北緯65.8度・東経69.3度まで北上する</strong>ため、地点の分布より図の範囲が北に広い。</p>
 </div>
 
 <div class="kpi">
@@ -259,9 +351,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   <div class="card"><div class="k">交通費 合計</div><div class="v">488,593 <small>円</small></div></div>
 </div>
 
-<h2><span class="num">01</span>全体の規模<span class="en">Scale</span></h2>
+<h2><span class="num">01</span><span class="hd"><span class="en">Scale</span><span class="t">全体の規模</span></span></h2>
 
 <p>47区間の大圏距離を合計すると<strong>79,638km</strong>で、地球1周40,075kmの1.99倍にあたる。内訳は空路に大きく偏る。</p>
+
+<div class="stack" id="stack"></div>
 
 <div class="tbl-scroll"><table>
 <thead><tr><th>手段</th><th class="num">区間数</th><th class="num">距離 km</th><th class="num">構成比</th><th>内容</th></tr></thead>
@@ -280,21 +374,24 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 </div>
 
 <div class="callout">
-<p><strong>最短経路は地点の緯度より高いところを通る。</strong>成田は北緯35.8度、チューリッヒは北緯47.5度だが、この2点を結ぶ大圏コースの頂点は<strong>北緯65.8度・東経69.5度</strong>で、西シベリアの北端にあたる。北極圏の南限66.6度のすぐ手前である。地図上で最も北へ張り出す線が最も長い区間ではなく、<strong>東西に最も離れた2点を結ぶ区間</strong>だという点が、平面の地図では直感に反する。最南は北緯1.4度のシンガポールで、南半球に入るのはジャカルタの南緯6.1度だけである。</p>
+<p><strong>最短経路は地点の緯度より高いところを通る。</strong>成田は北緯35.8度、チューリッヒは北緯47.5度だが、この2点を結ぶ大圏コースの頂点は<strong>北緯65.823度・東経69.253度</strong>で、西シベリアのヤマロ・ネネツ自治管区にあたる。<strong class="hit">北極圏の南限66.56度まで0.74度しか残っていない。</strong>この頂点から最も近い都市は北極線上に位置するサレハルドで、距離は143kmである。地図上で最も北へ張り出す線が最も長い区間ではなく、<strong>東西に最も離れた2点を結ぶ区間</strong>だという点が、平面の地図では直感に反する。最南は北緯1.4度のシンガポールで、南半球に入るのはジャカルタの南緯6.1度だけである。</p>
 </div>
 
 <p>ネットワークとしては<strong>単一のハブに完全に依存した形</strong>になっている。発着回数は成田が8回、以下チューリッヒ・マニラ・カイロ・上海浦東が各4回で、<strong>2位グループの2倍が1点に集まる</strong>。区間の記録がある4回の渡航はいずれも成田発・成田着で、途中で別の日本の空港に入った記録はない。<strong>片道で抜けて別の空港から帰る形を1度も取っていない。</strong></p>
 
+<h3>上位2区間で全体の4分の1を占める</h3>
+<div class="rank" id="rank"></div>
+
 <p>単一区間で最も長いのは<strong>チューリッヒ - シンガポールの10,304km</strong>（SWISS LX176、2024年11月18日）で、次が成田 - チューリッヒの9,595km。上位2区間だけで19,899kmあり、<strong>全体79,638kmの25.0%を2区間が占める</strong>。</p>
 
-<h2><span class="num">02</span>渡航ごとの動線<span class="en">Itineraries</span></h2>
+<h2><span class="num">02</span><span class="hd"><span class="en">Itineraries</span><span class="t">渡航ごとの動線</span></span></h2>
 <div id="trips"></div>
 
-<h2><span class="num">03</span>行った国と地域<span class="en">Countries</span></h2>
+<h2><span class="num">03</span><span class="hd"><span class="en">Countries</span><span class="t">行った国と地域</span></span></h2>
 <p>20の国と地域。国別の統計ページがあるものはリンクしている。<strong>タイ・ベトナム・香港は渡航しているがページを作っていない。</strong></p>
 <div class="ctygrid" id="ctygrid"></div>
 
-<h2><span class="num">04</span>移動しながら働いている<span class="en">Working in Transit — 旅行ではなく出張として扱われた</span></h2>
+<h2><span class="num">04</span><span class="hd"><span class="en">Working in Transit — 旅行ではなく出張として扱われた</span><span class="t">移動しながら働いている</span></span></h2>
 
 <p>区間の記録だけを見ると旅行のように見えるが、<strong>社内の記録では出張として扱われている</strong>。渡航中のやりとりから、この移動の性格が3点わかる。</p>
 
@@ -308,7 +405,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p><strong>この移動を何と呼ぶか。</strong>20日間で9カ国、18日間で8カ国という密度は観光の配分ではない。一方で稼働は1日5時間で、宿の回線に依存している。<strong class="hit">移動を止めずに働ける範囲を実験している</strong>という読み方が、記録の全体と最も整合する。1区間あたりの距離が短くなるほど1kmの単価が上がるという前節の結果は、この形の移動が<strong>効率ではなく到達数を最大化している</strong>ことの裏返しでもある。</p>
 </div>
 
-<h2><span class="num">05</span>データの限界<span class="en">Caveats</span></h2>
+<h2><span class="num">05</span><span class="hd"><span class="en">Caveats</span><span class="t">データの限界</span></span></h2>
 
 <div class="risk">
 <p><strong>2022年8月のカンボジアは区間の記録がない。</strong>当時使っていたメールアドレスの受信箱が残っておらず、便名・空港・費用はすべてN/A。渡航した事実と目的だけが分かる。したがって距離と費用の集計は<strong>2024年11月以降の4回分</strong>である。</p>
@@ -344,7 +441,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
 <p>費用はシートのFare列の合計で、<strong>宿泊費とその他の費用は含まない</strong>。含めると2024年11月-12月は追加費用41,320円と過払い返金17,140円、2025年4月-5月は宿泊費45,336円、2025年11月は宿泊費18,350円とその他22,950円が加わる。通貨は記録時点の円で、為替の時点調整はしていない。</p>
 
-<h2>出典<span class="en">Sources</span></h2>
+<h2><span class="num"></span><span class="hd"><span class="en">Sources</span><span class="t">出典</span></span></h2>
 <ol class="sources">
 <li>Googleスプレッドシート「travel-abroad」（5シート。2025-11-Summary／2025-05-Flight／2025-05-Lodging／2024-11-Flight／2026-03-Flight。区間・時刻・運賃・宿泊先・訪問先の一次記録。最終更新2026年3月14日）</li>
 <li>SWISS 予約確認メール 3件（RLKZVF＝LX728 チューリッヒ - アムステルダム 2024年11月17日・ゲートA84／RQJDBJ＝アムステルダム - チューリッヒ 2024年11月18日／P39QRK＝LX176 チューリッヒ - シンガポール 2024年11月18日・ゲートE42）</li>
@@ -455,6 +552,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
     lp += 'M' + ring.map(([la,lo]) => `${f1(px(lo))},${f1(py(la))}`).join('L') + 'Z';
   }
   if (lp) svg += `<path class="land" d="${lp}"/>`;
+  let kp = '';
+  for (const ring of (window.LAKES || [])){
+    kp += 'M' + ring.map(([la,lo]) => `${f1(px(lo))},${f1(py(la))}`).join('L') + 'Z';
+  }
+  if (kp) svg += `<path class="lake" d="${kp}"/>`;
 
   // 区間。地下鉄→陸路→バス→鉄道→空路の順に重ねる
   const order = {metro:0, road:1, bus:2, rail:3, air:4};
@@ -487,7 +589,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
     const n = N[code], isAir = n.kind === 'air', isHub = deg[code] >= hub*0.6;
     const cx = f1(px(n.lon)), cy = f1(py(n.lat));
     svg += `<g class="nd" data-trips="${[...(trips4[code]||[])].join(' ')}">`;
-    if (isHub) svg += `<circle cx="${cx}" cy="${cy}" r="10" fill="none" stroke="var(--air)" stroke-width="1" opacity=".45"/>`;
+    if (isHub) svg += `<circle cx="${cx}" cy="${cy}" r="10" fill="none" stroke="var(--m-air)" stroke-width="1" opacity=".45"/>`;
     if (isAir) svg += `<circle cx="${cx}" cy="${cy}" r="4.6" fill="none" stroke="#FFF6E8" stroke-width="1.1" opacity=".85"/>`;
     svg += `<circle cx="${cx}" cy="${cy}" r="${isAir?2:1.7}" fill="${isAir?'#FFF6E8':'#7FB8AE'}"/>`
         +  `<circle cx="${cx}" cy="${cy}" r="11" fill="transparent" style="cursor:pointer"`
@@ -524,17 +626,37 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
         +  ` x="${f1(L.cx + L.off[0])}" y="${f1(L.cy + L.off[1])}">${L.isAir?esc(L.code):''}</text>`;
   }
 
-  // 大圏コースの最北点。本文の指摘と地図を接続する
+  // 大圏コースの最北点。等間隔サンプリングでは頂点付近が平坦で取りこぼすため、
+  // 大圏平面の法線に北極を射影して解析的に求める
   (function(){
-    let top = null;
-    for (const [g,pts] of arcs){ for (const [la,lo] of pts) if (!top || la > top[0]) top = [la,lo]; }
-    if (!top) return;
-    const x = px(top[1]), y = py(top[0]);
+    const U = (lat,lon) => { const a=rad(lat), o=rad(lon);
+      return [Math.cos(a)*Math.cos(o), Math.cos(a)*Math.sin(o), Math.sin(a)]; };
+    let best = null;
+    for (const g of all){
+      if (g.mode !== 'air') continue;
+      const p1 = U(N[g.from].lat, N[g.from].lon), p2 = U(N[g.to].lat, N[g.to].lon);
+      let n = [p1[1]*p2[2]-p1[2]*p2[1], p1[2]*p2[0]-p1[0]*p2[2], p1[0]*p2[1]-p1[1]*p2[0]];
+      const m = Math.hypot(...n); if (!m) continue; n = n.map(c=>c/m);
+      let v = [-n[2]*n[0], -n[2]*n[1], 1-n[2]*n[2]];
+      const mv = Math.hypot(...v); if (!mv) continue; v = v.map(c=>c/mv);
+      let la = Math.atan2(v[2], Math.hypot(v[0],v[1]))*180/Math.PI;
+      let lo = Math.atan2(v[1], v[0])*180/Math.PI;
+      if (la < 0){ la = -la; lo = ((lo+360)%360)-180; }
+      // 頂点が区間の経度範囲に入っていなければ端点が最北
+      const [x0,x1] = [N[g.from].lon, N[g.to].lon].sort((u,w)=>u-w);
+      if (lo < x0 || lo > x1){
+        const e = N[g.from].lat >= N[g.to].lat ? g.from : g.to;
+        la = N[e].lat; lo = N[e].lon;
+      }
+      if (!best || la > best[0]) best = [la, lo];
+    }
+    if (!best) return;
+    const x = px(best[1]), y = py(best[0]);
     svg += `<g class="apex">`
-        +  `<circle cx="${f1(x)}" cy="${f1(y)}" r="3.2" fill="none" stroke="var(--air)" stroke-width="1.2"/>`
-        +  `<line x1="${f1(x)}" y1="${f1(y-6)}" x2="${f1(x)}" y2="${f1(y-17)}" stroke="var(--air)" stroke-width=".9" opacity=".7"/>`
+        +  `<circle cx="${f1(x)}" cy="${f1(y)}" r="3.2" fill="none" stroke="var(--m-air)" stroke-width="1.2"/>`
+        +  `<line x1="${f1(x)}" y1="${f1(y-6)}" x2="${f1(x)}" y2="${f1(y-17)}" stroke="var(--m-air)" stroke-width=".9" opacity=".7"/>`
         +  `<text class="lbl apexlbl" x="${f1(x)}" y="${f1(y-22)}" text-anchor="middle">`
-        +  `${top[0].toFixed(1)}&#176;N &#183; 最北点</text></g>`;
+        +  `${best[0].toFixed(1)}&#176;N &#183; 最北点</text></g>`;
   })();
 
   svg += '</g></svg>';
@@ -651,40 +773,94 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
       + `<td class="num">${km?(airkm/km*100).toFixed(1)+'%':na}</td></tr>`;
   }).join('');
 
+  /* ---------- 手段の構成（積み上げ棒）---------- */
+  {
+    const rows = Object.entries(byMode).sort((x,y)=>y[1].km-x[1].km);
+    const bar = rows.map(([k,v])=>{
+      const pc = v.km/total*100;
+      return `<span style="width:${pc.toFixed(3)}%;background:var(--m-${k})" title="${MODE[k].ja} ${fmt(v.km)}km"></span>`;
+    }).join('');
+    const keys = rows.map(([k,v])=>
+      `<div><i style="background:var(--m-${k})"></i><span>${esc(MODE[k].ja)}</span>`
+      + `<b>${fmt(v.km)}</b><em>km / ${(v.km/total*100).toFixed(1)}%</em></div>`).join('');
+    document.getElementById('stack').innerHTML =
+      `<div class="bar">${bar}</div><div class="keys">${keys}</div>`;
+  }
+
+  /* ---------- 最長区間（順位バー）---------- */
+  {
+    const top = [...all].sort((x,y)=>y.km-x.km).slice(0,8);
+    const max = top[0].km, cum = top.slice(0,2).reduce((a,x)=>a+x.km,0);
+    document.getElementById('rank').innerHTML = top.map((g,i)=>
+      `<div class="row"><div class="n">${i+1}</div>`
+      + `<div class="lab"><div class="txt">${esc(N[g.from].ja)} &#8212; ${esc(N[g.to].ja)}`
+      + `<small>${esc(g.date.replace(/-/g,'.'))}${g.flight?' / '+esc(g.flight):''}</small></div>`
+      + `<div class="b" style="width:${(g.km/max*100).toFixed(1)}%;background:var(--${g.mode})"></div></div>`
+      + `<div class="km">${fmt(g.km)}</div></div>`).join('')
+      + `<div class="row" style="background:#FBFAF7"><div class="n"></div>`
+      + `<div class="lab"><div class="txt"><b>上位2区間の合計</b>`
+      + `<small>全体79,638kmの${(cum/total*100).toFixed(1)}%</small></div></div>`
+      + `<div class="km">${fmt(cum)}</div></div>`;
+  }
+
   /* ---------- 渡航ごとの詳細 ---------- */
-  const modeCell = m => `<span style="display:inline-block;width:11px;height:3px;border-radius:2px;background:${MODE[m].c};vertical-align:middle;margin-right:6px"></span>${MODE[m].ja}`;
+  const modeCell = m => `<span style="display:inline-block;width:11px;height:3px;border-radius:2px;`
+    + `background:var(--${m});vertical-align:middle;margin-right:7px"></span>${MODE[m].ja}`;
+  const DAY = 86400000;
+  const maxTripKm = Math.max(...T.trips.map(t =>
+    t.segments.reduce((a,g)=>a+gc(g.from,g.to),0)));
+
   document.getElementById('trips').innerHTML = T.trips.map(t=>{
     if (!t.detail){
-      return `<h3>${esc(t.label)}　${esc(t.title)}</h3><div class="box"><p>${esc(t.note)}</p>`
-        + `<p class="src">区間・便名・費用はすべてN/A。</p></div>`;
+      return `<div class="trip"><div class="th"><div class="l">`
+        + `<span class="when">${esc(t.label)}</span><span class="name">${esc(t.title)}</span></div>`
+        + `<div class="r">区間 <b>N/A</b></div></div>`
+        + `<div class="body"><p>${esc(t.note)}</p>`
+        + `<p class="fn">区間・便名・費用はすべてN/A。距離と費用の集計には含めていない。</p></div></div>`;
     }
-    const ss = t.segments.map(s=>({...s, km:gc(s.from,s.to)}));
-    const km = ss.reduce((a,s)=>a+s.km,0);
-    const days = [...new Set(ss.map(s=>s.date))].sort();
-    const band = days.map(d=>{
-      const on = ss.filter(s=>s.date===d);
-      const air = on.some(s=>s.mode==='air');
-      return `<div class="d ${air?'move':'land'}"><div class="n">${d.slice(5).replace('-','/')}</div>`
-        + `<div class="c">${on.map(s=>esc(N[s.to].ja)).join('<br>')}</div></div>`;
+    const ss = t.segments.map(g=>({...g, km:gc(g.from,g.to)}));
+    const km = ss.reduce((a,g)=>a+g.km,0);
+    const airkm = ss.filter(g=>g.mode==='air').reduce((a,g)=>a+g.km,0);
+
+    // 移動のない日も並べて、動いた日と滞在した日の比を見せる
+    const dates = [...new Set(ss.map(g=>g.date))].sort();
+    const t0 = new Date(dates[0]+'T00:00:00Z').getTime();
+    const t1 = new Date(dates[dates.length-1]+'T00:00:00Z').getTime();
+    const span = Math.round((t1-t0)/DAY) + 1;
+    let stay = 0;
+    const band = Array.from({length:span}, (_,i)=>{
+      const iso = new Date(t0 + i*DAY).toISOString().slice(0,10);
+      const on = ss.filter(g=>g.date===iso);
+      const md = on.length ? (on.some(g=>g.mode==='air') ? 'air' : 'land') : 'stay';
+      if (!on.length) stay++;
+      return `<div class="d ${md}"><div class="n">${iso.slice(5).replace('-','/')}</div>`
+        + `<div class="c">${on.length ? on.map(g=>esc(N[g.to].ja)).join('<br>') : '滞在'}</div></div>`;
     }).join('');
-    const extra = t.extra ? Object.entries(t.extra).map(([k,v])=>`${esc(k)} ${fmt(v)}円`).join(' / ') : '';
-    const rows = ss.map(s=>`<tr>`
-      + `<td class="num">${s.date.slice(5).replace('-','/')}</td>`
-      + `<td>${esc(N[s.from].ja)} <span class="src">→</span> <b>${esc(N[s.to].ja)}</b></td>`
-      + `<td>${modeCell(s.mode)}</td>`
-      + `<td>${esc([s.carrier,s.flight].filter(Boolean).join(' ')) || '<span style="color:var(--sub)">N/A</span>'}</td>`
-      + `<td class="num">${s.dep||'-'}${s.arr?' → '+esc(s.arr):''}</td>`
-      + `<td class="num">${s.km>=1?fmt(s.km):'-'}</td>`
-      + `<td class="num">${s.fare?fmt(s.fare):'-'}</td>`
-      + `<td class="src">${esc(s.note||'')}</td></tr>`).join('');
-    return `<h3>${esc(t.label)}　${esc(t.title)}</h3>`
-      + `<p>${esc(t.note)}</p>`
-      + `<p class="src">${t.days}日 / ${ss.length}区間 / ${fmt(km)}km / 交通費${fmt(t.fare)}円`
-      + (extra?` / ${extra}`:'') + `</p>`
+
+    const extra = t.extra ? Object.entries(t.extra).map(([k,v])=>`${esc(k)} ${fmt(v)}円`).join('　') : '';
+    const rows = ss.map(g=>`<tr>`
+      + `<td class="num">${g.date.slice(5).replace('-','/')}</td>`
+      + `<td>${esc(N[g.from].ja)} <span class="src">&#8594;</span> <b>${esc(N[g.to].ja)}</b></td>`
+      + `<td>${modeCell(g.mode)}</td>`
+      + `<td>${esc([g.carrier,g.flight].filter(Boolean).join(' ')) || '<span class="src">N/A</span>'}</td>`
+      + `<td class="num">${g.dep||'-'}${g.arr?' &#8594; '+esc(g.arr):''}</td>`
+      + `<td class="num">${g.km>=1?fmt(g.km):'-'}</td>`
+      + `<td class="num">${g.fare?fmt(g.fare):'-'}</td>`
+      + `<td class="src">${esc(g.note||'')}</td></tr>`).join('');
+
+    return `<div class="trip">`
+      + `<div class="th"><div class="l"><span class="when">${esc(t.label)}</span>`
+      + `<span class="name">${esc(t.title)}</span></div>`
+      + `<div class="r"><b>${fmt(km)}</b> km　<b>${ss.length}</b> 区間　<b>${t.days}</b> 日<br>`
+      + `空路 ${(airkm/km*100).toFixed(0)}%　交通費 ${fmt(t.fare)}円　${(t.fare/km).toFixed(1)} 円/km</div></div>`
+      + `<div class="body"><p>${esc(t.note)}</p>`
       + `<div class="band">${band}</div>`
-      + `<p class="fn">帯は区間のある日だけを並べたもの。橙は空路を含む日、緑は陸路のみの日。表示は各日の到着地。</p>`
-      + `<div class="tbl-scroll"><table><thead><tr><th class="num">日付</th><th>区間</th><th>手段</th><th>便・事業者</th>`
-      + `<th class="num">時刻</th><th class="num">km</th><th class="num">運賃 円</th><th>備考</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      + `<p class="fn">${span}日のうち<strong>移動した日は${span-stay}日、動かなかった日は${stay}日</strong>。`
+      + `橙は空路を含む日、緑は陸路のみの日、斜線は移動のない日。表示は各日の到着地。`
+      + (extra?`　${extra}は上の交通費に含まない。`:'') + `</p>`
+      + `<div class="tbl-scroll"><table><thead><tr><th class="num">日付</th><th>区間</th><th>手段</th>`
+      + `<th>便・事業者</th><th class="num">時刻</th><th class="num">km</th><th class="num">運賃 円</th>`
+      + `<th>備考</th></tr></thead><tbody>${rows}</tbody></table></div></div></div>`;
   }).join('');
 
   /* ---------- 国 ---------- */

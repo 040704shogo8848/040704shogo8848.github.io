@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>菊陽町 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / 菊陽町</p>
+
+<header class="top">
+  <div>
+    <h1>菊陽町 / Kikuyo</h1>
+    <div class="meta">熊本 / 菊池郡　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">火山灰土壌の透水性がニンジンの産地を作り、同じ透水性が水道水源を100%地下水にし、その地下水が2nm世代の半導体工場を呼んだ。50年で人口が3.3倍になった町を、農業と半導体が同じ地質条件を共有しているという視点で読む。</p>
+<p><span class="tag">熊本</span><span class="tag">半導体</span><span class="tag">TSMC</span><span class="tag">地下水</span><span class="tag">ニンジン</span><span class="tag">ベッドタウン</span></p>
+
+<div class="kpi"><div class="card"><div class="k">人口</div><div class="v">44,954人 <small>2026年8月1日 推計</small></div></div><div class="card"><div class="k">面積</div><div class="v">37.46 km² <small>人口密度 約1,200人/km²</small></div></div><div class="card"><div class="k">町制施行</div><div class="v">1969年 <small>昭和44年1月1日</small></div></div><div class="card"><div class="k">人口 45年の倍率</div><div class="v">3.3倍 <small>1975年13,138人→2020年43,337人</small></div></div></div>
+<iframe class="map" loading="lazy" title="菊陽町の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=130.5247,32.7347,131.0847,33.0147&amp;layer=mapnik&amp;marker=32.8747,130.8047"></iframe>
+
+<h2><span class="num">01</span>町としての特徴<span class="en">Profile</span></h2>
+<p>熊本市の北東に隣接する町で、市ではない。面積37.46km²、東西11.8km、南北9.4km。人口は2026年8月1日現在の推計で44,954人、人口密度は約1,200人/km²である。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>町制施行</td>
+<td>1969年1月1日。菊陽村から町制へ</td>
+</tr>
+<tr>
+<td>沿革</td>
+<td>1889年に津田村・原水村・白水村が発足 → 1955年に3村が対等合併して菊陽村 → 1969年に町制施行</td>
+</tr>
+<tr>
+<td>隣接</td>
+<td>熊本市（北区・東区）、合志市、菊池郡大津町、上益城郡益城町</td>
+</tr>
+<tr>
+<td>地形</td>
+<td>中南部を白川が西流し、沿岸に河岸段丘。北部を堀川が流れ、流域に用水路が張り巡らされている</td>
+</tr>
+</tbody></table></div>
+<p><strong>この町を理解する鍵は水である。</strong>熊本都市圏は水道水源のほぼ100%を地下水で賄っており、菊陽町はその地下水盆の涵養域に位置する。2004年に熊本市と大津町とともに「白川中流域における水田湛水推進に関する協定」を締結し、<strong>休耕田に水を張る農家へ助成金を出して地下水を涵養する</strong>政策を実施している。</p>
+<div class="callout"><p>読み方。<strong>休耕田に水を張るという政策は、農業の縮小を地下水涵養の手段に転用したものである。</strong>減反で使われなくなった水田が、そのまま放置されれば涵養機能を失う。協定はその水田に対価を払って水を張らせている。この地下水が、後述する半導体工場の立地条件のひとつになっている。<strong>農業の衰退と半導体の到来が、水を介して同じ回路につながっている。</strong></p></div>
+<h2><span class="num">02</span>経済規模と産業構造<span class="en">Economy</span></h2>
+<div class="risk"><p><strong>町単体の製造品出荷額等は、公開の一次情報の範囲で確認できずN/Aとした。</strong>農業産出額の総額も同様である。製造品出荷額等は2020年までが工業統計調査、2021年以降が経済構造実態調査で年次が接続しないため、仮に数値が得られても長期の比較には使えない。</p></div>
+<p>産業別就業者数は以下である。ただし<strong>集計の基準年次が出典に明示されておらず時点はN/A</strong>。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>産業分類</th>
+<th>就業者数</th>
+<th>構成比</th>
+</tr></thead><tbody>
+<tr>
+<td>第1次産業</td>
+<td>875人</td>
+<td class="num">4.3%</td>
+</tr>
+<tr>
+<td>第2次産業</td>
+<td>6,452人</td>
+<td class="num">31.4%</td>
+</tr>
+<tr>
+<td>第3次産業</td>
+<td>13,167人</td>
+<td class="num">64.2%</td>
+</tr>
+</tbody></table></div>
+<h3>ニンジンは減反政策の副産物である</h3>
+<p>菊陽町のニンジンは県内1位、全国でも上位に入る。<strong>しかしこの産地は、ニンジンを作りたくて作られたのではない。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年</th>
+<th>出来事</th>
+</tr></thead><tbody>
+<tr>
+<td>1972年頃</td>
+<td>米の生産過剰と減反政策のもとで、<strong>タバコ栽培の後作として</strong>秋冬にんじんが導入される</td>
+</tr>
+<tr>
+<td>1978年</td>
+<td>冬にんじんが国の指定産地に</td>
+</tr>
+<tr>
+<td>1998年</td>
+<td>春夏にんじんが国の指定産地に</td>
+</tr>
+</tbody></table></div>
+<p>適地条件になったのは<strong>黒ボク土</strong>である。火山灰由来の土壌で、通気性と透水性に優れる。機械化の進展とあわせて作付面積が拡大し、町の基幹作物になった。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>品種</th>
+<th>作付面積</th>
+<th>収穫量</th>
+<th>出荷量</th>
+<th>反収</th>
+<th>県内順位</th>
+<th>全国順位</th>
+</tr></thead><tbody>
+<tr>
+<td>春夏にんじん</td>
+<td>95ha</td>
+<td>2,900t</td>
+<td>2,610t</td>
+<td>約3,050kg/10a</td>
+<td>1位／45市町村</td>
+<td><strong>14位／1,719市町村</strong></td>
+</tr>
+<tr>
+<td>冬にんじん</td>
+<td>123ha</td>
+<td>3,690t</td>
+<td>3,100t</td>
+<td>約3,000kg/10a</td>
+<td>1位／45市町村</td>
+<td><strong>11位／1,719市町村</strong></td>
+</tr>
+</tbody></table></div>
+<p>いずれも2016年度産。<strong>より新しい年次の数値は確認できずN/A。</strong>2006年産のニンジン産出額は約4.1億円で県内1位だが、出典ページの単位表記が特殊なため換算値は参考値として扱う。</p>
+<div class="callout"><p>読み方。<strong>通気性と透水性という同じ土壌の性質が、ニンジンの産地化と地下水の涵養の両方を成立させている。</strong>水を通す土だから根菜が育ち、水を通す土だから雨水が地下に入る。菊陽町の農業と、次章で扱う半導体は、<strong>同じ火山灰層の物理的性質を別の用途で使っている</strong>。この構造は北海道の厚真町と対になる。厚真では4万年前の火山灰層が2018年の斜面崩壊のすべり面になった。<strong>同じ火山灰が、一方では資源として、一方では災害の原因として働いている。</strong></p></div>
+<h2><span class="num">03</span>人口推移<span class="en">Population</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年</th>
+<th>人口</th>
+<th>前回比</th>
+</tr></thead><tbody>
+<tr>
+<td>1975年</td>
+<td>13,138人</td>
+<td>-</td>
+</tr>
+<tr>
+<td>1980年</td>
+<td>20,152人</td>
+<td><strong>+53.4%</strong></td>
+</tr>
+<tr>
+<td>1985年</td>
+<td>22,585人</td>
+<td class="num">+12.1%</td>
+</tr>
+<tr>
+<td>1990年</td>
+<td>24,154人</td>
+<td class="num">+6.9%</td>
+</tr>
+<tr>
+<td>1995年</td>
+<td>26,273人</td>
+<td class="num">+8.8%</td>
+</tr>
+<tr>
+<td>2000年</td>
+<td>28,360人</td>
+<td class="num">+7.9%</td>
+</tr>
+<tr>
+<td>2005年</td>
+<td>32,434人</td>
+<td class="num">+14.4%</td>
+</tr>
+<tr>
+<td>2010年</td>
+<td>37,734人</td>
+<td class="num">+16.3%</td>
+</tr>
+<tr>
+<td>2015年</td>
+<td>40,984人</td>
+<td class="num">+8.6%</td>
+</tr>
+<tr>
+<td><strong>2020年</strong></td>
+<td><strong>43,337人</strong></td>
+<td><strong>+5.7%</strong></td>
+</tr>
+</tbody></table></div>
+<p>国勢調査各回。2025年速報は44,548人、2026年8月1日推計は44,954人である。<strong>1975年から2020年の45年間で3.3倍</strong>になった。</p>
+<h3>増加は3つの波でできている</h3>
+<p>熊本県内で人口が増えている数少ない自治体だが、その増加は連続した1本の線ではない。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>波</th>
+<th>時期</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>第1波</td>
+<td>1975-1980年</td>
+<td><strong>5年で53.4%増</strong>。1969年の町制施行後の基盤整備期にあたるが、この急増の要因を分解した一次資料は確認できずN/A</td>
+</tr>
+<tr>
+<td>第2波</td>
+<td>1994-2006年</td>
+<td><strong>光の森の開発</strong>。1994年9月に基本計画承認、1995年4月にJR九州と新駅設置の覚書、1995年9月に都市計画決定告示。2004年4月に人口3万人突破、同年6月にゆめタウン光の森開業、2006年3月に光の森駅開業</td>
+</tr>
+<tr>
+<td>第3波</td>
+<td>2021年-</td>
+<td><strong>半導体</strong>。JASM設立以降、地価と家賃の急騰を伴いながら人口増加率が全国上位に</td>
+</tr>
+</tbody></table></div>
+<p>第2波は<strong>商業施設と新駅を同時に作った</strong>開発である。基本計画の承認から駅の開業まで12年かかっている。</p>
+<div class="risk"><p>各期の増加人数について、社会増と自然増の内訳を定量分解した一次資料は確認できずN/A。年齢別人口構成も同様である。</p></div>
+<h2><span class="num">04</span>日本の大企業との関連<span class="en">Corporate Links</span></h2>
+<h3>JASMの年表</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>時点</th>
+<th>出来事</th>
+</tr></thead><tbody>
+<tr>
+<td>2021年</td>
+<td>JASM設立。TSMCとソニーセミコンダクタソリューションズが出資。<strong>設立当初の出資比率は一次確認できずN/A</strong></td>
+</tr>
+<tr>
+<td>2024年2月6日</td>
+<td>TSMC・ソニー・デンソー・トヨタの4社が追加出資を発表し、第2工場建設を決定</td>
+</tr>
+<tr>
+<td><strong>2024年2月24日</strong></td>
+<td><strong>第1工場 開所式。</strong>TSMC創業者の張忠謀、劉徳音会長、齋藤健経産大臣、蒲島郁夫熊本県知事、ソニーグループ吉田憲一郎会長兼CEO、デンソー林新之助社長、トヨタ豊田章男会長が出席</td>
+</tr>
+<tr>
+<td>2024年10-12月</td>
+<td>第1工場 量産開始予定（当時の見込み）</td>
+</tr>
+<tr>
+<td>2025年10月16日</td>
+<td>TSMCが第2工場の建設着手を発表</td>
+</tr>
+<tr>
+<td>2025年10月24日</td>
+<td>第2工場が本格着工との現地発表</td>
+</tr>
+<tr>
+<td>2026年1-3月期</td>
+<td><strong>JASM第1工場が初の黒字化</strong>（報道ベース）</td>
+</tr>
+<tr>
+<td><strong>2026年3月31日</strong></td>
+<td><strong>台湾経済部が第2工場の生産プロセスを3nmへの計画変更を承認。</strong>当初承認は2024年6月の6-12nm</td>
+</tr>
+</tbody></table></div>
+<p><strong>出資比率</strong>は2024年2月の第2工場発表時点で以下である。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>出資者</th>
+<th>比率</th>
+</tr></thead><tbody>
+<tr>
+<td>TSMC</td>
+<td>約86.5%</td>
+</tr>
+<tr>
+<td>ソニーセミコンダクタソリューションズ</td>
+<td>約6.0%</td>
+</tr>
+<tr>
+<td>デンソー</td>
+<td>約5.5%</td>
+</tr>
+<tr>
+<td>トヨタ自動車</td>
+<td>約2.0%</td>
+</tr>
+</tbody></table></div>
+<p><strong>生産プロセス</strong>は第1工場が22/28nmと12/16nm世代。両工場合計の対象は40nm、22/28nm、12/16nm、6/7nmとされていたが、2026年3月に第2工場が3nmへ変更承認された。</p>
+<div class="risk"><p><strong>投資額と着工時期は出典間で食い違う。</strong>投資額は両工場合計200億米ドル（約2兆9,600億円）超とする資料、第2工場単独で約1兆6,900億円とする資料、約2.1兆円とする資料が併存する。金額の粒度が資料により異なるため、単純比較はできない。着工時期は2025年6月着工とする資料と、2025年10月16日発表・10月24日本格着工とする資料があり、後者と整合する形で2025年10月時点の熊本県知事コメントは「年内着工の方向性に変わりはない」としている。<strong>推定で一方に寄せず両方を記載した。</strong>稼働時期も2027年12月、2028年、2029年上期と複数の見込みが報じられている。</p></div>
+<h3>なぜ菊陽町だったのか</h3>
+<p><strong>理由は水だけではない。既存の集積が先にあった。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>要因</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>ソニーの既存拠点</td>
+<td>ソニーセミコンダクタマニュファクチャリング熊本テクノロジーセンターが<strong>2001年10月開設</strong>。所在地は菊陽町大字原水4000-1。2001年4月にソニー国分・長崎・大分の3社が合併してソニーセミコンダクタ九州が設立された流れにある</td>
+</tr>
+<tr>
+<td>装置メーカー</td>
+<td>東京エレクトロン九州の本社は<strong>熊本県合志市</strong>福原1-1。菊陽町ではなく隣接市である</td>
+</tr>
+<tr>
+<td>九州の集積</td>
+<td>1967年に三菱電機が熊本へ半導体工場を進出させたのが端緒。1969年に九州日本電気、1970年に東芝大分工場。九州の半導体関連事業所は1,000超で、2000年に集積回路生産額が過去最高の約1.4兆円</td>
+</tr>
+<tr>
+<td>水</td>
+<td>熊本地域は水道水源のほぼ100%が地下水。TSMC熊本第1工場は<strong>1日約8,500トン</strong>の地下水を使用する見込みとされた。熊本地域の取水量の約65%を水道事業が占め、水道使用量を1%節水すると年間100万トン超の削減になるとの試算がある</td>
+</tr>
+</tbody></table></div>
+<p><strong>工場の水循環率の実数値は確認できずN/A。</strong>富士フイルムが産業一覧に挙がるが、町内の事業所の所在地と稼働内容は一次確認できずN/A。</p>
+<h3>地価は町から隣町へ移った</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>調査</th>
+<th>時点</th>
+<th>対象</th>
+<th>上昇率</th>
+<th>順位</th>
+</tr></thead><tbody>
+<tr>
+<td>令和4年 熊本県地価調査</td>
+<td>2022年</td>
+<td><strong>菊陽町の工業地</strong></td>
+<td class="num">31.6%</td>
+<td><strong>全国1位</strong></td>
+</tr>
+<tr>
+<td>令和6年 都道府県地価調査</td>
+<td>2024年7月1日</td>
+<td>大津町の商業地・工業地 計3地点</td>
+<td class="num">33.3%</td>
+<td>全国1位（商業地・工業地とも）</td>
+</tr>
+<tr>
+<td>令和7年 地価公示</td>
+<td>2025年1月1日</td>
+<td>大津町の工業地</td>
+<td class="num">33.3%</td>
+<td>全国1位</td>
+</tr>
+</tbody></table></div>
+<p>全国1位になったのは<strong>2022年が菊陽町の工業地</strong>で、2024年から2025年は<strong>隣接する大津町</strong>である。<strong>菊陽町自身の住宅地上昇率の全国順位は確認できずN/A。</strong></p>
+<p>家賃も動いている。2021年1-3月期と2024年1-3月期の比較で、大津町のシングル向けマンション家賃が<strong>36.7%上昇</strong>。菊陽町と大津町はシングル向け・ファミリー向けともに2桁の上昇率を記録し、両町の平均家賃は熊本市を上回った。菊陽町単独の数値は出典記事に明記がなくN/A。地価高騰により地元商店の借地料が数倍になり閉店に至った事例も報じられている。</p>
+<div class="callout"><p>読み方。<strong>上昇の中心が2年で隣町へ移っている。</strong>工場の立地点そのものより、その周辺で供給が追いつかない場所のほうが後から強く上がる。菊陽町の工業地が2022年に全国1位を取り、2024年以降は大津町が取っている。<strong>地価は工場の位置ではなく、工場から通える範囲の需給で決まっている。</strong></p></div>
+<h3>雇用の構成</h3>
+<p>JASM第1工場の従業員は約1,700人で、内訳は以下である。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>区分</th>
+<th>人数</th>
+<th>比率</th>
+</tr></thead><tbody>
+<tr>
+<td>台湾TSMC本体からの派遣技術者</td>
+<td>320人</td>
+<td class="num">18.6%</td>
+</tr>
+<tr>
+<td>ソニーグループからの技術者</td>
+<td>200人</td>
+<td class="num">11.6%</td>
+</tr>
+<tr>
+<td>新卒・中途採用（ほぼ半々）</td>
+<td>約700人</td>
+<td class="num">40.7%</td>
+</tr>
+<tr>
+<td>アウトソース</td>
+<td>約500人</td>
+<td class="num">29.1%</td>
+</tr>
+</tbody></table></div>
+<p>内訳の合計は1,720人で、公表の約1,700人と一致する範囲にある。新卒採用は第1期（2023年春入社）で100人超が内定し、熊本大学・崇城大学など地元大学からの採用が多いとされるが、<strong>地元採用比率の定量値は明記がなくN/A</strong>。第2工場は単独で約1,700人の直接雇用、第1・第2工場合計で約3,400人超の雇用創出見込みとされる。</p>
+<div class="callout"><p>読み方。<strong>技術移転の設計が人数に表れている。</strong>台湾からの派遣320人とソニーからの200人で合計520人、全体の30.2%が外部から持ち込まれた技術者である。残りを新卒中途とアウトソースで埋めている。<strong>工場は建てれば動くのではなく、動かせる人間を連れてくる必要がある。</strong>そのうえで台湾出身者が生活する町として、後述する台湾料理の店が生まれている。</p></div>
+<h2><span class="num">05</span>出身の有名人<span class="en">People</span></h2>
+<p>確認できたのは以下である。出典は人物辞典サイト1件のみで、<strong>いずれもsingle-source</strong>である。</p>
+<p>野球の荒木雅博（1977年生、元中日）、吉野光樹（1998年生）、中熊大智（1996年生）、中村和臣（1935年生）。サッカーの澤田崇（1991年生）、矢野大輔（1984年生）、小牧成亘（1992年生）、北里大地（2003年生）。ゴルフの笠りつ子（1987年生）、狭間猛（1967年生）。陸上の久保田和真（1993年生）。俳優の映美くらら（1979年生）。アナウンサーの田中秀喜（1969年生）。競輪の中村健志（1986年生）。お笑いの桂竹紋（1983年生）、れん（1999年生）。軍人の武藤章（1892年生）。</p>
+<div class="risk"><p>出典に「鈴木孝政・バレーボール選手・1977年7月18日生」の記載があるが、同姓同名の著名な野球選手と混同している可能性があるため<strong>本ページには採用しなかった</strong>。武藤章についても出典が人物辞典1件のみで、町との関係の一次確認はできていない。</p></div>
+<h2><span class="num">06</span>食<span class="en">Food</span></h2>
+<p>菊陽町の食は<strong>産地化の政策と、半導体が連れてきた人口で説明できる</strong>。名物料理の系譜ではない。</p>
+<h3>ニンジンは作物であって料理ではない</h3>
+<p>前述のとおり、菊陽町のニンジンは1972年頃に<strong>タバコの後作</strong>として導入された。米の減反政策で空いた作付を埋める作物として選ばれ、黒ボク土の通気性と透水性が適地条件になった。<strong>1978年に冬にんじん、1998年に春夏にんじんが国の指定産地となり、20年かけて2つの作型が確立している。</strong>2016年度産で春夏が全国14位、冬が全国11位である。</p>
+<p><strong>この町の食を語るとき、加工や外食よりも作付の話が先に来るのは、産地化が政策として設計されたためである。</strong></p>
+<h3>台湾料理の店は2024年以降に現れた</h3>
+<p>JASM第1工場の稼働と台湾からの派遣者320人を背景に、台湾の食を扱う施設が生まれている。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>施設</th>
+<th>所在</th>
+<th>開業</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>日台会館</td>
+<td>菊陽町津久礼</td>
+<td><strong>2025年3月3日</strong></td>
+<td>台湾で結婚式場とレストランを展開する御嵿グループが運営。台湾の食と文化を紹介する複合施設で、宴会とビジネス交流にも対応</td>
+</tr>
+<tr>
+<td>其中之一</td>
+<td>菊陽町原水</td>
+<td>N/A</td>
+<td>本格台湾料理店。店長は台湾の大学に4年間通った経験を持つ</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p><strong>両店とも営業時間・定休日・現況は一次情報で確認できずN/A。</strong>訪問前に各店のサイトまたはSNSで確認が必要である。開業から日が浅く、営業条件が変わりやすい。</p></div>
+<div class="callout"><p>読み方。<strong>食は人口構成の後からついてくる。</strong>2024年2月に工場が開所し、2025年3月に台湾の複合施設が開業した。<strong>13か月の遅れがある。</strong>室蘭の焼き鳥が日本製鋼所の従業員が6,460人から39,624人へ増えた8年間に生まれたのと同じ順序で、まず人が来て、次に店ができている。ただし規模と速度は違う。室蘭は8年、菊陽は1年である。</p></div>
+<h2><span class="num">07</span>観光スポット<span class="en">Places</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>施設</th>
+<th>開館時間</th>
+<th>休館日</th>
+<th>料金</th>
+</tr></thead><tbody>
+<tr>
+<td>菊陽杉並木公園さんさん</td>
+<td>4-10月 8:30-19:00／11-3月 8:30-17:00</td>
+<td>火曜（祝日の場合は翌水曜）、12月29日-1月3日</td>
+<td>公園は無料。個別施設の利用料はN/A</td>
+</tr>
+<tr>
+<td>鼻ぐり井手公園（馬場楠井手の鼻ぐり）</td>
+<td>8:30-17:00</td>
+<td>火曜（祝日の場合は直後の非祝日）</td>
+<td>公園は無料の可能性が高いが交流センター等の利用料はN/A</td>
+</tr>
+<tr>
+<td>菊陽温泉さんさんの湯（さんふれあ内）</td>
+<td>9:30-23:00（22:30受付終了）／日曜・祝日 9:30-19:00（18:00受付終了）</td>
+<td>火曜（祝日の場合は営業）</td>
+<td>大人450円、小人250円</td>
+</tr>
+<tr>
+<td>豊後街道 菊陽杉並木</td>
+<td>常時開放</td>
+<td>-</td>
+<td>無料</td>
+</tr>
+</tbody></table></div>
+<p><strong>豊後街道の杉並木は加藤清正が整備したもので、東西約11kmが現存する。</strong>馬場楠井手の鼻ぐりは、加藤清正の時代に作られた用水路の土砂対策の構造物である。</p>
+<p><strong>ラピダスと同様、JASMの工場に一般向けの見学窓口は確認できない。</strong>外から見る場合の視認地点についても、公道からの視界を保証する一次情報は確認できずN/Aとした。</p>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>菊陽町「国勢調査の人口等集計結果」（1975-2020年の各回人口） — https://www.town.kikuyo.lg.jp/kiji003747/index.html</li>
+  <li>菊陽町「世帯・人口・統計」（各種人口統計） — https://www.town.kikuyo.lg.jp/list00232.html</li>
+  <li>Wikipedia「菊陽町」（面積37.46km²、東西11.8km・南北9.4km、推計人口44,954人／2026年8月1日、町制施行1969年1月1日、沿革、隣接自治体、地理）</li>
+  <li>菊陽町「菊陽町の農業」（冬にんじん1978年・春夏にんじん1998年に国指定産地） — https://www.town.kikuyo.lg.jp/kiji003331/index.html</li>
+  <li>菊陽町「ニンジンの産出額」（2006年産で県内1位） — https://www.town.kikuyo.lg.jp/kiji003348/index.html</li>
+  <li>ジャパンクロップス「熊本県菊池郡 菊陽町の農作物」（2016年度産の作付面積・収穫量・出荷量・県内順位・全国順位） — https://japancrops.com/municipalities/kumamoto/kikuyo-machi/crops/</li>
+  <li>ホームメイト研究所「菊池郡菊陽町の市場調査データ」（産業別就業者数。総務省統計局「統計でみる市区町村のすがた2026」を引用するが集計年次の明示なし） — https://www.homemate.co.jp/research/pr-kumamoto/43404/</li>
+  <li>デンソー「熊本におけるJASM第二工場の建設について」（4社の出資比率） — https://www.denso.com/jp/ja/news/newsroom/2024/20240206-01/</li>
+  <li>ソニーセミコンダクタソリューションズ「熊本におけるJASM第二工場の建設について」 — https://www.sony-semicon.com/ja/news/2024/2024020601.html</li>
+  <li>トヨタ自動車「熊本におけるJASM第二工場の建設について」 — https://global.toyota/jp/newsroom/corporate/40410700.html</li>
+  <li>Car Watch「JASM、熊本に半導体製造の第二工場を建設決定」（出資比率） — https://car.watch.impress.co.jp/docs/news/1566911.html</li>
+  <li>MONOist「TSMC熊本第1工場が始動へ、2024年末までの稼働に向け開所式を開催」（2024年2月24日開所式、22/28nmと12/16nm、出席者） — https://monoist.itmedia.co.jp/mn/articles/2402/27/news084.html</li>
+  <li>地方経済総合研究所「TSMCの熊本第2工場計画の現状と影響」（第2工場単独 約1兆6,900億円、稼働2029年上期見込み、2025年10月時点の県知事コメント、雇用約1,700人） — https://www.reri.or.jp/report-and-news/tsmc-kumamoto-second-factory/</li>
+  <li>熊本建設業経営戦略センター「TSMC第2工場着工とくまもとサイエンスパーク」（2025年6月着工説、投資額約2.1兆円、2026年1-3月期の初黒字化、合計3,400人超） — https://mkensetu.jp/kumamoto-tsmc-jasm2-science-park-construction-strategy/</li>
+  <li>NetIB-News「TSMC熊本第2工場が着工」（2025年10月16日発表） — https://www.data-max.co.jp/article/80914</li>
+  <li>KAB「TSMC熊本第2工場 建設始まった 1700人雇用見込む」（2025年10月24日本格着工） — https://www.kab.co.jp/news/article/16244453</li>
+  <li>日本経済新聞「TSMC、熊本で6ナノ半導体製造へ 第2工場27年12月稼働」 — https://www.nikkei.com/article/DGXZQOJC1465D0U5A011C2000000/</li>
+  <li>台湾当局の第2工場プロセス変更承認に関する報道（2026年3月31日、当初承認2024年6月の6-12nmから3nmへ）</li>
+  <li>熊本県「令和4年地価調査結果」（菊陽町の工業地31.6%上昇で全国1位） — https://www.pref.kumamoto.jp/uploaded/attachment/214543.pdf</li>
+  <li>熊本日日新聞「熊本・大津町の地価上昇率、商業地と工業地の計3地点が全国1位 前年比33.3%」 — https://kumanichi.com/articles/1547686</li>
+  <li>熊本日日新聞「新工場で働く1700人はどんな人？」（台湾派遣320人、ソニー200人、新卒中途約700人、アウトソース約500人、地元大学からの採用） — https://kumanichi.com/articles/924725</li>
+  <li>熊本日日新聞「地価高騰、苦渋の閉店 TSMC進出の熊本県菊陽町周辺」 — https://kumanichi.com/articles/1225343</li>
+  <li>熊本日日新聞「TSMC進出の菊陽町、大津町のマンション平均家賃、熊本市上回る」 — https://kumanichi.com/articles/1597425</li>
+  <li>アットホーム「TSMCの熊本県進出に伴う工場周辺エリアの家賃動向」（2024年9月30日発表。大津町シングル向け+36.7%） — https://www.athome.co.jp/corporate/news/data/questionnaire/tsmc-yachin-202409/</li>
+  <li>地方経済総合研究所「熊本の水資源と半導体産業」（水道水源のほぼ100%が地下水、第1工場1日約8,500トン、取水量の約65%が水道事業） — https://www.reri.or.jp/report-and-news/ckm-semiconductor-water/</li>
+  <li>熊本県「地下水量保全の取組」 — https://www.pref.kumamoto.jp/site/mizunokuni-kumamoto/224095.html</li>
+  <li>地方経済総合研究所「シリコンアイランドとは 九州が世界の半導体拠点になるまで」（1967年三菱電機、1969年九州日本電気、1970年東芝大分、2000年に集積回路生産額約1.4兆円） — https://www.reri.or.jp/report-and-news/ckm-silicon-island/</li>
+  <li>日本政策投資銀行九州支店「九州半導体産業の経済波及効果の最大化に向けて」（2026年1月） — https://www.dbj.jp/upload/investigate/docs/f1ac21644181b97ac112ea72cba0453e_2.pdf</li>
+  <li>ソニーセミコンダクタソリューションズグループ「ソニーの半導体の歴史 沿革年表」（熊本テクノロジーセンター2001年10月開設） — https://www.sony-semicon.com/ja/company/history/timeline.html</li>
+  <li>東京エレクトロン「拠点紹介」（東京エレクトロン九州の本社は熊本県合志市福原1-1） — https://www.tel.co.jp/about/locations/tkl.html</li>
+  <li>Wikipedia「光の森」（1994年9月基本計画承認、1995年4月JR九州と覚書、1995年9月都市計画決定、2004年4月人口3万人突破、2004年6月ゆめタウン開業、2006年3月駅開業）</li>
+  <li>熊本日日新聞「TSMC進出の熊本・菊陽町で台湾の食や文化を発信 日台会館が開業」（2025年3月3日開業、御嵿グループ） — https://kumanichi.com/articles/1704302</li>
+  <li>フォーカス台湾「複合施設 日台会館、TSMC進出の熊本・菊陽町にオープン」 — https://japan.focustaiwan.tw/society/202503030008</li>
+  <li>肥後ジャーナル「其中之一の本格台湾料理」（菊陽町原水、店長の経歴） — https://higojournal.com/archives/sononakanoichi.html</li>
+  <li>菊陽町「菊陽杉並木公園さんさん」（開園時間・休園日） — https://www.town.kikuyo.lg.jp/kiji003390/index.html</li>
+  <li>菊陽町「馬場楠井手の鼻ぐり」 — https://www.town.kikuyo.lg.jp/kiji003486/index.html</li>
+  <li>菊陽町文化財ツーリズム「鼻ぐり井手公園について」（開館時間・休館日） — https://www.kikuyotsu-rizumu.jp/hanaguri/park.html</li>
+  <li>るるぶ&amp;more「菊陽温泉さんさんの湯」（営業時間・料金） — https://rurubu.jp/andmore/spot/80040219</li>
+  <li>菊陽町「町内観光マップ」（豊後街道杉並木 東西約11km） — https://www.town.kikuyo.lg.jp/kiji0034498/index.html</li>
+  <li>jimbutsu.jitenon.jp「熊本県菊陽町出身の有名人」（人物一覧。single-source） — https://jimbutsu.jitenon.jp/cat/kentown43.php?town=1589</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく都市リサーチであり、投資助言ではない。町単体の製造品出荷額等、農業産出額の総額、年齢別人口構成、交通渋滞の実測値、保育所の待機児童数、JASMの地元採用比率、菊陽町の住宅地地価上昇率の全国順位は確認できずN/Aとした。JASM第2工場の投資額と着工時期は出典間で食い違うため両方を併記した。人口密度、倍率、増加率、反収、台湾派遣者の比率は本ページによる算出値。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "人口（推計）",
+  "value": 44954,
+  "unit": "人",
+  "as_of": "2026-08",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（国勢調査）",
+  "value": 43337,
+  "unit": "人",
+  "as_of": "2020",
+  "source": "https://www.town.kikuyo.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（国勢調査 速報）",
+  "value": 44548,
+  "unit": "人",
+  "as_of": "2025",
+  "source": "https://www.town.kikuyo.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "面積",
+  "value": 37.46,
+  "unit": "km2",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "1975年からの人口倍率",
+  "value": 3.3,
+  "unit": "倍",
+  "as_of": "2020",
+  "source": "https://www.town.kikuyo.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "1975-1980年の人口増加率",
+  "value": 53.4,
+  "unit": "%",
+  "as_of": "1980",
+  "source": "https://www.town.kikuyo.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "春夏にんじん 作付面積",
+  "value": 95,
+  "unit": "ha",
+  "as_of": "2016",
+  "source": "https://japancrops.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "春夏にんじん 収穫量",
+  "value": 2900,
+  "unit": "t",
+  "as_of": "2016",
+  "source": "https://japancrops.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "春夏にんじん 全国順位",
+  "value": 14,
+  "unit": "位/1719市町村",
+  "as_of": "2016",
+  "source": "https://japancrops.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "冬にんじん 作付面積",
+  "value": 123,
+  "unit": "ha",
+  "as_of": "2016",
+  "source": "https://japancrops.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "冬にんじん 収穫量",
+  "value": 3690,
+  "unit": "t",
+  "as_of": "2016",
+  "source": "https://japancrops.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "冬にんじん 全国順位",
+  "value": 11,
+  "unit": "位/1719市町村",
+  "as_of": "2016",
+  "source": "https://japancrops.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "JASM TSMC出資比率",
+  "value": 86.5,
+  "unit": "%",
+  "as_of": "2024-02",
+  "source": "https://www.denso.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "JASM 第1工場 従業員数",
+  "value": 1700,
+  "unit": "人",
+  "as_of": "2025",
+  "source": "https://kumanichi.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "JASM 台湾からの派遣技術者",
+  "value": 320,
+  "unit": "人",
+  "as_of": "2025",
+  "source": "https://kumanichi.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "JASM 第1工場の地下水使用量",
+  "value": 8500,
+  "unit": "t/日",
+  "as_of": "2024",
+  "source": "https://www.reri.or.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "熊本地域 水道水源の地下水比率",
+  "value": 100,
+  "unit": "%",
+  "as_of": "2024",
+  "source": "https://www.reri.or.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "菊陽町 工業地の地価上昇率",
+  "value": 31.6,
+  "unit": "%",
+  "as_of": "2022",
+  "source": "https://www.pref.kumamoto.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "大津町 商業地・工業地の地価上昇率",
+  "value": 33.3,
+  "unit": "%",
+  "as_of": "2024-07",
+  "source": "https://kumanichi.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "九州 集積回路生産額 過去最高",
+  "value": 1.4,
+  "unit": "兆円",
+  "as_of": "2000",
+  "source": "https://www.reri.or.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ソニー熊本テクノロジーセンター 開設",
+  "value": 2001,
+  "unit": "年",
+  "as_of": "2001-10",
+  "source": "https://www.sony-semicon.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "第1工場 開所",
+  "value": 2024,
+  "unit": "年",
+  "as_of": "2024-02-24",
+  "source": "https://monoist.itmedia.co.jp/",
+  "confidence": "reported"
+ }
+]
+</script>
+</body>
+</html>

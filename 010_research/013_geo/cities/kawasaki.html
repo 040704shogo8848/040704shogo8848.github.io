@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>川崎市 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / 川崎市</p>
+
+<header class="top">
+  <div>
+    <h1>川崎市 / Kawasaki</h1>
+    <div class="meta">神奈川 / 京浜　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">製造品出荷額は1984年の6.8兆円から2020年の3.4兆円へ半減した。にもかかわらず人口は政令市移行時の98万人から156万人へ6割増えている。工業都市が住宅都市に変わったのではない。南端に工業を残したまま、北に別の都市を積み増した結果として、1つの市の中に平均年齢4.8歳の差と性比116.5対93.1の分断がある。</p>
+<p><span class="tag">京浜工業地帯</span><span class="tag">川崎公害</span><span class="tag">JFE</span><span class="tag">埋立</span><span class="tag">政令市</span><span class="tag">本社移転</span></p>
+
+<div class="kpi"><div class="card"><div class="k">人口</div><div class="v">約156.7万人 <small>2026年8月1日 推計</small></div></div><div class="card"><div class="k">面積</div><div class="v">144.35 km² <small>市公式値</small></div></div><div class="card"><div class="k">市制施行</div><div class="v">1924年 <small>大正13年7月1日</small></div></div><div class="card"><div class="k">製造品出荷額 ピーク比</div><div class="v">-49.8% <small>1984年6.8兆円→2020年3.4兆円</small></div></div></div>
+<iframe class="map" loading="lazy" title="川崎市の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=139.4229,35.3908,139.9829,35.6708&amp;layer=mapnik&amp;marker=35.5308,139.7029"></iframe>
+
+<h2><span class="num">01</span>市としての特徴<span class="en">Profile</span></h2>
+<p>市域は東西約31km、南北約19kmと東西に細長い。多摩川沿いに、臨海部の工業地帯から内陸の丘陵住宅地まで帯状に伸びる。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>人口</td>
+<td>約1,567,324人（2026年8月1日 推計）／1,558,559人（2025年10月1日現在）</td>
+</tr>
+<tr>
+<td>面積</td>
+<td><strong>144.35km²（市公式値）／142.96km²（別出典）で不一致</strong></td>
+</tr>
+<tr>
+<td>市制施行</td>
+<td>1924年7月1日。川崎町・御幸村・大師町の合併で発足。<strong>当時の人口48,394人</strong></td>
+</tr>
+<tr>
+<td>政令指定都市移行</td>
+<td>1972年4月1日。移行時の人口980,280人。当初は川崎・幸・中原・高津・多摩の5区</td>
+</tr>
+<tr>
+<td>7区体制</td>
+<td>1982年7月、高津区から宮前区、多摩区から麻生区を分区</td>
+</tr>
+<tr>
+<td>昼夜間人口比率</td>
+<td><strong>87.3</strong>（2020年 国勢調査）</td>
+</tr>
+</tbody></table></div>
+<p><strong>市制施行時の48,394人から102年で32.4倍になっている。</strong></p>
+<div class="risk"><p>面積が市公式サイトの144.35km²と別出典の142.96km²で一致しない。<strong>両方を記載し、確定値はN/Aとする。</strong></p></div>
+<h2><span class="num">02</span>経済規模と産業構造<span class="en">Economy</span></h2>
+<h3>製造品出荷額はほぼ半減している</h3>
+<p><strong>2020年実績までが工業統計調査および令和3年経済センサス活動調査、2021年以降が経済構造実態調査で年次は接続しない。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>時点</th>
+<th>製造品出荷額等</th>
+<th>調査</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>1984年</strong></td>
+<td><strong>約6兆8,000億円。ピーク</strong></td>
+<td>市制90周年資料の記述</td>
+</tr>
+<tr>
+<td>2020年実績</td>
+<td><strong>3兆4,113億円</strong></td>
+<td>令和3年経済センサス活動調査</td>
+</tr>
+</tbody></table></div>
+<p><strong>36年で49.8%減、ほぼ半減である。</strong>同資料は全国主要都市のなかで上位（21大都市中3位）としているが、ランキングの基準年はN/A。2020年実績以降の最新値もN/A。</p>
+<p><strong>内訳で重要なのは地理的な偏りである。</strong>3兆4,113億円のうち<strong>川崎区が2兆5,877億円を占め、市全体の75.9%</strong>にあたる。</p>
+<h3>市内総生産</h3>
+<p>川崎市は市町村民経済計算を独自に公表している。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年度</th>
+<th>市内総生産（名目）</th>
+</tr></thead><tbody>
+<tr>
+<td>2021年度</td>
+<td>6兆1,701億円</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p>上記は二次情報を経由した数値で、市公式の市民経済計算ページと統計書PDFでの直接確認ができていない。<strong>産業別就業者数と業種別構成比の実数・構成比はN/A。</strong>令和2年国勢調査の就業状態等基本集計にデータが存在することは確認したが、数値を取得できなかった。</p></div>
+<div class="callout"><p>読み方。<strong>工業が半減しながら人口が6割増えた。</strong>政令市移行時の980,280人から2026年の1,567,324人へ59.9%増である。これは工業都市が住宅都市へ転換したという話ではない。<strong>製造品出荷額の75.9%が川崎区に残ったまま、北部に住宅地が積み増された。</strong>同じ市域の中で、南端は工業のままで、北は東京のベッドタウンになった。昼夜間人口比率87.3はその結果である。</p></div>
+<h2><span class="num">03</span>人口推移<span class="en">Population</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年</th>
+<th>人口</th>
+</tr></thead><tbody>
+<tr>
+<td>1950年</td>
+<td>319,226人</td>
+</tr>
+<tr>
+<td>1960年</td>
+<td>632,975人</td>
+</tr>
+<tr>
+<td>1970年</td>
+<td>973,486人</td>
+</tr>
+<tr>
+<td>1980年</td>
+<td>1,040,802人</td>
+</tr>
+<tr>
+<td>1990年</td>
+<td>1,173,603人</td>
+</tr>
+<tr>
+<td>2025年10月1日</td>
+<td>1,558,559人</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p>2000年、2010年、2015年、2020年の各回国勢調査人口は、一次データがExcelとPDFの添付ファイル内にあり数値を取得できずN/A。</p></div>
+<p><strong>人口の節目</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>節目</th>
+<th>到達</th>
+</tr></thead><tbody>
+<tr>
+<td>100万人</td>
+<td>1973年6月</td>
+</tr>
+<tr>
+<td>110万人</td>
+<td>1986年</td>
+</tr>
+<tr>
+<td>120万人</td>
+<td>1993年</td>
+</tr>
+<tr>
+<td>130万人</td>
+<td>2004年</td>
+</tr>
+<tr>
+<td>140万人</td>
+<td>2009年</td>
+</tr>
+<tr>
+<td><strong>150万人</strong></td>
+<td><strong>2017年4月</strong></td>
+</tr>
+</tbody></table></div>
+<p>100万人から150万人まで44年かかっている。ただし130万人から140万人は5年、140万人から150万人は8年である。</p>
+<h3>1つの市の中に3つの違う都市がある</h3>
+<p>2023年10月1日現在の年齢別人口による。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>区</th>
+<th>平均年齢</th>
+<th>性比</th>
+</tr></thead><tbody>
+<tr>
+<td>川崎区</td>
+<td>N/A</td>
+<td><strong>116.5</strong>（7区中最高。男性超過）</td>
+</tr>
+<tr>
+<td>中原区</td>
+<td><strong>41.9歳</strong>（7区中最低）</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>麻生区</td>
+<td><strong>46.7歳</strong>（7区中最高）</td>
+<td><strong>93.1</strong>（女性超過）</td>
+</tr>
+</tbody></table></div>
+<p><strong>麻生区と中原区で平均年齢が4.8歳違う。</strong>川崎区の性比116.5と麻生区の93.1は23.4ポイント差である。麻生区は多摩丘陵の住宅地、中原区は武蔵小杉の再開発で若年ファミリー層が流入した区である。</p>
+<div class="risk"><p>川崎区の性比が高いことについて、臨海部の工業地帯における単身男性労働者の集積を反映している可能性があるが、<strong>これは推論であってデータによる因果の証明ではない。</strong>7区すべての人口と年齢構成の一覧はN/A。多摩区のみ229,061人（2025年10月1日）を確認した。</p></div>
+<h3>昼夜間人口比率の推移</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年</th>
+<th>比率</th>
+</tr></thead><tbody>
+<tr>
+<td>2000年</td>
+<td>87.8（昼間人口109万7千人）</td>
+</tr>
+<tr>
+<td>2005年</td>
+<td>87.1（昼間人口115万4千人）</td>
+</tr>
+<tr>
+<td>2015年</td>
+<td class="num">88.3</td>
+</tr>
+<tr>
+<td>2020年</td>
+<td class="num">87.3</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p>検索の過程で2020年の比率を83.6とする要約が出たが、複数の独立した情報源が87.3で一致しており<strong>83.6は誤りの可能性が高いと判断して採用しなかった。</strong></p></div>
+<p>武蔵小杉の再開発について、2009年時点の町丁目別人口増加率では中原区新丸子東3丁目が932.0%、幸区堀河町が545.4%を記録している。中原区の人口は2016年に25万人を超え、川崎市の行政区として初めて25万人を突破した。武蔵小杉には<strong>もともとNECや不二サッシの工場と社宅が立地しており、バブル崩壊後の工場撤退跡地にタワーマンションが建設された。</strong></p>
+<h2><span class="num">04</span>日本の大企業との関連<span class="en">Corporate Links</span></h2>
+<p><strong>本社所在地と市内拠点は別である。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>企業</th>
+<th>本社所在地</th>
+<th>川崎市内の拠点</th>
+</tr></thead><tbody>
+<tr>
+<td>JFEスチール</td>
+<td>東京都千代田区</td>
+<td>東日本製鉄所京浜地区（川崎区・幸区。旧日本鋼管）</td>
+</tr>
+<tr>
+<td>ENEOS</td>
+<td>東京都千代田区</td>
+<td>川崎製油所（川崎区）。日本石油化学川崎工場は1957年操業開始。2019年4月に川崎製油所と川崎工場の組織を一体化</td>
+</tr>
+<tr>
+<td><strong>東亜石油</strong></td>
+<td><strong>川崎市川崎区。本社・京浜製油所とも市内</strong></td>
+<td>京浜製油所。<strong>原油処理能力7万バレル/日。</strong>出光興産グループで、出光からの受託精製が主業務</td>
+</tr>
+<tr>
+<td>味の素</td>
+<td>東京都中央区</td>
+<td>川崎工場（川崎区）。<strong>1914年操業開始。</strong>当時の敷地6万3千m²・従業員約140名から、現在は約37万m²・グループ含め約3,800名へ</td>
+</tr>
+<tr>
+<td><strong>富士通</strong></td>
+<td><strong>神奈川県川崎市中原区上小田中4-1-1（登記上の本店）</strong></td>
+<td>同所。<strong>2024年9月末までに東京・汐留シティセンターから全面退去し、本社機能を川崎工場（中原区）と川崎タワー（幸区）の2拠点に分散</strong></td>
+</tr>
+<tr>
+<td><strong>東芝</strong></td>
+<td><strong>神奈川県川崎市幸区堀川町72-34。2025年8月1日付で東京都港区芝浦から登記上の本店を移転</strong></td>
+<td>川崎本社（スマートコミュニティセンター）。移転作業は2025年7月2日から8月25日にかけて部門ごとに順次実施</td>
+</tr>
+<tr>
+<td>NEC</td>
+<td>東京都港区</td>
+<td>玉川事業場（中原区。NEC玉川ルネッサンスシティ）。2005年までにサウスタワー・ノースタワー・ホール棟が竣工</td>
+</tr>
+<tr>
+<td>キヤノン</td>
+<td>東京都大田区下丸子</td>
+<td>川崎事業所（幸区柳町70-1）。2007年開設、敷地114,732m²。生産技術の研究開発拠点とデジタル一眼レフ用CMOSセンサー工場。2015年に高層棟完成</td>
+</tr>
+<tr>
+<td>日本触媒</td>
+<td>大阪市</td>
+<td>川崎製造所（千鳥工場・浮島工場、いずれも川崎区）。<strong>1959年操業開始。</strong>エチレンオキサイドの国産初の製造販売技術を実現した拠点で、現在は国内最大級のエチレンオキサイド製造設備。高吸水性樹脂で世界シェア1位</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>読み方。<strong>2024年から2025年にかけて本社機能が川崎へ戻っている。</strong>富士通は登記上の本店がもともと中原区にあり、2024年に汐留から全面退去して市内2拠点へ分散した。東芝は2025年8月に登記上の本店を港区から幸区へ移した。<strong>素材型工業都市が、研究開発と本社機能の拠点へ性格を変えつつある動きと読める。</strong>ただし移転の理由と意図についての市の公式評価はN/A。</p></div>
+<h3>キングスカイフロント</h3>
+<p>川崎区殿町地区の約40ヘクタール。国家戦略特区と国際戦略総合特区に指定され、研究機関・大学・企業など70超の機関が立地し、研究者約1,000名が従事する。<strong>ただし人数の時点はN/A。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>施設</th>
+<th>敷地</th>
+<th>運営開始</th>
+</tr></thead><tbody>
+<tr>
+<td>実験動物中央研究所</td>
+<td>約0.6ha</td>
+<td>2011年7月。宮前区野川から移転</td>
+</tr>
+<tr>
+<td>ライフイノベーションセンター</td>
+<td>約0.8ha</td>
+<td>2016年4月</td>
+</tr>
+<tr>
+<td>予防衛生研究所（名称は出典のまま。正式名称と法人格はN/A）</td>
+<td>約2.7ha</td>
+<td>2018年3月</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">05</span>出身の有名人<span class="en">People</span></h2>
+<p>区の記載があるものを挙げる。</p>
+<p>川崎区は坂本九（歌手）、布川敏和（俳優）、小森純（モデル）、酒井健太（芸人）、BAD HOP（ヒップホップクルー）。幸区は東山紀之（タレント）、安藤政信（俳優）、佐藤藍子（女優）、SHISHAMO（バンド）。区の記載がないものとして藤子・F・不二雄（漫画家。ゆかりの人物としての記載）、島田雅彦（小説家）、神崎順（俳優・演出家）。</p>
+<div class="risk"><p>Wikipediaの一覧セクションには他にも人物の記載があるが、個別に事実確認したものだけを挙げた。生年や卒業校の検証はしていない。</p></div>
+<h2><span class="num">06</span>食<span class="en">Food</span></h2>
+<p>川崎の食は<strong>工業労働と、そこに集住した人々から説明できる。</strong></p>
+<h3>桜本のコリアタウンは差別の帰結として生まれた</h3>
+<p>川崎区の大島・桜本・浜町一帯は戦前から日本鋼管（現在のJFEスチール）の工場を中心とする工業地帯で、国内の貧困層に加えて朝鮮半島出身の労働者が飯場で暮らし、工業地帯の下町として発展した。</p>
+<p><strong>集住が起きた理由は、住宅市場からの排除である。</strong>「朝鮮人には家や部屋を貸さない」という差別により、多くの在日朝鮮人が桜本3丁目などの地区に身を寄せて暮らすようになった。周辺には朝鮮料理店と韓国食材店が集まりコリアタウンを形成している。</p>
+<p><strong>セメント通り</strong>という地名は、セメント工場労働者の通勤路であったことに由来する。2024年時点で川崎区桜本・池上地域は「多文化共生のまち」として、地域の歴史を学ぶ講座が行われている。</p>
+<div class="callout"><p>読み方。<strong>工場が労働者を呼び、住宅市場が彼らを1か所に押し込め、その密度が食文化を作った。</strong>室蘭の焼き鳥が製鉄所の従業員増加という需要から生まれたのに対し、桜本の朝鮮料理は<strong>排除された結果として生じた集住から生まれている。</strong>同じ工業都市の食でも、需要側から生まれたか排除側から生まれたかで成り立ちが違う。</p></div>
+<div class="risk"><p><strong>沖縄出身者の集住については、確認できたのは横浜市鶴見区の事例だけである。</strong>鶴見では1928年に名護出身者が鶴見沖縄会館を設立し、1977年におきつる協会、1980年におきつる会館が完成している。<strong>川崎市内、池上町などにおける沖縄出身者集住の一次資料は確認できずN/A。</strong>川崎市内の沖縄街への言及は民間サイトにあるが成立史の裏付けが取れていない。池上新町周辺に焼肉とホルモンの店が集積していることはグルメサイトで確認できるが、<strong>その集積が沖縄出身者の集住に起因するという因果を裏付ける一次資料はなくN/A。</strong>個別店舗の営業時間・定休日・現況を一次確認していないため店名は挙げない。</p></div>
+<h2><span class="num">07</span>観光スポット<span class="en">Places</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>施設</th>
+<th>開館時間</th>
+<th>休館日</th>
+<th>料金</th>
+</tr></thead><tbody>
+<tr>
+<td>川崎大師（平間寺）</td>
+<td>大本堂の開扉5:30-18:00（10-3月は6:00-17:30、正月は変動）。毎月20日は21:00まで、21日は5:30から</td>
+<td>N/A。通年参拝可能とみられるが休止日の明記なし</td>
+<td>一般参拝は無料。護摩祈願5,000円から、自動車交通安全祈祷1台5,000円</td>
+</tr>
+<tr>
+<td>川崎市立日本民家園</td>
+<td>3-10月 9:30-17:00（最終入園16:30）、11-2月 9:30-16:30（最終入園16:00）</td>
+<td>月曜（祝日の場合は翌日）、祝日の翌日（土日祝の場合は開園）、年末年始、臨時休園あり</td>
+<td>一般550円、高校・大学生および65歳以上330円（要証明書）、中学生以下無料</td>
+</tr>
+<tr>
+<td>藤子・F・不二雄ミュージアム</td>
+<td>10:00-18:00。<strong>入館は1時間ごとの完全予約制</strong>（10時から16時の毎時）</td>
+<td>火曜、年末年始、臨時休館あり</td>
+<td>大人・大学生1,000円、高校・中学生700円、4歳以上500円、3歳以下無料</td>
+</tr>
+<tr>
+<td>川崎工場夜景クルーズ</td>
+<td>期間と便により異なる。2026年1-3月の屋形船クルーズは17:30-19:45運航</td>
+<td><strong>通年定期便ではなく季節・イベント限定運航</strong></td>
+<td>屋形船クルーズは大人8,800円・子ども7,700円（2026年1-3月分の例）</td>
+</tr>
+</tbody></table></div>
+<p><strong>藤子・F・不二雄ミュージアムは完全予約制なので当日には入れない。</strong>工場夜景クルーズも定期便ではない。</p>
+<h2><span class="num">08</span>京浜工業地帯の埋立<span class="en">Reclamation</span></h2>
+<p>浅野総一郎が安田善次郎らの支援を得て<strong>鶴見埋立組合</strong>を設立したのは1912年である。1913年に埋立の認可を取得して着工し、事業は後継の埋立会社（現在の東亜建設工業の前身）に引き継がれ、1928年頃までに造成が進んだ。</p>
+<div class="risk"><p><strong>埋立面積は出典間で著しく食い違う。</strong>「約140万坪（約500万m²）」とする記述と、単位換算に矛盾がある「約5,000万m²」とする記述が混在しており、<strong>正確な埋立面積はN/A。</strong>川崎の海側が選ばれた明示的な理由を述べた一次資料も確認できずN/A。遠浅の干潟が大規模埋立に適していたこと、東京港と横浜港に近接し海上輸送に有利だったことが背景として語られるが、裏付ける一次資料は見つかっていない。</p></div>
+<h2><span class="num">09</span>川崎公害訴訟<span class="en">Pollution Litigation</span></h2>
+<p><strong>四大公害病には含まれない、別個の大気汚染訴訟である。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>提訴</td>
+<td><strong>1982年3月18日</strong></td>
+</tr>
+<tr>
+<td>第1次訴訟の原告</td>
+<td>患者91人、遺族11人</td>
+</tr>
+<tr>
+<td>第1次判決</td>
+<td><strong>1994年1月25日。</strong>12社に対し26億3,590万円の請求中、7億3,000万円を認容</td>
+</tr>
+<tr>
+<td>第2-4次判決</td>
+<td>1998年8月5日</td>
+</tr>
+<tr>
+<td>企業との和解</td>
+<td><strong>1996年12月25日、企業14社と31億円で和解</strong></td>
+</tr>
+<tr>
+<td>国・道路公団との和解</td>
+<td><strong>1999年5月20日</strong></td>
+</tr>
+<tr>
+<td>対象物質</td>
+<td>二酸化硫黄、二酸化窒素、浮遊粒子状物質</td>
+</tr>
+</tbody></table></div>
+<p>提訴から企業との和解まで14年、国との和解まで17年かかっている。</p>
+<h3>二酸化硫黄と二酸化窒素で34年の差がある</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>物質</th>
+<th>基準達成の時期</th>
+</tr></thead><tbody>
+<tr>
+<td>二酸化硫黄（SO2）</td>
+<td><strong>1979年度に市独自の目標値を達成し、以後維持</strong></td>
+</tr>
+<tr>
+<td>二酸化窒素（NO2）</td>
+<td>池上測定局で<strong>2012年度まで横ばい。2013年度に初めて基準達成</strong>し、2015年度以降は継続達成</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>読み方。<strong>同じ大気汚染でも、片方は1979年に終わり、もう片方は2013年まで終わらなかった。34年の差である。</strong>SO2は排煙脱硫と燃料の低硫黄化という工場側の対策で減らせたが、NO2は自動車の排出ガスが大きな比重を占めるため、工場だけを止めても下がらない。<strong>訴訟の被告に国と道路公団が含まれ、企業との和解から2年半遅れて1999年に和解したのはこの構造による。</strong>四日市がSO2で1976年度に環境基準を達成したのと川崎の1979年度はほぼ同時期だが、川崎はそのあと34年をNO2に費やしている。</p></div>
+<h2><span class="num">10</span>JFE京浜地区の高炉休止<span class="en">Blast Furnace Shutdown</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>休止方針の発表</td>
+<td>2020年11月、JFEホールディングスが京浜地区の上工程・熱延設備の休止方針を発表</td>
+</tr>
+<tr>
+<td>対象</td>
+<td><strong>第2高炉</strong>（炉容積5,000m³）。1979年火入れ、1990年に高炉1基体制化で休止、2004年3月に第1高炉休止に伴い再稼働</td>
+</tr>
+<tr>
+<td>休止日</td>
+<td><strong>2023年9月16日</strong></td>
+</tr>
+<tr>
+<td>跡地</td>
+<td>福田紀彦市長が<strong>400ヘクタール超</strong>の跡地について「カーボンニュートラルと新たな産業創出の同時実現」を目指すと表明</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p><strong>削減規模は出典間で粒度が違う。</strong>「粗鋼生産能力が約3,000万トンから2,600万トン程度に低下」とする記述と、「年産能力約400万トン相当の削減、対象従業員約1,200人が配置転換」とする記述がある。<strong>扇島における水素関連の具体的な事業計画の詳細、離職と再配置の人数はN/A。</strong></p></div>
+<div class="risk"><p><strong>製鉄所の起源年が3つの出典で食い違う。</strong>「日本鋼管川崎製鉄所設立1912年」、「1936年に最初の高炉が完成し首都圏初の銑鋼一貫製鉄所」、「1946年 日本鋼管川崎製鉄所操業開始、1968年に京浜製鉄所として統合発足」である。<strong>会社設立・工場稼働・高炉点火・製鉄所統合という異なる出来事を指している可能性が高く、同一の設立を指しているとは限らない。</strong>一次資料での確認が必要である。</p></div>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>Wikipedia「川崎市」（面積142.96km²、市制施行1924年7月1日・当時人口48,394人、1972年4月1日政令市移行・980,280人、1982年7月の分区、2020年の昼夜間人口比率87.3）</li>
+  <li>川崎市「川崎市プロフィール」（面積144.35km²） — https://www.city.kawasaki.jp/shisei/category/35-9-1-0-0-0-0-0-0-0.html</li>
+  <li>川崎市「川崎市の90年間の変遷」（1984年の製造品出荷額等ピーク約6兆8,000億円） — https://www.city.kawasaki.jp/170/cmsfiles/contents/0000054/54365/2014.3kawasakishi-hensen.pdf</li>
+  <li>川崎市「2023統計情報第2号 川崎市の経済 令和3年経済センサス活動調査結果 製造業編」（2020年実績3兆4,113億円、川崎区2兆5,877億円） — https://www.city.kawasaki.jp/170/cmsfiles/contents/0000151/151856/2021houkokusyo.pdf</li>
+  <li>川崎市「市勢データ」（人口の節目。100万人1973年6月、110万人1986年、120万人1993年、130万人2004年、140万人2009年、150万人2017年4月） — https://www.city.kawasaki.jp/170/cmsfiles/contents/0000054/54365/201705_shisei-data.pdf</li>
+  <li>川崎市「長期時系列データ 人口」および統計情報各年（1950年319,226人、1960年632,975人、1970年973,486人、1980年1,040,802人、1990年1,173,603人） — https://www.city.kawasaki.jp/170/page/0000010875.html</li>
+  <li>川崎市「人口速報集計」（2025年10月1日現在 市全体1,558,559人、多摩区229,061人） — https://www.city.kawasaki.jp/170/page/0000186726.html</li>
+  <li>川崎市「川崎市年齢別人口 令和5年10月1日現在」（麻生区の平均年齢46.7歳、中原区41.9歳、川崎区の性比116.5、麻生区93.1） — https://www.city.kawasaki.jp/170/cmsfiles/contents/0000156/156220/nenreibetuR5.pdf</li>
+  <li>川崎市 平成12年・平成17年・平成27年の国勢調査関連資料（昼夜間人口比率87.8、87.1、88.3） — https://www.city.kawasaki.jp/170/cmsfiles/contents/0000096/96770/h27cjinkogaiyo.pdf</li>
+  <li>川崎市「市民経済計算」ページおよび令和3年度報告書 — https://www.city.kawasaki.jp/shisei/category/51-4-6-3-0-0-0-0-0-0.html</li>
+  <li>アーベスト「各政令指定都市の市内総生産ランキング」（令和3年度6兆1,701億円。二次情報のため一次確認が必要） — https://kawasaki-a-best.com/blog/detail/20250911193539/</li>
+  <li>JBpress「タワマンの街 武蔵小杉から始まった川崎市の人口増」（町丁目別人口増加率。新丸子東3丁目932.0%、堀河町545.4%） — https://jbpress.ismedia.jp/articles/-/90376</li>
+  <li>日本経済新聞「川崎市中原区の人口25万人超え 武蔵小杉のマンション林立で」 — https://www.nikkei.com/article/DGXLZO03472380Q6A610C1L82000/</li>
+  <li>現代ビジネス「武蔵小杉のタワマンだけではない 川崎の意外な将来性」 — https://gendai.media/articles/-/169208</li>
+  <li>国土交通省関東地方整備局「浅野総一郎」（1912年の鶴見埋立組合設立） — https://www.ktr.mlit.go.jp/ktr_content/content/000100732.pdf</li>
+  <li>川崎市「川崎臨海部ものづくり・コンビナート 浅野総一郎」 — https://kawasaki-rinkaibu.jp/fukudokuhon_school/page01-history.html</li>
+  <li>川崎公害病患者と家族の会「川崎公害裁判について」（1982年3月18日提訴） — https://kawasaki-kougai.net/about/</li>
+  <li>けやき総合法律事務所「川崎公害裁判」（1996年12月25日に企業14社と31億円で和解、1999年5月20日に国・道路公団と和解） — https://www.keyakisougou-law.jp/incident/in07-04.html</li>
+  <li>Wikipedia「川崎公害」（第1次訴訟の原告 患者91人・遺族11人、第1次判決1994年1月25日で12社に26億3,590万円の請求中7億3,000万円認容、第2-4次判決1998年8月5日、対象物質、四大公害病とは発生源が異なる旨）</li>
+  <li>環境再生保全機構「川崎 記録で見る大気汚染と裁判」 — https://www.erca.go.jp/yobou/saiban/kawasaki/</li>
+  <li>川崎市「大気汚染の現状と対策」（SO2は1979年度に市独自目標値を達成し以後維持、NO2は池上測定局で2012年度まで横ばい・2013年度に初めて基準達成・2015年度以降継続達成） — https://www.city.kawasaki.jp/300/cmsfiles/contents/0000127/127113/2-3.pdf</li>
+  <li>ニュースイッチ「100年以上の歴史に幕 JFE京浜高炉の火が消える」（1936年に最初の高炉完成・首都圏初の銑鋼一貫製鉄所とする記述） — https://newswitch.jp/p/23381</li>
+  <li>タウンニュース「JFEスチール シンボル高炉休止 跡地は脱炭素の拠点へ」（2023年9月22日付。跡地400ヘクタール超、市長の表明） — https://www.townnews.co.jp/0203/2023/09/22/698451.html</li>
+  <li>Wikipedia「JFEスチール東日本製鉄所」（第2高炉は1979年火入れ・1990年休止・2004年3月再火入れ・炉容積5,000m³、1946年日本鋼管川崎製鉄所操業開始・1968年京浜製鉄所発足とする記述）</li>
+  <li>富士通「拠点情報」（登記上の本店は川崎市中原区上小田中4-1-1） — https://www.fujitsu.com/jp/about/corporate/facilities/</li>
+  <li>東芝「本社機能の移転について」（2025年8月1日付の登記変更、川崎市幸区堀川町72-34） — https://www.global.toshiba/jp/news/corporate/2025/06/news-20250630-01.html</li>
+  <li>日本経済新聞「東芝、本店所在地を東京・芝浦から川崎へ移転」 — https://www.nikkei.com/article/DGXZQOUC016JL0R00C25A8000000/</li>
+  <li>川崎市「川崎臨海部の企業の一部を紹介 味の素」（1914年操業開始、当時の敷地6万3千m²・従業員約140名） — https://kawasaki-rinkaibu.jp/fukudokuhon_school/page02-grocely-and-household-ajinomoto.html</li>
+  <li>The社史「味の素の歴史」（現在の敷地約37万m²、グループ含め約3,800名） — https://the-shashi.com/tse/2802/</li>
+  <li>日本触媒「川崎製造所」（1959年操業開始、千鳥工場・浮島工場、国内最大級のエチレンオキサイド製造設備、高吸水性樹脂で世界シェア1位） — https://www.shokubai.co.jp/ja/sustainability/rc/site-report/kawasaki/</li>
+  <li>ENEOS「川崎製油所」および「川崎地区における組織の一体化について」（2019年4月一体化） — https://www.eneos.co.jp/company/branch/kawasaki/refinery/</li>
+  <li>東亜石油「会社沿革」および公式サイト（本社・京浜製油所とも川崎市川崎区、原油処理能力7万バレル/日、出光興産グループ） — https://www.toaoil.co.jp/company/history.html</li>
+  <li>bb-building.net「キヤノン川崎事業所」（2007年開設、敷地114,732m²、2015年高層棟完成） — https://bb-building.net/city/info/0586.html</li>
+  <li>殿町国際戦略拠点キングスカイフロント 公式サイト — https://www.king-skyfront.jp/</li>
+  <li>Wikipedia「キングスカイフロント」（約40ha、立地機関70超、研究者約1,000名、予防衛生研究所2.7ha・2018年3月運営開始）</li>
+  <li>Wikipedia「実験動物中央研究所」（2011年7月に宮前区野川から移転）</li>
+  <li>東京新聞「多文化共生 人も街も温かい 川崎の桜本・池上地域で20人が歴史学ぶ」 — https://www.tokyo-np.co.jp/article/143958</li>
+  <li>Wikipedia「セメント通り」（地名の由来、コリアタウンの形成）</li>
+  <li>東京DEEP案内「川崎臨海部のコリアタウン 桜本商店街」 — https://tokyodeep.info/sakuramoto-shotengai/</li>
+  <li>はまれぽ.com「鶴見 沖縄タウンとは その歴史と現在」（横浜市鶴見区の事例。1928年鶴見沖縄会館、1977年おきつる協会、1980年おきつる会館） — https://hamarepo.com/story.php?story_id=7720</li>
+  <li>川崎大師 公式サイト（開扉時間、護摩祈願料） — https://www.kawasakidaishi.com/</li>
+  <li>川崎市立日本民家園「利用案内」（開園時間、休園日、料金） — https://www.nihonminkaen.jp/information.html</li>
+  <li>川崎市 藤子・F・不二雄ミュージアム「来館のご案内」（完全予約制、料金） — https://fujiko-museum.com/access.html</li>
+  <li>川崎市観光協会「川崎工場夜景食事付き屋形船クルーズ」ほか（運航時期、料金） — https://www.k-kankou.jp/topics/detail.html?CN=401009</li>
+  <li>Wikipedia「川崎市出身の人物一覧」および fnb-entamebox（区別の出身者）</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく都市リサーチであり、投資助言ではない。埋立面積、川崎の海側が選ばれた明示的理由、産業別就業者数の実数と構成比、JFE高炉休止に伴う削減トン数と配置転換人数、7区すべての現在人口と年齢構成、川崎市内における沖縄出身者集住の経緯、ホルモン食文化と集住の因果は確認できずN/Aとした。面積と京浜製鉄所の起源年は出典間で食い違うため両方を記載した。減少率、増加率、構成比、年齢差は本ページによる算出値。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "人口（推計）",
+  "value": 1567324,
+  "unit": "人",
+  "as_of": "2026-08",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（速報集計）",
+  "value": 1558559,
+  "unit": "人",
+  "as_of": "2025-10",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "面積（市公式値）",
+  "value": 144.35,
+  "unit": "km2",
+  "as_of": "2026",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "市制施行時の人口",
+  "value": 48394,
+  "unit": "人",
+  "as_of": "1924",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "政令市移行時の人口",
+  "value": 980280,
+  "unit": "人",
+  "as_of": "1972",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "政令市移行時からの人口増加率",
+  "value": 59.9,
+  "unit": "%",
+  "as_of": "2026-08",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "製造品出荷額等 ピーク",
+  "value": 68000,
+  "unit": "億円",
+  "as_of": "1984",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造品出荷額等",
+  "value": 34113,
+  "unit": "億円",
+  "as_of": "2020",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ピークからの製造品出荷額の減少率",
+  "value": 49.8,
+  "unit": "%",
+  "as_of": "2020",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "川崎区が市の製造品出荷額に占める比率",
+  "value": 75.9,
+  "unit": "%",
+  "as_of": "2020",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "市内総生産（名目）",
+  "value": 61701,
+  "unit": "億円",
+  "as_of": "2021",
+  "source": "https://kawasaki-a-best.com/",
+  "confidence": "single-source"
+ },
+ {
+  "claim": "昼夜間人口比率",
+  "value": 87.3,
+  "unit": "%",
+  "as_of": "2020",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "麻生区の平均年齢",
+  "value": 46.7,
+  "unit": "歳",
+  "as_of": "2023-10",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "中原区の平均年齢",
+  "value": 41.9,
+  "unit": "歳",
+  "as_of": "2023-10",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "川崎区の性比",
+  "value": 116.5,
+  "unit": "男/女100",
+  "as_of": "2023-10",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "川崎公害訴訟 提訴",
+  "value": 1982,
+  "unit": "年",
+  "as_of": "1982-03-18",
+  "source": "https://kawasaki-kougai.net/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "企業との和解金",
+  "value": 31,
+  "unit": "億円",
+  "as_of": "1996-12-25",
+  "source": "https://www.keyakisougou-law.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "SO2の市独自目標値 達成",
+  "value": 1979,
+  "unit": "年度",
+  "as_of": "1979",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "NO2の環境基準 初達成（池上測定局）",
+  "value": 2013,
+  "unit": "年度",
+  "as_of": "2013",
+  "source": "https://www.city.kawasaki.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "JFE京浜 第2高炉 休止",
+  "value": 2023,
+  "unit": "年",
+  "as_of": "2023-09-16",
+  "source": "https://www.townnews.co.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "JFE京浜 跡地面積",
+  "value": 400,
+  "unit": "ha超",
+  "as_of": "2023",
+  "source": "https://www.townnews.co.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "キングスカイフロント 面積",
+  "value": 40,
+  "unit": "ha",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "味の素 川崎工場 操業開始",
+  "value": 1914,
+  "unit": "年",
+  "as_of": "1914",
+  "source": "https://kawasaki-rinkaibu.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "東芝 本店を川崎市へ移転",
+  "value": 2025,
+  "unit": "年",
+  "as_of": "2025-08-01",
+  "source": "https://www.global.toshiba/",
+  "confidence": "reported"
+ }
+]
+</script>
+</body>
+</html>

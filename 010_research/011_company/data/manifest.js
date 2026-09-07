@@ -3,6 +3,25 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "トライグループ",
+    "fullName": "株式会社トライグループ",
+    "ticker": null,
+    "market": null,
+    "country": "JP",
+    "status": "private",
+    "cohort": "jp-private",
+    "tags": [
+      "教育",
+      "家庭教師・個別指導",
+      "PE/LBO"
+    ],
+    "date": "2026-09-07",
+    "summary": "家庭教師のトライを核とする国内最大級のマンツーマン教育事業者。2021年11月にCVCが約1,100億円で買収し、掲げた3〜4年後の上場は未実現のまま保有5年目に入った。",
+    "sourceCount": 27,
+    "variant": "listed",
+    "file": "reports/trygroup_research_260907.html"
+  },
+  {
     "company": "DOPA!",
     "fullName": "株式会社sinsa",
     "ticker": null,

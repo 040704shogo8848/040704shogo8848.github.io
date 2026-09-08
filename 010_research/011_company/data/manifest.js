@@ -3,6 +3,27 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "Terra Drone",
+    "fullName": "Terra Drone 株式会社",
+    "ticker": "278A",
+    "market": "東証グロース",
+    "country": "JP",
+    "status": "listed",
+    "cohort": "jp-startup",
+    "tags": [
+      "ドローン",
+      "防衛",
+      "インドネシア",
+      "人的資本",
+      "IPO"
+    ],
+    "date": "2026-09-08",
+    "summary": "2016年2月設立。2017〜2018年はVCラウンドが1本も無く、外部による値付けが存在しないまま世界9位のドローンサービス事業者として語られていた。対外説明の2018年度売上27億円に対し、上場時開示の連結売上は2020年1月期11.0億円。2024年11月の上場は初値が公開価格を8.0%下回り、2026年1月の年初来安値2,055円から迎撃ドローンの量産契約で9月に20,280円・時価総額2,108億円へ。単体平均年収497万円と役員2名の保有株19.5億円を並べ、この会社でキャリアを積んだ場合の報酬構造を分解した。",
+    "sourceCount": 33,
+    "variant": "startup-case",
+    "file": "reports/terra_drone_research_260908.html"
+  },
+  {
     "company": "トライグループ",
     "fullName": "株式会社トライグループ",
     "ticker": null,

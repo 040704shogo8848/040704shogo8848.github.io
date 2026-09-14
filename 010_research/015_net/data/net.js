@@ -2,6 +2,23 @@
 // 追加は bin/add-net.sh 経由。
 window.NET = [
   {
+    "title": "We Must Pace the Frontier — Dario Amodei 全訳と背景",
+    "kind": "article",
+    "channel": "darioamodei.com",
+    "published": "2026-09-12",
+    "url": "https://darioamodei.com/post/we-must-pace-the-frontier",
+    "tags": [
+      "AI安全性",
+      "Anthropic",
+      "規制",
+      "米中",
+      "全訳"
+    ],
+    "summary": "Anthropic CEO が2026年9月12日に公開した論考の全訳と背景整理。AI能力の向上速度そのものを落とすと主張し、第三者評価者の常駐（Anthropicが単独先行）、民主主義国の企業間協調、国際協調の3段階を提案する。根拠は再帰的自己改善の加速と7月のOpenAI／Hugging Face事案。原文全文・日本語全訳・事案の時系列・反応・用語解説を収める。",
+    "lang": "en",
+    "file": "pages/pace_the_frontier_260913.html"
+  },
+  {
     "title": "サラリーマンの節税 — 制度の一次情報で組み直す",
     "kind": "article",
     "channel": "note / キティー Kitty",

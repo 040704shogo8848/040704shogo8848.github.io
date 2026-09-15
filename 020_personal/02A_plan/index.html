@@ -1,0 +1,1564 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>100年プラン</title>
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#F8F7F3; --panel:#ffffff; --panel2:#FBFAF7;
+    --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a;
+    --line:#E5E2DA; --line2:#D9D5CA;
+    --accent:#2563EB; --accent-ink:#ffffff;
+    --grid0:#EDEBE4;      /* これからの日・予定なし */
+    --grid-past:#CBC4B1;  /* もう過ぎた日・予定なし */
+    --grid-void:#F4F2EC;  /* 存在しない日・生まれる前 */
+    --seq1:#b7d3f6; --seq2:#86b6ef; --seq3:#3987e5; --seq4:#1c5cab;
+    --today:#D97706;
+    --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+    --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948;
+    --shadow:0 12px 30px rgba(0,0,0,.11);
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:#0b1214; --panel:#0f1a1d; --panel2:#0d171a;
+    --ink:#e8f0ef; --sub:#9db2b0; --muted:#6b8380;
+    --line:#1d3034; --line2:#25403f;
+    --accent:#4c9dff; --accent-ink:#06211b;
+    --grid0:#182c30;
+    --grid-past:#2e4f55;
+    --grid-void:#131f21;
+    --seq1:#1c5cab; --seq2:#2a78d6; --seq3:#5598e7; --seq4:#9ec5f4;
+    --today:#f2c14e;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+    --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
+    --shadow:0 12px 34px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box}
+  html,body{background:var(--bg)}
+  body{margin:0;color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    font-size:15px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+  .wrap{max-width:1560px;margin:0 auto;padding:30px 20px 80px}
+  .crumb{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .crumb a{color:var(--muted);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  /* ── header ─────────────────────────────── */
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+  h1{font-size:27px;margin:0 0 3px;letter-spacing:-.01em}
+  .romaji{font-size:12px;color:var(--muted);letter-spacing:.08em;margin-bottom:6px}
+  .range{font-size:13px;color:var(--sub)}
+  .range .sep{color:var(--muted);margin:0 10px}
+  .topact{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
+  button,select,input,textarea{font:inherit}
+  .btn{font-size:13px;padding:9px 16px;border-radius:9px;border:1px solid var(--line2);
+    background:var(--panel);color:var(--sub);cursor:pointer;transition:border-color .12s,color .12s,background .12s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+  .btn.primary:hover{opacity:.85;color:var(--bg)}
+  .btn.sm{font-size:12px;padding:6px 11px;border-radius:7px}
+  .btn.danger:hover{border-color:var(--s8);color:var(--s8)}
+  .chk{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--sub);cursor:pointer;user-select:none}
+  .chk input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
+
+  /* ── toolbar ────────────────────────────── */
+  .bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    margin:22px 0 0;padding:11px 14px;background:var(--panel);
+    border:1px solid var(--line);border-radius:11px}
+  .bar .spacer{flex:1 1 auto}
+  .seg{display:inline-flex;gap:6px}
+  .seg button{font-size:12.5px;padding:6px 14px;border-radius:8px;border:1px solid var(--line2);
+    background:var(--panel);color:var(--sub);cursor:pointer;transition:border-color .12s,color .12s}
+  .seg button:hover{border-color:var(--accent);color:var(--accent)}
+  .seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+  .hint{font-size:12px;color:var(--muted)}
+  .legend{display:flex;align-items:center;gap:15px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
+  .lg{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:11px;height:11px;border-radius:2.5px;background:var(--seq3);display:inline-block}
+  .sw.ramp{background:linear-gradient(90deg,var(--seq1),var(--seq4));width:34px}
+  .sw.today{background:transparent;border:2px solid var(--today)}
+
+  /* ── category filter ────────────────────── */
+  .cats{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 0}
+  .cbtn{display:inline-flex;align-items:center;gap:7px;font-size:12px;padding:5px 12px 5px 9px;
+    border-radius:999px;border:1px solid var(--line2);background:var(--panel);color:var(--sub);cursor:pointer}
+  .cbtn .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .cbtn[aria-pressed="false"]{opacity:.38}
+  .cbtn:hover{border-color:var(--accent)}
+  .cbtn .n{color:var(--muted);font-size:11px}
+
+  /* ── grid ───────────────────────────────── */
+  .gridwrap{margin-top:14px;border:1px solid var(--line);border-radius:12px;
+    background:var(--panel);overflow:hidden}
+  .scroller{overflow-x:auto;overflow-y:hidden;position:relative}
+  .inner{position:relative}
+  .monthrow{position:relative;height:27px;display:flex;align-items:stretch;
+    border-bottom:1px solid var(--line);background:var(--panel);font-size:11.5px;color:var(--muted)}
+  .mh-left{position:sticky;left:0;z-index:4;background:var(--panel);flex:none;
+    border-right:1px solid var(--line2);display:flex;align-items:center;justify-content:flex-end;
+    padding-right:10px;letter-spacing:.02em;white-space:nowrap}
+  .mh-grid{position:relative;flex:none}
+  .mlab{position:absolute;top:5px;white-space:nowrap;letter-spacing:.02em}
+  .mline{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
+  .cvrow{display:flex;align-items:flex-start;position:relative}
+  .leftcol{position:sticky;left:0;z-index:3;background:var(--panel);
+    border-right:1px solid var(--line2);flex:none}
+  canvas{display:block}
+  #tip{position:fixed;z-index:9998;pointer-events:none;opacity:0;transition:opacity .09s;
+    background:var(--panel);border:1px solid var(--line2);border-radius:9px;
+    padding:9px 12px;font-size:12px;box-shadow:var(--shadow);max-width:290px;line-height:1.6}
+  #tip .td{font-size:11px;color:var(--muted);letter-spacing:.02em}
+  #tip .ti{display:flex;align-items:center;gap:6px;margin-top:3px}
+  #tip .ti .dot{width:8px;height:8px;border-radius:50%;flex:none}
+  #tip .more{font-size:11px;color:var(--muted);margin-top:3px}
+
+  /* ── day panel ──────────────────────────── */
+  .daypanel{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);
+    padding:16px 18px;display:none}
+  .daypanel.on{display:block}
+  .dp-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .dp-date{font-size:17px;font-weight:600}
+  .dp-meta{font-size:12px;color:var(--muted)}
+  .dp-list{margin:12px 0 0;display:flex;flex-direction:column;gap:7px}
+  .dp-empty{font-size:13px;color:var(--muted);margin:10px 0 0}
+
+  /* ── plan row ───────────────────────────── */
+  .prow{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;
+    background:var(--panel2);border:1px solid var(--line)}
+  .prow .bar4{width:3px;align-self:stretch;border-radius:2px;flex:none}
+  .prow .body{flex:1 1 auto;min-width:0}
+  .prow .t{font-size:13.5px;line-height:1.45}
+  .prow .m{font-size:11.5px;color:var(--muted);margin-top:1px}
+  .prow .m .cat{color:var(--sub)}
+  .prow.done .t{text-decoration:line-through;color:var(--muted)}
+  .prow .acts{display:flex;gap:5px;flex:none}
+  .prow.br{border-color:var(--line2);background:var(--panel)}
+  .badge{display:inline-block;font-size:10.5px;letter-spacing:.05em;padding:1px 7px;border-radius:999px;
+    border:1px solid var(--ink);color:var(--ink);margin-right:7px;vertical-align:1px}
+  .prow .note-full{font-size:12.5px;color:var(--sub);margin-top:6px;line-height:1.8;
+    padding-left:1px;white-space:pre-wrap}
+  .prow .opts{margin:7px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:3px}
+  .prow .opts li{font-size:12.5px;color:var(--sub);padding-left:16px;position:relative}
+  .prow .opts li:before{content:"";position:absolute;left:4px;top:9px;width:5px;height:5px;
+    border-radius:50%;background:var(--muted)}
+  .prow .src{font-size:11px;color:var(--muted);margin-top:5px}
+  .iconb{width:28px;height:28px;border-radius:7px;border:1px solid var(--line2);background:transparent;
+    color:var(--muted);cursor:pointer;font-size:13px;line-height:1;display:grid;place-items:center}
+  .iconb:hover{border-color:var(--accent);color:var(--accent)}
+  .iconb.on{color:var(--accent);border-color:var(--accent)}
+
+  /* ── stats ──────────────────────────────── */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-top:26px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:14px 16px}
+  .stat .k{font-size:11px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+  .stat .v{font-size:25px;font-weight:600;letter-spacing:-.02em;margin-top:3px;line-height:1.25}
+  .stat .v .u{font-size:12.5px;font-weight:400;color:var(--sub);margin-left:3px}
+  .stat .s{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .lifebar{margin-top:9px;height:5px;border-radius:99px;background:var(--grid0);overflow:hidden}
+  .lifebar span{display:block;height:100%;background:var(--accent)}
+
+  /* ── sections ───────────────────────────── */
+  h2{font-size:16.5px;margin:44px 0 4px;padding-top:14px;border-top:1px solid var(--line);
+    display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  h2 .en{font-size:10.5px;color:var(--muted);font-weight:400;letter-spacing:.09em;text-transform:uppercase}
+  .lead{font-size:13px;color:var(--sub);margin:4px 0 16px}
+
+  .tl{display:flex;flex-direction:column;gap:2px}
+  .tl-year{display:grid;grid-template-columns:82px 1fr;gap:16px;padding:10px 0;border-top:1px solid var(--line)}
+  .tl-year:first-child{border-top:0}
+  .tl-y{font-size:16px;font-weight:600;letter-spacing:-.01em;position:sticky;top:64px}
+  .tl-y .age{display:block;font-size:11px;color:var(--muted);font-weight:400;letter-spacing:0}
+  .tl-items{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .empty{color:var(--muted);font-size:13px;padding:18px 0}
+
+  /* ── modal ──────────────────────────────── */
+  .mask{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9990;display:none;
+    align-items:flex-start;justify-content:center;padding:70px 18px 30px;overflow-y:auto}
+  .mask.on{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line2);border-radius:14px;
+    width:100%;max-width:470px;padding:22px 24px 24px;box-shadow:var(--shadow)}
+  .modal h3{margin:0 0 16px;font-size:17px}
+  .f{margin-bottom:13px}
+  .f label{display:block;font-size:11.5px;color:var(--muted);letter-spacing:.04em;margin-bottom:5px}
+  .f input[type=text],.f input[type=date],.f input[type=number],.f select,.f textarea{
+    width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--line2);
+    background:var(--panel2);color:var(--ink);font-size:13.5px}
+  .f textarea{resize:vertical;min-height:62px;line-height:1.6}
+  .f input:focus,.f select:focus,.f textarea:focus{outline:0;border-color:var(--accent)}
+  .f2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .modal .acts{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+  .modal .acts .r{display:flex;gap:9px}
+  .err{color:var(--s8);font-size:12px;margin-top:-6px;margin-bottom:10px;display:none}
+  .err.on{display:block}
+
+  .tools{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+  .note{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px;margin:18px 0 0;font-size:12.5px;color:var(--sub);line-height:1.8}
+  .note b{color:var(--ink);font-weight:600}
+  kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;
+    border:1px solid var(--line2);border-radius:4px;padding:1px 5px;color:var(--sub)}
+
+  @media(max-width:700px){
+    .wrap{padding:22px 14px 70px}
+    h1{font-size:24px}
+    .tl-year{grid-template-columns:62px 1fr;gap:11px}
+    .tl-y{font-size:14px;position:static}
+    .bar{gap:10px;padding:10px}
+  }
+  @media print{ .bar,.topact,.tools,.cats{display:none} }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a><a href="../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../021_profile/index.html">profile</a><a href="index.html">plan</a><a href="../023_travel/index.html">travel</a><a href="../027_cinema/index.html">cinema</a><a href="../024_method/index.html">method</a><a href="../026_handbook/index.html">handbook</a><a href="../025_fitness/index.html">fitness</a><a href="../028_english/index.html">english</a><a href="../029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../021_profile/index.html">profile</a>
+    <a class="snav-a" href="index.html">plan</a>
+    <a class="snav-a" href="../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../024_method/index.html">method</a>
+    <a class="snav-a" href="../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../028_english/index.html">english</a>
+    <a class="snav-a" href="../029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../index.html">shogo</a> / personal / plan</div>
+
+  <div class="top">
+    <div>
+      <h1>100年プラン</h1>
+      <div class="romaji">100-year plan</div>
+      <div class="range num"><span id="rangeTxt">2004 — 2104年</span><span class="sep">|</span><span id="rangeSub">0歳から100歳まで・101年分</span></div>
+    </div>
+    <div class="topact">
+      <label class="chk"><input type="checkbox" id="brOnly">分岐点だけ</label>
+      <label class="chk"><input type="checkbox" id="showDone" checked>完了済みも表示</label>
+      <button class="btn" id="btnTheme" title="テーマ切替">◐</button>
+      <button class="btn primary" id="btnAdd">＋ プランを追加</button>
+    </div>
+  </div>
+
+  <div class="bar">
+    <div class="seg" id="segUnit">
+      <button type="button" data-u="d" aria-pressed="true">日</button>
+      <button type="button" data-u="w" aria-pressed="false">週</button>
+      <button type="button" data-u="m" aria-pressed="false">月</button>
+    </div>
+    <span class="hint" id="unitHint">1行＝1年・1マス＝1日</span>
+    <button class="btn sm" id="btnZoom">マスを拡大</button>
+    <div class="seg" id="segPaint">
+      <button type="button" data-p="s" aria-pressed="true">密度</button>
+      <button type="button" data-p="c" aria-pressed="false">カテゴリ別</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div class="cats" id="catBar"></div>
+
+  <div class="gridwrap">
+    <div class="scroller" id="scroller">
+      <div class="inner" id="inner">
+        <div class="monthrow" id="monthrow"></div>
+        <div class="cvrow">
+          <div class="leftcol" id="leftcol"><canvas id="cvL"></canvas></div>
+          <div style="position:relative">
+            <canvas id="cvG"></canvas>
+            <canvas id="cvO" style="position:absolute;left:0;top:0;pointer-events:none"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="daypanel" id="daypanel">
+    <div class="dp-head">
+      <div>
+        <div class="dp-date" id="dpDate">—</div>
+        <div class="dp-meta" id="dpMeta"></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn sm" id="dpAdd">この日に追加</button>
+        <button class="btn sm" id="dpClose">閉じる</button>
+      </div>
+    </div>
+    <div class="dp-list" id="dpList"></div>
+    <div class="dp-empty" id="dpEmpty">この日に登録されたプランはない。</div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <h2>分岐点<span class="en">Decision points</span></h2>
+  <div class="lead" id="brLead">選ぶ余地があって、選び方で先が変わるもの。決める時期の順に並べる。</div>
+  <div class="tl" id="branches"></div>
+
+  <h2>年表<span class="en">Timeline</span></h2>
+  <div class="lead" id="tlLead">登録したプランを年ごとに並べる。日付のないものは年の先頭に置く。</div>
+  <div class="tl" id="timeline"></div>
+
+  <h2>使い方とデータ<span class="en">How it works</span></h2>
+  <div class="note">
+    <b>1行が1年、1マスが1日。</b>生まれた年から100歳までの101行をひと目に並べる。マスにカーソルを合わせると日付と年齢、その日のプランが出る。クリックすると下に詳細が開く。<br>
+    <b>もう過ぎた日は濃いマスで塗る。</b>今日より前の予定のない日がそれで、生まれてから今日までがひと塊で見える。残りはその右側にある。<br>
+    <b>分岐点</b>は選ぶ余地のあるプラン。年の左端に点が付き、下の「分岐点」に選択肢とメモを全文で並べる。<br>
+    <b>年のみ列</b>は左端の縦1列。月日が決まっていないプラン（「2034年に決める」など）はここに入る。何十年も先の予定に月日は無いので、この列が主役になる。<br>
+    <b>密度</b>表示はプランの重なりの濃さ、<b>カテゴリ別</b>表示は分類の色で塗る。カテゴリのボタンを押すと絞り込める。<br>
+    <b>データはこのブラウザの中だけに保存される。</b>サーバーには送らない。別の端末に移すときは書き出しと読み込みを使う。<br>
+    <kbd>N</kbd> 追加 / <kbd>Esc</kbd> 閉じる / <kbd>T</kbd> 今日へ移動
+  </div>
+  <div class="tools">
+    <button class="btn sm" id="btnToday">今日へ移動</button>
+    <button class="btn sm" id="btnSetup">生年月日と年の範囲</button>
+    <button class="btn sm" id="btnExport">書き出す（JSON）</button>
+    <button class="btn sm" id="btnImport">読み込む</button>
+    <button class="btn sm" id="btnSample">サンプルを入れる</button>
+    <button class="btn sm danger" id="btnClear">全部消す</button>
+    <input type="file" id="fileIn" accept="application/json" style="display:none">
+  </div>
+</div>
+
+<div id="tip"></div>
+
+<div class="mask" id="mask">
+  <div class="modal" id="modal">
+    <h3 id="mTitle">プランを追加</h3>
+    <div class="f">
+      <label>タイトル</label>
+      <input type="text" id="fTitle" maxlength="120" placeholder="例：修士課程に出願する">
+    </div>
+    <div class="err" id="fErr"></div>
+    <div class="f2">
+      <div class="f">
+        <label>カテゴリ</label>
+        <select id="fCat"></select>
+      </div>
+      <div class="f">
+        <label>期間のかたち</label>
+        <select id="fKind">
+          <option value="date">日付で決める</option>
+          <option value="year">年だけ決める</option>
+        </select>
+      </div>
+    </div>
+    <div class="f2" id="rowDate">
+      <div class="f">
+        <label>開始日</label>
+        <input type="date" id="fStart">
+      </div>
+      <div class="f">
+        <label>終了日（空なら1日）</label>
+        <input type="date" id="fEnd">
+      </div>
+    </div>
+    <div class="f2" id="rowYear" style="display:none">
+      <div class="f">
+        <label>開始年</label>
+        <input type="number" id="fYs" min="1900" max="2200" step="1">
+      </div>
+      <div class="f">
+        <label>終了年（空なら1年）</label>
+        <input type="number" id="fYe" min="1900" max="2200" step="1">
+      </div>
+    </div>
+    <div class="f" id="repWrap">
+      <label class="chk"><input type="checkbox" id="fRep">毎年くり返す（開始日の月日を全部の年に置く）</label>
+    </div>
+    <div class="f">
+      <label>メモ</label>
+      <textarea id="fNote" maxlength="1000" placeholder="なぜやるか、何が終わったら完了か"></textarea>
+    </div>
+    <div class="f">
+      <label class="chk"><input type="checkbox" id="fBr">分岐点にする（選ぶ余地があるもの）</label>
+    </div>
+    <div class="f" id="optWrap" style="display:none">
+      <label>選択肢（1行に1つ）</label>
+      <textarea id="fOpts" maxlength="800" placeholder="秋に在籍して進級する&#10;休学して3年をもう1年やる"></textarea>
+    </div>
+    <div class="f" id="srcWrap" style="display:none">
+      <label>どこから来たか</label>
+      <input type="text" id="fSrc" maxlength="120" placeholder="about-me.md 6.9">
+    </div>
+    <div class="f">
+      <label class="chk"><input type="checkbox" id="fDone">完了にする</label>
+    </div>
+    <div class="acts">
+      <button class="btn sm danger" id="mDel" style="visibility:hidden">削除</button>
+      <div class="r">
+        <button class="btn" id="mCancel">やめる</button>
+        <button class="btn primary" id="mSave">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mask" id="smask">
+  <div class="modal" style="max-width:400px">
+    <h3>設定</h3>
+    <div class="f">
+      <label>生年月日（左の列に年齢を出す。空でもよい）</label>
+      <input type="date" id="sBirth">
+    </div>
+    <div class="err" id="sErr"></div>
+    <div class="f2">
+      <div class="f"><label>始まりの年</label><input type="number" id="sY0" min="1900" max="2200" step="1"></div>
+      <div class="f"><label>終わりの年</label><input type="number" id="sY1" min="1900" max="2200" step="1"></div>
+    </div>
+    <div class="acts">
+      <span></span>
+      <div class="r">
+        <button class="btn" id="sCancel">やめる</button>
+        <button class="btn primary" id="sSave">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ══ 定数 ═══════════════════════════════════════════════════════════════
+   列は「閏年の366日」を基準に固定する。平年には2/29の列が無く、そこは
+   欠番マスとして暗く描く。こうすると51年ぶんの月境界が縦に一直線に揃う。 */
+var COLS = 366;
+var MSTART = [0,31,60,91,121,152,182,213,244,274,305,335];   // 各月1日の列
+var MNAME  = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+var WDAY   = ['日','月','火','水','木','金','土'];
+var KEY    = 'plan.v2';
+
+var GEOM = {
+  d:[{cw:4,rh:11},{cw:6,rh:16},{cw:9,rh:23}],
+  w:[{cw:13,rh:13},{cw:19,rh:19},{cw:28,rh:27}],
+  m:[{cw:46,rh:20},{cw:66,rh:30},{cw:96,rh:44}]
+};
+var UNITCOLS = {d:366, w:53, m:12};
+var UNITHINT = {d:'1行＝1年・1マス＝1日', w:'1行＝1年・1マス＝1週', m:'1行＝1年・1マス＝1月'};
+
+var CATS = [
+  {id:'work',  name:'仕事',  v:'--s1'},
+  {id:'money', name:'資本',  v:'--s2'},
+  {id:'learn', name:'学び',  v:'--s3'},
+  {id:'fam',   name:'家族',  v:'--s4'},
+  {id:'body',  name:'身体',  v:'--s5'},
+  {id:'trip',  name:'旅',    v:'--s6'},
+  {id:'mark',  name:'節目',  v:'--s7'},
+  {id:'etc',   name:'その他',v:'--s8'}
+];
+var CATI = {}; CATS.forEach(function(c,i){ CATI[c.id]=i; });
+
+/* ══ 日付ユーティリティ ═══════════════════════════════════════════════ */
+function isLeap(y){ return (y%4===0 && y%100!==0) || y%400===0; }
+function daysInYear(y){ return isLeap(y)?366:365; }
+function colOf(m,d){ return MSTART[m-1] + d - 1; }          // m:1-12 → 0..365
+function mdOfCol(c){                                        // 列 → {m,d}
+  var m=11; while(MSTART[m]>c) m--;
+  return {m:m+1, d:c-MSTART[m]+1};
+}
+function voidCell(y,c){ return c===59 && !isLeap(y); }      // 平年の2/29
+function pad2(n){ return n<10?('0'+n):(''+n); }
+function iso(y,m,d){ return y+'-'+pad2(m)+'-'+pad2(d); }
+function parseISO(s){
+  if(!s) return null;
+  var a=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if(!a) return null;
+  return {y:+a[1], m:+a[2], d:+a[3]};
+}
+function validDate(o){
+  if(!o) return false;
+  if(o.m<1||o.m>12||o.d<1) return false;
+  var dim=[31,isLeap(o.y)?29:28,31,30,31,30,31,31,30,31,30,31][o.m-1];
+  return o.d<=dim;
+}
+function weekdayOf(y,m,d){ return new Date(Date.UTC(y,m-1,d)).getUTCDay(); }
+function dayNo(y,m,d){ return Math.floor(Date.UTC(y,m-1,d)/86400000); }   // 通算日
+function cmpISO(a,b){ return a<b?-1:(a>b?1:0); }
+
+function ageAt(birth,y,m,d){
+  if(!birth) return null;
+  var b=parseISO(birth); if(!b) return null;
+  var a = y-b.y;
+  if(m<b.m || (m===b.m && d<b.d)) a--;
+  return a;
+}
+function ageInYear(birth,y){                                 // その年の誕生日到来後の年齢
+  if(!birth) return null;
+  var b=parseISO(birth); if(!b) return null;
+  return y-b.y;
+}
+function fmtNum(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+
+/* ══ 状態 ═══════════════════════════════════════════════════════════════ */
+var TODAY = (function(){
+  var t=new Date();
+  return {y:t.getFullYear(), m:t.getMonth()+1, d:t.getDate()};
+})();
+var TCOL = colOf(TODAY.m,TODAY.d);
+function isPast(y,c){ return y<TODAY.y || (y===TODAY.y && c<TCOL); }
+function preBirth(y,c){                                     /* 生まれる前の日 */
+  var b=DB.birth?parseISO(DB.birth):null;
+  if(!b||!validDate(b)) return false;
+  return y<b.y || (y===b.y && c<colOf(b.m,b.d));
+}
+
+var BIRTH0 = '2004-07-04';
+var DB = {
+  v:1,
+  birth:BIRTH0,
+  y0:+BIRTH0.slice(0,4), y1:+BIRTH0.slice(0,4)+100,
+  plans:[],
+  ui:{unit:'d', zoom:0, showDone:true, paint:'s', off:{}, brOnly:false, theme:'light'}
+};
+
+function load(){
+  try{
+    var raw=localStorage.getItem(KEY);
+    if(!raw) return;
+    var o=JSON.parse(raw);
+    if(!o||typeof o!=='object') return;
+    if(typeof o.birth==='string'||o.birth===null) DB.birth=o.birth;
+    if(typeof o.y0==='number' && typeof o.y1==='number' && o.y1>=o.y0){ DB.y0=o.y0; DB.y1=o.y1; }
+    if(Array.isArray(o.plans)) DB.plans=o.plans.filter(okPlan);
+    if(o.ui&&typeof o.ui==='object'){
+      var u=o.ui;
+      if(GEOM[u.unit]) DB.ui.unit=u.unit;
+      if(u.zoom===0||u.zoom===1||u.zoom===2) DB.ui.zoom=u.zoom;
+      if(typeof u.showDone==='boolean') DB.ui.showDone=u.showDone;
+      if(u.paint==='s'||u.paint==='c') DB.ui.paint=u.paint;
+      if(u.off&&typeof u.off==='object') DB.ui.off=u.off;
+      if(typeof u.brOnly==='boolean') DB.ui.brOnly=u.brOnly;
+      if(u.theme==='dark'||u.theme==='light') DB.ui.theme=u.theme;
+    }
+  }catch(e){}
+}
+function okPlan(p){
+  return p && typeof p==='object' && typeof p.t==='string'
+      && (p.k==='date'||p.k==='year') && typeof p.s==='string';
+}
+function optsOf(p){ return Array.isArray(p.opts)?p.opts.filter(function(x){return typeof x==='string'&&x.trim();}):[]; }
+var saveT=null;
+function save(){
+  if(saveT) clearTimeout(saveT);
+  saveT=setTimeout(function(){
+    try{ localStorage.setItem(KEY, JSON.stringify(DB)); }catch(e){}
+  },160);
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+/* ══ 集計 ═══════════════════════════════════════════════════════════════
+   cnt  … その日に重なっているプラン数
+   catx … その日を代表するカテゴリ（先に登録された方を優先）+1、0は無し */
+var NY=0, cnt=null, catx=null, ycnt=null, ycat=null, brY=null, stat=null;
+
+function visible(p){
+  if(!DB.ui.showDone && p.done) return true;               /* 描画側で除外 */
+  return true;
+}
+function shown(p){
+  if(p.done && !DB.ui.showDone) return false;
+  if(DB.ui.brOnly && !p.br) return false;
+  if(DB.ui.off[p.cat]) return false;
+  return true;
+}
+
+function build(){
+  NY = DB.y1-DB.y0+1;
+  cnt  = new Uint16Array(NY*COLS);
+  catx = new Uint8Array(NY*COLS);
+  ycnt = new Uint16Array(NY);
+  ycat = new Uint8Array(NY);
+  brY  = new Uint8Array(NY);
+  stat = {total:0, done:0, days:0, yearOnly:0, br:0, brOpen:0};
+
+  var i,p,y,r,c,c0,c1,ci,base;
+  for(i=0;i<DB.plans.length;i++){
+    p=DB.plans[i];
+    stat.total++;
+    if(p.done) stat.done++;
+    if(p.br){ stat.br++; if(!p.done) stat.brOpen++; }
+    if(!shown(p)) continue;
+    if(p.br) markBranchYears(p);
+    ci = (CATI[p.cat]!==undefined ? CATI[p.cat] : CATI.etc) + 1;
+
+    if(p.k==='year'){
+      var ys=+p.s, ye=+(p.e||p.s);
+      if(!(ys>0)) continue;
+      if(!(ye>=ys)) ye=ys;
+      stat.yearOnly++;
+      for(y=Math.max(ys,DB.y0); y<=Math.min(ye,DB.y1); y++){
+        r=y-DB.y0; ycnt[r]++; if(!ycat[r]) ycat[r]=ci;
+      }
+      continue;
+    }
+
+    var s=parseISO(p.s); if(!validDate(s)) continue;
+    var e=p.e?parseISO(p.e):s; if(!validDate(e)) e=s;
+    if(cmpISO(iso(e.y,e.m,e.d), iso(s.y,s.m,s.d))<0) e=s;
+
+    if(p.rep){                                              /* 毎年くり返す */
+      var cc=colOf(s.m,s.d);
+      for(y=DB.y0;y<=DB.y1;y++){
+        if(voidCell(y,cc)) continue;
+        base=(y-DB.y0)*COLS+cc;
+        cnt[base]++; if(!catx[base]) catx[base]=ci;
+      }
+      continue;
+    }
+
+    for(y=Math.max(s.y,DB.y0); y<=Math.min(e.y,DB.y1); y++){
+      r=y-DB.y0;
+      c0 = (y===s.y)? colOf(s.m,s.d) : 0;
+      c1 = (y===e.y)? colOf(e.m,e.d) : COLS-1;
+      base=r*COLS;
+      for(c=c0;c<=c1;c++){
+        if(voidCell(y,c)) continue;
+        cnt[base+c]++; if(!catx[base+c]) catx[base+c]=ci;
+      }
+    }
+  }
+  for(i=0;i<cnt.length;i++) if(cnt[i]) stat.days++;
+}
+function markBranchYears(p){
+  var ys,ye,y;
+  if(p.k==='year'){ ys=+p.s; ye=+(p.e||p.s); if(!(ye>=ys)) ye=ys; }
+  else if(p.rep){ ys=DB.y0; ye=DB.y0; }
+  else {
+    var a=parseISO(p.s), b=p.e?parseISO(p.e):null;
+    if(!validDate(a)) return;
+    ys=a.y; ye=(b&&validDate(b))?b.y:a.y;
+  }
+  for(y=Math.max(ys,DB.y0); y<=Math.min(ye,DB.y1); y++) brY[y-DB.y0]=1;
+}
+
+/* 指定日のプランを拾う（パネル・ツールチップ用） */
+function plansOn(y,m,d){
+  var key=iso(y,m,d), out=[];
+  for(var i=0;i<DB.plans.length;i++){
+    var p=DB.plans[i];
+    if(!shown(p)) continue;
+    if(p.k==='year'){
+      var ys=+p.s, ye=+(p.e||p.s); if(!(ye>=ys)) ye=ys;
+      continue;
+    }
+    if(p.rep){
+      var s0=parseISO(p.s);
+      if(s0 && s0.m===m && s0.d===d) out.push(p);
+      continue;
+    }
+    var s=parseISO(p.s); if(!validDate(s)) continue;
+    var e=p.e?parseISO(p.e):s; if(!validDate(e)) e=s;
+    if(cmpISO(key, iso(s.y,s.m,s.d))>=0 && cmpISO(key, iso(e.y,e.m,e.d))<=0) out.push(p);
+  }
+  return out;
+}
+function plansInYearOnly(y){
+  var out=[];
+  for(var i=0;i<DB.plans.length;i++){
+    var p=DB.plans[i];
+    if(!shown(p) || p.k!=='year') continue;
+    var ys=+p.s, ye=+(p.e||p.s); if(!(ye>=ys)) ye=ys;
+    if(y>=ys && y<=ye) out.push(p);
+  }
+  return out;
+}
+function plansInRange(y,c0,c1){                              /* 週・月ビュー用 */
+  var out=[], seen={};
+  for(var c=c0;c<=c1;c++){
+    if(voidCell(y,c)) continue;
+    var md=mdOfCol(c), a=plansOn(y,md.m,md.d);
+    for(var j=0;j<a.length;j++) if(!seen[a[j].id]){ seen[a[j].id]=1; out.push(a[j]); }
+  }
+  return out;
+}
+
+/* ══ 色 ═══════════════════════════════════════════════════════════════ */
+var C={};
+function refreshColors(){
+  var cs=getComputedStyle(document.documentElement);
+  ['--panel','--grid0','--grid-past','--grid-void','--seq1','--seq2','--seq3','--seq4',
+   '--today','--ink','--sub','--muted','--line','--line2','--accent',
+   '--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'
+  ].forEach(function(k){ C[k]=cs.getPropertyValue(k).trim(); });
+  CATS.forEach(function(c){ c.color=C[c.v]; });
+}
+function densColor(n){ return n<=0?C['--grid0']:(n===1?C['--seq2']:(n===2?C['--seq3']:C['--seq4'])); }
+function ratioColor(p){
+  if(p<=0) return C['--grid0'];
+  if(p<=0.25) return C['--seq1'];
+  if(p<=0.5)  return C['--seq2'];
+  if(p<=0.75) return C['--seq3'];
+  return C['--seq4'];
+}
+function catColor(ci){ return ci?CATS[ci-1].color:C['--grid0']; }
+function catOf(id){ return CATS[CATI[id]!==undefined?CATI[id]:CATI.etc]; }
+
+/* ══ 幾何 ═══════════════════════════════════════════════════════════════ */
+var G={};
+function geom(){
+  var g=GEOM[DB.ui.unit][DB.ui.zoom];
+  G.cw=g.cw; G.rh=g.rh;
+  G.cols=UNITCOLS[DB.ui.unit];
+  G.gx=1;
+  G.gy=G.rh>=21?3:2;
+  G.ycw=Math.max(11, Math.min(20, Math.round(G.rh*0.9)));
+  G.padL=13; G.yearW=36; G.ageW=DB.birth?26:0; G.gapA=DB.birth?7:0; G.gapY=11; G.padR=11;
+  G.leftW=G.padL+G.yearW+G.gapA+G.ageW+G.gapY+G.ycw+G.padR;
+  G.gridW=G.cols*G.cw;
+  G.h=NY*G.rh;
+  G.fs=G.rh>=20?12:(G.rh>=15?11:9.5);
+}
+function setCanvas(cv,w,h){
+  var r=window.devicePixelRatio||1;
+  cv.width=Math.max(1,Math.round(w*r)); cv.height=Math.max(1,Math.round(h*r));
+  cv.style.width=w+'px'; cv.style.height=h+'px';
+  var x=cv.getContext('2d'); x.setTransform(r,0,0,r,0,0);
+  x.clearRect(0,0,w,h);
+  return x;
+}
+function colRange(c){                                        /* 表示列 → 日の列範囲 */
+  var u=DB.ui.unit;
+  if(u==='d') return [c,c];
+  if(u==='w') return [c*7, Math.min(365, c*7+6)];
+  return [MSTART[c], (c===11?365:MSTART[c+1]-1)];
+}
+function colOfDay(dc){                                       /* 日の列 → 表示列 */
+  var u=DB.ui.unit;
+  if(u==='d') return dc;
+  if(u==='w') return Math.floor(dc/7);
+  return mdOfCol(dc).m-1;
+}
+
+/* ══ 描画 ═══════════════════════════════════════════════════════════════ */
+var cvL=document.getElementById('cvL'), cvG=document.getElementById('cvG'), cvO=document.getElementById('cvO');
+var $=function(id){ return document.getElementById(id); };
+
+function drawGrid(){
+  var x=setCanvas(cvG,G.gridW,G.h), r,c,y,col,n,rng,i,base,has,tot;
+  x.fillStyle=C['--panel']; x.fillRect(0,0,G.gridW,G.h);
+  var w=G.cw-G.gx, hh=G.rh-G.gy, u=DB.ui.unit, paint=DB.ui.paint;
+  if(w<1) w=1; if(hh<1) hh=1;
+  var rd = w>=7 && hh>=7 ? 2 : 0;
+  var E0=C['--grid0'], EP=C['--grid-past'];
+
+  for(r=0;r<NY;r++){
+    y=DB.y0+r; base=r*COLS;
+    for(c=0;c<G.cols;c++){
+      rng=colRange(c);
+      if(u==='d'){
+        if(voidCell(y,c)||preBirth(y,c)){ x.fillStyle=C['--grid-void']; rect(x,c*G.cw,r*G.rh,w,hh,rd); continue; }
+        n=cnt[base+c];
+        col = n ? (paint==='c' ? catColor(catx[base+c]) : densColor(n))
+                : (isPast(y,c) ? EP : E0);
+      }else{
+        has=0; tot=0; var ci=0;
+        for(i=rng[0];i<=rng[1];i++){
+          if(voidCell(y,i)) continue;
+          tot++;
+          if(cnt[base+i]){ has++; if(!ci) ci=catx[base+i]; }
+        }
+        col = has ? (paint==='c' ? catColor(ci) : ratioColor(tot?has/tot:0))
+                  : (preBirth(y,rng[1]) ? C['--grid-void'] : (isPast(y,rng[1]) ? EP : E0));
+      }
+      x.fillStyle=col||E0;
+      rect(x,c*G.cw,r*G.rh,w,hh,rd);
+    }
+  }
+
+  /* 月の境界線 */
+  if(u!=='m'){
+    x.fillStyle=C['--line2'];
+    for(var mi=1;mi<12;mi++){
+      var px = u==='d' ? MSTART[mi]*G.cw : Math.round(MSTART[mi]/7)*G.cw;
+      x.fillRect(px-1,0,1,G.h);
+    }
+  }
+  /* 今日 */
+  markToday(x);
+}
+function rect(x,px,py,w,h,r){
+  if(!r){ x.fillRect(px,py,w,h); return; }
+  x.beginPath();
+  if(x.roundRect) x.roundRect(px,py,w,h,r); else x.rect(px,py,w,h);
+  x.fill();
+}
+function markToday(x){
+  if(TODAY.y<DB.y0||TODAY.y>DB.y1) return;
+  var r=TODAY.y-DB.y0, dc=colOf(TODAY.m,TODAY.d), c=colOfDay(dc);
+  var w=G.cw-G.gx, hh=G.rh-G.gy;
+  x.save();
+  x.strokeStyle=C['--today']; x.lineWidth=2;
+  var o=x.lineWidth/2;
+  x.strokeRect(c*G.cw-o, r*G.rh-o, w+o*2, hh+o*2);
+  x.restore();
+}
+
+function drawLeft(){
+  var x=setCanvas(cvL,G.leftW,G.h), r,y,n;
+  x.fillStyle=C['--panel']; x.fillRect(0,0,G.leftW,G.h);
+  x.textBaseline='middle';
+  var yx=G.padL+G.yearW, ax=yx+G.gapA, cx=ax+G.ageW+G.gapY;
+  var hh=G.rh-G.gy, w=G.ycw;
+  var rd = w>=8 && hh>=8 ? 2 : 0;
+
+  for(r=0;r<NY;r++){
+    y=DB.y0+r;
+    var cy=r*G.rh+hh/2, cur=(y===TODAY.y);
+    x.font=(cur?'600 ':'')+G.fs+'px -apple-system,"Hiragino Sans",sans-serif';
+    x.fillStyle=cur?C['--accent']:(G.rh<16&&y%5!==0?C['--muted']:C['--sub']);
+    x.textAlign='right';
+    x.fillText(String(y), yx, cy);
+    if(DB.birth){
+      var a=ageInYear(DB.birth,y);
+      x.font=(G.fs-1)+'px -apple-system,"Hiragino Sans",sans-serif';
+      x.fillStyle=C['--muted'];
+      x.fillText(a+'歳', ax+G.ageW, cy);
+    }
+    if(brY[r]){
+      x.fillStyle=C['--ink'];
+      x.beginPath();
+      x.arc(5, cy, Math.min(2.6, Math.max(1.6, hh/4)), 0, 6.2832);
+      x.fill();
+    }
+    n=ycnt[r];
+    if(n){
+      x.fillStyle = DB.ui.paint==='c' ? catColor(ycat[r]) : densColor(n);
+      rect(x,cx,r*G.rh,w,hh,rd);
+    }else{
+      x.fillStyle=(y<TODAY.y?C['--grid-past']:C['--grid0']); rect(x,cx,r*G.rh,w,hh,rd);
+      x.fillStyle=C['--muted']; x.textAlign='center';
+      x.font=(G.fs-2)+'px -apple-system,sans-serif';
+      if(hh>=9) x.fillText('–', cx+w/2, cy);
+    }
+  }
+  x.fillStyle=C['--line'];
+  for(r=1;r<NY;r++) if(DB.y0+r>0 && (DB.y0+r)%10===0) x.fillRect(0,r*G.rh-G.gy/2-0.5,G.leftW,1);
+}
+
+var hoverCell=null, selCell=null;
+function drawOverlay(){
+  var x=setCanvas(cvO,G.gridW,G.h);
+  function box(cell,color,lw){
+    if(!cell) return;
+    var w=G.cw-G.gx, hh=G.rh-G.gy;
+    x.strokeStyle=color; x.lineWidth=lw;
+    var o=lw/2+0.5;
+    x.strokeRect(cell.c*G.cw-o, cell.r*G.rh-o, w+o*2, hh+o*2);
+  }
+  box(selCell, C['--accent'], 2);
+  box(hoverCell, C['--ink'], 1);
+}
+
+function drawMonths(){
+  var mr=$('monthrow'), u=DB.ui.unit;
+  var html='<div class="mh-left" style="width:'+G.leftW+'px">年 / 年のみ</div>';
+  html+='<div class="mh-grid" style="width:'+G.gridW+'px">';
+  for(var m=0;m<12;m++){
+    var px = u==='d' ? MSTART[m]*G.cw : (u==='w' ? Math.round(MSTART[m]/7)*G.cw : m*G.cw);
+    if(m>0) html+='<div class="mline" style="left:'+(px-1)+'px"></div>';
+    html+='<div class="mlab" style="left:'+(px+5)+'px">'+MNAME[m]+'</div>';
+  }
+  html+='</div>';
+  mr.innerHTML=html;
+}
+
+function draw(){
+  geom();
+  drawMonths();
+  drawGrid();
+  drawLeft();
+  drawOverlay();
+  $('inner').style.width=(G.leftW+G.gridW)+'px';
+}
+
+/* ══ 表示用の文字列 ═══════════════════════════════════════════════════ */
+function esc(s){
+  return String(s).replace(/[&<>"']/g,function(m){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+  });
+}
+function jpDate(y,m,d,wd){
+  return y+'年'+m+'月'+d+'日'+(wd?'（'+WDAY[weekdayOf(y,m,d)]+'）':'');
+}
+function spanText(p){
+  if(p.k==='year'){
+    var ys=+p.s, ye=+(p.e||p.s);
+    return (ye>ys)? (ys+' — '+ye+'年'):(ys+'年');
+  }
+  var s=parseISO(p.s); if(!validDate(s)) return '日付なし';
+  if(p.rep) return '毎年 '+s.m+'月'+s.d+'日';
+  var e=p.e?parseISO(p.e):null;
+  if(!e||!validDate(e)||(e.y===s.y&&e.m===s.m&&e.d===s.d)) return jpDate(s.y,s.m,s.d,true);
+  var n=dayNo(e.y,e.m,e.d)-dayNo(s.y,s.m,s.d)+1;
+  return jpDate(s.y,s.m,s.d,false)+' — '+jpDate(e.y,e.m,e.d,false)+'・'+fmtNum(n)+'日間';
+}
+function planRow(p,full){
+  var cc=catOf(p.cat), o=optsOf(p), wide=full||p.br;
+  var h='<div class="prow'+(p.done?' done':'')+(p.br?' br':'')+'" data-id="'+esc(p.id)+'">'
+    + '<div class="bar4" style="background:'+cc.color+'"></div>'
+    + '<div class="body"><div class="t">'+(p.br?'<span class="badge">分岐</span>':'')+esc(p.t)+'</div>'
+    + '<div class="m"><span class="cat">'+esc(cc.name)+'</span> · '+esc(spanText(p));
+  if(p.note && !wide) h+=' · '+esc(p.note.replace(/\s+/g,' ').slice(0,60))+(p.note.length>60?'…':'');
+  h+='</div>';
+  if(wide && p.note) h+='<div class="note-full">'+esc(p.note)+'</div>';
+  if(wide && o.length) h+='<ul class="opts">'+o.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul>';
+  if(wide && p.src) h+='<div class="src">'+esc(p.src)+'</div>';
+  h+='</div><div class="acts">'
+    + '<button class="iconb'+(p.done?' on':'')+'" data-act="done" title="決めた／完了を切り替える">✓</button>'
+    + '<button class="iconb" data-act="edit" title="編集">✎</button>'
+    + '</div></div>';
+  return h;
+}
+function sortKey(p,yearLast){
+  if(p.k==='year') return p.s+(yearLast?'-99-99':'-00-00');
+  if(p.rep) return String(DB.y0)+'-00-01';
+  return p.s;
+}
+
+/* ══ ツールチップ ═══════════════════════════════════════════════════════ */
+var tip=$('tip');
+function cellInfo(r,c){
+  if(r<0||r>=NY||c<0||c>=G.cols) return null;
+  var y=DB.y0+r;
+  if(DB.ui.unit==='d'){
+    if(voidCell(y,c)) return {kind:'void', y:y};
+    if(preBirth(y,c)){ var md0=mdOfCol(c); return {kind:'pre', y:y, m:md0.m, d:md0.d}; }
+    var md=mdOfCol(c);
+    return {kind:'day', y:y, m:md.m, d:md.d, c:c, plans:plansOn(y,md.m,md.d)};
+  }
+  var rng=colRange(c), a=rng[0], b=rng[1];
+  while(voidCell(y,a)&&a<b) a++;
+  while(voidCell(y,b)&&b>a) b--;
+  var f=mdOfCol(a), t=mdOfCol(b);
+  return {kind:'range', y:y, from:f, to:t, c:c, plans:plansInRange(y,rng[0],rng[1])};
+}
+function tipHTML(info){
+  if(!info) return '';
+  if(info.kind==='void') return '<div class="td">'+info.y+'年には 2月29日 が無い</div>';
+  if(info.kind==='pre') return '<div class="td">'+jpDate(info.y,info.m,info.d,true)+'・生まれる前</div>';
+  var head, sub='';
+  if(info.kind==='day'){
+    head=jpDate(info.y,info.m,info.d,true);
+    var a=ageAt(DB.birth,info.y,info.m,info.d);
+    sub=(a!==null?a+'歳・':'')+'その年の'+(colOf(info.m,info.d)- (isLeap(info.y)||info.m<3?0:1) +1)+'日目';
+  }else{
+    head=info.y+'年 '+info.from.m+'月'+info.from.d+'日 — '+info.to.m+'月'+info.to.d+'日';
+    var a2=ageAt(DB.birth,info.y,info.from.m,info.from.d);
+    sub=(a2!==null?a2+'歳':'');
+  }
+  var h='<div><b>'+esc(head)+'</b></div><div class="td">'+esc(sub)+'</div>';
+  var ps=info.plans||[];
+  for(var i=0;i<Math.min(ps.length,5);i++){
+    var cc=catOf(ps[i].cat);
+    h+='<div class="ti"><span class="dot" style="background:'+cc.color+'"></span>'
+      + '<span'+(ps[i].done?' style="opacity:.55;text-decoration:line-through"':'')+'>'+esc(ps[i].t)+'</span></div>';
+  }
+  if(ps.length>5) h+='<div class="more">ほか '+(ps.length-5)+' 件</div>';
+  if(!ps.length) h+='<div class="more">予定なし</div>';
+  return h;
+}
+function showTip(ev,html){
+  if(!html){ hideTip(); return; }
+  tip.innerHTML=html;
+  tip.style.opacity='1';
+  var w=tip.offsetWidth, hh=tip.offsetHeight;
+  var x=ev.clientX+14, y=ev.clientY+16;
+  if(x+w>window.innerWidth-8) x=ev.clientX-w-14;
+  if(y+hh>window.innerHeight-8) y=ev.clientY-hh-14;
+  tip.style.left=Math.max(6,x)+'px'; tip.style.top=Math.max(6,y)+'px';
+}
+function hideTip(){ tip.style.opacity='0'; }
+
+/* ══ 日パネル ═══════════════════════════════════════════════════════════ */
+var sel=null;                                              /* {type:'cell'|'year', ...} */
+function openCell(r,c){
+  var info=cellInfo(r,c);
+  if(!info||info.kind==='void'||info.kind==='pre') return;
+  selCell={r:r,c:c}; sel={type:'cell', info:info}; drawOverlay(); renderPanel();
+}
+function openYear(r){
+  var y=DB.y0+r;
+  selCell=null; sel={type:'year', y:y, plans:plansInYearOnly(y)}; drawOverlay(); renderPanel();
+}
+function renderPanel(){
+  var dp=$('daypanel');
+  if(!sel){ dp.classList.remove('on'); return; }
+  dp.classList.add('on');
+  var head, meta, ps;
+  if(sel.type==='year'){
+    head=sel.y+'年（年のみ）';
+    var a=ageInYear(DB.birth,sel.y);
+    meta='月日を決めていないプラン'+(a!==null?'・その年に'+a+'歳':'');
+    ps=sel.plans;
+  }else{
+    var i=sel.info; ps=i.plans;
+    if(i.kind==='day'){
+      head=jpDate(i.y,i.m,i.d,true);
+      var ag=ageAt(DB.birth,i.y,i.m,i.d);
+      var left=dayNo(i.y,i.m,i.d)-dayNo(TODAY.y,TODAY.m,TODAY.d);
+      meta=(ag!==null?ag+'歳・':'')+(left===0?'今日':(left>0?'今日から'+fmtNum(left)+'日後':fmtNum(-left)+'日前'));
+    }else{
+      head=i.y+'年 '+i.from.m+'月'+i.from.d+'日 — '+i.to.m+'月'+i.to.d+'日';
+      var ag2=ageInYear(DB.birth,i.y);
+      meta=(ag2!==null?'その年に'+ag2+'歳':'');
+    }
+  }
+  $('dpDate').textContent=head;
+  $('dpMeta').textContent=meta;
+  $('dpList').innerHTML=ps.map(planRow).join('');
+  $('dpEmpty').style.display=ps.length?'none':'block';
+}
+
+/* ══ 統計 ═══════════════════════════════════════════════════════════════ */
+function renderStats(){
+  var totalDays=0, y;
+  for(y=DB.y0;y<=DB.y1;y++) totalDays+=daysInYear(y);
+  var endNo=dayNo(DB.y1,12,31), nowNo=dayNo(TODAY.y,TODAY.m,TODAY.d);
+  var left=endNo-nowNo;
+  var h='';
+  h+=card('プラン', fmtNum(stat.total), '件', stat.done?('完了 '+stat.done+'件'):'完了 0件');
+  if(stat.br) h+=card('分岐点', fmtNum(stat.br), '件', 'まだ決めていない '+stat.brOpen+'件');
+  h+=card('予定のある日', fmtNum(stat.days), '日',
+      totalDays?('この'+NY+'年の '+(stat.days/totalDays*100).toFixed(1)+'%'):'');
+  var ag=ageAt(DB.birth,TODAY.y,TODAY.m,TODAY.d);
+  h+=card('今日', TODAY.m+'/'+TODAY.d, '', TODAY.y+'年'+(ag!==null?'・'+ag+'歳':''));
+  var b=DB.birth?parseISO(DB.birth):null;
+  if(b&&validDate(b)){
+    var lived=nowNo-dayNo(b.y,b.m,b.d);
+    h+=card('もう使った日数', fmtNum(Math.max(0,lived)), '日', (lived/365.25).toFixed(1)+'年ぶん');
+  }
+  var a1=ageInYear(DB.birth,DB.y1);
+  h+=card((a1!==null?a1+'歳':DB.y1+'年')+'まで', fmtNum(Math.max(0,left)), '日', (left/365.25).toFixed(1)+'年');
+  if(b&&validDate(b)){
+    var bn=dayNo(b.y,b.m,b.d), pc=(nowNo-bn)/(endNo-bn)*100;
+    pc=Math.max(0,Math.min(100,pc));
+    h+='<div class="stat"><div class="k">経過</div><div class="v num">'+pc.toFixed(1)+'<span class="u">%</span></div>'
+      + '<div class="s">'+b.y+'年 → '+DB.y1+'年</div>'
+      + '<div class="lifebar"><span style="width:'+pc.toFixed(2)+'%"></span></div></div>';
+  }
+  $('stats').innerHTML=h;
+}
+function rangeSub(){
+  var n=DB.y1-DB.y0+1, a0=ageInYear(DB.birth,DB.y0), a1=ageInYear(DB.birth,DB.y1);
+  if(a0!==null && a0<=0) return '0歳から'+a1+'歳まで・'+n+'年分';
+  if(a0!==null) return a0+'歳から'+a1+'歳まで・'+n+'年分';
+  return (DB.y0<=TODAY.y&&TODAY.y<=DB.y1?'今年を含む':'')+n+'年分';
+}
+function card(k,v,u,s){
+  return '<div class="stat"><div class="k">'+esc(k)+'</div><div class="v num">'+esc(v)
+    +(u?'<span class="u">'+esc(u)+'</span>':'')+'</div><div class="s">'+esc(s||'')+'</div></div>';
+}
+
+/* ══ 年表 ═══════════════════════════════════════════════════════════════ */
+function renderTimeline(){
+  var byYear={}, i,p,y;
+  for(i=0;i<DB.plans.length;i++){
+    p=DB.plans[i];
+    if(!shown(p)) continue;
+    if(p.rep){ push(DB.y0,p); continue; }
+    y = p.k==='year' ? +p.s : (parseISO(p.s)||{}).y;
+    if(!(y>0)) continue;
+    push(y,p);
+  }
+  function push(y,p){ (byYear[y]=byYear[y]||[]).push(p); }
+
+  var years=Object.keys(byYear).map(Number).sort(function(a,b){return a-b;});
+  if(!years.length){
+    $('timeline').innerHTML='<div class="empty">まだ何も登録されていない。右上の「プランを追加」か、グリッドのマスをクリックして始める。</div>';
+    return;
+  }
+  var h='';
+  for(i=0;i<years.length;i++){
+    y=years[i];
+    var list=byYear[y].slice().sort(function(a,b){
+      var ka=a.k==='year'?'0':(a.rep?'1':'2'+a.s), kb=b.k==='year'?'0':(b.rep?'1':'2'+b.s);
+      return ka<kb?-1:(ka>kb?1:0);
+    });
+    var ag=ageInYear(DB.birth,y);
+    h+='<div class="tl-year"><div class="tl-y num">'+y
+      +(ag!==null?'<span class="age">'+ag+'歳</span>':'')+'</div>'
+      +'<div class="tl-items">'+list.map(planRow).join('')+'</div></div>';
+  }
+  $('timeline').innerHTML=h;
+  $('tlLead').textContent='登録したプランを年ごとに並べる。全 '+stat.total+' 件のうち、いま表示しているのは '
+    + DB.plans.filter(shown).length + ' 件。';
+}
+
+function renderBranches(){
+  var list=DB.plans.filter(function(p){ return p.br && shown(p); })
+                   .sort(function(a,b){ var x=sortKey(a,1),y=sortKey(b,1); return x<y?-1:(x>y?1:0); });
+  if(!list.length){
+    $('branches').innerHTML='<div class="empty">分岐点はまだ無い。プランを作るとき「分岐点にする」を選ぶと、ここに選択肢とメモが並ぶ。</div>';
+    $('brLead').textContent='選ぶ余地があって、選び方で先が変わるもの。決める時期の順に並べる。';
+    return;
+  }
+  var byYear={}, i,p,y;
+  for(i=0;i<list.length;i++){
+    p=list[i];
+    y = p.k==='year' ? +p.s : (p.rep ? DB.y0 : (parseISO(p.s)||{}).y);
+    if(!(y>0)) continue;
+    (byYear[y]=byYear[y]||[]).push(p);
+  }
+  var years=Object.keys(byYear).map(Number).sort(function(a,b){return a-b;}), h='';
+  for(i=0;i<years.length;i++){
+    y=years[i];
+    var ag=ageInYear(DB.birth,y);
+    h+='<div class="tl-year"><div class="tl-y num">'+y
+      +(ag!==null?'<span class="age">'+ag+'歳</span>':'')+'</div>'
+      +'<div class="tl-items">'+byYear[y].map(function(q){ return planRow(q,true); }).join('')+'</div></div>';
+  }
+  $('branches').innerHTML=h;
+  $('brLead').textContent='選ぶ余地があって、選び方で先が変わるもの。全 '+list.length
+    +' 件のうち、まだ決めていないのが '+list.filter(function(q){return !q.done;}).length+' 件。';
+}
+
+/* ══ 凡例・カテゴリ ═══════════════════════════════════════════════════ */
+function renderLegend(){
+  var h='';
+  if(DB.ui.paint==='s'){
+    h+='<span class="lg"><span class="sw" style="background:'+C['--grid-past']+'"></span>過ぎた日</span>';
+    h+='<span class="lg"><span class="sw" style="background:'+C['--grid0']+'"></span>これから</span>';
+    h+='<span class="lg"><span class="sw ramp"></span>'+(DB.ui.unit==='d'?'重なりが多い':'その期間に予定が詰まっている')+'</span>';
+  }else{
+    h+='<span class="lg"><span class="sw" style="background:'+C['--grid-past']+'"></span>過ぎた日</span>';
+    h+='<span class="lg">色＝カテゴリ（下のボタン）</span>';
+  }
+  h+='<span class="lg"><span class="sw today"></span>今日</span>';
+  $('legend').innerHTML=h;
+}
+function renderCats(){
+  var used={}, i;
+  for(i=0;i<DB.plans.length;i++){
+    var p=DB.plans[i];
+    if(p.done&&!DB.ui.showDone) continue;
+    used[p.cat]=(used[p.cat]||0)+1;
+  }
+  $('catBar').innerHTML=CATS.map(function(c){
+    var on=!DB.ui.off[c.id];
+    return '<button class="cbtn" data-cat="'+c.id+'" aria-pressed="'+on+'">'
+      + '<span class="dot" style="background:'+c.color+'"></span>'+esc(c.name)
+      + '<span class="n">'+(used[c.id]||0)+'</span></button>';
+  }).join('');
+}
+
+/* ══ 再描画のまとめ ═══════════════════════════════════════════════════ */
+function refresh(all){
+  build();
+  if(all!==false) draw();
+  renderStats(); renderBranches(); renderTimeline(); renderCats(); renderLegend();
+  if(sel){                                                 /* 選択中の中身を作り直す */
+    if(sel.type==='year') sel.plans=plansInYearOnly(sel.y);
+    else if(selCell) sel.info=cellInfo(selCell.r,selCell.c);
+    renderPanel();
+  }
+  save();
+}
+
+/* ══ モーダル ═══════════════════════════════════════════════════════════ */
+var mask=$('mask'), editing=null;
+function fillCatSelect(){
+  $('fCat').innerHTML=CATS.map(function(c){
+    return '<option value="'+c.id+'">'+esc(c.name)+'</option>';
+  }).join('');
+}
+function openModal(p,preset){
+  editing = p?p.id:null;
+  $('mTitle').textContent = p?'プランを編集':'プランを追加';
+  $('mDel').style.visibility = p?'visible':'hidden';
+  $('fErr').classList.remove('on');
+  var k = p?p.k:'date';
+  $('fTitle').value = p?p.t:'';
+  $('fCat').value  = p?(CATI[p.cat]!==undefined?p.cat:'etc'):'work';
+  $('fKind').value = k;
+  $('fNote').value = p?(p.note||''):'';
+  $('fDone').checked = p?!!p.done:false;
+  $('fRep').checked = p?!!p.rep:false;
+  $('fBr').checked = p?!!p.br:false;
+  $('fOpts').value = p?optsOf(p).join('\n'):'';
+  $('fSrc').value = (p&&p.src)?p.src:'';
+  syncBr();
+  if(k==='year'){
+    $('fYs').value=p?p.s:String(TODAY.y);
+    $('fYe').value=(p&&p.e)?p.e:'';
+    $('fStart').value=''; $('fEnd').value='';
+  }else{
+    $('fStart').value = p?p.s:(preset&&preset.date?preset.date:iso(TODAY.y,TODAY.m,TODAY.d));
+    $('fEnd').value   = (p&&p.e)?p.e:(preset&&preset.end?preset.end:'');
+    $('fYs').value=String(TODAY.y); $('fYe').value='';
+  }
+  if(preset&&preset.year){ $('fKind').value='year'; $('fYs').value=String(preset.year); }
+  syncKind();
+  mask.classList.add('on');
+  setTimeout(function(){ $('fTitle').focus(); },30);
+}
+function closeModal(){ mask.classList.remove('on'); editing=null; }
+function syncBr(){
+  var on=$('fBr').checked;
+  $('optWrap').style.display = on?'':'none';
+  $('srcWrap').style.display = on?'':'none';
+}
+function syncKind(){
+  var k=$('fKind').value;
+  $('rowDate').style.display = k==='date'?'':'none';
+  $('rowYear').style.display = k==='year'?'':'none';
+  $('repWrap').style.display = k==='date'?'':'none';
+  $('fEnd').disabled = $('fRep').checked;
+}
+function err(msg){ var e=$('fErr'); e.textContent=msg; e.classList.add('on'); }
+function saveModal(){
+  var t=$('fTitle').value.trim();
+  if(!t){ err('タイトルを入れる。'); return; }
+  var k=$('fKind').value, rec={
+    id: editing||uid(), t:t, cat:$('fCat').value, k:k,
+    note:$('fNote').value.trim(), done:$('fDone').checked
+  };
+  if($('fBr').checked){
+    rec.br=true;
+    var o=$('fOpts').value.split('\n').map(function(x){return x.trim();}).filter(Boolean);
+    if(o.length) rec.opts=o;
+    var sv=$('fSrc').value.trim(); if(sv) rec.src=sv;
+  }
+  if(k==='year'){
+    var ys=parseInt($('fYs').value,10), ye=$('fYe').value?parseInt($('fYe').value,10):null;
+    if(!(ys>=1900&&ys<=2200)){ err('開始年が正しくない。'); return; }
+    if(ye!==null&&!(ye>=ys&&ye<=2200)){ err('終了年は開始年より後にする。'); return; }
+    rec.s=String(ys); if(ye!==null) rec.e=String(ye);
+  }else{
+    var s=parseISO($('fStart').value);
+    if(!validDate(s)){ err('開始日が正しくない。'); return; }
+    rec.s=$('fStart').value;
+    rec.rep=$('fRep').checked;
+    if(!rec.rep && $('fEnd').value){
+      var e=parseISO($('fEnd').value);
+      if(!validDate(e)){ err('終了日が正しくない。'); return; }
+      if(cmpISO($('fEnd').value, rec.s)<0){ err('終了日は開始日より後にする。'); return; }
+      rec.e=$('fEnd').value;
+    }
+  }
+  if(editing){
+    for(var i=0;i<DB.plans.length;i++) if(DB.plans[i].id===editing){ DB.plans[i]=rec; break; }
+  }else DB.plans.push(rec);
+  closeModal(); refresh();
+}
+function delPlan(id){
+  DB.plans=DB.plans.filter(function(p){ return p.id!==id; });
+  refresh();
+}
+function findPlan(id){
+  for(var i=0;i<DB.plans.length;i++) if(DB.plans[i].id===id) return DB.plans[i];
+  return null;
+}
+
+/* ══ 設定 ═══════════════════════════════════════════════════════════════ */
+var smask=$('smask');
+function openSetup(){
+  $('sBirth').value=DB.birth||'';
+  $('sY0').value=DB.y0; $('sY1').value=DB.y1;
+  $('sErr').classList.remove('on');
+  smask.classList.add('on');
+}
+function saveSetup(){
+  var b=$('sBirth').value, y0=parseInt($('sY0').value,10), y1=parseInt($('sY1').value,10);
+  if(b && !validDate(parseISO(b))){ $('sErr').textContent='生年月日が正しくない。'; $('sErr').classList.add('on'); return; }
+  if(!(y0>=1900&&y0<=2200)||!(y1>=y0&&y1<=2200)||(y1-y0)>150){
+    $('sErr').textContent='年の範囲が正しくない。終わりの年は始まりの年より後、幅は150年まで。';
+    $('sErr').classList.add('on'); return;
+  }
+  DB.birth=b||null; DB.y0=y0; DB.y1=y1;
+  smask.classList.remove('on');
+  sel=null; selCell=null; renderPanel();
+  $('rangeTxt').textContent=DB.y0+' — '+DB.y1+'年';
+  $('rangeSub').textContent=rangeSub();
+  refresh();
+}
+
+/* ══ 入出力 ═══════════════════════════════════════════════════════════ */
+function doExport(){
+  var blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='plan50_'+TODAY.y+pad2(TODAY.m)+pad2(TODAY.d)+'.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400);
+}
+function doImport(file){
+  var fr=new FileReader();
+  fr.onload=function(){
+    try{
+      var o=JSON.parse(fr.result);
+      if(!o||!Array.isArray(o.plans)) throw 0;
+      var ps=o.plans.filter(okPlan);
+      if(!confirm('読み込むと今のデータは置き換わる。プラン '+ps.length+' 件を読み込む。')) return;
+      DB.plans=ps.map(function(p){ if(!p.id) p.id=uid(); return p; });
+      if(typeof o.birth==='string'||o.birth===null) DB.birth=o.birth;
+      if(typeof o.y0==='number'&&typeof o.y1==='number'&&o.y1>=o.y0&&o.y1-o.y0<=150){ DB.y0=o.y0; DB.y1=o.y1; }
+      sel=null; selCell=null; renderPanel();
+      $('rangeTxt').textContent=DB.y0+' — '+DB.y1+'年';
+      $('rangeSub').textContent=rangeSub();
+      refresh();
+    }catch(e){ alert('読み込めなかった。書き出したJSONを選ぶ。'); }
+  };
+  fr.readAsText(file);
+}
+function addSample(){
+  if(DB.plans.length && !confirm('今あるプランに例を足す。続ける。')) return;
+  var b=parseISO(DB.birth)||{y:TODAY.y-22,m:7,d:4};
+  var n1=TODAY.y+1;
+  var add=[
+    {t:'誕生日', cat:'mark', k:'date', s:iso(b.y,b.m,b.d), rep:true, note:'毎年くり返す例'},
+    {t:'この100年でやることを書き出す', cat:'mark', k:'year', s:String(TODAY.y), note:'月日を決めていないプランの例'},
+    {t:'毎日続けることを1つ決めて、1年やる', cat:'learn', k:'date', s:iso(n1,1,1), e:iso(n1,12,31), note:'期間のあるプランの例'},
+    {t:'30歳の棚卸し', cat:'mark', k:'year', s:String(b.y+30)},
+    {t:'長い旅に出る', cat:'trip', k:'date', s:iso(n1+1,8,1), e:iso(n1+1,8,31)},
+    {t:'計画を見直す', cat:'work', k:'year', s:String(TODAY.y+10)},
+    {t:'60歳の棚卸し', cat:'mark', k:'year', s:String(b.y+60)}
+  ];
+  add.forEach(function(p){ p.id=uid(); DB.plans.push(p); });
+  refresh();
+}
+
+/* ══ 操作 ═══════════════════════════════════════════════════════════════ */
+var scroller=$('scroller');
+function cellAt(ev,cv){
+  var b=cv.getBoundingClientRect();
+  return {c:Math.floor((ev.clientX-b.left)/G.cw), r:Math.floor((ev.clientY-b.top)/G.rh)};
+}
+cvG.addEventListener('mousemove',function(ev){
+  var p=cellAt(ev,cvG);
+  if(p.r<0||p.r>=NY||p.c<0||p.c>=G.cols){ hideTip(); if(hoverCell){hoverCell=null;drawOverlay();} return; }
+  if(!hoverCell||hoverCell.r!==p.r||hoverCell.c!==p.c){ hoverCell=p; drawOverlay(); }
+  showTip(ev, tipHTML(cellInfo(p.r,p.c)));
+});
+cvG.addEventListener('mouseleave',function(){ hideTip(); hoverCell=null; drawOverlay(); });
+cvG.addEventListener('click',function(ev){
+  var p=cellAt(ev,cvG);
+  if(p.r<0||p.r>=NY||p.c<0||p.c>=G.cols) return;
+  openCell(p.r,p.c);
+});
+cvG.addEventListener('dblclick',function(ev){
+  var p=cellAt(ev,cvG), info=cellInfo(p.r,p.c);
+  if(!info||info.kind!=='day') return;
+  openModal(null,{date:iso(info.y,info.m,info.d)});
+});
+cvL.addEventListener('mousemove',function(ev){
+  var b=cvL.getBoundingClientRect(), r=Math.floor((ev.clientY-b.top)/G.rh), x=ev.clientX-b.left;
+  var cx=G.padL+G.yearW+G.gapA+G.ageW+G.gapY;
+  if(r<0||r>=NY||x<cx||x>cx+G.ycw){ hideTip(); return; }
+  var y=DB.y0+r, ps=plansInYearOnly(y);
+  var ag=ageInYear(DB.birth,y);
+  var h='<div><b>'+y+'年（年のみ）</b></div><div class="td">月日を決めていないプラン'+(ag!==null?'・'+ag+'歳':'')+'</div>';
+  for(var i=0;i<Math.min(ps.length,5);i++){
+    var cc=catOf(ps[i].cat);
+    h+='<div class="ti"><span class="dot" style="background:'+cc.color+'"></span>'+esc(ps[i].t)+'</div>';
+  }
+  if(!ps.length) h+='<div class="more">まだ無い</div>';
+  if(ps.length>5) h+='<div class="more">ほか '+(ps.length-5)+' 件</div>';
+  showTip(ev,h);
+});
+cvL.addEventListener('mouseleave',hideTip);
+cvL.addEventListener('click',function(ev){
+  var b=cvL.getBoundingClientRect(), r=Math.floor((ev.clientY-b.top)/G.rh);
+  if(r<0||r>=NY) return;
+  openYear(r);
+});
+cvL.addEventListener('dblclick',function(ev){
+  var b=cvL.getBoundingClientRect(), r=Math.floor((ev.clientY-b.top)/G.rh);
+  if(r<0||r>=NY) return;
+  openModal(null,{year:DB.y0+r});
+});
+
+document.addEventListener('click',function(ev){
+  var btn=ev.target.closest?ev.target.closest('[data-act]'):null;
+  if(!btn) return;
+  var row=btn.closest('.prow'); if(!row) return;
+  var p=findPlan(row.getAttribute('data-id')); if(!p) return;
+  if(btn.getAttribute('data-act')==='done'){ p.done=!p.done; refresh(); }
+  else openModal(p);
+});
+
+$('segUnit').addEventListener('click',function(ev){
+  var b=ev.target.closest('button'); if(!b) return;
+  DB.ui.unit=b.getAttribute('data-u');
+  [].forEach.call(this.children,function(x){ x.setAttribute('aria-pressed', String(x===b)); });
+  $('unitHint').textContent=UNITHINT[DB.ui.unit];
+  sel=null; selCell=null; hoverCell=null; renderPanel();
+  refresh();
+});
+$('segPaint').addEventListener('click',function(ev){
+  var b=ev.target.closest('button'); if(!b) return;
+  DB.ui.paint=b.getAttribute('data-p');
+  [].forEach.call(this.children,function(x){ x.setAttribute('aria-pressed', String(x===b)); });
+  refresh();
+});
+$('btnZoom').addEventListener('click',function(){
+  DB.ui.zoom=(DB.ui.zoom+1)%3;
+  this.textContent=['マスを拡大','さらに拡大','マスを縮小'][DB.ui.zoom];
+  refresh();
+});
+$('showDone').addEventListener('change',function(){ DB.ui.showDone=this.checked; refresh(); });
+$('catBar').addEventListener('click',function(ev){
+  var b=ev.target.closest('.cbtn'); if(!b) return;
+  var id=b.getAttribute('data-cat');
+  if(DB.ui.off[id]) delete DB.ui.off[id]; else DB.ui.off[id]=1;
+  refresh();
+});
+$('btnTheme').addEventListener('click',function(){
+  DB.ui.theme = DB.ui.theme==='dark'?'light':'dark';
+  applyTheme(); refreshColors(); refresh();
+});
+function applyTheme(){
+  if(DB.ui.theme==='dark') document.documentElement.setAttribute('data-theme','dark');
+  else document.documentElement.removeAttribute('data-theme');
+}
+$('btnAdd').addEventListener('click',function(){ openModal(null,null); });
+$('dpAdd').addEventListener('click',function(){
+  if(!sel) return;
+  if(sel.type==='year') openModal(null,{year:sel.y});
+  else if(sel.info.kind==='day') openModal(null,{date:iso(sel.info.y,sel.info.m,sel.info.d)});
+  else openModal(null,{date:iso(sel.info.y,sel.info.from.m,sel.info.from.d),
+                       end:iso(sel.info.y,sel.info.to.m,sel.info.to.d)});
+});
+$('dpClose').addEventListener('click',function(){ sel=null; selCell=null; drawOverlay(); renderPanel(); });
+$('mCancel').addEventListener('click',closeModal);
+$('mSave').addEventListener('click',saveModal);
+$('mDel').addEventListener('click',function(){
+  if(editing && confirm('このプランを消す。')){ delPlan(editing); closeModal(); }
+});
+$('fKind').addEventListener('change',syncKind);
+$('fBr').addEventListener('change',syncBr);
+$('brOnly').addEventListener('change',function(){ DB.ui.brOnly=this.checked; refresh(); });
+$('fRep').addEventListener('change',syncKind);
+mask.addEventListener('click',function(ev){ if(ev.target===mask) closeModal(); });
+$('fTitle').addEventListener('keydown',function(ev){ if(ev.key==='Enter'){ ev.preventDefault(); saveModal(); } });
+
+$('btnToday').addEventListener('click',goToday);
+function goToday(){
+  if(TODAY.y<DB.y0||TODAY.y>DB.y1){ alert('今年は表示している範囲の外にある。'); return; }
+  var r=TODAY.y-DB.y0, c=colOfDay(colOf(TODAY.m,TODAY.d));
+  var target=G.leftW+c*G.cw-scroller.clientWidth/2;
+  scroller.scrollLeft=Math.max(0,target);
+  openCell(r,c);
+  $('daypanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+$('btnSetup').addEventListener('click',openSetup);
+$('sCancel').addEventListener('click',function(){ smask.classList.remove('on'); });
+$('sSave').addEventListener('click',saveSetup);
+smask.addEventListener('click',function(ev){ if(ev.target===smask) smask.classList.remove('on'); });
+$('btnExport').addEventListener('click',doExport);
+$('btnImport').addEventListener('click',function(){ $('fileIn').click(); });
+$('fileIn').addEventListener('change',function(){ if(this.files&&this.files[0]) doImport(this.files[0]); this.value=''; });
+$('btnSample').addEventListener('click',addSample);
+$('btnClear').addEventListener('click',function(){
+  if(!DB.plans.length){ alert('消すものが無い。'); return; }
+  if(confirm('登録した '+DB.plans.length+' 件を全部消す。元に戻せない。')){
+    DB.plans=[]; sel=null; selCell=null; renderPanel(); refresh();
+  }
+});
+document.addEventListener('keydown',function(ev){
+  if(ev.key==='Escape'){
+    if(mask.classList.contains('on')) closeModal();
+    else if(smask.classList.contains('on')) smask.classList.remove('on');
+    else if(sel){ sel=null; selCell=null; drawOverlay(); renderPanel(); }
+    return;
+  }
+  var t=ev.target.tagName;
+  if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT') return;
+  if(ev.key==='n'||ev.key==='N'){ ev.preventDefault(); openModal(null,null); }
+  else if(ev.key==='t'||ev.key==='T'){ ev.preventDefault(); goToday(); }
+});
+window.addEventListener('resize',function(){ hideTip(); });
+
+/* ══ 起動 ═══════════════════════════════════════════════════════════════ */
+load();
+applyTheme();
+refreshColors();
+fillCatSelect();
+$('showDone').checked=DB.ui.showDone;
+$('brOnly').checked=!!DB.ui.brOnly;
+$('btnZoom').textContent=['マスを拡大','さらに拡大','マスを縮小'][DB.ui.zoom];
+$('unitHint').textContent=UNITHINT[DB.ui.unit];
+[].forEach.call($('segUnit').children,function(x){ x.setAttribute('aria-pressed', String(x.getAttribute('data-u')===DB.ui.unit)); });
+[].forEach.call($('segPaint').children,function(x){ x.setAttribute('aria-pressed', String(x.getAttribute('data-p')===DB.ui.paint)); });
+$('rangeTxt').textContent=DB.y0+' — '+DB.y1+'年';
+$('rangeSub').textContent=rangeSub();
+refresh();
+if(TODAY.y>=DB.y0&&TODAY.y<=DB.y1){
+  var tc=colOfDay(colOf(TODAY.m,TODAY.d)), tx=G.leftW+tc*G.cw;
+  if(tx > scroller.clientWidth-70) scroller.scrollLeft=Math.max(0,tx-scroller.clientWidth/2);
+}
+})();
+</script>
+</body>
+</html>

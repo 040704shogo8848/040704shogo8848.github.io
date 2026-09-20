@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>いわき市 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / いわき市</p>
+
+<header class="top">
+  <div>
+    <h1>いわき市 / Iwaki</h1>
+    <div class="meta">福島県 / 浜通り　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">常磐炭田の最後の炭鉱が閉じたのは1976年で、市の人口がピークを打ったのはその22年後の1998年である。閉山の年に開いていたハワイアンセンターは10年前の1966年に始まっていた。製造品出荷額等1兆730億円は福島県全体の19.0%を占め、県2位の郡山市の1.52倍にあたる。</p>
+<p><span class="tag">常磐炭田</span><span class="tag">ハワイアンズ</span><span class="tag">小名浜港</span><span class="tag">化学</span><span class="tag">原発事故</span></p>
+
+<div class="kpi"><div class="card"><div class="k">人口</div><div class="v">309,658人 <small>2026年9月1日・現住人口</small></div></div><div class="card"><div class="k">面積</div><div class="v">1,232.51 km² <small>2025年7月1日</small></div></div><div class="card"><div class="k">製造品出荷額等</div><div class="v">1兆730.5億円 <small>2023年・従業者4人以上</small></div></div><div class="card"><div class="k">財政力指数</div><div class="v">0.78 <small>2024年度</small></div></div></div>
+<iframe class="map" loading="lazy" title="いわき市の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=140.6078,36.9105,141.1678,37.1905&amp;layer=mapnik&amp;marker=37.0505,140.8878"></iframe>
+
+<h2><span class="num">01</span>市としての特徴<span class="en">Profile</span></h2>
+<p><strong>炭鉱で始まり、炭鉱が終わってから22年間人口が増え続けた市である。福島県の製造業の5分の1がここにある。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>属性</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>位置</td>
+<td>福島県の南東端。<strong>東西39km、南北51.5km</strong>、太平洋に約60kmの海岸線を持つ。田村市・双葉郡（広野町・楢葉町・川内村）・石川郡・東白川郡、および茨城県北茨城市が隣接する</td>
+</tr>
+<tr>
+<td>面積</td>
+<td>1,232.51km²。<strong>福島県内最大</strong>で、全国の市区町村でも上位に入る</td>
+</tr>
+<tr>
+<td>地形</td>
+<td>西の阿武隈高地（標高500-700m）から東の太平洋へ下る。夏井川・鮫川が流れる。阿武隈高地が市域を分けるため、<strong>市街地が一つにまとまらず複数の核に分かれている</strong></td>
+</tr>
+<tr>
+<td>成り立ち</td>
+<td><strong>1966年10月1日、5市4町3村と双葉郡2町村の計14自治体が合併</strong>し、当時として日本一広い市になった</td>
+</tr>
+<tr>
+<td>産業構造</td>
+<td>製造業では化学が最大。ほかに情報通信機械、パルプ・紙、金属製品、非鉄金属、輸送用機械</td>
+</tr>
+<tr>
+<td>港湾</td>
+<td>小名浜港（重要港湾、<strong>2011年5月に国際バルク戦略港湾（石炭）に選定</strong>）。2023年の総貨物量1,502万トン</td>
+</tr>
+<tr>
+<td>財政</td>
+<td>財政力指数0.78、経常収支比率94.8%、実質公債費比率7.1%（2024年度）</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>面積1,232.51km²は東京23区（約628km²）のほぼ2倍にあたる。<strong>市街地が一つにまとまっていないのは合併の結果ではなく地形の結果で</strong>、平・小名浜・湯本・勿来・内郷がそれぞれ独立した中心を持つ。市の中心地を1点で指せない構造は、公共交通と商業の効率を今も制約している。</p></div>
+<h2><span class="num">02</span>経済規模と産業構造<span class="en">Economy</span></h2>
+<h3>業種別の構成（2023年・従業者4人以上）</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>業種</th>
+<th>事業所数</th>
+<th>従業者数</th>
+<th>出荷額</th>
+<th>構成比</th>
+</tr></thead><tbody>
+<tr>
+<td>総数</td>
+<td class="num">548</td>
+<td>24,312人</td>
+<td><strong>1兆730.5億円</strong></td>
+<td class="num">100%</td>
+</tr>
+<tr>
+<td>化学</td>
+<td class="num">37</td>
+<td>3,707人</td>
+<td>2,587.5億円</td>
+<td class="num">24.1%</td>
+</tr>
+<tr>
+<td>情報通信機械</td>
+<td class="num">5</td>
+<td>2,440人</td>
+<td>1,668.5億円</td>
+<td class="num">15.6%</td>
+</tr>
+<tr>
+<td>パルプ・紙</td>
+<td class="num">20</td>
+<td>1,200人</td>
+<td>1,033.8億円</td>
+<td class="num">9.6%</td>
+</tr>
+<tr>
+<td>金属製品</td>
+<td class="num">73</td>
+<td>2,515人</td>
+<td>822.6億円</td>
+<td class="num">7.7%</td>
+</tr>
+<tr>
+<td>非鉄金属</td>
+<td class="num">9</td>
+<td>795人</td>
+<td>559.3億円</td>
+<td class="num">5.2%</td>
+</tr>
+<tr>
+<td>輸送用機械</td>
+<td class="num">13</td>
+<td>1,356人</td>
+<td>551.3億円</td>
+<td class="num">5.1%</td>
+</tr>
+<tr>
+<td>窯業・土石</td>
+<td class="num">41</td>
+<td>1,238人</td>
+<td>485.8億円</td>
+<td class="num">4.5%</td>
+</tr>
+<tr>
+<td>食料品</td>
+<td class="num">70</td>
+<td>2,037人</td>
+<td>470.4億円</td>
+<td class="num">4.4%</td>
+</tr>
+<tr>
+<td>電気機械</td>
+<td class="num">24</td>
+<td>1,307人</td>
+<td>389.5億円</td>
+<td class="num">3.6%</td>
+</tr>
+<tr>
+<td>電子部品</td>
+<td class="num">27</td>
+<td>1,427人</td>
+<td>297.8億円</td>
+<td class="num">2.8%</td>
+</tr>
+<tr>
+<td>家具</td>
+<td class="num">16</td>
+<td>773人</td>
+<td>289.4億円</td>
+<td class="num">2.7%</td>
+</tr>
+<tr>
+<td>木材</td>
+<td class="num">33</td>
+<td>837人</td>
+<td>285.9億円</td>
+<td class="num">2.7%</td>
+</tr>
+<tr>
+<td>生産用機械</td>
+<td class="num">43</td>
+<td>1,240人</td>
+<td>267.8億円</td>
+<td class="num">2.5%</td>
+</tr>
+</tbody></table></div>
+<h3>福島県内の位置</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>順位</th>
+<th>市町村</th>
+<th>事業所数</th>
+<th>従業者数</th>
+<th>製造品出荷額等</th>
+</tr></thead><tbody>
+<tr>
+<td class="num">1</td>
+<td><strong>いわき市</strong></td>
+<td class="num">548</td>
+<td>24,312人</td>
+<td><strong>1兆730.5億円</strong></td>
+</tr>
+<tr>
+<td class="num">2</td>
+<td>郡山市</td>
+<td class="num">388</td>
+<td>17,752人</td>
+<td>7,068.5億円</td>
+</tr>
+<tr>
+<td class="num">3</td>
+<td>福島市</td>
+<td class="num">299</td>
+<td>16,568人</td>
+<td>4,743.0億円</td>
+</tr>
+<tr>
+<td class="num">4</td>
+<td>白河市</td>
+<td class="num">139</td>
+<td>7,153人</td>
+<td>3,809.0億円</td>
+</tr>
+<tr>
+<td class="num">5</td>
+<td>相馬市</td>
+<td class="num">61</td>
+<td>3,599人</td>
+<td>3,277.9億円</td>
+</tr>
+<tr>
+<td class="num">11</td>
+<td>伊達市</td>
+<td class="num">121</td>
+<td>4,049人</td>
+<td>1,393.6億円</td>
+</tr>
+<tr>
+<td>—</td>
+<td>福島県計</td>
+<td class="num">3,255</td>
+<td>151,361人</td>
+<td>5兆6,345億円</td>
+</tr>
+</tbody></table></div>
+<p>いわき市は県の製造品出荷額等の<strong>19.0%</strong>、従業者の16.1%を占める。県2位の郡山市の1.52倍で、県庁所在地の福島市の2.26倍にあたる。</p>
+<div class="callout"><p>本サイトで扱った東北の工業都市と並べると桁が違う。<strong>いわき1兆730.5億円、北上6,424.7億円、八戸5,721億円、花巻2,442.4億円、盛岡1,227.0億円。</strong>いわき1市で盛岡の8.7倍を出している。炭鉱が閉じた市がこの規模になったのは、閉山の前から次の産業の誘致が始まっていたためである。</p></div>
+<div class="risk"><p>情報通信機械は<strong>5事業所に2,440人</strong>が集まり、出荷額の15.6%を出す。1事業所当たり488人で、市の平均44.4人の11.0倍になる。この分類の縮小や移転が起きたとき、代替する受け皿は市内にない。化学の24.1%と合わせて、<strong>上位2業種で出荷額の39.7%</strong>を占める。</p></div>
+<h2><span class="num">03</span>人口推移<span class="en">Population</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年次</th>
+<th>人口</th>
+<th>前回比</th>
+</tr></thead><tbody>
+<tr>
+<td>1970年</td>
+<td>327,164人</td>
+<td>—</td>
+</tr>
+<tr>
+<td>1980年</td>
+<td>342,074人</td>
+<td class="num">+4.6%</td>
+</tr>
+<tr>
+<td>1990年</td>
+<td>355,812人</td>
+<td class="num">+4.0%</td>
+</tr>
+<tr>
+<td><strong>1998年</strong></td>
+<td><strong>約361,934人（ピーク）</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>2000年</td>
+<td>360,138人</td>
+<td class="num">+1.2%</td>
+</tr>
+<tr>
+<td>2010年</td>
+<td>342,249人</td>
+<td class="num">-5.0%</td>
+</tr>
+<tr>
+<td>2020年</td>
+<td>332,931人</td>
+<td class="num">-2.7%</td>
+</tr>
+<tr>
+<td>2026年9月（現住人口）</td>
+<td><strong>309,658人</strong></td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<p>世帯数は141,218（2026年9月1日）。</p>
+<div class="risk"><p><strong>2020年の国勢調査から2026年9月までの6年弱で23,273人、7.0%減っている。</strong>1990年代までは10年で4%増えていた市が、いまは6年で7%減っている。ピークの1998年からは14.4%減。震災後に双葉郡から約24,000人が避難先として定住し、その分が一時的に減少を打ち消していたが、その効果はすでに一巡している。</p></div>
+<h3>常磐炭田の規模と閉山</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>数値</th>
+<th>時点</th>
+</tr></thead><tbody>
+<tr>
+<td>炭田の範囲</td>
+<td>福島県富岡町から茨城県日立市北部まで南北約95km、幅5-25km</td>
+<td>—</td>
+</tr>
+<tr>
+<td>炭鉱数</td>
+<td>最盛期に130以上</td>
+<td>—</td>
+</tr>
+<tr>
+<td>年間産炭量</td>
+<td><strong>420万トン（全国の約1割）</strong></td>
+<td>最盛期</td>
+</tr>
+<tr>
+<td>炭鉱数・就業者</td>
+<td>83坑、約22,000人</td>
+<td>1951年</td>
+</tr>
+<tr>
+<td>完全閉山</td>
+<td><strong>常磐炭砿西部鉱業所の閉山で120年の歴史が終わる</strong></td>
+<td>1976年9月1日</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">04</span>日本の大企業との関連<span class="en">Corporate Links</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>企業</th>
+<th>いわきとの関係</th>
+</tr></thead><tbody>
+<tr>
+<td>日産自動車</td>
+<td>いわき工場でエンジンを生産</td>
+</tr>
+<tr>
+<td>日本製紙</td>
+<td>勿来工場。02のパルプ・紙1,033.8億円の主要部分を占める</td>
+</tr>
+<tr>
+<td>三菱ケミカル</td>
+<td>小名浜の化学工場群の一角</td>
+</tr>
+<tr>
+<td>クリナップ</td>
+<td>本社機能と工場。システムキッチン</td>
+</tr>
+<tr>
+<td>常磐興産</td>
+<td>スパリゾートハワイアンズを運営。旧・常磐炭砿の事業転換で生まれた会社</td>
+</tr>
+<tr>
+<td>東京電力</td>
+<td>福島第一原子力発電所は市の北約40km。<strong>廃炉関連の受注が市内企業に入っているが、市内受注額の集計は確認できずN/A</strong></td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">05</span>出身の有名人<span class="en">People</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>人物</th>
+<th>関係</th>
+</tr></thead><tbody>
+<tr>
+<td>草野心平</td>
+<td>1903年上小川村（現・いわき市小川町）生。詩人。<strong>宮沢賢治を死後に世に出した最大の功労者</strong>で、1925年創刊の詩誌『銅鑼』に賢治の作品を毎号載せた。いわき市立草野心平記念文学館がある</td>
+</tr>
+<tr>
+<td>志賀理江子</td>
+<td>1980年生の写真家。市内で活動</td>
+</tr>
+<tr>
+<td>猪狩ともか</td>
+<td>1988年生。アイドルグループ「仮面女子」</td>
+</tr>
+<tr>
+<td>西内まりや</td>
+<td>1993年生。モデル・俳優</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>草野心平がいわき出身で、宮沢賢治が花巻出身である。</strong>今回の東北の行程で言えば、賢治を書いた人と賢治を世に出した人が、同じ旅程の両端にいる。花巻の宮沢賢治記念館といわきの草野心平記念文学館は、同じ一つの出来事を別の側から展示している。</p></div>
+<h2><span class="num">06</span>食<span class="en">Food</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>対象</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>メヒカリ</td>
+<td>いわき市の魚。深海性のアオメエソ。唐揚げが定番</td>
+</tr>
+<tr>
+<td>カツオ</td>
+<td>小名浜港の水揚げ。初鰹の北限に近い</td>
+</tr>
+<tr>
+<td>ウニの貝焼き</td>
+<td>ムラサキウニをホッキ貝の殻に盛って蒸す。浜通りの保存食</td>
+</tr>
+<tr>
+<td>じゃんがら念仏踊り</td>
+<td>食ではないが盆の行事。菓子「じゃんがら」の名の由来</td>
+</tr>
+<tr>
+<td>いわき ねぎ・トマト</td>
+<td>日照時間の長さを生かした施設園芸</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">07</span>観光スポット<span class="en">Places</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>場所</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>スパリゾートハワイアンズ</td>
+<td><strong>1966年1月に常磐ハワイアンセンターとして開業。</strong>2006年の映画『フラガール』の舞台。炭鉱の坑内から出る温泉を熱源に使った</td>
+</tr>
+<tr>
+<td>アクアマリンふくしま</td>
+<td>2000年7月15日開館の水族館。潮目をテーマにした大水槽</td>
+</tr>
+<tr>
+<td>いわき湯本温泉</td>
+<td>奈良時代からの記録がある古湯。炭鉱の湧水処理と温泉は同じ地下水系を共有していた</td>
+</tr>
+<tr>
+<td>白水阿弥陀堂</td>
+<td>1160年建立。<strong>福島県唯一の国宝建造物</strong></td>
+</tr>
+<tr>
+<td>塩屋埼灯台</td>
+<td>1899年初点灯。美空ひばりの歌碑がある</td>
+</tr>
+<tr>
+<td>いわき市石炭・化石館ほるる</td>
+<td>炭鉱の坑道再現とフタバスズキリュウの化石</td>
+</tr>
+<tr>
+<td>草野心平記念文学館</td>
+<td>1998年開館</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">08</span>閉山から22年後のピーク<span class="en">The Long Handover</span></h2>
+<p>炭鉱都市の多くは、閉山と人口ピークの時間差で性格が分かれる。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>都市</th>
+<th>閉山（終業）</th>
+<th>人口ピーク</th>
+<th>差</th>
+<th>ピークからの減少率</th>
+</tr></thead><tbody>
+<tr>
+<td>夕張市</td>
+<td>1990年</td>
+<td>1960年</td>
+<td>ピークが<strong>30年前</strong></td>
+<td class="num">-95.2%</td>
+</tr>
+<tr>
+<td>大牟田市</td>
+<td>1997年</td>
+<td>1959年</td>
+<td>ピークが<strong>38年前</strong></td>
+<td class="num">-46.7%</td>
+</tr>
+<tr>
+<td><strong>いわき市</strong></td>
+<td><strong>1976年</strong></td>
+<td><strong>1998年</strong></td>
+<td><strong>ピークが22年後</strong></td>
+<td><strong>-14.4%</strong></td>
+</tr>
+</tbody></table></div>
+<p>夕張と大牟田では、人口が減り始めてから何十年も後に炭鉱が閉じた。閉山は最後の一押しで、街の縮小はとっくに始まっていた。いわきは逆で、<strong>閉山から22年間、人口が増え続けた。</strong></p>
+<p>その22年に何があったか。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年</th>
+<th>出来事</th>
+</tr></thead><tbody>
+<tr>
+<td>1966年1月</td>
+<td>常磐湯本温泉観光が<strong>常磐ハワイアンセンター</strong>を開業。炭鉱の坑内から湧く温泉を熱源にした</td>
+</tr>
+<tr>
+<td>1966年10月1日</td>
+<td><strong>14市町村が合併</strong>していわき市が発足。企業誘致の受け皿となる広大な市域と、5つの市街地を一つの自治体に束ねた</td>
+</tr>
+<tr>
+<td>1976年9月1日</td>
+<td>常磐炭砿西部鉱業所が閉山。福島県側の炭鉱120年が終わる</td>
+</tr>
+<tr>
+<td>1970-80年代</td>
+<td>小名浜臨海工業団地・中部工業団地などへの誘致が進む</td>
+</tr>
+<tr>
+<td>1998年</td>
+<td>人口ピーク 約361,934人</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>いわきの転換が効いたのは、閉山の10年前に次の事業を始めていたからである。</strong>ハワイアンセンターは炭鉱会社が自分の資本で建てた事業で、熱源も坑内水、従業員も炭鉱離職者の家族だった。閉山後に代替産業を探したのではなく、閉山前に炭鉱の資産を別用途に付け替えた。合併も同じ年に起き、誘致の主体と用地を先に用意している。</p></div>
+<p>ただし現在の減り方は、この成功の上に乗っていない。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>数値</th>
+</tr></thead><tbody>
+<tr>
+<td>2020年国勢調査からの減少</td>
+<td><strong>6年弱で23,273人、7.0%減</strong></td>
+</tr>
+<tr>
+<td>ピーク（1998年）からの減少</td>
+<td>14.4%減</td>
+</tr>
+<tr>
+<td>上位2業種の出荷額シェア</td>
+<td>化学24.1%＋情報通信機械15.6%＝<strong>39.7%</strong></td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p>1966年の転換は、炭鉱という単一産業から観光と誘致工場への分散だった。2023年の構成は、化学と情報通信機械の2業種に出荷額の39.7%が集まっている。<strong>分散して立ち直った市が、半世紀かけてまた集中に戻っている。</strong>震災と原発事故による双葉郡からの流入は人口の減り方を10年ほど遅らせたが、その分の効果は終わっている。</p></div>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>いわき市「いわき市のプロフィール」（人口309,658人、世帯141,218／2026年9月1日現在、面積1,232.51km²／2025年7月1日現在、位置） — https://www.city.iwaki.lg.jp/www/contents/1001000004062/index.html</li>
+  <li>いわき市「いわき市の現住人口」（現住人口調査の算出方法、年度別結果表） — https://www.city.iwaki.lg.jp/www/contents/1454979811439/index.html</li>
+  <li>福島県「令和5年福島県の工業（2024年経済構造実態調査 製造業事業所調査 福島県版集計）」統計表VI部・表16 市町村別産業中分類別（いわき市548事業所・24,312人・出荷額107,304,629万円、郡山市388事業所・7,068.5億円、福島市299事業所・4,743.0億円、伊達市121事業所・1,393.6億円、県計3,255事業所・151,361人・5兆6,345億円） — https://www.pref.fukushima.lg.jp/sec/11045b/r5kougyou.html</li>
+  <li>自治体財政カルテ「いわき市の財政状況（令和6年度）」（財政力指数0.78、経常収支比率94.8%、実質公債費比率7.1%） — https://zaisei-karte.jp/072044</li>
+  <li>Wikipedia「いわき市」（面積1,231.85km²、国勢調査人口1970-2020年、ピーク1998年約361,934人、1966年10月1日の14市町村合併、常磐炭砿1976年9月1日完全閉山、小名浜港2023年総貨物量1,502万トン、震災の全半壊約4万戸、双葉郡から約24,000人が定住、スパリゾートハワイアンズ1966年開業、アクアマリンふくしま2000年7月15日開館） — https://ja.wikipedia.org/wiki/いわき市</li>
+  <li>日本経済新聞「福島・いわき市 殖産興業支えた常磐炭田」2013年3月（炭田の範囲 南北約95km・幅5-25km、最盛期130以上の炭鉱、年産420万トンで全国の1割、1976年の西部鉱業所閉山で120年） — https://www.nikkei.com/article/DGXDZO52753280T10C13A3EL1P01/</li>
+  <li>いわきヘリテージツーリズム協議会「常磐炭田の歴史」（1951年に炭坑83・就業約22,000人） — https://www.i-heritage.jp/history.html</li>
+  <li>国土交通省「小名浜港国際バルク戦略港湾」（2011年5月に国際バルク戦略港湾（石炭）に選定、東港地区国際物流ターミナル2022年6月本格供用） — https://www.mlit.go.jp/common/000122390.pdf</li>
+  <li>本サイト「夕張市」「大牟田市」「北上市」「八戸市」「盛岡市」「花巻市」の各ページ（比較に用いた閉山年・人口ピーク・製造品出荷額等）</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく地域リサーチであり、投資助言ではない。製造品出荷額等は2024年経済構造実態調査（2023年実績）の福島県版集計で、従業者4人以上の事業所が対象。工業統計調査とは接続しない。業種別の一部にX（秘匿）があり構成比の合計は100%にならない。東北地方の市町村のなかでの製造品出荷額の順位は仙台市の同年比較値を確認できずN/Aとした。市内総生産、震災の死者数の確定値、小名浜港の2024年以降の取扱量、廃炉関連の市内受注額はいずれも確認できずN/Aとした。構成比・増減率は本ページによる算出値。座標は市役所位置の概数である。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "人口（現住人口）",
+  "value": 309658,
+  "unit": "人",
+  "as_of": "2026-09-01",
+  "source": "https://www.city.iwaki.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "世帯数",
+  "value": 141218,
+  "unit": "世帯",
+  "as_of": "2026-09-01",
+  "source": "https://www.city.iwaki.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（国勢調査）",
+  "value": 332931,
+  "unit": "人",
+  "as_of": "2020",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口ピーク",
+  "value": 361934,
+  "unit": "人",
+  "as_of": "1998",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "single-source"
+ },
+ {
+  "claim": "ピークからの人口減少率",
+  "value": 14.4,
+  "unit": "%",
+  "as_of": "2026-09",
+  "source": "https://www.city.iwaki.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "2020年国勢調査からの減少率",
+  "value": 7.0,
+  "unit": "%",
+  "as_of": "2026-09",
+  "source": "https://www.city.iwaki.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "面積",
+  "value": 1232.51,
+  "unit": "km2",
+  "as_of": "2025-07-01",
+  "source": "https://www.city.iwaki.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造品出荷額等",
+  "value": 10730.5,
+  "unit": "億円",
+  "as_of": "2023",
+  "source": "https://www.pref.fukushima.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造業 従業者数",
+  "value": 24312,
+  "unit": "人",
+  "as_of": "2023",
+  "source": "https://www.pref.fukushima.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "福島県内シェア（製造品出荷額等）",
+  "value": 19.0,
+  "unit": "%",
+  "as_of": "2023",
+  "source": "https://www.pref.fukushima.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "上位2業種の出荷額シェア",
+  "value": 39.7,
+  "unit": "%",
+  "as_of": "2023",
+  "source": "https://www.pref.fukushima.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "財政力指数",
+  "value": 0.78,
+  "unit": "",
+  "as_of": "2024年度",
+  "source": "https://zaisei-karte.jp/072044",
+  "confidence": "reported"
+ },
+ {
+  "claim": "常磐炭田 最盛期の年産炭量",
+  "value": 420,
+  "unit": "万トン",
+  "as_of": "最盛期",
+  "source": "https://www.nikkei.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "常磐炭田 炭鉱就業者",
+  "value": 22000,
+  "unit": "人",
+  "as_of": "1951",
+  "source": "https://www.i-heritage.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "完全閉山",
+  "value": 1976,
+  "unit": "年",
+  "as_of": "1976-09-01",
+  "source": "https://www.nikkei.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "常磐ハワイアンセンター開業",
+  "value": 1966,
+  "unit": "年",
+  "as_of": "1966-01",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "閉山から人口ピークまでの年数",
+  "value": 22,
+  "unit": "年",
+  "as_of": "1998",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "合併自治体数",
+  "value": 14,
+  "unit": "自治体",
+  "as_of": "1966-10-01",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "小名浜港 総貨物量",
+  "value": 1502,
+  "unit": "万トン",
+  "as_of": "2023",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "双葉郡からの定住者",
+  "value": 24000,
+  "unit": "人",
+  "as_of": "2020年代",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "estimated"
+ }
+]
+</script>
+</body>
+</html>

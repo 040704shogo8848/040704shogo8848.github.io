@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>上北郡 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / 上北郡</p>
+
+<header class="top">
+  <div>
+    <h1>上北郡 / Kamikita District</h1>
+    <div class="meta">青森県 / 上北　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">6町1村で人口85,541人。1969年の新全総が日産200万バレルの製油所と年400万トンの石油化学を置くと決めた土地が、この郡にある。来たのは核燃料サイクルと国家石油備蓄570万klだった。同じ新全総で同じ用途を割り当てられた北海道の苫東は、1,213億円の債権放棄を経て第三セクターが清算された。</p>
+<p><span class="tag">むつ小川原開発</span><span class="tag">国家石油備蓄</span><span class="tag">核燃料サイクル</span><span class="tag">苫東</span><span class="tag">小川原湖</span></p>
+
+<div class="kpi"><div class="card"><div class="k">人口</div><div class="v">85,541人 <small>2026年8月1日・推計人口</small></div></div><div class="card"><div class="k">面積</div><div class="v">1,280.22 km² <small>人口密度66.8人/km²</small></div></div><div class="card"><div class="k">構成</div><div class="v">6町1村 <small>野辺地・七戸・六戸・横浜・東北・おいらせ／六ヶ所村</small></div></div><div class="card"><div class="k">国家石油備蓄</div><div class="v">570万kl <small>むつ小川原・六ヶ所村</small></div></div></div>
+<iframe class="map" loading="lazy" title="上北郡の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=140.96,40.73,141.52,41.01&amp;layer=mapnik&amp;marker=40.8700,141.2400"></iframe>
+
+<h2><span class="num">01</span>郡としての特徴<span class="en">Profile</span></h2>
+<p><strong>青森県の太平洋側、下北半島の付け根にあたる。国が1969年に「日本最大級の工業基地」を置くと決めた場所で、結果として来たのは原子力と石油備蓄だった。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>属性</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>構成</td>
+<td><strong>6町1村</strong>。野辺地町・七戸町・六戸町・横浜町・東北町・おいらせ町、および六ヶ所村</td>
+</tr>
+<tr>
+<td>人口</td>
+<td>85,541人、37,655世帯（2026年8月1日）</td>
+</tr>
+<tr>
+<td>面積</td>
+<td>1,280.22km²。人口密度66.8人/km²</td>
+</tr>
+<tr>
+<td>成立</td>
+<td>1878年に郡として成立。<strong>現在の三沢市と十和田市ももとは上北郡に属していた</strong></td>
+</tr>
+<tr>
+<td>縮小の経緯</td>
+<td>2005年1月に十和田湖町が十和田市と合併して郡を離れ、2006年3月に下田町と百石町が合併しておいらせ町になった</td>
+</tr>
+<tr>
+<td>地形</td>
+<td>太平洋岸に<strong>小川原湖</strong>（汽水湖）と尾駮沼・鷹架沼。西に八甲田・奥羽の山地。海岸は砂丘と低湿地で、稲作に向かない土地が広がっていた</td>
+</tr>
+<tr>
+<td>位置づけ</td>
+<td>青森県の統計上は「上北地域」に十和田市・三沢市を加えて178,049人（2026年8月1日）</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>この土地が選ばれた理由は、人がいなかったことである。</strong>むつ小川原開発が構想された1960年代末、砂地で米が穫れず人口密度が低いことが、大規模開発の立地要件として評価された。開発計画が来たのは地域に力があったからではなく、地域に何もなかったからである。</p></div>
+<h2><span class="num">02</span>7町村の規模<span class="en">The Seven</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>町村</th>
+<th>人口</th>
+<th>世帯</th>
+<th>特徴</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>おいらせ町</strong></td>
+<td><strong>23,909人</strong></td>
+<td class="num">10,026</td>
+<td><strong>青森県の町村で最多。</strong>八戸市・三沢市のベッドタウン。2015年国勢調査の増加率は県内40市町村で2位。1970年17,036人→2020年24,273人</td>
+</tr>
+<tr>
+<td>東北町</td>
+<td>14,691人</td>
+<td class="num">5,899</td>
+<td>小川原湖の西岸。シジミ・シラウオ・ワカサギの漁場</td>
+</tr>
+<tr>
+<td>七戸町</td>
+<td>12,795人</td>
+<td class="num">5,310</td>
+<td><strong>東北新幹線七戸十和田駅</strong>（2010年開業）。馬産地</td>
+</tr>
+<tr>
+<td>野辺地町</td>
+<td>10,816人</td>
+<td class="num">5,138</td>
+<td>陸奥湾に面した旧南部藩の湊町。<strong>1893年5月造林の日本最初の鉄道防雪林</strong>（鉄道記念物第14号、約700本の杉が2km）</td>
+</tr>
+<tr>
+<td>六戸町</td>
+<td>9,848人</td>
+<td class="num">4,041</td>
+<td>三沢基地・八戸への通勤圏</td>
+</tr>
+<tr>
+<td><strong>六ヶ所村</strong></td>
+<td><strong>9,740人</strong></td>
+<td class="num">5,402</td>
+<td>核燃料サイクル施設、国家石油備蓄、核融合研究。財政力指数1.61で全国2位。[個別ページ](rokkasho.html)</td>
+</tr>
+<tr>
+<td>横浜町</td>
+<td>3,742人</td>
+<td class="num">1,839</td>
+<td>陸奥湾岸。<strong>菜の花の作付面積は2014年産128haで全国1位</strong>。現在も国内最大級</td>
+</tr>
+<tr>
+<td>計</td>
+<td>85,541人</td>
+<td class="num">37,655</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p><strong>7町村のうち増えているのはおいらせ町だけで、しかもその理由は八戸市・三沢市への通勤である。</strong>郡の人口の27.9%を1町が占め、その1町は郡内の産業ではなく郡外の都市に依存している。開発計画が置かれた六ヶ所村の人口は9,740人で、郡内5位にとどまる。</p></div>
+<h2><span class="num">03</span>人口<span class="en">Population</span></h2>
+<h3>2026年7月中の動き</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>郡計</th>
+</tr></thead><tbody>
+<tr>
+<td>出生</td>
+<td>22人</td>
+</tr>
+<tr>
+<td>死亡</td>
+<td>124人</td>
+</tr>
+<tr>
+<td>自然増減</td>
+<td><strong>-102人</strong></td>
+</tr>
+<tr>
+<td>転入</td>
+<td>241人</td>
+</tr>
+<tr>
+<td>転出</td>
+<td>212人</td>
+</tr>
+<tr>
+<td>社会増減</td>
+<td><strong>+29人</strong></td>
+</tr>
+<tr>
+<td>合計</td>
+<td>-73人</td>
+</tr>
+</tbody></table></div>
+<p>1か月で自然減102人に対し社会増29人。<strong>転入超過が出ていても、自然減がその3.5倍ある。</strong></p>
+<h3>六ヶ所村の男女比</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>区分</th>
+<th>男</th>
+<th>女</th>
+<th>男性比</th>
+</tr></thead><tbody>
+<tr>
+<td>上北郡 計</td>
+<td>42,194人</td>
+<td>43,347人</td>
+<td class="num">49.3%</td>
+</tr>
+<tr>
+<td><strong>六ヶ所村</strong></td>
+<td><strong>5,741人</strong></td>
+<td><strong>3,999人</strong></td>
+<td><strong>58.9%</strong></td>
+</tr>
+<tr>
+<td>青森県 計</td>
+<td>532,502人</td>
+<td>596,383人</td>
+<td class="num">47.2%</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>六ヶ所村だけ男性が女性より43.6%多い。</strong>郡の他の町村も県全体も女性が多いなかで、この村だけ逆転している。再処理工場・石油備蓄・建設工事に伴う単身の就業者が住民登録している構造を映している。人口9,740人という数字は、家族を含む定住人口としては読めない。</p></div>
+<h2><span class="num">04</span>むつ小川原開発の年表<span class="en">The Plan</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年</th>
+<th>出来事</th>
+</tr></thead><tbody>
+<tr>
+<td>1968年12月23日</td>
+<td>通商産業省が大規模工業基地構想を示す</td>
+</tr>
+<tr>
+<td><strong>1969年5月30日</strong></td>
+<td><strong>新全国総合開発計画（新全総）を閣議決定。</strong>むつ小川原を大規模工業基地に位置づける</td>
+</tr>
+<tr>
+<td>当初計画</td>
+<td><strong>日産200万バレルの製油所、年400万トン（エチレン換算）の石油化学、1,000万kWの火力発電</strong></td>
+</tr>
+<tr>
+<td>1971年8月20日</td>
+<td>六ヶ所村長・寺下力三郎が計画への反対を表明</td>
+</tr>
+<tr>
+<td>1973年</td>
+<td>第1次石油危機。計画を<strong>製油100万バレル・石化160万トン・火力320万kW</strong>へ縮小</td>
+</tr>
+<tr>
+<td>1973年12月</td>
+<td>村長選で推進派が勝つ</td>
+</tr>
+<tr>
+<td>1979年12月10日</td>
+<td>むつ小川原石油備蓄株式会社 設立</td>
+</tr>
+<tr>
+<td>1979年</td>
+<td>第2次石油危機。工業基地構想は事実上止まる</td>
+</tr>
+<tr>
+<td>1980年11月</td>
+<td>国家石油備蓄基地 着工</td>
+</tr>
+<tr>
+<td>1983年</td>
+<td>むつ小川原港 供用開始</td>
+</tr>
+<tr>
+<td>1983年8月末</td>
+<td>石油備蓄基地A地区が一部完成、9月にオイルイン開始</td>
+</tr>
+<tr>
+<td><strong>1984年7月</strong></td>
+<td><strong>電気事業連合会が核燃料サイクル3施設の立地を青森県に申し入れ</strong></td>
+</tr>
+<tr>
+<td>1985年9月</td>
+<td>石油備蓄基地 全面完成（570万kl）</td>
+</tr>
+<tr>
+<td>1993年4月28日</td>
+<td>再処理工場 着工</td>
+</tr>
+<tr>
+<td>2001年</td>
+<td>クリスタルバレイ構想（液晶産業集積）が始動</td>
+</tr>
+<tr>
+<td>2010年</td>
+<td>クリスタルバレイ構想を見直し</td>
+</tr>
+<tr>
+<td>現在</td>
+<td>再処理工場、ウラン濃縮、低レベル埋設、高レベル貯蔵、MOX燃料、国家石油備蓄、風力113MW、核融合研究</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p><strong>新全総で決まった用途と、実際に来た用途は一致していない。</strong>石油精製と石油化学は1件も立地せず、代わりに石油を「使わずに置いておく」備蓄基地と、原子力のバックエンド施設が入った。用地の取得と港湾の整備という前提条件だけが計画どおり進み、その上に別の産業が乗った形である。</p></div>
+<h2><span class="num">05</span>むつ小川原と苫東<span class="en">Two National Projects</span></h2>
+<p>新全総は同じ年に、北海道の苫小牧東部（苫東）にも同じ性格の大規模工業基地を割り当てた。両者は50年後にこうなっている。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th><strong>むつ小川原</strong>（青森県上北郡）</th>
+<th><strong>苫東</strong>（北海道苫小牧市・厚真町・安平町）</th>
+</tr></thead><tbody>
+<tr>
+<td>位置づけ</td>
+<td>新全総（1969年5月30日閣議決定）</td>
+<td>全総に位置づけ、第3期北海道総合開発計画</td>
+</tr>
+<tr>
+<td>当初構想</td>
+<td>製油日産200万バレル、石化年400万トン、火力1,000万kW</td>
+<td>石油化学・鉄鋼など重厚長大型</td>
+</tr>
+<tr>
+<td>開発会社 設立</td>
+<td>むつ小川原開発（1970年代）</td>
+<td><strong>苫小牧東部開発（1972年7月）</strong></td>
+</tr>
+<tr>
+<td>計画面積</td>
+<td>開発地区の面積はN/A（一次情報で確認できず）</td>
+<td><strong>10,700ha</strong></td>
+</tr>
+<tr>
+<td>計画の見直し</td>
+<td>2度の石油危機で縮小、事実上頓挫</td>
+<td>1995年の新計画で工場等用地5,500haへ縮小</td>
+</tr>
+<tr>
+<td>開発会社の帰結</td>
+<td>用地会社を新むつ小川原へ引き継ぎ</td>
+<td><strong>1997年に負債約1,800億円。出資者に1,213億円の債権放棄を求め、1999年7月に株式会社苫東を設立、同年9月に旧社を特別清算。第三セクターとして過去最大の倒産</strong></td>
+</tr>
+<tr>
+<td>現在の用地</td>
+<td>核燃料サイクル施設群、風力、核融合研究、尾駮レイクタウン</td>
+<td><strong>分譲済1,129.5ha（工場等用地5,500haの20.5%）</strong>、AIデータセンター、ソーラー</td>
+</tr>
+<tr>
+<td>国家石油備蓄基地</td>
+<td><strong>むつ小川原国家石油備蓄基地</strong></td>
+<td><strong>苫小牧東部国家石油備蓄基地</strong></td>
+</tr>
+</tbody></table></div>
+<h3>国家石油備蓄基地の比較</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th>むつ小川原</th>
+<th>苫小牧東部</th>
+</tr></thead><tbody>
+<tr>
+<td>所在地</td>
+<td>青森県上北郡六ヶ所村</td>
+<td>北海道苫小牧市および厚真町</td>
+</tr>
+<tr>
+<td>敷地面積</td>
+<td>269ha</td>
+<td><strong>274ha</strong></td>
+</tr>
+<tr>
+<td>貯蔵容量</td>
+<td>570万kl</td>
+<td><strong>640万kl</strong></td>
+</tr>
+<tr>
+<td>タンク基数</td>
+<td>55基（11.12万kl×51、3.75万kl×4）</td>
+<td><strong>57基</strong>（11.48万kl×55、4.1万kl×2）</td>
+</tr>
+<tr>
+<td>立地決定</td>
+<td>国家石油備蓄事業の<strong>第1号</strong></td>
+<td>1981年1月（<strong>第2号</strong>）</td>
+</tr>
+<tr>
+<td>一部完成・オイルイン</td>
+<td>1983年8月末完成、9月開始</td>
+<td>1984年8月末完成、9月開始</td>
+</tr>
+<tr>
+<td>全面完成</td>
+<td><strong>1985年9月</strong></td>
+<td><strong>1990年11月末</strong>（オイルイン完了1991年1月）</td>
+</tr>
+<tr>
+<td>隣接施設</td>
+<td>—</td>
+<td>北海道石油共同備蓄基地（敷地約135万m²、原油タンク33基、約358万kl）</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>同じ構想が、同じ失敗をして、同じ代替用途に着地した。</strong>どちらも重化学工業のコンビナートを想定して用地と港を用意し、どちらにもコンビナートは来ず、どちらにも国家石油備蓄基地が入った。国家備蓄10基地のうち第1号と第2号が、新全総の2大工業基地予定地に置かれている。<strong>用地の空きと港湾の存在が、備蓄という「使わない土地の使い道」に合致した。</strong></p></div>
+<p>違いは3点ある。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>論点</th>
+<th>むつ小川原</th>
+<th>苫東</th>
+</tr></thead><tbody>
+<tr>
+<td>会社の処理</td>
+<td>用地会社を承継し、清算による巨額の債権放棄は表面化していない</td>
+<td><strong>1,213億円の債権放棄と特別清算</strong></td>
+</tr>
+<tr>
+<td>次に入った産業</td>
+<td><strong>原子力のバックエンド。</strong>立地自治体に固定資産税と交付金が入り、六ヶ所村の財政力指数は1.61で全国2位</td>
+<td><strong>電力とデータセンター。</strong>苫小牧市域への集積が進み、隣接する厚真町は供給側にとどまる</td>
+</tr>
+<tr>
+<td>用地の消化</td>
+<td>核燃料サイクル施設群が広い敷地を占有</td>
+<td><strong>50年以上かけて工場等用地の20.5%しか分譲できていない</strong></td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p>どちらも、<strong>当初計画が失敗したこと自体は問題の中心ではない。</strong>問題は、計画のために取得した用地と整備した港湾が、その後50年にわたって「次に来るもの」を待ち続ける資産になった点にある。六ヶ所村は原子力でその待ち時間を財政的に埋めた。苫東はデータセンターでいま埋めつつあるが、税収は隣接する苫小牧市域に落ちる。<strong>用地を用意した主体と、便益を受ける主体が一致しない構造は、両方に共通している。</strong></p></div>
+<h2><span class="num">06</span>六ケ所原燃PRセンターとは何か<span class="en">The PR Center</span></h2>
+<p>日本原燃が六ヶ所村に置く広報施設である。正式名称は<strong>六ケ所原燃PRセンター</strong>で、原料ではなく「原燃（げんねん）」と読む。会社名の日本原燃の略である。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>所在地</td>
+<td>青森県上北郡六ヶ所村大字尾駮字上尾駮2-42</td>
+</tr>
+<tr>
+<td>構造</td>
+<td><strong>地下1階・地上3階</strong></td>
+</tr>
+<tr>
+<td>地下1階・1階</td>
+<td>再処理工場の内部（溶解槽など）やウラン濃縮工場を<strong>大型模型</strong>で再現</td>
+</tr>
+<tr>
+<td>2階</td>
+<td>環境とエネルギー、放射線の測定を扱う展示。実験・工作のプランがある</td>
+</tr>
+<tr>
+<td>3階</td>
+<td><strong>展望ホール。</strong>高さ約20mから核燃料サイクル施設・国家石油備蓄基地・風車・太平洋を一望できる</td>
+</tr>
+<tr>
+<td>開館時間</td>
+<td>9:00-17:00</td>
+</tr>
+<tr>
+<td>休館日</td>
+<td>毎月最終月曜（祝日の場合は翌日）、年末年始</td>
+</tr>
+<tr>
+<td>見学</td>
+<td>事前予約で案内スタッフが付く。売店・レストランあり</td>
+</tr>
+<tr>
+<td>関連</td>
+<td>六ヶ所村次世代エネルギーパーク（2008年6月に経済産業省認定、2010年5月から見学予約受付）の見学施設の一つ</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>この施設の価値は展示より3階の窓にある。</strong>再処理工場、高レベル放射性廃棄物の一時貯蔵、国家石油備蓄570万kl、風力発電が同じ視野に入る。04と05で見たとおり、これらはすべて1969年の工業基地構想の跡地に後から入ったものである。<strong>一つの窓から、失敗した計画の上に何が積み上がったかがまとめて見える。</strong></p></div>
+<h2><span class="num">07</span>訪問できる場所<span class="en">Places</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>場所</th>
+<th>町村</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>六ケ所原燃PRセンター</td>
+<td>六ヶ所村</td>
+<td>06を参照。事前予約で案内</td>
+</tr>
+<tr>
+<td>むつ小川原国家石油備蓄基地</td>
+<td>六ヶ所村</td>
+<td>見学可。タンク51基が並ぶ</td>
+</tr>
+<tr>
+<td>小川原湖</td>
+<td>東北町</td>
+<td>汽水湖。シジミ・シラウオ・ワカサギ。<strong>漁協の実績はシジミ1,850トン、ワカサギ330トン、シラウオ78トン</strong></td>
+</tr>
+<tr>
+<td>菜の花畑</td>
+<td>横浜町</td>
+<td>5月中旬から下旬が見ごろ。2014年産の作付面積128haで全国1位</td>
+</tr>
+<tr>
+<td>日本最初の鉄道防雪林</td>
+<td>野辺地町</td>
+<td>1893年5月造林。鉄道記念物第14号。野辺地駅ホーム西側に約700本の杉が2km続く</td>
+</tr>
+<tr>
+<td>七戸十和田駅</td>
+<td>七戸町</td>
+<td>2010年12月4日の東北新幹線新青森延伸で開業。十和田湖・奥入瀬への玄関</td>
+</tr>
+<tr>
+<td>道の駅しちのへ</td>
+<td>七戸町</td>
+<td>馬産地の歴史展示</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">08</span>増える町と、男の村<span class="en">Asymmetries</span></h2>
+<p>上北郡の中で起きている非対称は2つある。</p>
+<h3>増えているのは通勤する町だけ</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>町村</th>
+<th>人口</th>
+<th>郡内シェア</th>
+<th>人口の向き</th>
+</tr></thead><tbody>
+<tr>
+<td>おいらせ町</td>
+<td>23,909人</td>
+<td class="num">27.9%</td>
+<td><strong>増加</strong>（八戸・三沢のベッドタウン）</td>
+</tr>
+<tr>
+<td>東北町</td>
+<td>14,691人</td>
+<td class="num">17.2%</td>
+<td>減少</td>
+</tr>
+<tr>
+<td>七戸町</td>
+<td>12,795人</td>
+<td class="num">15.0%</td>
+<td>減少</td>
+</tr>
+<tr>
+<td>野辺地町</td>
+<td>10,816人</td>
+<td class="num">12.6%</td>
+<td>減少</td>
+</tr>
+<tr>
+<td>六戸町</td>
+<td>9,848人</td>
+<td class="num">11.5%</td>
+<td>横ばい</td>
+</tr>
+<tr>
+<td>六ヶ所村</td>
+<td>9,740人</td>
+<td class="num">11.4%</td>
+<td>減少（ピークは2000年の11,849人）</td>
+</tr>
+<tr>
+<td>横浜町</td>
+<td>3,742人</td>
+<td class="num">4.4%</td>
+<td>減少</td>
+</tr>
+</tbody></table></div>
+<p><strong>郡内で最大の町は、郡内に産業を持たない町である。</strong>おいらせ町の人口は八戸市と三沢市への通勤で支えられており、郡の側から見れば人口の27.9%が郡外の雇用に依存している。一方、国家プロジェクトが集中した六ヶ所村の人口は郡内6位で、ピークは2000年、つまり再処理工場の建設中にあたる。<strong>建設のピークが人口のピークだった。</strong></p>
+<h3>六ヶ所村の男性比58.9%</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>六ヶ所村</th>
+<th>上北郡</th>
+<th>青森県</th>
+</tr></thead><tbody>
+<tr>
+<td>男性比</td>
+<td><strong>58.9%</strong></td>
+<td class="num">49.3%</td>
+<td class="num">47.2%</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p>男性が女性より43.6%多い自治体は、家族形成による人口再生産が働きにくい。2026年7月の六ヶ所村の出生数は<strong>0人</strong>、死亡は12人だった。財政力指数1.61という日本で2番目に豊かな財政と、この人口構成は同時に成立している。<strong>税収の豊かさは、人が住み続けることを保証しない。</strong></p></div>
+<p>上北郡全体では、2026年7月の1か月で自然減102人・社会増29人。<strong>転入が出ていても、自然減がその3.5倍ある。</strong>05で見たとおり、この郡は国の計画に用地を提供することで50年を過ごし、その対価として原子力と備蓄と交付金を得た。得られなかったのは人口である。</p>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>青森県総合政策部統計分析課「青森県の推計人口（令和8年8月1日現在）」（上北郡85,541人・37,655世帯、野辺地町10,816人、七戸町12,795人、六戸町9,848人、横浜町3,742人、東北町14,691人、六ヶ所村9,740人・男5,741人・女3,999人、おいらせ町23,909人、上北地域178,049人、県計1,128,885人、7月中の自然動態・社会動態） — https://opendata.pref.aomori.lg.jp/dataset/2437.html</li>
+  <li>Wikipedia「上北郡」（6町1村、面積1,280.22km²、人口密度66.8人/km²、1878年成立、三沢市・十和田市の分離、2005年1月の十和田湖町合併、2006年3月のおいらせ町発足） — https://ja.wikipedia.org/wiki/上北郡</li>
+  <li>Wikipedia「おいらせ町」（2026年8月1日推計23,909人、面積71.96km²、2006年3月1日に下田町・百石町が合併、2015年国勢調査の増加率が県内2位、1970年17,036人→2020年24,273人、青森県の町村で最多人口） — https://ja.wikipedia.org/wiki/おいらせ町</li>
+  <li>Wikipedia「むつ小川原開発計画」（1968年12月23日の通産省構想、1969年5月30日の新全総閣議決定、日産200万バレル・エチレン年400万トン・火力1,000万kWの当初計画、石油危機による縮小、1983年のむつ小川原港供用、1985年の石油備蓄基地完成、2001年クリスタルバレイ構想と2010年の見直し） — https://ja.wikipedia.org/wiki/むつ小川原開発計画</li>
+  <li>JOGMEC「むつ小川原国家石油備蓄基地」（青森県上北郡六ヶ所村、敷地269ha、貯蔵容量約570万kl、タンク55基＝11.12万kl×51・3.75万kl×4、1983年8月末一部完成・9月オイルイン、1985年9月全面完成、地上タンク方式） — https://www.jogmec.go.jp/about/domestic_007-02.html</li>
+  <li>JOGMEC「苫小牧東部国家石油備蓄基地」（北海道苫小牧市および厚真町、敷地約274ha、貯蔵容量約640万kl、タンク57基＝11.48万kl×55・4.1万kl×2、1984年8月末一部完成・9月オイルイン、1990年11月末完成・1991年1月オイルイン終了、北海道石油共同備蓄基地と併せて世界最大級） — https://www.jogmec.go.jp/about/domestic-offices/reserve-base/tomakomai.html</li>
+  <li>北海道石油共同備蓄「当基地概要」（敷地面積約135万m²、原油タンク33基、約358万kl） — https://www.hjos.co.jp/overview/base.php</li>
+  <li>Wikipedia「苫小牧東部地域」およびコトバンク「苫小牧東部開発計画」（計画面積約10,700ha、1972年7月に苫小牧東部開発株式会社設立、1995年の新計画で工場等用地5,500haへ縮小、1997年に負債約1,800億円、1,213億円の債権放棄、1999年7月に株式会社苫東設立・同年9月に旧社を特別清算、第三セクターとして過去最大の倒産、株式会社苫東の資本金6,210万円） — https://ja.wikipedia.org/wiki/苫小牧東部地域</li>
+  <li>六ケ所原燃PRセンター「見学予約・利用案内」および日本原燃「PR施設」（所在地 六ヶ所村大字尾駮字上尾駮2-42、地下1階地上3階、3階展望ホール、9:00-17:00、毎月最終月曜と年末年始休館、事前予約で案内） — https://6prc.jp/tour/</li>
+  <li>六ヶ所村次世代エネルギーパーク「見学施設」（2008年6月の経済産業省認定、2010年5月からの見学予約受付） — https://6energypark.com/visit/6prc.html</li>
+  <li>横浜町「菜の花情報」（平成26年産の作付面積128haで日本一、現在も国内最大級） — https://www.town.yokohama.lg.jp/index.cfm/7,11782,19,html</li>
+  <li>野辺地町「日本最古の鉄道防雪原林（鉄道記念物14号指定）」（1893年5月造林、野辺地駅ホーム西側に約700本の杉が2km） — https://www.town.noheji.aomori.jp/kanko/spot/14</li>
+  <li>青森県「豊かな自然・小川原湖の恵みを活かす」（小川原湖漁協の実績 シジミ1,850トン、シラウオ78トン、ワカサギ330トン） — https://www.pref.aomori.lg.jp/soshiki/nourin/sshinko/files/shiryou_tech_47.pdf</li>
+  <li>本サイト「六ヶ所村」「厚真町」の各ページ（財政力指数1.61、人口ピーク2000年11,849人、苫東の分譲済1,129.5ha＝20.5%、株式会社苫東の設立経緯）</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく地域リサーチであり、投資助言ではない。郡は地方自治法上の行政単位ではなく、地理的な区分である。町村別の製造品出荷額等、郡単位の域内総生産、むつ小川原開発株式会社の債務処理額の内訳、苫東地域のうち厚真町域の分譲実績はいずれも確認できずN/Aとした。六ヶ所村の詳細は個別ページを参照。石油備蓄基地のタンク基数はJOGMECとむつ小川原石油備蓄で表記が異なり、本ページはJOGMECの55基（11.12万kl×51、3.75万kl×4）を採った。構成比・増減率は本ページによる算出値。座標は郡の中央付近の概数である。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "上北郡 人口",
+  "value": 85541,
+  "unit": "人",
+  "as_of": "2026-08-01",
+  "source": "https://opendata.pref.aomori.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "上北郡 世帯数",
+  "value": 37655,
+  "unit": "世帯",
+  "as_of": "2026-08-01",
+  "source": "https://opendata.pref.aomori.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "上北郡 面積",
+  "value": 1280.22,
+  "unit": "km2",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "構成町村数",
+  "value": 7,
+  "unit": "町村",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "おいらせ町 人口",
+  "value": 23909,
+  "unit": "人",
+  "as_of": "2026-08-01",
+  "source": "https://opendata.pref.aomori.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "六ヶ所村 男性比",
+  "value": 58.9,
+  "unit": "%",
+  "as_of": "2026-08-01",
+  "source": "https://opendata.pref.aomori.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "新全総 閣議決定",
+  "value": 1969,
+  "unit": "年",
+  "as_of": "1969-05-30",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "むつ小川原 当初計画 製油能力",
+  "value": 200,
+  "unit": "万バレル/日",
+  "as_of": "1969",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "むつ小川原 当初計画 石油化学",
+  "value": 400,
+  "unit": "万トン/年",
+  "as_of": "1969",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "むつ小川原国家石油備蓄基地 貯蔵容量",
+  "value": 570,
+  "unit": "万kl",
+  "as_of": "2026",
+  "source": "https://www.jogmec.go.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "むつ小川原国家石油備蓄基地 敷地面積",
+  "value": 269,
+  "unit": "ha",
+  "as_of": "2026",
+  "source": "https://www.jogmec.go.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "むつ小川原国家石油備蓄基地 全面完成",
+  "value": 1985,
+  "unit": "年",
+  "as_of": "1985-09",
+  "source": "https://www.jogmec.go.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "苫小牧東部国家石油備蓄基地 貯蔵容量",
+  "value": 640,
+  "unit": "万kl",
+  "as_of": "2026",
+  "source": "https://www.jogmec.go.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "苫小牧東部国家石油備蓄基地 敷地面積",
+  "value": 274,
+  "unit": "ha",
+  "as_of": "2026",
+  "source": "https://www.jogmec.go.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "苫小牧東部国家石油備蓄基地 全面完成",
+  "value": 1990,
+  "unit": "年",
+  "as_of": "1990-11",
+  "source": "https://www.jogmec.go.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "苫東 計画面積",
+  "value": 10700,
+  "unit": "ha",
+  "as_of": "1972",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "苫小牧東部開発 債権放棄額",
+  "value": 1213,
+  "unit": "億円",
+  "as_of": "1999",
+  "source": "https://kotobank.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "苫小牧東部開発 負債",
+  "value": 1800,
+  "unit": "億円",
+  "as_of": "1997",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "苫東 分譲率（工場等用地）",
+  "value": 20.5,
+  "unit": "%",
+  "as_of": "2026",
+  "source": "https://www.tomatoh.co.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "核燃料サイクル立地要請",
+  "value": 1984,
+  "unit": "年",
+  "as_of": "1984-07",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "横浜町 菜の花作付面積",
+  "value": 128,
+  "unit": "ha",
+  "as_of": "2014年産",
+  "source": "https://www.town.yokohama.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "日本最初の鉄道防雪林 造林",
+  "value": 1893,
+  "unit": "年",
+  "as_of": "1893-05",
+  "source": "https://www.town.noheji.aomori.jp/",
+  "confidence": "reported"
+ }
+]
+</script>
+</body>
+</html>

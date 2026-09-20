@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>花巻市 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / 花巻市</p>
+
+<header class="top">
+  <div>
+    <h1>花巻市 / Hanamaki</h1>
+    <div class="meta">岩手県 / 県南　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">宮沢賢治記念館の累計入館者は開館43年で800万人に達した。同じ市の製造品出荷額等2,442億円のうち29.6%を占めるのは業務用機械で、その中身は2021年に富士フイルムが日立から買った医療機器事業である。賢治も空港も温泉もある市の人口は、2000年のピークから19.3%減った。</p>
+<p><span class="tag">宮沢賢治</span><span class="tag">花巻空港</span><span class="tag">花巻12湯</span><span class="tag">医療機器</span><span class="tag">花巻東高校</span></p>
+
+<div class="kpi"><div class="card"><div class="k">人口</div><div class="v">86,491人 <small>2026年8月1日・推計人口</small></div></div><div class="card"><div class="k">面積</div><div class="v">908.39 km² <small>人口密度95.2人/km²</small></div></div><div class="card"><div class="k">製造品出荷額等</div><div class="v">2,442.4億円 <small>2023年・全事業所</small></div></div><div class="card"><div class="k">財政力指数</div><div class="v">0.47 <small>2024年度</small></div></div></div>
+<iframe class="map" loading="lazy" title="花巻市の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=140.83689999999999,39.248599999999996,141.3969,39.5286&amp;layer=mapnik&amp;marker=39.3886,141.1169"></iframe>
+
+<h2><span class="num">01</span>市としての特徴<span class="en">Profile</span></h2>
+<p><strong>観光資源が3種類そろっている市である。作家、空港、温泉。それでも人口の減り方は岩手県内の平均並みで、隣の北上市とは対照的な軌道を描いている。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>属性</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>位置</td>
+<td>岩手県の中西部。北に盛岡市、南に北上市、東に遠野市・宮古市、西に西和賀町・雫石町が隣接する。<strong>盛岡・北上のどちらへも新幹線1駅</strong></td>
+</tr>
+<tr>
+<td>面積</td>
+<td>908.39km²。人口密度95.2人/km²</td>
+</tr>
+<tr>
+<td>地形</td>
+<td>中央に北上平野、西に奥羽山脈、東に北上高地。北上川・豊沢川・猿ヶ石川が流れ、西側の山あいに温泉が並ぶ</td>
+</tr>
+<tr>
+<td>成り立ち</td>
+<td>1954年4月1日に花巻町ほか5村が合併して旧花巻市が発足。<strong>2006年1月1日に旧花巻市・石鳥谷町・大迫町・東和町が合併</strong>し、同時に稗貫郡が消滅した</td>
+</tr>
+<tr>
+<td>交通</td>
+<td>東北新幹線新花巻駅、東北本線花巻駅、<strong>いわて花巻空港</strong>、東北自動車道花巻IC、釜石自動車道</td>
+</tr>
+<tr>
+<td>産業構造</td>
+<td>製造業では業務用機械（医療機器）が最大。農業は米・野菜、西部に温泉観光</td>
+</tr>
+<tr>
+<td>財政</td>
+<td>財政力指数0.47、経常収支比率90.7%、実質公債費比率9.2%、将来負担比率50.6%（2024年度）。<strong>基金152.6億円は標準財政規模288.8億円の52.8%</strong></td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>北上市との比較が効く。<strong>両市は東北自動車道と東北新幹線の同じ軸に並び、人口もほぼ同じ規模である</strong>（花巻86,491人、北上91,345人）。ところが製造品出荷額等は北上6,424.7億円に対し花巻2,442.4億円で2.6倍の差があり、財政力指数は0.95対0.47で2倍の差がある。立地条件がほぼ同じで結果が倍違う組み合わせは、東北では珍しい。</p></div>
+<h2><span class="num">02</span>経済規模と産業構造<span class="en">Economy</span></h2>
+<h3>業種別の構成（2023年・全事業所）</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>業種</th>
+<th>事業所数</th>
+<th>従業者数</th>
+<th>出荷額</th>
+<th>構成比</th>
+</tr></thead><tbody>
+<tr>
+<td>総数</td>
+<td class="num">216</td>
+<td>8,344人</td>
+<td>2,442.4億円</td>
+<td class="num">100%</td>
+</tr>
+<tr>
+<td><strong>業務用機械</strong></td>
+<td class="num">18</td>
+<td><strong>1,755人</strong></td>
+<td><strong>723.0億円</strong></td>
+<td><strong>29.6%</strong></td>
+</tr>
+<tr>
+<td>飲料・飼料</td>
+<td class="num">7</td>
+<td>213人</td>
+<td>317.1億円</td>
+<td class="num">13.0%</td>
+</tr>
+<tr>
+<td>食料品</td>
+<td class="num">37</td>
+<td>1,176人</td>
+<td>246.1億円</td>
+<td class="num">10.1%</td>
+</tr>
+<tr>
+<td>化学</td>
+<td class="num">3</td>
+<td>376人</td>
+<td>234.3億円</td>
+<td class="num">9.6%</td>
+</tr>
+<tr>
+<td>生産用機械</td>
+<td class="num">32</td>
+<td>1,156人</td>
+<td>212.3億円</td>
+<td class="num">8.7%</td>
+</tr>
+<tr>
+<td>金属製品</td>
+<td class="num">22</td>
+<td>684人</td>
+<td>143.6億円</td>
+<td class="num">5.9%</td>
+</tr>
+<tr>
+<td>はん用機械</td>
+<td class="num">8</td>
+<td>813人</td>
+<td>125.8億円</td>
+<td class="num">5.2%</td>
+</tr>
+<tr>
+<td>電気機械</td>
+<td class="num">10</td>
+<td>379人</td>
+<td>86.3億円</td>
+<td class="num">3.5%</td>
+</tr>
+<tr>
+<td>鉄鋼</td>
+<td class="num">4</td>
+<td>143人</td>
+<td>76.6億円</td>
+<td class="num">3.1%</td>
+</tr>
+<tr>
+<td>プラスチック</td>
+<td class="num">9</td>
+<td>383人</td>
+<td>71.0億円</td>
+<td class="num">2.9%</td>
+</tr>
+</tbody></table></div>
+<p>業務用機械の18事業所に従業者1,755人がぶら下がり、出荷額の29.6%を生む。この分類には医療用機械器具が含まれ、市内では<strong>富士フイルムヘルスケアマニュファクチャリング花巻事業所</strong>がマンモグラフィや血液分析装置を作っている。同社は2021年3月に富士フイルムが日立製作所の画像診断関連事業を買い取ってできた会社で、<strong>花巻の製造業の3割は、2021年に所有者が変わった事業の上に乗っている。</strong></p>
+<div class="risk"><p>飲料・飼料は<strong>7事業所213人で317.1億円</strong>を出している。従業者1人当たり1億4,887万円で、市平均2,927万円の5.1倍になる。装置産業の性格が強く、雇用への波及は出荷額の大きさに比例しない。従業者規模別では<strong>500-999人の事業所が2つ</strong>あり、この2事業所で市の製造業従業者の12.8%を占める。数社の判断が市の製造業統計を動かす構造である。</p></div>
+<h3>規模別の分布</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>従業者規模</th>
+<th>事業所数</th>
+<th>従業者数</th>
+<th>出荷額</th>
+</tr></thead><tbody>
+<tr>
+<td>1-9人</td>
+<td class="num">75</td>
+<td>333人</td>
+<td>52.1億円</td>
+</tr>
+<tr>
+<td>10-19人</td>
+<td class="num">45</td>
+<td>652人</td>
+<td>95.8億円</td>
+</tr>
+<tr>
+<td>20-29人</td>
+<td class="num">30</td>
+<td>758人</td>
+<td>141.8億円</td>
+</tr>
+<tr>
+<td>30-49人</td>
+<td class="num">27</td>
+<td>1,008人</td>
+<td>214.6億円</td>
+</tr>
+<tr>
+<td>50-99人</td>
+<td class="num">22</td>
+<td>1,541人</td>
+<td>281.3億円</td>
+</tr>
+<tr>
+<td>100-199人</td>
+<td class="num">11</td>
+<td>1,625人</td>
+<td>666.3億円</td>
+</tr>
+<tr>
+<td>200-299人</td>
+<td class="num">3</td>
+<td>859人</td>
+<td>353.6億円</td>
+</tr>
+<tr>
+<td>300人以上</td>
+<td class="num">3</td>
+<td>1,568人</td>
+<td>X（秘匿）</td>
+</tr>
+</tbody></table></div>
+<p>事業所数では1-9人が全体の34.7%を占めるが、出荷額では2.1%にすぎない。<strong>100人以上の17事業所が出荷額の少なくとも41.8%を出している</strong>（300人以上の3事業所が秘匿なので実際はこれより高い）。</p>
+<h2><span class="num">03</span>人口推移<span class="en">Population</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年次</th>
+<th>人口</th>
+<th>前回比</th>
+</tr></thead><tbody>
+<tr>
+<td>1970年</td>
+<td>101,858人</td>
+<td>—</td>
+</tr>
+<tr>
+<td>1980年</td>
+<td>105,678人</td>
+<td class="num">+3.8%</td>
+</tr>
+<tr>
+<td>1990年</td>
+<td>106,727人</td>
+<td class="num">+1.0%</td>
+</tr>
+<tr>
+<td>2000年</td>
+<td><strong>107,175人</strong></td>
+<td class="num">+0.4%</td>
+</tr>
+<tr>
+<td>2010年</td>
+<td>101,438人</td>
+<td class="num">-5.4%</td>
+</tr>
+<tr>
+<td>2015年</td>
+<td>97,702人</td>
+<td class="num">-3.7%</td>
+</tr>
+<tr>
+<td>2020年</td>
+<td>93,193人</td>
+<td class="num">-4.6%</td>
+</tr>
+<tr>
+<td>2026年8月（推計）</td>
+<td>86,491人</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<p>ピークは2000年の107,175人で、そこから<strong>19.3%減</strong>。人口の伸びが止まったのは1990年代で、北上市がまだ増えていた時期にあたる。</p>
+<div class="callout"><p>北上市のピークは2005年、減少率は3.2%。花巻のピークは2000年、減少率は19.3%。<strong>5年の差と16ポイントの差が、隣り合う2市の間にある。</strong>北上はキオクシアを含む工業集積で1975年から2005年まで人口を32%増やした。花巻は同じ期間に5.2%しか増えていない。</p></div>
+<h2><span class="num">04</span>日本の大企業との関連<span class="en">Corporate Links</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>企業</th>
+<th>花巻との関係</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>富士フイルムヘルスケアマニュファクチャリング</strong></td>
+<td>花巻事業所でマンモグラフィ、血液分析装置などを製造。2021年3月に富士フイルムが日立製作所の画像診断関連事業の買収を完了し、同年10月1日に同社を設立した。グループ全体の従業員は約2,900人（2026年4月1日現在、派遣を含む）</td>
+</tr>
+<tr>
+<td>イーエヌ大塚製薬</td>
+<td>大塚グループ。介護食・流動食を製造</td>
+</tr>
+<tr>
+<td>イリソ電子工業</td>
+<td>コネクタ。花巻に生産拠点</td>
+</tr>
+<tr>
+<td>エクセルシャノン</td>
+<td>樹脂サッシ</td>
+</tr>
+<tr>
+<td>日東工業</td>
+<td>配電盤・キャビネット</td>
+</tr>
+<tr>
+<td>富士大学</td>
+<td>1965年開学の私立大学。経済学部単科</td>
+</tr>
+</tbody></table></div>
+<p><strong>花巻の製造業の最大手は、2021年まで日立の一部だった。</strong>市の側から誘致した企業ではなく、企業グループの事業再編で所有者が変わった結果として現在の姿になっている。この点は、キオクシアが自らの投資判断で工場を建て増してきた北上市とは性格が違う。</p>
+<h2><span class="num">05</span>出身の有名人<span class="en">People</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>人物</th>
+<th>関係</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>宮沢賢治</strong></td>
+<td>1896年8月27日、稗貫郡花巻川口町生。1933年9月21日に花巻町で没、37歳。詳細は[人物ページ](../../019_people/index.html)を参照</td>
+</tr>
+<tr>
+<td>萬鉄五郎</td>
+<td>1885年東和町土沢生。洋画家。『裸体美人』（1912年）は重要文化財</td>
+</tr>
+<tr>
+<td>松本竣介</td>
+<td>1912年生、花巻で育つ。洋画家</td>
+</tr>
+<tr>
+<td>菊池雄星</td>
+<td>1991年盛岡市生、<strong>花巻東高校</strong>から2009年に西武へ。2019年からメジャーリーグ</td>
+</tr>
+<tr>
+<td>大谷翔平</td>
+<td>1994年奥州市生、<strong>花巻東高校</strong>から2012年に日本ハムへ。2018年からメジャーリーグ</td>
+</tr>
+<tr>
+<td>佐々木麟太郎</td>
+<td>2005年生、花巻東高校で高校通算140本塁打。2024年スタンフォード大学へ進学</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>菊池・大谷・佐々木の3人はいずれも花巻の出身ではなく、<strong>花巻東高校に通うために市外から来た。</strong>野球の実績が花巻にもたらしたのは出身者ではなく、進学先としての集客である。同じことが賢治にも言える。賢治は花巻生まれだが、中学と高等農林の9年間は盛岡で過ごした。</p></div>
+<h2><span class="num">06</span>食<span class="en">Food</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>対象</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>わんこそば</td>
+<td>花巻が発祥地の一つとされる。盛岡と発祥をめぐる説が分かれる</td>
+</tr>
+<tr>
+<td>白金豚</td>
+<td>花巻のブランド豚。賢治の作品名にちなむ命名</td>
+</tr>
+<tr>
+<td>エーデルワイン</td>
+<td>大迫町のワイナリー。1962年に地域の山ブドウ栽培から始まった</td>
+</tr>
+<tr>
+<td>南部杜氏</td>
+<td>石鳥谷町が発祥地。日本三大杜氏の一つで、<strong>石鳥谷には南部杜氏の資料館がある</strong></td>
+</tr>
+<tr>
+<td>ひっつみ</td>
+<td>小麦粉の生地をちぎって汁に入れる。県南一帯の家庭料理</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">07</span>観光スポット<span class="en">Places</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>場所</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>宮沢賢治記念館</td>
+<td>1982年開館。<strong>2025年8月2日に累計入館者800万人</strong>に到達（開館から約43年、年平均約18.6万人）</td>
+</tr>
+<tr>
+<td>宮沢賢治イーハトーブ館</td>
+<td>賢治研究の拠点。資料閲覧と上映</td>
+</tr>
+<tr>
+<td>宮沢賢治童話村</td>
+<td>作品世界を再現した体験型施設</td>
+</tr>
+<tr>
+<td>花巻12湯</td>
+<td>花巻・台・金谷・松倉・志戸平・渡り・大沢・山の神・鉛・新鉛・花巻北・東和の12湯。<strong>大沢温泉と鉛温泉は賢治と高村光太郎が通った</strong></td>
+</tr>
+<tr>
+<td>高村山荘</td>
+<td>高村光太郎が1945年の東京空襲後、7年間を過ごした山小屋</td>
+</tr>
+<tr>
+<td>花巻まつり</td>
+<td>9月開催。100基以上の神輿と風流山車</td>
+</tr>
+</tbody></table></div>
+<p>いわて花巻空港の2024年度の利用者は<strong>482,092人</strong>（前年度比1.1%増、5,234人増）。台北線は2025年1月1日に累計利用者10万人に達した。</p>
+<h2><span class="num">08</span>賢治の街になるまでの49年<span class="en">Kenji, Fifty Years Later</span></h2>
+<p>宮沢賢治が生前に出した本は2冊だけである。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>書名</th>
+<th>刊行</th>
+<th>部数</th>
+<th>備考</th>
+</tr></thead><tbody>
+<tr>
+<td>『心象スケッチ 春と修羅』</td>
+<td>1924年4月20日</td>
+<td><strong>1,000部（自費出版）</strong></td>
+<td>定価2円40銭。花巻の吉田印刷所で印刷</td>
+</tr>
+<tr>
+<td>『イーハトヴ童話 注文の多い料理店』</td>
+<td>1924年12月1日</td>
+<td><strong>1,000部</strong>（うち本人が200部買い取り）</td>
+<td>定価1円60銭。光原社名義</td>
+</tr>
+</tbody></table></div>
+<p>生前に得た原稿料は、雑誌『愛国婦人』に載った「雪渡り」の<strong>5円1回きり</strong>である。1933年に37歳で死んだとき、賢治は無名の元農学校教師だった。</p>
+<p>死後の受容はこう進んだ。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年</th>
+<th>出来事</th>
+</tr></thead><tbody>
+<tr>
+<td>1934年2月16日</td>
+<td>東京での「宮沢賢治友の会」の席上で、遺品の手帳から<strong>「雨ニモマケズ」が見つかる</strong></td>
+</tr>
+<tr>
+<td>1934-1935年</td>
+<td>文圃堂から最初の全集</td>
+</tr>
+<tr>
+<td>1939-1944年</td>
+<td>十字屋書店の増補版全集</td>
+</tr>
+<tr>
+<td>1945年</td>
+<td>花巻空襲で生家が焼け、原稿の一部が失われる</td>
+</tr>
+<tr>
+<td>1973-1977年</td>
+<td>『校本 宮澤賢治全集』。本文の異同を整理し、研究の土台ができる</td>
+</tr>
+<tr>
+<td><strong>1982年</strong></td>
+<td><strong>花巻市立宮沢賢治記念館 開館</strong></td>
+</tr>
+<tr>
+<td>2025年8月2日</td>
+<td>記念館の累計入館者が800万人に到達</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>賢治が死んでから記念館ができるまで49年かかっている。</strong>その間に全集が4回編まれ、教科書に載り、草野心平と高村光太郎が刊行に動いた。花巻が賢治の街になったのは賢治がいたからではなく、<strong>死後半世紀の編集と出版の積み重ねが先にあり、街はその後で追いついた。</strong></p></div>
+<div class="risk"><p>記念館の累計800万人は43年分で、年平均18.6万人になる。花巻市の人口86,491人の2.2倍が毎年来ている計算だが、市の人口は同じ期間に減り続けた。02で見たとおり市の製造業の3割は2021年に所有者が変わった1事業に依存し、飲料・飼料は7事業所で出荷額の13.0%を出している。<strong>賢治は花巻の知名度をつくったが、雇用をつくったのは医療機器と食品と温泉である。</strong></p></div>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>Wikipedia「花巻市」（推計人口86,491人／2026年8月1日、面積908.39km²、人口密度95.2人/km²、国勢調査人口1970-2020年、ピーク107,175人／2000年、1954年市制施行、2006年1月1日の4市町合併と稗貫郡消滅、市役所所在地） — https://ja.wikipedia.org/wiki/花巻市</li>
+  <li>岩手県ふるさと振興部「令和5年（2023年）岩手県の工業」2023年経済構造実態調査 製造業事業所調査に関する集計（第12表 市町村別。花巻市216事業所・8,344人・出荷額24,423,793万円・粗付加価値額8,376,296万円、業種別・規模別内訳） — https://www3.pref.iwate.jp/webdb/view/outside/s14Tokei/tkTyosaKekka.html</li>
+  <li>自治体財政カルテ「花巻市の財政状況（令和6年度）」（財政力指数0.47、経常収支比率90.7%、実質公債費比率9.2%、将来負担比率50.6%、標準財政規模288.8億円、基金152.6億円、地方債残高490.7億円） — https://zaisei-karte.jp/032051</li>
+  <li>富士フイルムヘルスケアマニュファクチャリング「会社概要・沿革」（2021年10月1日設立、従業員約2,900人／2026年4月1日現在、花巻事業所） — https://www.fujifilm.com/hcm/ja/about/company-profile</li>
+  <li>岩手日報「花巻の宮沢賢治記念館、入館800万人到達 開館から43年」2025年8月4日（2025年8月2日到達、1982年開館） — https://www.iwate-np.co.jp/article/2025/8/4/185617</li>
+  <li>岩手日日新聞「昨年度利用者48万2千人 いわて花巻空港」2025年5月7日（2024年度482,092人、前年度比1.1%・5,234人増） — https://www.iwanichi.co.jp/2025/05/07/14924314/</li>
+  <li>日本経済新聞「岩手・花巻―台北空港の定期便10万人」（2025年1月1日に累計10万人） — https://www.nikkei.com/article/DGXZQOCC081II0Y5A100C2000000/</li>
+  <li>Wikipedia「宮沢賢治」（1896年8月27日生-1933年9月21日没、37歳、『春と修羅』1924年4月20日1,000部自費出版・定価2円40銭、『注文の多い料理店』1924年12月1日1,000部・本人200部買い取り・定価1円60銭、原稿料5円、1934年2月16日の手帳発見、全集刊行史、1982年記念館開館） — https://ja.wikipedia.org/wiki/宮沢賢治</li>
+  <li>花巻観光協会「花巻12湯」（12温泉の一覧、大沢温泉と賢治・高村光太郎） — https://www.kanko-hanamaki.ne.jp/hanamaki12to/</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく地域リサーチであり、投資助言ではない。製造品出荷額等は2023年経済構造実態調査の岩手県版集計（全事業所）で、工業統計調査とは接続しない。業種別の一部にはX（秘匿）があり構成比の合計は100%にならない。業務用機械の内訳が特定企業に対応するかどうかは統計では示されないため、本文の推定は事業所の所在と規模から導いた読みである。市内総生産、花巻温泉郷の宿泊者数、宮沢賢治記念館の単年入館者数、富士フイルムヘルスケアマニュファクチャリング花巻事業所の従業員数はいずれも確認できずN/Aとした。構成比・増減率は本ページによる算出値。座標は市役所位置である。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "人口（推計）",
+  "value": 86491,
+  "unit": "人",
+  "as_of": "2026-08-01",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（国勢調査）",
+  "value": 93193,
+  "unit": "人",
+  "as_of": "2020",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口ピーク",
+  "value": 107175,
+  "unit": "人",
+  "as_of": "2000",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ピークからの人口減少率",
+  "value": 19.3,
+  "unit": "%",
+  "as_of": "2026-08",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "面積",
+  "value": 908.39,
+  "unit": "km2",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造品出荷額等",
+  "value": 2442.4,
+  "unit": "億円",
+  "as_of": "2023",
+  "source": "https://www3.pref.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造業 従業者数",
+  "value": 8344,
+  "unit": "人",
+  "as_of": "2023",
+  "source": "https://www3.pref.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "業務用機械 出荷額構成比",
+  "value": 29.6,
+  "unit": "%",
+  "as_of": "2023",
+  "source": "https://www3.pref.iwate.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "財政力指数",
+  "value": 0.47,
+  "unit": "",
+  "as_of": "2024年度",
+  "source": "https://zaisei-karte.jp/032051",
+  "confidence": "reported"
+ },
+ {
+  "claim": "基金",
+  "value": 152.6,
+  "unit": "億円",
+  "as_of": "2024年度",
+  "source": "https://zaisei-karte.jp/032051",
+  "confidence": "reported"
+ },
+ {
+  "claim": "宮沢賢治記念館 累計入館者",
+  "value": 800,
+  "unit": "万人",
+  "as_of": "2025-08-02",
+  "source": "https://www.iwate-np.co.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "宮沢賢治記念館 開館",
+  "value": 1982,
+  "unit": "年",
+  "as_of": "1982",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "いわて花巻空港 年間利用者",
+  "value": 482092,
+  "unit": "人",
+  "as_of": "2024年度",
+  "source": "https://www.iwanichi.co.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "『春と修羅』初版部数",
+  "value": 1000,
+  "unit": "部",
+  "as_of": "1924-04-20",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "宮沢賢治の生前の原稿料",
+  "value": 5,
+  "unit": "円",
+  "as_of": "1921",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "死去から記念館開館までの年数",
+  "value": 49,
+  "unit": "年",
+  "as_of": "1982",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "estimated"
+ }
+]
+</script>
+</body>
+</html>

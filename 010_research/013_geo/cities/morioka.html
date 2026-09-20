@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>盛岡市 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / 盛岡市</p>
+
+<header class="top">
+  <div>
+    <h1>盛岡市 / Morioka</h1>
+    <div class="meta">岩手県 / 県央　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">ニューヨーク・タイムズが2023年に世界で2番目に行くべき場所として挙げ、その年のインバウンドは前年の10.1倍になった。一方で製造品出荷額等1,227億円は、人口が3分の1の北上市の19.1%にとどまる。転出理由の1位は希望する就職先が市外にあったことで、43.3%を占める。</p>
+<p><span class="tag">県庁所在地</span><span class="tag">NYタイムズ</span><span class="tag">第3次産業</span><span class="tag">転出超過</span><span class="tag">南部鉄器</span></p>
+
+<div class="kpi"><div class="card"><div class="k">人口</div><div class="v">275,786人 <small>2026年8月1日・推計人口</small></div></div><div class="card"><div class="k">面積</div><div class="v">886.47 km² <small>全国49位</small></div></div><div class="card"><div class="k">製造品出荷額等</div><div class="v">1,227.0億円 <small>2023年・全事業所</small></div></div><div class="card"><div class="k">財政力指数</div><div class="v">0.70 <small>2024年度</small></div></div></div>
+<iframe class="map" loading="lazy" title="盛岡市の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=140.8727,39.5636,141.4327,39.8436&amp;layer=mapnik&amp;marker=39.7036,141.1527"></iframe>
+
+<h2><span class="num">01</span>市としての特徴<span class="en">Profile</span></h2>
+<p><strong>人口27.6万人は東北で仙台・いわき・郡山・秋田に次ぐ規模だが、製造業の規模は同じ岩手県の北上市の5分の1しかない。この街の経済は行政と商業と学校でできている。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>属性</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>位置</td>
+<td>岩手県のほぼ中央、北上盆地の北端。市内で<strong>北上川・雫石川・中津川の3河川が合流</strong>する。花巻市・八幡平市・宮古市・滝沢市・雫石町・紫波町・矢巾町などが隣接する</td>
+</tr>
+<tr>
+<td>面積</td>
+<td>886.47km²。全国1,741市区町村のうち49番目に広い</td>
+</tr>
+<tr>
+<td>地形</td>
+<td>西に岩手山（2,038m）、東に北上高地。市街地は三つの川がつくった扇状地と河岸段丘に乗っている</td>
+</tr>
+<tr>
+<td>成り立ち</td>
+<td>1889年4月1日に市制施行。<strong>1992年4月1日に都南村、2006年1月10日に玉山村を編入</strong>した</td>
+</tr>
+<tr>
+<td>産業構造</td>
+<td>第3次産業が就業人口の8割以上。卸売・小売業と医療・福祉が厚く、<strong>工業用地の不足もあって第2次産業は全国・県平均より薄い</strong></td>
+</tr>
+<tr>
+<td>伝統産業</td>
+<td>南部鉄器、南部古代型染、紫紺染</td>
+</tr>
+<tr>
+<td>財政</td>
+<td>財政力指数0.70、経常収支比率96.4%、実質公債費比率10.0%、<strong>将来負担比率83.0%</strong>（2024年度）。標準財政規模686.0億円に対し地方債残高1,395.0億円</td>
+</tr>
+<tr>
+<td>高等教育</td>
+<td>岩手大学、岩手県立大学（滝沢市）、岩手医科大学（矢巾町に移転）など</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>同じ岩手県の北上市と並べると輪郭が出る。<strong>人口は盛岡が北上の3.0倍、製造品出荷額等は北上が盛岡の5.2倍。</strong>1人当たりにすると北上は盛岡の15.7倍になる。盛岡は県内最大の消費地で、県内最小級の工業都市でもある。</p></div>
+<h2><span class="num">02</span>経済規模と産業構造<span class="en">Economy</span></h2>
+<h3>製造業の規模（2023年・全事業所）</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th>盛岡市</th>
+<th>花巻市</th>
+<th>北上市</th>
+</tr></thead><tbody>
+<tr>
+<td>事業所数</td>
+<td class="num">192</td>
+<td class="num">216</td>
+<td class="num">240</td>
+</tr>
+<tr>
+<td>従業者数</td>
+<td>5,484人</td>
+<td>8,344人</td>
+<td><strong>15,896人</strong></td>
+</tr>
+<tr>
+<td>製造品出荷額等</td>
+<td><strong>1,227.0億円</strong></td>
+<td>2,442.4億円</td>
+<td><strong>6,424.7億円</strong></td>
+</tr>
+<tr>
+<td>粗付加価値額</td>
+<td>413.8億円</td>
+<td>837.6億円</td>
+<td>1,395.7億円</td>
+</tr>
+<tr>
+<td>人口</td>
+<td>275,786人</td>
+<td>86,491人</td>
+<td>91,345人</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p><strong>県庁所在地が県内3位の工業都市ですらない。</strong>盛岡の従業者5,484人は北上の34.5%で、出荷額では19.1%にとどまる。北上と花巻は東北自動車道と新幹線の同じ軸の上に並んでいるので、立地条件の差ではない。差をつけたのは<strong>工業用地を用意したかどうか</strong>で、盛岡市自身が人口ビジョンで工業用地不足を第2次産業の薄さの理由に挙げている。</p></div>
+<h3>業種別の構成（2023年）</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>業種</th>
+<th>事業所数</th>
+<th>従業者数</th>
+<th>出荷額</th>
+<th>構成比</th>
+</tr></thead><tbody>
+<tr>
+<td>総数</td>
+<td class="num">192</td>
+<td>5,484人</td>
+<td>1,227.0億円</td>
+<td class="num">100%</td>
+</tr>
+<tr>
+<td>食料品</td>
+<td class="num">34</td>
+<td>2,028人</td>
+<td>457.5億円</td>
+<td class="num">37.3%</td>
+</tr>
+<tr>
+<td>金属製品</td>
+<td class="num">17</td>
+<td>899人</td>
+<td>333.6億円</td>
+<td class="num">27.2%</td>
+</tr>
+<tr>
+<td>業務用機械</td>
+<td class="num">3</td>
+<td>261人</td>
+<td>81.2億円</td>
+<td class="num">6.6%</td>
+</tr>
+<tr>
+<td>印刷</td>
+<td class="num">37</td>
+<td>597人</td>
+<td>71.7億円</td>
+<td class="num">5.8%</td>
+</tr>
+<tr>
+<td>プラスチック</td>
+<td class="num">10</td>
+<td>176人</td>
+<td>45.7億円</td>
+<td class="num">3.7%</td>
+</tr>
+<tr>
+<td>生産用機械</td>
+<td class="num">8</td>
+<td>257人</td>
+<td>42.7億円</td>
+<td class="num">3.5%</td>
+</tr>
+<tr>
+<td>窯業・土石</td>
+<td class="num">9</td>
+<td>139人</td>
+<td>35.7億円</td>
+<td class="num">2.9%</td>
+</tr>
+</tbody></table></div>
+<p>食料品と金属製品の2業種で64.5%を占める。食料品は市内消費と県内出荷を向けた地場型で、従業者2,028人は市内製造業の37.0%にあたる。<strong>電子部品は3事業所153人、輸送用機械は2事業所37人</strong>で、東北の他都市を伸ばした2業種がほぼ存在しない。</p>
+<h3>商業</h3>
+<p>年間商品販売額は<strong>約1兆3,559億円</strong>（2004年）。県全体の消費と卸の結節点であり、この機能が第3次産業8割という構造をつくっている。ただし商業統計調査は2007年を最後に系列が切り替わり、以後の比較可能な市別数値は確認できずN/Aとした。</p>
+<h2><span class="num">03</span>人口推移<span class="en">Population</span></h2>
+<h3>国勢調査人口</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年次</th>
+<th>人口</th>
+<th>前回比</th>
+</tr></thead><tbody>
+<tr>
+<td>1970年</td>
+<td>226,868人</td>
+<td>—</td>
+</tr>
+<tr>
+<td>1980年</td>
+<td>272,814人</td>
+<td class="num">+20.3%</td>
+</tr>
+<tr>
+<td>1990年</td>
+<td>292,632人</td>
+<td class="num">+7.3%</td>
+</tr>
+<tr>
+<td>2000年</td>
+<td><strong>302,857人</strong></td>
+<td class="num">+3.5%</td>
+</tr>
+<tr>
+<td>2010年</td>
+<td>298,348人</td>
+<td class="num">-1.5%</td>
+</tr>
+<tr>
+<td>2020年</td>
+<td>289,731人</td>
+<td class="num">-2.9%</td>
+</tr>
+<tr>
+<td>2026年8月（推計）</td>
+<td>275,786人</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<p>合併前の村を含めた組替人口では<strong>2000年がピーク</strong>で、2006年から減少に転じた。全国のピークは2008年なので、<strong>盛岡は全国より8年早く減少局面に入っている。</strong></p>
+<h3>年齢3区分</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>区分</th>
+<th>2010年</th>
+<th>2020年</th>
+<th>増減</th>
+</tr></thead><tbody>
+<tr>
+<td>生産年齢人口（15-64歳）</td>
+<td class="num">65.3%</td>
+<td class="num">59.6%</td>
+<td><strong>-5.7ポイント（△24,770人）</strong></td>
+</tr>
+<tr>
+<td>老年人口（65歳以上）</td>
+<td class="num">21.6%</td>
+<td class="num">28.4%</td>
+<td>+6.8ポイント（+16,314人）</td>
+</tr>
+</tbody></table></div>
+<p>社人研の2023年推計では、2050年に老年人口が4割、生産年齢人口が5割になる。市の独自推計では<strong>2050年の人口229,998人</strong>で、2024年比17.1%減にあたる。</p>
+<h3>自然動態と社会動態</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>数値</th>
+<th>時点</th>
+</tr></thead><tbody>
+<tr>
+<td>出生数</td>
+<td><strong>1,614人（過去最少）</strong></td>
+<td>2024年</td>
+</tr>
+<tr>
+<td>死亡数</td>
+<td><strong>3,741人（過去最多）</strong></td>
+<td>2024年</td>
+</tr>
+<tr>
+<td>合計特殊出生率</td>
+<td>1.36（岩手県1.40、全国1.26）</td>
+<td>2022年</td>
+</tr>
+<tr>
+<td>社会動態</td>
+<td>542人の転出超過</td>
+<td>2025年</td>
+</tr>
+<tr>
+<td>15-49歳女性人口</td>
+<td>1995年比34.7%減、2015年比17.1%減</td>
+<td>2024年</td>
+</tr>
+</tbody></table></div>
+<p>社会動態は<strong>1996年以降ほぼ一貫して転出超過</strong>で、例外は東日本大震災後の2011年から2014年である。沿岸からの避難者の転入が一時的に人口を押し上げた。2015年に再び転出超過へ戻った。</p>
+<div class="risk"><p><strong>女性の転出超過は男性の約1.9倍</strong>（2023年）。年齢別では15-19歳の進学期に県内他地域から転入超過になり、20-29歳の就職期に他県へ大きく流出する。仙台市に対しては15歳から39歳までの全年代で転出超過で、東京圏に対しては20-24歳が最大になる。<strong>進学で集め、就職で失う構造が固定している。</strong></p></div>
+<h3>転出理由（2023年度転出者への調査、n=504）</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>理由</th>
+<th>割合</th>
+</tr></thead><tbody>
+<tr>
+<td>盛岡市以外の地域に希望する<strong>就職先</strong>があった</td>
+<td><strong>43.3%</strong></td>
+</tr>
+<tr>
+<td>盛岡市以外の地域に希望する進学先があった</td>
+<td class="num">23.4%</td>
+</tr>
+<tr>
+<td>会社内の異動</td>
+<td class="num">18.8%</td>
+</tr>
+<tr>
+<td>都会で生活したかった</td>
+<td class="num">17.1%</td>
+</tr>
+<tr>
+<td>家族の転勤や転職</td>
+<td class="num">10.1%</td>
+</tr>
+</tbody></table></div>
+<p>就職先に希望した条件は<strong>職種・仕事内容79.4%、給料73.4%</strong>、成長できる環境49.5%。Uターン意向は「戻りたい・できれば戻りたい」が42.3%で、実家が市内にある人に限ると52.5%になる。戻るための条件の1位は<strong>市内に希望する就職先があること（61.5%）</strong>である。</p>
+<div class="callout"><p>転出理由も、戻る条件も、同じ1点を指している。<strong>雇用の量ではなく種類と賃金である。</strong>02で見た製造業の薄さと、この調査結果は同じ事実を別の角度から測っている。</p></div>
+<h2><span class="num">04</span>日本の大企業との関連<span class="en">Corporate Links</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>企業・機関</th>
+<th>盛岡との関係</th>
+</tr></thead><tbody>
+<tr>
+<td>岩手銀行</td>
+<td>本店所在地。1911年設立の盛岡銀行を源流とし、旧本店本館（1911年竣工、辰野金吾・葛西万司の設計）は国の重要文化財</td>
+</tr>
+<tr>
+<td>東日本旅客鉄道</td>
+<td>東北新幹線は1982年6月23日に大宮-盛岡で暫定開業。盛岡は1982年から2002年まで20年間、新幹線の終着駅だった</td>
+</tr>
+<tr>
+<td>IGRいわて銀河鉄道</td>
+<td>2002年の東北新幹線八戸延伸に伴い、JR東北本線の盛岡-目時を引き継いだ第3セクター</td>
+</tr>
+<tr>
+<td>川徳</td>
+<td>1866年創業の地場百貨店。中心市街地の核</td>
+</tr>
+<tr>
+<td>岩手県交通・岩手県北自動車</td>
+<td>県内バス2社の本社所在地</td>
+</tr>
+</tbody></table></div>
+<p>盛岡市に本社を置く上場製造業は確認できずN/Aとした。02の業種構成と整合する。</p>
+<h2><span class="num">05</span>出身の有名人<span class="en">People</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>人物</th>
+<th>関係</th>
+</tr></thead><tbody>
+<tr>
+<td>石川啄木</td>
+<td>1886年生、渋民村（現・盛岡市玉山）で育つ。盛岡中学中退。歌集『一握の砂』（1910年）</td>
+</tr>
+<tr>
+<td>宮沢賢治</td>
+<td>花巻出身だが、<strong>盛岡中学（1909-1914年）と盛岡高等農林学校（1915-1918年）の9年間を盛岡で過ごした。</strong>『銀河鉄道の夜』の情景の一部は盛岡時代の体験に由来するとされる</td>
+</tr>
+<tr>
+<td>米内光政</td>
+<td>1880年盛岡生。第37代内閣総理大臣（1940年）、海軍大将</td>
+</tr>
+<tr>
+<td>原敬</td>
+<td>1856年本宮村（現・盛岡市）生。第19代内閣総理大臣。1921年に東京駅で暗殺された</td>
+</tr>
+<tr>
+<td>新渡戸稲造</td>
+<td>1862年盛岡生。『武士道』（1899年）の著者、国際連盟事務次長</td>
+</tr>
+<tr>
+<td>金田一京助</td>
+<td>1882年盛岡生。言語学者、アイヌ語研究</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>明治から昭和前期にかけて、<strong>人口5万人前後の地方都市から首相2人と国際連盟事務次長が出ている。</strong>原敬と米内光政はどちらも盛岡藩士の家系で、戊辰戦争で朝敵とされた側から中央の頂点に届いた例である。</p></div>
+<h2><span class="num">06</span>食<span class="en">Food</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>対象</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>わんこそば</td>
+<td>盛岡三大麺の一つ。椀に一口分ずつ注ぎ足す形式</td>
+</tr>
+<tr>
+<td>盛岡冷麺</td>
+<td>1954年に食道園の初代が平壌の冷麺をもとに開発。小麦粉とでん粉の白い麺で、韓国の蕎麦粉の冷麺とは別物</td>
+</tr>
+<tr>
+<td>じゃじゃ麺</td>
+<td>白龍が発祥。平たいうどんに肉味噌。食べ終わりに卵を落として麺の茹で汁を注ぐ「ちいたんたん」がある</td>
+</tr>
+<tr>
+<td>南部せんべい</td>
+<td>小麦粉を型で焼く。ごま・落花生が定番</td>
+</tr>
+</tbody></table></div>
+<p>盛岡冷麺とじゃじゃ麺はどちらも戦後に朝鮮半島と旧満洲からの引揚者が持ち込んだ調理法を起点にしている。<strong>盛岡三大麺のうち2つが1950年代の発明である。</strong></p>
+<h2><span class="num">07</span>観光スポット<span class="en">Places</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>場所</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>盛岡城跡公園（岩手公園）</td>
+<td>1633年に南部氏が築いた城の跡。花崗岩の石垣がほぼ完全に残る。国史跡</td>
+</tr>
+<tr>
+<td>石割桜</td>
+<td>盛岡地方裁判所の敷地内。花崗岩の割れ目から生えたエドヒガン。国の天然記念物</td>
+</tr>
+<tr>
+<td>岩手銀行赤レンガ館</td>
+<td>1911年竣工、辰野金吾・葛西万司設計。重要文化財。2016年から一般公開</td>
+</tr>
+<tr>
+<td>材木町よ市</td>
+<td>4月から11月の毎週土曜に材木町商店街で開く朝市型の夜市</td>
+</tr>
+<tr>
+<td>中津川</td>
+<td>市街地の中心を流れ、秋に鮭が遡上する。NYタイムズの記事が挙げた要素の一つ</td>
+</tr>
+<tr>
+<td>もりおか歴史文化館</td>
+<td>盛岡城跡公園内。盛岡さんさ踊りの山車展示</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">08</span>名声と人口動態のずれ<span class="en">Fame vs Demography</span></h2>
+<p>ニューヨーク・タイムズは2023年1月12日、<strong>「2023年に行くべき52カ所」の2位に盛岡を挙げた。</strong>1位はロンドンで、日本からは盛岡と福岡の2都市が入った。記事が評価したのは東京から短時間で行けること、混雑がないこと、歩いて回れること、大正期の和洋折衷建築が残っていることだった。</p>
+<p>効果は数字に出た。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>変化</th>
+<th>時点</th>
+</tr></thead><tbody>
+<tr>
+<td>盛岡市のインバウンド</td>
+<td><strong>前年比10.1倍</strong>（全国平均1.5倍）</td>
+<td>2023年</td>
+</tr>
+<tr>
+<td>岩手県のインバウンド</td>
+<td>前年比13.7倍</td>
+<td>2023年</td>
+</tr>
+<tr>
+<td>岩手県の観光客入込数</td>
+<td>16,907千人回（前年比13.5%増）</td>
+<td>2024年度</td>
+</tr>
+<tr>
+<td>岩手県の観光消費額</td>
+<td>1,992.7億円（前年比1.6%増）</td>
+<td>2024年度</td>
+</tr>
+<tr>
+<td>岩手県の外国人入込</td>
+<td>473,799人回（台湾293,072人で最大）</td>
+<td>2024年度</td>
+</tr>
+</tbody></table></div>
+<p>一方で同じ期間の人口はこうなっている。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>数値</th>
+<th>時点</th>
+</tr></thead><tbody>
+<tr>
+<td>出生数</td>
+<td>1,614人（過去最少）</td>
+<td>2024年</td>
+</tr>
+<tr>
+<td>死亡数</td>
+<td>3,741人（過去最多）</td>
+<td>2024年</td>
+</tr>
+<tr>
+<td>社会動態</td>
+<td>542人の転出超過</td>
+<td>2025年</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p><strong>入込客数が10倍になった年に、出生数は過去最少を更新した。</strong>観光は消費を運ぶが、雇用の種類を変えない。転出者調査が示した1位の理由は「希望する就職先が市外にあった」で、戻る条件の1位は「市内に希望する就職先があること」である。観光消費はこの条件を満たす職を、少なくとも転出者が求める職種と賃金の水準では作っていない。</p></div>
+<p>岩手県の観光消費額は2024年度で1,992.7億円。県全体の値で、盛岡市分は分離できないためN/Aとした。仮に県の消費額全体が盛岡市に落ちたとしても、北上市1市の製造品出荷額等6,424.7億円の31.0%にしかならない。<strong>観光と工業は、地域経済に入る金額の桁が違う。</strong></p>
+<p>盛岡の課題は、名声を得たことではなく、名声が効く領域と人口が減る原因の領域が重なっていないことにある。</p>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>盛岡市「人口と世帯数」（推計人口275,786人、男130,371人、女145,415人、世帯133,416、令和8年8月1日現在） — https://www.city.morioka.iwate.jp/shisei/1027188/1019915/index.html</li>
+  <li>盛岡市「盛岡市人口ビジョン」令和7年3月（総人口の長期的推移、年齢3区分、自然増減・社会増減、合計特殊出生率1.36／2022年、出生1,614人・死亡3,741人／2024年、女性の転出超過が男性の約1.9倍／2023年、転出理由調査n=504、Uターン意向、2050年229,998人） — https://www.city.morioka.iwate.jp/_res/projects/default_project/_page_/001/030/790/02_zinnkoubizyonn.pdf</li>
+  <li>岩手県ふるさと振興部「令和5年（2023年）岩手県の工業」2023年経済構造実態調査 製造業事業所調査に関する集計（第12表 市町村別。盛岡市192事業所・5,484人・出荷額12,270,469万円、花巻市216事業所・8,344人・24,423,793万円、北上市240事業所・15,896人・64,247,285万円） — https://www3.pref.iwate.jp/webdb/view/outside/s14Tokei/tkTyosaKekka.html</li>
+  <li>自治体財政カルテ「石巻市・盛岡市ほかの財政状況（令和6年度）」（盛岡市 財政力指数0.70、経常収支比率96.4%、実質公債費比率10.0%、将来負担比率83.0%、標準財政規模686.0億円、基金123.3億円、地方債残高1,395.0億円） — https://zaisei-karte.jp/032018</li>
+  <li>Wikipedia「盛岡市」（面積886.47km²、国勢調査人口1970-2020年、隣接自治体、1889年市制施行、1992年都南村編入、2006年玉山村編入、年間商品販売額約1兆3,559億円／2004年、南部鉄器） — https://ja.wikipedia.org/wiki/盛岡市</li>
+  <li>岩手県「ニューヨーク・タイムズ紙『2023年に行くべき52カ所』に『盛岡市』が選ばれました」（2023年1月12日掲載、1位ロンドンに次ぐ2位） — https://www.pref.iwate.jp/sangyoukoyou/kankou/1059946/1061603.html</li>
+  <li>岩手県「令和6年版岩手県観光統計概要」（観光客入込数16,907千人回・前年比13.5%増、観光消費額1,992.7億円、外国人入込473,799人回、台湾293,072人） — https://www.pref.iwate.jp/sangyoukoyou/kankou/toukei/1075241/1090309.html</li>
+  <li>山口大学経済学部「ニューヨークタイムズの『行くべき観光地52ヵ所』をきっかけとした観光戦略」（盛岡市のインバウンド前年比10.1倍、全国1.5倍、岩手県13.7倍） — https://www.yamaguchi-u.ac.jp/econo/wp-content/uploads/2024/07/8b17f0c7525cf4e1b72ff3a10e220fb2.pdf</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく地域リサーチであり、投資助言ではない。製造品出荷額等は2023年経済構造実態調査の岩手県版集計（全事業所）で、工業統計調査とは接続しない。年間商品販売額は2004年商業統計調査の値で、以後の統計は接続しないため更新できていない。宿泊者数の市別実数、市内総生産、工業用地の未分譲面積、2025年の国勢調査人口はいずれも確認できずN/Aとした。構成比・増減率・1人当たりの各値は本ページによる算出値。座標は市役所位置の概数である。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "人口（推計）",
+  "value": 275786,
+  "unit": "人",
+  "as_of": "2026-08-01",
+  "source": "https://www.city.morioka.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（国勢調査）",
+  "value": 289731,
+  "unit": "人",
+  "as_of": "2020",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口ピーク",
+  "value": 302857,
+  "unit": "人",
+  "as_of": "2000",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ピークからの人口減少率",
+  "value": 8.9,
+  "unit": "%",
+  "as_of": "2026-08",
+  "source": "https://www.city.morioka.iwate.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "面積",
+  "value": 886.47,
+  "unit": "km2",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造品出荷額等",
+  "value": 1227.0,
+  "unit": "億円",
+  "as_of": "2023",
+  "source": "https://www3.pref.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造業 従業者数",
+  "value": 5484,
+  "unit": "人",
+  "as_of": "2023",
+  "source": "https://www3.pref.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造品出荷額等（北上市・比較）",
+  "value": 6424.7,
+  "unit": "億円",
+  "as_of": "2023",
+  "source": "https://www3.pref.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "財政力指数",
+  "value": 0.7,
+  "unit": "",
+  "as_of": "2024年度",
+  "source": "https://zaisei-karte.jp/032018",
+  "confidence": "reported"
+ },
+ {
+  "claim": "将来負担比率",
+  "value": 83.0,
+  "unit": "%",
+  "as_of": "2024年度",
+  "source": "https://zaisei-karte.jp/032018",
+  "confidence": "reported"
+ },
+ {
+  "claim": "地方債残高",
+  "value": 1395.0,
+  "unit": "億円",
+  "as_of": "2024年度",
+  "source": "https://zaisei-karte.jp/032018",
+  "confidence": "reported"
+ },
+ {
+  "claim": "出生数",
+  "value": 1614,
+  "unit": "人",
+  "as_of": "2024",
+  "source": "https://www.city.morioka.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "死亡数",
+  "value": 3741,
+  "unit": "人",
+  "as_of": "2024",
+  "source": "https://www.city.morioka.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "合計特殊出生率",
+  "value": 1.36,
+  "unit": "",
+  "as_of": "2022",
+  "source": "https://www.city.morioka.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "社会動態",
+  "value": -542,
+  "unit": "人",
+  "as_of": "2025",
+  "source": "https://www.city.morioka.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "老年人口割合",
+  "value": 28.4,
+  "unit": "%",
+  "as_of": "2020",
+  "source": "https://www.city.morioka.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "将来推計人口",
+  "value": 229998,
+  "unit": "人",
+  "as_of": "2050",
+  "source": "https://www.city.morioka.iwate.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "NYタイムズ 行くべき52カ所",
+  "value": 2,
+  "unit": "位",
+  "as_of": "2023-01-12",
+  "source": "https://www.pref.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "インバウンド 前年比",
+  "value": 10.1,
+  "unit": "倍",
+  "as_of": "2023",
+  "source": "https://www.yamaguchi-u.ac.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "岩手県 観光消費額",
+  "value": 1992.7,
+  "unit": "億円",
+  "as_of": "2024年度",
+  "source": "https://www.pref.iwate.jp/",
+  "confidence": "reported"
+ }
+]
+</script>
+</body>
+</html>

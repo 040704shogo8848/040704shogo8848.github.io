@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>宮沢賢治 — 千部と五円</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    /* charts: dataviz の検証済みスロット（surface #fff で検証） */
+    --s1:#2a78d6; --s1-light:#86b6ef; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  /* ── charts ───────────────────────────────────────────────────────────── */
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  /* 極性チャート: 0を中央に置く */
+  .pol{display:grid;gap:8px}
+  .pol .row{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:10px}
+  .pol .yr{font-size:12.5px;color:var(--sub);font-variant-numeric:tabular-nums;text-align:right}
+  .pol .track{position:relative;height:20px;background:linear-gradient(90deg,transparent 0,transparent calc(50% - 1px),var(--line) calc(50% - 1px),var(--line) calc(50% + 1px),transparent calc(50% + 1px));}
+  .pol .seg{position:absolute;top:0;height:20px;border-radius:3px}
+  .pol .seg.p{background:var(--s1);left:50%}
+  .pol .seg.n{background:var(--neg);right:50%}
+  .pol .val{position:absolute;top:0;font-size:12px;line-height:20px;
+    font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+  .pol-legend{display:flex;gap:16px;font-size:12px;color:var(--sub);margin-top:12px}
+  .pol-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  /* ── timeline ─────────────────────────────────────────────────────────── */
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  /* ── quotes ───────────────────────────────────────────────────────────── */
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / 宮沢賢治</p>
+
+<header class="top">
+  <h1>宮沢賢治 — 千部と五円</h1>
+  <div class="en">Kenji Miyazawa　1896.8.27 – 1933.9.21</div>
+  <div class="tags">
+    <span class="tag">花巻</span><span class="tag">農学校教諭</span><span class="tag">羅須地人協会</span>
+    <span class="tag">東北砕石工場</span><span class="tag">法華経・国柱会</span><span class="tag">死後評価</span>
+  </div>
+  <p class="lead">生前に出した本は2冊、いずれも1,000部の自費出版だった。受け取った原稿料は生涯で5円1回きり。37歳で死んだとき、この人物は無名の元農学校教師で、直前の肩書きは石灰肥料を売る会社の技師だった。死後49年で記念館が建ち、累計入館者は800万人に達している。</p>
+  <p class="srcnote">本ページは公開情報に基づく人物リサーチであり、評伝の定説を要約したものではない。和暦しか特定できない項目は年までを採り、年表の満年齢は生年月日1896年8月27日からの年差で算出している。没後の項目は没年1933年との年差で「没後N年」と表示する。賢治の作品総数、羅須地人協会の参加者数、東北砕石工場での賢治の報酬額、記念館の単年入館者数はいずれも一次情報で確認できずN/Aとした。「デクノボー」のモデル、『銀河鉄道の夜』のカムパネルラのモデルは諸説あり、本文では特定していない。</p>
+</header>
+
+<h2><span class="num">①</span>概要<span class="en">Overview</span></h2>
+
+<div class="kpi">
+  <div class="card"><div class="k">生没</div><div class="v">37歳<small>1896.8.27 – 1933.9.21</small></div></div>
+  <div class="card"><div class="k">生前の刊行</div><div class="v">2冊<small>各1,000部・いずれも自費</small></div></div>
+  <div class="card"><div class="k">生涯の原稿料</div><div class="v">5円<small>『雪渡り』1回のみ</small></div></div>
+  <div class="card"><div class="k">記念館 累計入館者</div><div class="v">800万人<small>2025年8月2日・開館43年</small></div></div>
+</div>
+
+<div class="callout">
+<p><b>先に結論を3つ書く。</b></p>
+<p><b>1つ目。この人物は文学で生活しようとしたことがない。</b>生涯で唯一の原稿料5円は1922年の『雪渡り』で、以後の2冊はどちらも自費出版である<sup><a href="#s1">1</a></sup><sup><a href="#s5">5</a></sup>。安定した給与所得があったのは稗貫農学校の教諭だった4年3か月だけで、月80円。その職を「本当の百姓になる」という理由で自分から辞めている<sup><a href="#s1">1</a></sup>。以後の生活は、質屋と古着商で財を成した父・政次郎の資産に依存した。</p>
+<p><b>2つ目。失敗の型が3回とも同じである。</b>人造宝石の事業（1919年、父の反対で断念）、羅須地人協会（1926-1928年、無料の肥料設計で約2,000枚を書いて肺を壊す）、東北砕石工場の技師（1931年、7か月で50回以上の出張の末に倒れる）。<b>いずれも「対価を取らずに、または取れる仕組みを作らずに、自分の体で埋めた」</b><sup><a href="#s5">5</a></sup>。理想の側が正しいほど、経済の側が壊れる構造を最後まで解いていない。</p>
+<p><b>3つ目。いま知られている作品の多くは、本人が世に出そうとしなかったものである。</b>代表作とされる「雨ニモマケズ」は1931年11月3日に手帳へ書かれた自分あてのメモで、死後5か月の1934年2月16日に遺品のトランクから見つかった<sup><a href="#s1">1</a></sup><sup><a href="#s3">3</a></sup>。生前に自分で出した2,000部はほとんど売れず、出す気のなかった1篇が教科書に載った。<b>この人物の評価は、本人の努力ではなく死後の編集者の仕事が作っている。</b></p>
+</div>
+
+<h2><span class="num">②</span>年表<span class="en">Timeline</span></h2>
+<p>日付が特定できる出来事だけを並べた。各項目は「事実と具体」「なぜ効いたか」の2層で書いている。期のボタンで絞り込める。</p>
+
+<div class="tl-tools">
+  <input id="tlq" type="search" placeholder="年表を検索（例: 石灰、トシ、手帳、5円）" aria-label="年表を検索">
+  <span class="tl-count" id="tlcount"></span>
+</div>
+<div class="tl-eras" id="tleras"></div>
+<div class="tl" id="tl"></div>
+<div class="tl-empty" id="tlempty">該当する項目がない。</div>
+
+<h2><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+
+<h3>I 質屋の長男（1896–1914）</h3>
+<p>父・政次郎は古着商から質屋へ広げて宮澤商店を営み、小作地も多く持っていた<sup><a href="#s5">5</a></sup>。<b>賢治は貧しい農民の側ではなく、貧しい農民から利息を取る側の家に生まれている。</b>この事実を本人が違和感として抱えていたことは複数の伝記が伝えている。後年の農民への関与を、階級の共有ではなく負い目から読むほうが行動の説明がつく。</p>
+<p>もう一つの起点は石である。小学校高学年で野山の石をハンマーで割って鉱物を調べ、「石っこ賢さん」と呼ばれた<sup><a href="#s5">5</a></sup>。この関心は土壌学、肥料設計、石灰販売という職業選択の全部につながっていく。<b>文学は後から来た。地質が先にある。</b></p>
+
+<h3>II 盛岡高等農林（1915–1920）</h3>
+<p>首席で入学し、翌年には学年で唯一の特待生になっている<sup><a href="#s1">1</a></sup>。指導教官の関豊太郎は冷害克服と土壌改良に取り組んだ学者で、賢治は地質調査を実地でこなした<sup><a href="#s5">5</a></sup>。1920年5月には助教授に推す話が出たが辞退した。</p>
+<div class="risk">
+<p><b>ここで進路を自分で閉じている。</b>学者として残る道、家業を継ぐ道、どちらも選ばなかった。以後13年の不安定さは、能力の不足ではなくこの選択から始まっている。同じ1920年10月に国柱会へ入信し、信仰と職業をめぐって父との衝突が始まった<sup><a href="#s1">1</a></sup>。</p>
+</div>
+<p>この時期の人間関係で最も重いのは保阪嘉内である。1917年7月1日に創刊した同人誌『アザリア』の中心メンバーで、1918年3月に「帝室を覆すの時は」という表現が問題視されて退学処分となった<sup><a href="#s4">4</a></sup>。賢治は学校に再考を求めたが覆らず、退学の決まった保阪に『法華経』を贈っている。のちに国柱会への入信を勧めて決裂し、1921年7月の面会を最後に再会していない。<b>『銀河鉄道の夜』のカムパネルラのモデルとする説があるが、確定していない。</b></p>
+
+<h3>III 家出と農学校（1921–1925）</h3>
+<p>1921年1月23日、家族に無断で上京した。本郷菊坂町に下宿し、謄写版印刷所で筆耕をしながら国柱会の街頭布教に加わっている<sup><a href="#s1">1</a></sup>。8月に妹トシの病で帰郷し、東京で自立する試みは8か月で終わった。</p>
+<p>12月3日に稗貫農学校の教諭となる。<b>月給80円。この4年3か月が、生涯で唯一の安定収入のある期間である。</b>そして創作が最も集中した期間でもある<sup><a href="#s5">5</a></sup>。生前に出した2冊はどちらもこの期間に出ている。</p>
+<div class="callout">
+<p><b>安定した職があったときにだけ大量に書けた、という事実は軽くない。</b>1926年に教職を辞して以降、賢治は農業指導と営業に時間を使い、まとまった作品を出していない。理想を追って職を捨てたことが、結果として創作の条件も壊した。</p>
+</div>
+<p>1922年11月27日の妹トシの死（24歳）がこの期間の中心にある<sup><a href="#s1">1</a></sup>。賢治はしばらく筆を置き、以後の作品は「永訣の朝」「オホーツク挽歌」を含めて死者への呼びかけの形を取るようになる。</p>
+
+<h3>IV 羅須地人協会（1926–1928）</h3>
+<p>1926年3月31日に花巻農学校を退職し、下根子桜の宮沢家別宅で独居自炊を始めた。8月16日に羅須地人協会を設立し、開墾、レコード鑑賞会、童話朗読、チェロの練習、そして<b>無料の肥料設計事務所</b>を運営した<sup><a href="#s2">2</a></sup>。11月29日には農民講座を開き、その講義のために『農民芸術概論綱要』を書いている<sup><a href="#s11">11</a></sup>。</p>
+<div class="risk">
+<p><b>この2年4か月に書いた肥料設計図は約2,000枚とされる。</b>すべて無料である<sup><a href="#s5">5</a></sup>。対価を取らない以上、依頼が増えるほど本人の時間と家の金が減る。1928年8月10日、高温干天の年に農業指導で歩き回った末に倒れ、両側肺浸潤と診断された。秋には急性肺炎を発症し、約2年の療養に入る。<b>協会は再開されなかった。</b></p>
+</div>
+<p>もう一つの終わり方の要因は警察である。1927年2月1日に『岩手日報』が「農村文化の創造に努む」と報じたことで社会主義運動との関係を疑われ、花巻警察署長の事情聴取を受けた<sup><a href="#s2">2</a></sup>。以後、協会の活動は不定期になった。<b>1918年に保阪が除籍された出来事と同じ構図が、9年後に本人の身に起きている。</b></p>
+
+<h3>V 東北砕石工場（1929–1931）</h3>
+<p>1929年春、東磐井郡の東北砕石工場主・鈴木東蔵が病床の賢治を訪ねた。花巻からの石灰の注文が途絶えた理由を調べに来て、原因が「肥料の神様」と呼ばれる人物の病臥だと知ったためである。面会謝絶中だったが対談は2時間に及んだ<sup><a href="#s5">5</a></sup>。</p>
+<p>1931年2月21日に技師として契約。花巻出張所は弟・清六の金物店内に置き、宮沢家が工場へ支度金500円を貸与し、末妹クニの夫が経理を引き受けた<sup><a href="#s5">5</a></sup><sup><a href="#s20">20</a></sup>。恩師の関豊太郎は「引き受けてよからん／引き受けるべからず」と印刷されたはがきの後者を棒線で消し、「小生の宿年の希望が実現しかゝったのを喜びます」と付記して送っている。</p>
+
+<div class="chart">
+  <div class="cap">東北砕石工場の生産量</div>
+  <div class="sub">賢治の営業活動の前後。単位はトン</div>
+  <div class="bars" id="chartSaiseki"></div>
+  <p class="sub" style="margin:14px 0 0">出典5。月産か年産かの別は原典に明記がないため、原典の表記のまま「10トンの生産量が25トン」と記す。</p>
+</div>
+
+<p>技師として契約しながら、賢治が実際にやったのは営業である。約7か月で50回以上の出張をこなし、自ら執筆・校正した宣伝書「肥料用炭酸石灰」を岩手・宮城・秋田・青森の農業関係者へ<b>1か月5,000通</b>送り、その費用を自ら負担すると申し出た<sup><a href="#s5">5</a></sup>。春で農業用石灰の需要が切れると、壁材という別用途を自分で探し、<b>20kg以上のサンプルをトランクに入れて</b>各地を回っている。</p>
+<div class="callout">
+<p><b>37年の生涯で、知識が数字に変換されたのはこの7か月だけである。</b>生産量は2.5倍になった。ただしそれを起こしたのは技師の設計ではなく本人の脚で、その脚が9月21日に止まった。現存する賢治の書簡は約500通で、うち鈴木東蔵あてが117通と最も多く、1日に2通送った日もある<sup><a href="#s5">5</a></sup>。<b>この人物が最も多く手紙を書いた相手は、文学者ではなく石灰工場の経営者である。</b></p>
+</div>
+
+<h3>VI 病臥と死（1931–1933）</h3>
+<p>1931年9月19日に仙台へ出張し、21日に東京・神田の旅館「八幡館」で発熱した。死を覚悟して両親と弟妹あてに遺書を書き、27日夜の寝台車で東京を離れ、28日朝に花巻へ着いた<sup><a href="#s5">5</a></sup>。以後、約2年の闘病生活に入る。</p>
+<p>この2年に賢治が送った書簡は100通近くあり、<b>そのうち30通が鈴木東蔵あてだった</b><sup><a href="#s5">5</a></sup>。もう営業に出られる状態ではなかったが、最後まで技師として工場を気にかけている。</p>
+<p>11月3日、黒革装の手帳（全166ページ）の51〜59ページに青鉛筆で「11.3.」と記して「雨ニモマケズ」を書いた<sup><a href="#s3">3</a></sup><sup><a href="#s21">21</a></sup>。発表を前提としないメモとみられている。翌1932年3月には『グスコーブドリの伝記』を発表した。技師として倒れた半年後に、技師が命と引き換えに土地を救う話を出している。</p>
+<p>1933年9月20日、急性肺炎の兆候と診断されながら訪ねてきた農民の稲作相談に1時間応じた。21日午前11時半に喀血し、父に法華経を1,000部印刷して知人に配るよう遺言して、午後1時30分に死去した<sup><a href="#s1">1</a></sup><sup><a href="#s5">5</a></sup>。満37歳。<b>最後の仕事は肥料の相談で、最後の遺言は信仰だった。文学は最後に出てこない。</b></p>
+
+<h3>VII 死後の増殖（1934–2025）</h3>
+<p>死の5か月後、1934年2月16日に東京の「宮沢賢治友の会」の席上で遺品のトランクから手帳が取り出され、「雨ニモマケズ」が見つかった<sup><a href="#s3">3</a></sup>。同年9月21日、命日の『岩手日報』夕刊に「未発表遺作（最後の手帳から）」の題で初めて活字になった。<b>全国紙ではなく地方紙から出ている。</b></p>
+
+<div class="chart">
+  <div class="cap">死後に編まれた全集</div>
+  <div class="sub">巻数。生前の刊行は2冊だけだった</div>
+  <div class="bars" id="chartZensyu"></div>
+  <p class="sub" style="margin:14px 0 0">出典1・23。十字屋書店版は全6巻＋別巻1で計7冊として数えた。</p>
+</div>
+
+<p>受容を動かしたのは草野心平と高村光太郎である。草野は『春と修羅』を読んで賢治を知り、1925年に広東で創刊した詩誌『銅鑼』へ寄稿を求めた<sup><a href="#s1">1</a></sup><sup><a href="#s18">18</a></sup>。死後は全集の刊行に尽力している。<b>草野心平は福島県いわき市の出身で、市内に草野心平記念文学館がある</b><sup><a href="#s16">16</a></sup>。花巻の宮沢賢治記念館といわきの草野心平記念文学館は、同じ一つの出来事を別の側から展示している。</p>
+<p>1936年11月21日には羅須地人協会跡に「雨ニモマケズ」の詩碑が建った。碑文は高村光太郎の揮毫で、1946年に訂正されている<sup><a href="#s3">3</a></sup>。1947年には東北砕石工場主の長男・鈴木實が地元青年団と詩碑の建立を発案し、谷川徹三に撰文と揮毫を依頼した<sup><a href="#s5">5</a></sup><sup><a href="#s22">22</a></sup>。<b>賢治を記念する最初の動きは、花巻ではなく一緒に働いた一関市東山の人たちから出ている。</b></p>
+<p>1973年から1977年の『校本 宮澤賢治全集』（全14巻）で本文の異同が整理され、研究の土台ができた<sup><a href="#s1">1</a></sup><sup><a href="#s23">23</a></sup>。<b>花巻市立宮沢賢治記念館の開館は1982年で、死去から49年後である</b><sup><a href="#s7">7</a></sup>。2025年8月2日に累計入館者800万人に到達した<sup><a href="#s6">6</a></sup>。</p>
+
+<h2><span class="num">④</span>実績の数字<span class="en">The Numbers</span></h2>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>項目</th><th class="num">数値</th><th>時点・条件</th></tr></thead>
+<tbody>
+<tr><td class="name">生前の刊行点数</td><td class="num">2冊</td><td>『春と修羅』1924年4月20日、『注文の多い料理店』1924年12月1日</td></tr>
+<tr><td class="name">『春と修羅』部数・定価</td><td class="num">1,000部 / 2円40銭</td><td>自費出版。花巻の吉田印刷所で印刷、関根書店名義</td></tr>
+<tr><td class="name">『注文の多い料理店』部数・定価</td><td class="num">1,000部 / 1円60銭</td><td>光原社名義。うち200部を本人が買い取り</td></tr>
+<tr><td class="name">生涯の原稿料</td><td class="num">5円</td><td>1922年1月『愛国婦人』掲載「雪渡り」。生涯で1回のみ</td></tr>
+<tr><td class="name">稗貫農学校の給与</td><td class="num">月80円</td><td>1921年12月3日–1926年3月31日。うち月20円を家に入れた</td></tr>
+<tr><td class="name">安定収入のあった期間</td><td class="num">4年3か月</td><td>農学校教諭のみ。37年の生涯の11.6%</td></tr>
+<tr><td class="name">肥料設計図</td><td class="num">約2,000枚</td><td>羅須地人協会期（1926–1928年）。すべて無料</td></tr>
+<tr><td class="name">東北砕石工場の技師期間</td><td class="num">7か月</td><td>1931年2月21日の契約から同年9月21日の発病まで</td></tr>
+<tr><td class="name">同期間の出張回数</td><td class="num">50回以上</td><td>約7か月で</td></tr>
+<tr><td class="name">宣伝書の発送</td><td class="num">5,000通/月</td><td>岩手・宮城・秋田・青森の農業関係者へ。費用を自ら負担すると申し出</td></tr>
+<tr><td class="name">工場の生産量</td><td class="num">10 → 25トン</td><td>営業活動の成果。2.5倍</td></tr>
+<tr><td class="name">現存書簡</td><td class="num">約500通</td><td>うち鈴木東蔵あて117通が最多</td></tr>
+<tr><td class="name">病臥中の書簡</td><td class="num">100通近く</td><td>1931年9月–1933年9月。うち30通が鈴木東蔵あて</td></tr>
+<tr><td class="name">遺言</td><td class="num">法華経1,000部</td><td>1933年9月21日。父に印刷して知人に配るよう依頼</td></tr>
+<tr><td class="name">死去から記念館開館まで</td><td class="num">49年</td><td>1933年 → 1982年</td></tr>
+<tr><td class="name">記念館 累計入館者</td><td class="num">800万人</td><td>2025年8月2日。開館から約43年、年平均約18.6万人</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="chart">
+  <div class="cap">37年の内訳</div>
+  <div class="sub">在籍・在職の期間で区切った。単位はか月</div>
+  <div class="bars" id="chartLife"></div>
+  <p class="sub" style="margin:14px 0 0">合計445か月（37年1か月）。区切りの前後に1か月未満の重なりがあるため、各期間の和は概数である。本ページによる算出値。</p>
+</div>
+
+<div class="callout">
+<p><b>読み方。</b>誕生から高等農林卒業までが259か月で、全体の58.2%を占める。<b>社会に出てからの期間は186か月しかない。</b>そのうち給与所得のあった農学校教諭が52か月、羅須地人協会が28か月、技師が7か月、残る99か月は療養と病臥である。<b>働いていた時間より、寝ていた時間のほうが長い。</b></p>
+</div>
+
+<h2><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
+<p>この人物の失敗は4つの類型に分かれる。金額が特定できるものは金額を書く。</p>
+
+<h3>類型1: 事業を起こそうとして、資金の出し手に止められる</h3>
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>案件</th><th>年</th><th>結末</th></tr></thead>
+<tbody>
+<tr><td>人造宝石の製造販売</td><td class="num">1919年</td><td>東京でトシを看病中に計画。<b>父・政次郎の反対で断念</b></td></tr>
+<tr><td>東北砕石工場への出資・関与</td><td class="num">1931年</td><td>宮沢家が工場へ<b>支度金500円を貸与</b>。事業の主体は東蔵で、賢治は技師の立場にとどまった</td></tr>
+</tbody>
+</table>
+</div>
+<p><b>賢治は自分の資本を持ったことがない。</b>事業の構想はあり、相手を説得する手紙も書けたが、金は常に父から出ている。1919年の断念も1931年の貸与も、判断者は政次郎である。</p>
+
+<h3>類型2: 対価を設計しなかった</h3>
+<p>羅須地人協会の肥料設計は無料だった。2年4か月で約2,000枚<sup><a href="#s5">5</a></sup>。1枚に要した時間を仮に30分としても1,000時間になる。<b>この労働は収入を1円も生んでいない。</b>同じことが童話にも言える。生前に出した2冊は自費出版で、印刷費は回収されていない。</p>
+<div class="risk">
+<p><b>無料であることが理想の証明になってしまっている。</b>対価を取れば農民の負担になるという判断は正しいが、その結果として続けられなくなれば農民は指導を失う。持続可能性の設計が最後まで欠けている。羅須地人協会が2年4か月で終わった直接の原因は、警察でも資金でもなく<b>本人の肺</b>だった。</p>
+</div>
+
+<h3>類型3: 自分の体を運転資金に使った</h3>
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>時期</th><th>負荷</th><th>結果</th></tr></thead>
+<tbody>
+<tr><td>1928年夏</td><td>高温干天の年に農業指導で歩き回る</td><td><b>8月10日に倒れ、両側肺浸潤。</b>秋に急性肺炎、約2年の療養</td></tr>
+<tr><td>1931年3–9月</td><td>7か月で50回以上の出張、20kg以上のサンプルを携行</td><td><b>9月21日に東京で発熱、遺書を書く。</b>以後2年の病臥</td></tr>
+<tr><td>1931年9月11–15日</td><td>盛岡の肥料展覧会。前後7日間のうち出張メモは4日分のみ</td><td>3日は疲労で動けなかったとみられる</td></tr>
+</tbody>
+</table>
+</div>
+<p>2回とも同じ形で倒れている。<b>1回目の療養2年を挟んでも、行動の設計は変わらなかった。</b></p>
+
+<h3>類型4: 生前の評価をほぼ得られなかった</h3>
+<p>刊行2冊・計2,000部、原稿料5円<sup><a href="#s13">13</a></sup>。文壇の中央との接点はほとんどなく、評価したのは草野心平ら少数の詩人だった<sup><a href="#s14">14</a></sup>。<b>これは作品の質の問題ではなく、流通の問題である。</b>自費出版を地方の印刷所で刷り、書店の名義だけ借りる方法では読者に届かない。死後に全集が4回編まれて初めて、読める形になった。</p>
+<div class="callout">
+<p><b>4つの類型は独立していない。</b>資本を持たず（類型1）、対価を取らず（類型2）、体で埋め（類型3）、その結果として作品を流通に乗せる余力が残らなかった（類型4）。<b>賢治の失敗は性格の問題でも運の問題でもなく、1つの設計の欠落が4方向に出たものである。</b>欠けていたのは、理想を続けるための収入源の設計である。</p>
+</div>
+
+<h2><span class="num">⑥</span>思想と方法<span class="en">Thought and Method</span></h2>
+
+<h3>法華経と国柱会</h3>
+<p>1920年10月に日蓮主義の国柱会へ入信した<sup><a href="#s1">1</a></sup>。父・政次郎は浄土真宗で、信仰をめぐる対立が家出の直接の引き金になっている。1918年に退学が決まった保阪嘉内に『法華経』を贈り、のちに入信を勧めて決裂した<sup><a href="#s4">4</a></sup>。死の床での遺言も法華経1,000部の印刷だった。<b>この人物の行動の一貫性は、文学ではなく信仰の側にある。</b></p>
+
+<h3>『農民芸術概論綱要』</h3>
+<p>1926年、羅須地人協会の農民講座のために書かれた講義テキストである<sup><a href="#s11">11</a></sup><sup><a href="#s17">17</a></sup>。文学作品として構想されたものではない。ここに置かれた一節が、のちに賢治の思想として最も広く引かれることになる。</p>
+<blockquote>
+世界がぜんたい幸福にならないうちは個人の幸福はあり得ない
+<span class="who">『農民芸術概論綱要』序論（1926年）<sup><a href="#s11">11</a></sup></span>
+</blockquote>
+<p>同じテキストにある「まづもろともに かがやく宇宙の微塵となりて 無方の空にちらばらう」は、1947年に谷川徹三が東山の詩碑の碑文として選び、揮毫に約1年をかけている<sup><a href="#s5">5</a></sup>。</p>
+
+<h3>イーハトーブと「心象スケッチ」</h3>
+<p>岩手を「イーハトーブ」と呼び始めたのは花巻農学校時代である<sup><a href="#s5">5</a></sup>。『春と修羅』に「詩集」ではなく「心象スケッチ」という語を与えたのも同じ時期で、<b>できあがった作品ではなく観測記録として出すという態度を、題名の段階で宣言している。</b>科学の記述法を文学へ持ち込んだというより、この人物にとって最初から両者が分かれていなかったと読むほうが行動の説明がつく。</p>
+
+<h3>技術者としての方法</h3>
+<p>石灰の商品名を「石灰岩抹」から肥料用「炭酸石灰」へ統一する提案、宣伝書の自筆と校正、月5,000通の発送、需要が切れる季節に向けた壁材への用途転換<sup><a href="#s5">5</a></sup>。<b>やっていることは近代的な市場開拓である。</b>欠けていたのは着想でも熱意でもなく、それを他人に委譲する仕組みだった。</p>
+
+<h2><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
+<p>日付と出典が特定できるものに限った。モデル特定のように裏づけの取れない説は「出典未確定」に分けている。</p>
+<div class="q-tabs" id="qtabs"></div>
+<div class="q-list" id="qlist"></div>
+
+<h2><span class="num">⑧</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+<li id="s1">Wikipedia「宮沢賢治」（生没年月日、家族、学歴、稗貫農学校教諭の期間と月給80円、国柱会入信、家出、トシの死、『春と修羅』『注文の多い料理店』の刊行日・部数・定価、原稿料5円、死去の経緯、死後の全集刊行史） — https://ja.wikipedia.org/wiki/宮沢賢治</li>
+<li id="s2">Wikipedia「羅須地人協会」（1926年8月16日設立、下根子桜、11月29日の農民講座開講、レコード鑑賞会、肥料設計、1927年2月1日の岩手日報記事と警察聴取、1928年夏の活動停止） — https://ja.wikipedia.org/wiki/羅須地人協会</li>
+<li id="s3">Wikipedia「雨ニモマケズ」（1931年11月3日の記載、手帳166ページ中の51〜59ページ、1934年2月16日の発見、1934年9月21日の岩手日報夕刊初出、1936年11月21日の詩碑建立と高村光太郎の揮毫、「ヒドリ／ヒデリ」の異同） — https://ja.wikipedia.org/wiki/雨ニモマケズ</li>
+<li id="s4">Wikipedia「保阪嘉内」（1896年10月18日–1937年2月8日、1917年7月1日の『アザリア』創刊、1918年3月の除籍、『法華経』の贈与、1921年7月の面会、カムパネルラのモデル説） — https://ja.wikipedia.org/wiki/保阪嘉内</li>
+<li id="s5">菅原淳「宮沢賢治が技師として働いた町 一関市東山町 〜『石っこ賢さん』と東北砕石工場〜」東北地質調査業協会『大地』第58号（家業、石っこ賢さん、関豊太郎、1929年春の鈴木東蔵来訪と2時間の対談、1931年2月21日の契約と支度金500円、関教授のはがき、50回以上の出張、宣伝書5,000通/月、生産10トン→25トン、サンプル20kg以上、1931年9月11–15日の肥料展覧会、9月21日の発病と遺書、書簡約500通のうち東蔵あて117通、病中書簡100通中30通、肥料設計図約2,000枚、谷川徹三の碑文選定） — https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf</li>
+<li id="s6">岩手日報「花巻の宮沢賢治記念館、入館800万人到達 開館から43年」2025年8月4日（2025年8月2日到達） — https://www.iwate-np.co.jp/article/2025/8/4/185617</li>
+<li id="s7">花巻市「宮沢賢治記念館の概要」（1982年開館） — https://www.city.hanamaki.iwate.jp/miyazawakenji/kinenkan/1003982.html</li>
+<li id="s8">花巻市「宮沢賢治記念館 入館料とアクセス」（所在地・開館時間・料金） — https://www.city.hanamaki.iwate.jp/miyazawakenji/kinenkan/1003991.html</li>
+<li id="s9">花巻市「宮沢賢治トップページ」（記念館・イーハトーブ館・童話村などの市の賢治関連施設） — https://www.city.hanamaki.iwate.jp/miyazawakenji/index.html</li>
+<li id="s10">国立国会図書館 レファレンス協同データベース「宮沢賢治の『雨ニモマケズ手帳』の名称と、『雨ニモマケズ』の出典について」 — https://crd.ndl.go.jp/reference/entry/index.php?page=ref_view&amp;id=1000110276</li>
+<li id="s11">青空文庫「農民芸術概論綱要」宮沢賢治（「世界がぜんたい幸福にならないうちは個人の幸福はあり得ない」「永久の未完成これ完成である」「まづもろともに かがやく宇宙の微塵となりて 無方の空にちらばらう」） — https://www.aozora.gr.jp/cards/000081/card2386.html</li>
+<li id="s12">筑摩書房『宮沢賢治「雨ニモマケズ手帳」研究』書誌（手帳研究の学術的位置づけ） — https://www.chikumashobo.co.jp/product/9784480823250/</li>
+<li id="s13">東洋経済オンライン「『宮沢賢治』が生前ほとんど評価されなかった背景」（生前の刊行は2冊のみで作家として無名だったこと） — https://toyokeizai.net/articles/-/638465</li>
+<li id="s14">nippon.com「宮沢賢治ってどんな人」（生前は一部の詩人に評価されながらほぼ無名、没後に草野心平・高村光太郎の尽力で知名度が上がったこと） — https://www.nippon.com/ja/views/b05804/</li>
+<li id="s15">本サイト「花巻市」都市リサーチ（記念館の年平均入館者、花巻市の人口86,491人／2026年8月1日、ピーク107,175人／2000年からの19.3%減） — <a href="../../013_geo/cities/hanamaki.html">013_geo/cities/hanamaki.html</a></li>
+<li id="s16">本サイト「いわき市」都市リサーチ（草野心平がいわき市小川町の出身であること、草野心平記念文学館） — <a href="../../013_geo/cities/iwaki.html">013_geo/cities/iwaki.html</a></li>
+<li id="s17">公益社団法人日本都市計画学会「名著探訪 農民芸術概論 宮沢賢治」（『農民芸術概論綱要』の位置づけ） — https://www.cpij.or.jp/com/gp/books_review/376books01.html</li>
+<li id="s18">講談社 草野心平『宮沢賢治覚書』書誌（草野心平による賢治論） — https://bookclub.kodansha.co.jp/product?item=0000167523</li>
+<li id="s19">花巻観光協会「宮沢賢治『雨ニモマケズ手帳』実物公開【宮沢賢治記念館】」（手帳の実物公開） — https://www.kanko-hanamaki.ne.jp/event/event_detail.php?id=802</li>
+<li id="s20">宮澤賢治の詩の世界（ihatov.cc）「東北砕石工場との『契約証』」（1931年2月の契約内容） — https://ihatov.cc/blog/archives/2010/09/post_719.htm</li>
+<li id="s21">宮澤賢治の詩の世界（ihatov.cc）「賢治の手帳」（手帳の使用時期と体裁） — https://ihatov.cc/blog/archives/2005/11/post_335.htm</li>
+<li id="s22">いわての旅「宮沢賢治の足跡をたどる 〜旧東北砕石工場と鉱物たち〜」（石と賢治のミュージアム、旧東北砕石工場、一関市東山町） — https://iwatetabi.jp/edu_travel/16044/</li>
+<li id="s23">国立国会図書館 レファレンス協同データベース「宮沢賢治の作品は、いつ頃から広く一般に読まれるようになったのか」（生前・没後の刊行状況と全集の系譜） — https://crd.ndl.go.jp/reference/entry/index.php?id=1000248947&amp;page=ref_view</li>
+</ol>
+
+</div>
+
+<script>
+/* ─── 年表データ ───────────────────────────────────────────────────────────
+   d=日付（西暦年＋和暦） / e=期の番号 / t=見出し / w=事実と具体 / y=なぜ効いたか
+   f=数値チップ / s=出典番号（HTMLに焼き込んだ ol.sources の id に対応）
+   出典一覧は HTML 側に静的に置いてある。JS が落ちても読める形にするため。 */
+const ERAS = [
+ '',
+ 'I 質屋の長男 1896–1914',
+ 'II 盛岡高等農林 1915–1920',
+ 'III 家出と農学校 1921–1925',
+ 'IV 羅須地人協会 1926–1928',
+ 'V 東北砕石工場 1929–1931',
+ 'VI 病臥と死 1931–1933',
+ 'VII 死後の増殖 1934–2025',
+];
+
+const TL = [
+ {d:'1896.8.27 明治29',e:1,t:'花巻に生まれる',
+  w:'岩手県稗貫郡里川口村川口町（現・花巻市豊沢町）で、父・宮沢政次郎、母・イチの長男として生まれた。家業は質屋と古着商で、地域では有数の資産家だった。政次郎は小作地も多く持っていた。',
+  y:'この人物は貧しい農村の出ではない。貧しい農民から利息を取る側の家の長男である。生涯を通じた農民への関与は、階級の共有ではなく負い目から出発している。',
+  f:['長男','質屋・古着商'],s:[1,5]},
+ {d:'1896.8.31 明治29',e:1,t:'陸羽地震（出生の5日後）',
+  w:'出生の5日後に陸羽地震が発生した。賢治の生年の前後は三陸津波（1896年6月15日）を含め、東北が連続して災害に見舞われた時期にあたる。',
+  y:'冷害と地震と凶作は、この人物が育った環境の常数である。後年『グスコーブドリの伝記』が冷害から始まるのは創作の設定ではない。',s:[1]},
+ {d:'1903.4 明治36',e:1,t:'花巻川口尋常小学校に入学',
+  w:'成績は優秀だった。高学年のころ野山を歩いて石をハンマーで割り、鉱物を調べることに熱中し、周囲から「石っこ賢さん」と呼ばれた。',
+  y:'鉱物への関心は趣味に留まらず、のちの土壌学・肥料設計・石灰販売という職業選択の全部につながっている。作品に鉱物名が頻出するのも同じ根から出ている。',
+  f:['石っこ賢さん'],s:[1,5]},
+ {d:'1909.4 明治42',e:1,t:'盛岡中学校に入学、寄宿舎「自彊寮」へ',
+  w:'岩手県立盛岡中学校（現・盛岡第一高校）に入学し、親元を離れて寄宿舎に入った。2年生のとき初めて岩手山に登り、以後も岩手山・早池峰山に何度も登っている。盛岡から花巻まで40km以上を歩いた記録も残る。',
+  y:'花巻の人という印象が強いが、この人物は13歳から22歳までの9年間を盛岡で過ごしている。岩手の地形を歩いて覚えた時期がここにあたる。',
+  f:['9年間','40km以上を歩行'],s:[1,5]},
+ {d:'1914.3 大正3',e:1,t:'盛岡中学を卒業、進学をめぐり父と対立',
+  w:'卒業後、さらに勉強したい賢治と、家業を継がせたい父・政次郎が対立した。同年4月には肥厚性鼻炎で岩手病院に入院し手術を受けている（5月末まで）。最終的に父の了解を得て1年後に進学した。',
+  y:'進学と家業の対立はこの一度で終わらない。以後20年、職業と信仰と金のすべてで父と衝突し、そのたびに父が最後に折れて資金を出す構図が繰り返される。',s:[1,5]},
+
+ {d:'1915.4 大正4',e:2,t:'盛岡高等農林学校に首席で入学',
+  w:'盛岡高等農林学校（現・岩手大学農学部）に首席で入学し、土壌学の関豊太郎教授の指導を受けた。関教授は冷害克服と土壌改良に取り組んだ当代一の学者である。',
+  y:'この人物の農業観は文学から来ていない。冷害を土壌の側から解こうとした学者の下で、地質調査を実地でやった上に乗っている。',
+  f:['首席入学'],s:[1,5]},
+ {d:'1916.3 大正5',e:2,t:'唯一の特待生に選ばれ授業料免除',
+  w:'学年で唯一の特待生となり、授業料が免除された。',
+  y:'学業の成績は一貫して高い。生前に評価されなかったのは能力の問題ではなく、出力した先が学術でも商売でもなかったことによる。',s:[1]},
+ {d:'1917.7.1 大正6',e:2,t:'同人誌『アザリア』を創刊',
+  w:'保阪嘉内・小菅健吉・河本義行らと文芸同人誌『アザリア』を創刊し、短歌や小文を発表した。翌1918年6月までに6冊を出している。',
+  y:'保阪嘉内はこのあと賢治が最も多くの手紙を書いた相手になり、『銀河鉄道の夜』のカムパネルラのモデルとも言われる。文学の出発点は同人誌であって、商業出版ではない。',
+  f:['6冊','同人4人'],s:[1,4,5]},
+ {d:'1918.3 大正7',e:2,t:'保阪嘉内が除籍される',
+  w:'『アザリア』第6号に保阪が寄せた「社会と自分」の中の「帝室を覆すの時は」という表現が問題視され、保阪は退学処分となった。賢治は学校当局に再考を求めたが処分は覆らず、退学が決まった保阪に『法華経』を贈った。',
+  y:'国家に触れる言葉が学籍を奪うことを、22歳で目の前で見ている。1927年に自分が警察の聴取を受けたとき、活動を不定期化させた判断の背景にこの経験がある。',s:[4]},
+ {d:'1918.3.15 大正7',e:2,t:'卒業、研究生として残る',
+  w:'農学第二部を卒業し、同校の研究生となった。4月28日の徴兵検査は第二乙種合格で兵役は課されなかった。6月30日には肋膜炎と診断されている。',
+  y:'病名がつくのはこれが最初で、以後15年にわたり肺の病が行動範囲を規定し続ける。',s:[1]},
+ {d:'1918.12.26 大正7',e:2,t:'妹トシの看病で上京',
+  w:'日本女子大学校に在学していた妹・トシが東京の病院に入院し、母とともに上京して看病にあたった。滞在中に人造宝石の製造販売事業を計画したが、父の反対で断念している。',
+  y:'事業を起こそうとして父に止められた最初の記録である。この人物は文学者になろうとしたのではなく、一貫して「食える仕組み」を作ろうとしては失敗している。',s:[1,5]},
+ {d:'1920.5 大正9',e:2,t:'研究生を修了、助教授推薦を辞退',
+  w:'関教授から助教授に推す話があったが辞退した。同年10月には日蓮主義の団体・国柱会に入信し、信仰と職業をめぐって父と争うことが多くなった。',
+  y:'学者になる道を自分で閉じている。この時点で選べた安定した進路を捨てたことが、以後13年の不安定さの起点になる。',s:[1,5]},
+
+ {d:'1921.1.23 大正10',e:3,t:'家族に無断で家出、東京へ',
+  w:'家族に告げずに上京し、国柱会を訪ねた。本郷菊坂町に下宿し、謄写版印刷所「文信社」で筆耕の仕事をしながら街頭布教と奉仕活動を行った。この時期に童話を大量に書いている。',
+  y:'25歳で家と職と信仰のすべてを賭けた。しかし8か月で妹の病により帰郷する。東京で自立する試みはここで一度きり、しかも失敗している。',
+  f:['8か月'],s:[1,5]},
+ {d:'1921.12.3 大正10',e:3,t:'稗貫農学校の教諭になる',
+  w:'稗貫郡立稗貫農学校（のちの県立花巻農学校、現・花巻農業高校）の教諭となり、土壌・肥料を担当した。給与は月80円で、下宿代として月20円を家に入れている。「精神歌」の作詞や田園劇の上演も行った。',
+  y:'月80円は当時の地方教員として厚い。生涯でこの4年3か月だけが、安定した給与所得のある期間である。そして創作が最も集中したのもこの期間である。',
+  f:['月80円','4年3か月'],s:[1,5]},
+ {d:'1922.1 大正11',e:3,t:'『雪渡り』で原稿料5円を得る',
+  w:'雑誌『愛国婦人』に童話『雪渡り』を発表し、稿料5円を得た。これが生涯で唯一の原稿料である。',
+  y:'37年の生涯で文筆が生んだ現金は5円だけである。以後の出版はすべて自費で、書くことは収入の手段になっていない。',
+  f:['5円','生涯唯一'],s:[1,5]},
+ {d:'1922.11.27 大正11',e:3,t:'妹トシが死去（24歳）',
+  w:'妹・トシが結核のため午後8時30分に死去した。賢治は大きな衝撃を受け、しばらく筆を置いた。のちに「永訣の朝」「オホーツク挽歌」などの追悼作品を残している。',
+  y:'この人物の作品が個人的な祈りから普遍的な問いへ移るのはここからである。翌年の樺太行きは、死者と通信しようとした旅として読まれている。',
+  f:['24歳'],s:[1,5]},
+ {d:'1924.4.20 大正13',e:3,t:'『心象スケッチ 春と修羅』を自費出版',
+  w:'花巻の吉田印刷所で印刷し、東京の関根書店の名義で刊行した。1,000部、定価2円40銭。詩集ではなく「心象スケッチ」と自ら呼んだ。',
+  y:'生前に出した1冊目。売れず、賢治の死後に古書店で二束三文で売られていたことが知られている。ただしこの1冊を読んだ草野心平が、死後の受容のすべてを動かすことになる。',
+  f:['1,000部','2円40銭'],s:[1,5]},
+ {d:'1924.12.1 大正13',e:3,t:'『イーハトヴ童話 注文の多い料理店』を刊行',
+  w:'光原社の名義で刊行。1,000部、定価1円60銭。そのうち200部を本人が買い取った。この時期に岩手を「イーハトーブ」と呼び始めている。',
+  y:'2冊目にして最後の生前刊行である。自分で200部買い取ったという事実が、この本がどう扱われたかを示している。',
+  f:['1,000部','本人が200部買取'],s:[1,5]},
+ {d:'1925.7 大正14',e:3,t:'草野心平の同人誌『銅鑼』に参加',
+  w:'草野心平は『春と修羅』を読んで賢治を知り、広東で創刊した詩誌『銅鑼』へ寄稿を求めた。賢治は第4号以降ほぼ毎号作品を載せ、文通が始まった。',
+  y:'生前に賢治を評価した数少ない同時代人である。草野はいわき市の出身で、死後の全集刊行を主導した。賢治の名前が残ったのは、この1人の判断に大きく依存している。',s:[1,16]},
+
+ {d:'1926.3.31 大正15',e:4,t:'花巻農学校を依願退職',
+  w:'「本当の百姓になる」との決意で教職を辞した。学校教育と現実の農民の苦しみとの差に限界を感じたことが理由とされる。',
+  y:'唯一の安定収入を自分で手放した。以後、生活は父の資産に依存する。理想の追求と経済的自立の放棄が、この人物では同じ行為になっている。',s:[1,5]},
+ {d:'1926.8.16 大正15',e:4,t:'羅須地人協会を設立',
+  w:'花巻町下根子桜の宮沢家別宅で独居自炊を始め、旧盆にあたる8月16日に羅須地人協会を設立した。農学校の教え子と近隣の青年が参加した。開墾、レコード鑑賞会、童話朗読会、チェロの練習、無料の肥料設計事務所を運営した。',
+  y:'農業指導と芸術活動を1つの組織でやろうとした。無料にしたことがこの試みの性格を決めている。対価を取らない以上、規模を広げるほど自分の体と家の金が減る。',
+  f:['無料の肥料設計'],s:[1,2,5]},
+ {d:'1926.11.29 大正15',e:4,t:'農民講座を開講',
+  w:'植物・土壌などの科学知識と「農民芸術」を教える講座を始めた。この講義の題材として書かれたのが『農民芸術概論綱要』である。12月2日には上京し、チェロ・オルガン・エスペラント語を学んでいる。',
+  y:'思想と技術を分けなかった。『農民芸術概論綱要』は文学作品ではなく農民向けの講義ノートで、そこに「世界がぜんたい幸福にならないうちは個人の幸福はあり得ない」が置かれている。',s:[1,2,11]},
+ {d:'1927.2.1 昭和2',e:4,t:'岩手日報の記事が出て、警察の聴取を受ける',
+  w:'『岩手日報』に「農村文化の創造に努む」との記事が出たことで社会主義運動との関係を疑われ、花巻警察署長の事情聴取を受けた。以後、協会の活動は不定期化した。',
+  y:'1918年に保阪が除籍された出来事の反復である。組織として農民を集めること自体が当時は政治的とみなされた。羅須地人協会が2年で終わった理由の1つがここにある。',s:[1,2]},
+ {d:'1928.8.10 昭和3',e:4,t:'過労で倒れ、両側肺浸潤と診断',
+  w:'高温干天の年に農業指導で歩き回った末に倒れ、両側肺浸潤と診断された。秋には急性肺炎を発症し、実家で約2年の療養生活に入った。羅須地人協会の活動は再開されなかった。',
+  y:'羅須地人協会は約2年4か月で終わった。この間に書いた肥料設計図は約2,000枚とされる。無料で2,000枚を書き、その労働が自分の肺を壊した。',
+  f:['肥料設計図 約2,000枚','2年4か月'],s:[1,2,5]},
+
+ {d:'1929 昭和4',e:5,t:'鈴木東蔵が病床の賢治を訪ねる',
+  w:'東磐井郡の陸中松川駅前にあった東北砕石工場の工場主・鈴木東蔵が、花巻からの石灰の注文が途絶えた理由を調べに来て、原因が「肥料の神様」と呼ばれる賢治の病臥であると知り、自宅を訪ねた。面会謝絶中だったが、父・政次郎が取り次ぎ、対談は2時間に及んだ。',
+  y:'賢治を必要とした最初の事業者である。農民を救うという同じ目的を持つ相手が、賢治の知識に事業上の価値を見いだした。羅須地人協会では得られなかった「対価のある関係」がここで成立する。',
+  f:['対談2時間'],s:[5]},
+ {d:'1930.9 昭和5',e:5,t:'東北砕石工場を初訪問',
+  w:'賢治が初めて工場を訪ねた。当日、東蔵は不在だった。翌日には工場の拡大とそれに必要な資金に言及した手紙を東蔵に送っている。商品名を「石灰岩抹」から肥料用「炭酸石灰」へ統一することも提案した。',
+  y:'技師として呼ばれる前から、事業の設計に口を出している。この人物は指導者ではなく事業者として関わろうとしていた。',s:[5]},
+ {d:'1931.2.21 昭和6',e:5,t:'東北砕石工場の技師となる',
+  w:'技師就任の契約を結び、花巻出張所を弟・清六の宮沢商会（金物店）内に開設した。宮沢家から工場へ支度金500円を貸与し、末妹クニの夫・主計が経理を引き受けた。恩師の関教授は「引き受けるべからず」と書いたはがきのその一行を棒線で消し、「小生の宿年の希望が実現しかゝったのを喜びます」と付記して送った。',
+  y:'家が金を貸し、家族が事務を持ち、恩師が迷ったうえで賛成した。この体制が組めたこと自体が、賢治1人では事業が回らないと周囲が判断していたことを示している。',
+  f:['支度金500円'],s:[5]},
+ {d:'1931.3–9 昭和6',e:5,t:'技師ではなくセールスマンとして走る',
+  w:'約7か月で50回以上の出張をこなした。自ら執筆・校正した宣伝書「肥料用炭酸石灰」を岩手・宮城・秋田・青森の農業関係者に1か月5,000通送り、その費用を自ら負担すると申し出ている。この営業の結果、工場の生産量は10トンから25トンへ増えた。',
+  y:'37年の生涯で唯一、自分の知識が数字に変換された期間である。2.5倍という成果が出ているのに、それを支えたのは技師の設計ではなく本人の脚だった。',
+  f:['50回以上の出張','5,000通/月','10t→25t'],s:[5]},
+ {d:'1931.9.11–15 昭和6',e:5,t:'岩手県主催の肥料展覧会',
+  w:'盛岡で5日間開かれた展覧会に工場製品の展示と案内で全力を注いだ。ただし前後を含む7日間のうち出張メモは4日分しかなく、3日は疲労で動けなかったとみられている。この時期、壁材用の重さ20kg以上のサンプルをトランクに入れて各地を回っていた。',
+  y:'農業用石灰は春で需要が切れる。そこで壁材という別用途を自分で探し、自分で担いだ。市場開拓の方法は正しいが、実行する体力がすでになかった。',
+  f:['サンプル20kg以上'],s:[5]},
+ {d:'1931.9.21 昭和6',e:6,t:'東京・神田八幡館で発熱、遺書を書く',
+  w:'9月19日に仙台へ出張し、21日に東京の旅館「八幡館」で発熱した。死を覚悟して両親と弟妹あてに遺書を書いている。27日夜に寝台車で東京を離れ、28日朝に花巻へ着いた。以後、約2年の闘病生活に入る。',
+  y:'技師として働いた期間は正味7か月で終わった。この日以降、賢治は一度も現金収入のある仕事に戻っていない。',
+  f:['技師期間 7か月'],s:[1,5]},
+ {d:'1931.11.3 昭和6',e:6,t:'手帳に「雨ニモマケズ」を書く',
+  w:'病床で使っていた黒革装の手帳（全166ページ）の51〜59ページに、青鉛筆で「11.3.」と記して書かれた。発表を前提としない自分あてのメモとみられている。',
+  y:'発表する気のなかった文章が、この人物の代表作になった。生前に自分で世に出した2冊はほとんど売れず、出す気のなかった1篇が教科書に載った。',
+  f:['手帳166ページ','51〜59ページ'],s:[1,3,10]},
+ {d:'1932.3 昭和7',e:6,t:'『グスコーブドリの伝記』を発表',
+  w:'雑誌『児童文学』に発表。冷害の飢饉で家族を失った少年が技師となり、最後は自らの命と引き換えに火山を噴火させてイーハトーブを救う話である。登場するクーボー大博士は関豊太郎教授がモデルとされる。',
+  y:'技師として倒れた半年後に、技師が命を捨てて土地を救う話を出している。作中の「私のやうなものは、これから沢山でてきます」という台詞は、自分の代わりが出ることに賭けた言葉として読める。',s:[5]},
+ {d:'1933.9.21 昭和8',e:6,t:'死去（満37歳）',
+  w:'前日20日に急性肺炎の兆候と診断されながら、訪ねてきた農民の稲作相談に1時間応じている。21日午前11時半に喀血し、父に法華経を1,000部印刷して知人に配るよう遺言し、午後1時30分に死去した。',
+  y:'最後の仕事は肥料の相談だった。文学者としてではなく、農業技術者として死んでいる。遺言の内容も文学ではなく信仰である。',
+  f:['満37歳','法華経1,000部'],s:[1,5]},
+
+ {d:'1934.2.16 昭和9',e:7,t:'手帳から「雨ニモマケズ」が見つかる',
+  w:'東京で開かれた「宮沢賢治友の会」の席上、弟が持参した革トランクのポケットから手帳が取り出され、この作品が見つかった。',
+  y:'死後5か月である。発見が偶然の集まりの場だったこと、しかも作品でなく遺品の整理から出たことが、この作品の性格を決めている。',s:[1,3,5]},
+ {d:'1934.9.21 昭和9',e:7,t:'「雨ニモマケズ」が初めて活字になる',
+  w:'『岩手日報』夕刊に「未発表遺作（最後の手帳から）」の題で掲載された。命日にあたる。',
+  y:'全国紙ではなく地方紙から出た。賢治の受容は中央の文壇からではなく、岩手と少数の詩人から広がっている。',s:[3]},
+ {d:'1934–1935 昭和9–10',e:7,t:'文圃堂版『宮沢賢治全集』（全3巻）',
+  w:'死の翌年から最初の全集が編まれた。草野心平と高村光太郎が刊行に動いている。',
+  y:'生前2冊しか本がなかった人物の全集が、死の翌年に出ている。原稿は膨大に残っていて、足りなかったのは読者ではなく編集者だった。',
+  f:['全3巻'],s:[1,23]},
+ {d:'1936.11.21 昭和11',e:7,t:'羅須地人協会跡に「雨ニモマケズ」詩碑が建つ',
+  w:'賢治が独居した下根子桜の跡地に建立された。碑文は高村光太郎の揮毫で、1946年に訂正されている。命日の9月21日にはこの場所で賢治祭が行われる。',
+  y:'死後3年で碑が建った。花巻が賢治の街として整備されるのは、これよりさらに46年後の記念館開館を待つ。',s:[3,5]},
+ {d:'1939–1944 昭和14–19',e:7,t:'十字屋書店版『全集』（全6巻・別巻1）',
+  w:'戦時下に増補版の全集が編まれた。',
+  y:'戦争中に2度目の全集が出ている。「雨ニモマケズ」の耐乏的な語彙が戦時の言説に取り込まれた側面があり、この時期の受容には留保が要る。',
+  f:['全7冊'],s:[1]},
+ {d:'1945 昭和20',e:7,t:'花巻空襲で生家が被災、原稿の一部が焼失',
+  w:'花巻空襲により宮沢家が焼け、残されていた原稿の一部が失われた。',
+  y:'現在読める賢治のテキストは、焼け残った分である。校本全集が本文の異同の整理に14巻を要したのは、この欠落も一因である。',s:[1]},
+ {d:'1947 昭和22',e:7,t:'東山（現・一関市）で詩碑の建立が動く',
+  w:'東北砕石工場主・鈴木東蔵の長男である鈴木實が、地元青年団とともに詩碑の建立を発案した。宮沢家の紹介で谷川徹三を訪ね、撰文と揮毫を依頼している。谷川は『農民芸術概論綱要』から「まづもろともに かがやく宇宙の微塵となりて 無方の空にちらばらう」を選び、揮毫に約1年をかけた。',
+  y:'賢治を最初に記念したのは花巻ではなく、技師として働いた一関市東山の人たちだった。一緒に働いた側が、最初に碑を建てている。',s:[5]},
+ {d:'1973–1977 昭和48–52',e:7,t:'筑摩書房『校本 宮澤賢治全集』（全14巻）',
+  w:'本文の異同を系統的に整理した校本が刊行され、学術研究の土台ができた。',
+  y:'死後40年で、ようやく「どの本文が賢治のものか」が確定作業に入った。生前に整えられなかった編集が、半世紀かけて他人の手で行われている。',
+  f:['全14巻'],s:[1]},
+ {d:'1982 昭和57',e:7,t:'花巻市立宮沢賢治記念館が開館',
+  w:'花巻市が記念館を開いた。死去から49年後である。',
+  y:'花巻が賢治の街になったのは、賢治がいたからではない。死後半世紀の編集と出版が先にあり、街はその後で追いついた。',
+  f:['死去から49年'],s:[7,15]},
+ {d:'2025.8.2 令和7',e:7,t:'記念館の累計入館者が800万人に到達',
+  w:'開館から約43年で累計800万人に達した。年平均は約18.6万人で、花巻市の人口86,491人（2026年8月1日）の約2.2倍にあたる。',
+  y:'生前に売れなかった1,000部の本が、いまは年18万人を呼んでいる。ただし同じ期間に花巻市の人口はピークから19.3%減った。名前は資源になったが、人口には効いていない。',
+  f:['累計800万人','年平均約18.6万人'],s:[6,15]},
+];
+
+/* 語録データ。t=テーマ / q=発言 / w=いつ・どこで / s=出典番号 */
+const QUOTES = [
+ {t:'農民芸術概論綱要',q:'世界がぜんたい幸福にならないうちは個人の幸福はあり得ない',w:'1926年、羅須地人協会の農民講座のために書かれた『農民芸術概論綱要』序論。文学作品ではなく農民向け講義のテキストである',s:[5,11]},
+ {t:'農民芸術概論綱要',q:'永久の未完成これ完成である',w:'同上。『農民芸術概論綱要』の一節',s:[5,11]},
+ {t:'農民芸術概論綱要',q:'まづもろともに かがやく宇宙の微塵となりて 無方の空にちらばらう',w:'同上の「農民芸術の綜合」から。1947年に谷川徹三が東山の詩碑の碑文として選び、揮毫に約1年をかけた',s:[5,11]},
+ {t:'手帳',q:'ミンナニデクノボートヨバレ ホメラレモセズ クニモサレズ サウイフモノニワタシハナリタイ',w:'1931年11月3日、黒革装手帳の51〜59ページ。発表を前提に書かれたものではない。原稿は「ヒドリノトキハ」と読め、刊本の「ヒデリノトキハ」との異同が研究上の論点になっている',s:[3,5,10]},
+ {t:'手帳',q:'あらたなるよきみちを得しということは たゞあらたなるなやみのみちを得しというふのみ',w:'1931年2月末、東北砕石工場の技師として働き始めた直後の「王冠印手帳」。営業の仕事に入って1週間ほどの記述',s:[5]},
+ {t:'作品',q:'私のやうなものは、これから沢山でてきます。私よりもつともつと何でもできる人が、私よりもつと立派にもつと美しく、仕事をしたり笑つたりしていくのですから。',w:'1932年3月、雑誌『児童文学』掲載『グスコーブドリの伝記』。主人公が自らの死を選ぶ場面の台詞',s:[5]},
+ {t:'同時代の記録',q:'兄はこの人と話しているうちに、全くこの人が好きになってしまったのであった',w:'弟・宮沢清六『兄のトランク』。1929年春に鈴木東蔵が病床の賢治を訪ねた場面。賢治本人の言葉ではない',s:[5]},
+ {t:'同時代の記録',q:'小生の宿年の希望が実現しかゝったのを喜びます',w:'1931年2月、恩師・関豊太郎から賢治への返信はがき。印刷された「引き受けてよからん／引き受けるべからず」の後者を棒線で消したうえで付記された',s:[5]},
+ {t:'同時代の記録',q:'兄賢治は自ら進んで東北砕石工場に行ったのです。その結果があのようになっても、それはそれで仕方なかったことです',w:'宮沢清六の後年の証言。賢治が砕石工場で酷使されて体を壊したという見方を否定したもの',s:[5]},
+ {t:'出典未確定',q:'雨ニモマケズの「デクノボー」のモデルは畠山八之助である',w:'東北砕石工場で俵詰めの名人と呼ばれた工員。娘の証言が残るが、モデル特定を裏づける賢治自身の記述はない',s:[5]},
+];
+
+/* ─── 描画 ───────────────────────────────────────────────────────────────── */
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sup = arr => (arr || []).map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+
+/* ─── 年齢 ─────────────────────────────────────────────────────────────────
+   d の先頭にある西暦年（あれば月日）から満年齢を出す。
+   生前より前の項目は「生誕N年前」、没後の項目は「没後N年」を出す。
+   項目に a: を書いた場合はそちらを優先する（没年と同じ年の没後の出来事など）。 */
+const BORN = '1896-08-27';
+const DIED = '1933-09-21';
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: true };
+  const m = String(x.d).match(/(\d{4})(?:[-.](\d{1,2})(?:[-.](\d{1,2}))?)?/);
+  if (!m) return null;
+  const y = +m[1], mo = m[2] ? +m[2] : null, dd = m[3] ? +m[3] : null;
+  const [by, bm, bd] = BORN.split('-').map(Number);
+  if (DIED) {
+    const dy = +DIED.split('-')[0];
+    if (y > dy) return { t: '没後' + (y - dy) + '年', out: true };
+  }
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  let a = y - by;
+  if (mo !== null && (mo < bm || (mo === bm && dd !== null && dd < bd))) a -= 1;
+  return { t: a + '歳', out: false };
+}
+
+const activeEras = new Set();
+
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`;
+}).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+/* 語録 */
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+/* チャート。単系列は1色。値はすべて棒に直接ラベルを置く */
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+
+
+bars('chartSaiseki', [
+  {k:'賢治の営業前', v:10, sub:'1931年2月以前'},
+  {k:'賢治の営業後', v:25, sub:'1931年'},
+], 'トン');
+
+bars('chartZensyu', [
+  {k:'生前の刊行', v:2, sub:'1924年・各1,000部'},
+  {k:'文圃堂版', v:3, sub:'1934–35'},
+  {k:'十字屋書店版', v:7, sub:'1939–44・別巻共'},
+  {k:'校本（筑摩書房）', v:14, sub:'1973–77'},
+], '冊');
+
+bars('chartLife', [
+  {k:'誕生〜高等農林卒', v:259, sub:'1896.8–1918.3'},
+  {k:'研究生・家出・帰郷', v:45, sub:'1918.3–1921.12'},
+  {k:'農学校教諭', v:52, sub:'1921.12–1926.4'},
+  {k:'羅須地人協会', v:28, sub:'1926.4–1928.8'},
+  {k:'療養', v:30, sub:'1928.8–1931.2'},
+  {k:'砕石工場 技師', v:7, sub:'1931.2–1931.9'},
+  {k:'病臥', v:24, sub:'1931.9–1933.9'},
+], 'か月');
+
+</script>
+
+<script type="application/json" id="facts">
+[
+ {"claim":"生年月日","value":1896,"unit":"年","as_of":"1896-08-27","source":"https://ja.wikipedia.org/wiki/宮沢賢治","confidence":"reported"},
+ {"claim":"没年月日","value":1933,"unit":"年","as_of":"1933-09-21","source":"https://ja.wikipedia.org/wiki/宮沢賢治","confidence":"reported"},
+ {"claim":"没年齢","value":37,"unit":"歳","as_of":"1933-09-21","source":"https://ja.wikipedia.org/wiki/宮沢賢治","confidence":"reported"},
+ {"claim":"生前の刊行点数","value":2,"unit":"冊","as_of":"1924","source":"https://ja.wikipedia.org/wiki/宮沢賢治","confidence":"reported"},
+ {"claim":"『春と修羅』初版部数","value":1000,"unit":"部","as_of":"1924-04-20","source":"https://ja.wikipedia.org/wiki/宮沢賢治","confidence":"reported"},
+ {"claim":"『春と修羅』定価","value":2.4,"unit":"円","as_of":"1924-04-20","source":"https://ja.wikipedia.org/wiki/宮沢賢治","confidence":"reported"},
+ {"claim":"『注文の多い料理店』初版部数","value":1000,"unit":"部","as_of":"1924-12-01","source":"https://ja.wikipedia.org/wiki/宮沢賢治","confidence":"reported"},
+ {"claim":"『注文の多い料理店』本人買取部数","value":200,"unit":"部","as_of":"1924-12-01","source":"https://ja.wikipedia.org/wiki/宮沢賢治","confidence":"reported"},
+ {"claim":"生涯の原稿料","value":5,"unit":"円","as_of":"1922-01","source":"https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf","confidence":"reported"},
+ {"claim":"稗貫農学校の月給","value":80,"unit":"円","as_of":"1921-1926","source":"https://ja.wikipedia.org/wiki/宮沢賢治","confidence":"reported"},
+ {"claim":"農学校教諭の在職期間","value":52,"unit":"か月","as_of":"1921-12-03/1926-03-31","source":"https://ja.wikipedia.org/wiki/宮沢賢治","confidence":"estimated"},
+ {"claim":"羅須地人協会 設立","value":1926,"unit":"年","as_of":"1926-08-16","source":"https://ja.wikipedia.org/wiki/羅須地人協会","confidence":"reported"},
+ {"claim":"肥料設計図の枚数","value":2000,"unit":"枚","as_of":"1926-1928","source":"https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf","confidence":"estimated"},
+ {"claim":"東北砕石工場 契約日","value":1931,"unit":"年","as_of":"1931-02-21","source":"https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf","confidence":"reported"},
+ {"claim":"宮沢家からの支度金貸与","value":500,"unit":"円","as_of":"1931-02","source":"https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf","confidence":"reported"},
+ {"claim":"技師期間","value":7,"unit":"か月","as_of":"1931-02/1931-09","source":"https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf","confidence":"estimated"},
+ {"claim":"出張回数","value":50,"unit":"回以上","as_of":"1931-03/1931-09","source":"https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf","confidence":"reported"},
+ {"claim":"宣伝書の月間発送数","value":5000,"unit":"通/月","as_of":"1931","source":"https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf","confidence":"reported"},
+ {"claim":"東北砕石工場 生産量（営業前）","value":10,"unit":"トン","as_of":"1931","source":"https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf","confidence":"single-source"},
+ {"claim":"東北砕石工場 生産量（営業後）","value":25,"unit":"トン","as_of":"1931","source":"https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf","confidence":"single-source"},
+ {"claim":"現存書簡","value":500,"unit":"通","as_of":"2026","source":"https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf","confidence":"estimated"},
+ {"claim":"鈴木東蔵あて書簡","value":117,"unit":"通","as_of":"2026","source":"https://tohoku-geo.ne.jp/information/daichi/img/58/p03.pdf","confidence":"reported"},
+ {"claim":"「雨ニモマケズ」執筆日","value":1931,"unit":"年","as_of":"1931-11-03","source":"https://ja.wikipedia.org/wiki/雨ニモマケズ","confidence":"reported"},
+ {"claim":"「雨ニモマケズ」発見日","value":1934,"unit":"年","as_of":"1934-02-16","source":"https://ja.wikipedia.org/wiki/雨ニモマケズ","confidence":"reported"},
+ {"claim":"手帳の総ページ数","value":166,"unit":"ページ","as_of":"1931","source":"https://ja.wikipedia.org/wiki/雨ニモマケズ","confidence":"reported"},
+ {"claim":"校本全集の巻数","value":14,"unit":"巻","as_of":"1973-1977","source":"https://ja.wikipedia.org/wiki/宮沢賢治","confidence":"reported"},
+ {"claim":"記念館 開館","value":1982,"unit":"年","as_of":"1982","source":"https://www.city.hanamaki.iwate.jp/","confidence":"reported"},
+ {"claim":"死去から記念館開館までの年数","value":49,"unit":"年","as_of":"1982","source":"https://www.city.hanamaki.iwate.jp/","confidence":"estimated"},
+ {"claim":"記念館 累計入館者","value":800,"unit":"万人","as_of":"2025-08-02","source":"https://www.iwate-np.co.jp/article/2025/8/4/185617","confidence":"reported"}
+]
+</script>
+</body>
+</html>

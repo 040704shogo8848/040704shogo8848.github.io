@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>能代市 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / 能代市</p>
+
+<header class="top">
+  <div>
+    <h1>能代市 / Noshiro</h1>
+    <div class="meta">秋田県 / 山本　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">東洋一の木都と呼ばれた街の製造品出荷額は、2008年の1,063億円から2020年の385億円へ64%減った。その同じ市域の沖に、日本で最初に商業運転を始めた洋上風力が20基立っている。</p>
+<p><span class="tag">洋上風力</span><span class="tag">秋田杉</span><span class="tag">能代火力</span><span class="tag">風の松原</span><span class="tag">木都</span></p>
+
+<div class="kpi"><div class="card"><div class="k">人口</div><div class="v">43,923人 <small>2026年8月1日・推計人口</small></div></div><div class="card"><div class="k">面積</div><div class="v">427.18 km² <small>市公式値は426.95km²</small></div></div><div class="card"><div class="k">製造品出荷額等</div><div class="v">384.9億円 <small>2020年・従業者4人以上</small></div></div><div class="card"><div class="k">高齢化率</div><div class="v">42.33% <small>2025年1月</small></div></div></div>
+<iframe class="map" loading="lazy" title="能代市の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=139.7472,40.0723,140.3072,40.3523&amp;layer=mapnik&amp;marker=40.2123,140.0272"></iframe>
+
+<h2><span class="num">01</span>市としての特徴<span class="en">Profile</span></h2>
+<p><strong>木材で立ち上がり木材で落ちた街が、同じ海岸線でエネルギーの供給地に置き換わろうとしている途中にある。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>属性</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>位置</td>
+<td>秋田県北部、日本海に面する。米代川の河口に市街地があり、北秋田市・藤里町・三種町・八峰町・上小阿仁村が隣接する</td>
+</tr>
+<tr>
+<td>面積</td>
+<td>427.18km²。市公式の統計値は426.95km²で、可住地面積は177.83km²</td>
+</tr>
+<tr>
+<td>地形</td>
+<td>市域の大半は米代川がつくった能代平野の平坦地。海岸部には砂丘が発達し、<strong>その砂を止めるために植えられた松林が市街地の西側を南北に走る</strong></td>
+</tr>
+<tr>
+<td>成り立ち</td>
+<td>1940年10月1日に市制施行。2006年3月21日に旧能代市と二ツ井町が合併して現在の市域になった</td>
+</tr>
+<tr>
+<td>地名の由来</td>
+<td>古くは野代と書いた。1704年の地震災害を受けて、野に代わるから、よく代わるへ、という願いを込めて能代に改めたとされる</td>
+</tr>
+<tr>
+<td>産業構造</td>
+<td>木材加工を軸に立ち上がり、現在は電気機械・電子部品・繊維が製造業の上位を占める。<strong>発電は電気業に分類されるため製造品出荷額には計上されない</strong>点に注意が必要である</td>
+</tr>
+<tr>
+<td>高齢化率</td>
+<td>42.33%（2025年1月）。年少人口率7.53%、生産年齢人口率50.14%</td>
+</tr>
+<tr>
+<td>財政</td>
+<td>財政力指数0.50、経常収支比率94.4%、実質公債費比率9.2%、地方交付税依存度24.9%（いずれも2024年度）</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>この市を1行で言うと、<strong>産業の中身が入れ替わったのに人口だけが戻らなかった街</strong>である。木材が抜けた穴を、火力180万kWと洋上風力84MWと製材大手の286億円が埋めに来ているが、そのどれも木材産業ほどの人数を雇わない。理由は03と08に数値で示す。</p></div>
+<h2><span class="num">02</span>経済規模と産業構造<span class="en">Economy</span></h2>
+<h3>製造品出荷額等の推移</h3>
+<p>市の統計書が持つ最も長い系列を採った。1980年から2005年までは旧能代市と旧二ツ井町の合算、2006年以降は合併後の市である。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年次</th>
+<th>事業所数</th>
+<th>従業者数</th>
+<th>製造品出荷額等</th>
+</tr></thead><tbody>
+<tr>
+<td>1980年（昭和55年）</td>
+<td class="num">384</td>
+<td>6,669人</td>
+<td>672.9億円</td>
+</tr>
+<tr>
+<td>1991年（平成3年）</td>
+<td class="num">372</td>
+<td>7,793人</td>
+<td>781.0億円</td>
+</tr>
+<tr>
+<td>2000年（平成12年）</td>
+<td class="num">258</td>
+<td>5,031人</td>
+<td>546.7億円</td>
+</tr>
+<tr>
+<td>2008年（平成20年）</td>
+<td class="num">171</td>
+<td>3,931人</td>
+<td><strong>1,063.0億円</strong></td>
+</tr>
+<tr>
+<td>2013年（平成25年）</td>
+<td class="num">134</td>
+<td>2,981人</td>
+<td>753.3億円</td>
+</tr>
+<tr>
+<td>2018年（平成30年）</td>
+<td class="num">117</td>
+<td>2,715人</td>
+<td>757.0億円</td>
+</tr>
+<tr>
+<td>2019年（令和元年）</td>
+<td class="num">113</td>
+<td>2,662人</td>
+<td>391.2億円</td>
+</tr>
+<tr>
+<td>2020年（令和2年）</td>
+<td class="num">104</td>
+<td>2,602人</td>
+<td><strong>384.9億円</strong></td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p>まず年次ラベルが一致しない。<strong>市の統計書の「工業の推移」表は7,570,181万円を平成29年に置き、同じ統計書の「産業中分類別の推移」表は同じ数値を平成30年に置いている。</strong>上表は後者を採った。その上で、2018年から2019年にかけて出荷額が48.3%減っているが、<strong>同じ期間に事業所数は117から113へ4減、従業者数は2,715人から2,662人へ53人減にとどまる。</strong>雇用が動いていないのに出荷額だけが半減しており、工場の閉鎖では説明できない。産業中分類の内訳では化学・鉄鋼・パルプ紙・プラスチックがいずれも秘匿（Ｘ）で、どの業種が動いたかを特定できない。<strong>原因はN/Aとする。</strong></p></div>
+<h3>業種別の構成（2020年）</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>業種</th>
+<th>事業所数</th>
+<th>従業者数</th>
+<th>出荷額</th>
+<th>構成比</th>
+</tr></thead><tbody>
+<tr>
+<td>総数</td>
+<td class="num">104</td>
+<td>2,602人</td>
+<td>384.9億円</td>
+<td class="num">100%</td>
+</tr>
+<tr>
+<td>木材・木製品</td>
+<td class="num">22</td>
+<td>327人</td>
+<td>52.0億円</td>
+<td class="num">13.5%</td>
+</tr>
+<tr>
+<td>繊維</td>
+<td class="num">17</td>
+<td>439人</td>
+<td>35.1億円</td>
+<td class="num">9.1%</td>
+</tr>
+<tr>
+<td>電気機械</td>
+<td class="num">5</td>
+<td>399人</td>
+<td>32.6億円</td>
+<td class="num">8.5%</td>
+</tr>
+<tr>
+<td>電子部品・デバイス</td>
+<td class="num">5</td>
+<td>231人</td>
+<td>30.4億円</td>
+<td class="num">7.9%</td>
+</tr>
+<tr>
+<td>印刷</td>
+<td class="num">8</td>
+<td>92人</td>
+<td>21.1億円</td>
+<td class="num">5.5%</td>
+</tr>
+<tr>
+<td>家具・装備品</td>
+<td class="num">7</td>
+<td>123人</td>
+<td>19.6億円</td>
+<td class="num">5.1%</td>
+</tr>
+<tr>
+<td>金属製品</td>
+<td class="num">12</td>
+<td>233人</td>
+<td>14.8億円</td>
+<td class="num">3.9%</td>
+</tr>
+</tbody></table></div>
+<p>注：化学・鉄鋼・パルプ紙・プラスチック・ゴム・飲料飼料・皮革の7業種は秘匿のため出荷額が公表されていない。上表の合計は総数に一致しない。</p>
+<div class="callout"><p><strong>木都と呼ばれた街で、木材・木製品の構成比は13.5%である。</strong>従業者は327人で、市の製造業就業者2,602人の12.6%にあたる。名前が残っているだけで、産業としての主役はすでに降りている。ただし2024年に稼働した中国木材能代工場はこの統計の対象年より後であり、次の調査で構成比は上がる。</p></div>
+<h3>財政</h3>
+<p>令和7年度の一般会計当初予算は374億6,300万円で、前年度当初比34億1,700万円増、4年連続で過去最大を更新した。推計人口43,923人で割ると<strong>1人当たり85.3万円</strong>である。財政力指数は0.50で、歳入の半分を自前で賄えていない。</p>
+<h2><span class="num">03</span>人口推移<span class="en">Population</span></h2>
+<h3>国勢調査による推移</h3>
+<p>旧能代市と旧二ツ井町を合算した現在の市域ベースで示す。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年次</th>
+<th>人口</th>
+<th>ピーク比</th>
+</tr></thead><tbody>
+<tr>
+<td>1955年（昭和30年）</td>
+<td><strong>83,785人</strong></td>
+<td>ピーク</td>
+</tr>
+<tr>
+<td>1960年（昭和35年）</td>
+<td>82,722人</td>
+<td class="num">-1.3%</td>
+</tr>
+<tr>
+<td>1970年（昭和45年）</td>
+<td>77,011人</td>
+<td class="num">-8.1%</td>
+</tr>
+<tr>
+<td>1975年（昭和50年）</td>
+<td>75,177人</td>
+<td class="num">-10.3%</td>
+</tr>
+<tr>
+<td>1985年（昭和60年）</td>
+<td>73,649人</td>
+<td class="num">-12.1%</td>
+</tr>
+<tr>
+<td>2000年（平成12年）</td>
+<td>65,237人</td>
+<td class="num">-22.1%</td>
+</tr>
+<tr>
+<td>2010年（平成22年）</td>
+<td>59,084人</td>
+<td class="num">-29.5%</td>
+</tr>
+<tr>
+<td>2015年（平成27年）</td>
+<td>54,730人</td>
+<td class="num">-34.7%</td>
+</tr>
+<tr>
+<td>2020年（令和2年）</td>
+<td>49,968人</td>
+<td class="num">-40.4%</td>
+</tr>
+<tr>
+<td>2026年8月（推計人口）</td>
+<td>43,923人</td>
+<td><strong>-47.6%</strong></td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>ピークは1955年で、産業のピークより53年早い。</strong>製造品出荷額のピークは2008年である。人が減り始めてから半世紀後に、生産額の最高値が来ている。これは工場が省人化したという意味であって、街が栄えていたという意味ではない。1980年に6,669人いた製造業の従業者は2020年に2,602人で、61.0%減っている。</p></div>
+<h3>直近の減り方</h3>
+<p>住民基本台帳（各年3月31日）では、2020年3月の51,894人から2024年3月の47,890人まで4年で4,004人減った。<strong>年率でおおむね2%の減少が、5年以上そのままの速度で続いている。</strong>外国人住民は2020年3月の254人から2024年3月の305人へ増えており、うち「その他」に分類される国籍が79人から150人へほぼ倍増している。</p>
+<h2><span class="num">04</span>日本の大企業との関連<span class="en">Corporate Links</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>企業・施設</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>東北電力 能代火力発電所</td>
+<td>1号機60万kW（1993年5月）、2号機60万kW（1994年12月）、3号機60万kW（2020年3月）で<strong>総出力180万kW</strong>。石炭専焼だが木質バイオマスを混焼する。3号機は超々臨界圧で送電端熱効率約46%（低位発熱量基準）</td>
+</tr>
+<tr>
+<td>秋田洋上風力発電</td>
+<td>丸紅を中心とするSPC。能代港内に<strong>4.2MW×20基＝84MW</strong>を建設し、2022年12月22日に商業運転を開始した。秋田港の4.2MW×13基＝54.6MWと合わせ、2023年1月に全面商業運転。出資に東北電力、大林組、コスモエネルギー、中部電力ほかが入る</td>
+</tr>
+<tr>
+<td>中国木材</td>
+<td>広島の製材最大手。<strong>286億円</strong>を投じて能代工業団地に約44haの国産材拠点を建設し、2024年1月に製材棟、5月に加工ライン、7月に集成材ラインを稼働させた。フル稼働時の年間原木消費量は24万m³、想定従業員数は約250人</td>
+</tr>
+<tr>
+<td>三菱商事</td>
+<td>2025年8月27日、<strong>能代市・三種町・男鹿市沖を含む3海域の洋上風力開発から撤退</strong>を表明した。これは一般海域の促進区域であり、港湾区域内で稼働中の能代港洋上風力とは別事業である</td>
+</tr>
+<tr>
+<td>JAXA 能代ロケット実験場</td>
+<td>1962年に東京大学生産技術研究所の付属施設として設置。現在は宇宙科学研究所の施設で、固体ロケットモーターの地上燃焼試験などを行う</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p>報道では「三菱商事が能代の洋上風力から撤退」とだけ書かれることがあるが、<strong>撤退したのは沖合の一般海域であり、港湾区域内の84MWは現在も回っている。</strong>能代を訪ねると両方が同じ海に見えるため、混同しやすい。</p></div>
+<h2><span class="num">05</span>出身の有名人<span class="en">People</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>人物</th>
+<th>分野</th>
+<th>備考</th>
+</tr></thead><tbody>
+<tr>
+<td>小野喬</td>
+<td>体操</td>
+<td>1931年生まれ。オリンピックで金メダルを獲得した体操選手</td>
+</tr>
+<tr>
+<td>山田久志</td>
+<td>プロ野球</td>
+<td>1948年生まれ。阪急ブレーブスのアンダースロー投手、のち監督</td>
+</tr>
+<tr>
+<td>野呂田芳成</td>
+<td>政治</td>
+<td>1929年生まれ。建設事務次官を経て衆議院議員、農林水産大臣・防衛庁長官を務めた</td>
+</tr>
+</tbody></table></div>
+<h3>バスケットボールの街</h3>
+<p>能代工業高校（現・能代科学技術高校）は全国高校バスケットボールの強豪として知られ、市は1989年度からバスケットボールによる街づくりを掲げている。<strong>人口4万人台の市が単一競技で全国的な知名度を持つ例は少ない。</strong>ただしこれが経済に何をもたらしたかを示す数値は確認できずN/Aとした。</p>
+<h2><span class="num">06</span>食<span class="en">Food</span></h2>
+<h3>檜山納豆</h3>
+<p>市南部の檜山地区で江戸期から続く製法の納豆である。わらづとに包んで発酵させる形を残しており、原料には市内産の大豆が使われる。秋田の民謡にも歌われてきた。<strong>製造業としては食料品8事業所・従業者56人・出荷額2.7億円（2020年）という規模で、産業統計上の存在感は小さい。</strong>各店舗の営業時間と定休日は一次情報で確認できずN/Aとした。</p>
+<h3>白神ねぎ</h3>
+<p>能代を含む地域で栽培される白ねぎのブランド。10月から12月に出荷されるものが甘みを増すとされる。木材産業の縮小後に市が力を入れてきた品目のひとつだが、農業産出額に占める割合は確認できずN/Aとした。</p>
+<h3>能代うどん</h3>
+<p>明治期にさかのぼる製法の細い乾麺である。冷やしうどんとしても食べられる。</p>
+<div class="callout"><p><strong>能代の食は、木材と違って産業史の主役になったことがない。</strong>檜山納豆も白神ねぎも能代うどんも、統計上は食料品製造業8事業所・出荷額2.7億円（2020年）の内側にあり、市の製造品出荷額の0.7%にすぎない。木都が抜けた穴を食が埋めたという物語は、数値では成立しない。</p></div>
+<h2><span class="num">07</span>訪問できる場所<span class="en">Places</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>場所</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>風の松原</td>
+<td>東西1km×南北14km、面積760ha、約700万本の黒松林。<strong>日本最大級の砂防林</strong>である。正徳年間（1711-1716）に商人が植林を始め、藩士や住民が引き継ぎ、1921年から本格的な植え直しが行われた。風の松原という名称は1987年12月に公募で決まった</td>
+</tr>
+<tr>
+<td>能代港の洋上風力</td>
+<td>84MWの20基が港湾区域内に並ぶ。陸から視認できる</td>
+</tr>
+<tr>
+<td>能代エナジアムパーク</td>
+<td>能代火力発電所のPR館</td>
+</tr>
+<tr>
+<td>JAXA 能代ロケット実験場</td>
+<td>見学は事前予約制。所要約60分、受付は10時から16時。開館日は金・土・日・月と祝日で、年末年始と8月12日から15日は休み。電話0185-52-7123</td>
+</tr>
+<tr>
+<td>きみまち阪</td>
+<td>旧二ツ井町域の県立自然公園</td>
+</tr>
+<tr>
+<td>能代役七夕</td>
+<td>8月に行われる市の伝統行事</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p>能代港洋上風力と、三菱商事が撤退した一般海域の位置関係を現地で取り違えないよう、事前に地図で確認しておく必要がある。<strong>回っている風車を見て「撤退した事業」と説明する誤りが起きやすい。</strong></p></div>
+<h2><span class="num">08</span>木から電気へは置き換わったのか<span class="en">Wood to Watts</span></h2>
+<p><strong>評価はせず、確認できた数値のみを並べる。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>木材が主役だった頃</th>
+<th>現在</th>
+</tr></thead><tbody>
+<tr>
+<td>製造業従業者数</td>
+<td>6,669人（1980年）</td>
+<td>2,602人（2020年）</td>
+</tr>
+<tr>
+<td>製造品出荷額等</td>
+<td>672.9億円（1980年）</td>
+<td>384.9億円（2020年）</td>
+</tr>
+<tr>
+<td>木材・木製品の従業者</td>
+<td>N/A</td>
+<td>327人（2020年）</td>
+</tr>
+<tr>
+<td>発電設備</td>
+<td>N/A</td>
+<td>火力180万kW＋洋上風力84MW</td>
+</tr>
+<tr>
+<td>新規の製造業投資</td>
+<td>N/A</td>
+<td>中国木材286億円・想定250人（2024年）</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>読み方。<strong>電源は増えたが雇用は戻っていない。</strong>能代火力180万kWは電気業に分類されるため製造品出荷額にも製造業就業者にも入らず、洋上風力84MWも同じである。発電所と風車は資本集約的で、1980年に木材が雇っていた人数の桁に届かない。一方で中国木材の250人は、2020年時点の木材・木製品従業者327人に匹敵する規模であり、<strong>エネルギーではなく木材そのものが雇用を戻す側に立っている</strong>というのが数値の示す状態である。市の製造品出荷額が次回調査で上向くとすれば、要因は風車ではなく製材である。</p></div>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>能代市「令和6年版 能代市の統計」工業の章（産業中分類別事業所数・従業者数・製造品出荷額等、工業の推移） — https://www.city.noshiro.lg.jp/up/files/www/city/tokei/noshiro-tokei/07_%E5%B7%A5%E6%A5%AD_R06.pdf</li>
+  <li>能代市「令和6年版 能代市の統計」人口の章（世帯数・人口の推移、国勢調査の世帯数・人口の推移、外国人住民人口） — https://www.city.noshiro.lg.jp/up/files/www/city/tokei/noshiro-tokei/04_%E4%BA%BA%E5%8F%A3_R06.pdf</li>
+  <li>能代市「令和6年版 能代市の統計」目次（各章PDFの所在） — https://www.city.noshiro.lg.jp/city/tokei/noshiro-tokei/25460</li>
+  <li>Wikipedia「能代市」（面積427.18km²、推計人口43,923人／2026年8月1日、ピーク83,785人／1955年、市制施行1940年、合併2006年、地名の由来、著名人）</li>
+  <li>生活ガイド.com「能代市の統計データ」（総面積426.95km²、可住地面積177.83km²、年齢3区分別人口比率、財政力指数0.50、経常収支比率94.4%、実質公債費比率9.2%） — https://www.seikatsu-guide.com/info/5/5202/1/</li>
+  <li>北羽新報「能代市の7年度当初予算案一般会計374億円」（374億6,300万円、前年度比34億1,700万円増、4年連続過去最大） — https://www.hokuu.co.jp/?p=26747</li>
+  <li>Wikipedia「能代火力発電所」（1〜3号機の出力・運転開始・燃料、総出力180万kW、所在地）</li>
+  <li>東北電力「能代火力発電所3号機の営業運転開始について」（2020年3月、60万kW、熱効率約46%） — https://www.tohoku-epco.co.jp/pastnews/normal/1213733_1049.html</li>
+  <li>丸紅「秋田県秋田港及び能代港における洋上風力発電プロジェクトの全面商業運転開始について」（能代港4.2MW×20基、秋田港4.2MW×13基） — https://www.marubeni.com/jp/news/2023/release/00014.html</li>
+  <li>東北電力「秋田港および能代港における洋上風力発電プロジェクトの全面商業運転開始について」 — https://www.tohoku-epco.co.jp/news/normal/1232189_2558.html</li>
+  <li>ウインドジャーナル「三菱商事 3海域からの撤退を正式表明」（2025年8月27日、能代市・三種町・男鹿市沖ほか） — https://windjournal.jp/124665/</li>
+  <li>日本経済新聞「広島の中国木材、秋田・能代工場1期工事完了 国産材移行」 — https://www.nikkei.com/article/DGXZQOCC105EA0Q4A011C2000000/</li>
+  <li>秋田魁新報「中国木材能代工場稼働、基幹産業の再生に期待 変わる木都（1）」（製材棟1月稼働、投資286億円、約250人、44ha、年間原木消費24万m³） — https://www.sakigake.jp/news/article/20240203AK0023/</li>
+  <li>能代市「風の松原」（東西1km×南北14km、760ha、約700万本、正徳年間の植林開始、1987年12月の命名） — https://www.city.noshiro.lg.jp/res/kanko/views/shizen/1103</li>
+  <li>JAXA宇宙科学研究所「能代ロケット実験場」（1962年設置） — https://www.isas.jaxa.jp/about/facilities/noshiro.html</li>
+  <li>ファン!ファン!JAXA!「能代ロケット実験場 アクセス」（見学の予約・時間・電話番号） — https://fanfun.jaxa.jp/visit/noshiro/access.html</li>
+  <li>能代市「木都 能代」（明治期の秋田木材と東洋一） — https://www.city.noshiro.lg.jp/res/kanko/theme/1202</li>
+  <li>能代観光協会「桧山納豆」「白神ねぎ」「能代うどん」 — https://welcomenoshiro.com/eat/</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく地域リサーチであり、投資助言ではない。面積は出典により427.18km²と426.95km²の2つがあり両方を記載した。製造品出荷額等は2020年までが工業統計調査、2021年以降が経済構造実態調査で年次が接続しないため、接続する範囲で比較している。市の統計書の「工業の推移」表は平成29年に7,570,181万円を置き、同じ統計書の「産業中分類別の推移」表は同じ数値を平成30年に置いており年次ラベルが一致しない。令和元年の48.3%減がどの業種によるものかは中分類が秘匿（Ｘ）のため特定できずN/Aとした。市内総生産、能代港洋上風力の年間発電量、中国木材能代工場の現在の従業員実数、檜山納豆・能代うどんの各店舗の営業時間はいずれも確認できずN/Aとした。構成比・減少率・1人当たりの各値は本ページによる算出値。座標は市役所位置の概数である。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "人口（推計）",
+  "value": 43923,
+  "unit": "人",
+  "as_of": "2026-08-01",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（国勢調査）",
+  "value": 49968,
+  "unit": "人",
+  "as_of": "2020",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口ピーク（国勢調査）",
+  "value": 83785,
+  "unit": "人",
+  "as_of": "1955",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ピークからの人口減少率",
+  "value": 47.6,
+  "unit": "%",
+  "as_of": "2026-08",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "面積",
+  "value": 427.18,
+  "unit": "km2",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "面積（市統計値）",
+  "value": 426.95,
+  "unit": "km2",
+  "as_of": "2025",
+  "source": "https://www.seikatsu-guide.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造品出荷額等（従業者4人以上）",
+  "value": 384.9,
+  "unit": "億円",
+  "as_of": "2020",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造品出荷額等ピーク",
+  "value": 1063.0,
+  "unit": "億円",
+  "as_of": "2008",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造品出荷額等 ピークからの減少率",
+  "value": 63.8,
+  "unit": "%",
+  "as_of": "2020",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "製造業事業所数（従業者4人以上）",
+  "value": 104,
+  "unit": "事業所",
+  "as_of": "2020",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造業従業者数（従業者4人以上）",
+  "value": 2602,
+  "unit": "人",
+  "as_of": "2020",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造業従業者数",
+  "value": 6669,
+  "unit": "人",
+  "as_of": "1980",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "木材・木製品 出荷額",
+  "value": 52.0,
+  "unit": "億円",
+  "as_of": "2020",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "木材・木製品の構成比",
+  "value": 13.5,
+  "unit": "%",
+  "as_of": "2020",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "高齢化率",
+  "value": 42.33,
+  "unit": "%",
+  "as_of": "2025-01",
+  "source": "https://www.seikatsu-guide.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "財政力指数",
+  "value": 0.5,
+  "unit": "",
+  "as_of": "2024",
+  "source": "https://www.seikatsu-guide.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "一般会計当初予算",
+  "value": 374.63,
+  "unit": "億円",
+  "as_of": "2025",
+  "source": "https://www.hokuu.co.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "能代火力発電所 総出力",
+  "value": 180,
+  "unit": "万kW",
+  "as_of": "2020-03",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "能代港洋上風力 出力",
+  "value": 84,
+  "unit": "MW",
+  "as_of": "2022-12-22",
+  "source": "https://www.marubeni.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "能代港洋上風力 基数",
+  "value": 20,
+  "unit": "基",
+  "as_of": "2022-12-22",
+  "source": "https://www.marubeni.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "中国木材能代工場 投資額",
+  "value": 286,
+  "unit": "億円",
+  "as_of": "2024",
+  "source": "https://www.sakigake.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "中国木材能代工場 想定従業員数",
+  "value": 250,
+  "unit": "人",
+  "as_of": "2024",
+  "source": "https://www.sakigake.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "風の松原 面積",
+  "value": 760,
+  "unit": "ha",
+  "as_of": "2026",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "風の松原 本数",
+  "value": 700,
+  "unit": "万本",
+  "as_of": "2026",
+  "source": "https://www.city.noshiro.lg.jp/",
+  "confidence": "reported"
+ }
+]
+</script>
+</body>
+</html>

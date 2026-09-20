@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>北上市 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / 北上市</p>
+
+<header class="top">
+  <div>
+    <h1>北上市 / Kitakami</h1>
+    <div class="meta">岩手県 / 県南　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">1975年から2005年までの30年で人口が32%増えた。東北の内陸都市で、これは例外に属する。製造品出荷額3,607億円は能代市の9.4倍で、ピークからの人口減少率は3.2%にとどまる。</p>
+<p><span class="tag">半導体</span><span class="tag">キオクシア</span><span class="tag">工業団地</span><span class="tag">展勝地</span><span class="tag">鬼剣舞</span></p>
+
+<div class="kpi"><div class="card"><div class="k">人口</div><div class="v">91,345人 <small>2026年8月1日・推計人口</small></div></div><div class="card"><div class="k">面積</div><div class="v">437.55 km² <small>市公式値</small></div></div><div class="card"><div class="k">製造品出荷額等</div><div class="v">3,607.3億円 <small>2020年・従業者4人以上</small></div></div><div class="card"><div class="k">財政力指数</div><div class="v">0.95 <small>2024年度</small></div></div></div>
+<iframe class="map" loading="lazy" title="北上市の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=140.833,39.1466,141.393,39.4266&amp;layer=mapnik&amp;marker=39.2866,141.1130"></iframe>
+
+<h2><span class="num">01</span>市としての特徴<span class="en">Profile</span></h2>
+<p><strong>東北の内陸で、工業誘致が人口に転換した数少ない例である。ただし転換が起きたのは1975年から2005年までで、以降は横ばいに移っている。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>属性</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>位置</td>
+<td>岩手県南西部の北上盆地。花巻市・奥州市・金ケ崎町・西和賀町が隣接する。東北自動車道と東北新幹線が市内を通り、<strong>仙台からも盛岡からも新幹線でおよそ30分台</strong>という位置にある</td>
+</tr>
+<tr>
+<td>面積</td>
+<td>437.55km²。可住地面積204.23km²、可住地人口密度456人/km²</td>
+</tr>
+<tr>
+<td>地形</td>
+<td>中央に北上盆地が広がり、東は北上山系の丘陵、西は奥羽山系の山地。北上川が市域を南北に貫く</td>
+</tr>
+<tr>
+<td>成り立ち</td>
+<td>1954年4月1日に旧北上市が市制施行。<strong>1991年4月1日に北上市・和賀町・江釣子村が合併</strong>して現在の市になった</td>
+</tr>
+<tr>
+<td>地名の由来</td>
+<td>北上川および北上盆地にちなむ</td>
+</tr>
+<tr>
+<td>産業構造</td>
+<td>製造業が中心で、輸送用機械・電子部品・プラスチック・生産用機械が上位を占める。市内に工業団地・流通基地・産業業務団地が計11か所ある</td>
+</tr>
+<tr>
+<td>年齢構成</td>
+<td>年少人口率11.08%、生産年齢人口率60.50%、<strong>高齢人口率28.43%</strong>（2025年1月1日）</td>
+</tr>
+<tr>
+<td>財政</td>
+<td><strong>財政力指数0.95</strong>、実質公債費比率7.2%、経常収支比率93.8%、<strong>地方交付税依存度6.6%</strong>（2024年度）。令和7年度の一般会計当初予算は512億円、全会計合計704億6,080万円</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>同じ東北の能代市と並べると輪郭がはっきりする。<strong>高齢化率は28.43%対42.33%、財政力指数は0.95対0.50、地方交付税依存度は6.6%対24.9%。</strong>北上市は自前の税収でほぼ回っており、能代市は歳入の4分の1を地方交付税に頼っている。この差をつくったのが製造業である。</p></div>
+<h2><span class="num">02</span>経済規模と産業構造<span class="en">Economy</span></h2>
+<h3>製造品出荷額等の推移</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年次</th>
+<th>事業所数</th>
+<th>従業者数</th>
+<th>製造品出荷額等</th>
+<th>粗付加価値額</th>
+</tr></thead><tbody>
+<tr>
+<td>2015年（平成27年）</td>
+<td class="num">242</td>
+<td>13,447人</td>
+<td>3,574.2億円</td>
+<td>1,130.9億円</td>
+</tr>
+<tr>
+<td>2016年（平成28年）</td>
+<td class="num">232</td>
+<td>13,719人</td>
+<td>3,643.0億円</td>
+<td>1,215.8億円</td>
+</tr>
+<tr>
+<td>2017年（平成29年）</td>
+<td class="num">232</td>
+<td>14,077人</td>
+<td>3,899.6億円</td>
+<td>1,358.2億円</td>
+</tr>
+<tr>
+<td>2018年（平成30年）</td>
+<td class="num">239</td>
+<td><strong>14,957人</strong></td>
+<td><strong>4,139.2億円</strong></td>
+<td>1,452.7億円</td>
+</tr>
+<tr>
+<td>2019年（令和元年）</td>
+<td class="num">238</td>
+<td>14,830人</td>
+<td>3,851.7億円</td>
+<td>1,376.5億円</td>
+</tr>
+<tr>
+<td>2020年（令和2年）</td>
+<td class="num">214</td>
+<td>13,837人</td>
+<td>3,607.3億円</td>
+<td>1,390.7億円</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p><strong>この表の終点は2020年で、キオクシア岩手の第2製造棟が稼働する5年前である。</strong>2020年の数値をもって現在の北上市の工業規模と読むと過小評価になる。一方で、2018年から2020年にかけて事業所数が239から214へ25減り、従業者数も1,120人減っている点は事実として残る。半導体が伸びる一方で他業種が縮んでおり、<strong>総額は2018年のピークを2020年時点では回復していない。</strong>2021年以降は統計が経済構造実態調査に切り替わり接続しないため、以降の推移はN/Aとした。</p></div>
+<h3>業種別の構成（2020年）</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>業種</th>
+<th>事業所数</th>
+<th>従業者数</th>
+<th>出荷額</th>
+<th>構成比</th>
+</tr></thead><tbody>
+<tr>
+<td>総数</td>
+<td class="num">214</td>
+<td>13,837人</td>
+<td>3,607.3億円</td>
+<td class="num">100%</td>
+</tr>
+<tr>
+<td>輸送用機械</td>
+<td class="num">11</td>
+<td>1,829人</td>
+<td>683.5億円</td>
+<td class="num">18.9%</td>
+</tr>
+<tr>
+<td>電子部品・デバイス</td>
+<td class="num">13</td>
+<td>2,583人</td>
+<td>636.2億円</td>
+<td class="num">17.6%</td>
+</tr>
+<tr>
+<td>プラスチック</td>
+<td class="num">20</td>
+<td>964人</td>
+<td>446.0億円</td>
+<td class="num">12.4%</td>
+</tr>
+<tr>
+<td>生産用機械</td>
+<td class="num">40</td>
+<td>2,061人</td>
+<td>333.1億円</td>
+<td class="num">9.2%</td>
+</tr>
+<tr>
+<td>金属製品</td>
+<td class="num">30</td>
+<td>954人</td>
+<td>265.8億円</td>
+<td class="num">7.4%</td>
+</tr>
+<tr>
+<td>食料品</td>
+<td class="num">18</td>
+<td>1,682人</td>
+<td>240.3億円</td>
+<td class="num">6.7%</td>
+</tr>
+<tr>
+<td>鉄鋼</td>
+<td class="num">6</td>
+<td>834人</td>
+<td>231.8億円</td>
+<td class="num">6.4%</td>
+</tr>
+<tr>
+<td>パルプ・紙</td>
+<td class="num">10</td>
+<td>542人</td>
+<td>217.3億円</td>
+<td class="num">6.0%</td>
+</tr>
+<tr>
+<td>窯業・土石</td>
+<td class="num">12</td>
+<td>362人</td>
+<td>86.3億円</td>
+<td class="num">2.4%</td>
+</tr>
+<tr>
+<td>木材</td>
+<td class="num">11</td>
+<td>230人</td>
+<td>81.5億円</td>
+<td class="num">2.3%</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>上位2業種で36.5%、上位5業種で65.5%を占める。</strong>特定の1社に依存した構造ではなく、輸送用機械と電子部品という異なる系統の2本柱に、プラスチックと生産用機械という部品・設備側が付く形になっている。これは工業団地に多様な業種を並べて誘致してきた結果である。<strong>能代市が単一業種の衰退で出荷額を64%失ったのに対し、北上市は1業種が落ちても他が残る構造を持っている。</strong></p></div>
+<h3>規模別の事業所（2020年）</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>従業者規模</th>
+<th>事業所数</th>
+<th>従業者数</th>
+<th>出荷額</th>
+</tr></thead><tbody>
+<tr>
+<td>4〜9人</td>
+<td class="num">41</td>
+<td>245人</td>
+<td>128.1億円</td>
+</tr>
+<tr>
+<td>10〜49人</td>
+<td class="num">118</td>
+<td>2,719人</td>
+<td>564.2億円</td>
+</tr>
+<tr>
+<td>50〜99人</td>
+<td class="num">24</td>
+<td>1,741人</td>
+<td>313.1億円</td>
+</tr>
+<tr>
+<td>100〜299人</td>
+<td class="num">18</td>
+<td>3,169人</td>
+<td>1,108.3億円</td>
+</tr>
+<tr>
+<td>300〜499人</td>
+<td class="num">9</td>
+<td>3,396人</td>
+<td>799.7億円</td>
+</tr>
+<tr>
+<td>500〜999人</td>
+<td class="num">4</td>
+<td>2,567人</td>
+<td>693.8億円</td>
+</tr>
+<tr>
+<td>1,000人以上</td>
+<td class="num">0</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>2020年時点で従業者1,000人以上の事業所は1つもない。</strong>500〜999人が4事業所あり、この4社で従業者の18.6%と出荷額の19.2%を占める。つまり北上市の工業は、巨大工場1つではなく中堅工場の束でできていた。<strong>キオクシア北上工場の従業員が約2,400人に達した現在、この分布は崩れているはずだが、それを示す統計はまだ公表されていない。</strong></p></div>
+<h3>1人当たり製造品出荷額</h3>
+<p>2020年の出荷額3,607.3億円を、住民基本台帳人口92,181人（令和3年度末）で割ると<strong>391万円</strong>である。能代市の同じ計算（384.9億円÷50,012人）は77万円で、<strong>5.1倍の差</strong>がある。いずれも本ページによる算出値で、人口の基準日が両市で1年ずれている点に注意が必要である。</p>
+<h2><span class="num">03</span>人口推移<span class="en">Population</span></h2>
+<h3>国勢調査による推移</h3>
+<p>現在の市域（旧北上市・旧和賀町・旧江釣子村の合算）で示す。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年次</th>
+<th>人口</th>
+<th>1975年比</th>
+</tr></thead><tbody>
+<tr>
+<td>1972年</td>
+<td>68,433人</td>
+<td>-</td>
+</tr>
+<tr>
+<td>1975年（第12回）</td>
+<td>71,383人</td>
+<td>基準</td>
+</tr>
+<tr>
+<td>1980年（第13回）</td>
+<td>76,633人</td>
+<td class="num">+7.4%</td>
+</tr>
+<tr>
+<td>1985年（第14回）</td>
+<td>80,248人</td>
+<td class="num">+12.4%</td>
+</tr>
+<tr>
+<td>1990年（第15回）</td>
+<td>82,902人</td>
+<td class="num">+16.1%</td>
+</tr>
+<tr>
+<td>1995年（第16回）</td>
+<td>87,969人</td>
+<td class="num">+23.2%</td>
+</tr>
+<tr>
+<td>2000年（第17回）</td>
+<td>91,501人</td>
+<td class="num">+28.2%</td>
+</tr>
+<tr>
+<td>2005年（第18回）</td>
+<td><strong>94,321人</strong></td>
+<td><strong>+32.1%</strong></td>
+</tr>
+<tr>
+<td>2010年（第19回）</td>
+<td>93,138人</td>
+<td class="num">+30.5%</td>
+</tr>
+<tr>
+<td>2026年8月（推計人口）</td>
+<td>91,345人</td>
+<td class="num">+28.0%</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>1975年から2005年までの30年で22,938人増えている。</strong>同じ30年で能代市は75,177人から62,858人へ12,319人減った。<strong>東北の内陸都市が人口を3割増やした例は多くない。</strong>そしてピークの2005年から2026年までの21年間の減り方は3.2%で、これも東北では小さい部類に入る。北上市は増えた街ではなく、増えたあと止まった街である。</p></div>
+<h3>自然動態と社会動態</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年度</th>
+<th>人口増減</th>
+<th>出生</th>
+<th>死亡</th>
+<th>自然増減</th>
+<th>転入</th>
+<th>転出</th>
+<th>社会増減</th>
+</tr></thead><tbody>
+<tr>
+<td>2017年度</td>
+<td class="num">-504</td>
+<td class="num">673</td>
+<td class="num">1,031</td>
+<td class="num">-358</td>
+<td class="num">2,926</td>
+<td class="num">3,072</td>
+<td class="num">-146</td>
+</tr>
+<tr>
+<td>2018年度</td>
+<td class="num">-324</td>
+<td class="num">627</td>
+<td class="num">1,036</td>
+<td class="num">-409</td>
+<td class="num">3,318</td>
+<td class="num">3,233</td>
+<td class="num">+85</td>
+</tr>
+<tr>
+<td>2019年度</td>
+<td class="num">+38</td>
+<td class="num">640</td>
+<td class="num">1,139</td>
+<td class="num">-499</td>
+<td class="num">3,851</td>
+<td class="num">3,314</td>
+<td><strong>+537</strong></td>
+</tr>
+<tr>
+<td>2020年度</td>
+<td class="num">+41</td>
+<td class="num">548</td>
+<td class="num">1,060</td>
+<td class="num">-512</td>
+<td class="num">3,531</td>
+<td class="num">2,978</td>
+<td><strong>+553</strong></td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>2019年度と2020年度は、自然減500人前後を社会増500人台が上回って人口が増えている。</strong>これは東北の市でほとんど見られない状態である。2019年度の転入3,851人は2017年度比で925人多く、増加分の大半は県外からの転入（1,475人→2,269人）である。<strong>キオクシア岩手の第1製造棟が2020年に稼働する直前の年に、県外転入が794人増えている</strong>という時系列は記録しておく価値がある。ただし転入と特定企業の因果関係を示す統計は確認できずN/Aとした。</p></div>
+<h2><span class="num">04</span>日本の大企業との関連<span class="en">Corporate Links</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>企業</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>キオクシア岩手</td>
+<td>北工業団地に立地。<strong>第1製造棟（K1）が2020年、第2製造棟（K2）が2025年9月に稼働開始。</strong>K2は2026年前半に本格出荷を始める。北上工場の従業員は約2,400人で、2026年と2027年に各100人の新規採用を計画する。<strong>第3製造棟（K3）の新設が予定されており、投資額は2社合計で約1兆8,000億円、うち約3分の1を政府補助金で賄う想定</strong>である。K2はフル生産時に北上工場の生産能力をほぼ倍増させる</td>
+</tr>
+<tr>
+<td>シチズン時計</td>
+<td>市内に製造拠点を持つ</td>
+</tr>
+<tr>
+<td>その他</td>
+<td>市内の工業団地・流通基地・産業業務団地は計11か所。輸送用機械11事業所、電子部品13事業所、生産用機械40事業所が立地する（2020年）</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p><strong>1兆8,000億円は第3製造棟（K3）の計画値であり、すでに稼働した設備の投資額ではない。</strong>また「2社合計」とあるのは、キオクシアと提携先を含む数字である。北上市の将来をこの金額で語る場合、<strong>計画段階であること、政府補助金が前提に入っていること</strong>の2点を落とさないほうがよい。半導体投資は市況で計画が縮む。宮城県大衡村では8,000億円・2027年稼働の計画が2024年9月に白紙になっている。</p></div>
+<h2><span class="num">05</span>出身の有名人<span class="en">People</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>人物</th>
+<th>分野</th>
+<th>備考</th>
+</tr></thead><tbody>
+<tr>
+<td>八重樫東</td>
+<td>ボクシング</td>
+<td>1983年生まれ。世界3階級制覇</td>
+</tr>
+<tr>
+<td>佐々木麟太郎</td>
+<td>野球</td>
+<td>2005年生まれ。花巻東高校を経てプロ野球</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">06</span>食<span class="en">Food</span></h2>
+<h3>二子さといも</h3>
+<p>市西部の二子地区で栽培されるさといもである。北上川の氾濫原がつくった土壌が産地の条件になった。<strong>これを使った北上コロッケが市のご当地料理として位置づけられている。</strong></p>
+<h3>食料品製造業としての規模</h3>
+<p>2020年の食料品製造業は18事業所・1,682人・240.3億円で、<strong>出荷額では市の6.7%にすぎないが、従業者数では12.2%を占める。</strong>電子部品・デバイスが13事業所・2,583人で出荷額636.2億円であるのと比べると、食料品は出荷額あたりの雇用が3倍以上多い。</p>
+<div class="callout"><p><strong>食料品は北上市で「儲かる産業」ではなく「人を雇う産業」として機能している。</strong>1人当たり出荷額は食料品が1,429万円、電子部品が2,463万円、輸送用機械が3,737万円である（いずれも本ページによる算出値）。工業都市の雇用を語るとき、出荷額の構成比だけを見ると食料品の役割を見落とす。</p></div>
+<h2><span class="num">07</span>観光スポット<span class="en">Places</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>場所</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>北上市立公園展勝地</td>
+<td>1921年（大正10年）に和賀展勝会の植樹で開園。<strong>園内293haに約150種・約1万本の桜</strong>があり、北上川沿いの2kmの並木には樹齢100年近いソメイヨシノ約500本が並ぶ。日本さくら名所100選、みちのく三大桜名所</td>
+</tr>
+<tr>
+<td>北上市立鬼の館</td>
+<td>鬼をテーマにした博物館。<strong>鬼剣舞発祥とされる岩崎地区</strong>にあり、面などの資料を収集展示する</td>
+</tr>
+<tr>
+<td>夏油温泉</td>
+<td>市西部の山中の温泉地</td>
+</tr>
+<tr>
+<td>鬼剣舞</td>
+<td>大宝年間（701-704年）に役小角が舞った念仏踊が起源とされる伝統芸能。出陣や凱旋の際にも舞われるようになったと伝わる</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>展勝地の開園は1921年で、北上市が工業都市になるより半世紀早い。</strong>人口が増え始めるのは1970年代からなので、桜も鬼剣舞も工業誘致の産物ではない。この街の観光資源は工業化以前に確立しており、<strong>産業と観光が別系統で並存している</strong>点が、産業遺産が観光資源になった夕張や大牟田と異なる。</p></div>
+<h2><span class="num">08</span>なぜ北上だけが増えたか<span class="en">Why Kitakami</span></h2>
+<p><strong>評価はせず、確認できた条件のみを並べる。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>条件</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>交通</td>
+<td>東北自動車道と東北新幹線が市内を通る。盛岡と仙台の中間に位置する</td>
+</tr>
+<tr>
+<td>用地</td>
+<td>工業団地・流通基地・産業業務団地が計11か所</td>
+</tr>
+<tr>
+<td>地形</td>
+<td>可住地面積204.23km²で、面積の46.7%が可住地。内陸盆地で平坦地が広い</td>
+</tr>
+<tr>
+<td>合併</td>
+<td>1991年4月1日に1市1町1村が合併し、市域と用地が拡大した</td>
+</tr>
+<tr>
+<td>業種の分散</td>
+<td>2020年時点で上位5業種が65.5%、単一業種への依存がない</td>
+</tr>
+<tr>
+<td>隣接自治体</td>
+<td>岩手県内の製造品出荷額1位は隣の金ケ崎町で、北上市は2位。<strong>工業集積は市域より広い単位で成立している</strong></td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>読み方。<strong>北上市の増加は市単独の成果というより、北上川沿いの平坦地に高速道路と新幹線が通った地理の結果である。</strong>同じ条件を能代市は持たない。日本海側の砂丘地形で、高速道路の整備は遅く、可住地面積は177.83km²と北上市より26km²少ない。<strong>したがって「北上に学べ」は成立しにくい。</strong>条件が移植できないからである。一方で、金ケ崎町が県内1位で北上市が2位という事実は、工業集積が行政区域ではなく地理単位で決まることを示している。北上市の数字を読むときは、隣接自治体を含めた圏域で見たほうが実態に近い。</p></div>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>北上市「令和4年版北上市統計書」製造業の章（事業所数・従業者数・製造品出荷額等の推移、従業者規模別、産業中分類別） — https://www.city.kitakami.iwate.jp/material/files/group/3/seizougyou202305.xlsx</li>
+  <li>北上市「令和4年版北上市統計書」人口の章（人口の変遷、戸籍人口及び住民基本台帳人口、自然動態・社会動態） — https://www.city.kitakami.iwate.jp/material/files/group/3/jinkou202305.xlsx</li>
+  <li>北上市「令和7年度予算 各会計総括表」（一般会計512億円、前年度465億円、総計704億6,080万円） — https://www.city.kitakami.iwate.jp/material/files/group/5/R7_yosan_soukatuhyou.pdf</li>
+  <li>Wikipedia「北上市」（面積437.55km²、推計人口91,345人／2026年8月1日、ピーク94,321人／2005年、市制施行1954年、1991年の合併、隣接自治体、著名人、製造品出荷額の県内順位）</li>
+  <li>生活ガイド.com「北上市の統計データ」（財政力指数0.95、実質公債費比率7.2%、経常収支比率93.8%、地方交付税依存度6.6%、年齢3区分別人口比率、可住地面積204.23km²） — https://www.seikatsu-guide.com/info/3/3206/1/</li>
+  <li>キオクシア「北上工場（キオクシア岩手株式会社）」（所在地、第1製造棟2020年・第2製造棟2025年9月の稼働開始） — https://www.kioxia.com/ja-jp/about/kitakami.html</li>
+  <li>キオクシア「AI需要に対応する北上工場第2製造棟の稼働開始について」（2025年9月30日） — https://www.kioxia.com/ja-jp/about/news/2025/20250930-1.html</li>
+  <li>日本経済新聞「キオクシア北上工場新棟が稼働、26年出荷開始 AI需要取り込む」（従業員約2,400人、2026・2027年に各100人採用） — https://www.nikkei.com/article/DGXZQOUC302RU0Q5A930C2000000/</li>
+  <li>日本経済新聞「キオクシア、岩手県にメモリーの新製造棟を建設へ 投資額1兆円超」（第3製造棟、2社合計約1兆8,000億円、約3分の1を政府補助金） — https://www.nikkei.com/article/DGXZQOUC26A240W6A820C2000000/</li>
+  <li>日本経済新聞「PSMC撤退、宮城県は誘致『仕切り直し』」（大衡村の8,000億円計画が2024年9月に白紙） — https://www.nikkei.com/article/DGXZQOCC275590X20C24A9000000/</li>
+  <li>北上市「工業団地」（市内11か所） — https://www.city.kitakami.iwate.jp/life/sangyo_shigoto_kigyoritchi/kigyoritchi/kogyodanchi/index.html</li>
+  <li>展勝地 総合情報ポータルサイト「展勝地の見どころ」（293ha、約150種、約1万本、2kmの並木、ソメイヨシノ約500本） — https://tenshouchi-ps.com/highlights/</li>
+  <li>北上観光コンベンション協会「鬼のまち〜鬼の伝統について」（大宝年間701-704年、役小角、鬼剣舞の由来） — https://kitakami-kanko.jp/oni-no-machi/</li>
+  <li>北上観光コンベンション協会「鬼の館」（岩崎地区、鬼剣舞発祥） — https://kitakami-kanko.jp/location/oninoyakata/</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく地域リサーチであり、投資助言ではない。製造品出荷額等は2020年までが工業統計調査で、2021年以降は経済構造実態調査となり年次が接続しない。市統計書で公開されている最新年は令和2年（2020年）であり、キオクシア岩手の第2製造棟が稼働した2025年以降の数値はまだ反映されていない。2015年・2020年の国勢調査人口、市内総生産、キオクシア岩手の敷地面積と設立年、キオクシア北上工場の第1製造棟の竣工月、市内の工業団地の立地企業総数はいずれも確認できずN/Aとした。構成比・増減率・1人当たりの各値は本ページによる算出値。座標は市役所位置の概数である。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "人口（推計）",
+  "value": 91345,
+  "unit": "人",
+  "as_of": "2026-08-01",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口ピーク（国勢調査）",
+  "value": 94321,
+  "unit": "人",
+  "as_of": "2005",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（国勢調査）",
+  "value": 71383,
+  "unit": "人",
+  "as_of": "1975",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "1975年から2005年の人口増加率",
+  "value": 32.1,
+  "unit": "%",
+  "as_of": "2005",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "ピークからの人口減少率",
+  "value": 3.2,
+  "unit": "%",
+  "as_of": "2026-08",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "面積",
+  "value": 437.55,
+  "unit": "km2",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "可住地面積",
+  "value": 204.23,
+  "unit": "km2",
+  "as_of": "2025",
+  "source": "https://www.seikatsu-guide.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造品出荷額等（従業者4人以上）",
+  "value": 3607.3,
+  "unit": "億円",
+  "as_of": "2020",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造品出荷額等",
+  "value": 4139.2,
+  "unit": "億円",
+  "as_of": "2018",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造業事業所数（従業者4人以上）",
+  "value": 214,
+  "unit": "事業所",
+  "as_of": "2020",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造業従業者数（従業者4人以上）",
+  "value": 13837,
+  "unit": "人",
+  "as_of": "2020",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "1人当たり製造品出荷額",
+  "value": 391,
+  "unit": "万円",
+  "as_of": "2020",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "輸送用機械 出荷額",
+  "value": 683.5,
+  "unit": "億円",
+  "as_of": "2020",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "電子部品・デバイス 出荷額",
+  "value": 636.2,
+  "unit": "億円",
+  "as_of": "2020",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "社会増減",
+  "value": 537,
+  "unit": "人",
+  "as_of": "2019年度",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "社会増減",
+  "value": 553,
+  "unit": "人",
+  "as_of": "2020年度",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "自然増減",
+  "value": -512,
+  "unit": "人",
+  "as_of": "2020年度",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "財政力指数",
+  "value": 0.95,
+  "unit": "",
+  "as_of": "2024",
+  "source": "https://www.seikatsu-guide.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "地方交付税依存度",
+  "value": 6.6,
+  "unit": "%",
+  "as_of": "2024",
+  "source": "https://www.seikatsu-guide.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "高齢人口率",
+  "value": 28.43,
+  "unit": "%",
+  "as_of": "2025-01-01",
+  "source": "https://www.seikatsu-guide.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "一般会計当初予算",
+  "value": 512.0,
+  "unit": "億円",
+  "as_of": "2025",
+  "source": "https://www.city.kitakami.iwate.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "キオクシア北上工場 従業員数",
+  "value": 2400,
+  "unit": "人",
+  "as_of": "2025-09",
+  "source": "https://www.nikkei.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "キオクシア第3製造棟 投資額（計画・2社合計）",
+  "value": 18000,
+  "unit": "億円",
+  "as_of": "2026-08",
+  "source": "https://www.nikkei.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "展勝地 桜の本数",
+  "value": 10000,
+  "unit": "本",
+  "as_of": "2026",
+  "source": "https://tenshouchi-ps.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "展勝地 開園",
+  "value": 1921,
+  "unit": "年",
+  "as_of": "1921",
+  "source": "https://tenshouchi-ps.com/",
+  "confidence": "reported"
+ }
+]
+</script>
+</body>
+</html>

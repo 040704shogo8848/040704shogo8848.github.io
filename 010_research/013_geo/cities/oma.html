@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大間町 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / 大間町</p>
+
+<header class="top">
+  <div>
+    <h1>大間町 / Ōma</h1>
+    <div class="meta">青森県 / 下北　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">着工から18年たった原発の工事進捗率は37.6%で、名称はいまも「大間原子力建設所」である。人口はそのあいだにピークの半分近くまで減った。一方でこの町のマグロは2026年1月の初競りで1本5億1,030万円、キロ210万円の史上最高値を付けた。</p>
+<p><span class="tag">大間原発</span><span class="tag">フルMOX</span><span class="tag">大間まぐろ</span><span class="tag">本州最北端</span><span class="tag">函館訴訟</span></p>
+
+<div class="kpi"><div class="card"><div class="k">人口</div><div class="v">4,074人 <small>2026年・推計人口</small></div></div><div class="card"><div class="k">面積</div><div class="v">52.09 km² <small>町公式値</small></div></div><div class="card"><div class="k">原発の工事進捗率</div><div class="v">37.6% <small>2025年1月</small></div></div><div class="card"><div class="k">初競り最高値</div><div class="v">5億1,030万円 <small>2026年1月5日・243kg</small></div></div></div>
+<iframe class="map" loading="lazy" title="大間町の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=140.6306,41.3892,141.1906,41.669200000000004&amp;layer=mapnik&amp;marker=41.5292,140.9106"></iframe>
+
+<h2><span class="num">01</span>町としての特徴<span class="en">Profile</span></h2>
+<p><strong>本州最北端の漁業の町に、まだ動いていない原発が18年間建っている。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>属性</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>位置</td>
+<td>青森県下北半島の最北西端。<strong>大間崎が本州最北端</strong>にあたる。津軽海峡を挟んで北海道まで17.5km</td>
+</tr>
+<tr>
+<td>面積</td>
+<td>52.09km²。海岸線は約15km</td>
+</tr>
+<tr>
+<td>気候</td>
+<td>年間降雪量の平均は208cm</td>
+</tr>
+<tr>
+<td>成り立ち</td>
+<td>郵便番号039-4692、団体コード02423-6</td>
+</tr>
+<tr>
+<td>産業構造</td>
+<td>漁業と観光。クロマグロの一本釣りが柱で、加えて電源開発の原子力建設所が立地する</td>
+</tr>
+<tr>
+<td>交通</td>
+<td><strong>鉄道は通っていない。</strong>津軽海峡フェリーが大間と函館を1日2往復で結ぶ。バスは下北交通の限られた便のみ</td>
+</tr>
+<tr>
+<td>財政</td>
+<td>令和7年度の一般会計当初予算は約45.1億円（前年度比8,838万円増、2.0%増）。<strong>依存財源70.2%、自主財源29.8%</strong></td>
+</tr>
+<tr>
+<td>町長</td>
+<td>野﨑尚文（2021年就任）</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>1人当たりの一般会計予算は約111万円である。</strong>約45.1億円を推計人口4,074人で割った値で、本ページによる算出値である。全国平均を大きく上回るが、[六ヶ所村](rokkasho.html)の154万円や[双葉町](futaba.html)の325万円には届かない。<strong>原発が建ってはいるが、動いていないからである。</strong>固定資産税は完成した設備にかかる。</p></div>
+<h2><span class="num">02</span>経済<span class="en">Economy</span></h2>
+<h3>大間原子力発電所の計画</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>項目</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>事業者</td>
+<td>電源開発（J-POWER）</td>
+</tr>
+<tr>
+<td>出力</td>
+<td>138.3万kW</td>
+</tr>
+<tr>
+<td>炉型</td>
+<td>改良型沸騰水型軽水炉（ABWR）</td>
+</tr>
+<tr>
+<td>特徴</td>
+<td><strong>全炉心にMOX燃料を装荷できる設計。</strong>商用炉として世界初にあたる</td>
+</tr>
+<tr>
+<td>構想</td>
+<td>1976年4月、大間町商工会が請願</td>
+</tr>
+<tr>
+<td>誘致決議</td>
+<td>1984年12月</td>
+</tr>
+<tr>
+<td>設置許可</td>
+<td>2008年4月</td>
+</tr>
+<tr>
+<td>着工</td>
+<td>2008年5月</td>
+</tr>
+<tr>
+<td>工事中断</td>
+<td>2011年3月</td>
+</tr>
+<tr>
+<td>工事再開</td>
+<td>2012年10月</td>
+</tr>
+<tr>
+<td>運転開始目標</td>
+<td>2030年度（2022年9月に電源開発が発表）。ただし2025年の青森県提出資料では<strong>運転開始時期は未定</strong>とされている</td>
+</tr>
+<tr>
+<td>当初の総工費</td>
+<td>約4,800億円。2014年に1,300億円の追加投資が報じられた</td>
+</tr>
+</tbody></table></div>
+<h3>工事の進み方</h3>
+<p>2025年1月時点の工事進捗率は以下のとおりである。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>区分</th>
+<th>進捗率</th>
+</tr></thead><tbody>
+<tr>
+<td>全体</td>
+<td><strong>37.6%</strong></td>
+</tr>
+<tr>
+<td>土木</td>
+<td class="num">64.7%</td>
+</tr>
+<tr>
+<td>建築</td>
+<td class="num">38.5%</td>
+</tr>
+<tr>
+<td>機械・電気</td>
+<td class="num">36.1%</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p><strong>着工は2008年5月で、2026年で18年が経過している。その時点の全体進捗が37.6%である。</strong>単純に外挿すれば残りの62.4%におよそ30年かかる計算になるが、工事は新規制基準への適合審査の進み方に規定されるため外挿は成立しない。<strong>確実に言えるのは、2030年度という目標と37.6%という進捗の間に説明が要るということだけである。</strong>電源開発の施設名称がいまだに「大間原子力発電所」ではなく<strong>大間原子力建設所</strong>である点も、この状態を表している。</p></div>
+<h3>用地買収と訴訟</h3>
+<p>炉心の位置は当初の計画から動いている。反対派の住民が土地の売却に応じず、<strong>2003年2月に電源開発が買収を断念し、炉心を南へ約200m移動させた。</strong>残された土地は現在も敷地内に囲まれる形で存在する。</p>
+<p>2014年4月3日、対岸の<strong>函館市が建設差し止めを求めて提訴</strong>した。市はふるさと納税で訴訟費用を募り、2018年7月時点で1億円に達している。<strong>自治体が県境を越えて国のエネルギー政策を争う構図</strong>は国内で他に例が少ない。</p>
+<h3>町の財政と交付金</h3>
+<p>町長の所信表明（2025年5月）は、<strong>「原子力発電所建設工事が中断し、町財政並びに地域経済がひっ迫している状況」</strong>を国と県に訴え続けた結果として、次の2つを挙げている。</p>
+<ul><li>県からの<strong>核燃料物質等取扱税交付金</strong>が令和6年度から増額</li><li>国の<strong>原子力発電施設等立地地域基盤整備支援事業交付金</strong>が令和7年度から新たに交付対象に</li></ul>
+<div class="callout"><p><strong>町自身が「建設工事が中断し財政と地域経済がひっ迫している」と書いている。</strong>原発立地の自治体が潤うという一般論は、稼働している場合にしか成り立たない。大間町は誘致決議から42年、着工から18年、稼働ゼロのまま交付金で埋めている。<strong>ここが[女川町](onagawa.html)との最大の違いである。</strong>女川町は2024年に2号機が再稼働し、2025年度に普通交付税の不交付団体になった。</p></div>
+<h2><span class="num">03</span>人口推移<span class="en">Population</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年次</th>
+<th>人口</th>
+<th>ピーク比</th>
+</tr></thead><tbody>
+<tr>
+<td>1970年代半ば</td>
+<td><strong>約7,750人</strong></td>
+<td>ピーク</td>
+</tr>
+<tr>
+<td>2015年（国勢調査）</td>
+<td>5,227人</td>
+<td class="num">-32.6%</td>
+</tr>
+<tr>
+<td>2020年（国勢調査）</td>
+<td>4,718人</td>
+<td class="num">-39.1%</td>
+</tr>
+<tr>
+<td>2026年（推計人口）</td>
+<td>4,074人</td>
+<td><strong>-47.4%</strong></td>
+</tr>
+</tbody></table></div>
+<p>2010年から2015年の5年間で17.56%減っている。ピークの値と年はWikipediaの記載に基づく概数であり、正確な年次はN/Aとした。</p>
+<div class="callout"><p><strong>原発の着工は2008年で、人口はその後も減り続けている。</strong>2015年から2020年で509人、2020年から2026年で644人減った。建設工事は雇用を生むが、その雇用は工事の進み方に連動する。<strong>進捗率37.6%という状態は、工事が人口を支えるほどの規模で動いていないことを意味する。</strong></p></div>
+<h2><span class="num">04</span>日本の大企業との関連<span class="en">Corporate Links</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>企業</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>電源開発（J-POWER）</td>
+<td>大間原子力建設所。138.3万kW、ABWR、フルMOX対応。着工2008年5月、進捗率37.6%（2025年1月）</td>
+</tr>
+<tr>
+<td>津軽海峡フェリー</td>
+<td>大間と函館を1日2往復で結ぶ。所要は約1時間30分程度。<strong>町の令和7年度当初予算の総務費に「大函丸指定管理料1億6,500万円」が計上されている。</strong>指定管理料は町が支出する費目だが、船舶の所有関係の詳細はN/Aとした</td>
+</tr>
+<tr>
+<td>喜代村（すしざんまい）</td>
+<td>2026年1月5日の豊洲市場初競りで大間産クロマグロを5億1,030万円で落札した</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">05</span>出身の有名人<span class="en">People</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>人物</th>
+<th>分野</th>
+<th>備考</th>
+</tr></thead><tbody>
+<tr>
+<td>泉浩</td>
+<td>柔道</td>
+<td>大間町出身の柔道家</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">06</span>食<span class="en">Food</span></h2>
+<h3>大間まぐろ</h3>
+<p>津軽海峡は太平洋から日本海へ抜ける潮の通り道で、餌を追うクロマグロが集まる。大間の漁法は<strong>一本釣りと延縄</strong>で、まき網と違って1尾ずつ扱うため鮮度と傷の少なさが値段に乗る。</p>
+<p>2026年1月5日、豊洲市場の初競りで<strong>大間産243kgのクロマグロが5億1,030万円</strong>で競り落とされた。記録が残る1999年以降の史上最高値で、2019年に同じ喜代村が付けた3億3,360万円を50%上回る。<strong>キロ単価は210万円</strong>（本ページによる算出値）。大間産が最高値を取るのは15年連続である。</p>
+<div class="risk"><p><strong>初競りの値段はブランドの指標であって、産業の規模の指標ではない。</strong>1尾5億円は年に1度の祝儀相場で、大間で水揚げされるクロマグロの平均は100kg前後とされる。さらに「大間まぐろ」として流通する量と、大間で実際に揚がるクロマグロの漁獲量の関係については、データ上の疑問を指摘する報道がある。<strong>町の漁業の年間生産額はこのページでは確認できずN/Aとした。</strong>初競りの金額だけでこの町の漁業を評価しないほうがよい。</p></div>
+<div class="callout"><p><strong>この町には、値段が世界一の魚と、進捗率37.6%の原発が同時にある。</strong>片方はキロ210万円という象徴的な数字を毎年1月に生み、もう片方は42年かけてまだ動いていない。<strong>町の財政は後者に依存し、町の知名度は前者に依存している。</strong></p></div>
+<h2><span class="num">07</span>訪問できる場所<span class="en">Places</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>場所</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>大間崎</td>
+<td><strong>本州最北端</strong>の碑がある。北海道まで17.5km</td>
+</tr>
+<tr>
+<td>大間原子力建設所</td>
+<td>電源開発の建設現場。外観は周辺から見える</td>
+</tr>
+<tr>
+<td>あさこはうす</td>
+<td>用地買収に応じなかった土地に建つ家。<strong>炉心が南へ約200m動いた原因</strong>にあたる</td>
+</tr>
+<tr>
+<td>大間港フェリーターミナル</td>
+<td>函館行き1日2往復</td>
+</tr>
+<tr>
+<td>弁天島</td>
+<td>大間崎の沖に浮かぶ島</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p>大間へは鉄道がない。青森市または新青森駅から下北方面へ車でおよそ3時間、むつ市からさらに約1時間かかる。<strong>函館からフェリーで入るほうが早い場合がある</strong>という、本州の町としては珍しい位置関係にある。函館市が原発を提訴している理由も、この距離にある。</p></div>
+<h2><span class="num">08</span>42年かけて動かなかったもの<span class="en">Forty-Two Years</span></h2>
+<p><strong>評価はせず、確認できた事実のみを並べる。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年</th>
+<th>出来事</th>
+<th>経過年数</th>
+</tr></thead><tbody>
+<tr>
+<td>1976年4月</td>
+<td>大間町商工会が請願</td>
+<td>0年</td>
+</tr>
+<tr>
+<td>1984年12月</td>
+<td>町が誘致決議</td>
+<td>8年8か月</td>
+</tr>
+<tr>
+<td>2003年2月</td>
+<td>用地買収を断念、炉心を南へ約200m移動</td>
+<td>26年10か月</td>
+</tr>
+<tr>
+<td>2008年5月</td>
+<td>着工</td>
+<td>32年1か月</td>
+</tr>
+<tr>
+<td>2011年3月</td>
+<td>工事中断</td>
+<td>34年11か月</td>
+</tr>
+<tr>
+<td>2012年10月</td>
+<td>工事再開</td>
+<td>36年6か月</td>
+</tr>
+<tr>
+<td>2014年4月3日</td>
+<td>函館市が提訴</td>
+<td>38年</td>
+</tr>
+<tr>
+<td>2025年1月</td>
+<td>工事進捗率37.6%</td>
+<td>48年9か月</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>読み方。<strong>請願から着工まで32年、着工から現在まで18年、合計50年かけて進捗率37.6%である。</strong>この間に町の人口はピークの約7,750人から4,074人へ47.4%減った。[六ヶ所村](rokkasho.html)の再処理工場が着工から33年で竣工延期27回、[双葉町](futaba.html)の原発が稼働してから40年で全町避難になったのと並べると、<strong>青森・福島の原子力立地は「早く来て遅く終わる」ではなく「遅く来てまだ終わっていない」という共通の形</strong>をしている。大間町の場合、その50年のあいだ町を実際に食わせてきたのはマグロである。</p></div>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>Wikipedia「大間町」（面積52.09km²、人口4,074人／2026年、2020年国勢調査4,718人、2015年5,227人・前回比17.56%減、ピーク約7,750人／1970年代半ば、海岸線約15km、北海道まで17.5km、年間降雪208cm、郵便番号039-4692、団体コード02423-6、町長野﨑尚文／2021年就任、津軽海峡フェリー1日2往復、鉄道なし、泉浩）</li>
+  <li>Wikipedia「大間原子力発電所」（事業者電源開発、138.3万kW、ABWR、全炉心MOX装荷可能、1976年4月の請願、1984年12月の誘致決議、2008年4月設置許可・5月着工、2011年3月中断、2012年10月再開、2022年9月発表の2030年度目標、2003年2月の買収断念と炉心200m移動、2014年4月3日の函館市提訴、2018年7月時点の訴訟費用1億円）</li>
+  <li>青森県「大間原子力発電所における新規制基準適合性審査の対応状況等について」令和7年2月19日・電源開発（工事進捗率 全体37.6%・土木64.7%・建築38.5%・機械電気36.1%、2025年1月時点） — https://www.pref.aomori.lg.jp/soshiki/kankyo/g-richi/files/siryo2-4_denpatsu.pdf</li>
+  <li>J-POWER「大間原子力発電所建設計画の概要」 — https://www.jpower.co.jp/bs/nuclear/oma/plan.html</li>
+  <li>日本経済新聞「Jパワー、大間原発に1300億円追加投資」 — https://www.nikkei.com/article/DGXKASFS13H2O_T11C14A1EE8000/</li>
+  <li>函館市「大間原発に係わる主な経過」 — https://www.city.hakodate.hokkaido.jp/docs/2014031100330/</li>
+  <li>大間町「広報おおま 2025年5月号 No.685」（令和7年度当初予算 前年度比8,838万円増・2.0%増、依存財源70.2%・自主財源29.8%、歳出款別構成比、大函丸指定管理料1億6,500万円、町長所信表明の「建設工事が中断し町財政並びに地域経済がひっ迫」、核燃料物質等取扱税交付金の令和6年度からの増額、原子力発電施設等立地地域基盤整備支援事業交付金の令和7年度からの新規交付） — https://www.town.ooma.lg.jp/public_relations/2025/files/2025-0501.pdf</li>
+  <li>日本経済新聞「マグロ初競り、史上最高値5億1000万円 すしざんまい6年ぶり落札」（2026年1月5日） — https://www.nikkei.com/article/DGXZQOUB0503J0V00C26A1000000/</li>
+  <li>大間町観光協会「2026年1月5日、東京・豊洲市場の初競りで、大間マグロに5億1,030万円の値が付きました！」（243kg、史上最高値、大間産15年連続で最高値） — https://oma-wide.net/news/hatsuseri2026/</li>
+  <li>ダイヤモンド・オンライン「『大間まぐろ』は大間産クロマグロなのか？データで読み解く&quot;漁獲量&quot;のナゾ」 — https://diamond.jp/articles/-/292609</li>
+  <li>大間町観光協会「大間まぐろ」（平均100kg前後） — https://oma-wide.net/oomatuna/</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく地域リサーチであり、投資助言ではない。大間原子力発電所の運転開始時期は、電源開発が2022年9月に示した2030年度という目標と、2025年の青森県資料の「未定」が併存しており、両方を記載した。令和7年度の一般会計当初予算の総額は町の広報に金額として記載がなく、前年度比8,838万円増・2.0%増という記述と歳出款別の構成比から逆算した約45.1億円を算出値として用いた。総工費の現在値、原発建設に伴う町の固定資産税収、大間産クロマグロの年間漁獲量、大函丸の船舶所有関係、1970年代の人口の正確な値と年はいずれも確認できずN/Aとした。1人当たりの値と単価は本ページによる算出値。座標は町役場位置の概数である。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "人口（推計）",
+  "value": 4074,
+  "unit": "人",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（国勢調査）",
+  "value": 4718,
+  "unit": "人",
+  "as_of": "2020",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口ピーク（概数）",
+  "value": 7750,
+  "unit": "人",
+  "as_of": "1970年代半ば",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "ピークからの人口減少率",
+  "value": 47.4,
+  "unit": "%",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "面積",
+  "value": 52.09,
+  "unit": "km2",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "大間原発 出力",
+  "value": 138.3,
+  "unit": "万kW",
+  "as_of": "2026",
+  "source": "https://www.jpower.co.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "大間原発 着工",
+  "value": 2008,
+  "unit": "年",
+  "as_of": "2008-05",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "大間原発 工事進捗率（全体）",
+  "value": 37.6,
+  "unit": "%",
+  "as_of": "2025-01",
+  "source": "https://www.pref.aomori.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "大間原発 工事進捗率（土木）",
+  "value": 64.7,
+  "unit": "%",
+  "as_of": "2025-01",
+  "source": "https://www.pref.aomori.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "大間原発 当初総工費",
+  "value": 4800,
+  "unit": "億円",
+  "as_of": "2008",
+  "source": "https://www.pref.aomori.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "大間原発 追加投資",
+  "value": 1300,
+  "unit": "億円",
+  "as_of": "2014",
+  "source": "https://www.nikkei.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "構想から着工までの年数",
+  "value": 32,
+  "unit": "年",
+  "as_of": "2008-05",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "函館市の提訴",
+  "value": 2014,
+  "unit": "年",
+  "as_of": "2014-04-03",
+  "source": "https://www.city.hakodate.hokkaido.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "函館市の訴訟費用（ふるさと納税）",
+  "value": 1,
+  "unit": "億円",
+  "as_of": "2018-07",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "一般会計当初予算（算出値）",
+  "value": 45.1,
+  "unit": "億円",
+  "as_of": "2025",
+  "source": "https://www.town.ooma.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "依存財源比率",
+  "value": 70.2,
+  "unit": "%",
+  "as_of": "2025",
+  "source": "https://www.town.ooma.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "1人当たり一般会計予算",
+  "value": 111,
+  "unit": "万円",
+  "as_of": "2025",
+  "source": "https://www.town.ooma.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "豊洲初競り 最高値",
+  "value": 510300000,
+  "unit": "円",
+  "as_of": "2026-01-05",
+  "source": "https://www.nikkei.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "豊洲初競り 落札されたマグロの重量",
+  "value": 243,
+  "unit": "kg",
+  "as_of": "2026-01-05",
+  "source": "https://oma-wide.net/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "豊洲初競り キロ単価",
+  "value": 210,
+  "unit": "万円/kg",
+  "as_of": "2026-01-05",
+  "source": "https://www.nikkei.com/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "前回の初競り最高値",
+  "value": 333600000,
+  "unit": "円",
+  "as_of": "2019-01",
+  "source": "https://oma-wide.net/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "大間産が最高値を取った連続年数",
+  "value": 15,
+  "unit": "年",
+  "as_of": "2026-01",
+  "source": "https://oma-wide.net/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "北海道までの距離",
+  "value": 17.5,
+  "unit": "km",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ }
+]
+</script>
+</body>
+</html>

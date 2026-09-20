@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>秋田市 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / 秋田市</p>
+
+<header class="top">
+  <div>
+    <h1>秋田市 / Akita</h1>
+    <div class="meta">秋田県 / 沿岸中部　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">人口29万の県庁所在地の製造品出荷額は2,914億円で、人口9万の北上市の3,607億円より小さい。そこへ2兆円・500MW級のAIデータセンター構想が来ている。電源として当て込んでいるのは、三菱商事が撤退したのと同じ県沖の洋上風力である。</p>
+<p><span class="tag">洋上風力</span><span class="tag">AIデータセンター</span><span class="tag">UAE</span><span class="tag">竿燈まつり</span><span class="tag">中核市</span></p>
+
+<div class="kpi"><div class="card"><div class="k">人口</div><div class="v">289,143人 <small>2026年8月1日・推計人口</small></div></div><div class="card"><div class="k">面積</div><div class="v">906.07 km² <small>市公式値</small></div></div><div class="card"><div class="k">製造品出荷額</div><div class="v">2,914億円 <small>2017年</small></div></div><div class="card"><div class="k">高齢人口率</div><div class="v">33.42% <small>2025年1月1日</small></div></div></div>
+<iframe class="map" loading="lazy" title="秋田市の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=139.8225,39.58,140.3825,39.86&amp;layer=mapnik&amp;marker=39.7200,140.1025"></iframe>
+
+<h2><span class="num">01</span>市としての特徴<span class="en">Profile</span></h2>
+<p><strong>第3次産業が79%を占める行政・商業都市で、製造業は県庁所在地としては小さい。そこへ日本最大級のデータセンター構想が来ている。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>属性</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>位置</td>
+<td>秋田県沿岸中部、日本海に面する。雄物川の河口に市街地があり、秋田港を持つ</td>
+</tr>
+<tr>
+<td>面積</td>
+<td>906.07km²。<strong>全国815市区中30位の広さ</strong>だが、可住地面積は291.94km²で、市域の32.2%にとどまる</td>
+</tr>
+<tr>
+<td>人口密度</td>
+<td>319人/km²。可住地人口密度は1,054人/km²</td>
+</tr>
+<tr>
+<td>成り立ち</td>
+<td>1889年4月1日に市制施行。2005年に河辺町・雄和町を編入。<strong>1997年4月1日に中核市へ移行</strong>し、中枢中核都市に指定されている</td>
+</tr>
+<tr>
+<td>産業構造</td>
+<td>第1次約2%、第2次約16%、<strong>第3次約79%</strong>（2015年10月1日）。年間商品販売額1兆1,478億円（2016年6月1日）に対し製造品出荷額2,914億円（2017年12月31日）</td>
+</tr>
+<tr>
+<td>地場産業</td>
+<td>木材・木製品、パルプ、非鉄金属、清酒。<strong>八橋油田は国内最大規模の陸上油田</strong>。近年はICT関連企業の伸びが指摘されている</td>
+</tr>
+<tr>
+<td>年齢構成</td>
+<td>年少10.06%、生産年齢56.51%、<strong>高齢33.42%</strong>（2025年1月1日）</td>
+</tr>
+<tr>
+<td>財政</td>
+<td>財政力指数0.65、実質公債費比率9.4%、経常収支比率94.0%、地方交付税依存度16.4%（2024年度）。令和7年度の一般会計当初予算は1,483億9,000万円で前年度比3.1%増</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>この市の輪郭は「県内の3分の1が集まる都市」である。</strong>秋田県内に占める割合は事業所14.3%、従業者17.0%、製造品出荷額21.0%。人口では県の3割近くを占める。<strong>一方で、製造業の集積は県庁所在地としては薄い。</strong>2,914億円は、人口が3分の1以下の[北上市](kitakami.html)の3,607億円（2020年）より小さく、[八戸市](hachinohe.html)の5,721億円（2023年）の半分である。年次が接続しないので厳密な比較ではないが、桁は変わらない。</p></div>
+<h2><span class="num">02</span>経済<span class="en">Economy</span></h2>
+<h3>規模</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>金額</th>
+<th>時点</th>
+</tr></thead><tbody>
+<tr>
+<td>年間商品販売額</td>
+<td>1兆1,478億円</td>
+<td>2016年6月1日</td>
+</tr>
+<tr>
+<td>製造品出荷額</td>
+<td>2,914億円</td>
+<td>2017年12月31日</td>
+</tr>
+<tr>
+<td>一般会計当初予算</td>
+<td>1,483億9,000万円</td>
+<td>令和7年度</td>
+</tr>
+</tbody></table></div>
+<p><strong>1人当たりの一般会計予算は51万円</strong>（推計人口289,143人で除した本ページによる算出値）。[八戸市](hachinohe.html)の48万円、[北上市](kitakami.html)の56万円と同じ水準にある。</p>
+<h3>秋田県内でのシェア</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>県内シェア</th>
+</tr></thead><tbody>
+<tr>
+<td>事業所数</td>
+<td class="num">14.3%</td>
+</tr>
+<tr>
+<td>従業者数</td>
+<td class="num">17.0%</td>
+</tr>
+<tr>
+<td>製造品出荷額</td>
+<td class="num">21.0%</td>
+</tr>
+</tbody></table></div>
+<h3>秋田港の洋上風力</h3>
+<p>秋田港内には<strong>4.2MW×13基＝54.6MW</strong>の着床式洋上風力が立つ。事業者は丸紅を中心とするSPCの秋田洋上風力発電で、[能代港](noshiro.html)の84MWと合わせて<strong>日本で最初の大型商業洋上風力</strong>として2023年1月に全面商業運転を開始した。出資には東北電力、大林組、コスモエネルギー、中部電力ほかが入る。</p>
+<div class="risk"><p><strong>秋田港の54.6MWと、三菱商事が2025年8月に撤退した海域は別事業である。</strong>撤退したのは能代市・三種町・男鹿市沖と由利本荘市沖の一般海域で、秋田港内の港湾区域ではない。港湾区域の風車は現在も回っている。<strong>報道で「秋田の洋上風力が撤退」と読むと、稼働中の設備と撤退した計画が混ざる。</strong></p></div>
+<h2><span class="num">03</span>人口推移<span class="en">Population</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年次</th>
+<th>人口</th>
+<th>ピーク比</th>
+</tr></thead><tbody>
+<tr>
+<td>2000年</td>
+<td><strong>336,646人</strong></td>
+<td>ピーク</td>
+</tr>
+<tr>
+<td>2025年1月1日（住民基本台帳）</td>
+<td>293,729人</td>
+<td class="num">-12.7%</td>
+</tr>
+<tr>
+<td>2026年8月1日（推計人口）</td>
+<td>289,143人</td>
+<td><strong>-14.1%</strong></td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>ピークが2000年である。</strong>[能代市](noshiro.html)の1955年、[女川町](onagawa.html)の1965年、[八戸市](hachinohe.html)の1995年と並べると、<strong>秋田県内で最後まで増えていたのが県都だった</strong>ことがわかる。県内の他市町村から人を吸い上げていた期間が2000年で終わり、以降は県外へ出る流れに変わった。高齢人口率33.42%は、[能代市](noshiro.html)の42.33%より9ポイント低いが、[北上市](kitakami.html)の28.43%より5ポイント高い。</p></div>
+<h2><span class="num">04</span>日本の大企業との関連<span class="en">Corporate Links</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>企業・計画</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>秋田洋上風力発電（丸紅ほか）</td>
+<td>秋田港内に4.2MW×13基＝54.6MW。2023年1月に全面商業運転</td>
+</tr>
+<tr>
+<td>AIデータセンター構想</td>
+<td><strong>整備費約2兆円、500MW級で国内最大級。</strong>2030年代前半の運用開始を目標とし、<strong>UAEが投資</strong>する計画。UAE政府系ファンドが数千億円から1兆円規模を投じると見込まれている。S2 Bitgritが参画。候補地は秋田市内の工業団地とされるが正確な名称はN/A</td>
+</tr>
+<tr>
+<td>三菱商事</td>
+<td>2025年8月27日に秋田県沖2海域（能代市・三種町・男鹿市沖、由利本荘市沖）と千葉県銚子市沖の開発から撤退した。<strong>秋田市は当事者ではないが、データセンターの電源計画に影響する</strong></td>
+</tr>
+</tbody></table></div>
+<h3>UAEとの接点</h3>
+<p>2026年8月19日、駐日UAE大使が秋田県知事および秋田市長と面会した。データセンター計画が議題に含まれている。</p>
+<div class="risk"><p><strong>2兆円は構想段階の整備費であり、投資契約が締結された金額ではない。</strong>この規模の計画を評価するときに確認すべきは3点ある。第1に、<strong>500MWの電力をどこから引くか。</strong>計画は県沖の洋上風力を当て込んでいるが、その海域から三菱商事が撤退しており、経済産業省と国土交通省は2026年にも3海域を再公募する方針である。第2に、<strong>再公募の新基準は応札価格に下限を設け、国内調達や実行確度で勝敗を決める設計</strong>とされており、電力の調達価格が当初想定より上がる可能性がある。第3に、<strong>データセンターは雇用が小さい。</strong>500MW級でも運用要員は数百人規模にとどまるのが一般的で、2兆円という金額から人口への効果を推定してはいけない。これは[能代市](noshiro.html)の火力180万kWと洋上風力84MWが製造業就業者を1人も増やさなかったのと同じ構図である。</p></div>
+<h2><span class="num">05</span>出身の有名人<span class="en">People</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>人物</th>
+<th>分野</th>
+<th>備考</th>
+</tr></thead><tbody>
+<tr>
+<td>佐々木希</td>
+<td>モデル・女優</td>
+<td>1988年生まれ。秋田市出身</td>
+</tr>
+</tbody></table></div>
+<p>秋田県全体では柳葉敏郎、生駒里奈、壇蜜、高橋優、藤あや子などが知られるが、いずれも秋田市出身とは確認できずN/Aとした。</p>
+<h2><span class="num">06</span>食<span class="en">Food</span></h2>
+<h3>米と塩と魚</h3>
+<p>秋田の食の骨格は、米（清酒・きりたんぽ）と、ハタハタから作る魚醤の<strong>しょっつる</strong>でできている。清酒製造は市の地場産業として公式に挙げられている4業種のひとつである。</p>
+<div class="callout"><p><strong>秋田市の食は、地場産業のリストにそのまま載っている。</strong>市が挙げる地場産業は「木材・木製品、パルプ、非鉄金属、清酒」で、<strong>4つのうち1つが酒である。</strong>これは食が観光資源であると同時に製造業の一角を占めているという意味で、[能代市](noshiro.html)の食料品製造業が出荷額の0.7%しかないのとは位置づけが違う。ただし清酒製造の出荷額そのものは確認できずN/Aとした。</p></div>
+<h2><span class="num">07</span>観光スポット<span class="en">Places</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>場所</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>竿燈まつり</td>
+<td>8月に行われる。東北三大祭りのひとつ</td>
+</tr>
+<tr>
+<td>千秋公園・久保田城跡</td>
+<td>秋田藩佐竹氏の居城跡</td>
+</tr>
+<tr>
+<td>セリオン</td>
+<td>秋田港のポートタワー。<strong>秋田港の洋上風力13基を見下ろせる位置にある</strong></td>
+</tr>
+<tr>
+<td>秋田港</td>
+<td>洋上風力54.6MW、クルーズ船の寄港地</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">08</span>2兆円は何に依存しているか<span class="en">What the Two Trillion Rests On</span></h2>
+<p><strong>評価はせず、依存関係だけを並べる。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>層</th>
+<th>内容</th>
+<th>現在の状態</th>
+</tr></thead><tbody>
+<tr>
+<td>需要</td>
+<td>AI向け計算需要</td>
+<td>計画の前提。実需の裏付けはN/A</td>
+</tr>
+<tr>
+<td>資本</td>
+<td>UAE政府系ファンドほか。数千億円〜1兆円</td>
+<td>投資契約の締結状況はN/A</td>
+</tr>
+<tr>
+<td>電力</td>
+<td>500MW。県沖の洋上風力を想定</td>
+<td><strong>三菱商事が2海域から撤退。2026年に再公募予定</strong></td>
+</tr>
+<tr>
+<td>系統</td>
+<td>秋田から需要地への送電</td>
+<td>本ページでは確認できずN/A</td>
+</tr>
+<tr>
+<td>用地</td>
+<td>秋田市内の工業団地</td>
+<td>候補地の正確な名称はN/A</td>
+</tr>
+<tr>
+<td>雇用</td>
+<td>運用要員</td>
+<td>数百人規模とみられるが計画値はN/A</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>読み方。<strong>6層のうち、確定していると言えるのは用地だけである。</strong>電力層に穴が空いており、しかもその穴は三菱商事という日本最大級の商社が「事業計画の実現が困難」と判断して開けたものである。<strong>再公募の新基準は応札価格に下限を設ける方向で、これは調達価格が上がることを意味する。</strong>500MWを再エネで賄う前提なら、電力コストは当初構想より高くなる。一方で、この構想が実現しなくても秋田市の人口曲線は大きく変わらない。<strong>2兆円という金額の大きさと、地域への効果の大きさは別の変数である。</strong>[六ヶ所村](rokkasho.html)の14兆円が人口17.8%減を止められなかったのと、[能代市](noshiro.html)の火力180万kWが製造業就業者を増やさなかったのが、その先例にあたる。</p></div>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>Wikipedia「秋田市」（面積906.07km²、推計人口289,143人／2026年8月1日、人口密度319人/km²、ピーク336,646人／2000年、1889年4月1日市制施行、2005年の河辺町・雄和町編入、1997年4月1日中核市移行、八橋油田、竿燈まつり、千秋公園、久保田城、セリオン）</li>
+  <li>秋田市「秋田市の産業」（製造品出荷額2,914億円／平成29年12月31日現在、年間商品販売額1兆1,478億円／平成28年6月1日現在、産業別就業者構成比／平成27年10月1日、地場産業は木材・木製品／パルプ／非鉄金属／清酒） — https://www.city.akita.lg.jp/shisei/shokai/1027573.html</li>
+  <li>生活ガイド.com「秋田市の統計データ」（財政力指数0.65、実質公債費比率9.4%、経常収支比率94.0%、地方交付税依存度16.4%、住民基本台帳人口293,729人／2025年1月1日、年齢3区分別人口比率、可住地面積291.94km²、可住地人口密度1,054人/km²） — https://www.seikatsu-guide.com/info/5/5201/1/</li>
+  <li>秋田市「令和7年度当初予算案の概要」（一般会計1,483億9,000万円、前年度比3.1%増） — https://www.city.akita.lg.jp/_res/projects/default_project/_page_/001/009/191/toushoyosannann07.pdf</li>
+  <li>丸紅「秋田県秋田港及び能代港における洋上風力発電プロジェクトの全面商業運転開始について」（秋田港4.2MW×13基、2023年1月） — https://www.marubeni.com/jp/news/2023/release/00014.html</li>
+  <li>日本経済新聞「秋田に日本最大級AIデータセンター 建設費2兆円、UAEが投資へ」（500MW級、2030年代前半の運用目標） — https://www.nikkei.com/article/DGXZQOCC138LW0T10C26A7000000/</li>
+  <li>日本経済新聞「秋田AIデータセンター、県訪問のUAE大使も熱視線 洋上風力が命綱」（2026年8月19日のUAE大使と知事・市長の面会） — https://www.nikkei.com/article/DGXZQOCC071RC0X00C26A8000000/</li>
+  <li>semi-connect「秋田のAIデータセンター計画とは？整備費2兆円・500MW・UAE投資」（S2 Bitgritの参画） — https://semi-connect.net/akita-ai-datacenter/</li>
+  <li>ウインドジャーナル「三菱商事 3海域からの撤退を正式表明」（2025年8月27日、能代市・三種町・男鹿市沖、由利本荘市沖、銚子市沖） — https://windjournal.jp/124665/</li>
+  <li>ダイヤモンド・オンライン「【26年の洋上風力】三菱商事撤退後に残った6陣営」（応札価格の下限設定、事業実現性重視の新基準、2026年の再公募） — https://diamond.jp/articles/-/377899</li>
+  <li>秋田県「秋田県内の洋上風力発電の進捗状況」（能代港8.4万kW、秋田港5.5万kW） — https://www.pref.akita.lg.jp/uploads/public/archive_0000007451_00/2.%E6%B4%8B%E4%B8%8A%E9%A2%A8%E5%8A%9B%E7%99%BA%E9%9B%BB%E3%81%AE%E5%B0%8E%E5%85%A5%E7%8A%B6%E6%B3%81%EF%BC%88202510%EF%BC%89.pdf</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく地域リサーチであり、投資助言ではない。製造品出荷額2,914億円は2017年12月31日現在の値で、他ページで用いた2020年の数値とは年次が接続しない。AIデータセンター構想は2026年時点で構想段階であり、候補地の正確な名称、投資契約の締結状況、着工時期はいずれも確認できずN/Aとした。市内総生産、業種別の製造品出荷額、1人当たり製造品出荷額に使える同年次の人口、秋田県全体の人口減少率の順位はいずれも確認できずN/Aとした。1人当たりの値と減少率は本ページによる算出値。座標は市役所位置の概数である。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "人口（推計）",
+  "value": 289143,
+  "unit": "人",
+  "as_of": "2026-08-01",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口ピーク",
+  "value": 336646,
+  "unit": "人",
+  "as_of": "2000",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "ピークからの人口減少率",
+  "value": 14.1,
+  "unit": "%",
+  "as_of": "2026-08",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "面積",
+  "value": 906.07,
+  "unit": "km2",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "可住地面積",
+  "value": 291.94,
+  "unit": "km2",
+  "as_of": "2024",
+  "source": "https://www.seikatsu-guide.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "製造品出荷額",
+  "value": 2914,
+  "unit": "億円",
+  "as_of": "2017-12-31",
+  "source": "https://www.city.akita.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "年間商品販売額",
+  "value": 11478,
+  "unit": "億円",
+  "as_of": "2016-06-01",
+  "source": "https://www.city.akita.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "第3次産業の就業者構成比",
+  "value": 79,
+  "unit": "%",
+  "as_of": "2015-10-01",
+  "source": "https://www.city.akita.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "県内シェア（製造品出荷額）",
+  "value": 21.0,
+  "unit": "%",
+  "as_of": "2017",
+  "source": "https://www.city.akita.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "財政力指数",
+  "value": 0.65,
+  "unit": "",
+  "as_of": "2024",
+  "source": "https://www.seikatsu-guide.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "高齢人口率",
+  "value": 33.42,
+  "unit": "%",
+  "as_of": "2025-01-01",
+  "source": "https://www.seikatsu-guide.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "一般会計当初予算",
+  "value": 1483.9,
+  "unit": "億円",
+  "as_of": "2025",
+  "source": "https://www.city.akita.lg.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "1人当たり一般会計予算",
+  "value": 51,
+  "unit": "万円",
+  "as_of": "2025",
+  "source": "https://www.city.akita.lg.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "秋田港洋上風力 出力",
+  "value": 54.6,
+  "unit": "MW",
+  "as_of": "2023-01",
+  "source": "https://www.marubeni.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "秋田港洋上風力 基数",
+  "value": 13,
+  "unit": "基",
+  "as_of": "2023-01",
+  "source": "https://www.marubeni.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "AIデータセンター構想 整備費",
+  "value": 2,
+  "unit": "兆円",
+  "as_of": "2026-07",
+  "source": "https://www.nikkei.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "AIデータセンター構想 電力規模",
+  "value": 500,
+  "unit": "MW",
+  "as_of": "2026-07",
+  "source": "https://www.nikkei.com/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "中核市移行",
+  "value": 1997,
+  "unit": "年",
+  "as_of": "1997-04-01",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ }
+]
+</script>
+</body>
+</html>

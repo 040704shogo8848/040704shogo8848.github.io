@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>富岡町 都市リサーチ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .up{color:var(--good)} .down{color:var(--bad)} .flat{color:var(--warn)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .map{width:100%;height:340px;border:1px solid var(--line);border-radius:10px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">geo</a> / <a href="index.html">cities</a> / 富岡町</p>
+
+<header class="top">
+  <div>
+    <h1>富岡町 / Tomioka</h1>
+    <div class="meta">福島県 / 浜通り　都市リサーチ</div>
+  </div>
+</header>
+<p class="lead">住民登録10,824人に対し町内居住者2,849人。帰還率は26.3%で、双葉町の4.4%とは桁がひとつ違う。町には東京電力の福島復興本社と廃炉資料館が置かれ、廃炉が終わるのは2064年度の見込みである。</p>
+<p><span class="tag">福島第二原発</span><span class="tag">避難指示解除</span><span class="tag">夜の森</span><span class="tag">廃炉資料館</span><span class="tag">帰還率</span></p>
+
+<div class="kpi"><div class="card"><div class="k">住民登録人口</div><div class="v">10,824人 <small>2026年8月末</small></div></div><div class="card"><div class="k">町内居住者</div><div class="v">2,849人 <small>2026年9月1日</small></div></div><div class="card"><div class="k">一般会計当初予算</div><div class="v">120.9億円 <small>令和7年度</small></div></div><div class="card"><div class="k">面積</div><div class="v">68.36 km² <small>町公式値</small></div></div></div>
+<iframe class="map" loading="lazy" title="富岡町の位置" src="https://www.openstreetmap.org/export/embed.html?bbox=140.6957,37.2037,141.2557,37.4837&amp;layer=mapnik&amp;marker=37.3437,140.9757"></iframe>
+
+<h2><span class="num">01</span>町としての特徴<span class="en">Profile</span></h2>
+<p><strong>避難指示が解けた浜通りの町のうち、人が最も戻った部類に入る。それでも帰還率は26.3%である。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>属性</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>位置</td>
+<td>福島県浜通り、双葉郡の中部。北は大熊町、南は楢葉町、西は川内村</td>
+</tr>
+<tr>
+<td>面積</td>
+<td>68.36km²</td>
+</tr>
+<tr>
+<td>成り立ち</td>
+<td>1900年3月8日に町制施行。1955年3月31日に近隣自治体と合併して現在の富岡町が発足した</td>
+</tr>
+<tr>
+<td>原発</td>
+<td><strong>福島第二原子力発電所</strong>の立地自治体のひとつ。ただし敷地の大半は楢葉町にあり、富岡町は一部にあたる。福島第一原子力発電所は隣の大熊町・双葉町</td>
+</tr>
+<tr>
+<td>避難指示</td>
+<td>2017年4月1日に帰還困難区域を除いて解除。2023年11月30日に特定復興再生拠点区域を解除</td>
+</tr>
+<tr>
+<td>立地機関</td>
+<td>東京電力ホールディングス福島復興本社（2016年3月7日開業）、東京電力廃炉資料館</td>
+</tr>
+<tr>
+<td>財政</td>
+<td>令和7年度の一般会計当初予算は120億8,788万5千円</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>この町は、浜通りの避難自治体のなかで「戻った側」の代表例として使われる。</strong>住民登録10,824人に対し町内居住者2,849人で帰還率26.3%。[双葉町](futaba.html)の4.4%と比べると6倍だが、<strong>震災直前の15,830人に対しては18.0%</strong>である。5人に4人は戻っていない。「戻った町」と「戻らなかった町」は程度の差であって、種類の差ではない。</p></div>
+<h2><span class="num">02</span>経済と財政<span class="en">Economy</span></h2>
+<h3>一般会計と特別会計（令和7年度当初予算）</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>会計</th>
+<th>金額</th>
+</tr></thead><tbody>
+<tr>
+<td>一般会計</td>
+<td><strong>120億8,788万5千円</strong></td>
+</tr>
+<tr>
+<td>国民健康保険事業</td>
+<td>21億2,323万円</td>
+</tr>
+<tr>
+<td>介護保険事業</td>
+<td>16億1,020万5千円</td>
+</tr>
+<tr>
+<td>公共下水道事業</td>
+<td>3億9,871万3千円</td>
+</tr>
+<tr>
+<td>農業集落排水事業</td>
+<td>9,729万円</td>
+</tr>
+<tr>
+<td>後期高齢者医療</td>
+<td>7,085万7千円</td>
+</tr>
+<tr>
+<td>介護サービス事業</td>
+<td>1,063万1千円</td>
+</tr>
+</tbody></table></div>
+<p>主な事業として、夜の森地区中核拠点施設の整備、<strong>富岡第二産業団地の整備</strong>、災害復興計画第三次の策定が挙げられている。</p>
+<h3>1人当たりで見る</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>基準</th>
+<th>人口</th>
+<th>1人当たり一般会計予算</th>
+</tr></thead><tbody>
+<tr>
+<td>住民登録人口</td>
+<td>10,824人</td>
+<td><strong>112万円</strong></td>
+</tr>
+<tr>
+<td>町内居住者</td>
+<td>2,849人</td>
+<td><strong>424万円</strong></td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p>同じ計算を並べると、[双葉町](futaba.html)は住民登録ベース325万円・居住ベース7,382万円、[六ヶ所村](rokkasho.html)154万円、[大間町](oma.html)111万円、[能代市](noshiro.html)85万円、[北上市](kitakami.html)56万円である。<strong>富岡町の住民登録ベース112万円は大間町とほぼ同じで、双葉町の3分の1にあたる。</strong>人が戻るほど1人当たりの数字は下がる。分母が増えるからである。<strong>この指標が下がることは、行政としては前進を意味する。</strong></p></div>
+<h3>福島第二原子力発電所</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>号機</th>
+<th>炉型</th>
+<th>出力</th>
+<th>営業運転開始</th>
+</tr></thead><tbody>
+<tr>
+<td>1号機</td>
+<td>BWR-5 Mark-2</td>
+<td>110万kW</td>
+<td>1982年4月</td>
+</tr>
+<tr>
+<td>2号機</td>
+<td>BWR-5 Mark-2改</td>
+<td>110万kW</td>
+<td>1984年2月</td>
+</tr>
+<tr>
+<td>3号機</td>
+<td>沸騰水型軽水炉</td>
+<td>110万kW</td>
+<td>1985年6月</td>
+</tr>
+<tr>
+<td>4号機</td>
+<td>沸騰水型軽水炉</td>
+<td>110万kW</td>
+<td>1987年8月</td>
+</tr>
+</tbody></table></div>
+<p>2011年3月11日、3本の送電系統のうち原子炉建屋につながる2本を失い、非常用ディーゼル発電機も一部が機能を失った。3月13日深夜に外部電源が復旧し、<strong>3月15日に全4基が冷温停止</strong>に至っている。</p>
+<p>廃炉の決定は<strong>2019年7月31日</strong>、電気事業法上の廃止は同年9月30日、<strong>廃炉完了の見込みは2064年度</strong>である。</p>
+<div class="risk"><p><strong>2064年度は、廃炉決定から45年後である。</strong>1号機の営業運転開始が1982年なので、運転していた期間が29年、止めてから片付け終わるまでが53年ということになる。<strong>発電した期間より、後始末の期間のほうが長い。</strong>この非対称は福島第二に限った話ではなく、原子力の会計を読むときに常に効く。[六ヶ所村](rokkasho.html)の総事業費が建設費の4倍になるのも同じ理由である。</p></div>
+<h2><span class="num">03</span>人口推移<span class="en">Population</span></h2>
+<h3>国勢調査</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>年次</th>
+<th>人口</th>
+</tr></thead><tbody>
+<tr>
+<td>2005年</td>
+<td>15,910人</td>
+</tr>
+<tr>
+<td>2010年</td>
+<td><strong>16,001人</strong>（震災前最後の調査）</td>
+</tr>
+<tr>
+<td>2015年</td>
+<td>0人（全町避難中）</td>
+</tr>
+<tr>
+<td>2020年</td>
+<td>2,128人</td>
+</tr>
+</tbody></table></div>
+<h3>住民登録人口と居住者</h3>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>時点</th>
+<th>住民登録人口</th>
+<th>世帯数</th>
+</tr></thead><tbody>
+<tr>
+<td>2011年3月末</td>
+<td>15,830人</td>
+<td>6,302世帯</td>
+</tr>
+<tr>
+<td>2026年8月末</td>
+<td><strong>10,824人</strong></td>
+<td>5,678世帯</td>
+</tr>
+</tbody></table></div>
+<p>2026年9月1日時点の内訳は、<strong>町内居住者2,849人・1,992世帯、福島県内への避難者6,541人・3,451世帯</strong>である。差し引きで県外避難がおよそ1,400人と計算される（本ページによる算出値）。</p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>指標</th>
+<th>値</th>
+</tr></thead><tbody>
+<tr>
+<td>住民登録人口の震災前比</td>
+<td class="num">-31.6%</td>
+</tr>
+<tr>
+<td>町内居住者の震災前比</td>
+<td><strong>-82.0%</strong></td>
+</tr>
+<tr>
+<td>帰還率（居住者÷住民登録）</td>
+<td class="num">26.3%</td>
+</tr>
+</tbody></table></div>
+<div class="callout"><p><strong>世帯数の減り方が人口より小さい。</strong>住民登録人口は15,830人から10,824人へ31.6%減ったが、世帯数は6,302から5,678へ9.9%しか減っていない。1世帯あたり人員は2.51人から1.91人に下がった。<strong>避難が世帯を分割したからである。</strong>親世代が町に戻り、子世代がいわき市や郡山市にとどまるという形が数字に出ている。県内避難者6,541人のうち、いわき市に4,179人、郡山市に1,330人がいる。</p></div>
+<h2><span class="num">04</span>日本の大企業との関連<span class="en">Corporate Links</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>企業・機関</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>東京電力ホールディングス</td>
+<td>福島第二原子力発電所の立地自治体のひとつ。<strong>福島復興本社を2016年3月7日に富岡町へ置いた。</strong>東京電力廃炉資料館も町内にある</td>
+</tr>
+<tr>
+<td>富岡第二産業団地</td>
+<td>令和7年度予算の主要事業。立地企業の一覧はN/A</td>
+</tr>
+</tbody></table></div>
+<div class="risk"><p><strong>福島第一原子力発電所の構内視察の集合場所は、双葉町ではなく富岡町の東京電力廃炉資料館である。</strong>東京電力主催の視察・座談会は福島県在住者または2011年3月11日時点で県内在住だった人に限られる。県外からも参加できる民間ツアー（参加費2,000円、所要約5時間、廃炉資料館集合）は、2026年10月13日から2027年3月23日までの全6回が受付を終了している。<strong>浜通りで廃炉を見に行く動線の起点はこの町にある。</strong></p></div>
+<h2><span class="num">05</span>出身の有名人<span class="en">People</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>人物</th>
+<th>分野</th>
+</tr></thead><tbody>
+<tr>
+<td>清水潔</td>
+<td>文部科学事務次官</td>
+</tr>
+<tr>
+<td>宮本和志</td>
+<td>プロレスラー</td>
+</tr>
+<tr>
+<td>井尻明</td>
+<td>元サッカー選手・指導者</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">06</span>食<span class="en">Food</span></h2>
+<h3>漁港と農地</h3>
+<p>富岡漁港は1993年に新設された比較的新しい漁港である。事故後の操業と現在の水揚げ量はN/Aとした。</p>
+<p>震災前の農業は浜通り中部の稲作が中心だったが、耕地面積と現在の作付面積は確認できずN/Aとした。</p>
+<div class="callout"><p><strong>富岡町の食は、[双葉町](futaba.html)と同じく2011年で一度切れている。</strong>ただし避難指示の解除が2017年4月と双葉町より5年早く、町内居住者も2,849人と多いため、日常の食が成立する規模には先に届いている。<strong>産業としての食の統計が復旧していないのは、統計を取るだけの事業所数がまだ揃っていないことの裏返しである。</strong>数字がないこと自体が状態を示している。</p></div>
+<h2><span class="num">07</span>訪問できる場所<span class="en">Places</span></h2>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>場所</th>
+<th>内容</th>
+</tr></thead><tbody>
+<tr>
+<td>東京電力廃炉資料館</td>
+<td>旧エネルギー館を転用した施設。福島第一の事故と廃炉の展示。構内視察ツアーの集合場所でもある</td>
+</tr>
+<tr>
+<td>夜ノ森公園</td>
+<td><strong>2.2km続く桜並木。</strong>震災後、帰還困難区域のバリケード越しに咲く桜として知られた。2023年に区域の解除が進んだ</td>
+</tr>
+<tr>
+<td>富岡町文化交流センター 学びの森</td>
+<td>2017年4月3日に再開</td>
+</tr>
+<tr>
+<td>富岡漁港</td>
+<td>1993年新設</td>
+</tr>
+</tbody></table></div>
+<h2><span class="num">08</span>帰った町と帰らなかった町<span class="en">Return Rates</span></h2>
+<p><strong>評価はせず、確認できた数値のみを並べる。</strong></p>
+<div class="tbl-scroll"><table>
+<thead><tr>
+<th>自治体</th>
+<th>震災前人口</th>
+<th>現在の住民登録</th>
+<th>町内居住者</th>
+<th>帰還率</th>
+</tr></thead><tbody>
+<tr>
+<td>[富岡町](tomioka.html)</td>
+<td>15,830人（2011年3月末）</td>
+<td>10,824人</td>
+<td>2,849人</td>
+<td><strong>26.3%</strong></td>
+</tr>
+<tr>
+<td>[双葉町](futaba.html)</td>
+<td>7,094人（2011年1月末）</td>
+<td>4,998人</td>
+<td>220人</td>
+<td><strong>4.4%</strong></td>
+</tr>
+</tbody></table></div>
+<p>避難指示の解除は富岡町が2017年4月1日、双葉町が2020年3月4日（駅周辺等）と2022年8月30日（特定復興再生拠点区域）である。</p>
+<div class="callout"><p>読み方。<strong>解除が5年早いと、帰還率は6倍になる。</strong>ただしこれを「早く解除すれば戻る」と読むのは因果が逆で、<strong>戻れる条件が先に整った地域から解除されている</strong>というのが順序である。富岡町は福島第一から南に離れており、帰還困難区域の割合が双葉町の96%（2013年時点）より小さかった。<strong>両町の差をつくったのは政策の速度ではなく、原発からの距離である。</strong>その上で、富岡町でも震災前の82.0%が戻っていない。<strong>浜通りの復興を1つの数字で語るなら、帰還率ではなく「戻らなかった人の数」のほうが実態に近い。</strong>富岡町で12,981人、双葉町で6,874人である（いずれも震災前人口から町内居住者を引いた本ページによる算出値）。</p></div>
+
+<h2><span class="num">99</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+  <li>富岡町「町の人口の動きについて」（2011年3月末15,830人・6,302世帯、2026年8月末10,824人・5,678世帯の月次系列） — https://www.tomioka-town.jp/soshiki/jumin/6893.html</li>
+  <li>富岡町「県内外の避難・居住先別人数【令和8年9月1日現在】」市町村別避難者数（町内居住者2,849人・1,992世帯、県内避難者合計6,541人・3,451世帯、いわき市4,179人、郡山市1,330人） — https://www.tomioka-town.jp/soshiki/jumin/10467.html</li>
+  <li>富岡町「令和7年第1回富岡町議会3月定例会報告」（一般会計120億8,788万5千円、各特別会計、夜の森地区中核拠点施設・富岡第二産業団地・災害復興計画第三次） — https://www.tomioka-town.jp/soshiki/gikai/7194.html</li>
+  <li>Wikipedia「富岡町」（面積68.36km²、2005年15,910人・2010年16,001人・2015年0人・2020年2,128人、1900年3月8日町制施行、1955年3月31日合併、2017年4月1日の避難指示解除、2023年11月30日の特定復興再生拠点区域解除、東京電力福島復興本社2016年3月7日開業、夜ノ森公園の2.2km桜並木、富岡漁港1993年新設、学びの森2017年4月3日再開、清水潔・宮本和志・井尻明）</li>
+  <li>Wikipedia「福島第二原子力発電所」（所在地は楢葉町で敷地の一部が富岡町、1〜4号機各110万kW、1982年4月・1984年2月・1985年6月・1987年8月の営業運転開始、2011年3月15日の全基冷温停止、2019年7月31日の廃炉決定、2019年9月30日の電気事業法上の廃止、2064年度の廃炉完了見込み）</li>
+  <li>東京電力「2026年度 福島第一原子力発電所視察・座談会」（廃炉資料館集合、対象は県内在住者または2011年3月11日時点で県内在住だった人） — https://www.tepco.co.jp/decommission/zadankai/data1/</li>
+  <li>「2026年度前期『福島第一原発構内』視察ツアー」（参加費2,000円、廃炉資料館集合、2026年10月13日〜2027年3月23日の全6回が受付終了） — https://genkifukushima.jp/1fsisatu2026/</li>
+  <li>福島県「富岡町の状況」ふくしま復興情報ポータルサイト — https://www.pref.fukushima.lg.jp/site/portal/26-10.html</li>
+</ol>
+
+<p class="fn" style="margin-top:30px;border-top:1px solid var(--line);padding-top:14px">本ページは公開情報に基づく地域リサーチであり、投資助言ではない。この町も住民登録人口と町内居住者数が4倍近く離れており、どちらを人口と呼ぶかで1人当たり指標が変わるため両方を併記した。国勢調査人口は2005年15,910人・2010年16,001人で、資料上のピークは震災前最後の調査となる2010年である。福島第二原子力発電所の敷地は大半が楢葉町にあり富岡町は一部であるため、本ページは立地自治体のひとつという書き方をしている。町内居住者2,849人のうち震災前からの住民と新規転入の内訳、町の財政力指数、町内の製造品出荷額、1955年の合併相手の正確な自治体名はいずれも確認できずN/Aとした。1人当たりの値と構成比は本ページによる算出値。座標は町役場位置の概数である。</p>
+
+</div>
+<script type="application/json" id="facts">
+[
+ {
+  "claim": "住民登録人口",
+  "value": 10824,
+  "unit": "人",
+  "as_of": "2026-08-31",
+  "source": "https://www.tomioka-town.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "町内居住者",
+  "value": 2849,
+  "unit": "人",
+  "as_of": "2026-09-01",
+  "source": "https://www.tomioka-town.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "県内避難者",
+  "value": 6541,
+  "unit": "人",
+  "as_of": "2026-09-01",
+  "source": "https://www.tomioka-town.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "震災直前の住民登録人口",
+  "value": 15830,
+  "unit": "人",
+  "as_of": "2011-03-31",
+  "source": "https://www.tomioka-town.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（国勢調査）",
+  "value": 16001,
+  "unit": "人",
+  "as_of": "2010",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "人口（国勢調査）",
+  "value": 2128,
+  "unit": "人",
+  "as_of": "2020",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "帰還率（居住者÷住民登録）",
+  "value": 26.3,
+  "unit": "%",
+  "as_of": "2026-09",
+  "source": "https://www.tomioka-town.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "町内居住者の震災前比減少率",
+  "value": 82.0,
+  "unit": "%",
+  "as_of": "2026-09",
+  "source": "https://www.tomioka-town.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "面積",
+  "value": 68.36,
+  "unit": "km2",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "一般会計当初予算",
+  "value": 120.9,
+  "unit": "億円",
+  "as_of": "2025",
+  "source": "https://www.tomioka-town.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "1人当たり一般会計予算（住民登録ベース）",
+  "value": 112,
+  "unit": "万円",
+  "as_of": "2025",
+  "source": "https://www.tomioka-town.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "1人当たり一般会計予算（居住者ベース）",
+  "value": 424,
+  "unit": "万円",
+  "as_of": "2025",
+  "source": "https://www.tomioka-town.jp/",
+  "confidence": "estimated"
+ },
+ {
+  "claim": "避難指示解除（帰還困難区域を除く）",
+  "value": 2017,
+  "unit": "年",
+  "as_of": "2017-04-01",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "特定復興再生拠点区域の避難指示解除",
+  "value": 2023,
+  "unit": "年",
+  "as_of": "2023-11-30",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "福島第二原発 1基あたり出力",
+  "value": 110,
+  "unit": "万kW",
+  "as_of": "1982",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "福島第二原発 基数",
+  "value": 4,
+  "unit": "基",
+  "as_of": "1987",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "福島第二原発 廃炉決定",
+  "value": 2019,
+  "unit": "年",
+  "as_of": "2019-07-31",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "福島第二原発 廃炉完了見込み",
+  "value": 2064,
+  "unit": "年度",
+  "as_of": "2064",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "東京電力福島復興本社の開業",
+  "value": 2016,
+  "unit": "年",
+  "as_of": "2016-03-07",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "夜ノ森の桜並木の長さ",
+  "value": 2.2,
+  "unit": "km",
+  "as_of": "2026",
+  "source": "https://ja.wikipedia.org/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "世帯数（住民登録）",
+  "value": 5678,
+  "unit": "世帯",
+  "as_of": "2026-08-31",
+  "source": "https://www.tomioka-town.jp/",
+  "confidence": "reported"
+ },
+ {
+  "claim": "1世帯あたり人員",
+  "value": 1.91,
+  "unit": "人",
+  "as_of": "2026-08-31",
+  "source": "https://www.tomioka-town.jp/",
+  "confidence": "estimated"
+ }
+]
+</script>
+</body>
+</html>

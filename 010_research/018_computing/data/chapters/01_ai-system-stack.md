@@ -288,6 +288,73 @@ MCP（Model Context Protocol）は、エージェントが外部ツールとデ�
 
 整理すると、2026年9月のラボ地図は次のように読める。自己回帰の frontier 競合には Meta が戻り、接続の標準は MCP が押さえ、世界モデルは JEPA・生成シミュレータ・空間再構成／計測・実寸通信に枝分かれしている。層構造の章として重要なのは、これらを1つの性能順位に潰さないことである。
 
+## モデルと基盤の5題：MoE、encoder の fine tune、説明可能性、Qwen、Databricks の Neon 買収
+
+結論を先に置く。==推論コストは activated パラメータに、配備コストは total パラメータに乗る。蒸留は別操作である。encoder の選定は MTEB 平均ではなくタスクとレイテンシで切り、説明可能性と追跡可能性は RAG の引用では満たせない。Qwen の強みはベンチと派生モデル数であり、資金は上場親会社の社内予算である。Databricks の Neon 買収は OLTP への拡張であり、$1B は一次発表にない報道値である==（as_of 2026-09-25）。
+
+### MoE の activated / total と蒸留との差分
+
+Mixture-of-Experts（MoE）では、1トークンの処理に使う重みと、保持する重みが一致しない。Mixtral 論文の定義では、総パラメータ数（sparse parameter count）は専門家数 n とともに増え、1トークンの active parameter count は top-K とともに増える。Mixtral 8x7B は総約47B、推論時 active 約13B（8専門家のうち上位2）である（as_of 2024-01）[出典](https://arxiv.org/abs/2401.04088)。DeepSeek-V2 は総 236B・active 21B、DeepSeek-V3 は総 671B・active 37B である[出典](https://arxiv.org/abs/2405.04434)[出典](https://arxiv.org/abs/2412.19437)。Qwen3 の公開 MoE は 30B（active 3B）と 235B（active 22B）である（as_of 2025-04-29）[出典](https://www.alibabagroup.com/en-US/document-1853940226976645120)。
+
+推論コストは2軸で切る。FLOPs は active に概ね比例し、Mixtral 論文はメモリとハード利用率を別問題だと注記する[出典](https://arxiv.org/abs/2401.04088)。重みメモリは total に比例する。専門家を増やしすぎると KV キャッシュ用メモリが圧迫されバッチが縮小し、クエリあたりコストが上がる[出典](https://arxiv.org/abs/2404.02852)。DeepSeek-V2 は DeepSeek 67B 比で学習コスト 42.5% 減、KV キャッシュ 93.3% 減、最大生成スループット 5.76 倍を報告する（as_of 2024-05、自己報告）[出典](https://arxiv.org/abs/2405.04434)。
+
+蒸留との差分は操作対象にある。同章前半の蒸留節のとおり、蒸留は教師生成データで生徒の出力分布を寄せる操作であり、疎起動ではない。同一 32B base の AIME 2024 数字はそちらの節を参照する。MoE は計算とメモリの比率を変え、蒸留は別サイズへ能力を移す。代替ではない。
+
+| 軸 | MoE | 蒸留 | 出典 |
+| --- | --- | --- | --- |
+| 操作 | トークンごとに専門家の部分集合を起動 | 教師出力で生徒を学習 | Mixtral / DeepSeek-R1 |
+| 推論 FLOPs の主因 | activated パラメータ | 生徒の全パラメータ | Mixtral §2.1 |
+| 重みメモリの主因 | total パラメータ | 生徒の全パラメータ | Mixtral / 推論最適 MoE |
+| 能力の移転 | なし（同一モデル内の疎実行） | 教師データが覆う範囲に限定 | 同章蒸留節 |
+
+### embedding encoder の選び方と fine tune
+
+検索段の精度は embedding encoder の選定と微調整で先に決まる。軸は3つ。第1にタスク集合。MTEB / MMTEB の平均は入口だが、業務では retrieval の nDCG とレイテンシが先に効く。第2に表現の形。BGE-M3 は dense・sparse・multi-vector を1モデルで持ち、最大入力 8,192 トークン、100言語超を対象とする（as_of 2024）[出典](https://arxiv.org/abs/2402.03216)。第3に規模。Qwen3-Embedding-8B は MTEB Multilingual mean (task) 70.58、MTEB Code 80.68 を自己報告する（as_of 2025-06-05）[出典](https://arxiv.org/abs/2506.05176)。同表では BGE-M3（0.6B）が 59.56、multilingual-e5-large-instruct（0.6B）が 63.22 である。平均では LLM 級が上だが、BGE-M3 はハイブリッドと長文で別用途を持つ。
+
+選定規則は単純である。多言語かつ BM25 併用なら BGE-M3 系。平均点優先で GPU 予算があるなら Qwen3-Embedding 4B/8B。レイテンシ制約が厳しければ 0.6B 級を起点に再ランクを後段へ置く。章前半の contextual retrieval と RRF／rerank は、encoder 選定の後に効く。
+
+fine tune は対照学習に収束する。FlagEmbedding では各例に `query`・`pos`・`neg` を置き、学習率はおおむね 1e-5、温度 0.02〜0.05、埋め込みを正規化し、hard negative と自己蒸留を足しうる[出典](https://bge-model.com/tutorial/7_Finetuning/7.1.2.html)[出典](https://arxiv.org/abs/2402.03216)。BGE-M3 本体は教師なし対照学習の後、labeled / 合成と hard negative で3機能を自己知識蒸留する。WINLP 2025 ではヨルバ語・イボ語・ハウサ語コーパスで BGE-M3 を微調整し、Wura の MRR がヨルバ語 0.7846→0.9201、イボ語 0.7566→0.8638、ハウサ語 0.8575→0.9230、英語クエリ×現地文書 0.7377→0.8617 となった（as_of 2025）[出典](https://s.mlcollective.org/2025.winlp_main.33.pdf)。MIRACL ヨルバ語では 0.5952→0.5996 とほぼ横ばいで、適応先と評価先がずれると伸びが消える。
+
+| モデル | 規模 | MTEB Multilingual mean (task) | 特徴 | as_of |
+| --- | --- | --- | --- | --- |
+| Qwen3-Embedding-8B | 8B | 70.58 | LLM バックボーン、Code 80.68 | 2025-06 |
+| Qwen3-Embedding-4B | 4B | 69.45 | 8B に近い平均、計算は半分弱 | 2025-06 |
+| multilingual-e5-large-instruct | 0.6B | 63.22 | MIT、指示付き検索 | 2025-06 表 |
+| BGE-M3 | 0.6B | 59.56 | dense/sparse/multi-vector、8192 トークン | 2025-06 表 |
+
+### explainability / transparency / traceability と RAG の位置
+
+語の定義を混同すると、RAG の引用を「説明した」と誤読する。ISO/IEC 22989:2022 は explainability を「結果に影響する重要な要因を、人間が理解できる形で表現する性質」とし、「なぜか」に答えるが最適性の主張は求めない（3.5.7）。transparency は「システムに関する適切な情報がステークホルダに利用可能である性質」で、機能・性能・限界・構成・手順・設計前提・データ源などが例示される（3.5.15）[出典](https://www.iso.org/standard/74296.html)。NIST IR 8312 は explanation・meaningful・explanation accuracy・knowledge limits の4原則を置く（as_of 2021）[出典](https://nvlpubs.nist.gov/nistpubs/ir/2021/nist.ir.8312.pdf)。
+
+traceability は ISO/IEC 22989 の単独見出し語ではない。EU High-Level Expert Group on AI は transparency を traceability・explainability・communication で説明し、データ・システム・ビジネスモデルの文書化を求める[出典](https://www.mdpi.com/2504-2289/5/2/20)。実務上は入力・検索ヒット・モデル版・プロンプト版・出力を監査記録として辿れる性質である。
+
+RAG の位置は狭い。文書を添える操作は transparency のデータ源開示と、traceability の出典リンクの一部を満たしうるが、explainability ではない。Attributed generation では、引用が文を支持していても（correctness）、モデルが実際に依存していない（faithfulness 欠如）事例が最大 57% に達しうると報告される（as_of 2024-12）[出典](https://arxiv.org/abs/2412.18004)。同章の faithfulness / FACTS grounding も、主張が文脈に支持されるかを測るのであって、内部の因果経路ではない。==RAG の出典表示は追跡の入口であり、説明可能性の達成条件ではない==。
+
+| 語 | 定義の核 | RAG で満たせる範囲 |
+| --- | --- | --- |
+| explainability | 結果の重要要因を人間が理解できる形で示す | 原則として満たさない（引用≠要因） |
+| transparency | システム情報をステークホルダが利用可能 | データ源・構成の開示の一部 |
+| traceability | データ・過程・出力を記録から辿れる | ヒット文書 ID・版のログで部分的に |
+
+### Qwen の強みと資金構造
+
+Qwen の強みは公開ベンチと OSS 派生量である。Qwen3-235B-A22B は AIME'24 85.7、AIME'25 81.5、LiveCodeBench v5 70.7、BFCL v3 70.8、CodeForces 2,056 を報告する（as_of 2025-05、自己報告）[出典](https://arxiv.org/abs/2505.09388)。事前学習は 36兆トークン（Qwen2.5 の約2倍）、119言語、dense 6サイズと MoE 2サイズを公開した（as_of 2025-04-29）[出典](https://www.alibabagroup.com/en-US/document-1853940226976645120)。累計ダウンロード3億超、Hugging Face 派生10万超は公式の自己報告である（single-source）[出典](https://www.alibabagroup.com/en-US/document-1853940226976645120)。2024年5月時点では企業導入9万超、OSS ダウンロード700万という別時点の数字もあり、同一指標の時系列としては足せない[出典](https://www.alibabacloud.com/blog/alibaba-clouds-qwen-models-attract-over-90000-enterprise-adoptions-within-its-first-year_601130)。
+
+資金構造への答えは、国研ではない、である。Qwen はアリババグループ内の通義ラボ／クラウド側の系列で、独立調達ラウンドや単独評価額は非開示である。2017年10月の達摩院設立時、今後3年の技術研究開発投入を1,000億人民元超とする発表がある（as_of 2017-10-11）[出典](https://www.chinanews.com.cn/business/2017/10-11/8349851.shtml)[出典](https://language.chinadaily.com.cn/2017-10/12/content_33156180.htm)。これはグループ全体のコミットメントであり、Qwen 単体の予算表ではない。単体の年間研究費・GPU 時間・独立 P&L は 2026-09-25 時点で一次資料から取れない。
+
+### Databricks の Neon 買収：DB 戦略と $1B の根拠
+
+Databricks は2025年5月14日、サーバレス Postgres の Neon を買収する意向を発表した[出典](https://www.databricks.com/company/newsroom/press-releases/databricks-agrees-acquire-neon-help-developers-deliver-ai-systems)[出典](https://www.databricks.com/blog/databricks-neon)。戦略は Lakehouse から OLTP への拡張である。公式の論拠は3点。第1に、Neon 上の DB の 80% 超が AI エージェントによる自動作成で、以前は 30% だった（as_of 2025-05-14、自己報告）[出典](https://www.databricks.com/blog/databricks-neon)。第2に、ストレージとコンピュートの分離、500 ms 以下の起動、スキーマとデータの即時ブランチ[出典](https://www.databricks.com/company/newsroom/press-releases/databricks-agrees-acquire-neon-help-developers-deliver-ai-systems)。第3に、Postgres 互換である。OLTP 市場を 1,000億米ドル超とする表現の算定式は非開示である[出典](https://www.databricks.com/blog/databricks-neon)。章前半の pgvector 節とは層が違い、ベクトル索引ではなく短命な OLTP 状態の置き場を押さえる動きである。
+
+$1B の根拠は一次発表にない。Databricks / Neon の公式文は額を書いていない[出典](https://www.databricks.com/company/newsroom/press-releases/databricks-agrees-acquire-neon-help-developers-deliver-ai-systems)[出典](https://neon.com/blog/neon-and-databricks)。約10億米ドルは同日の Reuters と CNBC が報じた値である（as_of 2025-05-14）[出典](https://www.reuters.com/technology/databricks-buy-startup-neon-1-billion-wsj-reports-2025-05-14/)[出典](https://www.cnbc.com/2025/05/14/databricks-is-buying-database-startup-neon-for-about-1-billion.html)。2社以上で一致するが、契約書や規制提出物での確認は取れていない（official-undisclosed）。CNBC は顧客 18,000超を Databricks 声明として伝え、従業員 130超は求人票由来である（後者 single-source）[出典](https://www.cnbc.com/2025/05/14/databricks-is-buying-database-startup-neon-for-about-1-billion.html)。
+
+| 項目 | 値 | 根拠の種類 | as_of |
+| --- | --- | --- | --- |
+| 買収額 | 約 10億米ドル | Reuters / CNBC 報道。公式 PR は非開示 | 2025-05-14 |
+| エージェント作成 DB 比率 | 80% 超（以前 30%） | Databricks / Neon 自己報告 | 2025-05-14 |
+| 起動遅延 | 500 ms 以下 | Databricks PR | 2025-05-14 |
+| 顧客数 | 18,000超 | CNBC が Databricks 声明として報道 | 2025-05-14 |
+
 ## この章の要点
 
 - 強化学習は事前学習の代替ではなく積層である。kを大きく取った pass@k では base model が上回り、強化学習の到達点は base model に規定される。
@@ -302,6 +369,11 @@ MCP（Model Context Protocol）は、エージェントが外部ツールとデ�
 - Muse Spark 1.3 は独立順位で frontier クラスタに入ったが首位ではない。計算資源の中央値順位とモデル順位は一致しない。
 - 自己回帰の誤り蓄積批判は適用範囲が切り分けられたままである。JEPA（V-JEPA 2）は動画理解とゼロショットロボット計画で実績を出したが、言語 frontier の置き換えにはなっていない。
 - MCP は2025年12月の公開サーバー1万超から2026年7月の SDK 月次4億超へ伸び、接続層の既定になった。世界モデルは JEPA・Genie 系生成・空間順像／逆像・Beam 通信に分岐する。
+- MoE では推論 FLOPs が activated、重みメモリが total に乗る。蒸留は別操作であり、代替ではない。
+- embedding の選定は MTEB 平均だけでなく、ハイブリッド要否とレイテンシで切る。ドメイン fine tune は評価コーパスがずれると伸びが消える。
+- explainability / transparency / traceability は定義が分かれる。RAG の出典表示は追跡の入口であり、説明可能性の達成条件ではない。
+- Qwen の強みは公開ベンチと派生モデル数。資金はアリババ社内予算であり、国研でも独立調達でもない。
+- Databricks の Neon 買収はエージェント向けサーバレス Postgres（OLTP）への拡張。約 $1B は公式非開示の報道値である。
 
 ## 残っている問い
 - OpenAI の o1 発表記事は素材収集時に HTTP 403 を返し、学習時計算量と推論時計算量の2軸スケーリング図の原文が確認できていない。xAI の Grok 4 発表ページも同様で、強化学習の計算量を事前学習と同規模にしたという主張は一次確認できていない。
@@ -313,7 +385,12 @@ MCP（Model Context Protocol）は、エージェントが外部ツールとデ�
 - 主要ラボの研究者数について、各社監査可能な公式開示は見つからなかった。本文の人数は LinkedIn 由来の推定のみである。
 - 公式 MCP Registry API の 2026-09-25 時点の latest レコード数は、本節執筆時に API を叩いていない。Anthropic / Claude の公表値で時系列を組み立てた。
 - AMI Labs の現在の従業員数、学習中モデルの公開ベンチ、収益の有無は非開示である。
+- Qwen / 通義ラボ単体の年間研究費、学習 GPU 時間、独立 P&L は非開示である。達摩院の 1,000億人民元は2017年発表のグループ全体コミットメントであり、Qwen への配分は取れない。
+- Databricks–Neon の買収額について、契約書・規制当局提出物・当事者の金額開示は 2026-09-25 時点で確認できていない。約 $1B は Reuters / CNBC の報道値に留まる。
+- MTEB リーダーボードの 2026-09-25 時点のライブ順位は、Hugging Face Space がメタデータ取得で止まり、本節では論文・モデルカード掲載の 2025-06 前後の表を使った。
+- ISO/IEC 22989 本文の有料版フルテキストは未購入である。explainability / transparency の定義文は公開プレビューおよび二次掲載 PDF から確認した。
 ## 出典
+
 
 1. Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?、NeurIPS 2025 — https://arxiv.org/abs/2504.13837
 2. DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning、PDF全文 — https://www.thewirechina.com/wp-content/uploads/2025/01/DeepSeek-R1-Document.pdf
@@ -405,3 +482,25 @@ MCP（Model Context Protocol）は、エージェントが外部ツールとデ�
 88. Bringing MCP 2026-07-28 to Claude、Anthropic — https://claude.com/blog/bringing-mcp-2026-07-28-to-claude
 89. Genie 3、Google DeepMind — https://deepmind.google/models/genie/
 90. Google Beam expands with new regions, partners, and customers — https://blog.google/innovation-and-ai/technology/research/google-beam-expansion/
+91. Mixtral of Experts、arXiv:2401.04088 — https://arxiv.org/abs/2401.04088
+92. DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model — https://arxiv.org/abs/2405.04434
+93. DeepSeek-V3 Technical Report — https://arxiv.org/abs/2412.19437
+94. Toward Inference-optimal Mixture-of-Expert Large Language Models — https://arxiv.org/abs/2404.02852
+95. Alibaba Introduces Qwen3、Alibaba Group — https://www.alibabagroup.com/en-US/document-1853940226976645120
+96. BGE M3-Embedding、arXiv:2402.03216 — https://arxiv.org/abs/2402.03216
+97. Qwen3 Embedding、arXiv:2506.05176 — https://arxiv.org/abs/2506.05176
+98. Fine-tuning、BGE documentation — https://bge-model.com/tutorial/7_Finetuning/7.1.2.html
+99. Improving BGE-M3 Multilingual Dense Embeddings for Nigerian Low Resource Languages、WINLP 2025 — https://s.mlcollective.org/2025.winlp_main.33.pdf
+100. ISO/IEC 22989:2022 — https://www.iso.org/standard/74296.html
+101. Four Principles of Explainable Artificial Intelligence、NIST IR 8312 — https://nvlpubs.nist.gov/nistpubs/ir/2021/nist.ir.8312.pdf
+102. Traceability for Trustworthy AI: A Review of Models and Tools — https://www.mdpi.com/2504-2289/5/2/20
+103. Correctness is not Faithfulness in RAG Attributions、arXiv:2412.18004 — https://arxiv.org/abs/2412.18004
+104. Qwen3 Technical Report、arXiv:2505.09388 — https://arxiv.org/abs/2505.09388
+105. Alibaba Cloud's Qwen Models Attract over 90,000 Enterprise Adoptions — https://www.alibabacloud.com/blog/alibaba-clouds-qwen-models-attract-over-90000-enterprise-adoptions-within-its-first-year_601130
+106. 阿里巴巴成立“达摩院” 3年研发投入将超千亿、中国新聞網 — https://www.chinanews.com.cn/business/2017/10-11/8349851.shtml
+107. Alibaba sets up DAMO Academy、China Daily — https://language.chinadaily.com.cn/2017-10/12/content_33156180.htm
+108. Databricks Agrees to Acquire Neon、Databricks Press Release — https://www.databricks.com/company/newsroom/press-releases/databricks-agrees-acquire-neon-help-developers-deliver-ai-systems
+109. Databricks and Neon、Databricks Blog — https://www.databricks.com/blog/databricks-neon
+110. Neon and Databricks、Neon Blog — https://neon.com/blog/neon-and-databricks
+111. Databricks will buy Neon for $1 billion、Reuters — https://www.reuters.com/technology/databricks-buy-startup-neon-1-billion-wsj-reports-2025-05-14/
+112. Databricks is buying Neon for about $1 billion、CNBC — https://www.cnbc.com/2025/05/14/databricks-is-buying-database-startup-neon-for-about-1-billion.html

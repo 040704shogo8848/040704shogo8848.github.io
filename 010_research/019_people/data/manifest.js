@@ -3,6 +3,28 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "麻生太郎",
+    "nameEn": "Taro Aso",
+    "born": 1940,
+    "died": null,
+    "country": "JP",
+    "role": "自由民主党 副総裁／元内閣総理大臣",
+    "field": "politician",
+    "status": "active",
+    "tags": [
+      "政治",
+      "自民党",
+      "吉田茂",
+      "麻生グループ",
+      "財務"
+    ],
+    "date": "2026-09-25",
+    "summary": "1940年飯塚市生まれ。大久保利通の玄孫・吉田茂の外孫。麻生セメント社長を経て1979年衆院初当選。第92代総理（358日）、財務相連続3,205日。為公会（2006年・15人）から志公会（2017年・59人）まで党内政策集団を立ち上げた。",
+    "file": "people/aso_taro_260925.html",
+    "sourceCount": 28,
+    "variant": "life-arc"
+  },
+  {
     "name": "柳澤花芽",
     "nameEn": "Kaga Yanagisawa",
     "born": 1967,

@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>球団オーナーシップの経済性｜MLB と NPB の損益構造、Mark Walter の回収経路、日本の球団売買</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em;line-height:1.35}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+  @media(max-width:760px){.kpi{grid-template-columns:repeat(2,1fr)}}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card)}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;line-height:1.6}
+  th{background:#F3F1EB;font-weight:700;white-space:nowrap}
+  td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  td.c{text-align:center;white-space:nowrap;font-weight:700}
+  caption{caption-side:bottom;font-size:11.5px;color:var(--muted);text-align:left;padding-top:6px}
+  td.neg{color:var(--bad)}
+  tr.em td{background:#FBFAF6;font-weight:700}
+
+  figure{margin:22px 0 8px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:18px 16px 10px}
+  figcaption{font-size:11.5px;color:var(--muted);padding-top:8px;line-height:1.7}
+  .legend{display:flex;gap:20px;font-size:12px;color:var(--sub);margin:4px 0 0 60px;flex-wrap:wrap}
+  .legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:5px}
+
+  ol.src{font-size:13px;color:var(--sub);padding-left:22px}
+  ol.src li{margin:6px 0}
+  ol.src a{color:var(--accent)}
+  footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:12px;color:var(--muted)}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<div class="crumb"><a href="../../../index.html">shogo</a> / <a href="../index.html">industry</a> / 球団オーナーシップ</div>
+
+<header class="top">
+  <h1>球団オーナーシップの経済性</h1>
+  <div class="en">MLB &amp; NPB Franchise Economics — Mark Walter’s Recovery Path and Japan Team Sales</div>
+  <div class="tags">
+    <span class="tag">スポーツ</span><span class="tag">球団</span><span class="tag">放映権</span>
+    <span class="tag">MLB</span><span class="tag">NPB</span>
+  </div>
+  <p class="lead">
+    MLBの球団価値は資産評価の上昇が主軸で、営業利益は薄い。NPBは親会社の広告・ブランド費用と
+    球場周辺の興行が本体である。Mark Walterのドジャースは2012年の買収額2.15十億ドルから、
+    Forbes 2025年評価6.8十億ドルまで上昇した。日本の一軍売買は数十億円単位にとどまる。
+  </p>
+  <p class="srcnote">Forbes、Sportico、各社IR・プレスリリース、NPB公式発表をもとに作成（2026年9月25日時点）</p>
+</header>
+
+<div class="kpi">
+  <div class="card"><div class="k">ドジャース評価額（Forbes 2025）</div><div class="v">6.8<small>十億USD。2012年買収2.15十億USDから約3.2倍</small></div></div>
+  <div class="card"><div class="k">MLB平均球団価値（Forbes 2025）</div><div class="v">2.6<small>十億USD。前年比+8%</small></div></div>
+  <div class="card"><div class="k">ソフトバンクホークス売上</div><div class="v">509<small>億円（2026年2月期。営業利益79.8億円）</small></div></div>
+  <div class="card"><div class="k">日本ハム ボールパーク事業</div><div class="v">310<small>億円（2026年3月期。事業利益54億円）</small></div></div>
+</div>
+
+<h2><span class="num">01</span>結論<span class="en">Conclusion</span></h2>
+
+<p><strong class="hit">MLBの回収は「営業利益」ではなく「資産評価とメディア権」である。</strong>
+Forbesが2025年3月に公表した評価では、ロサンゼルス・ドジャースの企業価値は6.8十億ドル、推定売上752百万ドル、営業利益は21百万ドルである<sup>1</sup>。
+2012年にGuggenheim Baseball Managementが球団本体2十億ドル、Chavez Ravine周辺不動産0.15十億ドルで買収した時点から、評価額だけで約3.2倍に膨らんだ<sup>2</sup>。
+営業利益率は売上比3%前後であり、配当を主目的にした投資とは言えない。</p>
+
+<p><strong class="hit">NPBの損益は、球団単体の興行と親会社の広告・ブランド費用が重なっている。</strong>
+福岡ソフトバンクホークスの決算公告では、2026年2月期の売上高509億3,800万円、営業利益79億7,800万円である<sup>3</sup>。
+日本ハムのボールパーク事業は同社IRで売上310億円、事業利益54億円（2026年3月期）と開示されている<sup>4</sup>。
+一方、12球団の入場料・放映権・グッズの内訳を揃えて比較できる公式統計は公開されていない。</p>
+
+<p><strong class="hit">日本の一軍売買は数十億円で、MLBの十億ドル単位とは桁が違う。</strong>
+DeNAは2011年、横浜ベイスターズ株式66.92%を65億円で取得し、NPB保証金等30億円を加えて資金総額95億円とした<sup>5</sup>。
+ソフトバンクは2004年、ダイエーホークス株式を事業価値50億円、福岡ドーム関連の興行権等を150億円で取得した<sup>6</sup>。
+いずれも買収時点の価格であり、現在価値の再評価は公表されていない。</p>
+
+<div class="callout">
+球団オーナーシップが「投資として成立する」条件は、リーグによって定義が分かれる。
+MLBではローカル放映権と不動産を含む資産評価の上昇が主経路である。
+NPBでは球団単体の黒字より、親会社の認知・広告、球場周辺の不動産・興行、あるいはファーム・独立リーグでの地域事業が回収経路になる。
+</div>
+
+<h2><span class="num">02</span>球団の損益構造：放映権・入場料・グッズ・スポンサー<span class="en">P&amp;L Structure: Media, Gate, Merch, Sponsorship</span></h2>
+
+<h3>MLB側の骨格</h3>
+
+<p>Forbesの2025年版によれば、MLB30球団の平均企業価値は2.6十億ドル（前年比+8%）、リーグ全体の売上は2024シーズンで12.1十億ドルである<sup>1</sup><sup>7</sup>。
+Sporticoの独自評価では平均2.82十億ドル、リーグ売上12.75十億ドルとやや高い。両社の推計は一致していない（disputed）<sup>8</sup>。</p>
+
+<p>ドジャースの2024年レギュラーシーズンは、1試合あたり入場料収入約4.29百万ドルでリーグ首位だった（SporticoがMLB内部のゲート報告を引用。single-source）<sup>9</sup>。
+ローカル放映はSpectrum SportsNet LAとの25年・8.35十億ドル契約（2013年開始、年換算約334百万ドル）が中核である<sup>9</sup><sup>10</sup>。
+全国放映はESPN・Fox・TBSとのリーグ一括契約が基盤で、現行パッケージは7年12.9十億ドル規模とForbesが記述している<sup>1</sup>。
+2025年にはESPNが残存期間を早期終了する合意が報じられており、全国メディアの再編が未確定である<sup>1</sup><sup>7</sup>。</p>
+
+<div class="tbl-scroll"><table>
+  <caption>表1. MLBの収益カテゴリとドジャース周辺の公開数値（as of 2025–2026）</caption>
+  <thead><tr><th>カテゴリ</th><th>リーグ／球団の扱い</th><th>公開されている数値</th><th>出典の性質</th></tr></thead>
+  <tbody>
+    <tr><td>全国放映権</td><td>MLB機構が一括販売し、分配</td><td>現行ESPN/Fox/TBSで7年12.9十億USD（Forbes）</td><td>推計・報道</td></tr>
+    <tr><td>ローカル放映権</td><td>各球団がRSN等と契約</td><td>ドジャース：25年8.35十億USD（SportsNet LA）</td><td>報道（複数）</td></tr>
+    <tr class="em"><td>入場料</td><td>ホーム試合のチケット・プレミアム</td><td>ドジャース：2024年1試合4.29百万USD</td><td>Sportico（single-source）</td></tr>
+    <tr><td>スポンサー</td><td>各球団＋リーグ中央</td><td>大谷加入後の日本企業スポンサー増が報じられたが、球団公式の合計額は非開示</td><td>N/A（内訳）</td></tr>
+    <tr><td>グッズ・物販</td><td>リーグ中央＋各球団</td><td>球団別の公式開示はほぼ無し</td><td>N/A</td></tr>
+    <tr><td>球団売上（Forbes推計）</td><td>球団単位</td><td>ドジャース752百万USD、ヤンキース728百万USD（2025評価時点）</td><td>推計</td></tr>
+    <tr><td>営業利益（Forbes推計）</td><td>球団単位</td><td>ドジャース21百万USD、ヤンキース▲57百万USD</td><td>推計</td></tr>
+  </tbody>
+</table></div>
+
+<h3>NPB側の骨格</h3>
+
+<p>NPBではホームゲームの放映権を各球団が保持するのが原則である。
+パシフィック・リーグは共同出資会社パシフィックリーグマーケティング（PLM）を通じ、インターネット配信などを横断で扱う一方、地上波・BS・CSは各球団が保持する、とPLM関係者のインタビューで説明されている<sup>11</sup>。
+セ・リーグに相当する横断配信会社は、同規模の公式説明が見当たらない。</p>
+
+<p>リクルートワークス研究所の同インタビューでは、1995年時点でMLBとNPBの収益がいずれも約1,400億円規模だったのに対し、インタビュー時点（2021年）ではNPBが約1,800億円前後、MLBが1兆円超、という対比が語られている（single-source、時点が古い）<sup>11</sup>。
+2024–2025年のNPB12球団合算売上の公式値は、本稿作成時点で取得できなかった。</p>
+
+<div class="tbl-scroll"><table>
+  <caption>表2. MLBとNPBの損益構造の比較（構造面）</caption>
+  <thead><tr><th>項目</th><th>MLB</th><th>NPB</th></tr></thead>
+  <tbody>
+    <tr><td>全国／中央の放映権</td><td>機構が一括販売し分配</td><td>機構の一括販売は限定的。各球団販売が基本</td></tr>
+    <tr><td>ローカル放映権</td><td>RSN等と長期契約が主軸。Diamond Sports破綻以降は再編中</td><td>地上波・BS・CS・ネットを球団ごとに販売。パはネットをPLMが横断</td></tr>
+    <tr><td>入場料</td><td>大市場球団で1試合数百万USD規模</td><td>球団・球場により大きく異なる。12球団横断の公式内訳は非公開</td></tr>
+    <tr><td>グッズ</td><td>リーグ中央と球団の併用</td><td>球団・関連会社・球場運営が分離している事例あり</td></tr>
+    <tr><td>親会社の位置づけ</td><td>オーナー個人・投資コンソーシアムが中心</td><td>事業会社の子会社が大半。広告・ブランド費用と接合</td></tr>
+    <tr><td>黒字の意味</td><td>営業利益は薄い球団が多く、価値上昇が主回収</td><td>ホークスのように興行黒字の例もあるが、内訳の独立採算は確認困難</td></tr>
+  </tbody>
+</table></div>
+
+<div class="note">
+ソフトバンクホークスの決算公告は売上・営業利益・純利益を示すが、入場料／放映権／スポンサー／グッズの内訳は出ない。
+日本ハムは「ボールパーク事業」として球場来場を含むセグメントを開示するが、球団単体のP&amp;Lとは一致しない。
+いずれも、表1のようなカテゴリ別比較には使えない。
+</div>
+
+<h2><span class="num">03</span>Mark Walter：資産構成とドジャース買収の回収経路<span class="en">Mark Walter: Assets and Recovery Path</span></h2>
+
+<p>Mark R. WalterはGuggenheim PartnersのCEOである。
+Forbesは純資産を約7.3十億ドルと掲載し、同社の運用資産を3百十億ドル超と記述している（as of Forbesプロファイル更新時点）<sup>12</sup>。
+Bloomberg Billionaires Indexは純資産を十億ドル単位でより大きく見積もる時期があり、数値はソース間で割れている（disputed）<sup>13</sup>。
+Guggenheim自体は非公開会社で、Walterの持分比率はForm ADV上も25%未満と報じられており、資産構成の内訳は公式開示されていない。</p>
+
+<div class="tbl-scroll"><table>
+  <caption>表3. ドジャース買収（2012年）と評価の推移</caption>
+  <thead><tr><th>項目</th><th>数値</th><th>時点／出典</th></tr></thead>
+  <tbody>
+    <tr><td>球団本体の取得額</td><td>2.0十億USD</td><td>2012-03-27 PR Newswire<sup>2</sup></td></tr>
+    <tr><td>Chavez Ravine不動産JV</td><td>0.15十億USD</td><td>同上</td></tr>
+    <tr class="em"><td>合計</td><td>2.15十億USD</td><td>同上</td></tr>
+    <tr><td>支配パートナー</td><td>Mark R. Walter</td><td>同上。共同出資者にMagic Johnson、Stan Kasten、Todd Boehlyら</td></tr>
+    <tr><td>Forbes評価（2025）</td><td>6.8十億USD</td><td>売上752百万、営業利益21百万USD<sup>1</sup></td></tr>
+    <tr><td>Sportico評価（2025頃）</td><td>7.73十億USD（不動産等含む）</td><td>Forbesと定義が異なる（disputed）<sup>9</sup></td></tr>
+    <tr><td>買収からの評価倍率（Forbes基準）</td><td>約3.2倍</td><td>6.8 / 2.15。筆者算出</td></tr>
+  </tbody>
+</table></div>
+
+<p>回収経路は、公開情報から次の3層に分けられる。</p>
+
+<p><strong>1. ローカル放映権の再契約。</strong>
+買収直後の課題は、Foxとの契約終了後にローカル権利をどう取り直すかだった。
+結果としてTime Warner Cable（現Spectrum）との8.35十億ドル契約が成立し、買収価格を上回る長期キャッシュフローの土台になった<sup>10</sup>。
+この契約は他球団のRSN破綻局面でも相対的に安定している、と複数報道が指摘する。</p>
+
+<p><strong>2. 入場料・スポンサーの上方修正。</strong>
+2024年のゲート収入首位化と、大谷翔平加入後のスポンサー増が報じられている<sup>9</sup>。
+ただしスポンサー合計額の公式開示は無い。</p>
+
+<p><strong>3. 資産評価そのもの。</strong>
+Forbes評価6.8十億ドルは、営業利益21百万ドルの資本化では説明しきれない。
+メディア権、スタジアム、ブランド、将来の不動産開発オプションが乗った「フランチャイズ価値」である。
+配当利回り型の回収ではなく、持分評価と出口時の売却益が主経路になる。</p>
+
+<div class="risk">
+公開されていないもの：Guggenheim Baseball Managementの出資比率、買収時の負債構造、SportsNet LAからの球団への年間支払額の確定値、Walter個人のドジャース持分比率。
+いずれも非開示であり、内部収益率（IRR）の再現はできない。
+</div>
+
+<h2><span class="num">04</span>球団オーナーシップが投資として成立する条件<span class="en">When Ownership Works as an Investment</span></h2>
+
+<p>公開データから言える成立条件は、リーグごとに形が違う。</p>
+
+<p><strong>MLB側。</strong>
+(a) ローカルまたは全国のメディア権が、買収価格を正当化する長期契約になること。
+(b) 大市場の入場料・スポンサーが、選手年俸の上昇をある程度相殺すること。
+(c) 評価額の上昇が、薄い営業利益を上回る出口を提供すること。
+ドジャースは(a)(c)が明確で、(b)も2024年以降に強化された事例である。
+一方、Forbesの営業利益は球団によって赤字が大きく、評価額の上昇が無い球団ではキャッシュフロー投資として成立しにくい。</p>
+
+<p><strong>NPB側。</strong>
+(a) 球団＋球場の権利を一体で握れること（ソフトバンクの2004年案件は球団50億円と興行権150億円をセットにした）<sup>6</sup>。
+(b) 親会社にとって広告・ブランド費用として説明可能な支出構造であること。
+(c) 日本ハムのように、ボールパークを「観光・街」のセグメントとして黒字化できること<sup>4</sup>。
+一軍売買の価格帯は数十億円であり、MLBのような十億ドル単位のキャピタルゲイン市場は形成されていない。</p>
+
+<div class="tbl-scroll"><table>
+  <caption>表4. 投資として見るときの条件と、公開データでの確認状況</caption>
+  <thead><tr><th>条件</th><th>MLBでの確認</th><th>NPBでの確認</th></tr></thead>
+  <tbody>
+    <tr><td>長期メディア契約</td><td>ドジャース8.35十億USDで確認</td><td>球団別契約額の横断開示なし（N/A）</td></tr>
+    <tr><td>興行の黒字</td><td>上位球団でも営業利益は薄い／赤字あり</td><td>ホークスは営業黒字。内訳は非開示</td></tr>
+    <tr><td>不動産・球場</td><td>買収時に周辺土地を別枠で取得</td><td>日本ハムのボールパーク事業がセグメント開示</td></tr>
+    <tr><td>出口市場（再売却）</td><td>十億ドル単位の取引が複数</td><td>一軍の売買事例は稀。価格は数十億円</td></tr>
+    <tr><td>親会社の広告効果</td><td>個人オーナー中心で二次的</td><td>参入目的にブランド向上が明示される例が多い</td></tr>
+  </tbody>
+</table></div>
+
+<h2><span class="num">05</span>日本の球団売買の事例と価格<span class="en">Japan Franchise Transactions and Prices</span></h2>
+
+<div class="tbl-scroll"><table>
+  <caption>表5. 日本の一軍球団に関する主な売買・参入コスト（公表ベース）</caption>
+  <thead><tr><th>年</th><th>案件</th><th>対価</th><th>備考</th></tr></thead>
+  <tbody>
+    <tr><td>2004</td><td>ソフトバンク←ダイエー（ホークス）</td><td>球団事業価値50億円＋ドーム興行権等150億円＝計200億円</td><td>ソフトバンク公式リリース<sup>6</sup></td></tr>
+    <tr><td>2004</td><td>楽天（東北）新規参入</td><td>預かり保証金制度：総額30億円規模（保証金25億円＋手数料・寄付5億円）</td><td>既存球団の買収ではない。加盟料60億円制度は廃止後<sup>14</sup></td></tr>
+    <tr><td>2002頃</td><td>TBS←横浜（取得）</td><td>報道ベース約140億円</td><td>日刊スポーツ報道。公式の取得価額開示は本稿では未確認（single-source）<sup>15</sup></td></tr>
+    <tr class="em"><td>2011</td><td>DeNA←TBS HD等（横浜）</td><td>株式66.92%を65億円。保証金等30億円を含め資金総額95億円</td><td>DeNA公式リリース<sup>5</sup></td></tr>
+  </tbody>
+</table></div>
+
+<p>価格の読み方には注意が要る。
+ソフトバンク案件は「球団株式」と「ドームの興行権・放映権・物販」を分けて買っている。
+DeNA案件は議決権66.92%の取得であり、100%時価ではない。
+楽天は新規参入であり、既存フランチャイズの買収価格ではない。
+TBSの取得額140億円は報道依存で、売却額65億円との差額を「損失」と単純に結ぶには、保有期間中の損益と保証金の扱いを別途確認する必要がある。</p>
+
+<p>オリックスと近鉄の合併（2004年）は球団売買ではなく統合であり、買収価格は存在しない。
+ライブドアは参入審査で選ばれなかった。</p>
+
+<h2><span class="num">06</span>二軍・独立リーグの資本：ハヤテファンドと identity academy の構造<span class="en">Farm / Independent Capital: Hayate and Identity Academy</span></h2>
+
+<p>NPBは2023年9月29日、2024シーズンからのファーム・リーグ新規参加について、新潟（イースタン）と静岡（ウエスタン）を内定・承認したと発表した<sup>16</sup>。
+申請3社のうち栃木（エイジェック）は内定に入っていない。</p>
+
+<p><strong>くふうハヤテベンチャーズ静岡。</strong>
+運営会社はハヤテ223株式会社である。代表取締役は杉原行洋。ハヤテグループ傘下として球団を立ち上げた。
+2024年1月、くふうカンパニーが資本業務提携とネーミングライツを取得し、球団名が「くふうハヤテベンチャーズ静岡」に決まった<sup>17</sup>。
+本拠地は静岡市清水庵原球場。ウエスタン・リーグ所属。</p>
+
+<p><strong>ハヤテ側のファンド。</strong>
+ハヤテインベストメント株式会社をGPとする「INNOVATION HAYATE V Capital 投資事業有限責任組合」が2022年3月に組成され、出資総額は当初上限20億円、主LPは株式会社イノベーション、である<sup>18</sup>。
+投資対象はBtoB・DX系スタートアップと説明されている。
+球団ハヤテ223への出資額・持分比率は、同リリースからは読み取れない（N/A）。</p>
+
+<p><strong>オイシックス新潟アルビレックスBC。</strong>
+運営は株式会社新潟アルビレックス・ベースボール・クラブ。BCリーグからNPBファームへ移行した。
+オイシックス・ラ・大地がメインスポンサーとなり、球団名に企業名を冠した<sup>19</sup>。
+事業費規模は報道で「昨期の3倍、約6億円」とされた例があるが、一次IRでの確定値は未確認（single-source報道）。</p>
+
+<p><strong>identity academy。</strong>
+公式サイトによれば、金融教育プログラムを提供する組織であり、関連のFuture Identity Capitalは卒業生・起業家への投資を掲げ、ポートフォリオに福祉・介護・チケット・リサーチツール・無人艇などのスタートアップを掲載している<sup>20</sup>。
+同サイトの公開ポートフォリオに、ハヤテ223やくふうハヤテベンチャーズ静岡は見当たらない。
+ハヤテグループとidentity academyの資本関係を示す一次資料は、本稿作成時点で取得できなかった。</p>
+
+<div class="tbl-scroll"><table>
+  <caption>表6. ファーム新規2球団と周辺資本の構造</caption>
+  <thead><tr><th>球団</th><th>運営会社</th><th>リーグ</th><th>主な資本・スポンサー</th><th>公開されている金額</th></tr></thead>
+  <tbody>
+    <tr><td>くふうハヤテベンチャーズ静岡</td><td>ハヤテ223</td><td>ウエスタン</td><td>ハヤテグループ、くふうカンパニー（ネーミング＋資本業務提携）</td><td>提携対価は非開示</td></tr>
+    <tr><td>オイシックス新潟アルビレックスBC</td><td>新潟アルビレックスBC</td><td>イースタン</td><td>オイシックス・ラ・大地（メインスポンサー）</td><td>事業費「約6億円」は報道依存</td></tr>
+    <tr><td>（参考）IHVCファンド</td><td>ハヤテインベストメント（GP）</td><td>—</td><td>イノベーション他</td><td>出資総額上限20億円（2022年）</td></tr>
+    <tr><td>（参考）Future Identity Capital</td><td>identity academy関連</td><td>—</td><td>公開ポートフォリオは非野球</td><td>球団出資の記載なし</td></tr>
+  </tbody>
+</table></div>
+
+<div class="note">
+二軍球団の親会社構造は「一軍の事業会社オーナー」とは異なる。
+静岡は投資・ベンチャー支援を本業とするグループが球団運営会社を新設し、くふうが名称と資本で乗る形である。
+新潟は地域スポーツの既存運営会社に食品サブスク企業がスポンサーとして乗る形である。
+いずれも、入場料・放映権だけで回収する前提には見えない。
+</div>
+
+<h2><span class="num">07</span>残っている問い<span class="en">Open Questions</span></h2>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>#</th><th>問い</th><th>なぜ必要か／取れなかった理由</th></tr></thead>
+  <tbody>
+    <tr><td class="c">1</td><td>NPB12球団の入場料・放映権・グッズ・スポンサーの合算と球団別内訳</td><td>公式の横断統計が無い。各社の決算公告も内訳非開示</td></tr>
+    <tr><td class="c">2</td><td>SportsNet LAからドジャースへの年間支払額の確定値</td><td>契約総額は報道されるが、年次キャッシュフローの公式開示は無い</td></tr>
+    <tr><td class="c">3</td><td>Guggenheim Baseball Managementの出資比率と買収時レバレッジ</td><td>非公開。IRRの再現不可</td></tr>
+    <tr><td class="c">4</td><td>Mark Walterの純資産・Guggenheim AUMのソース間差</td><td>ForbesとBloombergで水準が異なる（disputed）</td></tr>
+    <tr><td class="c">5</td><td>ハヤテ223とくふうカンパニーの出資比率・ネーミング対価</td><td>資本業務提携は公表、金額は非開示</td></tr>
+    <tr><td class="c">6</td><td>identity academy／Future Identity Capitalとハヤテ球団の資本関係</td><td>双方の公開ページに相互記載が無い</td></tr>
+    <tr><td class="c">7</td><td>TBSによる横浜取得時の正式な取得価額</td><td>売却時はDeNAが65億円を開示。取得時は報道の140億円のみ</td></tr>
+  </tbody>
+</table></div>
+
+<h2><span class="num">08</span>出典<span class="en">Sources</span></h2>
+
+<ol class="src">
+  <li><a href="https://www.forbes.com/sites/justinteitelbaum/2025/03/26/baseballs-most-valuable-teams-2025/">Forbes, Baseball’s Most Valuable Teams 2025（2025-03-26。平均価値2.6十億USD、ドジャース6.8十億USD等）</a></li>
+  <li><a href="https://www.prnewswire.com/news-releases/the-los-angeles-dodgers-and-frank-mccourt-announce-agreement-with-guggenheim-baseball-management-144493865.html">PR Newswire, The Los Angeles Dodgers and Frank McCourt Announce Agreement With Guggenheim Baseball Management（2012-03-27。球団2十億USD＋不動産0.15十億USD）</a></li>
+  <li><a href="https://catr.jp/companies/61a5a/7316">官報決算データベース／関連二次整理, 福岡ソフトバンクホークス株式会社（2026年2月期売上509億3,800万円、営業利益79億7,800万円）</a></li>
+  <li><a href="https://www.nipponham.co.jp/corporate/ir/library/briefing-session/pdf/20260508_01.pdf">日本ハム, 2026年3月期 決算説明会資料（ボールパーク事業 売上310億円、事業利益54億円）</a></li>
+  <li><a href="https://dena.com/jp/news/409/">株式会社ディー・エヌ・エー, プロ野球への参入について（2011-11-04。取得価額65億円、資金総額95億円）</a></li>
+  <li><a href="https://group.softbank/news/press/20041130_0">ソフトバンクグループ, 福岡ダイエーホークスの株式取得、および株式会社ホークスタウンとの基本合意について（2004-11-30。球団50億円、興行権等150億円）</a></li>
+  <li><a href="https://www.cbssports.com/mlb/news/yankees-become-first-mlb-team-valued-at-more-than-8-billion-plus-which-club-saw-50-increase-over-last-year/">CBS Sports, Yankees become first MLB team valued at more than $8 billion（Forbes評価の二次報道。リーグ売上12.1十億USD）</a></li>
+  <li><a href="https://www.sportico.com/valuations/teams/2025/mlb-teams-values-2025-yankees-dodgers-worth-billion-1234844509/">Sportico, MLB Team Values 2025（平均2.82十億USD、リーグ売上12.75十億USD。Forbesと定義差）</a></li>
+  <li><a href="https://www.sportico.com/leagues/baseball/2025/dodgers-yankees-mlb-ticket-revenue-1234854483/">Sportico, Dodgers, Yankees’ Ticket Revenues Lead MLB（2024年1試合4.29百万USD、SportsNet LA 8.35十億USD）</a></li>
+  <li><a href="https://www.latimes.com/sports/dodgers/story/2026-01-26/dodgers-tv-deal-sportsnet-la-mlb-giving-them-break">Los Angeles Times, What’s the deal with the Dodgers’ TV deal?（SportsNet LA 8.35十億USDの経緯）</a></li>
+  <li><a href="https://www.works-i.com/works/series/sports/detail004.html">リクルートワークス研究所, 個別球団の利益より、リーグとファンという全体利益にフォーカス（PLMインタビュー。放映権の球団別保持とMLB対比）</a></li>
+  <li><a href="https://www.forbes.com/profile/mark-walter/">Forbes, Mark Walter profile（純資産約7.3十億USD、Guggenheim AUM 300十億USD超）</a></li>
+  <li><a href="https://www.bloomberg.com/billionaires/profiles/mark-r-walter/">Bloomberg Billionaires Index, Mark Walter（純資産・AUMの推計。Forbesと水準差あり）</a></li>
+  <li><a href="https://ja.wikipedia.org/wiki/%E3%83%97%E3%83%AD%E9%87%8E%E7%90%83%E5%86%8D%E7%B7%A8%E5%95%8F%E9%A1%8C_(2004%E5%B9%B4)">Wikipedia, プロ野球再編問題 (2004年)（加盟料廃止と預かり保証金制度。二次。制度の骨格確認用）</a></li>
+  <li><a href="https://www.nikkansports.com/baseball/news/p-bb-tp0-20111105-859271.html">日刊スポーツ, ＴＢＳ　横浜140億で買い、65億で売った（2011-11-05。取得額は報道）</a></li>
+  <li><a href="https://npb.jp/news/detail/20230929_03.html">NPB.jp, ファーム・リーグ新規参加 審査結果（2023-09-29。新潟・静岡を承認）</a></li>
+  <li><a href="https://prtimes.jp/main/html/rd/p/000000360.000046400.html">くふうカンパニー, ハヤテ223と資本業務提携、球団名「くふうハヤテベンチャーズ静岡」（PR TIMES）</a></li>
+  <li><a href="https://hayate.co.jp/pdf/20220322_press_release.pdf">ハヤテグループ, INNOVATION HAYATE V Capital 設立（2022-03-22。出資額20億円）</a></li>
+  <li><a href="https://prtimes.jp/main/html/rd/p/000000812.000008895.html">オイシックス株式会社, オイシックス新潟アルビレックスBCのファーム参加正式決定（2023-11-22）</a></li>
+  <li><a href="https://www.identity-academy.jp/fund">identity academy, Fund（Future Identity Capitalのポートフォリオ掲載）</a></li>
+</ol>
+
+<footer>球団オーナーシップの経済性 ／ 2026年9月25日作成。数値は各出典の公表時点。評価倍率など筆者算出にはその旨を記した。投資判断は含まない。</footer>
+
+</div>
+
+<script type="application/json" id="facts">
+[
+  {"claim":"Dodgers Forbes value 2025","value":6.8,"unit":"B USD","as_of":"2025-03-26","source":"https://www.forbes.com/sites/justinteitelbaum/2025/03/26/baseballs-most-valuable-teams-2025/","confidence":"reported"},
+  {"claim":"Dodgers Forbes revenue 2025 list","value":752,"unit":"M USD","as_of":"2025-03-26","source":"https://www.forbes.com/sites/justinteitelbaum/2025/03/26/baseballs-most-valuable-teams-2025/","confidence":"reported"},
+  {"claim":"Dodgers Forbes operating income 2025 list","value":21,"unit":"M USD","as_of":"2025-03-26","source":"https://www.forbes.com/sites/justinteitelbaum/2025/03/26/baseballs-most-valuable-teams-2025/","confidence":"reported"},
+  {"claim":"MLB average team value Forbes 2025","value":2.6,"unit":"B USD","as_of":"2025-03-26","source":"https://www.forbes.com/sites/justinteitelbaum/2025/03/26/baseballs-most-valuable-teams-2025/","confidence":"reported"},
+  {"claim":"MLB league revenue 2024 Forbes/CBS","value":12.1,"unit":"B USD","as_of":"2024 season","source":"https://www.cbssports.com/mlb/news/yankees-become-first-mlb-team-valued-at-more-than-8-billion-plus-which-club-saw-50-increase-over-last-year/","confidence":"reported"},
+  {"claim":"MLB average team value Sportico 2025","value":2.82,"unit":"B USD","as_of":"2025","source":"https://www.sportico.com/valuations/teams/2025/mlb-teams-values-2025-yankees-dodgers-worth-billion-1234844509/","confidence":"disputed"},
+  {"claim":"Dodgers purchase team 2012","value":2.0,"unit":"B USD","as_of":"2012-03-27","source":"https://www.prnewswire.com/news-releases/the-los-angeles-dodgers-and-frank-mccourt-announce-agreement-with-guggenheim-baseball-management-144493865.html","confidence":"reported"},
+  {"claim":"Dodgers purchase Chavez Ravine JV 2012","value":0.15,"unit":"B USD","as_of":"2012-03-27","source":"https://www.prnewswire.com/news-releases/the-los-angeles-dodgers-and-frank-mccourt-announce-agreement-with-guggenheim-baseball-management-144493865.html","confidence":"reported"},
+  {"claim":"SportsNet LA deal total","value":8.35,"unit":"B USD over 25 years","as_of":"deal 2013","source":"https://www.sportico.com/leagues/baseball/2025/dodgers-yankees-mlb-ticket-revenue-1234854483/","confidence":"reported"},
+  {"claim":"Dodgers ticket revenue per home game 2024","value":4.29,"unit":"M USD","as_of":"2024 season","source":"https://www.sportico.com/leagues/baseball/2025/dodgers-yankees-mlb-ticket-revenue-1234854483/","confidence":"single-source"},
+  {"claim":"SoftBank Hawks sales FY2026/2","value":509.38,"unit":"B JPY","as_of":"2026-02-28","source":"https://catr.jp/companies/61a5a/7316","confidence":"reported"},
+  {"claim":"SoftBank Hawks operating income FY2026/2","value":79.78,"unit":"B JPY","as_of":"2026-02-28","source":"https://catr.jp/companies/61a5a/7316","confidence":"reported"},
+  {"claim":"Nippon Ham ballpark sales FY2026/3","value":310,"unit":"B JPY","as_of":"2026-03","source":"https://www.nipponham.co.jp/corporate/ir/library/briefing-session/pdf/20260508_01.pdf","confidence":"reported"},
+  {"claim":"Nippon Ham ballpark business profit FY2026/3","value":54,"unit":"B JPY","as_of":"2026-03","source":"https://www.nipponham.co.jp/corporate/ir/library/briefing-session/pdf/20260508_01.pdf","confidence":"reported"},
+  {"claim":"DeNA Yokohama equity purchase","value":65,"unit":"B JPY for 66.92%","as_of":"2011-11-04","source":"https://dena.com/jp/news/409/","confidence":"reported"},
+  {"claim":"DeNA total funds including NPB deposit","value":95,"unit":"B JPY","as_of":"2011-11-04","source":"https://dena.com/jp/news/409/","confidence":"reported"},
+  {"claim":"SoftBank Daiei Hawks team value","value":50,"unit":"B JPY","as_of":"2004-11-30","source":"https://group.softbank/news/press/20041130_0","confidence":"reported"},
+  {"claim":"SoftBank HawksTown dome business transfer","value":150,"unit":"B JPY","as_of":"2004-11-30","source":"https://group.softbank/news/press/20041130_0","confidence":"reported"},
+  {"claim":"Mark Walter Forbes net worth","value":7.3,"unit":"B USD","as_of":"Forbes profile ~2026","source":"https://www.forbes.com/profile/mark-walter/","confidence":"disputed"},
+  {"claim":"INNOVATION HAYATE V Capital size","value":20,"unit":"B JPY cap","as_of":"2022-03-22","source":"https://hayate.co.jp/pdf/20220322_press_release.pdf","confidence":"reported"}
+]
+</script>
+</body>
+</html>

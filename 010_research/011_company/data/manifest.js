@@ -3,6 +3,27 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "TDK",
+    "fullName": "TDK株式会社",
+    "ticker": "6762",
+    "market": "TSE",
+    "country": "JP",
+    "status": "listed",
+    "cohort": "jp-listed",
+    "tags": [
+      "電子部品",
+      "電池",
+      "中国依存",
+      "iPhone",
+      "センサー"
+    ],
+    "date": "2026-09-25",
+    "summary": "連結売上の55%が中国、54.7%がエナジー応用製品。主要顧客グループは連結の19%（顧客名非開示）。EV向けトラクション電池比率は非開示。エナジー利益率はFY25の19.9%からFY26は18.0%へ低下。",
+    "file": "reports/tdk_research_260925.html",
+    "sourceCount": 12,
+    "variant": "listed"
+  },
+  {
     "company": "国内AIスタートアップM&A",
     "fullName": "国内AIスタートアップM&A・アクハイヤー分析 2024-2026",
     "ticker": null,

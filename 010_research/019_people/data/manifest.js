@@ -3,6 +3,27 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "柳澤花芽",
+    "nameEn": "Kaga Yanagisawa",
+    "born": 1967,
+    "died": null,
+    "country": "JP",
+    "role": "野村総合研究所 代表取締役社長",
+    "field": "operator",
+    "status": "active",
+    "tags": [
+      "NRI",
+      "コンサルティング",
+      "システム",
+      "経営者"
+    ],
+    "date": "2026-09-25",
+    "summary": "1991年入社。システムとコンサル、人事制度改革を経て2024年4月にNRI初の女性社長へ。就任2期目の2026年3月期は売上で中計目標を達成する一方、海外のれん減損969億円で営業利益は半減した。",
+    "file": "people/yanagisawa_kaga_260925.html",
+    "sourceCount": 24,
+    "variant": "life-arc"
+  },
+  {
     "name": "宮沢賢治",
     "nameEn": "Kenji Miyazawa",
     "born": 1896,

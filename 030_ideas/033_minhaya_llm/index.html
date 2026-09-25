@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>みんはや LLM native 版 — クイズアプリの市場と問題生成の置換</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  h4{font-size:14px;margin:18px 0 6px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .note{border-left:4px solid var(--warn);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk,.note{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a><a href="../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../031_frontier_trading/index.html">frontier trading</a><a href="../032_evacsim/index.html">evacsim</a><a href="index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../020_personal/021_profile/index.html">profile</a><a href="../../020_personal/02A_plan/index.html">plan</a><a href="../../020_personal/023_travel/index.html">travel</a><a href="../../020_personal/027_cinema/index.html">cinema</a><a href="../../020_personal/024_method/index.html">method</a><a href="../../020_personal/026_handbook/index.html">handbook</a><a href="../../020_personal/025_fitness/index.html">fitness</a><a href="../../020_personal/028_english/index.html">english</a><a href="../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+  <div class="crumb"><a href="../../index.html">shogo</a> / ideas / minhaya llm</div>
+
+  <header class="top">
+    <div>
+      <h1>みんはや LLM native 版</h1>
+      <div class="meta">クイズアプリの市場と、問題生成を LLM に置き換えた時の構造／基準日 2026-09-25／出典20件</div>
+      <div style="margin-top:8px">
+        <span class="tag">クイズアプリ</span><span class="tag">LLM</span><span class="tag">問題生成</span><span class="tag">課金率</span><span class="tag">受験</span>
+      </div>
+    </div>
+  </header>
+  <p class="lead">「みんなで早押しクイズ」（みんはや）型の対戦クイズを、問題DBの人手生産から LLM による生成に置き換えたときの市場構造と、受験対策への接続条件を整理する。みんはや本体の DAU・課金率は非開示であり、ここでの市場数値は公開ベンチマークとストア公開情報に限る。</p>
+
+  <div class="callout">
+    <strong>先に結論。3つある。</strong>
+    <br><br>
+    <strong>① 公開ベンチマークでは、クイズ／学習系の課金は薄い。</strong>Kahoot! は2022年末時点で有料購読が130万件超、同時にプラットフォーム利用者の約97%が無料である<sup>1</sup>。プロ向けの free-to-paid 転換率は2023年Q2時点で約6.8%である<sup>2</sup>。教育アプリ寄りの公開指標として Duolingo は、有料加入者の LTM MAU に対する比率が2024年Q4で8.8%、2025年Q2で9.0%である<sup>3</sup><sup>4</sup>。Sensor Tower が公開する米国 trivia 上位の週次アクティブは、Kahoot! でおおむね29万〜54万人、Trivia Crack でおおむね17万〜37万人の帯である（国・週・定義は表を参照）<sup>5</sup><sup>6</sup>。みんはや単体の DAU・課金率は N/A である。
+    <br><br>
+    <strong>② 問題の「作成＋レビュー」コストは高ステークスで1問1,000〜2,500米ドルの公開レンジがある。</strong>米 NAEP の選択式（selected-response）は作成とレビューで1,000〜2,500米ドル／問、中位の目安は約1,750米ドル／問である<sup>7</sup>。資格試験向けの良質な多肢選択は1,000〜2,000米ドル／問以上という別系統の見積もりがある<sup>8</sup>。エンタメ早押しのタグ付け単価そのものは公開されていない。LLM は生成コストを下げるが、<strong class="hit">正誤・難易度・漏洩・著作権の検証コストは残る</strong>。Kahoot! 自身が2023年に AI 問題生成を有料プランへ載せ、生成結果の幻覚を作成者が検証する前提を明示している<sup>9</sup>。
+    <br><br>
+    <strong>③ 受験接続は「反応速度の対戦」から「カリキュラム整合の反復」への軸変換である。</strong>みんはやの公開説明はランダムマッチ／フリーマッチと難易度3段階・ユーザー作問である<sup>10</sup><sup>11</sup>。受験アプリが必要とするのは教科・単元・到達度のタグと誤答分析である。接続するなら LLM は問題文の量産より、<strong class="hit">単元タグと難易度の一貫性を保った生成＋人手レビュー</strong>の側に効く。リクルートのスタディサプリは過去のIRで有料会員数を開示していたが、2024〜2025年の有価証券報告書では会員数の継続開示を確認できず、現時点の有料会員数は N/A である<sup>12</sup>。
+  </div>
+
+  <div class="kpi">
+    <div class="card"><div class="k">Kahoot 無料比率</div><div class="v">約97% <small>2022年末</small></div></div>
+    <div class="card"><div class="k">Kahoot 有料購読</div><div class="v">130万+ <small>2022年末</small></div></div>
+    <div class="card"><div class="k">Duolingo 有料浸透</div><div class="v">8.8〜9.0% <small>LTM MAU比</small></div></div>
+    <div class="card"><div class="k">NAEP 選択式の作成レビュー</div><div class="v">1,000〜2,500$ <small>／問</small></div></div>
+  </div>
+
+  <h2><span class="num">①</span>結論<span class="en">Verdict</span></h2>
+
+  <p>LLM native の早押しクイズは、「問題在庫の希少性」を緩める。対戦マッチメイキング、レート、レイテンシ、不正対策は現行みんはやと同じく残る。収益は広告とアプリ内課金（広告非表示・ガチャ通貨）に依存する構造がストア上で見えるが、課金率の公開値は無い<sup>10</sup><sup>11</sup>。市場側の公開ベンチマークは、学習系でも有料層が1桁％台に留まる例が複数ある。したがって LLM 化の本丸は売上倍率ではなく、<strong class="hit">問題供給の限界費用と、受験向けタグ品質の限界費用</strong>である。</p>
+
+  <h2><span class="num">②</span>クイズアプリ市場：DAU と課金率の公開ベンチマーク<span class="en">Public Benchmarks</span></h2>
+
+  <h3>定義の注意</h3>
+  <p>Sensor Tower の公開ブログは「Active users」を週次系列で示しており、DAU ではない<sup>5</sup><sup>6</sup>。Kahoot! のIRは「active accounts（LTM）」と「paid subscriptions」を使い、日次DAUは開示していない<sup>1</sup><sup>13</sup>。Duolingo は DAU／MAU／有料加入者をSEC提出資料で開示する<sup>3</sup><sup>4</sup>。指標が揃わないため、表では原文の定義をそのまま残す。</p>
+
+  <h3>表1. 公開されているアクティブと課金のベンチマーク</h3>
+  <div class="tbl-scroll"><table>
+    <thead>
+      <tr>
+        <th>対象</th>
+        <th>指標</th>
+        <th class="num">数値</th>
+        <th>時点・範囲</th>
+        <th>出典</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Kahoot!（米国 unified）</td>
+        <td>週次 Active users（ピーク／期末付近）</td>
+        <td class="num">約53.3万／約29.4万</td>
+        <td>2025年Q4、米国</td>
+        <td>Sensor Tower<sup>5</sup></td>
+      </tr>
+      <tr>
+        <td>Trivia Crack（米国 unified）</td>
+        <td>週次 Active users（期末付近）</td>
+        <td class="num">約36.9万</td>
+        <td>2025年Q4、米国</td>
+        <td>Sensor Tower<sup>5</sup></td>
+      </tr>
+      <tr>
+        <td>Kahoot!（米国 unified）</td>
+        <td>週次 Active users（期末付近）</td>
+        <td class="num">53.7万超</td>
+        <td>2025年Q1、米国</td>
+        <td>Sensor Tower<sup>6</sup></td>
+      </tr>
+      <tr>
+        <td>Trivia Crack（米国 unified）</td>
+        <td>週次 Active users（期末付近）</td>
+        <td class="num">約16.7万</td>
+        <td>2025年Q1、米国</td>
+        <td>Sensor Tower<sup>6</sup></td>
+      </tr>
+      <tr>
+        <td>Kahoot! Group</td>
+        <td>Active accounts（LTM）</td>
+        <td class="num">2,580万</td>
+        <td>2022年末</td>
+        <td>Kahoot Q4 2022<sup>1</sup></td>
+      </tr>
+      <tr>
+        <td>Kahoot! Group</td>
+        <td>Paid subscriptions</td>
+        <td class="num">130万超</td>
+        <td>2022年末（前年比+18%）</td>
+        <td>Kahoot Q4 2022<sup>1</sup></td>
+      </tr>
+      <tr>
+        <td>Kahoot! プラットフォーム</td>
+        <td>無料利用者の比率</td>
+        <td class="num">約97%</td>
+        <td>2022年末の記述</td>
+        <td>Kahoot Q4 2022<sup>1</sup></td>
+      </tr>
+      <tr>
+        <td>Kahoot!（Professional）</td>
+        <td>free-to-paid conversion</td>
+        <td class="num">約6.8%</td>
+        <td>2023年Q2</td>
+        <td>Kahoot Q2 2023資料<sup>2</sup></td>
+      </tr>
+      <tr>
+        <td>Kahoot!</td>
+        <td>Active users（LTM）</td>
+        <td class="num">2,400万</td>
+        <td>Press Kit、2024年1月時点の記載</td>
+        <td>Kahoot Press Kit<sup>13</sup></td>
+      </tr>
+      <tr>
+        <td>Duolingo</td>
+        <td>DAU／Paid／浸透率</td>
+        <td class="num">4,050万／950万／8.8%</td>
+        <td>2024年Q4。浸透率は LTM MAU 比</td>
+        <td>Duolingo SEC<sup>3</sup></td>
+      </tr>
+      <tr>
+        <td>Duolingo</td>
+        <td>DAU／Paid／浸透率</td>
+        <td class="num">4,770万／1,090万／9.0%</td>
+        <td>2025年Q2。浸透率は LTM MAU 比</td>
+        <td>Duolingo SEC<sup>4</sup></td>
+      </tr>
+      <tr>
+        <td>MWM カタログ</td>
+        <td>インストーラーあたり30日ARPU中央値</td>
+        <td class="num">Game $0.07／Education $0.24</td>
+        <td>State of May 2026</td>
+        <td>MWM<sup>14</sup></td>
+      </tr>
+      <tr>
+        <td>みんはや</td>
+        <td>DAU・課金率</td>
+        <td class="num">N/A</td>
+        <td>運営の継続開示なし</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table></div>
+  <p class="fn">Sensor Tower の数値は同社ブログの要約値であり、有料ダッシュボードの一次抽出ではない。週次売上のピークも併記されており、Kahoot! は2025年Q4米国 unified でピーク約6.5万米ドル／週、Trivia Crack は約4.8万〜5.6万米ドル／週の帯である<sup>5</sup>。</p>
+
+  <h3>みんはやのストア公開シグナル</h3>
+  <p>Google Play 側のインストール数表記は 1,000,000+ である（第三者ミラーでも同表記）<sup>15</sup>。App Store では評価件数約53万、評価4.5、単語カテゴリで上位に入る表示がある（取得時点）<sup>10</sup>。MWM は App Store 累計ダウンロードを 7.5M+ と表示する（第三者推定、single-source）<sup>16</sup>。Ember Picks は日本 Google Play の trivia で free #3・grossing #2 を記録している（チャート監視の第三者、single-source）<sup>17</sup>。いずれも DAU や課金率そのものではない。</p>
+
+  <h2><span class="num">③</span>現行のみんはやの構造（問題DB・対戦・課金）<span class="en">Current Structure</span></h2>
+
+  <p>運営は Q ONE, Inc.（Google Play 表記では Q ONE K.K.）である<sup>10</sup><sup>11</sup>。公式サイトはストア導線のみで、KPI の説明はない<sup>18</sup>。ストア説明から読み取れる構造は次のとおりである。</p>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>層</th><th>公開されている内容</th><th>非公開（N/A）</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>対戦</td>
+        <td>ランダムマッチ（レート対戦）とフリーマッチ（友人・パーティ）<sup>10</sup><sup>11</sup></td>
+        <td>同時接続数、マッチング待ち時間、チート検知の精度</td>
+      </tr>
+      <tr>
+        <td>問題</td>
+        <td>難易度3種のおまかせ、またはオリジナル問題の作成・共有<sup>10</sup><sup>11</sup></td>
+        <td>公式問題総数の現行値、タグ体系、採用／却下率、モデレーションコスト</td>
+      </tr>
+      <tr>
+        <td>課金</td>
+        <td>アプリ内購入あり。広告非表示 480円、ダイヤ各パック（160〜10,000円帯）、プレミアパック 650円など<sup>10</sup></td>
+        <td>課金率、ARPU、広告収益比率、ガチャ期待値の監査結果</td>
+      </tr>
+      <tr>
+        <td>UX変遷</td>
+        <td>2022年7月にリニューアル（キャラクター・ガチャ方向）がバージョン履歴に残る<sup>10</sup></td>
+        <td>リニューアル前後の課金率・継続率の差分</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <p>つまり現行プロダクトの重心は「問題在庫の編集部」だけでなく、「リアルタイム対戦の公平性」と「広告／IAP の摩擦」にある。LLM が直接置き換えるのは問題供給側であり、対戦レイテンシやレート設計は別問題である。</p>
+
+  <h2><span class="num">④</span>LLM native にすると何が変わるか<span class="en">What Changes</span></h2>
+
+  <h3>問題生成</h3>
+  <p>従来の在庫モデルでは、問題が増えるほどタグ付け・重複検知・正誤確認の固定費が乗る。LLM native では、プロンプトと制約（ジャンル、文字数、答え一意性、読み上げ順序）から都度生成し、対戦直前に検証キューへ流す形が取れる。Kahoot! は2023年に AI question generator を Kahoot!+ Gold／EDU 向けに出し、生成結果に幻覚があり得るため作成者の検証を必須としている<sup>9</sup>。同社は既存の人間生成問題バンク（kahoot 2.5億超、ユーザー生成質問約19億）も併記しており、AI は在庫の代替ではなく作成速度の補助として位置づけられている<sup>9</sup>。</p>
+
+  <h3>タグ付けコスト</h3>
+  <p>「タグ付け」だけを切り出した単価の公開系列は、エンタメクイズでは見つからない。代わりに、問題作成とレビューを含む公開コストがある。</p>
+
+  <h3>表2. 問題まわりの公開コストと LLM 化で動く費用</h3>
+  <div class="tbl-scroll"><table>
+    <thead>
+      <tr>
+        <th>項目</th>
+        <th class="num">公開レンジ</th>
+        <th>対象</th>
+        <th>LLM 化で起きること</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>選択式の作成＋レビュー</td>
+        <td class="num">1,000〜2,500 米ドル／問（中位目安約1,750）</td>
+        <td>米 NAEP<sup>7</sup></td>
+        <td>下書き生成は下がる。レビュー・パイロット・枠組み整合は残る</td>
+      </tr>
+      <tr>
+        <td>良質な多肢選択（資格試験）</td>
+        <td class="num">1,000〜2,000 米ドル／問以上</td>
+        <td>テスト開発の費用論の見積もり<sup>8</sup></td>
+        <td>同上。高ステークスほど検証比重が大きい</td>
+      </tr>
+      <tr>
+        <td>エンタメ早押しのタグ付け単価</td>
+        <td class="num">N/A</td>
+        <td>みんはや含む公開値なし</td>
+        <td>自動タグ案は出せるが、早押し特有の「読み上げ途中で一意になるか」は別検査</td>
+      </tr>
+      <tr>
+        <td>ユーザー生成問題のモデレーション</td>
+        <td class="num">N/A（単価非開示）</td>
+        <td>みんはやは作問機能を公開<sup>10</sup></td>
+        <td>生成量が増えると、拒否／修正キューがボトルネックになる</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    NAEP の数字は国家学力調査の品質水準であり、雑学早押しの1問コストと直接は等しくない。ここでは「人手で品質を担保する問題の下限感」として使う。エンタメDBの実コストは、おそらくこのレンジより低いが、公開されていない。
+  </div>
+
+  <h3>難易度調整</h3>
+  <p>みんはやはストア上で難易度3種を明示する<sup>10</sup>。LLM は「易／中／難」のラベルを付けられるが、ラベルと実正答率の対応は対戦ログが無いと校正できない。LLM native では、生成時の自己評価ではなく、<strong class="hit">出題後の正答率・押しタイミング分布で難易度を事後更新する</strong>側が構造の本体になる。これは現行の人手タグを「事前に正しく付ける」モデルから、「事後に較正する」モデルへの移動である。</p>
+
+  <h2><span class="num">⑤</span>受験対策との接続<span class="en">Exam Prep Link</span></h2>
+
+  <p>接続の論点は、同じ「クイズUI」でも最適化対象が違うことである。</p>
+
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>軸</th><th>みんはや型（公開仕様）</th><th>受験対策型（一般構造）</th></tr></thead>
+    <tbody>
+      <tr><td>勝敗</td><td>早押しの速さ＋正誤<sup>10</sup></td><td>正答率、弱点単元の削減</td></tr>
+      <tr><td>問題の寿命</td><td>繰り返し出題でも「覚えゲー」批判が出る（ストアレビューに「百人一首化」指摘あり）<sup>10</sup></td><td>同一単元の変形問題が必要</td></tr>
+      <tr><td>タグ</td><td>難易度3種＋ユーザー作問<sup>10</sup></td><td>教科・単元・学習指導要領／試験範囲</td></tr>
+      <tr><td>課金</td><td>広告・通貨・見た目（公開IAP）<sup>10</sup></td><td>月額コンテンツ（講義＋演習）が主</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>スタディサプリは受験向けオンライン学習の公開ベンチマーク候補だが、会員数の開示は途切れている。第三者まとめでは2020年1Qにブランド全体で有料会員74.1万人とされ<sup>19</sup>、コロナ期には152万人とする報道もある<sup>20</sup>。2024年3月期・2025年3月期の有価証券報告書ではサービス沿革の記載に留まり、最新の有料会員数は確認できない<sup>12</sup>。よって「受験市場の規模感」を会員数で現在値として置くことはできない。</p>
+
+  <p>LLM native で受験に寄せる場合の接続条件は次の3点に整理できる。</p>
+  <ol>
+    <li>生成プロンプトに単元・出題形式・禁止事項（著作権のある過去問の再現禁止）を入れる。</li>
+    <li>正答・解説・誤答選択肢の事実確認を人手または別モデルの検証キューに残す（Kahoot! が明示した幻覚対策と同型）<sup>9</sup>。</li>
+    <li>対戦UIは任意である。受験では「速さ」より「反復と弱点」が主目的なので、みんはやのレート対戦をそのまま転用しても学習効果の指標にはならない。</li>
+  </ol>
+
+  <h2><span class="num">⑥</span>成立条件と反証<span class="en">Conditions and Falsifiers</span></h2>
+
+  <div class="box">
+    <p><strong>成立条件</strong></p>
+    <ul>
+      <li>生成問題の致命的誤答率が、人手在庫と同等以下に抑えられる（対戦中の誤答は信頼を落とす）。</li>
+      <li>タグ／難易度の事後較正が、マッチング品質（実力差の偏り）を悪化させない。</li>
+      <li>課金が広告除去と化粧課金に留まるなら、LLM 化単体では売上の段階変化は起きにくい（公開ベンチマークの課金層は薄い）<sup>1</sup><sup>3</sup>。</li>
+    </ul>
+    <p><strong>反証</strong></p>
+    <ul>
+      <li>みんはやまたは同等アプリが、公式に高課金率（例: 有料比率が学習系公開値の2倍超）を継続開示した場合、①の「薄い課金」前提は弱まる。</li>
+      <li>エンタメ早押しで、タグ付けなしの完全自動生成が長期に事故率を低く保てた実証が出た場合、②の「検証コストは残る」は弱まる。</li>
+      <li>受験接続で、カリキュラムタグ無しの雑学生成だけで偏差値・得点の改善が再現可能なら、⑤の軸変換は過剰である。</li>
+    </ul>
+  </div>
+
+  <div class="risk">
+    みんはやの累計ダウンロードやランキングは第三者推定を含む。MWM の 7.5M+ と Ember Picks のカテゴリ順位は、いずれも運営の一次開示ではない。ヘッドラインの課金・アクティブ比較は Kahoot! と Duolingo の開示、および Sensor Tower の公開ブログに依拠する。
+  </div>
+
+  <h2><span class="num">⑦</span>残っている問い<span class="en">Open Questions</span></h2>
+
+  <div class="box">
+    <ol style="margin:0;padding-left:20px">
+      <li><strong>みんはやの DAU と課金率。</strong>運営・IR・アプリストアのいずれも継続的な一次開示が無い。第三者のチャート順位とインストール下限しか取れない。</li>
+      <li><strong>エンタメ早押し問題DBのタグ付け単価。</strong>NAEP／資格試験の作成レビュー単価は取れたが、雑学DBのタグ付けだけの円／問は非開示。</li>
+      <li><strong>みんはや公式問題の現行総数と採用フロー。</strong>ユーザー集計サイトの過去値はあるが、運営確認が取れないため本文の確定値には使わない。</li>
+      <li><strong>スタディサプリ等の受験アプリの現行有料会員数・課金率。</strong>リクルートHDの直近有価証券報告書では会員数の継続開示を確認できなかった。</li>
+      <li><strong>Sensor Tower／data.ai の有料ダッシュボード上の日本 trivia DAU。</strong>公開ブログは米国週次が中心で、日本みんはやの DAU 時系列は有料壁の向こうにある。</li>
+    </ol>
+  </div>
+
+  <h2><span class="num">⑧</span>出典<span class="en">Sources</span></h2>
+
+  <ol class="sources">
+    <li>Kahoot! ASA「Q4 2022 Report」（有料購読130万超、無料約97%、active accounts 25.8M LTM 等）<a href="https://kahoot.com/files/2023/02/4Q22_Kahoot_quarterly_report.pdf">https://kahoot.com/files/2023/02/4Q22_Kahoot_quarterly_report.pdf</a></li>
+    <li>Kahoot! ASA「Q2 2023 Quarterly Presentation」（Professional free-to-paid conversion 約6.8%）<a href="https://kahoot.com/files/2023/08/2Q23_Kahoot_quarterly_presentaton.pdf">https://kahoot.com/files/2023/08/2Q23_Kahoot_quarterly_presentaton.pdf</a></li>
+    <li>Duolingo, Inc.「Q4 2024 Shareholder Letter」（SEC EDGAR。DAU 40.5M、Paid 9.5M、Paid Subscriber Penetration 8.8%）<a href="https://www.sec.gov/Archives/edgar/data/1562088/000156208825000039/q4fy24duolingo12-31x24shar.htm">https://www.sec.gov/Archives/edgar/data/1562088/000156208825000039/q4fy24duolingo12-31x24shar.htm</a></li>
+    <li>Duolingo, Inc.「Q2 2025 Shareholder Letter」（SEC EDGAR。DAU 47.7M、Paid 10.9M、Penetration 9.0%）<a href="https://www.sec.gov/Archives/edgar/data/1562088/000156208825000165/q2fy25duolingo6-30x25share.htm">https://www.sec.gov/Archives/edgar/data/1562088/000156208825000165/q2fy25duolingo6-30x25share.htm</a></li>
+    <li>Sensor Tower「Top 5 Trivia Games Performance in the US for Q4 2025」（unified。Kahoot!／Trivia Crack の週次 active・revenue）<a href="https://sensortower.com/blog/2025-q4-unified-top-5-trivia-games-revenue-us-604118ed241bc16eb8b8453a">https://sensortower.com/blog/2025-q4-unified-top-5-trivia-games-revenue-us-604118ed241bc16eb8b8453a</a></li>
+    <li>Sensor Tower「Top 5 Trivia Games Performance on Unified Platform in the US - Q1 2025」<a href="https://sensortower.com/blog/2025-q1-unified-top-5-trivia%20games-revenue-us-604118ed241bc16eb8b8453a">https://sensortower.com/blog/2025-q1-unified-top-5-trivia%20games-revenue-us-604118ed241bc16eb8b8453a</a></li>
+    <li>National Academies of Sciences, Engineering, and Medicine『A Pragmatic Future for NAEP』（Item Development。選択式の作成・レビュー費用 1,000–2,500 USD）<a href="https://www.nationalacademies.org/read/26427/chapter/6">https://www.nationalacademies.org/read/26427/chapter/6</a></li>
+    <li>テスト開発の費用論における見積もり要約「Evidence Based on Costs of Testing, Cost-Benefit Analyses」（資格試験向け多肢選択 1,000–2,000 USD／問以上）<a href="https://ebrary.net/323321/education/evidence_based_costs_testing">https://ebrary.net/323321/education/evidence_based_costs_testing</a></li>
+    <li>Kahoot!「Unlock the power of AI in your classroom with Kahoot!’s new question generator!」（2023年。幻覚の検証責任、問題バンク規模）<a href="https://kahoot.com/blog/2023/03/kahoot-ai/">https://kahoot.com/blog/2023/03/kahoot-ai/</a></li>
+    <li>Apple App Store「みんなで早押しクイズ」（Q ONE, Inc.。機能説明・IAP価格・評価件数）<a href="https://apps.apple.com/jp/app/%E3%81%BF%E3%82%93%E3%81%AA%E3%81%A7%E6%97%A9%E6%8A%BC%E3%81%97%E3%82%AF%E3%82%A4%E3%82%BA/id1044039663">https://apps.apple.com/jp/app/みんなで早押しクイズ/id1044039663</a></li>
+    <li>Google Play「みんなで早押しクイズ」（Q ONE, Inc.／Q ONE K.K.。機能説明）<a href="https://play.google.com/store/apps/details?id=com.tactosh.quiz&amp;hl=ja">https://play.google.com/store/apps/details?id=com.tactosh.quiz&amp;hl=ja</a></li>
+    <li>株式会社リクルートホールディングス「2025年3月期 有価証券報告書」（スタディサプリ沿革。会員数の継続開示は本文で確認できず）<a href="https://recruit-holdings.com/ja/ir/library/upload/report_202503Q4_ar_jp.html">https://recruit-holdings.com/ja/ir/library/upload/report_202503Q4_ar_jp.html</a></li>
+    <li>Kahoot!「Press Kit」（Last updated: January 2024。Active users LTM 24M 等）<a href="https://kahoot.com/files/2017/08/Kahoot-PressKit-2024.pdf">https://kahoot.com/files/2017/08/Kahoot-PressKit-2024.pdf</a></li>
+    <li>MWM「ユーザーあたり平均収益（ARPU）」ベンチマーク（State of May 2026。Game／Education の中央値）<a href="https://mwm.ai/ja/glossary/arpu">https://mwm.ai/ja/glossary/arpu</a></li>
+    <li>APKCombo「みんなで早押しクイズ」（Google Play インストール 1,000,000+ のミラー表記）<a href="https://apkcombo.com/ja/%E3%81%BF%E3%82%93%E3%81%AA%E3%81%A7%E6%97%A9%E6%8A%BC%E3%81%97%E3%82%AF%E3%82%A4%E3%82%BA/com.tactosh.quiz/">https://apkcombo.com/ja/みんなで早押しクイズ/com.tactosh.quiz/</a></li>
+    <li>MWM App Intelligence「みんなで早押しクイズ」（App Store Downloads 7.5M+ 表示。第三者推定）<a href="https://mwm.ai/apps/minnadezao-ya-shikuizu/1044039663">https://mwm.ai/apps/minnadezao-ya-shikuizu/1044039663</a></li>
+    <li>Ember Picks「みんなで早押しクイズ — Chart History &amp; Rankings」（日本 trivia free／grossing 順位）<a href="https://emberpicks.com/app/googleplay/app-com-tactosh-quiz/">https://emberpicks.com/app/googleplay/app-com-tactosh-quiz/</a></li>
+    <li>みんなで早押しクイズ 公式サイト（Q ONE, Inc.）<a href="https://minhaya.com/">https://minhaya.com/</a></li>
+    <li>Education Career「スタディサプリの有料会員数の推移まとめ」（2020年1Q 74.1万人等。IR二次まとめ）<a href="https://education-career.jp/magazine/data-report/2019/studysapuri-number/">https://education-career.jp/magazine/data-report/2019/studysapuri-number/</a></li>
+    <li>ストレイナー「スタディサプリ有料会員、152万人に」（リクルート決算の報道）<a href="https://strainer.jp/stories/122">https://strainer.jp/stories/122</a></li>
+  </ol>
+</div>
+
+<script type="application/json" id="facts">
+[
+ {"claim":"Kahoot Group paid subscriptions","value":1300000,"unit":"subscriptions (exceeded)","as_of":"2022-12","source":"https://kahoot.com/files/2023/02/4Q22_Kahoot_quarterly_report.pdf","confidence":"reported"},
+ {"claim":"Kahoot platform free users share","value":97,"unit":"%","as_of":"2022-12","source":"https://kahoot.com/files/2023/02/4Q22_Kahoot_quarterly_report.pdf","confidence":"reported"},
+ {"claim":"Kahoot active accounts LTM","value":25800000,"unit":"accounts","as_of":"2022-12","source":"https://kahoot.com/files/2023/02/4Q22_Kahoot_quarterly_report.pdf","confidence":"reported"},
+ {"claim":"Kahoot professional free-to-paid conversion","value":6.8,"unit":"%","as_of":"2023-Q2","source":"https://kahoot.com/files/2023/08/2Q23_Kahoot_quarterly_presentaton.pdf","confidence":"reported"},
+ {"claim":"Kahoot active users LTM (press kit)","value":24000000,"unit":"users","as_of":"2024-01","source":"https://kahoot.com/files/2017/08/Kahoot-PressKit-2024.pdf","confidence":"reported"},
+ {"claim":"Duolingo DAU Q4 2024","value":40500000,"unit":"users","as_of":"2024-Q4","source":"https://www.sec.gov/Archives/edgar/data/1562088/000156208825000039/q4fy24duolingo12-31x24shar.htm","confidence":"reported"},
+ {"claim":"Duolingo paid subscribers Q4 2024","value":9500000,"unit":"subscribers","as_of":"2024-Q4","source":"https://www.sec.gov/Archives/edgar/data/1562088/000156208825000039/q4fy24duolingo12-31x24shar.htm","confidence":"reported"},
+ {"claim":"Duolingo paid penetration of LTM MAU Q4 2024","value":8.8,"unit":"%","as_of":"2024-Q4","source":"https://www.sec.gov/Archives/edgar/data/1562088/000156208825000039/q4fy24duolingo12-31x24shar.htm","confidence":"reported"},
+ {"claim":"Duolingo paid penetration of LTM MAU Q2 2025","value":9.0,"unit":"%","as_of":"2025-Q2","source":"https://www.sec.gov/Archives/edgar/data/1562088/000156208825000165/q2fy25duolingo6-30x25share.htm","confidence":"reported"},
+ {"claim":"Kahoot weekly active users peak US Q4 2025","value":533000,"unit":"users (weekly active, approx)","as_of":"2025-Q4","source":"https://sensortower.com/blog/2025-q4-unified-top-5-trivia-games-revenue-us-604118ed241bc16eb8b8453a","confidence":"single-source"},
+ {"claim":"Trivia Crack weekly active users end Q4 2025 US","value":369000,"unit":"users (weekly active, approx)","as_of":"2025-Q4","source":"https://sensortower.com/blog/2025-q4-unified-top-5-trivia-games-revenue-us-604118ed241bc16eb8b8453a","confidence":"single-source"},
+ {"claim":"NAEP selected-response item creation and review cost","value":"1000-2500","unit":"USD per item","as_of":"2022","source":"https://www.nationalacademies.org/read/26427/chapter/6","confidence":"reported"},
+ {"claim":"High-quality licensure MC item development cost","value":"1000-2000","unit":"USD per item or higher","as_of":"literature estimate","source":"https://ebrary.net/323321/education/evidence_based_costs_testing","confidence":"reported"},
+ {"claim":"MWM Game median 30d ARPU per installer","value":0.07,"unit":"USD","as_of":"2026-05","source":"https://mwm.ai/ja/glossary/arpu","confidence":"reported"},
+ {"claim":"MWM Education median 30d ARPU per installer","value":0.24,"unit":"USD","as_of":"2026-05","source":"https://mwm.ai/ja/glossary/arpu","confidence":"reported"},
+ {"claim":"みんなで早押しクイズ Google Play installs","value":"1000000+","unit":"installs (store bucket)","as_of":"2026-09","source":"https://apkcombo.com/ja/%E3%81%BF%E3%82%93%E3%81%AA%E3%81%A7%E6%97%A9%E6%8A%BC%E3%81%97%E3%82%AF%E3%82%A4%E3%82%BA/com.tactosh.quiz/","confidence":"reported"},
+ {"claim":"みんなで早押しクイズ App Store downloads (MWM)","value":"7.5M+","unit":"downloads","as_of":"2026-08","source":"https://mwm.ai/apps/minnadezao-ya-shikuizu/1044039663","confidence":"single-source"},
+ {"claim":"みんなで早押しクイズ IAP 広告非表示","value":480,"unit":"JPY","as_of":"2026-09","source":"https://apps.apple.com/jp/app/id1044039663","confidence":"reported"},
+ {"claim":"みんはや DAU","value":"N/A","unit":"—","as_of":"2026-09-25","source":"https://minhaya.com/","confidence":"single-source"},
+ {"claim":"スタディサプリ有料会員（現行）","value":"N/A","unit":"—","as_of":"2025-03","source":"https://recruit-holdings.com/ja/ir/library/upload/report_202503Q4_ar_jp.html","confidence":"single-source"}
+]
+</script>
+</body>
+</html>

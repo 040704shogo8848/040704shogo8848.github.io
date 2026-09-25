@@ -33,10 +33,6 @@
   .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
     border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
   .tb-warn strong{color:#5C3800}
-  .tb-vnote{color:#7A4A00}
-  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
-    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
-  .tb-ok strong{color:#12452A}
 
   .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
     padding:18px 20px 14px;margin:0 0 34px}
@@ -269,9 +265,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   <h1>AIシステムの層構造</h1>
   <p class="tb-thesis">生成AIの実用性能は基盤モデルの規模ではなく、事後学習・検索・状態管理という周辺層の設計で決まり、失敗はモデル本体ではなく層の接合部で起きる。</p>
 
-<p class="tb-ok"><strong>この章は2026-08-14に出典照合を通した。</strong> 検証した事実クレームは96件で、内訳は出典と一致82件、出典と食い違い2件（本文を修正済み）、時点更新2件、出典で確認できず10件。 確認できなかった項目は末尾の「残っている問い」に列挙した。</p>
+<p class="tb-warn"><strong>この章はまだ出典照合を通していない。</strong>
+数値は執筆時に調べたまま入っており、第三者による検証を経ていない。
+本文中の出典リンクから各自で確かめること。</p>
 
-<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">事前学習のスケーリングから事後学習と蒸留への潮目</a></li><li><a href="#s2">検索を接続したときに精度を規定する要素</a></li><li><a href="#s3">rerank・RRF・federated searchをどこで効かせるか</a></li><li><a href="#s4">専用ベクトルDBが汎用DB拡張に対して守れる領域</a></li><li><a href="#s5">モーダルをまたぐと崩れる認識が評価に現れない理由</a></li><li><a href="#s6">ワークフロー型とエージェント型で分かれる状態設計</a></li><li><a href="#s7">出力面の変化と、生成AI経由の流入をどう測るか</a></li><li><a href="#s8">この章の要点</a></li><li><a href="#s9">残っている問い</a></li><li><a href="#s10">出典</a></li></ol></nav>
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">事前学習のスケーリングから事後学習と蒸留への潮目</a></li><li><a href="#s2">検索を接続したときに精度を規定する要素</a></li><li><a href="#s3">rerank・RRF・federated searchをどこで効かせるか</a></li><li><a href="#s4">専用ベクトルDBが汎用DB拡張に対して守れる領域</a></li><li><a href="#s5">モーダルをまたぐと崩れる認識が評価に現れない理由</a></li><li><a href="#s6">ワークフロー型とエージェント型で分かれる状態設計</a></li><li><a href="#s7">出力面の変化と、生成AI経由の流入をどう測るか</a></li><li><a href="#s8">ラボの位置と世界モデル：Meta の復帰、自己回帰批判、MCP の浸透</a></li><li><a href="#s9">この章の要点</a></li><li><a href="#s10">残っている問い</a></li><li><a href="#s11">出典</a></li></ol></nav>
 
 <p>生成AIの導入を検討する場面で、最初に出てくる問いはたいてい「どのモデルを使うか」である。この問いの立て方には落とし穴がある。実際に動くシステムは、基盤モデル1つで構成されていない。事後学習で振る舞いを整え、検索で外部の文書を差し込み、ツール呼び出しの履歴を管理し、出力を評価する。この一連の層が直列につながっている。そして観測される失敗の多くは、層と層の接合部で起きる。検索が正解文書を拾えていないのに生成側のプロンプトを直す、視覚の読み取りが崩れているのに推論の指示を足す、といった当て先の誤りが繰り返し発生する。層の切り分けができていれば避けられる誤りである。この章は、どこで何が壊れるかを層ごとに分けて示す。<strong class="hit">モデルの良し悪しではなく、層の接合を見る目を作ることが目的になる</strong>。</p>
 <figure class="tb-fig">
@@ -411,7 +409,24 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <p>変わるのは文の作りである。Aggarwal らは10,000クエリの GEO-bench で9手法を比較した。位置調整済み語数の指標で、最適化なしのベースラインは 19.3、引用の追加が 27.2、統計の追加が 25.2、出典明記が 24.6、流暢さの改善が 24.7 である <a class="tb-src" href="https://arxiv.org/pdf/2311.09735" target="_blank" rel="noopener">出典</a>。効かない手法も同じ表に出ており、キーワード詰め込みは 17.7 でベースラインを下回った。ユニーク語の追加は 20.5 で有意差がない。</p>
 <p>効き方は元の検索順位に依存する。同論文では、検索5位のソースに出典明記を適用した場合の可視性改善が 115.1%、引用追加が 99.7% である一方、検索1位のソースでは出典明記が -30.3%、引用追加が -22.9% と悪化する。既に上位のサイトにとっては守りの施策、中位以下にとっては攻めの施策になる。効く手法は分野でも違い、統計の追加は法律・行政、討論、意見で上位、引用の追加は社会、解説、歴史で上位である。</p>
 <p>なお Aggarwal らの結果は合成環境のベンチマークである。実運用の生成エンジンでの再現性は確認できていない。</p>
-<h2 id="s8">この章の要点</h2>
+<h2 id="s8">ラボの位置と世界モデル：Meta の復帰、自己回帰批判、MCP の浸透</h2>
+<p>2026年9月時点で、frontier の地図は3つの軸で読み直せる。第1に、Meta の Muse Spark 1.3 は独立ベンチで frontier クラスタに入り、コーディングとエージェント作業では OpenAI・Anthropic と勝ち負けが入れ替わる水準まで戻った。第2に、自己回帰の誤り蓄積批判は同章前半で整理したとおり適用範囲が切り分けられ、JEPA は動画理解とゼロショットロボット計画で実績を出したが、言語 frontier の置き換えにはなっていない。第3に、ツール接続の標準は MCP が事実上の既定になり、世界モデルは生成・計測・通信という別製品線に分岐している。ベンチの順位、計算資源の規模、プロトコルの普及は、同じ「AI」という語の下で別の層を測っている。</p>
+<h3>Meta が frontier に戻ったと言える根拠</h3>
+<p>Meta は2026年9月2日、Muse Spark 1.3 を Muse Code と Meta Model API で公開した。公式の説明は、長時間のエージェント作業とコーディングでの改善、および社内比較で先行版 1.2 に対しツール呼び出しが約20%減、トークンが約25%減という運用面の数字である（as_of 2026-09-02）<a class="tb-src" href="https://research.meta.ai/blog/introducing-muse-spark-1-3" target="_blank" rel="noopener">出典</a>。コンテキスト窓は100万トークン、API 標準料金は入力 1.25 米ドル/100万トークン、出力 4.25 米ドル/100万トークンで、1.2 から据え置きである（as_of 2026-09-03）<a class="tb-src" href="https://venturebeat.com/technology/meta-says-muse-spark-1-3-has-frontier-performance-but-its-best-results-come-from-a-model-developers-cant-broadly-use-yet" target="_blank" rel="noopener">出典</a>。</p>
+<p>独立評価では、Artificial Analysis の Intelligence Index で出荷構成の xhigh が 61、プレビューの max が 62 と報告された（as_of 2026-09-03）。同一時点の比較では Claude Opus 5（max 63）と Claude Fable 5.1（max 66）の下、GPT-5.6 Sol（max）および Grok 4.6（high）と同水準である<a class="tb-src" href="https://venturebeat.com/technology/meta-says-muse-spark-1-3-has-frontier-performance-but-its-best-results-come-from-a-model-developers-cant-broadly-use-yet" target="_blank" rel="noopener">出典</a>。一方、同 Index の方法論は更新されうる。2026-09-25 時点の Artificial Analysis ページは xhigh を 45 と表示しており、絶対スコアは時点間で一致しない（disputed）<a class="tb-src" href="https://artificialanalysis.ai/models/muse-spark-1-3-xhigh" target="_blank" rel="noopener">出典</a>。<strong class="hit">復帰の根拠は「首位」ではなく、独立順位で frontier クラスタに入ったこと、およびコーディング系で他社と勝ち負けが入れ替わることである</strong>。</p>
+<p>Meta が提示するコーディング・エージェント系の数値は次のとおりである（いずれも Meta 自己報告、as_of 2026-09-02 前後。single-source）。DeepSWE 1.1 で 75.4%（Claude Opus 5 は 74.0%、GPT-5.6 Sol は 72.7%）、Terminal-Bench 2.1 で 88.8%（GPT-5.6 Sol と同点、Opus 5 は 86.7%）、OSWorld 2.0 は max で 66.9%、xhigh で 57.2%、MRCR v2（256K–512K）で 98.5% である<a class="tb-src" href="https://venturebeat.com/technology/meta-says-muse-spark-1-3-has-frontier-performance-but-its-best-results-come-from-a-model-developers-cant-broadly-use-yet" target="_blank" rel="noopener">出典</a>。注意点は、ヘッドラインの一部がまだ広く提供されていない max 推論設定に載っていることである。実運用で使えるのは xhigh 側であり、ベンチ上の上限と API で触れる上限は一致しない。</p>
+<p>計算資源と研究者数は、モデル順位とは別の軸である。Epoch AI の AI Chip Users 推計（中央値、H100 換算、as_of 2025年末）では、OpenAI 174.3万、Google DeepMind 158.3万、Anthropic 119.0万、Meta Superintelligence Labs 99.6万、SpaceXAI 61.5万である<a class="tb-src" href="https://epoch.ai/latest/introducing-the-ai-chip-users-explorer" target="_blank" rel="noopener">出典</a><a class="tb-src" href="https://epoch.ai/gradient-updates/frontier-labs-dont-use-most-ai-compute" target="_blank" rel="noopener">出典</a>。これは所有ではなく利用の推計であり、90%信用区間は DeepMind と Meta で特に広い。研究者・技術者の人数は各社が監査可能な開示をしていない。LinkedIn Talent Insights 由来の PeopleInAI 集計（as_of 2026-08、研究キーワードでフィルタ、推定）では OpenAI 4,890、Meta 4,041、Anthropic 2,509、Google DeepMind 1,874 である<a class="tb-src" href="https://www.linkedin.com/pulse/inside-ai-lab-hiring-what-numbers-actually-show-peopleinai-htdmc" target="_blank" rel="noopener">出典</a>。Metix の技術プロファイル集計（as_of 2026年前半、推定）では Meta 4,092、DeepMind 2,837、OpenAI 2,628、Anthropic 1,251 と定義が異なり、絶対値は一致しない<a class="tb-src" href="https://metix.ai/reports/mapping/frontier-ai-labs-talent-2026" target="_blank" rel="noopener">出典</a>。計算資源の順位とモデル順位は一致しない。Meta の計算利用中央値は5社中4位でも、Muse Spark 1.3 は独立順位で frontier クラスタに入っている。</p>
+<div class="tb-tw"><table><thead><tr><th>ラボ</th><th>計算利用中央値（H100e、2025年末）</th><th>90% CI（H100e）</th><th>研究者系ヘッドカウント（推定）</th><th>出典</th></tr></thead><tbody><tr><td>OpenAI</td><td>1,743,000</td><td>1,251,000–2,185,000</td><td>4,890（PeopleInAI, 2026-08）/ 2,628（Metix 技術, 2026年前半）</td><td>Epoch / PeopleInAI / Metix</td></tr><tr><td>Google DeepMind</td><td>1,583,000</td><td>1,008,000–2,549,000</td><td>1,874 / 2,837</td><td>同上</td></tr><tr><td>Anthropic</td><td>1,190,000</td><td>842,000–1,717,000</td><td>2,509 / 1,251</td><td>同上</td></tr><tr><td>Meta Superintelligence Labs</td><td>996,000</td><td>606,000–1,638,000</td><td>4,041 / 4,092</td><td>同上</td></tr><tr><td>SpaceXAI</td><td>615,000</td><td>551,000–700,000</td><td>N/A（本節の2ソースに非掲載）</td><td>Epoch</td></tr></tbody></table></div>
+<div class="tb-tw"><table><thead><tr><th>指標</th><th>Muse Spark 1.3</th><th>比較対象</th><th>as_of</th><th>出典の種類</th></tr></thead><tbody><tr><td>Intelligence Index（xhigh / max）</td><td>61 / 62</td><td>Claude Fable 5.1 max 66、Opus 5 max 63</td><td>2026-09-03</td><td>Artificial Analysis（VentureBeat経由）</td></tr><tr><td>Intelligence Index（xhigh、現行ページ）</td><td>45</td><td>Index v4.3.2。絶対値は上と一致せず</td><td>2026-09-25</td><td>Artificial Analysis 直接</td></tr><tr><td>DeepSWE 1.1</td><td>75.4%</td><td>Opus 5 74.0%、GPT-5.6 Sol 72.7%</td><td>2026-09-02頃</td><td>Meta 自己報告（single-source）</td></tr><tr><td>Terminal-Bench 2.1</td><td>88.8%</td><td>GPT-5.6 Sol 同点、Opus 5 86.7%</td><td>2026-09-02頃</td><td>Meta 自己報告（single-source）</td></tr><tr><td>ツール呼び出し / トークン（対 1.2）</td><td>約 −20% / 約 −25%</td><td>Meta 社内コーディング比較</td><td>2026-09-02</td><td>Meta 公式</td></tr></tbody></table></div>
+<h3>LeCun の自己回帰批判と JEPA の実績</h3>
+<p>誤り蓄積の形式化は、LeCun 自身が LinkedIn で述べた式である。トークンが正解空間から外れる確率を e、長さを n とすると正しさは (1-e)^n で減衰する、という主張である（投稿時点は2023年）<a class="tb-src" href="https://www.linkedin.com/posts/yann-lecun_i-have-claimed-that-auto-regressive-llms-activity-7045908925660950528-hJGk/" target="_blank" rel="noopener">出典</a>。同章の「自己回帰という構造への批判は、どこまで残っているか」で整理した評価は、2026年時点でも骨格は変わっていない。独立誤差と一定 e を外すと減衰は指数より緩くなる、という反論があり、Arbuzov らは key トークンと non-key トークンの二率モデルを提案し、予測される減衰は最悪でも引き延ばし指数、多くの場合はべき乗か一定に近づくと述べている<a class="tb-src" href="https://arxiv.org/pdf/2505.24187" target="_blank" rel="noopener">出典</a>。実務上は、検証と再試行を外側に置く設計が補償になっている、という前節の帰結をそのまま使う。</p>
+<p>JEPA 側の実績は、言語ベンチの首位争いとは別の軸にある。V-JEPA 2 は100万時間超の動画で事前学習した 12億パラメータ規模の自己教師あり動画モデルである。Something-Something v2 で top-1 77.3%、Epic-Kitchens-100 の行動予測で recall-at-5 39.7%、LLM 整列後の動画QAでは PerceptionTest 84.0、TempCompass 76.9（8B 規模）を報告している<a class="tb-src" href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener">出典</a>。行動条件付きの V-JEPA 2-AC は DROID のロボット動画62時間未満で後段学習し、2つの研究室の Franka アームでゼロショットのピック＆プレース計画を行ったとある。環境固有データの収集もタスク固有の報酬学習もしていない、という点が主張の核である。</p>
+<p>組織面では、LeCun は2025年11月に Meta からの離脱と Advanced Machine Intelligence（AMI）研究の継続を表明し、2026年3月に AMI Labs としてシード 10.3億米ドル（約8.9億ユーロ）、プレマネー評価額 35億米ドルを発表した（as_of 2026-03-09/10）<a class="tb-src" href="https://techcrunch.com/2026/03/09/yann-lecuns-ami-labs-raises-1-03-billion-to-build-world-models/" target="_blank" rel="noopener">出典</a><a class="tb-src" href="https://www.linkedin.com/posts/yann-lecun_unveiling-our-new-startup-advanced-machine-activity-7437016101080883200-0Mr9" target="_blank" rel="noopener">出典</a>。JEPA 路線の研究室は Meta の外に移った。Meta 本体は Muse Spark 系の自己回帰 frontier を製品の主軸に置いている。<strong class="hit">JEPA は物理世界の表現と計画で数値を出したが、テキスト生成の frontier 競合を置き換えていない</strong>。</p>
+<h3>MCP の浸透と world model の位置づけ</h3>
+<p>MCP（Model Context Protocol）は、エージェントが外部ツールとデータを呼ぶための接続層である。Anthropic が2024年11月に公開し、2025年12月9日に Linux Foundation 配下の Agentic AI Foundation へ寄贈した時点で、公開の稼働サーバーは1万超、Python と TypeScript の公式 SDK 月次ダウンロードは9,700万超、クライアント側は ChatGPT、Cursor、Gemini、Microsoft Copilot、Visual Studio Code などが名前付きで挙がった（as_of 2025-12-09）<a class="tb-src" href="https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation" target="_blank" rel="noopener">出典</a><a class="tb-src" href="https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/" target="_blank" rel="noopener">出典</a>。約7か月後の MCP 2026-07-28 仕様発表では、SDK 月次ダウンロードが4億超（同年比4倍）、Claude のコネクタ一覧に掲載されたサーバーが950超と報告されている（as_of 2026-07-28）<a class="tb-src" href="https://claude.com/blog/bringing-mcp-2026-07-28-to-claude" target="_blank" rel="noopener">出典</a>。サーバー総数のレジストリ値は定義によって6,000台規模から2万台超まで割れるため、ヘッドラインは Anthropic / MCP 公式の時系列（1万超→ディレクトリ950超＋SDK 4倍）を採用し、第三者レジストリの上限値は採用しない。浸透の速さは、モデル順位の勝負ではなく、接続の既定がベンダー横断で揃ったことにある。</p>
+<p>世界モデルという語は、同じ時期に少なくとも3つの製品線を指している。第1は JEPA 系の潜在予測（上節）。第2は生成型の対話世界で、Google DeepMind の Genie 3 はテキストからフォトリアルな環境を生成し、20〜24 fps でリアルタイム操作できると説明する一般用途の世界モデルである<a class="tb-src" href="https://deepmind.google/models/genie/" target="_blank" rel="noopener">出典</a>。第3は空間の順像／逆像で、World Labs の Atlas と計測系の分岐は同日の業界レポートに整理した（[空間 AI の分岐](../../014_industry/reports/spatial_ai_world_models_260925.html)）。Google Beam は世界モデル製品ではない。Project Starline 由来の実寸3D映像通信で、2026年9月23日時点で米・加・英・仏・独・日の6か国へ出荷し、チャネルパートナー18社、社内8週間試験ではチームのつながり感が50%増、フィードバック理解が33%容易、フォロー会議が21%減と報告している（as_of 2026-09-23、Google 自己報告、single-source）<a class="tb-src" href="https://blog.google/innovation-and-ai/technology/research/google-beam-expansion/" target="_blank" rel="noopener">出典</a>。Beam は空間の「場」をハードウェアで再現する通信製品であり、Genie や Atlas のシミュレーション／生成とは層が違う。</p>
+<p>整理すると、2026年9月のラボ地図は次のように読める。自己回帰の frontier 競合には Meta が戻り、接続の標準は MCP が押さえ、世界モデルは JEPA・生成シミュレータ・空間再構成／計測・実寸通信に枝分かれしている。層構造の章として重要なのは、これらを1つの性能順位に潰さないことである。</p>
+<h2 id="s9">この章の要点</h2>
 <ul>
 <li>強化学習は事前学習の代替ではなく積層である。kを大きく取った pass@k では base model が上回り、強化学習の到達点は base model に規定される。</li>
 <li>蒸留は圧縮ではなく推論パターンの移転である。同一の 32B base で強化学習が AIME 2024 pass@1 47.0%、蒸留が 72.6% だった。ただし関数呼び出しやJSON出力など、教師データが覆わない能力は転写されない。</li>
@@ -422,31 +437,23 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <li>視覚の誤認識はランダムな作話ではない。背景除去だけで平均正答率が 21.09ポイント上がる。最終回答一致型の指標には現れず、ステップ採点、知覚プローブ、画像なし対照の3点を併走させて初めて見える。</li>
 <li>エージェント基盤では、推論呼び出しをステートレスに保ち、状態を実行状態・長期記憶・耐久実行の3層に外置きする。書き込み権限をオーケストレータ1つに絞れば一貫性が保てる。</li>
 <li>生成AI経由の流入は全流入の 0.32% で検索の代替になっていない。同時に Google検索の 68.01% がクリックなしで終わる。起きているのは代替ではなく既存経路の目減りである。</li>
+<li>Muse Spark 1.3 は独立順位で frontier クラスタに入ったが首位ではない。計算資源の中央値順位とモデル順位は一致しない。</li>
+<li>自己回帰の誤り蓄積批判は適用範囲が切り分けられたままである。JEPA（V-JEPA 2）は動画理解とゼロショットロボット計画で実績を出したが、言語 frontier の置き換えにはなっていない。</li>
+<li>MCP は2025年12月の公開サーバー1万超から2026年7月の SDK 月次4億超へ伸び、接続層の既定になった。世界モデルは JEPA・Genie 系生成・空間順像／逆像・Beam 通信に分岐する。</li>
 </ul>
-<h2 id="s9">残っている問い</h2>
+<h2 id="s10">残っている問い</h2>
 <ul>
 <li>OpenAI の o1 発表記事は素材収集時に HTTP 403 を返し、学習時計算量と推論時計算量の2軸スケーリング図の原文が確認できていない。xAI の Grok 4 発表ページも同様で、強化学習の計算量を事前学習と同規模にしたという主張は一次確認できていない。</li>
-
-<li class="tb-vnote">蒸留に関する2つの数値は、出典としたarXiv:2604.25110に存在しない。同論文は実験結果を持たない位置づけの論考であり、MMLUで生徒が教師の95%超を保つという値も、蒸留モデルが難問で12ポイントを超えて劣化するという値も載っていない。同論文から引けるのは、見出しスコアを保ったまま別の能力を失いうるという主張だけである。この2数値は撤回するか、実験を伴う別の一次資料に差し替える必要がある。</li>
-<li class="tb-vnote">チャンク統制実験の数値は、出典としたarXiv:2409.13694と実験設定ごと食い違う。同論文が振っているチャンクサイズは50、200、500、1000であり、本文の64、128、256、512、1000ではない。埋め込みモデルもBGE M3の1種のみで、本文が書く4モデル比較ではない。57%から59%、54%、59%という正答率は論文に開示がない。この段落は全面的に書き直すか削除するのが妥当である。</li>
-<li class="tb-vnote">100万ベクトルで4製品が95%超という記述、pgvectorとChromaがp95で4ミリ秒から12ミリ秒と最速という記述は、出典にChromaが登場せず、pgvectorは1,000万ベクトル時点で最も遅い製品として示されている。1億ベクトルでPineconeとWeaviateが調整なしで動くという記述も裏が取れていない。</li>
-<li class="tb-vnote">ベクトルデータベースの数値の出典としたブログは、自ら方向性を示す範囲であって保証ではないと断っているコンサル系の記事であり、中立の第三者ベンチマークではない。同じ章の第4節末尾が中立的なベンチマークは取れていないと書いており、正面から衝突している。</li>
-<li class="tb-vnote">FACTS Groundingの83.6%という数値は、本文中に一度も登場しないのに「残っている問い」だけがこれを参照している。</li>
-<li class="tb-vnote">512トークンに10%から20%の重なりという設定、および状態空間モデルの線形スケーリングは無出典である。</li>
-<li class="tb-vnote">max_tool_callsについて公式記述は確認できていないと書いているが、直前で引用しているディープリサーチのガイドに記述がある。</li>
-<li class="tb-vnote">マルチエージェントの節にあるコンテキストウィンドウ20万トークン超で切り捨てという記述は、引用元の記事としては正確だが、2026年8月時点では100万トークン構成のモデルが存在する。当時のモデルを前提とした記述である旨の注記が要る。</li>
-<li class="tb-vnote">第9節の「残っている問い」のリストの外側に、チャンク統制実験とベクトルデータベースのベンチマークの2段落が混入している。章構成上も浮いており、両方とも出典照合に失敗した箇所である。削除か全面書き直しを推奨する。</li>
-</ul>
-<p>統制実験も出ている。chunkサイズを64・128・256・512、重なりを0%・10%・30%・50%・70%、埋め込みモデルをm3e-base、bge-base、stella-base、gte-baseで振った比較では、正答率は57%から59%の狭い帯に収まる。落ちるのはchunk 1000でtop-k=3の組み合わせで54%となり、kを5に上げると59%へ戻る<a class="tb-src" href="https://arxiv.org/pdf/2409.13694" target="_blank" rel="noopener">出典</a>。<strong class="hit">chunkサイズ単独ではなく、chunkサイズとtop-kの積が確保する情報量が効いている</strong>。Vectaraが25構成48モデルで行った比較では、chunkの設定が埋め込みモデルの選択と同程度に検索品質を左右するとされる。実務上の既定値としては512トークンに10%から20%の重なりが挙がる。</p>
-<ul>
 <li>FACTS Grounding のリーダーボードの2026年8月時点の順位は確認できていない。本文に挙げた 83.6% は2024年12月公開時点の値である。</li>
-</ul>
-<p>第三者ベンチマークも2026年時点で揃ってきた。100万ベクトルでは4製品とも既定設定で95%超の再現率に達する。1,000万ベクトル規模のp99遅延はQdrantが約4ms、Weaviateが約9msで、1,000万未満ではpgvectorとChromaがp95で4msから12msと最も速い。1億ベクトルではPineconeとWeaviateが調整なしで再現率を保つ一方、pgvectorはHNSWのパラメータ調整を要する<a class="tb-src" href="https://lushbinary.com/blog/vector-database-benchmarks-production-selection-guide-2026/" target="_blank" rel="noopener">出典</a>。<strong class="hit">分岐点は1,000万ベクトル付近にある</strong>。それ以下はPostgres上のpgvectorで足り、運用の複雑さを増やす理由がない。</p>
-<ul>
 <li>GEO 施策の実施前後で自社の被引用率がどれだけ動いたかを実データで測った公開研究が見つかっていない。Aggarwal らの結果は合成環境のベンチマークである。</li>
 <li>Weaviate の企業規模に関する記述は2023年時点の内容しか取れておらず、2026年8月時点の実態を反映していない可能性が高い。</li>
+<li>Muse Spark 1.3 の Meta 公式 evaluation report（DeepSWE / Terminal-Bench 等の生表）の PDF 直リンクは、ブログ本文からは辿れず未取得である。VentureBeat 経由の Meta 自己報告に依拠している。</li>
+<li>Artificial Analysis Intelligence Index の絶対スコアが、2026-09-03 報道の 61 と 2026-09-25 ページ表示の 45 で一致しない。Index 版の差分表（どの評価が入れ替わったか）の公式説明は未確認である。</li>
+<li>主要ラボの研究者数について、各社監査可能な公式開示は見つからなかった。本文の人数は LinkedIn 由来の推定のみである。</li>
+<li>公式 MCP Registry API の 2026-09-25 時点の latest レコード数は、本節執筆時に API を叩いていない。Anthropic / Claude の公表値で時系列を組み立てた。</li>
+<li>AMI Labs の現在の従業員数、学習中モデルの公開ベンチ、収益の有無は非開示である。</li>
 </ul>
-<h2 id="s10">出典</h2>
+<h2 id="s11">出典</h2>
 <ol>
 <li>Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?、NeurIPS 2025 — https://arxiv.org/abs/2504.13837</li>
 <li>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning、PDF全文 — https://www.thewirechina.com/wp-content/uploads/2025/01/DeepSeek-R1-Document.pdf</li>
@@ -521,6 +528,23 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <li>Cloudflare Blog, The crawl before the fall of referrals — https://blog.cloudflare.com/ai-search-crawl-refer-ratio-on-radar/</li>
 <li>TechCrunch, AI traffic to US retailers rose 393% in Q1 — https://techcrunch.com/2026/04/16/ai-traffic-to-us-retailers-rose-393-in-q1-and-its-boosting-their-revenue-too/</li>
 <li>Similarweb, AI Search Stats 2026 — https://www.similarweb.com/blog/marketing/geo/gen-ai-stats/</li>
+<li>Introducing Muse Spark 1.3、Meta AI Research — https://research.meta.ai/blog/introducing-muse-spark-1-3</li>
+<li>Meta says Muse Spark 1.3 has frontier performance、VentureBeat — https://venturebeat.com/technology/meta-says-muse-spark-1-3-has-frontier-performance-but-its-best-results-come-from-a-model-developers-cant-broadly-use-yet</li>
+<li>Muse Spark 1.3 (xhigh)、Artificial Analysis — https://artificialanalysis.ai/models/muse-spark-1-3-xhigh</li>
+<li>Introducing the AI Chip Users Explorer、Epoch AI — https://epoch.ai/latest/introducing-the-ai-chip-users-explorer</li>
+<li>How Much AI Compute Do Frontier Labs Use?、Epoch AI — https://epoch.ai/gradient-updates/frontier-labs-dont-use-most-ai-compute</li>
+<li>Inside AI Lab Hiring: What the Numbers Actually Show、PeopleInAI — https://www.linkedin.com/pulse/inside-ai-lab-hiring-what-numbers-actually-show-peopleinai-htdmc</li>
+<li>Frontier AI Lab Talent Landscape &amp; Flow Map、Metix AI — https://metix.ai/reports/mapping/frontier-ai-labs-talent-2026</li>
+<li>Yann LeCun、Auto-Regressive LLMs are exponentially diverging（LinkedIn） — https://www.linkedin.com/posts/yann-lecun_i-have-claimed-that-auto-regressive-llms-activity-7045908925660950528-hJGk/</li>
+<li>Beyond Exponential Decay: Rethinking Error Accumulation in Large Language Models — https://arxiv.org/pdf/2505.24187</li>
+<li>V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning — https://arxiv.org/abs/2506.09985</li>
+<li>Yann LeCun’s AMI Labs raises $1.03B to build world models、TechCrunch — https://techcrunch.com/2026/03/09/yann-lecuns-ami-labs-raises-1-03-billion-to-build-world-models/</li>
+<li>Yann LeCun、AMI Labs seed round 発表（LinkedIn） — https://www.linkedin.com/posts/yann-lecun_unveiling-our-new-startup-advanced-machine-activity-7437016101080883200-0Mr9</li>
+<li>Donating the Model Context Protocol and establishing the Agentic AI Foundation、Anthropic — https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation</li>
+<li>MCP joins the Agentic AI Foundation、Model Context Protocol Blog — https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/</li>
+<li>Bringing MCP 2026-07-28 to Claude、Anthropic — https://claude.com/blog/bringing-mcp-2026-07-28-to-claude</li>
+<li>Genie 3、Google DeepMind — https://deepmind.google/models/genie/</li>
+<li>Google Beam expands with new regions, partners, and customers — https://blog.google/innovation-and-ai/technology/research/google-beam-expansion/</li>
 </ol>
 
   <div class="tb-nav"><span></span><span></span></div>

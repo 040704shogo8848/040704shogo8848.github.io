@@ -2,6 +2,20 @@
 // 追加は bin/add-report.sh 経由。
 window.INDUSTRY = [
   {
+    "title": "エアバスとボーイングの寡占｜統合の経緯、参入障壁、COMAC の実績、受注残と生産レート",
+    "date": "2026-09-25",
+    "tags": [
+      "航空機",
+      "寡占",
+      "Airbus",
+      "Boeing",
+      "COMAC"
+    ],
+    "summary": "2025年末の商業機受注残はAirbus 8,754機、Boeing 6,100機超。同年交付は793機と600機で、単純換算すると各約10〜11年分のスロットが埋まっている。寡占は1997年のMcDonnell Douglas統合で固定され、参入は認証・サプライチェーン・受注残が同時に阻む。C919はCAAC証明済だがEASAは3〜6年、2025年交付は貿易報道で15機。出典15件。",
+    "source": "Desk research",
+    "file": "reports/airbus_boeing_duopoly_260925.html"
+  },
+  {
     "title": "球団オーナーシップの経済性｜MLB と NPB の損益構造、Mark Walter の回収経路、日本の球団売買",
     "date": "2026-09-25",
     "tags": [

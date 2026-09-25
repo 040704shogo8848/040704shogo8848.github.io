@@ -3,6 +3,27 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "四隅論",
+    "fullName": "2000〜2020年の四隅（メディア・EC・金融・通信）と、2025年以降に同じ位置を取る領域",
+    "ticker": null,
+    "market": null,
+    "country": "JP",
+    "status": "private",
+    "cohort": "other",
+    "tags": [
+      "産業構造",
+      "時価総額",
+      "プラットフォーム",
+      "AI",
+      "テーゼ"
+    ],
+    "date": "2026-09-25",
+    "summary": "2000〜2020年の四隅（メディア・EC・金融・通信）は米国では2010年代後半に時価総額で裏付けられるが、2000年時点のECと日本の再現は弱い。2025年以降の重心は計算・クラウド・決済レールへ移り、AIは四隅ではなく基盤レイヤーである。",
+    "file": "reports/four_corners_2025_thesis_research_260925.html",
+    "sourceCount": 18,
+    "variant": "thesis"
+  },
+  {
     "company": "VCパートナーの供給源",
     "fullName": "元投資先出身のVCパートナー：a16z と Sequoia の事例分析",
     "ticker": null,

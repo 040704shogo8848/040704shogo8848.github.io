@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MRAM・スピントロニクス・CIM｜商用化の現在地と、BEOL 熱制約が決める製造の限界</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em;line-height:1.35}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+  @media(max-width:760px){.kpi{grid-template-columns:repeat(2,1fr)}}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card)}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;line-height:1.6}
+  th{background:#F3F1EB;font-weight:700;white-space:nowrap}
+  td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  td.c{text-align:center;white-space:nowrap;font-weight:700}
+  caption{caption-side:bottom;font-size:11.5px;color:var(--muted);text-align:left;padding-top:6px}
+  td.neg{color:var(--bad)}
+  tr.em td{background:#FBFAF6;font-weight:700}
+
+  figure{margin:22px 0 8px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:18px 16px 10px}
+  figcaption{font-size:11.5px;color:var(--muted);padding-top:8px;line-height:1.7}
+  .legend{display:flex;gap:20px;font-size:12px;color:var(--sub);margin:4px 0 0 60px;flex-wrap:wrap}
+  .legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:5px}
+
+  ol.src{font-size:13px;color:var(--sub);padding-left:22px}
+  ol.src li{margin:6px 0}
+  ol.src a{color:var(--accent)}
+  footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:12px;color:var(--muted)}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<div class="crumb"><a href="../../../index.html">shogo</a> / <a href="../index.html">industry</a> / MRAM・スピントロニクス</div>
+
+<header class="top">
+  <h1>MRAM・スピントロニクス・CIM｜商用化の現在地と、BEOL 熱制約が決める製造の限界</h1>
+  <div class="en">MRAM, Spintronics &amp; CIM — Commercial Status and the BEOL Thermal Ceiling</div>
+  <div class="tags">
+    <span class="tag">半導体</span><span class="tag">MRAM</span><span class="tag">スピントロニクス</span>
+    <span class="tag">CIM</span><span class="tag">メモリ</span>
+  </div>
+  <p class="lead">
+    MRAMはすでに製品として出荷されている。ただし主戦場はDRAMやHBMではなく、
+    不揮発バッファ、組込みフラッシュの代替、宇宙・車載の高信頼メモリである。
+    製造側ではMTJがBEOLの約400°C熱予算に耐えるかが、スケールとCIMへの道を決める。
+  </p>
+  <p class="srcnote">各社IR・プレスリリース、IEDM/ISSCC周辺の公開資料、NASA/JPL、imec、東北大学公開資料をもとに作成（2026年9月25日時点）</p>
+</header>
+
+<div class="kpi">
+  <div class="card"><div class="k">STT-MRAMがSRAM LLCより省エネになる容量（読出し）</div><div class="v">0.4 MB超<small>5nmノード、imec IEDM 2018</small></div></div>
+  <div class="card"><div class="k">同・書込みで省エネになる容量</div><div class="v">5 MB超<small>同論文。セル面積はSRAMの43.3%</small></div></div>
+  <div class="card"><div class="k">BEOL互換の熱処理上限（業界の事実上の目標）</div><div class="v">400 °C<small>MTJスタックが保持すべき熱予算</small></div></div>
+  <div class="card"><div class="k">Aisin/東北大実証チップの起動エネルギー</div><div class="v">0.0942 J<small>従来4.7624 Jに対し50倍以上の効率（2025-07）</small></div></div>
+</div>
+
+<div class="callout">
+<strong>結論の骨格。</strong>
+商用MRAMは「万能メモリ」ではなく、用途を選んで入っている。ディスクリートはEverspinのSTT-MRAMがIBM FlashCore Module 4の永続バッファに入り、組込みはTSMC 22ULLやSamsung 28 nm FD-SOIのeMRAMがMCUとGPS SoCに載っている。東北大側の事業化主体はCIES発のパワースピンであり、Sony・SK hynixとの三者共同スタートアップは公開資料では確認できない。製造の硬制約は銅配線そのものより、MTJの400 °C耐性と後工程の積層順である。CIMはマクロ電力効率ではSRAMやGPUの演算器を上回る報告があるが、勝つ条件は容量・アクセスパターン・精度の三つに依存する。
+</div>
+
+<p>半導体の前工程と先端パッケージの律速は、<a href="../chapters/01_semiconductor-value-chain.html">半導体バリューチェーンの教科書章</a>と<a href="gddr_hbm_supply_chain_260730.html">GDDR/HBMサプライチェーン</a>で扱う。本レポートはそこには立ち入らず、不揮発メモリの一系統であるMRAMと、その上に載るCIMの条件だけを切る。</p>
+
+<h2><span class="num">01</span>結論<span class="en">Conclusion</span></h2>
+
+<p><strong class="hit">商用化は「部分代替」で止まっている。</strong>
+2026年9月時点で、スタンドアロンSTT-MRAMの量産品はEverspinのPERSYST系列が中心であり、1 Gb DDR4品がIBMのFlashCore Module 4に採用されている。<sup>1</sup>
+組込みMRAM（eMRAM）はTSMCの22ULLで量産が確認され、Samsungは28 nm FD-SOIで先行量産したうえで14 nmへの縮小を進めている。<sup>2</sup><sup>3</sup>
+いずれもDRAMやHBMのビット単価競争には入っていない。主用途は電源喪失時の永続バッファ、MCUのeFlash代替、車載・産業・宇宙の高信頼メモリである。</p>
+
+<p><strong class="hit">東北大の事業化軸はCIESとパワースピンであり、Sony・SK hynixの三者共同スタートアップは見つからない。</strong>
+公開されている東北大学発スタートアップはパワースピン株式会社（2018年起業、2019年正式発表）である。<sup>4</sup><sup>5</sup>
+2023年11月のSeries Cで25億円を調達し、累計調達は約35億5,500万円である。<sup>6</sup>
+実証チップではアイシン・NEC・NEDOとの共同が一次情報で確認できる。<sup>7</sup>
+SonyとSK hynixを共同創業先とするスタートアップのプレスリリースは、本調査では取得できなかった（詳細は第3章と残っている問い）。</p>
+
+<p><strong class="hit">製造限界は「銅が何度まで持つか」より「MTJが400 °CのBEOLに耐えるか」である。</strong>
+業界の事実上の目標は、後工程配線プロセスと両立する400 °C熱予算である。<sup>8</sup><sup>9</sup>
+ルテニウム（Ru）は、ピッチ20 nm未満での銅デュアルダマシンのRC限界を避ける配線材料としてimecが実証しており、動機は主に微細配線の抵抗である。<sup>10</sup>
+MTJ内部でもRuは合成反強磁性結合層として用いられるが、これは配線代替とは別の役割である。<sup>9</sup></p>
+
+<p><strong class="hit">CIM/PIMがSRAMキャッシュとGPU演算に勝つ条件は、容量とアクセスパターンで決まる。</strong>
+imecの5 nm比較では、読出しで0.4 MB超、書込みで5 MB超のときSTT-MRAMがSRAMよりエネルギー効率で上回り、セル面積はSRAMマクロの43.3%だった。<sup>11</sup>
+CIMマクロではISSCC 2023で22.4〜41.5 TOPS/Wが報告されているが、これは推論向けMACのマクロ指標であり、GPUの汎用訓練性能との直接比較ではない。<sup>12</sup></p>
+
+<h2><span class="num">02</span>MRAM の商用化度：誰がどの製品に使っているか<span class="en">Commercial Status</span></h2>
+
+<p>MRAMには大きく二つの製品形がある。一つはEverspinのようなディスクリート品。もう一つはファウンドリがCMOSロジックのBEOLに差し込むeMRAMである。前者は容量とインタフェースが製品そのものとして見える。後者は顧客SoCの中に埋もれる。</p>
+
+<div class="tbl-scroll"><table>
+  <thead>
+    <tr><th>供給側</th><th>技術・ノード</th><th>確認できる製品／顧客</th><th>主用途</th><th>時点</th></tr>
+  </thead>
+  <tbody>
+    <tr class="em">
+      <td>Everspin</td>
+      <td>STT-MRAM、1 Gb、DDR4互換</td>
+      <td>IBM FlashCore Module 4（PERSYST EMD4E001G）</td>
+      <td>電源喪失時の永続バッファ。帯域は読書きとも2.7 GB/s（公表）</td>
+      <td>2024-04<sup>1</sup></td>
+    </tr>
+    <tr>
+      <td>Everspin</td>
+      <td>xSPI STT-MRAM、64/128 Mb、AEC-Q100 Grade 1</td>
+      <td>EM064LX HR / EM128LX HR（−40〜+125 °C）</td>
+      <td>車載・航空宇宙・産業の高速不揮発メモリ</td>
+      <td>2025-03<sup>13</sup></td>
+    </tr>
+    <tr>
+      <td>TSMC</td>
+      <td>22ULL eSTT-MRAM</td>
+      <td>Ambiq Apollo4 Blue MCU（Fitbit Luxe等、TechInsights解析）</td>
+      <td>MCUのeFlash代替。セル面積0.046 µm²（解析値）</td>
+      <td>解析公開 2022前後<sup>2</sup></td>
+    </tr>
+    <tr>
+      <td>TSMC</td>
+      <td>16 nm FinFET eMRAM</td>
+      <td>東北大×アイシン実証チップ（内蔵32 MB）</td>
+      <td>エッジAIのBOOT兼メインメモリ</td>
+      <td>2025-07<sup>7</sup></td>
+    </tr>
+    <tr>
+      <td>Samsung Foundry</td>
+      <td>28 nm FD-SOI eMRAM（量産）、14 nm開発完了宣言</td>
+      <td>28 nmは2019年から量産。14 nmは2024年末量産準備を目標と公表</td>
+      <td>組込みNVM、車載向けを強調</td>
+      <td>2019〜2024<sup>3</sup></td>
+    </tr>
+    <tr>
+      <td>GlobalFoundries × Everspin</td>
+      <td>22FDX eMRAM、ディスクリートは40/28 nm</td>
+      <td>eMRAMは22FDXで量産開始を発表。JDAを12 nm FinFETまで延長</td>
+      <td>MCU・IoTのeFlash代替、車載温度での保持</td>
+      <td>2017〜2020<sup>14</sup></td>
+    </tr>
+    <tr>
+      <td>Avalanche Technology</td>
+      <td>22 nm bulk CMOS STT-MRAM（Space Grade）</td>
+      <td>Gen3 Dual QSPI、密度1〜8 Gb</td>
+      <td>宇宙向けFPGA/SoCのブート兼ワーキングメモリ</td>
+      <td>2023-01出荷開始<sup>15</sup></td>
+    </tr>
+  </tbody>
+  <caption>公開プレスと第三者解析で裏が取れたものに限定。市場シェアの信頼できる一次統計は本調査では取得できなかった（Yole等の有料レポートは未購入）。</caption>
+</table></div>
+
+<p>IBMへの採用は、ディスクリートSTT-MRAMがエンタープライズSSDの永続バッファとして使われていることを示す。競合はスーパーキャパシタ付きDRAMバッファなどであり、ビット単価でNANDと勝負してはいない。eMRAM側ではTechInsightsがApollo4からTSMC 22ULLのMTJを抜き、M3とM4のあいだへの埋込みを報告している。<sup>2</sup>
+Samsungは2019年に28 nm FD-SOIで量産を始め、2024年には14 nmで33%の面積縮小と読出しサイクル2.6倍を主張した。<sup>3</sup>
+14 nmの量産開始日は、独立した出荷統計では未確認である（ロードマップ発表はsingle-source）。</p>
+
+<div class="note">
+SonyのGPSレシーバIC「CXD5605」にMRAMが載っているとする説明は、東北大側の講演資料をEE Times Japanが引用した二次情報として存在する。<sup>16</sup>
+Sony自身の製品ページでの「MRAM搭載」明示と、ファウンドリ工程の一次開示は本調査では取得できなかった。表には入れず、残っている問いに残す。
+</div>
+
+<h2><span class="num">03</span>東北大 CSIS と Sony・SK hynix の体制<span class="en">Tohoku Ecosystem</span></h2>
+
+<p>東北大学のスピントロニクス拠点は、役割が二つに分かれている。基礎・材料寄りが先端スピントロニクス研究開発センター（CSIS、片平キャンパス）、デバイスから300 mm試作・産学共同までを担うのが国際集積エレクトロニクス研究開発センター（CIES、青葉山）である。<sup>17</sup><sup>18</sup></p>
+
+<div class="tbl-scroll"><table>
+  <thead>
+    <tr><th>組織</th><th>役割</th><th>確認できる外部との関係</th><th>確認できないこと</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CSIS</td>
+      <td>スピントロニクスの世界トップレベル研究拠点（文科省支援）</td>
+      <td>公開サイト上の研究拠点説明</td>
+      <td>企業会員の完全リスト</td>
+    </tr>
+    <tr class="em">
+      <td>CIES</td>
+      <td>300 mm試作、産学コンソーシアム、国家プロジェクト</td>
+      <td>NEDO AI半導体でアイシン・NECと実証チップ。JAXA宇宙探査イノベーションハブでISS実証を目標と明記</td>
+      <td>Sony／SK hynixの正式会員契約の有無</td>
+    </tr>
+    <tr>
+      <td>パワースピン</td>
+      <td>CIES技術の社会実装スタートアップ（2018年）</td>
+      <td>THVP等の出資、Series Cで累計約35.55億円。設計・試作・IPライセンス</td>
+      <td>Sony／SK hynixの出資・共同創業</td>
+    </tr>
+    <tr>
+      <td>アイシン＋NEC＋東北大</td>
+      <td>NEDO事業の実証チップ</td>
+      <td>TSMC 16 nm eMRAM、32 MB内蔵、エネルギー0.0942 J／起動65.7 ms</td>
+      <td>量産スケジュールと販売価格</td>
+    </tr>
+    <tr>
+      <td>PSMC×パワースピン（報道）</td>
+      <td>MRAM量産を目指す提携（日経→DIGITIMES）</td>
+      <td>2029年量産を目指すと報じられた</td>
+      <td>両社の共同プレス一次文面（有料／非公開）</td>
+    </tr>
+  </tbody>
+  <caption>「Sony・SK hynixとの共同スタートアップ」という三者体制は、公開一次情報では再構成できない。</caption>
+</table></div>
+
+<p>パワースピンの事業は回路設計・試作評価・コンサル・IPライセンスで、関連特許は350件超と自社が述べる。<sup>6</sup>
+量産ファブは持たず、CIESの300 mmラインと外部ファウンドリ前提の設計会社に近い。2025年7月の実証チップはCortex-A53デュアルコアとCIES製AIアクセラレータ、TSMC 16 nmのMRAM 32 MBを内蔵し、起動〜初回AI完了のエネルギーは4.7624 Jから0.0942 J、OS起動は2,535.3 msから65.7 msだった。<sup>7</sup>
+比較対象は外付けFLASH＋DRAM＋SRAMの構成であり、GPUとの比較ではない。</p>
+
+<div class="risk">
+<strong>Sony・SK hynixについて。</strong>
+imecのSTT-MRAM LLC研究の協力企業リストにはSony Semiconductor Solutionsが含まれる。<sup>11</sup>
+これはimecコアプログラム上の関係であり、東北大スタートアップの共同創業ではない。
+SK hynixについては、東北大CSIS／CIES／パワースピンとの共同スタートアップを示す一次プレスを本調査では見つけられなかった。
+日経報道のPSMC提携も、パワースピン側の英文一次リリースとしては未確認である。<sup>19</sup>
+</div>
+
+<h2><span class="num">04</span>製造制約：BEOL の熱処理温度、銅配線、ルテニウム代替<span class="en">BEOL Thermal Budget</span></h2>
+
+<p>MRAMの記憶素子は磁気トンネル接合（MTJ）である。CoFeB／MgO／CoFeB系の極薄多層膜を、CMOSのトランジスタ工程（FEOL）が終わったあとの配線層のあいだに差し込む。差し込む高さはノードと設計で違うが、TechInsightsの22ULL例ではM3とM4のあいだだった。<sup>2</sup>
+この位置関係が、熱制約の本質を決める。</p>
+
+<figure>
+<svg viewBox="0 0 860 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BEOLに埋め込まれたMTJと熱予算の模式図">
+  <rect width="860" height="420" fill="#fff"/>
+  <text x="30" y="36" font-size="15" font-weight="700" fill="#1a1a1a">BEOL埋め込みMTJと熱予算（模式）</text>
+  <text x="30" y="58" font-size="12" fill="#555">FEOL完了後に配線層のあいだへMTJを差し込む。以降の工程は約400 °Cを超えない設計が求められる。</text>
+
+  <rect x="40" y="90" width="360" height="48" fill="#3F5670"/>
+  <text x="220" y="120" font-size="13" text-anchor="middle" fill="#fff">上位メタル配線（Cu または Ru）</text>
+
+  <rect x="40" y="148" width="360" height="36" fill="#EEF2FF" stroke="#2563EB"/>
+  <text x="220" y="171" font-size="13" text-anchor="middle" fill="#2563EB" font-weight="700">MTJ（CoFeB / MgO / CoFeB）</text>
+
+  <rect x="40" y="194" width="360" height="48" fill="#5A7A9A"/>
+  <text x="220" y="224" font-size="13" text-anchor="middle" fill="#fff">下位メタル配線（Cu）</text>
+
+  <rect x="40" y="252" width="360" height="56" fill="#1a1a1a"/>
+  <text x="220" y="286" font-size="13" text-anchor="middle" fill="#fff">FEOL（トランジスタ）</text>
+
+  <line x1="430" y1="166" x2="520" y2="166" stroke="#2563EB" stroke-width="1.5"/>
+  <rect x="520" y="100" width="300" height="200" fill="#F7F6F2" stroke="#E5E2DA"/>
+  <text x="540" y="128" font-size="13" font-weight="700" fill="#1a1a1a">熱の制約</text>
+  <text x="540" y="158" font-size="12.5" fill="#555">目標: MTJが 400 °C の</text>
+  <text x="540" y="178" font-size="12.5" fill="#555">BEOLアニールに耐える</text>
+  <text x="540" y="210" font-size="12.5" fill="#555">超過すると拡散・短絡・</text>
+  <text x="540" y="230" font-size="12.5" fill="#555">PMA劣化のリスク</text>
+  <text x="540" y="262" font-size="12.5" fill="#555">実装リフローは別途</text>
+  <text x="540" y="282" font-size="12.5" fill="#555">約 260 °C（はんだ）</text>
+
+  <text x="40" y="350" font-size="12.5" fill="#555">Ru配線代替の動機は主にピッチ20 nm未満のRC。MTJの熱耐性とは別レイヤの議論である。</text>
+  <text x="40" y="372" font-size="12.5" fill="#555">ただしSOT-MRAMのSAFフリー層ではRuが磁気結合にも使われ、400 °C耐性が報告されている。</text>
+  <text x="40" y="400" font-size="12" fill="#8a8a8a">層順は単純化。実際のマスク数・ビア・ハードマスクはノード依存。</text>
+</svg>
+<figcaption>MTJはFEOLのあとに来る。だから「銅が溶けるか」より「その後の配線工程の熱でMTJが壊れるか」が製造限界になる。</figcaption>
+</figure>
+
+<div class="tbl-scroll"><table>
+  <thead>
+    <tr><th>制約</th><th>数値</th><th>意味</th><th>出典の性格</th></tr>
+  </thead>
+  <tbody>
+    <tr class="em">
+      <td>BEOL互換のMTJ熱予算</td>
+      <td>400 °C</td>
+      <td>STT/SOT-MRAMが後工程と両立するための業界標準目標</td>
+      <td>imec、学術レビューで一致<sup>8</sup><sup>9</sup></td>
+    </tr>
+    <tr>
+      <td>CoFeB系の損傷閾値（特許記載）</td>
+      <td>400 °C超で劣化しやすい</td>
+      <td>トンネル障壁をまたぐ金属拡散・短絡を避ける</td>
+      <td>IBM系MRAM配線特許<sup>20</sup></td>
+    </tr>
+    <tr>
+      <td>はんだリフロー耐性（eMRAM）</td>
+      <td>260 °C</td>
+      <td>実装工程でデータ保持が求められる</td>
+      <td>GlobalFoundries 22FDX発表<sup>14</sup></td>
+    </tr>
+    <tr>
+      <td>Cu配線の後アニールとEM</td>
+      <td>350 °Cで寿命低下の報告</td>
+      <td>多層Cuの累積熱予算が下層EMを劣化させうる</td>
+      <td>JJAP 2009（NEC時代の実験）<sup>21</sup></td>
+    </tr>
+    <tr>
+      <td>Ru配線の実証ピッチ</td>
+      <td>16 nmピッチ、平均656 Ω/µm</td>
+      <td>Cuデュアルダマシンが厳しくなる領域の代替</td>
+      <td>imec IITC 2025<sup>10</sup></td>
+    </tr>
+  </tbody>
+  <caption>「銅配線が耐えられる最高温度」という単一の物理定数はない。あるのはプロセス熱予算と信頼性トレードオフである。</caption>
+</table></div>
+
+<p>銅の融点は1,084 °Cであり、「400 °Cで銅が溶ける」わけではない。制約は、(1) low-kとバリア界面の信頼性、(2) 多層工程の累積熱による下層EM寿命の低下、<sup>21</sup>(3) 形成済みMTJが同じ熱履歴にさらされること、の三つである。MRAM固有の硬さは第3にある。</p>
+
+<p>Ru代替は文脈を分ける。配線では、imecがピッチ20 nm未満のCu RC限界への対策としてセミダマシンRuを推し、16 nmピッチで平均656 Ω/µm、18〜22 nmで歩留まり90%超を報告した。<sup>10</sup>
+これは先端ロジックのローカル配線ロードマップであり、MRAM専用の救済策ではない。MTJでは、SOT-MRAMの合成反強磁性フリー層がRuで結合し、400 °C耐性を保つとimecが報告している。<sup>9</sup>
+同じ元素でも、配線代替と磁気スタック副材では意味が違う。</p>
+
+<h2><span class="num">05</span>CIM/PIM が SRAM キャッシュと GPU に勝つ条件<span class="en">When CIM Beats SRAM/GPU</span></h2>
+
+<p>Compute-in-Memory（CIM）／Processing-in-Memory（PIM）は、データを演算器まで運ぶ距離を短くして、移動エネルギーの支配を崩す発想である。MRAMはその不揮発性と密度から、重みを置いたままMACするマクロの候補になる。ただし「常に勝つ」わけではない。</p>
+
+<div class="tbl-scroll"><table>
+  <thead>
+    <tr><th>比較軸</th><th>SRAMキャッシュ側が有利な条件</th><th>MRAM／CIM側が有利な条件</th><th>根拠</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>容量</td>
+      <td>小容量（L1級、頻繁な書込み）</td>
+      <td>読出し0.4 MB超、書込み5 MB超（5 nm LLC比較）</td>
+      <td>imec IEDM 2018<sup>11</sup></td>
+    </tr>
+    <tr>
+      <td>面積</td>
+      <td>周辺回路込みで差が小さい設計</td>
+      <td>セル面積43.3%（同比較のSTTセル）</td>
+      <td>同<sup>11</sup></td>
+    </tr>
+    <tr>
+      <td>アクセス</td>
+      <td>書込み比率が高い、ランダム更新</td>
+      <td>読出し優位、WORM、重み固定の推論</td>
+      <td>STT書込みエネルギーが相対的に高いため</td>
+    </tr>
+    <tr>
+      <td>クロック</td>
+      <td>GHz級L1</td>
+      <td>約100 MHz級のLLCでも要件を満たすとの評価</td>
+      <td>imec<sup>11</sup></td>
+    </tr>
+    <tr>
+      <td>演算効率（マクロ）</td>
+      <td>高精度訓練、汎用GPUカーネル</td>
+      <td>低〜中精度推論MAC。報告例22.4〜41.5 TOPS/W</td>
+      <td>ISSCC 2023<sup>12</sup></td>
+    </tr>
+    <tr>
+      <td>待機電力</td>
+      <td>常時通電で更新頻度が高い</td>
+      <td>電源断を挟むエッジ、暗電流ゼロが欲しい車載</td>
+      <td>Aisin実証の暗電流議論<sup>7</sup></td>
+    </tr>
+  </tbody>
+  <caption>「TOPS/W」はマクロ精度と入出力ビット幅に依存する。GPUのボード級効率と並べるときは単位の定義を揃える必要がある。</caption>
+</table></div>
+
+<p>STT-MRAMは小容量SRAMの置き換えではなく、最後段キャッシュ級でエネルギーが逆転する。<sup>11</sup>
+書込み閾値が読出しより高い（5 MB）のは、STT書込み電流がMgOを貫くためである。SOTは読書き経路を分離し、imecは単素子で100 fJ/bit未満・耐性10<sup>15</sup>超を報告する。<sup>9</sup>
+キャッシュ置換の本命はSOT側に移りつつあるが、2026年の商用品の大半はまだSTT／Toggle系である。</p>
+
+<p>CIMマクロは条件付きで読む。ISSCC 2023の28 nm 2 Mb品は22.4〜41.5 TOPS/W、<sup>12</sup>foundry MRAMの22 nm FD-SOI 256 kbマクロは1b換算68.6 TOPS/Wである。<sup>22</sup>
+いずれもアレイ内MAC効率であり、ホストとの授受や学習時の重み更新を含まない。GPUに速度で勝つのは、モデルがオンチップ重みに収まり、データ移動が支配的で、精度がマクロのビット幅に収まるときに限る。</p>
+
+<div class="callout">
+<strong>勝ち条件の要約。</strong>
+(1) 容量がLLC級まで大きい、(2) 読出しまたは固定重み推論が主、(3) 待機電力と起動エネルギーがシステム制約、(4) 精度が低ビットMACで足りる。
+この四つが同時に揃うとき、MRAM-CIMはSRAMキャッシュと外付けGPUのあいだに割り込める。一つでも欠けると、既存階層に負ける。
+</div>
+
+<h2><span class="num">06</span>放射線耐性と宇宙用途の実績<span class="en">Radiation &amp; Space</span></h2>
+
+<p>MRAMの記憶自体は磁化方向であり、電荷蓄積型メモリのようなシングルイベントアップセット（SEU）に対して本質的に強い、というのが技術側の説明である。ただし製品の放射線耐性は、MTJではなく周辺CMOSのラッチアップ耐性で決まることが多い。</p>
+
+<div class="tbl-scroll"><table>
+  <thead>
+    <tr><th>事例</th><th>デバイス</th><th>結果</th><th>時点</th></tr>
+  </thead>
+  <tbody>
+    <tr class="em">
+      <td>SpriteSat（東北大衛星）のTAMU磁力計</td>
+      <td>Freescale 4 Mb MRAM</td>
+      <td>宇宙機への初期搭載例として報告。JPL整理ではビットエラー167件の記載あり</td>
+      <td>打上げ 2009-01<sup>23</sup><sup>24</sup></td>
+    </tr>
+    <tr>
+      <td>JPL/NEPP重イオン試験</td>
+      <td>Freescale MR2A16A</td>
+      <td>SEL閾値が室温で約10 MeV·cm²/mgと低く、緩和なしの採用は注意が必要</td>
+      <td>試験報告 2008前後<sup>25</sup></td>
+    </tr>
+    <tr>
+      <td>JPL技術ステータス</td>
+      <td>Everspin系Toggle MRAM</td>
+      <td>商用・車載・アビオニクスへの採用例を整理。宇宙向けはHoneywell/Aeroflexのrad-hard CMOS載荷が進行中と記載</td>
+      <td>JPL Pub 13-3（2013）<sup>24</sup></td>
+    </tr>
+    <tr>
+      <td>Avalanche Gen3 Space</td>
+      <td>1〜8 Gb Dual QSPI STT-MRAM</td>
+      <td>自社資料でTID &gt;300 krad、SEE約75 MeV·cm²/mg。2023年から出荷</td>
+      <td>2023〜2025<sup>15</sup><sup>26</sup></td>
+    </tr>
+    <tr>
+      <td>CIES / JAXA</td>
+      <td>（デバイス型番は未詳）</td>
+      <td>ISSでの待機電力不要システムと放射線耐性の実証を「目指す」とCIESが記載。完了報告は未確認</td>
+      <td>CIES概要 as of 2026-03<sup>18</sup></td>
+    </tr>
+  </tbody>
+  <caption>飛行実績は「載った」ことと「無故障でミッション成功」を分けて読む必要がある。</caption>
+</table></div>
+
+<p>初期のFreescale商用品は、MTJより周辺CMOSのSELが弱点だった。<sup>25</sup>
+宇宙用途では、Everspin素子をrad-hard CMOSに載せる経路と、Avalancheのように自社で高密度Space Gradeを出す経路が並存する。<sup>24</sup><sup>15</sup>
+AvalancheのTID/SEE数値はベンダー資料が主で、NASA正式認定リストとの突合は未完了である（single-source寄り）。パワースピンとCIESは宇宙応用を目標に掲げるが、<sup>6</sup><sup>18</sup>特定ミッションのテレメトリ成功を示す一次報告は本調査では未確認である。</p>
+
+<h2><span class="num">07</span>残っている問い<span class="en">Open Questions</span></h2>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>#</th><th>問い</th><th>取れなかった理由</th></tr></thead>
+  <tbody>
+    <tr><td class="c">1</td><td>東北大・Sony・SK hynixの三者共同スタートアップは存在するのか。出資比率と契約形態は何か</td><td>公開プレスで該当法人を特定できず。CIES会員リストも非公開</td></tr>
+    <tr><td class="c">2</td><td>世界のディスクリート／eMRAM出荷ビット数と売上</td><td>Yole・TechInsights等の有料レポート未購入。各社はセグメント売上を非開示</td></tr>
+    <tr><td class="c">3</td><td>Samsung 14 nm eMRAMの量産開始日と初期顧客</td><td>ロードマップ発表は確認。出荷統計の一次情報なし</td></tr>
+    <tr><td class="c">4</td><td>Sony CXD5605のMRAM搭載とファウンドリ工程の一次開示</td><td>二次引用のみ。Sony製品ページでの明示なし</td></tr>
+    <tr><td class="c">5</td><td>PSMC×パワースピン提携の正式契約内容と2029年量産の進捗</td><td>日経は有料、共同一次リリース未確認</td></tr>
+    <tr><td class="c">6</td><td>CIES/JAXAのISS実証のフライトスケジュールと使用デバイス型番</td><td>目標表明のみ。完了報告なし</td></tr>
+    <tr><td class="c">7</td><td>MRAM-CIMマクロのTOPS/Wを、同一精度・同一モデルでGPUボード効率と比較した第三者ベンチマーク</td><td>論文はマクロ単体。システム級の中立比較は不足</td></tr>
+  </tbody>
+</table></div>
+
+<h2><span class="num">08</span>出典<span class="en">Sources</span></h2>
+
+<ol class="src">
+  <li><a href="https://investor.everspin.com/news-releases/news-release-details/next-generation-ibm-flashcore-modules-feature-everspins-persyst">Everspin, “Next-Generation IBM FlashCore Modules Feature Everspin's PERSYST 1 Gigabit STT-MRAM,” 2024-04-30</a></li>
+  <li><a href="https://www.techinsights.com/blog/memory/disruptive-technology-tsmc-22ull-emram">TechInsights, “Disruptive Technology: TSMC 22ULL eMRAM”</a></li>
+  <li><a href="https://www.mram-info.com/samsung-track-start-14-nm-emram-production-end-2024-8-nm-2026-and-5-nm-2027">MRAM-Info, “Samsung on track to start 14 nm eMRAM production by the end of 2024…,” 2024-06-01（Samsung Foundry Forum系発表の整理）</a></li>
+  <li><a href="https://www.tohoku.ac.jp/japanese/2019/07/press-20190624-powerspin.html">東北大学, 「東北大学発ベンチャー『パワースピン株式会社』設立」, 2019-07-01</a></li>
+  <li><a href="https://powerspin.co.jp/company/">パワースピン株式会社, 会社概要</a></li>
+  <li><a href="https://powerspin.co.jp/news_en/20231110/">パワースピン, Series C 25億円調達（累計約35億5,500万円）, 2023-11-10</a></li>
+  <li><a href="https://www.aisin.com/jp/news/uploads/20250707.pdf">NEDO・東北大学・アイシン, 「CMOS／スピントロニクス融合AI半導体」実証チップ, 2025-07-07</a></li>
+  <li><a href="https://doi.org/10.1038/s44306-024-00044-1">Nguyen et al., “Recent progress in spin-orbit torque magnetic random-access memory,” npj Spintronics, 2024（BEOL 400 °C）</a></li>
+  <li><a href="https://www.imec-int.com/en/articles/bringing-sot-mram-technology-closer-last-level-cache-memory-specifications">imec, “Bringing SOT-MRAM technology closer to last-level cache memory specifications,” 2024-12-16</a></li>
+  <li><a href="https://www.imec-int.com/en/press/imec-demonstrates-16nm-pitch-ru-lines-record-low-resistance-obtained-using-semi-damascene">imec, “16nm pitch Ru lines…,” IITC 2025, 2025-06-03</a></li>
+  <li><a href="https://www.imec-int.com/en/articles/imec-demonstrates-the-feasibility-of-introducing-sst-mram-as-a-last-level-cache">imec, “SST-MRAM as a last-level cache at the 5nm node,” IEDM 2018, 2018-12-03</a></li>
+  <li><a href="https://doi.org/10.1109/isscc42615.2023.10067339">Cai et al., “A 28nm 2Mb STT-MRAM Computing-in-Memory Macro… 22.4–41.5 TOPS/W,” ISSCC 2023</a></li>
+  <li><a href="https://www.everspin.com/news/everspin-expands-high-reliability-mram-portfolio-new-automotive-grade-offerings">Everspin, “Automotive-Grade EM064LX / EM128LX HR,” 2025-03-10</a></li>
+  <li><a href="https://www.design-reuse.com/news/8025-everspin-technologies-and-globalfoundries-extend-mram-joint-development-agreement-to-12nm/">Design &amp; Reuse / Everspin–GLOBALFOUNDRIES JDA to 12nm, 2020-03-12（22FDX eMRAM量産にも言及）</a></li>
+  <li><a href="https://www.avalanche-technology.com/avalanche-technology-shipping-high-density-bootable-mram-solutions-for-fpgas-in-space/">Avalanche Technology, “Shipping High Density Bootable MRAM Solutions for FPGAs in Space,” 2023-01-09</a></li>
+  <li><a href="https://eetimes.itmedia.co.jp/ee/articles/2312/25/news011_2.html">EE Times Japan, 東北大スピントロニクス取材（CXD5605等の二次引用）, 2023-12</a></li>
+  <li><a href="https://www.csis-crc.tohoku.ac.jp/">東北大学 先端スピントロニクス研究開発センター（CSIS）</a></li>
+  <li><a href="http://www.cies.tohoku.ac.jp/overview/">東北大学 国際集積エレクトロニクス研究開発センター（CIES）センター概要</a></li>
+  <li><a href="https://www.digitimes.com/news/a20240205PD216/psmc-mram-production-japan.html">DIGITIMES, “PSMC reportedly to produce MRAM in Japan,” 2024-02-06（日経報道の英訳整理）</a></li>
+  <li><a href="https://patents.google.com/patent/US11309216B2">US Patent 11,309,216, “Large grain copper interconnect lines for MRAM”（400 °C超でのMTJ劣化の記載）</a></li>
+  <li><a href="https://iopscience.iop.org/article/10.1143/JJAP.48.046507">Kakuhara &amp; Ueno, “Degradation of Electromigration Lifetime of Cu/Low-k Interconnects by Postannealing,” JJAP 48, 2009</a></li>
+  <li><a href="https://doi.org/10.1109/jssc.2024.3386462">“Fully Row/Column-Parallel In-Memory Computing Macro in Foundry MRAM…,” IEEE JSSC, 2024</a></li>
+  <li><a href="https://www.scientificamerican.com/article/japanese-satellite-mram-freescale/">Scientific American, “Japanese Satellite First to Use Magnetic Memory”（SpriteSat / Freescale 4 Mb）</a></li>
+  <li><a href="https://ntrs.nasa.gov/api/citations/20140000668/downloads/20140000668.pdf">JPL Publication 13-3, “MRAM Technology Status,” NASA NTRS</a></li>
+  <li><a href="https://nepp.nasa.gov/files/16431/08_173_1_JPL_%20Elghefari.pdf">NASA NEPP / JPL, “Radiation Effects Assessment of MRAM Devices”（MR2A16A SEL）</a></li>
+  <li><a href="https://www.avalanche-technology.com/wp-content/uploads/Space-Computing-Conference-2025-Web.pdf">Avalanche Technology, Space Computing Conference 2025資料（TID/SEE数値）</a></li>
+</ol>
+
+<footer>MRAM・スピントロニクス・CIM ／ 2026年9月25日作成。数値は各出典の公表時点のもので、推定・single-source・報道整理にはその旨を本文で明示した。</footer>
+
+</div>
+
+<script type="application/json" id="facts">
+[
+  {"claim":"IBM FCM4にEverspin 1Gb STT-MRAM採用","value":"EMD4E001G","unit":"—","as_of":"2024-04-30","source":"https://investor.everspin.com/news-releases/news-release-details/next-generation-ibm-flashcore-modules-feature-everspins-persyst","confidence":"reported"},
+  {"claim":"Everspin 1Gb STT-MRAMの読書き帯域","value":2.7,"unit":"GB/s","as_of":"2024-04-30","source":"https://investor.everspin.com/news-releases/news-release-details/next-generation-ibm-flashcore-modules-feature-everspins-persyst","confidence":"single-source"},
+  {"claim":"TSMC 22ULL eMRAMセル面積（TechInsights）","value":0.046,"unit":"µm²","as_of":"TechInsights analysis","source":"https://www.techinsights.com/blog/memory/disruptive-technology-tsmc-22ull-emram","confidence":"single-source"},
+  {"claim":"STT-MRAMがSRAMより読出し省エネになる容量","value":0.4,"unit":"MB","as_of":"2018-12 IEDM 5nm study","source":"https://www.imec-int.com/en/articles/imec-demonstrates-the-feasibility-of-introducing-sst-mram-as-a-last-level-cache","confidence":"reported"},
+  {"claim":"STT-MRAMがSRAMより書込み省エネになる容量","value":5,"unit":"MB","as_of":"2018-12 IEDM 5nm study","source":"https://www.imec-int.com/en/articles/imec-demonstrates-the-feasibility-of-introducing-sst-mram-as-a-last-level-cache","confidence":"reported"},
+  {"claim":"STT-MRAMセル面積のSRAM比","value":43.3,"unit":"%","as_of":"2018-12","source":"https://www.imec-int.com/en/articles/imec-demonstrates-the-feasibility-of-introducing-sst-mram-as-a-last-level-cache","confidence":"reported"},
+  {"claim":"BEOL互換MTJ熱予算目標","value":400,"unit":"°C","as_of":"2024","source":"https://doi.org/10.1038/s44306-024-00044-1","confidence":"reported"},
+  {"claim":"imec Ru配線16nmピッチ平均抵抗","value":656,"unit":"Ω/µm","as_of":"2025-06-03","source":"https://www.imec-int.com/en/press/imec-demonstrates-16nm-pitch-ru-lines-record-low-resistance-obtained-using-semi-damascene","confidence":"reported"},
+  {"claim":"パワースピンSeries C調達額","value":2.5,"unit":"B JPY","as_of":"2023-11-10","source":"https://powerspin.co.jp/news_en/20231110/","confidence":"reported"},
+  {"claim":"パワースピン累計調達","value":3.555,"unit":"B JPY","as_of":"2023-11-10","source":"https://powerspin.co.jp/news_en/20231110/","confidence":"single-source"},
+  {"claim":"Aisin実証 起動〜初回AI完了エネルギー（開発技術）","value":0.0942,"unit":"J","as_of":"2025-07-07","source":"https://www.aisin.com/jp/news/uploads/20250707.pdf","confidence":"reported"},
+  {"claim":"Aisin実証 同エネルギー（従来技術）","value":4.7624,"unit":"J","as_of":"2025-07-07","source":"https://www.aisin.com/jp/news/uploads/20250707.pdf","confidence":"reported"},
+  {"claim":"Aisin実証 OS起動時間（開発技術）","value":65.7,"unit":"ms","as_of":"2025-07-07","source":"https://www.aisin.com/jp/news/uploads/20250707.pdf","confidence":"reported"},
+  {"claim":"Aisin実証チップ内蔵MRAM容量","value":32,"unit":"MB","as_of":"2025-07-07","source":"https://www.aisin.com/jp/news/uploads/20250707.pdf","confidence":"reported"},
+  {"claim":"ISSCC 2023 MRAM-CIMエネルギー効率","value":"22.4–41.5","unit":"TOPS/W","as_of":"2023","source":"https://doi.org/10.1109/isscc42615.2023.10067339","confidence":"reported"},
+  {"claim":"SOT-MRAM書込みエネルギー（imec単素子）","value":100,"unit":"fJ/bit未満","as_of":"IEDM 2023","source":"https://www.imec-int.com/en/articles/bringing-sot-mram-technology-closer-last-level-cache-memory-specifications","confidence":"reported"},
+  {"claim":"Freescale MR2A16A SEL閾値（室温）","value":10,"unit":"MeV·cm²/mg","as_of":"NEPP test","source":"https://nepp.nasa.gov/files/16431/08_173_1_JPL_%20Elghefari.pdf","confidence":"reported"},
+  {"claim":"Avalanche Space Grade TID耐性（自社資料）","value":300,"unit":"krad超","as_of":"2025 brochure","source":"https://www.avalanche-technology.com/wp-content/uploads/Space-Computing-Conference-2025-Web.pdf","confidence":"single-source"},
+  {"claim":"eMRAMはんだリフロー耐性（GF発表）","value":260,"unit":"°C","as_of":"2017-09 / cited 2020 JDA","source":"https://www.design-reuse.com/news/8025-everspin-technologies-and-globalfoundries-extend-mram-joint-development-agreement-to-12nm/","confidence":"reported"}
+]
+</script>
+</body>
+</html>

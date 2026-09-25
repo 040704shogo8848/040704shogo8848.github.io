@@ -2,6 +2,20 @@
 // 追加は bin/add-report.sh 経由。
 window.INDUSTRY = [
   {
+    "title": "MRAM・スピントロニクス・CIM｜商用化の現在地と、BEOL 熱制約が決める製造の限界",
+    "date": "2026-09-25",
+    "tags": [
+      "半導体",
+      "MRAM",
+      "スピントロニクス",
+      "CIM",
+      "メモリ"
+    ],
+    "summary": "MRAMはディスクリート（Everspin 1GbがIBM FlashCore Module 4）とeMRAM（TSMC 22ULL、Samsung 28nm）で製品化済み。主用途は永続バッファと組込みNVM代替。製造の硬制約はMTJのBEOL 400°C耐性で、Ru配線代替は主に微細RC対策。CIMは読出し0.4MB超・書込み5MB超でSRAM LLCより省エネ（imec 5nm）。東北大の事業化軸はパワースピンで、Sony・SK hynix三者共同スタートアップは公開資料で未確認。出典26件",
+    "source": "Desk research",
+    "file": "reports/mram_spintronics_cim_260925.html"
+  },
+  {
     "title": "小惑星採掘の経済性｜AstroForge の自律ミッションと、金・PGM が鉄並みになる条件",
     "date": "2026-09-25",
     "tags": [

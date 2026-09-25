@@ -3,6 +3,27 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "日機装",
+    "fullName": "日機装株式会社",
+    "ticker": "6376",
+    "market": "TSE",
+    "country": "JP",
+    "status": "listed",
+    "cohort": "jp-listed",
+    "tags": [
+      "産業機械",
+      "LNG",
+      "極低温ポンプ",
+      "医療機器",
+      "MLCC"
+    ],
+    "date": "2026-09-25",
+    "summary": "2025年12月期売上2,156億円。工業63.5%・医療36.5%。クライオジェニックポンプ世界シェアは会社開示で約50%だがLNG単独は非開示。温水ラミネーターは国内シェア約9割超（単一ソース）。",
+    "file": "reports/nikkiso_research_260925.html",
+    "sourceCount": 11,
+    "variant": "listed"
+  },
+  {
     "company": "学生起業マーケット",
     "fullName": "学生起業の5分類と exit 実績、2周目起業家を出す会社の共通点",
     "ticker": null,

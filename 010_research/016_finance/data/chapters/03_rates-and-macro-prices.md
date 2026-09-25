@@ -139,7 +139,7 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 
 中央銀行の金購入をドル離脱の指標として読む見方も、数字と合わない。2025年の中銀ネット購入は863.3トンで、2024年の1,092.4トンから21%減った。2025年の買い手上位はポーランド102トン、カザフスタン57トン、ブラジル43トン、アゼルバイジャン38トン、トルコ27トン、中国27トン、チェコ20トンである。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025/central-banks)。首位のポーランドと7位のチェコはEUかつNATOの加盟国である。数量を最も増やした買い手はETFの801トンと地金コインの1,374トンであり、中銀ではない。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025)。
 
-外貨準備に占めるドル比率も下がっていない。IMF COFER ベースの米ドル比率は2026年Q1に57.13%となり、2025年Q4の56.42%から上昇したと報じられている。[出典](https://www.bestbrokers.com/forex-trading/us-dollar-share-of-global-currency-reserves/)。ただしこの数値はIMF本体のページを取得できず二次媒体経由での確認にとどまるため、断定には使わない。
+外貨準備に占めるドル比率も急落していない。IMF COFER の米ドル比率は、旧手法の割当準備ベースで2024年Q4に57.80%、新手法で2025年Q4に56.77%である。[出典](https://data.imf.org/en/news/4225global)、[出典](https://data.imf.org/en/news/imf%20data%20brief%20march%2027)。中銀の金購入が続く局面でも、ドル準備のシェアは6割弱で推移している。
 
 銀は需要側の技術変化が価格の外側で進んでいる例である。太陽光発電向けの銀需要は2024年の197.5百万オンスから2025年に186.6百万オンスへ6%減り、2026年は151百万オンスへ19%減る見通しである。減少の理由は設置量の減少ではない。世界の太陽電池生産は増え続けており、それを上回る速度でセル1枚あたりの銀量が削られた。[出典](https://www.mercomindia.com/silver-demand-forecast-to-drop-19-in-2026-on-lower-solar-cell-loadings)、[出典](https://www.pv-magazine.com/2026/04/15/silver-demand-from-pv-industry-expected-to-drop-19-this-year/)。減量の動機は価格にある。銀ペーストは太陽電池の製造コストの10%から20%を占める。銀価格は2026年1月に初めて1オンス100ドルを超えた。それでも銀の需給は緩んでいない。2026年の市場収支は67百万オンスの不足で、6年連続の不足となる見通しである。現物投資需要が2026年に227百万オンスへ20%増えるためである。[出典](https://silverinstitute.org/global-silver-investment-to-remain-strong-in-2026-against-the-backdrop-of-a-sixth-consecutive-annual-market-deficit/)。
 
@@ -173,6 +173,74 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 
 なお、路線価と実勢価格の乖離率を地域別に集計した公的統計は、素材ノートの調査では存在を確認できていない。上記の2成分分解は制度の設計から導いた枠組みであり、乖離率の実測ではない。
 
+## 金価格の要因分解：2024〜2025年の上昇を4つに分ける
+
+前節では、2025年の金リターン67%のうちWGC回帰が説明できたのは約60%にとどまり、中銀購入もドル離脱指標としては数字と合わないことを確認した。本節では同じ上昇を中銀購入・実質金利・ETFフロー・地政学の4枠に分け、一次データで水準を並べ、価格寄与は推定であることを明示する。基準日は2026年9月25日。売買の示唆は置かない。
+
+結論から述べる。==2024〜2025年の金価格上昇は、4枠のうち地政学と投資フロー（ETF）が価格モデル上で読み取れ、中銀購入は数量として大きいが価格寄与の分離ができず、実質金利は2024年に逆風・2025年に小幅な追い風にとどまる==。2年合計のドル建て終値リターンはおおよそ110%である。2024年がプラス25.5%、2025年がプラス67.4%で、積上げは1.255×1.674−1＝約110%（素材ノートの計算、非公表）。[出典](https://www.gold.org/goldhub/gold-focus/2025/01/golds-2024-performance-best-14-years)、[出典](https://www.gold.org/goldhub/research/gold-market-commentary-december-2025)。年平均のLBMA Gold Priceは2024年2,386.2ドル／オンス、2025年3,431.5ドル／オンスで、年平均ベースの前年比はプラス44%である。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025)。終値リターンと年平均変化率は対象が違う。
+
+### 要因分解の枠と方法の限界
+
+4枠は需要の観測軸であり、価格リターンの会計分解ではない。WGCのGold Return Attribution Model（GRAM）は月次リターンを経済拡大、リスクと不確実性、機会費用、モメンタムに回帰し、中銀購入はデータ制約からモデル外の「その他」に入る。[出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。したがって本節では、(1) 各枠の一次データの水準、(2) GRAMが枠に近い変数へ割り当てた寄与（推定）、(3) 割り当て不能な残差、の3層を分ける。寄与の百分率ポイントは、通年リターンへの加算分として読む。要因間の共線性と残差のため、4枠の和は通年リターンに一致しない。
+
+| 枠 | 観測する一次データ | 価格寄与の読み方 | 限界 |
+| --- | --- | --- | --- |
+| 中銀購入 | WGC Gold Demand Trends の中銀ネット購入（トン） | GRAMではモデル外。数量の大きさは需要の厚みを示すが、価格への百分率は分離できない | 未報告購入の推計を含む。価格感応度の線形外挿は過大になる |
+| 実質金利 | FRED DFII10（米10年TIPS利回り、%） | GRAMの機会費用のうち利回り成分。WGCの感応度は米10年利回り25bp低下あたり金プラス約1.75%（推定） | 名目利回りと実質利回り、ドルの動きが同時に動く |
+| ETFフロー | 同 Trends の ETF および類似商品の純増減（トン） | 需要側の投資フロー。価格側ではモメンタムと重なる | フローは価格の結果でもあり原因でもある |
+| 地政学 | GRAMの地政学リスク（GPR）寄与 | リスクと不確実性のうちGPR成分 | 指数の定義と推定期間に依存。事象そのものの列挙ではない |
+
+### 各要因の一次データと寄与の推定
+
+中銀ネット購入は2024年1,092.4トン、2025年863.3トンである。2025年は前年比21%減だが、2010〜2021年の年平均473トンをなお上回る。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025/central-banks)。買い手の内訳は前節に書いた。IMF COFERの米ドル比率は旧手法で2024年Q4に57.80%、新手法で2025年Q4に56.77%であり、金購入が続く局面でもドル準備比率は急落していない。[出典](https://data.imf.org/en/news/4225global)、[出典](https://data.imf.org/en/news/imf%20data%20brief%20march%2027)。GRAMの2025年（2025年11月28日時点、年初来61%）ではモデル外要因が20ポイントあり、中銀購入はここに含まれるが内訳は非開示である。[出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。局所感応度（中銀20〜30トンあたり価格1%）を年間800〜1,000トンへ外挿すると数十%になるが、近似の外挿なので本節では採用しない（estimated、不採用）。
+
+実質金利は年によって符号が逆である。FREDのDFII10は2023年12月29日1.72%、2024年12月31日2.24%、2025年12月31日1.93%である（%、各営業日）。[出典](https://fred.stlouisfed.org/series/DFII10)。2024年は実質金利が52bp上昇しながら金はプラス25.5%で、機会費用では逆風のなかの上昇である。2025年は31bp低下で、WGCの25bpあたり約1.75%を比例させるとおおよそプラス2%強（estimated）。GRAMの機会費用「その他」（利回り等）は両年とも2ポイントにとどまる。[出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。為替（ドル安）は2025年に8ポイントあり4枠の外で大きい。前節の「ドル指数上昇と金上昇の併存」とGRAMのドル安寄与が両立しうるのは、期間とドル指標の定義が違うためである。
+
+ETFおよび類似商品は2024年マイナス2.9トン、2025年プラス801.2トンである。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025)。地金・コインは2025年1,374.1トン。GRAMのモメンタムは2024年3ポイント、2025年9ポイントである。[出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。ETFトン数はGRAMの説明変数ではないため、9ポイントをETF寄与と同一視はできない。需要側の転換と価格側のモメンタムが同じ年に重なる、という対応関係までとする。
+
+地政学はGRAMのGPR寄与として2024年3ポイント、2025年8ポイントである。[同出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。2025年通年では、明示変数が説明した約60%のうち地政学リスクとオプション市場の活動が最大だった。[出典](https://www.gold.org/goldhub/research/gold-market-commentary-december-2025)。GPRは事象の列挙ではなく指数の変化分である。
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 220" role="img" aria-label="2025年GRAMにおける4枠に近い寄与（百分率ポイント）">
+  <text x="16" y="22" font-size="12" fill="var(--muted)">2025年（年初来61%、2025-11-28時点）GRAM寄与の対応（単位: リターンへの百分率ポイント）</text>
+  <g font-size="12" fill="var(--ink)">
+    <text x="16" y="58">地政学（GPR）</text>
+    <rect x="150" y="44" width="160" height="18" rx="3" fill="var(--accent)"/>
+    <text x="320" y="58" font-size="11" fill="var(--sub)">8</text>
+
+    <text x="16" y="98">実質金利等（機会費用・利回り）</text>
+    <rect x="150" y="84" width="40" height="18" rx="3" fill="#9DB8F5"/>
+    <text x="200" y="98" font-size="11" fill="var(--sub)">2</text>
+
+    <text x="16" y="138">モメンタム（ETFフローの価格側代理）</text>
+    <rect x="150" y="124" width="180" height="18" rx="3" fill="#6892EF"/>
+    <text x="340" y="138" font-size="11" fill="var(--sub)">9</text>
+
+    <text x="16" y="178">モデル外残差（中銀購入を含む）</text>
+    <rect x="150" y="164" width="400" height="18" rx="3" fill="#C5D4F7"/>
+    <text x="560" y="178" font-size="11" fill="var(--sub)">20</text>
+  </g>
+  <text x="16" y="210" font-size="11" fill="var(--muted)">棒の長さは寄与ポイントに比例。ドル安8と経済拡大10は4枠の外のため図から外している。</text>
+</svg>
+<figcaption>4枠に近いGRAM寄与。中銀はモデル外20ポイントの内数であり、棒全体を中銀寄与とは読めない。出典はWGC Gold Outlook 2026 Table 1（2025年11月28日時点）。</figcaption>
+</figure>
+
+### 過去の上昇局面との比較
+
+比較は年平均価格（World Bank Pink Sheet、ロンドン午後値の年平均）で揃える。日次高値のLBMA系列はライセンス制約で取得できないため、ピーク値の一次確認は本節では行わない。
+
+| 局面 | 始点の年平均（ドル／オンス） | 終点の年平均（ドル／オンス） | 倍率（終点／始点） | 主に観測される需要・マクロ |
+| --- | --- | --- | --- | --- |
+| 1970年代（1970→1980） | 35.94（1970年） | 607.86（1980年） | 約16.9倍 | ドルと金の兌換停止後の名目価格の再設定、高インフレ局面 |
+| 2008〜2011年 | 871.71（2008年） | 1,569.21（2011年） | 約1.80倍 | 金融危機と欧州債務懸念、実質金利低下と投資フロー |
+| 2024〜2025年 | 2,387.70（2024年） | 3,431.5（2025年、WGC年平均） | 約1.44倍（年平均）／終値ベース約2.10倍 | 中銀の高水準購入が続くなか、2025年にETFが急増。実質金利は決定打にならない |
+
+World Bankの金はロンドン午後値の年平均である。[出典](https://www.worldbank.org/en/research/commodity-markets)。2025年の年平均3,431.5ドルはWGC値で、Pink Sheetの2025年確定値は未確認（single-source）。1970→1980の約16.9倍は制度変更を含むため、2024〜2025年と同列の「相場の強さ」比較には使えない。2008〜2011年の年平均倍率約1.80と、2024〜2025年の年平均約1.44／終値ベース約2.10は対象が違う。==比較で言えるのは、2024〜2025年が実質金利低下を主因とする2010年前後型ではないこと、および中銀フローがETFより先に厚く続いていた点で1970年代とも2008年型とも構成が違うこと、の2点に限る==。
+
+### 何が説明できて何が残るか
+
+説明できるのは次である。第1に、GRAM上では2025年の明示寄与の先頭近くに地政学があり、モメンタムが続く。第2に、需要では2025年にETFがマイナスからプラス801トンへ転じた。第3に、実質金利は2024年に逆風、2025年に数ポイントの追い風にとどまる。第4に、中銀購入は数量として厚いがドル準備比率の急落とは対応せず、価格寄与はモデル外残差から切り離せない。残るのはモデル外20ポイントの内訳、日次LBMA高値、GPR原系列のイベント窓、Pink Sheetの2025年年平均である。4枠の和で通年リターンを説明し切ったようには読めない。
+
 ## この章の要点
 
 - 政策金利から国債利回りへの伝達は年限で切れ方が違う。機械的に効くのは2年まで、5年から10年は政策不確実性に依存して振れ、20年より先はタームプレミアムの領域である。日本の30年と40年の利回り差は2026年8月6日時点で0.7bpであり、カーブは30年で伸びるのをやめる。
@@ -183,6 +251,7 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 - 事業会社の3手段は時間軸が違う。為替予約は決済までの数か月から1年を平準化し、現地調達と現地生産はエクスポージャーの元本を減らし、建値通貨の選択は契約段階で経路を決める。予約は水準の恒久的な固定ではない。
 - 在外子会社の換算差額は損益を通らず純資産に直入される。任天堂の為替換算調整勘定は2026年3月末で純資産の8.0%を占める。円安は自己資本を増やしてROEの分母を膨らませる。
 - 実物資産の価格をドルの強弱という一本軸で束ねられない。2026年8月7日時点でドル指数が前年比1.41%高である一方、金は27.7%高、銀は65.1%高、銅は47.5%高である。金の2025年のリターンはWGCの回帰モデルで約60%しか説明できていない。
+- 2024〜2025年の金価格を中銀・実質金利・ETF・地政学の4枠で分けると、価格モデル上で厚いのは地政学とモメンタム（投資フロー）である。実質金利は2024年に逆風、2025年に数ポイントの追い風にとどまる。中銀購入は数量として厚いが価格寄与はモデル外残差から分離できない。
 - 金利が上がる局面でも公的地価は上がっている。2026年1月1日時点の地価公示は全国全用途平均で前年比プラス2.8%である。分母の割引率だけでは価格を説明できない。
 
 ## 残っている問い
@@ -195,7 +264,10 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 - 太陽電池のセル1枚あたりの銀装填量、および技術別の内訳。World Silver Survey 2026 の本体を取得できていない。
 - 2026年と2027年の精錬銅の需給収支。ICSG の2026年4月23日付プレスリリースの本文を取得できていない。銅の需給ギャップを定量で押さえられない。
 - BRICS加盟国全体の金保有量とそれが世界公的準備に占める比率。流通している数値の出典が二次媒体にとどまり、IMFまたはWGCの原データで裏を取れていない。
-- IMF COFER のドル比率57.13%。IMF本体のページを取得できず二次媒体経由の確認にとどまる。
+- GRAMのモデル外要因（2025年20ポイント）に占める中銀購入の内訳。WGCは中銀をモデル外と明記するが、寄与の分離値は公表していない。
+- LBMA Gold Priceの日次高値（1980年1月、2011年9月など）。ICE Benchmark Administrationのライセンス制約により取得できず、局面比較を年平均に限定している。
+- World Bank Pink Sheetの2025年金年平均。執筆時点のAnnual Pricesに2025年が未掲載であり、2025年の年平均はWGC値のみである。
+- GPR指数の月次原系列と金リターンのイベント窓。GRAMの集計寄与は取得できたが、指数そのものの一次系列での再推計はしていない。
 - 相続税路線価が公示価格の80%水準であること、および固定資産税評価額が70%水準であることを明示した一次資料。国税庁と総務省のいずれからも取得できていない。
 - 路線価と実勢価格の乖離率を地域別に集計した公的統計。存在を確認できていない。国土交通省の不動産価格指数は算定過程のプログラム誤りにより令和8年4月以降の公表が延期されており、直近の公表は令和7年12月分である。
 - 金利上昇下で地価が上昇している要因の分解。分子の期待賃料と名目成長が同時に上がっているという解釈は本章のものであり、賃料の推計値による裏付けを取っていない。
@@ -249,9 +321,14 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 45. Freeport-McMoRan「Freeport Provides Update on Restart Plans for Grasberg Minerals District」 https://investors.fcx.com/investors/news-releases/news-release-details/2025/Freeport-Provides-Update-on-Restart-Plans-for-Grasberg-Minerals-District/default.aspx
 46. Fastmarkets「Grasberg mine force majeure 2026 output」 https://www.fastmarkets.com/insights/grasberg-mine-force-majeure-2026-output/
 47. Mining Technology「Chuquicamata Copper Mine, Chile」 https://www.mining-technology.com/projects/chuquicamata-copper/
-48. BestBrokers「US Dollar Share of Global Currency Reserves」IMF COFERの二次集計 https://www.bestbrokers.com/forex-trading/us-dollar-share-of-global-currency-reserves/
-49. Trading Economics「Gold」 https://tradingeconomics.com/commodity/gold
-50. Trading Economics「Silver」 https://tradingeconomics.com/commodity/silver
-51. Trading Economics「Copper」 https://tradingeconomics.com/commodity/copper
-52. Trading Economics「United States Dollar Index」 https://tradingeconomics.com/united-states/currency
-53. Trading Economics「US 10 Year Treasury Note Yield」 https://tradingeconomics.com/united-states/government-bond-yield
+48. Trading Economics「Gold」 https://tradingeconomics.com/commodity/gold
+49. Trading Economics「Silver」 https://tradingeconomics.com/commodity/silver
+50. Trading Economics「Copper」 https://tradingeconomics.com/commodity/copper
+51. Trading Economics「United States Dollar Index」 https://tradingeconomics.com/united-states/currency
+52. Trading Economics「US 10 Year Treasury Note Yield」 https://tradingeconomics.com/united-states/government-bond-yield
+53. World Gold Council「Gold’s 2024 performance best in 14 years」2025年1月3日 https://www.gold.org/goldhub/gold-focus/2025/01/golds-2024-performance-best-14-years
+54. World Gold Council「Gold Outlook 2026: Push ahead or pull back」2025年12月4日 https://www.gold.org/goldhub/research/gold-outlook-2026
+55. Board of Governors of the Federal Reserve System「Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Inflation-Indexed (DFII10)」via FRED https://fred.stlouisfed.org/series/DFII10
+56. IMF Data Brief「Currency Composition of Official Foreign Exchange Reserves」2024Q4（2025年4月2日） https://data.imf.org/en/news/4225global
+57. IMF Data Brief「Currency Composition of Official Foreign Exchange Reserves」2025Q4（2026年3月27日） https://data.imf.org/en/news/imf%20data%20brief%20march%2027
+58. World Bank「Commodity Markets」（Pink Sheet, Annual Prices Nominal, Gold） https://www.worldbank.org/en/research/commodity-markets

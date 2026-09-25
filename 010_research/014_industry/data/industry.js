@@ -2,6 +2,20 @@
 // 追加は bin/add-report.sh 経由。
 window.INDUSTRY = [
   {
+    "title": "防衛産業の新規参入｜Anduril・Palantir の日本展開、利益率規制、JADC2 と CMMC が課すもの",
+    "date": "2026-09-25",
+    "tags": [
+      "防衛",
+      "Anduril",
+      "Palantir",
+      "ドローン",
+      "調達"
+    ],
+    "summary": "防衛調達の入口は利益率の天井（QCD 5〜10%＋調整1〜5%で最大15%）と、データ接続・CMMC に分かれる。Anduril Japan は2025-12-03設立でアスターと覚書、JISDA Shiraha は訓練用原価7万円。Palantir は SOMPO 合弁（資本1億USD・50/50）と富士通 AIP ライセンス（2029年度末まで売上1億USD目標）。韓国は SIPRI 2020–24で世界輸出シェア2.2%（ポーランド向け46%）。出典21件。",
+    "source": "Desk research",
+    "file": "reports/defense_new_primes_japan_260925.html"
+  },
+  {
     "title": "空間 AI の分岐｜World Labs Atlas（生成）と Clutch（計測）、順像と逆像で分かれる事業",
     "date": "2026-09-25",
     "tags": [

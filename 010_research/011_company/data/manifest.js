@@ -3,6 +3,27 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "Erebor",
+    "fullName": "Erebor Bank",
+    "ticker": null,
+    "market": null,
+    "country": "US",
+    "status": "private",
+    "cohort": "other",
+    "tags": [
+      "銀行",
+      "暗号資産",
+      "Palmer Luckey",
+      "Founders Fund",
+      "規制"
+    ],
+    "date": "2026-09-25",
+    "summary": "Palmer Luckey関与の国法銀行。2025年にOCC予備承認とFDIC預金保険を取得し2026年2月開業。対象は仮想通貨・AI・防衛・製造向けの預金・貸出とステーブルコイン関連。",
+    "file": "reports/erebor_research_260925.html",
+    "sourceCount": 11,
+    "variant": "startup-case"
+  },
+  {
     "company": "ダイニー",
     "fullName": "株式会社ダイニー",
     "ticker": null,

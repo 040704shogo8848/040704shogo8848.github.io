@@ -3,6 +3,27 @@
 // index.html はこの window.REPORTS を <script> で読む（file:// でも Pages でも動く）。
 window.REPORTS = [
   {
+    "company": "ダイニー",
+    "fullName": "株式会社ダイニー",
+    "ticker": null,
+    "market": null,
+    "country": "JP",
+    "status": "private",
+    "cohort": "other",
+    "tags": [
+      "飲食DX",
+      "レイオフ",
+      "組織",
+      "SaaS",
+      "資金調達"
+    ],
+    "date": "2026-09-25",
+    "summary": "飲食DXのダイニーが2025年6月に社員約2割へ退職勧奨を実施した事例を、公表一次情報と日本の黒字リストラ意識調査・雇用慣行研究から整理する。",
+    "file": "reports/dinii_research_260925.html",
+    "sourceCount": 12,
+    "variant": "startup-case"
+  },
+  {
     "company": "日機装",
     "fullName": "日機装株式会社",
     "ticker": "6376",

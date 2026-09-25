@@ -80,6 +80,55 @@ TerraPower の事例はこの経路を具体的に示す。米国原子力規制
 
 Helion 側にも規制の進捗はある。2026年6月にワシントン州から2件のライセンスを取得した [出典](https://www.ans.org/news/2026-06-23/article-8140/helion-secures-new-licenses-from-washington/)。核融合は米国では核分裂と別の規制枠組みで扱われるため、TerraPower と同じ手続を経るわけではない。 TerraPower側の韓国企業との関係は、出資ではなく製造の契約である。斗山エナビリティは2024年12月に、原子炉ガード容器、原子炉支持構造、炉心バレル構造という3つの主要機器について製造性検討と設計支援の契約を締結し、翌年から製造に入る計画を示した[出典](https://www.terrapower.com/terraPower-announces-awards-for-Natrium)。==技術提携ではなく、設計を受け取って作る側の受託である==。同社を研究開発機関として評価した場合の倍率は、比較対象となる非上場の研究開発型企業の評価水準が取れないため試算できない。それでも、Microsoft への供給目標が2028年である以上、許可の取得時期と PPA の稼働目標の差は資金繰り上の圧力として働く。技術の検証、規制の取得、契約の履行期限という3つの時計が、それぞれ別の速度で進んでいるかどうかを確かめることが、この分野の評価の中心にある。
 
+## PG・YC・Thiel の主張は今も成り立つか
+
+結論から書く。Y Combinator（YC）の標語「Make something people want」は、成熟バッチのユニコーン到達率では一般シードより高い水準で残っている。ただし評価額の分布は極端な冪乗則で、標語を満たしても大半の会社はヘッドライン評価に届かない。Paul Graham の founder mode は2024年の主張であり、因果を示す比較研究は確認できない。Peter Thiel のニッチ独占論と Graham の Do things that don't scale は主題が違う。前者は市場の選び方、後者は立ち上げ期の手作業である。maker's schedule の会議コスト構造を LLM 導入前後で測った実証は、2026年9月25日時点で確認できない。
+
+### Make something people want は評価額分布で残るか
+
+YC の標語は「Make something people want」である。Do things that don't scale の末尾でも、単一ユーザーへの過密な対応が「making something people want」への足場だと書かれている [出典](https://paulgraham.com/ds.html)。YC の公開ディレクトリは2026年時点で 5,000 社超を掲載し、投資条件は1社あたり50万ドル（うち12万5,000ドルで株式7%、残り37万5,000ドルはキャップなし MFN SAFE）である [出典](https://www.ycombinator.com/companies/industry/ai) [出典](https://www.ycombinator.com/deal)。投資条件の設計そのものは、[長期資本の特集](https://040704shogo8848.github.io/010_research/016_finance/long_horizon_capital.html)で扱う交渉消去の話であり、ここでは繰り返さない。収益前の企業評価という本章の主題に引き戻すと、標語が測っているのは需要の有無であって、次の検証までに現金が持つかどうかではない。需要があっても、検証サイクルが資金の残存期間を超える会社は、前節までの核融合・鉱山・宇宙送電と同じ型のリスクを抱える。
+
+YC 自身は全社の評価額分布表を公表していない。公開に近い二次集計を並べると、次の表になる。基準日は各ソースの as_of をそのまま置く。
+
+
+| 指標 | 値 | 母集団と時点 | 出典 |
+| --- | --- | --- | --- |
+| ディレクトリ掲載社数 | 5,000 社超 | YC 公開ディレクトリ、2026年9月時点 | https://www.ycombinator.com/companies/industry/ai |
+| バッチ索引の社数 | 6,162 社（うち Dealroom 照合 5,853 社） | Dealroom、2026年8月15日時点 | https://dealroom.co/yc-batches/ |
+| ユニコーン数（1B USD 以上） | 126 社（照合母集団の下限） | 同上。評価額は Dealroom 側のフラグ | https://dealroom.co/yc-batches/ |
+| ユニコーン率（成熟バッチ） | 約 4%〜5%（Palle）、約 6%（Rebel） | Palle は S05〜F24 の 4,939 社、2024年12月10日。Rebel は 2005〜2017 年バッチ | https://palle.substack.com/p/pulling-back-the-curtain-on-the-magic / https://jaredheyman.medium.com/on-the-power-law-of-y-combinator-startups-19cfb39863d6 |
+| 一般シードのユニコーン率（比較） | 約 2.5% | Palle が引用する業界平均、2024年12月 | https://palle.substack.com/p/pulling-back-the-curtain-on-the-magic |
+| 評価額成長の集中 | ユニコーン約 6% が成長の 90%。デカコーン約 0.6% がその半分超 | Rebel、2005〜2017 年バッチ、2024年4月 | https://jaredheyman.medium.com/on-the-power-law-of-y-combinator-startups-19cfb39863d6 |
+| 時価の集中（公開寄り） | 上位4社が創出時価の 85% 超 | Palle、Airbnb・DoorDash・Coinbase・Reddit、2024年12月 | https://palle.substack.com/p/pulling-back-the-curtain-on-the-magic |
+
+==標語が「今も有効か」への答えは、成功率の底上げとしては yes、分布の形としては no である==。成熟バッチのユニコーン率 4%〜6% は、Palle と Rebel で独立に観測されており、Palle が置く一般シード約 2.5% を上回る。一方で Dealroom の全バッチ合算では 126 / 5,853 ≒ 2.2% に落ちる。若いバッチは評価額の成熟前であり、合算率を成熟バッチの成功率と読み替えてはいけない。集中度はさらに急で、Rebel ではユニコーン約 6% が評価額成長の 90% を占め、Palle では上位4社が時価の 85% 超を占める。標語は「人の欲しいものを作る」という必要条件の指針であって、評価額分布の中央値を押し上げる十分条件ではない。YC の投資条件が交渉を消して件数を取る設計であることと、評価額が少数の勝ち筋に集中することは、同じ冪乗則の表裏である。
+
+同バッチでも出口は割れる。YC S05 の Loopt は累計調達ののち2012年に4,340万ドルで売却され、同一バッチの Reddit は2006年に1,000万ドルで買収された後に上場へ至った。数字の内訳は [Loopt の事例](https://040704shogo8848.github.io/010_research/011_company/reports/loopt_research_260727.html) に置き、ここでは繰り返さない。標語を満たしたかどうかだけでは、この差は説明できない。
+
+### founder mode の主張と反論
+
+Graham は2024年9月のエッセイで、創業者が規模拡大とともに「良い人材を雇い、仕事を任せる」という manager mode へ移行する通念が誤りだと書いた。根拠は Airbnb の Brian Chesky の講演と、その後に話を聞いた成功創業者たちの同調である。founder mode では CEO が直属以外とも関わり、Steve Jobs が組織図の上位100人ではない年次合宿を開いた例を挙げている。定義そのものは未完成だと本人が書いており、誤用（委任すべきことも引き受け続ける言い訳）も予測している [出典](https://paulgraham.com/foundermode.html)。
+
+反論側は少なくとも3点に分かれる。第一に、標本が成功側に偏っている。Airbnb と Apple を軸にした逸話から一般則を導いている、という指摘である [出典](https://www.wired.com/story/plaintext-want-to-get-into-founder-mode-you-should-be-so-lucky/)。第二に、批判対象が「管理」ではなく「管理の放棄」である、という読み替えである。Ed Batista は、Graham が嫌う「任せて放置」は Douglas McGregor の Theory Y が戒めた abdication に近く、誰が何をいつまでにどの品質で進めるかの関与は管理そのものだと書く [出典](https://edbatista.com/2024/09/the-antidote-to-manager-mode-is-actual-management.html)。第三に、skip-level を常態化すると情報経路が壊れうる、という運用上の懸念である。Sam Gerstenzang は、優れた人材は自律と高コンテキストな介入の両立を求め、Graham の二項対立では足りないと述べる [出典](https://samgerstenzang.substack.com/p/founder-mode-in-context)。
+
+ここで確定できるのは主張の内容と、公開された反論の型までである。founder mode を採用した企業群と manager mode を維持した企業群を、同一時点・同一規模で比較した研究は確認できない。因果の有無は未検証のまま残る。
+
+### Thiel のニッチ独占と Do things that don't scale の違い
+
+Thiel は Stanford のスタートアップ講義（CS183 / How to Start a Startup Lecture 5）と Zero to One で、価値ある事業は完全競争ではなく独占に寄ると述べた。スタートアップは小さな市場を丸ごと取り、同心円状に広げる。大きな市場の端に立つより、小さな市場の全体を取る。PayPal の初期は PalmPilot 送金ではなく eBay のパワーセラーに絞った、という事例が本に載る [出典](https://blakemasters.tumblr.com/post/21169325300/peter-thiels-cs183-startup-class-4-notes-essay) [出典](https://www.bnjs.co/notes/cs183b-lecture-5-peter-thiel-business-strategy-and-monopoly-theory/)。
+
+Graham の Do things that don't scale（2013年7月）は、市場定義ではなく点火の手番を扱う。初期ユーザーを1人ずつ集め、手書きの礼状や Collison installation（その場でノート PC に Stripe を入れる）のように、後から自動化する前提の手作業を推奨する。狭く始める「contained fire」も出てくるが、目的は臨界質量の獲得であり、競争構造としての独占の設計ではない [出典](https://paulgraham.com/ds.html)。Airbnb が初期にニューヨークでドアを叩いた話は、Thiel の「小さな市場」ではなく、Graham の「スケールしない手間」の側に属する。市場が小さくても、手動で触れなければ臨界には届かない、というのが Graham 側の順序である。
+
+==違いは「どの市場で勝つか」と「勝つ前に何をするか」の層の差である==。Thiel は市場境界とシェアを先に決める。Graham は境界が決まったあと、スケールしない手段で需要を確かめる。Facebook のハーバード限定は両方の叙述に現れるが、Thiel 側は独占への経路、Graham 側は初期の脆弱性への対処として読まれる。両者を同一の成長公式に畳むと、どちらの検証にもならない。
+
+### maker's schedule は LLM で変わったか
+
+Graham は2009年7月のエッセイで、manager の1時間単位と maker（プログラマ・書き手）の半日単位を分けた。maker にとって1回の会議は午後を二つに割り、難しい作業が入る余地を消す。場合によっては午前の着手意欲まで落とす、と書いている [出典](https://paulgraham.com/makerschedule.html) [出典](https://freakonomics.com/2009/07/read-this-if-you-hate-meetings/)。
+
+LLM 導入後に測れているのは、会議コストではなくタスク単体の生産性である。Noy と Zhang は ChatGPT を使った職業別の文章課題で、所要時間が約 40% 減り、品質が約 18% 上がったと報告した（被験者 453 人、Science 2023年） [出典](https://www.science.org/doi/10.1126/science.adh2586)。Dell'Acqua らは BCG コンサルタント 758 人を対象にした野外実験で、AI 能力の内側にある課題では完了数が平均 12.2% 増え、所要時間が平均 25.1% 短くなった一方、能力の外側の課題では正答率が 19 ポイント下がったと報告した [出典](https://mitsloan.mit.edu/sites/default/files/2023-10/SSRN-id4573321.pdf)。いずれも課題は連続時間の中で解かれており、会議による分断コストを LLM 前後で比較した設計ではない。
+
+したがって、maker's schedule の主張のうち「連続した半日が必要か」は、LLM によって否定も肯定もされていない。否定するには、同じ難度の制作課題を「会議で分断された半日」と「連続した半日」で LLM ありなしに割り付ける実験が要る。2026年9月25日時点で、その形式の公開研究は確認できない。言えるのは、frontier 内の文章・分析課題では LLM が所要時間を短縮するという点までである。短縮が会議の機会費用を下げるかどうかは別問題で、1時間の会議が半日を二つに割る幾何はそのまま残りうる。
+
 ## この章の要点
 
 - 収益前の企業では、技術の当否より先に、所要総額と手当済総額の差額を出す。差額が正なら、それを誰がいつ埋めるかが最初の論点になる。KoBold は開発費22億ドルから25億ドルに対し累計調達12億2,000万ドル超で、差額が残っている。
@@ -90,6 +139,8 @@ Helion 側にも規制の進捗はある。2026年6月にワシントン州か�
 - 検証サイクルの長さと投資家の保有期間の差が、そのままリスクになる。KoBold は参画からフル生産まで12年強で、ファンド満期10年を超える。
 - AI が短縮した工程と短縮していない工程を分ける。KoBold で短縮が数字で追えるのは探査と掘削の回転であり、竪坑掘削、許認可、製錬と電力のインフラは短縮していない。
 - 規制許可は建設許可と運転許可に分かれる。TerraPower は建設許可を2026年3月4日に取得したが、運転認可は建設完了後の申請であり、遅延の主因はこれまで規制ではなく燃料調達だった。
+- YC の「Make something people want」は、成熟バッチのユニコーン率 4%〜6% が一般シード約 2.5% を上回る点では残る。評価額は冪乗則で、ユニコーン約 6% が成長の 90%、上位4社が時価の 85% 超を占める。
+- founder mode は2024年の主張で、因果を示す比較研究は無い。Thiel のニッチ独占は市場選択、Do things that don't scale は点火の手作業であり、層が違う。maker's schedule の会議コストを LLM 前後で測った実証は確認できない。
 
 ## 残っている問い
 - Helion と Microsoft の PPA のペナルティ金額と発動条件は非開示であり、未達成時の帰結を定量的に語れる一次資料がない。Helion が上場して契約が開示されるまで検証できない。
@@ -103,7 +154,12 @@ Helion 側にも規制の進捗はある。2026年6月にワシントン州か�
 - Aetherflux が24時間かつ全天候の供給を明示した一次資料は取得できなかった。旧サイトは404を返し、アーカイブへのアクセスも遮断されている。
 - 宇宙から地上までの太陽光入力基準の総合効率を同社は公表していない。地上間レーザー送電の8.6km で800W、効率20%超という数値は二次情報で、DARPA の一次発表は取得できていない。
 - 国防総省 OECIF による同社への研究資金の金額は非開示であり、資金の残存期間への寄与を算定できない。
+- YC は全社の評価額分布を公式には出していない。Dealroom・Rebel・Palle は母集団と推定手法が異なり、同一表に完全統合できない。
+- founder mode を採用した企業と manager mode を維持した企業を、同一時点・同一規模で比較した研究は確認できない。
+- maker's schedule の会議による分断コストを、LLM 導入の前後で測った公開の実証研究は、2026年9月25日時点で確認できない。
+- Thiel のニッチ独占と Graham の Do things that don't scale を、同一コホートで対照した学術研究は確認できない。
 ## 出典
+
 
 1. Helion Raises $500 Million, Targets 2024 for Demonstrating Net Electricity from Fusion — https://www.helionenergy.com/articles/helion-raises-500m/
 2. Helion secures $2.2B to commercialize fusion energy, TechCrunch — https://techcrunch.com/2021/11/05/helion-series-e/
@@ -138,3 +194,20 @@ Helion 側にも規制の進捗はある。2026年6月にワシントン州か�
 31. Cowboy raises $275 million to build rockets with orbital data center upper stages, SpaceNews — https://spacenews.com/cowboy-raises-275-million-to-build-rockets-with-orbital-data-center-upper-stages/
 32. Startup takes new approach to space-based solar power, SpaceNews — https://spacenews.com/startup-takes-new-approach-to-space-based-solar-power/
 33. DARPA Triples Wireless Power Beaming to 800 Watts for 5 Miles, NextBigFuture — https://www.nextbigfuture.com/2025/08/darpa-triples-wireless-power-beaming-to-800-watts-for-5-miles-but-2028-goals-are-5000-watts-for-120-miles.html
+34. Paul Graham, Do Things that Don't Scale, 2013年7月 — https://paulgraham.com/ds.html
+35. Y Combinator Startup Directory（AI 業種ページ、5,000 社超の記載）, 2026年9月 — https://www.ycombinator.com/companies/industry/ai
+36. Y Combinator, The Deal — https://www.ycombinator.com/deal
+37. Dealroom, YC batch index, データ時点 2026年8月15日 — https://dealroom.co/yc-batches/
+38. Palle Broe, Pulling back the curtain on the magic of Y Combinator, 2025年2月11日（データ as of 2024年12月10日） — https://palle.substack.com/p/pulling-back-the-curtain-on-the-magic
+39. Jared Heyman / Rebel Fund, On the power law of Y Combinator startups, 2024年4月30日 — https://jaredheyman.medium.com/on-the-power-law-of-y-combinator-startups-19cfb39863d6
+40. Paul Graham, Founder Mode, 2024年9月 — https://paulgraham.com/foundermode.html
+41. Steven Levy, Want to Get Into Founder Mode? You Should Be So Lucky, WIRED, 2024年9月 — https://www.wired.com/story/plaintext-want-to-get-into-founder-mode-you-should-be-so-lucky/
+42. Ed Batista, The Antidote to "Manager Mode" is Actual Management, 2024年9月2日 — https://edbatista.com/2024/09/the-antidote-to-manager-mode-is-actual-management.html
+43. Sam Gerstenzang, "Founder Mode" in context, 2024年 — https://samgerstenzang.substack.com/p/founder-mode-in-context
+44. Blake Masters, Peter Thiel's CS183 Startup Class 4 Notes Essay — https://blakemasters.tumblr.com/post/21169325300/peter-thiels-cs183-startup-class-4-notes-essay
+45. bnjs, CS183B Lecture 5: Peter Thiel Business Strategy and Monopoly Theory Notes — https://www.bnjs.co/notes/cs183b-lecture-5-peter-thiel-business-strategy-and-monopoly-theory/
+46. Paul Graham, Maker's Schedule, Manager's Schedule, 2009年7月 — https://paulgraham.com/makerschedule.html
+47. Freakonomics, Read This If You Hate Meetings（Graham エッセイの引用転載）, 2009年7月 — https://freakonomics.com/2009/07/read-this-if-you-hate-meetings/
+48. Noy and Zhang, Experimental evidence on the productivity effects of generative artificial intelligence, Science, 2023年 — https://www.science.org/doi/10.1126/science.adh2586
+49. Dell'Acqua et al., Navigating the Jagged Technological Frontier, MIT Sloan / SSRN working paper — https://mitsloan.mit.edu/sites/default/files/2023-10/SSRN-id4573321.pdf
+50. Helion Announces $425M Series F, Helion Energy — https://www.helionenergy.com/newsroom/helion-announces-425m-series-f-investment-to-scale-commercialized-fusion-power

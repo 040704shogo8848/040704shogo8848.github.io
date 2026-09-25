@@ -241,6 +241,90 @@ World Bankの金はロンドン午後値の年平均である。[出典](https:/
 
 説明できるのは次である。第1に、GRAM上では2025年の明示寄与の先頭近くに地政学があり、モメンタムが続く。第2に、需要では2025年にETFがマイナスからプラス801トンへ転じた。第3に、実質金利は2024年に逆風、2025年に数ポイントの追い風にとどまる。第4に、中銀購入は数量として厚いがドル準備比率の急落とは対応せず、価格寄与はモデル外残差から切り離せない。残るのはモデル外20ポイントの内訳、日次LBMA高値、GPR原系列のイベント窓、Pink Sheetの2025年年平均である。4枠の和で通年リターンを説明し切ったようには読めない。
 
+## 2026年1月のトリプル安：関税・米債・ドルが同時に売られた経路
+
+前節までの金利差と為替の議論は、通常の相関を前提にしている。株式が売られる局面では国債とドルが買われやすい。2026年1月20日はその前提が同日に崩れた。基準日は2026年9月25日。
+
+結論から述べる。==1月20日の米株・米債・ドル同時安は、対欧州8か国への追加関税（2月1日から10%、6月1日から25%）の予告に対する「Sell America」反応であり、関税そのものは官報に載る前に撤回され、実施されていない==。円高の持続性を決めたのは金利差の小幅縮小ではなく、介入ゼロのもとでの投機ショートの巻き戻しである。
+
+### 2026年1月20日前後の日次
+
+1月17日（土）に関税の予告が出た。米国市場は1月19日がキング牧師記念日で休場であり、予告後の最初の取引日が1月20日である。FREDの終値で並べる。
+
+| 日付（as_of） | S&P500 | 米10年債利回り（DGS10、%） | 米ドル貿易加重指数（DTWEXBGS） | ドル円（DEXJPUS） |
+| --- | --- | --- | --- | --- |
+| 2026-01-16 | 6,940.01 | 4.24 | 120.0838 | 158.02 |
+| 2026-01-20 | 6,796.86 | 4.30 | 119.4455 | 157.89 |
+| 2026-01-21 | 6,875.62 | 4.26 | 119.3431 | 158.16 |
+| 2026-01-23 | 6,915.61 | 4.24 | 118.8976 | 157.57 |
+| 2026-01-27 | 6,978.60 | 4.24 | 117.4523 | 153.03 |
+
+出典はFREDの各系列である。[出典](https://fred.stlouisfed.org/series/SP500)、[出典](https://fred.stlouisfed.org/series/DGS10)、[出典](https://fred.stlouisfed.org/series/DTWEXBGS)、[出典](https://fred.stlouisfed.org/series/DEXJPUS)。1月16日から20日への変化は、S&P500がマイナス2.06%、10年債利回りがプラス6bp（価格は下落）、貿易加重ドルがマイナス0.53%、ドル円が0.13円の円高である。変化率は素材ノートの計算であり公表値ではない。
+
+ロイターは同日のS&P500下落率を2.06%、ダウを1.76%、Nasdaqを2.39%と報じ、FREDのS&P500終値と一致する。[出典](https://www.reuters.com/business/sp-nasdaq-futures-slide-one-month-lows-greenland-concerns-2026-01-20/)。ドルについてはICEのドル指数が一時0.7%安と報じられており、FREDの貿易加重指数（マイナス0.53%）とは系列が違う。[出典](https://www.reuters.com/world/asia-pacific/dollar-week-low-geopolitics-revive-sell-america-trade-2026-01-20/)。ヘッドラインの株下落は2ソースで一致する。ドルの下落幅は系列依存であり、ICE指数と貿易加重を混同しない。
+
+1月21日にはS&P500が6,875.62へ戻し、10年債利回りも4.26%へ低下した。関税予告の撤回と同日である。一方、ドル円の大きな円高は1月20日ではなく1月23日以降に集中している。1月23日の157.57から1月27日の153.03へ、4.54円動いた。トリプル安の当日と、円高の主戦場は日付がずれる。
+
+### 対欧州8か国の追加関税：法的根拠と実施状況
+
+1月17日11時19分（東部時間）、大統領はTruth Socialで次を予告した。デンマーク、ノルウェー、スウェーデン、フランス、ドイツ、英国、オランダ、フィンランドの8か国について、2026年2月1日から米国向け全品目に10%の関税を課し、2026年6月1日に25%へ引き上げる。条件はグリーンランドの「完全かつ全面的な購入」合意までである。[出典](https://trumpstruth.org/statuses/34583)。原文に根拠法（IEEPA、通商拡大法232条、1930年関税法338条など）の明示はない。
+
+1月21日、大統領はNATO事務総長との協議を理由に、2月1日に予定していた関税を課さないと投稿した。[出典](https://www.presidency.ucsb.edu/documents/truth-social-posts-january-21-2026)。連邦官報（Federal Register）に、この8か国向け追加関税を実施する大統領布告や執行命令は掲載されていない（2026年9月25日時点の確認）。したがって実施状況は「予告→撤回→未実施」であり、10%も25%も徴収されていない。
+
+法的根拠について取れる事実は2つに限る。第1に、当該予告自体はSNS投稿であり、官報上の発効文書ではない。第2に、2025年以降に実際に徴収された広範な関税の多くはIEEPAを根拠としていたが、連邦最高裁は2026年2月20日のLearning Resources, Inc. v. TrumpでIEEPA関税を退けた。この判決と還付の数字は[012_politics第3章](../../012_politics/chapters/03_cross-border-regulatory-power.html)に既出であり、ここには繰り返さない。グリーンランド関税は撤回時点で未発効のため、同判決の対象にもなっていない。==市場が反応したのは官報の税率ではなく、同盟国への関税が再予告されうるという期待そのものだった==。
+
+### 3市場が同時に売られる経路
+
+通常のリスクオフでは、株式が売られ、国債が買われ（利回り低下）、ドルが買われやすい。株式と国債の価格は逆相関、ドルは逃避先として同方向に強くなることが多い。1月20日はこの2つの慣性が同時に外れた。
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 240" role="img" aria-label="通常の相関と2026年1月20日の同時安">
+  <text x="16" y="22" font-size="12" fill="var(--muted)">通常のrisk-offと2026-01-20のSell America（方向のみ。尺度は揃えていない）</text>
+  <text x="16" y="52" font-size="12" fill="var(--ink)">通常</text>
+  <text x="100" y="52" font-size="12" fill="var(--sub)">株式 ↓</text>
+  <text x="220" y="52" font-size="12" fill="var(--sub)">国債価格 ↑（利回り↓）</text>
+  <text x="420" y="52" font-size="12" fill="var(--sub)">ドル ↑</text>
+  <text x="16" y="92" font-size="12" fill="var(--ink)">2026-01-20</text>
+  <text x="100" y="92" font-size="12" fill="var(--accent)">株式 ↓</text>
+  <text x="220" y="92" font-size="12" fill="var(--accent)">国債価格 ↓（利回り↑）</text>
+  <text x="420" y="92" font-size="12" fill="var(--accent)">ドル ↓</text>
+  <line x1="16" y1="120" x2="700" y2="120" stroke="var(--line)" stroke-width="1"/>
+  <text x="16" y="148" font-size="12" fill="var(--ink)">経路</text>
+  <text x="100" y="148" font-size="11" fill="var(--sub)">関税再燃の予告</text>
+  <text x="280" y="148" font-size="11" fill="var(--sub)">→ 米資産全体のリスクプレミアム上昇</text>
+  <text x="100" y="178" font-size="11" fill="var(--sub)">株式：利益と成長期待の割引</text>
+  <text x="100" y="202" font-size="11" fill="var(--sub)">国債：財政・インフレ・同盟リスクのタームプレミアム</text>
+  <text x="100" y="226" font-size="11" fill="var(--sub)">ドル：逃避先としての地位が疑われ、ドル建て資産ごと売却</text>
+</svg>
+<figcaption>通常のrisk-offでは国債とドルが緩衝材になる。1月20日は緩衝材ごと売られた。数値は上表のFRED終値。</figcaption>
+</figure>
+
+崩れた条件は次の3点である。第1に、ショックの震源が米国内の政策予告であること。同盟国への追加関税は、海外リスクへの逃避先としての米国資産という読みと両立しにくい。第2に、国債が安全資産として機能するには、財政と制度の安定が前提になる。関税の再燃はインフレ経路と報復経路の両方を意識させ、利回り上昇（価格下落）と株安が並走した。第3に、ドルの需要は「リスクオフ」ではなく「米資産を持ちたいか」に依存する。米株と米債を同時に減らすフローはドル売りになる。ロイターはこの組み合わせを2025年4月の広範関税発表後に見られた「Sell America」の再来と整理している。[同出典](https://www.reuters.com/world/asia-pacific/dollar-week-low-geopolitics-revive-sell-america-trade-2026-01-20/)。
+
+重要なのは、同時安の持続時間が短いことである。1月21日の撤回投稿のあと、株式は戻り、10年債利回りはピークから低下した。関税が官報に載り徴収が始まっていれば、経路は別の長さを持ちうる。今回観測できたのは「予告だけで起動し、撤回で減衰する」長さである。
+
+### 円高の持続性を決める要因
+
+本章の「金利差と経常収支」節で述べたとおり、短期のドル円は金利差だけでは決まらない。1月下旬の円高を、金利差・介入・投機ポジションの3要因で分ける。
+
+| 要因 | 観測値（as_of） | 円高方向か | 出典 |
+| --- | --- | --- | --- |
+| 日米10年金利差 | 2026-01-16: 米4.24%−日2.182%=2.058pt。2026-01-20: 米4.30%−日2.330%=1.970pt | 差は0.088pt縮小（円高方向） | FRED DGS10、財務省国債金利情報 |
+| 為替介入 | 2025-12-29〜2026-01-28の介入額は0円 | 実弾介入はなし | 財務省 FEIO |
+| 円先物の非商業ネット | 2026-01-06: プラス8,815枚。01-13: マイナス45,164枚。01-20: マイナス44,829枚。01-27: マイナス33,933枚 | 1月13日以降は大幅ショート。1月27日に向けてショート縮小（円買い方向） | CFTC COT |
+
+日本の10年利回りは財務省の国債金利情報（R8.1.16が2.182%、R8.1.20が2.330%）である。[出典](https://www.mof.go.jp/jgbs/reference/interest_rate/data/jgbcm_all.csv)。金利差の縮小幅0.088ptは、1月20日のドル円0.13円の動きより、1月23日から27日の4.54円の動きを説明するには小さい。金利差だけでは持続性を説明できない。
+
+介入はゼロである。財務省は2025年12月29日から2026年1月28日の外国為替平衡操作の実施額を0円と公表した。[出典](https://www.mof.go.jp/english/policy/international_policy/reference/feio/monthly/20260130e.html)。1月23日以降に観測された円急騰は、実弾介入の結果ではない。当局によるレートチェックの有無は、財務省・日銀のいずれも公式には認めていない（非開示）。
+
+投機ポジションは動いている。CFTCのCME円先物（非商業）は、1月6日時点でネットロング8,815枚だったが、1月13日にネットショート45,164枚へ振れ、1月20日も44,829枚のショートを維持した。1月27日には33,933枚までショートが減った。[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf010626.htm)、[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf011326.htm)、[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf012026.htm)、[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf012726.htm)。ネット枚数は建玉の差であり素材ノートの計算である。円高が加速した1月23日以降は、厚いショートの巻き戻しと整合する。
+
+持続性の整理は次になる。金利差の縮小は円高方向だが寄与は小さい。介入はゼロなので、水準を当局が固定したわけではない。残るのは投機ショートの解消と、介入観測そのものが生む期待である。期待は残高としては観測できない。したがって「円高がどこまで続くか」を金利差の延長線だけで読むと、1月下旬の動きを取り違える。
+
+1月20日のトリプル安と、1月23日以降の円高は連続した出来事ではあるが、主因の置き場が違う。前者は米資産全体のリスクプレミアム、後者は円のショートポジションと介入観測である。同じ週のドル安円高を一本の物語に畳むと、日付と要因の対応が消える。持続性を論じる単位は「1月の円高」ではなく、この2つの区間である。
+
+市場構造の側（誰が売れるか、板の厚み）は[016_finance第4章](04_market-structure-and-listing.html)の主題であり、本節では扱わない。
+
 ## この章の要点
 
 - 政策金利から国債利回りへの伝達は年限で切れ方が違う。機械的に効くのは2年まで、5年から10年は政策不確実性に依存して振れ、20年より先はタームプレミアムの領域である。日本の30年と40年の利回り差は2026年8月6日時点で0.7bpであり、カーブは30年で伸びるのをやめる。
@@ -253,6 +337,7 @@ World Bankの金はロンドン午後値の年平均である。[出典](https:/
 - 実物資産の価格をドルの強弱という一本軸で束ねられない。2026年8月7日時点でドル指数が前年比1.41%高である一方、金は27.7%高、銀は65.1%高、銅は47.5%高である。金の2025年のリターンはWGCの回帰モデルで約60%しか説明できていない。
 - 2024〜2025年の金価格を中銀・実質金利・ETF・地政学の4枠で分けると、価格モデル上で厚いのは地政学とモメンタム（投資フロー）である。実質金利は2024年に逆風、2025年に数ポイントの追い風にとどまる。中銀購入は数量として厚いが価格寄与はモデル外残差から分離できない。
 - 金利が上がる局面でも公的地価は上がっている。2026年1月1日時点の地価公示は全国全用途平均で前年比プラス2.8%である。分母の割引率だけでは価格を説明できない。
+- 2026年1月20日の米株・米債・ドル同時安は、対欧州8か国への追加関税予告に対するSell America反応である。関税は官報に載る前に撤回され未実施。円高の主戦場は1月23日以降であり、介入ゼロのもとでの投機ショート縮小と整合する。
 
 ## 残っている問い
 
@@ -271,6 +356,9 @@ World Bankの金はロンドン午後値の年平均である。[出典](https:/
 - 相続税路線価が公示価格の80%水準であること、および固定資産税評価額が70%水準であることを明示した一次資料。国税庁と総務省のいずれからも取得できていない。
 - 路線価と実勢価格の乖離率を地域別に集計した公的統計。存在を確認できていない。国土交通省の不動産価格指数は算定過程のプログラム誤りにより令和8年4月以降の公表が延期されており、直近の公表は令和7年12月分である。
 - 金利上昇下で地価が上昇している要因の分解。分子の期待賃料と名目成長が同時に上がっているという解釈は本章のものであり、賃料の推計値による裏付けを取っていない。
+- グリーンランド関税予告が、もし撤回されずに官報へ載った場合に依拠する予定だった根拠法。Truth Social原文に条文の指定がなく、未発効のまま撤回されたため特定できない。
+- 2026年1月23日以降の円急騰時に、日米当局がレートチェックを実施したか否か。財務省・日銀は公式に認めておらず、介入実績ゼロ以外の一次確認が取れない。
+- ICEドル指数（DXY）の1月20日終値。本稿はFREDの貿易加重指数（DTWEXBGS）を一次系列とし、ロイターが報じたICE指数の一時0.7%安は二次情報として併記したにとどまる。
 
 ## 出典
 
@@ -332,3 +420,17 @@ World Bankの金はロンドン午後値の年平均である。[出典](https:/
 56. IMF Data Brief「Currency Composition of Official Foreign Exchange Reserves」2024Q4（2025年4月2日） https://data.imf.org/en/news/4225global
 57. IMF Data Brief「Currency Composition of Official Foreign Exchange Reserves」2025Q4（2026年3月27日） https://data.imf.org/en/news/imf%20data%20brief%20march%2027
 58. World Bank「Commodity Markets」（Pink Sheet, Annual Prices Nominal, Gold） https://www.worldbank.org/en/research/commodity-markets
+59. Donald J. Trump Truth Social（2026年1月17日、対欧州8か国の関税予告）via Trump's Truth archive https://trumpstruth.org/statuses/34583
+60. The American Presidency Project「Truth Social Posts of January 21, 2026」（関税撤回） https://www.presidency.ucsb.edu/documents/truth-social-posts-january-21-2026
+61. Board of Governors of the Federal Reserve System「Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity (DGS10)」via FRED https://fred.stlouisfed.org/series/DGS10
+62. S&P Dow Jones Indices LLC「S&P 500」via FRED https://fred.stlouisfed.org/series/SP500
+63. Board of Governors of the Federal Reserve System「Nominal Broad U.S. Dollar Index (DTWEXBGS)」via FRED https://fred.stlouisfed.org/series/DTWEXBGS
+64. Board of Governors of the Federal Reserve System「Japanese Yen to U.S. Dollar Spot Exchange Rate (DEXJPUS)」via FRED https://fred.stlouisfed.org/series/DEXJPUS
+65. Reuters「Wall Street posts biggest daily drop in three months, Trump Greenland tariff threat triggers wide selloff」2026年1月20日 https://www.reuters.com/business/sp-nasdaq-futures-slide-one-month-lows-greenland-concerns-2026-01-20/
+66. Reuters「Dollar lower as investors reignite 'Sell America' trade」2026年1月20日 https://www.reuters.com/world/asia-pacific/dollar-week-low-geopolitics-revive-sell-america-trade-2026-01-20/
+67. 財務省「Foreign Exchange Intervention Operations (December 29, 2025 – January 28, 2026)」 https://www.mof.go.jp/english/policy/international_policy/reference/feio/monthly/20260130e.html
+68. 財務省「国債金利情報」一括CSV https://www.mof.go.jp/jgbs/reference/interest_rate/data/jgbcm_all.csv
+69. CFTC「Commitments of Traders — CME Futures Only」2026年1月6日付 https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf010626.htm
+70. CFTC「Commitments of Traders — CME Futures Only」2026年1月13日付 https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf011326.htm
+71. CFTC「Commitments of Traders — CME Futures Only」2026年1月20日付 https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf012026.htm
+72. CFTC「Commitments of Traders — CME Futures Only」2026年1月27日付 https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf012726.htm

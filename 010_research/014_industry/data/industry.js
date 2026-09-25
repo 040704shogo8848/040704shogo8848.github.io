@@ -2,6 +2,20 @@
 // 追加は bin/add-report.sh 経由。
 window.INDUSTRY = [
   {
+    "title": "小惑星採掘の経済性｜AstroForge の自律ミッションと、金・PGM が鉄並みになる条件",
+    "date": "2026-09-25",
+    "tags": [
+      "宇宙",
+      "資源",
+      "PGM",
+      "小惑星採掘",
+      "非鉄"
+    ],
+    "summary": "Autonomy-1 は採掘ではなく、分離後ゼロ指令の自律運用実証である。Solo は物理ベース飛行ソフト上の知能層で、Brokkr-1・Odin は通信障害で主目的未達。損益分岐は片道 rideshare（2026年 7,000 USD/kg）ではなく帰還質量で決まり、Pt を 950 USD/oz（約30,540 USD/kg）とするとミッション費用 1,000万USD で純 Pt 約 327 kg が要る。世界 Pt 鉱山は 17万 kg/年、JM の 2025年不足見通しは約 22.9 トンで、「鉄並み」価格には桁違いの供給増が要る。米国2015年・ルクセンブルク2017年・日本2021年法は抽出物の私有を認める。出典22件。",
+    "source": "Desk research",
+    "file": "reports/asteroid_mining_economics_260925.html"
+  },
+  {
     "title": "紙・パルプ業界にAIは何をするのか｜需要は20年前から減り、紙は変圧器の中へ",
     "date": "2026-09-24",
     "tags": [

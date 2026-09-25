@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小惑星採掘の経済性｜AstroForge の自律ミッションと、金・PGM が鉄並みになる条件</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em;line-height:1.35}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+  @media(max-width:760px){.kpi{grid-template-columns:repeat(2,1fr)}}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card)}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;line-height:1.6}
+  th{background:#F3F1EB;font-weight:700;white-space:nowrap}
+  td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  td.c{text-align:center;white-space:nowrap;font-weight:700}
+  caption{caption-side:bottom;font-size:11.5px;color:var(--muted);text-align:left;padding-top:6px}
+  td.neg{color:var(--bad)}
+  tr.em td{background:#FBFAF6;font-weight:700}
+
+  figure{margin:22px 0 8px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:18px 16px 10px}
+  figcaption{font-size:11.5px;color:var(--muted);padding-top:8px;line-height:1.7}
+  .legend{display:flex;gap:20px;font-size:12px;color:var(--sub);margin:4px 0 0 60px;flex-wrap:wrap}
+  .legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:5px}
+
+  ol.src{font-size:13px;color:var(--sub);padding-left:22px}
+  ol.src li{margin:6px 0}
+  ol.src a{color:var(--accent)}
+  footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:12px;color:var(--muted)}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+a.il{color:var(--accent);text-decoration:none}
+a.il:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<div class="crumb"><a href="../../../index.html">shogo</a> / <a href="../index.html">industry</a> / 小惑星採掘</div>
+
+<header class="top">
+  <h1>小惑星採掘の経済性</h1>
+  <div class="en">Asteroid Mining Economics — Autonomy-1, PGM Grades, and the Break-Even Mass</div>
+  <div class="tags">
+    <span class="tag">宇宙</span><span class="tag">資源</span><span class="tag">PGM</span>
+    <span class="tag">小惑星採掘</span><span class="tag">非鉄</span>
+  </div>
+  <p class="lead">
+    AstroForge の Autonomy-1 は採掘そのものではなく、地上からの指令を切った自律運用の実証である。
+    損益分岐を決めるのは打上げ単価ではなく、地球へ持ち帰れる質量である。
+    現行のサンプルリターンはグラム単位であり、PGM 価格で打上げ費を埋めるには数百キログラム級の回収が要る。
+  </p>
+  <p class="srcnote">AstroForge 公式、USGS、Johnson Matthey、各国法令、NASA / JAXA のミッション報告をもとに作成（2026年9月25日時点）</p>
+</header>
+
+<div class="kpi">
+  <div class="card"><div class="k">Pt 年平均価格（USGS）</div><div class="v">950<small>USD/トロイオンス（2024年）＝約30,540 USD/kg</small></div></div>
+  <div class="card"><div class="k">世界 Pt 鉱山生産</div><div class="v">170<small>トン（2024年推定、USGS）</small></div></div>
+  <div class="card"><div class="k">鉄隕石の PGM 中央値</div><div class="v">40.8<small>ppm（Cannon et al. 2023、推定分布）</small></div></div>
+  <div class="card"><div class="k">ミッション費用 1,000万USD の損益分岐</div><div class="v">327<small>kg の純 Pt を地球へ戻す必要（筆者計算）</small></div></div>
+</div>
+
+<h2><span class="num">01</span>結論<span class="en">Conclusion</span></h2>
+
+<div class="callout">
+<p><strong class="hit">Autonomy-1 は採掘ミッションではない。</strong>
+2026年9月21日の AstroForge 発表によれば、Autonomy-1 は分離後に地上へ1コマンドも送らない運用を実証する。
+Solo は物理ベースの飛行ソフトの上に乗る知能層であり、DeepSpace-2（2026年末予定）では shadow mode、Autonomy-1（2027年初頭予定）で初めて制御権限を握る。
+過去の Brokkr-1 と Odin はいずれも通信障害で主目的を達成していない。<sup>1</sup><sup>2</sup><sup>3</sup></p>
+
+<p><strong class="hit">損益分岐の本体は帰還質量である。</strong>
+SpaceX rideshare の公表単価は 2026年打上げで 7,000 USD/kg（50 kg から課金）だが、これは SSO / LEO への片道である。
+Pt を 950 USD/トロイオンス（2024年平均）とすると、ミッション総費用を 1,000万USD と置いた場合、純 Pt で約 327 kg を地球へ戻さないと打上げ費すら回収できない。
+政府系サンプルリターンは OSIRIS-REx が 121.6 g、はやぶさ2 が約 5.4 g にとどまる。<sup>4</sup><sup>5</sup><sup>6</sup><sup>7</sup></p>
+
+<p><strong class="hit">「金・PGM が鉄並み」は年間需給の桁では起きない。</strong>
+世界の Pt 鉱山生産は 2024年推定で 17万 kg、Pd は 19万 kg である。
+Johnson Matthey の 2025年見通しでは Pt は約 736千トロイオンス（約 22.9 トン）の供給不足である。
+鉄並み価格へ落とすにはこの需給の何桁も上の供給増が要り、その前に南アフリカ・ロシア・ジンバブエの鉱山と地上精錬の価格体系が崩れる。
+ただし所有権の国内法（米国 2015年、ルクセンブルク 2017年、日本 2021年）はすでに抽出物の私有を認めている。<sup>8</sup><sup>9</sup><sup>10</sup><sup>11</sup><sup>12</sup></p>
+</div>
+
+<div class="note">
+関連する既存ページ:
+<a class="il" href="../chapters/04_critical-materials.html">素材と資源の寡占構造</a>（精錬立地が寡占を決める、という章。地上の PGM 供給を扱う時はここへ接続する）／
+<a class="il" href="../../016_finance/chapters/03_rates-and-macro-prices.html">金利とマクロ価格</a>（金属価格の節）。同じ数字を二重に置かない。
+</div>
+
+<h2><span class="num">02</span>Autonomy-1 と Solo<span class="en">Autonomy-1 and Solo</span></h2>
+
+<p>AstroForge は 2022年創業の小惑星資源スタートアップである。TechCrunch の報道では累計調達は 5,600万USD とされる（single-source）。
+ミッション列は、軌道上精錬実証の Brokkr-1、深宇宙の Odin、小惑星ランデブーの DeepSpace-2、そして自律実証の Autonomy-1 である。<sup>2</sup><sup>3</sup></p>
+
+<h3>Solo の技術的な中身</h3>
+
+<p>公式説明では、Solo は既存の決定論的・物理ベース飛行ソフトを置き換えない「intelligence layer」である。
+Sense → Decide → Act の連鎖で、機体状態を取り込み、オフノミナルを判定し、サブシステムを協調させる。
+地上オペレータが受信できるテレメトリは深宇宙通信の帯域で削られるのに対し、Solo は機上の全データにアクセスできる、というのが AstroForge の主張である。<sup>1</sup><sup>13</sup></p>
+
+<p>TechCrunch によると、スタックは (1) 伝統的制御、(2) 電源や航法などサブシステム向けの学習モデル、(3) 約 2,500 センサを入力とする全体の知能層、の3層である。
+CEO の Matt Gialich は Autonomy-1 に地上受信可能な無線を載せない方針を公言しているが、飛行までに方針が変わる可能性も自ら認めている（single-source）。
+地上局網を自前で持つ場合の概算として、世界に5基の大型アンテナを置く費用を「およそ 2億USD」と述べている（single-source、推定発言）。
+公式ブログでは地上運用（アンテナ時間・テレメトリ解析・指令）がミッション費用の「ほぼ3分の1」を占めるとしている。<sup>1</sup><sup>2</sup></p>
+
+<h3>ミッション列と結果</h3>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>ミッション</th><th>時期</th><th>目的</th><th>結果（as of 2026-09-25）</th></tr></thead>
+  <tbody>
+    <tr><td>Brokkr-1</td><td>2023年4月</td><td>軌道上での精錬技術デモ（CubeSat）</td><td>通信問題で精錬デモ未達<sup>3</sup></td></tr>
+    <tr><td>Odin</td><td>2025年2月27日打上げ</td><td>近地球小惑星へのフライバイ観測。公称 100 kg、公式サイトは 300,000 km 飛行を表示</td><td>地上局・通信の問題で制御不能。主目的未達<sup>2</sup><sup>3</sup></td></tr>
+    <tr><td>DeepSpace-2</td><td>2026年第4四半期予定</td><td>惑星重力井戸外での商業ランデブー初。Solo を shadow mode で搭載</td><td>未飛行<sup>1</sup><sup>14</sup></td></tr>
+    <tr><td>Autonomy-1</td><td>2027年初頭予定</td><td>分離後ゼロ指令。NASA Goddard の COMPASS（太陽物理）を搭載。Stoke Space Nova Pathfinder 初号機</td><td>未飛行<sup>1</sup><sup>3</sup></td></tr>
+  </tbody>
+  <caption>公式発表と Space.com / TechCrunch の整理。Autonomy-1 の軌道は地球近傍の自律実証であり、小惑星への採掘・帰還は含まない。</caption>
+</table></div>
+
+<p>要するに、現時点で AstroForge が実証したのは「小惑星へ行くこと」でも「金属を持ち帰ること」でもなく、通信制約下で機体を失った経験から、地上依存を切るモデルへ振り切ったことである。</p>
+
+<h2><span class="num">03</span>何を採るのか<span class="en">What to Mine</span></h2>
+
+<p>AstroForge の公開メッセージは一貫して、金属に富む小惑星の白金族金属（PGM）である。
+NASA の Psyche ミッションは主帯の金属富化小惑星 (16) Psyche を探査中で、到着は 2029年8月頃、金属体積比は近年の推定で 30〜60% の範囲にある。
+ただし Psyche 自体の PGM 品位の実測値は未取得である。商業採掘の品位仮説は、鉄隕石の分析に依存する。<sup>15</sup><sup>16</sup></p>
+
+<h3>M型・鉄隕石の PGM 品位</h3>
+
+<p>Cannon, Gialich, Acain（2023）は鉄隕石の統計サンプリングで総 PGM 品位の分布を出し、中央値（50パーセンタイル）を 40.78 ppm、90パーセンタイルを 107.86 ppm とした。
+上限付近として IIAB Avce の約 230 ppm を示し、Kargel（1994）が Ir から他元素をコンドライト比で外挿して得た「300 ppm 超」は実測と整合しない、と結論している。
+同論文の共著者に AstroForge の Gialich と Acain が名を連ねる点は利害関係として明記する。<sup>17</sup></p>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>指標</th><th>値</th><th>時点・注</th></tr></thead>
+  <tbody>
+    <tr><td>鉄隕石 PGM・10パーセンタイル</td><td class="n">14.70 ppm</td><td>Cannon et al. 2023</td></tr>
+    <tr class="em"><td>鉄隕石 PGM・中央値</td><td class="n">40.78 ppm</td><td>同上。以降の計算の基準</td></tr>
+    <tr><td>鉄隕石 PGM・90パーセンタイル</td><td class="n">107.86 ppm</td><td>同上</td></tr>
+    <tr><td>上限付近の実測例</td><td class="n">約 230 ppm</td><td>IIAB Avce（論文の整理）</td></tr>
+    <tr><td>地上鉱床の中央値（比較）</td><td class="n">3.86 ppm</td><td>同論文 Table 2</td></tr>
+    <tr><td>(16) Psyche の金属体積比</td><td class="n">30〜60%</td><td>NASA 公開説明。PGM 品位は N/A</td></tr>
+  </tbody>
+  <caption>ppm は質量百万分率。1 ppm ＝ 1 g/t。中央値 40.78 ppm なら、純 PGM 1 kg を得るのに金属合金約 24.5 トンが要る（1 / 40.78e-6）。</caption>
+</table></div>
+
+<h3>地球帰還までの経路</h3>
+
+<p>経路は少なくとも4段に分かれる。(1) 近地球小惑星への到達、(2) 表面または内部からの採取・選鉱、(3) 機上精錬または高品位濃縮、(4) 地球への再突入・回収。
+政府ミッションは (1) とごく少量の (2)(4) までであり、(3) の商業スケールは未実証である。
+OSIRIS-REx は Bennu（炭素質）から 121.6 g、はやぶさ2 はリュウグウから 5.424±0.217 g を回収した。
+いずれも PGM 富化体ではなく、科学サンプルである。Psyche はランデブーと周回観測であり、サンプルリターンを含まない。<sup>6</sup><sup>7</sup><sup>15</sup></p>
+
+<div class="risk">
+<strong>回収可能量の一次数字は AstroForge が開示していない。</strong>
+公式サイトは「1小惑星で地球を200年供給できる」等のマーケ文言を置くが、対象天体名・推定品位・ミッションあたりの帰還質量は公表されていない（非開示）。
+本稿の損益分岐は、帰還する純 PGM 質量を変数として計算する。
+</div>
+
+<h2><span class="num">04</span>損益分岐の計算<span class="en">Break-Even Math</span></h2>
+
+<p>使う定数を先に固定する。読者が同じ式で再計算できる形にする。</p>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>記号</th><th>定義</th><th>採用値</th><th>出典</th></tr></thead>
+  <tbody>
+    <tr><td>P_Pt</td><td>白金の年平均価格</td><td class="n">950 USD/トロイオンス（2024）</td><td>USGS MCS 2025<sup>8</sup></td></tr>
+    <tr><td>m_oz</td><td>1トロイオンスの質量</td><td class="n">31.1034768 g</td><td>計量定義</td></tr>
+    <tr><td>p_Pt</td><td>白金のキロ単価</td><td class="n">950 / 0.0311034768 ＝ 30,543 USD/kg</td><td>筆者換算</td></tr>
+    <tr><td>P_Pd</td><td>パラジウム年平均価格</td><td class="n">980 USD/トロイオンス（2024）</td><td>USGS<sup>8</sup></td></tr>
+    <tr><td>p_Pd</td><td>パラジウムのキロ単価</td><td class="n">31,508 USD/kg</td><td>筆者換算</td></tr>
+    <tr><td>r_2026</td><td>SpaceX rideshare 公表単価</td><td class="n">7,000 USD/kg（2026年打上げ、50 kg 起算）</td><td>NewSpace Market が spacex.com を2026-08に記録<sup>4</sup></td></tr>
+    <tr><td>L_100</td><td>100 kg の SSO rideshare 費用</td><td class="n">350,000 + 50×7,000 ＝ 700,000 USD</td><td>「50 kg で 35万USD、追加は kg 単価」の表記に基づく推定<sup>4</sup></td></tr>
+    <tr><td>g</td><td>鉄隕石 PGM 中央値</td><td class="n">40.78 ppm</td><td>Cannon et al.<sup>17</sup></td></tr>
+  </tbody>
+  <caption>rideshare 価格は SSO / LEO の片道。深宇宙投入・帰還カプセル・機上精錬の費用はここに含まれない。</caption>
+</table></div>
+
+<p>損益分岐質量の式は次である。</p>
+
+<p style="text-align:center;font-family:ui-monospace,Menlo,monospace;font-size:14px;margin:18px 0">
+M_be (kg) ＝ C_mission (USD) ／ p_metal (USD/kg)
+</p>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>シナリオ</th><th>C_mission</th><th>仮定の中身</th><th>M_be（純 Pt）</th><th>同質量を中央値品位で掘る原料</th></tr></thead>
+  <tbody>
+    <tr><td>A. 片道 rideshare のみ</td><td class="n">70万USD</td><td>100 kg・SSO。帰還なし</td><td class="n">22.9 kg</td><td class="n">約 562 トン</td></tr>
+    <tr><td>B. 地上運用を含む低位</td><td class="n">210万USD</td><td>A の3倍（公式「地上運用が約1/3」の逆算）。推定</td><td class="n">68.8 kg</td><td class="n">約 1,690 トン</td></tr>
+    <tr class="em"><td>C. 商業初号機の仮置き</td><td class="n">1,000万USD</td><td>機体・深宇宙投入・運用を丸めた作業仮定。推定</td><td class="n">327 kg</td><td class="n">約 8,020 トン</td></tr>
+    <tr><td>D. 中位</td><td class="n">5,000万USD</td><td>同上。推定</td><td class="n">1,637 kg</td><td class="n">約 40,100 トン</td></tr>
+    <tr><td>E. 高位</td><td class="n">1億USD</td><td>同上。推定</td><td class="n">3,274 kg</td><td class="n">約 80,300 トン</td></tr>
+    <tr><td>参考. OSIRIS-REx</td><td class="n">11.6億USD</td><td>科学ミッション全寿命。帰還 121.6 g（非PGM）</td><td class="n">—</td><td class="n">グラム級。商業比較不可</td></tr>
+  </tbody>
+  <caption>原料質量 ＝ M_be / (40.78 × 10<sup>−6</sup>)。選鉱回収率・精錬歩留まりは 100% と置いている（楽観側）。実際はさらに原料が要る。</caption>
+</table></div>
+
+<figure>
+<svg viewBox="0 0 720 320" role="img" aria-label="ミッション費用に対する純Ptの損益分岐質量">
+  <text x="12" y="22" font-size="13" font-weight="700" fill="#1a1a1a">感度：ミッション総費用と損益分岐質量（純 Pt、30,543 USD/kg）</text>
+  <line x1="70" y1="50" x2="70" y2="270" stroke="#E5E2DA"/>
+  <line x1="70" y1="270" x2="680" y2="270" stroke="#E5E2DA"/>
+  <text x="20" y="160" font-size="11" fill="#555" transform="rotate(-90 20 160)">M_be (kg)</text>
+  <text x="360" y="308" font-size="11" fill="#555" text-anchor="middle">C_mission（百万USD）</text>
+  <!-- grid -->
+  <line x1="70" y1="215" x2="680" y2="215" stroke="#EDEBE5"/>
+  <line x1="70" y1="160" x2="680" y2="160" stroke="#EDEBE5"/>
+  <line x1="70" y1="105" x2="680" y2="105" stroke="#EDEBE5"/>
+  <text x="62" y="274" font-size="10" fill="#8a8a8a" text-anchor="end">0</text>
+  <text x="62" y="219" font-size="10" fill="#8a8a8a" text-anchor="end">1000</text>
+  <text x="62" y="164" font-size="10" fill="#8a8a8a" text-anchor="end">2000</text>
+  <text x="62" y="109" font-size="10" fill="#8a8a8a" text-anchor="end">3000</text>
+  <text x="131" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">10</text>
+  <text x="253" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">30</text>
+  <text x="375" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">50</text>
+  <text x="497" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">70</text>
+  <text x="619" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">100</text>
+  <!-- line: M = C*1e6/30543; scale x: 0-100M -> 70-680; y: 0-3500kg -> 270-50 -->
+  <!-- points: 10M->327kg, 30M->982, 50M->1637, 70M->2292, 100M->3274 -->
+  <polyline fill="none" stroke="#2563EB" stroke-width="2.5"
+    points="131,250 253,208 375,167 497,126 619,64"/>
+  <circle cx="131" cy="250" r="4" fill="#2563EB"/>
+  <circle cx="375" cy="167" r="4" fill="#2563EB"/>
+  <circle cx="619" cy="64" r="4" fill="#2563EB"/>
+  <text x="140" y="242" font-size="11" fill="#1a1a1a">327 kg @ 1,000万</text>
+  <text x="384" y="160" font-size="11" fill="#1a1a1a">1,637 kg @ 5,000万</text>
+  <text x="520" y="58" font-size="11" fill="#1a1a1a">3,274 kg @ 1億</text>
+  <!-- reference: OSIRIS return 0.1216 kg at absurd cost - horizontal near zero -->
+  <line x1="70" y1="268" x2="680" y2="268" stroke="#b91c1c" stroke-dasharray="4 3" stroke-width="1.5"/>
+  <text x="680" y="262" font-size="10" fill="#b91c1c" text-anchor="end">OSIRIS-REx 帰還 0.12 kg（参考）</text>
+</svg>
+<figcaption>直線は M_be ＝ C / 30,543。価格が半減すれば傾きは2倍になる。赤の破線は政府サンプルリターンの帰還質量スケールで、商業損益分岐とは桁が違う。</figcaption>
+</figure>
+
+<p>比較のため、Pd だけで埋める場合は p_Pd ＝ 31,508 USD/kg なので、シナリオ C の分岐質量は約 317 kg とほぼ同じである。
+Rh は USGS の 2024年平均が 4,600 USD/トロイオンス（約 147,900 USD/kg）と高いが、世界供給は小さく、ミッションの主産物として置く根拠はない。<sup>8</sup></p>
+
+<div class="note">
+<strong>片道 rideshare と帰還の混同を避ける。</strong>
+シナリオ A の 22.9 kg は「LEO に 100 kg を上げる費用を Pt で払う」計算にすぎない。
+小惑星から地球へ戻すデルタV、再突入熱防護、回収運用は rideshare 価格に含まれない。
+したがって商業採掘の現実的な下限はシナリオ C 以降の桁であると読む。
+</div>
+
+<h2><span class="num">05</span>先行2社の顛末<span class="en">Why the First Wave Ended</span></h2>
+
+<p>2010年代前半の小惑星採掘ブームを代表した Planetary Resources と Deep Space Industries は、いずれも採掘そのものの失敗ではなく、資金と事業焦点の崩壊で終わった。</p>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>項目</th><th>Planetary Resources</th><th>Deep Space Industries</th></tr></thead>
+  <tbody>
+    <tr><td>設立の公的起点</td><td>2012年（現行体制）</td><td>2012年</td></tr>
+    <tr><td>当初の対象</td><td>近地球小惑星の水・PGM</td><td>小惑星の水氷などを小型機で探査・抽出</td></tr>
+    <tr><td>飛行実績</td><td>Arkyd-3R、Arkyd-6A（技術実証）</td><td>Comet 推進系を他社衛星に搭載</td></tr>
+    <tr><td>詰まった主因</td><td><strong>資金</strong>。想定ラウンド不成立、人員削減、資産売却検討</td><td><strong>事業焦点</strong>。採掘より小型衛星推進へピボットした末に買収</td></tr>
+    <tr><td>終了形態</td><td>2018年10月、ConsenSys が資産買収</td><td>2019年1月、Bradford Space が買収。推進事業へ再編</td></tr>
+    <tr><td>法制度の寄与</td><td>米国 2015年法は同社活動期に成立。法が無いことが直接の死因ではない</td><td>同上</td></tr>
+  </tbody>
+  <caption>GeekWire および SpaceNews の報道整理。買収額は両件とも非開示。<sup>18</sup><sup>19</sup></caption>
+</table></div>
+
+<p>技術の壁は「全く飛べなかった」ではない。両社とも軌道上のハードは持った。
+ただし採掘から収益までの距離が長く、NASA の探査優先が月へ移る中で、長期ビジョンだけでは次のラウンドが埋まらなかった。
+法制度はむしろ整備が進んだ時期であり、死因の第1因子ではない。</p>
+
+<h2><span class="num">06</span>供給ショックが起きた場合の地上への影響<span class="en">If Space Supply Hits Earth</span></h2>
+
+<p>価格が「鉄並み」になる条件を、年間需給の実数から先に置く。</p>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>指標</th><th>数量</th><th>時点</th><th>出典</th></tr></thead>
+  <tbody>
+    <tr><td>世界 Pt 鉱山生産</td><td class="n">170,000 kg</td><td>2024年推定</td><td>USGS<sup>8</sup></td></tr>
+    <tr><td>世界 Pd 鉱山生産</td><td class="n">190,000 kg</td><td>2024年推定</td><td>USGS<sup>8</sup></td></tr>
+    <tr><td>うち南アフリカ Pt</td><td class="n">120,000 kg</td><td>2024年推定</td><td>USGS<sup>8</sup></td></tr>
+    <tr><td>うちロシア Pd</td><td class="n">75,000 kg</td><td>2024年推定</td><td>USGS<sup>8</sup></td></tr>
+    <tr><td>ジンバブエ Pt＋Pd</td><td class="n">19,000 + 15,000 kg</td><td>2024年推定</td><td>USGS<sup>8</sup></td></tr>
+    <tr><td>JM Pt 総供給（一次＋二次）</td><td class="n">7,095 千トロイオンス ≈ 221 トン</td><td>2024</td><td>JM 2025報告<sup>9</sup></td></tr>
+    <tr><td>JM Pt 総需要</td><td class="n">7,869 千トロイオンス ≈ 245 トン</td><td>2024</td><td>JM<sup>9</sup></td></tr>
+    <tr><td>JM Pt 需給ギャップ（2025見通し）</td><td class="n">不足 736 千トロイオンス ≈ 22.9 トン</td><td>2025見通し</td><td>JM<sup>9</sup></td></tr>
+    <tr><td>鉄鉱石 62% Fe 先物</td><td class="n">約 102 USD/トン ≈ 0.10 USD/kg</td><td>2026年頃の市場表示</td><td>公開相場（single-source）<sup>20</sup></td></tr>
+    <tr><td>熱延コイル（インドネシア FOB）</td><td class="n">523 USD/トン ≈ 0.52 USD/kg</td><td>2026-09-24</td><td>SMM<sup>21</sup></td></tr>
+  </tbody>
+</table></div>
+
+<p>Pt キロ単価 30,543 USD を熱延コイル 0.52 USD/kg まで落とすには、約 58,700 倍の価格下落が要る。
+これは年間 23 トンの不足を埋める程度の供給増では起きない。
+不足を消すだけなら、宇宙から（または新規地上鉱山から）純 Pt 換算でおおむね 20〜25 トン/年の追加で足りる。
+価格を半減させるには、在庫・投資需要・自動車触媒需要の弾性も絡むため単一のトン数では決まらないが、少なくとも「年間鉱山生産の 10%（Pt なら約 17 トン）」級の持続的余剰があれば、2024年に観測されたような Dual-digit の価格下落（Pd 年平均は前年比 −27%）を再び起こしうる。<sup>8</sup><sup>9</sup></p>
+
+<p>その水準でも「鉄並み」には届かない。鉄並みは、PGM が構造材として鉄と代替される世界であり、触媒・電子・化学向けの希少金属市場としては別物である。
+金属価格のマクロ経路の整理は
+<a class="il" href="../../016_finance/chapters/03_rates-and-macro-prices.html">金利とマクロ価格</a>
+に譲る。</p>
+
+<h3>資源国と精錬メーカー</h3>
+
+<p>南アフリカは世界 Pt 鉱山の約 71%（120/170）、ロシアは世界 Pd 鉱山の約 39%（75/190）を占める（2024年推定）。
+ジンバブエは両金属で合わせて 3.4 万 kg 規模である。
+USGS は 2024年の南アフリカ減産要因として深部採掘コスト、労働争議、電力供給の乱れを挙げ、ロシアでは災害・品位低下・紛争関連・製錬所の計画停止を挙げる。
+すでにコスト曲線の上側で苦しむ鉱山に、宇宙由来の数十トン級余剰が加われば、高コスト坑の閉山と雇用・外貨収入の縮小が先に来る。<sup>8</sup></p>
+
+<p>地上の非鉄精錬・加工（自動車触媒、化学触媒、電子材料）については、金属価格の暴落は原料調達コストを下げる一方、在庫評価損と鉱山側の出荷減で処理量そのものが減る。
+寡占の重心が採掘ではなく加工立地にある、という一般構造は
+<a class="il" href="../chapters/04_critical-materials.html">素材と資源の寡占構造</a>
+と同じである。PGM でも、廃触媒リサイクルの二次供給が JM 統計で一次の数割を占めており、価格下落は二次回収の採算を同時に削る。<sup>9</sup></p>
+
+<div class="risk">
+<strong>「金が鉄並み」も同じ論理である。</strong>
+2026年8月7日時点の金は 1オンス 4,340.26 USD（約 139,500 USD/kg）で、熱延コイル比は約 268,000 倍である。
+年間の金鉱山生産は数百トン規模であり、小惑星由来でこの比を埋める供給は、現在のサンプルリターン技術の延長線上にはない。
+金価格の出典は金融章の Trading Economics 引用に接続する（ここでは再掲のみ）。
+</div>
+
+<h2><span class="num">07</span>法制度<span class="en">Legal Status of Space Resources</span></h2>
+
+<p>外層空間条約（1967年）は天体の国家による領有を禁じるが、抽出した資源の私有については各国が国内法で正面から認め始めている。</p>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>法</th><th>成立</th><th>コア条文の趣旨</th><th>主権との関係</th></tr></thead>
+  <tbody>
+    <tr><td>米国 Commercial Space Launch Competitiveness Act（Title IV）</td><td>2015年</td><td>米国市民が商業回収した小惑星資源・宇宙資源について、所有・輸送・使用・販売の権利を認める（51 U.S.C. §51303）</td><td>領有権の主張は明示的に否認</td></tr>
+    <tr><td>ルクセンブルク「宇宙資源の探査・利用に関する法律」</td><td>2017年7月20日</td><td>「Space resources are capable of being owned.」大臣の書面許可が必要</td><td>許可制で監督。会社形態要件あり</td></tr>
+    <tr><td>日本「宇宙資源の探査及び開発に関する事業活動の促進に関する法律」（令和3年法律第83号）</td><td>2021年</td><td>許可に係る事業活動計画に従って採掘等した宇宙資源は、所有の意思をもって占有することで所有権を取得（第5条）</td><td>諸条約の実施を目的に明記。他国の探査・利用の自由を害しない旨</td></tr>
+  </tbody>
+  <caption>条文の一次情報は Congress.gov、Legilux、内閣府英訳 PDF。<sup>10</sup><sup>11</sup><sup>12</sup></caption>
+</table></div>
+
+<p>現状の含意は次である。国内法上、抽出物の私有は可能になった。
+しかし国際社会全体で調和した登記・優先権・紛争解決の制度は未完成であり、日本法も附則で「抜本的な見直しを含め検討」と書く。
+先行2社が倒れた主因が法の欠如ではなかったことと合わせると、今のボトルネックは所有権の文言ではなく、帰還質量とミッション費用である。</p>
+
+<h2><span class="num">08</span>残っている問い<span class="en">Open Questions</span></h2>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>#</th><th>問い</th><th>取れなかった理由</th></tr></thead>
+  <tbody>
+    <tr><td class="c">1</td><td>AstroForge がターゲットとする具体的な小惑星名と、推定 PGM 品位・推定回収質量</td><td>非開示。公式は一般論のみ</td></tr>
+    <tr><td class="c">2</td><td>Autonomy-1 / DeepSpace-2 のミッション総予算と内訳（打上げ・機体・地上運用）</td><td>非開示。地上運用「約1/3」以外の内訳なし</td></tr>
+    <tr><td class="c">3</td><td>Odin の最終軌道と、通信断絶の技術的な故障ツリー</td><td>公式の詳細故障報告書なし。報道ベース</td></tr>
+    <tr><td class="c">4</td><td>商業サンプルリターンの再突入機・回収質量の設計値</td><td>非開示。Starship 級のダウンマスは概念段階</td></tr>
+    <tr><td class="c">5</td><td>はやぶさ2 の全寿命コストの確定値（開発・打上げ・運用の合算）</td><td>公開資料で合算値が一意に確定できない。開発費単独の旧試算はある</td></tr>
+    <tr><td class="c">6</td><td>宇宙由来 PGM が年間 10 トン流入した場合の価格弾性（需給モデル）</td><td>公開の定量モデルなし。本稿は不足トン数との比較まで</td></tr>
+  </tbody>
+</table></div>
+
+<h2><span class="num">09</span>出典<span class="en">Sources</span></h2>
+
+<ol class="src">
+  <li><a href="https://www.astroforge.com/updates-collection/introducing-autonomy-1-the-first-autonomous-space-mission-powered-by-solo">AstroForge, Matt Gialich, “Introducing Autonomy-1: The First Autonomous Space Mission, Powered by Solo,” 2026-09-21</a></li>
+  <li><a href="https://techcrunch.com/2026/09/22/astroforge-is-putting-ai-in-command-of-its-next-spacecraft/">TechCrunch, “AstroForge is putting AI in command of its next spacecraft,” 2026-09-22</a></li>
+  <li><a href="https://www.space.com/technology/without-a-single-command-from-the-ground-asteroid-mining-company-to-launch-worlds-1st-autonomous-space-mission-in-2027">Space.com, “Asteroid-mining company AstroForge to launch world's 1st totally autonomous spacecraft in 2027”</a></li>
+  <li><a href="https://newspacemarket.com/intelligence/launch-index/">NewSpace Market, “Rideshare &amp; Small Launch Price Index”（SpaceX rideshare 2026: 7,000 USD/kg、as of 2026-08）</a></li>
+  <li><a href="https://www.planetary.org/space-missions/osiris-rex">The Planetary Society, “OSIRIS-REx” mission cost 1.16 billion USD</a></li>
+  <li><a href="https://science.nasa.gov/blogs/osiris-rex/2024/02/15/nasa-announces-osiris-rex-bulk-sample-mass/">NASA, “NASA Announces OSIRIS-REx Bulk Sample Mass,” 121.6 g, 2024-02-15</a></li>
+  <li><a href="https://curation.isas.jaxa.jp/sample-curation/ryugu/">JAXA 地球外物質研究グループ, はやぶさ2 リュウグウ試料（5.424±0.217 g）</a></li>
+  <li><a href="https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf">USGS, Mineral Commodity Summaries 2025, Platinum-Group Metals</a></li>
+  <li><a href="https://matthey.com/media/2025/johnson-matthey-publishes-2025-pgm-market-report">Johnson Matthey, “publishes 2025 PGM Market Report,” 2025-05-15（詳細表は同社 PGM Market Report May 2025）</a></li>
+  <li><a href="https://www.congress.gov/bill/114th-congress/house-bill/2262/text/enr">U.S. Congress, H.R.2262, U.S. Commercial Space Launch Competitiveness Act, 2015（enrolled）</a></li>
+  <li><a href="https://legilux.public.lu/eli/etat/leg/loi/2017/07/20/a674/jo/en">Luxembourg, Law of 20 July 2017 on the exploration and use of space resources</a></li>
+  <li><a href="https://www8.cao.go.jp/space/english/resource/documents/act83_2021.pdf">内閣府, Act on the Promotion of Business Activities Related to the Exploration and Development of Space Resources（令和3年法律第83号）英訳</a></li>
+  <li><a href="https://www.astroforge.com/solo">AstroForge, SOLO product page</a></li>
+  <li><a href="https://www.astroforge.io/missions">AstroForge, Missions（DeepSpace-2 / Odin）</a></li>
+  <li><a href="https://science.nasa.gov/mission/psyche/">NASA, Psyche mission overview</a></li>
+  <li><a href="https://science.nasa.gov/solar-system/asteroids/16-psyche/">NASA, Asteroid Psyche（金属体積比 30–60%）</a></li>
+  <li><a href="https://www.sciencedirect.com/science/article/pii/S0032063322001945">Cannon, Gialich, Acain, “Precious and structural metals on asteroids,” Planetary and Space Science, 2023</a></li>
+  <li><a href="https://www.geekwire.com/2018/consensys-blockchain-studio-acquires-planetary-resources-asteroid-mining-venture/">GeekWire, “ConsenSys blockchain studio acquires Planetary Resources,” 2018-10-31</a></li>
+  <li><a href="https://spacenews.com/deep-space-industries-acquired-by-bradford-space/">SpaceNews, “Deep Space Industries acquired by Bradford Space,” 2019-01-02</a></li>
+  <li><a href="https://www.investing.com/commodities/iron-ore-62-cfr-futures">Investing.com, Iron ore fines 62% Fe CFR futures（表示値の参照）</a></li>
+  <li><a href="https://news.metal.com/newscontent/104133845-smm-steel-hrc-prices-remain-stable-with-no-movement-at-all">SMM, HRC Indonesia 523 USD/tonne FOB, 2026-09-24</a></li>
+  <li><a href="https://www.govinfo.gov/content/pkg/USCODE-2015-title51/html/USCODE-2015-title51-subtitleV-chap513.htm">U.S. Code Title 51, Chapter 513 — Space Resource Commercial Exploration and Utilization</a></li>
+</ol>
+
+<footer>小惑星採掘の経済性 ／ 2026年9月25日作成。数値は各出典の公表時点のもので、算出値・推定値にはその旨を明記した。</footer>
+
+</div>
+
+<script type="application/json" id="facts">
+[
+  {"claim":"Autonomy-1 は分離後に地上から指令を送らない実証","value":"zero uplink commands after separation","unit":"—","as_of":"2026-09-21","source":"https://www.astroforge.com/updates-collection/introducing-autonomy-1-the-first-autonomous-space-mission-powered-by-solo","confidence":"reported"},
+  {"claim":"地上運用が AstroForge ミッション費用に占める割合","value":"nearly one-third","unit":"share of mission cost","as_of":"2026-09-21","source":"https://www.astroforge.com/updates-collection/introducing-autonomy-1-the-first-autonomous-space-mission-powered-by-solo","confidence":"single-source"},
+  {"claim":"AstroForge 累計調達","value":56,"unit":"M USD","as_of":"2026-09-22","source":"https://techcrunch.com/2026/09/22/astroforge-is-putting-ai-in-command-of-its-next-spacecraft/","confidence":"single-source"},
+  {"claim":"SpaceX rideshare 公表単価（2026年打上げ）","value":7000,"unit":"USD/kg","as_of":"2026-08","source":"https://newspacemarket.com/intelligence/launch-index/","confidence":"reported"},
+  {"claim":"USGS 白金年平均価格","value":950,"unit":"USD/troy oz","as_of":"2024","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
+  {"claim":"USGS パラジウム年平均価格","value":980,"unit":"USD/troy oz","as_of":"2024","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
+  {"claim":"白金キロ単価（筆者換算）","value":30543,"unit":"USD/kg","as_of":"2024","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"estimated"},
+  {"claim":"世界 Pt 鉱山生産","value":170000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
+  {"claim":"世界 Pd 鉱山生産","value":190000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
+  {"claim":"南アフリカ Pt 鉱山生産","value":120000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
+  {"claim":"ロシア Pd 鉱山生産","value":75000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
+  {"claim":"JM 2025見通し Pt 供給不足","value":736,"unit":"thousand troy oz","as_of":"2025 forecast","source":"https://matthey.com/media/2025/johnson-matthey-publishes-2025-pgm-market-report","confidence":"reported"},
+  {"claim":"鉄隕石総PGM中央値","value":40.78,"unit":"ppm","as_of":"2023","source":"https://www.sciencedirect.com/science/article/pii/S0032063322001945","confidence":"reported"},
+  {"claim":"OSIRIS-REx 帰還試料質量","value":121.6,"unit":"g","as_of":"2024-02-15","source":"https://science.nasa.gov/blogs/osiris-rex/2024/02/15/nasa-announces-osiris-rex-bulk-sample-mass/","confidence":"reported"},
+  {"claim":"OSIRIS-REx 全寿命費用","value":1.16,"unit":"B USD","as_of":"mission lifetime","source":"https://www.planetary.org/space-missions/osiris-rex","confidence":"reported"},
+  {"claim":"はやぶさ2 リュウグウ試料質量","value":5.424,"unit":"g","as_of":"curation","source":"https://curation.isas.jaxa.jp/sample-curation/ryugu/","confidence":"reported"},
+  {"claim":"ミッション費用1000万USD時の純Pt損益分岐質量","value":327,"unit":"kg","as_of":"2026-09-25","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"estimated"},
+  {"claim":"インドネシア熱延コイル FOB","value":523,"unit":"USD/tonne","as_of":"2026-09-24","source":"https://news.metal.com/newscontent/104133845-smm-steel-hrc-prices-remain-stable-with-no-movement-at-all","confidence":"single-source"},
+  {"claim":"Planetary Resources 資産買収","value":"ConsenSys asset purchase","unit":"—","as_of":"2018-10-31","source":"https://www.geekwire.com/2018/consensys-blockchain-studio-acquires-planetary-resources-asteroid-mining-venture/","confidence":"reported"},
+  {"claim":"Deep Space Industries 買収","value":"Bradford Space acquisition","unit":"—","as_of":"2019-01-01","source":"https://spacenews.com/deep-space-industries-acquired-by-bradford-space/","confidence":"reported"}
+]
+</script>
+</body>
+</html>

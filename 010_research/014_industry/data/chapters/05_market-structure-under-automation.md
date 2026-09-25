@@ -269,6 +269,77 @@ AI講師の4,380円は、人間講師のオンライン英会話7,980円の55%�
 
 ただし答えきれていない部分がある。仕向地側の冷蔵倉庫保管料、冷蔵ドレージ、小売の冷蔵什器の減価償却を含めた総コストを分解した公開資料は見つからなかった。現状では海上区間の2%前後という下限だけが言える。工程別の定量データは、秋田県総合食品研究センターらが2024年11月から2026年3月まで実施している共同研究で埋まる可能性がある [出典](https://www.hitachi-solutions.co.jp/company/press/news/2025/0110.html)。
 
+## ロボティクスの用語地図：AMR から VLA まで
+
+ロボットのニュースは製品名と技術略語が同時に並び、どの層の話かが混ざる。結論から述べる。==移動の用語は誘導方式と上位制御の分担を切り分け、把持の用語は力覚と触覚の供給経路を切り分け、制御の用語は古典制御・生成コード・端到端の学習政策の到達点を切り分ける必要がある==。部品の話は、本章前段の「量産速度と要素技術のどちらが障壁になるか」で見た減速機・センサの防衛線を、シェアが取れる一次開示まで落とす。as_of は特記のない限り 2026-09-25 である。
+
+### 移動：AMR・fleet manager・SLAM・VSLAM・UWB
+
+IFRは AMR を ISO 8373:2021 で定義された語ではないとし、実務上は車輪型の移動ロボットの通称として扱い、サービスロボットに分類する。マニピュレータ付きの場合は腕を産業用ロボット、台車をサービスロボットとして分けて数える [出典](https://ifr.org/img/worldrobotics/Sources___Methods_WR_2025_Service_Robots.pdf)。ISO 3691-4:2023 は運転者不在の産業用トラックの安全要件を定め、例示に automated guided vehicle と autonomous mobile robot の両方を載せる。誘導方式の違いで規格の適用外にはならない [出典](https://www.iso.org/standard/83545.html)。
+
+市場の規模はサンプル集計である点に注意が要る。IFR World Robotics 2025 では、業務用サービスロボットの販売台数は2024年に約19万9,000台、前年比9%増である。うち輸送・物流向けは10万2,900台、前年比14%増で、業務用の過半を占める。VDMAは同じ報告書を引用し、輸送・物流のうち約8万1,800台が庫内物流向けの移動ロボットだとする。いずれも294社のサンプルで、母集団への外挿はしていない [出典](https://ifr.org/ifr-press-releases/news/service-robots-see-global-growth-boom) [出典](https://www.vdma.eu/documents/d/group-34568/vdma_pi_mr_world-robotics_final_en)。
+
+使い分けは次の表に整理する。
+
+| 用語 | 役割 | 何を置き換えないか | as_of | 出典 |
+| --- | --- | --- | --- | --- |
+| AGV / AMR | 運転者不在の搬送台車。案内付き誘導を AGV、自由航法を AMR と呼ぶ慣習が強いが、ISO 3691-4 は両者とも driverless industrial truck の例に含める | 安全規格の適用範囲。誘導方式が変わっても別規格へ移らない | 2023（規格）、2025（IFR定義注記） | [ISO](https://www.iso.org/standard/83545.html)、[IFR](https://ifr.org/img/worldrobotics/Sources___Methods_WR_2025_Service_Robots.pdf) |
+| Fleet manager / fleet control | 複数台への指令、状態監視、交通調停を担う上位ソフト。VDA 5050 は fleet control と移動ロボット間のベンダー非依存通信インタフェースを定める | 安全アルゴリズム、サイバーセキュリティ、経路計画の中身。通信の形だけを標準化する | 2025-03（V3.0.0、文書表記は March 2026） | [VDA](https://www.vda.de/en/topics/automotive-industry/vda-5050) |
+| SLAM | 自己位置推定と地図構築を同時に行う一般名。LiDAR、カメラ、その他センサを含みうる | 特定センサの固有名ではない | 一般用語 | — |
+| VSLAM | カメラを主センサとする SLAM。ORB-SLAM2 は単眼・ステレオ・RGB-D に対応し、ループ閉じ込みと再位置決めを備える公開系の代表例である | LiDAR SLAM の代替保証ではない。照明とテクスチャに依存する | 2017（論文） | [arXiv:1610.06475](https://arxiv.org/abs/1610.06475) |
+| UWB | 広帯域無線による測距・測位。Qorvo DW1000 は IEEE 802.15.4a UWB 準拠で、2-way ranging または TDoA により精度 10 cm 級の位置推定を謳う | 地図を作る機能ではない。アンカー配置が前提の測位層である | データシート Rev 2.22（2017） | [Qorvo](https://www.qorvo.com/products/p/DW1000) |
+
+実務上の順序は、台車の航法（案内線か SLAM か）と、複数台の調停（fleet manager）と、測位の補助（UWB）が別レイヤだという点にある。VDA 5050 は後者の調停インタフェースであり、航法方式そのものを規定しない。
+
+### 把持と感覚：六軸力センサーと FingerVision
+
+六軸力覚センサは並進3軸とモーメント3軸を同時に測る。商業供給者は用途帯で分かれる。ATI Industrial Automation は産業用の広い定格レンジを持ち、Axia80-M8 で Fx/Fy ±150 N、Fz ±470 N、Tx/Ty ±8 Nm から上位機種へ広がる。OnRobot HEX-E/H QC は協働ロボット向けで、HEX-E の定格は力 200 N、トルク 10 Nm / 6.5 Nm、IP67 である。Robotiq FT 300-S は計測範囲 ±300 N / ±30 Nm、出力 100 Hz、IP65 である。日本勢では WACOH-TECH の DynPick が容量型六軸で、WEF-6A200-4 系は Fx/Fy/Fz 200 N、Mx/My/Mz 4 Nm、IP65 を標準とする [出典](https://ati.novanta.com/products/force-torque-sensors/) [出典](https://onrobot.com/storage/datasheets/hex/datasheet_hex-e_h_qc_v1.5_en.pdf) [出典](https://robotiq.com/products/ft-300-force-torque-sensor) [出典](https://wacoh-tech.com/en/products/dynpick/)。各社の世界シェアを同じ母数で並べた一次統計は取得できていない。N/A である。
+
+FingerVision は山口明彦と Christopher G. Atkeson が提案した視覚ベース触覚センサである。透明な弾性皮膚にマーカを埋め、内部カメラで変形と外部の近接視覚を同時に取る。論文上の特徴は、力が小さすぎて力覚が取れない対象でも滑りを検出できる点と、接触前の近接視覚が使える点にある [出典](https://www.cs.cmu.edu/~cga/papers/fingervision.pdf) [出典](http://akihikoy.net/info/wdocs/Yamaguchi,2018-FingerVision%20for%20Tactile%20Behaviors,%20Manipulation,%20and%20Haptic%20Feedback%20Teleoperation-SAMCON.pdf)。商用の完成品として FingerVision ブランドの量産ラインを掲げる供給者は、本稿の調査範囲では確認できなかった。同系統の視覚触覚を製品化したのは GelSight, Inc. で、GelSight Mini System は公式ストアで 510 米ドル、リードタイム約4週間として販売されている（2025年1月3日以降の注文は新配合ゲル付き） [出典](https://www.gelsight.com/product/gelsight-mini-system/)。したがって「FingerVision の供給者」は研究原型の公開設計と、商業化された近縁の視覚触覚製品を分けて書く必要がある。
+
+### 制御の階層：古典制御・code as policy・VLA
+
+制御は3層に分けると議論が安定する。
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 260" role="img" aria-label="ロボティクス制御の階層：古典制御、code as policy、VLA">
+  <rect x="24" y="28" width="672" height="56" rx="6" fill="var(--dim)" stroke="var(--line)"/>
+  <text x="40" y="52" font-size="13" fill="var(--ink)">上層：自然言語の指示・タスク分解</text>
+  <text x="40" y="70" font-size="11" fill="var(--muted)">人が書く、または LLM がコード／行動トークンを生成する</text>
+  <rect x="24" y="100" width="672" height="56" rx="6" fill="#EEF2FF" stroke="#D5DDF7"/>
+  <text x="40" y="124" font-size="13" fill="var(--ink)">中層：政策の表現形式</text>
+  <text x="40" y="142" font-size="11" fill="var(--muted)">古典：PID・力制御　／　Code as Policies：実行可能なプログラム　／　VLA：画像＋言語→行動</text>
+  <rect x="24" y="172" width="672" height="56" rx="6" fill="var(--dim)" stroke="var(--line)"/>
+  <text x="40" y="196" font-size="13" fill="var(--ink)">下層：関節・グリッパ・台車のアクチュエータ指令</text>
+  <text x="40" y="214" font-size="11" fill="var(--muted)">周波数と安全インターロックはハードと古典制御が担うことが多い</text>
+  <text x="24" y="250" font-size="11" fill="var(--muted)">上に行くほど意味理解が広がり、下に行くほど閉ループの厳密さが残る。</text>
+</svg>
+<figcaption>制御階層の模式図。Code as Policies は中層をコードで埋め、VLA は中層を学習済みの端到端政策で埋める。</figcaption>
+</figure>
+
+古典制御は力覚フィードバックやインピーダンス制御のように、センサ値と目標値の誤差を閉ループで抑える。到達点は既知の接触作業における再現性であり、未知物体への意味理解ではない。
+
+Code as Policies は Google Robotics の Liang らが ICRA 2023 で示した方式である。コード補完用 LLM に、言語指示をコメント、対応する Python を本体とする少数例を与え、新しい指示に対して知覚 API と制御プリミティブを組み合わせた政策コードを生成させる。空間幾何の推論、未見指示への再構成、曖昧な速度表現への数値割り当てを実機で示した。階層的なコード生成により HumanEval で 39.8% を解いたと報告している。到達点は「既存の知覚と制御 API が揃った環境での、プログラムとしての政策合成」であり、低レベル知覚そのものの学習ではない [出典](https://arxiv.org/abs/2209.07753)。
+
+VLA（vision-language-action）は、視覚と言語から直接行動を出す端到端政策である。RT-2 は Google DeepMind が PaLI-X と PaLM-E をロボット軌跡とウェブ規模の視覚言語タスクで共ファインチューンし、行動をテキストトークンとして扱う。約6,000試行の評価で、未見物体への汎化、ロボット学習データに無い指示の解釈、大小や近接といった初歩的な推論が現れたと報告する [出典](https://arxiv.org/abs/2307.15818) [出典](https://deepmind.google/blog/rt-2-new-model-translates-vision-and-language-into-action/)。π0 は Physical Intelligence が 2024年10月に公開した flow matching ベースの VLA で、事前学習済み VLM に action expert を足し、単腕・双腕・移動マニピュレータなど複数形態のデータで学習する。器用な作業で最大 50 Hz の制御を謳い、洗濯たたみや卓上片付け、箱組み立てなどを評価対象に含む。学習データは複数ロボット形態にまたがり、論文は 10,000 時間超の規模に言及する [出典](https://arxiv.org/abs/2410.24164)。
+
+到達点の差は次のとおりである。Code as Policies は API 境界の外側を言語で書き換え、VLA は境界の内側まで学習で埋める。どちらも下層の安全停止とサーボループを消してはいない。工場の量産線で日常的に置き換わったという一次統計は、本稿の調査範囲では見つかっていない。
+
+### 日本勢が強い部品：減速機・サーボ・センサーのシェア
+
+前段で述べた防衛線を、会社が自ら開示したシェアに落とす。定義が違う数値は足し合わせない。
+
+| 部品 | 企業 | 開示されたシェア | 母数の定義 | 時点 | 出典 |
+| --- | --- | --- | --- | --- | --- |
+| 精密減速機（RV 系） | ナブテスコ | 約 60%（自社推定） | 中型から大型の産業用ロボット関節向け精密減速機の世界市場 | 会社サイト掲載時点（取得 2026-09-25） | [Nabtesco](https://www.nabtesco.com/en/products/robot/) |
+| 同上（補足） | ナブテスコ＋住友 | 世界シェア合計 80%超 | RV 精密減速機市場（調査会社の記述） | QY Research レポート紹介文 | [QY Research](https://www.qyresearch.com/reports/4243477/rv-precision-reducer) |
+| ひずみ波歯車 | ハーモニック・ドライブ・システムズ | 数値シェアは非開示。手術支援ロボット等で「日米欧メーカー向けは当社グループが寡占」と自社説明 | 用途セグメントの定性記述 | 2026-02-28 個人投資家向け説明会 | [HDS](https://www.hds.co.jp/Portals/0/files/ir/event/investor/pdf/kojin%2020260228.pdf) |
+| ACサーボドライブ | 安川電機 | 世界 16%（自社推定） | AC servo drive 世界市場 | FY2024（YASKAWA Report 2025） | [Yaskawa](https://www.yaskawa-global.com/wp-content/uploads/2025/09/YR2025E_A4_06.pdf) |
+| 産業用ロボット（参考） | 安川電機 | 世界 7%（自社推定） | 産業用ロボット世界市場 | FY2024 | 同上 |
+| 六軸力覚・視覚触覚 | — | N/A | ベンダー別世界シェアの一次統計なし | 2026-09-25 | — |
+
+RV 減速機の約 60% はナブテスコ自身の推定であり、QY Research の「ナブテスコと住友で 80%超」は同じ方向を指すが母数と時点の突合は有料レポート本体に頼る。ヘッドラインとして使う場合は自社推定を主、調査会社文を補足とし、どちらも single-source に近い。ひずみ波の数値シェアは会社が公開しておらず、寡占という語は用途限定の自己評価である。サーボの 16% も自社推定である。センサ領域の日本勢シェアは、供給者の存在は確認できても、金額または台数の世界シェアには到達していない。前段で未解決だった「センサ領域における日本勢のシェア」は、力覚・触覚については依然 N/A のままである。
+
 ## この章の要点
 
 - 参入障壁の所在は技術ではなく制度と時間に置かれることが多い。自動運転では、カリフォルニア州のテスト許可27社が配備許可3社まで絞られており、絞り込みの原因は走行データの蓄積量である。
@@ -279,12 +350,17 @@ AI講師の4,380円は、人間講師のオンライン英会話7,980円の55%�
 - 人月型の事業に市場がつける倍率は、利益率でもROEでもなく翌期の成長見通しに連動する。ただし成長率が倍率に乗るには一定の時価総額が要る。
 - 自動化はテスト設計のように工程単位で削り、実行や管理は残す。課金単位は人月のままで、変わるのは単位あたりの単価である。SHIFTはエンジニア単価を月110万円から月125万円へ引き上げる計画を示している。
 - 消費者向け市場では、AIは既存の価格を置き換えるのではなく別の価格段を作る。AI英会話の4,380円は人間講師の7,980円の55%で、無料水準ではない。
+- ロボティクスの用語は層で切る。移動は誘導と fleet control と測位が別レイヤ、把持は六軸力覚の商業供給者と FingerVision 系の研究原型／GelSight の製品化を分け、制御は Code as Policies が API 合成、VLA が端到端である。部品シェアはナブテスコが中大型関節向け精密減速機で約60%（自社推定）、安川の AC サーボが世界16%（自社推定）まで一次開示で取れ、力覚・触覚の世界シェアは N/A である。
 
 ## 残っている問い
 - 無人運行に対応した車両と同型量産車の価格差。冗長系の追加がソフトウェアの後付けで賄えない範囲を定量化するには、この差分の公表が要る。取得できなかった。
 - 自動運転の普及による走行台数増と、追従挙動由来の渋滞減衰の正味効果。実測した一次資料に到達していない。
 - 都心の駐車場供給面積と、無人運行の乗車シェアの時系列。両方を同一都市で公開している資料が見つからなかった。
-- ヒューマノイドの減速機単体の原価比率。アクチュエータで30%超、ハンドで31%という機能単位の構成比は確認したが、減速機を単体で切り出した数値はない。センサ領域における日本勢のシェアも同様である。
+- ヒューマノイドの減速機単体の原価比率。アクチュエータで30%超、ハンドで31%という機能単位の構成比は確認したが、減速機を単体で切り出した数値はない。
+- 六軸力覚センサと視覚触覚センサのベンダー別世界シェア。ATI、OnRobot、Robotiq、WACOH-TECH、GelSight の製品仕様は一次資料で取れるが、金額または台数の世界シェアを同じ母数で並べた統計は非開示または有料レポートのみで、無料の一次開示には到達していない。
+- ハーモニック・ドライブ・システムズのひずみ波減速機における数値の世界シェア。会社は手術支援ロボット等で日米欧向け寡占と説明するが、百分比は公開していない。QY Research 等の有料レポートは閲覧できず、無料の紹介文だけでは単社シェアを確定できない。
+- FingerVision ブランドの量産供給者。研究論文と prototype 記述はあるが、同名の完成品を量産販売する企業の公式カタログは見つからなかった。
+- VLA と Code as Policies が工場の量産ラインで何台・何工程を置き換えたかの統計。論文の試行数はあるが、産業側の設置統計は IFR の用途分類にこの区分がない。
 - 日本の造船所別の鋼材調達コストと、厚板の内航輸送コスト。業界全体としては、船価の約7割が材料費で、鋼材費は材料費の約4割、すなわち建造コスト全体の約3割という水準が国土交通省の資料で示されている。ただしこれは業界平均であり、造船所別の調達条件と内航輸送費の内訳は開示されていないため、製鉄所への近接が船価に何%効くかは依然として言えない。
 - 宇宙産業のアクセラレータの応募数、採択率、出資条件は公表されていない。層別売上は2025年分を確認したが、軌道上サービス層を単独で切り出した売上は同報告書の区分に存在しない。
 - コンサル各社の等級別チャージレート、等級別稼働率、1案件あたりの等級構成。フリーランス市場の相場としてマネージャー月120万円から200万円、シニアマネージャー月140万円から250万円、パートナー月180万円から400万円という水準は取れるが、これは個人契約の相場であってファームの請求単価ではない。等級別稼働率と案件あたりの等級構成は、有価証券報告書にも決算説明資料にも記載されない。
@@ -363,3 +439,25 @@ AI講師の4,380円は、人間講師のオンライン英会話7,980円の55%�
 65. 酒類総合研究所 西堀奈穂子 老ねにくい清酒の醸造方法 — https://www.nrib.go.jp/data/kouen/pdf/52kou02.pdf
 66. HUNADE リーファーコンテナの海上運賃 — https://hunade.com/reefer-container-ryoukin
 67. 日立ソリューションズ 輸送時の日本酒品質に関する共同研究 — https://www.hitachi-solutions.co.jp/company/press/news/2025/0110.html
+68. IFR, Sources & Methods WR 2025 Service Robots（AMR 定義注記） — https://ifr.org/img/worldrobotics/Sources___Methods_WR_2025_Service_Robots.pdf
+69. IFR, World Robotics 2025 Service Robots press release — https://ifr.org/ifr-press-releases/news/service-robots-see-global-growth-boom
+70. VDMA, Sales of mobile robots in intralogistics are increasing worldwide — https://www.vdma.eu/documents/d/group-34568/vdma_pi_mr_world-robotics_final_en
+71. ISO 3691-4:2023 Driverless industrial trucks — https://www.iso.org/standard/83545.html
+72. VDA 5050 overview — https://www.vda.de/en/topics/automotive-industry/vda-5050
+73. Mur-Artal and Tardós, ORB-SLAM2, arXiv:1610.06475 — https://arxiv.org/abs/1610.06475
+74. Qorvo DW1000 Ultra-Wideband transceiver — https://www.qorvo.com/products/p/DW1000
+75. ATI Industrial Automation Force/Torque Sensors — https://ati.novanta.com/products/force-torque-sensors/
+76. OnRobot HEX-E/H QC datasheet — https://onrobot.com/storage/datasheets/hex/datasheet_hex-e_h_qc_v1.5_en.pdf
+77. Robotiq FT 300-S Force Torque Sensor — https://robotiq.com/products/ft-300-force-torque-sensor
+78. WACOH-TECH DynPick force sensors — https://wacoh-tech.com/en/products/dynpick/
+79. Yamaguchi and Atkeson, Combining Finger Vision and Optical Tactile Sensing — https://www.cs.cmu.edu/~cga/papers/fingervision.pdf
+80. Yamaguchi, FingerVision for Tactile Behaviors（SAMCON 2018） — http://akihikoy.net/info/wdocs/Yamaguchi,2018-FingerVision%20for%20Tactile%20Behaviors,%20Manipulation,%20and%20Haptic%20Feedback%20Teleoperation-SAMCON.pdf
+81. GelSight Mini System product page — https://www.gelsight.com/product/gelsight-mini-system/
+82. Liang et al., Code as Policies, arXiv:2209.07753 — https://arxiv.org/abs/2209.07753
+83. Brohan et al., RT-2, arXiv:2307.15818 — https://arxiv.org/abs/2307.15818
+84. DeepMind, RT-2 blog — https://deepmind.google/blog/rt-2-new-model-translates-vision-and-language-into-action/
+85. Black et al., π0, arXiv:2410.24164 — https://arxiv.org/abs/2410.24164
+86. Nabtesco, Precision Reduction Gears — https://www.nabtesco.com/en/products/robot/
+87. QY Research, RV Precision Reducer market overview — https://www.qyresearch.com/reports/4243477/rv-precision-reducer
+88. ハーモニック・ドライブ・システムズ 個人投資家様向け会社説明会（2026-02-28） — https://www.hds.co.jp/Portals/0/files/ir/event/investor/pdf/kojin%2020260228.pdf
+89. YASKAWA Report 2025 — https://www.yaskawa-global.com/wp-content/uploads/2025/09/YR2025E_A4_06.pdf

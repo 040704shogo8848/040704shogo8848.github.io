@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adam D'Angelo — Facebook 初代 CTO から Quora まで</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --s2:#eb6834; --s3:#1baf7a; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  .bar.s2 .fl{background:var(--s2)}
+  .bar.s3 .fl{background:var(--s3)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / Adam D'Angelo</p>
+
+<header class="top">
+  <h1>Adam D'Angelo — Facebook 初代 CTO から Quora まで</h1>
+  <div class="en">Adam D'Angelo　1984.8.14 – ／Quora 共同創業者・CEO、元 Facebook CTO</div>
+  <div class="tags">
+    <span class="tag">Quora</span><span class="tag">Facebook</span><span class="tag">創業</span>
+    <span class="tag">OpenAI</span><span class="tag">エース社員</span><span class="tag">Poe</span>
+  </div>
+  <p class="lead">1984年コネチカット州 Redding 生まれ。Phillips Exeter Academy と Caltech を経て Facebook に入り、2006年11月から2008年6月まで CTO を務めた。2009年6月に Charlie Cheever と Quora を共同創業し、基準日時点でも CEO である。本ページの焦点は、初代 CTO 退任から Quora 創業までの経緯と、Max Levchin など「元エースが創業者になる」経路の共通点である。</p>
+  <p class="srcnote">作成日 2026年9月25日。数値の基準日は同日。存命人物のため、出典のない逸話・人物評・投資判断は書かない。年表の満年齢は生年月日1984年8月14日からの年差で算出している。Facebook 在籍期間の確定日付は Asana の公式取締役略歴（SEC 開示に基づく投資家向けページ）を優先する。</p>
+</header>
+
+<h2 id="overview"><span class="num">①</span>概要<span class="en">Overview</span></h2>
+
+<div class="kpi">
+  <div class="card"><div class="k">生年月日</div><div class="v">1984.8.14<small>Redding, CT</small></div></div>
+  <div class="card"><div class="k">FB CTO</div><div class="v">2006.11–08.6<small>Asana 公式略歴</small></div></div>
+  <div class="card"><div class="k">Quora 創業</div><div class="v">2009.6<small>CEO 継続中</small></div></div>
+  <div class="card"><div class="k">直近評価額</div><div class="v">$500M<small>2024-01・a16z ラウンド</small></div></div>
+</div>
+
+<div class="callout">
+<p><b>先に結論を3つ書く。</b></p>
+<p><b>1つ目。Facebook での確定期間は「2005年6月–2008年6月」、CTO は「2006年11月–2008年6月」である。</b>Asana 投資家向けの取締役略歴がこの日付を明記する。Wikipedia などが「2004年加入」と書く記述は、会社移転初期の関与や非雇用の関係を含む可能性があり、本ページでは雇用関係の一次日付として Asana の略歴を優先する<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup>。</p>
+<p><b>2つ目。CTO 退任から約1年で Quora を共同創業し、以降の意思決定は CEO として一本化する。</b>創業は2009年6月（Asana 略歴・複数報道）。Series A（2010年）と Series B（2012年）で外部資本を入れつつ、Series B では本人が $20M を自己出資した。共同創業者 Charlie Cheever は2012年9月に日常業務から離れ、以後の経営中枢は D'Angelo 側に寄る<sup><a href="#s1">1</a></sup><sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup><sup><a href="#s5">5</a></sup>。</p>
+<p><b>3つ目。「元エースが創業者になる」経路は、Levchin（PayPal CTO → Slide → Affirm）と並べると、技術的な早期実績・CTO 経験・自社への自己出資・次の会社では CEO を取る、という骨格が重なる。</b>出口の形は異なる。Levchin は Slide を Google に売却（報道額約 $182M）したあと Affirm を創業した。D'Angelo は Quora を独立継続させ、評価額はピーク時約 $1.8B–$2B から2024年1月の $500M まで下がったうえで Poe に再投資している<sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup>。</p>
+</div>
+
+<h2 id="timeline"><span class="num">②</span>年表<span class="en">Timeline</span></h2>
+<p>日付が一次情報または複数報道で確定した出来事だけを並べた。各項目は事実、具体、なぜ効いたかの3層である。期のボタンで絞り込める。日付の右は、その時点の満年齢である。</p>
+
+<div class="tl-tools">
+  <input id="tlq" type="search" placeholder="年表を検索（例: Quora、CTO、Poe、OpenAI、Levchin）" aria-label="年表を検索">
+  <span class="tl-count" id="tlcount"></span>
+</div>
+<div class="tl-eras" id="tleras"></div>
+<div class="tl" id="tl"></div>
+<div class="tl-empty" id="tlempty">該当する項目がない。</div>
+
+<h2 id="phases"><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+
+<h3>I Exeter・Caltech・競技プログラミング（〜2006）</h3>
+<p>生年月日は1984年8月14日、出身はコネチカット州 Redding である<sup><a href="#s2">2</a></sup>。高校は Phillips Exeter Academy。同級生の Mark Zuckerberg らと Synapse Media Player（音楽推薦ソフト）を開発した、と David Kirkpatrick『The Facebook Effect』が記す<sup><a href="#s2">2</a></sup><sup><a href="#s10">10</a></sup>。</p>
+<p>2002–2006年に California Institute of Technology で計算機科学の学士を取得した<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup>。国際情報オリンピック（IOI）2002で銀メダル、ACM ICPC では Caltech チームとして2003年北米優勝・2004年世界大会銀、と大会公式の順位表および Exeter の記録が残る<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup><sup><a href="#s13">13</a></sup>。在学中の2004年には AIM の buddy list を比較する BuddyZoo を公開した<sup><a href="#s2">2</a></sup>。</p>
+
+<h3>II Facebook 初代 CTO（2005–2008）</h3>
+<p>Asana の公式取締役略歴は、Facebook での役職を次のように書く。「2005年6月から2008年6月まで上級職。うち CTO は2006年11月から2008年6月」<sup><a href="#s1">1</a></sup>。VentureBeat は2008年5月11日に「CTO の Adam D'Angelo が退社する」と報じた<sup><a href="#s14">14</a></sup>。</p>
+<p>退任後のインタビューで本人は、Facebook で学んだこととして「長期に集中し、短期の判断で会社を歪めないこと」「最後まで残ること」を挙げている<sup><a href="#s15">15</a></sup>。CTO から創業者への移行は、コードを書く時間の放棄と、採用・資金調達・異職種マネジメントの吸収として語られる<sup><a href="#s15">15</a></sup>。</p>
+<p class="note">「いつ Facebook を辞めたか」について、一部の二次記事は「1月」と書く。Asana の略歴は在籍終了を2008年6月、VentureBeat は退社報道を2008年5月とする。本ページは雇用終了の確定日として Asana の「June 2008」を採用し、「1月」説は突合未了とする。</p>
+
+<h3>III Quora 創業（2009–2010）</h3>
+<p>2009年6月、元 Facebook エンジニアの Charlie Cheever と Quora を共同創業し、CEO に就いた<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup>。2008年12月には Asana の取締役に就任しており、基準日時点の Form 8-K（2026年4月）まで同社ボードに残ったあと、2026年株主総会で退任予定である<sup><a href="#s1">1</a></sup><sup><a href="#s16">16</a></sup>。</p>
+<p>2010年1月4日にプライベートベータ、同年3月に Benchmark 主導の Series A、同年6月に一般公開が進んだ<sup><a href="#s3">3</a></sup><sup><a href="#s17">17</a></sup>。Series A の規模は TechCrunch ソースが「$11M・評価額 $86M」とし、後続の TechCrunch 記事は WSJ 経由で「最終的に $14M・$87.5M」とも書く。金額は<strong class="hit">諸説</strong>である。投資の事実と Matt Cohler の取締役就任は、Quora と Benchmark が確認している<sup><a href="#s3">3</a></sup><sup><a href="#s17">17</a></sup>。</p>
+<blockquote>
+Our belief is that more than 90% of the information people want to know is still not available on the web in a format that's easy for them to quickly understand.
+<span class="who">Adam D'Angelo（FinSMEs が Series A 時に引用、2010年3月）<sup><a href="#s18">18</a></sup></span>
+</blockquote>
+<p>創業動機について、2013年の Om Malik インタビューでは「知識を整理する場所が弱い」「既存の巨大ユーザー基盤を置き換えるのは難しいので、知識向けの核をつくる」と説明している<sup><a href="#s15">15</a></sup>。</p>
+
+<h3>IV 資金調達・自己出資・共同創業者の離脱（2012）</h3>
+<p>2012年5月、Series B で $50M を調達した。評価額は pre-money $400M。リードは Peter Thiel（個人）。TechCrunch は創業者本人への確認として、残額を Matrix と Northbridge が分け、D'Angelo 自身が $20M を入れたと報じた<sup><a href="#s4">4</a></sup>。Business Insider と Reuters も同ラウンドの $50M・$400M を報じている<sup><a href="#s19">19</a></sup><sup><a href="#s20">20</a></sup>。</p>
+<p>同年9月11日、Charlie Cheever が日常業務から離れた。D'Angelo の公式声明は「we decided it was best for Charlie to step away」「founder かつ advisor として残る」とだけ述べ、理由の詳細は公開していない<sup><a href="#s5">5</a></sup>。TechCrunch は当時の従業員数を約40人、Mountain View への移転直前と記す<sup><a href="#s5">5</a></sup>。</p>
+
+<h3>V Instagram 助言・OpenAI・Poe（2010–2024）</h3>
+<p>2010年10月、Instagram 創業直後の障害対応で Kevin Systrom が D'Angelo に電話した、と New York Times が報じる。インフラと採用の助言のあと、本人も Instagram に出資した<sup><a href="#s21">21</a></sup>。</p>
+<p>2018年、OpenAI の取締役に就任した。Elon Musk の退任後の補充として、同年4月に本人が就任を共有した記録が裁判資料に残る<sup><a href="#s22">22</a></sup><sup><a href="#s23">23</a></sup>。2023年11月、Sam Altman 解任に投票した4人の一人であり、Altman 復帰後もオリジナルのボード6人のうち唯一残った、と Forbes・WSJ が報じた<sup><a href="#s24">24</a></sup><sup><a href="#s25">25</a></sup>。</p>
+<p>2022年12月、Quora は AI チャットボット集約プロダクト Poe（Platform for Open Exploration）を iOS 招待制で開始した<sup><a href="#s26">26</a></sup>。2023年2月に一般公開。2024年1月9日、Andreessen Horowitz から $75M を調達し、評価額は $500M。本人は「前回ピークより低いが、新市場にマークされた」と書いた。Quora 本体（Poe 除く）はキャッシュフロー黒字で、調達額は Poe に使う、とも述べている<sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup>。</p>
+
+<h3>VI 比較 — 元エースが創業者になる経路（Levchin ほか）</h3>
+<p>タスクが求める比較対象として、Max Levchin を置く。Affirm 公式の経営陣略歴は、PayPal 共同創業者・CTO（eBay 買収まで）、Slide 創業者・CEO（Google が買収）、その後 HVF から Affirm を創業し CEO、と書く<sup><a href="#s6">6</a></sup>。Slide の買収額は TechCrunch が約 $182M（従業員リテンション $46M を加えると約 $228M）と報じ、Bloomberg は約 $200M とする。<strong class="hit">買収額は諸説</strong>である<sup><a href="#s7">7</a></sup><sup><a href="#s27">27</a></sup>。</p>
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>項目</th><th>Adam D'Angelo</th><th>Max Levchin</th></tr></thead>
+<tbody>
+<tr><td class="name">初期の技術実績</td><td>IOI 銀・ICPC・Synapse / BuddyZoo</td><td>UIUC で複数スタートアップ、PayPal の詐欺対策技術</td></tr>
+<tr><td class="name">スケール企業での役</td><td>Facebook CTO（2006–08）</td><td>PayPal CTO（〜2002）</td></tr>
+<tr><td class="name">退任後の第1創業</td><td>Quora（2009–、CEO）</td><td>Slide（2004–2010、CEO）</td></tr>
+<tr><td class="name">自己資本の投入</td><td>Quora Series B に $20M</td><td>Slide Series A に $7M（報道）</td></tr>
+<tr><td class="name">出口 / 継続</td><td>独立継続。評価額 $500M（2024）</td><td>Slide 売却後、Affirm を再創業（上場企業 CEO）</td></tr>
+<tr><td class="name">次の会社での肩書</td><td>創業時から CEO</td><td>創業時から CEO（Slide / Affirm）</td></tr>
+</tbody>
+</table>
+</div>
+<p>共通点として、公開資料から確認できるのは次の4点である。(1) スケール前〜急成長期の技術中枢を担ったあと、同じ会社の長期オペレーション役ではなく<strong class="hit">新しい会社の CEO</strong>を取る。(2) 次の会社では共同創業または単独創業で、プロダクト定義に最初から入る。(3) 調達ラウンドで<strong class="hit">本人資金を入れる</strong>（D'Angelo $20M、Levchin $7M）。(4) 退出のタイミングは「会社が既に軌道に乗ったあと」であり、創業期の共同創業者退出とは位相が違う。</p>
+<p>相違点も明確である。Levchin は PayPal で共同創業者でもあった。D'Angelo は Facebook の共同創業者ではなく、雇用された技術幹部である。また Levchin は Slide を売却してから Affirm を立ち上げたのに対し、D'Angelo は Quora を売却せず、評価額の低下を受け入れたうえで Poe に振り向けている。</p>
+
+<h2 id="numbers"><span class="num">④</span>実績の数字<span class="en">The Numbers</span></h2>
+<p>経営者としての数字は、在籍期間・調達額・評価額・利用規模に限る。個人の現在純資産の監査済み開示は無い。Forbes の2016年推計は時点付きで記す。</p>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>項目</th><th class="num">数値</th><th>時点・条件</th></tr></thead>
+<tbody>
+<tr><td class="name">生年月日</td><td class="num">1984-08-14</td><td>Wikipedia ほか<sup><a href="#s2">2</a></sup></td></tr>
+<tr><td class="name">FB 在籍</td><td class="num">2005-06〜2008-06</td><td>Asana 公式略歴<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">FB CTO</td><td class="num">2006-11〜2008-06</td><td>Asana 公式略歴<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">Quora 創業</td><td class="num">2009-06</td><td>Asana 略歴・複数報道<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup></td></tr>
+<tr><td class="name">Series A 評価額</td><td class="num">$86M</td><td>2010-03。調達額は $11M / $14M で諸説<sup><a href="#s3">3</a></sup><sup><a href="#s17">17</a></sup></td></tr>
+<tr><td class="name">Series B</td><td class="num">$50M @ $400M</td><td>2012-05 pre-money。本人 $20M<sup><a href="#s4">4</a></sup><sup><a href="#s19">19</a></sup></td></tr>
+<tr><td class="name">月間ユニーク（2019）</td><td class="num">3億人</td><td>会社説明・Recode<sup><a href="#s28">28</a></sup></td></tr>
+<tr><td class="name">2018年売上</td><td class="num">約 $20M</td><td>投資家向け説明・Recode（single-source）<sup><a href="#s28">28</a></sup></td></tr>
+<tr><td class="name">評価額（2019）</td><td class="num">約 $2B</td><td>Valor ラウンド・Recode / Reuters<sup><a href="#s28">28</a></sup><sup><a href="#s29">29</a></sup></td></tr>
+<tr><td class="name">月間ユニーク（2024）</td><td class="num">4億人超</td><td>本人声明・TechCrunch / a16z<sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup></td></tr>
+<tr><td class="name">評価額（2024-01）</td><td class="num">$500M</td><td>a16z $75M ラウンド<sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup></td></tr>
+<tr><td class="name">Poe MAU（モバイル）</td><td class="num">約122万</td><td>2023-10・Apptopia / TechCrunch（single-source）<sup><a href="#s8">8</a></sup></td></tr>
+<tr><td class="name">Forbes 純資産推計</td><td class="num">$600M</td><td>2016-12・Under 40 リスト（推定）<sup><a href="#s30">30</a></sup><sup><a href="#s31">31</a></sup></td></tr>
+<tr><td class="name">Slide 売却額（参考）</td><td class="num">約 $182M</td><td>2010-08。Bloomberg は約 $200M（諸説）<sup><a href="#s7">7</a></sup><sup><a href="#s27">27</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="chart">
+  <div class="cap">Quora の報道評価額の推移</div>
+  <div class="sub">単位は百万 USD。Series A は $86M、Series B は pre-money $400M、2019年は約 $2,000M、2024年は $500M</div>
+  <div class="bars" id="chartVal"></div>
+  <p class="sub" style="margin:14px 0 0">出典3・4・8・9・28・29。2017年の約 $1.7B–$1.8B は PitchBook / TechCrunch 経由の二次値。</p>
+</div>
+
+<div class="chart">
+  <div class="cap">主要ラウンドの調達額</div>
+  <div class="sub">単位は百万 USD。Series A の $11M は TechCrunch ソース値（WSJ 系は $14M）</div>
+  <div class="bars" id="chartRaise"></div>
+  <p class="sub" style="margin:14px 0 0">出典3・4・8。Series A は disputed。</p>
+</div>
+
+<h2 id="failures"><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
+<p>「失敗」は、公開された金額・役職・評価額の切れ目で切る。能力や人柄の評価は書かない。</p>
+
+<h3>類型1: 共同創業者の日常業務からの離脱（2012）</h3>
+<p>Series B の4か月後、Cheever が day-to-day から外れた。公式理由は非開示。声明は「we decided」のみである<sup><a href="#s5">5</a></sup>。共同創業体制から、CEO 単独への収束が日付付きで残る。</p>
+
+<h3>類型2: 収益化の遅れと評価額の倍率</h3>
+<p>2019年時点で月間ユニーク約3億に対し、2018年売上は約 $20M（投資家向け説明）。評価額約 $2B は売上の約100倍と Recode が計算した<sup><a href="#s28">28</a></sup>。広告は2016年まで意図的に抑制していた、と同記事が書く。成長指標と収益指標の乖離が、後の評価額修正の前提になる。</p>
+
+<h3>類型3: IPO 準備が上場に至らない（2021）</h3>
+<p>Reuters は2021年11月、Quora が2022年前半の IPO に向けて銀行・弁護士の起用を始めたと関係者情報で報じた。当時の評価額は2019年ラウンドの約 $2B を前提に「その2倍以上を狙う」とされた<sup><a href="#s29">29</a></sup>。基準日時点で上場は確認できない。準備報道と完了の非一致を、失敗類型として置く。</p>
+
+<h3>類型4: 評価額の下方修正（2024）</h3>
+<p>2024年1月のラウンドで評価額は $500M。前回ピーク（約 $1.8B–$2B）からの下落を本人が認めた<sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup>。<strong class="hit">ピーク比でおおむね4分の1</strong>（$2B → $500M）である。資金は Poe に振り向け、本体はキャッシュフロー黒字と説明している。</p>
+
+<div class="risk">
+<p><b>欠落データ。</b>Facebook 在籍時の報酬・株式保有比率、Quora の監査済み売上の時系列、本人の現在純資産、Cheever 離脱の正式理由、OpenAI 取締役会での個別発言録は、本ページが取得した公開一次資料では揃っていない。残っている問いに移す。</p>
+</div>
+
+<h2 id="thought"><span class="num">⑥</span>思想と方法<span class="en">Thought and Method</span></h2>
+
+<h3>「頭の中の知識」をウェブに移す</h3>
+<p>Series A 時点の定型句は「知りたい情報の90%超が、まだウェブ上の読みやすい形になっていない」である<sup><a href="#s18">18</a></sup><sup><a href="#s3">3</a></sup>。Om Malik インタビューでも、分散した知識を一つの核に集める、と繰り返す<sup><a href="#s15">15</a></sup>。製品思想は検索の置き換えではなく、長期に残る回答データベースである。</p>
+
+<h3>長期と採用</h3>
+<p>Facebook からの教訓として「長期」と「 thrashing しないこと」を挙げる<sup><a href="#s15">15</a></sup>。Series B でも調達目的を「長期に集中し、良いチームを作る」と述べた<sup><a href="#s4">4</a></sup>。Quora 移行後はコードより採用に時間を使う、と2013年時点で語っている<sup><a href="#s15">15</a></sup>。</p>
+
+<h3>テキストの優位と Poe への拡張</h3>
+<p>2013年時点では「動画よりテキストの方が知識の走査に向く」と述べていた<sup><a href="#s15">15</a></sup>。2022年以降の Poe は、同じ「質問→回答」軸を大規模言語モデルの UI に移した形である。a16z は「単一モデルではなく多数モデルの集約層」と定義する<sup><a href="#s9">9</a></sup>。</p>
+
+<h2 id="quotes"><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
+<p>日付と出典が特定できる発言に限った。出典未確定の言い回しは載せない。英語原文を先に置き、必要に応じて訳を添える。</p>
+<div class="q-tabs" id="qtabs"></div>
+<div class="q-list" id="qlist"></div>
+
+<h2 id="open"><span class="num">⑧</span>残っている問い / 出典<span class="en">Open Questions / Sources</span></h2>
+
+<h3>残っている問い</h3>
+<ul>
+<li>Facebook への正式な雇用開始日は2005年6月でよいか。2004年の関与（会社移転期）を示す雇用契約・給与記録などの一次資料は公開されていない。</li>
+<li>Series A の確定調達額は $11M か $14M か。TechCrunch ソースと WSJ 経由の数値が割れたままである。</li>
+<li>Charlie Cheever が day-to-day を離れた公式理由（本人または会社の詳細説明）は、声明以外に存在するか。</li>
+<li>Quora の監査済み売上・営業利益の時系列（2016年広告開始以降）を、法定開示または本人の定点発表だけで追えるか。</li>
+<li>2021年の IPO 準備がその後どう停止・延期されたか。会社側の一次説明は本ページの範囲では見つかっていない。</li>
+<li>本人の現在の Quora 持分比率と、OpenAI / Asana 関連の経済的利害の開示。Asana の Form 4 等の突合は未了。</li>
+</ul>
+
+<ol class="sources">
+<li id="s1">Asana, Inc. Investor Relations「Board of Directors」Adam D'Angelo 略歴（FB 2005-06〜2008-06、CTO 2006-11〜2008-06、Quora CEO since 2009-06、Asana 取締役 since 2008-12、Caltech BS） — <a href="https://investors.asana.com/corporate-governance/board-of-directors">https://investors.asana.com/corporate-governance/board-of-directors</a></li>
+<li id="s2">Wikipedia「Adam D'Angelo」（生年月日1984-08-14、Redding CT、Exeter、Caltech、BuddyZoo、Quora、OpenAI） — <a href="https://en.wikipedia.org/wiki/Adam_D%27Angelo">https://en.wikipedia.org/wiki/Adam_D%27Angelo</a></li>
+<li id="s3">TechCrunch「Quora Has The Magic: Benchmark Invests at $86 Million Valuation」（2010-03-28。$11M・$86M ソース、Cohler 取締役、ベータ開始2010-01-04） — <a href="https://techcrunch.com/2010/03/28/quora-has-the-magic-benchmark-invests-at-86-million-valuation/">https://techcrunch.com/2010/03/28/quora-has-the-magic-benchmark-invests-at-86-million-valuation/</a></li>
+<li id="s4">TechCrunch「Quora Raises $50M At $400M From Peter Thiel, D'Angelo Puts In $20M Of His Own Money」（2012-05-14。創業者確認、$20M 自己出資） — <a href="https://techcrunch.com/2012/05/14/quora-raises-50-at-400m-from-peter-thiel-dangelo-puts-20m-of-his-own-money/">https://techcrunch.com/2012/05/14/quora-raises-50-at-400m-from-peter-thiel-dangelo-puts-20m-of-his-own-money/</a></li>
+<li id="s5">TechCrunch「Quora Co-Founder Charlie Cheever Steps Back From Day-To-Day Role」（2012-09-11。D'Angelo 声明全文、従業員約40人） — <a href="https://techcrunch.com/2012/09/11/quora-cheever/">https://techcrunch.com/2012/09/11/quora-cheever/</a></li>
+<li id="s6">Affirm Holdings「Max Levchin」経営陣略歴（PayPal CTO、Slide CEO、Affirm 創業者 CEO、HVF） — <a href="https://investors.affirm.com/management/max-levchin">https://investors.affirm.com/management/max-levchin</a></li>
+<li id="s7">TechCrunch「Google Buys Slide for $182 Million」（2010-08-04。買収額 $182M、リテンション $46M） — <a href="https://techcrunch.com/2010/08/04/google-buys-slide-for-182-million-getting-more-serious-about-social-games/">https://techcrunch.com/2010/08/04/google-buys-slide-for-182-million-getting-more-serious-about-social-games/</a></li>
+<li id="s8">TechCrunch「Quora raised $75M from a16z to grow Poe」（2024-01-09。評価額 $500M、月間4億超、本人コメント） — <a href="https://techcrunch.com/2024/01/09/quora-75m-funding-a16z-poe-ai-chat/">https://techcrunch.com/2024/01/09/quora-75m-funding-a16z-poe-ai-chat/</a></li>
+<li id="s9">Andreessen Horowitz「Investing in Quora and Poe」（2024-01-09。David George。400M+ users、Poe 集約層） — <a href="https://a16z.com/announcement/investing-in-quora-and-poe/">https://a16z.com/announcement/investing-in-quora-and-poe/</a></li>
+<li id="s10">David Kirkpatrick, <i>The Facebook Effect</i>（2010）。Wikipedia が Synapse 記述の出典として引用 — 書籍</li>
+<li id="s11">Exeter Bulletin「Exeter Olympians」（IOI 銀メダル2002 等） — Wikipedia 経由の参照先。原典突合は Exeter アーカイブ</li>
+<li id="s12">ACM ICPC World Finals 2003 Standings（Caltech Beavers・北米優勝） — <a href="https://icpc.global/">https://icpc.global/</a>（大会アーカイブ。Wikipedia が旧 URL を引用）</li>
+<li id="s13">ACM ICPC World Finals 2004 Standings（Caltech・世界大会銀） — 同上</li>
+<li id="s14">VentureBeat, Eric Eldon「Facebook CTO Adam D'Angelo to leave the company」（2008-05-11） — <a href="https://venturebeat.com/2008/05/11/facebook-cto-adam-dangelo-to-leave-the-company/">https://venturebeat.com/2008/05/11/facebook-cto-adam-dangelo-to-leave-the-company/</a></li>
+<li id="s15">Om Malik「My conversation with ex-Facebook CTO and Quora co-founder Adam D'Angelo」（2013-01-07。長期・採用・知識の核） — <a href="https://om.co/gigaom/my-conversation-with-ex-facebook-cto-and-quora-co-founder-adam-dangelo/">https://om.co/gigaom/my-conversation-with-ex-facebook-cto-and-quora-co-founder-adam-dangelo/</a></li>
+<li id="s16">Asana, Inc. Form 8-K（filed 2026-04-20。D'Angelo ら取締役辞任、2026年株主総会で発効） — <a href="https://investors.asana.com/static-files/4fb80037-1c1a-45ee-a0d6-598cdd2dbce5">https://investors.asana.com/static-files/4fb80037-1c1a-45ee-a0d6-598cdd2dbce5</a></li>
+<li id="s17">TechCrunch「Quora's Highly Praised Q&amp;A Service Launches To The Public」（2010-06-21。WSJ 経由 $14M / $87.5M の記載） — <a href="https://techcrunch.com/2010/06/21/quoras-highly-praised-qa-service-launches-to-the-public-and-the-real-test-begins/">https://techcrunch.com/2010/06/21/quoras-highly-praised-qa-service-launches-to-the-public-and-the-real-test-begins/</a></li>
+<li id="s18">FinSMEs「Quora Secures Series A Funding」（2010-03-29。D'Angelo の 90% 発言引用、創業2009-04 表記） — <a href="https://www.finsmes.com/2010/03/quora-secures-series-a-funding.html">https://www.finsmes.com/2010/03/quora-secures-series-a-funding.html</a></li>
+<li id="s19">Business Insider「Quora: Raises $50 Million From Early Facebook Investors」（2012-05-14） — <a href="https://www.businessinsider.com/quora-raises-50-million-from-early-facbook-investors-2012-5">https://www.businessinsider.com/quora-raises-50-million-from-early-facbook-investors-2012-5</a></li>
+<li id="s20">Reuters「Q: Which company raised $50 million? A: question and answer site Quora」（2012-05-14） — <a href="https://www.reuters.com/article/business/q-which-company-raised-50-million-a-question-and-answer-site-quora-idUS35965886/">https://www.reuters.com/article/business/q-which-company-raised-50-million-a-question-and-answer-site-quora-idUS35965886/</a></li>
+<li id="s21">The New York Times「Instagram Founders Were Helped by Bay Area Connections」（2012-04-14。2010-10 の電話助言と出資） — <a href="https://www.nytimes.com/2012/04/14/technology/instagram-founders-were-helped-by-bay-area-connections.html">https://www.nytimes.com/2012/04/14/technology/instagram-founders-were-helped-by-bay-area-connections.html</a></li>
+<li id="s22">OpenAI「OpenAI supporters」（2018-02-20。Musk 退任、ボード拡大予告） — <a href="https://openai.com/index/openai-supporters/">https://openai.com/index/openai-supporters/</a></li>
+<li id="s23">CourtListener / Musk v. Altman 関連 Exhibit（Adam 就任ツイート言及、2018-04） — <a href="https://storage.courtlistener.com/recap/gov.uscourts.cand.433688/gov.uscourts.cand.433688.328.58.pdf">https://storage.courtlistener.com/recap/gov.uscourts.cand.433688/gov.uscourts.cand.433688.328.58.pdf</a></li>
+<li id="s24">Forbes, Alex Konrad「These Are The People That Fired OpenAI CEO Sam Altman」（2023-11-17） — <a href="https://www.forbes.com/sites/alexkonrad/2023/11/17/these-are-the-people-that-fired-openai-ceo-sam-altman/">https://www.forbes.com/sites/alexkonrad/2023/11/17/these-are-the-people-that-fired-openai-ceo-sam-altman/</a></li>
+<li id="s25">The Wall Street Journal「He Fired Sam Altman. Now He Has to Work With Him.」（2023-12-01。唯一残ったオリジナル取締役） — <a href="https://www.wsj.com/tech/ai/adam-dangelo-openai-board-19ab00ee">https://www.wsj.com/tech/ai/adam-dangelo-openai-board-19ab00ee</a></li>
+<li id="s26">TechCrunch「Quora launches Poe, a way to talk to AI chatbots like ChatGPT」（2022-12-21） — <a href="https://techcrunch.com/2022/12/21/quora-launches-poe-a-way-to-talk-to-ai-chatbots-like-chatgpt/">https://techcrunch.com/2022/12/21/quora-launches-poe-a-way-to-talk-to-ai-chatbots-like-chatgpt/</a></li>
+<li id="s27">Bloomberg「Google Said to Have Paid About $200 Million for Slide」（2010-08-06） — <a href="https://www.bloomberg.com/news/articles/2010-08-06/google-buys-social-gaming-company-slide-in-bid-to-keep-pace-with-facebook">https://www.bloomberg.com/news/articles/2010-08-06/google-buys-social-gaming-company-slide-in-bid-to-keep-pace-with-facebook</a></li>
+<li id="s28">Vox / Recode, Theodore Schleifer「Question-and-answer site Quora still exists, and it's now worth $2B」（2019-05-16。$2B、売上約 $20M、月間3億） — <a href="https://www.vox.com/recode/2019/5/16/18627157/quora-value-billion-question-answer">https://www.vox.com/recode/2019/5/16/18627157/quora-value-billion-question-answer</a></li>
+<li id="s29">Reuters「Questions-and-answers site Quora readies IPO-sources」（2021-11-05。評価額約 $2B、2022年 IPO 準備） — <a href="https://www.reuters.com/business/finance/exclusive-questions-and-answers-site-quora-readies-ipo-sources-2021-11-05/">https://www.reuters.com/business/finance/exclusive-questions-and-answers-site-quora-readies-ipo-sources-2021-11-05/</a></li>
+<li id="s30">Forbes「America's Richest Entrepreneurs Under 40 2016」（Adam D'Angelo #24、純資産 $600M） — <a href="https://www.forbes.com/sites/luisakroll/2016/12/12/americas-richest-entrepreneurs-under-40-2016/">https://www.forbes.com/sites/luisakroll/2016/12/12/americas-richest-entrepreneurs-under-40-2016/</a></li>
+<li id="s31">Forbes profile「Adam D'Angelo」（$600M as of 2016-12-12、Quora 評価 $900M 当時表記） — <a href="https://www.forbes.com/profile/adam-dangelo/">https://www.forbes.com/profile/adam-dangelo/</a></li>
+<li id="s32">TechCrunch「Quora opens its new AI chatbot app Poe to the general public」（2023-02-06。一般公開、月間4億への言及） — <a href="https://techcrunch.com/2023/02/06/quora-opens-its-new-ai-chatbot-app-poe-to-the-general-public/">https://techcrunch.com/2023/02/06/quora-opens-its-new-ai-chatbot-app-poe-to-the-general-public/</a></li>
+<li id="s33">Wikipedia「Max Levchin」（PayPal / Slide / Affirm の要約。Affirm 公式と突合） — <a href="https://en.wikipedia.org/wiki/Max_Levchin">https://en.wikipedia.org/wiki/Max_Levchin</a></li>
+</ol>
+
+</div>
+
+<script type="application/json" id="facts">
+[
+  {"claim":"生年月日","value":"1984-08-14","unit":"date","as_of":"2026-09-25","source":"https://en.wikipedia.org/wiki/Adam_D%27Angelo","confidence":"reported"},
+  {"claim":"Facebook在籍開始","value":"2005-06","unit":"month","as_of":"2005-06","source":"https://investors.asana.com/corporate-governance/board-of-directors","confidence":"reported"},
+  {"claim":"Facebook CTO期間開始","value":"2006-11","unit":"month","as_of":"2006-11","source":"https://investors.asana.com/corporate-governance/board-of-directors","confidence":"reported"},
+  {"claim":"Facebook在籍終了","value":"2008-06","unit":"month","as_of":"2008-06","source":"https://investors.asana.com/corporate-governance/board-of-directors","confidence":"reported"},
+  {"claim":"Quora創業","value":"2009-06","unit":"month","as_of":"2009-06","source":"https://investors.asana.com/corporate-governance/board-of-directors","confidence":"reported"},
+  {"claim":"Quora Series A 評価額","value":86,"unit":"M USD","as_of":"2010-03","source":"https://techcrunch.com/2010/03/28/quora-has-the-magic-benchmark-invests-at-86-million-valuation/","confidence":"reported"},
+  {"claim":"Quora Series A 調達額","value":11,"unit":"M USD","as_of":"2010-03","source":"https://techcrunch.com/2010/03/28/quora-has-the-magic-benchmark-invests-at-86-million-valuation/","confidence":"disputed"},
+  {"claim":"Quora Series B 調達額","value":50,"unit":"M USD","as_of":"2012-05","source":"https://techcrunch.com/2012/05/14/quora-raises-50-at-400m-from-peter-thiel-dangelo-puts-20m-of-his-own-money/","confidence":"reported"},
+  {"claim":"Quora Series B pre-money評価額","value":400,"unit":"M USD","as_of":"2012-05","source":"https://techcrunch.com/2012/05/14/quora-raises-50-at-400m-from-peter-thiel-dangelo-puts-20m-of-his-own-money/","confidence":"reported"},
+  {"claim":"D'Angelo Series B 自己出資","value":20,"unit":"M USD","as_of":"2012-05","source":"https://techcrunch.com/2012/05/14/quora-raises-50-at-400m-from-peter-thiel-dangelo-puts-20m-of-his-own-money/","confidence":"reported"},
+  {"claim":"Quora評価額_2019","value":2000,"unit":"M USD","as_of":"2019-05","source":"https://www.vox.com/recode/2019/5/16/18627157/quora-value-billion-question-answer","confidence":"reported"},
+  {"claim":"Quora売上_2018","value":20,"unit":"M USD","as_of":"2018","source":"https://www.vox.com/recode/2019/5/16/18627157/quora-value-billion-question-answer","confidence":"single-source"},
+  {"claim":"Quora月間ユニーク_2019","value":300,"unit":"M people","as_of":"2019-05","source":"https://www.vox.com/recode/2019/5/16/18627157/quora-value-billion-question-answer","confidence":"reported"},
+  {"claim":"Quora評価額_2024","value":500,"unit":"M USD","as_of":"2024-01","source":"https://techcrunch.com/2024/01/09/quora-75m-funding-a16z-poe-ai-chat/","confidence":"reported"},
+  {"claim":"a16z調達額_2024","value":75,"unit":"M USD","as_of":"2024-01","source":"https://a16z.com/announcement/investing-in-quora-and-poe/","confidence":"reported"},
+  {"claim":"Quora月間ユニーク_2024","value":400,"unit":"M people","as_of":"2024-01","source":"https://techcrunch.com/2024/01/09/quora-75m-funding-a16z-poe-ai-chat/","confidence":"reported"},
+  {"claim":"PoeモバイルMAU","value":1.22,"unit":"M users","as_of":"2023-10","source":"https://techcrunch.com/2024/01/09/quora-75m-funding-a16z-poe-ai-chat/","confidence":"single-source"},
+  {"claim":"Forbes純資産推計_2016","value":600,"unit":"M USD","as_of":"2016-12-12","source":"https://www.forbes.com/sites/luisakroll/2016/12/12/americas-richest-entrepreneurs-under-40-2016/","confidence":"estimated"},
+  {"claim":"Slide買収額","value":182,"unit":"M USD","as_of":"2010-08","source":"https://techcrunch.com/2010/08/04/google-buys-slide-for-182-million-getting-more-serious-about-social-games/","confidence":"disputed"},
+  {"claim":"Asana取締役就任","value":"2008-12","unit":"month","as_of":"2008-12","source":"https://investors.asana.com/corporate-governance/board-of-directors","confidence":"reported"}
+]
+</script>
+
+<script>
+const BORN = '1984-08-14';
+const DIED = null;
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: true };
+  const m = String(x.d).match(/(\d{4})(?:[-.](\d{1,2})(?:[-.](\d{1,2}))?)?/);
+  if (!m) return null;
+  const y = +m[1], mo = m[2] ? +m[2] : null, dd = m[3] ? +m[3] : null;
+  const [by, bm, bd] = BORN.split('-').map(Number);
+  if (DIED) { const dy = +DIED.split('-')[0]; if (y > dy) return { t: '没後' + (y - dy) + '年', out: true }; }
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  let a = y - by;
+  if (mo !== null && (mo < bm || (mo === bm && dd !== null && dd < bd))) a -= 1;
+  return { t: a + '歳', out: false };
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sup(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+}
+
+const ERAS = [
+  '',
+  'I 形成 1984–2006',
+  'II Facebook 2005–2008',
+  'III Quora創業 2009–2012',
+  'IV 拡大とAI 2018–2024',
+  'V ボード刷新 2026',
+];
+
+const TL = [
+ {d:'1984.8.14',e:1,t:'コネチカット州 Redding に生まれる',
+  w:'生年月日は Wikipedia が August 14, 1984 と記す。Forbes の年齢表記と整合する。',
+  y:'以後の満年齢計算の基準日。',
+  f:['Redding'],s:[2,30]},
+ {d:'2002',e:1,t:'国際情報オリンピックで銀メダル',
+  w:'Exeter 在学中。大会成績は Exeter の Olympians 記録と Wikipedia が一致する。',
+  y:'競技プログラミングの公的実績の起点。',
+  f:['IOI銀'],s:[2,11]},
+ {d:'2002–2006',e:1,t:'Caltech で計算機科学の学士',
+  w:'Asana 略歴と Wikipedia が BS in computer science を記す。',
+  y:'Facebook 参入前の学位。',
+  f:['Caltech'],s:[1,2]},
+ {d:'2004',e:1,t:'BuddyZoo を公開',
+  w:'AIM buddy list の比較とネットワーク図。在学中の個人プロダクト。',
+  y:'ソーシャルグラフへの関心が後の経路と接続する。',s:[2]},
+ {d:'2005.6',e:2,t:'Facebook に上級職として在籍開始',
+  w:'Asana 公式略歴の日付。CTO 就任はその翌年。',
+  y:'雇用関係の確定開始。',
+  f:['雇用開始'],s:[1]},
+ {d:'2006.11',e:2,t:'Facebook CTO に就任',
+  w:'Asana 略歴。〜2008年6月。',
+  y:'初代 CTO としての公式期間の開始。',
+  f:['CTO'],s:[1]},
+ {d:'2008.5.11',e:2,t:'VentureBeat が CTO 退社を報道',
+  w:'Eric Eldon 記事。在籍終了の直前シグナル。',
+  y:'退任が外部に確定する日付。',s:[14]},
+ {d:'2008.6',e:2,t:'Facebook 在籍終了',
+  w:'Asana 略歴の終了月。CTO 期間の終了と一致。',
+  y:'エース社員フェーズの切れ目。',
+  f:['退任'],s:[1]},
+ {d:'2008.12',e:3,t:'Asana 取締役に就任',
+  w:'公式略歴。2026年株主総会まで在任予定。',
+  y:'Facebook 同窓ネットワーク上のボード役。',s:[1,16]},
+ {d:'2009.6',e:3,t:'Charlie Cheever と Quora を共同創業、CEO',
+  w:'Asana 略歴が June 2009 から CEO と明記。',
+  y:'CTO から創業者 CEO への転換点。',
+  f:['Quora'],s:[1,2]},
+ {d:'2010.1.4',e:3,t:'Quora プライベートベータ開始',
+  w:'TechCrunch Series A 記事が日付を記す。招待制。',
+  y:'プロダクト公開の第1段階。',s:[3]},
+ {d:'2010.3.28',e:3,t:'Benchmark 主導の Series A',
+  w:'評価額 $86M。調達額は $11M（TCソース）と $14M（WSJ経由）で諸説。Matt Cohler が取締役。',
+  y:'外部資本と Facebook 同窓のボードが入る。',
+  f:['$86M'],s:[3,17,18]},
+ {d:'2010.6',e:3,t:'Quora を一般公開方向へ',
+  w:'TechCrunch が public launch を報じる。',
+  y:'クローズドから開放への移行。',s:[17]},
+ {d:'2010.10',e:3,t:'Instagram 創業直後に技術助言、のち出資',
+  w:'NYT が Systrom の電話エピソードと出資を報じる。',
+  y:'FB 退任後のネットワークが次のスタートアップに接続する。',s:[21]},
+ {d:'2012.5.14',e:3,t:'Series B $50M（pre-money $400M）、本人 $20M',
+  w:'TechCrunch が創業者確認。Thiel がリード。BI・Reuters も同額を報じる。',
+  y:'自己資本でガバナンスを残す選択。',
+  f:['$20M自己'],s:[4,19,20]},
+ {d:'2012.9.11',e:3,t:'Charlie Cheever が day-to-day から離脱',
+  w:'D\'Angelo 声明。「we decided」。顧問として残る。',
+  y:'共同創業から CEO 一本化。',
+  f:['共同創業者離脱'],s:[5]},
+ {d:'2018.4',e:4,t:'OpenAI 取締役に就任',
+  w:'Musk 退任後の補充。裁判資料が就任共有に言及。',
+  y:'知識プロダクトと AI の交差点に入る。',s:[22,23]},
+ {d:'2019.5',e:4,t:'Quora 評価額約 $2B（Valor ラウンド）',
+  w:'Recode。月間ユニーク約3億、2018年売上約 $20M。',
+  y:'ピーク評価の公開アンカー。',
+  f:['$2B'],s:[28,29]},
+ {d:'2021.11',e:4,t:'IPO 準備を Reuters が報道',
+  w:'2022年前半上場を関係者が示唆。完了は未確認。',
+  y:'上場経路が開いたあと閉じた可能性。',s:[29]},
+ {d:'2022.12.21',e:4,t:'Poe を招待制で開始',
+  w:'TechCrunch。Platform for Open Exploration。iOS。',
+  y:'Q&A から LLM UI への拡張。',
+  f:['Poe'],s:[26]},
+ {d:'2023.2.6',e:4,t:'Poe を一般公開',
+  w:'TechCrunch。独立プロダクトとして運用。',
+  y:'AI 側の本格投入。',s:[32]},
+ {d:'2023.11',e:4,t:'OpenAI で Altman 解任に投票、ボード再建後も残留',
+  w:'Forbes・WSJ。オリジナル6人で唯一残る。',
+  y:'ボード役としての可視性が最大になる局面。',s:[24,25]},
+ {d:'2024.1.9',e:4,t:'a16z から $75M、評価額 $500M',
+  w:'本人がピーク比の低下を認める。資金は Poe。本体は CF 黒字。',
+  y:'評価額の下方修正と AI 再投資の同時決定。',
+  f:['$500M'],s:[8,9]},
+ {d:'2026.4.14',e:5,t:'Asana 取締役辞任を提出（2026年総会で発効）',
+  w:'Form 8-K。ボード刷新の一環。意見対立は無しと明記。',
+  y:'長期ボード役の終了予定。',s:[16]},
+];
+
+const QUOTES = [
+ {t:'知識',q:'Our belief is that more than 90% of the information people want to know is still not available on the web in a format that\'s easy for them to quickly understand.（知りたい情報の90%超は、まだウェブ上で素早く理解できる形になっていない、というのが私たちの信念だ。）',
+  w:'2010年3月・Series A 時（FinSMEs 引用）',s:[18]},
+ {t:'長期',q:'Focus on the long term, and always do what\'s right to grow the company and not make short-term decisions. And outlast everyone.（長期に集中し、会社を伸ばすために正しいことをし、短期判断で歪めない。そして最後まで残る。）',
+  w:'2013年1月・Om Malik インタビュー（Facebook で学んだこと）',s:[15]},
+ {t:'創業',q:'I felt that if we could organize that, there was a huge potential and it was good for the world. I didn\'t think there was something that was very good at organizing knowledge.（知識を整理できれば大きな可能性があり、世界にも良い。知識をうまく整理するものはまだ無いと思った。）',
+  w:'2013年1月・Om Malik インタビュー',s:[15]},
+ {t:'共同創業者',q:'We decided it was best for Charlie to step away from his day-to-day role at the company. He will always be a founder of Quora and will be an advisor to the company.',
+  w:'2012年9月11日・Cheever 離脱時の声明',s:[5]},
+ {t:'評価額',q:'In the last two years, the market has changed substantially, driven by rising interest rates and higher cost of capital. This means our valuation is lower than our previous peak, but we are happy to finally be marked to this new market.（この2年で金利上昇と資本コスト上昇により市場は大きく変わった。評価額は前回ピークより低いが、新市場にマークされたことを前向きに受け止める。）',
+  w:'2024年1月・a16z ラウンド時の本人コメント（TechCrunch 経由）',s:[8]},
+];
+
+const activeEras = new Set();
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button type="button" class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`;
+}).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.cls ? ' ' + r.cls : ''}${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+bars('chartVal', [
+  {k:'2010 Series A', v:86, sub:'報道'},
+  {k:'2012 Series B', v:400, sub:'pre-money', cls:'s2'},
+  {k:'2019 Valor', v:2000, sub:'約', cls:'s3'},
+  {k:'2024 a16z', v:500, sub:'', cls:'s2'},
+], 'M USD');
+
+bars('chartRaise', [
+  {k:'Series A', v:11, sub:'諸説$14M', est:true},
+  {k:'Series B', v:50, sub:'うち本人20', cls:'s2'},
+  {k:'a16z 2024', v:75, sub:'Poe向け', cls:'s3'},
+], 'M USD');
+</script>
+</body>
+</html>

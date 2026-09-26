@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ダリオ・アモデイ — OpenAI 研究責任者から Anthropic 創業まで</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --s2:#eb6834; --s3:#1baf7a; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  .bar.s2 .fl{background:var(--s2)}
+  .bar.s3 .fl{background:var(--s3)}
+  .bar.neg .fl{background:var(--neg)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / ダリオ・アモデイ</p>
+
+<header class="top">
+  <h1>ダリオ・アモデイ — OpenAI 研究責任者から Anthropic 創業まで</h1>
+  <div class="en">Dario Amodei　1983 – ／Anthropic 共同創業者・CEO</div>
+  <div class="tags">
+    <span class="tag">Anthropic</span><span class="tag">OpenAI</span><span class="tag">Claude</span>
+    <span class="tag">scaling</span><span class="tag">AI safety</span><span class="tag">創業</span>
+  </div>
+  <p class="lead">1983年、サンフランシスコ生まれ。プリンストンで生物物理学の博士号（2011年）、Baidu / Google Brain を経て OpenAI の VP of Research。GPT-2・GPT-3 の研究責任者を務めたのち、2020年12月に退社し、2021年2月に妹 Daniela らと Anthropic を設立した。2025年9月時点の Series F は調達 $13B・評価額 $183B（post-money）。</p>
+  <p class="srcnote">作成日 2026年9月26日。数値の基準日は同日。存命人物のため、本人が公開の場で述べた家族の事実以外の私生活・出典のない人物評は書かない。生年月日の月日は公開一次資料で確定できていない。年表の満年齢は生年1983年1月1日仮定からの年差であり、誕生日前後では1歳ずれる可能性がある。本ページは Anthropic 製モデルが執筆している。会社の公式発信は一次資料として用いるが評価としては引用せず、外部批判を同じ章立てで並べる。</p>
+</header>
+
+<h2 id="overview"><span class="num">①</span>概要<span class="en">Overview</span></h2>
+
+<div class="kpi">
+  <div class="card"><div class="k">生年</div><div class="v">1983<small>San Francisco, CA</small></div></div>
+  <div class="card"><div class="k">Anthropic 設立</div><div class="v">2021.2<small>California 法人</small></div></div>
+  <div class="card"><div class="k">Series F 評価</div><div class="v">$183B<small>2025-09・post-money</small></div></div>
+  <div class="card"><div class="k">Series F 調達</div><div class="v">$13B<small>ICONIQ 主導</small></div></div>
+</div>
+
+<div class="callout">
+<p><b>先に結論を3つ書く。</b></p>
+<p><b>1つ目。曲線は「神経計測の博士 → 計算量と性能の相関の体感 → 言語モデルの研究責任 → 安全性を看板にした別会社」である。</b>プリンストンの学位論文は神経回路の集団挙動（2011年、指導教員 William Bialek / Michael J. Berry）。Baidu の Deep Speech 2（2015年12月 arXiv）で大規模計算の効きを見、OpenAI では GPT-2（2019年2月）と GPT-3（2020年5月）の研究責任者となった。退社理由として本人が公開の場で述べたのは、安全性とスケーリングを一体で進める自らのビジョンを、他者のビジョンとの議論で実現するより新会社で実現する方が生産的だ、という形である<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup><sup><a href="#s5">5</a></sup>。</p>
+<p><b>2つ目。Anthropic の資金曲線は、FTX 主導の Series B を経て、Google・Amazon・大型 VC ラウンドへ移る。</b>Series A $124M（2021年5月）、Series B $580M（2022年4月、Sam Bankman-Fried / Alameda 主導。FTX 側の投下は裁判所文書で $500M）。のち FTX 破産管財人が持分を約 $1.3B で売却。2025年3月 Series E は $3.5B・評価 $61.5B、同年9月 Series F は $13B・評価 $183B。評価額の伸びは、製品としての Claude 投入（2023年3月以降）とクラウド大手の戦略出資が重なった区間に集中する<sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s10">10</a></sup>。</p>
+<p><b>3つ目。本人の時間軸発言は、時点と相手を固定しないと意味がずれる。</b>2023年7月25日の米上院司法委員会小委員会では、中期リスク（生物兵器への悪用など）と供給網・第三者監査を政策課題として置いた。2024年10月の随筆 <i>Machines of Loving Grace</i> では強力 AI の上振れを具体化し、2025年4月の <i>The Urgency of Interpretability</i> では「datacenter 内の天才の国」相当が 2026〜2027年にもあり得ると書き、解釈可能性の到達（5〜10年）とのギャップを問題にした<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup><sup><a href="#s13">13</a></sup><sup><a href="#s14">14</a></sup>。</p>
+</div>
+
+<h2 id="timeline"><span class="num">②</span>年表<span class="en">Timeline</span></h2>
+<p>日付が一次情報または複数報道で確定した出来事だけを並べた。各項目は事実、具体、なぜ効いたかの3層である。期のボタンで絞り込める。日付の右は、その時点の満年齢（生年1983年仮定）である。</p>
+
+<div class="tl-tools">
+  <input id="tlq" type="search" placeholder="年表を検索（例: Claude、FTX、Series、OpenAI、RSP）" aria-label="年表を検索">
+  <span class="tl-count" id="tlcount"></span>
+</div>
+<div class="tl-eras" id="tleras"></div>
+<div class="tl" id="tl"></div>
+<div class="tl-empty" id="tlempty">該当する項目がない。</div>
+
+<h2 id="phases"><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+
+<h3>I 形成 — 家族・物理学・神経計測（1983–2011）</h3>
+<p>生年は1983年、生地はサンフランシスコ。父 Riccardo はトスカナ出身のイタリア系皮革職人、母 Elena Engel は図書館関連のプロジェクト管理に従事した、と本人が Alex Kantrowitz のインタビュー（Big Technology、2025年7月）で述べている。妹 Daniela は1987年生まれ。父は長く病を患い、2006年に死去した。本人は、その後数年で当該疾患の予後が大きく改善したと知り、科学の速度が生死を分けたと公に語っている<sup><a href="#s15">15</a></sup><sup><a href="#s16">16</a></sup>。</p>
+<p>学部は Caltech に在籍したのちスタンフォードへ移り、物理学で学士。プリンストンで博士号（2011年）。学位論文題目は <i>Network-Scale Electrophysiology: Measuring and Understanding the Collective Behavior of Neural Circuits</i>。指導教員は William Bialek と Michael J. Berry（Princeton DataSpace / Mathematics Genealogy Project）。Hertz Foundation は同論文に Thesis Prize を与えたと記す。のちスタンフォード医学部でポスドク（質量分析とプロテオーム／がんバイオマーカー）<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup><sup><a href="#s17">17</a></sup>。</p>
+
+<h3>II Baidu・Google Brain — スケールの体感（2014–2016）</h3>
+<p>2014年11月、Baidu の Silicon Valley AI Lab（Andrew Ng の下）に入社。2015年12月8日、Deep Speech 2 の arXiv 原稿が公開され、Amodei は共著者の先頭に位置する。英語と中国語の end-to-end 音声認識で、計算資源と実験反復速度を前面に置いた。本人はのちに、計算量を増やすと性能が滑らかに上がる傾向をここで見た、と語る<sup><a href="#s3">3</a></sup><sup><a href="#s15">15</a></sup>。</p>
+<p>Baidu 退社後に Google Brain へ移り、2016年6月、「Concrete Problems in AI Safety」（Chris Olah、Jacob Steinhardt、Paul Christiano、John Schulman、Dan Mané らと共著）を arXiv に出した。事故リスクを5類型（副作用、報酬ハッキング、スケーラブルな監督、安全な探索、分布シフト）に整理した実務向け論文である<sup><a href="#s18">18</a></sup>。</p>
+
+<h3>III OpenAI — GPT-2 / GPT-3 と退社（2016–2020）</h3>
+<p>2016年に OpenAI 入社。2019年に VP of Research。GPT-2（2019年2月）と GPT-3（2020年5月）の研究責任者として OpenAI 公式が退社時に名指しする。2020年1月の Kaplan ら <i>Scaling Laws for Neural Language Models</i> は、言語モデルの損失が計算量・データ・パラメータに対してべき乗則に近い、という実証をまとめた。Amodei 自身は共著者ではないが、OpenAI 在籍期のスケーリング研究の中核文書として後続議論に引用される<sup><a href="#s4">4</a></sup><sup><a href="#s19">19</a></sup><sup><a href="#s20">20</a></sup><sup><a href="#s21">21</a></sup>。</p>
+<p>2020年12月、OpenAI が組織アップデートで退社を発表。Greg Brockman は「research に寄り product には寄りにくい新プロジェクト」と書き、Amodei 本人の社内発言として「安全な AGI という目標は共有する」と引用する。退社理由の内部対立を推測で書かない。公開発言では、Fortune（2023年9月）でスケーリング信念とアライメントの両方を強く持つ集団が別会社を始めた、と述べ、Lex Fridman 対談では Microsoft 提携への不満が理由だという説を否定し、「他者のビジョンと議論するより、信頼できる人々と自らのビジョンを実現する」と述べた<sup><a href="#s4">4</a></sup><sup><a href="#s5">5</a></sup><sup><a href="#s22">22</a></sup>。</p>
+
+<h3>IV Anthropic 創業と FTX ラウンド（2021–2022）</h3>
+<p>2021年2月3日、California で Anthropic が法人化された、という複数の二次整理がある。共同創業者には妹 Daniela（President）と、OpenAI から移った研究・政策人材が含まれる。人数は「約11人」「7人の共同創業者」など報道で割れ、OpenAI 公式は「handful」とだけ書いた（諸説）。2021年5月28日、Series A $124M。主導は Jaan Tallinn。参加者に Dustin Moskovitz、Eric Schmidt、Center for Emerging Risk Research ら<sup><a href="#s6">6</a></sup><sup><a href="#s4">4</a></sup><sup><a href="#s16">16</a></sup>。</p>
+<p>2022年4月29日、Series B $580M を発表。主導は Sam Bankman-Fried（Alameda Research）。裁判所文書・Reuters によると FTX 側の Anthropic 出資は $500M、初期持分 13.56%、後続調達で希釈され破産時点で約 7.84%。2022年11月に FTX が Chapter 11 を申請した時点で、Anthropic はまだ一般向けチャット製品を公開していなかった。OpenAI の ChatGPT は同月30日に公開された<sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s23">23</a></sup>。</p>
+
+<h3>V Claude・RSP・クラウド資本（2023–2024）</h3>
+<p>2023年2月、Google が $300M を出資（報道では約10%持分）。3月14日に Claude を一般公開。5月に Spark Capital 主導で $450M（いわゆる Series C）。7月11日 Claude 2。7月25日、米上院司法委員会・Privacy, Technology, and the Law 小委員会で証言。9月19日、Responsible Scaling Policy（RSP）v1.0 と Long-Term Benefit Trust（LTBT）を同時に公開枠組みとして提示。同月25日、Amazon が最大 $4B の投資を発表（当初tranche $1.25B）<sup><a href="#s24">24</a></sup><sup><a href="#s25">25</a></sup><sup><a href="#s11">11</a></sup><sup><a href="#s26">26</a></sup><sup><a href="#s27">27</a></sup><sup><a href="#s28">28</a></sup>。</p>
+<p>2024年3月4日 Claude 3 ファミリー、6月20日 Claude 3.5 Sonnet。FTX 破産管財人は2024年2月に売却手続の承認を得て、3月に持分の大部分を約 $884M で売却合意、残分も同年中に売却し合計約 $1.3B と報じられた。2024年10月、本人サイトに <i>Machines of Loving Grace</i>。11月、Amazon が追加 $4B（累計 $8B）を発表<sup><a href="#s25">25</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s13">13</a></sup><sup><a href="#s29">29</a></sup>。</p>
+
+<h3>VI 評価額の跳ね上がり（2025）</h3>
+<p>2025年3月3日、Series E $3.5B・評価額 $61.5B（post-money）。主導 Lightspeed。4月、<i>The Urgency of Interpretability</i>。5月22日、Claude Opus 4 / Sonnet 4（Claude 4 系列の公開開始）。9月2日、Series F $13B・評価額 $183B。主導 ICONIQ、共同に Fidelity と Lightspeed<sup><a href="#s10">10</a></sup><sup><a href="#s14">14</a></sup><sup><a href="#s30">30</a></sup><sup><a href="#s31">31</a></sup>。</p>
+
+<h3>VII 利害構造 — 誰が得をするか</h3>
+<p>Anthropic の公式発信（安全研究、RSP、PBC、LTBT）は、企業顧客・規制当局・採用市場に対して「安全性を優先する供給者」という識別子を与える。その識別子から直接の金銭的利益を得るのは、(1) 創業者と従業員の持分、(2) Amazon / Google などクラウドとチップ需要を抱える戦略投資家、(3) Series E/F に参加した成長株投資家である。安全研究の公開は競合他社の規範形成にも使われるが、規範のコストを最も多く負担する主体が Anthropic 自身であるとは限らない。</p>
+<p>外部から繰り返し指摘されるのは、同じ主体が最前線モデルの商用投入速度でも競合している点である。「race to the top」は本人の用語だが、速度競争の参加者としての利益と、減速・監査を求める政策発言の利益は、常に一致しない。LTBT は株主の金銭的利害から切り離した取締役選任をうたうが、信託契約の全文は公開されておらず、株主の特別多数で信託を変更できる条項がある、と EA Forum 等の外部分析が書く。公式の章立てを借りずに置くと、<strong class="hit">得をするのは「安全ブランド付きの成長株」を保有・販売できる側</strong>であり、信託の実効性は公開された拒否権の行使履歴ではまだ測れない<sup><a href="#s27">27</a></sup><sup><a href="#s32">32</a></sup><sup><a href="#s5">5</a></sup>。</p>
+
+<h2 id="numbers"><span class="num">④</span>実績の数字<span class="en">The Numbers</span></h2>
+<p>中心は資金調達表と Claude 投入履歴である。個人持分比率の監査済み開示は無い（N/A）。</p>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>ラウンド</th><th>日付</th><th class="num">調達額</th><th class="num">評価額</th><th>主導・注記</th></tr></thead>
+<tbody>
+<tr><td class="name">Series A</td><td>2021-05-28</td><td class="num">$124M</td><td class="num">約 $550M post</td><td>Jaan Tallinn。評価は二次整理（推定・諸説）<sup><a href="#s6">6</a></sup><sup><a href="#s33">33</a></sup></td></tr>
+<tr><td class="name">Series B</td><td>2022-04</td><td class="num">$580M</td><td class="num">約 $4B post</td><td>SBF 主導。評価は二次（推定）。FTX 投下 $500M<sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s33">33</a></sup></td></tr>
+<tr><td class="name">Google</td><td>2023-02</td><td class="num">$300M</td><td class="num">約10%持分の報道</td><td>評価の公式開示なし（single-source に近い報道）<sup><a href="#s24">24</a></sup></td></tr>
+<tr><td class="name">Series C</td><td>2023-05</td><td class="num">$450M</td><td class="num">約 $4.1B</td><td>Spark Capital。調達は公式、評価は報道（諸説）<sup><a href="#s34">34</a></sup><sup><a href="#s33">33</a></sup></td></tr>
+<tr><td class="name">Amazon</td><td>2023-09-25</td><td class="num">最大 $4B</td><td class="num">N/A</td><td>当初 $1.25B + option<sup><a href="#s28">28</a></sup></td></tr>
+<tr><td class="name">Amazon 追加</td><td>2024-11</td><td class="num">$4B</td><td class="num">N/A</td><td>累計 $8B。少数株主のまま<sup><a href="#s29">29</a></sup></td></tr>
+<tr><td class="name">Series E</td><td>2025-03-03</td><td class="num">$3.5B</td><td class="num">$61.5B post</td><td>Lightspeed。公式発表<sup><a href="#s10">10</a></sup></td></tr>
+<tr><td class="name">Series F</td><td>2025-09-02</td><td class="num">$13B</td><td class="num">$183B post</td><td>ICONIQ。公式発表<sup><a href="#s31">31</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="chart">
+  <div class="cap">主要ラウンドの調達額（開示値）</div>
+  <div class="sub">単位は M USD。Amazon の「最大 $4B」はコミット上限のため棒は $4,000M として置く</div>
+  <div class="bars" id="chartRaise"></div>
+  <p class="sub" style="margin:14px 0 0">出典6・7・10・28・29・31・34。評価額は別チャート。</p>
+</div>
+
+<div class="chart">
+  <div class="cap">開示された post-money 評価額</div>
+  <div class="sub">単位は B USD。Series A/B の評価は二次整理、E/F は公式</div>
+  <div class="bars" id="chartVal"></div>
+  <p class="sub" style="margin:14px 0 0">出典10・31・33。A/B は est。</p>
+</div>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>Claude 系</th><th>公開日</th><th>注記</th></tr></thead>
+<tbody>
+<tr><td class="name">Claude 1</td><td>2023-03-14</td><td>初の一般向けアシスタント<sup><a href="#s25">25</a></sup></td></tr>
+<tr><td class="name">Claude 2</td><td>2023-07-11</td><td>API・ウェブ拡充<sup><a href="#s25">25</a></sup></td></tr>
+<tr><td class="name">Claude 2.1</td><td>2023-11-21</td><td>200K コンテキスト等<sup><a href="#s25">25</a></sup></td></tr>
+<tr><td class="name">Claude 3</td><td>2024-03-04</td><td>Haiku / Sonnet / Opus<sup><a href="#s25">25</a></sup></td></tr>
+<tr><td class="name">Claude 3.5 Sonnet</td><td>2024-06-20</td><td>コーディング・Artifacts<sup><a href="#s25">25</a></sup></td></tr>
+<tr><td class="name">Claude 4（Opus/Sonnet 4）</td><td>2025-05-22</td><td>Claude 4 系列の開始。Opus 4 は ASL-3 関連の記述あり<sup><a href="#s30">30</a></sup><sup><a href="#s25">25</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>項目</th><th class="num">数値</th><th>時点・条件</th></tr></thead>
+<tbody>
+<tr><td class="name">生年</td><td class="num">1983</td><td>月日は公開一次で未確定<sup><a href="#s16">16</a></sup></td></tr>
+<tr><td class="name">PhD</td><td class="num">2011</td><td>Princeton・神経計測<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">OpenAI 退社発表</td><td class="num">2020-12</td><td>公式組織アップデート<sup><a href="#s4">4</a></sup></td></tr>
+<tr><td class="name">Anthropic 設立</td><td class="num">2021-02</td><td>California 法人<sup><a href="#s16">16</a></sup></td></tr>
+<tr><td class="name">FTX 初期持分</td><td class="num">13.56% → 7.84%</td><td>投下 $500M。希釈後・破産時<sup><a href="#s8">8</a></sup></td></tr>
+<tr><td class="name">FTX 持分売却総額</td><td class="num">約 $1.3B</td><td>2024年。$884M + 残分（推定。報道合算）<sup><a href="#s9">9</a></sup></td></tr>
+<tr><td class="name">RSP 発効</td><td class="num">2023-09-19</td><td>v1.0。ASL 段階的定義<sup><a href="#s26">26</a></sup></td></tr>
+<tr><td class="name">Series F / Series A 調達比</td><td class="num">約 105倍</td><td>$13B ÷ $124M。自己計算</td></tr>
+<tr><td class="name">評価 $183B / $61.5B</td><td class="num">約 3.0倍</td><td>2025-09 ÷ 2025-03。自己計算</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="failures"><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
+<p>ここでの「失敗」は、金額・時点・制度設計のズレで切る。人格評価は書かない。Anthropic に法的責任がある事案と、投資家側の破綻が重なった事案を分ける。</p>
+
+<h3>類型1: FTX / Alameda からの資金受領とその後始末</h3>
+<p>2022年4月の Series B で、SBF 主導の $580M を受け入れた。FTX 側の Anthropic 持分は投下 $500M、初期 13.56%。2022年11月の FTX 破綻後、持分は破産財団の資産になった。2024年、管財人は合計約 $1.3B で売却し、債権者への配当原資にしたと報じられる。投下 $500M に対する回収約 $1.3B は、倍率にして約 <strong class="hit">2.6倍</strong>（自己計算）である<sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup>。</p>
+<p>分けるべき点は次のとおり。(a) Anthropic が FTX 顧客資産の横領に関与したという裁判所の認定は、本ページが参照した破産関連報道には無い。(b) それでも、大口の暗号資産取引所創業者を主導投資家に据えた時点で、カウンターパーティ・レピュテーションのリスクを引き受けた。(c) 売却益の帰属先は Anthropic ではなく FTX 財団／債権者である。会社側の「失敗」は、資金の違法性の証明ではなく、<strong class="hit">ガバナンスと資金源の適合を公開前に十分に切り分けられなかったこと</strong>として測る。</p>
+
+<h3>類型2: 安全性を掲げながら最前線モデルを出し続ける構造</h3>
+<p>本人は Fortune と Lex Fridman 対談で、スケーリングとアライメントを同時に進める「race to the top」を説明した。一方で Claude は 2023年以降、競合と同時間帯で世代更新を続け、評価額は 2025年に $61.5B から $183B へ約3倍になった。RSP は壊滅的リスクに焦点を当て ASL を段階定義するが、商用投入の停止条件が外部から検証可能な形で発動した公開事例は、本ページの範囲では確認できていない。構造的矛盾を本人は「例示で業界を引き上げる」と説明する。外部は「安全言説が成長株の差別化装置になっている」と読む。両方を並置する<sup><a href="#s5">5</a></sup><sup><a href="#s22">22</a></sup><sup><a href="#s26">26</a></sup><sup><a href="#s32">32</a></sup>。</p>
+
+<h3>類型3: ChatGPT 公開時点での製品遅延（2022年末–2023年初）</h3>
+<p>ChatGPT は2022年11月30日公開。Claude の一般公開は2023年3月14日。この約3.5か月、対話型 LLM の消費者側デフォルトは OpenAI 側に固定された。Anthropic 自身は2023年3月8日の <i>core views on AI safety</i> で、Claude の初期版を2022年春に訓練しつつ「安全研究を優先し公開を遅らせた」と書く。安全判断としての自己説明はあるが、商用の先行者利益では負けた区間である。金額換算の公式開示は無い（N/A）。観測できるのは、公開タイミングの差と、その後のキャッチアップ速度（2023–2025年の調達・評価）である<sup><a href="#s23">23</a></sup><sup><a href="#s25">25</a></sup><sup><a href="#s37">37</a></sup>。</p>
+
+<h3>類型4: Long-Term Benefit Trust の設計と実効性批判</h3>
+<p>2023年9月19日、Anthropic は LTBT を発表した。Class T 株式により、時間・資金マイルストーンに応じて取締役の選任権が信託に移り、最終的に過半数に達する、と公式は書く。信託委員は Anthropic の金銭的持分を持たない。一方、EA Forum の分析（2023年以降）は、(1) 信託契約全文が非公開、(2) 株主の特別多数で信託の権限を変更・無効化できる条項がある、(3) 公開された拒否権行使の記録が乏しい、を指摘する。Financial Times 系の後続報道でも、信託が収益と目的のトレードオフで表立った拒否を行った事例は確認しにくい、と書かれるものがある。設計意図と、<strong class="hit">外部から見た拒否権の観測可能性</strong>は別物である<sup><a href="#s27">27</a></sup><sup><a href="#s32">32</a></sup>。</p>
+
+<div class="risk">
+<p><b>欠落データ。</b>創業者個人の希薄化後持分％、RSP に基づく学習停止の内部トリガー発動履歴、LTBT の信託契約全文、Series A/B の公式 post-money（会社発表文に無い部分）は、公開一次資料では揃っていない。</p>
+</div>
+
+<h2 id="thought"><span class="num">⑥</span>思想と方法<span class="en">Thought and Method</span></h2>
+
+<h3>スケーリングとアライメントの二本立て</h3>
+<p>Baidu での経験と OpenAI での GPT 系列を経て、本人の公開説明は一貫して「計算量を積むと能力が上がる」と「能力は価値観を自動では与えない」の両方を置く。Fortune インタビュー（2023年9月26日）では、この二点を OpenAI 在籍時から特に強く共有した集団が Anthropic を始めた、と述べる<sup><a href="#s5">5</a></sup>。</p>
+
+<h3>Responsible Scaling Policy と ASL</h3>
+<p>RSP v1.0（2023年9月19日発効）は、壊滅的リスク（例: 数千人死亡や数千億ドル規模の直接損害）に焦点を当て、AI Safety Level（ASL）を段階的に定義する。ASL-2 の安全策を ASL-3 到達前に固め、上位レベルへ進むたびに評価基準を先に定義する、という「iterative」方式を採る。これは自主コミットメントであり、法令ではない<sup><a href="#s26">26</a></sup>。</p>
+
+<h3>時間軸の置き方（発言の固定）</h3>
+<p><i>Machines of Loving Grace</i>（2024年10月、本人サイト）は、強力 AI の上振れ（生物・神経・経済・労働）を具体的に素描し、リスクへの集中は上振れを守るためだと書く。<i>The Urgency of Interpretability</i>（2025年4月）では、解釈可能性が「AI の MRI」水準に達するのに 5〜10年を見込む一方、「country of geniuses in a datacenter」相当は 2026〜2027年にもあり得るとし、輸出規制による 1〜2年のリードが解釈可能性の間に合うかを左右する、と政府向け含意を述べた。いずれもエッセイ上の一人称であり、規制当局への法的約束ではない<sup><a href="#s13">13</a></sup><sup><a href="#s14">14</a></sup>。</p>
+
+<h3>議会証言（2023年7月25日）</h3>
+<blockquote>
+Private action is not enough. This risk and many others like it require a systemic policy response.
+<span class="who">Dario Amodei、米上院司法委員会小委員会「Oversight of A.I.: Principles for Regulation」、2023年7月25日（口述・配布証言の趣旨）<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup></span>
+</blockquote>
+<p>配布証言は、供給網（半導体からモデル保管まで）、第三者テスト／監査、NIST 等への研究投資の3類を推奨する。中期リスクとして生物兵器への悪用を「grave」と位置づける<sup><a href="#s12">12</a></sup>。</p>
+
+<h2 id="quotes"><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
+<p>日付と出典が特定できる発言に限った。出典未確定の言い回しは載せない。</p>
+<div class="q-tabs" id="qtabs"></div>
+<div class="q-list" id="qlist"></div>
+
+<h2 id="open"><span class="num">⑧</span>残っている問い / 出典<span class="en">Open Questions / Sources</span></h2>
+
+<h3>残っている問い</h3>
+<ul>
+<li>生年月日の月日を、本人または公的登録の一次資料で確定できるか。現状は生年1983のみ。</li>
+<li>2020年12月退社時に OpenAI から同時に移った人数の確定名簿（公式は「handful」、報道は約7〜11で諸説）。</li>
+<li>Series A / B の post-money 評価を、会社の公式発表文だけで固定できるか。現状は二次整理に依存する区間がある。</li>
+<li>LTBT の信託契約全文と、取締役選任・拒否の公開ログはどこまで開示されるか。</li>
+<li>RSP に基づく学習・展開の停止が、外部監査可能な形で発動した事例はあるか。</li>
+<li>創業者個人の希薄化後持分％と議決権。監査済み開示は未確認（N/A）。</li>
+</ul>
+
+<ol class="sources">
+<li id="s1">Princeton University DataSpace, Dario Amodei dissertation “Network-Scale Electrophysiology…”（2011、Advisors: Berry / Bialek） — https://dataspace.princeton.edu/handle/88435/dsp013f462544k</li>
+<li id="s2">Mathematics Genealogy Project, Dario Amodei（Ph.D. Princeton 2011、Advisor 1 William Samuel Bialek、Advisor 2 Michael James Berry） — https://mathgenealogy.org/id.php?id=260240</li>
+<li id="s3">Amodei et al., “Deep Speech 2: End-to-End Speech Recognition in English and Mandarin,” arXiv:1512.02595（2015-12-08） — https://arxiv.org/abs/1512.02595</li>
+<li id="s4">OpenAI, “Organizational update from OpenAI”（2020-12、Dario Amodei VP of Research 退社、GPT-2/GPT-3、新プロジェクト） — https://openai.com/index/organizational-update/</li>
+<li id="s5">Fortune, “Anthropic CEO interview: why I quit OpenAI”（2023-09-26、スケーリングとアライメント、別会社設立の説明） — https://fortune.com/2023/09/26/anthropic-ceo-interview-quit-open-ai-amazon-investment/</li>
+<li id="s6">Anthropic, “Anthropic raises $124 million to build more reliable, general AI systems”（2021-05-28、Series A、Jaan Tallinn 主導） — https://www.anthropic.com/news/anthropic-raises-124-million-to-build-more-reliable-general-ai-systems</li>
+<li id="s7">Anthropic, “Anthropic raises Series B to build robust AI”（2022-04、$580M、SBF 主導） — https://www.anthropic.com/news/anthropic-raises-series-b-to-build-safe-reliable-ai</li>
+<li id="s8">Reuters, “Crypto exchange FTX to sell shares in AI startup Anthropic”（2024-02-22、$500M 投下、13.56%→7.84%） — https://www.reuters.com/technology/crypto-exchange-ftx-sell-shares-ai-startup-anthropic-2024-02-22/</li>
+<li id="s9">CNBC, “FTX estate sells majority stake in startup Anthropic for $884 million”（2024-03-25）＋残分売却で合計約 $1.3B の報道 — https://www.cnbc.com/2024/03/25/ftx-estate-sells-majority-stake-in-startup-anthropic-for-884-million.html</li>
+<li id="s10">Anthropic, “Anthropic raises Series E at $61.5B post-money valuation”（2025-03-03、$3.5B） — https://www.anthropic.com/news/anthropic-raises-series-e-at-usd61-5b-post-money-valuation</li>
+<li id="s11">U.S. Senate Judiciary Committee, Subcommittee hearing “Oversight of A.I.: Principles for Regulation”（2023-07-25、証人 Dario Amodei） — https://www.judiciary.senate.gov/committee-activity/hearings/oversight-of-ai-principles-for-regulation</li>
+<li id="s12">Written Testimony of Dario Amodei（2023-07-25、Senate Judiciary Subcommittee PDF） — https://www.judiciary.senate.gov/imo/media/doc/2023-07-26_-_testimony_-_amodei.pdf</li>
+<li id="s13">Dario Amodei, “Machines of Loving Grace”（2024-10、本人サイト） — https://darioamodei.com/essay/machines-of-loving-grace</li>
+<li id="s14">Dario Amodei, “The Urgency of Interpretability”（2025-04、本人サイト。2026–2027 / 5–10年 / 1–2年リード） — https://darioamodei.com/post/the-urgency-of-interpretability</li>
+<li id="s15">Alex Kantrowitz, “The Making Of Dario Amodei,” Big Technology（2025-07-29、家族・父の死・Baidu スケールの本人発言） — https://www.bigtechnology.com/p/the-making-of-dario-amodei</li>
+<li id="s16">Wikipedia, “Dario Amodei”（生年1983、家族、経歴の二次整理。一次と突合して使用） — https://en.wikipedia.org/wiki/Dario_Amodei</li>
+<li id="s17">Fannie &amp; John Hertz Foundation, “Dario Amodei” プロフィール（PhD、Thesis Prize、Stanford Medicine ポスドク、Anthropic CEO） — https://www.hertzfoundation.org/people/dario-amodei/</li>
+<li id="s18">Amodei, Olah, Steinhardt, Christiano, Schulman, Mané, “Concrete Problems in AI Safety,” arXiv:1606.06565（2016-06） — https://arxiv.org/abs/1606.06565</li>
+<li id="s19">OpenAI, “Better Language Models and Their Implications”（GPT-2、2019-02-14） — https://openai.com/index/better-language-models/</li>
+<li id="s20">OpenAI, “Language Models are Few-Shot Learners” / GPT-3 発表（2020-05） — https://openai.com/index/language-models-are-few-shot-learners/</li>
+<li id="s21">Kaplan et al., “Scaling Laws for Neural Language Models,” arXiv:2001.08361（2020-01） — https://arxiv.org/abs/2001.08361</li>
+<li id="s22">Inc. / Lex Fridman 対談報道, “Anthropic CEO Dario Amodei Says He Left OpenAI Over a Difference in ‘Vision’”（Microsoft 提携説の否定、race to the top） — https://www.inc.com/ben-sherry/anthropic-ceo-dario-amodei-says-he-left-openai-over-a-difference-in-vision/91018229</li>
+<li id="s23">OpenAI, “Introducing ChatGPT”（2022-11-30） — https://openai.com/index/chatgpt/</li>
+<li id="s24">報道整理: Google $300M 出資・約10%持分（2023-02。評価の公式開示なし。FT / 各紙） — https://www.cnbc.com/2025/03/03/amazon-backed-ai-firm-anthropic-valued-at-61point5-billion-after-latest-round.html</li>
+<li id="s25">Anthropic, “Introducing Claude”（2023-03-14）／Wikipedia “Claude (language model)”（以降の公開日突合） — https://www.anthropic.com/news/introducing-claude</li>
+<li id="s26">Anthropic, Responsible Scaling Policy v1.0 PDF（Effective 2023-09-19、ASL） — https://www-cdn.anthropic.com/files/4zrzovbb/website/1adf000c8f675958c2ee23805d91aaade1cd4613.pdf</li>
+<li id="s27">Anthropic, “The Long-Term Benefit Trust”（2023-09-19、Class T、過半数選任のマイルストーン） — https://www.anthropic.com/news/the-long-term-benefit-trust</li>
+<li id="s28">Amazon / Anthropic, Amazon 最大 $4B 投資発表（2023-09-25） — https://www.aboutamazon.com/news/company-news/amazon-invests-in-anthropic-ai</li>
+<li id="s29">CNBC, Amazon 追加 $4B・累計 $8B（2024-11 報道） — https://www.cnbc.com/2025/03/03/amazon-backed-ai-firm-anthropic-valued-at-61point5-billion-after-latest-round.html</li>
+<li id="s30">Anthropic, “Introducing Claude 4”（2025-05-22、Opus 4 / Sonnet 4） — https://www.anthropic.com/news/claude-4</li>
+<li id="s31">Anthropic, “Anthropic raises $13B Series F at $183B post-money valuation”（2025-09-02） — https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation</li>
+<li id="s32">EA Forum, “Maybe Anthropic’s Long-Term Benefit Trust is powerless”（信託契約非公開・株主特別多数による変更条項の指摘） — https://forum.effectivealtruism.org/posts/JARcd9wKraDeuaFu5/maybe-anthropic-s-long-term-benefit-trust-is-powerless</li>
+<li id="s33">Seedlist / 二次整理, Anthropic 資金調達表（Series A 評価約 $550M post 等。公式に無い数値は諸説） — https://seedlist.com/startups/anthropic.html</li>
+<li id="s34">Anthropic, “Anthropic Raises $450 Million in Series C Funding…”（2023-05、Spark Capital 主導。評価額は本文非開示） — https://www.anthropic.com/news/anthropic-series-c</li>
+<li id="s35">GovInfo, S. Hrg. 118-108 “Oversight of A.I.: Principles for Regulation”（2023-07-25 議事録） — https://www.govinfo.gov/content/pkg/CHRG-118shrg53503/html/CHRG-118shrg53503.htm</li>
+<li id="s36">ICML 2016 / PMLR, Deep Speech 2 公式ページ — https://proceedings.mlr.press/v48/amodei16.html</li>
+<li id="s37">Anthropic, “Anthropic’s core views on AI safety”（2023-03-08。Claude を2022年春に訓練し公開を遅らせたと明記） — https://www.anthropic.com/news/core-views-on-ai-safety</li>
+<li id="s38">Anthropic, “Introducing 100K Context Windows”（2023-05-11） — https://www.anthropic.com/news/100k-context-windows</li>
+<li id="s39">Anthropic, “Claude 2”（2023-07-11） — https://www.anthropic.com/news/claude-2</li>
+</ol>
+
+</div>
+
+<script type="application/json" id="facts">
+[
+  {"claim":"生年","value":1983,"unit":"year","as_of":"2026-09-26","source":"https://en.wikipedia.org/wiki/Dario_Amodei","confidence":"reported"},
+  {"claim":"PhD年","value":2011,"unit":"year","as_of":"2011","source":"https://dataspace.princeton.edu/handle/88435/dsp013f462544k","confidence":"reported"},
+  {"claim":"Series_A_raise","value":124,"unit":"M USD","as_of":"2021-05-28","source":"https://www.anthropic.com/news/anthropic-raises-124-million-to-build-more-reliable-general-ai-systems","confidence":"reported"},
+  {"claim":"Series_B_raise","value":580,"unit":"M USD","as_of":"2022-04-29","source":"https://www.anthropic.com/news/anthropic-raises-580-million-series-to-advance-reliable-ai","confidence":"reported"},
+  {"claim":"FTX_Anthropic_investment","value":500,"unit":"M USD","as_of":"2022","source":"https://www.reuters.com/technology/crypto-exchange-ftx-sell-shares-ai-startup-anthropic-2024-02-22/","confidence":"reported"},
+  {"claim":"FTX_stake_sale_majority","value":884,"unit":"M USD","as_of":"2024-03","source":"https://www.cnbc.com/2024/03/25/ftx-estate-sells-majority-stake-in-startup-anthropic-for-884-million.html","confidence":"reported"},
+  {"claim":"FTX_stake_sale_total","value":1300,"unit":"M USD","as_of":"2024","source":"https://www.cnbc.com/2024/03/25/ftx-estate-sells-majority-stake-in-startup-anthropic-for-884-million.html","confidence":"estimated"},
+  {"claim":"Series_E_raise","value":3500,"unit":"M USD","as_of":"2025-03-03","source":"https://www.anthropic.com/news/anthropic-raises-series-e-at-usd61-5b-post-money-valuation","confidence":"reported"},
+  {"claim":"Series_E_valuation","value":61.5,"unit":"B USD","as_of":"2025-03-03","source":"https://www.anthropic.com/news/anthropic-raises-series-e-at-usd61-5b-post-money-valuation","confidence":"reported"},
+  {"claim":"Series_F_raise","value":13000,"unit":"M USD","as_of":"2025-09-02","source":"https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation","confidence":"reported"},
+  {"claim":"Series_F_valuation","value":183,"unit":"B USD","as_of":"2025-09-02","source":"https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation","confidence":"reported"},
+  {"claim":"Amazon_commitment_2023","value":4,"unit":"B USD","as_of":"2023-09-25","source":"https://www.aboutamazon.com/news/company-news/amazon-invests-in-anthropic-ai","confidence":"reported"},
+  {"claim":"Series_A_valuation_post","value":550,"unit":"M USD","as_of":"2021-05","source":"https://seedlist.com/startups/anthropic.html","confidence":"disputed"},
+  {"claim":"Google_investment_2023","value":300,"unit":"M USD","as_of":"2023-02","source":"https://www.anthropic.com/news","confidence":"reported"},
+  {"claim":"Claude1_release","value":"2023-03-14","unit":"date","as_of":"2023-03-14","source":"https://en.wikipedia.org/wiki/Claude_(language_model)","confidence":"reported"}
+]
+</script>
+
+<script>
+const BORN = '1983-01-01';
+const DIED = null;
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: true };
+  const m = String(x.d).match(/(\d{4})(?:[-.](\d{1,2})(?:[-.](\d{1,2}))?)?/);
+  if (!m) return null;
+  const y = +m[1], mo = m[2] ? +m[2] : null, dd = m[3] ? +m[3] : null;
+  const [by, bm, bd] = BORN.split('-').map(Number);
+  if (DIED) { const dy = +DIED.split('-')[0]; if (y > dy) return { t: '没後' + (y - dy) + '年', out: true }; }
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  let a = y - by;
+  if (mo !== null && (mo < bm || (mo === bm && dd !== null && dd < bd))) a -= 1;
+  return { t: a + '歳', out: false };
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sup(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+}
+
+const ERAS = [
+  '',
+  'I 形成 1983–2011',
+  'II Baidu–Google 2014–2016',
+  'III OpenAI 2016–2020',
+  'IV Anthropic創業 2021–2022',
+  'V Claudeと資本 2023–2024',
+  'VI 評価拡大 2025',
+];
+
+const TL = [
+ {d:'1983',e:1,t:'サンフランシスコに生まれる',
+  w:'生年1983。父 Riccardo（皮革職人）、母 Elena Engel（図書館プロジェクト）。妹 Daniela は1987年生まれ。月日は公開一次で未確定。',
+  y:'以後の満年齢は生年仮定。',
+  f:['SF'],s:[15,16]},
+ {d:'2003.3.3',e:1,t:'Caltech 学生紙にイラク戦争反対の寄稿',
+  w:'The California Tech。傍観を批判する一文。Big Technology が引用。',
+  y:'学生時代の公開発言の確定日付。',s:[15]},
+ {d:'2006',e:1,t:'父 Riccardo が死去。スタンフォード物理学学士の時期と重なる',
+  w:'本人インタビュー。長く病を患った末の死。のちに当該疾患の予後改善を知り、科学速度の遅れを問題にする。',
+  y:'研究対象を理論物理から生物・計測へ寄せる転機として本人が語る。',
+  f:['2006'],s:[15,16]},
+ {d:'2011',e:1,t:'プリンストンで PhD（生物物理学／物理）',
+  w:'論文 Network-Scale Electrophysiology…。指導教員 William Bialek / Michael J. Berry。',
+  y:'神経回路の集団計測が最初の長い研究単位。',
+  f:['PhD'],s:[1,2]},
+ {d:'2011',e:1,t:'Hertz Thesis Prize',
+  w:'Hertz Foundation プロフィールが Thesis Prize を記載。',
+  y:'学位論文の外部評価。',s:[17]},
+ {d:'2011–14',e:1,t:'スタンフォード医学部でポスドク',
+  w:'質量分析とプロテオーム／がんバイオマーカー。Hertz プロフィール。',
+  y:'人間スケールを超える生物データの問題意識。',s:[17,15]},
+ {d:'2014.11',e:2,t:'Baidu Silicon Valley AI Lab に入社',
+  w:'Andrew Ng の下。本人・同僚インタビュー。',
+  y:'大規模計算実験への入口。',
+  f:['Baidu'],s:[15,16]},
+ {d:'2015.12.8',e:2,t:'Deep Speech 2 を arXiv 公開',
+  w:'Amodei ら。英語・中国語の end-to-end ASR。HPC による実験反復を強調。',
+  y:'計算量と性能の滑らかな相関を本人が体感した局面。',
+  f:['DS2'],s:[3,36]},
+ {d:'2015–16',e:2,t:'Google Brain へ移籍',
+  w:'Baidu 後。Concrete Problems 論文の所属は Google Brain。',
+  y:'安全研究の公開デビュー前夜。',s:[18,16]},
+ {d:'2016.6',e:2,t:'“Concrete Problems in AI Safety” を arXiv 公開',
+  w:'Olah / Steinhardt / Christiano / Schulman / Mané らと共著。事故リスク5類型。',
+  y:'のちの安全研究アジェンダの実務カタログ。',
+  f:['AI Safety'],s:[18]},
+ {d:'2016',e:3,t:'OpenAI に入社',
+  w:'研究サイエンティストとして。退社時公式が「nearly five years」と書く。',
+  y:'言語モデル研究の主戦場へ。',
+  f:['OpenAI'],s:[4]},
+ {d:'2019.2.14',e:3,t:'GPT-2 発表（研究責任者）',
+  w:'OpenAI ブログ。退社時公式が GPT-2/GPT-3 の貢献を明記。',
+  y:'大規模 LM の社会実装前の能力実証。',
+  f:['GPT-2'],s:[19,4]},
+ {d:'2019',e:3,t:'VP of Research に就任',
+  w:'OpenAI 組織アップデートの肩書き。',
+  y:'研究方針の共同決定権限。',s:[4]},
+ {d:'2020.1',e:3,t:'Kaplan ら “Scaling Laws for Neural Language Models”',
+  w:'arXiv:2001.08361。Amodei は共著者ではないが OpenAI 在籍期の中核文書。',
+  y:'スケーリング信念の定量的支柱。',
+  f:['scaling laws'],s:[21]},
+ {d:'2020.5',e:3,t:'GPT-3 発表（研究責任者）',
+  w:'Few-shot 論文・OpenAI 発表。',
+  y:'のちの ChatGPT の技術的前提。',
+  f:['GPT-3'],s:[20,4]},
+ {d:'2020.12',e:3,t:'OpenAI 退社を公式発表',
+  w:'組織アップデート。新プロジェクトは research 寄りと Brockman。本人社内発言を引用。',
+  y:'Anthropic 創業への切れ目。',
+  f:['退社'],s:[4]},
+ {d:'2021.2',e:4,t:'Anthropic を設立（Daniela らと）',
+  w:'California 法人。共同創業者数は報道で約7〜11（諸説）。OpenAI は handful。',
+  y:'安全性とスケーリングを一体で進める別法人。',
+  f:['Anthropic'],s:[16,4,6]},
+ {d:'2021.5.28',e:4,t:'Series A $124M',
+  w:'Jaan Tallinn 主導。Moskovitz、Schmidt、CERR ら。',
+  y:'研究計算の初期資本。',
+  f:['$124M'],s:[6]},
+ {d:'2022.4.29',e:4,t:'Series B $580M（SBF / Alameda 主導）',
+  w:'FTX 側投下は $500M。初期持分 13.56%。',
+  y:'後の破産管財人売却の起点。',
+  f:['$580M'],s:[7,8]},
+ {d:'2022',e:4,t:'旗艦モデル Claude の初期版を訓練（公開は延期）',
+  w:'2023年3月の core views で、2022年春に訓練し安全研究を優先して公開を遅らせたと公式に書く。',
+  y:'ChatGPT 先行を招いた判断の公式自己記述。',
+  f:['公開延期'],s:[37]},
+ {d:'2022.11.11',e:4,t:'FTX が Chapter 11 を申請',
+  w:'Anthropic 持分は破産財団資産へ。',
+  y:'大口投資家リスクの顕在化。',
+  f:['FTX'],s:[8]},
+ {d:'2022.11.30',e:4,t:'OpenAI が ChatGPT を公開（Anthropic は未公開）',
+  w:'消費者向け対話 UI のデフォルトが先に固定。',
+  y:'製品タイミング差の確定日付。',
+  f:['ChatGPT'],s:[23]},
+ {d:'2023.2',e:5,t:'Google が $300M を出資',
+  w:'約10%持分との報道あり（評価の公式開示なし）。',
+  y:'クラウド戦略投資の第一波。',
+  f:['$300M'],s:[24]},
+ {d:'2023.3.14',e:5,t:'Claude 1 を一般公開',
+  w:'Introducing Claude。Claude Instant も同時。',
+  y:'商用キャッチアップの開始。',
+  f:['Claude'],s:[25]},
+ {d:'2023.3.8',e:5,t:'“core views on AI safety” を公開',
+  w:'能力研究の非公開方針と、Claude 公開遅延の自己説明。',
+  y:'製品遅延を安全研究優先として公式に位置づける。',s:[37]},
+ {d:'2023.5.11',e:5,t:'Claude の 100K コンテキストを発表',
+  w:'Anthropic 公式。',
+  y:'長文企業用途の差別化。',
+  f:['100K'],s:[38]},
+ {d:'2023.5',e:5,t:'Spark Capital 主導で $450M（Series C）',
+  w:'公式発表。評価額は本文非開示。二次では約 $4.1B（諸説）。',
+  y:'FTX 後の資本再編。',
+  f:['$450M'],s:[34,33]},
+ {d:'2023.7.11',e:5,t:'Claude 2 公開',
+  w:'API・claude.ai。公式。',
+  y:'世代更新の定常化。',s:[39,25]},
+ {d:'2023.7.25',e:5,t:'米上院司法委員会小委員会で証言',
+  w:'Oversight of A.I.: Principles for Regulation。供給網・第三者監査・研究投資。',
+  y:'政策アクターとしての公開デビュー。',
+  f:['Senate'],s:[11,12,35]},
+ {d:'2023.9.19',e:5,t:'RSP v1.0 と LTBT を発表',
+  w:'ASL の段階定義。Class T による取締役選任のマイルストーン。',
+  y:'安全コミットメントの文書化。',
+  f:['RSP','LTBT'],s:[26,27]},
+ {d:'2023.9.25',e:5,t:'Amazon が最大 $4B の投資を発表',
+  w:'当初 tranche $1.25B。AWS・Bedrock 連携。',
+  y:'計算資源と販路の固定。',
+  f:['$4B'],s:[28]},
+ {d:'2023.11.21',e:5,t:'Claude 2.1',
+  w:'200K コンテキスト等。',
+  y:'企業向け文脈長競争。',s:[25]},
+ {d:'2024.2.22',e:5,t:'裁判所が FTX の Anthropic 株売却手続を承認',
+  w:'Reuters。顧客反対派との妥協後。',
+  y:'持分出口の法的確定。',s:[8]},
+ {d:'2024.3.4',e:5,t:'Claude 3（Haiku / Sonnet / Opus）',
+  w:'マルチモーダル。',
+  y:'旗艦世代の三層化。',
+  f:['Claude 3'],s:[25]},
+ {d:'2024.3',e:5,t:'FTX 財団が持分の大部分を約 $884M で売却合意',
+  w:'CNBC。残分含め合計約 $1.3B と報じられる。',
+  y:'投下 $500M の回収局面。',
+  f:['$884M'],s:[9]},
+ {d:'2024.6.20',e:5,t:'Claude 3.5 Sonnet',
+  w:'コーディング・Artifacts。',
+  y:'開発者向け主力モデルの更新。',s:[25]},
+ {d:'2024.10',e:5,t:'“Machines of Loving Grace” を公開',
+  w:'本人サイト。強力 AI の上振れ素描。',
+  y:'リスク論と対になる長期ビジョンの文書。',
+  f:['随筆'],s:[13]},
+ {d:'2024.11',e:5,t:'Amazon が追加 $4B（累計 $8B）',
+  w:'少数株主のまま。CNBC が Series E 記事内で回顧。',
+  y:'クラウド依存の深化。',
+  f:['$8B累計'],s:[29]},
+ {d:'2025.3.3',e:6,t:'Series E $3.5B・評価 $61.5B',
+  w:'Lightspeed 主導。公式発表。',
+  y:'評価額の桁が変わる。',
+  f:['$61.5B'],s:[10]},
+ {d:'2025.4',e:6,t:'“The Urgency of Interpretability” を公開',
+  w:'2026–2027年の強力 AI 可能性と、解釈可能性 5–10年、輸出規制 1–2年リード。',
+  y:'時間軸発言の一次テキスト。',
+  f:['解釈可能性'],s:[14]},
+ {d:'2025.5.22',e:6,t:'Claude Opus 4 / Sonnet 4（Claude 4 系列）',
+  w:'Anthropic 公式。Opus 4 は ASL-3 関連の位置づけが報道される。',
+  y:'最前線モデル更新の継続。',
+  f:['Claude 4'],s:[30,25]},
+ {d:'2025.9.2',e:6,t:'Series F $13B・評価 $183B',
+  w:'ICONIQ 主導。Fidelity・Lightspeed 共同。',
+  y:'本稿作成時点の最新大型ラウンド。',
+  f:['$183B'],s:[31]},
+];
+
+const QUOTES = [
+ {t:'退社',q:'It is incredibly unproductive to try and argue with someone else’s vision.（他者のビジョンと議論しようとするのは、著しく非生産的だ。）',
+  w:'Lex Fridman 対談（Inc. 報道要約）。Microsoft 提携への不満が退社理由だという説を否定した文脈',s:[22]},
+ {t:'退社',q:'Take some people you trust and go make your vision happen.（信頼できる人々を連れて、自らのビジョンを実現しに行け。）',
+  w:'同上',s:[22]},
+ {t:'スケーリング',q:'If you pour more compute into these models, they’ll get better and better and that there’s almost no end to this.（モデルに計算量を注ぎ込めば、性能は上がり続け、ほぼ終わりがない。）',
+  w:'2023年9月26日・Fortune インタビュー',s:[5]},
+ {t:'安全',q:'You don’t tell the models what their values are just by pouring more compute into them.（計算量を注ぐだけでは、モデルに価値観を教えられない。）',
+  w:'2023年9月26日・Fortune インタビュー',s:[5]},
+ {t:'議会',q:'Private action is not enough. This risk and many others like it require a systemic policy response.（民間の自主対応だけでは足りない。この種のリスクには制度的な政策対応が必要だ。）',
+  w:'2023年7月25日・米上院司法委員会小委員会',s:[11,12,35]},
+ {t:'解釈可能性',q:'I consider it basically unacceptable for humanity to be totally ignorant of how they work.（人類がそれらの仕組みをまったく知らないままにするのは、基本的に受け入れがたい。）',
+  w:'2025年4月・The Urgency of Interpretability（強力 AI を解釈できないまま展開することについて）',s:[14]},
+ {t:'時間軸',q:'We could have AI systems equivalent to a “country of geniuses in a datacenter” as soon as 2026 or 2027.（早ければ2026年か2027年に、“datacenter 内の天才の国”に相当する AI があり得る。）',
+  w:'2025年4月・The Urgency of Interpretability',s:[14]},
+ {t:'家族',q:'They gave me a sense of right and wrong and what was important in the world.（両親は、何が正しく何が重要かの感覚を与えてくれた。）',
+  w:'2025年7月・Big Technology インタビュー',s:[15]},
+];
+
+const activeEras = new Set();
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button type="button" class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`;
+}).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.cls ? ' ' + r.cls : ''}${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 1 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+bars('chartRaise', [
+  {k:'A 2021', v:124, sub:'Tallinn'},
+  {k:'B 2022', v:580, sub:'SBF', cls:'s2'},
+  {k:'Google', v:300, sub:'2023'},
+  {k:'Spark', v:450, sub:'2023', cls:'s3'},
+  {k:'Amazon1', v:4000, sub:'上限', est:true},
+  {k:'Amazon2', v:4000, sub:'2024', est:true, cls:'s2'},
+  {k:'E 2025', v:3500, sub:'Lightspeed'},
+  {k:'F 2025', v:13000, sub:'ICONIQ', cls:'s3'},
+], 'M');
+
+bars('chartVal', [
+  {k:'A post', v:0.55, sub:'二次', est:true},
+  {k:'B post', v:4, sub:'二次', est:true, cls:'s2'},
+  {k:'E post', v:61.5, sub:'公式'},
+  {k:'F post', v:183, sub:'公式', cls:'s3'},
+], 'B');
+</script>
+</body>
+</html>

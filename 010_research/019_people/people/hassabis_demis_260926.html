@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>デミス・ハサビス — チェス・ゲームAIから AlphaFold とノーベル化学賞まで</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --s2:#eb6834; --s3:#1baf7a; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  .bar.s2 .fl{background:var(--s2)}
+  .bar.s3 .fl{background:var(--s3)}
+  .bar.neg .fl{background:var(--neg)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / デミス・ハサビス</p>
+
+<header class="top">
+  <h1>デミス・ハサビス — チェス・ゲームAIから AlphaFold とノーベル化学賞まで</h1>
+  <div class="en">Demis Hassabis　1976.7.27 – ／Google DeepMind CEO・Isomorphic Labs CEO</div>
+  <div class="tags">
+    <span class="tag">DeepMind</span><span class="tag">AlphaFold</span><span class="tag">AlphaGo</span>
+    <span class="tag">ノーベル化学賞</span><span class="tag">ゲームAI</span><span class="tag">神経科学</span>
+  </div>
+  <p class="lead">1976年7月27日ロンドン生まれ。13歳でチェス世界2位（14歳以下）・ELO 2300。17歳で『Theme Park』（1994年）の共同設計・主任プログラマ。2005年に Elixir Studios を閉じたのち UCL で認知神経科学の博士（2009年）。2010年に DeepMind を共同創業し、2014年に Google が買収。2024年10月9日、John Jumper とともにノーベル化学賞の半額を受賞した（他半額は David Baker）。</p>
+  <p class="srcnote">作成日 2026年9月26日。数値の基準日は同日。存命人物のため、出典のない私生活・人物評は書かない。年表の満年齢は生年月日 1976年7月27日からの年差で算出している。Google 買収額、Theme Park 売上本数など報道間で割れる数値は両方書き「諸説」と明示する。2007年の海馬論文は PNAS 掲載であり、Science 誌の Breakthroughs of the Year トップ10選定は別イベントである。</p>
+</header>
+
+<h2 id="overview"><span class="num">①</span>概要<span class="en">Overview</span></h2>
+
+<div class="kpi">
+  <div class="card"><div class="k">生年月日</div><div class="v">1976.7.27<small>London, UK</small></div></div>
+  <div class="card"><div class="k">DeepMind 設立</div><div class="v">2010.9<small>Shane Legg / Mustafa Suleyman</small></div></div>
+  <div class="card"><div class="k">Google 買収</div><div class="v">2014.1.26<small>£4億〜$6.5億・諸説</small></div></div>
+  <div class="card"><div class="k">ノーベル化学賞</div><div class="v">2024.10.9<small>AlphaFold・賞分け1/4</small></div></div>
+</div>
+
+<div class="callout">
+<p><b>先に結論を3つ書く。</b></p>
+<p><b>1つ目。曲線は「チェスとゲームAI → シミュレーションゲーム会社の商業失敗 → 海馬と想像の神経科学 → 汎用強化学習のスタートアップ → Alphabet 内の科学・製品AI」である。</b>13歳でマスター級（ELO 2300、14歳以下世界2位）。ケンブリッジ合格後のギャップイヤーで Bullfrog に入り、17歳で『Theme Park』を共同設計・主任プログラミングした。1998年に Elixir を創業し、2005年4月に閉鎖。UCL の PNAS 論文（2007年）は Science 誌のブレイクスルー10に選ばれ、2009年に博士、MIT／ハーバードで客員研究ののち、2010年9月に DeepMind を設立した<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup><sup><a href="#s5">5</a></sup>。</p>
+<p><b>2つ目。DeepMind の公開成果はゲームから科学へ移り、組織は独立性の縮小と引き換えに Alphabet の計算資源へ寄った。</b>Atari DQN（2013–2015）、AlphaGo 対李世乭（2016年3月、4勝1敗、第2局37手目）、AlphaZero（2017–2018）、AlphaFold（CASP13・2018／CASP14・2020、中央値 GDT 92.4）、AlphaFold DB（2021年以降、2022年に2億超構造）、AlphaFold 3（2024年5月）。2023年4月20日に Google Brain と統合して Google DeepMind となり、本人が CEO。Isomorphic Labs（2021年11月）も兼務し、2025年3月に外部調達 $600M を発表した<sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s10">10</a></sup>。</p>
+<p><b>3つ目。失敗と摩擦は金額と当局文書で残る。</b>Elixir は『Republic』長期開発のあと商業的に伸びず、主要プロジェクトキャンセルをきっかけに2005年に畳んだ。DeepMind Health / Streams は、Royal Free が約160万人分の部分患者記録を臨床安全性試験に使った件で、2017年7月3日に英国 ICO が Data Protection Act 違反と認定した（データコントローラは Trust）。Streams チームは2018年11月に Google へ移り、2019年に DeepMind Health は Google Health 側へ吸収された。共同創業者 Mustafa Suleyman は2019年に職務変更、2022年に離脱、2024年に Microsoft AI CEO。英国法人の決算は2016–2019年に年次損失（2019年 £477M）を積み、同年 Google Ireland が関連会社貸付 £1.1B を免除した<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup><sup><a href="#s13">13</a></sup><sup><a href="#s14">14</a></sup><sup><a href="#s15">15</a></sup>。</p>
+</div>
+
+<h2 id="timeline"><span class="num">②</span>年表<span class="en">Timeline</span></h2>
+<p>日付が一次情報または複数報道で確定した出来事だけを並べた。各項目は事実、具体、なぜ効いたかの3層である。期のボタンで絞り込める。日付の右は、その時点の満年齢である。</p>
+
+<div class="tl-tools">
+  <input id="tlq" type="search" placeholder="年表を検索（例: AlphaGo、AlphaFold、ICO、Elixir、Nobel）" aria-label="年表を検索">
+  <span class="tl-count" id="tlcount"></span>
+</div>
+<div class="tl-eras" id="tleras"></div>
+<div class="tl" id="tl"></div>
+<div class="tl-empty" id="tlempty">該当する項目がない。</div>
+
+<h2 id="phases"><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+
+<h3>I 形成 — チェス・Theme Park・ケンブリッジ（1976–1997）</h3>
+<p>ノーベル財団の事実欄は、生年月日を 1976年7月27日、生地をロンドンとする。父はギリシャ系キプロス人、母はシンガポール華人、と複数の二次整理が一致する（私生活の詳細は一次が薄いためそれ以上は書かない）<sup><a href="#s1">1</a></sup><sup><a href="#s16">16</a></sup>。</p>
+<p>4歳でチェスを始め、13歳でマスター級・ELO 2300、14歳以下の世界ランキング2位（1位は Judit Polgár）、と Guardian（2014年）と母校 Queen Elizabeth's School の記録が一致する。チェスの賞金でコンピュータを買った、という本人の公開発言は複数インタビューで繰り返し出るが、金額と機種の一次リストは本ページでは確定していない（残っている問いへ）<sup><a href="#s2">2</a></sup><sup><a href="#s17">17</a></sup>。</p>
+<p>16歳でケンブリッジに合格し、年齢のため1年待つ間に Bullfrog Productions へ入った。17歳で Peter Molyneux と『Theme Park』（1994年）を共同設計し、主任プログラマを務めた。売上本数は<strong class="hit">諸説</strong>である。Wikipedia 系の二次整理は「1,500万本超」、Guardian 2014は「数百万本」、1999年の Independent は当時時点で「3.5百万本」と書く。ヘッドラインに使う場合は dual-source で両端を併記する<sup><a href="#s2">2</a></sup><sup><a href="#s18">18</a></sup><sup><a href="#s19">19</a></sup>。</p>
+<p>Queens' College で計算機科学を学び、1997年に first-class（double first と Guardian が書く）で卒業した<sup><a href="#s2">2</a></sup>。</p>
+
+<h3>II Elixir — 商業シミュレーションの行き止まり（1998–2005）</h3>
+<p>卒業後、Lionhead Studios で『Black &amp; White』のリード AI プログラマを短期間務めたのち、1998年に Elixir Studios をロンドンで創業（22歳）。従業員は最大約60人、Eidos・Vivendi などと契約した、と Guardian が買収時の整理で書く<sup><a href="#s2">2</a></sup>。</p>
+<p>『Republic: The Revolution』（2003年、Eidos）は開発が長く、発売後の商業成績は限定的だった、と閉鎖時の業界報道が揃う。『Evil Genius』（2004年、Vivendi）は評点はそれなりでも、スタジオを支える規模にはならなかった。2005年4月、主要プロジェクト（報道では Blue Vault 等）が「高リスク」としてキャンセルされ、日次業務を停止。Hassabis は声明で「革新的でオリジナルなアイデアを追う小規模インディーに、いまのゲーム業界は場所がない」と書いた。知財・技術権は各パブリッシャー等へ売却され、のちに Rebellion Developments が IP を取得した、と二次整理がある（売却先の契約全文は非公開）<sup><a href="#s11">11</a></sup><sup><a href="#s20">20</a></sup><sup><a href="#s21">21</a></sup>。</p>
+
+<h3>III 神経科学 — 海馬と想像（2005–2009）</h3>
+<p>2005年以降、University College London で認知神経科学の博士課程に入る。2007年1月、Hassabis・Kumaran・Vann・Maguire の論文 “Patients with hippocampal amnesia cannot imagine new experiences” が PNAS に掲載された。両側海馬損傷の健忘患者は、新しい経験を想像する課題で対照群より著しく劣り、空間的一貫性を欠く断片画像になると示した。同年、Science 誌の Breakthroughs of the Year トップ10（「Back to the Future」枠）に選ばれ、UCL が2008年1月に公式発表した<sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup>。</p>
+<p>2009年に PhD。Gatsby Computational Neuroscience Unit で Wellcome Trust フェロー、MIT とハーバードの共同客員研究者として神経科学と AI の接点を続けた、と Guardian とノーベル財団の略歴が一致する<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup>。</p>
+
+<h3>IV DeepMind 創業と Google 買収（2010–2014）</h3>
+<p>2010年9月、DeepMind Technologies を Shane Legg・Mustafa Suleyman と設立（Companies House 法人番号 07386350）。初期出資者として Founders Fund、Horizons Ventures（李嘉誠）、Elon Musk、Jaan Tallinn、Scott Banister らが報じられる（個々の持分％の監査開示は非公開）<sup><a href="#s5">5</a></sup><sup><a href="#s16">16</a></sup><sup><a href="#s22">22</a></sup>。</p>
+<p>2014年1月26日前後、Google が買収を発表。金額は<strong class="hit">諸説</strong>である。Guardian / BBC は約 £400M（約 $650M）、Reuters は Recode 経由で $400M、The Information は「$500M 超」かつ Facebook を上回ったと書く。Google は公式に金額を確認していない。買収条件として倫理審査委員会（Ethics Board）の設置を求めた、と The Information（2014年1月26日）が関係者2人の話として報じ、のち Economist（2019年）は「Ethics and Safety Review Agreement」と AGI 到達時の統制パネルについて書いた。ボード構成員の公式名簿は長らく非公開である<sup><a href="#s23">23</a></sup><sup><a href="#s24">24</a></sup><sup><a href="#s25">25</a></sup><sup><a href="#s26">26</a></sup>。</p>
+
+<h3>V ゲームAI — Atari・AlphaGo・AlphaZero（2013–2018）</h3>
+<p>2013年の NIPS ワークショップで Atari 向け Deep Q-Network（DQN）を示し、2015年2月の Nature 論文でピクセル入力から複数 Atari ゲームを学習する結果をまとめた<sup><a href="#s27">27</a></sup>。2016年1月の Nature 論文は Fan Hui に対する AlphaGo の 5–0 を含み、2016年3月9–15日、ソウルで李世乭と5番勝負。結果は AlphaGo の <strong class="hit">4勝1敗</strong>。第2局（3月10日）の黒37手目（肩突き）は、プロ解説が「人間は敢えて打たない」と評した一手として記録が残る。第4局は李世乭が勝ち、第5局で AlphaGo が決着した<sup><a href="#s6">6</a></sup><sup><a href="#s28">28</a></sup>。</p>
+<p>2017年5月、柯潔戦。2017年10月、人間棋譜なし学習の AlphaGo Zero。2018年、チェス・将棋・囲碁を同一アルゴリズムで扱う AlphaZero を Science 等で発表した<sup><a href="#s29">29</a></sup>。</p>
+
+<h3>VI 科学AI — AlphaFold からノーベル賞（2018–2024）</h3>
+<p>CASP13（2018年12月）で初代 AlphaFold が首位。CASP14（2020年11–12月）では AlphaFold2 がドメイン中央値 GDT_TS <strong class="hit">92.4</strong> を出し、DeepMind 公式と後続の Proteins 誌論文が同じ数値を書く。2021年7月15日前後に Nature 本論文と AlphaFold Protein Structure Database を公開し、2022年に既知タンパク質のほぼすべて（2億超）へ拡張した、とノーベル財団と DeepMind が述べる。2024年5月、AlphaFold 3（核酸・リガンド等を含む複合体予測）を Nature に発表<sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s30">30</a></sup><sup><a href="#s31">31</a></sup>。</p>
+<p>並行して AlphaCode、AlphaTensor、GNoME（2023年、約220万の新結晶候補）、AlphaMissense、AlphaProteo などを公開した。2024年10月9日、スウェーデン王立科学アカデミーはノーベル化学賞を、半額を David Baker（計算タンパク質設計）、半額を Hassabis と John Jumper（タンパク質構造予測）に授与すると発表。賞金額は 1,100万スウェーデン・クローナ、Hassabis の分け前は 1/4<sup><a href="#s1">1</a></sup><sup><a href="#s9">9</a></sup>。</p>
+
+<h3>VII 組織 — Health 移管・Brain 統合・Isomorphic・Gemini（2018–2026）</h3>
+<p>DeepMind Health の Streams は Royal Free とのデータ契約から始まり、ICO 事案（⑤）ののち、2018年11月13日に Streams チームを Google へ移すと発表、2019年に DeepMind Health が Google Health 側へ吸収された<sup><a href="#s13">13</a></sup>。2021年11月、創薬向け子会社 Isomorphic Labs を設立し、本人が CEO を兼務。2024年1月、Eli Lilly（前払い $45M、マイルストーン最大約 $1.7B）と Novartis（前払い $37.5M、マイルストーン最大約 $1.2B）との提携を発表。2025年3月31日、Thrive Capital 主導で外部調達 $600M（GV・Alphabet 参加）を発表した<sup><a href="#s10">10</a></sup><sup><a href="#s32">32</a></sup>。</p>
+<p>2023年4月20日、Sundar Pichai と Hassabis が Google Brain と DeepMind の統合を発表。新単位 Google DeepMind の CEO は Hassabis。Gemini 系列（2023年12月以降）の中核責任を負う構図になった。統合は「独立性の維持」という買収時の語りとの緊張を公式に解消した日付である<sup><a href="#s33">33</a></sup>。</p>
+
+<h2 id="numbers"><span class="num">④</span>実績の数字<span class="en">The Numbers</span></h2>
+<p>中心は買収額の諸説、英国法人の損益、AlphaFold の精度指標、Isomorphic の契約額である。個人持分の監査済み開示は無い（N/A）。</p>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>項目</th><th class="num">数値</th><th>時点・条件</th></tr></thead>
+<tbody>
+<tr><td class="name">生年月日</td><td class="num">1976-07-27</td><td>ノーベル財団 Facts<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">チェス ELO（ピーク）</td><td class="num">2300</td><td>13歳・マスター級。14歳以下世界2位<sup><a href="#s2">2</a></sup><sup><a href="#s17">17</a></sup></td></tr>
+<tr><td class="name">Theme Park 売上</td><td class="num">数百万〜1,500万本超</td><td>諸説。Guardian／Wikipedia／Independent<sup><a href="#s2">2</a></sup><sup><a href="#s18">18</a></sup><sup><a href="#s19">19</a></sup></td></tr>
+<tr><td class="name">Google 買収額</td><td class="num">£400M / $400M / $650M / $500M超</td><td>諸説。Google 非確認<sup><a href="#s23">23</a></sup><sup><a href="#s24">24</a></sup><sup><a href="#s25">25</a></sup></td></tr>
+<tr><td class="name">AlphaGo 対李世乭</td><td class="num">4勝1敗</td><td>2016-03-09〜15・ソウル<sup><a href="#s6">6</a></sup><sup><a href="#s28">28</a></sup></td></tr>
+<tr><td class="name">CASP14 中央値 GDT_TS</td><td class="num">92.4</td><td>AlphaFold2・2020<sup><a href="#s7">7</a></sup><sup><a href="#s30">30</a></sup></td></tr>
+<tr><td class="name">AlphaFold DB 構造数</td><td class="num">2億超</td><td>2022年拡張・ノーベル財団<sup><a href="#s1">1</a></sup><sup><a href="#s8">8</a></sup></td></tr>
+<tr><td class="name">DeepMind 年次損失 2019</td><td class="num">£477M</td><td>Companies House 決算<sup><a href="#s15">15</a></sup></td></tr>
+<tr><td class="name">貸付免除 2019</td><td class="num">£1.1B</td><td>Google Ireland 関連会社<sup><a href="#s15">15</a></sup><sup><a href="#s34">34</a></sup></td></tr>
+<tr><td class="name">DeepMind 利益 2023</td><td class="num">£113M</td><td>売上 £1,527M<sup><a href="#s35">35</a></sup></td></tr>
+<tr><td class="name">Lilly 提携（前払い）</td><td class="num">$45M</td><td>2024-01。マイルストーン最大約 $1.7B<sup><a href="#s32">32</a></sup></td></tr>
+<tr><td class="name">Novartis 提携（前払い）</td><td class="num">$37.5M</td><td>2024-01。マイルストーン最大約 $1.2B<sup><a href="#s32">32</a></sup></td></tr>
+<tr><td class="name">Isomorphic 外部調達</td><td class="num">$600M</td><td>2025-03-31・Thrive 主導<sup><a href="#s10">10</a></sup></td></tr>
+<tr><td class="name">ノーベル化学賞分け前</td><td class="num">1/4</td><td>総額 SEK 11M・2024-10-09<sup><a href="#s9">9</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="chart">
+  <div class="cap">DeepMind Technologies Ltd. の年次損益（英国法人）</div>
+  <div class="sub">単位は百万 GBP。負は損失。2016–2019は損失、2020以降は利益（開示値）</div>
+  <div class="bars" id="chartPl"></div>
+  <p class="sub" style="margin:14px 0 0">出典14・15・34・35。親会社 Alphabet 連結との定義差に注意。</p>
+</div>
+
+<div class="chart">
+  <div class="cap">Isomorphic Labs の開示された前払い・調達</div>
+  <div class="sub">単位は M USD。マイルストーン上限は棒に含めない</div>
+  <div class="bars" id="chartIso"></div>
+  <p class="sub" style="margin:14px 0 0">出典10・32。</p>
+</div>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>賞・称号</th><th>日付・年</th><th>根拠</th></tr></thead>
+<tbody>
+<tr><td class="name">CBE</td><td>2017-12-30 発表（NY Honours 2018）</td><td>科学・技術への貢献。London Gazette<sup><a href="#s36">36</a></sup></td></tr>
+<tr><td class="name">王立協会フェロー（FRS）</td><td>2018</td><td>Royal Society 名簿<sup><a href="#s37">37</a></sup></td></tr>
+<tr><td class="name">Knight Bachelor</td><td>2024-03/04 発表・Gazette 2024-04-19</td><td>AI への貢献。ユーザー指示の「2023」は誤りで、2024年である<sup><a href="#s38">38</a></sup></td></tr>
+<tr><td class="name">ノーベル化学賞</td><td>2024-10-09</td><td>タンパク質構造予測（Jumper と半額）<sup><a href="#s9">9</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="failures"><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
+<p>ここでの「失敗」は、金額・時点・当局認定・組織設計のズレで切る。人格評価は書かない。</p>
+
+<h3>類型1: Elixir Studios の商業失敗と5年での閉鎖（1998–2005）</h3>
+<p>1998年創業、2005年4月閉鎖。『Republic: The Revolution』は開発期間が長く、発売（2003年）後もスタジオを支えるヒットにはならなかった、と閉鎖時の GameDeveloper / IGN / GamesIndustry が一致して書く。『Evil Genius』（2004年）も評点はあっても財務の柱には不足した。主要プロジェクトがパブリッシャー側の「高リスク」判断でキャンセルされ、残資産・IP を売却して畳んだ。Hassabis 声明は「オリジナル IP を追う小規模スタジオに場所がない」とし、ライセンス路線への妥協を拒否したと述べる。閉鎖額・累積損失の監査済み総額は本ページが取得した公開資料では N/A（Companies House の当時 PDF を未突合）<sup><a href="#s11">11</a></sup><sup><a href="#s20">20</a></sup>。</p>
+<p><strong class="hit">測れること:</strong> 創業から閉鎖まで約7年、主要出荷は2本、閉鎖理由はプロジェクトキャンセル＋リスク回避的な出版市場、という日付と声明である。測れないこと: 累積赤字の正確なポンド額。</p>
+
+<h3>類型2: DeepMind Health / Streams と ICO 認定（2015–2017）</h3>
+<p>2015年9月30日、Royal Free London NHS Foundation Trust は Google UK Limited（DeepMind 関連）と臨床検出・診断アプリ開発の契約を結んだ。臨床安全性試験のため、DeepMind は約 <strong class="hit">160万人分</strong>の部分患者記録を処理した。Streams は2017年2月から本番利用へ移った。2017年7月3日、情報コミッショナー（ICO）は Trust が Data Protection Act に違反したと認定した。要点は、(1) 患者への十分な告知がなかった、(2) 試験目的での大量処理の必要性・比例性が示されなかった、である。データコントローラは Trust、DeepMind はプロセッサ、と ICO の undertaking は書く。DeepMind 公式ブログも同日、ICO が試験段階の法的根拠に満足しなかったと認め、契約の詳細化などを挙げた<sup><a href="#s12">12</a></sup><sup><a href="#s39">39</a></sup>。</p>
+<p>金額罰則の本ページでの確定値は N/A（undertaking 中心。罰金は別枠の議論があるが、ここでは ICO 認定文書を一次とする）。</p>
+
+<h3>類型3: Health 事業の Google 本体への移管（2018–2019）</h3>
+<p>2018年11月13日、DeepMind は Streams チームを Google へ移すと発表した。理由として「Google の規模で展開する」を公式が書く。BBC 等は、160万人データ問題ののち「信頼の毀損」批判と、独立審査パネルの継続困難を報じた。2019年、DeepMind Health は Google Health 側へ吸収された。買収時に語られた「研究ラボの独立性」と、ヘルスケア製品の親会社ブランド化は、ここで明示的に分岐した<sup><a href="#s13">13</a></sup><sup><a href="#s40">40</a></sup>。</p>
+
+<h3>類型4: 英国法人の累積損失と独立性の縮小（2016–2023）</h3>
+<p>Companies House 開示（DeepMind Technologies Limited）では、損失は少なくとも 2016年 £94M、2017年 £302M、2018年 £470M、2019年 £477M。2019年、Google Ireland Holdings が関連会社貸付と利息合計 £1.1B を免除した。2020年に £44M の利益へ転じ、2022年 £61M、2023年 £113M（売上 £1,527M）。累積の「研究開発コスト」は Alphabet が負担する構造であり、英国法人単体の黒字化はグループ内取引・IP 再編の直後でもある。2023年4月の Google Brain 統合は、別ブランドとしての DeepMind の制度的独立性を終了させる日付である<sup><a href="#s14">14</a></sup><sup><a href="#s15">15</a></sup><sup><a href="#s33">33</a></sup><sup><a href="#s35">35</a></sup>。</p>
+
+<h3>類型5: 共同創業者 Mustafa Suleyman の離脱（2019–2024）</h3>
+<p>2019年、Suleyman は DeepMind での職務を離れ、Google 本体の AI 政策・プロダクト側へ移った（報道はマネジメント問題の調査と時期が重なると書く。本ページは本人の人格評価を書かず、職務変更の日付だけを置く）。2022年1月、Google を離れ Greylock へ。同年 Inflection AI を共同創業。2024年3月19日、Microsoft が Microsoft AI の EVP / CEO に就任すると発表した。創業三人のうち製品・政策側の一角が競合陣営の消費者 AI 責任者になった、という構造変化である<sup><a href="#s41">41</a></sup><sup><a href="#s42">42</a></sup>。</p>
+
+<div class="risk">
+<p><b>欠落データ。</b>Elixir 閉鎖時の累積損失額（監査済み）、Ethics Board の構成員名簿と議事、ICO 事案に伴う金銭罰の最終額、DeepMind 創業時の各投資家持分％、Hassabis 個人の Alphabet 持株数は、公開一次資料では揃っていない。</p>
+</div>
+
+<h2 id="thought"><span class="num">⑥</span>思想と方法<span class="en">Thought and Method</span></h2>
+
+<h3>ゲームから一般知能へ</h3>
+<p>本人の公的略歴は、チェスとシミュレーションゲームで「環境の規則を学習するエージェント」を設計した経験を、強化学習研究所の動機に接続する。DQN の Nature 論文（2015年）は、同一ネットワークが多様な Atari 課題で像素から方策を学ぶ、という形でその接続を実験にした<sup><a href="#s27">27</a></sup>。</p>
+
+<h3>海馬・エピソード・想像</h3>
+<p>PNAS 2007は、記憶の想起と未来の想像が海馬の場面構築に依存する、という仮説を患者データで示した。Science のブレイクスルー選定は、この線を「記憶と想像の共通基盤」として位置づけた。のちの世界モデル／シミュレーション仮説との思想的連続は本人インタビューで語られるが、論文そのものは臨床神経科学の範囲に留まる<sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup>。</p>
+
+<h3>科学への転用と創薬子会社</h3>
+<p>AlphaFold 以降の公式言説は、「ゲームで実証した一般学習を科学のボトルネックに当てる」である。Isomorphic Labs はその商業化レーンであり、Lilly / Novartis の前払い合計 $82.5M とマイルストーン上限の合算（報道は「nearly $3B」）は、研究公開と契約収入を同時に追う構造を数字で示す<sup><a href="#s32">32</a></sup>。</p>
+
+<h3>倫理ボードと統合</h3>
+<p>2014年買収時の Ethics Board 要求は、The Information と後続の Economist 報道が一次に近い。2023年の Brain 統合後、公式コミュニケーションの主語は「Google DeepMind」に変わり、独立倫理ボードの公開活動は本ページの範囲では追跡しにくい（残っている問いへ）<sup><a href="#s25">25</a></sup><sup><a href="#s26">26</a></sup><sup><a href="#s33">33</a></sup>。</p>
+
+<h2 id="quotes"><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
+<p>日付と出典が特定できる発言に限った。出典未確定の言い回しは載せない。</p>
+<div class="q-tabs" id="qtabs"></div>
+<div class="q-list" id="qlist"></div>
+
+<h2 id="open"><span class="num">⑧</span>残っている問い / 出典<span class="en">Open Questions / Sources</span></h2>
+
+<h3>残っている問い</h3>
+<ul>
+<li>チェスの賞金で購入した最初のコンピュータの機種・金額・年を、本人の日付付き一次資料で固定できるか。</li>
+<li>Theme Park の生涯売上本数を、EA / Bullfrog の監査済み出荷データで確定できるか。現状は 3.5百万（1999時点）〜1,500万超で諸説。</li>
+<li>Google による DeepMind 買収の確定対価（現金・株式・アーンアウト）を、Alphabet の SEC 開示で行項目として追えるか。現状は報道の諸説のみ。</li>
+<li>Ethics Board（Ethics and Safety Review Agreement）の構成員名簿と、AGI 関連の拒否権行使履歴は公開されるか。</li>
+<li>Elixir Studios 閉鎖時の累積損益と、IP 売却先別の対価。</li>
+<li>ICO undertaking 以外に、Royal Free / DeepMind 事案で科された金銭罰の最終額。</li>
+<li>DeepMind 創業ラウンドにおける Founders Fund・Horizons・Musk らの個別出資額と持分％。</li>
+</ul>
+
+<ol class="sources">
+<li id="s1">Nobel Prize Outreach, “Demis Hassabis – Facts”（生年月日 1976-07-27、London、AlphaFold2、賞分け 1/4） — https://www.nobelprize.org/prizes/chemistry/2024/hassabis/facts/</li>
+<li id="s2">The Guardian, “Demis Hassabis: 15 facts about the DeepMind Technologies founder”（2014-01-28。チェス、Theme Park、Elixir、PNAS/Science 選定、買収 £400m） — https://www.theguardian.com/technology/shortcuts/2014/jan/28/demis-hassabis-15-facts-deepmind-technologies-founder-google</li>
+<li id="s3">Hassabis, Kumaran, Vann, Maguire, “Patients with hippocampal amnesia cannot imagine new experiences,” PNAS 104(5):1726–1731（2007） — https://www.pnas.org/doi/10.1073/pnas.0610561104</li>
+<li id="s4">UCL News, “Amnesia research in top 10 breakthroughs of 2007”（2008-01-11。Science Breakthroughs of the Year） — https://www.ucl.ac.uk/news/2008/jan/amnesia-research-top-10-breakthroughs-2007</li>
+<li id="s5">Companies House, DEEPMIND TECHNOLOGIES LIMITED（company 07386350、設立・決算履歴） — https://find-and-update.company-information.service.gov.uk/company/07386350</li>
+<li id="s6">Google / DeepMind, AlphaGo vs Lee Sedol 試合報告（2016-03、4–1、第2局） — https://blog.google/innovation-and-ai/products/alphagos-ultimate-challenge/</li>
+<li id="s7">DeepMind, “AlphaFold: a solution to a 50-year-old grand challenge in biology”（CASP14、中央値 GDT 92.4） — https://deepmind.google/blog/alphafold-a-solution-to-a-50-year-old-grand-challenge-in-biology/</li>
+<li id="s8">Jumper et al., “Highly accurate protein structure prediction with AlphaFold,” Nature（2021） — https://www.nature.com/articles/s41586-021-03819-2</li>
+<li id="s9">Nobel Prize, Press release: The Nobel Prize in Chemistry 2024（2024-10-09） — https://www.nobelprize.org/prizes/chemistry/2024/press-release/</li>
+<li id="s10">Isomorphic Labs, “Isomorphic Labs announces $600m external investment round”（2025-03-31、Thrive / GV / Alphabet） — https://www.isomorphiclabs.com/articles/isomorphic-labs-announces-600m-external-investment-round</li>
+<li id="s11">GameDeveloper, “Elixir Studios To Close Doors”（2005。Hassabis 声明、IP 売却、Republic / Evil Genius） — https://www.gamedeveloper.com/game-platforms/elixir-studios-to-close-doors</li>
+<li id="s12">BAILII / ICO, Royal Free London NHS Foundation Trust Undertaking [2017] UKICO 2017-66（2017-07-03、約160万件） — https://www.bailii.org/uk/cases/UKICO/2017/2017-66.html</li>
+<li id="s13">DeepMind, “Scaling Streams with Google”（2018-11-13。Streams チームの Google 移管） — https://deepmind.google/blog/scaling-streams-with-google/</li>
+<li id="s14">DeepMind Technologies Limited, Full accounts year ended 31 Dec 2017（損失 £302M；比較年 2016 £94M） — https://gwern.net/doc/reinforcement-learning/deepmind/2017-deepmind-fullaccounts.pdf</li>
+<li id="s15">DeepMind Technologies Limited, Full accounts year ended 31 Dec 2019（損失 £477M、貸付免除 £1.1B） — https://gwern.net/doc/reinforcement-learning/deepmind/2019-deepmind-fullaccounts.pdf</li>
+<li id="s16">Wikipedia, “Demis Hassabis”（経歴の二次整理。一次と突合して使用） — https://en.wikipedia.org/wiki/Demis_Hassabis</li>
+<li id="s17">Queen Elizabeth's School, Barnet, “Entrepreneur and academic: Demis remains at technological forefront”（U14 世界2位、ELO、Theme Park） — https://www.qebarnet.co.uk/entrepreneur_and_academic__demis_remains_at_technological_forefront/</li>
+<li id="s18">Wikipedia, “Theme Park (video game)”（売上 15 million の二次記載） — https://en.wikipedia.org/wiki/Theme_Park_(video_game)</li>
+<li id="s19">The Independent, “Game over for blood and gore”（1999。Theme Park 当時売上 3.5 million の報道） — https://www.independent.co.uk/news/game-over-for-blood-and-gore-1099853.html</li>
+<li id="s20">IGN, “Elixir Shuts Down”（2005-04-28。Hassabis 声明原文） — https://www.ign.com/articles/2005/04/28/elixir-shuts-down</li>
+<li id="s21">GamesIndustry.biz, “Elixir Studios to close following cancellation of key project”（2005-04-28） — https://www.gamesindustry.biz/elixir-studios-to-close-following-cancellation-of-key-project</li>
+<li id="s22">TechCrunch / 各紙整理: DeepMind 初期投資家（Founders Fund、Horizons、Musk、Tallinn 等。持分％は非開示） — https://techcrunch.com/2014/01/26/google-deepmind/</li>
+<li id="s23">The Guardian, “Google buys UK artificial intelligence startup Deepmind for £400m”（2014-01-27、$650m 換算） — https://www.theguardian.com/technology/2014/jan/27/google-acquires-uk-artificial-intelligence-startup-deepmind</li>
+<li id="s24">BBC News, “Google buys UK artificial intelligence start-up DeepMind”（2014-01-27、reported £400m） — https://www.bbc.com/news/technology-25908379</li>
+<li id="s25">The Information (archive), “Google Beat Facebook for DeepMind, Creates Ethics Board”（2014-01-26、$500M 超、倫理委員会） — https://web.archive.org/web/20140131121719/https:/www.theinformation.com/Google-beat-Facebook-For-DeepMind-Creates-Ethics-Board</li>
+<li id="s26">Forbes / Economist 報道整理, DeepMind Ethics Board と Ethics and Safety Review Agreement（2019） — https://www.forbes.com/sites/samshead/2019/03/14/deepminds-mysterious-ethics-board-will-reportedly-control-agi-if-its-ever-created/</li>
+<li id="s27">Mnih et al., “Human-level control through deep reinforcement learning,” Nature（2015-02、DQN / Atari） — https://www.nature.com/articles/nature14236</li>
+<li id="s28">DeepMind media, Lee Sedol vs AlphaGo Game 2 English commentary PDF（黒37手目） — https://deepmind-media.storage.googleapis.com/alphago/pdf-files/english/ls-vs-ag2/LS%20vs%20AG%20-%20G2%20-%20English.pdf</li>
+<li id="s29">Silver et al., AlphaGo Zero / AlphaZero 系列（Nature 2017、Science 2018） — https://www.nature.com/articles/nature24270</li>
+<li id="s30">Jumper et al., “Applying and improving AlphaFold at CASP14,” Proteins（中央値 GDT_TS 92.4） — https://onlinelibrary.wiley.com/doi/10.1002/prot.26257</li>
+<li id="s31">Abramson et al. / DeepMind, AlphaFold 3（Nature 2024-05） — https://www.nature.com/articles/s41586-024-07487-w</li>
+<li id="s32">Isomorphic Labs, “Isomorphic Labs kicks off 2024 with two pharmaceutical collaborations”（2024-01-07。Lilly $45M / Novartis $37.5M） — https://www.isomorphiclabs.com/articles/isomorphic-labs-kicks-off-2024-with-two-pharmaceutical-collaborations</li>
+<li id="s33">Google, “Google DeepMind: Bringing together two world-class AI teams”（2023-04-20。Brain 統合、Hassabis CEO） — https://blog.google/innovation-and-ai/technology/ai/april-ai-update/</li>
+<li id="s34">Bloomberg, “Google Waives $1.5 Billion DeepMind Loan…”（2019年 £1.1B 免除、損失 £477M の報道） — https://www.bloomberg.com/news/articles/2020-12-17/deepmind-says-2019-revenue-jumped-158-on-ai-research-work</li>
+<li id="s35">DeepMind Technologies Limited, Full accounts year ended 31 Dec 2023（利益 £113M、売上 £1,527M） — https://gwern.net/doc/reinforcement-learning/deepmind/2023-deepmind-fullaccounts.pdf</li>
+<li id="s36">The London Gazette, New Year Honours 2018 — Dr Demis HASSABIS CBE（2017-12-30） — https://www.thegazette.co.uk/notice/2937937</li>
+<li id="s37">The Royal Society, “Sir Demis Hassabis CBE FREng FRS”（選出 2018） — https://royalsociety.org/people/demis-hassabis-13817/</li>
+<li id="s38">The London Gazette, Knights Bachelor — Demis HASSABIS（2024-04-19 notice） — https://www.thegazette.co.uk/notice/4603787</li>
+<li id="s39">DeepMind, “The Information Commissioner, the Royal Free, and what we’ve learned”（ICO 対応の公式説明） — https://deepmind.google/blog/the-information-commissioner-the-royal-free-and-what-weve-learned/</li>
+<li id="s40">BBC News, “Google accused of 'trust demolition' over health app”（2018-11、Streams の Google 移管批判） — https://www.bbc.co.uk/news/technology-46206677</li>
+<li id="s41">The New York Times, “DeepMind co-founder leaves Google after a rocky tenure”（2022-01-20、Suleyman 離脱） — https://www.nytimes.com/2022/01/20/business/google-deepmind-mustafa-suleyman.html</li>
+<li id="s42">Microsoft Blog, “Mustafa Suleyman … joins Microsoft to lead Copilot”（2024-03-19、Microsoft AI CEO） — https://blogs.microsoft.com/blog/2024/03/19/mustafa-suleyman-deepmind-and-inflection-co-founder-joins-microsoft-to-lead-copilot/</li>
+<li id="s43">Silver et al., “Mastering the game of Go with deep neural networks and tree search,” Nature（2016-01、Fan Hui 5–0） — https://www.nature.com/articles/nature16961</li>
+<li id="s44">Reuters, “Google to buy artificial intelligence company DeepMind”（2014-01-26、$400M 報道） — https://web.archive.org/web/20160311002911/http:/www.reuters.com/article/google-deepmind-idUSL2N0L102A20140127</li>
+<li id="s45">DeepMind, “Announcing Google DeepMind”（2023-04-20、Hassabis 社内メモ） — https://deepmind.google/blog/announcing-google-deepmind/</li>
+</ol>
+
+</div>
+
+<script type="application/json" id="facts">
+[
+  {"claim":"生年月日","value":"1976-07-27","unit":"date","as_of":"2024-10-09","source":"https://www.nobelprize.org/prizes/chemistry/2024/hassabis/facts/","confidence":"reported"},
+  {"claim":"チェス_ELO_ピーク","value":2300,"unit":"Elo","as_of":"1990","source":"https://www.theguardian.com/technology/shortcuts/2014/jan/28/demis-hassabis-15-facts-deepmind-technologies-founder-google","confidence":"reported"},
+  {"claim":"Theme_Park_売上本数","value":15,"unit":"M copies","as_of":"lifetime","source":"https://en.wikipedia.org/wiki/Theme_Park_(video_game)","confidence":"disputed"},
+  {"claim":"Google_買収額_GBP","value":400,"unit":"M GBP","as_of":"2014-01","source":"https://www.theguardian.com/technology/2014/jan/27/google-acquires-uk-artificial-intelligence-startup-deepmind","confidence":"disputed"},
+  {"claim":"AlphaGo_対李世乭","value":"4-1","unit":"match","as_of":"2016-03-15","source":"https://blog.google/innovation-and-ai/products/alphagos-ultimate-challenge/","confidence":"reported"},
+  {"claim":"CASP14_median_GDT_TS","value":92.4,"unit":"GDT_TS","as_of":"2020-12","source":"https://deepmind.google/blog/alphafold-a-solution-to-a-50-year-old-grand-challenge-in-biology/","confidence":"reported"},
+  {"claim":"ICO_患者記録数","value":1.6,"unit":"M records","as_of":"2017-07-03","source":"https://www.bailii.org/uk/cases/UKICO/2017/2017-66.html","confidence":"reported"},
+  {"claim":"DeepMind_損失_2019","value":477,"unit":"M GBP","as_of":"2019-12-31","source":"https://gwern.net/doc/reinforcement-learning/deepmind/2019-deepmind-fullaccounts.pdf","confidence":"reported"},
+  {"claim":"貸付免除_2019","value":1.1,"unit":"B GBP","as_of":"2019","source":"https://gwern.net/doc/reinforcement-learning/deepmind/2019-deepmind-fullaccounts.pdf","confidence":"reported"},
+  {"claim":"DeepMind_利益_2023","value":113,"unit":"M GBP","as_of":"2023-12-31","source":"https://gwern.net/doc/reinforcement-learning/deepmind/2023-deepmind-fullaccounts.pdf","confidence":"reported"},
+  {"claim":"Isomorphic_外部調達","value":600,"unit":"M USD","as_of":"2025-03-31","source":"https://www.isomorphiclabs.com/articles/isomorphic-labs-announces-600m-external-investment-round","confidence":"reported"},
+  {"claim":"Lilly_前払い","value":45,"unit":"M USD","as_of":"2024-01","source":"https://www.isomorphiclabs.com/articles/isomorphic-labs-kicks-off-2024-with-two-pharmaceutical-collaborations","confidence":"reported"},
+  {"claim":"Novartis_前払い","value":37.5,"unit":"M USD","as_of":"2024-01","source":"https://www.isomorphiclabs.com/articles/isomorphic-labs-kicks-off-2024-with-two-pharmaceutical-collaborations","confidence":"reported"},
+  {"claim":"ノーベル化学賞_分け前","value":0.25,"unit":"share","as_of":"2024-10-09","source":"https://www.nobelprize.org/prizes/chemistry/2024/press-release/","confidence":"reported"}
+]
+</script>
+
+<script>
+const BORN = '1976-07-27';
+const DIED = null;
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: true };
+  const m = String(x.d).match(/(\d{4})(?:[-.](\d{1,2})(?:[-.](\d{1,2}))?)?/);
+  if (!m) return null;
+  const y = +m[1], mo = m[2] ? +m[2] : null, dd = m[3] ? +m[3] : null;
+  const [by, bm, bd] = BORN.split('-').map(Number);
+  if (DIED) { const dy = +DIED.split('-')[0]; if (y > dy) return { t: '没後' + (y - dy) + '年', out: true }; }
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  let a = y - by;
+  if (mo !== null && (mo < bm || (mo === bm && dd !== null && dd < bd))) a -= 1;
+  return { t: a + '歳', out: false };
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sup(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+}
+
+const ERAS = [
+  '',
+  'I チェス・ゲーム 1976–1997',
+  'II Elixir 1998–2005',
+  'III 神経科学 2005–2009',
+  'IV DeepMind創業〜買収 2010–2014',
+  'V ゲームAI 2013–2018',
+  'VI AlphaFold・賞 2018–2024',
+  'VII 組織・Isomorphic 2018–2026',
+];
+
+const TL = [
+ {d:'1976.7.27',e:1,t:'ロンドンに生まれる',
+  w:'ノーベル財団 Facts が生年月日を 1976年7月27日、生地をロンドンと記す。',
+  y:'以後の満年齢計算の基準日。',
+  f:['London'],s:[1]},
+ {d:'1980',e:1,t:'4歳でチェスを始める',
+  w:'父と叔父の対局を見て覚えた、と二次整理が一致する。金額付きの一次日記は未確認。',
+  y:'ボードゲームと競争の起点。',s:[16]},
+ {d:'1989',e:1,t:'13歳でチェス・マスター級（ELO 2300）',
+  w:'14歳以下の世界ランキング2位（1位 Judit Polgár）。Guardian と母校記録が一致。',
+  y:'賞金とコンピュータ購入の文脈が後のインタビューで繰り返される。',
+  f:['ELO 2300'],s:[2,17]},
+ {d:'1992',e:1,t:'ケンブリッジ合格。ギャップイヤーで Bullfrog へ',
+  w:'年齢のため入学を1年待ち、Amiga Power の就職コンテスト経由などで Bullfrog に入る、と複数二次が書く。',
+  y:'ゲーム産業への入口。',s:[2,16]},
+ {d:'1994',e:1,t:'『Theme Park』発売。共同設計・主任プログラマ（17歳）',
+  w:'Peter Molyneux と共同。売上は数百万〜1,500万本超で諸説。Golden Joystick 受賞の記載あり。',
+  y:'シミュレーションとエージェント設計の実務経験。',
+  f:['諸説・売上'],s:[2,18,19]},
+ {d:'1997',e:1,t:'ケンブリッジ（Queens\' College）計算機科学を first-class で卒業',
+  w:'Guardian は double first と記述。',
+  y:'学術側の学位の確定。',s:[2]},
+ {d:'1997',e:1,t:'Lionhead で『Black & White』リード AI プログラマ',
+  w:'Molyneux の新スタジオ。短期間の在籍。',
+  y:'AI プログラマとしての肩書きが残る。',s:[2]},
+ {d:'1998',e:2,t:'Elixir Studios を創業（22歳）',
+  w:'ロンドン。のち最大約60人。Eidos・Vivendi などと契約。',
+  y:'独立スタジオ経営の開始。',
+  f:['創業'],s:[2,11]},
+ {d:'1998',e:2,t:'Mind Sports Olympiad で優勝（のち5回）',
+  w:'1998–2001・2003の5回。2003年に競技から引退。',
+  y:'多ゲーム強さの公的記録。',s:[2,16]},
+ {d:'2003',e:2,t:'『Republic: The Revolution』発売（Eidos）',
+  w:'長期開発の戦略・シミュレーション。商業的には限定的だったと閉鎖時報道。',
+  y:'スタジオの主力タイトルの出荷。',s:[11,20]},
+ {d:'2004',e:2,t:'『Evil Genius』発売（Vivendi）',
+  w:'評点は一定だが、スタジオを支える規模には不足したと業界報道。',
+  y:'2本目の出荷。',s:[11]},
+ {d:'2005.4',e:2,t:'Elixir Studios の日次業務を停止',
+  w:'主要プロジェクトが「高リスク」でキャンセル。IP・技術権を売却し閉鎖。Hassabis 声明を残す。',
+  y:'ゲーム会社経営の終点。神経科学へ移る直前条件。',
+  f:['閉鎖'],s:[11,20,21]},
+ {d:'2005',e:3,t:'UCL で認知神経科学の博士課程を開始',
+  w:'海馬・エピソード記憶・想像を主題とする。',
+  y:'学術キャリアへの転換。',s:[1,2]},
+ {d:'2007.1',e:3,t:'PNAS 論文：海馬健忘患者は新しい経験を想像できない',
+  w:'Hassabis / Maguire ら。空間的一貫性の欠如を示す。',
+  y:'後の Science ブレイクスルー選定の原典。',
+  f:['PNAS'],s:[3]},
+ {d:'2007.12',e:3,t:'Science 誌 Breakthroughs of the Year トップ10に選定',
+  w:'「Back to the Future」枠。UCL が2008年1月に公式発表。',
+  y:'神経科学での国際的認知。',s:[4]},
+ {d:'2009',e:3,t:'UCL で PhD（認知神経科学）',
+  w:'のち Gatsby で Wellcome Trust フェロー。MIT / ハーバード客員。',
+  y:'DeepMind 創業前の最終学位。',s:[1,2]},
+ {d:'2010.9',e:4,t:'DeepMind Technologies を設立',
+  w:'共同創業者 Shane Legg・Mustafa Suleyman。Companies House 07386350。',
+  y:'研究スタートアップの起点。',
+  f:['創業'],s:[5,16]},
+ {d:'2011',e:4,t:'初期資金を拡充（Founders Fund・Horizons 等）',
+  w:'Musk、Tallinn、Banister らも報じられる。個別持分は非開示。',
+  y:'研究スケールの資金条件。',s:[22]},
+ {d:'2013',e:5,t:'Atari DQN を NIPS ワークショップで発表',
+  w:'像素入力からの深層強化学習。',
+  y:'汎用エージェントの初期実証。',s:[27]},
+ {d:'2014.1.26',e:4,t:'Google が DeepMind 買収を発表',
+  w:'金額は £400M / $400M / $650M / $500M超で諸説。Ethics Board 条件が報道される。',
+  y:'Alphabet 傘下での研究拡大の始点。',
+  f:['諸説・買収額'],s:[23,24,25,44]},
+ {d:'2015.2',e:5,t:'Nature：DQN / Atari 論文',
+  w:'複数ゲームで人間水準に近い制御を示す。',
+  y:'ゲームAIの査読付き里程標。',s:[27]},
+ {d:'2015.9.30',e:7,t:'Royal Free と Streams 関連のデータ処理契約',
+  w:'ICO が認定した日付。約160万件の部分記録が試験に使われた。',
+  y:'Health 事案の契約起点。',s:[12]},
+ {d:'2016.1',e:5,t:'Nature：AlphaGo 論文（Fan Hui に 5–0）',
+  w:'プロ棋士への初めての完封。',
+  y:'李世乭戦の直前条件。',s:[43]},
+ {d:'2016.3.9',e:5,t:'AlphaGo 対李世乭・第1局（ソウル）',
+  w:'5番勝負開始。最終的に AlphaGo が 4勝1敗。',
+  y:'大衆的認知の転換点。',s:[6,28]},
+ {d:'2016.3.10',e:5,t:'第2局・黒37手目',
+  w:'肩突き。解説が「人間は敢えて打たない」と評した一手として記録。',
+  y:'創造的着手の象徴事例。',
+  f:['37手目'],s:[28]},
+ {d:'2016.3.15',e:5,t:'第5局で AlphaGo がシリーズ勝利（4–1）',
+  w:'第4局は李世乭が勝利。賞金 $1M を慈善等へ寄付と公式。',
+  y:'シリーズ決着。',
+  f:['4–1'],s:[6]},
+ {d:'2017.2',e:7,t:'Streams が Royal Free で本番利用へ',
+  w:'ICO undertaking が記す移行時期。',
+  y:'試験から臨床運用へ。',s:[12]},
+ {d:'2017.5',e:5,t:'AlphaGo 対柯潔',
+  w:'中国・烏鎮。AlphaGo が勝利。',
+  y:'トッププロへの追加実証。',s:[16]},
+ {d:'2017.7.3',e:7,t:'ICO が Royal Free の Data Protection Act 違反を認定',
+  w:'約160万件。告知不足と比例性の欠如。DeepMind はプロセッサ。',
+  y:'Health 事業の法的汚れの確定日付。',
+  f:['ICO'],s:[12,39]},
+ {d:'2017.10',e:5,t:'AlphaGo Zero を発表',
+  w:'人間棋譜なしの自己対戦学習。',
+  y:'学習データの前提を外す。',s:[29]},
+ {d:'2017.12.30',e:6,t:'CBE 授与が発表（NY Honours 2018）',
+  w:'科学・技術への貢献。London Gazette。',
+  y:'国家栄誉の最初の段階。',s:[36]},
+ {d:'2018',e:6,t:'王立協会フェロー（FRS）に選出',
+  w:'Royal Society 名簿。',
+  y:'学術側の正式会員資格。',s:[37]},
+ {d:'2018',e:5,t:'AlphaZero を発表（チェス・将棋・囲碁）',
+  w:'同一アルゴリズムで複数完全情報ゲーム。',
+  y:'ゲーム特化からの一般化。',s:[29]},
+ {d:'2018.11.13',e:7,t:'Streams チームを Google へ移管すると発表',
+  w:'DeepMind 公式ブログ。のち DeepMind Health は Google Health 側へ。',
+  y:'独立性の縮小の明示。',s:[13,40]},
+ {d:'2018.12',e:6,t:'CASP13 で AlphaFold が首位',
+  w:'初代システム。Nature 2019 で方法を公開。',
+  y:'構造予測競争への参入。',s:[7]},
+ {d:'2019',e:7,t:'Mustafa Suleyman が DeepMind から Google 側へ職務変更',
+  w:'のち2022年に Google 離脱。',
+  y:'創業三人体制の変質。',s:[41]},
+ {d:'2019',e:7,t:'英国法人が損失 £477M。関連会社貸付 £1.1B を免除',
+  w:'Companies House 決算。Bloomberg も報じる。',
+  y:'累積コストの可視化。',
+  f:['£477M'],s:[15,34]},
+ {d:'2020.11',e:6,t:'CASP14：AlphaFold2 が中央値 GDT 92.4',
+  w:'DeepMind 公式と Proteins 誌が同数値。',
+  y:'実験精度に近い予測の達成。',
+  f:['GDT 92.4'],s:[7,30]},
+ {d:'2021.7',e:6,t:'AlphaFold Nature 論文と構造 DB を公開',
+  w:'のち2022年に2億超構造へ拡張。',
+  y:'科学コミュニティへの配布。',s:[8,1]},
+ {d:'2021.11',e:7,t:'Isomorphic Labs を設立。Hassabis が CEO 兼務',
+  w:'創薬への商業レーン。',
+  y:'AlphaFold の応用会社。',s:[10,32]},
+ {d:'2022.1',e:7,t:'Mustafa Suleyman が Google を離脱',
+  w:'Greylock へ。同年 Inflection AI を創業。',
+  y:'創業者の完全な分岐。',s:[41]},
+ {d:'2023',e:6,t:'GNoME 等：約220万の新結晶候補を報告',
+  w:'材料探索。同年 AlphaMissense 等も公開。',
+  y:'科学AIの多領域展開。',s:[16]},
+ {d:'2023.4.20',e:7,t:'Google Brain と統合し Google DeepMind 発足。Hassabis が CEO',
+  w:'Pichai / Hassabis の公式発表。',
+  y:'独立ブランドとしての DeepMind の終了。',
+  f:['統合'],s:[33,45]},
+ {d:'2023.12',e:7,t:'Gemini 系列の公開開始',
+  w:'Google DeepMind が中核責任を負うマルチモーダルモデル。',
+  y:'製品AIへの直接責任。',s:[33]},
+ {d:'2024.1.7',e:7,t:'Isomorphic が Lilly・Novartis と提携発表',
+  w:'前払い $45M + $37.5M。マイルストーン上限は各約 $1.7B / $1.2B。',
+  y:'創薬契約収入の確定。',
+  f:['$82.5M upfront'],s:[32]},
+ {d:'2024.3',e:6,t:'Knight Bachelor（ナイト）が発表',
+  w:'AI への貢献。Gazette 2024-04-19。※2023年ではない。',
+  y:'CBE に続く叙勲。',s:[38]},
+ {d:'2024.3.19',e:7,t:'Suleyman が Microsoft AI CEO に就任',
+  w:'Microsoft 公式ブログ。',
+  y:'創業者の競合陣営入り。',s:[42]},
+ {d:'2024.5',e:6,t:'AlphaFold 3 を Nature に発表',
+  w:'タンパク質に加え核酸・リガンド等の複合体。',
+  y:'構造予測の拡張。',s:[31]},
+ {d:'2024.10.9',e:6,t:'ノーベル化学賞（Jumper と半額、Baker と分け合う）',
+  w:'タンパク質構造予測。賞分け 1/4。総額 SEK 11M。',
+  y:'科学的評価の頂点日付。',
+  f:['Nobel'],s:[1,9]},
+ {d:'2025.3.31',e:7,t:'Isomorphic Labs が外部調達 $600M を発表',
+  w:'Thrive Capital 主導。GV・Alphabet 参加。',
+  y:'創薬子会社の独立資金。',
+  f:['$600M'],s:[10]},
+];
+
+const QUOTES = [
+ {t:'ゲーム産業',q:'It seems that today\'s games industry no longer has room for small independent developers wanting to work on innovative and original ideas. Perhaps there is no longer any need for them. However, this was the sole purpose of setting up Elixir and something we could never compromise on by going down the licensing route.',
+  w:'2005年4月・Elixir 閉鎖時声明（GameDeveloper / IGN）。訳: 革新的でオリジナルなアイデアを追う小規模インディーに、いまのゲーム業界は場所がないように見える。',s:[11,20]},
+ {t:'AlphaGo',q:'The team weren\'t that confident towards the end of the game as the professional commentators kept changing their minds about who was winning, but AlphaGo\'s estimate was increasingly confident that it was winning in the second half of the game.',
+  w:'2016年3月・李世乭戦第2局後のコメント（British Go Association 記録）。訳: 終盤、解説はどちらが勝っているか揺れ続けたが、AlphaGo の勝率推定は後半ますます自信を深めていた。',s:[6]},
+ {t:'Health / ICO',q:'The ICO wasn\'t satisfied that there was a legal basis for this use of patient data in testing … and raised concerns about how much patients knew about what was happening.',
+  w:'2017年・DeepMind 公式ブログ（ICO への応答）。訳: ICO は試験段階での患者データ利用の法的根拠に満足せず、患者の認知の程度にも懸念を示した。',s:[39]},
+ {t:'統合',q:'Combining our talents and efforts will accelerate our progress towards a world in which AI helps solve the biggest challenges facing humanity.',
+  w:'2023年4月20日・Google DeepMind 発表（Hassabis 社内メモ）。訳: 人材と努力を合わせることで、AI が人類の最大課題の解決を助ける世界への進捗を加速する。',s:[45]},
+ {t:'叙勲',q:'Delighted and honoured to receive a Knighthood for services to AI.',
+  w:'2024年3月・本人の X 投稿（TechCrunch が引用）。訳: AI への貢献でナイト爵を受け、喜びと栄誉に思う。',s:[38]},
+];
+
+const activeEras = new Set();
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button type="button" class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`;
+}).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.cls ? ' ' + r.cls : ''}${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+bars('chartPl', [
+  {k:'2016', v:-94, cls:'neg', sub:'損失'},
+  {k:'2017', v:-302, cls:'neg', sub:'損失'},
+  {k:'2018', v:-470, cls:'neg', sub:'損失'},
+  {k:'2019', v:-477, cls:'neg', sub:'損失'},
+  {k:'2020', v:44, sub:'利益'},
+  {k:'2022', v:61, cls:'s2', sub:'利益'},
+  {k:'2023', v:113, cls:'s3', sub:'利益'},
+], 'M£');
+
+bars('chartIso', [
+  {k:'Lilly前払', v:45, sub:'2024-01'},
+  {k:'Novartis前払', v:37.5, cls:'s2', sub:'2024-01'},
+  {k:'外部調達', v:600, cls:'s3', sub:'2025-03'},
+], 'M$');
+</script>
+</body>
+</html>

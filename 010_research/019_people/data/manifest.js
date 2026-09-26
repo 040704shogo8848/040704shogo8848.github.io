@@ -3,6 +3,29 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "デミス・ハサビス",
+    "nameEn": "Demis Hassabis",
+    "born": 1976,
+    "died": null,
+    "country": "GB",
+    "role": "Google DeepMind CEO・Isomorphic Labs CEO（AlphaFold・ノーベル化学賞2024）",
+    "field": "scientist",
+    "status": "active",
+    "tags": [
+      "DeepMind",
+      "AlphaFold",
+      "AlphaGo",
+      "ノーベル化学賞",
+      "ゲームAI",
+      "神経科学"
+    ],
+    "date": "2026-09-26",
+    "summary": "1976年ロンドン生まれ。13歳でチェス世界2位（14歳以下）・ELO 2300。17歳で『Theme Park』を共同設計。2010年に DeepMind を創業し2014年に Google が買収（£4億〜$6.5億・諸説）。2024年10月9日、AlphaFold でノーベル化学賞（John Jumper と半額）。",
+    "file": "people/hassabis_demis_260926.html",
+    "sourceCount": 45,
+    "variant": "life-arc"
+  },
+  {
     "name": "チェ・ゲバラ",
     "nameEn": "Che Guevara",
     "born": 1928,

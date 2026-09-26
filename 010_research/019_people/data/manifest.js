@@ -3,6 +3,29 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "舛岡富士雄",
+    "nameEn": "Fujio Masuoka",
+    "born": 1943,
+    "died": null,
+    "country": "JP",
+    "role": "東北大学名誉教授・Unisantis Electronics 共同創業者・顧問（フラッシュメモリ発明者）",
+    "field": "scientist",
+    "status": "active",
+    "tags": [
+      "フラッシュメモリ",
+      "NAND",
+      "東芝",
+      "職務発明",
+      "SGT",
+      "IEEE Liebmann"
+    ],
+    "date": "2026-09-26",
+    "summary": "1943年高崎市生まれ。1984年IEDMでNOR型、1987年でNAND型フラッシュを発表。2006年東芝と8700万円で和解。2018年本田賞。東芝メモリは2018年に約2兆3億円で譲渡されキオクシアへ。",
+    "file": "people/masuoka_fujio_260926.html",
+    "sourceCount": 40,
+    "variant": "life-arc"
+  },
+  {
     "name": "パルマー・ラッキー",
     "nameEn": "Palmer Luckey",
     "born": 1992,

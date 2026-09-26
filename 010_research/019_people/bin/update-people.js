@@ -53,9 +53,12 @@ const FIELD_JA = {
 };
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
+// born / died は西暦の整数。紀元前は負の数で持ち、表示のときだけ「前100」に直す。
+// 生の値を正のままにすると born での並べ替えが古代と近代で逆転する。
+const yr = (n) => (n < 0 ? `前${-n}` : `${n}`);
 const life = (p) => {
   if (!p.born) return '—';
-  return p.died ? `${p.born}–${p.died}` : `${p.born}–`;
+  return p.died ? `${yr(p.born)}–${yr(p.died)}` : `${yr(p.born)}–`;
 };
 
 const rows = arr.map((p) => `      <tr>

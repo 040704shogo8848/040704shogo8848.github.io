@@ -3,6 +3,29 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "ポール・グレアム",
+    "nameEn": "Paul Graham",
+    "born": 1964,
+    "died": null,
+    "country": "GB",
+    "role": "エッセイスト・投資家、Y Combinator 共同創業者（日常運営からは離任）",
+    "field": "investor",
+    "status": "active",
+    "tags": [
+      "Y Combinator",
+      "Viaweb",
+      "Lisp",
+      "エッセイ",
+      "投資",
+      "Arc"
+    ],
+    "date": "2026-09-26",
+    "summary": "1964年イングランド生まれ。1995年に Viaweb を創業し1998年に Yahoo! が約49百万ドル（株式）で買収。2005年に Y Combinator を共同設立し、Airbnb・Stripe・Dropbox 等を含むバッチ投資モデルを作った。2014年に社長を Sam Altman へ譲り、以後は執筆と Lisp 方言（Arc / Bel）に重心を移す。",
+    "file": "people/graham_paul_260926.html",
+    "sourceCount": 48,
+    "variant": "life-arc"
+  },
+  {
     "name": "ヘンリー・フォード",
     "nameEn": "Henry Ford",
     "born": 1863,

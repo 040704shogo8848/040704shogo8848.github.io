@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ポール・グレアム — Viaweb から Y Combinator まで</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --s2:#eb6834; --s3:#1baf7a; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  .bar.s2 .fl{background:var(--s2)}
+  .bar.s3 .fl{background:var(--s3)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / ポール・グレアム</p>
+
+<header class="top">
+  <h1>ポール・グレアム — Viaweb から Y Combinator まで</h1>
+  <div class="en">Paul Graham　1964.11.13 – ／エッセイスト・投資家、Y Combinator 共同創業者</div>
+  <div class="tags">
+    <span class="tag">Y Combinator</span><span class="tag">Viaweb</span><span class="tag">Lisp</span>
+    <span class="tag">エッセイ</span><span class="tag">投資</span><span class="tag">Arc</span>
+  </div>
+  <p class="lead">1964年11月13日、イングランド・ドーセット州ウェイマス生まれ。米ピッツバーグ育ち。コーネル大学で哲学（1986年）、ハーバード大学で計算機科学の修士（1988年）と博士（1990年）。1990–1993年に RISD とフィレンツェのアカデミアで絵を学び、1995年に Robert Morris と Viaweb を創業。1998年に Yahoo! が株式約 $49M で買収。2005年に Jessica Livingston・Morris・Trevor Blackwell と Y Combinator を設立した。</p>
+  <p class="srcnote">作成日 2026年9月26日。数値の基準日は同日。存命人物のため、出典のない私生活・人物評・投資判断は書かない。生地は Wikipedia・本人 bio が Weymouth, Dorset と記す（日本語で「ウェイマス」）。年表の満年齢は生年月日1964年11月13日からの年差で算出している。YC の累計社数・ユニコーン数は時点と定義で割れるため、本文で複数出典を併記する。</p>
+</header>
+
+<h2 id="overview"><span class="num">①</span>概要<span class="en">Overview</span></h2>
+
+<div class="kpi">
+  <div class="card"><div class="k">生年月日</div><div class="v">1964.11.13<small>Weymouth, England</small></div></div>
+  <div class="card"><div class="k">Viaweb 売却</div><div class="v">約 $49M<small>1998-06・Yahoo! 株式</small></div></div>
+  <div class="card"><div class="k">YC 設立</div><div class="v">2005.3<small>Summer Founders</small></div></div>
+  <div class="card"><div class="k">エッセイ PV</div><div class="v">約2,500万<small>/年・本人 bio</small></div></div>
+</div>
+
+<div class="callout">
+<p><b>先に結論を3つ書く。</b></p>
+<p><b>1つ目。事業の曲線は「Lisp で書いた SaaS → 売却 → エッセイ → バッチ投資」である。</b>Viaweb は Common Lisp で書かれたブラウザ上の EC 構築サービスで、本人はこれを競争優位の根拠として "Beating the Averages"（2001年）に書いた。Yahoo! は1998年6月に約 $49M（株式）で買収し Yahoo! Store とした。Graham は約1年後の1999年に退社し、製品が社内でローンチ済みであること・自分が不要であること・時間が足りないことを理由に挙げた<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup>。</p>
+<p><b>2つ目。YC はエッセイが案件を呼ぶ経路で始まった。</b>"How to Start a Startup"（2005年3月）の講演後、本人は「種銭を出さずに言葉だけを置いた」ことへの罪悪感から Summer Founders Program を発表した。初回バッチは8社（Livingston の回顧・WIRED 同時代報道。Dealroom 照合は9社で<strong class="hit">諸説</strong>）。投資条件は当初おおよそ創業者1人あたり $6,000・持分約6%、のち $120,000 で7%、2022年1月から合計 $500,000（うち $125,000 が7%）へ変わった<sup><a href="#s5">5</a></sup><sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup>。</p>
+<p><b>3つ目。読む単位はファンド規模ではなくバッチ当たりの打率である。</b>成熟バッチではユニコーン到達率が一般シードより高いと二次分析が置く一方、大半の会社はヘッドライン評価に届かない。Dealroom 照合（as of 公開表）ではマッチ企業約5,853社中ユニコーン126社。Palle Broe（as of 2024-12-10）は約4,939社を対象にユニコーン率約4.5%、Series A 到達約45%と書く。本人は2014年2月に社長を Sam Altman に譲り、「YC を大きくする役には自分が最適でない」と書いた<sup><a href="#s10">10</a></sup><sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup>。</p>
+</div>
+
+<h2 id="timeline"><span class="num">②</span>年表<span class="en">Timeline</span></h2>
+<p>日付が一次情報または複数報道で確定した出来事だけを並べた。各項目は事実、具体、なぜ効いたかの3層である。期のボタンで絞り込める。日付の右は、その時点の満年齢である。</p>
+
+<div class="tl-tools">
+  <input id="tlq" type="search" placeholder="年表を検索（例: Viaweb、YC、Arc、エッセイ、Airbnb）" aria-label="年表を検索">
+  <span class="tl-count" id="tlcount"></span>
+</div>
+<div class="tl-eras" id="tleras"></div>
+<div class="tl" id="tl"></div>
+<div class="tl-empty" id="tlempty">該当する項目がない。</div>
+
+<h2 id="phases"><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+
+<h3>I 形成 — 哲学・CS・画家志望（1964–1993）</h3>
+<p>生年月日は1964年11月13日。生地はイングランド・ドーセット州ウェイマス。家族は1968年に米ペンシルベニア州ピッツバーグへ移り、Gateway High School に通った<sup><a href="#s13">13</a></sup>。コーネル大学で哲学の学士（1986年）、ハーバード大学で計算機科学の修士（1988年）と博士（1990年、論文題 "The State of a Program and Its Uses"）を取得した<sup><a href="#s13">13</a></sup><sup><a href="#s1">1</a></sup>。</p>
+<p>博士取得直後、画家を志して美術学校に入る。1990年夏に RISD の foundation を履修し、同年秋からフィレンツェの Accademia di Belle Arti で約1年学ぶ。資金が尽きて米国へ戻り、Interleaf で約1年勤務したあと、1992年秋に RISD へ復帰し、1993年に退学した。志望期間はおおよそ <strong class="hit">1990–1993年</strong>である。本人の回顧 "What I Worked On"（2021年）が年次の骨格を書く<sup><a href="#s14">14</a></sup>。</p>
+<p>同時期に Lisp の著作を出した。Prentice Hall から <i>On Lisp</i>（1993年）、<i>ANSI Common Lisp</i>（1995年）。本人 bio が両書を列挙する<sup><a href="#s1">1</a></sup>。</p>
+
+<h3>II Viaweb — Lisp の SaaS と Yahoo! 買収（1995–1999）</h3>
+<p>1995年、Robert Morris と Viaweb を創業した。ブラウザ上で EC サイトを構築・運営するサービスで、本人は「最初の SaaS」と呼ぶ<sup><a href="#s1">1</a></sup>。まもなく Trevor Blackwell が加わった。実装の中核は Common Lisp であり、"Beating the Averages"（2001年）で「平均的な言語より強力な言語で書いたことが競争優位だった」と論じた<sup><a href="#s15">15</a></sup>。</p>
+<p>1998年6月8日、Yahoo! は Viaweb 買収の確定合意を発表した。公表価値は約 $49M。約455,000株の Yahoo! 普通株を発行する条件とされた。NYT（Reuters）と Wired、Yahoo! のプレスリリースが同額で一致する。SEC 提出物はクローズ日を1998年6月10日とし、発行株数787,182株＋オプション122,252株、購入対価合計約 $48.559M と記す（発表時の概算 $49M と最終計上の差は<strong class="hit">諸説というより発表と決算の差</strong>）<sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup><sup><a href="#s16">16</a></sup>。</p>
+<p>製品は Yahoo! Store になった。Graham は約1年勤務したあと1999年に退社した。Startup School Radio での本人回顧では、(1) 製品が Yahoo! 内で安全にローンチ済み、(2) 自分はもう必要とされていない、(3) 働く場所が好きではない、(4) 金より時間が足りない、と説明している<sup><a href="#s4">4</a></sup>。</p>
+
+<h3>III エッセイ — 案件を呼ぶ経路（2001–2005）</h3>
+<p>2001年、paulgraham.com でエッセイの公開を始めた。本人 bio は年間約2,500万ページビューと書く（single-source）<sup><a href="#s1">1</a></sup>。代表作の年次は次のとおりである。</p>
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>年</th><th>題名</th><th>本稿での位置づけ</th></tr></thead>
+<tbody>
+<tr><td class="name">2001</td><td>Beating the Averages</td><td>Viaweb の Lisp 優位論<sup><a href="#s15">15</a></sup></td></tr>
+<tr><td class="name">2002-08</td><td>A Plan for Spam</td><td>ベイジアン・フィルタの実務論<sup><a href="#s17">17</a></sup></td></tr>
+<tr><td class="name">2003</td><td>Hackers and Painters</td><td>ハッカーと画家の同型論。2004年に同名の書籍<sup><a href="#s1">1</a></sup><sup><a href="#s18">18</a></sup></td></tr>
+<tr><td class="name">2005-03</td><td>How to Start a Startup</td><td>YC 設立の直接の引き金<sup><a href="#s5">5</a></sup><sup><a href="#s19">19</a></sup></td></tr>
+<tr><td class="name">2009</td><td>Maker's Schedule, Manager's Schedule / Keep Your Identity Small</td><td>時間配分とアイデンティティの縮小<sup><a href="#s20">20</a></sup><sup><a href="#s21">21</a></sup></td></tr>
+<tr><td class="name">2013</td><td>Do Things That Don't Scale</td><td>初期の手作業を正当化する定番文<sup><a href="#s22">22</a></sup></td></tr>
+<tr><td class="name">2023</td><td>How to Do Great Work</td><td>長期の仕事論<sup><a href="#s23">23</a></sup></td></tr>
+<tr><td class="name">2024-09</td><td>Founder Mode</td><td>経営様式の二項対立の提示と誤読<sup><a href="#s24">24</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+<p>「エッセイ → 応募」の経路は、本人の Summer Founders 発表文が一次でつなぐ。講演で種銭を出さないと書いたあと「guilty」と感じ、Y Combinator と Summer Founders Program を始めた、と本人が書く<sup><a href="#s5">5</a></sup>。その後の応募増は、バッチ規模の拡大と報道で間接に測れる。TechCrunch（2012年4月）は、締切日に「約1分に1件」の応募があったと Graham の話を伝える。YC 公式 "Scaling YC"（2020年）は、初回8社から100社超まで約20バッチ、200社超までさらに約4年かかったと書く。応募数そのものの公式時系列は非開示である<sup><a href="#s25">25</a></sup><sup><a href="#s26">26</a></sup>。</p>
+
+<h3>IV Y Combinator の設計（2005–2014）</h3>
+<p>共同創業者は Paul Graham、Jessica Livingston、Robert Morris、Trevor Blackwell。初期資金は本人 $100k、Morris と Blackwell が各 $50k で合計 $200k、と "How Y Combinator Started" が書く<sup><a href="#s27">27</a></sup>。2005年夏の第1バッチは8社。Reddit と Loopt が含まれる。Livingston の回顧は、創業者1人あたり $6,000（MIT 夏季院生 stipend 基準）と述べ、WIRED 同時代記事は持分5–7%と報じた。2007年時点の YC FAQ（Wayback）は「通常約6%、範囲2–10%」「通常 $5,000＋創業者1人あたり $5,000」と書く<sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s28">28</a></sup>。</p>
+<p>バッチ当たりの代表例（YC 会社ページ・既存レポートと突合可能なもの）は次である。Dropbox（S07）、Airbnb（W09）、Stripe（S09）、Coinbase（S12）、DoorDash（S13）。初回バッチの Reddit は S05<sup><a href="#s29">29</a></sup><sup><a href="#s30">30</a></sup>。</p>
+<p>投資条件の主な更新は公式ブログに残る。2014年 "The New Deal" でおおよそ $120k で7%。2018–19年に $150k で7%（post-money SAFE）。2020年6月に Winter 2021 から $125k で7%。2022年1月11日に合計 $500k（$125k で7%＋$375k の uncapped MFN SAFE）へ拡張した。現行の公式説明は The Deal ページに残る<sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s31">31</a></sup><sup><a href="#s32">32</a></sup><sup><a href="#s47">47</a></sup>。</p>
+
+<h3>V 社長交代と離任（2014–2019）</h3>
+<p>2014年2月21日、Graham は YC ブログで Sam Altman の社長就任を発表した。「YC を大きくする必要があり、その役に自分は最適でない。Sam が必要だ」と書いた。自身は office hours を続けると述べた<sup><a href="#s12">12</a></sup>。Altman は2005年夏バッチの Loopt 創業者である。</p>
+<p>2019年3月、Altman が YC 社長を退き OpenAI に専念する局面で、Graham は X 上で「YC が Altman を解雇したという主張は誤り」と述べ、Jessica Livingston が「OpenAI にフルタイムなら YC の後任を探す」と伝えた経緯を書いた（2024年5月の TechCrunch が引用）<sup><a href="#s33">33</a></sup>。本人 bio と著作活動の重心は、この前後で執筆と Lisp 方言（Bel、2019年公開）へ移る<sup><a href="#s1">1</a></sup><sup><a href="#s34">34</a></sup>。</p>
+
+<h3>VI Lisp 方言 — Arc と Bel（2001–2019）</h3>
+<p>Arc は2001年に構想を公表し、2008年1月29日に初期版を公開した。Hacker News（2007年2月19日開始、当初 Startup News）は Arc の実地試験として書かれた<sup><a href="#s35">35</a></sup><sup><a href="#s36">36</a></sup><sup><a href="#s37">37</a></sup>。広く使われる言語にはならず、本番の代表例は HN にほぼ限定される。Bel は2019年10月に仕様を公開した「それ自体で書かれた Lisp」であり、本人 bio が明記する<sup><a href="#s1">1</a></sup><sup><a href="#s34">34</a></sup>。</p>
+
+<h2 id="numbers"><span class="num">④</span>実績の数字<span class="en">The Numbers</span></h2>
+<p>投資家としての数字は、個人のファンド AUM ではなく、<strong class="hit">バッチ規模とバッチ当たりの到達率</strong>で置く。個人純資産の監査済み開示は無い。</p>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>項目</th><th class="num">数値</th><th>時点・条件</th></tr></thead>
+<tbody>
+<tr><td class="name">生年月日</td><td class="num">1964-11-13</td><td>Wikipedia<sup><a href="#s13">13</a></sup></td></tr>
+<tr><td class="name">Viaweb 買収公表額</td><td class="num">約 $49M</td><td>1998-06-08。Yahoo! PR / NYT / Wired<sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup></td></tr>
+<tr><td class="name">Viaweb 買収・SEC 対価</td><td class="num">約 $48.559M</td><td>1998-06-10 クローズ。発行株787,182＋オプション<sup><a href="#s16">16</a></sup></td></tr>
+<tr><td class="name">YC 初期ファンド</td><td class="num">$200k</td><td>PG $100k + RM/TB 各 $50k（本人エッセイ）<sup><a href="#s27">27</a></sup></td></tr>
+<tr><td class="name">S05 バッチ規模</td><td class="num">8社</td><td>Livingston / WIRED / Scaling YC。Dealroom は9（諸説）<sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s10">10</a></sup><sup><a href="#s26">26</a></sup></td></tr>
+<tr><td class="name">初期出資（2005）</td><td class="num">約 $6,000/創業者</td><td>持分おおよそ6%（範囲2–10%）<sup><a href="#s6">6</a></sup><sup><a href="#s28">28</a></sup></td></tr>
+<tr><td class="name">標準ディール（2014）</td><td class="num">$120k / 7%</td><td>The New Deal<sup><a href="#s8">8</a></sup></td></tr>
+<tr><td class="name">標準ディール（2022–）</td><td class="num">$500k</td><td>$125k→7% + $375k MFN SAFE<sup><a href="#s9">9</a></sup></td></tr>
+<tr><td class="name">累計投資社数（bio）</td><td class="num">3,000社超</td><td>本人 bio（時点不明・下限表記）<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">累計投資社数（照合）</td><td class="num">約5,850–6,160社</td><td>Dealroom / YC Atlas。定義で割れる（諸説）<sup><a href="#s10">10</a></sup></td></tr>
+<tr><td class="name">$1B超企業数</td><td class="num">90社超 / 126社</td><td>Broe（2024-12）と Dealroom。定義差（諸説）<sup><a href="#s10">10</a></sup><sup><a href="#s11">11</a></sup></td></tr>
+<tr><td class="name">ユニコーン率（分析）</td><td class="num">約4.5%</td><td>Broe・成熟バッチ（推定）。一般シード約2.5%と比較<sup><a href="#s11">11</a></sup></td></tr>
+<tr><td class="name">Series A 到達率</td><td class="num">約45%</td><td>同分析（推定）。一般シード約33%<sup><a href="#s11">11</a></sup></td></tr>
+<tr><td class="name">W16 ユニコーン数</td><td class="num">16社</td><td>Dealroom バッチ表。打率の上限寄り例<sup><a href="#s10">10</a></sup></td></tr>
+<tr><td class="name">W22 バッチ規模</td><td class="num">約398社</td><td>Dealroom。大規模化のピーク寄り<sup><a href="#s10">10</a></sup></td></tr>
+<tr><td class="name">エッセイ PV</td><td class="num">約2,500万/年</td><td>本人 bio（single-source）<sup><a href="#s1">1</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="chart">
+  <div class="cap">YC バッチ規模の推移（代表年）</div>
+  <div class="sub">単位は社/バッチ。S05 は8（公式系）。W12・W15・W21・W22 は Dealroom 照合</div>
+  <div class="bars" id="chartBatch"></div>
+  <p class="sub" style="margin:14px 0 0">出典6・10・26。応募数の公式時系列は非開示のため、バッチ規模を代理指標として置く。</p>
+</div>
+
+<div class="chart">
+  <div class="cap">成熟バッチの打率指標（二次分析）</div>
+  <div class="sub">単位は%。Palle Broe（as of 2024-12-10）の YC 全体近似と、同稿が置く一般シード比較</div>
+  <div class="bars" id="chartHit"></div>
+  <p class="sub" style="margin:14px 0 0">出典11。ファンド全体の IRR や AUM ではない。バッチ当たりの到達率である。</p>
+</div>
+
+<div class="chart">
+  <div class="cap">標準投資額の変遷（YC→創業者）</div>
+  <div class="sub">単位は千 USD。2005年は創業者2人想定の $12k を代表値として置く（$6k×2）</div>
+  <div class="bars" id="chartDeal"></div>
+  <p class="sub" style="margin:14px 0 0">出典6・8・9・31。2022年の $500k のうち固定7%に対応するのは $125k。</p>
+</div>
+
+<h2 id="failures"><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
+<p>「失敗」は、公開された金額・製品の帰趨・到達率・言説の反発で切る。能力や人柄の評価は書かない。</p>
+
+<h3>類型1: Viaweb / Yahoo! Store が市場の主軸に残らなかった</h3>
+<p>買収額は約 $49M（1998年）。その後 Yahoo! Store は Yahoo Small Business 系の一機能として存続したが、親会社のポータル戦略の中では周辺化した。2015年には Luminate / Aabaco への改名・スピンオフ構想、Verizon 傘下を経て、2022年以降は Turbify ブランドへ移る、と業界報道が追う<sup><a href="#s38">38</a></sup><sup><a href="#s39">39</a></sup>。Shopify 等の後続ホスト型 EC が主戦場を取った。Graham 自身は "What Happened to Yahoo"（2010年頃）で、在籍時に検索の価値を軽視した組織判断を回顧する<sup><a href="#s40">40</a></sup>。買収額に対する Yahoo! Store 単体の長期貢献額の監査済み分解は、本ページの範囲では取得できない（N/A）。</p>
+
+<h3>類型2: Arc が広く使われなかった</h3>
+<p>2001年構想、2008年1月29日公開。本番の代表例は Hacker News にほぼ限られる。本人は公開時に「未完成だが使う価値がある」と書いたが、標準ライブラリ・モジュール・互換性の制約がコミュニティ議論で繰り返し指摘された<sup><a href="#s35">35</a></sup><sup><a href="#s41">41</a></sup>。言語普及という目標に対する到達は、HN 以外の採用数が公開指標としてほぼ無い、という形で測れる。</p>
+
+<h3>類型3: YC 投資の大半はヘッドライン成功にならない</h3>
+<p>Broe 分析（約4,939社、as of 2024-12-10）では、ユニコーン約4.5%、Series A 約45%、exit 約10%。裏を返せば、<strong class="hit">約95%はユニコーンにならず、約55%は Series A に届かない</strong>（同稿の定義・サンプル内）<sup><a href="#s11">11</a></sup>。Dealroom のバッチ表でも、W22（約398社）のように規模が大きい若いバッチは、時点上ユニコーン0が並ぶ。失敗率の公式定義（解散・買収の損切り・ゾンビ）は YC が単一の監査表として出していない。ここは二次分析の到達率の補数として置く。</p>
+
+<h3>類型4: 2013年末の「女性創業者・多様性」発言と反発</h3>
+<p>2013年12月、The Information インタビューの引用が拡散した。Graham は "What I Didn't Say" で、編集により "these" が落ち、「非ハッカーの応募者」を指した文脈が一般化したと反論した。The Information 側は「these が何を指すか不明だった」と応じた、と TechCrunch が伝える<sup><a href="#s42">42</a></sup><sup><a href="#s43">43</a></sup>。同月、本人は Jessica Livingston 宛に Female Founders 向けイベントを提案するメール（2013-12-07）を公開した。Fast Company は、Livingston 主催の Female Founders Conference が応募ファネル拡大を目的としたと書く<sup><a href="#s42">42</a></sup><sup><a href="#s44">44</a></sup>。金額損失ではなく、言説と採用広報上のコストが発生した局面である。</p>
+
+<h3>類型5: 「Founder Mode」（2024年9月）の誤読と、バッチ大規模化の構造</h3>
+<p>2024年9月のエッセイは、Brian Chesky（Airbnb）の話を受けて「manager mode への移行が既定ではない」と主張した。CNN・NYT・Wikipedia 要約が、マイクロマネジメントの正当化として読まれた批判を記録する。Chesky 自身は後に「founder mode という名は自分のものではない」「創業者以外の CEO にも妥当しうる」と述べた、と Observer が報じた<sup><a href="#s24">24</a></sup><sup><a href="#s45">45</a></sup><sup><a href="#s46">46</a></sup>。</p>
+<p>バッチ大規模化について、本人は2014年時点で「YC は大きくなる必要があり、自分はその役に最適でない」と書いて社長を譲った<sup><a href="#s12">12</a></sup>。その後も応募増と仮想バッチ（2020年以降）により W21 で300社超、W22 で約400社近傍まで拡大した（Dealroom）<sup><a href="#s10">10</a></sup><sup><a href="#s26">26</a></sup>。懸念（質の維持・物理制約）と拡大が同時に残る構造である。拡大を止めたという公開決定は、本ページの範囲では確認できない。</p>
+
+<div class="risk">
+<p><b>欠落データ。</b>Viaweb 売却後の Yahoo! Store 単体売上・利益の時系列、YC 全体の監査済み失敗率（解散・損切りの定義付き）、応募数の年次公式表、本人の現在の YC 持分・キャリー、Bel の利用者数は、公開一次資料では揃っていない。残っている問いに移す。</p>
+</div>
+
+<h2 id="thought"><span class="num">⑥</span>思想と方法<span class="en">Thought and Method</span></h2>
+
+<h3>言語の選択を事業のレバーにする</h3>
+<p>"Beating the Averages" の骨格は、Viaweb が Common Lisp で書かれたことと、競合が同じ速度で機能を出せなかったことの因果である<sup><a href="#s15">15</a></sup>。後の Arc / Bel も、同じ「言語を自分で持つ」志向の延長にある。</p>
+
+<h3>スケールしないことを初期にやる</h3>
+<p>"Do Things That Don't Scale"（2013年）は、手動の顧客獲得や個別対応を、初期の正規手段として置く<sup><a href="#s22">22</a></sup>。YC のバッチ制・ディナー・office hours も、標準化した少額投資と高密度の対面を組み合わせる設計として読める（Livingston の回顧）<sup><a href="#s6">6</a></sup>。</p>
+
+<h3>エッセイを募集チャネルにする</h3>
+<p>Summer Founders 発表は、講演・エッセイの読者を応募者に変換する装置として明示されている<sup><a href="#s5">5</a></sup>。bio の年間約2,500万 PV は、その装置の継続的な流量の自己申告である<sup><a href="#s1">1</a></sup>。</p>
+
+<h3>アイデンティティを小さく保つ</h3>
+<p>"Keep Your Identity Small"（2009年）は、政治や帰属で自己を固めると議論と学習が歪む、と主張する<sup><a href="#s21">21</a></sup>。2013年の多様性論争への反論文も、文脈と指示対象の限定を主題にする<sup><a href="#s42">42</a></sup>。</p>
+
+<h2 id="quotes"><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
+<p>日付と出典が特定できる発言に限った。出典未確定の言い回しは載せない。英語原文を先に置き、必要に応じて訳を添える。</p>
+<div class="q-tabs" id="qtabs"></div>
+<div class="q-list" id="qlist"></div>
+
+<h2 id="open"><span class="num">⑧</span>残っている問い / 出典<span class="en">Open Questions / Sources</span></h2>
+
+<h3>残っている問い</h3>
+<ul>
+<li>Viaweb 買収後の Yahoo! Store（および後継ブランド）の単体売上・営業利益の時系列を、Yahoo! / Verizon の法定開示だけで追えるか。本ページでは取得できなかった。</li>
+<li>YC 全体の「失敗率」を、解散・買収額・ゾンビ企業の定義付きで公式に出せるか。到達率の補数（Broe）以外の監査表は非開示である。</li>
+<li>応募数の年次公式表（2005–2026）は存在するか。バッチ規模と「締切日1分に1件」（2012年）以外は、公開一次で連続系列になっていない。</li>
+<li>本人の YC 持分・キャリー・継続パートナーシップの有無（2019年以降）。公開の持分開示は確認できない。</li>
+<li>S05 の社数が8か9か。Livingston / WIRED / Scaling YC は8、Dealroom 照合は9。突合の差分理由（途中脱落・別カウント）は未確定。</li>
+<li>Arc / Bel のアクティブ利用者数。本番採用の公開リストは HN 以外にほぼ無い。</li>
+</ul>
+
+<ol class="sources">
+<li id="s1">Paul Graham「Bio」（Viaweb 1995、Yahoo 1998、エッセイ 2001・約25M PV/年、YC 2005・3,000社超、Bel 2019、著書、学歴、RISD / Florence） — <a href="https://paulgraham.com/bio.html">https://paulgraham.com/bio.html</a></li>
+<li id="s2">Yahoo! プレスリリース（1998-06-08。Viaweb 買収・約 $49M・約455,000株）キャッシュ — <a href="https://web.cs.wpi.edu/~cs1102/a16/Assignments/Hwk5/cached/Viaweb.html">https://web.cs.wpi.edu/~cs1102/a16/Assignments/Hwk5/cached/Viaweb.html</a></li>
+<li id="s3">The New York Times / Reuters「Yahoo Buying Viaweb」（1998-06-09。約 $49M・455,000株・従業員21人） — <a href="https://www.nytimes.com/1998/06/09/business/company-news-yahoo-buying-viaweb-a-web-marketing-software-maker.html">https://www.nytimes.com/1998/06/09/business/company-news-yahoo-buying-viaweb-a-web-marketing-software-maker.html</a></li>
+<li id="s4">Y Combinator Blog「Paul Graham on Doing Things Right by Accident」（Startup School Radio。1999年退社理由） — <a href="https://www.ycombinator.com/blog/paul-graham-startup-school-radio-interview/">https://www.ycombinator.com/blog/paul-graham-startup-school-radio-interview/</a></li>
+<li id="s5">Paul Graham「Summer Founders Program」（2005-03。How to Start a Startup 後の罪悪感と YC 発表） — <a href="https://paulgraham.com/summerfounder.html">https://paulgraham.com/summerfounder.html</a></li>
+<li id="s6">Y Combinator Blog「Jessica Livingston Shares 9 Things She Learned From Founding YC」（S05・8社、$6,000/創業者） — <a href="https://www.ycombinator.com/blog/jessica-livingston-shares-9-things-she-learned-from-founding-yc/">https://www.ycombinator.com/blog/jessica-livingston-shares-9-things-she-learned-from-founding-yc/</a></li>
+<li id="s7">WIRED「Stars Rise at Startup Summer Camp」（2005-09。8グループ、$6,000/人、持分5–7%） — <a href="https://www.wired.com/2005/09/stars-rise-at-startup-summer-camp/">https://www.wired.com/2005/09/stars-rise-at-startup-summer-camp/</a></li>
+<li id="s8">Y Combinator Blog「The New Deal」（$120k for 7%） — <a href="https://www.ycombinator.com/blog/the-new-deal/">https://www.ycombinator.com/blog/the-new-deal/</a></li>
+<li id="s9">Y Combinator Blog「YC's $500,000 Standard Deal」（2022-01-11。$125k for 7% + $375k MFN SAFE） — <a href="https://www.ycombinator.com/blog/ycs-500-000-standard-deal">https://www.ycombinator.com/blog/ycs-500-000-standard-deal</a></li>
+<li id="s10">Dealroom「YC batch index」（マッチ約5,853/6,162社、ユニコーン126、バッチ別社数） — <a href="https://dealroom.co/yc-batches/">https://dealroom.co/yc-batches/</a></li>
+<li id="s11">Palle Broe「Pulling back the curtain on the magic of Y Combinator」（2025-02-11稿、データ as of 2024-12-10。約4,939社、ユニコーン約4.5%、Series A 約45%、exit 約10%） — <a href="https://palle.substack.com/p/pulling-back-the-curtain-on-the-magic">https://palle.substack.com/p/pulling-back-the-curtain-on-the-magic</a></li>
+<li id="s12">Paul Graham / YC Blog「Sam Altman for President」（2014-02-21） — <a href="https://www.ycombinator.com/blog/sam-altman-for-president">https://www.ycombinator.com/blog/sam-altman-for-president</a></li>
+<li id="s13">Wikipedia「Paul Graham (programmer)」（生年月日・Weymouth・Pittsburgh・学歴・Viaweb・YC・Arc・Bel） — <a href="https://en.wikipedia.org/wiki/Paul_Graham_(programmer)">https://en.wikipedia.org/wiki/Paul_Graham_(programmer)</a></li>
+<li id="s14">Paul Graham「What I Worked On」（2021。RISD foundation、Florence 1年、Interleaf、RISD復帰、1993年退学） — <a href="https://paulgraham.com/worked.html">https://paulgraham.com/worked.html</a></li>
+<li id="s15">Paul Graham「Beating the Averages」（2001。Viaweb と Common Lisp） — <a href="https://paulgraham.com/avg.html">https://paulgraham.com/avg.html</a></li>
+<li id="s16">SEC EDGAR Yahoo! 提出物（Viaweb クローズ 1998-06-10、787,182株、対価約 $48.559M） — <a href="https://www.sec.gov/Archives/edgar/data/1011006/000104746999001705/0001047469-99-001705.txt">https://www.sec.gov/Archives/edgar/data/1011006/000104746999001705/0001047469-99-001705.txt</a></li>
+<li id="s17">Paul Graham「A Plan for Spam」（2002-08） — <a href="https://paulgraham.com/spam.html">https://paulgraham.com/spam.html</a></li>
+<li id="s18">Paul Graham「Hackers and Painters」（2003） — <a href="https://paulgraham.com/hp.html">https://paulgraham.com/hp.html</a></li>
+<li id="s19">Paul Graham「How to Start a Startup」（2005-03） — <a href="https://paulgraham.com/start.html">https://paulgraham.com/start.html</a></li>
+<li id="s20">Paul Graham「Maker's Schedule, Manager's Schedule」（2009-07） — <a href="https://paulgraham.com/makerschedule.html">https://paulgraham.com/makerschedule.html</a></li>
+<li id="s21">Paul Graham「Keep Your Identity Small」（2009-02） — <a href="https://paulgraham.com/identity.html">https://paulgraham.com/identity.html</a></li>
+<li id="s22">Paul Graham「Do Things that Don't Scale」（2013-07） — <a href="https://paulgraham.com/ds.html">https://paulgraham.com/ds.html</a></li>
+<li id="s23">Paul Graham「How to Do Great Work」（2023） — <a href="https://paulgraham.com/greatwork.html">https://paulgraham.com/greatwork.html</a></li>
+<li id="s24">Paul Graham「Founder Mode」（2024-09） — <a href="https://paulgraham.com/foundermode.html">https://paulgraham.com/foundermode.html</a></li>
+<li id="s25">TechCrunch「How Does Y Combinator Scale Y Combinator?」（2012-04-02。応募が締切日に約1分1件、W12=66社） — <a href="https://techcrunch.com/2012/04/02/yc-y-combinator-scaling/">https://techcrunch.com/2012/04/02/yc-y-combinator-scaling/</a></li>
+<li id="s26">Y Combinator Blog「Scaling YC」（初回8社、100社超まで約20バッチ、W21が300社超） — <a href="https://www.ycombinator.com/blog/scaling-yc">https://www.ycombinator.com/blog/scaling-yc</a></li>
+<li id="s27">Paul Graham「How Y Combinator Started」（初期 $200k の内訳） — <a href="https://paulgraham.com/ycstart.html">https://paulgraham.com/ycstart.html</a></li>
+<li id="s28">Y Combinator FAQ（Wayback 2007-02-25。通常約6%、$5,000+$5,000/創業者） — <a href="https://web.archive.org/web/20070225164455/ycombinator.com/faq.html">https://web.archive.org/web/20070225164455/ycombinator.com/faq.html</a></li>
+<li id="s29">Y Combinator 会社ディレクトリ（Dropbox S07、Airbnb W09、Stripe S09、Coinbase S12、DoorDash S13、Reddit S05 等） — <a href="https://www.ycombinator.com/companies">https://www.ycombinator.com/companies</a></li>
+<li id="s30">本サイト既存レポート（Airbnb / Stripe / Dropbox / Coinbase / DoorDash / Reddit / Loopt）との突合。数字の再掲は各レポートを優先 — <a href="../../011_company/index.html">011_company</a></li>
+<li id="s31">Y Combinator Blog「New Standard Deal」（$150k for 7%、W19 から） — <a href="https://www.ycombinator.com/blog/new-standard-deal">https://www.ycombinator.com/blog/new-standard-deal</a></li>
+<li id="s32">Y Combinator Blog「A New Standard Deal」（2020-06-26。W21 から $125k for 7%） — <a href="https://www.ycombinator.com/blog/a-new-standard-deal">https://www.ycombinator.com/blog/a-new-standard-deal</a></li>
+<li id="s33">TechCrunch「Paul Graham claims Sam Altman wasn't fired from Y Combinator」（2024-05-30。2019年の交代経緯） — <a href="https://techcrunch.com/2024/05/30/paul-graham-claims-altman-wasnt-fired-from-y-combinator/">https://techcrunch.com/2024/05/30/paul-graham-claims-altman-wasnt-fired-from-y-combinator/</a></li>
+<li id="s34">Paul Graham「Bel」（2019。Lisp 方言の仕様公開） — <a href="https://paulgraham.com/bel.html">https://paulgraham.com/bel.html</a></li>
+<li id="s35">Paul Graham「Arc's Out」（2008-01-29） — <a href="https://paulgraham.com/arc0.html">https://paulgraham.com/arc0.html</a></li>
+<li id="s36">Paul Graham「What I've Learned from Hacker News」（2009-02。2007-02 開始） — <a href="https://paulgraham.com/hackernews.html">https://paulgraham.com/hackernews.html</a></li>
+<li id="s37">Wikipedia「Hacker News」（2007-02-19 Startup News として開始、Arc で実装） — <a href="https://en.wikipedia.org/wiki/Hacker_News">https://en.wikipedia.org/wiki/Hacker_News</a></li>
+<li id="s38">EcommerceBytes「Yahoo Stores Gets New Name...」（2015-08-03。Luminate / Aabaco） — <a href="https://www.ecommercebytes.com/2015/08/03/yahoo-stores-gets-new-name-user-agreement-advance-spinoff/">https://www.ecommercebytes.com/2015/08/03/yahoo-stores-gets-new-name-user-agreement-advance-spinoff/</a></li>
+<li id="s39">EcommerceBytes「Yahoo Stores Gets Its Name Back...」（2017-09-04。Verizon 下でのブランド変遷） — <a href="https://www.ecommercebytes.com/2017/09/04/yahoo-stores-gets-name-back-dizzying-ride/">https://www.ecommercebytes.com/2017/09/04/yahoo-stores-gets-name-back-dizzying-ride/</a></li>
+<li id="s40">Paul Graham「What Happened to Yahoo」（在籍時の検索軽視の回顧） — <a href="https://paulgraham.com/yahoo.html">https://paulgraham.com/yahoo.html</a></li>
+<li id="s41">Arc Forum / HN 議論（普及阻害要因としてのライブラリ・名前空間等。二次） — <a href="http://arclanguage.org/item?id=21062">http://arclanguage.org/item?id=21062</a></li>
+<li id="s42">Paul Graham「What I Didn't Say」（2013-12。The Information 引用への反論、Female Founders 提案メール） — <a href="https://paulgraham.com/wids.html">https://paulgraham.com/wids.html</a></li>
+<li id="s43">TechCrunch「Paul Graham Responds To Critics...」（2013-12-30。these の編集と The Information の応答） — <a href="https://techcrunch.com/2013/12/30/paul-graham-responds-to-critics/">https://techcrunch.com/2013/12/30/paul-graham-responds-to-critics/</a></li>
+<li id="s44">Fast Company「How, and Why, Y Combinator Got Serious About Diversity」（Female Founders Conference とファネル） — <a href="https://www.fastcompany.com/3042308/how-and-why-y-combinator-got-serious-about-diversity/">https://www.fastcompany.com/3042308/how-and-why-y-combinator-got-serious-about-diversity/</a></li>
+<li id="s45">The New York Times DealBook「Why Silicon Valley Is Talking About Founder Mode」（2024-09-03） — <a href="https://www.nytimes.com/2024/09/03/business/dealbook/founder-mode-chesky-graham.html">https://www.nytimes.com/2024/09/03/business/dealbook/founder-mode-chesky-graham.html</a></li>
+<li id="s46">Observer「Airbnb CEO Brian Chesky Goes All-Out Defending 'Founder Mode'」（2024-09。名称は Graham 側、Chesky の限定） — <a href="https://observer.com/2024/09/airbnbs-brian-chesky-defends-founder-mode-criticisms/">https://observer.com/2024/09/airbnbs-brian-chesky-defends-founder-mode-criticisms/</a></li>
+<li id="s47">Y Combinator「The Y Combinator Deal」（現行 $500k の公式説明） — <a href="https://www.ycombinator.com/deal">https://www.ycombinator.com/deal</a></li>
+<li id="s48">Wired「Yahoo Buys Portal-Puzzle Piece」（1998-06。約 $49M、Graham のコメント、顧客数約1,064） — <a href="https://www.wired.com/1998/06/yahoo-buys-portal-puzzle-piece/">https://www.wired.com/1998/06/yahoo-buys-portal-puzzle-piece/</a></li>
+</ol>
+
+</div>
+
+<script type="application/json" id="facts">
+[
+  {"claim":"生年月日","value":"1964-11-13","unit":"date","as_of":"2026-09-26","source":"https://en.wikipedia.org/wiki/Paul_Graham_(programmer)","confidence":"reported"},
+  {"claim":"Viaweb買収公表額","value":49,"unit":"M USD","as_of":"1998-06-08","source":"https://www.nytimes.com/1998/06/09/business/company-news-yahoo-buying-viaweb-a-web-marketing-software-maker.html","confidence":"reported"},
+  {"claim":"Viaweb買収SEC対価","value":48.559,"unit":"M USD","as_of":"1998-06-10","source":"https://www.sec.gov/Archives/edgar/data/1011006/000104746999001705/0001047469-99-001705.txt","confidence":"reported"},
+  {"claim":"YC初期ファンド","value":200,"unit":"k USD","as_of":"2005-03","source":"https://paulgraham.com/ycstart.html","confidence":"single-source"},
+  {"claim":"S05バッチ社数","value":8,"unit":"社","as_of":"2005-08","source":"https://www.ycombinator.com/blog/jessica-livingston-shares-9-things-she-learned-from-founding-yc/","confidence":"disputed"},
+  {"claim":"初期出資_創業者あたり","value":6000,"unit":"USD","as_of":"2005","source":"https://www.ycombinator.com/blog/jessica-livingston-shares-9-things-she-learned-from-founding-yc/","confidence":"reported"},
+  {"claim":"標準ディール_2014","value":120,"unit":"k USD","as_of":"2014","source":"https://www.ycombinator.com/blog/the-new-deal/","confidence":"reported"},
+  {"claim":"標準ディール_2022","value":500,"unit":"k USD","as_of":"2022-01-11","source":"https://www.ycombinator.com/blog/ycs-500-000-standard-deal","confidence":"reported"},
+  {"claim":"累計投資社数_bio","value":3000,"unit":"社超","as_of":"bio","source":"https://paulgraham.com/bio.html","confidence":"single-source"},
+  {"claim":"累計投資社数_Dealroomマッチ","value":5853,"unit":"社","as_of":"Dealroom公開表","source":"https://dealroom.co/yc-batches/","confidence":"disputed"},
+  {"claim":"ユニコーン数_Dealroom","value":126,"unit":"社","as_of":"Dealroom公開表","source":"https://dealroom.co/yc-batches/","confidence":"disputed"},
+  {"claim":"ユニコーン率_Broe","value":4.5,"unit":"%","as_of":"2024-12-10","source":"https://palle.substack.com/p/pulling-back-the-curtain-on-the-magic","confidence":"estimated"},
+  {"claim":"SeriesA到達率_Broe","value":45,"unit":"%","as_of":"2024-12-10","source":"https://palle.substack.com/p/pulling-back-the-curtain-on-the-magic","confidence":"estimated"},
+  {"claim":"エッセイ年間PV","value":25,"unit":"M pageviews/year","as_of":"bio","source":"https://paulgraham.com/bio.html","confidence":"single-source"},
+  {"claim":"Altman社長就任発表","value":"2014-02-21","unit":"date","as_of":"2014-02-21","source":"https://www.ycombinator.com/blog/sam-altman-for-president","confidence":"reported"},
+  {"claim":"画家志望期間","value":"1990-1993","unit":"years","as_of":"2021","source":"https://paulgraham.com/worked.html","confidence":"reported"},
+  {"claim":"HackerNews開始","value":"2007-02-19","unit":"date","as_of":"2007-02-19","source":"https://en.wikipedia.org/wiki/Hacker_News","confidence":"reported"},
+  {"claim":"Arc公開","value":"2008-01-29","unit":"date","as_of":"2008-01-29","source":"https://paulgraham.com/arc0.html","confidence":"reported"}
+]
+</script>
+
+<script>
+const BORN = '1964-11-13';
+const DIED = null;
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: true };
+  const m = String(x.d).match(/(\d{4})(?:[-.](\d{1,2})(?:[-.](\d{1,2}))?)?/);
+  if (!m) return null;
+  const y = +m[1], mo = m[2] ? +m[2] : null, dd = m[3] ? +m[3] : null;
+  const [by, bm, bd] = BORN.split('-').map(Number);
+  if (DIED) { const dy = +DIED.split('-')[0]; if (y > dy) return { t: '没後' + (y - dy) + '年', out: true }; }
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  let a = y - by;
+  if (mo !== null && (mo < bm || (mo === bm && dd !== null && dd < bd))) a -= 1;
+  return { t: a + '歳', out: false };
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sup(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+}
+
+const ERAS = [
+  '',
+  'I 形成・絵画 1964–1993',
+  'II Viaweb 1995–1999',
+  'III エッセイ 2001–2005',
+  'IV YC運営 2005–2014',
+  'V 交代と執筆 2014–2026',
+];
+
+const TL = [
+ {d:'1964.11.13',e:1,t:'イングランド・ウェイマスに生まれる',
+  w:'Wikipedia が November 13, 1964、Weymouth, Dorset と記す。',
+  y:'以後の満年齢計算の基準日。',
+  f:['Weymouth'],s:[13]},
+ {d:'1968',e:1,t:'家族がピッツバーグへ移住',
+  w:'Wikipedia。Gateway High School に通う。',
+  y:'米国内での学校教育の起点。',s:[13]},
+ {d:'1986',e:1,t:'コーネル大学で哲学の学士',
+  w:'本人 bio と Wikipedia。AB / BA in philosophy。',
+  y:'のちの文章と論点形成の学位。',
+  f:['Cornell'],s:[1,13]},
+ {d:'1988',e:1,t:'ハーバードで計算機科学の修士',
+  w:'Wikipedia。MS in computer science。',
+  y:'PhD への中間点。',s:[13]},
+ {d:'1990',e:1,t:'ハーバードで計算機科学の博士',
+  w:'論文題 The State of a Program and Its Uses。同年に美術学校へ進む。',
+  y:'CS 学位の完了と画家志望の分岐。',
+  f:['PhD'],s:[13,14]},
+ {d:'1990.夏',e:1,t:'RISD の foundation を履修',
+  w:'What I Worked On。BFA プログラムの編入条件。',
+  y:'画家志望期間（1990–1993）の開始。',
+  f:['RISD'],s:[14]},
+ {d:'1990.秋',e:1,t:'フィレンツェ・アカデミア美術学校へ',
+  w:'入場試験を経て約1年在籍。資金が尽きて米国へ戻る。',
+  y:'絵画教育の本格期間。',
+  f:['Florence'],s:[14,1]},
+ {d:'1991',e:1,t:'Interleaf に就職（約1年）',
+  w:'Lisp 方言のスクリプト担当。並行して On Lisp を執筆。',
+  y:'美術と Lisp 著作のあいだの賃金労働。',s:[14]},
+ {d:'1992.秋',e:1,t:'RISD に復帰',
+  w:'What I Worked On。翌年退学。',
+  y:'画家コースの再開と終了への入口。',s:[14]},
+ {d:'1993',e:1,t:'On Lisp 刊行、RISD 退学',
+  w:'Prentice Hall。画家志望期間の終了。',
+  y:'著作家・ハッカー側へ重心が戻る。',
+  f:['On Lisp'],s:[1,14]},
+ {d:'1995',e:2,t:'ANSI Common Lisp 刊行',
+  w:'Prentice Hall。本人 bio。',
+  y:'Lisp 実務書としての第二冊。',s:[1]},
+ {d:'1995',e:2,t:'Robert Morris と Viaweb を創業',
+  w:'ブラウザ上の EC 構築。本人は最初の SaaS と呼ぶ。',
+  y:'事業家フェーズの開始。',
+  f:['Viaweb'],s:[1,15]},
+ {d:'1996頃',e:2,t:'Trevor Blackwell が Viaweb に参加',
+  w:'Wikipedia・本人回顧。Harvard CS 系。',
+  y:'のちの YC 共同創業者セットが揃う。',s:[13,4]},
+ {d:'1998.6.8',e:2,t:'Yahoo! が Viaweb 買収を発表（約 $49M）',
+  w:'約455,000株。NYT・Wired・Yahoo! PR が一致。',
+  y:'出口の確定。',
+  f:['$49M'],s:[2,3,48]},
+ {d:'1998.6.10',e:2,t:'Viaweb 買収クローズ',
+  w:'SEC。787,182株＋オプション122,252株。対価約 $48.559M。製品は Yahoo! Store。',
+  y:'発表額と決算計上の差が残る。',
+  f:['SEC'],s:[16]},
+ {d:'1999',e:2,t:'Yahoo! を退社',
+  w:'約1年勤務後。製品ローンチ済み・不要・時間不足を本人が説明。',
+  y:'大企業オペレーションからの退出。',
+  f:['退社'],s:[4]},
+ {d:'2001',e:3,t:'paulgraham.com でエッセイ開始、Beating the Averages',
+  w:'Viaweb の Lisp 優位論。bio は年間約25M PV。',
+  y:'文章が主要な公的出力になる。',
+  f:['エッセイ'],s:[1,15]},
+ {d:'2002.8',e:3,t:'A Plan for Spam を公開',
+  w:'ベイジアン・フィルタの実務提案。',
+  y:'技術エッセイの代表例。',s:[17]},
+ {d:'2003',e:3,t:'Hackers and Painters エッセイ',
+  w:'翌2004年に O\'Reilly から同名書籍。',
+  y:'ハッカー＝画家の同型論の定着。',s:[18,1]},
+ {d:'2005.3',e:3,t:'How to Start a Startup、続けて Summer Founders 発表',
+  w:'講演後の罪悪感から YC を設立、と本人が書く。',
+  y:'エッセイが案件募集に接続する日付。',
+  f:['YC設立'],s:[5,19,27]},
+ {d:'2005.夏',e:4,t:'第1バッチ（S05）8社を資金提供',
+  w:'Reddit・Loopt 等。$6,000/創業者。持分おおよそ6%。Dealroom は9社表記で諸説。',
+  y:'バッチ投資モデルの実証開始。',
+  f:['8社'],s:[6,7,28,29]},
+ {d:'2007.2.19',e:4,t:'Hacker News（Startup News）開始',
+  w:'Arc の実地試験。2007-08-14 に現名へ。',
+  y:'言語実験とコミュニティ基盤。',
+  f:['HN'],s:[36,37]},
+ {d:'2007.夏',e:4,t:'Dropbox が S07 バッチに参加',
+  w:'YC 会社ページ。シードは当時の標準額。',
+  y:'ストレージ系の代表ポートフォリオ。',s:[29,30]},
+ {d:'2008.1.29',e:4,t:'Arc の初期版を公開',
+  w:'arclanguage.org。本人は未完成だが使用に耐えると書く。',
+  y:'言語普及目標の公開スタート。',
+  f:['Arc'],s:[35]},
+ {d:'2009.2',e:4,t:'Keep Your Identity Small / HN から学んだこと',
+  w:'アイデンティティ縮小論と HN 運営の回顧。',
+  y:'議論設計の明示。',s:[21,36]},
+ {d:'2009.7',e:4,t:'Maker\'s Schedule, Manager\'s Schedule',
+  w:'会議がメーカーの時間を壊す、という時間論。',
+  y:'のちの Founder Mode 言説の前史。',s:[20]},
+ {d:'2009.冬',e:4,t:'Airbnb が W09 バッチに参加',
+  w:'YC 会社ページ。',
+  y:'消費者向け巨大化の代表例。',s:[29,30]},
+ {d:'2009.夏',e:4,t:'Stripe が S09 バッチに参加',
+  w:'YC 会社ページ。Demo Day 非登壇の経緯は既存 Stripe レポート。',
+  y:'開発者向けインフラの代表例。',s:[29,30]},
+ {d:'2012.4',e:4,t:'応募が締切日に約1分1件、と報道',
+  w:'TechCrunch。W12 は66社。エッセイ経路の流量の間接指標。',
+  y:'応募増が運営ボトルネックになる局面。',
+  f:['応募増'],s:[25]},
+ {d:'2012.夏',e:4,t:'Coinbase が S12 バッチに参加',
+  w:'YC 会社ページ・YC ブログ回顧。',
+  y:'暗号資産系の代表例。',s:[29,30]},
+ {d:'2013.7',e:4,t:'Do Things That Don\'t Scale を公開',
+  w:'初期の手作業を正規手段として置く。',
+  y:'YC 助言の定番テキスト化。',s:[22]},
+ {d:'2013.夏',e:4,t:'DoorDash が S13 バッチに参加',
+  w:'YC 会社ページ。',
+  y:'配送系の代表例。',s:[29,30]},
+ {d:'2013.12',e:4,t:'女性創業者・多様性発言が拡散、反論文を公開',
+  w:'What I Didn\'t Say。Female Founders イベント提案メール（2013-12-07）も掲載。',
+  y:'言説コストが発生する局面。',
+  f:['論争'],s:[42,43,44]},
+ {d:'2014.2.21',e:5,t:'Sam Altman を YC 社長に指名',
+  w:'本人ブログ。成長役に自分が最適でないと明記。office hours は継続予定。',
+  y:'運営責任の移譲。',
+  f:['社長交代'],s:[12]},
+ {d:'2014',e:5,t:'標準ディールを約 $120k / 7% に更新',
+  w:'The New Deal。それ以前は約 $17k+$80k SAFE 等。',
+  y:'投資額の段階的引き上げ。',s:[8]},
+ {d:'2016',e:5,t:'家族でイングランドへ移住',
+  w:'What I Worked On。当初1年の予定が継続居住に。',
+  y:'執筆・Bel の地理的背景。',s:[14]},
+ {d:'2019.3',e:5,t:'Altman が YC 社長を退任（OpenAI 専念）',
+  w:'Graham は「解雇ではない」と後に説明。Livingston が二者択一を伝えたとする。',
+  y:'YC 日常運営からの本人側の距離がさらに開く。',s:[33]},
+ {d:'2019.10',e:5,t:'Bel（Lisp 方言）の仕様を公開',
+  w:'本人 bio。それ自体で書かれた Lisp。',
+  y:'言語実験の再開。',
+  f:['Bel'],s:[1,34]},
+ {d:'2020.6.26',e:5,t:'W21 から $125k / 7% の標準ディール',
+  w:'A New Standard Deal。バッチは仮想化で300社超へ。',
+  y:'大規模化とディール更新の同時進行。',s:[32,26]},
+ {d:'2022.1.11',e:5,t:'標準ディールを合計 $500k に拡張',
+  w:'$125k→7% + $375k uncapped MFN SAFE。',
+  y:'現行ディールの骨格。',
+  f:['$500k'],s:[9,47]},
+ {d:'2023',e:5,t:'How to Do Great Work を公開',
+  w:'長期の仕事論。',
+  y:'YC 退任後の中心出力が執筆であることを示す。',s:[23]},
+ {d:'2024.9',e:5,t:'Founder Mode を公開',
+  w:'Chesky の話を受けた経営様式論。マイクロマネジメント正当化として誤読される。',
+  y:'言説の拡散と反発が再発する局面。',
+  f:['Founder Mode'],s:[24,45,46]},
+];
+
+const QUOTES = [
+ {t:'Lisp',q:'If you can use a more powerful language, you\'ll write programs faster, and those programs will be better.（より強力な言語を使えれば、プログラムは速く書け、そのプログラムは良くなる。）',
+  w:'2001年・Beating the Averages',s:[15]},
+ {t:'YC',q:'In How to Start a Startup, I said there could be ten times more startups than there are.... afterwards I felt guilty. So I\'ve figured out a solution to the problem.（スタートアップは今の10倍あってもおかしくない、と書いた。……そのあと罪悪感を覚えた。だから解決策を考えた。）',
+  w:'2005年3月・Summer Founders Program',s:[5]},
+ {t:'退社',q:'The product was safely launched within Yahoo. They didn\'t really need me, and I didn\'t like working there.... I had enough money, but I didn\'t have enough time.（製品は Yahoo 内で安全にローンチ済みだった。彼らはもう私を必要としていなかったし、私はそこで働くのが好きではなかった。……金は足りていたが、時間が足りなかった。）',
+  w:'2016年公開の Startup School Radio 回顧（1999年退社について）',s:[4]},
+ {t:'社長交代',q:'YC needs to grow, and I\'m not the best person to grow it. Sam is what YC needs at this stage in its evolution.（YC は成長する必要があり、それを担う最適任は私ではない。この段階の YC に必要なのは Sam だ。）',
+  w:'2014年2月21日・Sam Altman for President',s:[12]},
+ {t:'多様性',q:'I didn\'t say women can\'t be taught to be hackers. I said YC can\'t do it in 3 months.（女性がハッカーになれないとは言っていない。YC が3か月ではできない、と言った。）',
+  w:'2013年12月・What I Didn\'t Say',s:[42]},
+ {t:'Founder Mode',q:'Till now most people even in Silicon Valley have implicitly assumed that scaling a startup meant switching to manager mode.（これまでシリコンバレーでさえ、スタートアップのスケールとは manager mode への移行だと暗黙に想定されてきた。）',
+  w:'2024年9月・Founder Mode',s:[24]},
+ {t:'スケール',q:'Do things that don\'t scale.（スケールしないことをやれ。）',
+  w:'2013年7月・同名エッセイの標題・主張',s:[22]},
+];
+
+const activeEras = new Set();
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button type="button" class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`;
+}).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.cls ? ' ' + r.cls : ''}${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+bars('chartBatch', [
+  {k:'S05', v:8, sub:'公式系'},
+  {k:'W12', v:66, sub:'', cls:'s2'},
+  {k:'W15', v:110, sub:'', cls:'s3'},
+  {k:'W21', v:336, sub:'仮想化後', cls:'s2'},
+  {k:'W22', v:398, sub:'ピーク寄り'},
+], '社');
+
+bars('chartHit', [
+  {k:'YC ユニコーン', v:4.5, sub:'Broe', cls:'s2'},
+  {k:'一般シードUNI', v:2.5, sub:'同稿比較', est:true},
+  {k:'YC Series A', v:45, sub:'', cls:'s3'},
+  {k:'一般シードA', v:33, sub:'同稿比較', est:true},
+  {k:'YC exit', v:10, sub:'Broe'},
+], '%');
+
+bars('chartDeal', [
+  {k:'2005 (2人)', v:12, sub:'$6k×2', est:true},
+  {k:'2014', v:120, sub:'7%', cls:'s2'},
+  {k:'2019', v:150, sub:'7%', cls:'s3'},
+  {k:'2022合計', v:500, sub:'うち125→7%'},
+], 'k USD');
+</script>
+</body>
+</html>

@@ -3,6 +3,29 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "カニエ・ウェスト",
+    "nameEn": "Kanye West",
+    "born": 1977,
+    "died": null,
+    "country": "US",
+    "role": "音楽家・Yeezy 創業者（法的氏名 Ye）",
+    "field": "founder",
+    "status": "active",
+    "tags": [
+      "Yeezy",
+      "adidas",
+      "ヒップホップ",
+      "ファッション",
+      "創業",
+      "シカゴ"
+    ],
+    "date": "2026-09-26",
+    "summary": "1977年アトランタ生まれ、シカゴ育ち。『The College Dropout』（2004年、初週441,000枚）からグラミー通算24回。2013年に Nike を離れ adidas と Yeezy を拡大し、2021年売上はアナリスト推計約$1.7B。2022年10月25日に adidas が契約を即時終了し、純利益影響は最大€2.5億。",
+    "file": "people/west_kanye_260926.html",
+    "sourceCount": 48,
+    "variant": "life-arc"
+  },
+  {
     "name": "ピーター・ティール",
     "nameEn": "Peter Thiel",
     "born": 1967,

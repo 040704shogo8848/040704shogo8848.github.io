@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>マイケル・セイベル — Justin.tv / Twitch から Y Combinator まで</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --s2:#eb6834; --s3:#1baf7a; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  .bar.s2 .fl{background:var(--s2)}
+  .bar.s3 .fl{background:var(--s3)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / マイケル・セイベル</p>
+
+<header class="top">
+  <h1>マイケル・セイベル — Justin.tv / Twitch から Y Combinator まで</h1>
+  <div class="en">Michael Seibel　1982.10.07 – ／Y Combinator Partner Emeritus、Justin.tv・Socialcam 共同創業者</div>
+  <div class="tags">
+    <span class="tag">Y Combinator</span><span class="tag">Twitch</span><span class="tag">Justin.tv</span>
+    <span class="tag">Socialcam</span><span class="tag">起業</span><span class="tag">アクセラレータ</span>
+  </div>
+  <p class="lead">1982年10月7日、ニューヨーク市ブルックリン生まれ（Wikipedia）。思春期にニュージャージー州イーストブランズウィックへ移り、East Brunswick High School を2000年に卒業。イェール大学で政治学の学士（2005年）。2006年にメリーランド州の米上院選挙キャンペーンで財務ディレクターを務めたあと、ベイ・エリアへ移り Justin.tv（のち Twitch）と Socialcam の共同創業者・CEO を歴任。2013年から Y Combinator に入り、2016–2024年にアクセラレータの運営責任者（CEO / Managing Director）を務めた。本人サイト（as of 2026）は Partner Emeritus・退職済みと記す。</p>
+  <p class="srcnote">作成日 2026年9月26日。数値の基準日は同日。存命人物のため、出典のない私生活・人物評・投資判断は書かない。生年月日は Wikipedia の October 7, 1982。本人サイトは「43歳」（2026年時点）と書くが月日は本人サイトに無い。年表の満年齢は 1982-10-07 からの年差。Justin.tv / Twitch の個人持分・売却時受取額、Kerry 2004年陣営での勤務、Saybrook College 在寮は一次資料で確認できず N/A。メリーランドは出身地ではなく上院選キャンペーンの勤務地である。</p>
+</header>
+
+<h2 id="overview"><span class="num">①</span>概要<span class="en">Overview</span></h2>
+
+<div class="kpi">
+  <div class="card"><div class="k">生年月日</div><div class="v">1982.10.07<small>Brooklyn, NY（Wikipedia）</small></div></div>
+  <div class="card"><div class="k">Socialcam 売却</div><div class="v">約 $60M<small>2012-07・Autodesk</small></div></div>
+  <div class="card"><div class="k">Twitch 買収</div><div class="v">約 $970M<small>2014-08・Amazon 現金</small></div></div>
+  <div class="card"><div class="k">YC 運営責任</div><div class="v">2016–2024<small>CEO / MD・本人声明</small></div></div>
+</div>
+
+<div class="callout">
+<p><b>先に結論を3つ書く。</b></p>
+<p><b>1つ目。曲線は「政治キャンペーン → ライブ動画の共同創業 → モバイル動画の早期売却 → YC の運営責任」である。</b>Justin.tv は2007年3月19日に Justin Kan の24時間ライフキャストとして始まり、一般ユーザー向けのライブ配信プラットフォームへ転換した。共同創業者は Justin Kan、Emmett Shear、Michael Seibel、Kyle Vogt。Seibel は2007–2011年に CEO。2011年6月にゲーム配信の Twitch.tv を分離し、2014年8月に Amazon が約 $970M（現金）で買収した。その直前の2014年8月5日に Justin.tv 本体は閉鎖された。本命だった汎用ライブ動画が、副産物のゲーム縦割に負ける構造である<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup><sup><a href="#s5">5</a></sup>。</p>
+<p><b>2つ目。Socialcam の $60M 売却は「成長が Facebook Open Graph に依存したまま、早く出口を取った」案件である。</b>2011年3月にローンチし、2012年7月17日に Autodesk が約 $60M で買収合意、SEC はクローズ対価を約 $59.5M（2012-08-01）と記す。売却直前の Facebook 月間アクティブはピーク約8,000万から約5,400万へ減少（The Verge・single-source）。買収後、AppData 系の報道では6か月で5%未満（約5百万未満）まで落ちたとされる（Business Insider・single-source）。同時代の Instagram は Facebook が約 $1B で買収（2012年）、Snapchat は2013年6月にプレマネー約 $800M。比較は出口タイミングの検証であり、Seibel 個人の受取額は非開示である<sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s10">10</a></sup>。</p>
+<p><b>3つ目。YC では役職名が組織変更に連動して何度も変わった。</b>2013年パートタイム・パートナー、2014年フルタイム（YC 初のアフリカ系アメリカ人パートナーと報道）、2016年9月に YC Core（＝バッチ運営）の CEO（Altman は YC Group の president）、2019年に Ralston が president になっても本人はアクセラレータの CEO を継続、のちに Managing Director/CEO と呼称。2024年3月に w24 終了をもって Group Partner へ戻り、2025年3月に Partner Emeritus。本人サイト（2026）は「retired from Y Combinator in 2026」と書く<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup><sup><a href="#s13">13</a></sup><sup><a href="#s1">1</a></sup><sup><a href="#s14">14</a></sup>。</p>
+</div>
+
+<div class="note">
+<p><b>一次と食い違う通説。</b>「2004年 Kerry 陣営」「メリーランド州出身」「Reddit 取締役は2016年から」は、本人サイト・Reddit 公式・Yale For Humanity では確認できない。一次は (1) 2006年 Kweisi Mfume 上院選の財務ディレクター、(2) 生地は Brooklyn、(3) Reddit 取締役は2020年6月10日就任、である。Saybrook College 同寮も本稿では N/A とする。</p>
+</div>
+
+<h2 id="timeline"><span class="num">②</span>年表<span class="en">Timeline</span></h2>
+<p>日付が一次情報または複数報道で確定した出来事だけを並べた。各項目は事実、具体、なぜ効いたかの3層である。期のボタンで絞り込める。日付の右は、その時点の満年齢である（基準日 1982-10-07）。</p>
+
+<div class="tl-tools">
+  <input id="tlq" type="search" placeholder="年表を検索（例: Twitch、Socialcam、YC、Reddit）" aria-label="年表を検索">
+  <span class="tl-count" id="tlcount"></span>
+</div>
+<div class="tl-eras" id="tleras"></div>
+<div class="tl" id="tl"></div>
+<div class="tl-empty" id="tlempty">該当する項目がない。</div>
+
+<h2 id="phases"><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+
+<h3>I 形成 — イェールと政治キャンペーン（1982–2006）</h3>
+<p>生年月日は Wikipedia が 1982年10月7日、生地を New York City（Brooklyn）と記す。本人サイトは年齢のみ（43歳、2026年時点）で月日は書かない。思春期にニュージャージー州イーストブランズウィックへ移り、East Brunswick High School を2000年に卒業した、と Wikipedia が書く<sup><a href="#s15">15</a></sup><sup><a href="#s1">1</a></sup>。</p>
+<p>イェール大学で政治学の学士（2005年）。同級生に Justin Kan。Emmett Shear もイェール 2005年。Kyle Vogt は MIT。共同創業セットはこの時期に揃い始める。寮（Saybrook 等）の一次確認は取れなかった（N/A）<sup><a href="#s16">16</a></sup><sup><a href="#s17">17</a></sup>。</p>
+<p>卒業後、2006年に元 NAACP 会長 Kweisi Mfume のメリーランド州米上院選挙で財務ディレクターを務めた。本人サイト・Reddit 公式・Yale For Humanity が一致する。選挙は敗退した。同年、ベイ・エリアへ移る<sup><a href="#s1">1</a></sup><sup><a href="#s18">18</a></sup><sup><a href="#s19">19</a></sup>。</p>
+
+<h3>II Justin.tv — ライフキャストからプラットフォームへ（2006–2011）</h3>
+<p>本人エッセイ "The AM/PM Debate"（2019年）は、Justin.tv を2006年10月に4人で始めた、と書く。エンジニア3人（Emmett Shear、Justin Kan、Kyle Vogt）とビジネス1人（Seibel）。平均年齢23歳。Seibel は共同創業者であり、最初の従業員ではない<sup><a href="#s20">20</a></sup><sup><a href="#s2">2</a></sup>。</p>
+<p>2007年3月19日、Kan が帽子にカメラを付けて24時間ライフキャストを開始した。同年、サイトを一般ユーザー向けのライブ動画プラットフォームへ開いた。Inc.（2009年）は月間約3,100万訪問者、1日あたり約4万放送、月間約5,000万時間の動画視聴と報じ、CEO Seibel の発言を載せる。ピーク月間ユーザーは報道により約3,000万〜3,100万で、定義（訪問者／ユニーク）が揃わないため<strong class="hit">諸説</strong>とする<sup><a href="#s21">21</a></sup><sup><a href="#s22">22</a></sup>。</p>
+<p>バッチは YC W07。本人は「YC Founder: w07, w12」と2024年の声明で記す<sup><a href="#s13">13</a></sup>。</p>
+
+<h3>III Twitch 分離と Justin.tv の終焉（2011–2014）</h3>
+<p>2011年6月6日、E3 で TwitchTV（のち Twitch.tv）を発表。ローンチ時の数字は報道で一致する。月間ユニーク約320万、月間動画視聴約4,500万回、視聴者1人あたり月約4.5時間。AllThingsD は CEO Seibel の「e-sports は収益の大きな部分」「キャッシュドライバー」という発言を載せる。Seibel はこの時点で Justin.tv の CEO であり、分離発表の当事者である。Twitch 専任 CEO はのちに Emmett Shear<sup><a href="#s23">23</a></sup><sup><a href="#s24">24</a></sup><sup><a href="#s1">1</a></sup>。</p>
+<p>2014年2月、親会社名を Justin.tv, Inc. から Twitch Interactive, Inc. へ変更。Twitch 公式は月間アクティブ配信者100万超、月間視聴約450万、月間視聴時間平均約130億分と発表した<sup><a href="#s25">25</a></sup>。</p>
+<p>2014年8月5日、Justin.tv 本体を即時閉鎖。「Twitch に資源を集中するため」と公式が説明する。2014年8月25日、Amazon が Twitch Interactive を約 $970M（現金、オプション等調整後）で買収合意と発表。SEC 8-K / Exhibit 99.1 と Amazon プレスが同額。7月の指標は月間ユニーク5,500万超、視聴時間150億分超、配信者100万超。Seibel はこの時点では日常運営の CEO ではなく、本人は Emmett Shear（CEO）と Kevin Lin（COO）の下で売却が進んだ、と書く。個人持分・受取額は非開示（N/A）<sup><a href="#s4">4</a></sup><sup><a href="#s5">5</a></sup><sup><a href="#s3">3</a></sup><sup><a href="#s1">1</a></sup>。</p>
+
+<h3>IV Socialcam — Facebook 依存の急成長と早期売却（2011–2015）</h3>
+<p>2011年3月7日、Justin.tv から Socialcam（モバイル動画共有）をローンチ。Seibel が CEO。AllThingsD 同日報道。本人インタビュー（Business Insider, 2012年）では、最初の100万ダウンロードに6か月、その後 Justin.tv からスピンアウトした、と述べる。共同創業者として Ammon Bartram、Guillaume Luccisano を Wikipedia が列挙する<sup><a href="#s26">26</a></sup><sup><a href="#s27">27</a></sup><sup><a href="#s28">28</a></sup>。</p>
+<p>成長の経路は Facebook Open Graph の自動投稿だった。The Verge（2012-07-17）は Facebook 上で最も人気のアプリとなり、月間アクティブがピーク約8,000万から売却直前に約5,400万へ減った、と書く（single-source）。Autodesk は2012年7月17日に約 $60M での買収合意を発表。ダウンロード数は1,600万超。SEC は2012年8月1日クローズ、対価約 $59.5M と記す<sup><a href="#s8">8</a></sup><sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup>。</p>
+<p>買収後、Business Insider（2012-11）は Socialcam / Viddy の Facebook 月間ユーザーが約6か月で95%超減少し5百万未満になった、と AppData を引用して報じた（single-source）。Facebook は implicit Open Graph 投稿の扱いを段階的に厳しくした。Socialcam は2015年10月29日にサービス終了（Autodesk 告知・Wayback）<sup><a href="#s9">9</a></sup><sup><a href="#s29">29</a></sup>。</p>
+
+<h3>V Y Combinator — パートナーから運営責任者へ（2013–2024）</h3>
+<p>2013年にパートタイム・パートナー、2014年10月頃にフルタイム。Yale For Humanity と Reddit 公式が年次を一致させる。2016年9月13日、Sam Altman の "YC Changes" で YC Core（バッチ運営）の CEO に就任。Altman は "President of YC Group"。2019年5月20日、Geoff Ralston が president に交代。Seibel は HN 上で「アクセラレータの CEO を継続する」と書いた。のちの公式・本人声明では役職を "Managing Director/CEO of the YC accelerator" と呼ぶ<sup><a href="#s19">19</a></sup><sup><a href="#s18">18</a></sup><sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup><sup><a href="#s13">13</a></sup>。</p>
+<p>本人が署名したバッチ統計では、W21 が319社、S21 が377社。黒人創業者比率は本人が公開した数字で、W15 頃の直近バッチで創業者の4%、W21 で創業者の5%（企業の7%に黒人創業者）、S21 で創業者の4%、W23 で創業者の2%。2015年の "YC Demographics" で応募側の低さを問題として書いた<sup><a href="#s30">30</a></sup><sup><a href="#s31">31</a></sup><sup><a href="#s32">32</a></sup><sup><a href="#s33">33</a></sup><sup><a href="#s34">34</a></sup>。</p>
+<p>2020年6月10日、Reddit 取締役に就任（Alexis Ohanian の後任）。Reddit 公式。本人は Steve Huffman / Ohanian を2007年から知る、と声明する。Dropbox・Kalshi の取締役も本人サイトが列挙する（就任日の一次は本稿では Dropbox / Kalshi は N/A）<sup><a href="#s18">18</a></sup><sup><a href="#s1">1</a></sup>。</p>
+<p>2024年3月15日、w24 終了をもって Managing Director/CEO を降り、Group Partner に戻る声明。2025年3月20日、Garry Tan が Partner Emeritus への移行を発表。本人 LinkedIn / X では w25 が新規投資の最終バッチ、と述べる。本人サイト（2026）は YC から退職した、と書く<sup><a href="#s13">13</a></sup><sup><a href="#s14">14</a></sup><sup><a href="#s1">1</a></sup>。</p>
+
+<h3>VI 助言の実務化 — Startup School と講義</h3>
+<p>2016年の "YC Changes" で Fellowship を拡張した MOOC を "Startup School" と呼ぶ方針が示された。Seibel は YC Library と Startup School 向けに、初期顧客・MVP・プロダクト開発サイクル等の講義・エッセイを残した。代表例は本人サイトの "Product Development Cycle Fundamentals"（2016）、"The Real Product Market Fit"（2016）、"How to Pitch Your Company"（2016）、および YC Library の "How to Get Your First 10 Customers"。標語 "Build something people want" を、オフィスアワーとバッチ運営のチェックリストに落とすのが役割だった、と本人のエッセイ群が示す<sup><a href="#s11">11</a></sup><sup><a href="#s35">35</a></sup><sup><a href="#s36">36</a></sup><sup><a href="#s37">37</a></sup>。</p>
+<p>担当・助言の文脈で名前が出る企業の例。Kyle Vogt（Justin.tv 共同創業者）の Cruise は本人サイトの投資リストと Reddit 発表に載る。Zapier・Ginkgo Bioworks は YC 出身企業であり、Seibel 個人がバッチ担当だったという一次リストは本稿では取れなかった（N/A）。YC 公式ページは「助言した企業の合計時価総額 $192B」「オフィスアワー 6,500・企業 1,745+・21バッチ」等を載せる（時点不明・single-source）<sup><a href="#s1">1</a></sup><sup><a href="#s18">18</a></sup><sup><a href="#s38">38</a></sup>。</p>
+
+<h2 id="numbers"><span class="num">④</span>実績の数字<span class="en">The Numbers</span></h2>
+<p>個人の純資産・持分・売却時受取額の監査済み開示は無い。下表は会社側の公表値と、本人／YC が公開した運営指標に限定する。</p>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>項目</th><th class="num">数値</th><th>時点・条件</th></tr></thead>
+<tbody>
+<tr><td class="name">生年月日</td><td class="num">1982-10-07</td><td>Wikipedia<sup><a href="#s15">15</a></sup></td></tr>
+<tr><td class="name">Yale 卒業</td><td class="num">2005</td><td>政治学 BA。本人 bio<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">Justin.tv 月間訪問（報道）</td><td class="num">約3,100万</td><td>Inc. 2009。諸説あり<sup><a href="#s21">21</a></sup></td></tr>
+<tr><td class="name">Twitch ローンチ時 MAU</td><td class="num">約320万</td><td>2011-06。TechCrunch / AllThingsD<sup><a href="#s23">23</a></sup><sup><a href="#s24">24</a></sup></td></tr>
+<tr><td class="name">Twitch 月間視聴者（2014-02）</td><td class="num">約4,500万</td><td>Twitch 公式<sup><a href="#s25">25</a></sup></td></tr>
+<tr><td class="name">Twitch 月間ユニーク（2014-07）</td><td class="num">5,500万超</td><td>Amazon PR<sup><a href="#s5">5</a></sup></td></tr>
+<tr><td class="name">Amazon→Twitch</td><td class="num">約 $970M</td><td>2014-08-25。現金。SEC / Amazon<sup><a href="#s3">3</a></sup><sup><a href="#s5">5</a></sup></td></tr>
+<tr><td class="name">Socialcam ダウンロード</td><td class="num">1,600万超</td><td>Autodesk PR 2012-07<sup><a href="#s6">6</a></sup></td></tr>
+<tr><td class="name">Socialcam Facebook MAU ピーク</td><td class="num">約8,000万</td><td>The Verge。single-source<sup><a href="#s8">8</a></sup></td></tr>
+<tr><td class="name">Autodesk→Socialcam（発表）</td><td class="num">約 $60M</td><td>2012-07-17<sup><a href="#s6">6</a></sup></td></tr>
+<tr><td class="name">同（SEC 対価）</td><td class="num">約 $59.5M</td><td>2012-08-01 クローズ<sup><a href="#s7">7</a></sup></td></tr>
+<tr><td class="name">YC 助言企業合計時価</td><td class="num">$192B</td><td>YC people ページ。時点不明・single-source<sup><a href="#s38">38</a></sup></td></tr>
+<tr><td class="name">オフィスアワー</td><td class="num">6,500</td><td>同。1,745+社・21バッチ<sup><a href="#s38">38</a></sup></td></tr>
+<tr><td class="name">W21 バッチ規模</td><td class="num">319社</td><td>本人署名ブログ<sup><a href="#s31">31</a></sup></td></tr>
+<tr><td class="name">S21 バッチ規模</td><td class="num">377社</td><td>本人署名ブログ<sup><a href="#s32">32</a></sup></td></tr>
+<tr><td class="name">MD/CEO 期間の資金提供（本人）</td><td class="num">3,000社超</td><td>2024-03 声明。下限表記<sup><a href="#s13">13</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="chart">
+  <div class="cap">出口・比較の金額（公表値）</div>
+  <div class="sub">単位: 百万 USD。Socialcam は発表額。Twitch は Amazon 発表。Instagram / Snapchat は同時代の比較用。</div>
+  <div class="bars" id="chartExit"></div>
+</div>
+
+<div class="chart">
+  <div class="cap">YC が公開した黒人創業者比率（創業者ベース）</div>
+  <div class="sub">単位: %。本人署名のバッチ統計。定義は各投稿に依存。</div>
+  <div class="bars" id="chartDemo"></div>
+</div>
+
+<h2 id="failures"><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
+<p>勝ちと同じ精度で負けを置く。金額と時点を書く。類型は4つ。</p>
+
+<div class="risk">
+<p><b>類型A。本命事業が副産物に負ける（Justin.tv → Twitch）。</b>汎用ライブ動画として始めた Justin.tv は、2011年にゲーム縦割 Twitch を分離したあと、2014年2月に社名まで Twitch Interactive へ置き換えられ、2014年8月5日に本体を閉鎖した。約3週間後の8月25日に Amazon が約 $970M で Twitch を買収。閉鎖時点の Justin.tv 単体の評価額・最終月間ユーザーは公式非開示（N/A）。構造としては、ピーク時に月間約3,000万規模と報じられた本命プラットフォームが、副産物の縦割に資源を吸い取られて消えた、という順序である。Seibel は CEO を2011年まで務め、Twitch ローンチ時の公的な顔だったが、売却時の日常運営は Shear / Lin 側である<sup><a href="#s4">4</a></sup><sup><a href="#s5">5</a></sup><sup><a href="#s21">21</a></sup><sup><a href="#s1">1</a></sup>。</p>
+</div>
+
+<div class="risk">
+<p><b>類型B。成長が単一プラットフォームの仕様に依存する（Socialcam × Facebook Open Graph）。</b>The Verge は売却直前に Facebook MAU がピーク約8,000万→約5,400万へ減っていた、と書く。Business Insider は買収後約6か月で Facebook 上の月間ユーザーが5百万未満（95%超減）になった、と AppData を引用する。Facebook の counting 変更と spam 抑制が同時に起きた、という説明が同記事にある。Autodesk は約 $60M（SEC 約 $59.5M）を払ったが、サービスは2015年10月に終了した。ユーザー基盤を資産として残せなかった出口である<sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s29">29</a></sup>。</p>
+</div>
+
+<div class="risk">
+<p><b>類型C。早く売った判断の機会費用（Socialcam $60M vs 同時代の動画・写真アプリ）。</b>比較の基準は次のとおり。Instagram は Facebook が2012年4月に約 $1B（現金＋株式）で買収合意。Snapchat は2013年6月にプレマネー約 $800M（シリーズB、$60M 調達）。Facebook が Snapchat に約 $1B〜$3B を提示したという報道は2013年後半（諸説・未確認オファー）。Socialcam の $60M は、Instagram の約1/17、Snapchat 2013年評価の約1/13。製品カテゴリ（短尺動画／写真）は近いが、ユーザー質・成長持続・収益化は別物であり、単純な「取りこぼし」とは書けない。ただし<strong class="hit">プラットフォーム依存のピークで売った</strong>という事実と、売却後のユーザー崩壊は同時に成立する。個人受取額は N/A<sup><a href="#s6">6</a></sup><sup><a href="#s10">10</a></sup><sup><a href="#s39">39</a></sup><sup><a href="#s40">40</a></sup>。</p>
+</div>
+
+<div class="risk">
+<p><b>類型D。バッチ大規模化と選別・品質の緊張（YC 運営期）。</b>本人署名では W21=319社、S21=377社。2024年声明は「Demo Day がバッチあたり約5億ドル規模の資金調達を生む」「応募が10倍」等を列挙する。大規模化は到達企業の絶対数を増やす一方、1社あたりのパートナー時間を薄くする。YC が公開する「失敗率」（バッチ全体の倒産・解散割合）の公式時系列は本稿では見つからず <strong class="hit">N/A</strong>。二次分析（例: 成熟バッチのユニコーン率約4.5%）は一般シードとの比較に使われるが、Seibel 個人の選別成績を分離する一次はない。本人は "YC Has Changed"（2018）でバッチ拡大への問いを正面から扱った<sup><a href="#s31">31</a></sup><sup><a href="#s32">32</a></sup><sup><a href="#s13">13</a></sup><sup><a href="#s41">41</a></sup>。</p>
+</div>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>類型</th><th>案件</th><th>金額・時点</th><th>観測できる帰結</th></tr></thead>
+<tbody>
+<tr><td class="name">A 本命敗北</td><td>Justin.tv 閉鎖</td><td>2014-08-05。本体評価 N/A</td><td>Twitch が $970M で売却、本体は消滅</td></tr>
+<tr><td class="name">B 平台依存</td><td>Socialcam MAU</td><td>2012ピーク〜同年末</td><td>FB上で95%超減（報道・single-source）</td></tr>
+<tr><td class="name">C 早期出口</td><td>Socialcam 売却</td><td>約 $60M / 2012-07</td><td>IG $1B・Snap ~$800M（2013）と桁差</td></tr>
+<tr><td class="name">D 大規模化</td><td>YC バッチ</td><td>W21 319 / S21 377</td><td>公式失敗率 N/A。選別密度の緊張</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="ideas"><span class="num">⑥</span>思想と方法<span class="en">Ideas and Method</span></h2>
+<p>本人の語を一次から拾う。外部の評価語は使わない。</p>
+
+<h3>プロダクト開発の手続き</h3>
+<p>"Product Development Cycle Fundamentals"（2016）で、Justin.tv / Socialcam 以前は決定を書き残さない会議・仕様の食い違いが常態だった、と自己批判する。サイクルを明示し、意思決定を文書化する、という実務に落とす<sup><a href="#s35">35</a></sup>。</p>
+
+<h3>プロダクト／マーケットフィットの誤認</h3>
+<p>"The Real Product Market Fit"（2016）は、フィット前に採用・バーン増・最適化を始める誤りを扱う。フィットの定義を感覚ではなく指標側に置く、という論旨である<sup><a href="#s36">36</a></sup>。</p>
+
+<h3>初期顧客は「知っている人」から</h3>
+<p>YC Library "How to Get Your First 10 Customers" および同趣旨の Startup School 講義で、最初の顧客は個人ネットワークから取り、問題を強く持ち、MVP に付き合って支払い可能な相手を選ぶ、と述べる。qualification のための質問を4–5個用意する、という手順を示す<sup><a href="#s37">37</a></sup>。</p>
+
+<h3>多様性は応募パイプラインの問題として測る</h3>
+<p>"YC Demographics"（2015）で、応募サンプルの女性11.8%、Black または Hispanic 約3%に対し、直近バッチの Black 創業者4%等を並べ、「応募側の比率が人口に対して低い」と書いた。差別の有無を応募と採択の差で測る、という方法である<sup><a href="#s30">30</a></sup>。</p>
+
+<h3>YC 拡大への応答</h3>
+<p>"YC Has Changed"（2018）は、リーダーシップ変更・バッチ大型化・投資額増・Growth・MOOC を列挙し、創業者側の疑義に答える形で書かれた。大規模化を否定せず、改善点を列挙する文体である<sup><a href="#s41">41</a></sup>。</p>
+
+<h2 id="quotes"><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
+<p>日付・場所・出典が確定できる発言だけを置く。英語は原文＋訳。</p>
+<div class="q-tabs" id="qtabs"></div>
+<div class="q-list" id="qlist"></div>
+
+<h2 id="sources"><span class="num">⑧</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+<li id="s1"><a href="https://www.michaelseibel.com/">Michael Seibel — 本人サイト（bio・Formal Bio）。Socialcam $60m、Twitch $970m、2006 Senate campaign、YC 経歴</a></li>
+<li id="s2"><a href="https://en.wikipedia.org/wiki/Justin.tv">Wikipedia — Justin.tv（創業者4名・2007-03-19 ローンチ・2014-08-05 閉鎖）</a></li>
+<li id="s3"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000101872414000034/amzn-2014augustxex991.htm">SEC — Amazon Exhibit 99.1（2014-08-25）。Twitch 約 $970M 現金</a></li>
+<li id="s4"><a href="https://techcrunch.com/2014/08/05/justin-tv-shuts-down-to-let-the-company-focus-on-twitch/">TechCrunch — Justin.tv Shuts Down（2014-08-05）。公式声明引用</a></li>
+<li id="s5"><a href="https://press.aboutamazon.com/2014/8/amazon-com-to-acquire-twitch">Amazon Press Center — Amazon.com to Acquire Twitch（2014-08-25）</a></li>
+<li id="s6"><a href="https://investors.autodesk.com/news-releases/news-release-details/autodesk-signs-agreement-acquire-socialcam">Autodesk IR — Signs Agreement to Acquire Socialcam（2012-07-17）。約 $60M、DL 1,600万超</a></li>
+<li id="s7"><a href="https://www.sec.gov/Archives/edgar/data/769397/000076939712000016/R23.htm">SEC — Autodesk。Socialcam 取得対価約 $59.5M（2012-08-01）</a></li>
+<li id="s8"><a href="https://www.theverge.com/2012/7/17/3164664/facebooks-top-app-socialcam-sells-to-autodesk-for-60-million">The Verge — Socialcam sells to Autodesk（2012-07-17）。FB MAU ピーク約80M→約54M</a></li>
+<li id="s9"><a href="https://www.businessinsider.com/socialcam-viddy-user-numbers-2012-11">Business Insider — Socialcam, Viddy User Numbers Implode（2012-11）。6か月で95%超減</a></li>
+<li id="s10"><a href="https://www.forbes.com/sites/jjcolao/2013/06/24/snapchat-raises-60-million-from-ivp-at-800-million-valuation/">Forbes — Snapchat Series B。プレマネー約 $800M（2013-06）</a></li>
+<li id="s11"><a href="https://www.ycombinator.com/blog/yc-changes">Y Combinator — YC Changes by Sam Altman（2016-09-13）。Seibel = CEO of YC Core</a></li>
+<li id="s12"><a href="https://www.ycombinator.com/blog/geoff-ralston-for-president">Y Combinator — Geoff Ralston for President（2019-05-20）</a></li>
+<li id="s13"><a href="https://www.ycombinator.com/blog/michael-seibel-group-partner">Y Combinator — Michael Seibel on his next ten years at YC（2024-03-15）。MD/CEO 8年・Group Partner 復帰</a></li>
+<li id="s14"><a href="https://www.ycombinator.com/blog/michael-seibel-partner-emeritus/">Y Combinator — Michael Seibel Partner Emeritus（2025-03-20）by Garry Tan</a></li>
+<li id="s15"><a href="https://en.wikipedia.org/wiki/Michael_Seibel">Wikipedia — Michael Seibel（生年月日・Brooklyn・East Brunswick・経歴概要）</a></li>
+<li id="s16"><a href="https://news.yale.edu/2016/03/02/start-stars-say-collaboration-commitment-and-communication-are-heart-their-success">Yale News — Kan &amp; Seibel 講演回顧（2016-03-02）。Yale '05・政治キャンペーン後に参加</a></li>
+<li id="s17"><a href="https://www.yalealumnimagazine.com/blog_posts/1875-justin-kan-05-emmett-shear-05-billion-dollar-men">Yale Alumni Magazine — Kan / Shear / Seibel（2014-08-27）</a></li>
+<li id="s18"><a href="https://redditinc.com/news/reddit-welcomes-michael-seibel-to-board-of-directors">Reddit Inc. — Welcomes Michael Seibel to Board（2020-06-10）。Mfume キャンペーン・YC 年次</a></li>
+<li id="s19"><a href="https://forhumanity.yale.edu/michael-seibel-05">Yale For Humanity — Michael Seibel ’05。2013 part-time / 2014 full-time</a></li>
+<li id="s20"><a href="https://www.michaelseibel.com/">Michael Seibel — Essays 一覧に "The AM/PM Debate"（2019-11-19）。4共同創業者・平均23歳の記述（本文抜粋は同サイト掲載）</a></li>
+<li id="s21"><a href="https://www.inc.com/30under30/2009/profile_justintv.html">Inc. 30 Under 30 — JustinTV Profile（2009）。月間約3,100万訪問・Seibel CEO 発言</a></li>
+<li id="s22"><a href="https://en.wikipedia.org/wiki/Justin_Kan">Wikipedia — Justin Kan。Justin.tv 月間3,000万超の記述</a></li>
+<li id="s23"><a href="https://techcrunch.com/2011/06/06/justin-tv-launches-live-streamed-video-gaming-portal-twitchtv/">TechCrunch — Justin.tv Debuts TwitchTV（2011-06-06）。3.2M uniques / 45M views</a></li>
+<li id="s24"><a href="https://allthingsd.com/20110606/justin-tv-broadcasts-gamers-every-move-on-twitchtv/">AllThingsD — Justin.tv Broadcasts Gamers on TwitchTV（2011-06-06）。Seibel CEO 発言</a></li>
+<li id="s25"><a href="https://blog.twitch.tv/en/2014/02/09/twitch-hits-one-million-monthly-active-broadcasters-21dd72942b32/">Twitch Blog — 1M broadcasters / Twitch Interactive 社名変更（2014-02）</a></li>
+<li id="s26"><a href="https://allthingsd.com/20110307/justin-tv-launches-socialcam-mobile-video-sharing-app/">AllThingsD — Justin.tv Launches Socialcam（2011-03-07）</a></li>
+<li id="s27"><a href="https://www.businessinsider.com/how-mobile-video-app-socialcam-used-facebook-to-explode-to-75-million-users-in-15-months-2012-6">Business Insider — Socialcam / Facebook 成長インタビュー（2012-06）。Seibel 発言</a></li>
+<li id="s28"><a href="https://en.wikipedia.org/wiki/Socialcam">Wikipedia — Socialcam（ローンチ 2011-03-07・終了 2015-10）</a></li>
+<li id="s29"><a href="https://web.archive.org/web/20151021204136/https://socialcam.com/">Wayback — socialcam.com 閉鎖告知（2015-10-29 終了）</a></li>
+<li id="s30"><a href="https://www.ycombinator.com/blog/yc-demographics">Y Combinator — YC Demographics by Michael Seibel（2015-01-14）</a></li>
+<li id="s31"><a href="https://www.ycombinator.com/blog/w21-batch-stats">Y Combinator — YC Winter 2021 Batch Stats by Michael Seibel（2021-03-23）</a></li>
+<li id="s32"><a href="https://www.ycombinator.com/blog/yc-summer-2021-batch-stats/">Y Combinator — YC Summer 2021 Batch Stats by Michael Seibel（2021-09-02）</a></li>
+<li id="s33"><a href="https://www.ycombinator.com/blog/meet-the-yc-summer-2022-batch">Y Combinator — Meet the YC Summer 2022 Batch（Black 3% 等）</a></li>
+<li id="s34"><a href="https://www.ycombinator.com/blog/meet-the-yc-winter-2023-batch">Y Combinator — Meet the YC Winter 2023 Batch by Michael Seibel（2023-04-05）。Black 2%</a></li>
+<li id="s35"><a href="https://www.michaelseibel.com/">Michael Seibel — Product Development Cycle Fundamentals（2016-08-02・Essays 一覧）</a></li>
+<li id="s36"><a href="https://www.michaelseibel.com/">Michael Seibel — The Real Product Market Fit（2016-06-27・Essays 一覧）</a></li>
+<li id="s37"><a href="https://www.ycombinator.com/library/SF-how-to-get-your-first-10-customers">Y Combinator Library — How to Get Your First 10 Customers</a></li>
+<li id="s38"><a href="https://www.ycombinator.com/people/michael-seibel">Y Combinator — Michael Seibel people page（$192B・6,500 OH 等）</a></li>
+<li id="s39"><a href="https://about.fb.com/news/2012/04/facebook-to-acquire-instagram/">Meta (Facebook) — Facebook to Acquire Instagram（2012-04-09）。約 $1B</a></li>
+<li id="s40"><a href="https://www.theguardian.com/technology/2013/nov/13/snapchat-facebook-buyout-offer-rejected">The Guardian — Snapchat rejects reported Facebook offer（2013-11）。$3bn 報道・諸説</a></li>
+<li id="s41"><a href="https://www.michaelseibel.com/">Michael Seibel — YC Has Changed（2018-09-28・Essays 一覧）</a></li>
+<li id="s42"><a href="https://news.ycombinator.com/item?id=19961797">Hacker News — Geoff Ralston taking over。Seibel「CEO 継続」コメント（2019）</a></li>
+<li id="s43"><a href="https://blog.twitch.tv/en/2014/08/25/a-letter-from-the-ceo-august-25-2014-b34c1cfbb099/">Twitch Blog — A Letter from the CEO（2014-08-25）。Shear</a></li>
+
+<li id="s44"><a href="https://techcrunch.com/2012/04/30/socialcam-nabs-angel-funding-from-the-a-list-yuri-milner-tim-draper-laurene-powell-jobs-and-more/">TechCrunch — Socialcam Angel Funding（2012-04-30）</a></li>
+<li id="s45"><a href="https://www.wired.com/story/plaintext-y-combinator-michael-seibel-startup-whisperer/">WIRED — YC Managing Director step-down 文脈（Tan / Ralston）</a></li>
+
+</ol>
+
+<p class="srcnote" style="margin-top:28px">残っている問い: (1) Justin.tv / Twitch 売却時の Seibel 個人持分と受取額。(2) Socialcam 売却時の個人受取額と希薄化後の持分。(3) Kerry 2004年陣営での勤務の有無（一次は Mfume 2006のみ）。(4) Saybrook College 同寮の一次確認。(5) YC 全体の公式失敗率の時系列。(6) Dropbox / Kalshi 取締役の就任日。(7) Zapier・Ginkgo を本人がバッチ担当した一次リスト。</p>
+</div>
+
+<script type="application/json" id="facts">
+[
+  {"claim":"生年月日","value":"1982-10-07","unit":"date","as_of":"Wikipedia","source":"https://en.wikipedia.org/wiki/Michael_Seibel","confidence":"reported"},
+  {"claim":"Socialcam買収発表額","value":60,"unit":"M USD","as_of":"2012-07-17","source":"https://investors.autodesk.com/news-releases/news-release-details/autodesk-signs-agreement-acquire-socialcam","confidence":"reported"},
+  {"claim":"Socialcam買収SEC対価","value":59.5,"unit":"M USD","as_of":"2012-08-01","source":"https://www.sec.gov/Archives/edgar/data/769397/000076939712000016/R23.htm","confidence":"reported"},
+  {"claim":"Twitch買収額","value":970,"unit":"M USD","as_of":"2014-08-25","source":"https://press.aboutamazon.com/2014/8/amazon-com-to-acquire-twitch","confidence":"reported"},
+  {"claim":"Twitch_2014-07_uniques","value":55,"unit":"M unique visitors/month","as_of":"2014-07","source":"https://press.aboutamazon.com/2014/8/amazon-com-to-acquire-twitch","confidence":"reported"},
+  {"claim":"Justin.tv月間訪問_Inc2009","value":31,"unit":"M visitors/month","as_of":"2009","source":"https://www.inc.com/30under30/2009/profile_justintv.html","confidence":"disputed"},
+  {"claim":"TwitchローンチMAU","value":3.2,"unit":"M monthly uniques","as_of":"2011-06","source":"https://techcrunch.com/2011/06/06/justin-tv-launches-live-streamed-video-gaming-portal-twitchtv/","confidence":"reported"},
+  {"claim":"Socialcam_FB_MAU_peak","value":80,"unit":"M MAU","as_of":"2012","source":"https://www.theverge.com/2012/7/17/3164664/facebooks-top-app-socialcam-sells-to-autodesk-for-60-million","confidence":"single-source"},
+  {"claim":"Socialcam_FB_MAU_post_sale","value":5,"unit":"M MAU under","as_of":"2012-11","source":"https://www.businessinsider.com/socialcam-viddy-user-numbers-2012-11","confidence":"single-source"},
+  {"claim":"YC_W21_companies","value":319,"unit":"companies","as_of":"2021-03-23","source":"https://www.ycombinator.com/blog/w21-batch-stats","confidence":"reported"},
+  {"claim":"YC_S21_companies","value":377,"unit":"companies","as_of":"2021-09-02","source":"https://www.ycombinator.com/blog/yc-summer-2021-batch-stats/","confidence":"reported"},
+  {"claim":"YC_W21_Black_founders","value":5,"unit":"% of founders","as_of":"2021-03","source":"https://www.ycombinator.com/blog/w21-batch-stats","confidence":"reported"},
+  {"claim":"YC_advice_portfolio_value","value":192,"unit":"B USD","as_of":"YC people page","source":"https://www.ycombinator.com/people/michael-seibel","confidence":"single-source"},
+  {"claim":"Reddit_board_appointment","value":"2020-06-10","unit":"date","as_of":"2020-06-10","source":"https://redditinc.com/news/reddit-welcomes-michael-seibel-to-board-of-directors","confidence":"reported"},
+  {"claim":"YC_CEO_appointment","value":"2016-09-13","unit":"date","as_of":"2016-09-13","source":"https://www.ycombinator.com/blog/yc-changes","confidence":"reported"}
+]
+</script>
+
+<script>
+const BORN = '1982-10-07';
+const DIED = null;
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: true };
+  const m = String(x.d).match(/(\d{4})(?:[-.](\d{1,2})(?:[-.](\d{1,2}))?)?/);
+  if (!m) return null;
+  const y = +m[1], mo = m[2] ? +m[2] : null, dd = m[3] ? +m[3] : null;
+  const [by, bm, bd] = BORN.split('-').map(Number);
+  if (DIED) { const dy = +DIED.split('-')[0]; if (y > dy) return { t: '没後' + (y - dy) + '年', out: true }; }
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  let a = y - by;
+  if (mo !== null && (mo < bm || (mo === bm && dd !== null && dd < bd))) a -= 1;
+  return { t: a + '歳', out: false };
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sup(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+}
+
+const ERAS = [
+  '',
+  'I 形成 1982–2006',
+  'II Justin.tv 2006–2011',
+  'III Twitch 2011–2014',
+  'IV Socialcam 2011–2015',
+  'V YC 2013–2026',
+];
+
+const TL = [
+ {d:'1982.10.07',e:1,t:'ニューヨーク市ブルックリンに生まれる',
+  w:'Wikipedia が October 7, 1982、Brooklyn と記す。本人サイトは月日なし・年齢のみ。',
+  y:'以後の満年齢計算の基準日。',
+  f:['Brooklyn'],s:[15,1]},
+ {d:'2000',e:1,t:'East Brunswick High School を卒業',
+  w:'Wikipedia。ニュージャージー州イーストブランズウィック。',
+  y:'高等教育への入口。',s:[15]},
+ {d:'2005',e:1,t:'イェール大学で政治学の学士',
+  w:'本人 bio・YC・Yale For Humanity。同級生に Justin Kan。Emmett Shear も Yale ’05。',
+  y:'共同創業ネットワークの形成。',
+  f:['Yale BA'],s:[1,19,16]},
+ {d:'2006',e:1,t:'Mfume 上院選の財務ディレクター',
+  w:'メリーランド州。Kweisi Mfume。本人サイト・Reddit 公式が一致。選挙は敗退。',
+  y:'政治オペレーションの実務経験。Kerry 2004 は一次で確認できず。',
+  f:['Senate'],s:[1,18,19]},
+ {d:'2006',e:1,t:'ベイ・エリアへ移住',
+  w:'本人サイト「2006年から Bay Area」。',
+  y:'スタートアップ創業の地理的起点。',s:[1]},
+ {d:'2006.10',e:2,t:'Justin.tv を4人で開始',
+  w:'本人エッセイ The AM/PM Debate。Kan / Shear / Vogt / Seibel。平均年齢23歳。',
+  y:'共同創業者としての参加。従業員ではない。',
+  f:['共同創業'],s:[20,2]},
+ {d:'2007.3.19',e:2,t:'Justin.tv ライフキャスト開始',
+  w:'Kan が帽子カメラで24時間配信。Wikipedia。',
+  y:'製品の公開実験の開始。',
+  f:['lifecast'],s:[2]},
+ {d:'2007',e:2,t:'一般ユーザー向けライブ動画プラットフォームへ転換',
+  w:'ライフキャストから誰でも配信できるサイトへ。YC W07 バッチ。',
+  y:'コンテンツ会社からプラットフォームへ。',
+  f:['W07'],s:[2,13,16]},
+ {d:'2007',e:2,t:'Seibel が Justin.tv CEO に（〜2011）',
+  w:'本人 bio。2007–2011年 CEO。',
+  y:'事業側の責任者としての局面。',
+  f:['CEO'],s:[1,18]},
+ {d:'2009',e:2,t:'Inc. が月間約3,100万訪問と報じる',
+  w:'1日約4万放送、月間約5,000万時間。Seibel「最も使われるライブ動画」発言。',
+  y:'汎用ライブのピーク指標（諸説の基準点）。',
+  f:['31M'],s:[21]},
+ {d:'2010.秋',e:4,t:'Socialcam の着想（本人インタビュー）',
+  w:'Business Insider。Justin.tv 社内でモバイル動画の非ライブ課題から。',
+  y:'次プロダクトの種。',s:[27]},
+ {d:'2011.3.7',e:4,t:'Socialcam をローンチ',
+  w:'AllThingsD。iPhone / Android。Seibel が CEO。',
+  y:'モバイル短尺動画への展開。',
+  f:['Socialcam'],s:[26,28]},
+ {d:'2011.6.6',e:3,t:'TwitchTV を E3 で発表',
+  w:'月間ユニーク約320万、動画視聴約4,500万回、視聴者月約4.5時間。Seibel が CEO として説明。',
+  y:'ゲーム縦割の分離。本命と副産物の分岐点。',
+  f:['Twitch'],s:[23,24]},
+ {d:'2011',e:4,t:'Socialcam を Justin.tv からスピンアウト',
+  w:'本人インタビュー。最初の100万DLに約6か月後。YC W12。',
+  y:'独立会社としての成長局面。',
+  f:['W12'],s:[27,13]},
+ {d:'2011',e:2,t:'Justin.tv CEO を退き Socialcam へ',
+  w:'本人 bio。Justin.tv/Twitch の CEO 期間は 2007–2011。',
+  y:'Twitch 日常運営は Shear 側へ移る。',s:[1]},
+ {d:'2012.7.17',e:4,t:'Autodesk が Socialcam を約 $60M で買収合意',
+  w:'Autodesk IR。DL 1,600万超。The Verge は FB MAU ピーク約80M→約54M と書く。',
+  y:'早期出口の確定。',
+  f:['$60M'],s:[6,8]},
+ {d:'2012.8.1',e:4,t:'Socialcam 買収クローズ（約 $59.5M）',
+  w:'Autodesk SEC。発表額との差は最終計上。',
+  y:'現金出口の完了。',
+  f:['SEC'],s:[7]},
+ {d:'2012.11',e:4,t:'Socialcam の FB ユーザー急落が報道',
+  w:'Business Insider。約6か月で95%超減、5百万未満。Open Graph / counting 変更。',
+  y:'プラットフォーム依存の帰結が数値化される。',
+  f:['平台依存'],s:[9]},
+ {d:'2013',e:5,t:'Y Combinator のパートタイム・パートナーに',
+  w:'Yale For Humanity・Reddit 公式。',
+  y:'運営側への入口。',
+  f:['YC PT'],s:[19,18]},
+ {d:'2013.6',e:4,t:'Snapchat がプレマネー約 $800M で調達',
+  w:'Forbes。Socialcam 売却約1年後の同カテゴリ比較点。',
+  y:'早期売却の機会費用を測る基準。',
+  f:['Snap $800M'],s:[10]},
+ {d:'2014.2',e:3,t:'親会社名を Twitch Interactive に変更',
+  w:'Twitch 公式。月間視聴者約4,500万、配信者100万超。',
+  y:'社名レベルで副産物が本命を置換。',
+  f:['社名変更'],s:[25]},
+ {d:'2014.10',e:5,t:'YC フルタイム・パートナーに',
+  w:'Reddit 公式「2014年に partner」。初のアフリカ系アメリカ人パートナーと報道される。',
+  y:'YC 日常の正社員化。',
+  f:['フルタイム'],s:[18,15]},
+ {d:'2014.8.5',e:3,t:'Justin.tv を即時閉鎖',
+  w:'TechCrunch。Twitch に資源集中。7年のライブ動画を終了。',
+  y:'本命事業の終了。',
+  f:['閉鎖'],s:[4]},
+ {d:'2014.8.25',e:3,t:'Amazon が Twitch を約 $970M で買収合意',
+  w:'Amazon PR / SEC。現金。7月ユニーク5,500万超。Shear CEO。',
+  y:'出口の確定。Seibel 個人受取は非開示。',
+  f:['$970M'],s:[5,3,43]},
+ {d:'2015.1.14',e:5,t:'YC Demographics を公開',
+  w:'本人署名。直近バッチの Black 創業者4%等。応募パイプラインの低さを指摘。',
+  y:'多様性を数値で測る公式化。',
+  f:['demographics'],s:[30]},
+ {d:'2015.10.29',e:4,t:'Socialcam サービス終了',
+  w:'Autodesk 告知（Wayback）。2015-10-29。',
+  y:'買収後プロダクトの消滅。',s:[29,28]},
+ {d:'2016.9.13',e:5,t:'YC Core（バッチ運営）の CEO に就任',
+  w:'Altman「YC Changes」。Altman は YC Group President。',
+  y:'アクセラレータ運営の責任者。',
+  f:['YC CEO'],s:[11]},
+ {d:'2018.9.28',e:5,t:'YC Has Changed を公開',
+  w:'本人エッセイ。バッチ拡大・投資額・MOOC 等への応答。',
+  y:'大規模化批判への一次応答。',s:[41]},
+ {d:'2019.5.20',e:5,t:'Ralston が YC President に。Seibel は CEO 継続',
+  w:'YC ブログ。HN で本人が CEO 継続と明言。',
+  y:'役職名の二重構造（President / CEO）が続く。',
+  f:['Ralston'],s:[12,42]},
+ {d:'2019.11.19',e:5,t:'The AM/PM Debate を公開',
+  w:'本人エッセイ。共同創業初期の役割分担の回顧。',
+  y:'オペレーターとしての自己史の文書化。',s:[20]},
+ {d:'2020.6.10',e:5,t:'Reddit 取締役に就任',
+  w:'Reddit 公式。Ohanian 後任。本人声明。',
+  y:'YC 外のガバナンス役。',
+  f:['Reddit'],s:[18]},
+ {d:'2021.3.23',e:5,t:'W21 バッチ統計を公開（319社）',
+  w:'本人署名。Black founders 5%（企業の7%）。',
+  y:'大規模バッチの公式スナップショット。',
+  f:['319社'],s:[31]},
+ {d:'2021.9.2',e:5,t:'S21 バッチ統計を公開（377社）',
+  w:'本人署名。Black founders 4%。',
+  y:'バッチ規模のピーク寄りの記録。',
+  f:['377社'],s:[32]},
+ {d:'2023.4.5',e:5,t:'W23 バッチ統計を公開（282社）',
+  w:'本人署名。応募2万超。Black founders 2%。',
+  y:'多様性格差の再計測。',s:[34]},
+
+ {d:'2005',e:1,t:'Kan / Shear が Kiko Calendar を創業（前置）',
+  w:'Yale News。のち eBay で売却し、Seibel と Vogt を加えて Justin.tv へ。',
+  y:'共同創業セットが揃う前史。',s:[16]},
+ {d:'2007',e:2,t:'YC W07 バッチとして資金提供を受ける',
+  w:'Altman「YC Changes」および本人 2024 声明が w07 を明記。',
+  y:'YC との最初の公式な接続。',
+  f:['YC W07'],s:[11,13]},
+ {d:'2012.4',e:4,t:'Socialcam がエンジェル調達を発表',
+  w:'TechCrunch。Yuri Milner、Tim Draper、Laurene Powell Jobs 等。金額の一次合計は N/A。',
+  y:'売却直前の資金・バリュエーション文脈。',s:[44]},
+ {d:'2012.4',e:4,t:'Facebook が Instagram を約 $1B で買収合意',
+  w:'同時代比較。現金＋株式。Socialcam $60M の約17倍規模。',
+  y:'早期売却の機会費用を測る基準点。',
+  f:['IG $1B'],s:[39]},
+ {d:'2016',e:5,t:'Startup School（MOOC）構想が公式化',
+  w:'YC Changes。Fellowship を拡張したオンライン講座。名称は従来の Startup School 会議へのオマージュ。',
+  y:'助言の配信経路がバッチ外へ広がる。',
+  f:['Startup School'],s:[11]},
+ {d:'2022',e:5,t:'Garry Tan が YC のトップに（Ralston 後任）',
+  w:'WIRED 等が Ralston 退任後に Tan 就任と記述。Seibel は MD/CEO を継続。',
+  y:'運営責任者と Group トップの分離が続く。',s:[45]},
+ {d:'2024.3.15',e:5,t:'MD/CEO を降り Group Partner へ',
+  w:'本人声明（YC ブログ）。w24 終了で発効。8年間の運営責任。',
+  y:'管理から mentorship への回帰。',
+  f:['Group Partner'],s:[13]},
+ {d:'2025.3.20',e:5,t:'Partner Emeritus へ移行',
+  w:'Garry Tan 発表。w25 が新規投資の最終バッチ、と本人。',
+  y:'日常バッチ運営からの退出。',
+  f:['Emeritus'],s:[14]},
+ {d:'2026',e:5,t:'本人サイトが YC 退職を記す',
+  w:'「I retired from Y Combinator in 2026」。Reddit / Dropbox / Kalshi 取締役は継続と記載。',
+  y:'現時点の肩書きの基準。',
+  f:['retired'],s:[1]},
+];
+
+const QUOTES = [
+ {t:'創業',q:'We started Justin.tv in October of 2006 with 4 co-founders. 3 engineers (Emmett Sheer, Justin Kan, Kyle Vogt) and 1 business guy (me). Average age 23.（Justin.tv は2006年10月、共同創業者4人で始めた。エンジニア3人…とビジネス1人（私）。平均年齢23歳。）',
+  w:'2019-11-19・The AM/PM Debate（本人サイト掲載抜粋）',s:[20]},
+ {t:'Twitch',q:'It has become a good portion of our revenues.... It\'s been a cash driver from the get-go.（e-sports は収益の大きな部分になった。……最初からキャッシュドライバーだった。）',
+  w:'2011-06-06・AllThingsD（CEO としての発言）',s:[24]},
+ {t:'多様性',q:'The good news is that there is no disadvantage to applying to YC as a female or minority founder. The bad news, of course, is that applicant percentages are low relative to the entire population.（女性・少数派創業者として応募しても不利はない。悪い知らせは、応募比率が人口に対して低いことだ。）',
+  w:'2015-01-14・YC Demographics',s:[30]},
+ {t:'Reddit',q:'I\'ve known Steve and Alexis since 2007 and have been a Reddit user ever since.（Steve と Alexis を2007年から知っており、それ以来 Reddit ユーザーだ。）',
+  w:'2020-06-10・Reddit 取締役就任声明',s:[18]},
+ {t:'YC退任',q:'After 8 years as the Managing Director/CEO of the YC accelerator, I\'ve decided now is the right time to hand over my leadership responsibilities.（YC アクセラレータの Managing Director/CEO を8年務めたあと、いまが責任を渡す適切な時だと判断した。）',
+  w:'2024-03-15・YC ブログ声明',s:[13]},
+ {t:'PMF',q:'I often talk to founders who believe they\'ve found product/market fit when they haven\'t.（フィットしていないのにフィットしたと思い込む創業者と、よく話す。）',
+  w:'2016-06-27・The Real Product Market Fit（本人サイト Essays 一覧の要約対象）',s:[36]},
+ {t:'ライブ',q:'It\'s a far cry from when it was just Justin.... We have the most used live video system in existence.（Justin だけだった頃とはだいぶ違う。……現存する最も使われるライブ動画システムだ。）',
+  w:'2009・Inc. 30 Under 30（CEO 発言）',s:[21]},
+];
+
+const activeEras = new Set();
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button type="button" class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`;
+}).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.cls ? ' ' + r.cls : ''}${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+bars('chartExit', [
+  {k:'Socialcam', v:60, sub:'2012'},
+  {k:'Twitch', v:970, sub:'2014 Amazon', cls:'s2'},
+  {k:'Instagram', v:1000, sub:'2012 FB', cls:'s3'},
+  {k:'Snapchat', v:800, sub:'2013 val', est:true},
+], 'M$');
+
+bars('chartDemo', [
+  {k:'W15頃', v:4, sub:'Seibel 2015'},
+  {k:'W21', v:5, sub:'創業者%', cls:'s2'},
+  {k:'S21', v:4, sub:'', cls:'s3'},
+  {k:'S22', v:3, sub:''},
+  {k:'W23', v:2, sub:'', cls:'s2'},
+], '%');
+</script>
+</body>
+</html>

@@ -3,6 +3,29 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "マイケル・セイベル",
+    "nameEn": "Michael Seibel",
+    "born": 1982,
+    "died": null,
+    "country": "US",
+    "role": "Y Combinator Partner Emeritus（2016–2024年はアクセラレータ CEO / Managing Director）。Justin.tv・Socialcam 共同創業者",
+    "field": "operator",
+    "status": "active",
+    "tags": [
+      "Y Combinator",
+      "Twitch",
+      "Justin.tv",
+      "Socialcam",
+      "起業",
+      "アクセラレータ"
+    ],
+    "date": "2026-09-26",
+    "summary": "1982年ブルックリン生まれ。イェール政治学卒（2005）。Justin.tv（のち Twitch）共同創業者・CEO（2007–2011）、Socialcam を Autodesk に約60百万ドルで売却（2012）。Amazon が Twitch を約970百万ドルで買収（2014）。2016–2024年に YC アクセラレータの運営責任者を務め、2025年に Partner Emeritus。",
+    "file": "people/seibel_michael_260926.html",
+    "sourceCount": 45,
+    "variant": "life-arc"
+  },
+  {
     "name": "ネイサン・メイアー・ロスチャイルド",
     "nameEn": "Nathan Mayer Rothschild",
     "born": 1777,

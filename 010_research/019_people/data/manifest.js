@@ -3,6 +3,29 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "サム・アルトマン",
+    "nameEn": "Sam Altman",
+    "born": 1985,
+    "died": null,
+    "country": "US",
+    "role": "OpenAI CEO（元 Y Combinator president）",
+    "field": "founder",
+    "status": "active",
+    "tags": [
+      "OpenAI",
+      "Y Combinator",
+      "Loopt",
+      "創業",
+      "投資",
+      "Worldcoin"
+    ],
+    "date": "2026-09-26",
+    "summary": "1985年シカゴ生まれ。2005年に Loopt を創業し YC 第1期へ。2012年に Green Dot が4,340万ドルで買収。2014–2019年に YC president、2015年に OpenAI を共同設立し2019年から CEO。2023年11月に解任され5日で復帰。OpenAI の直接持株は持たないと説明してきた。",
+    "file": "people/altman_sam_260926.html",
+    "sourceCount": 38,
+    "variant": "life-arc"
+  },
+  {
     "name": "Adam D'Angelo",
     "nameEn": "Adam D'Angelo",
     "born": 1984,

@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>サム・アルトマン — Loopt から OpenAI まで</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --s2:#eb6834; --s3:#1baf7a; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  .bar.s2 .fl{background:var(--s2)}
+  .bar.s3 .fl{background:var(--s3)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / サム・アルトマン</p>
+
+<header class="top">
+  <h1>サム・アルトマン — Loopt から OpenAI まで</h1>
+  <div class="en">Sam Altman　1985.4.22 – ／OpenAI CEO、元 Y Combinator president</div>
+  <div class="tags">
+    <span class="tag">OpenAI</span><span class="tag">Y Combinator</span><span class="tag">Loopt</span>
+    <span class="tag">創業</span><span class="tag">投資</span><span class="tag">Worldcoin</span>
+  </div>
+  <p class="lead">1985年シカゴ生まれ、ミズーリ州クレイトン／ラデュー周辺で育ち、John Burroughs School を経てスタンフォードを中退した。2005年に Loopt を創業し Y Combinator 第1期に入り、2014–2019年に YC president、2015年に OpenAI を共同設立、2019年から同 CEO。本ページの焦点は、Loopt の出口数字、YC 在任中の制度変更、非営利から capped-profit／PBC への資本構造の転換、2023年11月の5日間、および並行投資の開示可能な範囲である。</p>
+  <p class="srcnote">作成日 2026年9月26日。数値の基準日は同日。存命人物のため、出典のない逸話・人物評・投資判断は書かない。年表の満年齢は生年月日1985年4月22日からの年差で算出している。出生地はシカゴ（Wikipedia ほか）、育った場所はセントルイス郊外である。Loopt の調達・売却の詳細は本サイトの <a href="../../011_company/reports/loopt_research_260727.html">Loopt 企業レポート</a> と接続し、ここでは繰り返さない数字は要約に留める。OpenAI 取締役会での Adam D'Angelo の役割は <a href="dangelo_adam_260925.html">D'Angelo 長編</a>、YC 創業期は <a href="graham_paul_260926.html">Paul Graham 長編</a> を参照。</p>
+</header>
+
+<h2 id="overview"><span class="num">①</span>概要<span class="en">Overview</span></h2>
+
+<div class="kpi">
+  <div class="card"><div class="k">生年月日</div><div class="v">1985.4.22<small>Chicago, IL</small></div></div>
+  <div class="card"><div class="k">Loopt 売却</div><div class="v">$43.4M<small>2012-03発表・現金</small></div></div>
+  <div class="card"><div class="k">YC president</div><div class="v">2014–2019<small>Graham の後任</small></div></div>
+  <div class="card"><div class="k">OpenAI 持株</div><div class="v">直接0<small>本人・公式の説明</small></div></div>
+</div>
+
+<div class="callout">
+<p><b>先に結論を3つ書く。</b></p>
+<p><b>1つ目。Loopt の出口は総額4,340万ドル（うち約980万ドルがリテンション）であり、累計調達は報道が約1,700万ドルと3,000万ドル超で割れる。</b>投資家と創業者への配分は非開示だが、Hydrazine Capital 設立時に本人が Loopt 売却から約500万ドルを持ち込んだとする二次報道がある。どの調達額を採っても、<strong class="hit">投下資本に対する出口倍率はシリコンバレーの標準的な期待値を下回る</strong>という整理は変わらない<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup>。</p>
+<p><b>2つ目。OpenAI は2015年に非営利・10億ドルの拠出表明で始まり、2019年に「数十億ドル規模の計算資源が要る」という理由で capped-profit を導入し、Microsoft が同年に10億ドル、2023年1月に「数年にわたる数十億ドル」の追加を表明した。</b>資本需要が統治形態を押し広げた経緯は、公式文面に残る。2025年以降の PBC 再編は合意の到達点と、持分・残余争点を分けて読む必要がある<sup><a href="#s5">5</a></sup><sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup>。</p>
+<p><b>3つ目。2023年11月17日の解任から21日の原則合意、29日の正式復帰まで、取締役会声明・Microsoft・従業員約770人中700人超の署名・新ボード・WilmerHale 調査が時系列で繋がる。</b>調査要約は「信頼の崩壊」であり、製品安全・財務・投資家向け表明を理由とはしなかった、と OpenAI が公表した<sup><a href="#s9">9</a></sup><sup><a href="#s10">10</a></sup><sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup>。</p>
+</div>
+
+<h2 id="timeline"><span class="num">②</span>年表<span class="en">Timeline</span></h2>
+<p>日付が一次情報または複数報道で確定した出来事だけを並べた。各項目は事実、具体、なぜ効いたかの3層である。期のボタンで絞り込める。日付の右は、その時点の満年齢である。</p>
+
+<div class="tl-tools">
+  <input id="tlq" type="search" placeholder="年表を検索（例: Loopt、YC、OpenAI、解任、Worldcoin、Stargate）" aria-label="年表を検索">
+  <span class="tl-count" id="tlcount"></span>
+</div>
+<div class="tl-eras" id="tleras"></div>
+<div class="tl" id="tl"></div>
+<div class="tl-empty" id="tlempty">該当する項目がない。</div>
+
+<h2 id="phases"><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+
+<h3>I 形成 — シカゴ、セントルイス、スタンフォード中退（1985–2005）</h3>
+<p>生年月日は1985年4月22日、出生地はシカゴである<sup><a href="#s13">13</a></sup>。1989年に家族が父の故郷であるミズーリ州クレイトンへ移り、本人はラデューの John Burroughs School に通った<sup><a href="#s13">13</a></sup>。スタンフォード大学で計算機科学を約2年学び、学士を取らずに中退した<sup><a href="#s13">13</a></sup>。</p>
+
+<h3>II Loopt — 位置情報 SNS と Green Dot 売却（2005–2012）</h3>
+<p>2005年、位置情報共有アプリ Loopt を共同創業し CEO を務めた。同年夏の Y Combinator 第1期（S05）に入った<sup><a href="#s13">13</a></sup><sup><a href="#s14">14</a></sup>。調達は NEA・Sequoia などを含み、累計は買収時点の同時代報道が約1,700万ドル、後年の集計が3,000万ドル超と<strong class="hit">諸説</strong>である<sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup>。</p>
+<p>2012年3月9日、Green Dot が現金総額4,340万ドルでの買収を発表した。うち約980万ドルは主要従業員のリテンション枠である<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup>。完了は同年4月4日<sup><a href="#s15">15</a></sup>。株式分（総額からリテンションを除いた約3,360万ドル）の投資家・創業者配分は非開示。二次報道は、本人が Hydrazine Capital（2012年、弟 Jack と共同）へ Loopt 売却由来の約500万ドルを持ち込んだと書く<sup><a href="#s13">13</a></sup>（single-source に近い二次経路）。詳細な損益構造は <a href="../../011_company/reports/loopt_research_260727.html">Loopt レポート</a> に置く。</p>
+<p>Altman は2011年から YC のパートタイム・パートナーであり、売却後も継続した。Green Dot ではモバイル製品の EVP となり、2013年3月4日に取締役、2016年4月11日に退任した<sup><a href="#s4">4</a></sup>。</p>
+
+<h3>III YC president — 規模・Continuity・Research（2011–2019）</h3>
+<p>2014年2月21日、Paul Graham が「Sam Altman for President」を公開し、次バッチから Altman が YC president になると発表した。Graham は「YC を大きくする必要があり、自分はその適任ではない」と書いた<sup><a href="#s14">14</a></sup><sup><a href="#s16">16</a></sup>。</p>
+<p>在任中の制度変更として確認できるのは次である。(1) バッチ規模の拡大を公言し、パートナー増と申請処理のシャーディングを進めた<sup><a href="#s16">16</a></sup>。(2) 2015年10月、YC Research を開設。初期資金1,000万ドルは本人の拠出と MIT Technology Review が報じた<sup><a href="#s17">17</a></sup>。(3) YC Continuity（成長段階の継続投資）を同系統の拡張として運用した。(4) Request for Startups（RFS）により、YC が資金を出したい領域を公開リスト化した。</p>
+<p>2014年には Yishan Wong 退任後、Reddit の暫定 CEO を約8日間務めた記録がある<sup><a href="#s13">13</a></sup>。2019年3月、YC president を退き会長へ移行すると発表し、OpenAI に重心を移した。同年中に正式役職からも離れた、と後年の整理がある<sup><a href="#s18">18</a></sup>。</p>
+
+<h3>IV OpenAI — 非営利から capped-profit、Microsoft（2015–2023）</h3>
+<p>2015年12月11日、OpenAI は非営利の AI 研究組織として発足を発表した。共同議長は Sam Altman と Elon Musk。資金提供者は Altman、Greg Brockman、Musk、Reid Hoffman、Jessica Livingston、Peter Thiel、AWS、Infosys、YC Research で、<strong class="hit">合計10億ドルの拠出を表明</strong>した（数年でそのごく一部しか使わない見込み、と同時に書いた）<sup><a href="#s5">5</a></sup>。</p>
+<p>2019年3月11日、OpenAI LP（capped-profit）を導入する公式文は、理由を資本側から明示する。「今後数年で数十億ドルを大規模クラウド計算・人材・AI スーパーコンピュータに投じる必要がある」「既存の法形態ではミッションと資本調達の両立が取れない」<sup><a href="#s6">6</a></sup>。初回投資家のリターン上限は出資の100倍、超過分は非営利へ、と定めた<sup><a href="#s6">6</a></sup>。</p>
+<p>同年7月22日、Microsoft が10億ドルを出資し、Azure 上の共同スーパーコンピューティングと商業化の優先パートナーシップを発表した<sup><a href="#s7">7</a></sup><sup><a href="#s19">19</a></sup>。2023年1月23日、Microsoft は「数年にわたる数十億ドル」の第3段階を発表した。報道はおおむね約100億ドルと書くが、Microsoft 公式文面は額面を「multibillion」に留めている（額の<strong class="hit">諸説／公式非明示</strong>）<sup><a href="#s8">8</a></sup>。</p>
+<p>2022年11月30日、ChatGPT を公開した。これ以降、CEO としての外部可視性が急上昇する。</p>
+
+<h3>V 2023年11月 — 解任から復帰の5日間</h3>
+<p>時系列を、取れる日付と声明に限定して再構成する。</p>
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>日付</th><th>出来事</th><th>出典</th></tr></thead>
+<tbody>
+<tr><td class="name">2023-11-17</td><td>OpenAI, Inc. ボードが Altman の CEO 解任とボード退任を発表。理由は「ボードとのコミュニケーションで一貫して率直でなかった」。CTO Mira Murati が暫定 CEO。Greg Brockman はボード議長を降り、社内役職は継続とされた。</td><td><sup><a href="#s9">9</a></sup></td></tr>
+<tr><td class="name">2023-11-17〜</td><td>Brockman が社長を辞任。週末に復帰交渉。</td><td>複数報道</td></tr>
+<tr><td class="name">2023-11-19</td><td>Emmett Shear が暫定 CEO に任命された、と報じられる。Altman が本社で来訪者バッジの写真を投稿。</td><td>ABC ほか</td></tr>
+<tr><td class="name">2023-11-20 早朝</td><td>Microsoft CEO Satya Nadella が、Altman と Brockman が Microsoft で新設の先進 AI 研究チームを率いると発表（X 投稿。東部標準時で約午前3時前後と報道）。</td><td><sup><a href="#s20">20</a></sup></td></tr>
+<tr><td class="name">2023-11-20</td><td>従業員書簡。ボード総辞職と Altman／Brockman 復帰を要求し、拒否なら Microsoft 子会社へ移ると示唆。署名は約700人超／従業員約770人（報道により 667・730・738 など、時点で増減）。Ilya Sutskever と Murati も署名したと複数紙。</td><td><sup><a href="#s11">11</a></sup><sup><a href="#s21">21</a></sup></td></tr>
+<tr><td class="name">2023-11-21</td><td>原則合意。Altman 復帰と新ボード（Bret Taylor 議長、Larry Summers、Adam D'Angelo）。本人は X で「new board and Satya's support」と投稿。</td><td><sup><a href="#s22">22</a></sup></td></tr>
+<tr><td class="name">2023-11-29</td><td>正式発表。Altman が CEO 復帰、Murati が CTO、Brockman が President。初期ボードは Taylor／Summers／D'Angelo。Microsoft に非議決権オブザーバー。WilmerHale による独立調査を進行。</td><td><sup><a href="#s12">12</a></sup></td></tr>
+<tr><td class="name">2024-03-08</td><td>WilmerHale 調査完了の要約を OpenAI が公開。解任は「信頼の崩壊」が帰結。製品安全・開発速度・財務・対外表明を理由とせず。ボードは裁量内だが、短縮スケジュールで主要利害関係者への事前通知と十分な調査・弁明の機会を欠いた。行為は解任を「必須」にしなかった。</td><td><sup><a href="#s10">10</a></sup><sup><a href="#s23">23</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>VI 持株・並行投資・Stargate（2015–2026）</h3>
+<p><b>OpenAI 持株。</b>本人は議会証言等で「OpenAI の株式を持たない」と繰り返してきた。OpenAI は YC 経由の間接的で小さな持分を開示し、本人の「唯一の利害」と説明してきた。2024年12月、本人は Sequoia 経由の微小持分をかつて持ち売却したと述べ、YC 経由の「ごく小さい」残分に言及した。OpenAI 広報は直接保有は一度もなく、Sequoia 汎用ファンド経由は1%未満のごく一部で既に解消、と述べた<sup><a href="#s24">24</a></sup><sup><a href="#s25">25</a></sup>。2025年以降に報じられた本人への株式付与案は、<strong class="hit">報道と本人の「現行の計画・約束はない」発言を分けて</strong>扱う。確定した付与契約の一次開示は本ページの範囲では確認できていない。</p>
+<p><b>Helion Energy。</b>2015年から関与し会長。2021年ラウンドへの個人出資は報道で約3.75億ドル。2026年3月、OpenAI との大口取引検討に伴いボードを退き、金銭的利害は残すと本人が述べた<sup><a href="#s26">26</a></sup>。</p>
+<p><b>Oklo。</b>2015年から会長・初期投資家。AltC Acquisition Corp.（本人が CEO）との SPAC 合併が2024年5月9日に完了、5月10日に NYSE「OKLO」で上場。グロス調達約3.06億ドル。クロージング時点の開示で本人保有は約315万株・約2.58%<sup><a href="#s27">27</a></sup><sup><a href="#s28">28</a></sup>。2025年4月に会長を退任（利益相反回避・将来の取引余地、と報道）。</p>
+<p><b>Retro Biosciences。</b>寿命延長を掲げるバイオ。本人出資は報道で約1.8億ドル。持分比率の監査済み開示は N/A<sup><a href="#s25">25</a></sup>。</p>
+<p><b>Worldcoin／World（Tools for Humanity）。</b>2019年、Alex Blania らと共同創業。虹彩スキャンで「人である証明」とトークン配布を組み合わせる。本人の WLD／会社持分比率は非開示。</p>
+<p><b>Stargate。</b>2025年1月21日、OpenAI・SoftBank・Oracle・MGX が米国で AI インフラ会社 Stargate を発表。<strong class="hit">今後4年で5,000億ドルを投じる意向、うち1,000億ドルを直ちに展開開始</strong>と公式に書いた。財務責任は SoftBank、運営責任は OpenAI、会長は孫正義<sup><a href="#s29">29</a></sup>。初期出資の内訳（各190億ドル等）は二次報道。表明額と、確定契約・実行額は区別する。</p>
+
+<h3>VII 2025年以降の営利構造・PBC</h3>
+<p>OpenAI は2025年に capped-profit LLC から Delaware の Public Benefit Corporation（OpenAI Group PBC）への転換を進めた、と複数の法定・報道ソースが記す。非営利財団の残余支配、Microsoft・従業員／投資家の持分比率は時点により更新される。到達した合意（形態変更・大口出資のクロージング）と、訴訟・州当局・残余争点は別レイヤである。SoftBank は2025年3月コミット（最大400億ドル）の追加クロージングを同年12月に完了し、保有約11%と公表した<sup><a href="#s30">30</a></sup>。</p>
+
+<h2 id="numbers"><span class="num">④</span>実績の数字<span class="en">The Numbers</span></h2>
+<p>経営者・投資家としての数字は、出口額・出資表明・開示保有に限る。個人純資産の監査済み一次表は無い。</p>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>項目</th><th class="num">数値</th><th>時点・条件</th></tr></thead>
+<tbody>
+<tr><td class="name">生年月日</td><td class="num">1985-04-22</td><td>Chicago<sup><a href="#s13">13</a></sup></td></tr>
+<tr><td class="name">Loopt 売却総額</td><td class="num">$43.4M</td><td>2012-03-09発表。現金。うちリテンション約$9.8M<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup></td></tr>
+<tr><td class="name">Loopt 累計調達</td><td class="num">約$17M / $30M超</td><td>諸説。買収時報道 vs 後年集計<sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup></td></tr>
+<tr><td class="name">Loopt→本人手元（報道）</td><td class="num">約$5M</td><td>Hydrazine 設立時の持ち込み。二次（推定に近い）<sup><a href="#s13">13</a></sup></td></tr>
+<tr><td class="name">YC president</td><td class="num">2014-02〜2019-03</td><td>Graham 発表／退任報道<sup><a href="#s14">14</a></sup><sup><a href="#s18">18</a></sup></td></tr>
+<tr><td class="name">YC Research 初期</td><td class="num">$10M</td><td>2015-10。本人拠出（MIT TR）<sup><a href="#s17">17</a></sup></td></tr>
+<tr><td class="name">OpenAI 拠出表明</td><td class="num">$1B</td><td>2015-12-11。コミット。実支出は別<sup><a href="#s5">5</a></sup></td></tr>
+<tr><td class="name">capped-profit 導入</td><td class="num">2019-03-11</td><td>初回キャップ100x<sup><a href="#s6">6</a></sup></td></tr>
+<tr><td class="name">Microsoft 出資①</td><td class="num">$1B</td><td>2019-07-22<sup><a href="#s7">7</a></sup><sup><a href="#s19">19</a></sup></td></tr>
+<tr><td class="name">Microsoft 出資③</td><td class="num">数十億USD</td><td>2023-01-23。公式は multibillion。報道は約$10B（諸説）<sup><a href="#s8">8</a></sup></td></tr>
+<tr><td class="name">従業員署名（解任時）</td><td class="num">700+/約770</td><td>2023-11-20。報道時点で増減<sup><a href="#s11">11</a></sup></td></tr>
+<tr><td class="name">OpenAI 直接持株</td><td class="num">0</td><td>本人・広報の説明<sup><a href="#s24">24</a></sup><sup><a href="#s25">25</a></sup></td></tr>
+<tr><td class="name">CEO 報酬（報道）</td><td class="num">$76,001/年</td><td>2025時点の Fortune 等（single-source 経路）<sup><a href="#s25">25</a></sup></td></tr>
+<tr><td class="name">Oklo クロージング保有</td><td class="num">約2.58%</td><td>2024-05。SEC 8-K<sup><a href="#s28">28</a></sup></td></tr>
+<tr><td class="name">Oklo SPAC グロス</td><td class="num">約$306M</td><td>2024-05-09完了<sup><a href="#s27">27</a></sup></td></tr>
+<tr><td class="name">Helion 個人出資（報道）</td><td class="num">約$375M</td><td>2021ラウンド。比率は N/A<sup><a href="#s26">26</a></sup></td></tr>
+<tr><td class="name">Retro 出資（報道）</td><td class="num">約$180M</td><td>持分比率 N/A<sup><a href="#s25">25</a></sup></td></tr>
+<tr><td class="name">Stargate 表明</td><td class="num">$500B / 即時$100B</td><td>2025-01-21。意向。確定契約とは別<sup><a href="#s29">29</a></sup></td></tr>
+<tr><td class="name">SoftBank→OpenAI</td><td class="num">最大$40B・保有約11%</td><td>2025-12追加クロージング完了公表<sup><a href="#s30">30</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="chart">
+  <div class="cap">資本イベントの規模（対数ではない単純棒）</div>
+  <div class="sub">単位は百万 USD。Stargate の5,000億は別スケールのため表のみ。Microsoft 2023は報道の約10,000を採用（公式は multibillion）</div>
+  <div class="bars" id="chartCap"></div>
+  <p class="sub" style="margin:14px 0 0">出典1・5・7・8・17・27。Microsoft 2023は disputed。</p>
+</div>
+
+<div class="chart">
+  <div class="cap">Loopt: 調達の諸説と売却総額</div>
+  <div class="sub">単位は百万 USD。売却43.4のうちリテンション約9.8</div>
+  <div class="bars" id="chartLoopt"></div>
+  <p class="sub" style="margin:14px 0 0">出典1・2・3・4。</p>
+</div>
+
+<h2 id="failures"><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
+<p>「失敗」は、公開された金額・規制命令・統治の切れ目で切る。能力や人柄の評価は書かない。</p>
+
+<h3>類型1: プロダクト／市場 — Loopt が伸びなかった</h3>
+<p>キャリア個別統合（Boost／Sprint／Verizon 等）に資本と時間を投じたあと、2008年の App Store が参入障壁を無効化した。Foursquare（2009年創業）や Facebook の位置機能と競合し、登録ユーザーの公開ピークは2010年時点で約400万人（アクティブではない）<sup><a href="#s4">4</a></sup>。出口4,340万ドルは、調達約1,700万ドルなら投資家に元本超の余地があるが、3,000万ドル超なら優先株の清算次第で普通株は薄い。<strong class="hit">創業者手元の確定額は非開示</strong>で、二次の「約500万ドル」以外に監査済みの分配表は無い。</p>
+
+<h3>類型2: 規制 — Worldcoin の虹彩スキャン</h3>
+<p>各国当局の命令・停止は日付付きで残る。</p>
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>当局・地域</th><th>時期</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td class="name">ケニア（政府・データ保護）</td><td>2023-08</td><td>運用停止・調査。プライバシー・同意・詐欺懸念<sup><a href="#s31">31</a></sup></td></tr>
+<tr><td class="name">スペイン AEPD</td><td>2024-03-06</td><td>最大3か月の予防的停止。収集・処理停止と既存データのブロック。のち BayLDA 最終決定まで再開しない法的コミット<sup><a href="#s32">32</a></sup><sup><a href="#s33">33</a></sup></td></tr>
+<tr><td class="name">ポルトガル CNPD</td><td>2024-03-25</td><td>生体データ収集を90日間一時制限。未成年・同意の欠陥を理由<sup><a href="#s34">34</a></sup></td></tr>
+<tr><td class="name">ドイツ BayLDA</td><td>EU リード当局</td><td>欧州本店所在。調査・是正の中核。最終決定の詳細は時点で更新<sup><a href="#s33">33</a></sup></td></tr>
+<tr><td class="name">香港 PCPD</td><td>2024</td><td>過度収集・透明性・保存・アクセス権の違反を認定し停止命令（報道・当局発表）</td></tr>
+</tbody>
+</table>
+</div>
+<p>制裁金の確定額は案件・時点で異なり、本ページは「命令・停止」を一次に置き、罰金の総額集計は N/A とする。</p>
+
+<h3>類型3: 統治設計 — 2023年11月の解任と再就職</h3>
+<p>非営利ボードが営利事業の CEO を即時解任できる構造は、意図されたセーフガードだった。結果として、(1) 主要投資家・従業員への事前通知なし、(2) 約770人中700人超の離反威嚇、(3) Microsoft が受け皿を提示、(4) 5日で原則逆転、が起きた。WilmerHale は「裁量内だが必須ではなかった」「短縮手順」と要約した<sup><a href="#s10">10</a></sup><sup><a href="#s23">23</a></sup>。<strong class="hit">セーフガードが組織を安定させる方向ではなく、短期間の統治真空を生んだ</strong>ことが、金額ではなく制度上の失敗として残る。</p>
+
+<h3>類型4: 資本構造 — 非営利の建前と計算資源コスト</h3>
+<p>2015年の10億ドル表明に対し、2019年時点の実受領は約1.3億ドル規模だった、とする後年報道がある（single-source 経路）。公式 LP 文は「数十億ドルが必要」と書き、営利ビークルを導入した<sup><a href="#s6">6</a></sup>。ミッション優先の文言と、実際の調達規模（Microsoft 単独で累計報道ベース百億ドル級）のギャップは、設計時の想定と計算コストの現実のずれとして整理できる。PBC 化はギャップを解消する試みだが、争点の消滅ではない。</p>
+
+<h3>類型5: 個人投資の外れ（取れる範囲）</h3>
+<p>ポートフォリオは400社超とされる。個別の損切り額の監査済み開示は稀である。Humane（AI ウェアラブル）など価値毀損が報じられた案件はあるが、本人の損失額は N/A。Reddit・Instacart は成功側の事例として語られることが多く、「外した案件」の金額リストは公開一次では揃わない。欠落として残す。</p>
+
+<div class="risk">
+<p><b>欠落データ。</b>Loopt の創業者最終手取りの監査済み分配、OpenAI への本人株式付与の有無と条件（契約書）、Worldcoin／Tools for Humanity の本人持分、Helion／Retro の正確な保有比率、Stargate の確定出資契約額、個人投資の損切り一覧は、本ページが取得した公開一次資料では揃っていない。</p>
+</div>
+
+<h2 id="thought"><span class="num">⑥</span>思想と方法<span class="en">Thought and Method</span></h2>
+
+<h3>複利と「所有」</h3>
+<p>2019年1月のブログ「How To Be Successful」は、「真に豊かになるのは急成長するものを所有すること」「給与では Forbes リストに届かない」と書く<sup><a href="#s35">35</a></sup>。OpenAI で直接持株を取らない選択は、このエッセイの一般論と並置すると緊張関係にある。本人の説明は「ミッション」「YC 経由の微小持分」に寄せられてきた<sup><a href="#s24">24</a></sup>。</p>
+
+<h3>資本が統治を押し広げる</h3>
+<p>OpenAI LP 文の核心は、アルゴリズムだけでなく計算資源のコストがスケールの制約だという認識である<sup><a href="#s6">6</a></sup>。非営利のままでは調達が足りない、という診断が capped-profit を正当化する。以降の Microsoft・SoftBank・Stargate は、同じ診断の延長線上の規模拡大である。</p>
+
+<h3>ネットワークとバッチ</h3>
+<p>YC president 期の方法は、バッチ規模の拡大、Continuity、Research、RFS によるテーマ提示である。Graham の後任としての公開理由は「成長を回せる管理者」だった<sup><a href="#s14">14</a></sup>。</p>
+
+<blockquote>
+We’ve experienced firsthand that the most dramatic AI systems use the most computational power in addition to algorithmic innovations, and decided to scale much faster than we’d planned when starting OpenAI. We’ll need to invest billions of dollars in upcoming years…
+<span class="who">OpenAI「OpenAI LP」、2019年3月11日<sup><a href="#s6">6</a></sup></span>
+</blockquote>
+
+<h2 id="quotes"><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
+<p>日付・媒体が特定できる発言に限った。出典未確定の言い回しは載せない。英語原文を先に置き、訳を添える。</p>
+<div class="q-tabs" id="qtabs"></div>
+<div class="q-list" id="qlist"></div>
+
+<h2 id="open"><span class="num">⑧</span>残っている問い / 出典<span class="en">Open Questions / Sources</span></h2>
+
+<h3>残っている問い</h3>
+<ul>
+<li>Loopt 売却時の普通株・優先株の分配表で、創業者（Altman ほか）の確定手取りはいくらか。Green Dot の SEC 開示は総額とリテンションまでで、個人別は非開示。</li>
+<li>2015年の10億ドル拠出表明のうち、YC Research を含む各コミットの実支払額の内訳一次表はどこか。</li>
+<li>2023年1月の Microsoft「multibillion」の契約上の確定額と払込スケジュール。公式は額面を明示していない。</li>
+<li>本人への OpenAI 株式付与について、取締役会決議・契約の有無。報道と本人発言以外の一次文書は未確認。</li>
+<li>Tools for Humanity／World における本人の持分比率と、WLD 配分。</li>
+<li>Stargate の確定出資契約（各社の払込済み額）と、表明5,000億ドルのうち債務・LP 分の内訳。</li>
+<li>個人投資ポートフォリオの実現損の一覧。Reddit・Instacart 以外の「外した案件」の金額が公開一次で追えるか。</li>
+</ul>
+
+<ol class="sources">
+<li id="s1">Green Dot Corporation IR「Green Dot to Acquire Loopt」（2012-03-09。総額$43.4M、リテンション約$9.8M、Altman コメント） — <a href="https://ir.greendot.com/news-releases/news-release-details/green-dot-acquire-loopt">https://ir.greendot.com/news-releases/news-release-details/green-dot-acquire-loopt</a></li>
+<li id="s2">SEC EDGAR, Green Dot EX-99.01 Loopt Acquisition Press Release（2012-03-09。同上） — <a href="https://www.sec.gov/Archives/edgar/data/1386278/000138627812000035/ex9901looptacquisitionpres.htm">https://www.sec.gov/Archives/edgar/data/1386278/000138627812000035/ex9901looptacquisitionpres.htm</a></li>
+<li id="s3">AllThingsD, Liz Gannes「Loopt's Sam Altman on Why He Sold to Green Dot for $43.4M」（2012-03-09。累計調達約$17M） — <a href="https://allthingsd.com/20120309/green-dot-buys-location-app-loopt-for-43-4m/">https://allthingsd.com/20120309/green-dot-buys-location-app-loopt-for-43-4m/</a></li>
+<li id="s4">本サイト「Loopt — 位置情報 SNS の終わり方」（調達諸説、キャリア依存、Green Dot 役職日付） — <a href="../../011_company/reports/loopt_research_260727.html">011_company/reports/loopt_research_260727.html</a></li>
+<li id="s5">OpenAI「Introducing OpenAI」（2015-12-11。非営利、$1B 拠出表明、共同議長 Altman / Musk） — <a href="https://openai.com/index/introducing-openai/">https://openai.com/index/introducing-openai/</a></li>
+<li id="s6">OpenAI「OpenAI LP」（2019-03-11。capped-profit、billions of dollars、100x キャップ） — <a href="https://openai.com/index/openai-lp/">https://openai.com/index/openai-lp/</a></li>
+<li id="s7">OpenAI「Microsoft invests in and partners with OpenAI」（2019-07-22。$1B） — <a href="https://openai.com/index/microsoft-invests-in-and-partners-with-openai/">https://openai.com/index/microsoft-invests-in-and-partners-with-openai/</a></li>
+<li id="s8">Microsoft Corporate Blogs「Microsoft and OpenAI extend partnership」（2023-01-23。multiyear, multibillion） — <a href="https://blogs.microsoft.com/blog/2023/01/23/microsoftandopenaiextendpartnership/">https://blogs.microsoft.com/blog/2023/01/23/microsoftandopenaiextendpartnership/</a></li>
+<li id="s9">OpenAI「OpenAI announces leadership transition」（2023-11-17。解任理由、Murati 暫定、ボード構成） — <a href="https://openai.com/index/openai-announces-leadership-transition/">https://openai.com/index/openai-announces-leadership-transition/</a></li>
+<li id="s10">OpenAI「Review completed &amp; Altman, Brockman to continue to lead OpenAI」（2024-03-08。WilmerHale 要約） — <a href="https://openai.com/index/review-completed-altman-brockman-to-continue-to-lead-openai/">https://openai.com/index/review-completed-altman-brockman-to-continue-to-lead-openai/</a></li>
+<li id="s11">The New York Times「OpenAI Staff Threatens Exodus…」（2023-11-20。700+/770） — <a href="https://www.nytimes.com/2023/11/20/business/openai-staff-exodus-turmoil.html">https://www.nytimes.com/2023/11/20/business/openai-staff-exodus-turmoil.html</a></li>
+<li id="s12">OpenAI「Sam Altman returns as CEO, OpenAI has a new initial board」（2023-11-29。Taylor / Summers / D'Angelo） — <a href="https://openai.com/index/sam-altman-returns-as-ceo-openai-has-a-new-initial-board/">https://openai.com/index/sam-altman-returns-as-ceo-openai-has-a-new-initial-board/</a></li>
+<li id="s13">Wikipedia「Sam Altman」（生年月日・シカゴ、Clayton、Burroughs、Stanford 中退、Hydrazine 約$5M、Reddit 暫定CEO 等。一次と突合） — <a href="https://en.wikipedia.org/wiki/Sam_Altman">https://en.wikipedia.org/wiki/Sam_Altman</a></li>
+<li id="s14">Y Combinator / Paul Graham「Sam Altman for President」（2014-02-21） — <a href="https://www.ycombinator.com/blog/sam-altman-for-president">https://www.ycombinator.com/blog/sam-altman-for-president</a></li>
+<li id="s15">Green Dot IR「Green Dot Completes Acquisition of Loopt」（2012-04-04） — <a href="https://ir.greendot.com/news-releases/news-release-details/green-dot-completes-acquisition-loopt">https://ir.greendot.com/news-releases/news-release-details/green-dot-completes-acquisition-loopt</a></li>
+<li id="s16">TechCrunch「Sam Altman Taking Over As President Of Y Combinator…」（2014-02-21） — <a href="https://techcrunch.com/2014/02/21/sam-altman-taking-over-as-president-of-y-combinator-replacing-paul-graham-at-the-helm/">https://techcrunch.com/2014/02/21/sam-altman-taking-over-as-president-of-y-combinator-replacing-paul-graham-at-the-helm/</a></li>
+<li id="s17">MIT Technology Review「Y Combinator Opens Research Lab…」（2015-10-07。初期$10M は Altman） — <a href="https://www.technologyreview.com/2015/10/07/165873/y-combinator-opens-research-lab-to-tackle-big-problems/">https://www.technologyreview.com/2015/10/07/165873/y-combinator-opens-research-lab-to-tackle-big-problems/</a></li>
+<li id="s18">TechCrunch「Y Combinator president Sam Altman is stepping down…」（2019-03-08） — <a href="https://techcrunch.com/2019/03/08/y-combinator-president-sam-altman-is-stepping-down-amid-a-series-of-changes-at-the-accelerator/">https://techcrunch.com/2019/03/08/y-combinator-president-sam-altman-is-stepping-down-amid-a-series-of-changes-at-the-accelerator/</a></li>
+<li id="s19">Microsoft Source「OpenAI forms exclusive computing partnership with Microsoft…」（2019-07-22。$1B） — <a href="https://news.microsoft.com/source/2019/07/22/openai-forms-exclusive-computing-partnership-with-microsoft-to-build-new-azure-ai-supercomputing-technologies/">https://news.microsoft.com/source/2019/07/22/openai-forms-exclusive-computing-partnership-with-microsoft-to-build-new-azure-ai-supercomputing-technologies/</a></li>
+<li id="s20">NBC News「OpenAI employees threaten to quit… after former CEO Sam Altman joins Microsoft」（2023-11-20。Nadella 発表時刻） — <a href="https://www.nbcnews.com/business/business-news/sam-altman-joins-microsoft-openai-ouster-rcna125940">https://www.nbcnews.com/business/business-news/sam-altman-joins-microsoft-openai-ouster-rcna125940</a></li>
+<li id="s21">WIRED「OpenAI Staff Threaten to Quit Unless Board Resigns」（2023-11-20。730+） — <a href="https://www.wired.com/story/openai-staff-walk-protest-sam-altman/">https://www.wired.com/story/openai-staff-walk-protest-sam-altman/</a></li>
+<li id="s22">ABC News「4 days from fired to re-hired: A timeline…」（2023-11-21原則合意、X 投稿引用） — <a href="https://abcnews.go.com/Business/sam-altman-reaches-deal-return-ceo-openai/story?id=105091534">https://abcnews.go.com/Business/sam-altman-reaches-deal-return-ceo-openai/story?id=105091534</a></li>
+<li id="s23">CourtListener RECAP, Musk v. Altman 関連 Exhibit（WilmerHale 要約テキスト。30,000+ documents） — <a href="https://storage.courtlistener.com/recap/gov.uscourts.cand.433688/gov.uscourts.cand.433688.403.2_1.pdf">https://storage.courtlistener.com/recap/gov.uscourts.cand.433688/gov.uscourts.cand.433688.403.2_1.pdf</a></li>
+<li id="s24">TechCrunch「Sam Altman once owned some equity in OpenAI through Sequoia」（2024-12-19。Bari Weiss インタビュー、広報コメント） — <a href="https://techcrunch.com/2024/12/19/sam-altman-once-owned-some-equity-in-openai-through-sequoia/">https://techcrunch.com/2024/12/19/sam-altman-once-owned-some-equity-in-openai-through-sequoia/</a></li>
+<li id="s25">Fortune「OpenAI may soon be the most valuable private company—but Sam Altman’s net worth won’t jolt…」（2025-08-21。持株0、$76,001、Helion/Retro 報道額） — <a href="https://fortune.com/2025/08/21/openai-billionaire-ceo-sam-altman-new-valuation-personal-finance-zero-equity-salary-investments/">https://fortune.com/2025/08/21/openai-billionaire-ceo-sam-altman-new-valuation-personal-finance-zero-equity-salary-investments/</a></li>
+<li id="s26">Reuters / Yahoo Finance「OpenAI CEO Sam Altman exits Helion Energy's board…」（2026-03。取引検討、金銭的利害は継続） — <a href="https://finance.yahoo.com/sectors/energy/articles/openai-ceo-sam-altman-exits-191414129.html">https://finance.yahoo.com/sectors/energy/articles/openai-ceo-sam-altman-exits-191414129.html</a></li>
+<li id="s27">AltC Acquisition Corp.「Stockholders Approve Business Combination with Oklo」（2024-05-07発表資料。グロス約$306M、Altman 会長） — <a href="https://www.sec.gov/Archives/edgar/data/1849056/000110465924058297/tm2413786d1_ex99-1.htm">https://www.sec.gov/Archives/edgar/data/1849056/000110465924058297/tm2413786d1_ex99-1.htm</a></li>
+<li id="s28">Oklo Inc. Form 8-K（2024-05。クロージング後の保有。Altman 約3,151,379株・約2.58%） — <a href="https://www.sec.gov/Archives/edgar/data/1849056/000110465924060634/tm2414092d1_8k.htm">https://www.sec.gov/Archives/edgar/data/1849056/000110465924060634/tm2414092d1_8k.htm</a></li>
+<li id="s29">SoftBank Group「Announcing The Stargate Project」（2025-01-22。$500B／即時$100B、役割分担） — <a href="https://group.softbank/en/news/press/20250122">https://group.softbank/en/news/press/20250122</a></li>
+<li id="s30">SoftBank Group「Completion of Additional $22.5 Billion Investment in OpenAI」（2025-12-31。累計コミット充足、保有約11%） — <a href="https://group.softbank/en/news/press/20251231">https://group.softbank/en/news/press/20251231</a></li>
+<li id="s31">Reuters「Scrutiny of iris-scanning crypto project Worldcoin grows」（ケニア停止ほか各国） — <a href="https://www.reuters.com/technology/scrutiny-iris-scanning-crypto-project-worldcoin-grows-2023-09-01/">https://www.reuters.com/technology/scrutiny-iris-scanning-crypto-project-worldcoin-grows-2023-09-01/</a></li>
+<li id="s32">TechCrunch「Worldcoin hit with temporary ban in Spain…」（2024-03-06。AEPD） — <a href="https://techcrunch.com/2024/03/06/worldcoin-spain-ban/">https://techcrunch.com/2024/03/06/worldcoin-spain-ban/</a></li>
+<li id="s33">AEPD「Worldcoin commits to stop its activity in Spain」（2024-06-04。BayLDA まで再開しないコミット） — <a href="https://www.aepd.es/en/press-and-communication/press-releases/worldcoin-commits-to-stop-its-activity-in-spain">https://www.aepd.es/en/press-and-communication/press-releases/worldcoin-commits-to-stop-its-activity-in-spain</a></li>
+<li id="s34">CNPD Deliberação/2024/137（2024-03-25。ポルトガル90日制限 PDF） — <a href="https://www.cnpd.pt/media/imub4o4i/pt-sa-decision-worldcoin_temporary-limitation-of-processing_20240325.pdf">https://www.cnpd.pt/media/imub4o4i/pt-sa-decision-worldcoin_temporary-limitation-of-processing_20240325.pdf</a></li>
+<li id="s35">Sam Altman「How To Be Successful」（2019-01-24。blog.samaltman.com。所有・複利） — <a href="https://blog.samaltman.com/how-to-be-successful">https://blog.samaltman.com/how-to-be-successful</a></li>
+<li id="s36">CNBC「Hundreds of OpenAI employees threaten to follow Altman…」（2023-11-20。書簡文面、約667署名時点） — <a href="https://www.cnbc.com/2023/11/20/hundreds-of-openai-employees-threaten-to-follow-altman-to-microsoft-unless-board-resigns-reports-say.html">https://www.cnbc.com/2023/11/20/hundreds-of-openai-employees-threaten-to-follow-altman-to-microsoft-unless-board-resigns-reports-say.html</a></li>
+<li id="s37">Nasdaq / Business Wire「Oklo Inc. Begins Trading on the New York Stock Exchange」（2024-05-10） — <a href="https://www.nasdaq.com/press-release/oklo-inc.-begins-trading-on-the-new-york-stock-exchange-2024-05-10">https://www.nasdaq.com/press-release/oklo-inc.-begins-trading-on-the-new-york-stock-exchange-2024-05-10</a></li>
+<li id="s38">AP News「President Trump highlights investing $500 billion in 'Stargate' AI project」（2025-01-21。ホワイトハウス） — <a href="https://apnews.com/article/trump-ai-openai-oracle-softbank-son-altman-ellison-be261f8a8ee07a0623d4170397348c41">https://apnews.com/article/trump-ai-openai-oracle-softbank-son-altman-ellison-be261f8a8ee07a0623d4170397348c41</a></li>
+</ol>
+
+</div>
+
+<script type="application/json" id="facts">
+[
+  {"claim":"生年月日","value":"1985-04-22","unit":"date","as_of":"2026-09-26","source":"https://en.wikipedia.org/wiki/Sam_Altman","confidence":"reported"},
+  {"claim":"Loopt売却総額","value":43.4,"unit":"M USD","as_of":"2012-03-09","source":"https://ir.greendot.com/news-releases/news-release-details/green-dot-acquire-loopt","confidence":"reported"},
+  {"claim":"Looptリテンション枠","value":9.8,"unit":"M USD","as_of":"2012-03-09","source":"https://ir.greendot.com/news-releases/news-release-details/green-dot-acquire-loopt","confidence":"reported"},
+  {"claim":"Loopt累計調達_買収時報道","value":17,"unit":"M USD","as_of":"2012-03-09","source":"https://allthingsd.com/20120309/green-dot-buys-location-app-loopt-for-43-4m/","confidence":"disputed"},
+  {"claim":"OpenAI拠出表明","value":1000,"unit":"M USD","as_of":"2015-12-11","source":"https://openai.com/index/introducing-openai/","confidence":"reported"},
+  {"claim":"Microsoft出資_2019","value":1000,"unit":"M USD","as_of":"2019-07-22","source":"https://openai.com/index/microsoft-invests-in-and-partners-with-openai/","confidence":"reported"},
+  {"claim":"Microsoft出資_2023","value":10000,"unit":"M USD","as_of":"2023-01-23","source":"https://blogs.microsoft.com/blog/2023/01/23/microsoftandopenaiextendpartnership/","confidence":"disputed"},
+  {"claim":"YC_Research初期資金","value":10,"unit":"M USD","as_of":"2015-10","source":"https://www.technologyreview.com/2015/10/07/165873/y-combinator-opens-research-lab-to-tackle-big-problems/","confidence":"reported"},
+  {"claim":"OpenAI従業員数_解任時","value":770,"unit":"人","as_of":"2023-11-20","source":"https://www.nytimes.com/2023/11/20/business/openai-staff-exodus-turmoil.html","confidence":"reported"},
+  {"claim":"従業員書簡署名","value":700,"unit":"人超","as_of":"2023-11-20","source":"https://www.nytimes.com/2023/11/20/business/openai-staff-exodus-turmoil.html","confidence":"reported"},
+  {"claim":"OpenAI直接持株","value":0,"unit":"%","as_of":"2025-08","source":"https://fortune.com/2025/08/21/openai-billionaire-ceo-sam-altman-new-valuation-personal-finance-zero-equity-salary-investments/","confidence":"reported"},
+  {"claim":"Oklo保有比率_クロージング","value":2.58,"unit":"%","as_of":"2024-05","source":"https://www.sec.gov/Archives/edgar/data/1849056/000110465924060634/tm2414092d1_8k.htm","confidence":"reported"},
+  {"claim":"Oklo_SPACグロス調達","value":306,"unit":"M USD","as_of":"2024-05-09","source":"https://www.sec.gov/Archives/edgar/data/1849056/000110465924058297/tm2413786d1_ex99-1.htm","confidence":"reported"},
+  {"claim":"Helion個人出資","value":375,"unit":"M USD","as_of":"2021","source":"https://fortune.com/2025/08/21/openai-billionaire-ceo-sam-altman-new-valuation-personal-finance-zero-equity-salary-investments/","confidence":"single-source"},
+  {"claim":"Retro個人出資","value":180,"unit":"M USD","as_of":"2025","source":"https://fortune.com/2025/08/21/openai-billionaire-ceo-sam-altman-new-valuation-personal-finance-zero-equity-salary-investments/","confidence":"single-source"},
+  {"claim":"Stargate表明総額","value":500,"unit":"B USD","as_of":"2025-01-21","source":"https://group.softbank/en/news/press/20250122","confidence":"reported"},
+  {"claim":"Stargate即時展開","value":100,"unit":"B USD","as_of":"2025-01-21","source":"https://group.softbank/en/news/press/20250122","confidence":"reported"},
+  {"claim":"Loopt創業者手元_報道","value":5,"unit":"M USD","as_of":"2012","source":"https://en.wikipedia.org/wiki/Sam_Altman","confidence":"estimated"}
+]
+</script>
+
+<script>
+const BORN = '1985-04-22';
+const DIED = null;
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: true };
+  const m = String(x.d).match(/(\d{4})(?:[-.](\d{1,2})(?:[-.](\d{1,2}))?)?/);
+  if (!m) return null;
+  const y = +m[1], mo = m[2] ? +m[2] : null, dd = m[3] ? +m[3] : null;
+  const [by, bm, bd] = BORN.split('-').map(Number);
+  if (DIED) { const dy = +DIED.split('-')[0]; if (y > dy) return { t: '没後' + (y - dy) + '年', out: true }; }
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  let a = y - by;
+  if (mo !== null && (mo < bm || (mo === bm && dd !== null && dd < bd))) a -= 1;
+  return { t: a + '歳', out: false };
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sup(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+}
+
+const ERAS = [
+  '',
+  'I 形成 1985–2004',
+  'II Loopt 2005–2012',
+  'III YC 2011–2019',
+  'IV OpenAI創業〜拡大 2015–2022',
+  'V 解任と復帰 2023–2024',
+  'VI 資本・インフラ 2025–2026',
+];
+
+const TL = [
+ {d:'1985.4.22',e:1,t:'シカゴに生まれる',
+  w:'Samuel Harris Altman。のち家族はミズーリ州クレイトンへ移る（1989年）。',
+  y:'以後の満年齢計算の基準日。',
+  f:['Chicago'],s:[13]},
+ {d:'1989',e:1,t:'家族がクレイトン（ミズーリ）へ移住',
+  w:'父の故郷。John Burroughs School（ラデュー）に通う。',
+  y:'育った場所の確定。出生地シカゴと区別する。',s:[13]},
+ {d:'2003',e:1,t:'スタンフォード大学に入学（計算機科学）',
+  w:'約2年在学のち中退。学士は取得せず。',
+  y:'Loopt 創業前の学位パスを切る。',s:[13]},
+ {d:'2005.1',e:2,t:'Loopt を共同創業、CEO',
+  w:'位置情報共有のモバイルアプリ。キャリア経由のデータ購入が初期の中核。',
+  y:'創業者としての第1社。',
+  f:['Loopt'],s:[13,4]},
+ {d:'2005.6',e:2,t:'Y Combinator 第1期（S05）に参加',
+  w:'Graham の「Sam Altman for President」は、本人が第1期創業者だったと明記。',
+  y:'YC との関係のゼロ点。',
+  f:['YC S05'],s:[14]},
+ {d:'2006',e:2,t:'Loopt Series A（NEA 等、約$5M）',
+  w:'後年報道・集計。キャリア統合の資金。',
+  y:'位置情報インフラへの先行投資。',s:[4,13]},
+ {d:'2008.7',e:2,t:'iPhone App Store 開始（業界イベント）',
+  w:'Loopt が築いたキャリア統合の参入障壁が無効化される転機。',
+  y:'後発 Foursquare 等が同じ交渉なしに配布可能になる。',
+  f:['App Store'],s:[4]},
+ {d:'2010.7',e:2,t:'Loopt 登録ユーザー約400万人を公表',
+  w:'登録ベース。アクティブは非開示。',
+  y:'規模の公開ピーク。',s:[4]},
+ {d:'2011',e:3,t:'YC パートタイム・パートナーに就任',
+  w:'Loopt 売却より前。',
+  y:'運営側への移行の開始。',s:[13,16]},
+ {d:'2012.3.9',e:2,t:'Green Dot が Loopt を$43.4Mで買収発表',
+  w:'現金。うち約$9.8Mがリテンション。',
+  y:'出口の確定。凱旋ではない。',
+  f:['$43.4M'],s:[1,2,3]},
+ {d:'2012.4.4',e:2,t:'Loopt 買収完了',
+  w:'約30名が Green Dot のモバイル開発へ。',
+  y:'サービス終了への移行。',s:[15,4]},
+ {d:'2012',e:3,t:'弟 Jack と Hydrazine Capital を共同設立',
+  w:'二次報道は Loopt 売却由来の約$5Mを持ち込んだとする。',
+  y:'個人投資ビークルの起点。',s:[13]},
+ {d:'2013.3.4',e:2,t:'Green Dot 取締役に就任',
+  w:'EVP, Mobile Products and Technology と兼任の開示。',
+  y:'売却後の大企業ボード役。',s:[4]},
+ {d:'2014.2.21',e:3,t:'YC president 就任を Graham が発表',
+  w:'次バッチから。Graham は office hours を継続。',
+  y:'YC の成長フェーズの委任。',
+  f:['president'],s:[14,16]},
+ {d:'2014.7',e:3,t:'Reddit 暫定 CEO（約8日間）',
+  w:'Yishan Wong 退任後。Huffman 復帰まで。',
+  y:'ポートフォリオ企業の緊急オペレーション。',s:[13]},
+ {d:'2015.10',e:3,t:'YC Research を開設',
+  w:'初期資金$10Mは本人拠出と MIT TR。',
+  y:'長期研究アーム。のち OpenAI と接続する文脈。',
+  f:['$10M'],s:[17]},
+ {d:'2015',e:3,t:'Oklo / Helion に関与開始（会長・投資）',
+  w:'Oklo は YC 経由。Helion は核融合。',
+  y:'エネルギー投資の長期軸。',s:[27,26]},
+ {d:'2015.12.11',e:4,t:'OpenAI 設立を非営利として発表',
+  w:'共同議長 Altman / Musk。$1B 拠出表明。',
+  y:'AI 組織の公式起点。',
+  f:['OpenAI'],s:[5]},
+ {d:'2016.4.11',e:2,t:'Green Dot 取締役を退任',
+  w:'独立取締役増員のため枠を譲ったと開示。',
+  y:'決済会社ボードからの離脱。',s:[4]},
+ {d:'2018.2',e:4,t:'Elon Musk が OpenAI ボードを退任',
+  w:'OpenAI LP 文が過去の関与に言及。',
+  y:'共同議長体制の終了。',s:[6]},
+ {d:'2019.1.24',e:3,t:'ブログ「How To Be Successful」公開',
+  w:'所有・複利・長期思考の13項目。',
+  y:'本人の方法論の一次テキスト。',s:[35]},
+ {d:'2019.3.8',e:3,t:'YC president 退任を発表（会長へ移行）',
+  w:'OpenAI に重心。同年中に正式役職からも離脱。',
+  y:'YC 日常運営からの切れ目。',
+  f:['YC退任'],s:[18]},
+ {d:'2019.3.11',e:4,t:'OpenAI LP（capped-profit）を導入',
+  w:'「billions of dollars」が必要と明記。初回キャップ100x。',
+  y:'非営利だけでは資本が足りない、という公式診断。',
+  f:['capped-profit'],s:[6]},
+ {d:'2019.7.22',e:4,t:'Microsoft が OpenAI に$1B出資',
+  w:'Azure 共同スーパーコンピューティング、独占クラウド。',
+  y:'営利構造の最初の大口外部資本。',
+  f:['$1B'],s:[7,19]},
+ {d:'2019',e:4,t:'Tools for Humanity / Worldcoin を共同創業',
+  w:'Alex Blania らと。虹彩スキャンとトークン。',
+  y:'本人の並行メガプロジェクト。',s:[13,31]},
+ {d:'2021',e:6,t:'Helion に個人で約$375M出資（報道）',
+  w:'ラウンド規模の一部。保有比率は非開示。',
+  y:'エネルギー側の最大ポジション。',s:[25,26]},
+ {d:'2022.11.30',e:4,t:'ChatGPT 公開',
+  w:'一般向けチャット UI。利用が急拡大。',
+  y:'CEO としての外部可視性の転換点。',
+  f:['ChatGPT'],s:[13]},
+ {d:'2023.1.23',e:4,t:'Microsoft が追加の multibillion 出資を発表',
+  w:'公式は額面非明示。報道は約$10B。',
+  y:'計算資源と製品展開の第3段階。',s:[8]},
+ {d:'2023.8',e:5,t:'ケニアが Worldcoin の運用を停止',
+  w:'データ保護・同意・詐欺懸念。',
+  y:'規制リスクが顕在化。',s:[31]},
+ {d:'2023.11.17',e:5,t:'OpenAI ボードが Altman を CEO 解任',
+  w:'「not consistently candid」。Murati 暫定。Brockman は議長降板。',
+  y:'5日間クライシスの起点。',
+  f:['解任'],s:[9]},
+ {d:'2023.11.20',e:5,t:'Nadella が Microsoft での雇用を発表／従業員700人超が署名',
+  w:'先進 AI 研究チーム。書簡はボード総辞職と復帰を要求。',
+  y:'資本と人材の両方がボードを圧迫。',
+  f:['700+/770'],s:[20,11,21,36]},
+ {d:'2023.11.21',e:5,t:'復帰の原則合意',
+  w:'新ボード案（Taylor / Summers / D\'Angelo）。本人が X で投稿。',
+  y:'逆転の確定シグナル。',s:[22]},
+ {d:'2023.11.29',e:5,t:'正式に CEO 復帰、初期新ボードを発表',
+  w:'Microsoft に非議決権オブザーバー。WilmerHale 調査開始へ。',
+  y:'制度上の復帰完了。',
+  f:['復帰'],s:[12]},
+ {d:'2024.3.6',e:6,t:'スペイン AEPD が Worldcoin を一時停止',
+  w:'収集・処理停止と既存データのブロック。',
+  y:'EU 内での強制停止。',s:[32]},
+ {d:'2024.3.8',e:5,t:'WilmerHale 調査完了の要約を公開',
+  w:'信頼の崩壊。安全・財務を理由とせず。手順は短縮。',
+  y:'解任理由の公式な事後整理。',
+  f:['WilmerHale'],s:[10,23]},
+ {d:'2024.3.25',e:6,t:'ポルトガル CNPD が90日の収集制限',
+  w:'生体データ。未成年・同意の欠陥。',
+  y:'AEPD に続く連続規制。',s:[34]},
+ {d:'2024.5.9',e:6,t:'Oklo が AltC との SPAC 合併を完了',
+  w:'グロス約$306M。翌10日 NYSE 上場。本人は会長・約2.58%。',
+  y:'公開市場でのエネルギー投資の可視化。',
+  f:['OKLO'],s:[27,28,37]},
+ {d:'2024.6.4',e:6,t:'Worldcoin がスペインで再開しない法的コミット',
+  w:'BayLDA 最終決定まで。AEPD 発表。',
+  y:'一時停止から長期停止へ。',s:[33]},
+ {d:'2024.12.19',e:5,t:'Sequoia 経由の微小 OpenAI 持分をかつて売却したと発言',
+  w:'TechCrunch が Bari Weiss インタビューを報じる。直接保有は否定継続。',
+  y:'持株説明の補正。',s:[24]},
+ {d:'2025.1.21',e:6,t:'Stargate Project を発表（$500B意向／即時$100B）',
+  w:'SoftBank・OpenAI・Oracle・MGX。孫正義が会長。',
+  y:'インフラ資本の表明。実行額は別。',
+  f:['Stargate'],s:[29,38]},
+ {d:'2025.4',e:6,t:'Oklo 会長を退任（報道）',
+  w:'利益相反回避・将来の取引余地。',
+  y:'OpenAI との取引可能性に備えたボード整理。',s:[13]},
+ {d:'2025.12.26',e:6,t:'SoftBank が OpenAI 追加$22.5Bをクロージング',
+  w:'3月コミット充足。保有約11%。',
+  y:'大口外部資本の確定払込。',s:[30]},
+ {d:'2026.3',e:6,t:'Helion ボードを退任',
+  w:'OpenAI との大口取引検討。金銭的利害は残すと本人。',
+  y:'利益相反の事前整理。',s:[26]},
+];
+
+const QUOTES = [
+ {t:'資本',q:'We’ll need to invest billions of dollars in upcoming years into large-scale cloud compute, attracting and retaining talented people, and building AI supercomputers.（今後数年で、大規模クラウド計算・人材確保・AIスーパーコンピュータに数十億ドルを投じる必要がある。）',
+  w:'2019年3月11日・OpenAI「OpenAI LP」',s:[6]},
+ {t:'所有',q:'You get truly rich by owning things that increase rapidly in value.（真に豊かになるのは、急激に値上がりするものを所有することだ。）',
+  w:'2019年1月24日・blog.samaltman.com「How To Be Successful」',s:[35]},
+ {t:'解任',q:'Mr. Altman’s departure follows a deliberative review process by the board, which concluded that he was not consistently candid in his communications with the board…（ボードは審議の末、ボードとのコミュニケーションで一貫して率直でなかったと判断した。）',
+  w:'2023年11月17日・OpenAI 公式発表',s:[9]},
+ {t:'復帰',q:'With the new board and w satya\'s support, i\'m looking forward to returning to openai…（新しいボードと Satya の支持のもと、OpenAI に戻るのを楽しみにしている。）',
+  w:'2023年11月21日・本人の X 投稿（ABC が引用）',s:[22]},
+ {t:'持株',q:'I have a tiny sliver of equity from an old YC fund — I used to have some via a Sequoia fund but that one turned out to be easier to like sell… so I have a very small amount that’s quite insignificant to me.（古い YC ファンド経由のごく一部。Sequoia 経由は売却した。自分にとって取るに足らない。）',
+  w:'2024年12月・Bari Weiss インタビュー（TechCrunch 経由）',s:[24]},
+ {t:'Microsoft',q:'The past three years of our partnership have been great. Microsoft shares our values…（この3年のパートナーシップは素晴らしかった。Microsoft は価値観を共有している。）',
+  w:'2023年1月23日・Microsoft 追加出資発表時のコメント',s:[8]},
+ {t:'YC',q:'Of all the people we’ve met in the 9 years we’ve been working on YC, Jessica and I both feel Sam is the best suited for that task.（YC の9年で会った誰よりも、Sam がその任に最適だと Jessica と私は思う。）',
+  w:'2014年2月21日・Paul Graham「Sam Altman for President」',s:[14]},
+];
+
+const activeEras = new Set();
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button type="button" class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`;
+}).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.cls ? ' ' + r.cls : ''}${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+bars('chartCap', [
+  {k:'YC Research', v:10, sub:'2015'},
+  {k:'OpenAI表明', v:1000, sub:'2015', cls:'s2'},
+  {k:'MSFT 2019', v:1000, sub:'確定', cls:'s2'},
+  {k:'MSFT 2023', v:10000, sub:'報道約', est:true, cls:'s3'},
+  {k:'Oklo SPAC', v:306, sub:'2024', cls:'s2'},
+], 'M USD');
+
+bars('chartLoopt', [
+  {k:'調達(報道低)', v:17, sub:'諸説', est:true},
+  {k:'調達(高)', v:30, sub:'諸説$30M+', est:true, cls:'s2'},
+  {k:'売却総額', v:43.4, sub:'うち留保9.8', cls:'s3'},
+], 'M USD');
+</script>
+</body>
+</html>

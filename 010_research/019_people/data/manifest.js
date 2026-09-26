@@ -3,6 +3,29 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "ジョン・D・ロックフェラー",
+    "nameEn": "John D. Rockefeller",
+    "born": 1839,
+    "died": 1937,
+    "country": "US",
+    "role": "Standard Oil 創業者。1870年に Standard Oil Company of Ohio を設立し、1882年 Trust・1899年持株会社へ組織を組み替えた",
+    "field": "founder",
+    "status": "deceased",
+    "tags": [
+      "石油",
+      "Standard Oil",
+      "トラスト",
+      "反トラスト",
+      "慈善",
+      "Gilded Age"
+    ],
+    "date": "2026-09-26",
+    "summary": "1839年ニューヨーク州生まれ。1870年に Standard Oil of Ohio（資本金100万ドル）を設立し、1879年頃に米精製能力の約90–95%を主張する規模へ統合。1911年5月15日の連邦最高裁判決で分割されたが、1913年の資産は約9億ドル（当時GDP比約2.3%）と推計される。生涯寄付は約5.3–5.4億ドル。1937年死去（97歳）。",
+    "file": "people/rockefeller_john_260926.html",
+    "sourceCount": 28,
+    "variant": "life-arc"
+  },
+  {
     "name": "舛岡富士雄",
     "nameEn": "Fujio Masuoka",
     "born": 1943,

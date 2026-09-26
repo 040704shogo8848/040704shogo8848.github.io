@@ -3,6 +3,29 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "ジェフリー・ヒントン",
+    "nameEn": "Geoffrey Hinton",
+    "born": 1947,
+    "died": null,
+    "country": "GB",
+    "role": "トロント大学名誉教授・元 Google VP and Engineering Fellow（2024年ノーベル物理学賞）",
+    "field": "scientist",
+    "status": "active",
+    "tags": [
+      "深層学習",
+      "ニューラルネット",
+      "トロント大学",
+      "AlexNet",
+      "チューリング賞",
+      "ノーベル物理学賞"
+    ],
+    "date": "2026-09-26",
+    "summary": "1947年ウィンブルドン生まれ。1986年 Nature で誤差逆伝播を共著し、2012年 AlexNet（top-5 誤り率15.3%）と DNNresearch の $44M オークションを経て Google へ。2018年チューリング賞、2024年ノーベル物理学賞。2023年5月に Google を退社し AI リスクを公に語る。",
+    "file": "people/hinton_geoffrey_260926.html",
+    "sourceCount": 30,
+    "variant": "life-arc"
+  },
+  {
     "name": "デミス・ハサビス",
     "nameEn": "Demis Hassabis",
     "born": 1976,

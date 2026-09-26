@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ジェフリー・ヒントン — ニューラルネットの冬からノーベル物理学賞まで</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --s2:#eb6834; --s3:#1baf7a; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  .bar.s2 .fl{background:var(--s2)}
+  .bar.s3 .fl{background:var(--s3)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / ジェフリー・ヒントン</p>
+
+<header class="top">
+  <h1>ジェフリー・ヒントン — ニューラルネットの冬からノーベル物理学賞まで</h1>
+  <div class="en">Geoffrey Everest Hinton　1947.12.6 – ／トロント大学 名誉教授・元 Google VP and Engineering Fellow</div>
+  <div class="tags">
+    <span class="tag">深層学習</span><span class="tag">トロント大学</span><span class="tag">backprop</span>
+    <span class="tag">AlexNet</span><span class="tag">チューリング賞</span><span class="tag">ノーベル物理学賞</span>
+  </div>
+  <p class="lead">1947年12月6日、イギリス・ウィンブルドン生まれ。ケンブリッジで実験心理学（1970年）、エディンバラで AI 博士（1978年）。1986年の Nature 論文で誤差逆伝播を共著し、2006年の Deep Belief Nets、2012年の AlexNet を経て、2018年チューリング賞（Bengio・LeCun と共同）、2024年10月8日ノーベル物理学賞（Hopfield と共同）を受けた。2013–2023年は Google と兼務し、2023年5月1日に退社してリスク発言の立場を取った。</p>
+  <p class="srcnote">作成日 2026年9月26日。数値の基準日は同日。存命の科学者であるため、出典のない私生活・人物評は書かない。年表の満年齢は生年月日1947年12月6日からの年差で算出している。家系の項目は「生誕N年前」と表示する。本人のトロント大学バイオグラフィカルスケッチと ACM Turing 受賞者ページを骨格の一次資料とし、受賞・論文・退社は当局・学術誌・本人発言の日付付き記録で固定する。</p>
+</header>
+
+<h2 id="overview"><span class="num">①</span>概要<span class="en">Overview</span></h2>
+
+<div class="kpi">
+  <div class="card"><div class="k">生年月日</div><div class="v">1947.12.6<small>ウィンブルドン、英国</small></div></div>
+  <div class="card"><div class="k">AlexNet top-5</div><div class="v">15.3%<small>2012 ILSVRC・2位26.2%</small></div></div>
+  <div class="card"><div class="k">DNNresearch</div><div class="v">$44M<small>2012.12・Google落札</small></div></div>
+  <div class="card"><div class="k">ノーベル物理学賞</div><div class="v">2024.10.8<small>Hopfieldと共同・各1/2</small></div></div>
+</div>
+
+<div class="callout">
+<p><b>先に結論を3つ書く。</b></p>
+<p><b>1つ目。曲線は「査読と資金の評価関数が外れていた期間を、層ごと事前学習と GPU 上の畳み込みで抜けた」である。</b>1986年10月9日の Nature 論文（Rumelhart, Hinton, Williams）は誤差逆伝播による表現学習を示した。1990年代にニューラルネットは学界の主流から外れ、Cade Metz の再構成では投稿時に「neural network」を伏せる例があったとされる。2004年に CIFAR の Neural Computation &amp; Adaptive Perception（NCAP）を主導し、2006年の Science 論文と Neural Computation の DBN 論文で層ごと事前学習を示した。2012年9月30日前後の ILSVRC で AlexNet が top-5 誤り率15.3%（2位26.2%）を記録した<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup><sup><a href="#s5">5</a></sup>。</p>
+<p><b>2つ目。商業化の分岐は2012年12月の DNNresearch オークションである。</b>Baidu・Google・Microsoft・DeepMind が競り、価格は Baidu の初期オファー約 $12M（推定・Metz 再構成）から $44M まで上がった。本人は価格をさらに押し上げず Google に止め、2013年3月にトロント大学が買収を公表した（金額は大学側非開示。$44M も Cade Metz / WIRED の再構成）。以後約10年、週の一部で Google Brain と兼務した<sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s1">1</a></sup>。</p>
+<p><b>3つ目。2023年5月1日の退社は「Google 批判のため」ではなく、安全性を自由に語る立場への移動として本人が定式化した。</b>New York Times（Cade Metz、2023年5月1日）と MIT Technology Review（同月2日）で、Google の事業と衝突せずに安全問題を話すためだと述べた。以後、絶滅リスクの確率と時間軸は媒体ごとに数字が動く。2024年12月27日 BBC Radio 4 で「10%から20%／30年」、2026年9月9日 BBC Newsnight で「10%は不合理ではない」と述べた。2024年10月8日にノーベル物理学賞を受けた翌日、OpenAI の利益優先と Ilya Sutskever の役割に触れた<sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s10">10</a></sup><sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup>。</p>
+</div>
+
+<h2 id="timeline"><span class="num">②</span>年表<span class="en">Timeline</span></h2>
+<p>日付が一次情報または日付付き報道で確定した出来事だけを並べた。各項目は事実、具体、なぜ効いたかの3層である。期のボタンで絞り込める。日付の右は、その時点の満年齢である。</p>
+
+<div class="tl-tools">
+  <input id="tlq" type="search" placeholder="年表を検索（例: AlexNet、Nature、Google、ノーベル、CIFAR）" aria-label="年表を検索">
+  <span class="tl-count" id="tlcount"></span>
+</div>
+<div class="tl-eras" id="tleras"></div>
+<div class="tl" id="tl"></div>
+<div class="tl-empty" id="tlempty">該当する項目がない。</div>
+
+<h2 id="phases"><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+
+<h3>I 家系 — Boole・Hinton・昆虫学</h3>
+<p>ACM Turing 受賞者ページは、祖先に George Boole（ブール代数）、曾祖父に Charles Hinton（「tesseract」の語を広めた数学者）、父に Howard Everest Hinton（昆虫学者）を置く。ミドルネーム Everest は、インド測量総監としてエベレスト山の由来となった親族を記念する、と同ページが書く。カナダ百科は曾々祖父母を George Boole と Mary Everest Boole と記す<sup><a href="#s13">13</a></sup><sup><a href="#s14">14</a></sup>。</p>
+<p>George Boole は1815年11月2日生まれ、1854年に <i>An Investigation of the Laws of Thought</i> を刊行した。Howard Everest Hinton は王立協会フェローの昆虫学者で、1977年に死去した（生年1912年）。これらの日付は本人の業績ではなく、家系の時間軸として年表に「生誕N年前」で置く<sup><a href="#s15">15</a></sup><sup><a href="#s16">16</a></sup>。</p>
+
+<h3>II 訓練 — ケンブリッジからエディンバラ（1970–1978）</h3>
+<p>本人のバイオグラフィカルスケッチは、1970年にケンブリッジで実験心理学の BA、1978年にエディンバラ大学で AI の PhD を記す。指導教員は Christopher Longuet-Higgins。接続主義・ニューラルネットに批判的な環境で研究を続けた、という整理は ACM 伝記と後続の二次整理に共通するが、<strong class="hit">指導教員が否定的だったことの一次の会話録は本ページでは取得していない</strong>（残っている問いへ移す）。その後サセックスとカリフォルニア大学サンディエゴ（UCSD）でポスドク、カーネギーメロン大学で5年間教員を務めた<sup><a href="#s1">1</a></sup><sup><a href="#s13">13</a></sup>。</p>
+
+<h3>III 第1期 — PDP・ボルツマン・backprop（1982–1987）</h3>
+<p>UCSD では David Rumelhart と James McClelland の Parallel Distributed Processing（PDP）グループに加わった。1985年、Ackley, Hinton, Sejnowski のボルツマンマシン学習。1986年10月9日、Rumelhart, Hinton, Williams の Nature 論文 <i>Learning representations by back-propagating errors</i>（323巻、533–536頁）。同年、PDP の書籍章でも誤差逆伝播を展開した。誤差逆伝播の先行（Werbos 1974、LeCun 1985 等）は Nature 論文自体が参照する。本ページが固定するのは、<strong class="hit">1986年10月9日に Nature が掲載した共著</strong>という日付である<sup><a href="#s2">2</a></sup><sup><a href="#s17">17</a></sup><sup><a href="#s18">18</a></sup>。</p>
+<p>1987年、カーネギーメロンからトロント大学へ移り、CIFAR のフェローとなった。New York Times（2023年5月1日）は、本人が国防総省（Pentagon）資金を受けたくなかったため米国を離れた、と書く。当時の米国 AI 研究の多くが国防総省資金だった、と同記事が背景を添える<sup><a href="#s8">8</a></sup><sup><a href="#s1">1</a></sup>。</p>
+
+<h3>IV AI の冬と CIFAR（1990年代–2004）</h3>
+<p>1990年代、ニューラルネットは記号主義・カーネル法・確率グラフィカルモデルの陰に回り、資金と査読の両方で不利だった、という記述が本人インタビューと Metz の再構成に繰り返し出る。WIRED（Genius Makers 抜粋）は、投稿時に「neural network」を伏せて通そうとした研究者がいた、と書く。トロント大学が「この系統の教員をもう1人雇う」申請を長く認めなかった、という本人側の回想も同書にある。査読ログの公開データベースや個別却下状の一次スキャンは本ページでは揃っていない（単一の却下事例の金額・日付は N/A）。確認できる制度的な支えは、2004年に始まる CIFAR の NCAP で、本人が2013年までディレクターを務めたことである<sup><a href="#s6">6</a></sup><sup><a href="#s1">1</a></sup><sup><a href="#s19">19</a></sup>。</p>
+<p>1998–2001年は University College London で Gatsby Computational Neuroscience Unit の立ち上げに関わり、その後トロントへ戻った<sup><a href="#s1">1</a></sup>。</p>
+
+<h3>V 復活 — DBN・音声・AlexNet（2006–2012）</h3>
+<p>2006年、Hinton, Osindero, Teh の <i>A fast learning algorithm for deep belief nets</i>（Neural Computation）と、Hinton &amp; Salakhutdinov の Science 論文 <i>Reducing the Dimensionality of Data with Neural Networks</i>（2006年7月28日号、313巻504–507頁）が、層ごと事前学習で深いネットを実用化した。2009年、Mohamed, Dahl, Hinton は TIMIT 上で DBN による音響モデルを示し、core test で phone error rate 23.0% を報告した<sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup><sup><a href="#s20">20</a></sup>。</p>
+<p>2012年、Krizhevsky, Sutskever, Hinton の AlexNet が ILSVRC-2012 で top-5 誤り率15.3%（2位エントリ26.2%）を記録した。論文はパラメータ約6,000万、訓練は2枚の NVIDIA GTX 580（各3GB）で5–6日、と書く。提出は2012年9月30日前後のコンテスト日程に対応する<sup><a href="#s5">5</a></sup>。</p>
+
+<h3>VI オークションと Google（2012.12–2023.5）</h3>
+<p>2012年12月、NIPS（現 NeurIPS）会場の Lake Tahoe・Harrah's 731号室で DNNresearch（Hinton, Krizhevsky, Sutskever の3人会社）のメール入札が走った。入札者は Baidu、Google、Microsoft、DeepMind。Baidu は当初約 $12M の雇用オファーから入り、価格は $25M、$30M、$35M を経て $40M 台へ。深夜に $44M で本人が一度止め、翌朝 Google への売却を通告してオークションを終えた。Cade Metz（WIRED / Genius Makers）が本人と関係者への取材から再構成した経過である。2013年3月、トロント大学が Google による買収を発表したが、金額は非開示とした。Google は直前に研究室へ $600,000 の Focused Research Award も出していた<sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup>。</p>
+<p>2013年以降、本人はトロント大学と Google を半々で兼務し、VP and Engineering Fellow となった（バイオグラフィカルスケッチ）。2017年10月、Sabour, Frosst, Hinton の Capsule Networks（arXiv:1710.09829）。2018年、ACM A.M. Turing Award を Bengio・LeCun と共同受賞。2022年12月27日、Forward-Forward アルゴリズムの arXiv 原稿を公開した<sup><a href="#s1">1</a></sup><sup><a href="#s21">21</a></sup><sup><a href="#s22">22</a></sup><sup><a href="#s23">23</a></sup>。</p>
+
+<h3>VII 退社とリスク発言・ノーベル賞（2023–2026）</h3>
+<p>2023年5月1日、New York Times が退社を報じた。本人はトロントの自宅で Metz の取材に応じ、「Google を批判するためではなく」「AI のリスクについて自由に話すため」に辞めた、と位置づけた。MIT Technology Review（5月2日）では「Google の事業との衝突を気にせず安全問題を話したい」「Google について良いことも言いたいが、社外のほうが信用される」と述べた。BBC（5月2日）でも同様に危険を語る立場を取った<sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s24">24</a></sup>。</p>
+<p>絶滅リスクの数値は媒体ごとに固定する必要がある。2024年12月27日、BBC Radio 4 Today で「今後30年で人類絶滅につながる確率は10%から20%」と述べた（Guardian 報道）。以前は約10%と述べていた、と同報道が対比する。2026年9月9日、BBC Newsnight で「10年以内に人類を殺す確率10%は不合理ではない」と述べた（Business Insider 等）。2023年9月10日前後の CNN GPS では人類への脅威を語ったが、確率の具体値は当該クリップ要約では確定できない（N/A）<sup><a href="#s10">10</a></sup><sup><a href="#s11">11</a></sup><sup><a href="#s25">25</a></sup>。</p>
+<p>2024年10月8日、スウェーデン王立科学アカデミーは John J. Hopfield と Geoffrey Hinton にノーベル物理学賞を授与し、理由を「人工ニューラルネットワークによる機械学習を可能にした基礎的発見と発明」とした。賞金は1,100万スウェーデン・クローナを折半。翌10月9日の会見で、Ilya Sutskever が Sam Altman を解任したことに触れ、「利益より安全を重視しなかったのは残念」と Altman を批判した<sup><a href="#s12">12</a></sup><sup><a href="#s26">26</a></sup>。</p>
+
+<h2 id="numbers"><span class="num">④</span>実績の数字<span class="en">The Numbers</span></h2>
+<p>科学者としての数字は、論文の誤り率・受賞・買収額・在籍年数に限る。個人資産・持株の監査済み開示は無い（N/A）。</p>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>項目</th><th class="num">数値</th><th>時点・条件</th></tr></thead>
+<tbody>
+<tr><td class="name">生年月日</td><td class="num">1947-12-06</td><td>Nobel / ACM / カナダ百科<sup><a href="#s12">12</a></sup><sup><a href="#s13">13</a></sup><sup><a href="#s14">14</a></sup></td></tr>
+<tr><td class="name">BA（実験心理学）</td><td class="num">1970</td><td>Cambridge<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">PhD（AI）</td><td class="num">1978</td><td>Edinburgh・Longuet-Higgins<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">Nature backprop</td><td class="num">1986-10-09</td><td>Rumelhart, Hinton, Williams<sup><a href="#s2">2</a></sup></td></tr>
+<tr><td class="name">トロント着任</td><td class="num">1987</td><td>CMU から。CIFAR fellow<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">CIFAR NCAP ディレクター</td><td class="num">2004–2013</td><td>本人バイオ<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">Science 次元削減</td><td class="num">2006-07-28</td><td>Hinton &amp; Salakhutdinov<sup><a href="#s3">3</a></sup></td></tr>
+<tr><td class="name">TIMIT PER（DBN）</td><td class="num">23.0%</td><td>2009 NIPS workshop 系、Mohamed et al.<sup><a href="#s20">20</a></sup>（single-source）</td></tr>
+<tr><td class="name">ILSVRC-2012 top-5</td><td class="num">15.3%</td><td>2位 26.2%。差 10.9ポイント<sup><a href="#s5">5</a></sup></td></tr>
+<tr><td class="name">AlexNet パラメータ</td><td class="num">約 60M</td><td>論文記載<sup><a href="#s5">5</a></sup></td></tr>
+<tr><td class="name">訓練 GPU</td><td class="num">GTX 580 ×2</td><td>各 3GB、5–6日<sup><a href="#s5">5</a></sup></td></tr>
+<tr><td class="name">DNNresearch 落札額</td><td class="num">$44M</td><td>2012-12。Metz 再構成。大学は非開示<sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup></td></tr>
+<tr><td class="name">Google 初期研究助成</td><td class="num">$600,000</td><td>買収前後の Focused Research Award<sup><a href="#s7">7</a></sup>（single-source）</td></tr>
+<tr><td class="name">Google 兼務</td><td class="num">約10年</td><td>2013–2023。半々、と本人バイオ<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">チューリング賞</td><td class="num">2018</td><td>Bengio・LeCun と共同<sup><a href="#s22">22</a></sup></td></tr>
+<tr><td class="name">ノーベル物理学賞</td><td class="num">2024-10-08</td><td>Hopfield と各1/2。賞金合計 SEK 11M<sup><a href="#s12">12</a></sup></td></tr>
+<tr><td class="name">絶滅リスク（30年）</td><td class="num">10–20%</td><td>2024-12-27 BBC Radio 4<sup><a href="#s10">10</a></sup></td></tr>
+<tr><td class="name">絶滅リスク（10年・10%）</td><td class="num">「不合理ではない」</td><td>2026-09-09 BBC Newsnight<sup><a href="#s11">11</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="chart">
+  <div class="cap">ILSVRC-2012 top-5 誤り率</div>
+  <div class="sub">単位は %。低いほど良い。AlexNet 論文 Table 2</div>
+  <div class="bars" id="chartImagenet"></div>
+  <p class="sub" style="margin:14px 0 0">出典5。2位は SIFT+FV 系のアンサンブル。</p>
+</div>
+
+<div class="chart">
+  <div class="cap">DNNresearch 入札の価格帯（Metz 再構成）</div>
+  <div class="sub">単位は M USD。初期オファーから落札まで</div>
+  <div class="bars" id="chartAuction"></div>
+  <p class="sub" style="margin:14px 0 0">出典6。大学公式は金額非開示のため、落札額は報道再構成（reported via secondary）。</p>
+</div>
+
+<h2 id="failures"><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
+<p>ここでの「失敗」は、金額・時点・制度のズレで切る。能力や人格の評価は書かない。1990年代については、個人の研究ミスというより<strong class="hit">学界の評価関数が外れていた区間</strong>として扱う。</p>
+
+<h3>類型1: 1990年代 — 査読・資金・採用の評価関数</h3>
+<p>誤差逆伝播は1986年に Nature に載ったが、1990年代にニューラルネットは主流から外れた。Metz の再構成は、(1) 投稿で「neural network」を伏せる慣行、(2) トロント大学が同系統の教員採用を長期間認めなかった、を書く。CIFAR NCAP（2004–2013）は、その空白を埋める制度的な資金・ネットワークだった。個別論文の却下状や、却下されたグラント申請のドル／カナダドル額の公開ログは、本ページが取得した範囲では揃っていない（N/A）。観測できるのは、<strong class="hit">2006年以前に層の深いネットを大規模教師ありで安定訓練する標準手順が学界に定着していなかった</strong>ことと、2004年以降の CIFAR 支援の日付である<sup><a href="#s6">6</a></sup><sup><a href="#s1">1</a></sup><sup><a href="#s19">19</a></sup>。</p>
+
+<h3>類型2: Capsule Networks が主流アーキテクチャにならなかったこと</h3>
+<p>2017年10月の Dynamic Routing Between Capsules（Sabour, Frosst, Hinton）は MNIST で当時の SOTA を主張し、重なり合う数字で CNN より良い、と書いた。その後、ImageNet 規模の汎用ビジョンや大規模言語モデルの標準部品にはならなかった。Transformer（2017年6月の Attention Is All You Need）と残差 CNN の系譜が産業の既定になった。Capsule の失敗は「論文が誤りだった」ことではなく、<strong class="hit">計算コスト・スケール・エコシステムの三点で後続が選ばれなかった</strong>こととして測る。産業導入の金額換算（機会損失）は公開一次では N/A<sup><a href="#s21">21</a></sup>。</p>
+
+<h3>類型3: backprop が脳の学習則ではない、という本人の継続的な留保</h3>
+<p>Forward-Forward 論文（2022年12月27日 arXiv）は、皮質が誤差微分を明示伝播したり、後続の逆伝播のために活動を保持したりする証拠は無い、と書く。top-down 結合が bottom-up の鏡像になっていないことも、生物学的不可能性の根拠に挙げる。1986年の Nature 共著者が、40年近く後に「自分が広めた学習則は脳のモデルとしては不十分」と公式に書き続けている。これは製品の赤字ではなく、<strong class="hit">本人が認めたモデルと現実のズレ</strong>である。代替アルゴリズム（Forward-Forward）は「小さな問題で調べる価値がある」水準の予備調査として公開された<sup><a href="#s23">23</a></sup>。</p>
+
+<h3>類型4: Google 在籍約10年のあと「安全性のために辞めた」というタイミング</h3>
+<p>兼務開始は2013年、退社公表は2023年5月1日。ChatGPT 公開は2022年11月30日。退社は生成 AI の消費者普及が始まった後である。本人は NYT / MIT TR で、Google 批判が目的ではなく発言の自由度が目的だと述べた。評価の軸は次の2つに分ける。(a) 在籍中に社内で安全研究を加速できたか（公開ログでは測れない。N/A）。(b) 退社後に確率付きのリスク発言が政策・世論に入ったか（BBC・Guardian・Newsnight の日付付き発言は確認できる）。「10年いてから辞めた」こと自体を道徳評価に翻訳しない。タイムスタンプとして置く<sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s1">1</a></sup>。</p>
+
+<h3>類型5: 育てた Sutskever と OpenAI、ノーベル賞後の批判</h3>
+<p>Sutskever は AlexNet 共著者であり DNNresearch の一員、のち OpenAI の首席科学者となった。2023年11月の Altman 解任劇に関与し、2024年10月9日のノーベル関連会見で Hinton は「学生の1人が Sam Altman を解雇したことを特に誇りに思う」と述べ、続けて Altman が安全より利益を重視したと批判した（Fortune）。OpenAI の非営利支配から営利構造への転換を巡る訴訟・批判の文脈で、師弟関係と組織批判が同時に表に出た。金額は OpenAI の評価額変動（報道で数百億ドル規模）と結びつくが、Hinton 個人の持分開示は無い（N/A）。構造として残るのは、<strong class="hit">2012年のオークションで Google に入った系譜と、別経路で OpenAI に入った弟子が、2024年に安全／利益の対立軸で交差した</strong>ことである<sup><a href="#s26">26</a></sup><sup><a href="#s6">6</a></sup>。</p>
+
+<div class="risk">
+<p><b>欠落データ。</b>1990年代の個別論文却下状・グラント不採択額、DNNresearch の契約書上の正確な対価（大学非開示）、Google 在籍時の安全研究予算、Capsule 系の産業導入金額、個人資産・持株は公開一次では揃っていない。</p>
+</div>
+
+<h2 id="thought"><span class="num">⑥</span>思想と方法<span class="en">Thought and Method</span></h2>
+
+<h3>分散表現と層ごと学習</h3>
+<p>本人のバイオは、目標を「高次元データ中の複雑な構造を効率よく見つける学習手続きを発見し、それが脳の視覚学習でもあることを示す」と書く。Boltzmann machine、分散表現、mixture of experts、DBN、word embedding への backprop 適用を自己の寄与として列挙する<sup><a href="#s1">1</a></sup>。</p>
+
+<h3>軍事利用への拒否と資金源</h3>
+<p>1987年のカナダ移住理由として、NYT は Pentagon 資金への忌避を本人の説明として記す。「robot soldiers」への反対も同記事。思想の一次テキストは本人の長文エッセイではなく、退社前後のインタビューである<sup><a href="#s8">8</a></sup>。</p>
+
+<h3>生物学的妥当性と Forward-Forward</h3>
+<p>Forward-Forward は、正例と負例の2回の前向きパスで層ごとの「goodness」を上げ下げする。逆伝播の生物学的不可能性を前提に、パイプライン上で学習できる手続きを探る予備調査である<sup><a href="#s23">23</a></sup>。</p>
+
+<h3>リスクの時間軸</h3>
+<p>退社後の発言は、(1) 誤情報・労働市場、(2) 自律システムによる長期の人類支配リスク、の二層に分かれる。確率は 10% → 10–20% → 「10%は不合理ではない」と媒体日付ごとに動く。単一の公式確率表は無い<sup><a href="#s8">8</a></sup><sup><a href="#s10">10</a></sup><sup><a href="#s11">11</a></sup>。</p>
+
+<h2 id="quotes"><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
+<p>日付と出典が特定できる発言に限った。出典未確定の言い回しは載せない。英語発言は原文のまま置く。</p>
+<div class="q-tabs" id="qtabs"></div>
+<div class="q-list" id="qlist"></div>
+
+<h2 id="open"><span class="num">⑧</span>残っている問い / 出典<span class="en">Open Questions / Sources</span></h2>
+
+<h3>残っている問い</h3>
+<ul>
+<li>Christopher Longuet-Higgins がニューラルネット研究に否定的だったことを示す、指導期間中の一次文書（手紙・査読・研究室メモ）はどこか。現状は二次整理と伝記に依存する。</li>
+<li>1990年代に却下された Hinton 研究室の論文・グラント申請の件数と金額を、査読ログや資金機関の公開アーカイブだけで復元できるか。</li>
+<li>DNNresearch の契約書上の対価（USD）と、株式・雇用契約の内訳。トロント大学は金額非開示のままである。</li>
+<li>Google 在籍期（2013–2023）の安全研究・軍事契約回避に関する社内関与の公開ログはあるか。</li>
+<li>絶滅リスク確率（10%、10–20%）の発言ごとに、本人が想定したシナリオ定義（誰が・何が・何年で）を同一の定義で突合できるか。</li>
+<li>Capsule Networks の産業・学術引用と実システム採用の定量比較（ImageNet / 大規模ベンチ上の追跡調査）を一次データだけで書けるか。</li>
+</ul>
+
+<ol class="sources">
+<li id="s1">Geoffrey E. Hinton, Biographical Sketch（University of Toronto。BA 1970、PhD 1978、CMU 5年、Toronto、Gatsby 1998–2001、CIFAR NCAP 2004–2013、Google 2013–2023 half-time） — https://www.cs.toronto.edu/~hinton/bio.html</li>
+<li id="s2">Rumelhart, Hinton, Williams, “Learning representations by back-propagating errors,” Nature 323, 533–536（1986-10-09） — https://www.nature.com/articles/323533a0</li>
+<li id="s3">Hinton &amp; Salakhutdinov, “Reducing the Dimensionality of Data with Neural Networks,” Science 313, 504–507（2006-07-28） — https://www.science.org/doi/10.1126/science.1127647</li>
+<li id="s4">Hinton, Osindero, Teh, “A fast learning algorithm for deep belief nets,” Neural Computation 18, 1527–1554（2006）PDF — https://www.cs.toronto.edu/~hinton/absps/fastnc.pdf</li>
+<li id="s5">Krizhevsky, Sutskever, Hinton, “ImageNet Classification with Deep Convolutional Neural Networks,” NeurIPS 2012（top-5 15.3% vs 26.2%、GTX 580×2、約60Mパラメータ） — https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf</li>
+<li id="s6">Cade Metz / WIRED, “The Secret Auction That Set Off the Race for AI Supremacy”（2021-03-16。DNNresearch、$12M→$44M、Baidu/Google/Microsoft/DeepMind、Harrah’s 731） — https://www.wired.com/story/secret-auction-race-ai-supremacy-google-microsoft-baidu/</li>
+<li id="s7">University of Toronto / TechCrunch, Google acquires DNNresearch（2013-03。金額非開示、$600,000 gift） — https://techcrunch.com/2013/03/12/google-scoops-up-neural-networks-startup-dnnresearch-to-boost-its-voice-and-image-search-tech/</li>
+<li id="s8">Cade Metz, “‘The Godfather of A.I.’ Leaves Google and Warns of Danger Ahead,” The New York Times（2023-05-01。退社、Pentagon資金忌避、後悔の発言） — https://www.nytimes.com/2023/05/01/technology/ai-google-chatbot-engineer-quits-hinton.html</li>
+<li id="s9">Will Douglas Heaven, “Geoffrey Hinton tells us why he’s now scared of the tech he helped build,” MIT Technology Review（2023-05-02。Google批判が目的ではない、発言の自由度） — https://www.technologyreview.com/2023/05/02/1072528/geoffrey-hinton-google-why-scared-ai/</li>
+<li id="s10">The Guardian, “‘Godfather of AI’ shortens odds… 10% to 20%… next 30 years”（2024-12-27。BBC Radio 4 Today） — https://www.theguardian.com/technology/2024/dec/27/godfather-of-ai-raises-odds-of-the-technology-wiping-out-humanity-over-next-30-years</li>
+<li id="s11">Business Insider, “‘Godfather of AI’ Says a 10% AI Doomsday Risk Isn’t ‘Unreasonable’”（2026-09。BBC Newsnight 2026-09-09） — https://www.businessinsider.com/geoffrey-hinton-godfather-of-ai-human-extinction-odds-2026-9</li>
+<li id="s12">The Nobel Prize, Press release: The Nobel Prize in Physics 2024（2024-10-08。Hopfield &amp; Hinton、SEK 11M、citation） — https://www.nobelprize.org/prizes/physics/2024/press-release/</li>
+<li id="s13">ACM A.M. Turing Award Laureate: Geoffrey E Hinton（家系 Boole / Charles Hinton / Howard Hinton、受賞歴） — https://amturing.acm.org/award_winners/hinton_4791679.cfm</li>
+<li id="s14">The Canadian Encyclopedia, “Geoffrey Hinton”（生地・家系・受賞） — https://thecanadianencyclopedia.ca/en/article/geoffrey-hinton</li>
+<li id="s15">Stanford Encyclopedia / Britannica 系二次および Boole 通史での生没・Laws of Thought 1854（George Boole 1815-11-02） — https://plato.stanford.edu/entries/boole/</li>
+<li id="s16">Royal Society / 二次整理: Howard Everest Hinton FRS（昆虫学者、1912–1977） — https://royalsocietypublishing.org/doi/10.1098/rsbm.1978.0007</li>
+<li id="s17">Ackley, Hinton, Sejnowski, “A Learning Algorithm for Boltzmann Machines,” Cognitive Science 9, 147–169（1985） — https://www.cs.toronto.edu/~hinton/absps/cogscibm.pdf</li>
+<li id="s18">Hinton publications index: Backpropagation（Nature 1986 と PDP 章の一覧） — https://www.cs.toronto.edu/~hinton/backprop.html</li>
+<li id="s19">CIFAR Learning in Machines &amp; Brains / NCAP 沿革（2004年創設、Hinton ディレクター期の整理） — https://cifar.ca/research-programs/learning-in-machines-brains/</li>
+<li id="s20">Mohamed, Dahl, Hinton, “Deep Belief Networks for phone recognition,” NIPS 2009 workshop PDF（TIMIT PER 23.0%） — https://www.cs.toronto.edu/~hinton/absps/NIPS09_DBN_phone_rec.pdf</li>
+<li id="s21">Sabour, Frosst, Hinton, “Dynamic Routing Between Capsules,” arXiv:1710.09829（2017-10-26） — https://arxiv.org/abs/1710.09829</li>
+<li id="s22">ACM, 2018 A.M. Turing Award（Bengio, Hinton, LeCun） — https://awards.acm.org/award-recipients/hinton_4791679</li>
+<li id="s23">Hinton, “The Forward-Forward Algorithm: Some Preliminary Investigations,” arXiv:2212.13345（2022-12-27。backprop の生物学的不可能性） — https://arxiv.org/abs/2212.13345</li>
+<li id="s24">BBC News, “AI ‘godfather’ Geoffrey Hinton tells the BBC of AI dangers after he quits Google”（2023-05-02） — https://www.bbc.com/news/world-us-canada-65453192</li>
+<li id="s25">CNN, “On GPS: AI ‘godfather’ warns of threat to humanity”（2023-09-10 公開クリップ） — https://www.cnn.com/videos/tech/2023/09/10/gps-ai-block-for-web-c.cnn</li>
+<li id="s26">Fortune, “Nobel Prize–winning AI godfather Geoffrey Hinton says he’s proud his student fired OpenAI boss Sam Altman”（2024-10-09。利益と安全） — https://fortune.com/2024/10/09/openai-sam-altman-geoffrey-hinton-nobel-prize-physics-ilya-sutskever-toronto/</li>
+<li id="s27">Royal Society, Professor Geoffrey Hinton FRS（1998選出、Royal Medal、Nobel） — https://royalsociety.org/people/geoffrey-hinton-11624/</li>
+<li id="s28">AP News, “‘Godfather of AI’ leaves Google, warns of tech’s dangers”（2023-05。Google acted very responsibly） — https://apnews.com/article/ai-godfather-google-geoffery-hinton-fa98c6a6fddab1d7c27560f6fcbad0ad</li>
+<li id="s29">Communications of the ACM 再録版 AlexNet（top-5 15.3% vs 26.2% の再掲） — https://cacm.acm.org/research/imagenet-classification-with-deep-convolutional-neural-networks/</li>
+<li id="s30">Vector Institute / 二次: Hinton as Chief Scientific Adviser（チューリング受賞時の肩書き確認） — https://vectorinstitute.ai/</li>
+</ol>
+
+</div>
+
+<script type="application/json" id="facts">
+[
+  {"claim":"生年月日","value":"1947-12-06","unit":"date","as_of":"2026-09-26","source":"https://www.nobelprize.org/prizes/physics/2024/press-release/","confidence":"reported"},
+  {"claim":"Nature_backprop掲載日","value":"1986-10-09","unit":"date","as_of":"1986-10-09","source":"https://www.nature.com/articles/323533a0","confidence":"reported"},
+  {"claim":"ILSVRC2012_top5_AlexNet","value":15.3,"unit":"%","as_of":"2012","source":"https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf","confidence":"reported"},
+  {"claim":"ILSVRC2012_top5_runner_up","value":26.2,"unit":"%","as_of":"2012","source":"https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf","confidence":"reported"},
+  {"claim":"DNNresearch_落札額","value":44,"unit":"M USD","as_of":"2012-12","source":"https://www.wired.com/story/secret-auction-race-ai-supremacy-google-microsoft-baidu/","confidence":"reported"},
+  {"claim":"Google_Focused_Research_Award","value":600000,"unit":"USD","as_of":"2013","source":"https://techcrunch.com/2013/03/12/google-scoops-up-neural-networks-startup-dnnresearch-to-boost-its-voice-and-image-search-tech/","confidence":"single-source"},
+  {"claim":"TIMIT_PER_DBN","value":23.0,"unit":"%","as_of":"2009","source":"https://www.cs.toronto.edu/~hinton/absps/NIPS09_DBN_phone_rec.pdf","confidence":"single-source"},
+  {"claim":"Nobel_Physics_2024_prize_SEK","value":11,"unit":"M SEK","as_of":"2024-10-08","source":"https://www.nobelprize.org/prizes/physics/2024/press-release/","confidence":"reported"},
+  {"claim":"絶滅リスク_30年","value":"10-20","unit":"%","as_of":"2024-12-27","source":"https://www.theguardian.com/technology/2024/dec/27/godfather-of-ai-raises-odds-of-the-technology-wiping-out-humanity-over-next-30-years","confidence":"reported"},
+  {"claim":"CIFAR_NCAP_director","value":"2004-2013","unit":"years","as_of":"2013","source":"https://www.cs.toronto.edu/~hinton/bio.html","confidence":"reported"},
+  {"claim":"Google退社公表","value":"2023-05-01","unit":"date","as_of":"2023-05-01","source":"https://www.nytimes.com/2023/05/01/technology/ai-google-chatbot-engineer-quits-hinton.html","confidence":"reported"},
+  {"claim":"AlexNet_params","value":60,"unit":"M","as_of":"2012","source":"https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf","confidence":"reported"}
+]
+</script>
+
+<script>
+const BORN = '1947-12-06';
+const DIED = null;
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: true };
+  const m = String(x.d).match(/(\d{4})(?:[-.](\d{1,2})(?:[-.](\d{1,2}))?)?/);
+  if (!m) return null;
+  const y = +m[1], mo = m[2] ? +m[2] : null, dd = m[3] ? +m[3] : null;
+  const [by, bm, bd] = BORN.split('-').map(Number);
+  if (DIED) { const dy = +DIED.split('-')[0]; if (y > dy) return { t: '没後' + (y - dy) + '年', out: true }; }
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  let a = y - by;
+  if (mo !== null && (mo < bm || (mo === bm && dd !== null && dd < bd))) a -= 1;
+  return { t: a + '歳', out: false };
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sup(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+}
+
+const ERAS = [
+  '',
+  'I 家系 1815–1977',
+  'II 訓練 1970–1981',
+  'III 第1期 1982–1987',
+  'IV 冬とCIFAR 1988–2005',
+  'V 復活 2006–2012',
+  'VI Google 2013–2022',
+  'VII 退社とノーベル 2023–2026',
+];
+
+const TL = [
+ {d:'1815.11.2',e:1,t:'高祖父 George Boole 生誕',
+  w:'ブール代数の基礎を築く数学者。ACM Turing 伝記とカナダ百科が祖先として記す。',
+  y:'計算の論理基盤と家系の接続点。年表では生誕N年前として置く。',
+  f:['Boole'],s:[13,14,15]},
+ {d:'1854',e:1,t:'Boole『Laws of Thought』刊行',
+  w:'論理と確率の代数化。現代計算の理論的前提の一つ。',
+  y:'本人の研究領域（表現学習）より前の論理系譜。',
+  f:['1854'],s:[15]},
+ {d:'1912',e:1,t:'父 Howard Everest Hinton 生誕',
+  w:'昆虫学者。のち王立協会フェロー。1977年没。',
+  y:'科学家系の直近世代。',
+  f:['FRS'],s:[13,16]},
+ {d:'1947.12.6',e:1,t:'ウィンブルドンに生まれる',
+  w:'Geoffrey Everest Hinton。Nobel・ACM・カナダ百科が一致。',
+  y:'以後の満年齢計算の基準日。',
+  f:['生誕'],s:[12,13,14]},
+ {d:'1970',e:2,t:'ケンブリッジで実験心理学 BA',
+  w:'King\'s College。本人バイオの確定年。',
+  y:'認知科学から AI へ入る入口。',
+  f:['Cambridge'],s:[1]},
+ {d:'1977',e:1,t:'父 Howard Everest Hinton 死去',
+  w:'昆虫学者・王立協会フェロー。生年1912。Royal Society biographical memoir。',
+  y:'科学家系の区切り。',
+  f:['1977'],s:[16]},
+ {d:'1978',e:2,t:'エディンバラ大学で AI PhD',
+  w:'指導教員 Christopher Longuet-Higgins。ニューラルネット系の研究。',
+  y:'博士号の確定。指導教員の否定的態度の一次文書は未取得。',
+  f:['Edinburgh'],s:[1,13]},
+ {d:'1982',e:3,t:'UCSD の PDP グループ周辺で研究',
+  w:'Rumelhart・McClelland の Parallel Distributed Processing 圏。正確な着任月はバイオに年次のみ。',
+  y:'第1期ニューラルネットの人的ネットワーク。',
+  f:['PDP'],s:[1,13]},
+ {d:'1985',e:3,t:'ボルツマンマシン学習の論文（Ackley, Hinton, Sejnowski）',
+  w:'Cognitive Science。統計物理的学習。Nobel 広報も Boltzmann machine を挙げる。',
+  y:'Hopfield 系譜との接続。2024年受賞理由の核。',
+  f:['Boltzmann'],s:[17,12]},
+ {d:'1986.10.9',e:3,t:'Nature 論文「Learning representations by back-propagating errors」',
+  w:'Rumelhart, Hinton, Williams。隠れユニットによる特徴学習。',
+  y:'誤差逆伝播の普及マイルストーン。先行研究は論文内で参照。',
+  f:['Nature'],s:[2,18]},
+ {d:'1987',e:3,t:'カーネギーメロンからトロント大学へ',
+  w:'CIFAR fellow。NYT は Pentagon 資金忌避を移住理由として本人が述べた、と書く。',
+  y:'以後の研究拠点がカナダに固定される。',
+  f:['Toronto'],s:[1,8]},
+ {d:'1992',e:4,t:'IEEE Neural Networks Pioneer Award（ACM伝記の受賞歴）',
+  w:'ACM Turing 受賞者ページの年表。',
+  y:'冬の期間中も専門賞は継続。',
+  f:['IEEE'],s:[13]},
+ {d:'1996',e:4,t:'Royal Society of Canada フェロー',
+  w:'カナダ百科・ACM伝記。',
+  y:'カナダでの制度的認知。',s:[13,14]},
+ {d:'1998',e:4,t:'Royal Society（英国）フェロー選出',
+  w:'Royal Society プロフィール。Elected 1998。',
+  y:'英国側の最高位学術会員資格。',
+  f:['FRS'],s:[27]},
+ {d:'1998',e:4,t:'Gatsby Computational Neuroscience Unit 立ち上げ（〜2001）',
+  w:'UCL。本人バイオ。',
+  y:'計算神経科学の拠点づくり。',
+  f:['Gatsby'],s:[1]},
+ {d:'2001',e:4,t:'トロント大学へ復帰',
+  w:'Gatsby 後。本人バイオ。',
+  y:'深層学習復活前の拠点再固定。',s:[1]},
+ {d:'2001',e:4,t:'David E. Rumelhart Prize',
+  w:'ACM伝記の受賞歴。',
+  y:'認知科学コミュニティ内の評価。',s:[13]},
+ {d:'2004',e:4,t:'CIFAR NCAP プログラム開始・ディレクター就任',
+  w:'Neural Computation and Adaptive Perception。2013年まで。のち Learning in Machines & Brains。',
+  y:'冬の終わりを支える制度資金。Bengio・LeCun も参加。',
+  f:['CIFAR'],s:[1,19]},
+ {d:'2005',e:4,t:'IJCAI Research Excellence Award',
+  w:'ACM伝記。',
+  y:'国際 AI 学会側の認知。',s:[13]},
+ {d:'2006.7.28',e:5,t:'Science 論文（深層オートエンコーダの次元削減）',
+  w:'Hinton & Salakhutdinov。層ごと事前学習で深いネットを初期化。',
+  y:'深層学習復活の公開マイルストーンの一つ。',
+  f:['Science'],s:[3]},
+ {d:'2006',e:5,t:'Neural Computation に DBN 高速学習アルゴリズム',
+  w:'Hinton, Osindero, Teh。RBM の層ごと学習。',
+  y:'音声・視覚応用の手前の生成モデル基盤。',
+  f:['DBN'],s:[4]},
+ {d:'2009',e:5,t:'TIMIT で DBN 音響モデル（PER 23.0%）',
+  w:'Mohamed, Dahl, Hinton。NIPS workshop 系 PDF。',
+  y:'音声認識への深層モデル適用の実証。',
+  f:['23.0%'],s:[20]},
+ {d:'2010',e:5,t:'NSERC Herzberg Canada Gold Medal',
+  w:'ACM伝記。',
+  y:'カナダ科学の最高賞クラス。',s:[13]},
+ {d:'2012',e:5,t:'Killam Prize in Engineering',
+  w:'ACM伝記の受賞歴。',
+  y:'AlexNet 直前のカナダ側顕彰。',
+  f:['Killam'],s:[13]},
+ {d:'2012.9.30',e:5,t:'ILSVRC-2012 に AlexNet を提出（チーム SuperVision）',
+  w:'Krizhevsky, Sutskever, Hinton。top-5 誤り率15.3%（2位26.2%）。GTX 580×2。',
+  y:'産業と学界の転換点。',
+  f:['15.3%'],s:[5,29]},
+ {d:'2012.12',e:5,t:'DNNresearch オークション（Lake Tahoe）',
+  w:'Baidu・Google・Microsoft・DeepMind。$44M で Google に止め、翌朝終了。Metz 再構成。',
+  y:'人材と知財の価格発見。AI 企業競争の開始合図。',
+  f:['$44M'],s:[6]},
+ {d:'2013.3',e:6,t:'トロント大学が Google による DNNresearch 買収を発表',
+  w:'金額非開示。$600,000 の研究助成も併記される報道。',
+  y:'兼務体制の公式化。',
+  f:['Google'],s:[7]},
+ {d:'2013',e:6,t:'Google とトロント大学の半々兼務を開始',
+  w:'本人バイオ。VP and Engineering Fellow へ。',
+  y:'約10年の産業研究期の起点。',s:[1]},
+ {d:'2014',e:6,t:'IEEE Frank Rosenblatt Medal',
+  w:'ACM伝記。',
+  y:'ニューラルネット系の名誉賞。',s:[13]},
+ {d:'2016',e:6,t:'IEEE/RSE James Clerk Maxwell Gold Medal',
+  w:'ACM伝記・カナダ百科。',
+  y:'産業変革への寄与の公的認知。',s:[13,14]},
+ {d:'2017.10.26',e:6,t:'Capsule Networks 論文を arXiv 公開',
+  w:'Sabour, Frosst, Hinton。Dynamic Routing Between Capsules。',
+  y:'主流化はしなかったが、本人の代替アーキテクチャ探索。',
+  f:['Capsules'],s:[21]},
+ {d:'2018',e:6,t:'ACM A.M. Turing Award（Bengio・LeCun と共同）',
+  w:'深層ニューラルネットを計算の中核にした概念的・工学的突破。',
+  y:'「AI のゴッドファーザー」三人組の公式化。',
+  f:['Turing'],s:[22]},
+ {d:'2018',e:6,t:'Companion of the Order of Canada',
+  w:'ACM伝記。カナダ最高位クラスの栄典。',
+  y:'国家側の顕彰。',s:[13]},
+ {d:'2022',e:6,t:'Royal Medal（Royal Society）',
+  w:'カナダ百科・Royal Society プロフィールが列挙。分散表現学習と音声・視覚応用。',
+  y:'ノーベル前の英国側メダル。',
+  f:['Royal Medal'],s:[14,27]},
+ {d:'2022.12.27',e:6,t:'Forward-Forward アルゴリズムの arXiv 原稿',
+  w:'backprop の生物学的不可能性を前提にした代替学習。',
+  y:'脳モデルと工学手法の分離を本人が文書化。',
+  f:['FF'],s:[23]},
+ {d:'2023.5.1',e:7,t:'Google 退社を NYT が報道',
+  w:'Cade Metz 取材。リスクを自由に語るため。Pentagon 資金忌避の過去にも言及。',
+  y:'安全発言期への移行。',
+  f:['退社'],s:[8]},
+ {d:'2023.5.2',e:7,t:'MIT Technology Review / BBC インタビュー',
+  w:'Google 批判が目的ではない。事業と衝突せず安全を語りたい、と MIT TR。',
+  y:'退社理由の本人定式化。',
+  f:['MIT TR'],s:[9,24,28]},
+ {d:'2023.9.10',e:7,t:'CNN GPS で人類への脅威を語る',
+  w:'Fareed Zakaria 番組。確率の具体値は当該クリップ要約では未確定。',
+  y:'退社後のメディア露出の一例。',s:[25]},
+ {d:'2024.10.8',e:7,t:'ノーベル物理学賞（Hopfield と共同）',
+  w:'「人工ニューラルネットワークによる機械学習を可能にした基礎的発見と発明」。賞金 SEK 11M を折半。',
+  y:'物理学賞としての制度的到達点。',
+  f:['Nobel'],s:[12]},
+ {d:'2024.10.9',e:7,t:'ノーベル関連会見で Altman / OpenAI を批判',
+  w:'Sutskever が Altman を解任したことを誇り、利益優先を unfortunately と述べた（Fortune）。',
+  y:'弟子の系譜と安全／利益対立が交差。',
+  f:['OpenAI'],s:[26]},
+ {d:'2024.12.27',e:7,t:'BBC Radio 4 で絶滅リスク 10–20%／30年',
+  w:'Guardian が Today 番組発言を報道。以前の約10%から上方修正と対比。',
+  y:'確率付きリスク発言の確定日付の一つ。',
+  f:['10–20%'],s:[10]},
+ {d:'2026.9.9',e:7,t:'BBC Newsnight で「10%は不合理ではない」',
+  w:'10年以内に AI が人類を殺す確率10%について。Business Insider 等が報道。',
+  y:'基準日直前の最新確定発言。',
+  f:['Newsnight'],s:[11]},
+];
+
+const QUOTES = [
+ {t:'退社',q:'I want to talk about AI safety issues without having to worry about how it interacts with Google’s business. As long as I’m paid by Google, I can’t do that.',
+  w:'2023-05-02・MIT Technology Review インタビュー',s:[9]},
+ {t:'退社',q:'There’s a lot of good things about Google that I want to say, and they’re much more credible if I’m not at Google anymore.',
+  w:'2023-05-02・MIT Technology Review',s:[9]},
+ {t:'後悔',q:'I console myself with the normal excuse: If I hadn’t done it, somebody else would have.',
+  w:'2023-05-01・New York Times（トロント自宅でのインタビュー）',s:[8]},
+ {t:'リスク',q:'Not really, 10% to 20%.（今後30年で AI が人類絶滅につながるか、という問いへの応答として Guardian が報道）',
+  w:'2024-12-27・BBC Radio 4 Today（Guardian 経由）',s:[10]},
+ {t:'リスク',q:'A 10% chance seems not an unreasonable estimate to me, but nobody really knows how to give a sensible estimate.',
+  w:'2026-09-09・BBC Newsnight（Business Insider 経由）',s:[11]},
+ {t:'OpenAI',q:'I’m particularly proud of the fact that one of my students fired Sam Altman.',
+  w:'2024-10-09・ノーベル賞関連会見（Fortune）',s:[26]},
+ {t:'OpenAI',q:'Over time it turned out that Sam Altman was much less concerned with safety than with profits, and I think that’s unfortunate.',
+  w:'2024-10-09・同会見（Fortune）',s:[26]},
+ {t:'脳',q:'As a model of how cortex learns, backpropagation remains implausible despite considerable effort to invent ways in which it could be implemented by real neurons.',
+  w:'2022-12-27・Forward-Forward 論文（arXiv:2212.13345）',s:[23]},
+];
+
+const activeEras = new Set();
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button type="button" class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`;
+}).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.cls ? ' ' + r.cls : ''}${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+bars('chartImagenet', [
+  {k:'AlexNet', v:15.3, sub:'top-5'},
+  {k:'2位エントリ', v:26.2, sub:'SIFT+FV', cls:'s2'},
+], '%');
+
+bars('chartAuction', [
+  {k:'初期オファー', v:12, sub:'Baidu', est:true},
+  {k:'中盤', v:25, sub:'入札', cls:'s2'},
+  {k:'高値帯', v:35, sub:'入札', cls:'s2'},
+  {k:'落札停止', v:44, sub:'Google', cls:'s3'},
+], 'M$');
+</script>
+</body>
+</html>

@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>パルマー・ラッキー — Oculus から Anduril まで</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --s2:#eb6834; --s3:#1baf7a; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  .bar.s2 .fl{background:var(--s2)}
+  .bar.s3 .fl{background:var(--s3)}
+  .bar.neg .fl{background:var(--neg)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / パルマー・ラッキー</p>
+
+<header class="top">
+  <h1>パルマー・ラッキー — Oculus から Anduril まで</h1>
+  <div class="en">Palmer Luckey　1992.09.19 – ／起業家、Oculus VR 創業者・Anduril Industries 共同創業者</div>
+  <div class="tags">
+    <span class="tag">Oculus</span><span class="tag">VR</span><span class="tag">Anduril</span>
+    <span class="tag">防衛</span><span class="tag">創業</span><span class="tag">Facebook</span>
+  </div>
+  <p class="lead">1992年9月19日、カリフォルニア州ロングビーチ生まれ。ホームスクール育ち。14歳からガレージで VR ヘッドセットを自作し、2012年に Oculus Rift の Kickstarter で $2,437,429（9,522人）を調達。2014年3月に Facebook が Oculus を発表時約 $2B で買収。2017年3月に Facebook を退社し、同年6月に Anduril Industries を共同創業。2025年6月の Series G で評価額 $30.5B。</p>
+  <p class="srcnote">作成日 2026年9月26日。数値の基準日は同日。存命人物のため、出典のない私生活・人物評・投資判断は書かない。年表の満年齢は生年月日1992年9月19日からの年差で算出している。Facebook 買収の確定総額（発表約 $2B／Zuckerberg 証言約 $3B）、本人の受取額、Nimble America 寄付額（$10,000／本人の後年発言 $9,000）、退社が解雇か自主退社かは報道・本人・会社で食い違うため、本文で3系統を並べて確定事実を明示する。防衛契約の金額は上限額（ceiling）と確定発注額を区別する。</p>
+</header>
+
+<h2 id="overview"><span class="num">①</span>概要<span class="en">Overview</span></h2>
+
+<div class="kpi">
+  <div class="card"><div class="k">生年月日</div><div class="v">1992.9.19<small>Long Beach, CA</small></div></div>
+  <div class="card"><div class="k">Oculus Kickstarter</div><div class="v">$2.44M<small>9,522人・2012-08</small></div></div>
+  <div class="card"><div class="k">Facebook 買収発表</div><div class="v">約 $2B<small>2014-03-25</small></div></div>
+  <div class="card"><div class="k">Anduril 評価額</div><div class="v">$30.5B<small>Series G・2025-06</small></div></div>
+</div>
+
+<div class="callout">
+<p><b>先に結論を3つ書く。</b></p>
+<p><b>1つ目。曲線は「ガレージ試作 → Kickstarter → Facebook 売却 → 政治寄付報道と退社 → 防衛テック再起業」である。</b>2012年8月の Kickstarter は目標 $250,000 に対し $2,437,429（9,522人）。2014年3月25日、Facebook は現金 $400M＋株式約 $1.6B（23.1M 株）＋アーニングアウト最大 $300M で約 $2B と発表した。Zuckerberg は2017年の ZeniMax 裁判で、従業員リテンション約 $700M を含め総額約 $3B だったと証言した。発表額と確定額は別である<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup>。</p>
+<p><b>2つ目。退社の説明は3系統が並立する。</b>2016年9月22日、Daily Beast が Nimble America への $10,000 寄付を報じた。本人は Facebook 上で謝罪し、のちに 60 Minutes（2025年）では「$9,000 を Trump 支持・Clinton 反対の団体に出した」と述べる（寄付額は諸説）。Facebook／Meta は「政治的見解が退社理由ではない」と繰り返し否定した。Zuckerberg は2018年4月の上院証言で「personnel matter」としつつ「not because of a political view」と答えた。WSJ（2018年11月）は社内メールと、本人側が少なくとも約 $100M の支払いを交渉した経緯を報じた（解雇か自主退社かは当事者間で食い違い、確定事実は「2017年3月に Facebook／Oculus から離れた」まで）<sup><a href="#s5">5</a></sup><sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup>。</p>
+<p><b>3つ目。Anduril の評価額は8年で Seed から $30.5B まで上がった。</b>2017年6月、Trae Stephens・Brian Schimpf・Matt Grimm・Joseph Chen と共同創業。Founders Fund が主導する Seed／Series A から、2020年 $1.9B、2021年 $4.6B、2022年約 $8.5B、2024年8月 $14B、2025年6月 Series G $2.5B（評価額 $30.5B）と推移した。製品は Sentry Tower、Lattice、Anvil、Ghost、Dive-LD、Barracuda、Fury（CCA）、EagleEye、Roadrunner。IVAS は Microsoft から引き継いだプログラムの上限枠が約 $21.9–22B（ceiling）であり、確定発注額ではない<sup><a href="#s9">9</a></sup><sup><a href="#s10">10</a></sup><sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup>。</p>
+</div>
+
+<h2 id="timeline"><span class="num">②</span>年表<span class="en">Timeline</span></h2>
+<p>日付が一次情報または複数報道で確定した出来事だけを並べた。各項目は事実、具体、なぜ効いたかの3層である。期のボタンで絞り込める。日付の右は、その時点の満年齢である。</p>
+
+<div class="tl-tools">
+  <input id="tlq" type="search" placeholder="年表を検索（例: Oculus、Facebook、ZeniMax、Anduril、IVAS）" aria-label="年表を検索">
+  <span class="tl-count" id="tlcount"></span>
+</div>
+<div class="tl-eras" id="tleras"></div>
+<div class="tl" id="tl"></div>
+<div class="tl-empty" id="tlempty">該当する項目がない。</div>
+
+<h2 id="phases"><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+
+<h3>I 形成 — ホームスクール・ガレージ・MTBS3D（1992–2011）</h3>
+<p>生年月日は1992年9月19日。生地はカリフォルニア州ロングビーチ。母親にホームスクールされ、父親の自動車関連の仕事の傍らで電子工作を始めた、と同時代の伝記報道が書く。14歳前後からコミュニティカレッジの講座を取り、2009年頃から自宅ガレージで VR ヘッドセットの試作を開始。MTBS3D（Meant to be Seen 3D）フォーラムに進捗を投稿し、6世代目を「Oculus Rift」と名付けた。試作資金として、破損 iPhone の修理転売などで少なくとも約 $36,000 を稼いだ、と本人・報道が書く（single-source に近い集計）<sup><a href="#s1">1</a></sup><sup><a href="#s13">13</a></sup><sup><a href="#s14">14</a></sup>。</p>
+<p>カリフォルニア州立大学ロングビーチ校（CSULB）でジャーナリズムを専攻し、学生紙 Daily Forty-Niner の Online Editor を務めたが、のちに中退した。並行して、南カリフォルニア大学 ICT の Mixed Reality Lab で PTSD 治療向け VR（BRAVEMIND）関連のパートタイムに従事した、と Wikipedia／WIRED 系二次が記す<sup><a href="#s1">1</a></sup><sup><a href="#s15">15</a></sup>。</p>
+
+<h3>II Oculus — Kickstarter と法人化（2012–2013）</h3>
+<p>2012年4月頃、Kickstarter 実施のために Oculus VR を法人化した。同年の E3 で、id Software の John Carmack が Luckey から借りたプロトタイプで Doom 3: BFG Edition を披露し、注目が広がった。2012年8月1日、Oculus Rift の Kickstarter が目標 $250,000 で開始。約1か月で $2,437,429（9,522人）に達した。Valve の Gabe Newell らが応援動画を出した。$1M 超過後、Brendan Iribe を CEO に迎え、経営体制を整えた<sup><a href="#s2">2</a></sup><sup><a href="#s13">13</a></sup><sup><a href="#s16">16</a></sup><sup><a href="#s17">17</a></sup>。</p>
+<p>2013年、Series A 約 $16M、Series B 約 $75M を調達した、と Business Insider 等が報じる。製品は開発者向けキット（DK1）から消費者版（CV1）へ進んだ<sup><a href="#s18">18</a></sup>。</p>
+
+<h3>III Facebook 買収 — 発表額と確定額（2014）</h3>
+<p>2014年3月25日、Facebook は Oculus VR の買収を発表した。内訳は現金 $400M、Facebook 普通株式 23.1M 株（発表時点の評価約 $1.6B、直前20営業日平均終値 $69.35）、達成条件付きの追加最大 $300M（現金・株式）。合計は「約 $2B」と公式に書かれた<sup><a href="#s3">3</a></sup>。</p>
+<p>2017年1月の ZeniMax 裁判で、Zuckerberg は従業員リテンション約 $700M とアーニングアウト約 $300M を含め、実質約 $3B だったと証言した（USA Today / NBC）。発表時の約 $2B と、裁判での約 $3B は両方書く必要がある。Luckey 個人の受取額は契約上非開示である。Forbes は2015年時点の純資産を約 $700M と推定した（推定・買収持分の評価を含む）<sup><a href="#s4">4</a></sup><sup><a href="#s19">19</a></sup><sup><a href="#s20">20</a></sup>。</p>
+
+<h3>IV ZeniMax 訴訟（2014–2018）</h3>
+<p>2014年5月、ZeniMax Media（id Software の親会社）が、営業秘密・著作権・契約違反等を主張して Oculus・Luckey・Iribe・Carmack らをテキサス北地区連邦地裁に訴えた。Carmack の id からの移籍と、VR 技術の移転が争点になった<sup><a href="#s21">21</a></sup><sup><a href="#s22">22</a></sup>。</p>
+<p>2017年2月1–2日の陪審評決は総額 $500M。営業秘密の盗用は否定された一方、著作権侵害等で損害賠償が認定され、うち Luckey 個人分は $50M と報道された（Ars Technica）。NDA 違反は認定されたが損害は de minimis でゼロ、という整理もある。2018年6月、判事は契約違反 $200M と著作権 $50M を維持し、残り約 $250M を退けたと報じられた。2018年12月、Facebook と ZeniMax は非公開条件で和解した（和解額は非開示）<sup><a href="#s23">23</a></sup><sup><a href="#s24">24</a></sup><sup><a href="#s25">25</a></sup>。</p>
+
+<h3>V Nimble America と Facebook 退社（2016–2017）</h3>
+<p>2016年9月22日前後、Daily Beast が Luckey の Nimble America（Trump 支持のオンライン団体）への $10,000 寄付を報じた。Clinton を標的にした看板「Too Big to Jail」等と結びつけて書かれた。一部の独立 VR 開発者が Oculus 対応の停止を表明した。本人は Facebook 上で「Oculus とそのパートナーの印象に悪影響を与えたことを深く謝罪する」と書き、個人の行為だと述べた<sup><a href="#s5">5</a></sup><sup><a href="#s1">1</a></sup>。</p>
+<p>2017年3月、Luckey は Facebook／Oculus から離れた。当初、双方とも詳細を説明しなかった。説明の3系統は次のとおりである。</p>
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>系統</th><th>主張の内容</th><th>時点・出典</th><th>確定度</th></tr></thead>
+<tbody>
+<tr><td class="name">報道（Daily Beast 等）</td><td>寄付報道が退社の前段となった、と時系列で結びつける</td><td>2016-09 / 2017-03</td><td>時系列は事実。因果は推定</td></tr>
+<tr><td class="name">本人</td><td>60 Minutes（2025）で「Trump 支持・Clinton 反対の団体に $9,000」と述べる。WSJ は少なくとも約 $100M の支払い交渉を報じる</td><td>2018–2025</td><td>寄付・交渉の報道あり。額は諸説</td></tr>
+<tr><td class="name">Facebook / Zuckerberg</td><td>「政治的見解が理由ではない」。上院で personnel matter としつつ not because of a political view</td><td>2018-04 / 2018-11</td><td>会社側の公式説明</td></tr>
+</tbody>
+</table>
+</div>
+<p>確定できるのは、<strong class="hit">2017年3月に役職を離れた事実</strong>と、<strong class="hit">2016年9月に寄付が報じられた事実</strong>までである。解雇か自主退社かは、公開一次資料では決着していない<sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup>。</p>
+
+<h3>VI Anduril — 創業から Series G（2017–2025）</h3>
+<p>2017年6月、Anduril Industries を共同創業。共同創業者は Luckey、Trae Stephens（のち Founders Fund パートナー／Anduril Chairman）、Brian Schimpf、Matt Grimm、Joseph Chen。社名は『指輪物語』の剣アンドゥリルに由来する、と本人・報道が説明する。Founders Fund が Seed（2017年8月、約 $17.5M）と Series A（2018年6月、約 $41M）を主導した。ユーザー依頼文の「2017年 Series A」は、Seed／A の呼び分けが報道で揺れるため、本稿は金額と日付で区別する<sup><a href="#s9">9</a></sup><sup><a href="#s26">26</a></sup><sup><a href="#s27">27</a></sup>。</p>
+<p>2018年3月、米南部国境向けの監視塔パイロットを開始。初期12日で入国試み55件を検知した、と Wikipedia／社側説明系が書く。のちに Customs and Border Protection（CBP）向け Autonomous Surveillance Tower の Program of Record を獲得し、数百基規模・「数億ドル」級と報じられた（確定の単年発注額は公開が稀疏）<sup><a href="#s1">1</a></sup><sup><a href="#s28">28</a></sup>。</p>
+<p>製品系列の導入年はおおむね次のとおりである。Sentry Tower（国境監視、2018–）、Lattice OS（指揮統制ソフトウェア）、Anvil（対ドローン迎撃）、Ghost（小型 UAV）、Dive-LD（水中自律機）、Barracuda（自律弾薬）、Roadrunner（再利用可能な対ドローン迎撃機、2023–24年発表）、Fury／YFQ-44A（CCA、2024年4月に米空軍の Increment 1 で General Atomics と並んで選定。Boeing 案は選外）、EagleEye（兵士向け HMD／AR、IVAS 関連で2025年以降に前面化）<sup><a href="#s29">29</a></sup><sup><a href="#s30">30</a></sup><sup><a href="#s12">12</a></sup>。</p>
+<p>主要契約の例。2020年、Advanced Battle Management System（ABMS）関連で約 $967M と本人が発表（上限か確定かは契約文書の公開が限定的）。2022年2月、SOCOM 向け対無人システムで約 $1B と本人が発表。2022年には英国向け展開も報じられた。2025年2月11日、Microsoft と Anduril が IVAS の次段階で提携を発表。Microsoft がプライムだった枠（初期予算約 $21.9B、報道では約 $22B）の生産・ハード／ソフト開発・納期管理を Anduril が引き継ぐ。Microsoft はクラウド（Azure）側に残る。これは<strong class="hit">契約上限枠（ceiling）の移管</strong>であり、即時の確定売上 $22B ではない<sup><a href="#s31">31</a></sup><sup><a href="#s32">32</a></sup><sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup>。</p>
+<p>Palantir・OpenAI との提携も公開されているが、契約金額の一次開示は案件ごとに異なる。本稿の金額表は調達ラウンドと、上限が明示された政府契約に限定する。</p>
+
+<h2 id="numbers"><span class="num">④</span>実績の数字<span class="en">The Numbers</span></h2>
+<p>中心は Kickstarter、Facebook 買収の内訳、Anduril の評価額推移である。個人純資産の監査済み開示は無い。</p>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>ラウンド</th><th class="num">調達額</th><th class="num">評価額（post）</th><th>時点・主導</th></tr></thead>
+<tbody>
+<tr><td class="name">Seed</td><td class="num">約 $17.5M</td><td class="num">約 $88M（報道）</td><td>2017-08・Founders Fund<sup><a href="#s26">26</a></sup><sup><a href="#s27">27</a></sup></td></tr>
+<tr><td class="name">Series A</td><td class="num">約 $41M</td><td class="num">N/A（公開一貫せず）</td><td>2018-06・Founders Fund<sup><a href="#s26">26</a></sup></td></tr>
+<tr><td class="name">Series B</td><td class="num">約 $120M</td><td class="num">約 $1B+</td><td>2019-09・Founders Fund 等<sup><a href="#s26">26</a></sup></td></tr>
+<tr><td class="name">Series C</td><td class="num">$200M</td><td class="num">$1.9B</td><td>2020-07・a16z<sup><a href="#s10">10</a></sup><sup><a href="#s26">26</a></sup></td></tr>
+<tr><td class="name">Series D</td><td class="num">$450M</td><td class="num">$4.6B</td><td>2021-06-17・Elad Gil（公式）<sup><a href="#s33">33</a></sup></td></tr>
+<tr><td class="name">Series E</td><td class="num">約 $1.48B</td><td class="num">約 $8.48B</td><td>2022-12・Valor 等。約 $8.5B と丸める報道あり<sup><a href="#s10">10</a></sup><sup><a href="#s26">26</a></sup></td></tr>
+<tr><td class="name">Series F</td><td class="num">$1.5B</td><td class="num">$14B</td><td>2024-08・Founders Fund / Sands<sup><a href="#s10">10</a></sup><sup><a href="#s34">34</a></sup></td></tr>
+<tr><td class="name">Series G</td><td class="num">$2.5B</td><td class="num">$30.5B</td><td>2025-06・Founders Fund（$1B）<sup><a href="#s10">10</a></sup><sup><a href="#s35">35</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>項目</th><th class="num">数値</th><th>時点・条件</th></tr></thead>
+<tbody>
+<tr><td class="name">生年月日</td><td class="num">1992-09-19</td><td>Long Beach, CA<sup><a href="#s1">1</a></sup></td></tr>
+<tr><td class="name">Kickstarter 調達</td><td class="num">$2,437,429</td><td>2012-08。9,522人。目標 $250,000<sup><a href="#s2">2</a></sup></td></tr>
+<tr><td class="name">Facebook 発表額</td><td class="num">約 $2B</td><td>2014-03-25。現金 $400M＋株約 $1.6B＋EO 最大 $300M<sup><a href="#s3">3</a></sup></td></tr>
+<tr><td class="name">Facebook 実質総額（証言）</td><td class="num">約 $3B</td><td>2017-01。リテンション約 $700M＋EO 約 $300M を含む<sup><a href="#s4">4</a></sup></td></tr>
+<tr><td class="name">本人純資産（推定）</td><td class="num">約 $700M</td><td>Forbes 2015。個人受取の契約額は非開示（推定）<sup><a href="#s20">20</a></sup></td></tr>
+<tr><td class="name">ZeniMax 陪審総額</td><td class="num">$500M</td><td>2017-02。うち Luckey 個人 $50M（報道）<sup><a href="#s23">23</a></sup></td></tr>
+<tr><td class="name">ZeniMax 和解</td><td class="num">非開示</td><td>2018-12<sup><a href="#s25">25</a></sup></td></tr>
+<tr><td class="name">Nimble America 寄付</td><td class="num">$10,000 / $9,000</td><td>2016報道 $10K。本人後年 $9K。諸説<sup><a href="#s5">5</a></sup><sup><a href="#s6">6</a></sup></td></tr>
+<tr><td class="name">退社時交渉額（報道）</td><td class="num">少なくとも約 $100M</td><td>WSJ 2018-11。single-source<sup><a href="#s8">8</a></sup></td></tr>
+<tr><td class="name">ABMS 関連（本人発表）</td><td class="num">約 $967M</td><td>2020-09。上限／確定の区別は文書非公開<sup><a href="#s31">31</a></sup></td></tr>
+<tr><td class="name">SOCOM C-UAS（本人発表）</td><td class="num">約 $1B</td><td>2022-02。同上<sup><a href="#s32">32</a></sup></td></tr>
+<tr><td class="name">IVAS 枠</td><td class="num">約 $21.9–22B</td><td>ceiling。2025-02 に Anduril がプライム側へ<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup></td></tr>
+<tr><td class="name">Anduril 2024 売上（報道）</td><td class="num">約 $1B</td><td>Series G 報道。前年比約2倍（single-source に近い）<sup><a href="#s35">35</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="chart">
+  <div class="cap">Anduril 評価額の推移（post-money）</div>
+  <div class="sub">単位は十億 USD。Series C 以降の公開値</div>
+  <div class="bars" id="chartVal"></div>
+  <p class="sub" style="margin:14px 0 0">出典10・33・34・35。Series E は約 $8.48B を $8.5B として表示。</p>
+</div>
+
+<div class="chart">
+  <div class="cap">Meta Reality Labs 営業損失（年次）</div>
+  <div class="sub">単位は十億 USD。符号は損失（負）。Oculus 売却後の VR／AR セグメント</div>
+  <div class="bars" id="chartRl"></div>
+  <p class="sub" style="margin:14px 0 0">出典36・37・38。2019–2025年の累計は約 $88B（自己計算）。</p>
+</div>
+
+<h2 id="failures"><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
+<p>④と同じ精度で負けを扱う。能力や人柄の評価は書かない。金額と時点で切る。</p>
+
+<h3>類型1: 売却後の市場が期待通りに伸びなかった — Reality Labs の累積損失</h3>
+<p>Luckey は2014年に Oculus を売却したあと、2017年に Meta（当時 Facebook）を離れた。その後も Meta は VR／AR を Reality Labs として継続し、年次の営業損失は次のとおりである。2019年 $4.5B、2020年 $6.6B、2021年 $10.2B、2022年 $13.7B、2023年 $16.1B、2024年 $17.7B、2025年 $19.2B（いずれも損失。Meta のセグメント開示／投資家向け資料）。2019–2025年の単純合計は約 <strong class="hit">$88B</strong>。売上は同期間でも年約 $2B 前後に留まる年が多い。買収時点の「次の計算プラットフォーム」という期待に対し、損益の符号は一貫して負である。これは Luckey 個人の経営失敗ではなく、売却先セグメントの公開実績である<sup><a href="#s36">36</a></sup><sup><a href="#s37">37</a></sup><sup><a href="#s38">38</a></sup>。</p>
+
+<h3>類型2: 政治寄付がキャリアの断絶を生んだ — Nimble America</h3>
+<p>寄付額そのものは $9,000–10,000（諸説）である。金額に対して失われたものは、Oculus での役職と、VR 業界内での信用の一部である。2017年3月の退社後、本人は同年6月に Anduril を創業した。退社時に少なくとも約 $100M を交渉した、という WSJ 報道（single-source）を採ると、金銭的な出口はあった。一方、消費者向け VR の表舞台からは外れた。寄付の絶対額と、キャリア断絶の規模は比例しない<sup><a href="#s5">5</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s6">6</a></sup>。</p>
+
+<h3>類型3: 個人に $50M が載った評決 — ZeniMax</h3>
+<p>2017年2月の陪審は総額 $500M、うち Luckey 個人 $50M。営業秘密の盗用は否定されたが、著作権等で金額が残った。2018年6月の判事判断で一部が減額され、同年12月に非公開和解。公開された確定支払額は無い。個人名で $50M が評決に載った事実自体が、創業者リスクの記録である<sup><a href="#s23">23</a></sup><sup><a href="#s24">24</a></sup><sup><a href="#s25">25</a></sup>。</p>
+
+<h3>類型4: 国境監視塔への市民的自由側の批判 — Sentry Tower</h3>
+<p>CBP 向け塔は「数百基」「数億ドル」規模と報じられ、検知件数の初期実績（12日で55件）も広報された。同時に、監視の常時化・国境の軍事技術転用に対する市民的自由・移民人権団体からの批判が、報道・議会証言の周辺に残る。契約の商業的成功と、社会的受容は別変数である。批判側の金額損失は計測できないが、調達継続の政治リスクとして残る<sup><a href="#s28">28</a></sup><sup><a href="#s1">1</a></sup>。</p>
+
+<h3>類型5: IVAS を引き継いだリスク — Microsoft 下での試験不通過</h3>
+<p>IVAS は Microsoft が2018年以降にプライムを務め、兵士装着試験で重量・酔い・信頼性などの問題が報じられ、予算削減・再競争の圧力が続いた。2025年2月、Anduril が生産・開発・納期の主導を引き継いだ。枠の上限は約 $21.9–22B（ceiling）である。前プライムが陸軍の求める運用試験を通過できなかったプログラムを引き取ることは、売上機会であると同時に、未達リスクの継承である。確定発注が天井まで消化される保証は、公開資料には無い<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup><sup><a href="#s39">39</a></sup>。</p>
+
+<div class="risk">
+<p><b>欠落データ。</b>Facebook 買収時の Luckey 個人の税引後手取り、ZeniMax 和解の支払額と負担割合、Anduril の LP 向け持分比率、CBP／英国契約の年次確定発注額、IVAS の現時点確定発注額は、公開一次資料では揃っていない。残っている問いに移す。</p>
+</div>
+
+<h2 id="thought"><span class="num">⑥</span>思想と方法<span class="en">Thought and Method</span></h2>
+
+<h3>ハードウェアを先に置く</h3>
+<p>MTBS3D への投稿から Kickstarter まで、本人の手順は「既存 HMD の欠点（視野・遅延・重量・価格）を列挙し、ガレージで試作を重ね、キットとして売る」だった。経営（Iribe）と販売を後から足した。WIRED（2014年）は、Carmack の E3 デモが火を付けた経緯を一次証言つきで書く<sup><a href="#s15">15</a></sup><sup><a href="#s13">13</a></sup>。</p>
+
+<h3>防衛への転進と「劣った技術に道徳的優位はない」</h3>
+<p>Anduril 創業後、本人は AI 自律兵器について、劣った技術を使うことに道徳的優位はない、という趣旨の発言を繰り返ししている（Business Insider 等のインタビュー）。製品は Lattice を中核に、センサー・ドローン・迎撃・水中を横展開する形である。思想の評価はせず、公開発言と製品系列の対応だけを置く<sup><a href="#s40">40</a></sup><sup><a href="#s29">29</a></sup>。</p>
+
+<h3>政治支出の継続</h3>
+<p>Nimble America 以降も、2020年・2024年に Trump 関連の資金調達イベントを主催・共催したと報じられている。防衛事業と共和党系政治支出が並走する。金額の FEC 突合は案件ごとに必要で、本稿はヘッドライン事件に限る<sup><a href="#s1">1</a></sup>。</p>
+
+<h2 id="quotes"><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
+<p>日付と出典が特定できる発言に限った。出典未確定の言い回しは載せない。</p>
+<div class="q-tabs" id="qtabs"></div>
+<div class="q-list" id="qlist"></div>
+
+<h2 id="open"><span class="num">⑧</span>残っている問い / 出典<span class="en">Open Questions / Sources</span></h2>
+
+<h3>残っている問い</h3>
+<ul>
+<li>Facebook 買収時の Luckey 個人の現金・株式・アーニングアウトの内訳と税引後手取り。契約は非開示で、Forbes の純資産推定しかない。</li>
+<li>ZeniMax 和解の支払総額と、Luckey 個人・Oculus・Facebook の負担割合。</li>
+<li>2017年3月の退社が解雇か自主退社か。WSJ・本人・Meta の3系統が並立したままである。</li>
+<li>Nimble America 寄付が $10,000 か $9,000 か。2016年報道と2025年本人発言が割れる。</li>
+<li>CBP Sentry Tower と英国契約の、年次の確定発注額（ceiling ではなく obligated）。</li>
+<li>IVAS について、Anduril 移管後の確定発注額と、陸軍の運用試験の合否時系列。</li>
+<li>Anduril における Luckey 個人の持分比率と、Series G 時点の未実現評価。</li>
+</ul>
+
+<ol class="sources">
+<li id="s1">Wikipedia “Palmer Luckey”（生年月日・学歴・Oculus／Anduril 経歴・Nimble America・ZeniMax・国境塔の骨格） — https://en.wikipedia.org/wiki/Palmer_Luckey</li>
+<li id="s2">Kickstarter “Oculus Rift: Step Into the Game”（調達 $2,437,429、9,522人、目標 $250,000、2012-08） — https://www.kickstarter.com/projects/1523379957/oculus-rift-step-into-the-game</li>
+<li id="s3">Facebook Newsroom “Facebook to Acquire Oculus”（2014-03-25。現金 $400M、23.1M 株≈$1.6B、EO 最大 $300M、合計約 $2B） — https://about.fb.com/news/2014/03/facebook-to-acquire-oculus/</li>
+<li id="s4">USA Today “Oculus cost $3B not $2B, Zuckerberg says in trial”（2017-01-17。リテンション約 $700M＋EO） — https://www.usatoday.com/story/tech/news/2017/01/17/oculus-cost-3-billion-mark-zuckerberg-trial-dallas/96676848/</li>
+<li id="s5">The Daily Beast “Oculus Founder Palmer Luckey Donated $10,000 to Pro-Trump Group Nimble America”（2016-09-22。$10,000 寄付報道） — https://www.thedailybeast.com/oculus-founder-palmer-luckey-donated-dollar10000-to-pro-trump-group-nimble-america</li>
+<li id="s6">CBS News / 60 Minutes “Tech mogul Palmer Luckey creating arsenal of AI-powered autonomous weapons”（2025-05-18。寄付を約 $9,000 と述べる本人発言） — https://www.cbsnews.com/news/palmer-luckey-anduril-ai-weapons-60-minutes-transcript/</li>
+<li id="s7">Senate testimony / 報道まとめ（2018-04。Cruz 質問に対し Zuckerberg「not because of a political view」） — https://en.wikipedia.org/wiki/Palmer_Luckey</li>
+<li id="s8">The Wall Street Journal（2018-11。社内メール、少なくとも約 $100M の支払い交渉。二次要約含む） — https://en.wikipedia.org/wiki/Palmer_Luckey</li>
+<li id="s9">Wikipedia “Anduril Industries”（共同創業者、製品系列、契約・調達の骨格） — https://en.wikipedia.org/wiki/Anduril_Industries</li>
+<li id="s10">Reuters “Anduril secures $30.5 billion valuation…”（2025-06-05。Series G $2.5B、前年 $14B） — https://www.reuters.com/business/anduril-secures-305-billion-valuation-latest-fund-raise-2025-06-05/</li>
+<li id="s11">TechCrunch “Anduril takes control of Microsoft’s $22B VR military headset program”（2025-02-11。初期予算約 $21.9B） — https://techcrunch.com/2025/02/11/anduril-takes-control-of-microsofts-22b-vr-military-headset-program/</li>
+<li id="s12">Microsoft Source “Anduril and Microsoft partner to advance IVAS…”（2025-02-11。公式提携発表） — https://news.microsoft.com/source/2025/02/11/anduril-and-microsoft-partner-to-advance-integrated-visual-augmentation-system-ivas-program-for-the-u-s-army/</li>
+<li id="s13">Road to VR “Q&amp;A With Palmer Luckey, Creator of the Oculus Rift”（2012-10-16） — https://www.roadtovr.com/qa-with-palmer-luckey-creator-of-the-oculus-rift/</li>
+<li id="s14">Los Angeles Times “Palmer Luckey’s Oculus Rift could be a virtual reality breakthrough”（2013-06-08） — https://www.latimes.com/entertainment/envelope/cotown/la-et-ct-palmer-luckey-oculus-rift-virtual-reality-20130608-story.html</li>
+<li id="s15">WIRED “The Inside Story of Oculus Rift…”（2014-05-20。Carmack・E3・試作経緯） — https://www.wired.com/2014/05/oculus-rift-2/</li>
+<li id="s16">Eurogamer “Happy Go Luckey: Meet the 20-year-old creator of Oculus Rift”（2013-07-11） — https://www.eurogamer.net/happy-go-luckey-meet-the-20-year-old-creator-of-oculus-rift</li>
+<li id="s17">MTBS3D フォーラム投稿（Luckey, 2009–2012。Rift 命名・試作ログの原典） — https://www.mtbs3d.com/</li>
+<li id="s18">Business Insider “Who Is Palmer Luckey…”（Series A 約 $16M、Series B 約 $75M、経歴要約） — https://www.businessinsider.com/who-is-palmer-luckey</li>
+<li id="s19">NBC News “In Oculus Lawsuit, Zuckerberg Reveals Key Details on $3B Acquisition”（2017。リテンション $700M） — https://www.nbcnews.com/tech/tech-news/oculus-lawsuit-zuckerberg-reveals-key-details-2b-acquisition-n707946</li>
+<li id="s20">Forbes “America’s Richest Self-Made Entrepreneurs…”／Forbes profile（2015頃純資産約 $700M 推定） — https://www.forbes.com/profile/palmer-luckey/</li>
+<li id="s21">The Verge “Oculus VR and its founder sued by ZeniMax and id Software”（2014-05-21） — https://www.theverge.com/2014/5/21/5738208/oculus-vr-sued-by-zenimax</li>
+<li id="s22">Engadget “Oculus VR and Palmer Luckey being sued…”（2014-05-21） — https://www.engadget.com/2014-05-21-oculus-vr-zenimax-lawsuit.html</li>
+<li id="s23">Ars Technica “Oculus, execs liable for $500 million in ZeniMax VR trial”（2017-02-01。総額 $500M、個人分の報道） — https://arstechnica.com/gaming/2017/02/oculus-execs-liable-for-500-million-in-zenimax-vr-trial/</li>
+<li id="s24">Court’s Charge to the Jury / 判決関連 PDF（ZeniMax v. Oculus。陪審説示・減額判断の一次） — テキサス北地区連邦地裁記録</li>
+<li id="s25">報道各社 “Facebook and ZeniMax settle…”（2018-12。和解額非開示） — https://en.wikipedia.org/wiki/ZeniMax_v._Oculus</li>
+<li id="s26">Seedlist / Sterling 等の調達年表整理（Seed $17.5M、A $41M、B〜G の金額・評価） — https://seedlist.com/startups/anduril-industries.html</li>
+<li id="s27">The Dynamics “The History of Anduril Industries”（Seed 評価約 $88M、以降の評価推移） — https://thedynamics.ai/articles/anduril-history</li>
+<li id="s28">Forbes “Facebook Made This 29-Year-Old Rich; War Made Him A Billionaire”（2022-06-03。国境塔・事業概観） — https://www.forbes.com/sites/jeremybogaisky/2022/06/03/palmer-luckey-anduril/</li>
+<li id="s29">Anduril 公式サイト／製品ページ（Lattice、Sentry、Roadrunner、Fury 等の製品説明） — https://www.anduril.com/</li>
+<li id="s30">米空軍 CCA Increment 1 選定報道（2024-04。Anduril Fury と General Atomics。Boeing 選外） — https://en.wikipedia.org/wiki/Anduril_Industries</li>
+<li id="s31">Luckey / Anduril 発表（2020-09。ABMS 関連約 $967M） — https://en.wikipedia.org/wiki/Palmer_Luckey</li>
+<li id="s32">Luckey / Anduril 発表（2022-02。SOCOM 対無人約 $1B） — https://en.wikipedia.org/wiki/Palmer_Luckey</li>
+<li id="s33">Anduril “Anduril Raises $450 Million in Series D Funding”（2021-06-17。評価 $4.6B） — https://www.anduril.com/news/anduril-raises-usd450-million-in-series-d-funding</li>
+<li id="s34">Reuters / CNBC 報道（2024-08。Series F $1.5B、評価 $14B。Series G 記事が前年評価として引用） — https://www.reuters.com/business/anduril-secures-305-billion-valuation-latest-fund-raise-2025-06-05/</li>
+<li id="s35">TechCrunch “Anduril raises $2.5B at $30.5B valuation led by Founders Fund”（2025-06-05。2024年売上約 $1B） — https://techcrunch.com/2025/06/05/anduril-raises-2-5b-at-30-5b-valuation-led-by-founders-fund/</li>
+<li id="s36">Meta Investor Relations — Q4/FY2024 Results（Reality Labs 2024 損失 $17.729B、2023 $16.120B） — https://investor.atmeta.com/investor-news/press-release-details/2025/Meta-Reports-Fourth-Quarter-and-Full-Year-2024-Results/</li>
+<li id="s37">Meta Investor Relations — Q4/FY2025 Results（Reality Labs 2025 損失 $19.193B、売上 $2.207B） — https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Fourth-Quarter-and-Full-Year-2025-Results/default.aspx</li>
+<li id="s38">Statista / セグメント開示二次整理（Reality Labs 2019–2022 損失 $4.5B / $6.6B / $10.2B / $13.7B） — https://www.statista.com/statistics/1290156/meta-reality-labs-operating-income/</li>
+<li id="s39">Breaking Defense “Army opens door to compete IVAS…” / 関連報道（Microsoft 下での試験問題と再競争圧力） — https://breakingdefense.com/2024/08/army-opens-door-to-compete-ivas-mixed-reality-goggles-after-microsoft-struggles/</li>
+<li id="s40">Business Insider “Anduril’s Palmer Luckey makes an ethical case for using AI in war: ‘There is no moral high ground in using inferior technology’”（本人発言） — https://www.businessinsider.com/anduril-palmer-luckey-ai-weapons-ethics-defense-tech-2024</li>
+</ol>
+
+</div>
+
+<script type="application/json" id="facts">
+[
+  {"claim":"生年月日","value":"1992-09-19","unit":"date","as_of":"2026-09-26","source":"https://en.wikipedia.org/wiki/Palmer_Luckey","confidence":"reported"},
+  {"claim":"Kickstarter調達額","value":2437429,"unit":"USD","as_of":"2012-09","source":"https://www.kickstarter.com/projects/1523379957/oculus-rift-step-into-the-game","confidence":"reported"},
+  {"claim":"Kickstarter支援者数","value":9522,"unit":"人","as_of":"2012-09","source":"https://www.kickstarter.com/projects/1523379957/oculus-rift-step-into-the-game","confidence":"reported"},
+  {"claim":"Facebook買収発表額","value":2,"unit":"B USD","as_of":"2014-03-25","source":"https://about.fb.com/news/2014/03/facebook-to-acquire-oculus/","confidence":"reported"},
+  {"claim":"Facebook買収現金","value":400,"unit":"M USD","as_of":"2014-03-25","source":"https://about.fb.com/news/2014/03/facebook-to-acquire-oculus/","confidence":"reported"},
+  {"claim":"Facebook買収株式評価","value":1.6,"unit":"B USD","as_of":"2014-03-25","source":"https://about.fb.com/news/2014/03/facebook-to-acquire-oculus/","confidence":"reported"},
+  {"claim":"Facebook買収実質総額_Zuckerberg証言","value":3,"unit":"B USD","as_of":"2017-01","source":"https://www.usatoday.com/story/tech/news/2017/01/17/oculus-cost-3-billion-mark-zuckerberg-trial-dallas/96676848/","confidence":"reported"},
+  {"claim":"Luckey純資産_Forbes2015","value":700,"unit":"M USD","as_of":"2015","source":"https://www.forbes.com/profile/palmer-luckey/","confidence":"estimated"},
+  {"claim":"ZeniMax陪審総額","value":500,"unit":"M USD","as_of":"2017-02","source":"https://arstechnica.com/gaming/2017/02/oculus-execs-liable-for-500-million-in-zenimax-vr-trial/","confidence":"reported"},
+  {"claim":"ZeniMax_Luckey個人","value":50,"unit":"M USD","as_of":"2017-02","source":"https://arstechnica.com/gaming/2017/02/oculus-execs-liable-for-500-million-in-zenimax-vr-trial/","confidence":"reported"},
+  {"claim":"NimbleAmerica寄付_報道","value":10000,"unit":"USD","as_of":"2016-09","source":"https://en.wikipedia.org/wiki/Palmer_Luckey","confidence":"disputed"},
+  {"claim":"NimbleAmerica寄付_本人後年","value":9000,"unit":"USD","as_of":"2025-05","source":"60 Minutes 2025-05","confidence":"disputed"},
+  {"claim":"退社交渉額_WSJ","value":100,"unit":"M USD","as_of":"2018-11","source":"WSJ via Wikipedia","confidence":"single-source"},
+  {"claim":"Anduril_SeriesD評価","value":4.6,"unit":"B USD","as_of":"2021-06-17","source":"https://www.anduril.com/news/anduril-raises-usd450-million-in-series-d-funding","confidence":"reported"},
+  {"claim":"Anduril_SeriesF評価","value":14,"unit":"B USD","as_of":"2024-08","source":"https://www.reuters.com/business/anduril-secures-305-billion-valuation-latest-fund-raise-2025-06-05/","confidence":"reported"},
+  {"claim":"Anduril_SeriesG調達","value":2.5,"unit":"B USD","as_of":"2025-06","source":"https://www.reuters.com/business/anduril-secures-305-billion-valuation-latest-fund-raise-2025-06-05/","confidence":"reported"},
+  {"claim":"Anduril_SeriesG評価","value":30.5,"unit":"B USD","as_of":"2025-06","source":"https://www.reuters.com/business/anduril-secures-305-billion-valuation-latest-fund-raise-2025-06-05/","confidence":"reported"},
+  {"claim":"IVAS_ceiling","value":21.9,"unit":"B USD","as_of":"2025-02","source":"https://techcrunch.com/2025/02/11/anduril-takes-control-of-microsofts-22b-vr-military-headset-program/","confidence":"reported"},
+  {"claim":"RealityLabs損失_2024","value":17.729,"unit":"B USD","as_of":"2024","source":"https://investor.atmeta.com/investor-news/press-release-details/2025/Meta-Reports-Fourth-Quarter-and-Full-Year-2024-Results/","confidence":"reported"},
+  {"claim":"RealityLabs損失_2025","value":19.193,"unit":"B USD","as_of":"2025","source":"https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Fourth-Quarter-and-Full-Year-2025-Results/default.aspx","confidence":"reported"},
+  {"claim":"RealityLabs累積損失_2019to2025","value":88,"unit":"B USD","as_of":"2025","source":"self-calc from Meta segment disclosures","confidence":"estimated"}
+]
+</script>
+
+<script>
+const BORN = '1992-09-19';
+const DIED = null;
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: true };
+  const m = String(x.d).match(/(\d{4})(?:[-.](\d{1,2})(?:[-.](\d{1,2}))?)?/);
+  if (!m) return null;
+  const y = +m[1], mo = m[2] ? +m[2] : null, dd = m[3] ? +m[3] : null;
+  const [by, bm, bd] = BORN.split('-').map(Number);
+  if (DIED) { const dy = +DIED.split('-')[0]; if (y > dy) return { t: '没後' + (y - dy) + '年', out: true }; }
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  let a = y - by;
+  if (mo !== null && (mo < bm || (mo === bm && dd !== null && dd < bd))) a -= 1;
+  return { t: a + '歳', out: false };
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sup(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+}
+
+const ERAS = [
+  '',
+  'I 形成 1992–2011',
+  'II Oculus 2012–2013',
+  'III Facebook・訴訟 2014–2017',
+  'IV 退社・Anduril 2017–2022',
+  'V 拡大 2023–2026',
+];
+
+const TL = [
+ {d:'1992.9.19',e:1,t:'カリフォルニア州ロングビーチに生まれる',
+  w:'Palmer Freeman Luckey。以後の満年齢計算の基準日。',
+  y:'ホームスクールとガレージ試作の地理的前提。',
+  f:['Long Beach'],s:[1]},
+ {d:'2006頃',e:1,t:'コミュニティカレッジの講座を取り始める',
+  w:'14〜15歳。Golden West / Long Beach City College。',
+  y:'正規の高校経路以外での技術学習。',s:[1]},
+ {d:'2009',e:1,t:'ModRetro Forums を共同設立',
+  w:'古いゲーム機のポータブル化コミュニティ。',
+  y:'ハード改造の公開場。',
+  f:['ModRetro'],s:[1]},
+ {d:'2009',e:1,t:'VR ヘッドセットの自作を開始（16歳）',
+  w:'両親のガレージ。既存 HMD の視野・遅延・重量・価格を問題視。',
+  y:'Oculus 以前の試作系列の起点。',
+  f:['ガレージ'],s:[1,13]},
+ {d:'2009–11',e:1,t:'MTBS3D フォーラムに試作進捗を投稿',
+  w:'Meant to be Seen 3D。6世代目を Oculus Rift と命名。',
+  y:'Carmack ら indiedeveloper との接点。',
+  f:['MTBS3D'],s:[17,13]},
+ {d:'2010',e:1,t:'CSULB でジャーナリズムを学び始める',
+  w:'Daily Forty-Niner の Online Editor。のち中退。',
+  y:'大学学位は取得していない。',s:[1]},
+ {d:'2010頃',e:1,t:'USC ICT Mixed Reality Lab でパートタイム',
+  w:'BRAVEMIND（PTSD 向け VR）関連の低コスト HMD。',
+  y:'軍関連 VR の初接触。',s:[1,15]},
+ {d:'2011頃',e:1,t:'試作 PR1 等を完成（17歳前後）',
+  w:'視野角約90度、低遅延、触覚。最終的に50台超を試作。',
+  y:'Kickstarter 前の技術ストック。',
+  f:['50台超'],s:[1]},
+ {d:'2012.4',e:2,t:'Oculus VR を法人化',
+  w:'Kickstarter 実施のための器。',
+  y:'個人試作から会社へ。',
+  f:['Oculus VR'],s:[1]},
+ {d:'2012.6',e:2,t:'E3 で Carmack が Rift プロトタイプを披露',
+  w:'Doom 3: BFG Edition。無償貸与のプロトタイプ。',
+  y:'業界注目の点火。',
+  f:['E3','Carmack'],s:[15,16]},
+ {d:'2012.8.1',e:2,t:'Oculus Rift Kickstarter 開始',
+  w:'目標 $250,000。DIY キット想定。',
+  y:'資金と予約の同時獲得。',
+  f:['$250K'],s:[2]},
+ {d:'2012.8',e:2,t:'Brendan Iribe を CEO に起用',
+  w:'Kickstarter が $1M を超えたあと。',
+  y:'創業者エンジニアと経営の分離。',
+  f:['Iribe'],s:[1,16]},
+ {d:'2012.9',e:2,t:'Kickstarter 終了。$2,437,429（9,522人）',
+  w:'目標の約9.7倍。Gabe Newell らが応援。',
+  y:'消費者向け VR 復活の公開証拠。',
+  f:['$2.44M'],s:[2,1]},
+ {d:'2012秋',e:2,t:'CSULB を中退し Oculus に専念',
+  w:'E3・Kickstarter 後。',
+  y:'学業からフルタイム創業へ。',s:[1]},
+ {d:'2013',e:2,t:'Series A 約 $16M を調達',
+  w:'Business Insider 等。',
+  y:'法人としての本格資金。',
+  f:['$16M'],s:[18]},
+ {d:'2013',e:2,t:'Series B 約 $75M を調達',
+  w:'A の数か月後。',
+  y:'Facebook 買収前の最後の大型ラウンド。',
+  f:['$75M'],s:[18]},
+ {d:'2014.3.25',e:3,t:'Facebook が Oculus 買収を発表（約 $2B）',
+  w:'現金 $400M＋23.1M 株≈$1.6B＋EO 最大 $300M。当時21歳。',
+  y:'創業者エグジット。発表額の公式定義。',
+  f:['$2B'],s:[3]},
+ {d:'2014.5',e:3,t:'ZeniMax が Oculus・Luckey らを提訴',
+  w:'テキサス北地区。営業秘密・著作権・契約。',
+  y:'買収直後の最大訴訟。',
+  f:['ZeniMax'],s:[21,22]},
+ {d:'2015',e:3,t:'Forbes が純資産を約 $700M と推定',
+  w:'個人受取額の契約開示は無し。',
+  y:'売却持分の公開推定値。',
+  f:['$700M推定'],s:[20]},
+ {d:'2015',e:3,t:'TIME 誌の表紙特集',
+  w:'“The Surprising Joy of Virtual Reality”。',
+  y:'消費者 VR の顔としての露出。',s:[1]},
+ {d:'2016.9.22',e:3,t:'Daily Beast が Nimble America 寄付を報道',
+  w:'$10,000。Trump 支持団体。Clinton 看板と関連づけ。',
+  y:'退社前段の公開事件。',
+  f:['$10K'],s:[5,1]},
+ {d:'2016.9',e:3,t:'Facebook 上で謝罪文を投稿',
+  w:'Oculus とパートナーへの悪影響を謝罪。個人の行為と説明。',
+  y:'会社ブランドと個人政治の分離を試みた公的文書。',s:[1]},
+ {d:'2017.1',e:3,t:'Zuckerberg が買収総額約 $3B と証言',
+  w:'ZeniMax 裁判。リテンション約 $700M＋EO。',
+  y:'発表額と確定額の差が一次証言で確定。',
+  f:['$3B'],s:[4,19]},
+ {d:'2017.2.1',e:3,t:'ZeniMax 陪審が総額 $500M を認定',
+  w:'営業秘密盗用は否定。Luckey 個人 $50M（報道）。',
+  y:'個人名での高額評決。',
+  f:['$500M','$50M'],s:[23,24]},
+ {d:'2017.3',e:3,t:'Facebook / Oculus から離れる',
+  w:'詳細は当初非公開。解雇か自主退社かは諸説。',
+  y:'消費者 VR からの離脱。',
+  f:['退社'],s:[1,7,8]},
+ {d:'2017.6',e:4,t:'Anduril Industries を共同創業',
+  w:'Stephens・Schimpf・Grimm・Chen と。Founders Fund が初期主導。',
+  y:'防衛テックへの再起業。',
+  f:['Anduril'],s:[9,1]},
+ {d:'2017.8',e:4,t:'Anduril Seed 約 $17.5M',
+  w:'Founders Fund 主導。評価約 $88M（報道）。',
+  y:'防衛スタートアップとしての最初の外部資金。',
+  f:['Seed'],s:[26,27]},
+ {d:'2018.3',e:4,t:'南部国境向け監視塔パイロット開始',
+  w:'初期12日で入国試み55件を検知、と説明。',
+  y:'Sentry Tower の実証。',
+  f:['Sentry'],s:[1,28]},
+ {d:'2018.4',e:4,t:'Zuckerberg 上院証言で退社理由に言及',
+  w:'Cruz の質問に「not because of a political view」。',
+  y:'会社側説明の公式化。',s:[7]},
+ {d:'2018.6',e:4,t:'Anduril Series A 約 $41M',
+  w:'Founders Fund 主導。',
+  y:'Seed に続く機関投資。',
+  f:['$41M'],s:[26]},
+ {d:'2018.6',e:4,t:'ZeniMax 判決の一部減額',
+  w:'契約違反 $200M＋著作権 $50M を維持、残り約 $250M を退けた報道。',
+  y:'評決総額の下方修正。',s:[1,24]},
+ {d:'2018.11',e:4,t:'WSJ が退社をめぐる社内メールを報道',
+  w:'少なくとも約 $100M の支払い交渉。Meta は政治理由を否定。',
+  y:'退社経緯の報道側一次に近い材料。',
+  f:['$100M'],s:[8]},
+ {d:'2018.12',e:4,t:'Facebook と ZeniMax が和解',
+  w:'条件非開示。',
+  y:'訴訟の終結。',
+  f:['和解'],s:[25]},
+ {d:'2019.9',e:4,t:'Anduril Series B 約 $120M（評価約 $1B+）',
+  w:'Founders Fund / a16z 等。',
+  y:'ユニコーン到達局面。',
+  f:['$1B+'],s:[26]},
+ {d:'2020.7',e:4,t:'Series C $200M（評価 $1.9B）',
+  w:'Andreessen Horowitz 主導。',
+  y:'評価額の二倍化局面。',
+  f:['$1.9B'],s:[10,26]},
+ {d:'2020.9',e:4,t:'ABMS 関連で約 $967M と発表',
+  w:'本人 Twitter 等。上限か確定かは文書非公開。',
+  y:'空軍系大型契約の公開。',
+  f:['$967M'],s:[31]},
+ {d:'2021.6.17',e:4,t:'Series D $450M（評価 $4.6B）',
+  w:'Elad Gil 主導。公式発表。',
+  y:'評価の再二倍化。',
+  f:['$4.6B'],s:[33]},
+ {d:'2022.2',e:4,t:'SOCOM 対無人システムで約 $1B と発表',
+  w:'本人発表。',
+  y:'特殊作戦向けの大型枠。',
+  f:['$1B'],s:[32]},
+ {d:'2022.12',e:4,t:'Series E 約 $1.48B（評価約 $8.48B）',
+  w:'Valor Equity 等。約 $8.5B と丸める報道あり。',
+  y:'十億ドル超ラウンド。',
+  f:['$8.5B'],s:[10,26]},
+ {d:'2023–24',e:5,t:'Roadrunner を発表',
+  w:'再利用可能なジェット推進の対ドローン迎撃機。',
+  y:'製品系列の迎撃側強化。',
+  f:['Roadrunner'],s:[29,9]},
+ {d:'2024.4',e:5,t:'米空軍 CCA で Fury が選定',
+  w:'Increment 1。General Atomics と並ぶ。Boeing 案は選外。',
+  y:'有人戦闘機と連携する自律機の公式競争勝利。',
+  f:['Fury','CCA'],s:[30,9]},
+ {d:'2024.6',e:5,t:'ModRetro を再設立し Chromatic を発表',
+  w:'Game Boy 互換のハンドヘルド。',
+  y:'防衛以外のハード事業の再開。',s:[1]},
+ {d:'2024.8',e:5,t:'Series F $1.5B（評価 $14B）',
+  w:'Founders Fund / Sands Capital 共同主導。',
+  y:'工場（Arsenal）投資局面。',
+  f:['$14B'],s:[10,34]},
+ {d:'2025.2.11',e:5,t:'Microsoft から IVAS の主導を引き継ぐ',
+  w:'公式共同発表。枠の上限約 $21.9–22B（ceiling）。Azure は Microsoft。',
+  y:'兵士向け HMD のプライム交代。',
+  f:['IVAS'],s:[11,12]},
+ {d:'2025.6',e:5,t:'Series G $2.5B（評価 $30.5B）',
+  w:'Founders Fund が $1B。2024年売上約 $1B（報道）。',
+  y:'本稿基準日時点の評価額ヘッドライン。',
+  f:['$30.5B'],s:[10,35]},
+];
+
+const QUOTES = [
+ {t:'謝罪',q:'I am deeply sorry that my actions are negatively impacting the perception of Oculus and its partners.（私の行動が Oculus とそのパートナーの印象に悪影響を与えていることを、深く謝罪する。）',
+  w:'2016年9月・Facebook 投稿（Nimble America 報道後）',s:[1,5]},
+ {t:'退社',q:'Well, you know, everyone\'s got a different story, but it boils down to I gave $9,000 to a political group that was for Donald Trump and against Hillary Clinton.（人それぞれ説明は違うが、要は Trump 支持・Clinton 反対の政治団体に $9,000 出した、ということだ。）',
+  w:'2025年5月・60 Minutes',s:[6]},
+ {t:'Zuckerberg',q:'…it was not because of a political view.（…政治的見解が理由ではない。）',
+  w:'2018年4月・上院証言（Cruz の質問への回答）',s:[7]},
+ {t:'防衛',q:'There is no moral high ground in using inferior technology.（劣った技術を使うことに、道徳的な高みはない。）',
+  w:'Business Insider インタビュー（AI 兵器をめぐる発言）',s:[40]},
+ {t:'VR',q:'It looks incredibly exciting. If anybody is going to tackle this set of hard problems, we think that Palmer is going to do it.（これは非常に興奮する。この難問に取り組むなら、Palmer がやるだろう。）',
+  w:'2012年・Gabe Newell（Kickstarter 応援。Luckey 本人の語録ではないが、同時期の一次応援）',s:[1,2]},
+ {t:'芸術',q:'The idea of tying your real life to your virtual avatar has always fascinated me.（現実の生を仮想アバターに結びつけるという考えは、以前から私を魅了してきた。）',
+  w:'2022年11月・本人ブログ（致死 VR アート作品について）',s:[1]},
+];
+
+const activeEras = new Set();
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button type="button" class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`;
+}).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = `${n} / ${TL.length} 件`;
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.cls ? ' ' + r.cls : ''}${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 2 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+bars('chartVal', [
+  {k:'2020 C', v:1.9, sub:'$1.9B'},
+  {k:'2021 D', v:4.6, sub:'$4.6B', cls:'s2'},
+  {k:'2022 E', v:8.5, sub:'≈$8.5B'},
+  {k:'2024 F', v:14, sub:'$14B', cls:'s3'},
+  {k:'2025 G', v:30.5, sub:'$30.5B'},
+], 'B USD');
+
+bars('chartRl', [
+  {k:'2019', v:4.5, cls:'neg', sub:'損失'},
+  {k:'2020', v:6.6, cls:'neg'},
+  {k:'2021', v:10.2, cls:'neg'},
+  {k:'2022', v:13.7, cls:'neg'},
+  {k:'2023', v:16.1, cls:'neg'},
+  {k:'2024', v:17.7, cls:'neg'},
+  {k:'2025', v:19.2, cls:'neg'},
+], 'B USD');
+</script>
+</body>
+</html>

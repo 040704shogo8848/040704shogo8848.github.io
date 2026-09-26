@@ -3,6 +3,29 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "神崎忠男",
+    "nameEn": "Tadao Kanzaki",
+    "born": 1940,
+    "died": null,
+    "country": "JP",
+    "role": "登山家・日本山岳協会第10代会長（2011–2015）",
+    "field": "operator",
+    "status": "active",
+    "tags": [
+      "登山",
+      "エベレスト",
+      "日本山岳会",
+      "日本山岳協会",
+      "UIAA",
+      "日大山岳部"
+    ],
+    "date": "2026-09-26",
+    "summary": "1940年東京都生まれ。日本大学山岳部出身。エベレストに1970・1980・1988・1995年の4回遠征したが本人の登頂は0。1970年は日本人初登頂と同隊、1980年は約6,500 mで心筋梗塞。日本山岳協会第10代会長（2011–2015）、UIAA日本代表を20年以上務めた。",
+    "file": "people/kanzaki_tadao_260926.html",
+    "sourceCount": 30,
+    "variant": "life-arc"
+  },
+  {
     "name": "ジェフリー・ヒントン",
     "nameEn": "Geoffrey Hinton",
     "born": 1947,

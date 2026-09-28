@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>エベレスト・ビュー・トレッキング 2026</title>
+<meta name="description" content="日本山岳会のネパール遠征 2026年10月26日〜11月3日。標高1,350mのカトマンズから3,880mのホテル・エベレスト・ビューまでの行程を標高で読み、後半合流案が何に間に合って何に間に合わないかを検証する。">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --hairline: #e1e0d9;
+  --ring: rgba(11,11,11,0.10);
+  --sky: #2a78d6;
+  --trek: #16906a;
+  --peak: #b8862b;
+  --alert: #d2591f;
+  --grid: #d8d7cf;
+  --dark-bg: #1a1a19;
+  --dark-ink: #f0efec;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --hairline: #2c2c2a;
+    --ring: rgba(255,255,255,0.10);
+    --sky: #3987e5;
+    --trek: #17a077;
+    --peak: #d09b34;
+    --alert: #e2703a;
+    --grid: #33332f;
+    --dark-bg: #060606;
+    --dark-ink: #e1e0d9;
+  }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", sans-serif;
+  font-size: 15.5px;
+  line-height: 1.75;
+  -webkit-text-size-adjust: 100%;
+}
+main { max-width: 780px; margin: 0 auto; padding: 28px 18px 60px; }
+a { color: inherit; }
+
+header.hero { padding: 18px 0 8px; }
+.hero .date { font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+.hero h1 { font-size: 27px; line-height: 1.35; letter-spacing: .01em; margin: 4px 0 6px; }
+.hero h1 .arrow { color: var(--muted); font-weight: 400; margin: 0 6px; }
+.hero .lede { color: var(--ink-2); font-size: 14.5px; max-width: 660px; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 6px; }
+.stat {
+  background: var(--surface); border: 1px solid var(--ring);
+  border-radius: 8px; padding: 7px 12px; font-size: 12.5px; color: var(--ink-2);
+}
+.stat b { display: block; font-size: 15px; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 8px; }
+nav.toc a {
+  text-decoration: none; font-size: 13px; color: var(--ink-2);
+  border: 1px solid var(--hairline); border-radius: 20px; padding: 5px 14px; background: var(--surface);
+}
+
+section.block { margin-top: 44px; }
+section.block > h2 {
+  font-size: 20px; letter-spacing: .02em; padding-bottom: 8px; margin-bottom: 16px;
+  border-bottom: 2px solid var(--ink);
+}
+section.block > h2 small { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 10px; }
+.prose p { margin-bottom: 12px; color: var(--ink-2); }
+.prose p b, .prose p strong { color: var(--ink); }
+
+.card {
+  background: var(--surface); border: 1px solid var(--ring); border-radius: 10px;
+  padding: 16px 18px; margin-bottom: 12px;
+}
+.card h3 { font-size: 15.5px; margin-bottom: 8px; }
+.card p, .card li { font-size: 14px; color: var(--ink-2); }
+.card ul { padding-left: 20px; }
+.card li { margin-bottom: 5px; }
+.card b, .card strong { color: var(--ink); }
+.card.warn { border-left: 3px solid var(--alert); }
+.card.pick { border-left: 3px solid var(--trek); }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 620px) { .grid2 { grid-template-columns: 1fr; } }
+
+/* ---------- charts ---------- */
+figure.chart { margin: 4px 0 18px; }
+figure.chart svg { width: 100%; height: auto; display: block; }
+figure.chart figcaption { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+.chart .gridline { stroke: var(--grid); stroke-width: 1; }
+.chart .axis { stroke: var(--hairline); stroke-width: 1.2; }
+.chart .ylab, .chart .xlab { fill: var(--muted); font-size: 10.5px; font-family: system-ui, sans-serif; }
+.chart .plab { fill: var(--ink); font-size: 11px; font-family: system-ui, sans-serif; font-weight: 600; }
+.chart .plab-sub { fill: var(--muted); font-size: 10px; font-family: system-ui, sans-serif; }
+.chart .route { fill: none; stroke: var(--trek); stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+.chart .route-air { fill: none; stroke: var(--sky); stroke-width: 2.4; stroke-dasharray: 1 5; stroke-linecap: round; }
+.chart .route-opt { fill: none; stroke: var(--peak); stroke-width: 2; stroke-dasharray: 5 4; }
+.chart .dot { fill: var(--trek); }
+.chart .dot-air { fill: var(--sky); }
+.chart .dot-peak { fill: var(--peak); }
+.chart .band { fill: var(--alert); opacity: .075; }
+.chart .bandlab { fill: var(--alert); font-size: 10.5px; font-family: system-ui, sans-serif; font-weight: 600; }
+.chart .bar { fill: var(--muted); opacity: .5; }
+.chart .bar-hi { fill: var(--peak); }
+.chart .bar-out { fill: var(--alert); opacity: .55; }
+.chart .barlab { fill: var(--ink-2); font-size: 11px; font-family: system-ui, sans-serif; }
+.chart .barval { fill: var(--ink); font-size: 11px; font-family: system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 6px; font-size: 12.5px; color: var(--ink-2); }
+.legend i { display: inline-block; width: 16px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: 4px; }
+.legend i.l-trek { background: var(--trek); }
+.legend i.l-air { background: var(--sky); }
+.legend i.l-opt { background: var(--peak); }
+
+/* ---------- tables ---------- */
+table.cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.cmp th, table.cmp td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+table.cmp th { color: var(--muted); font-weight: 600; font-size: 12px; white-space: nowrap; }
+table.cmp td b { color: var(--ink); }
+table.cmp td { color: var(--ink-2); }
+table.cmp td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.cmp td.day { white-space: nowrap; font-variant-numeric: tabular-nums; }
+table.cmp tr.shogo td { background: color-mix(in srgb, var(--trek) 9%, transparent); }
+table.cmp tr.total td { border-bottom: none; border-top: 2px solid var(--ink); }
+.tbl-scroll { overflow-x: auto; }
+.tag {
+  display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 20px;
+  border: 1px solid var(--hairline); background: var(--bg); color: var(--ink-2); white-space: nowrap;
+}
+.tag.air { border-color: var(--sky); color: var(--sky); }
+.tag.trek { border-color: var(--trek); color: var(--trek); }
+.tag.evt { border-color: var(--peak); color: var(--peak); }
+
+/* ---------- steps ---------- */
+ol.steps { list-style: none; counter-reset: st; }
+ol.steps li { counter-increment: st; position: relative; padding: 0 0 14px 44px; font-size: 14px; color: var(--ink-2); }
+ol.steps li::before {
+  content: counter(st); position: absolute; left: 0; top: 1px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--surface); border: 1.5px solid var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: var(--ink);
+}
+ol.steps li::after { content: ""; position: absolute; left: 13px; top: 30px; bottom: 2px; width: 1.5px; background: var(--hairline); }
+ol.steps li:last-child::after { display: none; }
+ol.steps b { color: var(--ink); }
+
+.deep { margin: 18px 0; padding: 18px 20px; background: var(--dark-bg); color: var(--dark-ink); border-radius: 12px; }
+.deep h4 { font-size: 16px; margin-bottom: 6px; color: #ffffff; }
+.deep p { font-size: 13.5px; opacity: .85; margin-bottom: 6px; }
+.deep p:last-child { margin-bottom: 0; }
+.deep b { color: #ffffff; opacity: 1; }
+
+/* ---------- checklist ---------- */
+ul.chk { list-style: none; }
+ul.chk li {
+  position: relative; padding: 11px 0 11px 30px; font-size: 14px; color: var(--ink-2);
+  border-bottom: 1px dashed var(--hairline);
+}
+ul.chk li:last-child { border-bottom: none; }
+ul.chk li::before {
+  content: ""; position: absolute; left: 0; top: 16px;
+  width: 14px; height: 14px; border: 1.5px solid var(--muted); border-radius: 3px;
+}
+ul.chk li b { color: var(--ink); }
+ul.chk li .who { font-size: 11px; color: var(--muted); margin-left: 8px; white-space: nowrap; }
+
+details.src { margin-top: 44px; border-top: 1px solid var(--hairline); padding-top: 14px; }
+details.src summary { font-size: 13px; color: var(--muted); cursor: pointer; }
+details.src ul { padding-left: 20px; margin-top: 10px; }
+details.src li { font-size: 12.5px; color: var(--ink-2); margin-bottom: 6px; }
+
+footer.note { margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--hairline); }
+footer.note p { font-size: 12.5px; color: var(--muted); line-height: 1.7; }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a><a href="../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../021_profile/index.html">profile</a><a href="../02A_plan/index.html">plan</a><a href="index.html">travel</a><a href="../027_cinema/index.html">cinema</a><a href="../024_method/index.html">method</a><a href="../026_handbook/index.html">handbook</a><a href="../025_fitness/index.html">fitness</a><a href="../028_english/index.html">english</a><a href="../029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="index.html">travel</a>
+    <a class="snav-a" href="../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../024_method/index.html">method</a>
+    <a class="snav-a" href="../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../028_english/index.html">english</a>
+    <a class="snav-a" href="../029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<main>
+
+<header class="hero">
+  <p class="date">2026.10.26 — 11.04 ／ ネパール連邦民主共和国 コシ州 ソルクンブ郡</p>
+  <h1>エベレスト・ビュー・トレッキング<span class="arrow">—</span>標高で読む10日間</h1>
+  <p class="lede">日本山岳会のネパール遠征に、後半から合流できるかを検討するための資料。行程を距離ではなく<b>標高</b>で並べ直すと、「いつ行くか」が「どこまで行けるか」をそのまま決めていることが分かる。同じ期間にカトマンズでUIAA（国際山岳連盟）総会が開かれており、山の日程と会議の日程が背中合わせに組まれている。</p>
+
+  <div class="stats">
+    <div class="stat">今回の最高到達点<b>3,880 m</b></div>
+    <div class="stat">エベレスト山頂<b>8,848 m</b></div>
+    <div class="stat">ベースキャンプ<b>5,364 m</b></div>
+    <div class="stat">遠征の全日数<b>10 日</b></div>
+    <div class="stat">徒歩区間<b>2 日</b></div>
+    <div class="stat">出発まで<b>28 日</b></div>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#profile">標高で見る</a>
+  <a href="#plan">原本の行程</a>
+  <a href="#join">どこで合流するか</a>
+  <a href="#body">高度と体</a>
+  <a href="#geo">この山の成り立ち</a>
+  <a href="#who">誰が登ってきたか</a>
+  <a href="#sherpa">シェルパという仕事</a>
+  <a href="#hotel">ホテル・エベレスト・ビュー</a>
+  <a href="#logi">移動の実務</a>
+  <a href="#cost">費用</a>
+  <a href="#todo">確認事項</a>
+</nav>
+
+<!-- =========================================================== -->
+<section class="block" id="profile">
+<h2>標高で見る<small>この行程の主役は距離ではなく高さ</small></h2>
+
+<div class="prose">
+<p>10日間のうち、標高が動くのは<b>4日だけ</b>である。10月27日にカトマンズからルクラへ飛び、28日にナムチェバザールまで登り、29日にホテル・エベレスト・ビューへ上がり、30日にカトマンズへ戻る。残る6日は標高1,350mのカトマンズ盆地から出ない。</p>
+</div>
+
+<figure class="chart">
+<svg viewBox="0 0 760 330" role="img" aria-label="10月26日から11月4日までの標高プロファイル。カトマンズ1350mから27日にルクラ2840m、パクディン2610m、28日にナムチェバザール3440m、29日にホテル・エベレスト・ビュー3880mまで上がり、30日にカトマンズへ戻って以降は1350mのまま推移する。">
+  <!-- y grid -->
+  <g>
+    <line class="gridline" x1="52" y1="278" x2="740" y2="278"/>
+    <line class="gridline" x1="52" y1="213.5" x2="740" y2="213.5"/>
+    <line class="gridline" x1="52" y1="149" x2="740" y2="149"/>
+    <line class="gridline" x1="52" y1="84.5" x2="740" y2="84.5"/>
+    <line class="gridline" x1="52" y1="20" x2="740" y2="20"/>
+    <text class="ylab" x="46" y="282" text-anchor="end">0</text>
+    <text class="ylab" x="46" y="217.5" text-anchor="end">1,000</text>
+    <text class="ylab" x="46" y="153" text-anchor="end">2,000</text>
+    <text class="ylab" x="46" y="88.5" text-anchor="end">3,000</text>
+    <text class="ylab" x="46" y="24" text-anchor="end">4,000 m</text>
+  </g>
+
+  <!-- 3000m band = altitude-sickness zone -->
+  <rect class="band" x="52" y="20" width="688" height="64.5"/>
+  <text class="bandlab" x="736" y="79" text-anchor="end">3,000 m 以上（急性高山病が出はじめる帯）</text>
+
+  <!-- axis -->
+  <line class="axis" x1="52" y1="278" x2="740" y2="278"/>
+
+  <!-- x labels -->
+  <g>
+    <text class="xlab" x="52"    y="296" text-anchor="middle">10/26</text>
+    <text class="xlab" x="126.7" y="296" text-anchor="middle">27</text>
+    <text class="xlab" x="201.3" y="296" text-anchor="middle">28</text>
+    <text class="xlab" x="276"   y="296" text-anchor="middle">29</text>
+    <text class="xlab" x="350.7" y="296" text-anchor="middle">30</text>
+    <text class="xlab" x="425.3" y="296" text-anchor="middle">31</text>
+    <text class="xlab" x="500"   y="296" text-anchor="middle">11/1</text>
+    <text class="xlab" x="574.7" y="296" text-anchor="middle">2</text>
+    <text class="xlab" x="649.3" y="296" text-anchor="middle">3</text>
+    <text class="xlab" x="724"   y="296" text-anchor="middle">4</text>
+    <text class="xlab" x="52"    y="312" text-anchor="middle">月</text>
+    <text class="xlab" x="126.7" y="312" text-anchor="middle">火</text>
+    <text class="xlab" x="201.3" y="312" text-anchor="middle">水</text>
+    <text class="xlab" x="276"   y="312" text-anchor="middle">木</text>
+    <text class="xlab" x="350.7" y="312" text-anchor="middle">金</text>
+    <text class="xlab" x="425.3" y="312" text-anchor="middle">土</text>
+    <text class="xlab" x="500"   y="312" text-anchor="middle">日</text>
+    <text class="xlab" x="574.7" y="312" text-anchor="middle">月</text>
+    <text class="xlab" x="649.3" y="312" text-anchor="middle">火</text>
+    <text class="xlab" x="724"   y="312" text-anchor="middle">水</text>
+  </g>
+
+  <!-- Shogo's current window marker -->
+  <line x1="425.3" y1="20" x2="425.3" y2="278" stroke="#898781" stroke-width="1" stroke-dasharray="3 3"/>
+  <text class="plab-sub" x="430" y="200">ここから後半合流案</text>
+  <text class="plab-sub" x="430" y="213">（標高1,350mのまま）</text>
+
+  <!-- air legs -->
+  <path class="route-air" d="M52,190.9 L100,94.8"/>
+  <path class="route-air" d="M276,56.1 L320,94.8"/>
+  <path class="route-air" d="M320,94.8 L350.7,190.9"/>
+  <path class="route-air" d="M649.3,190.9 L724,278"/>
+
+  <!-- trek + stay line -->
+  <path class="route" d="M100,94.8 L126.7,109.7 L201.3,56.1 L250,27.7 L276,56.1"/>
+  <path class="route" d="M350.7,190.9 L425.3,190.9 L500,190.9 L574.7,190.9 L649.3,190.9"/>
+
+  <!-- optional heli day-trip from the back half -->
+  <path class="route-opt" d="M574.7,190.9 L600,27.7 L625,190.9"/>
+  <text class="plab-sub" x="604" y="24" text-anchor="middle">ヘリ日帰り案</text>
+
+  <!-- points -->
+  <circle class="dot-air" cx="52" cy="190.9" r="4"/>
+  <circle class="dot-air" cx="100" cy="94.8" r="4"/>
+  <circle class="dot" cx="126.7" cy="109.7" r="4"/>
+  <circle class="dot" cx="201.3" cy="56.1" r="4"/>
+  <circle class="dot-peak" cx="250" cy="27.7" r="5"/>
+  <circle class="dot" cx="276" cy="56.1" r="4"/>
+  <circle class="dot-air" cx="350.7" cy="190.9" r="4"/>
+  <circle class="dot-air" cx="724" cy="278" r="4"/>
+
+  <!-- labels -->
+  <text class="plab" x="52" y="182" text-anchor="start">カトマンズ 1,350</text>
+  <text class="plab" x="104" y="88" text-anchor="start">ルクラ 2,840</text>
+  <text class="plab" x="130" y="124" text-anchor="start">パクディン 2,610</text>
+  <text class="plab" x="196" y="48" text-anchor="end">ナムチェ 3,440</text>
+  <text class="plab" x="250" y="19" text-anchor="middle">ホテル・エベレスト・ビュー 3,880</text>
+  <text class="plab-sub" x="350.7" y="207" text-anchor="middle">カトマンズへ帰還</text>
+  <text class="plab-sub" x="724" y="272" text-anchor="end">成田</text>
+</svg>
+<figcaption>緑の実線が徒歩と滞在、青の点線が空路（固定翼・ヘリ）。29日夜のヘリコプター移動は原本に「可能であれば」と注記されており、取れなければナムチェバザール泊のままとなる。標高値は原本の記載を優先し、パクディンのみ現地の実標高（2,610m）を採った。原本は27日の高度欄にルクラの2,840mを記入している。</figcaption>
+</figure>
+
+<div class="legend">
+  <span><i class="l-trek"></i>徒歩・滞在</span>
+  <span><i class="l-air"></i>空路</span>
+  <span><i class="l-opt"></i>後半合流案から足せる選択肢</span>
+</div>
+
+<div class="prose" style="margin-top:22px">
+<p>次の図は、この行程の到達点を他の高さと並べたものである。<b>ホテル・エベレスト・ビューの3,880mは、富士山より高い</b>。一方で、話に出てくる「5,000mを超えるベースキャンプ」はこの行程には入っていない。</p>
+</div>
+
+<figure class="chart">
+<svg viewBox="0 0 760 250" role="img" aria-label="標高の比較棒グラフ。エベレスト山頂8848m、カラパタール5545m、エベレストベースキャンプ5364m、ホテル・エベレスト・ビュー3880m、富士山3776m、ナムチェバザール3440m、カトマンズ1350m。">
+  <g>
+    <!-- scale: x = 250 + (h/8848)*470 -->
+    <rect class="bar-out" x="250" y="14"  width="470"   height="18" rx="2"/>
+    <rect class="bar-out" x="250" y="46"  width="294.6" height="18" rx="2"/>
+    <rect class="bar-out" x="250" y="78"  width="285"   height="18" rx="2"/>
+    <rect class="bar-hi"  x="250" y="110" width="206.1" height="18" rx="2"/>
+    <rect class="bar"     x="250" y="142" width="200.6" height="18" rx="2"/>
+    <rect class="bar"     x="250" y="174" width="182.7" height="18" rx="2"/>
+    <rect class="bar"     x="250" y="206" width="71.7"  height="18" rx="2"/>
+
+    <text class="barlab" x="242" y="27"  text-anchor="end">エベレスト山頂</text>
+    <text class="barlab" x="242" y="59"  text-anchor="end">カラパタール</text>
+    <text class="barlab" x="242" y="91"  text-anchor="end">エベレストBC</text>
+    <text class="barlab" x="242" y="123" text-anchor="end">ホテル・エベレスト・ビュー</text>
+    <text class="barlab" x="242" y="155" text-anchor="end">富士山</text>
+    <text class="barlab" x="242" y="187" text-anchor="end">ナムチェバザール</text>
+    <text class="barlab" x="242" y="219" text-anchor="end">カトマンズ</text>
+
+    <text class="barval" x="728" y="27">8,848</text>
+    <text class="barval" x="552" y="59">5,545</text>
+    <text class="barval" x="543" y="91">5,364</text>
+    <text class="barval" x="464" y="123">3,880</text>
+    <text class="barval" x="459" y="155">3,776</text>
+    <text class="barval" x="441" y="187">3,440</text>
+    <text class="barval" x="330" y="219">1,350</text>
+
+    <text class="plab-sub" x="504" y="123">今回の最高到達点</text>
+    <text class="plab-sub" x="592" y="59">ヘリ日帰り案の着陸点</text>
+  </g>
+</svg>
+<figcaption>橙の3本は今回の行程に含まれない高さ。ホテル・エベレスト・ビュー（金）が今回の天井にあたる。単位はメートル。</figcaption>
+</figure>
+</section>
+
+<!-- =========================================================== -->
+<section class="block" id="plan">
+<h2>原本の行程<small>Japanese Alpine Club / Visit Nepal 2026.10.26〜11.3</small></h2>
+
+<div class="tbl-scroll">
+<table class="cmp">
+<thead>
+<tr><th>日付</th><th>曜</th><th>行程</th><th>所要</th><th>標高</th><th>宿</th></tr>
+</thead>
+<tbody>
+<tr><td class="day">10/26</td><td>月</td><td>午前 成田発 → <b>16:00 カトマンズ着</b>、ホテルへ <span class="tag air">空路</span></td><td class="num">—</td><td class="num">1,350 m</td><td>ホテル</td></tr>
+<tr><td class="day">10/27</td><td>火</td><td>6:00 カトマンズ → ルクラ（タラ航空チャーター） <span class="tag air">空路</span><br>ルクラ → パクディン 徒歩 <span class="tag trek">徒歩</span></td><td class="num">5.5 h</td><td class="num">2,840 m</td><td>ロッジ</td></tr>
+<tr><td class="day">10/28</td><td>水</td><td>パクディン → ナムチェバザール 徒歩 <span class="tag trek">徒歩</span></td><td class="num">7 h</td><td class="num">3,440 m</td><td>ロッジ</td></tr>
+<tr><td class="day">10/29</td><td>木</td><td>ナムチェバザール滞在<br><b>ホテル・エベレスト・ビュー（3,880m）を訪問</b>、エベレスト山群を望む<br>夕方 同ホテル → ルクラ ヘリコプター <span class="tag air">空路</span></td><td class="num">—</td><td class="num">3,440 m</td><td>ロッジ</td></tr>
+<tr><td class="day">10/30</td><td>金</td><td>ルクラ → カトマンズ（チャーター） <span class="tag air">空路</span></td><td class="num">—</td><td class="num">2,840 m</td><td>ホテル</td></tr>
+<tr class="shogo"><td class="day">10/31</td><td>土</td><td>自由行動<br>夜 <b>UIAA ディナー</b> <span class="tag evt">会議</span></td><td class="num">—</td><td class="num">1,350 m</td><td>ホテル</td></tr>
+<tr class="shogo"><td class="day">11/1</td><td>日</td><td>UAAA 合同会議（原本に「？」）と <b>NMA 記念パーティー</b> <span class="tag evt">会議</span></td><td class="num">—</td><td class="num">1,350 m</td><td>ホテル</td></tr>
+<tr class="shogo"><td class="day">11/2</td><td>月</td><td>自由行動　選択：①市内観光　②マウンテンフライト</td><td class="num">—</td><td class="num">1,350 m</td><td>ホテル</td></tr>
+<tr class="shogo"><td class="day">11/3</td><td>火</td><td>自由行動　選択：①市内観光　②マウンテンフライト<br><b>19:30 カトマンズ発</b> 成田へ <span class="tag air">空路</span></td><td class="num">—</td><td class="num">—</td><td>機中</td></tr>
+<tr class="shogo"><td class="day">11/4</td><td>水</td><td>午前 成田着</td><td class="num">—</td><td class="num">—</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card warn" style="margin-top:14px">
+<h3>原本の注記と、読み替えたところ</h3>
+<ul>
+<li><b>10月29日の注記</b>「可能であれば、ホテル・エベレスト・ビューからルクラへ、あるいはナムチェバザールからルクラへヘリコプターで」。つまりヘリは確定ではなく、取れなければナムチェバザール泊が続く。</li>
+<li><b>曜日の誤記</b>。原本は10月29日を S と記しているが、2026年10月29日は<b>木曜</b>である。10月31日（土）と11月1日（日）の S は正しい。</li>
+<li><b>高度欄は宿泊地の標高と一致しない行がある</b>。10月27日の 2,840m はルクラの高さで、実際に泊まるパクディンは2,610m。10月30日の 2,840m も同じくルクラの高さで、その夜はカトマンズ（1,350m）に戻っている。</li>
+<li><b>ホテル・エベレスト・ビューは「訪問」であって宿泊地ではない</b>。原本では29日の宿はナムチェバザールのロッジ。あのホテルに泊まる想定なら、この行程とは別の手配になる。</li>
+</ul>
+</div>
+</section>
+
+<!-- =========================================================== -->
+<section class="block" id="join">
+<h2>どこで合流するか<small>10月31日からでは、山はもう終わっている</small></h2>
+
+<div class="prose">
+<p>いま検討している10月31日（土）出発は、<b>標高が動く4日間が終わった翌日</b>にあたる。この案で入ると、ルクラにもナムチェバザールにもホテル・エベレスト・ビューにも行かず、10日間ずっとカトマンズ盆地の1,350mにいることになる。上の折れ線で、縦の破線から右がすべて平らなのがそれである。</p>
+<p>一方でこの日程には別の中身がある。10月31日の夜と11月1日は、<b>UIAA（国際山岳連盟）総会の公式ディナーと、NMA（ネパール山岳協会）主催の文化行事</b>が入っている。山ではなく人に会う日程として見るなら、この2日は遠征全体でいちばん密度が高い。</p>
+</div>
+
+<div class="deep">
+<h4>同じ週にカトマンズで何が起きているか</h4>
+<p>UIAA総会2026は<b>10月30日〜31日にカトマンズ</b>で開かれ、NMAが主催する。周辺プログラムを含めると10月27日〜11月1日で、27〜28日が第3回UIAA山岳安全シンポジウム、29日が執行委員会と各専門委員長会議、30日午後に総会開会と歓迎晩餐会、31日に気候変動サミットと総会の投票、夜に公式晩餐会と贈呈式、11月1日がNMAによる文化行事という並びになっている。</p>
+<p>原本の「10/31 夜 UIAA dinner party」はこの公式晩餐会、「11/1 NMA Birthday party」はNMAの記念行事にあたると読める。<b>じいたちの山の日程は、この会議に間に合うように前へ詰めて組まれている。</b>30日にルクラから戻るのは、30日午後の総会開会に間に合わせるためである。</p>
+</div>
+
+<div class="prose">
+<p>ここまでを踏まえて、現実的な入り方は4つある。</p>
+</div>
+
+<div class="tbl-scroll">
+<table class="cmp">
+<thead>
+<tr><th>案</th><th>日程</th><th>日本を空ける平日</th><th>最高到達</th><th>じいと山にいる時間</th><th>UIAA・NMA</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td><b>A</b> 全日程</td><td class="day">10/26 月 — 11/4 水</td><td class="num">8日</td><td class="num">3,880 m</td><td>4日</td><td>全部</td>
+</tr>
+<tr>
+  <td><b>B</b> 後半合流<br><span class="tag">現在の案</span></td><td class="day">10/31 土 — 11/4 水</td><td class="num">2日</td><td class="num">1,350 m</td><td>なし</td><td>31日夜から全部</td>
+</tr>
+<tr class="shogo">
+  <td><b>C</b> 山で合流<br><span class="tag trek">山に行ける最短</span></td><td class="day">10/28 水 — 11/3 火</td><td class="num">4日</td><td class="num">3,880 m</td><td>1〜2日</td><td>31日夜から全部</td>
+</tr>
+<tr>
+  <td><b>D</b> B＋ヘリ日帰り</td><td class="day">10/31 土 — 11/4 水</td><td class="num">2日</td><td class="num">3,880〜5,545 m</td><td>なし</td><td>31日夜から全部</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="grid2" style="margin-top:16px">
+<div class="card pick">
+<h3>案C ― 29日にホテルで落ち合う</h3>
+<p>10月28日（水）にカトマンズへ入り、29日の早朝にヘリでシャンボチェへ上がる。<b>29日はじいたちがホテル・エベレスト・ビューを訪れる日</b>なので、標高3,880mのテラスで合流できる。その後は一緒にルクラへ下り、30日にカトマンズへ戻って、31日夜の晩餐会と11月1日の行事に出る。11月3日（火・文化の日）の便で帰れば、日本を空ける平日は4日。</p>
+<p><b>代償は体への負担</b>。カトマンズの1,350mから数時間で3,880mへ上がることになり、2日かけて歩いて登ってきたじいたちとは順応の条件がまったく違う。下の「高度と体」を読んでから判断したい。</p>
+</div>
+<div class="card">
+<h3>案D ― 会議のあいだにヘリで往復する</h3>
+<p>いまの日程のまま、11月2日（月）か3日（火）の自由行動枠に、カトマンズ発のエベレスト日帰りヘリツアーを入れる。所要4〜5時間で、ルクラ、クンブ氷河、カラパタール上空を回り、<b>ホテル・エベレスト・ビューで朝食を取って戻る</b>行程が定番になっている。相乗りで1人あたり1,240〜1,300米ドルが2026年の相場。</p>
+<p>ただしカラパタールの着陸を含むものは5,545mまで一気に上がる。<b>1,350mからの直行としては最も荒い上がり方</b>で、頭痛や吐き気が出る確率は案Cより高い。着陸なしの遊覧に切り替えれば負担はほぼ消える。</p>
+</div>
+</div>
+
+<div class="card warn">
+<h3>日付の確認を2点</h3>
+<ul>
+<li><b>文化の日は11月3日（火）</b>である。11月4日は水曜で平日。「10/31（土）〜11/4（火）」という組み方だと曜日が1日ずれているので、帰国日を3日（火・祝）にするか、4日（水）を休むかを決める必要がある。原本の便は3日19:30カトマンズ発・4日午前成田着なので、<b>同じ便に乗ると休むのは4日（水）</b>になる。</li>
+<li><b>3泊4日は成立しにくい</b>。往路は午前発・現地夕方着、復路は夜発・翌朝着なので、10月31日出発・11月3日発だと現地3泊（31日・1日・2日）＋機中1泊で、日本側では5日間の枠を使う。</li>
+</ul>
+</div>
+</section>
+
+<!-- =========================================================== -->
+<section class="block" id="body">
+<h2>高度と体<small>訓練で変えられる部分と、変えられない部分</small></h2>
+
+<div class="prose">
+<p>急性高山病は、おおむね<b>標高3,000m前後から出はじめる</b>。今回の行程は3,440mで2泊し、日中に3,880mまで上げる。数字としてはちょうどその入口を歩くことになる。</p>
+<p>予防の原則ははっきりしている。<b>3,000mを超えたら、寝る場所の標高は1日500m以内の上昇にとどめる。1,000m上げるごとに休養日を1日入れる。2,500〜3,000mで2〜3日過ごしてから3,000m以上へ入るのが理想</b>とされる。</p>
+</div>
+
+<div class="card">
+<h3>原本の行程を、この原則で採点する</h3>
+<ul>
+<li>10/27　カトマンズ1,350m → ルクラ2,840m（空路で+1,490m）→ パクディン2,610mへ<b>下って</b>泊まる。飛行機で上げた分を歩いて下げる形で、設計としては良い。</li>
+<li>10/28　パクディン2,610m → ナムチェバザール3,440m。<b>睡眠高度が+830mで、500mの原則を超える</b>。エベレスト街道の標準行程がここを1日で登るので珍しくはないが、この行程で最初に体に来るのはこの日である。</li>
+<li>10/29　ナムチェ3,440mに泊まったまま、日中だけ3,880mへ上げて戻る。<b>高く登って低く寝るという順応の教科書通り</b>の1日。ホテル・エベレスト・ビューへの往復は、そもそも順応日の定番コースとして使われている。</li>
+</ul>
+<p style="margin-top:8px">つまり原本は、28日に1日だけ原則を外し、29日で取り返す組み方になっている。<b>後から合流してヘリで一気に上がる案（C・D）は、この28日と29日の2日分を丸ごと飛ばす</b>ということである。</p>
+</div>
+
+<div class="card warn">
+<h3>体力と高山病は別の話</h3>
+<p>高所への強さは、走り込みや筋力ではほとんど決まらない。<b>若くて体力がある人ほど無理をして重症化する</b>という指摘は高所医学の側から繰り返し出ている。今回の3,880mで意味のある準備は、トレーニングよりも次の3つになる。</p>
+<ul>
+<li><b>パルスオキシメーターを持っていく。</b>カトマンズ、ナムチェ、ホテル・エベレスト・ビューでSpO2を測って記録する。一般にSpO2が90%を割ると体に相応の低酸素負荷がかかっていると見る。</li>
+<li><b>アセタゾラミド（ダイアモックス）を事前に相談しておく。</b>ヘリで急に上げる案を採るなら特に。処方が要るので出発前に渡航外来で。</li>
+<li><b>行程中に引き返せる設計にしておく。</b>3,880mで頭痛が出たら下げれば治る。下げられない日程を組まないこと。</li>
+</ul>
+</div>
+
+<div class="deep">
+<h4>この旅の、いちばん値打ちのある持ち帰り</h4>
+<p>エベレスト登頂を目標に置いている以上、先に知っておくべきなのは装備でも体力でもなく、<b>自分の体が高度にどう反応するか</b>である。これは体質に依存していて、事前の訓練では分からない。3,440mで眠れるか、3,880mで頭が痛くならないか、SpO2がいくつまで落ちるか。今回の4日間で、その一次データが取れる。</p>
+<p>逆に、案B（カトマンズのみ）を選ぶと、<b>1,350mのデータしか取れない</b>。会議と人に会うことが目的ならそれで足りるが、登頂計画の前段としては何も得られない。案の比較で本当に差が出るのはここである。</p>
+</div>
+</section>
+
+<!-- =========================================================== -->
+<section class="block" id="geo">
+<h2>この山の成り立ち<small>世界の最高地点は、かつて海の底だった</small></h2>
+
+<div class="prose">
+<p>エベレストの山頂を作っている岩は<b>石灰岩</b>である。石灰岩は、浅くて暖かい海の底に生き物の殻が積もってできる岩だ。つまり世界でいちばん高い場所の岩は、もとは海底の堆積物だった。</p>
+<p>この石灰岩は<b>オルドビス紀、およそ4億8,500万年前から4億4,300万年前</b>のもので、三葉虫、腕足類、ウミユリといった海の無脊椎動物の化石が入っている。人類が登るはるか前、そこは浅い海だった。</p>
+<p>持ち上げたのはインド亜大陸の移動である。ゴンドワナ大陸から分かれて北上したインドプレートが、<b>およそ5,500万〜5,000万年前にユーラシア大陸へ衝突した</b>。押し合いは今も終わっていない。インドプレートは年5〜10mmの速さで北へ進み続けていて、エベレストは年4mmほど高くなっているという報告がある。</p>
+</div>
+
+<figure class="chart">
+<svg viewBox="0 0 760 340" role="img" aria-label="エベレストの地質断面図。山頂から8600mまでがオルドビス紀の石灰岩からなるチョモランマ層、その下のノースコル層の上部に化石を含むイエローバンド、約7000m以下が花崗岩と高変成岩のロンブク層。">
+  <polygon points="255.1,159.7 504.9,159.7 640,300 120,300" fill="#5a5750"/>
+  <polygon points="363.2,47.4 396.8,47.4 504.9,159.7 255.1,159.7" fill="#8a8780"/>
+  <polygon points="363.2,47.4 396.8,47.4 423.8,75.5 336.2,75.5" fill="#b8862b"/>
+  <polygon points="380,30 363.2,47.4 396.8,47.4" fill="#d9d6cc"/>
+
+  <g stroke="#898781" stroke-width="1">
+    <line x1="382" y1="34" x2="560" y2="34"/>
+    <line x1="412" y1="62" x2="560" y2="62"/>
+    <line x1="452" y1="112" x2="560" y2="112"/>
+    <line x1="560" y1="212" x2="430" y2="212"/>
+  </g>
+
+  <g>
+    <text class="plab" x="566" y="31">チョモランマ層</text>
+    <text class="plab-sub" x="566" y="45">山頂〜8,600m　オルドビス紀の石灰岩</text>
+    <text class="plab-sub" x="566" y="58">三葉虫・腕足類・ウミユリの化石を含む</text>
+
+    <text class="plab" x="566" y="82">イエローバンド</text>
+    <text class="plab-sub" x="566" y="96">大理石と千枚岩の黄色い帯。ここにも海の化石</text>
+    <text class="plab-sub" x="566" y="109">登頂者が最後に越える層</text>
+
+    <text class="plab" x="566" y="133">ノースコル層</text>
+    <text class="plab-sub" x="566" y="147">カンブリア紀の深海堆積物が変成したもの</text>
+
+    <text class="plab" x="566" y="209">ロンブク層</text>
+    <text class="plab-sub" x="566" y="223">花崗岩と高変成岩。山の土台</text>
+  </g>
+
+  <g>
+    <line class="gridline" x1="120" y1="30" x2="360" y2="30" stroke-dasharray="3 4"/>
+    <line class="gridline" x1="120" y1="159.7" x2="252" y2="159.7" stroke-dasharray="3 4"/>
+    <line class="gridline" x1="120" y1="274.5" x2="636" y2="274.5" stroke-dasharray="3 4"/>
+    <text class="ylab" x="114" y="34" text-anchor="end">8,848 m　山頂</text>
+    <text class="ylab" x="114" y="163" text-anchor="end">約 7,000 m</text>
+    <text class="ylab" x="114" y="272" text-anchor="end">5,364 m</text>
+    <text class="ylab" x="114" y="286" text-anchor="end">ベースキャンプ</text>
+  </g>
+
+  <text class="plab-sub" x="120" y="324">層の境目はどれも低角の断層で、上下の岩は別々の場所から運ばれて重なっている。</text>
+</svg>
+<figcaption>山頂から順に3つの地層が重なる。今回のトレッキングで立つ3,880mは、この図のさらに下、ロンブク層の裾にあたる。</figcaption>
+</figure>
+
+<div class="card">
+<h3>高さの数字は、何度も書き換えられている</h3>
+<ul>
+<li><b>1852年</b>　インド測量局のラーダナート・シクダールが約8,840mと算定し、世界最高峰だと分かった。</li>
+<li><b>1955年</b>　インド測量局が8,848m。これが長く公式値として使われた。</li>
+<li><b>1975年</b>　中国が8,848.13m。<b>1999年</b>にGPSで8,850m、<b>2005年</b>には中国が雪を除いた岩盤の高さとして8,844.43mを出した。</li>
+<li><b>2020年</b>　中国とネパールが合同で測り直し、<b>8,848.86m</b>を発表した。これが現在の公式値である。</li>
+</ul>
+<p style="margin-top:8px">雪氷を含めるか、どの海面を基準にするか、プレートの移動をどう扱うか。条件で答えが変わるので、<b>山の高さは測り方を決めないと決まらない</b>。</p>
+</div>
+</section>
+
+<!-- =========================================================== -->
+<section class="block" id="who">
+<h2>誰が登ってきたか<small>延べ13,737回、7,563人、死者339人</small></h2>
+
+<div class="prose">
+<p>2025年12月時点で、エベレストの登頂は<b>延べ13,737回</b>、登った人の数は<b>7,563人</b>。亡くなった人は<b>339人</b>で、登頂100回あたり1.06人にあたる。無酸素で登ったのは232人、登頂者の1.7%である。</p>
+<p>内訳にこの山の現在が出ている。<b>延べ13,737回のうち、雇われた側の登頂が7,081回で52%を占める</b>。客であるメンバーの登頂は6,656回で48%。金を払って登る人より、仕事として登る人のほうが多い。死者の内訳は、メンバー208人に対して雇われ労働者130人である。</p>
+</div>
+
+<div class="card">
+<h3>日本人の記録</h3>
+<ul>
+<li><b>1970年5月11日</b>　松浦輝夫と植村直己が日本人として初登頂。</li>
+<li><b>1973年10月26日</b>　石黒久と加藤保男が秋季の初登頂。今回の遠征と同じ10月の話である。</li>
+<li><b>1975年5月16日</b>　田部井淳子が<b>女性として世界で初めて</b>登頂。</li>
+<li><b>1980年5月30日</b>　重広恒夫と尾崎隆が北壁からの初登頂。</li>
+<li><b>最多登頂</b>は倉岡裕之の13回（2026年5月19日時点）。<b>最高齢登頂</b>は三浦雄一郎の80歳（2013年5月23日）。</li>
+</ul>
+<p style="margin-top:8px"><b>日本人の累計登頂者数は、信頼できる公開集計が見つからなかった。</b>168人・延べ213回という数字が流通しているが、どの時点のものか確認できないので、ここでは確定値として扱わない。国別の正確な記録はヒマラヤン・データベースが持っているが、一般に公開されている集計は限られる。</p>
+</div>
+
+<div class="deep">
+<h4>数より、登り方に出ている</h4>
+<p>公開されている国別の数字でひとつはっきりしているのは、<b>日本は標準ルート以外からの登頂が26回で国別3位</b>だということである。北壁、北東稜の完全縦走、秋季登頂。人数の多さではなく、<b>まだ誰も通っていない線を引く側に回った回数</b>で上位に来ている。1970年の初登頂から1980年の北壁までの10年が、その中身にあたる。</p>
+</div>
+</section>
+
+<!-- =========================================================== -->
+<section class="block" id="sherpa">
+<h2>シェルパという仕事<small>同じ山で、払われる額が一桁違う</small></h2>
+
+<div class="prose">
+<p>最初に区別しておきたい。<b>シェルパはもともと民族の名前</b>で、ネパール東部のクンブ地方に暮らす人々を指す。それが高所の仕事と結びついて、いまは職名のようにも使われている。そして<b>今回の隊が手配した「シェルパ」と、エベレスト登頂隊のシェルパは、別の仕事である</b>。</p>
+</div>
+
+<div class="card">
+<h3>今回の隊に関係するのはこちら（トレッキングの同行者）</h3>
+<ul>
+<li><b>公認ガイド</b>　1日あたり25〜35米ドル。本人の食事・宿・保険を含む額として提示されるのが通例。</li>
+<li><b>ポーターガイド</b>（荷物も運び、案内もする）　1日あたり22〜28米ドル。</li>
+<li><b>ポーター</b>　1日あたり20〜25米ドル。<b>荷物の上限は20〜25kg</b>で、これを守るかどうかが業者の良し悪しを分ける。</li>
+<li><b>チップ</b>は行程終了時に、払った人件費の10〜15%が相場とされる。</li>
+</ul>
+</div>
+
+<div class="card warn">
+<h3>登頂隊のシェルパはこちら</h3>
+<ul>
+<li><b>基本給</b>　1シーズン（約2か月）で2,500〜4,500米ドル。</li>
+<li><b>サミットボーナス</b>　頂上に着けば1,500〜3,500米ドルが加わる。</li>
+<li><b>合計</b>　経験を積んだクライミング・シェルパで1シーズン4,000〜10,000米ドルというのが通常の幅。トップクラスで1万ドル前後。</li>
+<li>アイスフォールの固定ロープを張るような<b>最も危険な高所作業は、日当およそ125米ドル</b>で計算される。</li>
+</ul>
+</div>
+
+<figure class="chart">
+<svg viewBox="0 0 760 210" role="img" aria-label="1シーズンあたりの金額比較。ネパールの1人あたり国民総所得1470ドル、クライミングシェルパ4000から10000ドル、欧米のリードガイド30000から50000ドル、客が払う遠征費45000から120000ドル。">
+  <g>
+    <rect class="bar" x="250" y="20" width="5.8" height="18" rx="2"/>
+    <rect class="bar-hi" x="265.7" y="56" width="23.5" height="18" rx="2"/>
+    <rect class="bar" x="367.5" y="92" width="78.3" height="18" rx="2"/>
+    <rect class="bar-out" x="426.3" y="128" width="293.7" height="18" rx="2"/>
+
+    <text class="barlab" x="242" y="33" text-anchor="end">ネパールの1人あたり国民総所得</text>
+    <text class="barlab" x="242" y="69" text-anchor="end">クライミング・シェルパ</text>
+    <text class="barlab" x="242" y="105" text-anchor="end">欧米のリードガイド</text>
+    <text class="barlab" x="242" y="141" text-anchor="end">客が払う遠征費（1人）</text>
+
+    <text class="barval" x="263" y="33">1,470 ドル（2024年・年額）</text>
+    <text class="barval" x="296" y="69">4,000 — 10,000 ドル</text>
+    <text class="barval" x="452" y="105">30,000 — 50,000 ドル</text>
+    <text class="barval" x="426.3" y="163">45,000 — 120,000 ドル</text>
+
+    <line class="gridline" x1="250" y1="14" x2="250" y2="180"/>
+    <text class="xlab" x="250" y="196" text-anchor="middle">0</text>
+    <text class="xlab" x="720" y="196" text-anchor="middle">120,000 ドル</text>
+  </g>
+</svg>
+<figcaption>下3本は1シーズン（約2か月）あたり、最上段のみネパールの1人あたり国民総所得の年額（世界銀行アトラス法、2024年）。棒は金額の幅をそのまま示していて、0からの積み上げではない。</figcaption>
+</figure>
+
+<div class="prose">
+<p>この図が示しているのは2つある。ひとつは、<b>シェルパの1シーズンの収入が、ネパールの1人あたり国民総所得の3倍から7倍</b>にあたること。現地の基準では確かに高収入で、クンブ地方の経済はこの仕事で回っている。</p>
+<p>もうひとつは、<b>同じ2か月で、欧米の隊のリードガイドは30,000〜50,000米ドルを受け取る</b>こと。しかも危険な区間を往復する回数は、荷揚げとロープ張りを担うシェルパのほうがはるかに多い。死者の39%が雇われ労働者だという先の数字は、ここに直結する。<b>最も危険な仕事をする人間が、最も安く雇われている</b>。</p>
+</div>
+</section>
+
+<!-- =========================================================== -->
+<section class="block" id="hotel">
+<h2>ホテル・エベレスト・ビュー<small>標高3,880m、全12室</small></h2>
+
+<div class="prose">
+<p>シャンボチェの丘の上、標高3,880mに建つ12室のホテル。<b>日本人の宮原巍（1934年生、長野県青木村出身）が建て、東京のヒマラヤ観光開発株式会社が所有している</b>。1972年竣工。世界で最も高い場所にあるホテルとしてギネスブックに載ったと複数の紹介記事が書いているが、記録の原典そのものは確認していない。</p>
+<p>建設は、木を伐り、石を割り、<b>資材をカトマンズから人の背で運び上げて</b>行われた。3,880mという高さに、道路のない土地で、建物を建てるという話である。隣接してシャンボチェの滑走路がある。</p>
+</div>
+
+<div class="card">
+<h3>この行程での位置づけ</h3>
+<ul>
+<li>原本では10月29日の<b>訪問先</b>であり、宿泊地ではない。泊まりたいなら別手配になる。</li>
+<li>ナムチェバザール（3,440m）からの往復は、エベレスト街道で<b>順応日の定番ルート</b>として歩かれている。標高差は440m。</li>
+<li>カトマンズ発の日帰りヘリツアーの多くが、このホテルでの朝食を組み込んでいる。案Dで上がる場合の着地点もここになる。</li>
+</ul>
+</div>
+</section>
+
+<!-- =========================================================== -->
+<section class="block" id="logi">
+<h2>移動の実務<small>ルクラ行きの便が、この行程でいちばん不確実な部分</small></h2>
+
+<ol class="steps">
+<li><b>秋のピークシーズンは、ルクラ便がカトマンズから飛ばない。</b>ネパール民間航空局の運用で、2026年秋（9月25日〜11月30日）のルクラ行き定期便はカトマンズではなく<b>ラメチャップのマンタリ空港</b>発となっている。カトマンズから約132km、車で4〜5時間。便の枠が6:00〜9:00なので、多くの隊は<b>深夜1〜3時にカトマンズを出る</b>。</li>
+<li><b>原本は「6:00 KTM to Lukla by Tara air (charter)」と書いている。</b>カトマンズ発6時と読める。チャーター扱いで例外が認められているのか、それとも実際は前夜にラメチャップへ移動するのかで、10月26日の夜の使い方がまるごと変わる。<b>ここは旅行手配元に確認したい最優先事項</b>である。</li>
+<li><b>ヘリコプターならカトマンズから直接飛べる。</b>国内線ターミナルからルクラまで45〜50分。相乗りで片道450〜550米ドル、機体一機の貸切で2,200〜2,800米ドルが2026年の相場。固定翼が飛べない気象条件でも飛べる幅があるぶん、日程が短い側の人間にとっては保険になる。</li>
+<li><b>ルクラ便は天候で止まる。</b>これは季節を問わない。短い日程で組むほど、1日の欠航が行程全部を潰す。案Cを採るなら、予備日をどこに置くかを先に決めておく必要がある。</li>
+<li><b>成田〜カトマンズはネパール航空の直行便がある。</b>週3往復で所要8時間40分（復路6時間20分）。ただし運航曜日は改定されており、10月31日（土）に飛べるかは確定情報を取っていない。<b>曜日が合わなければ、この案の出発日自体が動く。</b></li>
+</ol>
+</section>
+
+<!-- =========================================================== -->
+<section class="block" id="cost">
+<h2>費用<small>1米ドル150円で換算した概算</small></h2>
+
+<div class="tbl-scroll">
+<table class="cmp">
+<thead>
+<tr><th>項目</th><th>案B 後半合流</th><th>案C 山で合流</th><th>案D B＋ヘリ日帰り</th><th>備考</th></tr>
+</thead>
+<tbody>
+<tr><td>成田〜カトマンズ往復</td><td class="num">15〜25万円</td><td class="num">15〜25万円</td><td class="num">15〜25万円</td><td>ピークシーズンの直行便を想定</td></tr>
+<tr><td>カトマンズ宿泊</td><td class="num">3〜8万円</td><td class="num">3〜8万円</td><td class="num">3〜8万円</td><td>3〜4泊。総会の公式ホテルは高め</td></tr>
+<tr><td>ルクラ往復ヘリ</td><td class="num">—</td><td class="num">14〜17万円</td><td class="num">—</td><td>相乗り片道450〜550ドル</td></tr>
+<tr><td>山側の宿・食事・入域料</td><td class="num">—</td><td class="num">3〜6万円</td><td class="num">—</td><td>国立公園入域料と地方自治体料金を含む</td></tr>
+<tr><td>日帰りヘリツアー</td><td class="num">—</td><td class="num">—</td><td class="num">19〜20万円</td><td>相乗り1,240〜1,300ドル</td></tr>
+<tr><td>マウンテンフライト</td><td class="num">3〜4万円</td><td class="num">—</td><td class="num">—</td><td>所要50分〜1時間。ヘリ案と併用する意味は薄い</td></tr>
+<tr><td>その他（ビザ・保険・土産）</td><td class="num">3〜5万円</td><td class="num">3〜5万円</td><td class="num">3〜5万円</td><td>高所対応の旅行保険を含む</td></tr>
+<tr class="total"><td><b>概算合計</b></td><td class="num"><b>24〜42万円</b></td><td class="num"><b>35〜61万円</b></td><td class="num"><b>40〜58万円</b></td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card warn" style="margin-top:14px">
+<h3>この表の読み方</h3>
+<ul>
+<li><b>ツアー参加費は含めていない。</b>じいたちの隊に正式に入る形なら、旅行会社経由の本体価格が別に立つ。この表は個人で後から合流する場合の積み上げである。</li>
+<li><b>航空券とホテルは実勢を取っていない。</b>ピークシーズンかつUIAA総会で市内のホテルが埋まる週なので、上振れしやすい。<b>先に押さえるほど安くなる項目</b>で、出発まで28日という今の位置はすでに遅い側にある。</li>
+<li>2026年はネパールの航空燃料価格が年初から大きく上がっており、ヘリの各社価格に燃料サーチャージが乗っている。見積もりは都度取り直したい。</li>
+<li>当初の見立て「飛行機込みで50〜100万円」は、<b>案Cと案Dの上限側に重なる</b>。案Bだけなら下回る。</li>
+</ul>
+</div>
+</section>
+
+<!-- =========================================================== -->
+<section class="block" id="todo">
+<h2>確認事項<small>出発まで28日（2026年9月28日時点）</small></h2>
+
+<ul class="chk">
+<li><b>ネパール航空の成田発の運航曜日</b>。10月31日（土）に飛べるか。飛べない場合の代替（乗り継ぎ便を使うか、出発日をずらすか）<span class="who">Shogo</span></li>
+<li><b>ルクラ行きがカトマンズ発かラメチャップ発か</b>。チャーターで例外が取れているかを旅行手配元に確認する<span class="who">じい経由</span></li>
+<li><b>ツアー本体の価格と、後から合流する場合の扱い</b>。隊の一員として入れるのか、別行動の合流者になるのか<span class="who">じい経由</span></li>
+<li><b>UIAA公式晩餐会とNMA行事に、家族が同席できるか</b>。登録や同伴者枠の要否<span class="who">じい経由</span></li>
+<li><b>案C を採るなら、10月29日にシャンボチェで合流できるか</b>。じいたちが何時にホテル・エベレスト・ビューにいるか<span class="who">じい経由</span></li>
+<li><b>ヘリの見積もり</b>。カトマンズ〜ルクラ片道の相乗り枠と、日帰りツアーの空き。ピークシーズンは早く埋まる<span class="who">Shogo</span></li>
+<li><b>渡航外来の予約</b>。アセタゾラミドの処方と、高所を対象に含む旅行保険<span class="who">Shogo</span></li>
+<li><b>大学と仕事の4日間</b>。案Cなら10月28・29・30日と11月2日を空ける必要がある<span class="who">Shogo</span></li>
+<li><b>ネパールのビザ</b>。到着ビザで取れるが、必要書類と料金を事前に確認する<span class="who">Shogo</span></li>
+</ul>
+</section>
+
+<details class="src">
+<summary>主な出典（2026年9月28日時点の調査）</summary>
+<ul>
+<li>行程表原本：Japanese Alpine Club「Visit Nepal 2026.10.26〜11.3 Everest View Trekking」（手書き注記入り、2026年9月28日受領）</li>
+<li><a href="https://www.theuiaa.org/uiaa-member-association-update-focus-on-the-general-assembly-in-nepal/" rel="noopener">UIAA "Focus on the General Assembly in Nepal"</a>（総会の日程・各日のプログラム・周辺行事）</li>
+<li><a href="https://thehimalayantimes.com/nepal/nma-to-host-2026-uiaa-general-assembly-in-kathmandu-nma-president-sherpa-highlights-key-proposals-in-kosovo-meet" rel="noopener">The Himalayan Times「NMA to host 2026 UIAA General Assembly in Kathmandu」</a></li>
+<li><a href="https://ja.wikipedia.org/wiki/%E3%83%9B%E3%83%86%E3%83%AB%E3%83%BB%E3%82%A8%E3%83%99%E3%83%AC%E3%82%B9%E3%83%88%E3%83%BB%E3%83%93%E3%83%A5%E3%83%BC" rel="noopener">Wikipedia ホテル・エベレスト・ビュー</a>（標高3,880m・全12室・1972年竣工・ヒマラヤ観光開発による所有）</li>
+<li><a href="https://www.himalaya-kanko.co.jp/hev/hev_history.html" rel="noopener">ヒマラヤ観光開発株式会社 ホテル・エベレスト・ビュー</a>（シャンボチェの滑走路・1969年からの営業）</li>
+<li><a href="https://www.loveandtravel.co.jp/hotel-everest-view/" rel="noopener">ホテル・エベレスト・ビュー紹介記事</a>／<a href="http://sakurako.cc/%E4%B8%96%E7%95%8C%E4%B8%80%E9%AB%98%E3%81%84%E3%83%9B%E3%83%86%E3%83%AB%E3%82%A8%E3%83%99%E3%83%AC%E3%82%B9%E3%83%88%E3%83%93%E3%83%A5%E3%83%BC%E5%89%B5%E8%A8%AD%E8%80%85%E3%81%AB%E6%8D%A7%E3%81%90.html" rel="noopener">創業者 宮原巍について</a>（1934年長野県青木村生まれ・資材の人力輸送・ギネス記載への言及）</li>
+<li><a href="https://www.anta.or.jp/kaiin/pdf/kozanbyou_tisiki.pdf" rel="noopener">東京医科大学渡航者医療センター 増山茂「高所トレッキング・登山をする方が知っておきたい高山病の知識」</a></li>
+<li><a href="https://jsmmed.org/info/pg51.html" rel="noopener">日本登山医学会 急性高山病とは</a>／<a href="https://tozan-medical.com/altitude_acclimatization_1/" rel="noopener">高度順応の原則（睡眠高度500m/日・1,000mごとの休養日）</a></li>
+<li><a href="https://theeverestholiday.com/blog/lukla-flight-diversions-ramechhap-guide" rel="noopener">Lukla Flight Diversions &amp; Ramechhap Logistics Guide 2026</a>（2026年秋のラメチャップ運用・移動時間・出発時刻）</li>
+<li><a href="https://www.goheliservices.com/blog/kathmandu-to-lukla-helicopter-flight-cost" rel="noopener">カトマンズ〜ルクラ ヘリコプター料金 2026</a>（相乗り450〜550ドル・貸切2,200〜2,800ドル）</li>
+<li><a href="https://www.nepaltrekadventures.com/mount-everest-base-camp-helicopter-tours" rel="noopener">Everest Base Camp Helicopter Tour Cost 2026</a>／<a href="https://www.flighteverest.com/everest-base-camp-helicopter-tour-cost/" rel="noopener">同 価格内訳</a>（相乗り1,240〜1,300ドル・所要4〜5時間・ホテル・エベレスト・ビューでの朝食）</li>
+<li><a href="https://www.aviationwire.jp/archives/197217" rel="noopener">Aviation Wire「ネパール航空、成田就航 カトマンズから週3往復」</a>／<a href="https://www.airlineguide.jp/flight-time/ktm/" rel="noopener">成田〜カトマンズ所要時間</a></li>
+<li>標高：<a href="https://www.alltrails.com/trail/nepal/province-1/lukla-to-phakding-to-namche-bazaar" rel="noopener">ルクラ・パクディン・ナムチェバザール区間</a>／<a href="https://www.muchbetteradventures.com/magazine/everest-view-trek-guide/" rel="noopener">シャンボチェ 3,880m</a></li>
+<li>地質：<a href="https://iugs-geoheritage.org/geoheritage_sites/the-ordovician-rocks-of-the-mount-everest/" rel="noopener">IUGS「The Ordovician rocks of Mount Everest」</a>（山頂石灰岩のオルドビス紀年代と含まれる化石）／<a href="https://www.montana.edu/everest/facts/summit-limestone.html" rel="noopener">Montana State University Everest Education Expedition</a>／<a href="https://en.wikipedia.org/wiki/Mount_Everest" rel="noopener">Wikipedia Mount Everest</a>（チョモランマ層・ノースコル層・ロンブク層とイエローバンド）</li>
+<li>標高の測量史と日本人の記録：<a href="https://ja.wikipedia.org/wiki/%E3%82%A8%E3%83%99%E3%83%AC%E3%82%B9%E3%83%88" rel="noopener">Wikipedia エベレスト</a>（1852年シクダール・1955年8,848m・2020年8,848.86m／松浦輝夫と植村直己・田部井淳子・石黒久と加藤保男・重広恒夫と尾崎隆・倉岡裕之・三浦雄一郎）</li>
+<li>登頂と死者の統計：<a href="https://www.alanarnette.com/blog/2024/12/16/everest-by-the-numbers-2025-edition/" rel="noopener">Alan Arnette「Everest by the Numbers」</a>（2025年12月時点。延べ13,737回・7,563人・死者339人・メンバーと雇われの内訳・無酸素232人・日本の非標準ルート26回）</li>
+<li>シェルパと現地スタッフの報酬：<a href="https://globalsummitguide.com/sherpa-pay-2026/" rel="noopener">Global Summit Guide「How Much Do Sherpas Get Paid in 2026」</a>（基本給・サミットボーナス・欧米ガイドとの差）／<a href="https://nepalguideinfo.com/blog/ebc-and-gokyo-trek-guides-porters-cost-and-daily-charge/" rel="noopener">EBC and Gokyo Trek Guides &amp; Porters Daily Charge 2026</a>（ガイド25〜35ドル/日・ポーター20〜25ドル/日・荷物上限・チップ相場）</li>
+<li><a href="https://data.worldbank.org/indicator/NY.GNP.PCAP.CD?locations=NP" rel="noopener">世界銀行 ネパールの1人あたり国民総所得（アトラス法）</a>（2024年 1,470米ドル）</li>
+</ul>
+</details>
+
+<footer class="note">
+<p>標高は原本の記載を基本とし、原本と現地の実標高が食い違う箇所（パクディン）は本文に明記したうえで実標高を採った。費用は1米ドル150円で換算した概算で、航空券・ホテルの実勢は取っていない。UIAA総会のプログラムは2026年9月28日時点でUIAAが公開している版であり、当日までに変わりうる。ルクラ便の運用と航空会社の運航曜日は、必ず手配元と航空会社に直接確認すること。ここに書いた案の比較は判断材料であって、予約の代わりにはならない。</p>
+</footer>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>チンギス・カン — 部族の解体と、勝者が書いた記録</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --s2:#eb6834; --s3:#1baf7a; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  .bar.s2 .fl{background:var(--s2)}
+  .bar.s3 .fl{background:var(--s3)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+  /* 2桁の出典番号が隣接すると 1 と 13 が「113」に見えるので、間を空ける */
+  sup + sup{margin-left:3px}
+
+  .chart.wide .bar{grid-template-columns:148px 1fr auto}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .chart.wide .bar{grid-template-columns:112px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/02B_reading/index.html">reading</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / チンギス・カン</p>
+
+<header class="top">
+  <h1>チンギス・カン</h1>
+  <div class="en">Chinggis Khan / Temüjin — 1162（諸説1155・1167） – 1227.8.18 または 8.25</div>
+  <div class="tags">
+    <span class="tag">モンゴル帝国</span><span class="tag">チンギス・ハン</span><span class="tag">千戸制</span>
+    <span class="tag">元朝秘史</span><span class="tag">集史</span><span class="tag">ホラズム戦役</span>
+    <span class="tag">史料批判</span>
+  </div>
+</header>
+
+<p class="lead">
+  モンゴル高原の一氏族の子として生まれ、父の死で集団から切り離された状態から、1206年に高原の諸部族を1つの軍事組織に編成し、1227年の死までに東はいまの中国北部から西はカスピ海西岸までを支配下に置いた。本ページは征服の記録としてではなく、<strong class="hit">史料そのものが誰のために書かれたか</strong>を軸に読む。チンギス・カンの前半生について現存する記述は、いずれも本人の死後に、彼の子孫が統治する国家の内部で作られたものである。
+</p>
+<p class="srcnote">
+  作成日 2026年10月3日。表記は日本のモンゴル史研究の慣行に従い「チンギス・カン」とする。一般に流通する「チンギス・ハン」「ジンギスカン」は同一人物を指す。
+  生年は1162年説を基準に置く。1155年説と1167年説があり、<strong>諸説</strong>として本文に併記する。誕生日の月日は特定できないため、<strong>年表の満年齢はすべて「西暦年の差」であり、誕生日前後の1歳のずれを含む</strong>。例: 1206年の即位は 1206 − 1162 = 44歳と表示する。
+  一次史料は『モンゴル秘史（元朝秘史）』、ラシード・アッディーン『集史』、ジュヴァイニー『世界征服者の歴史』、『元史』『聖武親征録』を上位に置き、これらが食い違う箇所は食い違ったまま併記する。
+</p>
+
+<h2 id="overview"><span class="num">①</span>概要<span class="en">Overview</span></h2>
+
+<div class="kpi">
+  <div class="card"><div class="k">生没（通説）</div><div class="v">1162–1227<small>没時 満65歳。1155年説・1167年説あり（諸説）</small></div></div>
+  <div class="card"><div class="k">即位</div><div class="v">1206年<small>オノン川源流のクリルタイ。満44歳</small></div></div>
+  <div class="card"><div class="k">千戸の数</div><div class="v">95<small>『秘史』202節の千戸長リスト</small></div></div>
+  <div class="card"><div class="k">死亡時の版図</div><div class="v">約1,200万 km²<small>推計。出典により1,350万 km² とも</small></div></div>
+</div>
+
+<div class="callout">
+<p style="margin-top:0"><strong>先に結論を3つ置く。</strong></p>
+<p><strong>1. 彼がやったのは征服より先に「部族の解体」である。</strong>
+1206年のクリルタイで、高原の人口は血縁集団ではなく95の千戸（minggan）に割り直された<sup><a href="#s1">1</a></sup><sup><a href="#s13">13</a></sup>。15歳から70歳までの男子が千戸に編入され、千戸は百戸・十戸に分かれる<sup><a href="#s13">13</a></sup>。千戸長には鍛冶屋の子や牧夫の出自の者が就いた<sup><a href="#s13">13</a></sup>。親衛隊ケシクは1,150人から1万人に拡大され、構成員は千戸長・百戸長の子弟である<sup><a href="#s13">13</a></sup>。これは警護部隊であると同時に、指揮官の子を手元に置く人質制度であり、幕僚を育てる場でもあった。敵を倒す技術より、<strong class="hit">勝った後に味方を再編成する技術</strong>が先に来ている。</p>
+<p><strong>2. 西方への進軍の引き金は、本人の設計ではなく外交の失敗だった。</strong>
+1218年、モンゴルからホラズムへ送られた約450人の隊商がオトラルで拘束され、全員が処刑された<sup><a href="#s17">17</a></sup>。抗議の使節も殺され、ここから1219年の西征が始まる<sup><a href="#s17">17</a></sup><sup><a href="#s18">18</a></sup>。通商関係を結ぶために出した使節が開戦理由になった。本人が望んだ順序ではない。</p>
+<p><strong>3. 残った記録は全部、勝った側の内部で書かれている。</strong>
+『秘史』の成立年には1228年説と1252年説があり、クリストファー・アトウッドは1252年（モンケ治下）説を採る<sup><a href="#s4">4</a></sup><sup><a href="#s14">14</a></sup>。この説を採るとトルイ家に有利な記述の偏りが説明できる<sup><a href="#s14">14</a></sup>。宇野伸浩は『秘史』と『集史』を照合し、両者が食い違う箇所では『集史』『聖武親征録』『元史』の側が史実である可能性が高いとし、「多くの研究者が『元朝秘史』の作者の意図にはまってしまい、実際のチンギス・カンより良いイメージで捉えてきたことは否めない」と書く<sup><a href="#s2">2</a></sup>。『集史』はイルハン朝の公式史、ジュヴァイニーはモンゴル政権の高官である<sup><a href="#s6">6</a></sup>。<strong class="hit">批判的な記述を残したのは、被征服側のジューズジャーニーなど、統治圏の外にいた者に限られる</strong><sup><a href="#s13">13</a></sup>。</p>
+</div>
+
+<h2 id="timeline"><span class="num">②</span>年表<span class="en">Timeline</span></h2>
+<p>年が特定できる出来事だけを置いた。各項目は事実、具体、なぜそれが後を決めたかの3層である。
+期のボタンで絞り込める。日付の右は、リード文の規則で計算した満年齢（年差）である。</p>
+
+<div class="tl-tools">
+  <input id="tlq" type="search" placeholder="年表を検索（例: ジャムカ、オトラル、千戸、ケシク）" aria-label="年表を検索">
+  <span class="tl-count" id="tlcount"></span>
+</div>
+<div class="tl-eras" id="tleras"></div>
+<div class="tl" id="tl"></div>
+<div class="tl-empty" id="tlempty">該当する項目がない。</div>
+
+
+<h2 id="phases"><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+
+<h3>I 出自と喪失（1162年頃–1180年代）</h3>
+<p>テムジンはボルジギン氏の長イェスゲイと、メルキト族から奪われた女性ホエルンの子として、オノン川流域に生まれた<sup><a href="#s13">13</a></sup>。生年は特定できない。趙珙『蒙韃備録』とラシード・アッディーン『集史』は1155年を支持し、『元史』と『聖武親征録』は1162年を支持する<sup><a href="#s13">13</a></sup>。ポール・ペリオは生涯の出来事との整合から1167年を採った<sup><a href="#s13">13</a></sup>。パウル・ラチネフスキーは本人が正確な生年を知らなかった可能性を指摘している<sup><a href="#s13">13</a></sup>。現在は1162年説が最も多く採られる<sup><a href="#s13">13</a></sup>。</p>
+<p>父イェスゲイは、テムジンが8歳か9歳のとき、タタル族に毒を盛られて死んだ<sup><a href="#s13">13</a></sup>。イェスゲイは8年前の戦いでタタル族の縁者を殺した側であり、身元が割れたところで食事に毒を入れられたとされる<sup><a href="#s13">13</a></sup>。父の死後、一族はホエルンと子供たちを残して移動した<sup><a href="#s13">13</a></sup>。この時点でテムジンの家族は、草原の社会で生存の単位となる集団から外れている。</p>
+<p>『秘史』は、この時期に異母兄ベクテルを弟カサルとともに射殺した話を記す<sup><a href="#s1">1</a></sup><sup><a href="#s13">13</a></sup>。獲物の分配をめぐる争いが理由とされ、母ホエルンは叱責した<sup><a href="#s13">13</a></sup>。この挿話は『集史』などの公式史には入っていない<sup><a href="#s13">13</a></sup>。身内殺しを記録に残したのは『秘史』だけであり、この一点が『秘史』を「英雄を美化しただけの書ではない」と評価させる根拠にもなってきた<sup><a href="#s13">13</a></sup>。ただし後述のとおり、『秘史』の他の箇所には明確な脚色がある。</p>
+
+<h3>II 同盟・婚姻・決裂（1180年代–1203年）</h3>
+<p>妻ボルテは婚姻後まもなくメルキト族に奪われた。『秘史』によれば約300人の襲撃である<sup><a href="#s13">13</a></sup>。これはイェスゲイがメルキトからホエルンを奪ったことへの報復だった<sup><a href="#s26">26</a></sup>。テムジンは父の盟友であったケレイト族のトオリル（のちのオン・カン）と、幼時の結義兄弟（アンダ）ジャムカの力を借りてボルテを取り戻した<sup><a href="#s26">26</a></sup>。ボルテは帰還時に妊娠しており、生まれた長子ジョチの父が誰かという問題はこの時に発生する<sup><a href="#s26">26</a></sup>。テムジンはジョチを自分の子として扱ったが、疑義は後継者問題まで残った<sup><a href="#s26">26</a></sup>。</p>
+<p>この局面の戦績は一方的ではない。1187年頃のダラン・バルジュトの戦いでは、ジャムカに対して明確な敗北を喫している<sup><a href="#s13">13</a></sup>。1203年のカラカルジト・エレトの戦いでは、トオリルの軍に敗れて後退した<sup><a href="#s16">16</a></sup>。ケレイト族の有力者がテムジンの接近を警戒し、トオリルを離反させたことが開戦の経緯である<sup><a href="#s16">16</a></sup>。敗走後、少数の従者とバルジュナ湖畔に退いて盟約を結び、そこから立て直した<sup><a href="#s13">13</a></sup>。同年のうちにケレイトを破り、トオリルはナイマン領内へ逃れた先で、正体に気づかなかったナイマンの巡察隊に殺される<sup><a href="#s16">16</a></sup>。</p>
+<p>『秘史』124節は、この時期より前、ジャムカとの決裂の直後に、キヤト族の有力者アルタン・クチャル・サチャ・ベキがテムジンを「チンギス・カン」としてカンに推戴した、いわゆる第一次即位を記す<sup><a href="#s2">2</a></sup>。『集史』『聖武親征録』にこの記事はない<sup><a href="#s2">2</a></sup>。岡田英弘は第一次即位そのものを『秘史』の創作と見た<sup><a href="#s2">2</a></sup>。宇野伸浩は、1203年にオン・カンへ送った問責の文言が『秘史』179節・『集史』の双方に残り、その中で「お前が汗になれと言ったら受けなかった」とアルタンとクチャルに言及している点を挙げ、推戴の事実自体は複数史料で裏が取れると論じる<sup><a href="#s2">2</a></sup>。<strong class="hit">『秘史』が疑わしいという一般則を立てても、個々の記事は1件ずつ照合しないと判定できない</strong>、というのがこの事例の意味である<sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup>。</p>
+
+<h3>III ナイマン撃破から1206年の即位まで（1204–1206年）</h3>
+<p>1204年5月、ナイマン族との決戦（チャキルマウトの戦い）に勝ち、タヤン・カンは戦死した<sup><a href="#s15">15</a></sup>。同年末までにメルキト族を解体し、ナイマンへ逃れていたジャムカは部下に引き渡されたのち処刑された<sup><a href="#s15">15</a></sup>。</p>
+<p>この戦役は軍事以外の面で2つの結果を残した。1つは文字である。ナイマンの印璽を預かっていたウイグル人タタ・トンガが捕らえられ、ウイグル文字をモンゴル語の表記に転用する作業と、王子たちへの教育を命じられた<sup><a href="#s31">31</a></sup>。『元史』の本人伝は、タタ・トンガが印璽の用途をチンギスに説明したと記す<sup><a href="#s31">31</a></sup>。もう1つは行政である。文書と印璽が入ったことで、口頭の合意ではなく記録に基づく統治の条件が整った。</p>
+<p>1206年、オノン川源流のクリルタイで即位し、チンギス・カンの称号を得る<sup><a href="#s13">13</a></sup>。「チンギス」の語義は確定していない。テュルク語の tengiz（海）からとする説、chin（強固）からとする説、デ・ラチェヴィルツが採る「猛々しい・厳しい」を意味するテュルク語起源説などがあり、どれも決定的な論拠を欠く<sup><a href="#s36">36</a></sup>。</p>
+
+<h3>IV 制度の設計（1206–1211年）</h3>
+<p>即位の年に実施されたのは、戦果の分配ではなく編成替えである。15歳から70歳までの男子を千戸に編入し、千戸を百戸（jaghun）と十戸（arban）に分けた<sup><a href="#s13">13</a></sup>。『秘史』202節には95人の千戸長の名が並ぶ<sup><a href="#s1">1</a></sup><sup><a href="#s13">13</a></sup>。部族の単位ではなく、指揮系統の単位で人を数え直した点がここの要である。旧来の部族長の多くは地位を失い、戦功のある者が代わりに入った<sup><a href="#s13">13</a></sup>。ボオルチュとムカリにはそれぞれ1万人の指揮権が与えられた<sup><a href="#s13">13</a></sup>。</p>
+<p>親衛隊ケシクは1,150人から1万人へ拡大された<sup><a href="#s13">13</a></sup>。構成員は指揮官の子弟であり、警護・家政・将校養成・行政中枢を兼ねた<sup><a href="#s13">13</a></sup>。指揮官の子を手元に置くことは忠誠の担保であり、同時に次代の幹部を同じ基準で育てる装置でもある。</p>
+<p>この時期に、しばしば「チンギス・カンが定めた成文法典」として語られるヤサ（ジャサク）の問題が始まる。<strong class="hit">成文の法典が存在したという証拠はない。</strong>デヴィッド・アヤロンは、法典の存在を支える記述が15世紀のマムルーク朝の歴史家マクリーズィーに由来し、先行史料の無断転用であることを示した<sup><a href="#s5">5</a></sup>。デヴィッド・モーガンは1986年の論文で、13〜14世紀のモンゴル語・ペルシア語史料にある「ヤサ」の用例は法典を指しておらず、『秘史』が記すのは、シギ・クトゥクを最高判官（ヤルグチ）に任じ、判決の記録簿を管理させたことに過ぎないと論証した<sup><a href="#s5">5</a></sup>。ヤサの実体は、個別の裁定が積み重なって拘束力を持った判例の集合であり、体系化された法典ではない<sup><a href="#s5">5</a></sup>。</p>
+<p>そのシギ・クトゥクについても、『秘史』と『集史』は食い違う。『秘史』135節は、タタル族の陣営で拾われた子を母ホエルンが6番目の子として育てたと記し、同様の養子譚を4回繰り返す<sup><a href="#s2">2</a></sup>。『集史』では、育てたのはホエルンではなく正妻ボルテであり、シギ・クトゥクはチンギスを「父」、ボルテを「兄嫁」と呼んだとされる<sup><a href="#s2">2</a></sup>。ラチネフスキーはこの反復を文学的な仕掛けと判断し、『集史』側を史実とした<sup><a href="#s2">2</a></sup>。宇野はこれを支持し、シギ・クトゥクをチンギスの弟とする記述が多数の研究書に残っている状況を名指しで指摘している<sup><a href="#s2">2</a></sup>。</p>
+
+<h3>V 西夏・金・カラ・キタイ（1209–1218年）</h3>
+<p>最初の対外戦役は西夏である。1209年に進攻し、首都中興府（現在の銀川）を包囲した<sup><a href="#s13">13</a></sup><sup><a href="#s23">23</a></sup>。黄河の流路を変えて水攻めにする試みは1210年1月に失敗した<sup><a href="#s13">13</a></sup>。最終的に西夏の皇帝が服属し、娘チャカが差し出されて和議となった<sup><a href="#s13">13</a></sup>。この服属は長くは続かず、1219年の西征への従軍要求を西夏が拒んだことで、1226年の再征につながる<sup><a href="#s23">23</a></sup>。</p>
+<p>1211年5月、金への進攻が始まる<sup><a href="#s13">13</a></sup><sup><a href="#s21">21</a></sup>。同年秋の野狐嶺（獾児嘴）の戦いで金の野戦軍を破った<sup><a href="#s22">22</a></sup>。1212年、西京（現在の大同）の攻城戦でチンギス自身が矢を受けて負傷する<sup><a href="#s13">13</a></sup>。この負傷の後、攻城技術者の部隊が編成され、2年間で金の技術者500人が組み込まれた<sup><a href="#s13">13</a></sup>。1215年に金の中都（現在の北京）が陥落する<sup><a href="#s13">13</a></sup><sup><a href="#s21">21</a></sup>。</p>
+<p>攻城戦の能力は、モンゴルが自前で開発したものではない。中国側とイスラーム圏の技術者を捕らえて使役する形で獲得している<sup><a href="#s24">24</a></sup>。中央アジア進攻時には投石機の操作要員が1万人規模で随行したという記述がある<sup><a href="#s24">24</a></sup>。モンゴル軍の強さを騎射だけで説明すると、この部分が抜ける。</p>
+<p>1218年、ジェベがカラ・キタイを併合した<sup><a href="#s13">13</a></sup>。ナイマン王子クチュルクが簒奪していた政権であり、ここでモンゴルの版図はホラズム朝と直接に接することになる<sup><a href="#s13">13</a></sup>。</p>
+
+<h3>VI 西征（1218–1225年）</h3>
+<p>1218年、約450人のモンゴルの隊商がオトラルに到着したところで、総督イナルチュクがこれをスパイと断じて拘束し、ホラズム・シャーのムハンマド2世の同意のもとに全員を処刑した<sup><a href="#s17">17</a></sup>。チンギスは3人の使節を送って処罰を要求したが、ムハンマドはムスリムの正使を斬り、2人のモンゴル人の髭を剃って送り返した<sup><a href="#s17">17</a></sup>。1219年、西征が始まる<sup><a href="#s17">17</a></sup><sup><a href="#s18">18</a></sup>。オトラルは1219年12月から1220年2月まで包囲され、イナルチュクは処刑された<sup><a href="#s17">17</a></sup>。</p>
+<p>兵力の記録は信用できない。ラシード・アッディーンはモンゴル軍を60万以上、ジューズジャーニーは80万とし、ホラズム側を40万とするが、現代の研究はいずれも実数として扱わない<sup><a href="#s18">18</a></sup>。モーガンとデニス・サイナーはこれらの数字を否定しており、現代の推計はモンゴル側で10万から15万の範囲に収まる<sup><a href="#s18">18</a></sup>。</p>
+<p>1220年から1221年にかけて、ブハラ、サマルカンド、グルガンジ、ニシャプール、メルヴ、ヘラートが順に陥落した<sup><a href="#s18">18</a></sup><sup><a href="#s20">20</a></sup>。殺害された人数について、中世の年代記はヘラート240万、メルヴ130万、ニシャプール174.7万という数字を伝える<sup><a href="#s20">20</a></sup>。現代の研究はこれを誇張とし、ニシャプールについては10万から20万の範囲を推計として示す<sup><a href="#s19">19</a></sup><sup><a href="#s20">20</a></sup>。ホラズム朝の都市で人口100万に達したものがあったとは考えにくい、というのが反論の根拠である<sup><a href="#s20">20</a></sup>。数字は死者数の記録ではなく、破壊の全体性を示すための表現として書かれている<sup><a href="#s20">20</a></sup>。<strong class="hit">ただし「誇張されている」ことは「破壊がなかった」ことを意味しない</strong>。何人死んだかは確定できず、都市が機能を失ったことは確定できる、という非対称が残る。</p>
+<p>この戦役と並行して、ジェベとスブタイの別働隊がムハンマド2世を追ってイランを横断し、カフカスでグルジア・アルメニア連合軍を破り、草原を北上して1223年5月31日にカルカ河でルーシ諸公とキプチャクの連合軍と戦い、これを破った<sup><a href="#s32">32</a></sup>。目的は征服ではなく、後の遠征のための威力偵察である<sup><a href="#s32">32</a></sup>。</p>
+<p>1222年5月22日、チンギスはアム川の南で道士の丘処機（長春真人）と会見した<sup><a href="#s29">29</a></sup>。仲介したのは契丹人の官僚である耶律楚材とされる<sup><a href="#s30">30</a></sup>。1223年、全真教に対して税と賦役を免除する勅が出された<sup><a href="#s29">29</a></sup>。宗教集団への免税は、信仰への寛容というより、統治の協力者に対する対価として読むほうが整合する。</p>
+
+<h3>VII 最期と継承（1226–1229年）</h3>
+<p>1226年、西夏への再征が始まり、1227年に西夏は滅亡する<sup><a href="#s23">23</a></sup>。チンギスはこの戦役の途中、1227年8月18日または8月25日に死亡した<sup><a href="#s13">13</a></sup>。死因は確定していない。『秘史』は落馬による負傷とし、『元史』は8日間続いた病とするだけで病名を記さない<sup><a href="#s24">24</a></sup><sup><a href="#s38">38</a></sup>。腸チフスやペストを挙げる説、矢傷とする説、西夏の王女に刺されたとする説がある<sup><a href="#s24">24</a></sup><sup><a href="#s38">38</a></sup>。</p>
+<p>埋葬地は不明である。ラシード・アッディーンは、チンギス自身がブルカン・カルドゥン山を埋葬地に選び「我らと我らの子孫の墓所はこことする」と述べたと記す<sup><a href="#s24">24</a></sup>。この一帯はイフ・ホリグ（大禁地）として立ち入りが禁じられた<sup><a href="#s25">25</a></sup>。13世紀後半の時点で、マルコ・ポーロはモンゴル人自身が墓所の位置を知らないと書いている<sup><a href="#s24">24</a></sup>。衛星画像・ドローン・地中レーダーを用いた探索が行われているが、墓所は特定されていない<sup><a href="#s24">24</a></sup>。</p>
+<p>後継の指名は、1219年の西征の直前に行われた<sup><a href="#s13">13</a></sup><sup><a href="#s27">27</a></sup>。妃イェスイが遠征中の不測の事態を問うたことが発端である<sup><a href="#s27">27</a></sup>。チャガタイがジョチの出生を持ち出して長兄と激しく争い、調停の結果、第三子オゴデイが後継に指名された<sup><a href="#s27">27</a></sup>。1221年のグルガンジ攻略では、ジョチとチャガタイの対立が作戦を滞らせたため、チンギスはオゴデイを単独の指揮官に据えている<sup><a href="#s27">27</a></sup>。それでも空位は避けられず、オゴデイの即位は1229年であり、<strong class="hit">死から即位まで2年を要した</strong><sup><a href="#s13">13</a></sup>。</p>
+
+<h3>VIII 記録と像（1240年–現在）</h3>
+<p>『秘史』の奥書は「鼠の年」の大クリルタイでの成立を記すが、鼠年は1228年・1240年・1252年・1264年のいずれでもありうる<sup><a href="#s14">14</a></sup>。1228年説は、その年にのみ大集会の記録が確認できる点を論拠とする<sup><a href="#s14">14</a></sup>。デ・ラチェヴィルツは、全体が一人の手によるとしつつ、1228年ないし1229年を最初の10章の成立年と見た<sup><a href="#s14">14</a></sup>。アトウッドは1252年（モンケ治下）説を採り、この年代ならトルイ家寄りの記述、全体の均質さ、初期章にまで現れる年代の矛盾が同時に説明できると論じる<sup><a href="#s4">4</a></sup><sup><a href="#s14">14</a></sup>。実際、チンギスの子や孫が批判的に描かれる一方で、モンケの父トルイとモンケ本人には瑕疵が書かれない<sup><a href="#s14">14</a></sup>。</p>
+<p>20世紀のモンゴル人民共和国では、チンギス・カンは公的な記憶から外された。学校の教科書から記述が削られ、ヘンティーの生地への巡礼も禁じられた<sup><a href="#s33">33</a></sup><sup><a href="#s34">34</a></sup>。1962年の生誕800年記念行事を組織したイデオロギー担当書記のダラミーン・トゥムル・オチルは「民族主義的な情熱を煽った」として党の職を解かれ、1985年10月に殺害された<sup><a href="#s33">33</a></sup>。1990年以降は逆方向に振れ、国家の象徴として扱われる<sup><a href="#s34">34</a></sup><sup><a href="#s35">35</a></sup>。<strong class="hit">同じ人物が、同じ国で、40年を挟んで抹消対象と国家象徴の両方になっている。</strong>歴史上の人物の評価が、その人物についての新しい史料ではなく、評価する側の政治状況で決まる実例である<sup><a href="#s35">35</a></sup>。</p>
+
+
+<h2 id="numbers"><span class="num">④</span>実績の数字<span class="en">Record</span></h2>
+
+<p>征服の記録は、史料の数字をそのまま並べると意味を失う。ここでは「史料が言う数」と「現代の推計」を分けて置く。</p>
+
+<h3>戦役と結果</h3>
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>年</th><th>戦役</th><th class="num">満年齢</th><th>結果</th><th>確度</th></tr></thead>
+<tbody>
+<tr><td class="name">1187年頃</td><td>ダラン・バルジュトの戦い（対ジャムカ）</td><td class="num">25</td><td>敗北</td><td>『秘史』。年は推定</td></tr>
+<tr><td class="name">1203</td><td>カラカルジト・エレトの戦い（対ケレイト）</td><td class="num">41</td><td>敗北・後退</td><td>複数史料</td></tr>
+<tr><td class="name">1203</td><td>ケレイト討滅</td><td class="num">41</td><td>勝利</td><td>複数史料</td></tr>
+<tr><td class="name">1204.5</td><td>チャキルマウトの戦い（対ナイマン）</td><td class="num">42</td><td>勝利。タヤン・カン戦死</td><td>複数史料</td></tr>
+<tr><td class="name">1209–1210</td><td>西夏（第一次）</td><td class="num">47–48</td><td>服属させるが支配は確立せず</td><td>複数史料</td></tr>
+<tr><td class="name">1211</td><td>野狐嶺の戦い（対金）</td><td class="num">49</td><td>勝利</td><td>複数史料</td></tr>
+<tr><td class="name">1215</td><td>中都陥落</td><td class="num">53</td><td>勝利。金は遷都</td><td>複数史料</td></tr>
+<tr><td class="name">1218</td><td>カラ・キタイ併合</td><td class="num">56</td><td>勝利。ホラズムと国境を接する</td><td>複数史料</td></tr>
+<tr><td class="name">1219–1220</td><td>オトラル包囲</td><td class="num">57–58</td><td>勝利。5か月を要した</td><td>複数史料</td></tr>
+<tr><td class="name">1220–1221</td><td>ホラズム主要都市の攻略</td><td class="num">58–59</td><td>勝利。王朝は崩壊</td><td>複数史料</td></tr>
+<tr><td class="name">1223.5.31</td><td>カルカ河の戦い（ジェベ・スブタイ）</td><td class="num">61</td><td>勝利。占領はせず帰還</td><td>複数史料</td></tr>
+<tr><td class="name">1226–1227</td><td>西夏（第二次）</td><td class="num">64–65</td><td>勝利。西夏滅亡。本人は戦役中に死亡</td><td>複数史料</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>兵力の記述は史料間で5倍以上ひらく</h3>
+<div class="chart wide">
+  <div class="cap">ホラズム戦役（1219年）のモンゴル軍兵力</div>
+  <div class="sub">中世の年代記と現代の推計の対比。単位は万人。現代推計は幅の上限を取った</div>
+  <div class="bars" id="c-army"></div>
+  <p class="srcnote" style="margin:14px 0 0">ジューズジャーニー80万、ラシード・アッディーン60万超に対し、現代の推計は10万〜15万<sup><a href="#s18">18</a></sup>。モーガンとサイナーは中世側の数字を絶対数としても相対比としても採らない<sup><a href="#s18">18</a></sup>。</p>
+</div>
+
+<h3>殺害数の記述と現代推計</h3>
+<div class="chart">
+  <div class="cap">ホラーサーン3都市の犠牲者数</div>
+  <div class="sub">中世の年代記の数字（橙）と、現代の研究による推計（青）。単位は万人</div>
+  <div class="bars" id="c-kill"></div>
+  <p class="srcnote" style="margin:14px 0 0">中世側はヘラート240万、メルヴ130万、ニシャプール174.7万<sup><a href="#s20">20</a></sup>。ニシャプールについての現代の推計は10万〜20万で、ここでは上限20万を置いた<sup><a href="#s19">19</a></sup>。メルヴとヘラートの現代推計は本ページでは確認できなかったため、棒を置いていない。<strong>数字の大小ではなく、桁が1つ違うという事実を見る図である。</strong></p>
+</div>
+
+<h3>統治の規模</h3>
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>指標</th><th class="num">値</th><th>時点</th><th>出典の性格</th></tr></thead>
+<tbody>
+<tr><td class="name">千戸（minggan）の数</td><td class="num">95</td><td>1206年</td><td>『秘史』202節の千戸長リスト<sup><a href="#s1">1</a></sup><sup><a href="#s13">13</a></sup></td></tr>
+<tr><td class="name">ケシク（親衛隊）</td><td class="num">1,150 → 10,000人</td><td>1206年</td><td>複数史料。約8.7倍<sup><a href="#s13">13</a></sup></td></tr>
+<tr><td class="name">徴兵の年齢範囲</td><td class="num">15〜70歳</td><td>1206年</td><td>複数史料<sup><a href="#s13">13</a></sup></td></tr>
+<tr><td class="name">ボオルチュ・ムカリの指揮規模</td><td class="num">各10,000人</td><td>1206年</td><td>複数史料<sup><a href="#s13">13</a></sup></td></tr>
+<tr><td class="name">金から編入した攻城技術者</td><td class="num">500人</td><td>1212年からの2年間</td><td>複数史料<sup><a href="#s13">13</a></sup></td></tr>
+<tr><td class="name">死亡時の支配領域</td><td class="num">約1,200万 km²</td><td>1227年</td><td>推計。1,350万 km² とする記述もある<sup><a href="#s37">37</a></sup></td></tr>
+<tr><td class="name">金の人口（戸籍）</td><td class="num">8,413,164戸 / 53,532,151人</td><td>1207年</td><td>金の泰和7年の戸口。2系統の数字のうち信頼度が高いとされる方<sup><a href="#s40">40</a></sup></td></tr>
+<tr><td class="name">北中国の人口減</td><td class="num">約3分の2</td><td>1234年まで</td><td>戸籍ベース。後述の留保あり<sup><a href="#s40">40</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note">
+<strong>人口3分の2減をそのまま死者数と読んではいけない。</strong>この数字は戸籍上の戸数・口数の比較であり、戦乱で行政機構が壊れれば、人が生きていても捕捉されなくなる。南宋領への逃亡、課税を逃れるための隠匿、支配者が代わったことによる台帳の作り直しが、いずれも同じ方向に効く。死亡と捕捉漏れを分離した数字は本ページでは確認できなかった<sup><a href="#s40">40</a></sup>。
+</div>
+
+<h3>征服の条件として気候を見る研究</h3>
+<p>ニール・ピーダーソンらは2014年の米国科学アカデミー紀要で、モンゴル中部のシベリアマツから1,112年分の年輪を復元し、1211年から1225年にかけての暖かく湿潤な期間が、この1,000年のなかで最も長く続いた多雨期の1つであることを示した<sup><a href="#s7">7</a></sup><sup><a href="#s9">9</a></sup>。草の生産量が増えれば馬と家畜が増える。モンゴル軍の機動は馬の頭数に依存するため、この時期の気候が拡大の物理的条件を作ったという議論である<sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup>。因果を1本に単純化できる話ではないが、個人の資質に還元される説明に対する外部からの補正として扱える。</p>
+
+
+<h2 id="failures"><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
+
+<p>勝った側が書いた史料でも、負けの事実そのものは消されずに残っている。消えているのは負けの原因の分析のほうである。以下の5類型は、記録に残る事実から組み立てたものであり、史料がそう分類しているわけではない。</p>
+
+<h3>1. 戦場での敗北を2度喫している</h3>
+<p>1187年頃のダラン・バルジュトでジャムカに敗れ<sup><a href="#s13">13</a></sup>、1203年のカラカルジト・エレトでケレイト軍に敗れて後退した<sup><a href="#s16">16</a></sup>。後者では少数の従者とともにバルジュナ湖畔まで退いている<sup><a href="#s13">13</a></sup>。1203年の敗北から同年中のケレイト討滅までの間隔は数か月である<sup><a href="#s16">16</a></sup>。<strong>負けた後の再編成の速度が、負けない能力の代わりをしている。</strong>これを「不敗の将軍」と記述する一般書は、2回の敗北を省略している。</p>
+
+<h3>2. 外交で相手の政体を読み違えた</h3>
+<p>1218年のオトラル事件は、モンゴル側が通商のために送った約450人の隊商が全員処刑されたところから始まる<sup><a href="#s17">17</a></sup>。モンゴルは抗議の使節を送り、その正使も斬られた<sup><a href="#s17">17</a></sup>。この経緯は、ホラズム・シャーが総督イナルチュクを統制できる前提に立った判断が外れたことを示す。<strong>相手国の中央と地方の関係を読み違えた代償が、7年にわたる西方戦役である。</strong>開戦の決定ではなく、開戦前の情勢判断のほうに誤りがある。</p>
+
+<h3>3. 服属の処理が不完全で、同じ相手に2度遠征している</h3>
+<p>西夏は1210年に服属し、皇帝の娘を差し出している<sup><a href="#s13">13</a></sup>。しかし1219年の西征に際して従軍要求を拒んだ<sup><a href="#s23">23</a></sup>。結果として1226年から1227年にかけて再征が必要になり、チンギス自身がその戦役の最中に死んだ<sup><a href="#s23">23</a></sup>。1210年の和議は、軍事的な服属を取ったものの、動員に応じる義務を履行させる仕組みを伴っていなかった。<strong>征服と、征服後に相手を動かし続ける設計は別の問題である。</strong></p>
+
+<h3>4. 後継の設計を17年先送りし、死後に2年の空位を作った</h3>
+<p>1206年の即位から1219年まで、後継者の指名は行われていない<sup><a href="#s13">13</a></sup><sup><a href="#s27">27</a></sup>。指名のきっかけは本人の判断ではなく、妃イェスイが遠征前に問うたことである<sup><a href="#s27">27</a></sup>。その場でチャガタイがジョチの出生を持ち出して争いになり、長子と次子の両方が継承から外れ、第三子オゴデイが選ばれた<sup><a href="#s27">27</a></sup>。ジョチの出生への疑義は1180年代のボルテ奪還の時点で発生しており<sup><a href="#s26">26</a></sup>、30年以上処理されないまま残った問題が、最も重要な決定の場で噴出している。<strong>結果として、1227年の死から1229年のオゴデイ即位まで2年の空位が生じた</strong><sup><a href="#s13">13</a></sup>。</p>
+
+<h3>5. 征服地の統治設計が本人の代に間に合っていない</h3>
+<p>駅伝制（ジャムチ）は、しばしばチンギス・カンの業績として語られる。『秘史』はこれをオゴデイの事業として記し、体系化は1234年前後のオゴデイ期とされる<sup><a href="#s28">28</a></sup>。チンギス期にも使者の移動を支える仕組みは存在したが、制度として完成するのは次代である<sup><a href="#s28">28</a></sup>。税制も同様で、征服地から安定した収入を取る仕組みは、耶律楚材らの献策を経て次代に整う<sup><a href="#s30">30</a></sup><sup><a href="#s39">39</a></sup>。ただし耶律楚材の事績は後世の中国側の記述で誇張されている可能性が指摘されており、どこまでが本人の功績かは確定しない<sup><a href="#s39">39</a></sup>。<strong>草原の人口を再編成する設計は本人の代で完成し、定住地から税を取る設計は完成しなかった。</strong>この非対称が、死後の帝国が直面した問題の形を決めている。</p>
+
+<h2 id="method"><span class="num">⑥</span>思想と方法<span class="en">Method</span></h2>
+
+<h3>血縁の単位を解体して指揮の単位に置き換える</h3>
+<p>1206年の千戸制は、部族ごとの集団をいったん崩し、95の千戸に人を割り直した<sup><a href="#s1">1</a></sup><sup><a href="#s13">13</a></sup>。千戸長には、旧来の部族の序列ではなく戦功で選ばれた者が就き、その中には鍛冶屋・大工・牧夫の子が含まれる<sup><a href="#s13">13</a></sup>。支配層は「黄金の一族」（altan uruq）と、その下の「黒い骨」（qara yasun）に整理された<sup><a href="#s13">13</a></sup>。生まれによる序列を残したまま、実務の序列を別に作ったという構造である。</p>
+
+<h3>忠誠を人質と教育の両方で確保する</h3>
+<p>ケシクの構成員は千戸長・百戸長の子弟であり、警護・家政・行政・将校養成を兼ねた<sup><a href="#s13">13</a></sup>。指揮官の子を手元に置くことは反乱の抑止になり、同時にカンの近くで育った者が次代の指揮官になる。人質と幹部育成を同じ制度で処理している点が要である。</p>
+
+<h3>法は判例であり、法典ではない</h3>
+<p>ヤサ（ジャサク）は、国家運営・軍規・駅伝・冬の巻狩りなどに関する個別の裁定であり、1206年に公布された成文法典ではない<sup><a href="#s5">5</a></sup>。アヤロンは法典説の典拠が15世紀のマクリーズィーの無断転用であることを示し、モーガンは13〜14世紀の史料に法典の証拠がないことを示した<sup><a href="#s5">5</a></sup>。『秘史』が記すのは、シギ・クトゥクを最高判官に任じ、判決の記録簿を管理させたことである<sup><a href="#s5">5</a></sup>。個別の裁定が積み重なって拘束力を持った、というのが実体に近い<sup><a href="#s5">5</a></sup>。</p>
+
+<h3>文字と印璽を他者から取る</h3>
+<p>1204年にナイマンの印璽官だったウイグル人タタ・トンガを捕らえ、ウイグル文字をモンゴル語表記に転用させ、王子たちの教育に当たらせた<sup><a href="#s31">31</a></sup>。攻城技術も同様に、金とイスラーム圏の技術者を取り込む形で獲得している<sup><a href="#s13">13</a></sup><sup><a href="#s24">24</a></sup>。自前で開発したのではなく、持っている者を組織に入れた。</p>
+
+<h3>宗教集団を敵に回さず、課税の対象から外す</h3>
+<p>1222年5月22日に丘処機と会見し、1223年に全真教への免税の勅を出した<sup><a href="#s29">29</a></sup>。丘処機には虎頭の牌符（パイザ）と印璽文書が与えられ、金の旧皇家庭園が全真教に与えられた<sup><a href="#s29">29</a></sup>。これを宗教的寛容と呼ぶことはできるが、統治の協力者に対する報酬という説明のほうが事実の並びに合う。</p>
+
+<h3>使節の不可侵を開戦の基準にする</h3>
+<p>オトラル事件への対応は、隊商の殺害ではなく使節の殺害に対する報復として組み立てられている<sup><a href="#s17">17</a></sup>。使者を殺した相手は滅ぼすという基準を外部に示すことは、広域の支配において情報伝達の安全を確保する手段でもある。</p>
+
+<h2 id="quotes"><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
+
+<p>本人の発言として日付・場所・出典が確定するものは少ない。モンゴル語の一次記録はほぼ『秘史』に限られ、その『秘史』自体が後世の編纂物である。ここでは出典が特定できるものと、できないものを分けて置く。</p>
+
+<div class="q-tabs" id="qtabs"></div>
+<div class="q-list" id="qlist"></div>
+
+<div class="risk">
+<p style="margin-top:0"><strong>出典が確定しない有名な言い回しについて。</strong>
+「人生最大の喜びは敵を打ち破り、これを眼前に引き据え、その財産を奪い、その近親の者が涙に暮れるのを見ることだ」という趣旨の発言は、チンギス・カンの言葉として広く流通している。これはラシード・アッディーンの記述に由来するとされるが、本人が、いつ、どこで、誰に対して言ったかを特定できる形では確認できない。本ページは<strong>本文の根拠としては使わない</strong>。
+同様に、「一人が見る夢はただの夢、皆で見る夢は現実」という句は、チンギス・カンの言葉として日本語圏で広く引用されるが、13世紀の史料にこれを求めることはできない。</p>
+</div>
+
+
+<h2 id="open"><span class="num">⑧</span>残っている問い / 出典<span class="en">Open Questions / Sources</span></h2>
+
+<h3>「世界の男性の0.5%が子孫」という説の現状</h3>
+<p>2003年、タチアナ・ゼルジャルらは『アメリカ人類遺伝学雑誌』で、太平洋からカスピ海に至る地域の16集団でY染色体の1系統が高頻度に見られ、その地域の男性の約8%、世界の男性の約0.5%（発表時点で約1,600万人）を占めると報告した<sup><a href="#s10">10</a></sup>。変異の分布からこの系統の起源を約1,000年前のモンゴルと推定し、チンギス・カンの男系子孫による拡散を説明として提示した<sup><a href="#s10">10</a></sup>。</p>
+<p>この説明には複数の反証がある。2010年、米国人類遺伝学会の祖先・祖先検査タスクフォースは、特定の単系統と歴史上の個人を結びつける主張は推測的であり、単系統システムから人口史を推論する統計的な検出力は一般に低いと述べた<sup><a href="#s11">11</a></sup>。2012年の研究は、15世紀のダヤン・ハーンまで系譜をたどれるモンゴルの男性を調べ、2003年の星状クラスターに一致する者がいなかったと報告している<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup>。チンギスの兄弟の子孫、ジョチの子孫とされる系統も、それぞれ異なるハプログループを示した<sup><a href="#s11">11</a></sup>。2017年には、1130年から1250年のモンゴルの高位の墓から得られた古代DNAがハプログループC系ではなくR1b系だったことも報告されている<sup><a href="#s11">11</a></sup>。</p>
+<p><strong class="hit">チンギス・カン本人の遺骨が特定されていない以上、この系統が本人のものかを確かめる方法が現時点で存在しない。</strong>墓所が不明であることと、遺伝的末裔説が検証不能であることは同じ1つの事実の表裏である<sup><a href="#s24">24</a></sup>。</p>
+
+<h3>残っている問い</h3>
+<ul>
+<li>生年が1155年・1162年・1167年のどれかは確定していない。1155年説を支持するのは趙珙『蒙韃備録』とラシード・アッディーン、1162年説を支持するのは『元史』と『聖武親征録』である<sup><a href="#s13">13</a></sup>。本人が正確な生年を知らなかった可能性も指摘されている<sup><a href="#s13">13</a></sup></li>
+<li>死因は確定していない。落馬、病、矢傷、暗殺のいずれの説も、単一の史料にしか根拠がない<sup><a href="#s24">24</a></sup><sup><a href="#s38">38</a></sup></li>
+<li>没日が8月18日か8月25日かも確定していない<sup><a href="#s13">13</a></sup></li>
+<li>『秘史』の成立年は1228年説と1252年説が対立している。これは単なる年代の問題ではなく、誰の正統性のために書かれたテキストかという問題である<sup><a href="#s4">4</a></sup><sup><a href="#s14">14</a></sup></li>
+<li>ホラーサーン諸都市の犠牲者数は、中世の数字が誇張であることは合意されているが、実数の推計は都市ごとに揃っていない。メルヴとヘラートについて現代の推計を本ページでは確認できなかった<sup><a href="#s20">20</a></sup></li>
+<li>北中国の人口減少について、戦死・餓死・疫病・逃亡・戸籍の捕捉漏れを分離した数字は確認できなかった<sup><a href="#s40">40</a></sup></li>
+<li>「チンギス」の語義は未確定である。tengiz（海）説、chin（強固）説、テュルク語の「猛々しい」説のいずれも決定的な論拠を欠く<sup><a href="#s36">36</a></sup></li>
+<li>耶律楚材の事績がどこまで本人のものかは確定していない。後世の中国側の記述で誇張された可能性が指摘されている<sup><a href="#s39">39</a></sup></li>
+<li>妻の人数と子の人数は史料によって異なる。ボルテとの間の子（ジョチ、チャガタイ、オゴデイ、トルイと娘たち）以外は、網羅的な一覧が確定していない<sup><a href="#s13">13</a></sup></li>
+</ul>
+
+<h3>出典一覧</h3>
+<ol class="sources">
+<li id="s1">Igor de Rachewiltz 訳『The Secret History of the Mongols: A Mongolian Epic Chronicle of the Thirteenth Century』（短縮版、John C. Street 編、オープンアクセス、2015年）— <a href="https://cedar.wwu.edu/cedarbooks/4/">https://cedar.wwu.edu/cedarbooks/4/</a>（一次史料の英訳）</li>
+<li id="s2">宇野伸浩「チンギス・カン前半生研究のための『元朝秘史』と『集史』の比較考察」『人間環境学研究』第7巻、57–74頁、広島修道大学、2009年2月28日 — <a href="https://researchmap.jp/96101/published_papers/2573451/attachment_file.pdf">researchmap（本文PDF）</a></li>
+<li id="s3">同論文の書誌 — <a href="https://cir.nii.ac.jp/crid/1050845762671521024">CiNii Research</a></li>
+<li id="s4">Christopher P. Atwood「The Date of the Secret History of the Mongols Reconsidered」— <a href="https://scholarworks.iu.edu/iuswrrest/api/core/bitstreams/4ab07eb2-ead2-4f5c-873b-363fa4799c73/content">Indiana University ScholarWorks</a></li>
+<li id="s5">Encyclopaedia Iranica「YĀSĀ」（ヤサ＝法典説の否定、Ayalon と Morgan の論証） — <a href="https://www.iranicaonline.org/articles/yasa-law-code/">https://www.iranicaonline.org/articles/yasa-law-code/</a></li>
+<li id="s6">Encyclopaedia Iranica「JOVAYNI, ʿAlāʾ-al-Din ʿAṭā-Malek」（『世界征服者の歴史』の成立とその政治的位置） — <a href="https://www.iranicaonline.org/articles/jovayni-ala-al-din/">https://www.iranicaonline.org/articles/jovayni-ala-al-din/</a></li>
+<li id="s7">Neil Pederson, Amy E. Hessl, Nachin Baatarbileg, Kevin J. Anchukaitis, Nicola Di Cosmo「Pluvials, droughts, the Mongol Empire, and modern Mongolia」PNAS 111(12), 4375–4379, 2014年3月 — <a href="https://www.pnas.org/doi/10.1073/pnas.1318677111">https://www.pnas.org/doi/10.1073/pnas.1318677111</a></li>
+<li id="s8">PNAS Inner Workings「Story of an empire encased in tree rings」— <a href="https://www.pnas.org/doi/10.1073/pnas.1416724111">https://www.pnas.org/doi/10.1073/pnas.1416724111</a></li>
+<li id="s9">ScienceDaily「Mongol Empire rode wave of mild climate」2014年3月10日 — <a href="https://www.sciencedaily.com/releases/2014/03/140310152156.htm">https://www.sciencedaily.com/releases/2014/03/140310152156.htm</a></li>
+<li id="s10">Tatiana Zerjal ほか「The Genetic Legacy of the Mongols」American Journal of Human Genetics 72(3), 2003年 — <a href="https://www.cell.com/ajhg/fulltext/S0002-9297(07)60587-4">https://www.cell.com/ajhg/fulltext/S0002-9297(07)60587-4</a></li>
+<li id="s11">Wikipedia「Genetic descent from Genghis Khan」（2010年 ASHG タスクフォース声明、2012年・2017年の反証研究のまとめ） — <a href="https://en.wikipedia.org/wiki/Genetic_descent_from_Genghis_Khan">https://en.wikipedia.org/wiki/Genetic_descent_from_Genghis_Khan</a></li>
+<li id="s12">Wayne State University Human Biology Open Access Pre-Prints（モンゴル系集団の父系起源に関する研究、2012年） — <a href="https://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1012&amp;context=humbiol_preprints">digitalcommons.wayne.edu</a></li>
+<li id="s13">Wikipedia「Genghis Khan」（生年の諸説、1206年の制度、各戦役の年次、史料の信頼性評価の整理） — <a href="https://en.wikipedia.org/wiki/Genghis_Khan">https://en.wikipedia.org/wiki/Genghis_Khan</a></li>
+<li id="s14">Wikipedia「Secret History of the Mongols」（成立年の論争、トルイ家寄りの記述） — <a href="https://en.wikipedia.org/wiki/Secret_History_of_the_Mongols">https://en.wikipedia.org/wiki/Secret_History_of_the_Mongols</a></li>
+<li id="s15">Wikipedia「Battle of Chakirmaut」（1204年5月のナイマン戦） — <a href="https://en.wikipedia.org/wiki/Battle_of_Chakirmaut">https://en.wikipedia.org/wiki/Battle_of_Chakirmaut</a></li>
+<li id="s16">Wikipedia「Battle of Khalakhaljid Sands」（1203年の敗北とトオリルの最期） — <a href="https://en.wikipedia.org/wiki/Battle_of_Khalakhaljid_Sands">https://en.wikipedia.org/wiki/Battle_of_Khalakhaljid_Sands</a></li>
+<li id="s17">Wikipedia「Otrar Catastrophe」（1218年の隊商処刑と1219–1220年の包囲） — <a href="https://en.wikipedia.org/wiki/Otrar_Catastrophe">https://en.wikipedia.org/wiki/Otrar_Catastrophe</a></li>
+<li id="s18">Wikipedia「Mongol invasion of the Khwarazmian Empire」（兵力の史料差と現代推計） — <a href="https://en.wikipedia.org/wiki/Mongol_invasion_of_the_Khwarazmian_Empire">https://en.wikipedia.org/wiki/Mongol_invasion_of_the_Khwarazmian_Empire</a></li>
+<li id="s19">Wikipedia「Siege of Nishapur (1221)」（中世の数字と10万〜20万の現代推計） — <a href="https://en.wikipedia.org/wiki/Siege_of_Nishapur_(1221)">https://en.wikipedia.org/wiki/Siege_of_Nishapur_(1221)</a></li>
+<li id="s20">Wikipedia「Mongol invasion of Khorasan」（ヘラート240万・メルヴ130万などの数字と、その誇張性の評価） — <a href="https://en.wikipedia.org/wiki/Mongol_invasion_of_Khorasan">https://en.wikipedia.org/wiki/Mongol_invasion_of_Khorasan</a></li>
+<li id="s21">Wikipedia「Mongol conquest of the Jin dynasty」（1211年開戦から1215年中都陥落） — <a href="https://en.wikipedia.org/wiki/Mongol_conquest_of_the_Jin_dynasty">https://en.wikipedia.org/wiki/Mongol_conquest_of_the_Jin_dynasty</a></li>
+<li id="s22">Wikipedia「Battle of Yehuling」（1211年秋の野狐嶺の戦い） — <a href="https://en.wikipedia.org/wiki/Battle_of_Yehuling">https://en.wikipedia.org/wiki/Battle_of_Yehuling</a></li>
+<li id="s23">Wikipedia「Mongol conquest of Western Xia」（1209–1210年と1225–1227年の2度の戦役） — <a href="https://en.wikipedia.org/wiki/Mongol_conquest_of_Western_Xia">https://en.wikipedia.org/wiki/Mongol_conquest_of_Western_Xia</a></li>
+<li id="s24">Wikipedia「Burial place of Genghis Khan」（ラシード・アッディーンの記述、マルコ・ポーロ、現代の探索） — <a href="https://en.wikipedia.org/wiki/Burial_place_of_Genghis_Khan">https://en.wikipedia.org/wiki/Burial_place_of_Genghis_Khan</a></li>
+<li id="s25">Wikipedia「Ikh Khorig」（大禁地） — <a href="https://en.wikipedia.org/wiki/Ikh_Khorig">https://en.wikipedia.org/wiki/Ikh_Khorig</a></li>
+<li id="s26">Wikipedia「Börte」「Jochi」（メルキトによる誘拐とジョチの出生問題） — <a href="https://en.wikipedia.org/wiki/Jochi">https://en.wikipedia.org/wiki/Jochi</a></li>
+<li id="s27">Wikipedia「Ögedei Khan」（1219年の後継指名、グルガンジでの単独指揮） — <a href="https://en.wikipedia.org/wiki/%C3%96gedei_Khan">https://en.wikipedia.org/wiki/Ögedei_Khan</a></li>
+<li id="s28">Wikipedia「Yam (route)」（駅伝制の成立がオゴデイ期である点） — <a href="https://en.wikipedia.org/wiki/Yam_(route)">https://en.wikipedia.org/wiki/Yam_(route)</a></li>
+<li id="s29">Wikipedia「Qiu Chuji」（1222年5月22日の会見、1223年の免税の勅） — <a href="https://en.wikipedia.org/wiki/Qiu_Chuji">https://en.wikipedia.org/wiki/Qiu_Chuji</a></li>
+<li id="s30">Wikipedia「Yelü Chucai」（会見の仲介、税制への関与） — <a href="https://en.wikipedia.org/wiki/Yel%C3%BC_Chucai">https://en.wikipedia.org/wiki/Yelü Chucai</a></li>
+<li id="s31">Wikipedia「Mongolian script」「Old Uyghur alphabet」（タタ・トンガとウイグル文字の転用、『元史』の記述） — <a href="https://en.wikipedia.org/wiki/Mongolian_script">https://en.wikipedia.org/wiki/Mongolian_script</a></li>
+<li id="s32">Wikipedia「Battle of the Kalka River」（1223年5月31日、威力偵察としての性格） — <a href="https://en.wikipedia.org/wiki/Battle_of_the_Kalka_River">https://en.wikipedia.org/wiki/Battle_of_the_Kalka_River</a></li>
+<li id="s33">Wikipedia「Daramyn Tömör-Ochir」（1962年の生誕800年行事と失脚、1985年10月の殺害） — <a href="https://en.wikipedia.org/wiki/Daramyn_T%C3%B6m%C3%B6r-Ochir">https://en.wikipedia.org/wiki/Daramyn Tömör-Ochir</a></li>
+<li id="s34">The Asia-Pacific Journal: Japan Focus「Chinggis Khan on Film: Globalization, Nationalism, and Historical Revisionism」2018年 — <a href="https://apjjf.org/2018/22/Eng">https://apjjf.org/2018/22/Eng</a></li>
+<li id="s35">Nationalities Papers「The rebirth of Chinggis Khaan: state appropriation of Chinggis Khaan in post-socialist Mongolia」（Cambridge University Press） — <a href="https://resolve.cambridge.org/core/journals/nationalities-papers/article/abs/rebirth-of-chinggis-khaan-state-appropriation-of-chinggis-khaan-in-postsocialist-mongolia/171EAD24A23AEEAFD9388E747E16C86B">Cambridge Core</a></li>
+<li id="s36">Medievalists.net「What's in a Name? Genghis vs Chinggis」2022年3月（語義の諸説とデ・ラチェヴィルツの解釈） — <a href="https://www.medievalists.net/2022/03/name-genghis-chinggis/">https://www.medievalists.net/2022/03/name-genghis-chinggis/</a></li>
+<li id="s37">Wikipedia「Mongol Empire」（1227年時点の版図の推計） — <a href="https://en.wikipedia.org/wiki/Mongol_Empire">https://en.wikipedia.org/wiki/Mongol_Empire</a></li>
+<li id="s38">Medievalists.net「Genghis Khan died of the plague, researchers suggest」2021年12月（死因をめぐる近年の議論） — <a href="https://www.medievalists.net/2021/12/genghis-khan-died-plague/">https://www.medievalists.net/2021/12/genghis-khan-died-plague/</a></li>
+<li id="s39">Tatiana Sletneva「Yelü Chucai's Movement in the Mongolian Court Described in Yuanshi」（中国側史料における事績の潤色への注意） — <a href="https://real.mtak.hu/153919/1/document-11.pdf">real.mtak.hu</a></li>
+<li id="s40">Wikipedia「Jin dynasty (1115–1234)」「Population history of China」（1207年の戸口、1234年までの北中国の人口減） — <a href="https://en.wikipedia.org/wiki/Jin_dynasty_(1115%E2%80%931234)">https://en.wikipedia.org/wiki/Jin dynasty (1115–1234)</a></li>
+</ol>
+
+</div>
+
+
+<script type="application/json" id="facts">
+[
+  {"claim":"生年（通説）","value":1162,"unit":"year","as_of":"1162","source":"https://en.wikipedia.org/wiki/Genghis_Khan","confidence":"disputed"},
+  {"claim":"生年（別説）","value":"1155 / 1167","unit":"year","as_of":"1155-1167","source":"https://en.wikipedia.org/wiki/Genghis_Khan","confidence":"disputed"},
+  {"claim":"没年月日","value":"1227-08-18 または 1227-08-25","unit":"date","as_of":"1227-08","source":"https://en.wikipedia.org/wiki/Genghis_Khan","confidence":"disputed"},
+  {"claim":"父の死亡時のテムジンの年齢","value":"8〜9","unit":"歳","as_of":"1170頃","source":"https://en.wikipedia.org/wiki/Genghis_Khan","confidence":"reported"},
+  {"claim":"メルキトの襲撃人数","value":300,"unit":"人","as_of":"1180s","source":"https://cedar.wwu.edu/cedarbooks/4/","confidence":"single-source"},
+  {"claim":"千戸（minggan）の数","value":95,"unit":"単位","as_of":"1206","source":"https://cedar.wwu.edu/cedarbooks/4/","confidence":"reported"},
+  {"claim":"ケシクの規模（拡大前）","value":1150,"unit":"人","as_of":"1206以前","source":"https://en.wikipedia.org/wiki/Genghis_Khan","confidence":"reported"},
+  {"claim":"ケシクの規模（拡大後）","value":10000,"unit":"人","as_of":"1206","source":"https://en.wikipedia.org/wiki/Genghis_Khan","confidence":"reported"},
+  {"claim":"徴兵の年齢範囲","value":"15-70","unit":"歳","as_of":"1206","source":"https://en.wikipedia.org/wiki/Genghis_Khan","confidence":"reported"},
+  {"claim":"金から編入した攻城技術者","value":500,"unit":"人","as_of":"1212-1214","source":"https://en.wikipedia.org/wiki/Genghis_Khan","confidence":"reported"},
+  {"claim":"オトラルで処刑された隊商","value":450,"unit":"人","as_of":"1218","source":"https://en.wikipedia.org/wiki/Otrar_Catastrophe","confidence":"reported"},
+  {"claim":"オトラル包囲の期間","value":"1219-12 から 1220-02","unit":"period","as_of":"1219-1220","source":"https://en.wikipedia.org/wiki/Otrar_Catastrophe","confidence":"reported"},
+  {"claim":"モンゴル軍兵力（ジューズジャーニー）","value":800000,"unit":"人","as_of":"1219","source":"https://en.wikipedia.org/wiki/Mongol_invasion_of_the_Khwarazmian_Empire","confidence":"disputed"},
+  {"claim":"モンゴル軍兵力（ラシード・アッディーン）","value":600000,"unit":"人","as_of":"1219","source":"https://en.wikipedia.org/wiki/Mongol_invasion_of_the_Khwarazmian_Empire","confidence":"disputed"},
+  {"claim":"モンゴル軍兵力（現代推計）","value":"100000-150000","unit":"人","as_of":"1219","source":"https://en.wikipedia.org/wiki/Mongol_invasion_of_the_Khwarazmian_Empire","confidence":"estimated"},
+  {"claim":"ヘラート犠牲者（中世の記述）","value":2400000,"unit":"人","as_of":"1221","source":"https://en.wikipedia.org/wiki/Mongol_invasion_of_Khorasan","confidence":"disputed"},
+  {"claim":"メルヴ犠牲者（中世の記述）","value":1300000,"unit":"人","as_of":"1221","source":"https://en.wikipedia.org/wiki/Mongol_invasion_of_Khorasan","confidence":"disputed"},
+  {"claim":"ニシャプール犠牲者（中世の記述）","value":1747000,"unit":"人","as_of":"1221","source":"https://en.wikipedia.org/wiki/Siege_of_Nishapur_(1221)","confidence":"disputed"},
+  {"claim":"ニシャプール犠牲者（現代推計）","value":"100000-200000","unit":"人","as_of":"1221","source":"https://en.wikipedia.org/wiki/Siege_of_Nishapur_(1221)","confidence":"estimated"},
+  {"claim":"カルカ河の戦い","value":"1223-05-31","unit":"date","as_of":"1223-05-31","source":"https://en.wikipedia.org/wiki/Battle_of_the_Kalka_River","confidence":"reported"},
+  {"claim":"丘処機との会見","value":"1222-05-22","unit":"date","as_of":"1222-05-22","source":"https://en.wikipedia.org/wiki/Qiu_Chuji","confidence":"reported"},
+  {"claim":"全真教への免税の勅","value":"1223","unit":"year","as_of":"1223","source":"https://en.wikipedia.org/wiki/Qiu_Chuji","confidence":"reported"},
+  {"claim":"死亡時の支配領域","value":12000000,"unit":"km2","as_of":"1227","source":"https://en.wikipedia.org/wiki/Mongol_Empire","confidence":"estimated"},
+  {"claim":"金の戸口（泰和7年）","value":"8413164戸 / 53532151人","unit":"戸・人","as_of":"1207","source":"https://en.wikipedia.org/wiki/Jin_dynasty_(1115%E2%80%931234)","confidence":"reported"},
+  {"claim":"北中国の人口減（戸籍ベース）","value":"約2/3","unit":"比率","as_of":"1234","source":"https://en.wikipedia.org/wiki/Population_history_of_China","confidence":"disputed"},
+  {"claim":"Y染色体系統の保有率（対象地域）","value":8,"unit":"%","as_of":"2003","source":"https://www.cell.com/ajhg/fulltext/S0002-9297(07)60587-4","confidence":"reported"},
+  {"claim":"Y染色体系統の保有率（世界）","value":0.5,"unit":"%","as_of":"2003","source":"https://www.cell.com/ajhg/fulltext/S0002-9297(07)60587-4","confidence":"disputed"},
+  {"claim":"年輪復元の対象期間","value":1112,"unit":"年","as_of":"2014","source":"https://www.pnas.org/doi/10.1073/pnas.1318677111","confidence":"reported"},
+  {"claim":"多雨期","value":"1211-1225","unit":"period","as_of":"2014","source":"https://www.pnas.org/doi/10.1073/pnas.1318677111","confidence":"reported"},
+  {"claim":"オゴデイ即位","value":1229,"unit":"year","as_of":"1229","source":"https://en.wikipedia.org/wiki/%C3%96gedei_Khan","confidence":"reported"}
+]
+</script>
+
+<script>
+/* 誕生日の月日が特定できないため、満年齢は西暦年の差で出す。
+   BORN を1月1日に置いているのは年差を取るための便宜であり、実際の誕生日ではない。 */
+const BORN = '1162-01-01';
+const DIED = '1227-08-18';
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: !!x.out };
+  const m = String(x.d).match(/(\d{4})/);
+  if (!m) return null;
+  const y = +m[1];
+  const by = +BORN.split('-')[0];
+  const dy = +DIED.split('-')[0];
+  if (y > dy) return { t: '没後' + (y - dy) + '年', out: true };
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  return { t: (y - by) + '歳', out: false };
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sup(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+}
+
+const ERAS = [
+  '',
+  'I 出自と喪失 1162–1170年代',
+  'II 同盟と決裂 1180年代–1203',
+  'III 統一 1204–1206',
+  'IV 制度 1206–1208',
+  'V 西夏・金 1209–1218',
+  'VI 西征 1218–1225',
+  'VII 最期と継承 1226–1229',
+  'VIII 記録と像 1228–',
+];
+
+const TL = [
+ {d:'1162年頃',e:1,t:'オノン川流域に生まれる（通説）',
+  w:'父はボルジギン氏のイェスゲイ、母はメルキト族から奪われたホエルン。1155年説と1167年説があり確定しない。',
+  y:'生年が確定しないため、以後の満年齢はすべて1162年基準の年差である。',
+  f:['生年諸説','1155/1162/1167'],s:[13]},
+ {d:'1170年頃',e:1,a:'8〜9歳',t:'父イェスゲイがタタル族に毒殺される',
+  w:'テムジン8歳または9歳。イェスゲイは8年前にタタル族の縁者を殺した側であり、身元が割れた先の食事に毒を入れられた。',
+  y:'草原で生存の単位となる集団の長を失う。以後の全てがここから始まる。',
+  f:['8〜9歳'],s:[13]},
+ {d:'1170年頃',e:1,t:'一族がホエルンと子供たちを置いて移動する',
+  w:'タタル族の報復を恐れたことと、権力を奪う機会と見たことの両方が理由として挙げられる。',
+  y:'庇護者のない少数家族になる。血縁は自動的には味方でないという経験を最初期に得る。',
+  s:[13]},
+ {d:'1170年代',e:1,a:'14歳頃',t:'異母兄ベクテルを弟カサルとともに射殺する',
+  w:'獲物の分配をめぐる争いが理由とされ、母ホエルンに叱責された。『秘史』のみが記し、公式史には入っていない。',
+  y:'『秘史』が英雄譚一色でないとされる根拠の1つ。同時に、他の箇所の脚色を免罪しない。',
+  f:['『秘史』のみ'],s:[1,13]},
+ {d:'1180年代前半',e:2,a:'18〜22歳頃',t:'ボルテと結婚する',
+  w:'父イェスゲイが生前に取り決めた婚約に基づく。コンギラト族のデイ・セチェンの娘。',
+  y:'婚姻による同盟が、以後の勢力形成の最初の資源になる。',s:[13,26]},
+ {d:'1180年代',e:2,a:'18〜22歳頃',t:'メルキト族がボルテを奪う',
+  w:'『秘史』は約300人の襲撃と記す。イェスゲイがメルキトからホエルンを奪ったことへの報復である。',
+  y:'略奪の連鎖が親子2代で続いていることを示す。報復は個人ではなく集団の債務として扱われている。',
+  f:['約300人'],s:[13,26]},
+ {d:'1180年代',e:2,a:'18〜22歳頃',t:'ジャムカとトオリルの協力でボルテを奪還する',
+  w:'ジャムカは幼時の結義兄弟（アンダ）、トオリル（のちのオン・カン）は父の盟友であるケレイト族の長。',
+  y:'単独では動けず、2人の有力者の軍を借りた。この2人が後に最大の敵になる。',s:[13,26]},
+ {d:'1180年代',e:2,a:'18〜22歳頃',t:'長子ジョチが生まれ、出生に疑義が残る',
+  w:'ボルテは帰還時に妊娠していた。テムジンはジョチを自分の子として扱った。',
+  y:'この疑義が1219年の後継指名の場で噴出し、ジョチ家は継承から外れる。30年以上処理されなかった。',
+  f:['後継問題の起点'],s:[26]},
+ {d:'1180年代後半',e:2,a:'23〜27歳頃',t:'第一次即位（『秘史』124節）',
+  w:'キヤト族のアルタン、クチャル、サチャ・ベキがテムジンをカンに推戴したと『秘史』は記す。『集史』『聖武親征録』に対応記事はない。',
+  y:'岡田英弘は創作と見た。宇野伸浩は1203年の問責の辞が複数史料に残る点から推戴自体は史実と論じる。',
+  f:['史料が割れる'],s:[2]},
+ {d:'1187年頃',e:2,t:'ダラン・バルジュトの戦いでジャムカに敗れる',
+  w:'明確な敗北として記録されている。年次は推定。',
+  y:'2度ある戦場での敗北の1度目。不敗の将軍という像はこの事実と両立しない。',
+  f:['敗北'],s:[13]},
+ {d:'1196年頃',e:2,t:'金およびケレイトと共同でタタル族を討つ',
+  w:'『秘史』135節。この戦いの後、タタル族の陣営で拾われた子（シギ・クトゥク）の養子譚が置かれる。',
+  y:'草原の抗争に、外部の大国である金が当事者として関与していたことを示す。',s:[2]},
+ {d:'1203年',e:2,t:'カラカルジト・エレトの戦いでケレイト軍に敗れる',
+  w:'ケレイトの有力者がテムジンの接近を警戒し、オン・カンを離反させた。テムジンは後退した。',
+  y:'2度目の敗北。この時点で勢力は一度ほぼ失われている。',
+  f:['敗北'],s:[16]},
+ {d:'1203年',e:2,t:'バルジュナ湖畔で少数の従者と盟約を結ぶ',
+  w:'敗走後、手元に残った者と誓いを交わした。参加者の出自は部族も宗教も揃っていない。',
+  y:'血縁ではなく誓約で結び直した最初の形。後の千戸制の原型はこの形である。',
+  f:['バルジュナの誓い'],s:[13]},
+ {d:'1203年',e:2,t:'ケレイトを滅ぼす。オン・カンは逃亡先で殺される',
+  w:'ナイマン領に逃れたオン・カンは、正体に気づかなかった巡察隊に殺された。タヤン・カンはその首を踏みつけたと伝わる。',
+  y:'敗北から同年中の逆転である。再編成の速度が、負けない能力の代わりになっている。',s:[16]},
+ {d:'1204年5月',e:3,t:'チャキルマウトの戦いでナイマンを破る',
+  w:'タヤン・カン戦死。ハンガイ山中での決戦。',
+  y:'高原西部の最大勢力が消える。残る障害はメルキトとジャムカのみになる。',s:[15]},
+ {d:'1204年',e:3,t:'タタ・トンガを捕らえ、ウイグル文字をモンゴル語に転用させる',
+  w:'ナイマンの印璽を預かっていたウイグル人。『元史』の本人伝は、彼が印璽の用途をチンギスに説明したと記す。王子たちの教育も命じられた。',
+  y:'口頭の合意から文書による統治へ移る条件が整う。文字も技術者も外部から取り込んでいる。',
+  f:['文字の導入'],s:[31]},
+ {d:'1204年末',e:3,t:'メルキト族を解体する',
+  w:'ボルテ誘拐の相手である。20年以上を経ての決着になる。',
+  y:'草原の報復が世代をまたいで清算される構造を、本人の側から実行した事例。',s:[13,15]},
+ {d:'1204年',e:3,t:'ジャムカが部下に引き渡され、処刑される',
+  w:'ナイマンへ逃れた後、配下に捕らえられて引き渡された。残酷でない方法での死を望み、そのとおりになったと伝わる。',
+  y:'結義兄弟から最大の敵へという関係の終点。草原統一の最後の障害が消える。',s:[15]},
+ {d:'1206年',e:3,t:'オノン川源流のクリルタイでチンギス・カンとなる',
+  w:'満44歳。「チンギス」の語義は未確定で、海（tengiz）説、強固（chin）説、テュルク語で猛々しいとする説がある。',
+  y:'称号の獲得そのものより、同じ場で行われた編成替えのほうが後を決めた。',
+  f:['44歳'],s:[13,36]},
+ {d:'1206年',e:4,t:'95の千戸に人口を割り直す',
+  w:'15歳から70歳までの男子を千戸（minggan）に編入し、百戸・十戸に分けた。『秘史』202節に95人の千戸長の名が並ぶ。',
+  y:'部族を単位とする社会を、指揮系統を単位とする社会に置き換えた。これが本人の最大の設計である。',
+  f:['95千戸','15〜70歳'],s:[1,13]},
+ {d:'1206年',e:4,t:'ケシクを1,150人から10,000人へ拡大する',
+  w:'構成員は千戸長・百戸長の子弟。警護・家政・将校養成・行政中枢を兼ねた。約8.7倍。',
+  y:'忠誠の担保（人質）と幹部育成を1つの制度で処理している。',
+  f:['1,150→10,000'],s:[13]},
+ {d:'1206年',e:4,t:'シギ・クトゥクを最高判官（ヤルグチ）に任じる',
+  w:'判決の記録簿を管理させた。これが後に「ヤサという成文法典」と誤読される元になる。',
+  y:'法は判例の集積として運用された。法典が公布されたという証拠は無い。',
+  f:['ヤサ論争の起点'],s:[5]},
+ {d:'1206年',e:4,t:'ボオルチュとムカリに各1万人の指揮権を与える',
+  w:'出自ではなく戦功で選ばれた指揮官。千戸長には鍛冶屋・大工・牧夫の子が含まれる。',
+  y:'生まれによる序列（黄金の一族と黒い骨）を残しつつ、実務の序列を別に作った。',s:[13]},
+ {d:'1207年',e:4,t:'ジョチを北方へ派遣し、森林の諸族を服属させる',
+  w:'穀物と毛皮の交易路、および金鉱を確保した。',
+  y:'草原の外側に資源を取りに行く動きの最初。軍事行動が経済目的と結びつく。',s:[13]},
+ {d:'1204–1209年',e:4,a:'42〜47歳',t:'シャーマンのテブ・テンゲリを殺害させる',
+  w:'コンゴタン族出身のシャーマン。弟テムゲ・オッチギンに処置を命じ、力士が背を折った。『秘史』と『集史』で経緯の記述が食い違う。',
+  y:'宗教的権威を自らの下に置いた。弟カサルとの離間工作が背景にあるとされる。',
+  f:['史料が割れる'],s:[2,13]},
+ {d:'1209年',e:5,t:'西夏へ進攻する',
+  w:'首都中興府（現在の銀川）を包囲した。',
+  y:'最初の対外戦役。草原の外の定住国家を相手にする経験を得る。',s:[13,23]},
+ {d:'1210年1月',e:5,t:'黄河の流路を変える水攻めが失敗する',
+  w:'包囲は2か月の膠着に陥り、河川を使った攻撃は成功しなかった。',
+  y:'攻城の技術的な限界が露出した局面。この経験が後の技術者編入につながる。',
+  f:['失敗'],s:[13]},
+ {d:'1210年',e:5,t:'西夏が服属し、皇女チャカが差し出される',
+  w:'皇帝が服属を表明して和議となった。',
+  y:'この服属は9年後に機能しなかった。軍事的勝利と、動員に応じさせる仕組みは別だった。',s:[13,23]},
+ {d:'1211年5月',e:5,t:'金への進攻を開始する',
+  w:'同年3月のクリルタイで決定した。',
+  y:'人口と生産力で桁の違う相手に向かう。以後20年以上続く戦争の起点。',s:[13,21]},
+ {d:'1211年秋',e:5,t:'野狐嶺の戦いで金の野戦軍を破る',
+  w:'ムカリの指揮による勝利。獾児嘴の戦いとも呼ばれる。',
+  y:'金の主力を野戦で破ったことで、以後の戦いは城の攻防に移る。',s:[22]},
+ {d:'1212年',e:5,t:'西京（大同）の攻城戦で矢を受けて負傷する',
+  w:'この後、攻城技術者の部隊が編成され、2年間で金の技術者500人が組み込まれた。',
+  y:'本人の負傷が制度の変更に直結した。弱点を人材の取り込みで埋める型。',
+  f:['技術者500人'],s:[13]},
+ {d:'1215年',e:5,t:'金の中都（現在の北京）が陥落する',
+  w:'金は南へ遷都した。王朝自体は1234年まで存続する。',
+  y:'華北の中心都市を得たが、そこから税を取る仕組みは本人の代には整わなかった。',s:[13,21]},
+ {d:'1218年',e:5,t:'ジェベがカラ・キタイを併合する',
+  w:'ナイマン王子クチュルクが簒奪していた政権を倒した。',
+  y:'版図がホラズム朝と直接に接する。次の戦争の地理的条件がここで作られた。',s:[13]},
+ {d:'1219年',e:6,t:'西征の直前に後継者を指名する',
+  w:'妃イェスイが遠征中の不測の事態を問うたことが発端。チャガタイがジョチの出生を持ち出して争い、第三子オゴデイが選ばれた。',
+  y:'即位から13年、疑義の発生から30年以上を経ての決定である。先送りの代償は死後に出る。',
+  f:['オゴデイ'],s:[13,27]},
+ {d:'1218年',e:6,t:'オトラルで約450人の隊商が処刑される',
+  w:'総督イナルチュクがスパイと断じて拘束し、ホラズム・シャーのムハンマド2世の同意のもとに全員を殺した。',
+  y:'通商のために送った隊商が開戦理由になった。本人が設計した順序ではない。',
+  f:['約450人'],s:[17]},
+ {d:'1218年',e:6,t:'抗議の使節も殺される',
+  w:'3人の使節のうちムスリムの正使が斬られ、2人のモンゴル人は髭を剃られて送り返された。',
+  y:'使者の不可侵を開戦の基準に据える論理が、ここで外部に示される。',s:[17]},
+ {d:'1219年',e:6,t:'西征が始まる',
+  w:'兵力は、ジューズジャーニー80万、ラシード・アッディーン60万超と記すが、現代の推計は10万〜15万である。',
+  y:'史料の数字をそのまま使うと、以後の全ての評価が桁ごとずれる。',
+  f:['現代推計10〜15万'],s:[18]},
+ {d:'1219年12月–1220年2月',e:6,a:'57〜58歳',t:'オトラルを包囲し、イナルチュクを処刑する',
+  w:'包囲には5か月を要したとする記述もある。城壁を破って制圧した。',
+  y:'開戦理由となった当事者を名指しで処刑し、報復の論理を完結させた。',s:[17]},
+ {d:'1220年',e:6,t:'ブハラとサマルカンドが陥落する',
+  w:'ホラズム朝の中枢都市が相次いで落ちた。ムハンマド2世は西へ逃走する。',
+  y:'王朝の崩壊は会戦ではなく、都市の個別撃破で起きた。守備を分散させた側の判断も効いている。',s:[18]},
+ {d:'1221年',e:6,t:'グルガンジ攻略でオゴデイを単独指揮官に据える',
+  w:'ジョチとチャガタイが作戦をめぐって対立し、攻略が滞ったための措置。',
+  y:'後継指名の正しさを実地で確認する形になった。兄弟の対立は戦場でも制御できていない。',s:[27]},
+ {d:'1221年',e:6,t:'ニシャプール、メルヴ、ヘラートが陥落する',
+  w:'中世の年代記はヘラート240万、メルヴ130万、ニシャプール174.7万の犠牲者を記す。現代の研究はこれを誇張とし、ニシャプールについては10万〜20万を推計する。',
+  y:'数字は誇張でも、都市が機能を失ったことは別の証拠から確認できる。この2つを混同しない。',
+  f:['桁が1つ違う'],s:[19,20]},
+ {d:'1222年5月22日',e:6,t:'アム川の南で丘処機（長春真人）と会見する',
+  w:'仲介は契丹人官僚の耶律楚材とされる。丘処機は1220年に虎頭の牌符を受けて山東を発った。',
+  y:'征服地の宗教集団を敵に回さない方針の、最も記録の残る実例。',s:[29,30]},
+ {d:'1223年',e:6,t:'全真教に税と賦役を免除する勅を出す',
+  w:'丘処機には印璽文書が与えられ、金の旧皇家庭園が全真教に与えられた。',
+  y:'寛容というより、統治の協力者への対価として読むほうが事実の並びに合う。',s:[29]},
+ {d:'1223年5月31日',e:6,t:'カルカ河でルーシ・キプチャク連合軍を破る',
+  w:'ジェベとスブタイの別働隊。ムハンマド2世を追ってイランを横断し、カフカスを経て草原を北上した。',
+  y:'占領せずに帰還した。目的は征服ではなく、後の遠征のための威力偵察である。',
+  f:['威力偵察'],s:[32]},
+ {d:'1225年',e:6,t:'モンゴル高原へ帰還する',
+  w:'西征の開始から6年。',
+  y:'未処理のまま残っていた西夏の問題に戻ることになる。',s:[13]},
+ {d:'1226年',e:7,t:'西夏への再征を開始する',
+  w:'1219年の西征への従軍要求を西夏が拒んだことが理由。1210年の服属は機能しなかった。',
+  y:'同じ相手に2度遠征している。1度目の処理が不完全だったという事実が残る。',
+  f:['2度目'],s:[23]},
+ {d:'1227年8月18日 または 8月25日',e:7,t:'西夏戦役の途中で死亡する',
+  w:'死因は確定しない。『秘史』は落馬による負傷、『元史』は8日間続いた病とするが病名を記さない。腸チフス、ペスト、矢傷、暗殺の説がある。',
+  y:'最大の権力者の死因と没日が確定しない。記録を残す体制が本人の死に追いついていない。',
+  f:['死因未確定'],s:[13,24,38]},
+ {d:'1227年',e:7,t:'西夏が滅亡する',
+  w:'チンギスの死の前後に首都が陥落した。',
+  y:'本人が最後に着手した課題は、本人の死をまたいで完了した。',s:[23]},
+ {d:'1227年',e:7,t:'ブルカン・カルドゥン一帯が大禁地（イフ・ホリグ）とされる',
+  w:'ラシード・アッディーンは、チンギス自身が埋葬地を選び「我らと我らの子孫の墓所はこことする」と述べたと記す。墓所は現在も特定されていない。',
+  y:'墓が無いことが、後世の遺伝学的な検証を不可能にしている。',s:[24,25]},
+ {d:'1229年',e:7,t:'オゴデイが即位する',
+  w:'死から2年を要した。この間はトルイが監国の立場にあった。',
+  y:'後継を17年先送りした設計の代償が、空位という形で現れた。',
+  f:['空位2年'],s:[13,27]},
+ {d:'1228年 または 1252年',e:8,a:'没後1年 または 25年',out:true,t:'『モンゴル秘史』が成立する',
+  w:'奥書は「鼠の年」の大クリルタイでの成立を記す。鼠年は1228・1240・1252・1264年のいずれでもありうる。アトウッドは1252年（モンケ治下）説を採る。',
+  y:'1252年説を採ると、トルイ家に有利な記述の偏りと初期章の年代矛盾が同時に説明できる。',
+  f:['成立年の論争'],s:[4,14]},
+ {d:'1300年代初',e:8,a:'没後約75年',out:true,t:'ラシード・アッディーン『集史』が編纂される',
+  w:'イルハン朝の公式史。宇野伸浩は、『秘史』と食い違う箇所では『集史』側が史実である可能性が高いとする。',
+  y:'公式史のほうが事実に近い場合がある。どちらが公式かと、どちらが正確かは別の問題である。',s:[2]},
+ {d:'1962年',e:8,t:'生誕800年記念行事を組織した書記が失脚する',
+  w:'モンゴル人民共和国イデオロギー担当書記ダラミーン・トゥムル・オチルが「民族主義的な情熱を煽った」として党の職を解かれた。1985年10月に殺害される。',
+  y:'社会主義期には教科書から記述が削られ、生地への巡礼も禁じられた。',
+  f:['抹消の時代'],s:[33]},
+ {d:'1990年代以降',e:8,a:'没後760年以降',out:true,t:'国家の象徴として扱われるようになる',
+  w:'市場経済への移行後、国民的な象徴として復権した。映画・紙幣・記念像に用いられる。',
+  y:'同じ国で40年を挟み、抹消対象と国家象徴の両方になった。評価を決めたのは新史料ではなく政治状況である。',s:[34,35]},
+ {d:'2003年',e:8,t:'Y染色体の1系統を子孫とする論文が出る',
+  w:'ゼルジャルらは対象地域の男性の約8%、世界の男性の約0.5%がこの系統を持つと報告した。',
+  y:'2010年の米国人類遺伝学会の声明、2012年・2017年の研究がこの結びつけに反証を出している。',
+  f:['検証不能'],s:[10,11]},
+ {d:'2014年',e:8,t:'年輪から1211–1225年の多雨期が復元される',
+  w:'ピーダーソンらはモンゴル中部のシベリアマツから1,112年分を復元し、帝国の拡大期が過去1,000年で最も湿潤な時期の1つだったことを示した。',
+  y:'個人の資質に還元される説明への外部からの補正。因果を1本にはできない。',
+  f:['1,112年分'],s:[7,8]},
+];
+
+const QUOTES = [
+ {q:'クチャル、お前を「ネクン太子の子だ」と言って、我々から「お前が汗（カン）になれ」と言ったら、お前は受けなかったではないか。アルタン、お前を「クトゥラ汗が治めていた、父が治めていたのだから、お前が汗になれ」と言ったら、お前も受けなかったではないか。',
+  w:'1203年、オン・カンとの決裂に際してアルタンとクチャルへ送った問責の辞。『元朝秘史』179節。宇野伸浩の訳に基づく。「汗」は君主号のカンであり、読みやすさのため初出に読みを補った',t:'1203年の決裂',s:[2]},
+ {q:'お前たち二人は、私を殺して黒い土の上に投げて放置しようと、あるいは土の下に隠そうと考えていた。',
+  w:'同じ問責の辞の『集史』版。表現は異なるが内容は『秘史』とほぼ一致する。両史料に残ることが、第一次即位の実在を支える',t:'1203年の決裂',s:[2]},
+ {q:'我らと我らの子孫の墓所はこことする。',
+  w:'ブルカン・カルドゥンを埋葬地に選んだときの言葉として、14世紀初頭のラシード・アッディーンが記す',t:'最期',s:[24]},
+];
+</script>
+
+<script>
+const activeEras = new Set();
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button type="button" class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>なぜ効いたか。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`;
+}).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = n + ' / ' + TL.length + ' 件';
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.cls ? ' ' + r.cls : ''}${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 1 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+
+bars('c-army', [
+  {k:'ジューズジャーニー', v:80, cls:'s2'},
+  {k:'ラシード・アッディーン', v:60, cls:'s2'},
+  {k:'現代の推計（上限）', v:15},
+], '万人');
+
+bars('c-kill', [
+  {k:'ヘラート', v:240, sub:'中世', cls:'s2'},
+  {k:'ニシャプール', v:174.7, sub:'中世', cls:'s2'},
+  {k:'メルヴ', v:130, sub:'中世', cls:'s2'},
+  {k:'ニシャプール', v:20, sub:'現代推計'},
+], '万人');
+</script>
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>生成AIと思考力 — MIT脳波研究を一次情報で確認する</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a;
+    --accent:#2563EB; --line:#E5E2DA; --card:#fff;
+    --warn:#B4433A; --ok:#3B7F58;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.85;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  h1{font-size:27px;margin:0 0 4px;letter-spacing:-.01em;line-height:1.35}
+  .romaji{font-size:12.5px;color:var(--muted);letter-spacing:.06em;margin-bottom:20px}
+
+  h2{font-size:17px;margin:46px 0 4px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .en{display:block;font-size:10.5px;color:var(--muted);font-weight:400;
+    letter-spacing:.1em;text-transform:uppercase}
+  h3{font-size:14.5px;margin:28px 0 4px}
+  p{margin:11px 0}
+  .lead{color:var(--sub);font-size:14px}
+  a{color:var(--accent)}
+  ul,ol{margin:11px 0;padding-left:22px}
+  li{margin:6px 0}
+  strong{font-weight:600}
+
+  .spoiler{display:inline-block;font-size:11px;letter-spacing:.06em;
+    color:var(--warn);border:1px solid var(--warn);border-radius:4px;
+    padding:2px 8px;margin-bottom:18px}
+
+  .verdict{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:22px 0}
+  .verdict .lbl{font-size:10.5px;color:var(--muted);letter-spacing:.1em;
+    text-transform:uppercase;margin-bottom:12px}
+  ol.v{list-style:none;counter-reset:v;padding:0;margin:0}
+  ol.v li{counter-increment:v;position:relative;padding-left:32px;margin:0 0 15px}
+  ol.v li:last-child{margin-bottom:0}
+  ol.v li::before{content:counter(v);position:absolute;left:0;top:3px;
+    width:21px;height:21px;border-radius:50%;background:#EDEAE2;color:var(--sub);
+    font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;
+    font-variant-numeric:tabular-nums}
+  ol.v .t{font-weight:600}
+  ol.v .d{font-size:13.5px;color:var(--sub);display:block}
+
+  .qa{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:4px 20px;margin:20px 0}
+  .qa dt{font-weight:600;font-size:14.5px;padding-top:17px}
+  .qa dd{margin:4px 0 17px;font-size:13.5px;color:var(--sub)}
+  .qa dd:not(:last-child){padding-bottom:16px;border-bottom:1px solid var(--line)}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);
+    vertical-align:top}
+  th{font-size:11px;letter-spacing:.06em;color:var(--muted);font-weight:600;
+    text-transform:uppercase;white-space:nowrap}
+  td.n{font-weight:600}
+  .lay td:first-child,.num td:first-child{white-space:nowrap}
+  td.cv{color:var(--sub);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+  .tl{list-style:none;padding:0;margin:18px 0 0;position:relative}
+  .tl::before{content:"";position:absolute;left:6px;top:6px;bottom:10px;
+    width:1px;background:var(--line)}
+  .tl li{position:relative;padding:0 0 18px 26px}
+  .tl li::before{content:"";position:absolute;left:2px;top:8px;width:9px;height:9px;
+    border-radius:50%;background:#D8D3C7;border:2px solid var(--bg)}
+  .tl li.key::before{background:var(--ink)}
+  .tl .yr{font-size:11px;color:var(--muted);letter-spacing:.05em;
+    font-variant-numeric:tabular-nums}
+  .tl .ti{font-weight:600;font-size:14.5px;display:block}
+  .tl .bd{font-size:13.5px;color:var(--sub)}
+
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 18px;margin:18px 0;font-size:13.5px;color:var(--sub)}
+  .note strong{color:var(--ink)}
+  .note.w{border-color:#E3C9C6;background:#FCF6F5}
+
+  .dg{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:17px 20px;margin:20px 0}
+  .dg .h{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:6px}
+  .dg .b{font-size:14.5px;font-weight:600;line-height:1.7}
+
+  .src{font-size:12px;color:var(--muted);margin-top:8px}
+  .src a{color:var(--muted)}
+  ol.refs{font-size:12.5px;color:var(--sub);padding-left:20px}
+  ol.refs li{margin:7px 0;word-break:break-word}
+  ol.refs a{color:var(--sub)}
+  footer.pg{margin-top:52px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:11.5px;color:var(--muted)}
+
+  @media(max-width:600px){
+    .wrap{padding:28px 18px 64px}
+    h1{font-size:22px}
+    body{font-size:14.5px}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+
+  .vb{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.04em;
+    padding:2px 8px;border-radius:4px;margin-right:8px;white-space:nowrap;
+    vertical-align:1px}
+  .vb.ng{color:#B4433A;background:#FBF0EF;border:1px solid #E3C9C6}
+  .vb.pt{color:#8A6D1F;background:#FAF5E8;border:1px solid #E6DCC0}
+  .vb.ok{color:#3B7F58;background:#EFF6F1;border:1px solid #C9DED2}
+  .claim{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 19px;margin:20px 0}
+  .claim .q{font-size:14.5px;font-weight:600;margin-bottom:9px;line-height:1.6}
+  .claim .a{font-size:13.5px;color:var(--sub);margin:0}
+  .claim .a+.a{margin-top:7px}
+  blockquote{margin:14px 0;padding:2px 0 2px 16px;border-left:2px solid var(--line);
+    color:var(--sub);font-size:13.5px}
+  .rel{display:flex;flex-direction:column;gap:7px;margin:18px 0 0}
+  .rel a{background:var(--card);border:1px solid var(--line);border-radius:9px;
+    padding:13px 16px;text-decoration:none;color:inherit;display:block}
+  .rel a:hover{border-color:var(--accent)}
+  .rel .rt{font-size:14px;font-weight:600}
+  .rel a:hover .rt{color:var(--accent)}
+  .rel .rs{font-size:12.5px;color:var(--sub);margin-top:3px}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a><a href="../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../021_profile/index.html">profile</a><a href="../02A_plan/index.html">plan</a><a href="../023_travel/index.html">travel</a><a href="../027_cinema/index.html">cinema</a><a href="index.html">reading</a><a href="../024_method/index.html">method</a><a href="../026_handbook/index.html">handbook</a><a href="../025_fitness/index.html">fitness</a><a href="../028_english/index.html">english</a><a href="../029_mental_math/index.html">mental math</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="index.html">reading</a>
+    <a class="snav-a" href="../024_method/index.html">method</a>
+    <a class="snav-a" href="../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../028_english/index.html">english</a>
+    <a class="snav-a" href="../029_mental_math/index.html">mental math</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+<div class="crumb"><a href="../../index.html">shogo</a> / personal / <a href="index.html">reading</a></div>
+
+<h1>生成AIと思考力</h1>
+<div class="romaji">MIT脳波研究を一次情報で確認する</div>
+
+<p class="lead">生成AIを使って文章を書くと脳の働きが落ちる、という話の出どころはMIT Media Labの1本のプレプリントである。この研究が実際に何を測り、何を測っていないかを論文本体から確認し、日本語で流通している5つの要約を1件ずつ突き合わせる。学習成果の向上を示した査読済みRCT2件も並べる。</p>
+
+<div class="verdict">
+<div class="lbl">この記事の結論</div>
+<ol class="v">
+<li><span class="t">この論文は2026年10月時点で未査読である。</span><span class="d">arXiv:2506.08872。v1が2025年6月10日、v2が2025年12月31日。PDF全ページのフッターに Preprint, under review と印字され、著者自身がFAQで査読は開始したが非常に初期の段階だと述べている。</span></li>
+<li><span class="t">測られたのは電極間の方向性結合だけである。</span><span class="d">dDTFという指標で32電極のペアを解析した。論文の限界セクションが明記するとおり、スペクトルパワーの解析すら実施していない。意欲や集中を直接推定する指標は使われていない。</span></li>
+<li><span class="t">広く引用されている1項目が、比較対象を取り違えている。</span><span class="d">自力で考えた後にAIを使うと脳の活動も文章の質も上がる、という要約は比較対象を取り違えている。論文が示す比較対象はLLM群のセッション1から3であって、自力群自身の過去セッションではない。同じ論文の表には、alpha帯でセッション2と3のピーク、beta帯でセッション3のピークより有意に低いと書かれている。</span></li>
+<li><span class="t">著者は報道に対して使用を拒否している語がある。</span><span class="d">stupid、dumb、brain rot、harm、damage、passivity、trimming、brain scans、brain damage。理由は、これらの語が論文に登場しないためである。</span></li>
+</ol>
+</div>
+
+<h2>01 書誌と査読状況<span class="en">the paper</span></h2>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>項目</th><th>内容</th></tr>
+<tr><td class="n">論文名</td><td>Your Brain on ChatGPT: Accumulation of Cognitive Debt when Using an AI Assistant for Essay Writing Task</td></tr>
+<tr><td class="n">著者</td><td>Nataliya Kosmyna, Eugene Hauptmann, Ye Tong Yuan, Jessica Situ, Xian-Hao Liao, Ashly Vivian Beresnitzky, Iris Braunstein, Pattie Maes</td></tr>
+<tr><td class="n">所属</td><td>MIT Media Lab、MIT、Wellesley College、Massachusetts College of Art and Design</td></tr>
+<tr><td class="n">arXiv番号</td><td>arXiv:2506.08872。v1 2025年6月10日 / v2 2025年12月31日</td></tr>
+<tr><td class="n">分量</td><td>216ページ、図102点、表4点</td></tr>
+<tr><td class="n">資金</td><td>本研究および続編とも資金提供なしと著者が明記</td></tr>
+<tr><td class="n">査読状況</td><td>未査読のプレプリント</td></tr>
+</table>
+</div>
+
+<p>未査読と判断する根拠は3点ある。arXivの書誌情報に journal reference も DOI of record も付与されていない。論文PDFの全ページのフッターに Preprint, under review と印字されており、2025年12月31日のv2も同じである。著者自身がFAQで、査読プロセスは開始したが非常に初期の段階にあると述べ、査読には4か月から2年かかりうると書いている。</p>
+
+<p>この研究を根拠に主張を立てる場合、未査読であることの明記は省けない。</p>
+
+<h2>02 実験デザイン<span class="en">design</span></h2>
+
+<h3>被験者</h3>
+
+<p>当初60名を募集し、55名が3セッション以上を完了した。群の人数を揃えるため54名分のデータのみ報告している。年齢は18歳から39歳、平均22.9歳、標準偏差1.69。全員がボストン近郊の5大学の所属で、内訳はMIT 19名、Wellesley 18名、Harvard 10名、Tufts 5名、Northeastern 2名。学部生35名、大学院生14名、修士・博士取得者6名。性別は女性32名、男性19名、ノンバイナリー2名、無回答1名。</p>
+
+<h3>群構成とセッション</h3>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>群</th><th>条件</th><th>人数</th></tr>
+<tr><td class="n">LLM群</td><td>ChatGPT使用</td><td class="cv">18</td></tr>
+<tr><td class="n">検索エンジン群</td><td>Web検索使用</td><td class="cv">18</td></tr>
+<tr><td class="n">脳のみ群</td><td>ツールなし</td><td class="cv">18</td></tr>
+</table>
+</div>
+
+<p>セッション1から3は同じ群割り当てで実施し、期間は4か月。課題はSATの小論文プロンプトで、各セッションで3題から選択、全9題である。</p>
+
+<p>セッション4は18名のみ参加し、ツールを入れ替えた。LLM群からツールなしに移った9名を LLM-to-Brain、脳のみ群からChatGPTに移った9名を Brain-to-LLM と呼ぶ。検索エンジン群にセッション4は設定されていない。論文の結果サマリー表で該当欄は N/A である。</p>
+
+<h3>EEG計測</h3>
+
+<p>機材は Neuroelectrics Enobio 32。電極32個、サンプリングレート500Hz。解析手法は dDTF で、Granger因果に基づき電極間の方向性のある結合の強さを推定する指標である。32×31 = 992通りの全電極ペアについて算出した。解析帯域は alpha、beta、theta、delta、および high alpha のサブ帯域である。</p>
+
+<div class="note w">
+<strong>測っていないもの。</strong>論文の限界セクションに明記のとおり、スペクトルパワーの解析は実施していない。報告されているのは結合指標のみである。前頭非対称性や課題中の持続的注意指標といった、意欲や集中を直接推定する指標は使われていない。
+</div>
+
+<h3>評価指標</h3>
+
+<p>小論文は英語教師2名が7項目を0から5の6段階で採点した。項目は Uniqueness、Vocabulary、Grammar、Organization、Content、Length、およびその小論文がLLM支援で書かれたと思うかを示す ChatGPT指標である。教師には群の存在も研究目的も伝えていない。提供した情報は被験者の学歴区分、年齢、執筆条件のみ。別途AI採点者が同じ基準で採点し、各セッション後に全員へインタビューを行って引用能力、所有感、満足度を質問した。</p>
+
+<h2>03 報告された結果<span class="en">results</span></h2>
+
+<h3>神経結合の群間差</h3>
+
+<p>外部支援の量に応じて脳の結合が単調に低下した。脳のみ群が最も強く広範、検索エンジン群が中間、LLM群が最弱である。</p>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>群</th><th>脳のみ群に対する総結合量</th><th>部位の特徴</th></tr>
+<tr><td class="n">検索エンジン群</td><td class="cv">帯域に応じて34%から48%低い</td><td>後頭葉と視覚野の活動が高い。画面上の情報を走査・選別していたことと整合する</td></tr>
+<tr><td class="n">LLM群</td><td class="cv">低周波の意味処理系で最大55%低い</td><td>視覚野の活動は検索エンジン群ほど高くない。前頭頭頂系のbeta帯域が優位</td></tr>
+</table>
+</div>
+
+<p>脳のみ群は alpha、theta、delta 帯域で一貫して最高の総dDTF結合を示した。部位は側頭頭頂領域と前頭の実行系である。LLM群の前頭頭頂系beta優位について、著者は手続き的統合と運動協調に負荷が移ったと解釈する。</p>
+
+<h3>引用能力テスト</h3>
+
+<p>セッション1で、直前に自分が書いた小論文から1文を引用できるかを質問した。</p>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>項目</th><th>LLM群</th><th>検索エンジン群</th><th>脳のみ群</th></tr>
+<tr><td class="n">S1 正確な引用に失敗</td><td class="cv">83.3% / 15名</td><td class="cv">11.1% / 2名</td><td class="cv">11.1% / 2名</td></tr>
+<tr><td class="n">S1 正しい引用を産出</td><td class="cv">0名</td><td class="cv">15名</td><td class="cv">16名</td></tr>
+</table>
+</div>
+
+<p>セッション1のLLM群と他2群の差は有意である。検索エンジン群と脳のみ群の間に差はない。</p>
+
+<p>セッション4では、ツールを取り上げられた元LLM群9名のうち7名が引用を再現できず、正しい引用を産出できたのは1名のみだった。元脳のみ群でChatGPTを使った9名は、引用困難が1名、正しい引用の産出が7名である。</p>
+
+<h3>所有感</h3>
+
+<p>セッション1で完全な所有感を申告したのは、LLM群が18名中9名、検索エンジン群が18名中6名、脳のみ群が18名中16名。所有感なしと答えたのはLLM群の3名のみである。セッション4では元LLM群の9名中5名が完全な所有感を申告し、所有感ゼロの回答は消えた。</p>
+
+<h3>人間の採点者とAI採点者の差</h3>
+
+<p>AI採点者は統計的に4点付近に評価が集中した。人間の教師は ChatGPT指標を除く全項目でAI採点者より低い点を付けている。不一致が最も大きいのは Uniqueness と Content で、AI採点者が4点を付けた小論文に教師が1点や2点を付ける事例があった。Structure and Organization は両者とも3点前後で一致している。</p>
+
+<p>教師2名の記述によると、言語と構造はほぼ完璧なのに個人的な洞察や明確な主張を欠く小論文が全トピックに存在し、定型表現の反復からAI使用が明白に見えた。教師はこれらを soulless と評し、個性と創造性を客観的な完成度より重視した結果、content と uniqueness の点は低く、language と structure と accuracy の点は高くなった。</p>
+
+<h3>セッション4のEEG</h3>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>群</th><th>結果</th></tr>
+<tr><td class="n">LLM-to-Brain</td><td>高周波帯域の結合が低下。p &lt; 0.001 の高有意クラスタがゼロ。一方でtheta帯とdelta帯の活動は持続しており、著者はこれを認知的努力の継続と解釈し、ただしその努力は複雑な推論より想起に向いていたと述べる</td></tr>
+<tr><td class="n">Brain-to-LLM</td><td>alpha、beta、theta、delta の全帯域でネットワーク全体の方向性結合が上昇。ただし論文が明示する比較対象はLLM群のセッション1から3であって、脳のみ群自身の過去セッションではない</td></tr>
+</table>
+</div>
+
+<p>同じ論文の結果サマリー表には、Brain-to-LLM のセッション4の結合について、初心者パターンに戻りはしなかったがセッション3の脳のみ群の水準にも達しなかった、alpha帯ではセッション2と3のピーク、beta帯ではセッション3のピークより有意に低く、セッション1より高い中間状態であった、と記載がある。</p>
+
+<p>著者が挙げる上昇の説明は3つである。新奇性と認知負荷。外部からの提案を内的な計画と突き合わせる統合コスト。タスクスイッチングによる一時的なネットワーク再拡張。思考が深まったという説明ではない。著者は、熟達すると結合は再び収束すると述べている。</p>
+
+<h3>認知的負債の定義</h3>
+
+<div class="dg">
+<div class="h">cognitive debt</div>
+<div class="b">外部システムへの反復的依存が、自立的思考に必要な努力を要する認知プロセスを置き換える状態</div>
+</div>
+
+<p>短期的に労力を先送りし、長期的には批判的探究の減退、操作されやすさの増大、創造性の低下という形で費用が発生する、と論文は定義する。</p>
+
+<h2>04 著者自身が示した限界<span class="en">limitations</span></h2>
+
+<p>論文の Limitations and Future Work に挙がっている項目を列挙する。</p>
+
+<ol>
+<li>被験者数が限られ、近接した少数の大規模教育機関という特定の地理的領域からの募集である</li>
+<li>ChatGPTのみを用いた。他のLLMへ直接一般化できない</li>
+<li>テキスト以外のモダリティを扱っていない</li>
+<li>小論文執筆を着想生成・執筆などのサブタスクに分割していない。先行研究では分割が一般的である</li>
+<li>結合パターンのみを報告し、スペクトルパワーの変化を検討していない。EEGの空間解像度では海馬などの深部の寄与を特定できず、次はfMRIが必要である</li>
+<li>所見は文脈依存で、教育場面での小論文執筆に限定される</li>
+<li>記憶保持、創造性、文章の流暢さに対する縦断的影響は今後の課題である</li>
+</ol>
+
+<p>加えて、LLM-to-Brain群が狭い範囲の着想を反復した所見について、論文自身がより大きなサンプルによる確認が必要な予備的所見であると明記している。</p>
+
+<h3>報道機関への注意喚起</h3>
+
+<p>公式サイト brainonllm.com のFAQに、用語に関する明示的な要請がある。</p>
+
+<p>LLMが人を dumber にしていると言ってよいかという問いへの回答は No であり、stupid、dumb、brain rot、harm、damage、passivity、trimming といった語を使わないよう求めている。理由は、これらの語が論文に登場せず研究を誤って表すためである。追加で避けるよう求めている表現は、brain scans、LLMs make you stop thinking、impact negatively、brain damage、terrifying findings。brain scans を避ける理由は、本研究がEEGによる計測であり脳の画像撮影ではないためである。</p>
+
+<p>著者は、多くの報道と読者がLLMを使って論文を要約しており、それがノイズを増やしていると指摘し、人間による読解とフィードバックを求めている。</p>
+
+<div class="note w">
+<strong>要請は守られていない。</strong>Axios は2025年7月2日に Does ChatGPT make your brain rot? という見出しで記事を出している。brain rot は著者が明示的に使用を拒否した語である。
+</div>
+
+<h2>05 第三者による批判<span class="en">commentary</span></h2>
+
+<p>一次情報として確認できた正式な学術的批判は1本である。Stanković, M., Hirche, E., Kollatzsch, S., Doetsch, J. N. Commentary on Kosmyna et al. arXiv:2601.00856、2025年12月29日投稿。所属はウィーン大学心理学部臨床・健康心理学部門およびドレスデン工科大学臨床心理学・心理療法研究所。これも未査読である。</p>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>指摘</th><th>内容</th></tr>
+<tr><td class="n">検出力の不足</td><td>G*Power による事前検出力分析を、反復測定分散分析、効果量 f = 0.25、α = .05、検出力 .95、3群4測定、相関 r = .50 の条件で行うと、必要な被験者数は約159名となる。実際の54名では検出力が不足し、セッション4やトピック別解析ではさらに低い</td></tr>
+<tr><td class="n">多重比較の扱い</td><td>電極ペアごとに反復測定分散分析を実施したと読めるが、本数を1000に制限した基準が示されず、分散分析の結果自体が報告されていない。FDR補正の水準も示されず、p値はα = 0.05 とのみ比較されている</td></tr>
+<tr><td class="n">EEGからの結論の妥当性</td><td>本研究における有意な結合とは、ある群で他群より有意に強い電極間の方向性結合を指す。したがって結合の絶対的な強さについては結論を導けない。有意な結合の数が少ない群を、全体の神経活動が弱い群と解釈すべきではない</td></tr>
+<tr><td class="n">報告の不整合</td><td>42ページの図12に本文の群構成と整合しない群が現れる。セッション4のインタビュー結果について、37ページの記述と考察の記述が逆方向であり、この食い違いは解釈を大きく変える</td></tr>
+<tr><td class="n">透明性の不足</td><td>全セッションを完了したのが55名であるのに解析対象は54名で、除外基準が示されていない。F統計量がしばしば省略されている</td></tr>
+</table>
+</div>
+
+<p>3番目の指摘は本記事の照合に直結する。活動が落ちたという表現自体が、研究の操作的定義を超えている。</p>
+
+<h2>06 Microsoft Research と Carnegie Mellon の調査<span class="en">the other study</span></h2>
+
+<p>同じ文脈で引用されることが多いもう1本は、こちらは査読済みである。</p>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>項目</th><th>内容</th></tr>
+<tr><td class="n">論文名</td><td>The Impact of Generative AI on Critical Thinking: Self-Reported Reductions in Cognitive Effort and Confidence Effects From a Survey of Knowledge Workers</td></tr>
+<tr><td class="n">著者</td><td>Hao-Ping (Hank) Lee ほか7名。第一著者は Carnegie Mellon University、残る6名は Microsoft Research Cambridge</td></tr>
+<tr><td class="n">発表</td><td>CHI 2025、2025年4月26日から5月1日、横浜。査読付き国際会議</td></tr>
+<tr><td class="n">対象</td><td>週1回以上業務で生成AIを使うナレッジワーカー319名。各人が実例を3件ずつ提供し計936件</td></tr>
+</table>
+</div>
+
+<p>主要な結果は4点である。</p>
+
+<ol>
+<li>批判的思考を行使したと自己申告した割合は936件中555件、59.29%。残る約4割では批判的思考を働かせていないと回答した</li>
+<li>生成AIへの信頼が高いほど批判的思考の行使が減る。AIがそのタスクをこなす能力への信頼は、6つの認知活動のうち Application を除く5つで、知覚された労力と負の相関を示した</li>
+<li>自分の専門性への自信が高いほど批判的思考を行使する</li>
+<li>認知的労力が移行する。Knowledge と Comprehension では情報の収集から情報の検証へ、Application では問題解決からAI出力の統合へ、Analysis・Synthesis・Evaluation ではタスクの実行から監督へ移る。著者はこの監督役を stewardship と呼ぶ</li>
+</ol>
+
+<p>労力が減ったと答えた割合は、Knowledge 72%、Comprehension 79%、Application 69%、Analysis 72%、Synthesis 76%、Evaluation 55% である。</p>
+
+<p>著者が自ら記載する限界のうち最も重いのは1点目である。被験者が、生成AIを使う労力の減少と、生成AIを使う際の批判的思考の労力の減少を混同する場面が観察された。混同はAIの出力に満足しているときに起きやすい。相関と自己申告に基づく知見であり、因果関係を示す設計ではない。</p>
+
+<h2>07 日本語で流通した解説<span class="en">the Japanese column</span></h2>
+
+<p>日本語圏でこの研究を広めた記事を特定した。</p>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>項目</th><th>内容</th></tr>
+<tr><td class="n">題名</td><td>生成AIに依存すると脳活動が低下したまま戻らない――脳波測定から導かれたショッキングな観察結果とそれを回避するための方法</td></tr>
+<tr><td class="n">著者</td><td>小林雅一 KDDI総合研究所 リサーチフェロー</td></tr>
+<tr><td class="n">公開日</td><td>2025年7月7日</td></tr>
+</table>
+</div>
+
+<p>記事の主張は7点に整理できる。MIT Media Lab が2025年6月に公開した研究を主たる根拠とし、54名が3条件で小論文を書きEEGで alpha、theta、gamma などの脳波を計測したと紹介する。生成AIを使った群は神経接続などの脳活動で最低の成績を示したとする。この結果が意欲や主体性、集中力の欠如を示唆するとする。反復利用により独創性が低下し小論文が魂の抜けたものになったとする。自力作業に戻しても脳活動は抑制されたままだったとする。Microsoft と Carnegie Mellon の調査を補助的に引く。そして推奨は順序であり、まず難しい仕事に自力で取り組みその後に生成AIを組み込むと、最初から依存した者より脳活動と仕事の質が高まったとする。</p>
+
+<p>事実関係のうち照合できる点を先に挙げる。被験者数54名、年齢18歳から39歳、ボストン近郊という記述は論文と一致する。Microsoft/CMU調査の公表時期を2025年3月とする点は、CHI 2025の会期が2025年4月26日からであり、プレプリントの公開時期を指していると考えられる。この調査はオンライン調査であり、面接調査ではない。gamma 帯域への言及は、論文の解析帯域が alpha、beta、theta、delta と high alpha サブ帯域であることと一致しない。</p>
+
+<h2>08 要約の事実照合<span class="en">fact-check</span></h2>
+
+<p>流通している5項目を論文本体と突き合わせる。判定は合致、部分的に合致、不正確の3段階とする。</p>
+
+<div class="claim">
+<div class="q"><span class="vb pt">部分的に合致</span>生成AIに頼って小論文を書いた群は、脳波上、意欲と集中に関わる活動が落ちた</div>
+<p class="a">低下が確認されたのは総dDTF量である。LLM群は脳のみ群に対し、低周波の意味処理系で最大55%低い。検索エンジン群は34%から48%低い。この部分は論文の記述どおりである。</p>
+<p class="a">ただし計測されたのは意欲でも集中でもない。報告されているのは電極間の方向性結合の強度であり、スペクトルパワーの解析すら実施していない。帯域と解釈の対応は論文中で次のように与えられる。alpha帯は内的な意味探索と創造的要求で上昇するとされ、theta帯とdelta帯は記憶符号化と遠隔領域をまたぐ深い統合に対応づけられ、beta帯は能動的な認知的関与と運動計画に対応づけられる。意欲と集中はこのリストに含まれない。</p>
+<p class="a">さらに Stanković ほかが指摘するとおり、本研究の有意な結合は群間比較で相対的に強い結合を指すため、結合数の少ない群を全体の神経活動が弱い群と読むことはできない。活動が落ちたという表現自体が操作的定義を超えている。</p>
+</div>
+
+<div class="claim">
+<div class="q"><span class="vb pt">部分的に合致</span>自分の頭だけで書いた群の方が脳は活発で、独創性も高かった</div>
+<p class="a">独創性に対応する評価軸は存在する。英語教師2名が Uniqueness を0から5の6段階で採点した。教師の記述では、AI使用が明白な小論文は content と uniqueness の点が低く、language と structure と accuracy の点が高い。HAPPINESSトピックでは、教師がLLM群の Uniqueness を平均値かそれ以下に置いたと記述されている。</p>
+<p class="a">ただし論文が提示しているのはトピックごとのz-score散布図であり、群 × Uniqueness の平均差に対する有意性検定の結果は報告されていない。脳のみ群の独創性が高かったという命題は、教師の定性記述とトピック別の図から読み取れる傾向であって、検定された結論ではない。</p>
+<p class="a">脳は活発という部分は、1項目目と同じ理由で、結合指標の話を活発さに読み替えている。</p>
+</div>
+
+<div class="claim">
+<div class="q"><span class="vb ok">合致</span>AIに頼り切った人は、その後自分で考えても活動が低いまま戻りにくかった</div>
+<p class="a">LLM-to-Brain群は9名である。セッション4で7名が引用を再現できず、正しい引用を産出できたのは1名だった。EEGでは、深い意味符号化と出典記憶の想起に関連する前頭頭頂同期を欠き、p &lt; 0.001 の高有意クラスタがゼロだった。</p>
+<p class="a">ただし著者は、この群が完全に関与を失ったわけではないと明記している。theta帯とdelta帯の活動は持続しており、認知的努力は継続していたが複雑な推論ではなく想起に向いていたと解釈する。論文の表現は、AIを使った経験がこの軌跡を modulate するというもので、戻らないという表現は使っていない。4か月、最大4セッション、群あたり9名という設計で、恒久的な非可逆性は検証できない。</p>
+</div>
+
+<div class="claim">
+<div class="q"><span class="vb ng">不正確</span>先に自力で考え、あとからAIを補助輪にすると活動はさらに上がり、質も上がった</div>
+<p class="a">Brain-to-LLM群のセッション4で、全帯域にわたるネットワーク全体の方向性結合の上昇が観測されたのは事実である。</p>
+<p class="a">しかし論文が明示する比較対象は、LLM群のセッション1から3である。脳のみ群自身の過去セッションではない。同じ論文の結果サマリー表には、セッション4の結合はセッション3の脳のみ群の水準に達せず、alpha帯ではセッション2と3のピーク、beta帯ではセッション3のピークより有意に低く、セッション1より高い中間状態であったと記載がある。自力だけの時よりさらに上がったのではなく、自力だけの時のピークより下がっている。</p>
+<p class="a">著者が挙げる上昇の説明も、新奇性と認知負荷、外部提案と内的計画の統合コスト、タスクスイッチングによる一時的なネットワーク再拡張であり、思考が深まったという説明ではない。</p>
+<p class="a">質も上がったという部分について。セッション4は人間の教師とAI採点者の双方から高く採点される場合が多いと記載があり、FORETHOUGHTトピックでは Brain-to-LLM群のセッション4が教師から標準偏差1.5近い高評価を得たと記述されている。ただしこの記述はトピック単位で、群 × セッションの採点平均に対する検定結果は報告されていない。さらに同じ記述が LLM-to-Brain群にも当てはまる。論文の結果サマリーは、LLM-to-Brain群の小論文もAI採点者と人間の教師の双方から高く採点されたと述べている。セッション4の高評価は、ツールの順序に固有の効果とは言い切れない。</p>
+<p class="a">加えて Stanković ほかは、セッション4のインタビュー結果について37ページの記述と考察の記述が逆方向であると指摘している。この箇所の数値は論文内部で整合していない可能性がある。</p>
+</div>
+
+<div class="claim">
+<div class="q"><span class="vb ok">研究の結論として存在する</span>AIは思考の代替ではなく、思考を深める道具にすべきだ</div>
+<p class="a">論文の Cognitive Deficiency 節に、バランスの取れたアプローチが望ましく、定型的な支援にAIを使いつつ中核的な認知操作は本人に行わせるべきだという記述がある。考察の末尾には、学習者が十分な自己駆動の認知的努力を経るまでAI統合を遅らせる教育モデルをこれらの所見は支持するという記述がある。</p>
+<p class="a">ただし論文の表現は規範的な主張ではなく条件つきの示唆である。初期学習段階では完全な神経的関与が不可欠であり、後期の練習段階では選択的なAI支援が余計な認知負荷を減らしうると、学習段階で条件を分けている。思考を深める道具にすべきだという一般命題より限定的である。論文は自身を preliminary guide と位置づけており、未査読でもある。</p>
+</div>
+
+<h3>照合の総括</h3>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>要約項目</th><th>判定</th><th>主たる問題</th></tr>
+<tr><td class="n">意欲と集中が落ちた</td><td>部分的に合致</td><td>計測対象は神経結合の強度であり、意欲も集中も測っていない</td></tr>
+<tr><td class="n">自力群は脳が活発で独創性も高い</td><td>部分的に合致</td><td>Uniquenessは採点されたが群間差の検定結果は未報告</td></tr>
+<tr><td class="n">AI依存後は低いまま戻りにくい</td><td>合致</td><td>9名の予備的所見。theta帯とdelta帯は維持されている</td></tr>
+<tr><td class="n">自力の後にAIで活動も質も上がる</td><td>不正確</td><td>比較対象はLLM群であり、自力群のピークより低い</td></tr>
+<tr><td class="n">AIは思考を深める道具にすべき</td><td>研究の結論として存在</td><td>学習段階で条件が分かれる。未査読</td></tr>
+</table>
+</div>
+
+<h2>09 反対側のエビデンス<span class="en">counter-evidence</span></h2>
+
+<p>生成AIの利用が学習成果を向上させたことを示す査読済みの研究も存在する。片方だけを見ると判断を誤る。</p>
+
+<h3>トルコの高校生RCT</h3>
+
+<p>Bastani, H., Bastani, O., Sungu, A. ほか 2025年。Generative AI without guardrails can harm learning: Evidence from high school mathematics. PNAS, 122(26)。査読済み。</p>
+
+<p>トルコの大規模高校、9年生から11年生、50クラス、約1,000名を対象とした無作為化比較試験である。3条件を設けた。AIなしの対照群。GPT-4ベースの標準的なChatGPT類似インタフェースの GPT Base。教師の助言を踏まえた安全策を組み込んだ GPT Tutor。</p>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>条件</th><th>練習問題の成績</th><th>アクセス剥奪後の試験</th></tr>
+<tr><td class="n">GPT Base</td><td class="cv">48%向上</td><td class="cv">対照群より17%低い</td></tr>
+<tr><td class="n">GPT Tutor</td><td class="cv">127%向上</td><td>負の学習効果はおおむね緩和</td></tr>
+</table>
+</div>
+
+<p>この研究はAIが学習を助ける側と害する側の両方のエビデンスになる。設計次第で符号が反転する点が、MITの研究との接続点である。</p>
+
+<h3>ハーバードの物理課程RCT</h3>
+
+<p>Kestin, G., Miller, K., Klales, A. ほか 2025年。Scientific Reports。査読済み。194名を対象とした無作為化比較試験で、実施は2023年秋。対照条件は受動的な講義ではなく、物理教育で最良実践とされるアクティブラーニングの授業である。専用設計のAIチューターを自宅で使った群は、学習ゲインの中央値が2倍以上となった。効果量は0.73から1.3標準偏差。所要時間は60分に対し49分である。</p>
+
+<div class="dg">
+<div class="h">2件のRCTに共通する条件</div>
+<div class="b">専用設計のAIチューターが汎用チャットインタフェースと異なる結果をもたらす。MITの研究が用いたのは汎用のChatGPTである</div>
+</div>
+
+<h3>2026年のEEG追試</h3>
+
+<p>Khurana, K., Liew, A. 2026年6月。arXiv:2606.26579。未査読のプレプリント。14歳から18歳の48名を対象とした被験者内計画で、AIとの3つの関わり方が前頭のEEGスペクトル活動に影響するかを検討した。行動指標は Initiation、Processing、Stress の3特性で、3つの指標すべてにモード間の有意差が出た。</p>
+
+<p>一方でEEGデータは統計的有意性に達しなかった。著者は記述的なパターンが観察されたにとどまり、さらなる検討を要すると述べている。この結果は、少人数のEEGで生成AIの認知的影響を検出することの難しさを示し、MITの研究の検出力に対する批判と整合する。</p>
+
+<h2>10 認知的オフローディングの系譜<span class="en">lineage</span></h2>
+
+<p>この論点は新しくない。</p>
+
+<div class="tbl-scroll">
+<table>
+<tr><th>研究</th><th>年</th><th>内容</th></tr>
+<tr><td class="n">Sparrow, Liu, Wegner. Science</td><td class="cv">2011</td><td>後から情報にアクセスできると分かっている条件では、情報そのものの想起が低下し、その情報がどこにあるかの記憶が向上する。技術を介した transactive memory として説明された。Google効果の原典</td></tr>
+<tr><td class="n">Risko, Gilbert. Trends in Cognitive Sciences</td><td class="cv">2016</td><td>認知的オフローディングを、課題の情報処理要求を変えて認知的負荷を減らすための身体的行為の使用と定義する総説。Google効果をより広い現象の一事例として位置づける</td></tr>
+<tr><td class="n">Gerlich. Societies</td><td class="cv">2025</td><td>英国で669名を調査し666名を分析。AIツールの頻繁な利用と批判的思考能力の間に負の相関を見いだし、認知的オフローディングが媒介要因であるとする。自己申告と横断調査であり因果の方向は特定できない</td></tr>
+</table>
+</div>
+
+<p>MITの研究が述べる cognitive debt は、この系譜の延長にある概念整理である。電卓、GPS、検索エンジンに対して繰り返された論点が、生成AIで再提起されている。</p>
+
+<p>論文自身もこの系譜を冒頭で明示している。文字に対するソクラテスの異議、印刷に対するトリテミウスの異議、電卓に対する算術教師の異議、インターネットに対する異議を列挙し、生成AIをその最新例として位置づける。同時に Bainbridge 1983 の automation の皮肉を引き、定型業務の機械化が判断力を鍛える機会を奪うという論点が根拠のない懸念ではないと述べている。</p>
+
+<h2>関連<span class="en">related</span></h2>
+
+<div class="rel">
+<a href="harmony_itoh.html"><div class="rt">伊藤計劃『ハーモニー』読書ノート</div><div class="rs">健康と感情を社会が管理する世界の設定を、流通している要約と照合する</div></a>
+<a href="genocidal_organ_itoh.html"><div class="rt">伊藤計劃『虐殺器官』読書ノート</div><div class="rs">虐殺の文法という作中理論の科学的評価と、現実の生成AI影響工作の実測</div></a>
+<a href="../027_cinema/all_the_presidents_men_1976.html"><div class="rt">大統領の陰謀（1976）考察ノート</div><div class="rs">裏取りの手続きを138分かけて見せた記録。2026年のニュース接触データと突き合わせる</div></a>
+</div>
+
+<h2>出典<span class="en">sources</span></h2>
+
+<h3>一次情報</h3>
+<ol class="refs">
+<li>Kosmyna, N. ほか 2025. Your Brain on ChatGPT. arXiv:2506.08872. 未査読プレプリント <a href="https://arxiv.org/abs/2506.08872">arxiv.org</a></li>
+<li>同論文の公式サイト <a href="https://www.brainonllm.com/">brainonllm.com</a></li>
+<li>同論文の公式FAQ。著者による用語の注意喚起と査読状況 <a href="https://www.brainonllm.com/faq">brainonllm.com/faq</a></li>
+<li>MIT Media Lab 公式出版物ページ <a href="https://www.media.mit.edu/publications/your-brain-on-chatgpt/">media.mit.edu</a></li>
+<li>Stanković, M. ほか 2025. Commentary on Kosmyna et al. arXiv:2601.00856. 未査読プレプリント <a href="https://arxiv.org/abs/2601.00856">arxiv.org</a></li>
+<li>Lee, H.-P. ほか 2025. The Impact of Generative AI on Critical Thinking. CHI 2025. 査読済み <a href="https://www.microsoft.com/en-us/research/publication/the-impact-of-generative-ai-on-critical-thinking-self-reported-reductions-in-cognitive-effort-and-confidence-effects-from-a-survey-of-knowledge-workers/">microsoft.com</a></li>
+<li>同論文PDF本文 <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2025/01/lee_2025_ai_critical_thinking_survey.pdf">microsoft.com</a></li>
+</ol>
+
+<h3>日本語解説</h3>
+<ol class="refs" start="8">
+<li>小林雅一 2025-07-07. 生成AIに依存すると脳活動が低下したまま戻らない. KDDI総合研究所 <a href="https://rp.kddi-research.jp/atelier/column/archives/5443">rp.kddi-research.jp</a></li>
+</ol>
+
+<h3>周辺研究</h3>
+<ol class="refs" start="9">
+<li>Bastani, H. ほか 2025. Generative AI without guardrails can harm learning. PNAS 122(26). 査読済み <a href="https://www.pnas.org/doi/10.1073/pnas.2422633122">pnas.org</a></li>
+<li>Kestin, G. ほか 2025. AI tutoring outperforms in-class active learning. Scientific Reports. 査読済み <a href="https://www.researchgate.net/publication/392839220_AI_tutoring_outperforms_in-class_active_learning_an_RCT_introducing_a_novel_research-based_design_in_an_authentic_educational_setting">researchgate.net</a></li>
+<li>Sparrow, B., Liu, J., Wegner, D. M. 2011. Google Effects on Memory. Science 333(6043). 査読済み <a href="https://www.science.org/doi/10.1126/science.1207745">science.org</a></li>
+<li>Gerlich, M. 2025. AI Tools in Society. Societies 15(1). 査読済み <a href="https://www.mdpi.com/2075-4698/15/1/6">mdpi.com</a></li>
+<li>Khurana, K., Liew, A. 2026. An exploratory behavioral and electroencephalographic study. arXiv:2606.26579. 未査読プレプリント <a href="https://arxiv.org/abs/2606.26579">arxiv.org</a></li>
+</ol>
+
+<h3>報道</h3>
+<ol class="refs" start="14">
+<li>Axios 2025-07-02. Does ChatGPT make your brain rot? <a href="https://www.axios.com/2025/07/02/chatgpt-brain-mit-study-dumber">axios.com</a></li>
+</ol>
+
+<h2>未確認事項<span class="en">open items</span></h2>
+
+<ol class="refs">
+<li>MITの研究が査読誌へ掲載される見込みと時期。arXivのv2は2025年12月31日で journal reference は付与されていない</li>
+<li>Stanković ほかのコメンタリーに対する著者らの公式な回答</li>
+<li>MITの研究における Uniqueness スコアの群間平均差と、その有意性検定の結果</li>
+<li>セッション1の引用テストで、LLM群の83.3%が正確な引用に失敗したという記述と、0名が正しい引用を産出したという記述の定義の差</li>
+<li>FAQに記載のある vibe coding に関する続編研究の公開状況。2026年10月3日時点で公開を確認できなかった</li>
+</ol>
+
+<footer class="pg">調査日 2026-10-03 / 査読状況を各研究に明記した。数値はすべて論文本体またはその公式ページから取得している。</footer>
+
+</div>
+</body>
+</html>

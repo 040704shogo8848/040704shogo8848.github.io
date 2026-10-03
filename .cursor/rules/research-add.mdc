@@ -1,0 +1,97 @@
+---
+description: リサーチ記事を1本足す時の実務。出力先の選び方、各セクションの追加スクリプト、教科書の章への追記手順、書き方の基準。新しい記事を書く／既存章を伸ばす時に必ず読む
+alwaysApply: true
+---
+
+# リサーチ記事の追加手順
+
+repo.mdc の不変条件が前提。ここは「1本足す」時の実務だけを書く。
+
+## 0. 書く前に既存を読む
+
+- 同じ主題の章か記事が既にあることが多い。`grep -rl <キーワード> 010_research` を必ず回す
+- 教科書の章（`010_research/<sec>/data/chapters/*.md`）の末尾には `## 残っている問い` がある。
+  主題が重なるなら、新規記事ではなく **その章への追記** か **残っている問いに答える記事** にする
+- 既存ページとは相対リンクで接続する。同じ数字を別ページに二重に書かない
+
+## 1. 出力先の選び方
+
+| 主題 | セクション | 形 | 追加手順 | 仕様 |
+|---|---|---|---|---|
+| 単一企業、スタートアップ事例、M&Aテーゼ | 011_company | `reports/{slug}_research_YYMMDD.html` | `bin/add-report.sh` | `_tools/report-template.md` |
+| 業界構造、サプライチェーン、技術地図、複数社比較 | 014_industry | `reports/{slug}_YYMMDD.html` | `bin/add-report.sh` | CSSは `reports/paper_pulp_ai_impact_260924.html` を流用 |
+| 動画、記事、ポッドキャスト1本の整文 | 015_net | `pages/{slug}_YYMMDD.html` | `bin/add-net.sh` | CSSは `index.html` と同じ |
+| 人物の生涯長編 | 019_people | `people/{sei_mei}_YYMMDD.html` | `bin/add-person.sh` | `_tools/person-template.md` |
+| 訪問国のプロファイル | 013_geo | `countries/{iso}.html` | `bin/build-geo.js` | `_tools/geo-template.md`。本人が行った国だけ |
+| 都市 | 013_geo/cities | 外部ビルド | このリポでは触らない | |
+| 地図・地域横断の特集 | 013_geo | `{slug}.html` | 手順 3 | CSSは `africa_cities_infrastructure_brief.html` |
+| 政治、金融、科学、計算の主題 | 012/016/017/018 | 章への追記 or 特集 | 手順 2 / 3 | |
+| 自分のプロダクト構想 | 030_ideas | `{slug}/index.html` | 手順 3 相当 | |
+
+迷ったら 014_industry。個社の損益を主語にするなら 011_company。
+
+## 2. 教科書の章に追記する
+
+1. `010_research/<sec>/data/chapters/NN_slug.md` を編集する。front matter は触らない
+2. 本文に `## 見出し` を足す。位置は `## この章の要点` の前
+3. 答えた問いは `## 残っている問い` から外し、新しく分かった未解決は同じ節に足す
+4. `## 出典` は番号付き行。既存の末尾番号から続ける。本文側は `[出典](URL)` で紐づける
+5. 強調は `==文==`。章の判断1〜2箇所だけに使う。数字ごとに付けない
+6. 図は `<figure class="tb-fig">` + inline SVG + `<figcaption>`。開始タグと終了タグを行頭に置く
+7. `node _tools/build-textbook.mjs` → `node _tools/build-nav.mjs` → `node _tools/leak-check.mjs <変更した .md と .html>`
+8. `git add` は変更したファイルだけ。`git add -A` は使わない
+
+## 3. 特集ページを足す（012 / 016 / 013 / 030）
+
+1. 既存の特集ページの `<style>` と骨格をそのまま流用する
+   （例: `016_finance/long_horizon_capital.html`、`012_politics/intelligence_agencies.html`）
+2. `<body>` 直後に `<!-- snav:start --><!-- snav:end -->` を空で置く
+3. セクションの `index.html` の `.feat-list` 内、`<!-- feature:end -->` の前に `<a class="feat-item">` を1つ足す
+   （`.feat-t` = 題名、`.feat-d` = 要約。要約の末尾に「出典N件」）
+4. `node _tools/normalize-html.mjs <file>` → `node _tools/build-nav.mjs` → `node _tools/leak-check.mjs <file> <index.html>`
+5. 変更ファイルだけ `git add`、commit、push
+
+## 4. スクリプト経由の追加（011 / 014 / 015 / 019）
+
+```bash
+010_research/014_industry/bin/add-report.sh 010_research/014_industry/reports/<file>.html <<'JSON'
+{"title":"…","date":"YYYY-MM-DD","tags":["…"],"summary":"…","source":"Desk research"}
+JSON
+```
+
+- 正規化、nav注入、一覧更新、leak-check、commit、push まで一気に走る。**並列で呼ばない**
+- 011 と 019 のエントリ形は各テンプレに書いてある。非上場の `ticker`/`market` は `null`
+- 出力を `| head` に通さない。途中で死ぬ
+- 画像を使うなら `014_industry/images/YYMMDD_slug.jpg` に置き、**先に別コミットで入れる**
+
+## 5. 書き方の基準
+
+文体は既存ページに揃える。読む前に同セクションの直近1本を開くこと。
+
+- 記事と章は「である」調。修辞的な体言止めと強い対比表現は使わない
+- 数字は半角、漢数字を使わない。日本語は全角、英数字は半角。絵文字なし、グラデーションなし
+- 冒頭で結論を出す（`lead` と `callout`）。読み終わる前に判断が分かる形にする
+- 全ての数値に単位・通貨・時点。出典は本文の `<sup>` と末尾の `ol.sources` を1対1で対応させる
+- 確認できない項目は N/A と書く。推定は「推定」、報道間で割れる数値は両方書く
+- ヘッドライン数値は2ソース以上。1ソースしか無ければ `single-source` と明示
+- プレースホルダー（XX,XXX 等）禁止。実数か N/A のどちらか
+- 比較は基準を明示する。「多い／高い」だけで終わらせない。数と割合を分けて書く。「かなり」「多く」等の副詞を使わない
+- 構造の主張を代理指標で支えない。主張と証拠は同じ文書の中で完結させる
+- 利害を持つ当事者の発信を扱う時は、原文の章立てを借りない。「誰が得をするか」を独立した章に立てる
+- 章末は `残っている問い` と `出典`。答えられなかったことを隠さない
+- `</body>` 直前に `facts` ブロック（`report-template.md` の形式）
+
+## 6. 書かないもの
+
+- 本人への示唆、教訓、「〜に活かせる」の類。事実と分析だけ置く
+- 社内の会話、社内ツール、クライアント名、第三者の私生活、ローカルの絶対パス
+- 存命人物について出典のない評価や逸話
+- 個人の投資判断、保有銘柄
+
+## 7. 完了時に返すもの
+
+1. 公開URL
+2. 追加・変更したファイルのパス
+3. 出典件数と、`single-source` / `estimated` / `disputed` の件数
+4. 残っている問い（本文に書いたものをそのまま）
+5. 取れなかったデータと、その理由（403、有料、非開示 など）

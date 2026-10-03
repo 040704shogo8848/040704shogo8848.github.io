@@ -1,0 +1,73 @@
+---
+description: このリポジトリの不変条件。ビルドなしの素HTML・自動生成ナビ・publicリポという3つの前提を壊さないための規約
+alwaysApply: true
+---
+
+# 040704shogo8848.github.io の規約
+
+久保田翔己の公開サイト。まず README.md を読むこと。ここはREADMEに書かれた
+前提のうち、破ると復旧が面倒なものだけを再掲する。
+
+## 1. ビルドシステムを導入しない
+
+素の HTML を番号付きディレクトリに置くだけの構成。`file://` で直接開いても
+全ページ動くことが要件。
+
+- npm install / package.json / バンドラ / フレームワークを持ち込まない
+- 外部CDN依存を増やさない
+- `_tools/*.mjs` は Node 標準APIのみで書く
+
+「モダン化」「最適化」の名目でこの前提を崩す提案はしない。
+
+## 2. ナビゲーションを手で編集しない
+
+各HTMLの `snav` マーカーに挟まれた区間は `_tools/build-nav.mjs` の生成物。
+
+- ナビを変える時は `_tools/nav.json` を編集して `node _tools/build-nav.mjs`
+- HTML内のナビ部分を直接書き換えない。次回のビルドで消える
+- `node _tools/build-nav.mjs --check` で同期を検査できる
+
+## 3. 自動生成ファイルを直接編集しない
+
+| 真実のソース | 生成物（編集禁止） |
+|---|---|
+| `010_research/011_company/data/reports.json` | `manifest.js` |
+| `_tools/nav.json` | 各HTMLの snav 区間 |
+
+## 4. 記事の追加はスクリプトを通す
+
+企業リサーチ記事を手でディレクトリに置かない。正規化・nav注入・manifest更新・
+leak-check が `bin/add-report.sh` の中で走る。
+
+```bash
+010_research/011_company/bin/add-report.sh <生成した.html> <<'JSON'
+{...}
+JSON
+```
+
+このスクリプトを**並列実行しない**。`reports.json` は read-modify-write なので
+同時に走るとエントリが消える。
+
+## 5. public リポジトリである
+
+push した内容は履歴から消えない。以下をこのリポのファイルに書かない。
+
+- 社内 Slack / Notion / tl;dv の内容、クライアント固有の非公開情報
+- ローカル絶対パス（`/Users/...`）
+- APIキー・トークン・認証情報
+- 第三者の個人情報
+
+`.githooks/pre-push` が leak-check・nav同期・verify-report を push 前に走らせる。
+クローン直後は `git config core.hooksPath .githooks` が一度だけ必要。
+
+## 6. コミットは指示があった時だけ
+
+`git commit` / `git push` を自動で実行しない。pre-push フックが走るため、
+意図しない push は検査失敗で止まるか、止まらなければ公開されてしまう。
+
+## 7. 書式
+
+- ファイル名の日付は `YYMMDD` 形式、区切りは `_`（ハイフン不使用）
+- HTMLは絵文字を使わない。シンプルで清潔なデザインを保つ
+- 新しい記事の書式は `_tools/report-template.md` / `geo-template.md` /
+  `person-template.md` に従う

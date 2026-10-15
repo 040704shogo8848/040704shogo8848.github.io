@@ -1,0 +1,346 @@
+<!--meta
+{"chapter": 0, "part": "序章", "title": "化学と人間生活", "thesis": "化学は物質を分けて組み替えて新しい価値を生む技術である。金属・プラスチック・洗剤・肥料・医薬品・半導体・電池はどれも物質の組み替えから生まれた産業である。化学基礎はその組み替えを粒子と量の2つの視点で説明する科目である。", "verify": {"date": "2026-10-15", "checked": 46, "match": 35, "fixed": 5, "unconfirmed": 6}}
+-->
+<p>この教科書は化学の知識がない状態から大学入学共通テスト化学基礎で50点満点を取るところまでを積み上げる。序章は個別の知識に入る前の全体像である。化学が人類の暮らしと産業をどう作り変えてきたかを確認し続く章が何を扱うかを1枚の地図にまとめる。</p>
+<p>共通テストでこの範囲から直接問われるのは3種類である。身近な物質とその用途の対応・金属やプラスチックなどの製法と性質・実験や探究の手順である。2025年度の第2問は空気の成分の発見という化学史を題材にした。化学史と産業の知識は第2問の読解の速さに直結する。</p>
+
+<h2 id="s1">化学は物質を組み替える技術である</h2>
+<p>化学は物質の構造・性質・変化を扱う自然科学である。物理学が力や運動やエネルギーを扱い生物学が生命を扱うのに対し化学は<strong>物質そのもの</strong>を扱う。物質がどの粒子からできているか・粒子がどう結びついているか・結びつきを組み替えると何が生じるかが化学の問いである。</p>
+<p>化学の成果は2つの操作に分けられる。1つは混ざり合った物質から目的の物質を<strong>分ける</strong>操作である。鉱石から金属を取り出す製錬や原油からガソリンを取り出す分留がこれにあたる。もう1つは原子の結びつきを<strong>組み替える</strong>操作である。空気中の窒素からアンモニアを作る反応や石油からプラスチックを作る反応がこれにあたる。<strong class="hit">化学の産業はどれもこの2つの操作の組み合わせで説明できる</strong>。</p>
+<p>次の図は人類が物質を分けて組み替えてきた歴史の主な出来事である。銅の製錬は紀元前5000年ごろまでさかのぼる。一方でプラスチック・合成洗剤・合成肥料・リチウムイオン電池はいずれも20世紀に入ってから生まれた。化学が産業の規模で暮らしを変えたのは19世紀末からの約140年の出来事である。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 230" role="img" aria-label="物質を分けて組み替えてきた歴史の年表">
+  <defs><marker id="ah00a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker></defs>
+  <line x1="30" y1="115" x2="700" y2="115" stroke="var(--ink)" stroke-width="1.5" marker-end="url(#ah00a)"/>
+  <line x1="100" y1="105" x2="112" y2="125" stroke="var(--ink)" stroke-width="1.5"/>
+  <line x1="108" y1="105" x2="120" y2="125" stroke="var(--ink)" stroke-width="1.5"/>
+  <g>
+    <circle cx="60" cy="115" r="7" fill="var(--warm)"/>
+    <circle cx="160" cy="115" r="7" fill="var(--warm)"/>
+    <circle cx="240" cy="115" r="7" fill="var(--accent)"/>
+    <circle cx="320" cy="115" r="7" fill="var(--cool)"/>
+    <circle cx="400" cy="115" r="7" fill="var(--accent)"/>
+    <circle cx="480" cy="115" r="7" fill="var(--cool)"/>
+    <circle cx="560" cy="115" r="7" fill="var(--cool)"/>
+    <circle cx="640" cy="115" r="7" fill="var(--warm)"/>
+  </g>
+  <g stroke="var(--line)" stroke-width="1">
+    <line x1="60" y1="60" x2="60" y2="106"/><line x1="160" y1="124" x2="160" y2="160"/>
+    <line x1="240" y1="60" x2="240" y2="106"/><line x1="320" y1="124" x2="320" y2="160"/>
+    <line x1="400" y1="60" x2="400" y2="106"/><line x1="480" y1="124" x2="480" y2="160"/>
+    <line x1="560" y1="60" x2="560" y2="106"/><line x1="640" y1="124" x2="640" y2="160"/>
+  </g>
+  <g font-size="13" text-anchor="middle" font-weight="600" fill="var(--ink)">
+    <text x="60" y="34">前5000年ごろ</text>
+    <text x="240" y="34">1897年</text>
+    <text x="400" y="34">1913年</text>
+    <text x="560" y="34">1935年</text>
+    <text x="160" y="182">1886年</text>
+    <text x="320" y="182">1907年</text>
+    <text x="480" y="182">1917年</text>
+    <text x="640" y="182">1991年</text>
+  </g>
+  <g font-size="12" text-anchor="middle" fill="var(--sub)">
+    <text x="60" y="52">銅の製錬</text>
+    <text x="240" y="52">アスピリン合成</text>
+    <text x="400" y="52">アンモニア工場</text>
+    <text x="560" y="52">ナイロン合成</text>
+    <text x="160" y="200">アルミ電解製錬</text>
+    <text x="320" y="200">合成樹脂の特許</text>
+    <text x="480" y="200">合成洗剤</text>
+    <text x="640" y="200">Liイオン電池</text>
+  </g>
+  <g font-size="12" fill="var(--muted)">
+    <text x="30" y="222">橙＝金属と電池　青＝医薬と肥料　緑＝合成材料</text>
+  </g>
+</svg>
+<figcaption>横軸の間隔は年数に比例しない。紀元前と1886年の間を二重線で省略している。1907年はベークライトの特許出願の年である。1991年はリチウムイオン電池が初めて製品として発売された年である。</figcaption>
+</figure>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">分離は選手の選抜で化学反応は球団の合併である</p>
+<p>分離 ／ 同じ選手を選び出すだけで選手は変わらない。反応 ／ 合併後の球団は名称も戦い方も別物になる。水素と酸素から生じた水は燃えない。</p>
+</aside>
+
+<h2 id="s2">金属の製錬 酸素を外す技術</h2>
+<p>金属の多くは自然界で単独では存在しない。酸素や硫黄と結びついた鉱石として地中に存在する。鉱石から金属を取り出す操作を<strong>製錬</strong>と呼ぶ。製錬の中心は金属と結びついた酸素を外す反応である。この反応を<strong>還元</strong>と呼ぶ。還元の仕組みは第2編の酸化と還元の章で扱う。</p>
+<p>最も古い製錬は銅である。セルビアのベロヴォデ遺跡では紀元前5000年ごろの銅の製錬の跡が見つかっている。銅は鉱石を木炭と一緒に加熱するだけで取り出せる。鉄はより高い温度を要するため銅より遅れて普及した。現代の製鉄では鉄鉱石の酸化鉄とコークスを高炉に入れる。コークスから生じた一酸化炭素が酸化鉄から酸素を奪い鉄が残る。</p>
+<div class="fx">Fe<sub>2</sub>O<sub>3</sub> ＋ 3CO → 2Fe ＋ 3CO<sub>2</sub><small>酸化鉄の酸素が一酸化炭素へ移り二酸化炭素として出ていく。化学反応式の作り方は第2編で扱う。</small></div>
+<p>アルミニウムは酸素との結びつきが強く炭素では酸素を外せない。<strong class="hit">1886年にホールとエルーが独立に電気分解による製錬法を発明しアルミニウムは初めて大量生産できる金属になった</strong>。この方法では融解した酸化アルミニウムに大電流を流す。現代でも1 kgのアルミニウムを作るのに13〜15 kWhの電力を要する。アルミニウムが電気の缶詰と呼ばれる理由である。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 250" role="img" aria-label="鉄とアルミニウムの製錬の流れ">
+  <defs><marker id="ah00b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--sub)"/></marker></defs>
+  <text x="20" y="26" font-size="13" fill="var(--muted)">鉄　炭素で酸素を外す</text>
+  <text x="20" y="146" font-size="13" fill="var(--muted)">アルミニウム　電気で酸素を外す</text>
+  <g font-size="13" text-anchor="middle">
+    <rect x="20" y="40" width="160" height="60" rx="8" fill="none" stroke="var(--warm)" stroke-width="2"/>
+    <text x="100" y="66" font-weight="600">鉄鉱石</text><text x="100" y="86" fill="var(--sub)">Fe₂O₃</text>
+    <rect x="280" y="40" width="160" height="60" rx="8" fill="var(--dim)" stroke="var(--line)"/>
+    <text x="360" y="66" font-weight="600">高炉</text><text x="360" y="86" fill="var(--sub)">CO が O を奪う</text>
+    <rect x="540" y="40" width="160" height="60" rx="8" fill="var(--warm)"/>
+    <text x="620" y="66" font-weight="600" fill="#fff">鉄 Fe</text><text x="620" y="86" fill="#fff">CO₂ が出ていく</text>
+    <rect x="20" y="160" width="160" height="60" rx="8" fill="none" stroke="var(--cool)" stroke-width="2"/>
+    <text x="100" y="186" font-weight="600">ボーキサイト</text><text x="100" y="206" fill="var(--sub)">Al₂O₃ を精製</text>
+    <rect x="280" y="160" width="160" height="60" rx="8" fill="var(--dim)" stroke="var(--line)"/>
+    <text x="360" y="186" font-weight="600">融解して電気分解</text><text x="360" y="206" fill="var(--sub)">13〜15 kWh/kg</text>
+    <rect x="540" y="160" width="160" height="60" rx="8" fill="var(--cool)"/>
+    <text x="620" y="186" font-weight="600" fill="#fff">アルミニウム Al</text><text x="620" y="206" fill="#fff">1886年に工業化</text>
+  </g>
+  <g stroke="var(--sub)" stroke-width="2" fill="none">
+    <line x1="186" y1="70" x2="272" y2="70" marker-end="url(#ah00b)"/>
+    <line x1="446" y1="70" x2="532" y2="70" marker-end="url(#ah00b)"/>
+    <line x1="186" y1="190" x2="272" y2="190" marker-end="url(#ah00b)"/>
+    <line x1="446" y1="190" x2="532" y2="190" marker-end="url(#ah00b)"/>
+  </g>
+  <text x="229" y="62" font-size="12" text-anchor="middle" fill="var(--sub)">コークス</text>
+  <text x="489" y="182" font-size="12" text-anchor="middle" fill="var(--sub)">大電流</text>
+  <text x="360" y="244" font-size="12" text-anchor="middle" fill="var(--muted)">どちらも金属から酸素を外す反応である</text>
+</svg>
+<figcaption>鉄は炭素から生じる一酸化炭素で酸素を外せる。アルミニウムは酸素との結びつきが強く電気のエネルギーで外す。電力量は実際の工場の値で理論上の必要量はその半分程度である。</figcaption>
+</figure>
+
+<aside class="an an-biz"><b>会計で言えば</b>
+<p class="an-h">アルミニウムの変動費は原料ではなく電気代である</p>
+<p>1 kg ごとに13〜15 kWh の電力が要る。電気料金が上がった日本では製錬が採算を失い水力の安い地域に製錬が集まる。</p>
+</aside>
+
+<h2 id="s3">プラスチック・洗剤・医薬品 組み替えて作る物質</h2>
+<p>20世紀の化学は自然界に存在しない物質を大量に作れるようになった。代表がプラスチックである。1907年にベークランドがフェノールとホルムアルデヒドから合成樹脂ベークライトを作り特許を出願した。天然の原料を一切使わない最初の合成樹脂である。1935年にはデュポン社のカロザースがナイロンを合成し1938年に製品化された。</p>
+<p>プラスチックは小さな分子を数千個から数万個つないだ巨大な分子である。現在の主な原料は石油である。2023年の世界のプラスチック生産量は約4億1,380万トンで化石資源由来がその90.4%を占める。原油を分留して得たナフサを分解し小さな分子を作りそれをつなぐ。分留は第1章で扱う。</p>
+<p>洗剤も組み替えの産物である。セッケンは油脂と水酸化ナトリウムから作る。<strong>合成洗剤</strong>は第一次世界大戦中のドイツで生まれた。海上封鎖でセッケンの原料の油脂が不足し1917年に石炭由来の原料から洗浄成分が合成された。セッケンと合成洗剤の分子はどちらも水になじむ部分と油になじむ部分を1つの分子の両端にもつ。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 270" role="img" aria-label="洗剤の分子が油汚れを取り囲んで水中へ運ぶ">
+  <text x="20" y="24" font-size="13" fill="var(--muted)">洗剤分子1個</text>
+  <text x="330" y="24" font-size="13" fill="var(--muted)">油汚れを取り囲んだ粒</text>
+  <line x1="40" y1="90" x2="170" y2="90" stroke="var(--warm)" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="186" cy="90" r="16" fill="var(--cool)"/>
+  <text x="105" y="122" font-size="12.5" text-anchor="middle" fill="var(--warm)">油になじむ部分</text>
+  <text x="186" y="150" font-size="12.5" text-anchor="middle" fill="var(--cool)">水になじむ部分</text>
+  <line x1="186" y1="108" x2="186" y2="136" stroke="var(--line)"/>
+  <rect x="300" y="36" width="410" height="226" rx="10" fill="none" stroke="var(--cool)" stroke-dasharray="5 4"/>
+  <text x="690" y="58" font-size="12.5" text-anchor="end" fill="var(--cool)">水</text>
+  <circle cx="505" cy="136" r="38" fill="var(--warm)" opacity=".35"/>
+  <text x="505" y="141" font-size="13" text-anchor="middle" font-weight="600">油</text>
+  <g stroke="var(--warm)" stroke-width="5" stroke-linecap="round">
+    <line x1="505" y1="98" x2="505" y2="70"/><line x1="543" y1="136" x2="571" y2="136"/>
+    <line x1="505" y1="174" x2="505" y2="202"/><line x1="467" y1="136" x2="439" y2="136"/>
+    <line x1="532" y1="109" x2="552" y2="89"/><line x1="532" y1="163" x2="552" y2="183"/>
+    <line x1="478" y1="163" x2="458" y2="183"/><line x1="478" y1="109" x2="458" y2="89"/>
+  </g>
+  <g fill="var(--cool)">
+    <circle cx="505" cy="62" r="10"/><circle cx="579" cy="136" r="10"/><circle cx="505" cy="210" r="10"/><circle cx="431" cy="136" r="10"/>
+    <circle cx="558" cy="83" r="10"/><circle cx="558" cy="189" r="10"/><circle cx="452" cy="189" r="10"/><circle cx="452" cy="83" r="10"/>
+  </g>
+  <text x="330" y="250" font-size="12.5" fill="var(--sub)">外側が水になじむ部分なので粒ごと水に分散する</text>
+</svg>
+<figcaption>洗剤の分子は油になじむ部分を油汚れへ向け水になじむ部分を外側の水へ向けて並ぶ。油汚れは分子に包まれた粒として水中へ運ばれる。分子の構造の詳細は化学で扱う。</figcaption>
+</figure>
+
+<aside class="an an-lv"><b>恋愛で言えば</b>
+<p class="an-h">洗剤は水と油を仲直りさせず油を囲んで連れ出す友人である</p>
+<p>水と油 ／ 混ざらない2つのグループ。洗剤 ／ 両方と親しい友人で大勢で油を囲み水の側へ連れ出す。</p>
+<p class="an-x">油は粒のまま散らばるだけで水と1つの物質にはならない。</p>
+</aside>
+
+<p>医薬品は分子の構造を少し変えて性質を変える技術の典型である。ヤナギの樹皮に含まれる成分から作るサリチル酸は解熱と鎮痛の作用をもつが胃を荒らす。1897年にバイエル社の化学者ホフマンがサリチル酸の構造の一部を組み替えたアセチルサリチル酸を合成し1899年にアスピリンとして発売された。1928年にはフレミングが青カビからペニシリンを発見し感染症の治療を変えた。</p>
+
+<h2 id="s4">肥料とハーバー・ボッシュ法 空気からパンを作る</h2>
+<p>植物が育つには窒素が要る。空気の体積の約78%は窒素 N<sub>2</sub> だが植物は空気中の窒素を直接は利用できない。N<sub>2</sub> の2個の窒素原子は三重結合という非常に強い結合で結びついているからである。19世紀末まで窒素肥料はチリ硝石や鳥の糞の堆積物など限られた天然資源に頼っていた。</p>
+<p>1909年にドイツのハーバーが窒素と水素からアンモニアを合成する実験に成功した。BASF社のボッシュがこれを工業化し1913年にオッパウ工場で生産が始まった。この方法を<strong>ハーバー・ボッシュ法</strong>と呼ぶ。鉄を主成分とする触媒を使い約500 ℃と約2×10<sup>7</sup> Pa の高温高圧で反応させる。</p>
+<div class="fx">N<sub>2</sub> ＋ 3H<sub>2</sub> → 2NH<sub>3</sub><small>窒素1分子と水素3分子からアンモニア2分子が生じる。この係数の比は第2編の化学反応式と量的関係で使う。</small></div>
+<p>アンモニアは硫酸アンモニウムや尿素などの窒素肥料の原料になる。<strong class="hit">合成された窒素肥料によって養われている人口は2008年時点の推計で世界人口の48%に達する</strong>。その一方でこの方法は世界のエネルギー消費の1〜2%を使う。原料の水素の主な供給源はメタンを主成分とする天然ガスである。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 270" role="img" aria-label="ハーバー・ボッシュ法の流れと世界人口に占める割合">
+  <defs><marker id="ah00c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--sub)"/></marker></defs>
+  <g font-size="13" text-anchor="middle">
+    <rect x="20" y="30" width="130" height="50" rx="8" fill="none" stroke="var(--cool)" stroke-width="2"/>
+    <text x="85" y="52" font-weight="600">空気</text><text x="85" y="70" fill="var(--sub)">N₂ 約78%</text>
+    <rect x="20" y="100" width="130" height="50" rx="8" fill="none" stroke="var(--warm)" stroke-width="2"/>
+    <text x="85" y="122" font-weight="600">天然ガス</text><text x="85" y="140" fill="var(--sub)">H₂ を取り出す</text>
+    <rect x="230" y="55" width="190" height="70" rx="8" fill="var(--dim)" stroke="var(--line)"/>
+    <text x="325" y="80" font-weight="600">反応塔</text>
+    <text x="325" y="98" fill="var(--sub)">鉄触媒 約500 ℃</text>
+    <text x="325" y="115" fill="var(--sub)">約2×10⁷ Pa</text>
+    <rect x="500" y="55" width="200" height="70" rx="8" fill="var(--accent)"/>
+    <text x="600" y="84" font-weight="600" fill="#fff">アンモニア NH₃</text>
+    <text x="600" y="104" fill="#fff">肥料と硝酸の原料</text>
+  </g>
+  <g stroke="var(--sub)" stroke-width="2" fill="none">
+    <path d="M156 55 L222 80" marker-end="url(#ah00c)"/>
+    <path d="M156 125 L222 100" marker-end="url(#ah00c)"/>
+    <line x1="426" y1="90" x2="492" y2="90" marker-end="url(#ah00c)"/>
+  </g>
+  <text x="20" y="190" font-size="13" fill="var(--muted)">世界人口のうち合成窒素肥料で養われる割合　2008年の推計</text>
+  <rect x="20" y="202" width="326" height="34" fill="var(--accent)"/>
+  <rect x="346" y="202" width="354" height="34" fill="var(--dim)" stroke="var(--line)"/>
+  <text x="183" y="224" font-size="13" text-anchor="middle" fill="#fff" font-weight="600">48%</text>
+  <text x="523" y="224" font-size="13" text-anchor="middle" fill="var(--sub)">52%</text>
+  <text x="20" y="258" font-size="12" fill="var(--sub)">合成肥料がなければ養えない人口</text>
+  <text x="700" y="258" font-size="12" text-anchor="end" fill="var(--sub)">それ以外</text>
+</svg>
+<figcaption>空気の窒素と天然ガス由来の水素を高温高圧で反応させてアンモニアを作る。下の帯はエリスマンらの2008年の推計である。推計は世界平均の値で地域による差を含まない。</figcaption>
+</figure>
+
+<aside class="an an-lv"><b>男女で言えば</b>
+<p class="an-h">アンモニア合成は三重の絆で結ばれた2人を別れさせる工程である</p>
+<p>N<sub>2</sub> ／ 自然には別れない2人組。高温・高圧・触媒で引き離すと窒素原子はそれぞれ水素原子3個と結びつく。</p>
+<p class="an-x">触媒は仲介者ではなく近道であり反応の前後で自身は変化しない。</p>
+</aside>
+
+<aside class="an an-biz"><b>スタートアップで言えば</b>
+<p class="an-h">ハーバーは試作品でボッシュは量産工場である</p>
+<p>卓上の装置は1時間に約125 mL ／ オッパウ工場は1914年に1日あたり約20トン。両者をつないだのは高温高圧の水素で脆くならない容器という別の発明である。</p>
+</aside>
+
+<aside class="an an-rw"><b>現実世界</b>
+<p>アンモニアは肥料だけでなく硝酸を経て火薬の原料にもなる。第一次世界大戦で海上封鎖を受けたドイツはチリ硝石を輸入できなかったがハーバー・ボッシュ法で火薬の生産を続けた。ハーバーは1918年にノーベル化学賞を受けたが毒ガス兵器の開発を主導した人物でもある。同じ化学の知識が食料と兵器の両方を生んだ。ボッシュは高圧化学の開発で1931年にノーベル化学賞を受けた。</p>
+</aside>
+
+<h2 id="s5">現実世界の化学 電気・半導体・電池</h2>
+<p>現代の産業で化学の比重が最も大きい分野は電気と情報である。半導体チップの材料はケイ素 Si である。ケイ素は地殻に酸素の次に多い元素だが自然界では二酸化ケイ素などの化合物として存在する。これを還元して取り出し不純物を除いて純度を上げる。</p>
+<p>半導体用の多結晶シリコンの純度は<strong>11N</strong>と表される。Nは nine の頭文字で9が11個並ぶ 99.999999999% を意味する。不純物の割合は 10<sup>−11</sup> つまり1,000億個の原子のうち1個である。このケイ素を作る代表的な方法がシーメンス法である。ケイ素を塩化水素と反応させてトリクロロシラン SiHCl<sub>3</sub> という液体の化合物にし蒸留で何度も精製してから水素で還元して再びケイ素に戻す。精製の中心は第1章で扱う蒸留である。</p>
+
+<div class="tb-kpi">
+<div><b>11<small>N</small></b><i>半導体用シリコンの純度</i><em>99.999999999%</em></div>
+<div><b>13〜15<small>kWh/kg</small></b><i>アルミニウム製錬の電力</i><em>実際の工場の値</em></div>
+<div><b>48<small>%</small></b><i>合成窒素肥料で養われる人口</i><em>2008年の推計</em></div>
+<div><b>4.1<small>億t</small></b><i>世界のプラスチック生産</i><em>2023年</em></div>
+</div>
+
+<p>電池も化学そのものである。電池は物質の間で電子が移動する反応を電流として外に取り出す装置である。1985年に吉野彰が現在の形のリチウムイオン電池の特許を出願し1991年にソニーが製品として発売した。吉野は2019年にウィッティンガム・グッドイナフとともにノーベル化学賞を受けた。電池の原理は第15章で扱う。</p>
+
+<aside class="an an-biz"><b>投資で言えば</b>
+<p class="an-h">素材企業はゴールドラッシュのつるはし売りである</p>
+<p>チップや電池の勝者が入れ替わっても高純度シリコン・電解液・正極材はどの勝者も買う。</p>
+</aside>
+
+<aside class="an an-rw"><b>現実世界</b>
+<p>電力と化学は互いに依存している。アルミニウム製錬・ソーダ工業・半導体用シリコンの精製はいずれも大量の電力を使う。その一方で電力を蓄える電池・太陽電池のシリコン・送電線のアルミニウムと銅はすべて化学工業の製品である。電力の価格が化学製品の原価を動かし化学製品の性能が電力の使い方を変える。</p>
+</aside>
+
+<h2 id="s6">物質の探究と化学基礎の地図</h2>
+<p>化学の知識は観察と実験から作られてきた。現象を観察し仮説を立て仮説を確かめる実験を計画し結果を考察して仮説を修正する。この手順を<strong>探究</strong>と呼ぶ。共通テストは知識だけでなくこの手順そのものを問う。実験の目的に合う器具を選ぶ問い・結果のグラフから結論を導く問い・条件を1つだけ変えた比較実験を設計する問いがその例である。</p>
+<p>化学基礎は序章と2つの編からなる。第1編は<strong>物質の構成</strong>で物質が何からできているかを扱う。第2編は<strong>物質の変化とその利用</strong>で物質がどう変わるかを量とともに扱う。2つの編をつなぐのが物質量 mol である。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 330" role="img" aria-label="化学基礎の2つの編と主な単元の地図">
+  <defs><marker id="ah00d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker></defs>
+  <rect x="20" y="20" width="300" height="296" rx="10" fill="none" stroke="var(--warm)" stroke-width="2"/>
+  <rect x="400" y="20" width="300" height="296" rx="10" fill="none" stroke="var(--cool)" stroke-width="2"/>
+  <text x="170" y="46" font-size="14" font-weight="700" text-anchor="middle" fill="var(--warm)">第1編　物質の構成</text>
+  <text x="550" y="46" font-size="14" font-weight="700" text-anchor="middle" fill="var(--cool)">第2編　物質の変化とその利用</text>
+  <g font-size="13" fill="var(--ink)">
+    <text x="36" y="80">1 純物質と混合物・分離と精製</text>
+    <text x="36" y="108">2 元素・単体・同素体・検出</text>
+    <text x="36" y="136">3 物質の三態と熱運動</text>
+    <text x="36" y="164">4 原子の構造・同位体</text>
+    <text x="36" y="192">5 電子配置と周期表</text>
+    <text x="36" y="220">6 イオン結合</text>
+    <text x="36" y="248">7 共有結合と分子</text>
+    <text x="36" y="276">8 金属結合と結晶</text>
+    <text x="416" y="80">9 原子量・分子量・物質量</text>
+    <text x="416" y="108">10 溶液の濃度</text>
+    <text x="416" y="136">11 化学反応式と量的関係</text>
+    <text x="416" y="164">12 酸と塩基・pH</text>
+    <text x="416" y="192">13 中和反応と中和滴定</text>
+    <text x="416" y="220">14 酸化と還元</text>
+    <text x="416" y="248">15 イオン化傾向・電池・製錬</text>
+  </g>
+  <line x1="326" y1="166" x2="392" y2="166" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#ah00d)"/>
+  <text x="360" y="156" font-size="12.5" text-anchor="middle" fill="var(--accent)" font-weight="600">mol</text>
+  <text x="360" y="188" font-size="12" text-anchor="middle" fill="var(--sub)">粒子を</text>
+  <text x="360" y="204" font-size="12" text-anchor="middle" fill="var(--sub)">数で扱う</text>
+</svg>
+<figcaption>第1編は粒子の種類と結びつき方を扱う。第2編は粒子の数を物質量で数え反応の前後の量を計算する。数字はこの教科書の章番号である。最後に終章を置く。</figcaption>
+</figure>
+
+<h3>共通テスト化学基礎の構成</h3>
+<p>理科の基礎を付した科目は物理基礎・化学基礎・生物基礎・地学基礎の4つから2つを選び合わせて60分で解く。配点は各50点で2科目で100点である。時間の配分は受験者に任される。化学基礎に使える時間は約30分である。</p>
+<p>2025年度の化学基礎は大問2題であった。第1問は全範囲から基本事項を問う小問集合である。第2問は1つの題材を掘り下げる総合問題で2025年度は空気の成分の発見と質量保存の法則を題材にした。2021年度の配点は第1問30点・第2問20点であった。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>大問</th><th>形式</th><th>求められる力</th><th>この教科書の対応</th></tr></thead>
+<tbody>
+<tr><td>第1問</td><td>小問集合</td><td>用語の正確な定義・物質の性質・基本の計算</td><td>各章の本文と確認問題</td></tr>
+<tr><td>第2問</td><td>1つの題材の総合問題</td><td>初見の資料の読解・実験の考察・複数段階の計算</td><td>各章の現実世界の節と探究の問い</td></tr>
+</tbody></table></div>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">第1問は打者一巡で第2問は1人の強打者との長い打席である</p>
+<p>第1問 ／ 毎回異なる打者で範囲の穴が1つあれば失点する。第2問 ／ 初見の球種に粘って考え抜く。30分では第1問を速く片づけ第2問に時間を残す。</p>
+</aside>
+
+<h2 id="s7">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ 金属の製錬</div>
+<p class="qz-q">金属の製錬に関する記述として最も適当なものを1つ選べ。</p>
+<ol><li>鉄は鉄鉱石を電気分解して取り出すのが現代の主な方法である</li><li>アルミニウムは酸化アルミニウムを炭素と加熱するだけで容易に取り出せる</li><li>アルミニウムは融解した酸化アルミニウムを電気分解して取り出し大量の電力を要する</li><li>銅は20世紀に入ってから製錬されるようになった</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。アルミニウムは酸素との結びつきが強く炭素では酸素を外せないため電気分解で製錬する。1 は誤りで鉄は高炉でコークス由来の一酸化炭素を使って還元する。2 は 3 と逆の内容である。4 は誤りで銅の製錬は紀元前5000年ごろの遺跡で確認されている。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ ハーバー・ボッシュ法</div>
+<p class="qz-q">ハーバー・ボッシュ法に関する記述として誤りを含むものを1つ選べ。</p>
+<ol><li>原料は窒素と水素である</li><li>鉄を主成分とする触媒を用いる</li><li>生成するアンモニアは窒素肥料の原料になる</li><li>空気中の窒素は結合が弱いため常温常圧で水素と速やかに反応する</li></ol>
+<details><summary>解答と解説</summary><div>正解は 4 である。N<sub>2</sub> の窒素原子どうしは三重結合で強く結びついており常温常圧ではほとんど反応しない。そのため約500 ℃と約2×10<sup>7</sup> Pa の高温高圧と触媒を用いる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 物質と用途</div>
+<p class="qz-q">物質とその主な用途の組み合わせとして適当でないものを1つ選べ。</p>
+<ol><li>アンモニア ・ 窒素肥料の原料</li><li>高純度のケイ素 ・ 半導体の基板</li><li>アルミニウム ・ 飲料缶や送電線</li><li>ナイロン ・ 解熱鎮痛剤</li></ol>
+<details><summary>解答と解説</summary><div>正解は 4 である。ナイロンは合成繊維であり衣料や漁網などに使われる。解熱鎮痛剤として使われる代表的な合成医薬品はアセチルサリチル酸すなわちアスピリンである。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ 純度の計算</div>
+<p class="qz-q">純度11Nのケイ素がケイ素原子 6.0×10<sup>23</sup> 個を含むとき含まれる不純物の原子の数として最も近いものを1つ選べ。ただし不純物の割合は原子の個数の割合で 10<sup>−11</sup> とする。</p>
+<ol><li>6.0×10<sup>11</sup> 個</li><li>6.0×10<sup>12</sup> 個</li><li>6.0×10<sup>13</sup> 個</li><li>6.0×10<sup>34</sup> 個</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。6.0×10<sup>23</sup> × 10<sup>−11</sup> ＝ 6.0×10<sup>12</sup> である。純度が 99.999999999% でも1 mol 規模のケイ素には約6兆個の不純物原子が含まれる。6.0×10<sup>23</sup> は第2編で扱うアボガドロ定数の値である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 洗剤の働き</div>
+<p class="qz-q">セッケンや合成洗剤が油汚れを落とす仕組みとして最も適当なものを1つ選べ。</p>
+<ol><li>油を分解して水と二酸化炭素に変える</li><li>水になじむ部分と油になじむ部分を1つの分子にもち油を取り囲んで水中に分散させる</li><li>油を加熱して蒸発させる</li><li>油と反応して水に溶ける別の物質に変える</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。洗剤の分子は油になじむ部分を油に向け水になじむ部分を外側に向けて油を包む。油そのものは化学変化をしていない。1 と 4 は化学変化を述べており洗浄の仕組みとは異なる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 化学基礎の範囲</div>
+<p class="qz-q">次の学習内容のうち第2編 物質の変化とその利用 で扱うものを1つ選べ。</p>
+<ol><li>同素体の区別</li><li>原子の電子配置</li><li>中和滴定による濃度の決定</li><li>蒸留装置の組み立て</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。中和滴定は酸と塩基の反応の量的関係を使う操作で第2編で扱う。1 と 2 と 4 は物質が何からできているかを扱う第1編の内容である。</div></details></div>
+
+<h2 id="s8">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+化学の産業は物質を分ける操作と原子の結びつきを組み替える操作の組み合わせである。<br>
+製錬は金属から酸素を外す反応で鉄は炭素で外しアルミニウムは電気分解で外す。<br>
+ハーバー・ボッシュ法は N<sub>2</sub> ＋ 3H<sub>2</sub> → 2NH<sub>3</sub> を鉄触媒と高温高圧で進め窒素肥料の原料を作る。<br>
+洗剤は水になじむ部分と油になじむ部分を1つの分子にもつ。<br>
+半導体用シリコンの純度は11Nで精製の中心は蒸留である。<br>
+共通テスト化学基礎は50点で大問2題からなり他の基礎科目1つと合わせて60分で解く。</div>
+
+<h2 id="s9">残っている問い</h2>
+<ul>
+<li class="tb-vnote">2025年度の化学基礎の大問ごとの配点は大学入試センターの公表資料で確認できなかった。本文の第1問30点・第2問20点は2021年度の値である。</li>
+<li class="tb-vnote">合成窒素肥料で養われる人口の割合は推計の方法で異なる。スミルは2000年時点で約40%とし2019年時点で約38億人とする推計もある。本文の48%はエリスマンらの2008年の値である。</li>
+<li class="tb-vnote">ハーバーの実験装置の生産量1時間に約125 mL とオッパウ工場の1日約20トンは二次資料による値である。一次資料では確認していない。</li>
+<li class="tb-vnote">最初の合成洗剤の年は1916年とする資料と1917年とする資料がある。本文はドイツ化学会の資料に従い1917年とした。</li>
+<li class="tb-vnote">アスピリンの発明者をホフマンとする説に対しアイヒェングリュンの指示によるものとする再評価がある。</li>
+<li class="tb-vnote">日本国内のアルミニウム新地金の製錬が撤退した年は出典で確定していない。</li>
+</ul>
+
+<h2 id="s10">出典</h2>
+<ol>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 解説 理科編 理数編 — https://www.mext.go.jp/a_menu/shotou/new-cs/1407074.htm</li>
+<li>大学入試センター 大学入学共通テスト — https://www.dnc.ac.jp/kyotsu/</li>
+<li>リセマム 共通テスト2025 理科の分析速報 — https://resemom.jp/article/2025/01/19/80341.html</li>
+<li>東進 共通テスト2021 化学基礎 — https://www.toshin.com/kyotsutest/2021/about_kagaku-kiso.html</li>
+<li>Radivojević et al. On the origins of extractive metallurgy Belovode — https://discovery.ucl.ac.uk/id/eprint/1380193/</li>
+<li>Hall–Héroult process — Wikipedia — https://en.wikipedia.org/wiki/Hall%E2%80%93H%C3%A9roult_process</li>
+<li>Leo Hendrick Baekeland and the Invention of Bakelite — American Chemical Society — https://www.acs.org/education/whatischemistry/landmarks/bakelite.html</li>
+<li>Nylon — Wikipedia — https://en.wikipedia.org/wiki/Nylon</li>
+<li>Plastics the fast Facts 2024 — Plastics Europe — https://plasticseurope.org/knowledge-hub/plastics-the-fast-facts-2024/</li>
+<li>Laundry detergent — Wikipedia — https://en.wikipedia.org/wiki/Laundry_detergent</li>
+<li>Felix Hoffmann — Bayer — https://www.bayer.com/en/about-us/history/biographies/felix-hoffmann</li>
+<li>Haber process — Wikipedia — https://en.wikipedia.org/wiki/Haber_process</li>
+<li>1913 First Ammonia Synthesis Plant — BASF — https://www.basf.com/global/de/who-we-are/history/chronology/1902-1924/1913.html</li>
+<li>Erisman et al. How a century of ammonia synthesis changed the world — Nature Geoscience 2008 — https://www.iai.int/admin/site/sites/default/files/uploads/2008.Erisman-et-al_NatureGeo.pdf</li>
+<li>Our World in Data Population fed by Haber-Bosch fertilizers — https://ourworldindata.org/how-many-people-does-synthetic-fertilizer-feed</li>
+<li>Carl Bosch — Wikipedia — https://en.wikipedia.org/wiki/Carl_Bosch</li>
+<li>Polysilicon — Wikipedia — https://en.wikipedia.org/wiki/Polycrystalline_silicon</li>
+<li>Akira Yoshino — Britannica — https://www.britannica.com/biography/Yoshino-Akira</li>
+</ol>

@@ -1,0 +1,1309 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>化学基礎 計算ドリル</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a;
+    --accent:#2563EB; --line:#E5E2DA; --card:#fff;
+    --ok:#3B7F58; --ng:#B3261E;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.85;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 22px 90px}
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+  sub,sup{font-size:.68em;line-height:0}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  h1{font-size:27px;margin:0 0 4px;letter-spacing:-.01em}
+  .romaji{font-size:12px;color:var(--muted);letter-spacing:.08em;margin-bottom:20px}
+  .lead{color:var(--sub);font-size:14px;margin:14px 0 0}
+
+  h2{font-size:16.5px;margin:44px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .en{display:block;font-size:10.5px;color:var(--muted);font-weight:400;
+    letter-spacing:.09em;text-transform:uppercase}
+  h3{font-size:14px;margin:22px 0 6px}
+  h3 .sm{font-size:11px;color:var(--muted);font-weight:400}
+
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px;margin:18px 0;font-size:13.5px;color:var(--sub)}
+  .note a,.fb a,.tipbody a{color:var(--accent);text-decoration:none}
+
+  /* ---- setup ---- */
+  .pick{margin:18px 0 0}
+  .pick .lb{font-size:11.5px;color:var(--muted);letter-spacing:.04em;margin-bottom:7px}
+  .seg{display:flex;flex-wrap:wrap;gap:7px}
+  .seg button{font:inherit;font-size:13px;padding:7px 14px;border-radius:8px;
+    border:1px solid var(--line);background:var(--card);color:var(--sub);cursor:pointer;
+    transition:border-color .12s,color .12s}
+  .seg button:hover{border-color:var(--accent);color:var(--accent)}
+  .seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .seg button .s{display:block;font-size:10.5px;opacity:.62;letter-spacing:0}
+  button.go{font:inherit;font-size:14px;font-weight:600;padding:11px 30px;border-radius:8px;
+    border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;margin-top:22px}
+  button.go:hover{opacity:.85}
+  button.t{font:inherit;font-size:12.5px;padding:6px 13px;border-radius:999px;
+    border:1px solid var(--line);background:var(--card);color:var(--sub);cursor:pointer}
+  button.t:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ---- drill ---- */
+  .hide{display:none!important}
+  #drill{margin-top:30px}
+  .head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    font-size:12.5px;color:var(--muted);margin-bottom:6px}
+  .track{height:3px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:26px}
+  .fill{height:100%;width:0;background:var(--ink);transition:width .18s}
+
+  .qbox{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:28px 20px 24px;text-align:center}
+  .ctx{font-size:12.5px;color:var(--muted);margin-bottom:12px;letter-spacing:.02em}
+  .q{font-size:clamp(19px,4.8vw,26px);line-height:1.6;letter-spacing:.01em;
+    font-variant-numeric:tabular-nums}
+  .q .op{color:var(--muted);margin:0 .14em}
+  .q .nm{font-size:.62em;color:var(--sub)}
+  .q u{text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-color:var(--accent)}
+  .desc{margin-top:10px;font-size:14px;color:var(--sub);line-height:1.8}
+  .ask{margin-top:14px;font-size:14px;color:var(--sub)}
+  .ask .u{display:inline-block;margin-left:4px;padding:1px 8px;border-radius:5px;
+    background:#F1EFE8;color:var(--ink);font-size:13px;font-variant-numeric:tabular-nums}
+
+  .ans{margin-top:20px;display:flex;gap:8px;justify-content:center;align-items:stretch}
+  .ans input{font:inherit;font-size:24px;font-variant-numeric:tabular-nums;text-align:center;
+    padding:8px 12px;border-radius:9px;border:1.5px solid var(--line);background:#fff;
+    flex:1 1 auto;min-width:0;max-width:300px;letter-spacing:.02em}
+  .ans input:focus{outline:none;border-color:var(--accent)}
+  .ans button{font:inherit;font-size:14px;padding:0 18px;border-radius:9px;flex:0 0 auto;
+    border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+  .keys{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+  .keys button{font:inherit;font-size:14px;min-width:44px;padding:6px 8px;border-radius:8px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
+    font-variant-numeric:tabular-nums}
+  .keys button:hover{border-color:var(--accent);color:var(--accent)}
+  .choices{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .choices button{font:inherit;font-size:17px;padding:12px 10px;border-radius:9px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;text-align:center}
+  .choices button:hover{border-color:var(--accent)}
+  .choices button .k{display:block;font-size:10.5px;color:var(--muted)}
+  .choices button.right{border-color:var(--ok);background:#F2F8F4}
+  .choices button.wrong{border-color:var(--ng);background:#FCF3F2}
+  .choices button:disabled{cursor:default}
+
+  .fb{margin-top:20px;border-radius:10px;padding:14px 16px;font-size:13.5px;text-align:left}
+  .fb.ok{background:#F2F8F4;border:1px solid #CFE3D6;color:var(--ok)}
+  .fb.ng{background:#FCF3F2;border:1px solid #EBD3D0;color:var(--ng)}
+  .fb b{font-size:15px}
+  .fb .how{margin-top:9px;padding-top:9px;border-top:1px solid rgba(0,0,0,.08);
+    color:var(--sub);font-size:13px;line-height:1.95}
+  .fb .how em,.how2 em{font-style:normal;color:var(--ink);font-variant-numeric:tabular-nums}
+  .fb .how ol{margin:0;padding-left:1.4em}
+  .sub{margin-top:16px;text-align:center;font-size:12px;color:var(--muted)}
+  .sub button{margin:0 4px}
+
+  /* ---- result ---- */
+  .score{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 0}
+  .kpi{flex:1 1 120px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:13px 15px}
+  .kpi .v{font-size:25px;font-variant-numeric:tabular-nums;line-height:1.25}
+  .kpi .k{font-size:11px;color:var(--muted);letter-spacing:.04em}
+  .kpi .n{font-size:11.5px;color:var(--muted)}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.04em}
+  td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.miss{color:var(--ng)}
+  .how2{font-size:12px;color:var(--sub);line-height:1.8;margin-top:3px}
+  .how2 ol{margin:0;padding-left:1.3em}
+
+  details.tip{border-bottom:1px solid var(--line);padding:2px 0}
+  details.tip>summary{cursor:pointer;padding:9px 2px;font-size:14px;list-style:none}
+  details.tip>summary::-webkit-details-marker{display:none}
+  details.tip>summary::before{content:"＋ ";color:var(--muted)}
+  details.tip[open]>summary::before{content:"− "}
+  .tipbody{padding:2px 2px 16px;font-size:13.5px;color:var(--sub);line-height:1.85}
+  .tipbody .ex{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:10px 13px;margin:9px 0;font-variant-numeric:tabular-nums;color:var(--ink);font-size:13px}
+  .tipbody .ex i{font-style:normal;color:var(--muted)}
+  .tipbody ul{margin:6px 0;padding-left:1.3em}
+  .tipbody table{font-size:12.5px}
+  .tipbody td{padding:5px 9px}
+  #d-ref{margin-top:18px;text-align:left}
+
+  .amt{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:6px;margin-top:10px}
+  .amt div{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:6px 8px;text-align:center;font-variant-numeric:tabular-nums}
+  .amt b{display:block;font-size:16px}
+  .amt span{font-size:12px;color:var(--sub)}
+  .const{margin-top:10px;font-size:13px}
+  .const td{padding:5px 9px}
+
+  @media(max-width:430px){
+    #d-meta{display:none}
+    .qbox{padding:22px 13px 20px}
+    .ans input{font-size:21px}
+    .kpi{flex:1 1 calc(50% - 10px)}
+    .choices button{font-size:15px;padding:10px 6px}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a><a href="../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../021_profile/index.html">profile</a><a href="../02A_plan/index.html">plan</a><a href="../023_travel/index.html">travel</a><a href="../027_cinema/index.html">cinema</a><a href="../02B_reading/index.html">reading</a><a href="../024_method/index.html">method</a><a href="../026_handbook/index.html">handbook</a><a href="../025_fitness/index.html">fitness</a><a href="../028_english/index.html">english</a><a href="../029_mental_math/index.html">mental math</a><a href="index.html">chemistry</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../024_method/index.html">method</a>
+    <a class="snav-a" href="../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../028_english/index.html">english</a>
+    <a class="snav-a" href="../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="index.html">chemistry</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../index.html">shogo</a> / personal / <a href="index.html">02C chemistry</a> / drill</div>
+  <h1>化学基礎 計算ドリル</h1>
+  <div class="romaji">CHEMISTRY DRILL</div>
+  <p class="lead" id="lead">化学基礎の計算問題は g・mol・L の単位を掛けて割る操作の組み合わせで解ける。このドリルは物質量・濃度・反応の量的関係・pH・中和滴定を毎回異なる数値で出題する。酸化数と化学式は暗記の確認として出題する。誤答には単位を追った解き方を表示する。記録はこの端末のブラウザに保存する。</p>
+
+  <!-- ================= SETUP ================= -->
+  <section id="setup">
+    <h2>何を練習するか<span class="en">start</span></h2>
+    <div class="pick"><div class="lb">分野</div><div class="seg" id="cats"></div></div>
+    <div class="pick"><div class="lb">問題数</div><div class="seg" id="counts"></div></div>
+    <button class="go" id="b-start">始める</button>
+    <div class="note" id="cat-note"></div>
+  </section>
+
+  <!-- ================= DRILL ================= -->
+  <section id="drill" class="hide">
+    <div class="head">
+      <span class="num" id="d-prog">1 / 20</span>
+      <span id="d-meta"></span>
+      <span class="num" id="d-time">0.0s</span>
+    </div>
+    <div class="track"><div class="fill" id="d-fill"></div></div>
+
+    <div class="qbox">
+      <div id="d-ctx" class="ctx"></div>
+      <div id="d-q" class="q"></div>
+      <div id="d-desc" class="desc"></div>
+      <div id="d-ask" class="ask"></div>
+      <div class="ans" id="d-ansbox">
+        <input id="d-in" type="text" inputmode="decimal" autocomplete="off"
+               autocorrect="off" spellcheck="false" placeholder="答え">
+        <button id="b-ok">確定</button>
+      </div>
+      <div class="keys hide" id="d-keys"></div>
+      <div class="choices hide" id="d-choices"></div>
+      <div id="d-fb" class="fb hide"></div>
+    </div>
+    <div class="sub">
+      <button class="t" id="b-quit">中断する</button>
+      <span id="d-hintnote"></span>
+    </div>
+    <details class="tip" id="d-ref"><summary>原子量と定数を開く</summary><div class="tipbody" id="d-refbody"></div></details>
+  </section>
+
+  <!-- ================= RESULT ================= -->
+  <section id="result" class="hide">
+    <h2>結果<span class="en">result</span></h2>
+    <div class="score" id="r-kpi"></div>
+    <div id="r-missbox"></div>
+    <div style="margin-top:20px">
+      <button class="go" id="b-again">同じ条件でもう一度</button>
+      <button class="t" id="b-redo" style="margin-left:8px">間違えた問題だけ</button>
+      <button class="t" id="b-back" style="margin-left:4px">条件を変える</button>
+    </div>
+  </section>
+
+  <!-- ================= LOG ================= -->
+  <section id="logsec">
+    <h2>記録<span class="en">log</span></h2>
+    <div class="score" id="l-kpi"></div>
+    <div id="l-body"></div>
+  </section>
+
+  <!-- ================= REFERENCE ================= -->
+  <section id="refsec">
+    <h2>原子量表と定数<span class="en">reference</span></h2>
+    <div id="refbody"></div>
+  </section>
+
+  <!-- ================= METHOD ================= -->
+  <section id="techsec">
+    <h2>問題の解き方の型<span class="en">method</span></h2>
+    <p class="lead">どの分野も単位を式に書き込んで計算する。g を g/mol で割ると g が約分されて mol が残る。答えの単位が問われた単位と一致すれば式の組み方は正しい。</p>
+
+    <details class="tip"><summary>1. 物質量は mol を中心に置く</summary><div class="tipbody">
+      質量・粒子数・気体の体積は互いに直接換算しない。必ず一度 mol に直してから目的の量に換算する。
+      <table>
+        <tr><td>質量 g</td><td>÷ モル質量 g/mol</td><td>→ mol</td></tr>
+        <tr><td>粒子数 個</td><td>÷ 6.0×10<sup>23</sup> /mol</td><td>→ mol</td></tr>
+        <tr><td>気体の体積 L</td><td>÷ 22.4 L/mol</td><td>→ mol　標準状態のみ</td></tr>
+      </table>
+      <div class="ex">水 H<sub>2</sub>O 9.0 g の分子の数<br><i>→</i> モル質量 = 1×2 + 16 = 18 g/mol<br><i>→</i> 9.0 g ÷ 18 g/mol = 0.50 mol<br><i>→</i> 0.50 mol × 6.0×10<sup>23</sup> /mol = <b>3.0×10<sup>23</sup> 個</b></div>
+      <a href="chapters/09_mole.html">第9章 物質量を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>2. 濃度は溶液 1 L あたりの mol</summary><div class="tipbody">
+      モル濃度の分母は溶液の体積である。溶媒の体積ではない。希釈では水を加えても溶質の物質量は変わらないので C<sub>1</sub>V<sub>1</sub> = C<sub>2</sub>V<sub>2</sub> が成り立つ。質量パーセント濃度からの換算は溶液 1 L を仮定し 質量 → 溶質の質量 → 溶質の物質量 の順に求める。
+      <div class="ex">98% 硫酸 密度 1.84 g/cm<sup>3</sup><br><i>→</i> 溶液 1 L = 1000 cm<sup>3</sup> の質量 = 1000 × 1.84 = 1840 g<br><i>→</i> 溶質 = 1840 × 0.98 = 1803.2 g<br><i>→</i> 1803.2 g ÷ 98 g/mol = 18.4 mol<br><i>→</i> 1 L あたりなので <b>18.4 mol/L</b></div>
+      <a href="chapters/10_concentration.html">第10章 濃度を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>3. 反応式の係数の比は物質量の比</summary><div class="tipbody">
+      係数の比は質量の比ではない。手順は3段階で固定する。与えられた量を mol に直す → 係数の比を掛ける → 問われた単位に戻す。
+      <div class="ex">C<sub>3</sub>H<sub>8</sub> + 5O<sub>2</sub> → 3CO<sub>2</sub> + 4H<sub>2</sub>O　プロパン 4.4 g から生じる CO<sub>2</sub><br><i>→</i> 4.4 g ÷ 44 g/mol = 0.10 mol<br><i>→</i> CO<sub>2</sub> は 0.10 × 3/1 = 0.30 mol<br><i>→</i> 0.30 mol × 44 g/mol = <b>13.2 g</b></div>
+      <a href="chapters/11_reaction-quantities.html">第11章 反応の量的関係を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>4. pH は [H<sup>+</sup>] の指数の符号を変えた値</summary><div class="tipbody">
+      強酸は全部電離するので [H<sup>+</sup>] = 価数 × モル濃度 である。強塩基は [OH<sup>−</sup>] = 価数 × モル濃度 を求めてから [H<sup>+</sup>][OH<sup>−</sup>] = 1.0×10<sup>−14</sup> (mol/L)<sup>2</sup> で [H<sup>+</sup>] に直す。10倍に薄めると pH は 7 に向かって 1 だけ変わる。酸をいくら薄めても pH は 7 を超えない。
+      <div class="ex">5.0×10<sup>−3</sup> mol/L の H<sub>2</sub>SO<sub>4</sub><br><i>→</i> [H<sup>+</sup>] = 2 × 5.0×10<sup>−3</sup> = 1.0×10<sup>−2</sup> mol/L<br><i>→</i> <b>pH = 2</b></div>
+      <div class="ex">1.0×10<sup>−3</sup> mol/L の NaOH<br><i>→</i> [OH<sup>−</sup>] = 1.0×10<sup>−3</sup><br><i>→</i> [H<sup>+</sup>] = 1.0×10<sup>−14</sup> ÷ 1.0×10<sup>−3</sup> = 1.0×10<sup>−11</sup><br><i>→</i> <b>pH = 11</b></div>
+      <a href="chapters/12_acid-base.html">第12章 酸と塩基を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>5. 中和は H<sup>+</sup> の mol と OH<sup>−</sup> の mol を等しくおく</summary><div class="tipbody">
+      酸の価数 a × 濃度 C × 体積 V = 塩基の価数 b × 濃度 C′ × 体積 V′ である。両辺の体積を mL のまま書けば 1/1000 は両辺で約分される。酢酸やアンモニアのような弱酸・弱塩基でも中和に要する量は価数と物質量だけで決まる。
+      <div class="ex">0.10 mol/L の H<sub>2</sub>SO<sub>4</sub> 10.0 mL を 0.20 mol/L の NaOH で滴定<br><i>→</i> 2 × 0.10 × 10.0 = 1 × 0.20 × V′<br><i>→</i> <b>V′ = 10.0 mL</b></div>
+      <a href="chapters/13_neutralization.html">第13章 中和を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>6. 酸化数は合計から逆算する</summary><div class="tipbody">
+      <ul>
+        <li>単体の原子の酸化数は 0</li>
+        <li>単原子イオンの酸化数はイオンの電荷に等しい</li>
+        <li>化合物中の H は +1 で O は −2</li>
+        <li>化合物の酸化数の合計は 0 で多原子イオンの合計はイオンの電荷に等しい</li>
+        <li>アルカリ金属は +1 でアルカリ土類金属は +2</li>
+        <li>例外は H<sub>2</sub>O<sub>2</sub> の O が −1 で NaH の H が −1</li>
+      </ul>
+      <div class="ex">KMnO<sub>4</sub> の Mn<br><i>→</i> (+1) + x + (−2)×4 = 0<br><i>→</i> <b>x = +7</b></div>
+      <a href="chapters/14_redox.html">第14章 酸化と還元を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>7. 組成式は正負の電荷の合計を 0 にする</summary><div class="tipbody">
+      陽イオンの価数と陰イオンの価数を入れ替えて個数にし 最小の整数比に直す。多原子イオンが2個以上なら括弧でくくる。名称は陰イオンを先に読み 物イオン またはイオン を外して陽イオンの名称をつなげる。
+      <div class="ex">Al<sup>3+</sup> と SO<sub>4</sub><sup>2−</sup><br><i>→</i> Al を 2個 SO<sub>4</sub> を 3個 にすると (+3)×2 + (−2)×3 = 0<br><i>→</i> <b>Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub></b>　硫酸アルミニウム</div>
+      <a href="chapters/06_ionic-bond.html">第6章 イオン結合を開く</a>
+    </div></details>
+  </section>
+</div>
+
+<script id="gen">
+/* Question generators. Pure functions with no DOM access so that a node script
+   can load this block alone and check every answer. */
+var CHEM=(function(){
+'use strict';
+
+function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function shuffle(a){
+  a=a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function r6(x){ return Math.round(x*1e6)/1e6; }
+/* given data: shown as computed, float noise removed */
+function fx(x){ return String(r6(x)); }
+/* answers: three significant figures */
+function s3(x){
+  if(x===0) return '0';
+  if(Math.abs(x)>=100) return String(Number(x.toPrecision(3)));
+  return x.toPrecision(3);
+}
+function sgn(x){ return x>0 ? '+'+x : (x<0 ? '−'+(-x) : '0'); }
+function sup(n){ return '<sup>'+(n<0 ? '−'+(-n) : n)+'</sup>'; }
+/* concentration with two significant figures: 0.10 / 5.0×10^-3 */
+function sci(x){
+  if(x>=0.01) return x.toPrecision(2);
+  var e=Math.floor(Math.log10(x)+1e-9), m=x/Math.pow(10,e);
+  return m.toFixed(1)+'×10'+sup(e);
+}
+function em(s){ return '<em>'+s+'</em>'; }
+
+/* ── data ─────────────────────────────────────────────────────────────── */
+var AM={H:1,C:12,N:14,O:16,Na:23,Mg:24,Al:27,S:32,Cl:35.5,K:39,Ca:40,Fe:56,Cu:64};
+var NA=6.0, VM=22.4;
+var STP='標準状態 0 ℃ 1.013×10<sup>5</sup> Pa';
+var X10='×10<sup>23</sup> 個';
+
+var CPD={
+  H2O:['H<sub>2</sub>O','水',{H:2,O:1}],
+  CO2:['CO<sub>2</sub>','二酸化炭素',{C:1,O:2}],
+  NH3:['NH<sub>3</sub>','アンモニア',{N:1,H:3}],
+  CH4:['CH<sub>4</sub>','メタン',{C:1,H:4}],
+  C3H8:['C<sub>3</sub>H<sub>8</sub>','プロパン',{C:3,H:8}],
+  O2:['O<sub>2</sub>','酸素',{O:2}],
+  N2:['N<sub>2</sub>','窒素',{N:2}],
+  H2:['H<sub>2</sub>','水素',{H:2}],
+  Cl2:['Cl<sub>2</sub>','塩素',{Cl:2}],
+  HCl:['HCl','塩化水素',{H:1,Cl:1}],
+  SO2:['SO<sub>2</sub>','二酸化硫黄',{S:1,O:2}],
+  C6H12O6:['C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>','グルコース',{C:6,H:12,O:6}],
+  C2H5OH:['C<sub>2</sub>H<sub>5</sub>OH','エタノール',{C:2,H:6,O:1}],
+  NaCl:['NaCl','塩化ナトリウム',{Na:1,Cl:1}],
+  NaOH:['NaOH','水酸化ナトリウム',{Na:1,O:1,H:1}],
+  KOH:['KOH','水酸化カリウム',{K:1,O:1,H:1}],
+  KCl:['KCl','塩化カリウム',{K:1,Cl:1}],
+  H2SO4:['H<sub>2</sub>SO<sub>4</sub>','硫酸',{H:2,S:1,O:4}],
+  HNO3:['HNO<sub>3</sub>','硝酸',{H:1,N:1,O:3}],
+  CaCO3:['CaCO<sub>3</sub>','炭酸カルシウム',{Ca:1,C:1,O:3}],
+  CaCl2:['CaCl<sub>2</sub>','塩化カルシウム',{Ca:1,Cl:2}],
+  CaOH2:['Ca(OH)<sub>2</sub>','水酸化カルシウム',{Ca:1,O:2,H:2}],
+  MgO:['MgO','酸化マグネシウム',{Mg:1,O:1}],
+  MgCl2:['MgCl<sub>2</sub>','塩化マグネシウム',{Mg:1,Cl:2}],
+  Al2O3:['Al<sub>2</sub>O<sub>3</sub>','酸化アルミニウム',{Al:2,O:3}],
+  AlCl3:['AlCl<sub>3</sub>','塩化アルミニウム',{Al:1,Cl:3}],
+  CuO:['CuO','酸化銅(II)',{Cu:1,O:1}],
+  CuSO4:['CuSO<sub>4</sub>','硫酸銅(II)',{Cu:1,S:1,O:4}],
+  Fe2O3:['Fe<sub>2</sub>O<sub>3</sub>','酸化鉄(III)',{Fe:2,O:3}],
+  NaHCO3:['NaHCO<sub>3</sub>','炭酸水素ナトリウム',{Na:1,H:1,C:1,O:3}],
+  Na2CO3:['Na<sub>2</sub>CO<sub>3</sub>','炭酸ナトリウム',{Na:2,C:1,O:3}],
+  Mg:['Mg','マグネシウム',{Mg:1}],
+  Al:['Al','アルミニウム',{Al:1}],
+  Fe:['Fe','鉄',{Fe:1}],
+  Cu:['Cu','銅',{Cu:1}]
+};
+var GAS=['H2','O2','N2','CO2','CH4','NH3','Cl2','SO2','C3H8','HCl'];
+var MOLEC=['H2O','CO2','NH3','CH4','C3H8','O2','N2','H2','Cl2','HCl','SO2','C6H12O6','C2H5OH'];
+var ALL=Object.keys(CPD);
+var SOLUTE=['NaOH','NaCl','KCl','KOH','C6H12O6','CuSO4','Na2CO3','CaCl2','HCl','H2SO4','HNO3'];
+
+function M(id){
+  var c=CPD[id][2], s=0;
+  for(var el in c) s+=AM[el]*c[el];
+  return r6(s);
+}
+function fm(id){ return '<span class="fm">'+CPD[id][0]+'</span>'; }
+function cpd(id){ return CPD[id][1]+' '+fm(id); }
+function mmText(id){
+  var c=CPD[id][2], terms=[];
+  for(var el in c) terms.push(c[el]===1 ? fx(AM[el]) : fx(AM[el])+'×'+c[el]);
+  var body = terms.length===1 && c[Object.keys(c)[0]]===1 ? fx(M(id)) : terms.join(' + ')+' = '+fx(M(id));
+  return CPD[id][0]+' のモル質量 = '+em(body+' g/mol');
+}
+var NS=[0.1,0.2,0.25,0.3,0.4,0.5,0.6,0.75,0.8,1.2,1.5,2,2.5,3];
+var NSMALL=[0.1,0.2,0.25,0.3,0.4,0.5,0.75,1,1.5,2];
+
+/* ── templates ────────────────────────────────────────────────────────── */
+var T=[
+/* ── 物質量 ─────────────────────────────────────────────── */
+{cat:'mole',ctx:'質量から物質量',gen:function(){
+  var X=pick(ALL), n=pick(NS), m=r6(M(X)*n);
+  return {t:'m2n',v:{X:X,m:m},line:cpd(X)+' '+fx(m)+' g',ask:'物質量は',unit:'mol',ans:n,
+    steps:[mmText(X), em(fx(m)+' g ÷ '+fx(M(X))+' g/mol = '+s3(n)+' mol'),
+      'g を g/mol で割ると g が約分されて mol が残る']};
+}},
+{cat:'mole',ctx:'物質量から質量',gen:function(){
+  var X=pick(ALL), n=pick(NS), m=r6(M(X)*n);
+  return {t:'n2m',v:{X:X,n:n},line:cpd(X)+' '+fx(n)+' mol',ask:'質量は',unit:'g',ans:m,
+    steps:[mmText(X), em(fx(n)+' mol × '+fx(M(X))+' g/mol = '+s3(m)+' g')]};
+}},
+{cat:'mole',ctx:'質量から分子の数',gen:function(){
+  var X=pick(MOLEC), n=pick(NSMALL), m=r6(M(X)*n);
+  return {t:'m2N',v:{X:X,m:m},line:cpd(X)+' '+fx(m)+' g',ask:'分子の数は',unit:X10,ans:r6(n*NA),
+    steps:[mmText(X), em(fx(m)+' g ÷ '+fx(M(X))+' g/mol = '+s3(n)+' mol'),
+      em(s3(n)+' mol × 6.0×10<sup>23</sup> /mol = '+s3(n*NA)+'×10<sup>23</sup> 個')]};
+}},
+{cat:'mole',ctx:'分子の数から物質量',gen:function(){
+  var X=pick(MOLEC), n=pick(NSMALL), k=r6(n*NA);
+  return {t:'N2n',v:{X:X,k:k},line:cpd(X)+' '+fx(k)+'×10<sup>23</sup> 個',ask:'物質量は',unit:'mol',ans:n,
+    steps:[em(fx(k)+'×10<sup>23</sup> 個 ÷ 6.0×10<sup>23</sup> /mol = '+s3(n)+' mol'),
+      '10<sup>23</sup> は分子と分母で約分される']};
+}},
+{cat:'mole',ctx:'気体の体積から物質量',gen:function(){
+  var X=pick(GAS), n=pick(NS), V=r6(VM*n);
+  return {t:'V2n',v:{X:X,V:V},line:cpd(X)+' '+fx(V)+' L',desc:STP,ask:'物質量は',unit:'mol',ans:n,
+    steps:['標準状態の気体 1 mol の体積は種類によらず 22.4 L',
+      em(fx(V)+' L ÷ 22.4 L/mol = '+s3(n)+' mol')]};
+}},
+{cat:'mole',ctx:'質量から気体の体積',gen:function(){
+  var X=pick(GAS), n=pick(NS), m=r6(M(X)*n), V=r6(VM*n);
+  return {t:'m2V',v:{X:X,m:m},line:cpd(X)+' '+fx(m)+' g',desc:STP,ask:'体積は',unit:'L',ans:V,
+    steps:[mmText(X), em(fx(m)+' g ÷ '+fx(M(X))+' g/mol = '+s3(n)+' mol'),
+      em(s3(n)+' mol × 22.4 L/mol = '+s3(V)+' L')]};
+}},
+{cat:'mole',ctx:'含まれる原子の数',gen:function(){
+  var X=pick(MOLEC.filter(function(id){ return Object.keys(CPD[id][2]).length>1; }));
+  var c=CPD[X][2], el=pick(Object.keys(c)), cnt=c[el], n=pick([0.1,0.2,0.25,0.5,1]);
+  var byMass=Math.random()<0.5, m=r6(M(X)*n), N=r6(n*cnt*NA);
+  var st=[];
+  if(byMass) st.push(mmText(X), em(fx(m)+' g ÷ '+fx(M(X))+' g/mol = '+s3(n)+' mol'));
+  st.push('分子 1 個に '+el+' 原子が '+cnt+' 個含まれる',
+    em(s3(n)+' mol × '+cnt+' = '+s3(n*cnt)+' mol の '+el+' 原子'),
+    em(s3(n*cnt)+' mol × 6.0×10<sup>23</sup> /mol = '+s3(N)+'×10<sup>23</sup> 個'));
+  return {t:'atoms',v:{X:X,el:el,n:byMass?null:n,m:byMass?m:null},
+    line:cpd(X)+' '+(byMass? fx(m)+' g' : fx(n)+' mol'),
+    ask:'含まれる '+el+' 原子の数は',unit:X10,ans:N,steps:st};
+}},
+
+/* ── 濃度 ───────────────────────────────────────────────── */
+{cat:'conc',ctx:'モル濃度',gen:function(){
+  var X=pick(SOLUTE), C=pick([0.05,0.1,0.2,0.25,0.4,0.5,1,2]), V=pick([100,200,250,500]);
+  var n=r6(C*V/1000), m=r6(n*M(X));
+  return {t:'molarity',v:{X:X,m:m,V:V},line:cpd(X)+' '+fx(m)+' g',
+    desc:'水に溶かして水溶液全体を '+V+' mL にした',ask:'モル濃度は',unit:'mol/L',ans:C,
+    steps:[mmText(X), em(fx(m)+' g ÷ '+fx(M(X))+' g/mol = '+s3(n)+' mol'),
+      '体積を L に直す '+em(V+' mL = '+fx(V/1000)+' L'),
+      em(s3(n)+' mol ÷ '+fx(V/1000)+' L = '+s3(C)+' mol/L')]};
+}},
+{cat:'conc',ctx:'溶質の質量',gen:function(){
+  var X=pick(SOLUTE), C=pick([0.05,0.1,0.2,0.25,0.4,0.5,1,2]), V=pick([100,200,250,500]);
+  var n=r6(C*V/1000), m=r6(n*M(X));
+  return {t:'soluteMass',v:{X:X,C:C,V:V},line:fx(C)+' mol/L の'+cpd(X)+' 水溶液 '+V+' mL',
+    desc:'この水溶液を調製する',ask:'要する溶質の質量は',unit:'g',ans:m,
+    steps:[em(fx(C)+' mol/L × '+fx(V/1000)+' L = '+s3(n)+' mol'), mmText(X),
+      em(s3(n)+' mol × '+fx(M(X))+' g/mol = '+s3(m)+' g')]};
+}},
+{cat:'conc',ctx:'希釈後の濃度',gen:function(){
+  var X=pick(SOLUTE), C1, V1, k, V2, g=0;
+  do{ C1=pick([0.1,0.2,0.5,1,2,6]); V1=pick([10,20,25,50]); k=pick([2,4,5,10,20,25,50]); V2=V1*k; g++; }
+  while(V2>1000 && g<50);
+  var C2=r6(C1/k);
+  return {t:'dilC',v:{C1:C1,V1:V1,V2:V2},line:fx(C1)+' mol/L の'+cpd(X)+' 水溶液 '+V1+' mL',
+    desc:'水を加えて全体を '+V2+' mL にした',ask:'薄めた溶液のモル濃度は',unit:'mol/L',ans:C2,
+    steps:['水を加えても溶質の物質量は変わらない',
+      em('溶質 = '+fx(C1)+' mol/L × '+fx(V1/1000)+' L = '+s3(r6(C1*V1/1000))+' mol'),
+      em(s3(r6(C1*V1/1000))+' mol ÷ '+fx(V2/1000)+' L = '+s3(C2)+' mol/L'),
+      'C<sub>1</sub>V<sub>1</sub> = C<sub>2</sub>V<sub>2</sub> で書くと '+em(fx(C1)+' × '+V1+' = C<sub>2</sub> × '+V2)]};
+}},
+{cat:'conc',ctx:'希釈に要する原液',gen:function(){
+  var X=pick(SOLUTE), C1, C2, V2, V1, g=0;
+  do{ C1=pick([0.5,1,2,5,6,10]); C2=pick([0.05,0.1,0.2,0.25,0.5]); V2=pick([100,200,250,500,1000]);
+      V1=r6(C2*V2/C1); g++; }
+  while((C2>=C1 || V1<1) && g<50);
+  return {t:'dilV',v:{C1:C1,C2:C2,V2:V2},line:fx(C1)+' mol/L の'+cpd(X)+' 水溶液',
+    desc:'これを薄めて '+fx(C2)+' mol/L の水溶液を '+V2+' mL 調製する',ask:'要する原液の体積は',unit:'mL',ans:V1,
+    steps:['薄めた後に含まれる溶質の物質量を原液から持ってくる',
+      em('必要な溶質 = '+fx(C2)+' mol/L × '+fx(V2/1000)+' L = '+s3(r6(C2*V2/1000))+' mol'),
+      em(s3(r6(C2*V2/1000))+' mol ÷ '+fx(C1)+' mol/L = '+s3(r6(V1/1000))+' L = '+s3(V1)+' mL')]};
+}},
+{cat:'conc',ctx:'質量パーセント濃度からモル濃度',gen:function(){
+  var P=[['H2SO4',98,1.84],['HCl',36.5,1.18],['HNO3',63,1.40],['NH3',28,0.90],['NaOH',10,1.11],
+         ['NaOH',20,1.22],['NaCl',10,1.07],['KOH',20,1.19],['C6H12O6',18,1.07]];
+  var p=pick(P), X=p[0], w=p[1], d=p[2];
+  var mass=r6(1000*d), sol=r6(mass*w/100), C=r6(sol/M(X));
+  return {t:'w2C',v:{X:X,w:w,d:d},line:fx(w)+' % の'+cpd(X)+' 水溶液',
+    desc:'密度 '+fx(d)+' g/cm<sup>3</sup>',ask:'モル濃度は',unit:'mol/L',ans:C,
+    steps:['溶液 1 L を仮定する',
+      em('1 L = 1000 cm<sup>3</sup> の質量 = 1000 × '+fx(d)+' = '+fx(mass)+' g'),
+      em('溶質の質量 = '+fx(mass)+' × '+fx(w)+'/100 = '+s3(sol)+' g'), mmText(X),
+      em(s3(sol)+' g ÷ '+fx(M(X))+' g/mol = '+s3(C)+' mol'),
+      '溶液 1 L あたりなので '+em(s3(C)+' mol/L')]};
+}},
+{cat:'conc',ctx:'モル濃度から質量パーセント濃度',gen:function(){
+  var X=pick(['NaOH','NaCl','KCl','KOH','C6H12O6','H2SO4','HNO3']), C=pick([0.5,1,1.5,2,3]);
+  var d=pick([1.02,1.04,1.05,1.08,1.10,1.12,1.15]);
+  var mass=r6(1000*d), sol=r6(C*M(X)), w=r6(sol/mass*100);
+  return {t:'C2w',v:{X:X,C:C,d:d},line:fx(C)+' mol/L の'+cpd(X)+' 水溶液',
+    desc:'密度 '+fx(d)+' g/cm<sup>3</sup>',ask:'質量パーセント濃度は',unit:'%',ans:w,
+    steps:['溶液 1 L を仮定する',
+      em('溶液の質量 = 1000 cm<sup>3</sup> × '+fx(d)+' g/cm<sup>3</sup> = '+fx(mass)+' g'), mmText(X),
+      em('溶質の質量 = '+fx(C)+' mol × '+fx(M(X))+' g/mol = '+s3(sol)+' g'),
+      em(s3(sol)+' g ÷ '+fx(mass)+' g × 100 = '+s3(w)+' %')]};
+}},
+
+/* ── 反応の量的関係 ─────────────────────────────────────── */
+{cat:'rxn',ctx:'生成物の量',gen:function(){ return rxnQ(true); }},
+{cat:'rxn',ctx:'反応物の量',gen:function(){ return rxnQ(false); }},
+
+/* ── pH ─────────────────────────────────────────────────── */
+{cat:'ph',ctx:'強酸の pH',gen:function(){
+  var a=pick(ACID_S), k=rnd(1,4), C=r6(Math.pow(10,-k)/a[2]);
+  return {t:'phA',v:{val:a[2],C:C},exact:true,line:sci(C)+' mol/L の '+a[1]+' <span class="fm">'+a[0]+'</span>',
+    desc:'電離度は 1 とする',ask:'pH は',unit:'',ans:k,
+    steps:[a[1]+' は '+a[2]+' 価の強酸',
+      em('[H<sup>+</sup>] = '+a[2]+' × '+sci(C)+' = 1.0×10'+sup(-k)+' mol/L'),
+      em('pH = '+k)]};
+}},
+{cat:'ph',ctx:'強塩基の pH',gen:function(){
+  var b=pick(BASE_S), k=rnd(1,4), C=r6(Math.pow(10,-k)/b[2]);
+  return {t:'phB',v:{val:b[2],C:C},exact:true,line:sci(C)+' mol/L の '+b[1]+' <span class="fm">'+b[0]+'</span>',
+    desc:'電離度は 1 とする',ask:'pH は',unit:'',ans:14-k,
+    steps:[b[1]+' は '+b[2]+' 価の強塩基',
+      em('[OH<sup>−</sup>] = '+b[2]+' × '+sci(C)+' = 1.0×10'+sup(-k)+' mol/L'),
+      em('[H<sup>+</sup>] = 1.0×10<sup>−14</sup> ÷ 1.0×10'+sup(-k)+' = 1.0×10'+sup(k-14)+' mol/L'),
+      em('pH = '+(14-k))]};
+}},
+{cat:'ph',ctx:'薄めた酸の pH',gen:function(){
+  var a=pick(ACID_S), k=rnd(1,3), m=rnd(1,5-k), C=r6(Math.pow(10,-k)/a[2]);
+  var f=Math.pow(10,m), d=dilText(f);
+  return {t:'phAd',v:{val:a[2],C:C,f:f},exact:true,line:sci(C)+' mol/L の '+a[1]+' <span class="fm">'+a[0]+'</span>',
+    desc:d+'　電離度は 1 とする',ask:'薄めた後の pH は',unit:'',ans:k+m,
+    steps:[em('薄める前の [H<sup>+</sup>] = '+a[2]+' × '+sci(C)+' = 1.0×10'+sup(-k)+' mol/L　pH '+k),
+      em(f+' 倍に薄めると [H<sup>+</sup>] = 1.0×10'+sup(-k-m)+' mol/L'),
+      em('pH = '+(k+m)),'10倍ごとに pH は 1 ずつ 7 に近づく']};
+}},
+{cat:'ph',ctx:'薄めた塩基の pH',gen:function(){
+  var b=pick(BASE_S), k=rnd(1,3), m=rnd(1,5-k), C=r6(Math.pow(10,-k)/b[2]);
+  var f=Math.pow(10,m), d=dilText(f);
+  return {t:'phBd',v:{val:b[2],C:C,f:f},exact:true,line:sci(C)+' mol/L の '+b[1]+' <span class="fm">'+b[0]+'</span>',
+    desc:d+'　電離度は 1 とする',ask:'薄めた後の pH は',unit:'',ans:14-k-m,
+    steps:[em('薄める前の [OH<sup>−</sup>] = '+b[2]+' × '+sci(C)+' = 1.0×10'+sup(-k)+' mol/L　pH '+(14-k)),
+      em(f+' 倍に薄めると [OH<sup>−</sup>] = 1.0×10'+sup(-k-m)+' mol/L'),
+      em('[H<sup>+</sup>] = 1.0×10'+sup(k+m-14)+' mol/L なので pH = '+(14-k-m)),'10倍ごとに pH は 1 ずつ 7 に近づく']};
+}},
+
+/* ── 中和滴定 ───────────────────────────────────────────── */
+{cat:'neut',ctx:'中和に要する体積',gen:function(){
+  var p=neutPick();
+  return {t:'neutVb',v:p,line:neutLine(p,'acid'),desc:p.bf+' の '+fx(p.Cb)+' mol/L 水溶液で中和する',
+    ask:'中和点までに要する体積は',unit:'mL',ans:p.Vb,
+    steps:neutSteps(p,'Vb')};
+}},
+{cat:'neut',ctx:'塩基の濃度を求める',gen:function(){
+  var p=neutPick();
+  return {t:'neutCb',v:p,line:neutLine(p,'acid'),desc:'濃度不明の'+p.bf+' 水溶液を滴下すると '+fx(p.Vb)+' mL で中和点に達した',
+    ask:p.bn+'水溶液のモル濃度は',unit:'mol/L',ans:p.Cb,
+    steps:neutSteps(p,'Cb')};
+}},
+{cat:'neut',ctx:'酸の濃度を求める',gen:function(){
+  var p=neutPick();
+  return {t:'neutCa',v:p,line:'濃度不明の'+aq(p.af,p.an)+' '+fx(p.Va)+' mL',
+    desc:fx(p.Cb)+' mol/L の'+p.bf+' 水溶液を滴下すると '+fx(p.Vb)+' mL で中和点に達した',
+    ask:(p.an==='塩酸'?'塩酸':p.an+'水溶液')+'のモル濃度は',unit:'mol/L',ans:p.Ca,
+    steps:neutSteps(p,'Ca')};
+}},
+
+/* ── 酸化数 ─────────────────────────────────────────────── */
+{cat:'ox',ctx:'酸化数',gen:function(){
+  var it=pick(OX), x=oxSolve(it);
+  var keys=[]; for(var i=-4;i<=7;i++) keys.push(i);
+  return {t:'ox',v:{id:it.h},exact:true,im:'text',keys:keys,
+    line:'<span class="fm">'+it.h+'</span> <span class="nm">'+it.nm+'</span>',
+    ask:'下線を引いた原子の酸化数は',unit:'',ans:x,ansText:sgn(x),steps:oxSteps(it,x)};
+}},
+
+/* ── 化学式と名称 ───────────────────────────────────────── */
+{cat:'form',ctx:'イオンの組から組成式',gen:function(){
+  var p=ionPair();
+  return choiceQ('ionf',p,
+    '<span class="fm">'+ionH(p.c,1)+'</span> <span class="op">と</span> <span class="fm">'+ionH(p.a,-1)+'</span>',
+    p.c.nm+'イオンと'+p.a.nm+'イオンからなる化合物','組成式は',fmlChoices(p),
+    ['正電荷の合計と負電荷の合計を等しくする',
+     em('('+sgn(p.c.q)+')×'+p.nc+' + (−'+p.a.q+')×'+p.na+' = 0'),
+     '陽イオン '+p.nc+' 個と陰イオン '+p.na+' 個'+(p.a.p&&p.na>1||p.c.p&&p.nc>1?'　多原子イオンが2個以上なので括弧でくくる':''),
+     '組成式 '+em(fml(p))+'　名称は '+em(cname(p))]);
+}},
+{cat:'form',ctx:'名称から組成式',gen:function(){
+  var p=ionPair();
+  return choiceQ('namef',p,cname(p),'','組成式は',fmlChoices(p),
+    [cname(p)+' は '+p.c.nm+'イオン '+em(ionH(p.c,1))+' と '+p.a.nm+'イオン '+em(ionH(p.a,-1))+' からなる',
+     em('('+sgn(p.c.q)+')×'+p.nc+' + (−'+p.a.q+')×'+p.na+' = 0'),
+     '組成式 '+em(fml(p))]);
+}},
+{cat:'form',ctx:'組成式から名称',gen:function(){
+  var p=ionPair(), right=cname(p), seen={}, wrong=[];
+  seen[right]=1;
+  var g=0;
+  while(wrong.length<3 && g<200){
+    g++;
+    var q=Math.random()<0.5 ? {c:p.c,a:pick(AN_I)} : {c:pick(CAT_I),a:p.a};
+    if(!okPair(q.c,q.a)) continue;
+    var nm=cname(q);
+    if(!seen[nm]){ seen[nm]=1; wrong.push(nm); }
+  }
+  return choiceQ('fname',p,'<span class="fm">'+fml(p)+'</span>','','名称は',{right:right,wrong:wrong},
+    ['陽イオン '+em(ionH(p.c,1))+' は '+p.c.nm+'イオン',
+     '陰イオン '+em(ionH(p.a,-1))+' は '+p.a.nm+'イオン',
+     '陰イオンを先に読み イオン を外して '+em(right)]);
+}},
+{cat:'form',ctx:'多原子イオンの名称',gen:function(){
+  var it=pick(POLY), wrong=shuffle(POLY.filter(function(x){ return x!==it; })).slice(0,3).map(function(x){ return x[1]; });
+  return choiceQ('polyname',{h:it[0]},'<span class="fm">'+it[0]+'</span>','','このイオンの名称は',{right:it[1],wrong:wrong},
+    [em(it[0])+' は '+em(it[1])]);
+}},
+{cat:'form',ctx:'多原子イオンの化学式',gen:function(){
+  var it=pick(POLY), wrong=shuffle(POLY.filter(function(x){ return x!==it; })).slice(0,3).map(function(x){ return x[0]; });
+  return choiceQ('polyfml',{h:it[0]},it[1],'','化学式は',{right:it[0],wrong:wrong},
+    [it[1]+' は '+em(it[0])]);
+}}
+];
+
+/* ── reaction helpers ─────────────────────────────────────────────────── */
+/* each species: [compound id, coefficient, gas in this reaction] */
+var RXN=[
+  {r:[['C3H8',1,1],['O2',5,1]],p:[['CO2',3,1],['H2O',4,0]]},
+  {r:[['CH4',1,1],['O2',2,1]],p:[['CO2',1,1],['H2O',2,0]]},
+  {r:[['C2H5OH',1,0],['O2',3,1]],p:[['CO2',2,1],['H2O',3,0]]},
+  {r:[['Mg',1,0],['HCl',2,0]],p:[['MgCl2',1,0],['H2',1,1]]},
+  {r:[['Al',2,0],['HCl',6,0]],p:[['AlCl3',2,0],['H2',3,1]]},
+  {r:[['N2',1,1],['H2',3,1]],p:[['NH3',2,1]]},
+  {r:[['H2',2,1],['O2',1,1]],p:[['H2O',2,0]]},
+  {r:[['CaCO3',1,0],['HCl',2,0]],p:[['CaCl2',1,0],['H2O',1,0],['CO2',1,1]]},
+  {r:[['Mg',2,0],['O2',1,1]],p:[['MgO',2,0]]},
+  {r:[['Cu',2,0],['O2',1,1]],p:[['CuO',2,0]]}
+];
+function eqHTML(R){
+  function side(a){ return a.map(function(s){ return (s[1]>1?s[1]:'')+CPD[s[0]][0]; }).join(' + '); }
+  return side(R.r)+' → '+side(R.p);
+}
+function rxnQ(toProduct){
+  var R=pick(RXN), all=R.r.concat(R.p), A, B, g=0;
+  do{
+    if(toProduct){ A=pick(R.r); B=pick(R.p); }
+    else { B=pick(R.r); A=pick(all); }
+    g++;
+  } while((A===B) && g<50);
+  var t=pick([0.1,0.2,0.25,0.5,1,1.5,2]);
+  var nA=r6(t*A[1]), nB=r6(t*B[1]);
+  var giveV = A[2] && Math.random()<0.5;
+  var given = giveV ? r6(nA*VM) : r6(nA*M(A[0]));
+  var outs=['g','mol']; if(B[2]) outs.push('L');
+  var out=pick(outs);
+  var ans = out==='g' ? r6(nB*M(B[0])) : out==='L' ? r6(nB*VM) : nB;
+  var st=[];
+  if(giveV) st.push(em(fx(given)+' L ÷ 22.4 L/mol = '+s3(nA)+' mol'));
+  else st.push(mmText(A[0]), em(fx(given)+' g ÷ '+fx(M(A[0]))+' g/mol = '+s3(nA)+' mol'));
+  st.push('係数の比 '+CPD[A[0]][0]+' : '+CPD[B[0]][0]+' = '+A[1]+' : '+B[1]+' は物質量の比',
+    em(s3(nA)+' mol × '+B[1]+'/'+A[1]+' = '+s3(nB)+' mol の '+CPD[B[0]][0]));
+  if(out==='g') st.push(mmText(B[0]), em(s3(nB)+' mol × '+fx(M(B[0]))+' g/mol = '+s3(ans)+' g'));
+  if(out==='L') st.push(em(s3(nB)+' mol × 22.4 L/mol = '+s3(ans)+' L'));
+  var askW = out==='g' ? '質量は' : out==='L' ? '体積は' : '物質量は';
+  var role = R.r.indexOf(B)>=0 ? (toProduct?'':'反応に要する ') : '生じる ';
+  return {t:'rxn',v:{R:R,A:A[0],cA:A[1],B:B[0],cB:B[1],giveV:giveV,given:given,out:out},
+    line:eqHTML(R),
+    desc:CPD[A[0]][1]+' '+fx(given)+(giveV?' L':' g')+(R.r.indexOf(A)>=0?' が反応した':' が生じた')
+      +(giveV||out==='L'?'　気体の体積は'+STP+'で測る':''),
+    ask:role+CPD[B[0]][1]+' '+fm(B[0])+' の'+askW,unit:out,ans:ans,steps:st};
+}
+
+/* ── pH helpers ───────────────────────────────────────────────────────── */
+var ACID_S=[['HCl','塩酸',1],['HNO<sub>3</sub>','硝酸',1],['H<sub>2</sub>SO<sub>4</sub>','硫酸',2]];
+var BASE_S=[['NaOH','水酸化ナトリウム水溶液',1],['KOH','水酸化カリウム水溶液',1],
+            ['Ca(OH)<sub>2</sub>','水酸化カルシウム水溶液',2],['Ba(OH)<sub>2</sub>','水酸化バリウム水溶液',2]];
+function dilText(f){
+  if(Math.random()<0.5) return 'これを水で '+f+' 倍に薄めた';
+  var V1=pick([1,10]), V2=V1*f;
+  return 'この溶液 '+V1+' mL に水を加えて全体を '+(V2>=1000? fx(V2/1000)+' L' : V2+' mL')+' にした';
+}
+
+/* ── neutralization helpers ───────────────────────────────────────────── */
+var ACIDS=[['HCl','塩酸',1],['HNO<sub>3</sub>','硝酸',1],['CH<sub>3</sub>COOH','酢酸',1],
+           ['H<sub>2</sub>SO<sub>4</sub>','硫酸',2],['(COOH)<sub>2</sub>','シュウ酸',2]];
+var BASES=[['NaOH','水酸化ナトリウム',1],['KOH','水酸化カリウム',1],['NH<sub>3</sub>','アンモニア',1],
+           ['Ca(OH)<sub>2</sub>','水酸化カルシウム',2],['Ba(OH)<sub>2</sub>','水酸化バリウム',2]];
+function neutPick(){
+  var a, b, Ca, Va, Cb, Vb, g=0;
+  do{
+    a=pick(ACIDS); b=pick(BASES);
+    Ca=pick([0.05,0.1,0.15,0.2,0.25,0.5]); Va=pick([10,20,25]);
+    Cb=pick([0.05,0.1,0.2,0.25,0.5]);
+    Vb=r6(a[2]*Ca*Va/(b[2]*Cb)); g++;
+  } while((Vb<4 || Vb>50 || Math.abs(Vb*100-Math.round(Vb*100))>1e-6) && g<200);
+  return {af:a[1]+' '+a[0],an:a[1],a:a[2],Ca:Ca,Va:Va,bf:b[1]+' '+b[0],bn:b[1],b:b[2],Cb:Cb,Vb:Vb};
+}
+function aq(f,n){ return n==='塩酸' ? f : f+' 水溶液'; }
+function neutLine(p){ return fx(p.Ca)+' mol/L の'+aq(p.af,p.an)+' '+fx(p.Va)+' mL'; }
+function neutSteps(p,want){
+  var L='価数 × 濃度 × 体積 が酸と塩基で等しい', s=[L];
+  var lhs=p.a+' × '+(want==='Ca'?'C':fx(p.Ca))+' × '+fx(p.Va);
+  var rhs=p.b+' × '+(want==='Cb'?'C′':fx(p.Cb))+' × '+(want==='Vb'?'V′':fx(p.Vb));
+  s.push(p.an+'は '+p.a+' 価で'+p.bn+'は '+p.b+' 価');
+  s.push(em(lhs+' = '+rhs)+'　体積は両辺とも mL');
+  if(want==='Vb') s.push(em('V′ = '+p.a+' × '+fx(p.Ca)+' × '+fx(p.Va)+' ÷ ('+p.b+' × '+fx(p.Cb)+') = '+s3(p.Vb)+' mL'));
+  if(want==='Cb') s.push(em('C′ = '+p.a+' × '+fx(p.Ca)+' × '+fx(p.Va)+' ÷ ('+p.b+' × '+fx(p.Vb)+') = '+s3(p.Cb)+' mol/L'));
+  if(want==='Ca') s.push(em('C = '+p.b+' × '+fx(p.Cb)+' × '+fx(p.Vb)+' ÷ ('+p.a+' × '+fx(p.Va)+') = '+s3(p.Ca)+' mol/L'));
+  if(p.an==='酢酸'||p.an==='シュウ酸'||p.bn==='アンモニア') s.push('弱酸や弱塩基でも中和に要する量は価数と物質量で決まる');
+  return s;
+}
+
+/* ── oxidation number ─────────────────────────────────────────────────── */
+/* parts: [label, count, known oxidation number or null for the target] */
+var OX=[
+  {h:'K<u>Mn</u>O<sub>4</sub>',nm:'過マンガン酸カリウム',el:'Mn',z:0,ans:7,parts:[['K',1,1],['Mn',1,null],['O',4,-2]]},
+  {h:'<u>Mn</u>O<sub>4</sub><sup>−</sup>',nm:'過マンガン酸イオン',el:'Mn',z:-1,ans:7,parts:[['Mn',1,null],['O',4,-2]]},
+  {h:'<u>Mn</u>O<sub>2</sub>',nm:'酸化マンガン(IV)',el:'Mn',z:0,ans:4,parts:[['Mn',1,null],['O',2,-2]]},
+  {h:'<u>Mn</u><sup>2+</sup>',nm:'マンガン(II)イオン',el:'Mn',z:2,ans:2,parts:[['Mn',1,null]]},
+  {h:'<u>Cr</u><sub>2</sub>O<sub>7</sub><sup>2−</sup>',nm:'二クロム酸イオン',el:'Cr',z:-2,ans:6,parts:[['Cr',2,null],['O',7,-2]]},
+  {h:'K<sub>2</sub><u>Cr</u>O<sub>4</sub>',nm:'クロム酸カリウム',el:'Cr',z:0,ans:6,parts:[['K',2,1],['Cr',1,null],['O',4,-2]]},
+  {h:'H<sub>2</sub><u>S</u>O<sub>4</sub>',nm:'硫酸',el:'S',z:0,ans:6,parts:[['H',2,1],['S',1,null],['O',4,-2]]},
+  {h:'<u>S</u>O<sub>2</sub>',nm:'二酸化硫黄',el:'S',z:0,ans:4,parts:[['S',1,null],['O',2,-2]]},
+  {h:'H<sub>2</sub><u>S</u>',nm:'硫化水素',el:'S',z:0,ans:-2,parts:[['H',2,1],['S',1,null]]},
+  {h:'<u>S</u>O<sub>4</sub><sup>2−</sup>',nm:'硫酸イオン',el:'S',z:-2,ans:6,parts:[['S',1,null],['O',4,-2]]},
+  {h:'<u>S</u>O<sub>3</sub><sup>2−</sup>',nm:'亜硫酸イオン',el:'S',z:-2,ans:4,parts:[['S',1,null],['O',3,-2]]},
+  {h:'<u>S</u>',nm:'硫黄',el:'S',z:0,ans:0,parts:[['S',1,null]]},
+  {h:'H<sub>2</sub><u>O</u><sub>2</sub>',nm:'過酸化水素',el:'O',z:0,ans:-1,parts:[['H',2,1],['O',2,null]],
+   note:'過酸化水素の O は例外で −1 になる'},
+  {h:'H<sub>2</sub><u>O</u>',nm:'水',el:'O',z:0,ans:-2,parts:[['H',2,1],['O',1,null]]},
+  {h:'<u>O</u><sub>2</sub>',nm:'酸素',el:'O',z:0,ans:0,parts:[['O',2,null]]},
+  {h:'<u>N</u>H<sub>4</sub><sup>+</sup>',nm:'アンモニウムイオン',el:'N',z:1,ans:-3,parts:[['N',1,null],['H',4,1]]},
+  {h:'<u>N</u>H<sub>3</sub>',nm:'アンモニア',el:'N',z:0,ans:-3,parts:[['N',1,null],['H',3,1]]},
+  {h:'H<u>N</u>O<sub>3</sub>',nm:'硝酸',el:'N',z:0,ans:5,parts:[['H',1,1],['N',1,null],['O',3,-2]]},
+  {h:'<u>N</u>O<sub>3</sub><sup>−</sup>',nm:'硝酸イオン',el:'N',z:-1,ans:5,parts:[['N',1,null],['O',3,-2]]},
+  {h:'<u>N</u>O<sub>2</sub>',nm:'二酸化窒素',el:'N',z:0,ans:4,parts:[['N',1,null],['O',2,-2]]},
+  {h:'<u>N</u>O',nm:'一酸化窒素',el:'N',z:0,ans:2,parts:[['N',1,null],['O',1,-2]]},
+  {h:'<u>N</u><sub>2</sub>',nm:'窒素',el:'N',z:0,ans:0,parts:[['N',2,null]]},
+  {h:'<u>Fe</u><sub>2</sub>O<sub>3</sub>',nm:'酸化鉄(III)',el:'Fe',z:0,ans:3,parts:[['Fe',2,null],['O',3,-2]]},
+  {h:'<u>Fe</u>O',nm:'酸化鉄(II)',el:'Fe',z:0,ans:2,parts:[['Fe',1,null],['O',1,-2]]},
+  {h:'<u>Fe</u><sup>3+</sup>',nm:'鉄(III)イオン',el:'Fe',z:3,ans:3,parts:[['Fe',1,null]]},
+  {h:'<u>Cu</u><sub>2</sub>O',nm:'酸化銅(I)',el:'Cu',z:0,ans:1,parts:[['Cu',2,null],['O',1,-2]]},
+  {h:'<u>Cu</u>SO<sub>4</sub>',nm:'硫酸銅(II)',el:'Cu',z:0,ans:2,parts:[['Cu',1,null],['SO<sub>4</sub>',1,-2]],
+   note:'SO<sub>4</sub> はまとめて −2 として扱う'},
+  {h:'<u>Cu</u>',nm:'銅',el:'Cu',z:0,ans:0,parts:[['Cu',1,null]]},
+  {h:'H<u>Cl</u>O',nm:'次亜塩素酸',el:'Cl',z:0,ans:1,parts:[['H',1,1],['Cl',1,null],['O',1,-2]]},
+  {h:'K<u>Cl</u>O<sub>3</sub>',nm:'塩素酸カリウム',el:'Cl',z:0,ans:5,parts:[['K',1,1],['Cl',1,null],['O',3,-2]]},
+  {h:'H<u>Cl</u>O<sub>4</sub>',nm:'過塩素酸',el:'Cl',z:0,ans:7,parts:[['H',1,1],['Cl',1,null],['O',4,-2]]},
+  {h:'Na<u>Cl</u>',nm:'塩化ナトリウム',el:'Cl',z:0,ans:-1,parts:[['Na',1,1],['Cl',1,null]]},
+  {h:'<u>Cl</u><sub>2</sub>',nm:'塩素',el:'Cl',z:0,ans:0,parts:[['Cl',2,null]]},
+  {h:'Na<u>H</u>',nm:'水素化ナトリウム',el:'H',z:0,ans:-1,parts:[['Na',1,1],['H',1,null]],
+   note:'金属の水素化物では H は例外で −1 になる'},
+  {h:'<u>C</u>O<sub>2</sub>',nm:'二酸化炭素',el:'C',z:0,ans:4,parts:[['C',1,null],['O',2,-2]]},
+  {h:'<u>C</u>O',nm:'一酸化炭素',el:'C',z:0,ans:2,parts:[['C',1,null],['O',1,-2]]},
+  {h:'<u>C</u>H<sub>4</sub>',nm:'メタン',el:'C',z:0,ans:-4,parts:[['C',1,null],['H',4,1]]},
+  {h:'H<sub>2</sub><u>C</u><sub>2</sub>O<sub>4</sub>',nm:'シュウ酸',el:'C',z:0,ans:3,parts:[['H',2,1],['C',2,null],['O',4,-2]]}
+];
+function oxSolve(it){
+  var known=0, cnt=0;
+  it.parts.forEach(function(p){ if(p[2]===null) cnt+=p[1]; else known+=p[1]*p[2]; });
+  return (it.z-known)/cnt;
+}
+function oxSteps(it,x){
+  var P=it.parts;
+  if(P.length===1 && it.z===0) return ['単体なので酸化数は '+em('0')];
+  if(P.length===1 && P[0][1]===1) return ['単原子イオンの酸化数はイオンの電荷に等しい', em('電荷 '+sgn(it.z)+' → 酸化数 '+sgn(x))];
+  var s=[], kn=[];
+  P.forEach(function(p){ if(p[2]!==null) kn.push(p[0]+' は '+sgn(p[2])); });
+  if(it.note) s.push(it.note);
+  s.push(kn.join(' ・ ')+'　'+it.el+' を x とおく');
+  s.push(it.z===0 ? '化合物全体の合計は 0' : 'イオン全体の合計は電荷の '+sgn(it.z));
+  var terms=P.map(function(p){
+    var v = p[2]===null ? 'x' : '('+sgn(p[2])+')';
+    return p[1]===1 ? v : (p[2]===null ? p[1]+'x' : v+'×'+p[1]);
+  });
+  s.push(em(terms.join(' + ')+' = '+(it.z<0?'−'+(-it.z):it.z)));
+  s.push(em('x = '+sgn(x)));
+  return s;
+}
+
+/* ── ions and formulas ────────────────────────────────────────────────── */
+var CAT_I=[
+  {id:'Na',h:'Na',q:1,p:0,nm:'ナトリウム'},{id:'K',h:'K',q:1,p:0,nm:'カリウム'},
+  {id:'Ag',h:'Ag',q:1,p:0,nm:'銀'},{id:'NH4',h:'NH<sub>4</sub>',q:1,p:1,nm:'アンモニウム'},
+  {id:'Mg',h:'Mg',q:2,p:0,nm:'マグネシウム'},{id:'Ca',h:'Ca',q:2,p:0,nm:'カルシウム'},
+  {id:'Ba',h:'Ba',q:2,p:0,nm:'バリウム'},{id:'Zn',h:'Zn',q:2,p:0,nm:'亜鉛'},
+  {id:'Cu',h:'Cu',q:2,p:0,nm:'銅(II)'},{id:'Fe2',h:'Fe',q:2,p:0,nm:'鉄(II)'},
+  {id:'Fe3',h:'Fe',q:3,p:0,nm:'鉄(III)'},{id:'Al',h:'Al',q:3,p:0,nm:'アルミニウム'}
+];
+var AN_I=[
+  {id:'Cl',h:'Cl',q:1,p:0,nm:'塩化物',st:'塩化'},{id:'OH',h:'OH',q:1,p:1,nm:'水酸化物',st:'水酸化'},
+  {id:'NO3',h:'NO<sub>3</sub>',q:1,p:1,nm:'硝酸',st:'硝酸'},{id:'HCO3',h:'HCO<sub>3</sub>',q:1,p:1,nm:'炭酸水素',st:'炭酸水素'},
+  {id:'O',h:'O',q:2,p:0,nm:'酸化物',st:'酸化'},{id:'S',h:'S',q:2,p:0,nm:'硫化物',st:'硫化'},
+  {id:'SO4',h:'SO<sub>4</sub>',q:2,p:1,nm:'硫酸',st:'硫酸'},{id:'CO3',h:'CO<sub>3</sub>',q:2,p:1,nm:'炭酸',st:'炭酸'},
+  {id:'PO4',h:'PO<sub>4</sub>',q:3,p:1,nm:'リン酸',st:'リン酸'}
+];
+/* pairs that do not exist as stable salts at this level */
+var NOPAIR={'NH4|OH':1,'NH4|O':1,'NH4|S':1,'Ag|OH':1,'Al|CO3':1,'Fe3|CO3':1,'Al|S':1,'Fe3|S':1,
+  'Ag|HCO3':1,'Mg|HCO3':1,'Ba|HCO3':1,'Zn|HCO3':1,'Cu|HCO3':1,'Fe2|HCO3':1,'Fe3|HCO3':1,'Al|HCO3':1,
+  'Cu|CO3':1,'Fe2|CO3':1,'Zn|CO3':1,'Fe2|OH':0};
+function okPair(c,a){ return !NOPAIR[c.id+'|'+a.id]; }
+function gcd(a,b){ return b ? gcd(b,a%b) : a; }
+function ionPair(){
+  var c, a, g=0;
+  do{ c=pick(CAT_I); a=pick(AN_I); g++; } while(!okPair(c,a) && g<200);
+  var k=gcd(c.q,a.q);
+  return {c:c,a:a,nc:a.q/k,na:c.q/k};
+}
+function ionH(ion,s){
+  var q = ion.q===1 ? '' : ion.q;
+  return ion.h+'<sup>'+q+(s>0?'+':'−')+'</sup>';
+}
+function part(ion,n,noParen){
+  if(n===1) return ion.h;
+  return (ion.p && !noParen) ? '('+ion.h+')<sub>'+n+'</sub>' : ion.h+'<sub>'+n+'</sub>';
+}
+function fmlN(p,nc,na,noParen){ return part(p.c,nc,noParen)+part(p.a,na,noParen); }
+function fml(p){ return fmlN(p,p.nc,p.na,false); }
+function cname(p){ return p.a.st+p.c.nm; }
+function fmlChoices(p){
+  var right=fml(p), seen={}, wrong=[];
+  seen[right]=1;
+  var cand=[[1,1],[p.na,p.nc],[1,2],[2,1],[1,3],[3,1],[2,3],[3,2]];
+  if((p.c.p&&p.nc>1)||(p.a.p&&p.na>1)) wrong.push(fmlN(p,p.nc,p.na,true));
+  if(wrong.length) seen[wrong[0]]=1;
+  shuffle(cand).forEach(function(x){
+    var s=fmlN(p,x[0],x[1],false);
+    if(!seen[s]){ seen[s]=1; wrong.push(s); }
+  });
+  return {right:right,wrong:wrong.slice(0,3)};
+}
+var POLY=[
+  ['NH<sub>4</sub><sup>+</sup>','アンモニウムイオン'],['H<sub>3</sub>O<sup>+</sup>','オキソニウムイオン'],
+  ['OH<sup>−</sup>','水酸化物イオン'],['NO<sub>3</sub><sup>−</sup>','硝酸イオン'],
+  ['HCO<sub>3</sub><sup>−</sup>','炭酸水素イオン'],['CH<sub>3</sub>COO<sup>−</sup>','酢酸イオン'],
+  ['HSO<sub>4</sub><sup>−</sup>','硫酸水素イオン'],['MnO<sub>4</sub><sup>−</sup>','過マンガン酸イオン'],
+  ['SO<sub>4</sub><sup>2−</sup>','硫酸イオン'],['SO<sub>3</sub><sup>2−</sup>','亜硫酸イオン'],
+  ['CO<sub>3</sub><sup>2−</sup>','炭酸イオン'],['Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup>','二クロム酸イオン'],
+  ['C<sub>2</sub>O<sub>4</sub><sup>2−</sup>','シュウ酸イオン'],['PO<sub>4</sub><sup>3−</sup>','リン酸イオン']
+];
+function choiceQ(t,v,line,desc,ask,ch,steps){
+  var all=shuffle([ch.right].concat(ch.wrong));
+  return {t:t,v:v,kind:'choice',line:line,desc:desc,ask:ask,unit:'',
+    choices:all,ans:all.indexOf(ch.right),ansText:ch.right,steps:steps};
+}
+
+/* ── categories ───────────────────────────────────────────────────────── */
+var CATS=[
+  {k:'mole',lb:'物質量',s:'g・個・L と mol',ch:'chapters/09_mole.html',cn:'第9章'},
+  {k:'conc',lb:'濃度',s:'モル濃度・希釈・質量%',ch:'chapters/10_concentration.html',cn:'第10章'},
+  {k:'rxn',lb:'反応の量的関係',s:'係数の比 = 物質量の比',ch:'chapters/11_reaction-quantities.html',cn:'第11章'},
+  {k:'ph',lb:'pH',s:'強酸・強塩基・希釈',ch:'chapters/12_acid-base.html',cn:'第12章'},
+  {k:'neut',lb:'中和滴定',s:'価数 × C × V',ch:'chapters/13_neutralization.html',cn:'第13章'},
+  {k:'ox',lb:'酸化数',s:OX.length+'種から出題',ch:'chapters/14_redox.html',cn:'第14章'},
+  {k:'form',lb:'化学式と名称',s:'組成式・多原子イオン',ch:'chapters/06_ionic-bond.html',cn:'第6章'},
+  {k:'all',lb:'全部混ぜる',s:'7分野',ch:'',cn:''}
+];
+
+function genQ(cat){
+  var c = cat==='all' ? pick(CATS.slice(0,-1)).k : cat;
+  var pool=T.filter(function(t){ return t.cat===c; });
+  var tp=pick(pool), q=tp.gen();
+  q.ctx=tp.ctx; q.cat=c;
+  if(!q.kind) q.kind='num';
+  if(q.exact===undefined) q.exact=false;
+  if(q.ansText===undefined) q.ansText = q.exact ? String(q.ans) : s3(q.ans);
+  q.html=q.line+(q.desc?'　'+q.desc:'')+'　→ '+q.ask+(q.unit?' ('+q.unit+')':'');
+  return q;
+}
+
+/* ── answer check ─────────────────────────────────────────────────────── */
+function parse(raw){
+  var s=String(raw)
+    .replace(/[０-９]/g,function(ch){ return String.fromCharCode(ch.charCodeAt(0)-0xFEE0); })
+    .replace(/[．。]/g,'.').replace(/＋/g,'+').replace(/[−－‐ー―]/g,'-')
+    .replace(/[\s,，]/g,'')
+    .replace(/(×|x|X|\*|＊)10\^?/,'e');
+  if(s==='' || s==='+' || s==='-') return NaN;
+  return Number(s);
+}
+function near(a,b){ return Math.abs(a-b)<=1e-9*Math.max(1,Math.abs(b)); }
+function check(q,v){
+  if(q.kind==='choice') return v===q.ans;
+  if(typeof v!=='number' || !isFinite(v)) return false;
+  if(q.exact) return near(v,q.ans);
+  if(q.ans===0) return Math.abs(v)<1e-9;
+  if(Math.abs(v-q.ans)<=Math.abs(q.ans)*0.01) return true;
+  return near(v,Number(q.ans.toPrecision(2))) || near(v,Number(q.ans.toPrecision(3)));
+}
+
+return {AM:AM,CPD:CPD,M:M,OX:OX,oxSolve:oxSolve,RXN:RXN,CAT_I:CAT_I,AN_I:AN_I,okPair:okPair,
+  POLY:POLY,T:T,CATS:CATS,genQ:genQ,parse:parse,check:check,s3:s3,sgn:sgn};
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+var C=CHEM;
+function $(id){ return document.getElementById(id); }
+function strip(s){ return String(s).replace(/<[^>]*>/g,''); }
+
+/* ── reference panel ──────────────────────────────────────────────────── */
+function refHTML(){
+  var h='<div class="amt">';
+  Object.keys(C.AM).forEach(function(el){ h+='<div><b>'+el+'</b><span>'+C.AM[el]+'</span></div>'; });
+  h+='</div><table class="const">'
+    +'<tr><td>アボガドロ定数</td><td class="n">6.0×10<sup>23</sup> /mol</td></tr>'
+    +'<tr><td>気体のモル体積</td><td class="n">22.4 L/mol　標準状態</td></tr>'
+    +'<tr><td>水のイオン積</td><td class="n">1.0×10<sup>−14</sup> (mol/L)<sup>2</sup></td></tr>'
+    +'<tr><td>標準状態</td><td class="n">0 ℃ 1.013×10<sup>5</sup> Pa</td></tr>'
+    +'</table>';
+  return h;
+}
+$('refbody').innerHTML=refHTML();
+$('d-refbody').innerHTML=refHTML();
+
+/* ── session ──────────────────────────────────────────────────────────── */
+var S=null, clock=null;
+function show(which){
+  ['setup','drill','result'].forEach(function(id){ $(id).classList.toggle('hide', id!==which); });
+  var drilling = which==='drill';
+  ['lead','logsec','refsec','techsec'].forEach(function(id){ $(id).classList.toggle('hide', drilling); });
+}
+function catOf(k){
+  for(var i=0;i<C.CATS.length;i++) if(C.CATS[i].k===k) return C.CATS[i];
+  return C.CATS[0];
+}
+function label(cfg){ return catOf(cfg.cat).lb; }
+
+function start(cfg, queue){
+  S={cfg:cfg, i:0, items:[], queue:queue||null,
+     count:queue?queue.length:cfg.count, phase:'input'};
+  show('drill');
+  window.scrollTo({top:0,behavior:'smooth'});
+  nextQ();
+}
+function nextQ(){
+  if(S.i>=S.count){ finish(); return; }
+  $('d-fb').classList.add('hide');
+  $('d-in').value='';
+  $('d-hintnote').textContent='';
+  $('d-prog').textContent=(S.i+1)+' / '+S.count;
+  $('d-fill').style.width=(S.i/S.count*100)+'%';
+  var q = S.queue ? S.queue[S.i] : C.genQ(S.cfg.cat);
+  S.cur=q; S.phase='input';
+  $('d-meta').textContent=catOf(q.cat).lb;
+  $('d-ctx').textContent=q.ctx;
+  $('d-q').innerHTML=q.line;
+  $('d-desc').innerHTML=q.desc||'';
+  $('d-desc').classList.toggle('hide', !q.desc);
+  $('d-ask').innerHTML=q.ask+(q.unit?' <span class="u">'+q.unit+'</span>':'');
+  var isC = q.kind==='choice';
+  $('d-ansbox').classList.toggle('hide', isC);
+  $('d-choices').classList.toggle('hide', !isC);
+  $('d-keys').classList.toggle('hide', !q.keys);
+  if(isC){
+    $('d-choices').innerHTML=q.choices.map(function(c,i){
+      return '<button type="button" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+c+'</button>';
+    }).join('');
+    Array.prototype.forEach.call($('d-choices').children, function(b){
+      b.addEventListener('click', function(){ if(S.phase==='input') judge(Number(b.dataset.i)); });
+    });
+    $('d-hintnote').textContent='数字キー 1〜4 でも選べる';
+  } else {
+    var el=$('d-in');
+    el.setAttribute('inputmode', q.im||'decimal');
+    el.placeholder = q.keys ? '+7 / −2' : '答え';
+    if(q.keys){
+      $('d-keys').innerHTML=q.keys.map(function(k){
+        return '<button type="button" data-v="'+k+'">'+C.sgn(k)+'</button>';
+      }).join('');
+      Array.prototype.forEach.call($('d-keys').children, function(b){
+        b.addEventListener('click', function(){ if(S.phase==='input') judge(Number(b.dataset.v)); });
+      });
+    }
+    el.focus(); el.select();
+  }
+  S.qStart=performance.now();
+  stopClock();
+  clock=setInterval(function(){
+    $('d-time').textContent=((performance.now()-S.qStart)/1000).toFixed(1)+'s';
+  },100);
+}
+function stopClock(){ if(clock){ clearInterval(clock); clock=null; } }
+
+function stepsHTML(q){ return '<ol><li>'+q.steps.join('</li><li>')+'</li></ol>'; }
+function mineText(q,v){
+  if(q.kind==='choice') return q.choices[v];
+  if(q.keys) return C.sgn(v);
+  return String(Math.round(v*1e6)/1e6);
+}
+function judge(v){
+  if(S.phase!=='input') return;
+  stopClock();
+  var q=S.cur, ms=performance.now()-S.qStart;
+  var ok=C.check(q,v);
+  S.items.push({q:q, mine:mineText(q,v), ok:ok, ms:ms});
+  S.i++;
+  if(q.kind==='choice'){
+    Array.prototype.forEach.call($('d-choices').children, function(b,i){
+      b.disabled=true;
+      if(i===q.ans) b.classList.add('right');
+      else if(i===v) b.classList.add('wrong');
+    });
+  }
+  var fb=$('d-fb');
+  fb.classList.remove('hide','ok','ng');
+  if(ok){
+    fb.classList.add('ok');
+    fb.innerHTML='<b>正解</b>　'+(ms/1000).toFixed(1)+'秒';
+    S.phase='wait';
+    setTimeout(function(){ if(S && S.phase==='wait') nextQ(); }, 520);
+  } else {
+    fb.classList.add('ng');
+    var ch=catOf(q.cat);
+    fb.innerHTML='<b>不正解</b>　正解は '+q.ansText+(q.unit?' '+q.unit:'')
+      +'　自分の答え '+mineText(q,v)
+      +'<div class="how">'+stepsHTML(q)
+      +(ch.ch?'<a href="'+ch.ch+'" target="_blank" rel="noopener">'+ch.cn+'で確認する</a>':'')+'</div>';
+    S.phase='hold';
+    $('d-hintnote').textContent='Enter または確定で次へ';
+  }
+}
+function submit(){
+  if(S.phase==='hold'){ nextQ(); return; }
+  if(S.phase!=='input' || S.cur.kind==='choice') return;
+  var v=C.parse($('d-in').value);
+  if(!isFinite(v)) return;
+  judge(v);
+}
+function quit(){
+  if(S) S.phase='dead';
+  stopClock();
+  $('d-hintnote').textContent='';
+  if(S && S.items.length) finish(); else show('setup');
+}
+
+/* ── result ───────────────────────────────────────────────────────────── */
+function finish(){
+  S.phase='done';
+  stopClock();
+  $('d-hintnote').textContent='';
+  var it=S.items, n=it.length, ok=0, tot=0, fast=Infinity, slow=0;
+  it.forEach(function(x){ if(x.ok){ ok++; fast=Math.min(fast,x.ms); slow=Math.max(slow,x.ms); } tot+=x.ms; });
+  var avg=n? tot/n/1000 : 0;
+  $('r-kpi').innerHTML=
+    kpi(Math.round(ok/n*100)+'%','正答率',ok+' / '+n)
+   +kpi(avg.toFixed(1)+'s','1問あたり','合計 '+(tot/1000).toFixed(0)+'秒')
+   +kpi(isFinite(fast)?(fast/1000).toFixed(1)+'s':'—','最速',ok?'最遅 '+(slow/1000).toFixed(1)+'s':'正解なし')
+   +kpi('<span style="font-size:15px">'+label(S.cfg)+'</span>','分野','');
+
+  var miss=it.filter(function(x){ return !x.ok; }), h='';
+  if(miss.length){
+    h='<h3>間違えた '+miss.length+'問</h3><table><thead><tr><th>問題</th><th class="n">自分</th><th class="n">正解</th></tr></thead><tbody>';
+    miss.forEach(function(x){
+      h+='<tr><td>'+x.q.html+'<div class="how2">'+stepsHTML(x.q)+'</div></td>'
+        +'<td class="n miss">'+x.mine+'</td><td class="n">'+x.q.ansText+'</td></tr>';
+    });
+    h+='</tbody></table>';
+  } else {
+    h='<div class="note">全問正解。分野を全部混ぜるに切り替えると単位の判別まで練習できる。</div>';
+  }
+  var slowest=it.filter(function(x){ return x.ok; }).sort(function(a,b){ return b.ms-a.ms; }).slice(0,3);
+  if(slowest.length){
+    h+='<h3>時間がかかった問題<span class="sm"> — 正解でも遅い型は本番で時間が不足する</span></h3><table><tbody>';
+    slowest.forEach(function(x){
+      h+='<tr><td>'+x.q.html+' = '+x.q.ansText+'<div class="how2">'+stepsHTML(x.q)+'</div></td>'
+        +'<td class="n">'+(x.ms/1000).toFixed(1)+'s</td></tr>';
+    });
+    h+='</tbody></table>';
+  }
+  var by={};
+  it.forEach(function(x){
+    var k=x.q.ctx;
+    if(!by[k]) by[k]={n:0,ok:0,ms:0};
+    by[k].n++; by[k].ok+=x.ok?1:0; by[k].ms+=x.ms;
+  });
+  var keys=Object.keys(by);
+  if(keys.length>1){
+    h+='<h3>型ごとの成績</h3><table><thead><tr><th>型</th><th class="n">正答</th><th class="n">1問</th></tr></thead><tbody>';
+    keys.sort(function(a,b){ return by[a].ok/by[a].n - by[b].ok/by[b].n; }).forEach(function(k){
+      h+='<tr><td>'+k+'</td><td class="n">'+by[k].ok+'/'+by[k].n+'</td>'
+        +'<td class="n">'+(by[k].ms/by[k].n/1000).toFixed(1)+'s</td></tr>';
+    });
+    h+='</tbody></table>';
+  }
+  $('r-missbox').innerHTML=h;
+  $('b-redo').classList.toggle('hide', miss.length===0);
+  S.miss=miss.map(function(x){ return x.q; });
+  saveRun({t:Date.now(), cat:S.cfg.cat, lb:label(S.cfg), n:n, ok:ok, ms:tot});
+  drawLog();
+  show('result');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function kpi(v,k,n){
+  return '<div class="kpi"><div class="v num">'+v+'</div><div class="k">'+k+'</div>'
+    +(n?'<div class="n">'+n+'</div>':'')+'</div>';
+}
+
+/* ── log ──────────────────────────────────────────────────────────────── */
+var KEY='chem.hist.v1', PREF='chem.pref.v1';
+function loadRuns(){ try{ return JSON.parse(localStorage.getItem(KEY))||[]; }catch(e){ return []; } }
+function saveRun(r){
+  try{ var h=loadRuns(); h.push(r); localStorage.setItem(KEY,JSON.stringify(h.slice(-300))); }catch(e){}
+}
+function ymd(t){
+  var d=new Date(t);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function drawLog(){
+  var h=loadRuns();
+  if(!h.length){
+    $('l-kpi').innerHTML='';
+    $('l-body').innerHTML='<div class="note">まだ記録がない。1セッションを終えるとここに正答率と1問あたりの秒数が残る。</div>';
+    return;
+  }
+  var today=ymd(Date.now()), days={}, tn=0, tok=0, tms=0, todayN=0;
+  h.forEach(function(r){
+    days[ymd(r.t)]=1; tn+=r.n; tok+=r.ok; tms+=r.ms;
+    if(ymd(r.t)===today) todayN+=r.n;
+  });
+  var streak=0, d=new Date();
+  if(!days[today]) d.setDate(d.getDate()-1);
+  while(days[ymd(d.getTime())]){ streak++; d.setDate(d.getDate()-1); }
+  $('l-kpi').innerHTML=
+    kpi(todayN+'問','今日','連続 '+streak+'日')
+   +kpi(tn+'問','通算',Object.keys(days).length+'日')
+   +kpi(Math.round(tok/tn*100)+'%','通算の正答率','')
+   +kpi((tms/tn/1000).toFixed(1)+'s','通算の1問あたり','');
+
+  var agg={};
+  h.forEach(function(r){
+    if(!agg[r.lb]) agg[r.lb]={n:0,ok:0,ms:0};
+    agg[r.lb].n+=r.n; agg[r.lb].ok+=r.ok; agg[r.lb].ms+=r.ms;
+  });
+  var body='<h3>直近のセッション</h3><table><thead><tr><th>日時</th><th>分野</th><th class="n">正答</th><th class="n">1問</th></tr></thead><tbody>';
+  h.slice(-12).reverse().forEach(function(r){
+    var dt=new Date(r.t);
+    body+='<tr><td class="n">'+ymd(r.t).slice(5)+' '+String(dt.getHours()).padStart(2,'0')+':'
+      +String(dt.getMinutes()).padStart(2,'0')+'</td><td>'+r.lb+'</td>'
+      +'<td class="n">'+r.ok+'/'+r.n+'</td><td class="n">'+(r.ms/r.n/1000).toFixed(1)+'s</td></tr>';
+  });
+  body+='</tbody></table>';
+  var ak=Object.keys(agg);
+  if(ak.length){
+    body+='<h3>分野ごとの通算<span class="sm"> — 正答率の低い順</span></h3><table><tbody>';
+    ak.sort(function(a,b){ return agg[a].ok/agg[a].n - agg[b].ok/agg[b].n; }).forEach(function(k){
+      body+='<tr><td>'+k+'</td><td class="n">'+agg[k].n+'問</td>'
+        +'<td class="n">'+Math.round(agg[k].ok/agg[k].n*100)+'%</td>'
+        +'<td class="n">'+(agg[k].ms/agg[k].n/1000).toFixed(1)+'s / 問</td></tr>';
+    });
+    body+='</tbody></table>';
+  }
+  body+='<div style="margin-top:14px"><button class="t" id="b-clear">記録を消す</button></div>';
+  $('l-body').innerHTML=body;
+  $('b-clear').addEventListener('click', function(){
+    if(!confirm('この端末に保存した記録を全部消す。')) return;
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    drawLog();
+  });
+}
+
+/* ── setup UI ─────────────────────────────────────────────────────────── */
+var cfg={cat:'mole', count:10};
+try{
+  var p=JSON.parse(localStorage.getItem(PREF));
+  if(p && p.cat){ cfg.cat=p.cat; cfg.count=p.count||10; }
+}catch(e){}
+
+function seg(el, items, val, onSel){
+  el.innerHTML=items.map(function(it){
+    return '<button type="button" data-v="'+it.v+'" aria-pressed="'+(it.v===val)+'">'+it.lb
+      +(it.s? '<span class="s">'+it.s+'</span>':'')+'</button>';
+  }).join('');
+  Array.prototype.forEach.call(el.children, function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(el.children, function(x){ x.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      onSel(b.dataset.v);
+    });
+  });
+}
+function catNote(){
+  var pool = cfg.cat==='all' ? C.T : C.T.filter(function(t){ return t.cat===cfg.cat; });
+  var c=catOf(cfg.cat), link='';
+  if(c.ch) link='<br>対応する章 <a href="'+c.ch+'">'+c.cn+' '+c.lb+'</a>';
+  else link='<br>7分野から均等に出題する';
+  $('cat-note').innerHTML='出題する型 '+pool.length+'種類　—　'+pool.map(function(t){ return t.ctx; }).join(' / ')
+    +link
+    +'<br>数値の答えは有効数字2桁か3桁で入力する。正解との誤差が1%以内でも正解とする。10<sup>23</sup> を含む答えは単位欄の指数を除いた数だけを入力する。e 表記と ×10^ 表記も受け付ける。';
+}
+seg($('cats'), C.CATS.map(function(c){ return {v:c.k, lb:c.lb, s:c.s}; }), cfg.cat,
+    function(v){ cfg.cat=v; catNote(); });
+seg($('counts'), [10,20,30].map(function(c){ return {v:String(c), lb:c+'問'}; }), String(cfg.count),
+    function(v){ cfg.count=Number(v); });
+catNote();
+drawLog();
+
+/* ── wiring ───────────────────────────────────────────────────────────── */
+$('b-start').addEventListener('click', function(){
+  try{ localStorage.setItem(PREF, JSON.stringify(cfg)); }catch(e){}
+  start({cat:cfg.cat, count:cfg.count});
+});
+$('b-ok').addEventListener('click', submit);
+$('b-quit').addEventListener('click', quit);
+$('b-again').addEventListener('click', function(){ start(S.cfg); });
+$('b-redo').addEventListener('click', function(){
+  if(!S.miss||!S.miss.length) return;
+  var q=S.miss.slice(), c={cat:S.cfg.cat, count:q.length};
+  start(c,q);
+});
+$('b-back').addEventListener('click', function(){
+  show('setup'); window.scrollTo({top:0,behavior:'smooth'});
+});
+document.addEventListener('keydown', function(e){
+  if($('drill').classList.contains('hide')) return;
+  if(e.key==='Enter'){ e.preventDefault(); submit(); }
+  else if(e.key==='Escape'){ e.preventDefault(); quit(); }
+  else if(S && S.cur && S.cur.kind==='choice' && S.phase==='input' && /^[1-4]$/.test(e.key)){
+    var i=Number(e.key)-1;
+    if(i<S.cur.choices.length){ e.preventDefault(); judge(i); }
+  }
+});
+})();
+</script>
+</body>
+</html>

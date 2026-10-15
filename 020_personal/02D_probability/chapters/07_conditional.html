@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>条件付き確率と期待値｜確率・統計</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../021_profile/index.html">profile</a><a href="../../02A_plan/index.html">plan</a><a href="../../023_travel/index.html">travel</a><a href="../../027_cinema/index.html">cinema</a><a href="../../02B_reading/index.html">reading</a><a href="../../024_method/index.html">method</a><a href="../../026_handbook/index.html">handbook</a><a href="../../025_fitness/index.html">fitness</a><a href="../../028_english/index.html">english</a><a href="../../029_mental_math/index.html">mental math</a><a href="../../02C_chemistry/index.html">chemistry</a><a href="../index.html">probability</a><a href="../../02E_calculus/index.html">calculus</a><a href="../../02F_linear_algebra/index.html">linear algebra</a><a href="../../02G_physics/index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../024_method/index.html">method</a>
+    <a class="snav-a" href="../../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../028_english/index.html">english</a>
+    <a class="snav-a" href="../../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../index.html">probability</a>
+    <a class="snav-a" href="../../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../02G_physics/index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / personal /
+    <a href="../index.html">02D probability</a> / 第7章</div>
+
+  <div class="tb-ch">数学A — 第7章</div>
+  <h1>条件付き確率と期待値</h1>
+  <p class="tb-thesis">条件付き確率は全体を条件の事象に取り替えて測った確率である。乗法定理 P(A∩B)=P(A)P_A(B) を逆向きに使うと結果から原因の確率を求められる。期待値は値と確率の積の和であり不確実な選択を比べる基準になる。</p>
+
+<p class="tb-ok"><strong>この章は2026-10-15に出典照合を通した。</strong> 検証した事実は42件である。出典と一致したものは41件である。食い違ったものは1件で本文を修正済みである。出典で確認できなかったものは0件である。これらは末尾の「残っている問い」に列挙した。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">条件付き確率の定義</a></li><li><a href="#s2">確率の乗法定理</a></li><li><a href="#s3">原因の確率 検査の陽性と有病率</a></li><li><a href="#s4">期待値の定義</a></li><li><a href="#s5">期待値を判断に使う</a></li><li><a href="#s6">現実世界の期待値 宝くじの還元率</a></li><li><a href="#s7">確認問題</a></li><li><a href="#s8">この章の要点</a></li><li><a href="#s9">残っている問い</a></li><li><a href="#s10">出典</a></li></ol></nav>
+
+<p>第6章では全事象 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi></mrow><annotation encoding="application/x-tex">U</annotation></semantics></math></span> を分母として確率を求めた。この章では「ある事象が起こったと分かっているとき」の確率を扱う。分母を全事象からその事象に取り替えるのが条件付き確率である。続いて確率と値を組み合わせて1つの数にまとめる期待値を扱う。</p>
+<p>学習指導要領解説は数学Aの場合の数と確率で条件付き確率と期待値を求めることを定めている。期待値については「従前『数学B』で取り扱われていた期待値は『数学A』で取り扱う」と明記している。共通テストの確率の大問では条件付き確率と期待値が小問の後半に置かれることが多い。第8章ではこの章の期待値を確率変数の平均として数学Bの言葉で扱い直す。</p>
+
+<h2 id="s1">条件付き確率の定義</h2>
+<p>事象 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> が起こったという条件のもとで事象 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> が起こる確率を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> が起こったときの <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の<strong>条件付き確率</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_A(B)</annotation></semantics></math></span> で表す。大学の教科書では <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(B\mid A)</annotation></semantics></math></span> と書く。</p>
+<p>根元事象が同様に確からしいとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> が起こったと分かれば起こり得る結果は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> の要素に限られる。そのうち <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> も起こるのは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cap B</annotation></semantics></math></span> の要素である。したがって次のように定める。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow></mfrac><mo>=</mo><mfrac><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">P_A(B)=\frac{n(A\cap B)}{n(A)}=\frac{P(A\cap B)}{P(A)}</annotation></semantics></math></span></div>
+<p>右の形は分子と分母を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>U</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n(U)</annotation></semantics></math></span> で割ったものである。<strong class="hit">条件付き確率は全体 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi></mrow><annotation encoding="application/x-tex">U</annotation></semantics></math></span> を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> に取り替えて測り直した確率である</strong>。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 280" role="img" aria-label="P(A∩B) と条件付き確率 P_A(B) の分母の違いを示す">
+  <defs>
+    <clipPath id="c07a"><circle cx="135" cy="145" r="80"/></clipPath>
+    <clipPath id="c07b"><circle cx="495" cy="145" r="80"/></clipPath>
+  </defs>
+  <text x="20" y="24" font-size="13" fill="var(--muted)">P(A∩B) 分母は全体 U</text>
+  <text x="380" y="24" font-size="13" fill="var(--muted)">P<tspan font-size="10" dy="4">A</tspan><tspan dy="-4">(B) 分母は A</tspan></text>
+  <rect x="20" y="40" width="320" height="210" fill="var(--line)" fill-opacity="0.35" stroke="var(--ink)"/>
+  <circle cx="135" cy="145" r="80" fill="none" stroke="var(--cool)" stroke-width="2"/>
+  <circle cx="235" cy="145" r="80" fill="none" stroke="var(--warm)" stroke-width="2"/>
+  <circle cx="235" cy="145" r="80" fill="var(--accent)" fill-opacity="0.45" clip-path="url(#c07a)"/>
+  <rect x="380" y="40" width="320" height="210" fill="none" stroke="var(--line)" stroke-dasharray="5 4"/>
+  <circle cx="495" cy="145" r="80" fill="var(--cool)" fill-opacity="0.2" stroke="var(--cool)" stroke-width="2.5"/>
+  <circle cx="595" cy="145" r="80" fill="none" stroke="var(--warm)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <circle cx="595" cy="145" r="80" fill="var(--accent)" fill-opacity="0.45" clip-path="url(#c07b)"/>
+  <g font-size="15" font-weight="700" fill="var(--ink)" text-anchor="middle">
+    <text x="105" y="150">A</text><text x="265" y="150">B</text><text x="185" y="150">A∩B</text>
+    <text x="465" y="150">A</text><text x="625" y="150" fill="var(--muted)">B</text><text x="545" y="150">A∩B</text>
+    <text x="36" y="62">U</text>
+  </g>
+  <g font-size="12" fill="var(--sub)" text-anchor="middle">
+    <text x="180" y="272">濃い部分 ÷ 長方形全体</text>
+    <text x="540" y="272">濃い部分 ÷ 青い円 A</text>
+  </g>
+</svg>
+<figcaption>左は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(A\cap B)</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cap B</annotation></semantics></math></span> を全体 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi></mrow><annotation encoding="application/x-tex">U</annotation></semantics></math></span> と比べる。右は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_A(B)</annotation></semantics></math></span> で同じ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cap B</annotation></semantics></math></span> を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> と比べる。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> の外側は条件によって起こらないことが分かったので考えない。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 1</div>
+<p>大小2個のさいころを投げたところ目の和が8であった。このとき大のさいころの目が偶数である確率を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 事象 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> を和が8 とし事象 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> を大の目が偶数 とする。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> は (2,6)(3,5)(4,4)(5,3)(6,2) の5通りである。左が大の目である。<br>手順3 そのうち大の目が偶数なのは (2,6)(4,4)(6,2) の3通りである。<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>5</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">P_A(B)=\dfrac{3}{5}</annotation></semantics></math></span></div></details></div>
+<p>典型的な誤りは2つある。1つ目は分母を36のまま <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>36</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{36}</annotation></semantics></math></span> とする誤りで これは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(A\cap B)</annotation></semantics></math></span> である。2つ目は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_A(B)</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>B</mi></msub><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_B(A)</annotation></semantics></math></span> の取り違えである。大の目が偶数のとき和が8になる確率 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>B</mi></msub><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_B(A)</annotation></semantics></math></span> は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>18</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>6</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{18}=\dfrac{1}{6}</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_A(B)</annotation></semantics></math></span> とは異なる。問題文の「〜のとき」が条件の側である。</p>
+<p>2つの観点で分類したデータは表にまとめると条件付き確率を求めやすい。表の行か列のどちらか1つが条件にあたる。条件の行または列の合計を分母にし その中の該当するマスを分子にする。全体の合計を分母にした値は積事象の確率である。確認問題の問6はこの形である。</p>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">打率は条件付き確率である</p>
+<p>打率は安打数を打席数ではなく打数で割る。四球や犠打を除いた「打数に数える打席」を全体に取り替えて測った安打の割合である。</p>
+</aside>
+
+<h2 id="s2">確率の乗法定理</h2>
+<p>条件付き確率の定義の両辺に <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(A)</annotation></semantics></math></span> を掛けると次の式が得られる。これを<strong>確率の乗法定理</strong>と呼ぶ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mtext> </mtext><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(A\cap B)=P(A)\,P_A(B)</annotation></semantics></math></span></div>
+<p>「<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> が起こりさらに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> が起こる」確率は1段目の確率に1段目の結果を踏まえた2段目の確率を掛けて求める。袋から玉を戻さずに続けて取り出す試行では2回目の確率が1回目の結果で変わる。第6章の独立な試行の公式は使えずこの定理を使う。</p>
+
+<div class="ex"><div class="ex-h">例題 2</div>
+<p>赤玉3個と白玉2個が入った袋から玉を1個ずつ2回取り出す。取り出した玉は戻さない。2回とも赤玉である確率を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 1回目に赤である事象を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> とすると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>5</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">P(A)=\dfrac{3}{5}</annotation></semantics></math></span> である。<br>手順2 1回目に赤を取り出した後の袋は赤2個・白2個である。2回目に赤である事象を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> とすると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>4</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">P_A(B)=\dfrac{2}{4}</annotation></semantics></math></span> である。<br>手順3 乗法定理で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>5</mn></mfrac></mstyle><mo>×</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>4</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{5}\times\dfrac{2}{4}</annotation></semantics></math></span> である。<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>10</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{10}</annotation></semantics></math></span>。第6章の例題2で2個を同時に取り出したときの値 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><msub><mrow></mrow><mn>3</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub></mrow><mrow><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{{}_{3}\mathrm{C}_{2}}{{}_{5}\mathrm{C}_{2}}</annotation></semantics></math></span> と一致する</div></details></div>
+<p>3段階以上の試行でも乗法定理を繰り返し使える。同じ袋から玉を戻さずに3回取り出して3回とも赤玉である確率は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>5</mn></mfrac></mstyle><mo>×</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>4</mn></mfrac></mstyle><mo>×</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>3</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>10</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{5}\times\dfrac{2}{4}\times\dfrac{1}{3}=\dfrac{1}{10}</annotation></semantics></math></span> である。各段階の確率はそれまでの結果がすべて起こったという条件のもとでの確率である。式で書くと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo>∩</mo><mi>C</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mtext> </mtext><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mtext> </mtext><msub><mi>P</mi><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow></msub><mo stretchy="false">(</mo><mi>C</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(A\cap B\cap C)=P(A)\,P_A(B)\,P_{A\cap B}(C)</annotation></semantics></math></span> である。</p>
+
+<div class="ex"><div class="ex-h">例題 3</div>
+<p>10本のうち当たりが2本あるくじを A と B がこの順に1本ずつ引く。引いたくじは戻さない。B が当たる確率を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 B が当たるのは「A 当たりかつ B 当たり」と「A はずれかつ B 当たり」の2つの場合で互いに排反である。<br>手順2 前者は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>10</mn></mfrac></mstyle><mo>×</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>9</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>90</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{2}{10}\times\dfrac{1}{9}=\dfrac{2}{90}</annotation></semantics></math></span> である。<br>手順3 後者は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>8</mn><mn>10</mn></mfrac></mstyle><mo>×</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>9</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>16</mn><mn>90</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{8}{10}\times\dfrac{2}{9}=\dfrac{16}{90}</annotation></semantics></math></span> である。<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>90</mn></mfrac></mstyle><mo>+</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>16</mn><mn>90</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>18</mn><mn>90</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>5</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{2}{90}+\dfrac{16}{90}=\dfrac{18}{90}=\dfrac{1}{5}</annotation></semantics></math></span>。A が当たる確率 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>10</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{2}{10}</annotation></semantics></math></span> と等しい</div></details></div>
+<p>例題3の結果からくじは引く順番によらず公平であることが分かる。後に引く人は前の人の結果に左右されるが 前の人の結果がまだ分からない段階で計算すると当たりやすさは変わらない。</p>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_A(B)=P(B)</annotation></semantics></math></span> が成り立つとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> が起こったという情報は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の確率を変えない。このとき乗法定理は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mi>P</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(A\cap B)=P(A)P(B)</annotation></semantics></math></span> となり第6章の独立な試行の式と同じ形になる。</p>
+
+<h2 id="s3">原因の確率 検査の陽性と有病率</h2>
+<p>乗法定理は2通りに書ける。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> を先に考えても <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> を先に考えても <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cap B</annotation></semantics></math></span> の確率は同じだからである。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mtext> </mtext><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mtext> </mtext><msub><mi>P</mi><mi>B</mi></msub><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(A\cap B)=P(A)\,P_A(B)=P(B)\,P_B(A)</annotation></semantics></math></span></div>
+<p>この等式を使うと「原因 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> のもとで結果 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> が起こる確率」から「結果 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> が起こったときに原因が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> である確率」を求められる。これを<strong>原因の確率</strong>と呼ぶ。学習指導要領解説はこの考え方がベイズの定理の基になると述べている。数学Aではベイズの定理を公式として暗記せず 乗法定理と表や樹形図で計算する。</p>
+<p>次の検査を考える。数値は計算のための設定である。</p>
+<ul>
+<li>ある病気の有病率は 1% である</li>
+<li>病気の人が検査を受けると 90% が陽性になる</li>
+<li>病気でない人が検査を受けると 5% が陽性になる</li>
+</ul>
+<p>検査で陽性となった人が実際に病気である確率を求める。確率のままでは見通しが悪いので<strong class="hit">10,000人の集団に置き換えて人数で数える</strong>。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 300" role="img" aria-label="10000人を有病と非有病に分け検査の陽性と陰性に分ける樹形図">
+  <g stroke="var(--line)" stroke-width="1.6" fill="none">
+    <line x1="110" y1="150" x2="250" y2="80"/><line x1="110" y1="150" x2="250" y2="220"/>
+    <line x1="330" y1="80" x2="460" y2="45"/><line x1="330" y1="80" x2="460" y2="110"/>
+    <line x1="330" y1="220" x2="460" y2="185"/><line x1="330" y1="220" x2="460" y2="255"/>
+  </g>
+  <g font-size="14" font-weight="700" fill="var(--ink)">
+    <text x="20" y="155">10,000人</text>
+    <text x="255" y="85">有病 100</text>
+    <text x="255" y="225">非有病 9,900</text>
+  </g>
+  <g font-size="12" fill="var(--sub)">
+    <text x="150" y="100">1%</text><text x="150" y="214">99%</text>
+    <text x="380" y="52">90%</text><text x="380" y="112">10%</text>
+    <text x="380" y="192">5%</text><text x="380" y="252">95%</text>
+  </g>
+  <rect x="465" y="28" width="120" height="28" rx="4" fill="var(--accent)" fill-opacity="0.3"/>
+  <rect x="465" y="168" width="120" height="28" rx="4" fill="var(--warm)" fill-opacity="0.3"/>
+  <g font-size="14" fill="var(--ink)">
+    <text x="472" y="48">陽性 90</text><text x="472" y="115">陰性 10</text>
+    <text x="472" y="188">陽性 495</text><text x="472" y="260">陰性 9,405</text>
+  </g>
+  <g font-size="13" fill="var(--ink)">
+    <text x="600" y="110">陽性の合計</text>
+    <text x="600" y="130">90＋495＝585</text>
+    <text x="600" y="168" font-weight="700">うち有病 90</text>
+    <text x="600" y="190" font-weight="700">90÷585</text>
+    <text x="600" y="210" font-weight="700">≒ 15.4%</text>
+  </g>
+</svg>
+<figcaption>陽性者585人のうち病気の人は90人である。病気でない9,900人の5%にあたる495人が陽性になり 病気の人の陽性者90人を上回る。有病率が低いと陽性者の大半は病気でない人になる。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 4</div>
+<p>上の設定で検査が陽性であった人が病気である確率を確率の式で求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 病気である事象を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> とし陽性である事象を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> とする。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0.01</mn></mrow><annotation encoding="application/x-tex">P(A)=0.01</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0.9</mn></mrow><annotation encoding="application/x-tex">P_A(B)=0.9</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">P_{\overline{A}}(B)=0.05</annotation></semantics></math></span> である。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0.01</mn><mo>×</mo><mn>0.9</mn><mo>=</mo><mn>0.009</mn></mrow><annotation encoding="application/x-tex">P(A\cap B)=0.01\times0.9=0.009</annotation></semantics></math></span> である。<br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0.99</mn><mo>×</mo><mn>0.05</mn><mo>=</mo><mn>0.0495</mn></mrow><annotation encoding="application/x-tex">P(\overline{A}\cap B)=0.99\times0.05=0.0495</annotation></semantics></math></span> である。<br>手順4 陽性になるのはこの2つの場合で排反なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0.009</mn><mo>+</mo><mn>0.0495</mn><mo>=</mo><mn>0.0585</mn></mrow><annotation encoding="application/x-tex">P(B)=0.009+0.0495=0.0585</annotation></semantics></math></span> である。<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>B</mi></msub><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>0.009</mn><mn>0.0585</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>13</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">P_B(A)=\dfrac{0.009}{0.0585}=\dfrac{2}{13}</annotation></semantics></math></span> で約 15.4%</div></details></div>
+<p>「陽性なら90%の確率で病気である」と考える誤りが多い。90% は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_A(B)</annotation></semantics></math></span> で求めたいのは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>B</mi></msub><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_B(A)</annotation></semantics></math></span> である。<strong class="hit">2つの条件付き確率は向きが逆で値も大きく異なる</strong>。差を生むのは有病率 1% という元の割合である。</p>
+<p>同じ計算は人数の表でも確かめられる。行を「病気である」と「病気でない」に分け列を「陽性」と「陰性」に分けると 4つのマスは 90・10・495・9,405 である。陽性の列の合計 585 を分母にして病気のマス 90 を分子にすれば <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>B</mi></msub><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_B(A)</annotation></semantics></math></span> である。病気の行の合計 100 を分母にして陽性のマス 90 を分子にすれば <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_A(B)</annotation></semantics></math></span> である。<strong class="hit">分母にする合計が行か列かで2つの条件付き確率が分かれる</strong>。</p>
+
+<div class="ex"><div class="ex-h">例題 5</div>
+<p>例題4で陽性となった人がもう1回同じ検査を受け再び陽性となった。2回の検査結果は病気かどうかを固定すると互いに影響しないと仮定する。この人が病気である確率を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 2回とも陽性の確率は 病気なら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>0.9</mn><mn>2</mn></msup><mo>=</mo><mn>0.81</mn></mrow><annotation encoding="application/x-tex">0.9^2=0.81</annotation></semantics></math></span> で 病気でないなら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>0.05</mn><mn>2</mn></msup><mo>=</mo><mn>0.0025</mn></mrow><annotation encoding="application/x-tex">0.05^2=0.0025</annotation></semantics></math></span> である。<br>手順2 病気かつ2回陽性は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.01</mn><mo>×</mo><mn>0.81</mn><mo>=</mo><mn>0.0081</mn></mrow><annotation encoding="application/x-tex">0.01\times0.81=0.0081</annotation></semantics></math></span> である。<br>手順3 病気でなくかつ2回陽性は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.99</mn><mo>×</mo><mn>0.0025</mn><mo>=</mo><mn>0.002475</mn></mrow><annotation encoding="application/x-tex">0.99\times0.0025=0.002475</annotation></semantics></math></span> である。<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>0.0081</mn><mrow><mn>0.0081</mn><mo>+</mo><mn>0.002475</mn></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>0.0081</mn><mn>0.010575</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{0.0081}{0.0081+0.002475}=\dfrac{0.0081}{0.010575}</annotation></semantics></math></span> で約 76.6%</div></details></div>
+<p>1回目の結果で病気である確率は 1% から約 15% に上がり 2回目の結果で約 77% に上がった。データを得るたびに確率を更新するこの手順が学習指導要領解説の述べるベイズ統計の基本の考え方である。</p>
+
+<aside class="an an-lv"><b>恋愛で言えば</b>
+<p class="an-h">脈なしなら返信が遅い は 返信が遅いなら脈なし と同じではない</p>
+<p>前者は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_A(B)</annotation></semantics></math></span> で後者は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>B</mi></msub><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_B(A)</annotation></semantics></math></span> である。返信が遅い人の多くは単に忙しい人であり その割合が元の割合にあたる。</p>
+</aside>
+
+<h2 id="s4">期待値の定義</h2>
+<p>ある試行の結果に応じて値 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>x</mi><mn>2</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>x</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_1,x_2,\dots,x_n</annotation></semantics></math></span> のどれか1つが定まり それぞれの値をとる確率が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>p</mi><mn>2</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>p</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">p_1,p_2,\dots,p_n</annotation></semantics></math></span> であるとする。ただし <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>1</mn></msub><mo>+</mo><msub><mi>p</mi><mn>2</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>p</mi><mi>n</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">p_1+p_2+\cdots+p_n=1</annotation></semantics></math></span> である。このとき次の値を<strong>期待値</strong>と呼ぶ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>E</mi><mo>=</mo><msub><mi>x</mi><mn>1</mn></msub><msub><mi>p</mi><mn>1</mn></msub><mo>+</mo><msub><mi>x</mi><mn>2</mn></msub><msub><mi>p</mi><mn>2</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>x</mi><mi>n</mi></msub><msub><mi>p</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">E=x_1p_1+x_2p_2+\cdots+x_np_n</annotation></semantics></math></span></div>
+<p>期待値の意味は試行を多数回繰り返したときの1回あたりの平均である。試行を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span> 回繰り返すと値 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">x_k</annotation></semantics></math></span> はおよそ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><msub><mi>p</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">Np_k</annotation></semantics></math></span> 回現れる。全部の値の合計はおよそ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mi>N</mi><msub><mi>p</mi><mn>1</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>x</mi><mi>n</mi></msub><mi>N</mi><msub><mi>p</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_1Np_1+\cdots+x_nNp_n</annotation></semantics></math></span> である。これを回数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span> で割ると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><msub><mi>p</mi><mn>1</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>x</mi><mi>n</mi></msub><msub><mi>p</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_1p_1+\cdots+x_np_n</annotation></semantics></math></span> になる。<strong class="hit">期待値は第1章の度数分布の平均で相対度数を確率に置き換えたものである</strong>。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>値</th><th><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1</annotation></semantics></math></span></th><th><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">x_2</annotation></semantics></math></span></th><th><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⋯</mo></mrow><annotation encoding="application/x-tex">\cdots</annotation></semantics></math></span></th><th><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_n</annotation></semantics></math></span></th><th>計</th></tr></thead>
+<tbody>
+<tr><td>確率</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">p_1</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">p_2</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⋯</mo></mrow><annotation encoding="application/x-tex">\cdots</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">p_n</annotation></semantics></math></span></td><td>1</td></tr>
+</tbody></table></div>
+<p>期待値を求めるときはまず値と確率の対応表をつくる。確率の合計が1になることを確かめてから積を足す。</p>
+
+<div class="ex"><div class="ex-h">例題 6</div>
+<p>(1) さいころ1個を投げたときの出る目の期待値を求めよ。(2) 硬貨3枚を投げたときの表の枚数の期待値を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 (1) 目 1 から 6 はどれも確率 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>6</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{6}</annotation></semantics></math></span> なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mn>2</mn><mo>+</mo><mn>3</mn><mo>+</mo><mn>4</mn><mo>+</mo><mn>5</mn><mo>+</mo><mn>6</mn><mo stretchy="false">)</mo><mo>×</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>6</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>21</mn><mn>6</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">(1+2+3+4+5+6)\times\dfrac{1}{6}=\dfrac{21}{6}</annotation></semantics></math></span> である。<br>手順2 (2) 表の枚数 0・1・2・3 の確率は第6章の反復試行の公式で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>8</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{8}</annotation></semantics></math></span>・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>8</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{8}</annotation></semantics></math></span>・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>8</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{8}</annotation></semantics></math></span>・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>8</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{8}</annotation></semantics></math></span> である。<br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>⋅</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>8</mn></mfrac></mstyle><mo>+</mo><mn>1</mn><mo>⋅</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>8</mn></mfrac></mstyle><mo>+</mo><mn>2</mn><mo>⋅</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>8</mn></mfrac></mstyle><mo>+</mo><mn>3</mn><mo>⋅</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>8</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>12</mn><mn>8</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">0\cdot\dfrac{1}{8}+1\cdot\dfrac{3}{8}+2\cdot\dfrac{3}{8}+3\cdot\dfrac{1}{8}=\dfrac{12}{8}</annotation></semantics></math></span> である。<br>答え (1) <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>7</mn><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{7}{2}</annotation></semantics></math></span> (2) <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{2}</annotation></semantics></math></span></div></details></div>
+
+<div class="ex"><div class="ex-h">例題 7</div>
+<p>大小2個のさいころを投げて大きいほうの目を得点とする。同じ目ならその目を得点とする。得点の期待値を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 得点が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span> 以下になるのは2個とも <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span> 以下のときで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>k</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">k^2</annotation></semantics></math></span> 通りである。<br>手順2 得点がちょうど <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span> になるのは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>k</mi><mn>2</mn></msup><mo>−</mo><mo stretchy="false">(</mo><mi>k</mi><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>=</mo><mn>2</mn><mi>k</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k^2-(k-1)^2=2k-1</annotation></semantics></math></span> 通りである。確率は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>2</mn><mi>k</mi><mo>−</mo><mn>1</mn></mrow><mn>36</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{2k-1}{36}</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k=1</annotation></semantics></math></span> から 6 の値は 1・3・5・7・9・11 を36で割ったものである。<br>手順3 期待値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>1</mn><mo>⋅</mo><mn>1</mn><mo>+</mo><mn>2</mn><mo>⋅</mo><mn>3</mn><mo>+</mo><mn>3</mn><mo>⋅</mo><mn>5</mn><mo>+</mo><mn>4</mn><mo>⋅</mo><mn>7</mn><mo>+</mo><mn>5</mn><mo>⋅</mo><mn>9</mn><mo>+</mo><mn>6</mn><mo>⋅</mo><mn>11</mn></mrow><mn>36</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>161</mn><mn>36</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1\cdot1+2\cdot3+3\cdot5+4\cdot7+5\cdot9+6\cdot11}{36}=\dfrac{161}{36}</annotation></semantics></math></span> である。<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>161</mn><mn>36</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{161}{36}</annotation></semantics></math></span> で約 4.47</div></details></div>
+<p>この例題のように確率が直接数えにくいときは「<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span> 以下」の確率を先に求めて差をとる。最大値や最小値の問題で使う方法である。分子の合計 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mn>3</mn><mo>+</mo><mn>5</mn><mo>+</mo><mn>7</mn><mo>+</mo><mn>9</mn><mo>+</mo><mn>11</mn><mo>=</mo><mn>36</mn></mrow><annotation encoding="application/x-tex">1+3+5+7+9+11=36</annotation></semantics></math></span> で確率の和が1になることも確かめられる。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 260" role="img" aria-label="表の枚数の確率を棒の高さで示し期待値1.5が釣り合いの位置であることを示す">
+  <line x1="100" y1="200" x2="640" y2="200" stroke="var(--ink)" stroke-width="2"/>
+  <g fill="var(--cool)">
+    <rect x="120" y="150" width="60" height="50"/>
+    <rect x="270" y="50" width="60" height="150"/>
+    <rect x="420" y="50" width="60" height="150"/>
+    <rect x="570" y="150" width="60" height="50"/>
+  </g>
+  <g font-size="13" text-anchor="middle" fill="var(--ink)">
+    <text x="150" y="142">1/8</text><text x="300" y="42">3/8</text><text x="450" y="42">3/8</text><text x="600" y="142">1/8</text>
+  </g>
+  <g font-size="14" text-anchor="middle" fill="var(--sub)">
+    <text x="150" y="222">0枚</text><text x="300" y="222">1枚</text><text x="450" y="222">2枚</text><text x="600" y="222">3枚</text>
+  </g>
+  <path d="M375 202 L360 236 L390 236 Z" fill="var(--accent)"/>
+  <text x="375" y="254" font-size="13" text-anchor="middle" font-weight="700" fill="var(--accent)">期待値 1.5</text>
+</svg>
+<figcaption>横軸は表の枚数で棒の高さはその確率である。棒を重りとみなすと1.5の位置で釣り合う。期待値は確率の重心の位置である。1.5枚という結果は実際には起こらない。</figcaption>
+</figure>
+
+<p>図のように期待値は実際に起こる値とは限らない。さいころの期待値 3.5 も出る目ではない。「期待値の目が最も出やすい」と考えるのは誤りである。</p>
+
+<aside class="an an-biz"><b>会計で言えば</b>
+<p class="an-h">貸倒引当金は期待値で見積もる</p>
+<p>売掛金の総額に過去の貸倒実績率を掛けて計上する。どの取引先が倒産するかは分からなくても損失の平均は見込める。</p>
+</aside>
+
+<h2 id="s5">期待値を判断に使う</h2>
+<p>学習指導要領解説は期待値を意思決定に活用する力を数学Aの目標に挙げている。2つ以上の選択肢があり結果が確率的に定まるとき それぞれの期待値を比べて選択の根拠にする。</p>
+
+<div class="ex"><div class="ex-h">例題 8</div>
+<p>100本のくじがあり 1等 1000円が1本・2等 500円が4本・3等 100円が10本で残りははずれである。1本 50円でこのくじを引くのは得か。</p>
+<details open><summary>解き方</summary><div>手順1 賞金と確率の表をつくる。1000円 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>100</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{100}</annotation></semantics></math></span>・500円 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>4</mn><mn>100</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{4}{100}</annotation></semantics></math></span>・100円 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>10</mn><mn>100</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{10}{100}</annotation></semantics></math></span>・0円 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>85</mn><mn>100</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{85}{100}</annotation></semantics></math></span> で確率の合計は1である。<br>手順2 期待値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>1000</mn><mo>⋅</mo><mn>1</mn><mo>+</mo><mn>500</mn><mo>⋅</mo><mn>4</mn><mo>+</mo><mn>100</mn><mo>⋅</mo><mn>10</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>4000</mn><mn>100</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1000\cdot1+500\cdot4+100\cdot10}{100}=\dfrac{4000}{100}</annotation></semantics></math></span> である。<br>手順3 賞金の期待値 40円は参加費 50円より小さい。<br>答え 1回あたり平均で10円の損になるので期待値の観点では得ではない</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 9</div>
+<p>ある店は翌日の弁当の仕入れ数を 10個・20個・30個から選ぶ。仕入れ値は1個300円で売値は1個500円である。売れ残りは廃棄する。翌日の需要は 10個の確率が 0.3・20個の確率が 0.5・30個の確率が 0.2 と見込まれる。利益の期待値が最大になる仕入れ数を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 利益は「500円 × 売れた個数 − 300円 × 仕入れ数」である。売れた個数は仕入れ数と需要の小さいほうである。<br>手順2 10個仕入れると需要によらず10個売れて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5000</mn><mo>−</mo><mn>3000</mn><mo>=</mo><mn>2000</mn></mrow><annotation encoding="application/x-tex">5000-3000=2000</annotation></semantics></math></span> 円である。期待値も 2000円である。<br>手順3 20個仕入れると 需要10個なら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5000</mn><mo>−</mo><mn>6000</mn><mo>=</mo><mo>−</mo><mn>1000</mn></mrow><annotation encoding="application/x-tex">5000-6000=-1000</annotation></semantics></math></span> 円で 需要20個以上なら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10000</mn><mo>−</mo><mn>6000</mn><mo>=</mo><mn>4000</mn></mrow><annotation encoding="application/x-tex">10000-6000=4000</annotation></semantics></math></span> 円である。期待値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1000</mn><mo>×</mo><mn>0.3</mn><mo>+</mo><mn>4000</mn><mo>×</mo><mn>0.7</mn><mo>=</mo><mn>2500</mn></mrow><annotation encoding="application/x-tex">-1000\times0.3+4000\times0.7=2500</annotation></semantics></math></span> 円である。<br>手順4 30個仕入れると 需要10・20・30個で利益は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>4000</mn></mrow><annotation encoding="application/x-tex">-4000</annotation></semantics></math></span>・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1000</mn></mrow><annotation encoding="application/x-tex">1000</annotation></semantics></math></span>・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6000</mn></mrow><annotation encoding="application/x-tex">6000</annotation></semantics></math></span> 円である。期待値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1200</mn><mo>+</mo><mn>500</mn><mo>+</mo><mn>1200</mn><mo>=</mo><mn>500</mn></mrow><annotation encoding="application/x-tex">-1200+500+1200=500</annotation></semantics></math></span> 円である。<br>答え 20個。利益の期待値は 2500円</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 10</div>
+<p>次の2つのゲームのどちらか一方に1回だけ参加できる。ゲーム A はさいころを1個投げ 6の目なら1200円を受け取る。ゲーム B は硬貨を2枚投げ 2枚とも表なら600円・1枚だけ表なら100円を受け取る。受け取る金額の期待値が大きいほうを選べ。</p>
+<details open><summary>解き方</summary><div>手順1 A の期待値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1200</mn><mo>×</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>6</mn></mfrac></mstyle><mo>=</mo><mn>200</mn></mrow><annotation encoding="application/x-tex">1200\times\dfrac{1}{6}=200</annotation></semantics></math></span> 円である。<br>手順2 B は 2枚とも表の確率が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>4</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{4}</annotation></semantics></math></span> で1枚だけ表の確率が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{2}</annotation></semantics></math></span> である。<br>手順3 B の期待値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>600</mn><mo>×</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>4</mn></mfrac></mstyle><mo>+</mo><mn>100</mn><mo>×</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo>=</mo><mn>150</mn><mo>+</mo><mn>50</mn><mo>=</mo><mn>200</mn></mrow><annotation encoding="application/x-tex">600\times\dfrac{1}{4}+100\times\dfrac{1}{2}=150+50=200</annotation></semantics></math></span> 円である。<br>答え 期待値は どちらも200円で等しい。期待値だけでは選べない</div></details></div>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 240" role="img" aria-label="仕入れ数ごとの利益の期待値を比べる棒グラフ">
+  <line x1="120" y1="200" x2="620" y2="200" stroke="var(--ink)"/>
+  <line x1="120" y1="40" x2="120" y2="200" stroke="var(--ink)"/>
+  <g stroke="var(--line)" stroke-dasharray="3 3">
+    <line x1="120" y1="152" x2="620" y2="152"/><line x1="120" y1="104" x2="620" y2="104"/><line x1="120" y1="56" x2="620" y2="56"/>
+  </g>
+  <g font-size="12" fill="var(--sub)" text-anchor="end">
+    <text x="112" y="204">0</text><text x="112" y="156">1000</text><text x="112" y="108">2000</text><text x="112" y="60">3000</text>
+  </g>
+  <g fill="var(--cool)">
+    <rect x="170" y="104" width="80" height="96"/>
+    <rect x="330" y="80" width="80" height="120" fill="var(--accent)"/>
+    <rect x="490" y="176" width="80" height="24"/>
+  </g>
+  <g font-size="13" text-anchor="middle" fill="var(--ink)">
+    <text x="210" y="96">2000円</text><text x="370" y="72" font-weight="700">2500円</text><text x="530" y="168">500円</text>
+  </g>
+  <g font-size="13" text-anchor="middle" fill="var(--sub)">
+    <text x="210" y="222">10個仕入れ</text><text x="370" y="222">20個仕入れ</text><text x="530" y="222">30個仕入れ</text>
+  </g>
+</svg>
+<figcaption>縦軸は利益の期待値で1000円を48の高さで描いた。20個の仕入れが最大である。30個は需要が30個のとき最も大きな利益になるがその確率が0.2と小さく期待値では最も小さい。</figcaption>
+</figure>
+
+<p>期待値が大きくても結果のばらつきが大きい選択肢は避けたい場面がある。例題9で20個仕入れると1000円の赤字になる確率が0.3ある。10個仕入れると利益は常に2000円である。ばらつきは第8章で分散と標準偏差として数値で表す。<strong class="hit">期待値は判断の基準の1つであり唯一の基準ではない</strong>。</p>
+<p>例題のゲーム A と B は期待値が等しくても性質が異なる。A は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>5</mn><mn>6</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{5}{6}</annotation></semantics></math></span> の確率で何も受け取れない代わりに当たれば1200円である。B は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>4</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{4}</annotation></semantics></math></span> の確率で何かを受け取れるが最大でも600円である。確実さを重んじる人は B を選び大きな金額を重んじる人は A を選ぶ。どちらの判断も期待値の計算と矛盾しない。</p>
+
+<aside class="an an-biz"><b>スタートアップで言えば</b>
+<p class="an-h">ベンチャー投資は期待値で選び件数で平均に近づける</p>
+<p>10社に同額を投資し1社が30倍で9社が0なら全体は3倍である。1社だけでは0か30倍かのどちらかになる。</p>
+</aside>
+
+<h2 id="s6">現実世界の期待値 宝くじの還元率</h2>
+<p>宝くじの当せん金の総額は当せん金付証票法第5条で発売総額の5割を超えてはならないと定められている。購入者全体に戻る割合が5割以下なので 1枚300円の宝くじの賞金の期待値は150円以下である。総務省が2021年10月の地方財政審議会に示した資料では 2020年度の売上総額8,160億円のうち当せん金は3,839億円で 47.0% であった。</p>
+<aside class="an an-rw"><b>現実世界</b>
+<p class="an-h">宝くじの購入は期待値が参加費の半分以下の選択である</p>
+<p>それでも買う人がいるのは 賞金の最大額や娯楽の価値など期待値に含まれない要素を評価しているからである。</p>
+</aside>
+
+<h2 id="s7">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ 条件付き確率</div>
+<p class="qz-q">大小2個のさいころを投げたところ少なくとも1個は6の目であった。このとき目の和が10以上である確率を求めよ。</p>
+<ol><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>5</mn><mn>36</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{5}{36}</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{2}</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>5</mn><mn>11</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{5}{11}</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>6</mn><mn>11</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{6}{11}</annotation></semantics></math></span></li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。少なくとも1個が6の目の出方は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>36</mn><mo>−</mo><mn>25</mn><mo>=</mo><mn>11</mn></mrow><annotation encoding="application/x-tex">36-25=11</annotation></semantics></math></span> 通りである。そのうち和が10以上は (4,6)(5,6)(6,4)(6,5)(6,6) の5通りである。1 は分母を36にした <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(A\cap B)</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ くじ引き</div>
+<p class="qz-q">10本のうち当たりが3本あるくじを A と B がこの順に1本ずつ引く。引いたくじは戻さない。B が当たる確率を求めよ。</p>
+<details><summary>解答と解説</summary><div>正解は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>10</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{10}</annotation></semantics></math></span> である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>10</mn></mfrac></mstyle><mo>⋅</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>9</mn></mfrac></mstyle><mo>+</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>7</mn><mn>10</mn></mfrac></mstyle><mo>⋅</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>9</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>6</mn><mo>+</mo><mn>21</mn></mrow><mn>90</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>27</mn><mn>90</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>10</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{10}\cdot\dfrac{2}{9}+\dfrac{7}{10}\cdot\dfrac{3}{9}=\dfrac{6+21}{90}=\dfrac{27}{90}=\dfrac{3}{10}</annotation></semantics></math></span> で A と等しい。</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 原因の確率</div>
+<p class="qz-q">ある製品は工場 A で全体の 60% を工場 B で 40% を生産する。不良品の割合は A で 2%・B で 5% である。製品から1個を取り出したところ不良品であった。これが工場 A の製品である確率を求めよ。</p>
+<ol><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>5</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{2}{5}</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>8</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{8}</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>5</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{5}</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{2}</annotation></semantics></math></span></li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。A かつ不良は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.6</mn><mo>×</mo><mn>0.02</mn><mo>=</mo><mn>0.012</mn></mrow><annotation encoding="application/x-tex">0.6\times0.02=0.012</annotation></semantics></math></span> で B かつ不良は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.4</mn><mo>×</mo><mn>0.05</mn><mo>=</mo><mn>0.020</mn></mrow><annotation encoding="application/x-tex">0.4\times0.05=0.020</annotation></semantics></math></span> である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>0.012</mn><mrow><mn>0.012</mn><mo>+</mo><mn>0.020</mn></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>12</mn><mn>32</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>8</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{0.012}{0.012+0.020}=\dfrac{12}{32}=\dfrac{3}{8}</annotation></semantics></math></span> である。3 は生産の割合 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(A)</annotation></semantics></math></span> をそのまま答えた誤りである。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ 期待値</div>
+<p class="qz-q">硬貨3枚を同時に投げ 表が出た枚数1枚につき100円を受け取る。受け取る金額の期待値を求めよ。</p>
+<details><summary>解答と解説</summary><div>正解は 150円である。表の枚数の期待値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{2}</annotation></semantics></math></span> 枚なので金額は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>2</mn></mfrac></mstyle><mo>=</mo><mn>150</mn></mrow><annotation encoding="application/x-tex">100\times\dfrac{3}{2}=150</annotation></semantics></math></span> 円である。表で求めると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>⋅</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>8</mn></mfrac></mstyle><mo>+</mo><mn>100</mn><mo>⋅</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>8</mn></mfrac></mstyle><mo>+</mo><mn>200</mn><mo>⋅</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>8</mn></mfrac></mstyle><mo>+</mo><mn>300</mn><mo>⋅</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>8</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1200</mn><mn>8</mn></mfrac></mstyle><mo>=</mo><mn>150</mn></mrow><annotation encoding="application/x-tex">0\cdot\dfrac{1}{8}+100\cdot\dfrac{3}{8}+200\cdot\dfrac{3}{8}+300\cdot\dfrac{1}{8}=\dfrac{1200}{8}=150</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 期待値による判断</div>
+<p class="qz-q">参加費120円のゲームがある。大小2個のさいころを投げて同じ目が出たら600円を受け取り それ以外は何も受け取らない。正しい記述を1つ選べ。</p>
+<ol><li>受け取る金額の期待値は100円で参加費より小さい</li><li>受け取る金額の期待値は120円で参加費と等しい</li><li>受け取る金額の期待値は200円で参加費より大きい</li><li>同じ目が出る確率は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>36</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{36}</annotation></semantics></math></span> である</li></ol>
+<details><summary>解答と解説</summary><div>正解は 1 である。同じ目は (1,1) から (6,6) の6通りで確率は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>6</mn><mn>36</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>6</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{6}{36}=\dfrac{1}{6}</annotation></semantics></math></span> である。期待値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>600</mn><mo>×</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>6</mn></mfrac></mstyle><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">600\times\dfrac{1}{6}=100</annotation></semantics></math></span> 円である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 表からの条件付き確率</div>
+<p class="qz-q">ある学年の100人は男子50人と女子50人で 眼鏡をかけている生徒は男子20人と女子15人である。眼鏡をかけている生徒から1人を選ぶとき その生徒が女子である確率を求めよ。</p>
+<details><summary>解答と解説</summary><div>正解は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>7</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{3}{7}</annotation></semantics></math></span> である。条件の側は「眼鏡をかけている」で全体は35人である。そのうち女子は15人なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>15</mn><mn>35</mn></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>3</mn><mn>7</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{15}{35}=\dfrac{3}{7}</annotation></semantics></math></span> である。女子のうち眼鏡の割合 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>15</mn><mn>50</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{15}{50}</annotation></semantics></math></span> と取り違えない。</div></details></div>
+
+<div class="qz"><div class="qz-h">問7 ・ 有病率と陽性</div>
+<p class="qz-q">有病率が低い病気の検査について正しい記述を1つ選べ。病気の人の陽性率は高く 病気でない人の陽性率は低いとする。</p>
+<ol><li>陽性になった人が病気である確率は病気の人の陽性率と常に等しい</li><li>陽性になった人が病気である確率は有病率によらない</li><li>有病率が低いと 陽性になった人が病気である確率は病気の人の陽性率より小さくなりうる</li><li>病気でない人の陽性率を下げても陽性になった人が病気である確率は変わらない</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。例題4では病気の人の陽性率は90%でも陽性者が病気である確率は約15%であった。1 は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_A(B)</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>B</mi></msub><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_B(A)</annotation></semantics></math></span> の取り違えである。4 は誤りで 病気でない人の陽性者が減るので確率は上がる。</div></details></div>
+
+<h2 id="s8">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">P_A(B)=\dfrac{P(A\cap B)}{P(A)}=\dfrac{n(A\cap B)}{n(A)}</annotation></semantics></math></span> は全体を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> に取り替えた確率である。<br>
+乗法定理 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(A\cap B)=P(A)P_A(B)</annotation></semantics></math></span> は戻さない取り出しなど2段階の試行で使う。<br>
+くじは引く順番によらず当たる確率が等しい。<br>
+原因の確率は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><msub><mi>P</mi><mi>B</mi></msub><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(A)P_A(B)=P(B)P_B(A)</annotation></semantics></math></span> から求め 人数に置き換えた樹形図で確かめる。<br>
+<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>A</mi></msub><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_A(B)</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>B</mi></msub><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P_B(A)</annotation></semantics></math></span> は向きが逆で値が大きく異なりうる。差は元の割合から生じる。<br>
+期待値 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><msub><mi>p</mi><mn>1</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>x</mi><mi>n</mi></msub><msub><mi>p</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_1p_1+\cdots+x_np_n</annotation></semantics></math></span> は多数回の平均であり判断の基準の1つになる。</div>
+
+<h2 id="s9">残っている問い</h2>
+<ul>
+<li class="tb-vnote">検査の例の数値は計算のための設定である。実在の検査の感度と特異度は検査ごとに異なり この章の値は特定の検査を表さない。</li>
+<li class="tb-vnote">例題5は2回の検査結果が病気かどうかを固定すると独立であると仮定した。同じ人に同じ検査を繰り返すと結果が似やすく 現実にはこの仮定が成り立たないことがある。</li>
+<li class="tb-vnote">宝くじの当せん金の割合 47.0% は2020年度の全体の値である。種類ごとの割合と他の年度の値は確かめていない。</li>
+<li class="tb-vnote">期待値で判断するのはリスクに中立な判断である。経済学では効用の期待値で判断する考え方があり 高校の期待値はその特別な場合にあたる。</li>
+</ul>
+
+<h2 id="s10">出典</h2>
+<ol>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 解説 数学編 理数編 — https://www.mext.go.jp/content/20260115-mxt_kyoiku02-100002620_04.pdf</li>
+<li>当せん金付証票法 — https://hourei.net/law/323AC0000000144</li>
+<li>総務省 地方財政審議会資料 宝くじについて 2021年10月5日 — https://www.soumu.go.jp/main_content/000781378.pdf</li>
+<li>Conditional probability — Wikipedia — https://en.wikipedia.org/wiki/Conditional_probability</li>
+<li>Base rate fallacy — Wikipedia — https://en.wikipedia.org/wiki/Base_rate_fallacy</li>
+<li>Expected value — Wikipedia — https://en.wikipedia.org/wiki/Expected_value</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="06_probability.html">← 確率と独立な試行</a><a class="tb-nav-a" href="08_random-variable.html">確率変数と二項分布 →</a></div>
+</div>
+<script>
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){ if (!tick) { tick = true; requestAnimationFrame(draw); } }, {passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>

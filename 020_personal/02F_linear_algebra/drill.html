@@ -1,0 +1,1349 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ベクトルと線形代数 計算ドリル</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a;
+    --accent:#2563EB; --line:#E5E2DA; --card:#fff;
+    --ok:#3B7F58; --ng:#B3261E;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.85;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 22px 90px}
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+  sub,sup{font-size:.68em;line-height:0}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  h1{font-size:27px;margin:0 0 4px;letter-spacing:-.01em}
+  .romaji{font-size:12px;color:var(--muted);letter-spacing:.08em;margin-bottom:20px}
+  .lead{color:var(--sub);font-size:14px;margin:14px 0 0}
+
+  h2{font-size:16.5px;margin:44px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .en{display:block;font-size:10.5px;color:var(--muted);font-weight:400;
+    letter-spacing:.09em;text-transform:uppercase}
+  h3{font-size:14px;margin:22px 0 6px}
+  h3 .sm{font-size:11px;color:var(--muted);font-weight:400}
+
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px;margin:18px 0;font-size:13.5px;color:var(--sub)}
+  .note a,.fb a,.tipbody a{color:var(--accent);text-decoration:none}
+
+  /* ---- math ---- */
+  .vc{position:relative;display:inline-block;font-style:italic;font-family:"Times New Roman",Georgia,serif;
+    padding:0 .06em}
+  .vc::after{content:"→";position:absolute;left:50%;top:-.78em;transform:translateX(-50%) scaleX(1.15);
+    font-size:.6em;font-style:normal;line-height:1}
+  .mx{display:inline-grid;grid-template-columns:repeat(2,auto);gap:0 .75em;vertical-align:middle;
+    border-left:1.5px solid currentColor;border-right:1.5px solid currentColor;border-radius:7px;
+    padding:.05em .5em;line-height:1.45;text-align:center;font-variant-numeric:tabular-nums;margin:.15em 0}
+  .mx.c3{grid-template-columns:repeat(3,auto)}
+
+  /* ---- setup ---- */
+  .pick{margin:18px 0 0}
+  .pick .lb{font-size:11.5px;color:var(--muted);letter-spacing:.04em;margin-bottom:7px}
+  .seg{display:flex;flex-wrap:wrap;gap:7px}
+  .seg button{font:inherit;font-size:13px;padding:7px 14px;border-radius:8px;
+    border:1px solid var(--line);background:var(--card);color:var(--sub);cursor:pointer;
+    transition:border-color .12s,color .12s}
+  .seg button:hover{border-color:var(--accent);color:var(--accent)}
+  .seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .seg button .s{display:block;font-size:10.5px;opacity:.62;letter-spacing:0}
+  .seg button.out{border-style:dashed}
+  .seg button .tag{display:inline-block;margin-left:6px;font-size:10px;padding:0 6px;border-radius:99px;
+    border:1px solid currentColor;line-height:1.6;vertical-align:1px;opacity:.75}
+  button.go{font:inherit;font-size:14px;font-weight:600;padding:11px 30px;border-radius:8px;
+    border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;margin-top:22px}
+  button.go:hover{opacity:.85}
+  button.t{font:inherit;font-size:12.5px;padding:6px 13px;border-radius:999px;
+    border:1px solid var(--line);background:var(--card);color:var(--sub);cursor:pointer}
+  button.t:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ---- drill ---- */
+  .hide{display:none!important}
+  #drill{margin-top:30px}
+  .head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    font-size:12.5px;color:var(--muted);margin-bottom:6px}
+  .track{height:3px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:26px}
+  .fill{height:100%;width:0;background:var(--ink);transition:width .18s}
+
+  .qbox{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:28px 20px 24px;text-align:center}
+  .ctx{font-size:12.5px;color:var(--muted);margin-bottom:12px;letter-spacing:.02em}
+  .q{font-size:clamp(18px,4.6vw,24px);line-height:1.9;letter-spacing:.01em;
+    font-variant-numeric:tabular-nums}
+  .q .op{color:var(--muted);margin:0 .14em}
+  .desc{margin-top:10px;font-size:14px;color:var(--sub);line-height:1.8}
+  .ask{margin-top:14px;font-size:14px;color:var(--sub)}
+  .ask .u{display:inline-block;margin-left:4px;padding:1px 8px;border-radius:5px;
+    background:#F1EFE8;color:var(--ink);font-size:13px;font-variant-numeric:tabular-nums}
+
+  .ans{margin-top:20px;display:flex;gap:8px;justify-content:center;align-items:stretch}
+  .ans input{font:inherit;font-size:24px;font-variant-numeric:tabular-nums;text-align:center;
+    padding:8px 12px;border-radius:9px;border:1.5px solid var(--line);background:#fff;
+    flex:1 1 auto;min-width:0;max-width:300px;letter-spacing:.02em}
+  .ans input:focus{outline:none;border-color:var(--accent)}
+  .ans button{font:inherit;font-size:14px;padding:0 18px;border-radius:9px;flex:0 0 auto;
+    border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+  .keys{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+  .keys button{font:inherit;font-size:15px;min-width:48px;padding:5px 10px;border-radius:8px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
+    font-variant-numeric:tabular-nums}
+  .keys button:hover{border-color:var(--accent);color:var(--accent)}
+  .choices{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .choices button{font:inherit;font-size:17px;padding:12px 10px;border-radius:9px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;text-align:center}
+  .choices button:hover{border-color:var(--accent)}
+  .choices button .k{display:block;font-size:10.5px;color:var(--muted)}
+  .choices button.right{border-color:var(--ok);background:#F2F8F4}
+  .choices button.wrong{border-color:var(--ng);background:#FCF3F2}
+  .choices button:disabled{cursor:default}
+
+  .fb{margin-top:20px;border-radius:10px;padding:14px 16px;font-size:13.5px;text-align:left}
+  .fb.ok{background:#F2F8F4;border:1px solid #CFE3D6;color:var(--ok)}
+  .fb.ng{background:#FCF3F2;border:1px solid #EBD3D0;color:var(--ng)}
+  .fb b{font-size:15px}
+  .fb .how{margin-top:9px;padding-top:9px;border-top:1px solid rgba(0,0,0,.08);
+    color:var(--sub);font-size:13px;line-height:2.05}
+  .fb .how em,.how2 em{font-style:normal;color:var(--ink);font-variant-numeric:tabular-nums}
+  .fb .how ol{margin:0;padding-left:1.4em}
+  .sub{margin-top:16px;text-align:center;font-size:12px;color:var(--muted)}
+  .sub button{margin:0 4px}
+
+  /* ---- result ---- */
+  .score{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 0}
+  .kpi{flex:1 1 120px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:13px 15px}
+  .kpi .v{font-size:25px;font-variant-numeric:tabular-nums;line-height:1.25}
+  .kpi .k{font-size:11px;color:var(--muted);letter-spacing:.04em}
+  .kpi .n{font-size:11.5px;color:var(--muted)}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.04em}
+  td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.miss{color:var(--ng)}
+  .how2{font-size:12px;color:var(--sub);line-height:1.9;margin-top:3px}
+  .how2 ol{margin:0;padding-left:1.3em}
+
+  details.tip{border-bottom:1px solid var(--line);padding:2px 0}
+  details.tip>summary{cursor:pointer;padding:9px 2px;font-size:14px;list-style:none}
+  details.tip>summary::-webkit-details-marker{display:none}
+  details.tip>summary::before{content:"＋ ";color:var(--muted)}
+  details.tip[open]>summary::before{content:"− "}
+  .tipbody{padding:2px 2px 16px;font-size:13.5px;color:var(--sub);line-height:1.95}
+  .tipbody .ex{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:10px 13px;margin:9px 0;font-variant-numeric:tabular-nums;color:var(--ink);font-size:13px;line-height:2.1}
+  .tipbody .ex i{font-style:normal;color:var(--muted)}
+  .tipbody ul{margin:6px 0;padding-left:1.3em}
+  .tipbody table{font-size:12.5px}
+  .tipbody td{padding:5px 9px}
+  .oos{font-size:11px;color:var(--ng);margin-left:8px;padding:0 6px;border:1px solid currentColor;border-radius:99px;vertical-align:1px}
+  #d-ref{margin-top:18px;text-align:left}
+
+  .trig{margin-top:10px;font-size:13px;font-variant-numeric:tabular-nums}
+  .trig th,.trig td{text-align:center;padding:5px 4px}
+  .const{margin-top:10px;font-size:13px}
+  .const td{padding:5px 9px}
+  .scroll{overflow-x:auto}
+
+  @media(max-width:430px){
+    #d-meta{display:none}
+    .qbox{padding:22px 13px 20px}
+    .ans input{font-size:21px}
+    .kpi{flex:1 1 calc(50% - 10px)}
+    .choices button{font-size:15px;padding:10px 6px}
+    .trig{font-size:12px}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a><a href="../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../021_profile/index.html">profile</a><a href="../02A_plan/index.html">plan</a><a href="../023_travel/index.html">travel</a><a href="../027_cinema/index.html">cinema</a><a href="../02B_reading/index.html">reading</a><a href="../024_method/index.html">method</a><a href="../026_handbook/index.html">handbook</a><a href="../025_fitness/index.html">fitness</a><a href="../028_english/index.html">english</a><a href="../029_mental_math/index.html">mental math</a><a href="../02C_chemistry/index.html">chemistry</a><a href="../02D_probability/index.html">probability</a><a href="../02E_calculus/index.html">calculus</a><a href="index.html">linear algebra</a><a href="../02G_physics/index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../024_method/index.html">method</a>
+    <a class="snav-a" href="../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../028_english/index.html">english</a>
+    <a class="snav-a" href="../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="index.html">linear algebra</a>
+    <a class="snav-a" href="../02G_physics/index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../index.html">shogo</a> / personal / <a href="index.html">02F linear algebra</a> / drill</div>
+  <h1>ベクトルと線形代数 計算ドリル</h1>
+  <div class="romaji">LINEAR ALGEBRA DRILL</div>
+  <p class="lead" id="lead">ベクトルの計算は成分ごとの足し算と掛け算の組み合わせで解ける。このドリルは成分と大きさ・内積となす角・内分点と面積・空間ベクトル・複素数平面を毎回異なる数値で出題する。行列・行列式・固有値は範囲外の発展として選べる。誤答には成分を追った解き方を表示する。記録はこの端末のブラウザに保存する。</p>
+
+  <!-- ================= SETUP ================= -->
+  <section id="setup">
+    <h2>何を練習するか<span class="en">start</span></h2>
+    <div class="pick"><div class="lb">分野</div><div class="seg" id="cats"></div></div>
+    <div class="pick"><div class="lb">問題数</div><div class="seg" id="counts"></div></div>
+    <button class="go" id="b-start">始める</button>
+    <div class="note" id="cat-note"></div>
+  </section>
+
+  <!-- ================= DRILL ================= -->
+  <section id="drill" class="hide">
+    <div class="head">
+      <span class="num" id="d-prog">1 / 20</span>
+      <span id="d-meta"></span>
+      <span class="num" id="d-time">0.0s</span>
+    </div>
+    <div class="track"><div class="fill" id="d-fill"></div></div>
+
+    <div class="qbox">
+      <div id="d-ctx" class="ctx"></div>
+      <div id="d-q" class="q"></div>
+      <div id="d-desc" class="desc"></div>
+      <div id="d-ask" class="ask"></div>
+      <div class="ans" id="d-ansbox">
+        <input id="d-in" type="text" inputmode="decimal" autocomplete="off"
+               autocorrect="off" spellcheck="false" placeholder="答え">
+        <button id="b-ok">確定</button>
+      </div>
+      <div class="keys hide" id="d-keys"></div>
+      <div class="choices hide" id="d-choices"></div>
+      <div id="d-fb" class="fb hide"></div>
+    </div>
+    <div class="sub">
+      <button class="t" id="b-quit">中断する</button>
+      <span id="d-hintnote"></span>
+    </div>
+    <details class="tip" id="d-ref"><summary>三角比と公式を開く</summary><div class="tipbody" id="d-refbody"></div></details>
+  </section>
+
+  <!-- ================= RESULT ================= -->
+  <section id="result" class="hide">
+    <h2>結果<span class="en">result</span></h2>
+    <div class="score" id="r-kpi"></div>
+    <div id="r-missbox"></div>
+    <div style="margin-top:20px">
+      <button class="go" id="b-again">同じ条件でもう一度</button>
+      <button class="t" id="b-redo" style="margin-left:8px">間違えた問題だけ</button>
+      <button class="t" id="b-back" style="margin-left:4px">条件を変える</button>
+    </div>
+  </section>
+
+  <!-- ================= LOG ================= -->
+  <section id="logsec">
+    <h2>記録<span class="en">log</span></h2>
+    <div class="score" id="l-kpi"></div>
+    <div id="l-body"></div>
+  </section>
+
+  <!-- ================= REFERENCE ================= -->
+  <section id="refsec">
+    <h2>主要角の三角比と公式<span class="en">reference</span></h2>
+    <div id="refbody"></div>
+  </section>
+
+  <!-- ================= METHOD ================= -->
+  <section id="techsec">
+    <h2>問題の解き方の型<span class="en">method</span></h2>
+    <p class="lead">どの分野も成分を書き出してから計算する。x 成分と y 成分を別々の式に分ければ符号の誤りは途中で見つけられる。大きさと角は最後に根号と三角比の表で値に直す。</p>
+
+    <details class="tip"><summary>1. ベクトルの成分は x と y を別々に計算する</summary><div class="tipbody">
+      和と実数倍は成分ごとに計算する。大きさは三平方の定理で |<span class="vc">a</span>| = √(a<sub>1</sub><sup>2</sup> + a<sub>2</sub><sup>2</sup>) である。平行の条件は <span class="vc">a</span> = t<span class="vc">b</span> となる実数 t があることである。
+      <div class="ex"><span class="vc">a</span> = (2, −1)　<span class="vc">b</span> = (1, 3) のとき |2<span class="vc">a</span> − <span class="vc">b</span>|<br><i>→</i> 2<span class="vc">a</span> − <span class="vc">b</span> = (4 − 1, −2 − 3) = (3, −5)<br><i>→</i> 3<sup>2</sup> + (−5)<sup>2</sup> = 34<br><i>→</i> <b>√34</b></div>
+      <a href="chapters/01_plane-vector.html">第1章 平面ベクトルを開く</a>
+    </div></details>
+
+    <details class="tip"><summary>2. 内積は成分の積の和と |<span class="vc">a</span>||<span class="vc">b</span>|cos θ の2通りで書ける</summary><div class="tipbody">
+      <span class="vc">a</span>·<span class="vc">b</span> = a<sub>1</sub>b<sub>1</sub> + a<sub>2</sub>b<sub>2</sub> = |<span class="vc">a</span>||<span class="vc">b</span>|cos θ である。2つの式を等しくおけば cos θ が求まる。cos θ = 0 なら垂直である。角 θ は 0° ≦ θ ≦ 180° の範囲で答える。
+      <div class="ex"><span class="vc">a</span> = (1, 2)　<span class="vc">b</span> = (−1, 3) のなす角<br><i>→</i> <span class="vc">a</span>·<span class="vc">b</span> = 1×(−1) + 2×3 = 5<br><i>→</i> |<span class="vc">a</span>| = √5　|<span class="vc">b</span>| = √10<br><i>→</i> cos θ = 5 / (√5 × √10) = 5 / (5√2) = 1/√2<br><i>→</i> <b>θ = 45°</b></div>
+      <a href="chapters/02_inner-product.html">第2章 内積を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>3. 内分点は相手側の比を掛ける</summary><div class="tipbody">
+      AB を m : n に内分する点は (n<span class="vc">a</span> + m<span class="vc">b</span>) / (m + n) である。A に掛かる数は B 側の比 n である。外分は n を −n に置き換える。三角形の面積は2辺のベクトル (x<sub>1</sub>, y<sub>1</sub>) と (x<sub>2</sub>, y<sub>2</sub>) から S = |x<sub>1</sub>y<sub>2</sub> − x<sub>2</sub>y<sub>1</sub>| / 2 で求める。
+      <div class="ex">A(1, 2)　B(7, −4) を 1 : 2 に内分する点 P<br><i>→</i> x = (2×1 + 1×7) / 3 = 3<br><i>→</i> y = (2×2 + 1×(−4)) / 3 = 0<br><i>→</i> <b>P(3, 0)</b></div>
+      <a href="chapters/03_vector-geometry.html">第3章 ベクトルと図形を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>4. 空間ベクトルは z 成分が1つ増えるだけ</summary><div class="tipbody">
+      内積は a<sub>1</sub>b<sub>1</sub> + a<sub>2</sub>b<sub>2</sub> + a<sub>3</sub>b<sub>3</sub> で大きさは √(a<sub>1</sub><sup>2</sup> + a<sub>2</sub><sup>2</sup> + a<sub>3</sub><sup>2</sup>) である。なす角の求め方は平面と同じである。
+      <div class="ex"><span class="vc">a</span> = (1, 1, 0)　<span class="vc">b</span> = (0, 1, 1) のなす角<br><i>→</i> <span class="vc">a</span>·<span class="vc">b</span> = 0 + 1 + 0 = 1<br><i>→</i> |<span class="vc">a</span>| = |<span class="vc">b</span>| = √2<br><i>→</i> cos θ = 1 / (√2 × √2) = 1/2<br><i>→</i> <b>θ = 60°</b></div>
+      <a href="chapters/04_space-vector.html">第4章 空間ベクトルを開く</a>
+    </div></details>
+
+    <details class="tip"><summary>5. 複素数は極形式に直して角を足す</summary><div class="tipbody">
+      z = a + bi の絶対値は |z| = √(a<sup>2</sup> + b<sup>2</sup>) である。極形式 z = r(cos θ + i sin θ) に直すと ド・モアブルの定理 z<sup>n</sup> = r<sup>n</sup>(cos nθ + i sin nθ) が使える。偏角は 0° ≦ θ &lt; 360° で答える。
+      <div class="ex">(1 + √3 i)<sup>5</sup><br><i>→</i> 1 + √3 i = 2(cos 60° + i sin 60°)<br><i>→</i> 2<sup>5</sup>(cos 300° + i sin 300°) = 32 × (1/2 − √3/2 i)<br><i>→</i> <b>16 − 16√3 i</b></div>
+      <a href="chapters/05_complex-plane.html">第5章 複素数平面を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>6. 行列の積は行と列の積の和<span class="oos">範囲外</span></summary><div class="tipbody">
+      AB の (i, j) 成分は A の第 i 行と B の第 j 列を順に掛けて足した値である。2×2 行列 A = (a b ; c d) の逆行列は ad − bc ≠ 0 のとき A<sup>−1</sup> = (d −b ; −c a) / (ad − bc) である。
+      <div class="ex">A = <span class="mx"><span>1</span><span>2</span><span>3</span><span>4</span></span>　B = <span class="mx"><span>0</span><span>1</span><span>−1</span><span>2</span></span> の AB の (2, 1) 成分<br><i>→</i> 第2行 (3, 4) と第1列 (0, −1)<br><i>→</i> 3×0 + 4×(−1) = <b>−4</b></div>
+      <a href="chapters/06_matrix.html">第6章 行列を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>7. 行列式は 2×2 なら ad − bc で 3×3 ならサラスの方法<span class="oos">範囲外</span></summary><div class="tipbody">
+      3×3 の行列式は右下がりの3本の積の和から右上がりの3本の積の和を引く。行列式が 0 の行列は逆行列をもたない。
+      <div class="ex"><span class="mx c3"><span>1</span><span>2</span><span>0</span><span>0</span><span>1</span><span>3</span><span>2</span><span>0</span><span>1</span></span><br><i>→</i> 右下がり 1×1×1 + 2×3×2 + 0×0×0 = 13<br><i>→</i> 右上がり 0×1×2 + 2×0×1 + 1×3×0 = 0<br><i>→</i> <b>13 − 0 = 13</b></div>
+      <a href="chapters/07_linear-map.html">第7章 線形変換を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>8. 固有値は det(A − λE) = 0 の解<span class="oos">範囲外</span></summary><div class="tipbody">
+      2×2 行列では λ<sup>2</sup> − (a + d)λ + (ad − bc) = 0 を解く。固有値の和は a + d で積は ad − bc に等しい。固有ベクトルは (A − λE)<span class="vc">x</span> = <span class="vc">0</span> を満たす 0 でないベクトルである。
+      <div class="ex">A = <span class="mx"><span>4</span><span>1</span><span>2</span><span>3</span></span><br><i>→</i> λ<sup>2</sup> − 7λ + 10 = 0<br><i>→</i> (λ − 2)(λ − 5) = 0<br><i>→</i> <b>λ = 2, 5</b></div>
+      <a href="chapters/08_eigen.html">第8章 固有値を開く</a>
+    </div></details>
+  </section>
+</div>
+
+<script id="gen">
+/* Question generators. Pure functions with no DOM access so that a node script
+   can load this block alone and check every answer. */
+var LA=(function(){
+'use strict';
+
+function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function shuffle(a){
+  a=a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function nz(a,b){ var x; do{ x=rnd(a,b); } while(x===0); return x; }
+function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ var t=a%b; a=b; b=t; } return a; }
+/* answers that are not exact: three significant figures */
+function s3(x){
+  if(x===0) return '0';
+  if(Math.abs(x)>=100) return String(Number(x.toPrecision(3)));
+  return x.toPrecision(3);
+}
+function em(s){ return '<em>'+s+'</em>'; }
+
+/* ── number text ──────────────────────────────────────────────────────── */
+function N(x){ return x<0 ? '−'+(-x) : String(x); }
+function P(x){ return x<0 ? '('+N(x)+')' : String(x); }
+function fr(p,q){
+  if(q<0){ p=-p; q=-q; }
+  var g=gcd(p,q)||1; p/=g; q/=g;
+  return q===1 ? N(p) : N(p)+'/'+q;
+}
+/* n = c^2 r with r square free */
+function sqs(n){
+  var c=1, r=n;
+  for(var k=2;k*k<=r;k++){ while(r%(k*k)===0){ r/=k*k; c*=k; } }
+  return [c,r];
+}
+function radT(c,r){
+  if(c===0) return '0';
+  if(r===1) return N(c);
+  return (c===1 ? '' : c===-1 ? '−' : N(c))+'√'+r;
+}
+/* c√r / q reduced */
+function frRad(c,r,q){
+  if(c===0) return '0';
+  if(q<0){ c=-c; q=-q; }
+  var g=gcd(c,q); c/=g; q/=g;
+  return q===1 ? radT(c,r) : radT(c,r)+'/'+q;
+}
+/* √n as text plus value */
+function root(n){
+  var s=sqs(n);
+  return {v:Math.sqrt(n), t:radT(s[0],s[1]), exact:s[1]===1, c:s[0], r:s[1]};
+}
+function sqT(n){ return '√'+n; }
+/* answer object for √n */
+function rootAns(n){
+  var R=root(n);
+  return {ans:R.v, exact:R.exact, ansText: R.exact ? R.t : R.t+' ≒ '+s3(R.v)};
+}
+
+/* ── vector text ──────────────────────────────────────────────────────── */
+function vn(s){ return '<span class="vc">'+s+'</span>'; }
+var VA=vn('a'), VB=vn('b');
+function V(v){ return '('+v.map(N).join(', ')+')'; }
+function coefT(p,first){
+  if(first) return p===1 ? '' : p===-1 ? '−' : N(p);
+  return p>0 ? ' + '+(p===1?'':p) : ' − '+(p===-1?'':-p);
+}
+function lcT(p,x,q,y){ return coefT(p,true)+x+coefT(q,false)+y; }
+function sqSum(w){ return w.map(function(x){ return P(x)+'<sup>2</sup>'; }).join(' + '); }
+function dotSum(a,b){ return a.map(function(x,i){ return P(x)+'×'+P(b[i]); }).join(' + '); }
+function dot(a,b){ var s=0; for(var i=0;i<a.length;i++) s+=a[i]*b[i]; return s; }
+function norm2(a){ return dot(a,a); }
+function lin(p,a,q,b){ return a.map(function(x,i){ return p*x+q*b[i]; }); }
+function rvec(n,lo,hi){ var v=[]; for(var i=0;i<n;i++) v.push(rnd(lo,hi)); return v; }
+function rvecNZ(n,lo,hi){ var v; do{ v=rvec(n,lo,hi); } while(norm2(v)===0); return v; }
+var CN=['x','y','z'];
+
+/* ── trigonometry for 30° and 45° multiples: value = p√r / q ─────────── */
+var COS={0:[1,1,1],30:[1,2,3],45:[1,2,2],60:[1,2,1],90:[0,1,1],120:[-1,2,1],135:[-1,2,2],150:[-1,2,3],
+  180:[-1,1,1],210:[-1,2,3],225:[-1,2,2],240:[-1,2,1],270:[0,1,1],300:[1,2,1],315:[1,2,2],330:[1,2,3]};
+function cosE(t){ return COS[((t%360)+360)%360]; }
+function sinE(t){ return cosE(90-t); }
+function trigT(e){ return e[0]===0 ? '0' : frRad(e[0],e[2],e[1]); }
+function trigV(e){ return e[0]*Math.sqrt(e[2])/e[1]; }
+
+/* ── matrix text ──────────────────────────────────────────────────────── */
+function mx(M){
+  var n=M[0].length, cells='';
+  M.forEach(function(r){ r.forEach(function(x){ cells+='<span>'+(typeof x==='number'?N(x):x)+'</span>'; }); });
+  return '<span class="mx'+(n===3?' c3':'')+'">'+cells+'</span>';
+}
+
+/* ── templates ────────────────────────────────────────────────────────── */
+var T=[
+/* ── 成分と大きさ ───────────────────────────────────────── */
+{cat:'vec',ctx:'成分の計算',gen:function(){
+  var a=rvec(2,-5,5), b=rvec(2,-5,5), p=pick([1,2,3,-1,-2]), q=pick([1,2,3,-1,-2,-3]), i=rnd(0,1);
+  var w=lin(p,a,q,b), L=lcT(p,VA,q,VB);
+  return {t:'lin',v:{a:a,b:b,p:p,q:q,i:i},exact:true,
+    line:VA+' = '+V(a)+'　'+VB+' = '+V(b),ask:L+' の '+CN[i]+' 成分は',ans:w[i],
+    steps:['成分ごとに計算する',
+      em(CN[i]+' 成分 = '+P(p)+'×'+P(a[i])+' + '+P(q)+'×'+P(b[i])+' = '+N(w[i])),
+      L+' = '+em(V(w))]};
+}},
+{cat:'vec',ctx:'ベクトルの大きさ',gen:function(){
+  var a=rvecNZ(2,-5,5), b=rvec(2,-5,5), p=pick([1,2,-1,3]), q=pick([1,-1,2,-2]), w=lin(p,a,q,b);
+  while(norm2(w)===0){ b=rvec(2,-5,5); w=lin(p,a,q,b); }
+  var L=lcT(p,VA,q,VB), S=norm2(w), A=rootAns(S);
+  return {t:'mag',v:{a:a,b:b,p:p,q:q},exact:A.exact,
+    line:VA+' = '+V(a)+'　'+VB+' = '+V(b),ask:'|'+L+'| は',ans:A.ans,ansText:A.ansText,
+    steps:[L+' = '+em(V(w)),
+      em('|'+L+'|<sup>2</sup> = '+sqSum(w)+' = '+S),
+      em('|'+L+'| = '+sqT(S)+(root(S).t!==sqT(S)?' = '+root(S).t:''))]};
+}},
+{cat:'vec',ctx:'2点を結ぶベクトルの大きさ',gen:function(){
+  var A=rvec(2,-5,6), B; do{ B=rvec(2,-5,6); } while(B[0]===A[0]&&B[1]===A[1]);
+  var w=lin(1,B,-1,A), S=norm2(w), R=rootAns(S);
+  return {t:'ab',v:{A:A,B:B},exact:R.exact,
+    line:'A'+V(A)+'　B'+V(B),ask:'|'+vn('AB')+'| は',ans:R.ans,ansText:R.ansText,
+    steps:[vn('AB')+' = B − A = '+em('('+N(B[0])+' − '+P(A[0])+', '+N(B[1])+' − '+P(A[1])+') = '+V(w)),
+      em('|'+vn('AB')+'|<sup>2</sup> = '+sqSum(w)+' = '+S),
+      em('|'+vn('AB')+'| = '+sqT(S)+(root(S).t!==sqT(S)?' = '+root(S).t:''))]};
+}},
+{cat:'vec',ctx:'平行条件',gen:function(){
+  var b=[nz(-4,4),nz(-4,4)], t=pick([2,3,-2,-3,-1]), x=t*b[0], k=t*b[1];
+  return {t:'par',v:{b:b,x:x},exact:true,
+    line:VA+' = ('+N(x)+', k)　'+VB+' = '+V(b),desc:VA+' と '+VB+' は平行',ask:'k は',ans:k,
+    steps:['平行なので '+VA+' = t'+VB+' となる実数 t がある',
+      'x 成分から '+em(N(x)+' = t × '+P(b[0])+'　t = '+N(t)),
+      'y 成分から '+em('k = '+N(t)+' × '+P(b[1])+' = '+N(k))]};
+}},
+
+/* ── 内積となす角 ───────────────────────────────────────── */
+{cat:'inner',ctx:'成分から内積',gen:function(){
+  var a=rvec(2,-6,6), b=rvec(2,-6,6), d=dot(a,b);
+  return {t:'dot',v:{a:a,b:b},exact:true,line:VA+' = '+V(a)+'　'+VB+' = '+V(b),
+    ask:VA+'·'+VB+' は',ans:d,
+    steps:['内積は成分の積の和',em(VA+'·'+VB+' = '+dotSum(a,b)+' = '+N(d))]};
+}},
+{cat:'inner',ctx:'大きさと角から内積',gen:function(){
+  var g=angGiven(), cs=cosE(g.th);
+  return {t:'dotang',v:{pa:g.pa,ra:g.ra,q:g.q,th:g.th},line:'|'+VA+'| = '+radT(g.pa,g.ra)+'　|'+VB+'| = '+g.q,
+    desc:VA+' と '+VB+' のなす角は '+g.th+'°',ask:VA+'·'+VB+' は',ans:g.dv,ansText:g.dt,exact:g.dint,
+    steps:[VA+'·'+VB+' = |'+VA+'||'+VB+'|cos θ',
+      em('cos '+g.th+'° = '+trigT(cs)),
+      em(radT(g.pa,g.ra)+' × '+g.q+' × '+P2(trigT(cs))+' = '+g.dt)]};
+}},
+{cat:'inner',ctx:'内積からなす角',gen:function(){
+  var g=angGiven(), cs=cosE(g.th);
+  return {t:'ang1',v:{pa:g.pa,ra:g.ra,q:g.q,dv:g.dv},exact:true,
+    line:'|'+VA+'| = '+radT(g.pa,g.ra)+'　|'+VB+'| = '+g.q+'　'+VA+'·'+VB+' = '+g.dt,
+    desc:'0° ≦ θ ≦ 180° とする',ask:'なす角 θ は',unit:'度',ans:g.th,
+    steps:['cos θ = '+VA+'·'+VB+' / (|'+VA+'||'+VB+'|)',
+      em('cos θ = '+P2(g.dt)+' / ('+radT(g.pa,g.ra)+' × '+g.q+') = '+trigT(cs)),
+      em('θ = '+g.th+'°')]};
+}},
+{cat:'inner',ctx:'成分からなす角',gen:function(){
+  var a, th=pick([45,90,135]), k=pick([1,1,2]), s=pick([1,-1]);
+  do{ a=rvec(2,-3,3); } while(a[0]===0||a[1]===0);
+  var r=[-s*a[1], s*a[0]], b;
+  if(th===90) b=[k*r[0],k*r[1]];
+  else if(th===45) b=[k*(a[0]+r[0]), k*(a[1]+r[1])];
+  else b=[k*(r[0]-a[0]), k*(r[1]-a[1])];
+  if(Math.random()<0.5){ var t=a; a=b; b=t; }
+  var d=dot(a,b), A=norm2(a), B=norm2(b), st=[em(VA+'·'+VB+' = '+dotSum(a,b)+' = '+N(d))];
+  if(d===0) st.push('内積が 0 なので垂直');
+  else{
+    var R=root(A*B);
+    st.push(em('|'+VA+'| = '+root(A).t+'　|'+VB+'| = '+root(B).t),
+      em('cos θ = '+N(d)+' / ('+sqT(A)+' × '+sqT(B)+') = '+N(d)+' / '+paren(R.t)+' = '+trigT(cosE(th))));
+  }
+  st.push(em('θ = '+th+'°'));
+  return {t:'ang2',v:{a:a,b:b},exact:true,line:VA+' = '+V(a)+'　'+VB+' = '+V(b),
+    desc:'0° ≦ θ ≦ 180° とする',ask:'なす角 θ は',unit:'度',ans:th,steps:st};
+}},
+{cat:'inner',ctx:'垂直条件',gen:function(){
+  var a1=nz(-5,5), b=[nz(-5,5),nz(-5,5)], kp=-a1*b[0], kq=b[1];
+  return {t:'perp',v:{a1:a1,b:b},line:VA+' = ('+N(a1)+', k)　'+VB+' = '+V(b),desc:VA+' と '+VB+' は垂直',
+    ask:'k は',ans:kp/kq,ansText:fr(kp,kq),exact:kp%kq===0,
+    steps:['垂直なので内積が 0',
+      em(P(a1)+'×'+P(b[0])+' + k×'+P(b[1])+' = 0'),
+      em(N(b[1])+'k = '+N(kp)),em('k = '+fr(kp,kq))]};
+}},
+{cat:'inner',ctx:'平行と垂直の判定',gen:function(){
+  var u, a, b, typ=pick(['same','opp','perp','none']);
+  do{ u=rvec(2,-3,3); } while(u[0]===0||u[1]===0||gcd(u[0],u[1])!==1);
+  var s=pick([1,2,3]);
+  a=[s*u[0],s*u[1]];
+  if(typ==='same'||typ==='opp'){
+    var t; do{ t=pick([1,2,3]); } while(t===s);
+    if(typ==='opp') t=-t;
+    b=[t*u[0],t*u[1]];
+  } else if(typ==='perp'){ var t2=pick([1,2,-1,-2]); b=[-t2*u[1],t2*u[0]]; }
+  else { do{ b=rvec(2,-5,5); } while(norm2(b)===0 || dot(a,b)===0 || a[0]*b[1]-a[1]*b[0]===0); }
+  var d=dot(a,b), cr=a[0]*b[1]-a[1]*b[0];
+  var lab={same:'平行で同じ向き',opp:'平行で逆向き',perp:'垂直',none:'平行でも垂直でもない'};
+  var st=[em(VA+'·'+VB+' = '+dotSum(a,b)+' = '+N(d)),
+    em('a<sub>1</sub>b<sub>2</sub> − a<sub>2</sub>b<sub>1</sub> = '+P(a[0])+'×'+P(b[1])+' − '+P(a[1])+'×'+P(b[0])+' = '+N(cr)),
+    '内積が 0 なら垂直で a<sub>1</sub>b<sub>2</sub> − a<sub>2</sub>b<sub>1</sub> が 0 なら平行'];
+  if(typ==='same'||typ==='opp') st.push(VB+' = '+em(fr(b[0],a[0]))+' '+VA+' で係数が'+(typ==='same'?'正':'負'));
+  st.push('結論は '+em(lab[typ]));
+  return choiceQ('rel',{a:a,b:b},VA+' = '+V(a)+'　'+VB+' = '+V(b),'',VA+' と '+VB+' の関係は',
+    {right:lab[typ],wrong:['same','opp','perp','none'].filter(function(x){ return x!==typ; }).map(function(x){ return lab[x]; })},st);
+}},
+
+/* ── 内分点と面積 ───────────────────────────────────────── */
+{cat:'geo',ctx:'内分点',gen:function(){
+  var A=rvec(2,-6,6), B=rvec(2,-6,6), m, n;
+  do{ m=rnd(1,4); n=rnd(1,4); } while(gcd(m,n)!==1);
+  var i=rnd(0,1), num=n*A[i]+m*B[i], den=m+n;
+  return {t:'div',v:{A:A,B:B,m:m,n:n,i:i},line:'A'+V(A)+'　B'+V(B),desc:'線分 AB を '+m+' : '+n+' に内分する点 P',
+    ask:'P の '+CN[i]+' 座標は',ans:num/den,ansText:fr(num,den),exact:num%den===0,
+    steps:['m : n に内分する点は (n × A + m × B) / (m + n)',
+      em(CN[i]+' = ('+n+'×'+P(A[i])+' + '+m+'×'+P(B[i])+') / '+den+' = '+N(num)+' / '+den+' = '+fr(num,den))]};
+}},
+{cat:'geo',ctx:'外分点',gen:function(){
+  var A=rvec(2,-6,6), B=rvec(2,-6,6), m, n;
+  do{ m=rnd(1,4); n=rnd(1,4); } while(m===n || gcd(m,n)!==1);
+  var i=rnd(0,1), num=-n*A[i]+m*B[i], den=m-n;
+  return {t:'ext',v:{A:A,B:B,m:m,n:n,i:i},line:'A'+V(A)+'　B'+V(B),desc:'線分 AB を '+m+' : '+n+' に外分する点 Q',
+    ask:'Q の '+CN[i]+' 座標は',ans:num/den,ansText:fr(num,den),exact:num%den===0,
+    steps:['外分は内分の式の n を −n に置き換える','m : n に外分する点は (−n × A + m × B) / (m − n)',
+      em(CN[i]+' = (−'+n+'×'+P(A[i])+' + '+m+'×'+P(B[i])+') / '+P(den)+' = '+N(num)+' / '+P(den)+' = '+fr(num,den))]};
+}},
+{cat:'geo',ctx:'重心',gen:function(){
+  var A=rvec(2,-6,6), B=rvec(2,-6,6), C=rvec(2,-6,6), i=rnd(0,1), num=A[i]+B[i]+C[i];
+  return {t:'cen',v:{A:A,B:B,C:C,i:i},line:'A'+V(A)+'　B'+V(B)+'　C'+V(C),desc:'三角形 ABC の重心 G',
+    ask:'G の '+CN[i]+' 座標は',ans:num/3,ansText:fr(num,3),exact:num%3===0,
+    steps:['重心は3頂点の平均',em(CN[i]+' = ('+N(A[i])+' + '+P(B[i])+' + '+P(C[i])+') / 3 = '+N(num)+' / 3 = '+fr(num,3))]};
+}},
+{cat:'geo',ctx:'座標から三角形の面積',gen:function(){
+  var A, B, C, u, w, cr;
+  do{ A=rvec(2,-4,5); B=rvec(2,-4,5); C=rvec(2,-4,5); u=lin(1,B,-1,A); w=lin(1,C,-1,A); cr=u[0]*w[1]-u[1]*w[0]; } while(cr===0);
+  var ab=Math.abs(cr);
+  return {t:'area',v:{A:A,B:B,C:C},line:'A'+V(A)+'　B'+V(B)+'　C'+V(C),ask:'三角形 ABC の面積は',
+    ans:ab/2,ansText:fr(ab,2),exact:ab%2===0,
+    steps:[em(vn('AB')+' = '+V(u)+'　'+vn('AC')+' = '+V(w)),
+      'S = |x<sub>1</sub>y<sub>2</sub> − x<sub>2</sub>y<sub>1</sub>| / 2',
+      em('|'+P(u[0])+'×'+P(w[1])+' − '+P(u[1])+'×'+P(w[0])+'| / 2 = '+ab+' / 2 = '+fr(ab,2))]};
+}},
+{cat:'geo',ctx:'大きさと内積から面積',gen:function(){
+  var p=rnd(2,6), q=rnd(2,6), d;
+  do{ d=rnd(-p*q+1,p*q-1); } while(d===0);
+  var D=p*p*q*q-d*d, R=root(D), val=R.v/2;
+  return {t:'area2',v:{p:p,q:q,d:d},line:'|'+VA+'| = '+p+'　|'+VB+'| = '+q+'　'+VA+'·'+VB+' = '+N(d),
+    desc:VA+' と '+VB+' でつくる三角形',ask:'面積は',ans:val,exact:R.exact&&R.c%2===0,
+    ansText:R.exact ? fr(R.c,2) : frRad(R.c,R.r,2)+' ≒ '+s3(val),
+    steps:['S = (1/2)√(|'+VA+'|<sup>2</sup>|'+VB+'|<sup>2</sup> − ('+VA+'·'+VB+')<sup>2</sup>)',
+      em('(1/2)√('+p+'<sup>2</sup>×'+q+'<sup>2</sup> − '+P(d)+'<sup>2</sup>) = (1/2)√'+D),
+      em('= '+(R.exact ? fr(R.c,2) : frRad(R.c,R.r,2)))]};
+}},
+
+/* ── 空間ベクトル ───────────────────────────────────────── */
+{cat:'space',ctx:'空間ベクトルの内積',gen:function(){
+  var a=rvec(3,-5,5), b=rvec(3,-5,5), d=dot(a,b);
+  return {t:'dot3',v:{a:a,b:b},exact:true,line:VA+' = '+V(a)+'　'+VB+' = '+V(b),ask:VA+'·'+VB+' は',ans:d,
+    steps:['3つの成分の積を足す',em(VA+'·'+VB+' = '+dotSum(a,b)+' = '+N(d))]};
+}},
+{cat:'space',ctx:'空間ベクトルの大きさ',gen:function(){
+  var a=rvecNZ(3,-4,4), b=rvec(3,-4,4), p=pick([1,1,2,-1]), q=pick([1,-1,2,-2,0]), w=lin(p,a,q,b);
+  while(norm2(w)===0){ b=rvec(3,-4,4); w=lin(p,a,q,b); }
+  var L=q===0 ? coefT(p,true)+VA : lcT(p,VA,q,VB), S=norm2(w), A=rootAns(S);
+  var st=[];
+  if(!(q===0&&p===1)) st.push(L+' = '+em(V(w)));
+  st.push(em('|'+L+'|<sup>2</sup> = '+sqSum(w)+' = '+S), em('|'+L+'| = '+sqT(S)+(root(S).t!==sqT(S)?' = '+root(S).t:'')));
+  return {t:'mag3',v:{a:a,b:b,p:p,q:q},exact:A.exact,line:VA+' = '+V(a)+(q===0?'':'　'+VB+' = '+V(b)),
+    ask:'|'+L+'| は',ans:A.ans,ansText:A.ansText,steps:st};
+}},
+{cat:'space',ctx:'空間ベクトルのなす角',gen:function(){
+  var B=buckets3(), th=pick(Object.keys(B)), pr=pick(B[th]), a=pr[0], b=pr[1], d=dot(a,b), A=norm2(a), C=norm2(b);
+  th=Number(th);
+  var st=[em(VA+'·'+VB+' = '+dotSum(a,b)+' = '+N(d))];
+  if(d===0) st.push('内積が 0 なので垂直');
+  else st.push(em('|'+VA+'| = '+root(A).t+'　|'+VB+'| = '+root(C).t),
+    em('cos θ = '+N(d)+' / ('+sqT(A)+' × '+sqT(C)+') = '+N(d)+' / '+paren(root(A*C).t)+' = '+trigT(cosE(th))));
+  st.push(em('θ = '+th+'°'));
+  return {t:'ang3',v:{a:a,b:b},exact:true,line:VA+' = '+V(a)+'　'+VB+' = '+V(b),desc:'0° ≦ θ ≦ 180° とする',
+    ask:'なす角 θ は',unit:'度',ans:th,steps:st};
+}},
+{cat:'space',ctx:'空間ベクトルの垂直条件',gen:function(){
+  var a=[nz(-4,4),rnd(-4,4)], b=[rnd(-4,4),rnd(-4,4),nz(-4,4)], kp=-(a[0]*b[0]+a[1]*b[1]), kq=b[2];
+  return {t:'perp3',v:{a:a,b:b},line:VA+' = ('+N(a[0])+', '+N(a[1])+', k)　'+VB+' = '+V(b),desc:VA+' と '+VB+' は垂直',
+    ask:'k は',ans:kp/kq,ansText:fr(kp,kq),exact:kp%kq===0,
+    steps:['垂直なので内積が 0',em(P(a[0])+'×'+P(b[0])+' + '+P(a[1])+'×'+P(b[1])+' + k×'+P(b[2])+' = 0'),
+      em(N(b[2])+'k = '+N(kp)),em('k = '+fr(kp,kq))]};
+}},
+{cat:'space',ctx:'空間の2点間の距離',gen:function(){
+  var A=rvec(3,-4,5), B; do{ B=rvec(3,-4,5); } while(norm2(lin(1,B,-1,A))===0);
+  var w=lin(1,B,-1,A), S=norm2(w), R=rootAns(S);
+  return {t:'dist3',v:{A:A,B:B},exact:R.exact,line:'A'+V(A)+'　B'+V(B),ask:'AB の長さは',
+    ans:R.ans,ansText:R.ansText,
+    steps:[vn('AB')+' = B − A = '+em(V(w))+'',em('AB<sup>2</sup> = '+sqSum(w)+' = '+S),
+      em('AB = '+sqT(S)+(root(S).t!==sqT(S)?' = '+root(S).t:''))]};
+}},
+
+/* ── 複素数平面 ─────────────────────────────────────────── */
+{cat:'cplx',ctx:'複素数の絶対値',gen:function(){
+  var a=nz(-6,6), b=nz(-6,6), S=a*a+b*b, R=rootAns(S);
+  return {t:'abs',v:{a:a,b:b},exact:R.exact,line:'z = '+zT([a,1],[b,1]),ask:'|z| は',ans:R.ans,ansText:R.ansText,
+    steps:['|z| = √(a<sup>2</sup> + b<sup>2</sup>)',em('|z|<sup>2</sup> = '+P(a)+'<sup>2</sup> + '+P(b)+'<sup>2</sup> = '+S),
+      em('|z| = '+sqT(S)+(root(S).t!==sqT(S)?' = '+root(S).t:''))]};
+}},
+{cat:'cplx',ctx:'偏角',gen:function(){
+  var z=pick(ZB.concat(ZAX)), k=pick([1,1,2,3]);
+  var re=[z.re[0]*k,z.re[1]], im=[z.im[0]*k,z.im[1]], R=[z.R[0]*k,z.R[1]];
+  return {t:'arg',v:{re:re,im:im},exact:true,line:'z = '+zT(re,im),desc:'0° ≦ θ &lt; 360° とする',
+    ask:'偏角 θ は',unit:'度',ans:z.th,
+    steps:[em('|z| = '+radT(R[0],R[1])),
+      em('cos θ = '+frRad(re[0],re[1],1)+' / '+radT(R[0],R[1])+' = '+trigT(cosE(z.th))+'　sin θ = '+trigT(sinE(z.th))),
+      '点 z は'+QUAD(z.th),em('θ = '+z.th+'°')]};
+}},
+{cat:'cplx',ctx:'ド・モアブルの定理',gen:function(){
+  var z=pick(ZB), n=z.R[1]===2 ? rnd(2,8) : rnd(2,6), w=zpow(z,n);
+  var parts=[]; if(w.re.rat) parts.push('re'); if(w.im.rat) parts.push('im');
+  var pt=pick(parts), val=pt==='re'?w.re:w.im;
+  return {t:'pow',v:{re:z.re,im:z.im,n:n,pt:pt},exact:true,line:'z = '+zT(z.re,z.im),
+    ask:'z<sup>'+n+'</sup> の'+(pt==='re'?'実部':'虚部')+'は',ans:val.v,ansText:val.t,
+    steps:powSteps(z,n,w).concat(['実部 '+em(w.re.t)+'　虚部 '+em(w.im.t)])};
+}},
+{cat:'cplx',ctx:'累乗の偏角',gen:function(){
+  var z=pick(ZB), n=rnd(2,12), raw=n*z.th, ph=raw%360;
+  return {t:'powarg',v:{re:z.re,im:z.im,n:n},exact:true,line:'z = '+zT(z.re,z.im),desc:'0° ≦ θ &lt; 360° とする',
+    ask:'z<sup>'+n+'</sup> の偏角 θ は',unit:'度',ans:ph,
+    steps:[em('z = '+RT(z)+'(cos '+z.th+'° + i sin '+z.th+'°)'),
+      'ド・モアブルの定理で偏角は n 倍になる',
+      em(n+' × '+z.th+'° = '+raw+'°')+(raw>=360?'　360° の倍数を引いて '+em(ph+'°'):''),
+      em('θ = '+ph+'°')]};
+}},
+{cat:'cplx',ctx:'累乗が実数になる n',gen:function(){
+  var z=pick(ZB), n=180/gcd(z.th,180);
+  return {t:'real',v:{re:z.re,im:z.im},exact:true,line:'z = '+zT(z.re,z.im),
+    ask:'z<sup>n</sup> が実数となる最小の自然数 n は',ans:n,
+    steps:[em('z = '+RT(z)+'(cos '+z.th+'° + i sin '+z.th+'°)'),
+      'z<sup>n</sup> が実数となる条件は sin n×'+z.th+'° = 0',
+      'n × '+z.th+'° が 180° の倍数になる最小の n',em('n = '+n+'　'+n+' × '+z.th+'° = '+(n*z.th)+'°')]};
+}},
+
+/* ── 行列（範囲外） ─────────────────────────────────────── */
+{cat:'mat',ctx:'行列の積',gen:function(){
+  var A=[rvec(2,-3,4),rvec(2,-3,4)], B=[rvec(2,-3,4),rvec(2,-3,4)], i=rnd(0,1), j=rnd(0,1);
+  var v=A[i][0]*B[0][j]+A[i][1]*B[1][j];
+  return {t:'mul',v:{A:A,B:B,i:i,j:j},exact:true,line:'A = '+mx(A)+'　B = '+mx(B),
+    ask:'AB の ('+(i+1)+', '+(j+1)+') 成分は',ans:v,
+    steps:['A の第 '+(i+1)+' 行 ('+N(A[i][0])+', '+N(A[i][1])+') と B の第 '+(j+1)+' 列 ('+N(B[0][j])+', '+N(B[1][j])+')',
+      em(P(A[i][0])+'×'+P(B[0][j])+' + '+P(A[i][1])+'×'+P(B[1][j])+' = '+N(v))]};
+}},
+{cat:'mat',ctx:'行列の2乗',gen:function(){
+  var A=[rvec(2,-3,3),rvec(2,-3,3)], i=rnd(0,1), j=rnd(0,1), v=A[i][0]*A[0][j]+A[i][1]*A[1][j];
+  return {t:'sq',v:{A:A,i:i,j:j},exact:true,line:'A = '+mx(A),ask:'A<sup>2</sup> の ('+(i+1)+', '+(j+1)+') 成分は',ans:v,
+    steps:['A<sup>2</sup> = AA なので A の第 '+(i+1)+' 行と A の第 '+(j+1)+' 列を掛ける',
+      em(P(A[i][0])+'×'+P(A[0][j])+' + '+P(A[i][1])+'×'+P(A[1][j])+' = '+N(v))]};
+}},
+{cat:'mat',ctx:'逆行列',gen:function(){
+  var A, D;
+  do{ A=[rvec(2,-4,5),rvec(2,-4,5)]; D=A[0][0]*A[1][1]-A[0][1]*A[1][0]; } while(D===0);
+  var adj=[[A[1][1],-A[0][1]],[-A[1][0],A[0][0]]], i=rnd(0,1), j=rnd(0,1), p=adj[i][j];
+  return {t:'inv',v:{A:A,i:i,j:j},line:'A = '+mx(A),ask:'A<sup>−1</sup> の ('+(i+1)+', '+(j+1)+') 成分は',
+    ans:p/D,ansText:fr(p,D),exact:p%D===0,
+    steps:[em('ad − bc = '+P(A[0][0])+'×'+P(A[1][1])+' − '+P(A[0][1])+'×'+P(A[1][0])+' = '+N(D)),
+      'A<sup>−1</sup> = (1/'+P(D)+') '+mx(adj),
+      em('('+(i+1)+', '+(j+1)+') 成分 = '+N(p)+' / '+P(D)+' = '+fr(p,D))]};
+}},
+
+/* ── 行列式（範囲外） ───────────────────────────────────── */
+{cat:'det',ctx:'2×2 の行列式',gen:function(){
+  var A=[rvec(2,-6,7),rvec(2,-6,7)], D=A[0][0]*A[1][1]-A[0][1]*A[1][0];
+  return {t:'d2',v:{A:A},exact:true,line:'A = '+mx(A),ask:'det A は',ans:D,
+    steps:['det A = ad − bc',em(P(A[0][0])+'×'+P(A[1][1])+' − '+P(A[0][1])+'×'+P(A[1][0])+' = '+N(D))]};
+}},
+{cat:'det',ctx:'3×3 の行列式',gen:function(){
+  var A=[rvec(3,-3,4),rvec(3,-3,4),rvec(3,-3,4)], a=A;
+  var p1=a[0][0]*a[1][1]*a[2][2], p2=a[0][1]*a[1][2]*a[2][0], p3=a[0][2]*a[1][0]*a[2][1];
+  var m1=a[0][2]*a[1][1]*a[2][0], m2=a[0][1]*a[1][0]*a[2][2], m3=a[0][0]*a[1][2]*a[2][1];
+  var plus=p1+p2+p3, minus=m1+m2+m3, D=plus-minus;
+  function t3(x,y,z){ return P(x)+'×'+P(y)+'×'+P(z); }
+  return {t:'d3',v:{A:A},exact:true,line:'A = '+mx(A),ask:'det A は',ans:D,
+    steps:['サラスの方法で右下がりの積の和から右上がりの積の和を引く',
+      em('右下がり '+t3(a[0][0],a[1][1],a[2][2])+' + '+t3(a[0][1],a[1][2],a[2][0])+' + '+t3(a[0][2],a[1][0],a[2][1])+' = '+N(plus)),
+      em('右上がり '+t3(a[0][2],a[1][1],a[2][0])+' + '+t3(a[0][1],a[1][0],a[2][2])+' + '+t3(a[0][0],a[1][2],a[2][1])+' = '+N(minus)),
+      em(N(plus)+' − '+P(minus)+' = '+N(D))]};
+}},
+{cat:'det',ctx:'逆行列をもたない条件',gen:function(){
+  var a=nz(-5,5), c=nz(-5,5), d=nz(-5,5), kp=a*d;
+  return {t:'sing',v:{a:a,c:c,d:d},line:'A = '+mx([[a,'k'],[c,d]]),desc:'A は逆行列をもたない',ask:'k は',
+    ans:kp/c,ansText:fr(kp,c),exact:kp%c===0,
+    steps:['逆行列をもたない条件は det A = 0',em(P(a)+'×'+P(d)+' − k×'+P(c)+' = 0'),
+      em(N(c)+'k = '+N(kp)),em('k = '+fr(kp,c))]};
+}},
+
+/* ── 固有値（範囲外） ───────────────────────────────────── */
+{cat:'eig',ctx:'大きい方の固有値',gen:function(){ return eigQ('big'); }},
+{cat:'eig',ctx:'小さい方の固有値',gen:function(){ return eigQ('small'); }},
+{cat:'eig',ctx:'固有ベクトル',gen:function(){ return eigQ('vec'); }}
+];
+
+/* ── helpers: inner product ───────────────────────────────────────────── */
+function paren(s){ return s.indexOf('√')>0 ? '('+s+')' : s; }
+function P2(s){ return s.charAt(0)==='−' ? '('+s+')' : s; }
+/* |a| = pa√ra, |b| = q, angle th, a·b exact rational */
+function angGiven(){
+  var th=pick([45,60,90,120,135,30,150,60,120]), ra=1;
+  if(th===45||th===135) ra=2;
+  if(th===30||th===150) ra=3;
+  var pa=rnd(1,4), q=rnd(1,6), cs=cosE(th);
+  /* pa√ra × q × cp√ra / cq = pa q cp ra / cq */
+  var num = cs[0]===0 ? 0 : pa*q*cs[0]*(ra>1?ra:1), den=cs[1];
+  return {th:th,pa:pa,ra:ra,q:q,dv:num/den,dt:fr(num,den),dint:num%den===0};
+}
+
+/* ── helpers: space angles ────────────────────────────────────────────── */
+var B3=null;
+function buckets3(){
+  if(B3) return B3;
+  B3={};
+  var vs=[];
+  for(var x=-2;x<=2;x++) for(var y=-2;y<=2;y++) for(var z=-2;z<=2;z++) if(x||y||z) vs.push([x,y,z]);
+  for(var i=0;i<vs.length;i++) for(var j=i+1;j<vs.length;j++){
+    var a=vs[i], b=vs[j], d=dot(a,b), A=norm2(a), B=norm2(b), th=null;
+    if(d===0) th=90;
+    else if(4*d*d===A*B) th=d>0?60:120;
+    else if(2*d*d===A*B) th=d>0?45:135;
+    else if(4*d*d===3*A*B) th=d>0?30:150;
+    if(th===null) continue;
+    if(!B3[th]) B3[th]=[];
+    B3[th].push([a,b]);
+  }
+  return B3;
+}
+
+/* ── helpers: complex numbers ─────────────────────────────────────────── */
+/* re, im: [c, r] meaning c√r */
+function zT(re,im){
+  var s='';
+  if(re[0]!==0) s=radT(re[0],re[1]);
+  if(im[0]!==0){
+    var c=Math.abs(im[0]), body=(c===1&&im[1]===1) ? 'i' : (c===1?'':c)+(im[1]>1?'√'+im[1]+' i':'i');
+    if(s==='') s=(im[0]<0?'−':'')+body;
+    else s+=(im[0]<0?' − ':' + ')+body;
+  }
+  return s;
+}
+var ZB=[
+  {re:[1,1],im:[1,1],R:[1,2],th:45},{re:[-1,1],im:[1,1],R:[1,2],th:135},
+  {re:[-1,1],im:[-1,1],R:[1,2],th:225},{re:[1,1],im:[-1,1],R:[1,2],th:315},
+  {re:[1,3],im:[1,1],R:[2,1],th:30},{re:[-1,3],im:[1,1],R:[2,1],th:150},
+  {re:[-1,3],im:[-1,1],R:[2,1],th:210},{re:[1,3],im:[-1,1],R:[2,1],th:330},
+  {re:[1,1],im:[1,3],R:[2,1],th:60},{re:[-1,1],im:[1,3],R:[2,1],th:120},
+  {re:[-1,1],im:[-1,3],R:[2,1],th:240},{re:[1,1],im:[-1,3],R:[2,1],th:300}
+];
+var ZAX=[{re:[1,1],im:[0,1],R:[1,1],th:0},{re:[0,1],im:[1,1],R:[1,1],th:90},
+  {re:[-1,1],im:[0,1],R:[1,1],th:180},{re:[0,1],im:[-1,1],R:[1,1],th:270}];
+function QUAD(t){
+  if(t===0) return '実軸の正の部分にある';
+  if(t===90) return '虚軸の正の部分にある';
+  if(t===180) return '実軸の負の部分にある';
+  if(t===270) return '虚軸の負の部分にある';
+  return '第'+(Math.floor(t/90)+1)+'象限にある';
+}
+function RT(z){ return radT(z.R[0],z.R[1]); }
+function RP(z){ var t=RT(z); return t.indexOf('√')>=0 ? '('+t+')' : t; }
+/* r^n × (p√r / q) as exact c√s / q */
+function zpow(z,n){
+  var ph=(n*z.th)%360, e, o, base;
+  if(z.R[1]===2){ e=Math.floor(n/2); o=n%2; base=Math.pow(2,e); }
+  else { e=n; o=0; base=Math.pow(z.R[0],n); }
+  function part(tr){
+    if(tr[0]===0) return {v:0,t:'0',rat:true};
+    var rr=tr[2]*(o?2:1), s=sqs(rr), c=base*tr[0]*s[0];
+    return {v:c*Math.sqrt(s[1])/tr[1], t:frRad(c,s[1],tr[1]), rat:s[1]===1};
+  }
+  var rn = z.R[1]===2 ? (o ? (base===1?'':base)+'√2' : String(base)) : String(base);
+  return {ph:ph,raw:n*z.th,rn:rn,re:part(cosE(ph)),im:part(sinE(ph))};
+}
+function powSteps(z,n,w){
+  return [em('z = '+RT(z)+'(cos '+z.th+'° + i sin '+z.th+'°)'),
+    em('z<sup>'+n+'</sup> = '+RP(z)+'<sup>'+n+'</sup>(cos '+w.raw+'° + i sin '+w.raw+'°)'),
+    em(RP(z)+'<sup>'+n+'</sup> = '+w.rn)+(w.raw>=360?'　'+w.raw+'° は '+em(w.ph+'°')+' と同じ向き':''),
+    em('cos '+w.ph+'° = '+trigT(cosE(w.ph))+'　sin '+w.ph+'° = '+trigT(sinE(w.ph)))];
+}
+
+/* ── helpers: eigenvalues ─────────────────────────────────────────────── */
+function eigGen(){
+  var l1, l2, a, Pp, b, c, d, g=0;
+  for(;;){
+    g++;
+    l1=rnd(-3,6); l2=rnd(-3,6);
+    if(l1===l2) continue;
+    a=rnd(-3,6);
+    if(a===l1||a===l2) continue;
+    Pp=-(a-l1)*(a-l2);
+    var divs=[];
+    for(var x=-6;x<=6;x++) if(x!==0 && Pp%x===0 && Math.abs(Pp/x)<=6) divs.push(x);
+    if(!divs.length) continue;
+    b=pick(divs); c=Pp/b; d=l1+l2-a;
+    if(Math.abs(d)>8) continue;
+    break;
+  }
+  return {A:[[a,b],[c,d]],hi:Math.max(l1,l2),lo:Math.min(l1,l2)};
+}
+/* signed term: tm(-3,'λ') -> ' − 3λ', tm(0,..) -> '' */
+function tm(c,x){
+  if(c===0) return '';
+  var a=Math.abs(c), body=(a===1&&x?'':a)+x;
+  return (c<0?' − ':' + ')+body;
+}
+function fac(l){ return l===0 ? 'λ' : '(λ'+tm(-l,'')+')'; }
+function normV(v){
+  var g=gcd(v[0],v[1])||1, x=v[0]/g, y=v[1]/g;
+  if(x<0||(x===0&&y<0)){ x=-x; y=-y; }
+  return [x+0,y+0];
+}
+function eigQ(kind){
+  var E=eigGen(), A=E.A, a=A[0][0], b=A[0][1], c=A[1][0], d=A[1][1], tr=a+d, de=a*d-b*c;
+  var st=['det(A − λE) = ('+N(a)+' − λ)('+N(d)+' − λ) − '+P(b)+'×'+P(c)+' = 0',
+    em('λ<sup>2</sup>'+tm(-tr,'λ')+tm(de,'')+' = 0'),
+    em(fac(E.hi)+fac(E.lo)+' = 0'),
+    em('λ = '+N(E.hi)+', '+N(E.lo))];
+  st[0]=em(st[0]);
+  if(kind==='big') return {t:'eig',v:{A:A,kind:kind},exact:true,line:'A = '+mx(A),ask:'大きい方の固有値は',ans:E.hi,steps:st};
+  if(kind==='small') return {t:'eig',v:{A:A,kind:kind},exact:true,line:'A = '+mx(A),ask:'小さい方の固有値は',ans:E.lo,steps:st};
+  var lam=pick([E.hi,E.lo]), oth=lam===E.hi?E.lo:E.hi;
+  var right=normV([b,lam-a]);
+  var cand=[normV([b,oth-a]),normV([lam-a,b]),normV([b,a-lam]),normV([a-lam,b]),normV([c,lam-d]),normV([lam-d,c])];
+  for(var x=-3;x<=3;x++) for(var y=-3;y<=3;y++) if(x||y) cand.push(normV([x,y]));
+  var seen={}, wrong=[];
+  seen[V(right)]=1;
+  cand.forEach(function(v,idx){
+    if(wrong.length>=3) return;
+    if(v[0]===0&&v[1]===0) return;
+    if(v[0]*right[1]-v[1]*right[0]===0) return;
+    if(idx>=6 && Math.random()<0.6) return;
+    var k=V(v); if(seen[k]) return; seen[k]=1; wrong.push(k);
+  });
+  var g2=0;
+  while(wrong.length<3 && g2<500){
+    g2++;
+    var v=normV([rnd(-3,3),rnd(-3,3)]);
+    if((v[0]===0&&v[1]===0) || v[0]*right[1]-v[1]*right[0]===0) continue;
+    var k2=V(v); if(seen[k2]) continue; seen[k2]=1; wrong.push(k2);
+  }
+  var s2=st.slice(0,4).concat(['λ = '+N(lam)+' のとき (A − λE)'+vn('x')+' = '+vn('0')+' の第1行は '+em((a-lam===1?'':a-lam===-1?'−':N(a-lam))+'x'+tm(b,'y')+' = 0'),
+    em('x : y = '+N(b)+' : '+N(lam-a))+' なので固有ベクトルは '+em(V(right))+' の0でない実数倍']);
+  return choiceQ('evec',{A:A,lam:lam},'A = '+mx(A),'','固有値 '+N(lam)+' に対する固有ベクトルは',{right:V(right),wrong:wrong},s2);
+}
+
+function choiceQ(t,v,line,desc,ask,ch,steps){
+  var all=shuffle([ch.right].concat(ch.wrong));
+  return {t:t,v:v,kind:'choice',line:line,desc:desc,ask:ask,unit:'',
+    choices:all,ans:all.indexOf(ch.right),ansText:ch.right,steps:steps};
+}
+
+/* ── categories ───────────────────────────────────────────────────────── */
+var CATS=[
+  {k:'vec',lb:'成分と大きさ',s:'和・実数倍・平行',ch:'chapters/01_plane-vector.html',cn:'第1章'},
+  {k:'inner',lb:'内積となす角',s:'cos・垂直条件',ch:'chapters/02_inner-product.html',cn:'第2章'},
+  {k:'geo',lb:'内分点と面積',s:'内分・外分・重心',ch:'chapters/03_vector-geometry.html',cn:'第3章'},
+  {k:'space',lb:'空間ベクトル',s:'内積・大きさ・角',ch:'chapters/04_space-vector.html',cn:'第4章'},
+  {k:'cplx',lb:'複素数平面',s:'絶対値・偏角・累乗',ch:'chapters/05_complex-plane.html',cn:'第5章'},
+  {k:'mat',lb:'行列',s:'積と逆行列',ch:'chapters/06_matrix.html',cn:'第6章',out:true},
+  {k:'det',lb:'行列式',s:'2×2 と 3×3',ch:'chapters/07_linear-map.html',cn:'第7章',out:true},
+  {k:'eig',lb:'固有値',s:'2×2 の固有値',ch:'chapters/08_eigen.html',cn:'第8章',out:true},
+  {k:'all',lb:'範囲内を混ぜる',s:'5分野',ch:'',cn:''}
+];
+var IN_CATS=CATS.filter(function(c){ return c.k!=='all' && !c.out; });
+
+function genQ(cat){
+  var c = cat==='all' ? pick(IN_CATS).k : cat;
+  var pool=T.filter(function(t){ return t.cat===c; });
+  var tp=pick(pool);
+  return finalize(tp.gen(),tp);
+}
+function finalize(q,tp){
+  q.ctx=tp.ctx; q.cat=tp.cat;
+  if(!q.kind) q.kind='num';
+  if(q.exact===undefined) q.exact=false;
+  if(q.unit===undefined) q.unit='';
+  if(q.ansText===undefined) q.ansText = Number.isInteger(q.ans) ? N(q.ans) : s3(q.ans);
+  q.html=q.line+(q.desc?'　'+q.desc:'')+'　→ '+q.ask+(q.unit?' ('+q.unit+')':'');
+  return q;
+}
+
+/* ── answer check ─────────────────────────────────────────────────────── */
+function term(t){
+  t=t.replace(/^\((.*)\)$/,'$1');
+  var m=t.match(/^([+-]?)(\d*\.?\d*)(√\(?(\d*\.?\d+)\)?)?$/);
+  if(!m) return NaN;
+  if(m[2]==='' && !m[3]) return NaN;
+  var cv = m[2]==='' ? 1 : Number(m[2]);
+  var rv = m[3] ? Math.sqrt(Number(m[4])) : 1;
+  return (m[1]==='-'?-1:1)*cv*rv;
+}
+function parse(raw){
+  var s=String(raw)
+    .replace(/[０-９]/g,function(ch){ return String.fromCharCode(ch.charCodeAt(0)-0xFEE0); })
+    .replace(/[．。]/g,'.').replace(/＋/g,'+').replace(/[−－‐ー―]/g,'-').replace(/[／÷]/g,'/')
+    .replace(/[（]/g,'(').replace(/[）]/g,')')
+    .replace(/[\s,，°度]/g,'')
+    .replace(/sqrt|root|ルート/gi,'√');
+  if(s==='' || s==='+' || s==='-') return NaN;
+  var parts=s.split('/');
+  if(parts.length>2) return NaN;
+  var num=term(parts[0]), den=parts.length===2 ? term(parts[1]) : 1;
+  if(!isFinite(num) || !isFinite(den) || den===0) return NaN;
+  return num/den;
+}
+function near(a,b){ return Math.abs(a-b)<=1e-9*Math.max(1,Math.abs(b)); }
+function check(q,v){
+  if(q.kind==='choice') return v===q.ans;
+  if(typeof v!=='number' || !isFinite(v)) return false;
+  if(q.exact) return near(v,q.ans);
+  if(q.ans===0) return Math.abs(v)<1e-9;
+  if(Math.abs(v-q.ans)<=Math.abs(q.ans)*0.01) return true;
+  return near(v,Number(q.ans.toPrecision(2))) || near(v,Number(q.ans.toPrecision(3)));
+}
+
+return {T:T,CATS:CATS,IN_CATS:IN_CATS,genQ:genQ,finalize:finalize,parse:parse,check:check,s3:s3,N:N,
+  COS:COS,cosE:cosE,sinE:sinE,ZB:ZB,ZAX:ZAX,buckets3:buckets3,trigT:trigT,trigV:trigV};
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+var C=LA;
+function $(id){ return document.getElementById(id); }
+
+/* ── reference panel ──────────────────────────────────────────────────── */
+function refHTML(){
+  var A=[0,30,45,60,90,120,135,150,180];
+  var h='<div class="scroll"><table class="trig"><thead><tr><th>θ</th>'
+    +A.map(function(t){ return '<th>'+t+'°</th>'; }).join('')+'</tr></thead><tbody>'
+    +'<tr><td>cos</td>'+A.map(function(t){ return '<td>'+C.trigT(C.cosE(t))+'</td>'; }).join('')+'</tr>'
+    +'<tr><td>sin</td>'+A.map(function(t){ return '<td>'+C.trigT(C.sinE(t))+'</td>'; }).join('')+'</tr>'
+    +'</tbody></table></div>';
+  var a='<span class="vc">a</span>', b='<span class="vc">b</span>';
+  h+='<table class="const">'
+    +'<tr><td>内積</td><td>'+a+'·'+b+' = a<sub>1</sub>b<sub>1</sub> + a<sub>2</sub>b<sub>2</sub> = |'+a+'||'+b+'|cos θ</td></tr>'
+    +'<tr><td>垂直</td><td>'+a+'·'+b+' = 0</td></tr>'
+    +'<tr><td>平行</td><td>a<sub>1</sub>b<sub>2</sub> − a<sub>2</sub>b<sub>1</sub> = 0</td></tr>'
+    +'<tr><td>内分点</td><td>(n'+a+' + m'+b+') / (m + n)</td></tr>'
+    +'<tr><td>三角形の面積</td><td>(1/2)√(|'+a+'|<sup>2</sup>|'+b+'|<sup>2</sup> − ('+a+'·'+b+')<sup>2</sup>) = (1/2)|a<sub>1</sub>b<sub>2</sub> − a<sub>2</sub>b<sub>1</sub>|</td></tr>'
+    +'<tr><td>ド・モアブル</td><td>(cos θ + i sin θ)<sup>n</sup> = cos nθ + i sin nθ</td></tr>'
+    +'<tr><td>逆行列</td><td>A<sup>−1</sup> = (d −b ; −c a) / (ad − bc)</td></tr>'
+    +'<tr><td>固有方程式</td><td>λ<sup>2</sup> − (a + d)λ + (ad − bc) = 0</td></tr>'
+    +'</table>';
+  return h;
+}
+$('refbody').innerHTML=refHTML();
+$('d-refbody').innerHTML=refHTML();
+
+/* ── session ──────────────────────────────────────────────────────────── */
+var S=null, clock=null;
+function show(which){
+  ['setup','drill','result'].forEach(function(id){ $(id).classList.toggle('hide', id!==which); });
+  var drilling = which==='drill';
+  ['lead','logsec','refsec','techsec'].forEach(function(id){ $(id).classList.toggle('hide', drilling); });
+}
+function catOf(k){
+  for(var i=0;i<C.CATS.length;i++) if(C.CATS[i].k===k) return C.CATS[i];
+  return C.CATS[0];
+}
+function label(cfg){ return catOf(cfg.cat).lb; }
+
+function start(cfg, queue){
+  S={cfg:cfg, i:0, items:[], queue:queue||null,
+     count:queue?queue.length:cfg.count, phase:'input'};
+  show('drill');
+  window.scrollTo({top:0,behavior:'smooth'});
+  nextQ();
+}
+var PAD=['√','/','−','.'];
+function insertAt(el,s){
+  var a=el.selectionStart==null?el.value.length:el.selectionStart, b=el.selectionEnd==null?a:el.selectionEnd;
+  el.value=el.value.slice(0,a)+s+el.value.slice(b);
+  el.focus();
+  try{ el.setSelectionRange(a+s.length,a+s.length); }catch(e){}
+}
+function nextQ(){
+  if(S.i>=S.count){ finish(); return; }
+  $('d-fb').classList.add('hide');
+  $('d-in').value='';
+  $('d-hintnote').textContent='';
+  $('d-prog').textContent=(S.i+1)+' / '+S.count;
+  $('d-fill').style.width=(S.i/S.count*100)+'%';
+  var q = S.queue ? S.queue[S.i] : C.genQ(S.cfg.cat);
+  S.cur=q; S.phase='input';
+  $('d-meta').textContent=catOf(q.cat).lb;
+  $('d-ctx').textContent=q.ctx;
+  $('d-q').innerHTML=q.line;
+  $('d-desc').innerHTML=q.desc||'';
+  $('d-desc').classList.toggle('hide', !q.desc);
+  $('d-ask').innerHTML=q.ask+(q.unit?' <span class="u">'+q.unit+'</span>':'');
+  var isC = q.kind==='choice';
+  $('d-ansbox').classList.toggle('hide', isC);
+  $('d-choices').classList.toggle('hide', !isC);
+  $('d-keys').classList.toggle('hide', isC);
+  if(isC){
+    $('d-choices').innerHTML=q.choices.map(function(c,i){
+      return '<button type="button" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+c+'</button>';
+    }).join('');
+    Array.prototype.forEach.call($('d-choices').children, function(b){
+      b.addEventListener('click', function(){ if(S.phase==='input') judge(Number(b.dataset.i), null); });
+    });
+    $('d-hintnote').textContent='数字キー 1〜4 でも選べる';
+  } else {
+    var el=$('d-in');
+    $('d-keys').innerHTML=PAD.map(function(k){ return '<button type="button" data-v="'+k+'">'+k+'</button>'; }).join('');
+    Array.prototype.forEach.call($('d-keys').children, function(b){
+      b.addEventListener('mousedown', function(e){ e.preventDefault(); });
+      b.addEventListener('click', function(){ if(S.phase==='input') insertAt(el,b.dataset.v); });
+    });
+    el.focus(); el.select();
+  }
+  S.qStart=performance.now();
+  stopClock();
+  clock=setInterval(function(){
+    $('d-time').textContent=((performance.now()-S.qStart)/1000).toFixed(1)+'s';
+  },100);
+}
+function stopClock(){ if(clock){ clearInterval(clock); clock=null; } }
+
+function stepsHTML(q){ return '<ol><li>'+q.steps.join('</li><li>')+'</li></ol>'; }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function mineText(q,v,raw){
+  if(q.kind==='choice') return q.choices[v];
+  return esc(String(raw).trim());
+}
+function judge(v,raw){
+  if(S.phase!=='input') return;
+  stopClock();
+  var q=S.cur, ms=performance.now()-S.qStart;
+  var ok=C.check(q,v);
+  S.items.push({q:q, mine:mineText(q,v,raw), ok:ok, ms:ms});
+  S.i++;
+  if(q.kind==='choice'){
+    Array.prototype.forEach.call($('d-choices').children, function(b,i){
+      b.disabled=true;
+      if(i===q.ans) b.classList.add('right');
+      else if(i===v) b.classList.add('wrong');
+    });
+  }
+  var fb=$('d-fb');
+  fb.classList.remove('hide','ok','ng');
+  if(ok){
+    fb.classList.add('ok');
+    fb.innerHTML='<b>正解</b>　'+(ms/1000).toFixed(1)+'秒'+(q.kind!=='choice'&&!q.exact?'　正確な値は '+q.ansText:'');
+    S.phase='wait';
+    setTimeout(function(){ if(S && S.phase==='wait') nextQ(); }, q.exact||q.kind==='choice' ? 520 : 1100);
+  } else {
+    fb.classList.add('ng');
+    var ch=catOf(q.cat);
+    fb.innerHTML='<b>不正解</b>　正解は '+q.ansText+(q.unit?' '+q.unit:'')
+      +'　自分の答え '+mineText(q,v,raw)
+      +'<div class="how">'+stepsHTML(q)
+      +(ch.ch?'<a href="'+ch.ch+'" target="_blank" rel="noopener">'+ch.cn+'で確認する</a>':'')+'</div>';
+    S.phase='hold';
+    $('d-hintnote').textContent='Enter または確定で次へ';
+  }
+}
+function submit(){
+  if(S.phase==='hold'){ nextQ(); return; }
+  if(S.phase!=='input' || S.cur.kind==='choice') return;
+  var raw=$('d-in').value, v=C.parse(raw);
+  if(!isFinite(v)) return;
+  judge(v,raw);
+}
+function quit(){
+  if(S) S.phase='dead';
+  stopClock();
+  $('d-hintnote').textContent='';
+  if(S && S.items.length) finish(); else show('setup');
+}
+
+/* ── result ───────────────────────────────────────────────────────────── */
+function finish(){
+  S.phase='done';
+  stopClock();
+  $('d-hintnote').textContent='';
+  var it=S.items, n=it.length, ok=0, tot=0, fast=Infinity, slow=0;
+  it.forEach(function(x){ if(x.ok){ ok++; fast=Math.min(fast,x.ms); slow=Math.max(slow,x.ms); } tot+=x.ms; });
+  var avg=n? tot/n/1000 : 0;
+  $('r-kpi').innerHTML=
+    kpi(Math.round(ok/n*100)+'%','正答率',ok+' / '+n)
+   +kpi(avg.toFixed(1)+'s','1問あたり','合計 '+(tot/1000).toFixed(0)+'秒')
+   +kpi(isFinite(fast)?(fast/1000).toFixed(1)+'s':'—','最速',ok?'最遅 '+(slow/1000).toFixed(1)+'s':'正解なし')
+   +kpi('<span style="font-size:15px">'+label(S.cfg)+'</span>','分野','');
+
+  var miss=it.filter(function(x){ return !x.ok; }), h='';
+  if(miss.length){
+    h='<h3>間違えた '+miss.length+'問</h3><table><thead><tr><th>問題</th><th class="n">自分</th><th class="n">正解</th></tr></thead><tbody>';
+    miss.forEach(function(x){
+      h+='<tr><td>'+x.q.html+'<div class="how2">'+stepsHTML(x.q)+'</div></td>'
+        +'<td class="n miss">'+x.mine+'</td><td class="n">'+x.q.ansText+'</td></tr>';
+    });
+    h+='</tbody></table>';
+  } else {
+    h='<div class="note">全問正解。範囲内を混ぜるに切り替えると分野の判別まで練習できる。</div>';
+  }
+  var slowest=it.filter(function(x){ return x.ok; }).sort(function(a,b){ return b.ms-a.ms; }).slice(0,3);
+  if(slowest.length){
+    h+='<h3>時間がかかった問題<span class="sm"> — 正解でも遅い型は本番で時間が不足する</span></h3><table><tbody>';
+    slowest.forEach(function(x){
+      h+='<tr><td>'+x.q.html+' = '+x.q.ansText+'<div class="how2">'+stepsHTML(x.q)+'</div></td>'
+        +'<td class="n">'+(x.ms/1000).toFixed(1)+'s</td></tr>';
+    });
+    h+='</tbody></table>';
+  }
+  var by={};
+  it.forEach(function(x){
+    var k=x.q.ctx;
+    if(!by[k]) by[k]={n:0,ok:0,ms:0};
+    by[k].n++; by[k].ok+=x.ok?1:0; by[k].ms+=x.ms;
+  });
+  var keys=Object.keys(by);
+  if(keys.length>1){
+    h+='<h3>型ごとの成績</h3><table><thead><tr><th>型</th><th class="n">正答</th><th class="n">1問</th></tr></thead><tbody>';
+    keys.sort(function(a,b){ return by[a].ok/by[a].n - by[b].ok/by[b].n; }).forEach(function(k){
+      h+='<tr><td>'+k+'</td><td class="n">'+by[k].ok+'/'+by[k].n+'</td>'
+        +'<td class="n">'+(by[k].ms/by[k].n/1000).toFixed(1)+'s</td></tr>';
+    });
+    h+='</tbody></table>';
+  }
+  $('r-missbox').innerHTML=h;
+  $('b-redo').classList.toggle('hide', miss.length===0);
+  S.miss=miss.map(function(x){ return x.q; });
+  saveRun({t:Date.now(), cat:S.cfg.cat, lb:label(S.cfg), n:n, ok:ok, ms:tot});
+  drawLog();
+  show('result');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function kpi(v,k,n){
+  return '<div class="kpi"><div class="v num">'+v+'</div><div class="k">'+k+'</div>'
+    +(n?'<div class="n">'+n+'</div>':'')+'</div>';
+}
+
+/* ── log ──────────────────────────────────────────────────────────────── */
+var KEY='linalg.hist.v1', PREF='linalg.pref.v1';
+function loadRuns(){ try{ return JSON.parse(localStorage.getItem(KEY))||[]; }catch(e){ return []; } }
+function saveRun(r){
+  try{ var h=loadRuns(); h.push(r); localStorage.setItem(KEY,JSON.stringify(h.slice(-300))); }catch(e){}
+}
+function ymd(t){
+  var d=new Date(t);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function drawLog(){
+  var h=loadRuns();
+  if(!h.length){
+    $('l-kpi').innerHTML='';
+    $('l-body').innerHTML='<div class="note">まだ記録がない。1セッションを終えるとここに正答率と1問あたりの秒数が残る。</div>';
+    return;
+  }
+  var today=ymd(Date.now()), days={}, tn=0, tok=0, tms=0, todayN=0;
+  h.forEach(function(r){
+    days[ymd(r.t)]=1; tn+=r.n; tok+=r.ok; tms+=r.ms;
+    if(ymd(r.t)===today) todayN+=r.n;
+  });
+  var streak=0, d=new Date();
+  if(!days[today]) d.setDate(d.getDate()-1);
+  while(days[ymd(d.getTime())]){ streak++; d.setDate(d.getDate()-1); }
+  $('l-kpi').innerHTML=
+    kpi(todayN+'問','今日','連続 '+streak+'日')
+   +kpi(tn+'問','通算',Object.keys(days).length+'日')
+   +kpi(Math.round(tok/tn*100)+'%','通算の正答率','')
+   +kpi((tms/tn/1000).toFixed(1)+'s','通算の1問あたり','');
+
+  var agg={};
+  h.forEach(function(r){
+    if(!agg[r.lb]) agg[r.lb]={n:0,ok:0,ms:0};
+    agg[r.lb].n+=r.n; agg[r.lb].ok+=r.ok; agg[r.lb].ms+=r.ms;
+  });
+  var body='<h3>直近のセッション</h3><table><thead><tr><th>日時</th><th>分野</th><th class="n">正答</th><th class="n">1問</th></tr></thead><tbody>';
+  h.slice(-12).reverse().forEach(function(r){
+    var dt=new Date(r.t);
+    body+='<tr><td class="n">'+ymd(r.t).slice(5)+' '+String(dt.getHours()).padStart(2,'0')+':'
+      +String(dt.getMinutes()).padStart(2,'0')+'</td><td>'+r.lb+'</td>'
+      +'<td class="n">'+r.ok+'/'+r.n+'</td><td class="n">'+(r.ms/r.n/1000).toFixed(1)+'s</td></tr>';
+  });
+  body+='</tbody></table>';
+  var ak=Object.keys(agg);
+  if(ak.length){
+    body+='<h3>分野ごとの通算<span class="sm"> — 正答率の低い順</span></h3><table><tbody>';
+    ak.sort(function(a,b){ return agg[a].ok/agg[a].n - agg[b].ok/agg[b].n; }).forEach(function(k){
+      body+='<tr><td>'+k+'</td><td class="n">'+agg[k].n+'問</td>'
+        +'<td class="n">'+Math.round(agg[k].ok/agg[k].n*100)+'%</td>'
+        +'<td class="n">'+(agg[k].ms/agg[k].n/1000).toFixed(1)+'s / 問</td></tr>';
+    });
+    body+='</tbody></table>';
+  }
+  body+='<div style="margin-top:14px"><button class="t" id="b-clear">記録を消す</button></div>';
+  $('l-body').innerHTML=body;
+  $('b-clear').addEventListener('click', function(){
+    if(!confirm('この端末に保存した記録を全部消す。')) return;
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    drawLog();
+  });
+}
+
+/* ── setup UI ─────────────────────────────────────────────────────────── */
+var cfg={cat:'vec', count:10};
+try{
+  var p=JSON.parse(localStorage.getItem(PREF));
+  if(p && p.cat && C.CATS.some(function(c){ return c.k===p.cat; })){ cfg.cat=p.cat; cfg.count=p.count||10; }
+}catch(e){}
+
+function seg(el, items, val, onSel){
+  el.innerHTML=items.map(function(it){
+    return '<button type="button"'+(it.out?' class="out"':'')+' data-v="'+it.v+'" aria-pressed="'+(it.v===val)+'">'+it.lb
+      +(it.out?'<span class="tag">範囲外</span>':'')
+      +(it.s? '<span class="s">'+it.s+'</span>':'')+'</button>';
+  }).join('');
+  Array.prototype.forEach.call(el.children, function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(el.children, function(x){ x.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      onSel(b.dataset.v);
+    });
+  });
+}
+function catNote(){
+  var pool = cfg.cat==='all' ? C.T.filter(function(t){ return !catOf(t.cat).out; }) : C.T.filter(function(t){ return t.cat===cfg.cat; });
+  var c=catOf(cfg.cat), link='';
+  if(c.ch) link='<br>対応する章 <a href="'+c.ch+'">'+c.cn+' '+c.lb+'</a>';
+  else link='<br>範囲内の5分野から均等に出題する。範囲外の3分野は含めない';
+  if(c.out) link+='<br>この分野は範囲外の発展として出題する';
+  $('cat-note').innerHTML='出題する型 '+pool.length+'種類　—　'+pool.map(function(t){ return t.ctx; }).join(' / ')
+    +link
+    +'<br>答えは整数・分数・根号で入力する。分数は 3/4 のように / で区切る。根号は 2√5 や √3/2 のように √ を使う。√ と / は入力欄の下のボタンでも入力できる。小数で入力した場合は正解との誤差が1%以内なら正解とする。角度は度の数だけを入力する。';
+}
+seg($('cats'), C.CATS.map(function(c){ return {v:c.k, lb:c.lb, s:c.s, out:c.out}; }), cfg.cat,
+    function(v){ cfg.cat=v; catNote(); });
+seg($('counts'), [10,20,30].map(function(c){ return {v:String(c), lb:c+'問'}; }), String(cfg.count),
+    function(v){ cfg.count=Number(v); });
+catNote();
+drawLog();
+
+/* ── wiring ───────────────────────────────────────────────────────────── */
+$('b-start').addEventListener('click', function(){
+  try{ localStorage.setItem(PREF, JSON.stringify(cfg)); }catch(e){}
+  start({cat:cfg.cat, count:cfg.count});
+});
+$('b-ok').addEventListener('click', submit);
+$('b-quit').addEventListener('click', quit);
+$('b-again').addEventListener('click', function(){ start(S.cfg); });
+$('b-redo').addEventListener('click', function(){
+  if(!S.miss||!S.miss.length) return;
+  var q=S.miss.slice(), c={cat:S.cfg.cat, count:q.length};
+  start(c,q);
+});
+$('b-back').addEventListener('click', function(){
+  show('setup'); window.scrollTo({top:0,behavior:'smooth'});
+});
+document.addEventListener('keydown', function(e){
+  if($('drill').classList.contains('hide')) return;
+  if(e.key==='Enter'){ e.preventDefault(); submit(); }
+  else if(e.key==='Escape'){ e.preventDefault(); quit(); }
+  else if(S && S.cur && S.cur.kind==='choice' && S.phase==='input' && /^[1-4]$/.test(e.key)){
+    var i=Number(e.key)-1;
+    if(i<S.cur.choices.length){ e.preventDefault(); judge(i, null); }
+  }
+});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>速度と加速度｜物理</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../021_profile/index.html">profile</a><a href="../../02A_plan/index.html">plan</a><a href="../../023_travel/index.html">travel</a><a href="../../027_cinema/index.html">cinema</a><a href="../../02B_reading/index.html">reading</a><a href="../../024_method/index.html">method</a><a href="../../026_handbook/index.html">handbook</a><a href="../../025_fitness/index.html">fitness</a><a href="../../028_english/index.html">english</a><a href="../../029_mental_math/index.html">mental math</a><a href="../../02C_chemistry/index.html">chemistry</a><a href="../../02D_probability/index.html">probability</a><a href="../../02E_calculus/index.html">calculus</a><a href="../../02F_linear_algebra/index.html">linear algebra</a><a href="../index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../024_method/index.html">method</a>
+    <a class="snav-a" href="../../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../028_english/index.html">english</a>
+    <a class="snav-a" href="../../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / personal /
+    <a href="../index.html">02G physics</a> / 第1章</div>
+
+  <div class="tb-ch">物理基礎 — 第1章</div>
+  <h1>速度と加速度</h1>
+  <p class="tb-thesis">運動は位置と速度と加速度の3つの量で記述する。x−tグラフの傾きが速度でv−tグラフの傾きが加速度である。v−tグラフの面積が変位である。等加速度直線運動の3公式はこの面積から導ける。</p>
+
+<p class="tb-ok"><strong>この章は2026-10-15に出典照合を通した。</strong> 検証した事実は35件である。出典と一致したものは33件である。食い違ったものは2件で本文を修正済みである。出典で確認できなかったものは0件である。これらは末尾の「残っている問い」に列挙した。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">変位と速度と速さ</a></li><li><a href="#s2">x−tグラフとv−tグラフ</a></li><li><a href="#s3">合成速度と相対速度</a></li><li><a href="#s4">加速度</a></li><li><a href="#s5">等加速度直線運動の3公式</a></li><li><a href="#s6">自由落下と鉛直投げ上げ</a></li><li><a href="#s7">現実世界の速度と加速度</a></li><li><a href="#s8">確認問題</a></li><li><a href="#s9">この章の要点</a></li><li><a href="#s10">残っている問い</a></li><li><a href="#s11">出典</a></li></ol></nav>
+
+<p>序章では単位と次元と有効数字を準備した。この章から力学に入る。力学の最初の仕事は運動を数量で記述することである。物体がどこにあり・どれだけの速さでどちらへ動き・その速さがどう変わるかを位置と速度と加速度の3つの量で表す。力が運動をどう変えるかは第3章で扱う。この章は力を考えずに運動の記述だけを積み上げる。</p>
+<p>共通テストでこの範囲から問われるのは主に4種類である。x−tグラフとv−tグラフの読み取り・相対速度・等加速度直線運動の公式を使う計算・自由落下と鉛直投げ上げである。グラフの傾きと面積の意味を確定させれば4種類すべてを同じ考え方で解ける。</p>
+
+<h2 id="s1">変位と速度と速さ</h2>
+<p>直線上の運動を扱うときは直線に沿って座標軸を置く。原点と正の向きを決めると物体の位置は1つの数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> で表せる。位置が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">x_2</annotation></semantics></math></span> へ変わったとき位置の変化 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>x</mi><mo>=</mo><msub><mi>x</mi><mn>2</mn></msub><mo>−</mo><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">\Delta x=x_2-x_1</annotation></semantics></math></span> を<strong>変位</strong>と呼ぶ。変位は向きをもつ量で正の向きへ動けば正・負の向きへ動けば負になる。</p>
+<p>変位と道のりは異なる量である。東へ 30 m 歩いて西へ 10 m 戻ると道のりは 40 m で変位は東向きに 20 m である。<strong class="hit">変位は出発点と到着点だけで定まり途中の経路によらない</strong>。</p>
+<p>時間 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math></span> の間の変位が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\Delta x</annotation></semantics></math></span> のとき次の量を<strong>平均の速度</strong>と呼ぶ。</p>
+<p><div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mi>v</mi><mo>ˉ</mo></mover><mo>=</mo><mfrac><mrow><mi mathvariant="normal">Δ</mi><mi>x</mi></mrow><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\bar{v}=\frac{\Delta x}{\Delta t}</annotation></semantics></math></span></div></p>
+<p>速度は向きをもつ量で単位は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow><annotation encoding="application/x-tex">\mathrm{m/s}</annotation></semantics></math></span> である。速度の大きさを<strong>速さ</strong>と呼ぶ。日常語の速さは道のりを時間で割った値を指すことが多い。物理では向きを含む速度と大きさだけの速さを区別する。</p>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math></span> を限りなく小さくしたときの平均の速度を<strong>瞬間の速度</strong>と呼ぶ。自動車の速度計が示す値は瞬間の速さである。単に速度と書けば瞬間の速度を指す。</p>
+<p>大きさと向きをもつ量を<strong>ベクトル</strong>と呼び大きさだけの量を<strong>スカラー</strong>と呼ぶ。変位と速度はベクトルで道のりと速さはスカラーである。物理基礎の運動は直線上に限るので向きは正負の符号で表せる。</p>
+
+<div class="ex"><div class="ex-h">例題 1</div>
+<p>東を正の向きとする。人が東へ 30 m 歩き続けて西へ 10 m 戻った。全体で 20 s かかった。平均の速度と平均の速さを求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 変位は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>+</mo><mn>30</mn><mo>−</mo><mn>10</mn><mo>=</mo><mo>+</mo><mn>20</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">+30-10=+20\,\mathrm{m}</annotation></semantics></math></span> である。<br>手順2 平均の速度は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>20</mn><mo>÷</mo><mn>20</mn><mo>=</mo><mo>+</mo><mn>1.0</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">20\div20=+1.0\,\mathrm{m/s}</annotation></semantics></math></span> で東向きに 1.0 m/s である。<br>手順3 道のりは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>30</mn><mo>+</mo><mn>10</mn><mo>=</mo><mn>40</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">30+10=40\,\mathrm{m}</annotation></semantics></math></span> で平均の速さは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>40</mn><mo>÷</mo><mn>20</mn><mo>=</mo><mn>2.0</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">40\div20=2.0\,\mathrm{m/s}</annotation></semantics></math></span> である。<br>答え 平均の速度は東向き 1.0 m/s で平均の速さは 2.0 m/s である。2つの値が異なるのは途中で向きを変えたからである。</div></details></div>
+
+<p>単位の換算は全章で使う。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mn>1</mn><mtext> </mtext><mi mathvariant="normal">k</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">h</mi></mrow><mo>=</mo><mn>1000</mn><mtext> </mtext><mi mathvariant="normal">m</mi><mo>÷</mo><mn>3600</mn><mtext> </mtext><mi mathvariant="normal">s</mi></mrow><annotation encoding="application/x-tex">\mathrm{1\,km/h}=1000\,\mathrm{m}\div3600\,\mathrm{s}</annotation></semantics></math></span> なので km/h の値を 3.6 で割ると m/s の値になる。時速 72 km は秒速 20 m である。</p>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">時速160 km の直球の到達時間は割り算1回で約0.41秒と見積もれる</p>
+<p>160 km/h は 44.4 m/s で投手板から本塁までは 18.44 m である。</p>
+<p class="an-x">0.41秒は等速を仮定した見積もりで測定値ではない。</p>
+</aside>
+
+<h2 id="s2">x−tグラフとv−tグラフ</h2>
+<p>横軸に時刻 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span>・縦軸に位置 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> をとったグラフを<strong>x−tグラフ</strong>と呼ぶ。横軸に時刻・縦軸に速度 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span> をとったグラフを<strong>v−tグラフ</strong>と呼ぶ。2つのグラフには次の対応がある。</p>
+<div class="tb-vs">
+<div><h5>x−tグラフ</h5><ul>
+<li><strong>傾きが速度</strong>である。2点を結ぶ直線の傾きが平均の速度で接線の傾きが瞬間の速度である</li>
+<li>右上がりなら正の向きへ動き右下がりなら負の向きへ動く</li>
+<li>水平な部分は静止を表す</li>
+</ul></div>
+<div><h5>v−tグラフ</h5><ul>
+<li><strong>傾きが加速度</strong>である。第4節で定義する</li>
+<li><strong>横軸との間の面積が変位</strong>である。横軸より下の面積は負の変位である</li>
+<li>横軸と交わる時刻に運動の向きが変わる</li>
+</ul></div>
+</div>
+<p>傾きが速度になる理由は定義そのものである。傾きは縦の変化を横の変化で割った値で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>x</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta x/\Delta t</annotation></semantics></math></span> は速度の定義である。面積が変位になる理由は次のとおりである。速度 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span> で時間 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math></span> 進むと変位は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">v\Delta t</annotation></semantics></math></span> でこれは縦 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span>・横 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math></span> の長方形の面積である。速度が変わる場合も時間を細かく分けて長方形を並べれば同じ結論になる。<strong class="hit">速度を時間で積み上げた量が変位である</strong>。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 270" role="img" aria-label="等速直線運動のx−tグラフとv−tグラフ">
+  <g stroke="var(--ink)" stroke-width="1.2">
+    <line x1="60" y1="220" x2="340" y2="220"/><line x1="60" y1="220" x2="60" y2="40"/>
+    <line x1="420" y1="220" x2="700" y2="220"/><line x1="420" y1="220" x2="420" y2="40"/>
+  </g>
+  <g stroke="var(--line)" stroke-dasharray="3 3">
+    <line x1="60" y1="188" x2="320" y2="188"/><line x1="60" y1="156" x2="320" y2="156"/><line x1="60" y1="124" x2="320" y2="124"/><line x1="60" y1="92" x2="320" y2="92"/><line x1="60" y1="60" x2="320" y2="60"/>
+    <line x1="420" y1="180" x2="680" y2="180"/><line x1="420" y1="140" x2="680" y2="140"/><line x1="420" y1="100" x2="680" y2="100"/><line x1="420" y1="60" x2="680" y2="60"/>
+  </g>
+  <g font-size="12" fill="var(--sub)" text-anchor="middle">
+    <text x="60" y="236">0</text><text x="112" y="236">1</text><text x="164" y="236">2</text><text x="216" y="236">3</text><text x="268" y="236">4</text><text x="320" y="236">5</text>
+    <text x="420" y="236">0</text><text x="472" y="236">1</text><text x="524" y="236">2</text><text x="576" y="236">3</text><text x="628" y="236">4</text><text x="680" y="236">5</text>
+    <text x="340" y="256">t 単位 s</text><text x="690" y="256">t 単位 s</text>
+  </g>
+  <g font-size="12" fill="var(--sub)" text-anchor="end">
+    <text x="52" y="192">2</text><text x="52" y="160">4</text><text x="52" y="128">6</text><text x="52" y="96">8</text><text x="52" y="64">10</text>
+    <text x="412" y="184">1</text><text x="412" y="144">2</text><text x="412" y="104">3</text><text x="412" y="64">4</text>
+  </g>
+  <text x="66" y="34" font-size="12" fill="var(--muted)">x 単位 m</text>
+  <text x="426" y="34" font-size="12" fill="var(--muted)">v 単位 m/s</text>
+  <rect x="420" y="140" width="156" height="80" fill="var(--cool)" opacity=".3"/>
+  <line x1="60" y1="220" x2="320" y2="60" stroke="var(--warm)" stroke-width="2.5"/>
+  <line x1="420" y1="140" x2="680" y2="140" stroke="var(--warm)" stroke-width="2.5"/>
+  <g stroke="var(--accent)" stroke-width="1.8" fill="none">
+    <polyline points="112,188 216,188 216,124"/>
+  </g>
+  <g font-size="12.5" fill="var(--accent)">
+    <text x="150" y="204">2 s</text><text x="222" y="160">4 m</text>
+    <text x="232" y="122">傾き 4÷2＝2 m/s</text>
+  </g>
+  <text x="498" y="186" font-size="13" text-anchor="middle" fill="var(--ink)">面積 2×3＝6 m</text>
+  <text x="200" y="20" font-size="13" text-anchor="middle" fill="var(--ink)">x−tグラフ</text>
+  <text x="560" y="20" font-size="13" text-anchor="middle" fill="var(--ink)">v−tグラフ</text>
+</svg>
+<figcaption>速度 2 m/s の等速直線運動である。左のx−tグラフの傾き 2 m/s が右のv−tグラフの高さになる。右の0〜3 s の面積 6 m は左のグラフで t＝3 s の位置 6 m と一致する。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 2</div>
+<p>物体が初めの 3.0 s は速度 +4.0 m/s で進み次の 2.0 s は速度 −3.0 m/s で進んだ。5.0 s 間の変位と道のりを求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 v−tグラフで初めの面積は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4.0</mn><mo>×</mo><mn>3.0</mn><mo>=</mo><mo>+</mo><mn>12</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">4.0\times3.0=+12\,\mathrm{m}</annotation></semantics></math></span> である。<br>手順2 次の面積は横軸より下で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>3.0</mn><mo>×</mo><mn>2.0</mn><mo>=</mo><mo>−</mo><mn>6.0</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">-3.0\times2.0=-6.0\,\mathrm{m}</annotation></semantics></math></span> である。<br>手順3 変位は面積の符号つきの和で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>12</mn><mo>−</mo><mn>6.0</mn><mo>=</mo><mo>+</mo><mn>6.0</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">12-6.0=+6.0\,\mathrm{m}</annotation></semantics></math></span> である。<br>答え 変位は正の向きに 6.0 m で道のりは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>12</mn><mo>+</mo><mn>6.0</mn><mo>=</mo><mn>18</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">12+6.0=18\,\mathrm{m}</annotation></semantics></math></span> である。</div></details></div>
+
+<p>典型的な誤りは2つある。1つ目はx−tグラフの縦軸の高さを速度と読むことである。速度はグラフの高さではなく傾きである。2つ目はv−tグラフで横軸より下の面積を正の値として足すことである。変位を求めるときは符号をつけて足し道のりを求めるときは大きさを足す。</p>
+
+<aside class="an an-biz"><b>会計で言えば</b>
+<p class="an-h">v−tグラフの面積はフローを積み上げたストックである</p>
+<p>速度は毎秒の増加分で変位はその累計である。月次の損益を積み上げると純資産の増減になるのと同じ構造である。</p>
+</aside>
+
+<h2 id="s3">合成速度と相対速度</h2>
+<p>流れのある川を進む船の速度は2つの速度の和になる。静水での船の速度が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">v_1</annotation></semantics></math></span> で川の流れの速度が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">v_2</annotation></semantics></math></span> なら岸から見た船の速度は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>1</mn></msub><mo>+</mo><msub><mi>v</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">v_1+v_2</annotation></semantics></math></span> である。これを<strong>合成速度</strong>と呼ぶ。直線上では向きを符号で表して足し算するだけでよい。</p>
+<p>運動している観測者から見た相手の速度を<strong>相対速度</strong>と呼ぶ。地面に対する A の速度を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>A</mi></msub></mrow><annotation encoding="application/x-tex">v_A</annotation></semantics></math></span>・B の速度を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">v_B</annotation></semantics></math></span> とすると A から見た B の相対速度は次の式で表される。</p>
+<p><div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>v</mi><mrow><mi>A</mi><mi>B</mi></mrow></msub><mo>=</mo><msub><mi>v</mi><mi>B</mi></msub><mo>−</mo><msub><mi>v</mi><mi>A</mi></msub></mrow><annotation encoding="application/x-tex">v_{AB}=v_B-v_A</annotation></semantics></math></span></div></p>
+<p>理由は位置で考えると分かる。A から見た B の位置は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>B</mi></msub><mo>−</mo><msub><mi>x</mi><mi>A</mi></msub></mrow><annotation encoding="application/x-tex">x_B-x_A</annotation></semantics></math></span> である。この量が単位時間あたりに変わる量が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>B</mi></msub><mo>−</mo><msub><mi>v</mi><mi>A</mi></msub></mrow><annotation encoding="application/x-tex">v_B-v_A</annotation></semantics></math></span> である。<strong class="hit">「A から見た B」は B の速度から A の速度を引く</strong>。順序を逆にすると符号が逆になる。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 230" role="img" aria-label="地面から見た速度とAから見た相対速度">
+  <defs><marker id="ah02g01a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker></defs>
+  <text x="20" y="24" font-size="13" fill="var(--muted)">地面から見る</text>
+  <line x1="20" y1="90" x2="700" y2="90" stroke="var(--line)" stroke-width="2"/>
+  <rect x="120" y="58" width="60" height="28" rx="5" fill="var(--warm)"/><text x="150" y="77" font-size="13" fill="#fff" text-anchor="middle">A</text>
+  <rect x="420" y="58" width="60" height="28" rx="5" fill="var(--cool)"/><text x="450" y="77" font-size="13" fill="#fff" text-anchor="middle">B</text>
+  <g stroke="var(--accent)" stroke-width="2.5" marker-end="url(#ah02g01a)">
+    <line x1="182" y1="72" x2="262" y2="72"/><line x1="482" y1="72" x2="542" y2="72"/>
+  </g>
+  <g font-size="12.5" fill="var(--ink)">
+    <text x="190" y="52">20 m/s</text><text x="488" y="52">15 m/s</text>
+  </g>
+  <text x="20" y="134" font-size="13" fill="var(--muted)">A から見る</text>
+  <line x1="20" y1="200" x2="700" y2="200" stroke="var(--line)" stroke-width="2"/>
+  <rect x="120" y="168" width="60" height="28" rx="5" fill="var(--warm)"/><text x="150" y="187" font-size="13" fill="#fff" text-anchor="middle">A</text>
+  <rect x="420" y="168" width="60" height="28" rx="5" fill="var(--cool)"/><text x="450" y="187" font-size="13" fill="#fff" text-anchor="middle">B</text>
+  <line x1="418" y1="182" x2="398" y2="182" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#ah02g01a)"/>
+  <g font-size="12.5" fill="var(--ink)">
+    <text x="120" y="160">静止して見える</text><text x="330" y="160">15−20＝−5 m/s</text>
+  </g>
+  <text x="510" y="187" font-size="12.5" fill="var(--sub)">B は後ろ向きに 5 m/s で近づく</text>
+</svg>
+<figcaption>右向きを正とする。地面から見ると A は 20 m/s で B は 15 m/s である。A から見ると A は静止し B は −5 m/s で動いて見える。矢印の長さは速さに比例させた。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 3</div>
+<p>東向きに 25 m/s で走る列車 A と西向きに 15 m/s で走る列車 B がすれ違う。A の乗客から見た B の速度を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 東を正とすると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>A</mi></msub><mo>=</mo><mo>+</mo><mn>25</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">v_A=+25\,\mathrm{m/s}</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>B</mi></msub><mo>=</mo><mo>−</mo><mn>15</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">v_B=-15\,\mathrm{m/s}</annotation></semantics></math></span> である。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mrow><mi>A</mi><mi>B</mi></mrow></msub><mo>=</mo><msub><mi>v</mi><mi>B</mi></msub><mo>−</mo><msub><mi>v</mi><mi>A</mi></msub><mo>=</mo><mo>−</mo><mn>15</mn><mo>−</mo><mn>25</mn><mo>=</mo><mo>−</mo><mn>40</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">v_{AB}=v_B-v_A=-15-25=-40\,\mathrm{m/s}</annotation></semantics></math></span> である。<br>答え 西向きに 40 m/s である。向かい合って走ると相対速度の大きさは速さの和になる。</div></details></div>
+
+<aside class="an an-lv"><b>恋愛で言えば</b>
+<p class="an-h">同じ速さで並んで歩く二人の相対速度は0である</p>
+<p>地面から見て速くても互いには静止して見える。距離が縮むかどうかは速度の差だけで定まる。</p>
+</aside>
+
+<h2 id="s4">加速度</h2>
+<p>速度が時間とともに変わる運動では速度の変わり方を表す量が要る。時間 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math></span> の間に速度が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">\Delta v</annotation></semantics></math></span> 変わったとき次の量を<strong>平均の加速度</strong>と呼ぶ。</p>
+<p><div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mi>a</mi><mo>ˉ</mo></mover><mo>=</mo><mfrac><mrow><mi mathvariant="normal">Δ</mi><mi>v</mi></mrow><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\bar{a}=\frac{\Delta v}{\Delta t}</annotation></semantics></math></span></div></p>
+<p>単位は速度の単位 m/s を時間の単位 s で割った <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mathrm{m/s^2}</annotation></semantics></math></span> である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math></span> を限りなく小さくした値が瞬間の加速度である。加速度もベクトルで直線上では正負の符号で向きを表す。v−tグラフの傾きが加速度である。</p>
+<p>加速度の符号は速度の符号と独立である。<strong class="hit">速度と加速度が同じ向きなら速さは増え反対向きなら速さは減る</strong>。正の向きに進みながらブレーキをかける自動車は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v&gt;0</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">a&lt;0</annotation></semantics></math></span> である。加速度が負であることは後ろ向きに進むことを意味しない。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>速度の符号</th><th>加速度の符号</th><th>運動の様子</th></tr></thead>
+<tbody>
+<tr><td>正</td><td>正</td><td>正の向きに進み速さが増す</td></tr>
+<tr><td>正</td><td>負</td><td>正の向きに進み速さが減る</td></tr>
+<tr><td>負</td><td>負</td><td>負の向きに進み速さが増す</td></tr>
+<tr><td>負</td><td>正</td><td>負の向きに進み速さが減る</td></tr>
+</tbody></table></div>
+
+<div class="ex"><div class="ex-h">例題 4</div>
+<p>直線上を正の向きに 25 m/s で走る自動車がブレーキをかけ一定の割合で減速して 5.0 s 後に止まった。加速度を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 速度の変化は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>v</mi><mo>=</mo><mn>0</mn><mo>−</mo><mn>25</mn><mo>=</mo><mo>−</mo><mn>25</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">\Delta v=0-25=-25\,\mathrm{m/s}</annotation></semantics></math></span> である。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mi mathvariant="normal">Δ</mi><mi>v</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">Δ</mi><mi>t</mi><mo>=</mo><mo>−</mo><mn>25</mn><mo>÷</mo><mn>5.0</mn><mo>=</mo><mo>−</mo><mn>5.0</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">a=\Delta v/\Delta t=-25\div5.0=-5.0\,\mathrm{m/s^2}</annotation></semantics></math></span> である。<br>答え 負の向きに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5.0</mn><mtext> </mtext><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mathrm{5.0\,m/s^2}</annotation></semantics></math></span> である。自動車は正の向きに進み続けながら減速する。</div></details></div>
+
+<aside class="an an-biz"><b>投資で言えば</b>
+<p class="an-h">加速度が負でも売上は増え続けることがある</p>
+<p>売上の増加幅が縮む状態が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v&gt;0</annotation></semantics></math></span> かつ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">a&lt;0</annotation></semantics></math></span> である。減速は減収ではない。</p>
+</aside>
+
+<h2 id="s5">等加速度直線運動の3公式</h2>
+<p>加速度が一定の直線運動を<strong>等加速度直線運動</strong>と呼ぶ。時刻 0 の速度を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">v_0</annotation></semantics></math></span>・加速度を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span> とし時刻 0 に原点を出発するとする。この運動は次の3つの式で表される。</p>
+<p><div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>v</mi><mo>=</mo><msub><mi>v</mi><mn>0</mn></msub><mo>+</mo><mi>a</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">v=v_0+at</annotation></semantics></math></span></div></p>
+<p><div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>x</mi><mo>=</mo><msub><mi>v</mi><mn>0</mn></msub><mi>t</mi><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>a</mi><msup><mi>t</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">x=v_0t+\frac{1}{2}at^2</annotation></semantics></math></span></div></p>
+<p><div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>v</mi><mn>2</mn></msup><mo>−</mo><msubsup><mi>v</mi><mn>0</mn><mn>2</mn></msubsup><mo>=</mo><mn>2</mn><mi>a</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">v^2-v_0^2=2ax</annotation></semantics></math></span></div></p>
+<p>1つ目の式は加速度の定義から得られる。加速度が一定なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mo stretchy="false">(</mo><mi>v</mi><mo>−</mo><msub><mi>v</mi><mn>0</mn></msub><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">a=(v-v_0)/t</annotation></semantics></math></span> で両辺に <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span> を掛ければよい。v−tグラフは傾き <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span>・切片 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">v_0</annotation></semantics></math></span> の直線である。</p>
+<p>2つ目の式は v−tグラフの面積から得られる。0 から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span> までの面積は台形で長方形と三角形に分けられる。長方形は縦 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">v_0</annotation></semantics></math></span>・横 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span> で面積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>0</mn></msub><mi>t</mi></mrow><annotation encoding="application/x-tex">v_0t</annotation></semantics></math></span> である。三角形は底辺 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span>・高さ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">at</annotation></semantics></math></span> で面積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>a</mi><msup><mi>t</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\frac{1}{2}at^2</annotation></semantics></math></span> である。2つの和が変位 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> である。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 280" role="img" aria-label="等加速度直線運動のv−tグラフの面積を長方形と三角形に分ける図">
+  <rect x="80" y="180" width="400" height="60" fill="var(--cool)" opacity=".3"/>
+  <polygon points="80,180 480,180 480,60" fill="var(--warm)" opacity=".3"/>
+  <g stroke="var(--ink)" stroke-width="1.2">
+    <line x1="80" y1="240" x2="620" y2="240"/><line x1="80" y1="240" x2="80" y2="30"/>
+  </g>
+  <g stroke="var(--line)" stroke-dasharray="3 3">
+    <line x1="80" y1="180" x2="600" y2="180"/><line x1="80" y1="120" x2="600" y2="120"/><line x1="80" y1="60" x2="600" y2="60"/>
+    <line x1="480" y1="60" x2="480" y2="240"/>
+  </g>
+  <line x1="80" y1="180" x2="580" y2="30" stroke="var(--warm)" stroke-width="2.5"/>
+  <g font-size="12" fill="var(--sub)" text-anchor="middle">
+    <text x="80" y="256">0</text><text x="180" y="256">1</text><text x="280" y="256">2</text><text x="380" y="256">3</text><text x="480" y="256">4</text><text x="580" y="256">5</text>
+    <text x="620" y="274">t 単位 s</text>
+  </g>
+  <g font-size="12" fill="var(--sub)" text-anchor="end">
+    <text x="72" y="244">0</text><text x="72" y="184">4</text><text x="72" y="124">8</text><text x="72" y="64">12</text>
+  </g>
+  <text x="86" y="24" font-size="12" fill="var(--muted)">v 単位 m/s</text>
+  <g font-size="13" fill="var(--ink)" text-anchor="middle">
+    <text x="280" y="215">長方形 v₀t＝4×4＝16 m</text>
+    <text x="340" y="168" font-size="12">三角形 ½at²＝½×2×4²＝16 m</text>
+  </g>
+  <g font-size="12.5" fill="var(--accent)">
+    <text x="490" y="84">v＝v₀＋at＝12 m/s</text>
+    <text x="500" y="190">v₀＝4 m/s</text>
+    <text x="250" y="100">傾き a＝2 m/s²</text>
+  </g>
+</svg>
+<figcaption>初速度 4 m/s で加速度 2 m/s² の運動である。0〜4 s の面積は長方形 16 m と三角形 16 m の和で 32 m である。2つ目の公式で計算した <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>×</mo><mn>4</mn><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>×</mo><mn>2</mn><mo>×</mo><msup><mn>4</mn><mn>2</mn></msup><mo>=</mo><mn>32</mn></mrow><annotation encoding="application/x-tex">4\times4+\frac{1}{2}\times2\times4^2=32</annotation></semantics></math></span> m と一致する。</figcaption>
+</figure>
+
+<p>3つ目の式は1つ目と2つ目から時間 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span> を消去して得られる。1つ目から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mo stretchy="false">(</mo><mi>v</mi><mo>−</mo><msub><mi>v</mi><mn>0</mn></msub><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mi>a</mi></mrow><annotation encoding="application/x-tex">t=(v-v_0)/a</annotation></semantics></math></span> で2つ目に代入して整理すると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>v</mi><mn>2</mn></msup><mo>−</mo><msubsup><mi>v</mi><mn>0</mn><mn>2</mn></msubsup><mo>=</mo><mn>2</mn><mi>a</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">v^2-v_0^2=2ax</annotation></semantics></math></span> になる。<strong class="hit">時間が問題文に現れず速度と距離だけが与えられたら3つ目の式を使う</strong>。</p>
+
+<div class="ex"><div class="ex-h">例題 5</div>
+<p>時速 72 km で走る自動車が一定の加速度 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>5.0</mn><mtext> </mtext><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mathrm{-5.0\,m/s^2}</annotation></semantics></math></span> で減速して止まった。止まるまでに進んだ距離と時間を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 単位をそろえる。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>72</mn><mo>÷</mo><mn>3.6</mn><mo>=</mo><mn>20</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">72\div3.6=20\,\mathrm{m/s}</annotation></semantics></math></span> である。<br>手順2 時間が未知なので3つ目の式を使う。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>0</mn><mn>2</mn></msup><mo>−</mo><msup><mn>20</mn><mn>2</mn></msup><mo>=</mo><mn>2</mn><mo>×</mo><mo stretchy="false">(</mo><mo>−</mo><mn>5.0</mn><mo stretchy="false">)</mo><mo>×</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">0^2-20^2=2\times(-5.0)\times x</annotation></semantics></math></span> より <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>400</mn><mo>÷</mo><mn>10</mn><mo>=</mo><mn>40</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">x=400\div10=40\,\mathrm{m}</annotation></semantics></math></span> である。<br>手順3 時間は1つ目の式から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>=</mo><mn>20</mn><mo>−</mo><mn>5.0</mn><mi>t</mi></mrow><annotation encoding="application/x-tex">0=20-5.0t</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>4.0</mn><mtext> </mtext><mi mathvariant="normal">s</mi></mrow><annotation encoding="application/x-tex">t=4.0\,\mathrm{s}</annotation></semantics></math></span> である。<br>答え 40 m 進み 4.0 s で止まる。速さが2倍になると停止距離は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>v</mi><mn>0</mn><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">v_0^2</annotation></semantics></math></span> に比例して4倍になる。</div></details></div>
+
+<h3>記録タイマーのデータから加速度を求める</h3>
+<p>学習指導要領は斜面を下る台車などの運動を記録して速度と時間の関係を見いだす実験を挙げている。記録タイマーは一定の時間間隔で紙テープに打点する装置である。打点を0.1 s ごとに区切り各区間の長さを測ると区間ごとの平均の速度が得られる。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>区間</th><th>長さ</th><th>平均の速度</th><th>区間の中央の時刻</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>2.0 cm</td><td>0.20 m/s</td><td>0.05 s</td></tr>
+<tr><td>2</td><td>2.4 cm</td><td>0.24 m/s</td><td>0.15 s</td></tr>
+<tr><td>3</td><td>2.8 cm</td><td>0.28 m/s</td><td>0.25 s</td></tr>
+<tr><td>4</td><td>3.2 cm</td><td>0.32 m/s</td><td>0.35 s</td></tr>
+<tr><td>5</td><td>3.6 cm</td><td>0.36 m/s</td><td>0.45 s</td></tr>
+</tbody></table></div>
+<p>等加速度直線運動では区間の平均の速度は区間の中央の時刻の瞬間の速度に等しい。v−tグラフが直線なので台形の高さの平均が中央の高さに一致するからである。そこで平均の速度を区間の中央の時刻に対して点を打つ。</p>
+
+<div class="ex"><div class="ex-h">例題 6</div>
+<p>上の表のデータから台車の加速度を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 区間の長さは 0.1 s ごとに 0.4 cm ずつ増えている。<br>手順2 平均の速度は 0.1 s ごとに 0.04 m/s ずつ増えている。<br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mn>0.04</mn><mo>÷</mo><mn>0.1</mn><mo>=</mo><mn>0.40</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">a=0.04\div0.1=0.40\,\mathrm{m/s^2}</annotation></semantics></math></span> である。<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.40</mn><mtext> </mtext><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mathrm{0.40\,m/s^2}</annotation></semantics></math></span> である。隣り合う区間の長さの差 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\Delta x</annotation></semantics></math></span> と時間間隔 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mi mathvariant="normal">Δ</mi><mi>x</mi><mi mathvariant="normal">/</mi><msup><mi>T</mi><mn>2</mn></msup><mo>=</mo><mn>0.004</mn><mo>÷</mo><mn>0.01</mn><mo>=</mo><mn>0.40</mn></mrow><annotation encoding="application/x-tex">a=\Delta x/T^2=0.004\div0.01=0.40</annotation></semantics></math></span> とも計算できる。</div></details></div>
+
+<p>典型的な誤りは km/h のまま公式に代入することである。公式に代入する前に m と s と m/s と m/s² に必ずそろえる。もう1つは減速の運動で加速度に正の値を代入することである。座標の正の向きを先に決めて符号を確定させる。</p>
+
+<h2 id="s6">自由落下と鉛直投げ上げ</h2>
+<p>空気抵抗が無視できるとき地上付近で落下する物体は質量によらず同じ加速度で落下する。この加速度を<strong>重力加速度</strong>と呼び大きさを <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span> で表す。値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>9.8</mn><mtext> </mtext><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mathrm{9.8\,m/s^2}</annotation></semantics></math></span> で向きは鉛直下向きである。ガリレイは斜面の実験で落下距離が時間の2乗に比例することを示した。</p>
+<p>静止状態から落下させる運動を<strong>自由落下</strong>と呼ぶ。鉛直下向きを正とすると初速度0で加速度 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span> の等加速度直線運動である。</p>
+<p><div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>v</mi><mo>=</mo><mi>g</mi><mi>t</mi><mspace width="2em"/><mi>y</mi><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>g</mi><msup><mi>t</mi><mn>2</mn></msup><mspace width="2em"/><msup><mi>v</mi><mn>2</mn></msup><mo>=</mo><mn>2</mn><mi>g</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">v=gt \qquad y=\frac{1}{2}gt^2 \qquad v^2=2gy</annotation></semantics></math></span></div></p>
+<p>鉛直上向きに初速度 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">v_0</annotation></semantics></math></span> で投げ上げる運動を<strong>鉛直投げ上げ</strong>と呼ぶ。鉛直上向きを正とすると加速度は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mi>g</mi></mrow><annotation encoding="application/x-tex">-g</annotation></semantics></math></span> である。</p>
+<p><div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>v</mi><mo>=</mo><msub><mi>v</mi><mn>0</mn></msub><mo>−</mo><mi>g</mi><mi>t</mi><mspace width="2em"/><mi>y</mi><mo>=</mo><msub><mi>v</mi><mn>0</mn></msub><mi>t</mi><mo>−</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>g</mi><msup><mi>t</mi><mn>2</mn></msup><mspace width="2em"/><msup><mi>v</mi><mn>2</mn></msup><mo>−</mo><msubsup><mi>v</mi><mn>0</mn><mn>2</mn></msubsup><mo>=</mo><mo>−</mo><mn>2</mn><mi>g</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">v=v_0-gt \qquad y=v_0t-\frac{1}{2}gt^2 \qquad v^2-v_0^2=-2gy</annotation></semantics></math></span></div></p>
+<p>最高点では速度が0になる。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>=</mo><msub><mi>v</mi><mn>0</mn></msub><mo>−</mo><mi>g</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">0=v_0-gt</annotation></semantics></math></span> から最高点に達する時刻は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><msub><mi>v</mi><mn>0</mn></msub><mi mathvariant="normal">/</mi><mi>g</mi></mrow><annotation encoding="application/x-tex">t=v_0/g</annotation></semantics></math></span> で高さは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>v</mi><mn>0</mn><mn>2</mn></msubsup><mi mathvariant="normal">/</mi><mn>2</mn><mi>g</mi></mrow><annotation encoding="application/x-tex">v_0^2/2g</annotation></semantics></math></span> である。<strong class="hit">最高点で速度は0になるが加速度は0にならず下向きに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span> のままである</strong>。上昇と下降は対称で投げた点に戻る時刻は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><msub><mi>v</mi><mn>0</mn></msub><mi mathvariant="normal">/</mi><mi>g</mi></mrow><annotation encoding="application/x-tex">2v_0/g</annotation></semantics></math></span> でそのときの速度は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><msub><mi>v</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">-v_0</annotation></semantics></math></span> である。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 280" role="img" aria-label="初速度19.6 m/sで投げ上げた物体のy−tグラフとv−tグラフ">
+  <g stroke="var(--ink)" stroke-width="1.2">
+    <line x1="60" y1="230" x2="330" y2="230"/><line x1="60" y1="230" x2="60" y2="50"/>
+    <line x1="420" y1="140" x2="690" y2="140"/><line x1="420" y1="232" x2="420" y2="48"/>
+  </g>
+  <g stroke="var(--line)" stroke-dasharray="3 3">
+    <line x1="60" y1="190" x2="310" y2="190"/><line x1="60" y1="150" x2="310" y2="150"/><line x1="60" y1="110" x2="310" y2="110"/><line x1="60" y1="70" x2="310" y2="70"/>
+    <line x1="420" y1="60" x2="670" y2="60"/><line x1="420" y1="100" x2="670" y2="100"/><line x1="420" y1="180" x2="670" y2="180"/><line x1="420" y1="220" x2="670" y2="220"/>
+  </g>
+  <polygon points="420,61.6 540,140 420,140" fill="var(--cool)" opacity=".3"/>
+  <polygon points="540,140 660,218.4 660,140" fill="var(--warm)" opacity=".3"/>
+  <polyline fill="none" stroke="var(--warm)" stroke-width="2.5" points="60.0,230.0 66.0,214.7 72.0,200.2 78.0,186.5 84.0,173.6 90.0,161.4 96.0,150.0 102.0,139.4 108.0,129.6 114.0,120.6 120.0,112.4 126.0,105.0 132.0,98.3 138.0,92.4 144.0,87.3 150.0,83.0 156.0,79.5 162.0,76.7 168.0,74.8 174.0,73.6 180.0,73.2 186.0,73.6 192.0,74.8 198.0,76.7 204.0,79.5 210.0,83.0 216.0,87.3 222.0,92.4 228.0,98.3 234.0,105.0 240.0,112.4 246.0,120.6 252.0,129.6 258.0,139.4 264.0,150.0 270.0,161.4 276.0,173.6 282.0,186.5 288.0,200.2 294.0,214.7 300.0,230.0"/>
+  <line x1="420" y1="61.6" x2="660" y2="218.4" stroke="var(--warm)" stroke-width="2.5"/>
+  <circle cx="180" cy="73.2" r="4" fill="var(--accent)"/><circle cx="540" cy="140" r="4" fill="var(--accent)"/>
+  <g font-size="12" fill="var(--sub)" text-anchor="middle">
+    <text x="60" y="246">0</text><text x="120" y="246">1</text><text x="180" y="246">2</text><text x="240" y="246">3</text><text x="300" y="246">4</text>
+    <text x="300" y="266">t 単位 s</text>
+    <text x="480" y="156">1</text><text x="600" y="156">3</text><text x="660" y="156">4</text>
+    <text x="660" y="266">t 単位 s</text>
+  </g>
+  <g font-size="12" fill="var(--sub)" text-anchor="end">
+    <text x="52" y="194">5</text><text x="52" y="154">10</text><text x="52" y="114">15</text><text x="52" y="74">20</text>
+    <text x="412" y="64">20</text><text x="412" y="104">10</text><text x="412" y="144">0</text><text x="412" y="184">−10</text><text x="412" y="224">−20</text>
+  </g>
+  <text x="66" y="40" font-size="12" fill="var(--muted)">y 単位 m</text>
+  <text x="426" y="40" font-size="12" fill="var(--muted)">v 単位 m/s</text>
+  <g font-size="12.5" fill="var(--accent)">
+    <text x="190" y="64">最高点 19.6 m</text>
+    <text x="548" y="128">t＝2 s で v＝0</text>
+  </g>
+  <g font-size="12.5" fill="var(--ink)">
+    <text x="424" y="132">上昇 ＋19.6 m</text><text x="540" y="244">下降 −19.6 m</text>
+  </g>
+  <text x="190" y="20" font-size="13" text-anchor="middle" fill="var(--ink)">y−tグラフ</text>
+  <text x="560" y="20" font-size="13" text-anchor="middle" fill="var(--ink)">v−tグラフ</text>
+</svg>
+<figcaption>初速度 19.6 m/s で鉛直に投げ上げた運動である。左の放物線は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>19.6</mn><mi>t</mi><mo>−</mo><mn>4.9</mn><msup><mi>t</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">y=19.6t-4.9t^2</annotation></semantics></math></span> を0.1 s ごとに計算した。右の直線の傾きは −9.8 m/s² で一定である。右の上下2つの三角形の面積は等しく t＝4 s で投げた点に戻る。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 7</div>
+<p>小球を鉛直上向きに 19.6 m/s で投げ上げた。最高点の高さと投げた点に戻る時刻と戻ったときの速度を求めよ。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><mrow><mn>9.8</mn><mtext> </mtext><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">g=\mathrm{9.8\,m/s^2}</annotation></semantics></math></span> とする。</p>
+<details open><summary>解き方</summary><div>手順1 最高点では <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v=0</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>0</mn><mn>2</mn></msup><mo>−</mo><msup><mn>19.6</mn><mn>2</mn></msup><mo>=</mo><mo>−</mo><mn>2</mn><mo>×</mo><mn>9.8</mn><mo>×</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">0^2-19.6^2=-2\times9.8\times y</annotation></semantics></math></span> より <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>19.6</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">y=19.6\,\mathrm{m}</annotation></semantics></math></span> である。<br>手順2 戻る時刻は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">y=0</annotation></semantics></math></span> とおいて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>=</mo><mn>19.6</mn><mi>t</mi><mo>−</mo><mn>4.9</mn><msup><mi>t</mi><mn>2</mn></msup><mo>=</mo><mi>t</mi><mo stretchy="false">(</mo><mn>19.6</mn><mo>−</mo><mn>4.9</mn><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">0=19.6t-4.9t^2=t(19.6-4.9t)</annotation></semantics></math></span> より <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>4.0</mn><mtext> </mtext><mi mathvariant="normal">s</mi></mrow><annotation encoding="application/x-tex">t=4.0\,\mathrm{s}</annotation></semantics></math></span> である。<br>手順3 速度は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>19.6</mn><mo>−</mo><mn>9.8</mn><mo>×</mo><mn>4.0</mn><mo>=</mo><mo>−</mo><mn>19.6</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">v=19.6-9.8\times4.0=-19.6\,\mathrm{m/s}</annotation></semantics></math></span> である。<br>答え 最高点は 19.6 m で 4.0 s 後に下向き 19.6 m/s で戻る。投げた速さと同じ速さで戻る。</div></details></div>
+
+<p>落下の問題で多い誤りは2つある。1つ目は正の向きを途中で取り替えることである。投げ上げの問題では上向きを正と決めたら下降中も上向きを正のまま使う。下降中の速度と変位が負になるだけで式は1つで済む。2つ目は高さ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi></mrow><annotation encoding="application/x-tex">h</annotation></semantics></math></span> の点から投げ上げた物体が地面に達する時刻を求めるときに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">y=0</annotation></semantics></math></span> とおくことである。地面の位置は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mo>−</mo><mi>h</mi></mrow><annotation encoding="application/x-tex">y=-h</annotation></semantics></math></span> である。</p>
+<p>水平に投げた物体の運動を<strong>水平投射</strong>と呼ぶ。水平方向には力が働かないので等速直線運動をし鉛直方向には自由落下と同じ運動をする。2つの方向に分けて考えればこの章の式がそのまま使える。物理基礎で水平投射は定性的に触れる範囲である。平面内の運動として計算する扱いは科目「物理」の内容で第9章で行う。空気抵抗がある場合の落下は第3章で定性的に扱う。</p>
+
+<h2 id="s7">現実世界の速度と加速度</h2>
+<p>陸上100 m の世界記録は2009年にウサイン・ボルトが出した 9.58 s である。平均の速さは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>÷</mo><mn>9.58</mn><mo>≈</mo><mn>10.4</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">100\div9.58\approx10.4\,\mathrm{m/s}</annotation></semantics></math></span> で時速に直すと約 38 km である。スタート直後は加速度が大きく後半は速さが一定に近づく。区間ごとの通過時刻からv−tグラフを描くとこの章の傾きと面積の考え方で走りを分析できる。</p>
+<aside class="an an-rw"><b>現実世界</b>
+<p>自動車の停止距離は空走距離と制動距離の和である。空走距離は速さに比例し制動距離は速さの2乗に比例する。速さが2倍で制動距離が4倍になるのは例題5の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>v</mi><mn>2</mn></msup><mo>−</mo><msubsup><mi>v</mi><mn>0</mn><mn>2</mn></msubsup><mo>=</mo><mn>2</mn><mi>a</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">v^2-v_0^2=2ax</annotation></semantics></math></span> の帰結である。</p>
+</aside>
+
+<h2 id="s8">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ x−tグラフ</div>
+<p class="qz-q">直線上を運動する物体のx−tグラフが原点を通る直線で t＝4.0 s のとき x＝12 m である。物体の速度を1つ選べ。</p>
+<ol><li>0.33 m/s</li><li>3.0 m/s</li><li>12 m/s</li><li>48 m/s</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。x−tグラフの傾きが速度で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>12</mn><mo>÷</mo><mn>4.0</mn><mo>=</mo><mn>3.0</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">12\div4.0=3.0\,\mathrm{m/s}</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ v−tグラフの面積</div>
+<p class="qz-q">静止していた物体が一定の加速度で 4.0 s 間に 6.0 m/s まで加速しその後 2.0 s 間 6.0 m/s で進んだ。6.0 s 間の変位を1つ選べ。</p>
+<ol><li>12 m</li><li>18 m</li><li>24 m</li><li>36 m</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。v−tグラフの面積は三角形 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>×</mo><mn>4.0</mn><mo>×</mo><mn>6.0</mn><mo>=</mo><mn>12</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">\frac{1}{2}\times4.0\times6.0=12\,\mathrm{m}</annotation></semantics></math></span> と長方形 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6.0</mn><mo>×</mo><mn>2.0</mn><mo>=</mo><mn>12</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">6.0\times2.0=12\,\mathrm{m}</annotation></semantics></math></span> の和で 24 m である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 相対速度</div>
+<p class="qz-q">東向きに 20 m/s で進む自動車 A と西向きに 10 m/s で進む自動車 B がある。A から見た B の速度を1つ選べ。</p>
+<ol><li>東向き 10 m/s</li><li>西向き 10 m/s</li><li>東向き 30 m/s</li><li>西向き 30 m/s</li></ol>
+<details><summary>解答と解説</summary><div>正解は 4 である。東を正とすると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>B</mi></msub><mo>−</mo><msub><mi>v</mi><mi>A</mi></msub><mo>=</mo><mo>−</mo><mn>10</mn><mo>−</mo><mn>20</mn><mo>=</mo><mo>−</mo><mn>30</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">v_B-v_A=-10-20=-30\,\mathrm{m/s}</annotation></semantics></math></span> で西向き 30 m/s である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ 停止距離</div>
+<p class="qz-q">20 m/s で走る自動車が一定の加速度で減速し 5.0 s で止まった。止まるまでに進んだ距離を1つ選べ。</p>
+<ol><li>25 m</li><li>50 m</li><li>100 m</li><li>200 m</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。加速度は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>20</mn><mo>÷</mo><mn>5.0</mn><mo>=</mo><mo>−</mo><mn>4.0</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">-20\div5.0=-4.0\,\mathrm{m/s^2}</annotation></semantics></math></span> である。距離は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>20</mn><mn>2</mn></msup><mo>÷</mo><mo stretchy="false">(</mo><mn>2</mn><mo>×</mo><mn>4.0</mn><mo stretchy="false">)</mo><mo>=</mo><mn>50</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">20^2\div(2\times4.0)=50\,\mathrm{m}</annotation></semantics></math></span> である。v−tグラフの三角形の面積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>×</mo><mn>5.0</mn><mo>×</mo><mn>20</mn><mo>=</mo><mn>50</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">\frac{1}{2}\times5.0\times20=50\,\mathrm{m}</annotation></semantics></math></span> でも同じ値になる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 自由落下</div>
+<p class="qz-q">静かに放した小球が 2.0 s 間に落下する距離を1つ選べ。空気抵抗は無視し <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><mrow><mn>9.8</mn><mtext> </mtext><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">g=\mathrm{9.8\,m/s^2}</annotation></semantics></math></span> とする。</p>
+<ol><li>4.9 m</li><li>9.8 m</li><li>19.6 m</li><li>39.2 m</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>×</mo><mn>9.8</mn><mo>×</mo><msup><mn>2.0</mn><mn>2</mn></msup><mo>=</mo><mn>19.6</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">\frac{1}{2}\times9.8\times2.0^2=19.6\,\mathrm{m}</annotation></semantics></math></span> である。2 は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">gt</annotation></semantics></math></span> を距離と取り違えた値で 4 は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{2}</annotation></semantics></math></span> を掛け忘れた値である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 鉛直投げ上げ</div>
+<p class="qz-q">小球を鉛直上向きに 14.7 m/s で投げ上げた。投げた点に戻るまでの時間を1つ選べ。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><mrow><mn>9.8</mn><mtext> </mtext><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">g=\mathrm{9.8\,m/s^2}</annotation></semantics></math></span> とする。</p>
+<ol><li>1.5 s</li><li>3.0 s</li><li>4.5 s</li><li>6.0 s</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。最高点までの時間は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>14.7</mn><mo>÷</mo><mn>9.8</mn><mo>=</mo><mn>1.5</mn><mtext> </mtext><mi mathvariant="normal">s</mi></mrow><annotation encoding="application/x-tex">14.7\div9.8=1.5\,\mathrm{s}</annotation></semantics></math></span> で上昇と下降は対称なので戻るまでは 3.0 s である。最高点の高さは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>14.7</mn><mn>2</mn></msup><mo>÷</mo><mo stretchy="false">(</mo><mn>2</mn><mo>×</mo><mn>9.8</mn><mo stretchy="false">)</mo><mo>≈</mo><mn>11</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">14.7^2\div(2\times9.8)\approx11\,\mathrm{m}</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問7 ・ 最高点の加速度</div>
+<p class="qz-q">鉛直に投げ上げた小球が最高点にあるときの記述として正しいものを1つ選べ。</p>
+<ol><li>速度も加速度も0である</li><li>速度は0で加速度は鉛直下向きに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span> である</li><li>速度は下向きで加速度は0である</li><li>速度は0で加速度は鉛直上向きに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span> である</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。v−tグラフは傾き <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mi>g</mi></mrow><annotation encoding="application/x-tex">-g</annotation></semantics></math></span> の1本の直線で最高点でも傾きは変わらない。加速度が0なら小球は最高点に静止し続けることになる。</div></details></div>
+
+<h2 id="s9">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+変位は向きをもつ位置の変化で道のりとは異なる。速度は変位を時間で割った量である。<br>
+x−tグラフの傾きが速度でv−tグラフの傾きが加速度である。v−tグラフの面積が変位である。<br>
+A から見た B の相対速度は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>B</mi></msub><mo>−</mo><msub><mi>v</mi><mi>A</mi></msub></mrow><annotation encoding="application/x-tex">v_B-v_A</annotation></semantics></math></span> である。<br>
+速度と加速度が反対向きなら速さは減る。加速度の符号は運動の向きではない。<br>
+<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><msub><mi>v</mi><mn>0</mn></msub><mo>+</mo><mi>a</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">v=v_0+at</annotation></semantics></math></span> ／ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msub><mi>v</mi><mn>0</mn></msub><mi>t</mi><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>a</mi><msup><mi>t</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">x=v_0t+\frac{1}{2}at^2</annotation></semantics></math></span> ／ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>v</mi><mn>2</mn></msup><mo>−</mo><msubsup><mi>v</mi><mn>0</mn><mn>2</mn></msubsup><mo>=</mo><mn>2</mn><mi>a</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">v^2-v_0^2=2ax</annotation></semantics></math></span> 。2つ目はv−tグラフの台形の面積で3つ目は時間を消去した式である。<br>
+落下運動は加速度 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>=</mo><mrow><mn>9.8</mn><mtext> </mtext><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">g=\mathrm{9.8\,m/s^2}</annotation></semantics></math></span> の等加速度直線運動である。最高点でも加速度は下向きに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi></mrow><annotation encoding="application/x-tex">g</annotation></semantics></math></span> である。</div>
+
+<h2 id="s10">残っている問い</h2>
+<ul>
+<li class="tb-vnote">瞬間の速度は平均の速度で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math></span> を0に近づけた極限である。厳密な定義には微分が要る。物理基礎はグラフの接線の傾きとして直観的に扱う。</li>
+<li class="tb-vnote">重力加速度 9.8 m/s² は地表付近の代表値である。実際の値は緯度と高度で変わり赤道付近は小さく極付近は大きい。国際的な標準値は 9.80665 m/s² と定められている。</li>
+<li class="tb-vnote">投球の到達時間 0.41 s は投手板から本塁までの距離 18.44 m を初速度で割った見積もりである。実際は投手板より前で手から離れ空気抵抗で減速する。2つの効果は逆向きに働き実測の到達時間は投球ごとに異なる。</li>
+<li class="tb-vnote">ボルトの100 m の区間タイムは複数の分析が公表されているが測定方法によって値が異なる。本文では平均の速さだけを扱った。</li>
+</ul>
+
+<h2 id="s11">出典</h2>
+<ol>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 解説 理科編 理数編 — https://www.mext.go.jp/a_menu/shotou/new-cs/1407074.htm</li>
+<li>Equations of motion — Wikipedia — https://en.wikipedia.org/wiki/Equations_of_motion</li>
+<li>Relative velocity — Wikipedia — https://en.wikipedia.org/wiki/Relative_velocity</li>
+<li>Standard gravity — Wikipedia — https://en.wikipedia.org/wiki/Standard_gravity</li>
+<li>Two New Sciences — Wikipedia — https://en.wikipedia.org/wiki/Two_New_Sciences</li>
+<li>Men's 100 metres world record progression — Wikipedia — https://en.wikipedia.org/wiki/Men%27s_100_metres_world_record_progression</li>
+<li>Pitcher's mound — Wikipedia — https://en.wikipedia.org/wiki/Pitcher%27s_mound</li>
+<li>Braking distance — Wikipedia — https://en.wikipedia.org/wiki/Braking_distance</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="00_intro.html">← 物理学と人間生活</a><a class="tb-nav-a" href="02_force.html">力とつり合い →</a></div>
+</div>
+<script>
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){ if (!tick) { tick = true; requestAnimationFrame(draw); } }, {passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>

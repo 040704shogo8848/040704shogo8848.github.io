@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>確率変数と二項分布｜確率・統計</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../021_profile/index.html">profile</a><a href="../../02A_plan/index.html">plan</a><a href="../../023_travel/index.html">travel</a><a href="../../027_cinema/index.html">cinema</a><a href="../../02B_reading/index.html">reading</a><a href="../../024_method/index.html">method</a><a href="../../026_handbook/index.html">handbook</a><a href="../../025_fitness/index.html">fitness</a><a href="../../028_english/index.html">english</a><a href="../../029_mental_math/index.html">mental math</a><a href="../../02C_chemistry/index.html">chemistry</a><a href="../index.html">probability</a><a href="../../02E_calculus/index.html">calculus</a><a href="../../02F_linear_algebra/index.html">linear algebra</a><a href="../../02G_physics/index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../024_method/index.html">method</a>
+    <a class="snav-a" href="../../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../028_english/index.html">english</a>
+    <a class="snav-a" href="../../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../index.html">probability</a>
+    <a class="snav-a" href="../../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../02G_physics/index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / personal /
+    <a href="../index.html">02D probability</a> / 第8章</div>
+
+  <div class="tb-ch">数学B — 第8章</div>
+  <h1>確率変数と二項分布</h1>
+  <p class="tb-thesis">試行の結果に数値を対応させたものが確率変数である。確率変数の中心を期待値で測り散らばりを分散と標準偏差で測る。同じ試行を n 回くり返したときの成功回数は二項分布 B(n, p) に従い期待値は np で分散は np(1−p) である。</p>
+
+<p class="tb-ok"><strong>この章は2026-10-15に出典照合を通した。</strong> 検証した事実は32件である。出典と一致したものは30件である。食い違ったものは2件で本文を修正済みである。出典で確認できなかったものは0件である。これらは末尾の「残っている問い」に列挙した。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">Σ記号の読み方</a></li><li><a href="#s2">確率変数と確率分布</a></li><li><a href="#s3">期待値と分散と標準偏差</a></li><li><a href="#s4">aX＋b の期待値と分散</a></li><li><a href="#s5">確率変数の和と積</a></li><li><a href="#s6">二項分布</a></li><li><a href="#s7">現実世界の確率変数</a></li><li><a href="#s8">確認問題</a></li><li><a href="#s9">この章の要点</a></li><li><a href="#s10">残っている問い</a></li><li><a href="#s11">出典</a></li></ol></nav>
+
+<p>第6章と第7章では1つの事象の確率と1回の試行の期待値を計算した。この章からは数学Bの「統計的な推測」に入る。試行の結果を数値で表した量を<strong>確率変数</strong>と呼び確率変数がとる値と確率の対応を1つの表やグラフにまとめる。第1章と第2章でデータに対して計算した平均と分散を今度は確率分布に対して計算する。</p>
+<p>共通テストの数学Ⅱ・B・Cで「統計的な推測」は選択問題の1つである。この範囲から確率分布の期待値と分散・aX+b の変換・二項分布の期待値と分散が毎年の計算の出発点になる。第9章の正規分布と第10章の推定と第11章の検定はすべてこの章の公式の上に立つ。最初の節では数列の単元で学ぶ Σ 記号を必要な分だけ扱う。</p>
+
+<h2 id="s1">Σ記号の読み方</h2>
+<p>確率分布の期待値は「値×確率」を全部足した和である。項の数が多いと書き切れないので和を記号 Σ で表す。Σ はギリシャ文字のシグマの大文字で英語の sum の頭文字 S に当たる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>a</mi><mi>k</mi></msub><mo>=</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><msub><mi>a</mi><mn>2</mn></msub><mo>+</mo><msub><mi>a</mi><mn>3</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>a</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n} a_k = a_1 + a_2 + a_3 + \cdots + a_n</annotation></semantics></math></span></div>
+<p>下の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k=1</annotation></semantics></math></span> は「k を1から始める」を表し上の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> は「n で終える」を表す。k に 1・2・3・… と順に代入した項をすべて足す。k は足し終えると残らない文字なので i や j に替えても値は同じである。</p>
+<p>Σ には次の3つの性質がある。どれも足し算の順序を入れ替えてよいことと分配法則から直接に導かれる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false">(</mo><msub><mi>a</mi><mi>k</mi></msub><mo>+</mo><msub><mi>b</mi><mi>k</mi></msub><mo stretchy="false">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>a</mi><mi>k</mi></msub><mo>+</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>b</mi><mi>k</mi></msub><mo separator="true">,</mo><mspace width="2em"/><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>c</mi><mtext> </mtext><msub><mi>a</mi><mi>k</mi></msub><mo>=</mo><mi>c</mi><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>a</mi><mi>k</mi></msub><mo separator="true">,</mo><mspace width="2em"/><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>c</mi><mo>=</mo><mi>n</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}(a_k+b_k)=\sum_{k=1}^{n}a_k+\sum_{k=1}^{n}b_k ,\qquad \sum_{k=1}^{n}c\,a_k=c\sum_{k=1}^{n}a_k ,\qquad \sum_{k=1}^{n}c=nc</annotation></semantics></math></span></div>
+<p>計算で使う和の公式は次の2つである。1つ目は1から n までの和を逆順に並べた和と足すと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n+1</annotation></semantics></math></span> が n 個並ぶことから得られる。2つ目の導出は数列の単元で扱う。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>k</mi><mo>=</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac><mo separator="true">,</mo><mspace width="2em"/><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mi>k</mi><mn>2</mn></msup><mo>=</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>6</mn></mfrac></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}k=\frac{n(n+1)}{2} ,\qquad \sum_{k=1}^{n}k^2=\frac{n(n+1)(2n+1)}{6}</annotation></semantics></math></span></div>
+
+<div class="ex"><div class="ex-h">例題 1</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mn>5</mn></munderover><mo stretchy="false">(</mo><mn>2</mn><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mstyle></mrow><annotation encoding="application/x-tex">\displaystyle\sum_{k=1}^{5}(2k+1)</annotation></semantics></math></span> を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 性質で分ける。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>∑</mo><mi>k</mi><mo>+</mo><mo>∑</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2\sum k+\sum 1</annotation></semantics></math></span> になる。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mn>5</mn></msubsup><mi>k</mi><mo>=</mo><mfrac><mrow><mn>5</mn><mo>⋅</mo><mn>6</mn></mrow><mn>2</mn></mfrac><mo>=</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{5}k=\frac{5\cdot 6}{2}=15</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mn>5</mn></msubsup><mn>1</mn><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{5}1=5</annotation></semantics></math></span> である。<br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><mn>15</mn><mo>+</mo><mn>5</mn><mo>=</mo><mn>35</mn></mrow><annotation encoding="application/x-tex">2\times 15+5=35</annotation></semantics></math></span>。検算として 3+5+7+9+11=35 で一致する。答え 35</div></details></div>
+
+<p><strong>典型的な誤り</strong>は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mn>5</mn></msubsup><mn>1</mn></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{5}1</annotation></semantics></math></span> を1とする誤りである。1を5回足すので5である。定数の和は「定数×項の数」になる。</p>
+
+<h2 id="s2">確率変数と確率分布</h2>
+<p>試行の結果によって値が定まり各値をとる確率が定まる変数を<strong>確率変数</strong>と呼ぶ。確率変数は大文字の X や Y で表す。X がとる値を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>x</mi><mn>2</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>x</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_1, x_2, \ldots, x_n</annotation></semantics></math></span> としそれぞれの値をとる確率を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>p</mi><mn>2</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>p</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">p_1, p_2, \ldots, p_n</annotation></semantics></math></span> とする。この値と確率の対応を X の<strong>確率分布</strong>または単に分布と呼ぶ。X が値 a をとる確率を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo>=</mo><mi>a</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(X=a)</annotation></semantics></math></span> と書く。</p>
+<p>確率分布には次の2つの条件がある。各確率は0以上1以下であり確率の合計は1である。X がとる値は互いに排反な事象を表し全部合わせると全事象になるからである。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>p</mi><mi>k</mi></msub><mo>≥</mo><mn>0</mn><mo separator="true">,</mo><mspace width="2em"/><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>p</mi><mi>k</mi></msub><mo>=</mo><msub><mi>p</mi><mn>1</mn></msub><mo>+</mo><msub><mi>p</mi><mn>2</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>p</mi><mi>n</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">p_k \ge 0 ,\qquad \sum_{k=1}^{n}p_k=p_1+p_2+\cdots+p_n=1</annotation></semantics></math></span></div>
+<p>硬貨を3枚投げて表の枚数を X とする。X のとる値は 0・1・2・3 である。表が r 枚の出方は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>3</mn></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_3\mathrm{C}_r</annotation></semantics></math></span> 通りで全体は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>3</mn></msup><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">2^3=8</annotation></semantics></math></span> 通りなので確率分布は次の表になる。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>X</th><th>0</th><th>1</th><th>2</th><th>3</th><th>計</th></tr></thead>
+<tbody><tr><td>P</td><td>1/8</td><td>3/8</td><td>3/8</td><td>1/8</td><td>1</td></tr></tbody></table></div>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 290" role="img" aria-label="硬貨を3枚投げたときの表の枚数の確率分布">
+<line x1="90" y1="230" x2="90" y2="40" stroke="var(--ink)" stroke-width="1"/>
+<text x="84" y="234" font-size="12" text-anchor="end" fill="var(--sub)">0.0</text>
+<line x1="90" y1="187.8" x2="680" y2="187.8" stroke="var(--line)" stroke-dasharray="3 3"/>
+<text x="84" y="191.8" font-size="12" text-anchor="end" fill="var(--sub)">0.1</text>
+<line x1="90" y1="145.6" x2="680" y2="145.6" stroke="var(--line)" stroke-dasharray="3 3"/>
+<text x="84" y="149.6" font-size="12" text-anchor="end" fill="var(--sub)">0.2</text>
+<line x1="90" y1="103.3" x2="680" y2="103.3" stroke="var(--line)" stroke-dasharray="3 3"/>
+<text x="84" y="107.3" font-size="12" text-anchor="end" fill="var(--sub)">0.3</text>
+<line x1="90" y1="61.1" x2="680" y2="61.1" stroke="var(--line)" stroke-dasharray="3 3"/>
+<text x="84" y="65.1" font-size="12" text-anchor="end" fill="var(--sub)">0.4</text>
+<line x1="90" y1="230" x2="680" y2="230" stroke="var(--ink)" stroke-width="1"/>
+<line x1="174.3" y1="230" x2="174.3" y2="235" stroke="var(--ink)"/>
+<text x="174.3" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">0</text>
+<line x1="314.8" y1="230" x2="314.8" y2="235" stroke="var(--ink)"/>
+<text x="314.8" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">1</text>
+<line x1="455.2" y1="230" x2="455.2" y2="235" stroke="var(--ink)"/>
+<text x="455.2" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">2</text>
+<line x1="595.7" y1="230" x2="595.7" y2="235" stroke="var(--ink)"/>
+<text x="595.7" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">3</text>
+<rect x="139.3" y="177.2" width="70" height="52.8" fill="var(--cool)" opacity="0.85"/>
+<text x="174.3" y="169.2" font-size="13" text-anchor="middle" fill="var(--ink)">1/8</text>
+<rect x="279.8" y="71.7" width="70" height="158.3" fill="var(--cool)" opacity="0.85"/>
+<text x="314.8" y="63.7" font-size="13" text-anchor="middle" fill="var(--ink)">3/8</text>
+<rect x="420.2" y="71.7" width="70" height="158.3" fill="var(--cool)" opacity="0.85"/>
+<text x="455.2" y="63.7" font-size="13" text-anchor="middle" fill="var(--ink)">3/8</text>
+<rect x="560.7" y="177.2" width="70" height="52.8" fill="var(--cool)" opacity="0.85"/>
+<text x="595.7" y="169.2" font-size="13" text-anchor="middle" fill="var(--ink)">1/8</text>
+<polygon points="385,254 372,274 398,274" fill="var(--warm)"/>
+<text x="407" y="270" font-size="13" fill="var(--warm)">期待値 1.5 で釣り合う</text>
+<text x="680" y="249" font-size="12" text-anchor="end" fill="var(--muted)">表の枚数 X</text>
+<text x="90" y="28" font-size="12" fill="var(--muted)">確率</text>
+</svg>
+<figcaption>表の枚数 X の確率分布を棒の高さで示した。棒を重りと見ると X＝1.5 の位置で左右が釣り合う。この釣り合いの位置が次の節で定義する期待値である。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 2</div>
+<p>赤玉3個と白玉2個が入った袋から同時に2個取り出す。取り出した赤玉の個数を X とするとき X の確率分布を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 取り出し方の総数は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">{}_5\mathrm{C}_2=10</annotation></semantics></math></span> 通りである。<br>手順2 X＝0 は白2個で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>2</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">{}_2\mathrm{C}_2=1</annotation></semantics></math></span> 通り。X＝1 は赤1個と白1個で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>2</mn><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3\times 2=6</annotation></semantics></math></span> 通り。X＝2 は赤2個で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>3</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">{}_3\mathrm{C}_2=3</annotation></semantics></math></span> 通り。<br>手順3 確率は順に 1/10・6/10・3/10 である。合計が1になることを確かめる。答え P(X＝0)＝1/10・P(X＝1)＝3/5・P(X＝2)＝3/10</div></details></div>
+
+<p><strong>典型的な誤り</strong>は確率の合計を確かめずに次の計算へ進む誤りである。合計が1にならない分布は数え漏れか重複がある。共通テストでは分布表の空欄を「合計が1」の条件から求める設問が多い。</p>
+
+<h2 id="s3">期待値と分散と標準偏差</h2>
+<h3>期待値</h3>
+<p>確率変数 X の<strong>期待値</strong>または<strong>平均</strong>を次の式で定義し <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">E(X)</annotation></semantics></math></span> または m で表す。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>x</mi><mi>k</mi></msub><msub><mi>p</mi><mi>k</mi></msub><mo>=</mo><msub><mi>x</mi><mn>1</mn></msub><msub><mi>p</mi><mn>1</mn></msub><mo>+</mo><msub><mi>x</mi><mn>2</mn></msub><msub><mi>p</mi><mn>2</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>x</mi><mi>n</mi></msub><msub><mi>p</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">E(X)=\sum_{k=1}^{n}x_k p_k=x_1p_1+x_2p_2+\cdots+x_np_n</annotation></semantics></math></span></div>
+<p>この式の根拠は第1章の度数分布表の平均である。度数分布表の平均は「階級値×相対度数」の和であった。試行を多数回くり返すと各値の相対度数は確率に近づく。相対度数を確率で置き換えたものが期待値である。図1の釣り合いの位置は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>⋅</mo><mfrac><mn>1</mn><mn>8</mn></mfrac><mo>+</mo><mn>1</mn><mo>⋅</mo><mfrac><mn>3</mn><mn>8</mn></mfrac><mo>+</mo><mn>2</mn><mo>⋅</mo><mfrac><mn>3</mn><mn>8</mn></mfrac><mo>+</mo><mn>3</mn><mo>⋅</mo><mfrac><mn>1</mn><mn>8</mn></mfrac><mo>=</mo><mfrac><mn>12</mn><mn>8</mn></mfrac><mo>=</mo><mn>1.5</mn></mrow><annotation encoding="application/x-tex">0\cdot\frac18+1\cdot\frac38+2\cdot\frac38+3\cdot\frac18=\frac{12}{8}=1.5</annotation></semantics></math></span> で求まる。</p>
+
+<h3>分散と標準偏差</h3>
+<p>期待値が同じでも値の散らばり方は分布ごとに異なる。図2の A と B はどちらも期待値が3である。B のほうが3から遠い値をとる。この散らばりを測るために期待値 m からの偏差 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>−</mo><mi>m</mi></mrow><annotation encoding="application/x-tex">X-m</annotation></semantics></math></span> の2乗の期待値を考える。これを<strong>分散</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">V(X)</annotation></semantics></math></span> で表す。分散の正の平方根を<strong>標準偏差</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\sigma(X)</annotation></semantics></math></span> で表す。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false">(</mo><msub><mi>x</mi><mi>k</mi></msub><mo>−</mo><mi>m</mi><msup><mo stretchy="false">)</mo><mn>2</mn></msup><msub><mi>p</mi><mi>k</mi></msub><mo separator="true">,</mo><mspace width="2em"/><mi>σ</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><msqrt><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></msqrt></mrow><annotation encoding="application/x-tex">V(X)=\sum_{k=1}^{n}(x_k-m)^2p_k ,\qquad \sigma(X)=\sqrt{V(X)}</annotation></semantics></math></span></div>
+<p>偏差をそのまま平均すると正と負が打ち消し合って必ず0になる。2乗すると符号が消えるので散らばりの大きさが残る。ただし2乗すると単位も2乗になる。X が円なら分散の単位は円の2乗である。平方根をとって元の単位に戻したものが標準偏差である。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 280" role="img" aria-label="期待値が同じで分散が異なる2つの確率分布">
+<text x="60" y="30" font-size="13" fill="var(--ink)" font-weight="600">A 2・3・4 の値をとる</text>
+<line x1="60" y1="220" x2="360" y2="220" stroke="var(--ink)" stroke-width="1"/>
+<line x1="98.9" y1="220" x2="98.9" y2="225" stroke="var(--ink)"/>
+<text x="98.9" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">1</text>
+<line x1="154.4" y1="220" x2="154.4" y2="225" stroke="var(--ink)"/>
+<text x="154.4" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">2</text>
+<line x1="210" y1="220" x2="210" y2="225" stroke="var(--ink)"/>
+<text x="210" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">3</text>
+<line x1="265.6" y1="220" x2="265.6" y2="225" stroke="var(--ink)"/>
+<text x="265.6" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">4</text>
+<line x1="321.1" y1="220" x2="321.1" y2="225" stroke="var(--ink)"/>
+<text x="321.1" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">5</text>
+<rect x="131.4" y="149.2" width="46" height="70.8" fill="var(--cool)" opacity="0.85"/>
+<rect x="187" y="78.3" width="46" height="141.7" fill="var(--cool)" opacity="0.85"/>
+<rect x="242.6" y="149.2" width="46" height="70.8" fill="var(--cool)" opacity="0.85"/>
+<text x="154.4" y="142.2" font-size="12" text-anchor="middle" fill="var(--ink)">1/4</text>
+<text x="210" y="71.3" font-size="12" text-anchor="middle" fill="var(--ink)">1/2</text>
+<text x="265.6" y="142.2" font-size="12" text-anchor="middle" fill="var(--ink)">1/4</text>
+<line x1="210" y1="78.3" x2="210" y2="220" stroke="var(--accent)" stroke-dasharray="4 3"/>
+<text x="210" y="262" font-size="13" text-anchor="middle" fill="var(--sub)">期待値 3 ・ 分散 0.5</text>
+<text x="400" y="30" font-size="13" fill="var(--ink)" font-weight="600">B 1・3・5 の値をとる</text>
+<line x1="400" y1="220" x2="700" y2="220" stroke="var(--ink)" stroke-width="1"/>
+<line x1="438.9" y1="220" x2="438.9" y2="225" stroke="var(--ink)"/>
+<text x="438.9" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">1</text>
+<line x1="494.4" y1="220" x2="494.4" y2="225" stroke="var(--ink)"/>
+<text x="494.4" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">2</text>
+<line x1="550" y1="220" x2="550" y2="225" stroke="var(--ink)"/>
+<text x="550" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">3</text>
+<line x1="605.6" y1="220" x2="605.6" y2="225" stroke="var(--ink)"/>
+<text x="605.6" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">4</text>
+<line x1="661.1" y1="220" x2="661.1" y2="225" stroke="var(--ink)"/>
+<text x="661.1" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">5</text>
+<rect x="415.9" y="149.2" width="46" height="70.8" fill="var(--warm)" opacity="0.85"/>
+<rect x="527" y="78.3" width="46" height="141.7" fill="var(--warm)" opacity="0.85"/>
+<rect x="638.1" y="149.2" width="46" height="70.8" fill="var(--warm)" opacity="0.85"/>
+<text x="438.9" y="142.2" font-size="12" text-anchor="middle" fill="var(--ink)">1/4</text>
+<text x="550" y="71.3" font-size="12" text-anchor="middle" fill="var(--ink)">1/2</text>
+<text x="661.1" y="142.2" font-size="12" text-anchor="middle" fill="var(--ink)">1/4</text>
+<line x1="550" y1="78.3" x2="550" y2="220" stroke="var(--accent)" stroke-dasharray="4 3"/>
+<text x="550" y="262" font-size="13" text-anchor="middle" fill="var(--sub)">期待値 3 ・ 分散 2</text>
+</svg>
+<figcaption>A と B は期待値がどちらも3である。A の分散は (2−3)²×1/4＋(4−3)²×1/4＝0.5 で B の分散は (1−3)²×1/4＋(5−3)²×1/4＝2 である。B の値は3から2離れるので分散は A の4倍になる。</figcaption>
+</figure>
+<p>分散の計算には次の公式を使うことが多い。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mi>E</mi><mo stretchy="false">(</mo><msup><mi>X</mi><mn>2</mn></msup><mo stretchy="false">)</mo><mo>−</mo><mo stretchy="false">{</mo><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><msup><mo stretchy="false">}</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">V(X)=E(X^2)-\{E(X)\}^2</annotation></semantics></math></span></div>
+<p>導き方は定義の2乗を展開して Σ の性質を使うだけである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><mo stretchy="false">(</mo><msub><mi>x</mi><mi>k</mi></msub><mo>−</mo><mi>m</mi><msup><mo stretchy="false">)</mo><mn>2</mn></msup><msub><mi>p</mi><mi>k</mi></msub><mo>=</mo><mo>∑</mo><msubsup><mi>x</mi><mi>k</mi><mn>2</mn></msubsup><msub><mi>p</mi><mi>k</mi></msub><mo>−</mo><mn>2</mn><mi>m</mi><mo>∑</mo><msub><mi>x</mi><mi>k</mi></msub><msub><mi>p</mi><mi>k</mi></msub><mo>+</mo><msup><mi>m</mi><mn>2</mn></msup><mo>∑</mo><msub><mi>p</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\sum(x_k-m)^2p_k=\sum x_k^2p_k-2m\sum x_kp_k+m^2\sum p_k</annotation></semantics></math></span> と分ける。第2項の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><msub><mi>x</mi><mi>k</mi></msub><msub><mi>p</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\sum x_kp_k</annotation></semantics></math></span> は m で第3項の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><msub><mi>p</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\sum p_k</annotation></semantics></math></span> は1なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><msup><mi>X</mi><mn>2</mn></msup><mo stretchy="false">)</mo><mo>−</mo><mn>2</mn><msup><mi>m</mi><mn>2</mn></msup><mo>+</mo><msup><mi>m</mi><mn>2</mn></msup><mo>=</mo><mi>E</mi><mo stretchy="false">(</mo><msup><mi>X</mi><mn>2</mn></msup><mo stretchy="false">)</mo><mo>−</mo><msup><mi>m</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">E(X^2)-2m^2+m^2=E(X^2)-m^2</annotation></semantics></math></span> になる。第2章でデータの分散を「2乗の平均−平均の2乗」で求めた公式と同じ形である。</p>
+
+<div class="ex"><div class="ex-h">例題 3</div>
+<p>例題2の X について期待値と分散と標準偏差を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0</mn><mo>⋅</mo><mfrac><mn>1</mn><mn>10</mn></mfrac><mo>+</mo><mn>1</mn><mo>⋅</mo><mfrac><mn>6</mn><mn>10</mn></mfrac><mo>+</mo><mn>2</mn><mo>⋅</mo><mfrac><mn>3</mn><mn>10</mn></mfrac><mo>=</mo><mfrac><mn>12</mn><mn>10</mn></mfrac><mo>=</mo><mn>1.2</mn></mrow><annotation encoding="application/x-tex">E(X)=0\cdot\frac{1}{10}+1\cdot\frac{6}{10}+2\cdot\frac{3}{10}=\frac{12}{10}=1.2</annotation></semantics></math></span><br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><msup><mi>X</mi><mn>2</mn></msup><mo stretchy="false">)</mo><mo>=</mo><msup><mn>0</mn><mn>2</mn></msup><mo>⋅</mo><mfrac><mn>1</mn><mn>10</mn></mfrac><mo>+</mo><msup><mn>1</mn><mn>2</mn></msup><mo>⋅</mo><mfrac><mn>6</mn><mn>10</mn></mfrac><mo>+</mo><msup><mn>2</mn><mn>2</mn></msup><mo>⋅</mo><mfrac><mn>3</mn><mn>10</mn></mfrac><mo>=</mo><mfrac><mn>18</mn><mn>10</mn></mfrac><mo>=</mo><mn>1.8</mn></mrow><annotation encoding="application/x-tex">E(X^2)=0^2\cdot\frac{1}{10}+1^2\cdot\frac{6}{10}+2^2\cdot\frac{3}{10}=\frac{18}{10}=1.8</annotation></semantics></math></span><br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mn>1.8</mn><mo>−</mo><msup><mn>1.2</mn><mn>2</mn></msup><mo>=</mo><mn>1.8</mn><mo>−</mo><mn>1.44</mn><mo>=</mo><mn>0.36</mn></mrow><annotation encoding="application/x-tex">V(X)=1.8-1.2^2=1.8-1.44=0.36</annotation></semantics></math></span><br>手順4 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><msqrt><mn>0.36</mn></msqrt><mo>=</mo><mn>0.6</mn></mrow><annotation encoding="application/x-tex">\sigma(X)=\sqrt{0.36}=0.6</annotation></semantics></math></span>。答え 期待値 1.2・分散 0.36・標準偏差 0.6</div></details></div>
+
+<p><strong>典型的な誤り</strong>は2つある。1つ目は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><msup><mi>X</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">E(X^2)</annotation></semantics></math></span> を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><msup><mo stretchy="false">}</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\{E(X)\}^2</annotation></semantics></math></span> と同じものとして分散を0にする誤りである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><msup><mi>X</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">E(X^2)</annotation></semantics></math></span> は値を先に2乗してから確率を掛けて足す。2つ目は分散と標準偏差の取り違えである。設問がどちらを問うかを最後に確かめる。</p>
+
+<aside class="an an-biz"><b>投資で言えば</b>
+<p class="an-h">期待値はリターンで標準偏差はリスクである</p>
+<p>運用の世界では収益率の期待値をリターンと呼び標準偏差をリスクと呼ぶ。図2の A と B はリターンが同じでリスクが2倍異なる2つの商品である。</p>
+</aside>
+
+<h2 id="s4">aX＋b の期待値と分散</h2>
+<p>確率変数 X に定数 a を掛けて定数 b を足した <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><mi>a</mi><mi>X</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Y=aX+b</annotation></semantics></math></span> も確率変数である。X が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">x_k</annotation></semantics></math></span> をとるとき Y は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><msub><mi>x</mi><mi>k</mi></msub><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">ax_k+b</annotation></semantics></math></span> をとりその確率は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">p_k</annotation></semantics></math></span> のままである。このとき次の公式が成り立つ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>a</mi><mi>X</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><mi>a</mi><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>+</mo><mi>b</mi><mo separator="true">,</mo><mspace width="2em"/><mi>V</mi><mo stretchy="false">(</mo><mi>a</mi><mi>X</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mi>a</mi><mn>2</mn></msup><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><mi>σ</mi><mo stretchy="false">(</mo><mi>a</mi><mi>X</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><mi mathvariant="normal">∣</mi><mi>a</mi><mi mathvariant="normal">∣</mi><mtext> </mtext><mi>σ</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">E(aX+b)=aE(X)+b ,\qquad V(aX+b)=a^2V(X) ,\qquad \sigma(aX+b)=|a|\,\sigma(X)</annotation></semantics></math></span></div>
+<p>期待値の式は Σ の性質から得られる。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><mo stretchy="false">(</mo><mi>a</mi><msub><mi>x</mi><mi>k</mi></msub><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><msub><mi>p</mi><mi>k</mi></msub><mo>=</mo><mi>a</mi><mo>∑</mo><msub><mi>x</mi><mi>k</mi></msub><msub><mi>p</mi><mi>k</mi></msub><mo>+</mo><mi>b</mi><mo>∑</mo><msub><mi>p</mi><mi>k</mi></msub><mo>=</mo><mi>a</mi><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">\sum(ax_k+b)p_k=a\sum x_kp_k+b\sum p_k=aE(X)+b</annotation></semantics></math></span> である。</p>
+<p>分散の式は偏差を見ると根拠がわかる。Y の期待値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>m</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">am+b</annotation></semantics></math></span> なので Y の偏差は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><msub><mi>x</mi><mi>k</mi></msub><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo>−</mo><mo stretchy="false">(</mo><mi>a</mi><mi>m</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><mi>a</mi><mo stretchy="false">(</mo><msub><mi>x</mi><mi>k</mi></msub><mo>−</mo><mi>m</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(ax_k+b)-(am+b)=a(x_k-m)</annotation></semantics></math></span> である。<strong class="hit">b は全員を同じだけ平行移動させるだけで偏差を変えない。a は偏差を a 倍にするので2乗した分散は a² 倍になる</strong>。標準偏差は平方根をとるので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>a</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|a|</annotation></semantics></math></span> 倍になる。a が負でも散らばりは負にならないので絶対値が付く。</p>
+
+<div class="ex"><div class="ex-h">例題 4</div>
+<p>例題2のゲームで赤玉1個につき100円もらえ参加すると無条件で50円もらえるとする。受け取る金額 Y＝100X＋50 の期待値と標準偏差を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 例題3より E(X)＝1.2・σ(X)＝0.6 である。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mn>100</mn><mo>×</mo><mn>1.2</mn><mo>+</mo><mn>50</mn><mo>=</mo><mn>170</mn></mrow><annotation encoding="application/x-tex">E(Y)=100\times 1.2+50=170</annotation></semantics></math></span> 円<br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mi mathvariant="normal">∣</mi><mn>100</mn><mi mathvariant="normal">∣</mi><mo>×</mo><mn>0.6</mn><mo>=</mo><mn>60</mn></mrow><annotation encoding="application/x-tex">\sigma(Y)=|100|\times 0.6=60</annotation></semantics></math></span> 円。分散は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>100</mn><mn>2</mn></msup><mo>×</mo><mn>0.36</mn><mo>=</mo><mn>3600</mn></mrow><annotation encoding="application/x-tex">100^2\times 0.36=3600</annotation></semantics></math></span> である。答え 期待値 170円・標準偏差 60円</div></details></div>
+
+<p><strong>典型的な誤り</strong>は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>a</mi><mi>X</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><mi>a</mi><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">V(aX+b)=aV(X)+b</annotation></semantics></math></span> とする誤りである。分散には b が残らず a は2乗で掛かる。もう1つは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mo>−</mo><mn>2</mn><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mn>4</mn><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">V(-2X)=-4V(X)</annotation></semantics></math></span> とする誤りで正しくは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">4V(X)</annotation></semantics></math></span> である。</p>
+
+<aside class="an an-biz"><b>会計で言えば</b>
+<p class="an-h">固定の受取額 b はリスクを増やさない</p>
+<p>販売数量 X に単価 a を掛け固定収入 b を足しても収入の振れ幅は |a| 倍にしかならない。b は全期間に同額が加わるだけなので標準偏差に影響しない。</p>
+</aside>
+
+<h2 id="s5">確率変数の和と積</h2>
+<h3>和の期待値</h3>
+<p>2つの確率変数 X と Y について X＝a かつ Y＝b となる確率の対応をまとめたものを X と Y の<strong>同時分布</strong>と呼ぶ。同時分布から次の性質が成り立つ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo>+</mo><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>+</mo><mi>E</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><mi>E</mi><mo stretchy="false">(</mo><mi>a</mi><mi>X</mi><mo>+</mo><mi>b</mi><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mi>a</mi><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>+</mo><mi>b</mi><mi>E</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">E(X+Y)=E(X)+E(Y) ,\qquad E(aX+bY)=aE(X)+bE(Y)</annotation></semantics></math></span></div>
+<p>これは X と Y がどのような関係にあっても成り立つ。同時分布の表で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>+</mo><msub><mi>y</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">x_i+y_j</annotation></semantics></math></span> に確率を掛けて全部足すと x の部分と y の部分に分かれ x の部分は E(X) に y の部分は E(Y) になるからである。3つ以上の和でも同様である。</p>
+
+<h3>独立な確率変数</h3>
+<p>X のとる任意の値 a と Y のとる任意の値 b について次の式が成り立つとき X と Y は<strong>独立</strong>であるという。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo>=</mo><mi>a</mi><mo separator="true">,</mo><mtext> </mtext><mi>Y</mi><mo>=</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo>=</mo><mi>a</mi><mo stretchy="false">)</mo><mtext> </mtext><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo>=</mo><mi>b</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(X=a,\ Y=b)=P(X=a)\,P(Y=b)</annotation></semantics></math></span></div>
+<p>第6章の独立な試行の結果から定まる確率変数は独立である。たとえば2個のさいころの目 X と Y は独立である。X と Y が独立なら次の2つが成り立つ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mi>E</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo>+</mo><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>+</mo><mi>V</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">E(XY)=E(X)E(Y) ,\qquad V(X+Y)=V(X)+V(Y)</annotation></semantics></math></span></div>
+<p>積の式は独立の定義から同時確率が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo>=</mo><mi>a</mi><mo stretchy="false">)</mo><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo>=</mo><mi>b</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(X=a)P(Y=b)</annotation></semantics></math></span> に分かれ和が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><mi>a</mi><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo>=</mo><mi>a</mi><mo stretchy="false">)</mo><mo>×</mo><mo>∑</mo><mi>b</mi><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo>=</mo><mi>b</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\sum aP(X=a)\times\sum bP(Y=b)</annotation></semantics></math></span> に分かれることから得られる。分散の式は展開すると根拠がわかる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo>+</mo><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>+</mo><mi>V</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo><mo>+</mo><mn>2</mn><mo stretchy="false">{</mo><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mi>Y</mi><mo stretchy="false">)</mo><mo>−</mo><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mi>E</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">V(X+Y)=V(X)+V(Y)+2\{E(XY)-E(X)E(Y)\}</annotation></semantics></math></span></div>
+<p><strong class="hit">独立なら波かっこの中が0になるので分散がそのまま足し算になる</strong>。独立でないと波かっこの中は一般に0ではない。片方が大きいときにもう片方も大きくなりやすい組では和の散らばりが V(X)＋V(Y) より大きくなる。</p>
+
+<div class="ex"><div class="ex-h">例題 5</div>
+<p>2個のさいころを投げて出る目を X と Y とする。和 X＋Y の期待値と分散および積 XY の期待値を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 1個のさいころの目 X は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mn>1</mn><mo>+</mo><mn>2</mn><mo>+</mo><mo>⋯</mo><mo>+</mo><mn>6</mn></mrow><mn>6</mn></mfrac><mo>=</mo><mfrac><mn>21</mn><mn>6</mn></mfrac><mo>=</mo><mfrac><mn>7</mn><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">E(X)=\frac{1+2+\cdots+6}{6}=\frac{21}{6}=\frac72</annotation></semantics></math></span><br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><msup><mi>X</mi><mn>2</mn></msup><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mn>1</mn><mo>+</mo><mn>4</mn><mo>+</mo><mn>9</mn><mo>+</mo><mn>16</mn><mo>+</mo><mn>25</mn><mo>+</mo><mn>36</mn></mrow><mn>6</mn></mfrac><mo>=</mo><mfrac><mn>91</mn><mn>6</mn></mfrac></mrow><annotation encoding="application/x-tex">E(X^2)=\frac{1+4+9+16+25+36}{6}=\frac{91}{6}</annotation></semantics></math></span> なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>91</mn><mn>6</mn></mfrac><mo>−</mo><mfrac><mn>49</mn><mn>4</mn></mfrac><mo>=</mo><mfrac><mrow><mn>182</mn><mo>−</mo><mn>147</mn></mrow><mn>12</mn></mfrac><mo>=</mo><mfrac><mn>35</mn><mn>12</mn></mfrac></mrow><annotation encoding="application/x-tex">V(X)=\frac{91}{6}-\frac{49}{4}=\frac{182-147}{12}=\frac{35}{12}</annotation></semantics></math></span><br>手順3 和の期待値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>7</mn><mn>2</mn></mfrac><mo>+</mo><mfrac><mn>7</mn><mn>2</mn></mfrac><mo>=</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">\frac72+\frac72=7</annotation></semantics></math></span>。X と Y は独立なので和の分散は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>35</mn><mn>12</mn></mfrac><mo>×</mo><mn>2</mn><mo>=</mo><mfrac><mn>35</mn><mn>6</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{35}{12}\times 2=\frac{35}{6}</annotation></semantics></math></span><br>手順4 積の期待値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>7</mn><mn>2</mn></mfrac><mo>×</mo><mfrac><mn>7</mn><mn>2</mn></mfrac><mo>=</mo><mfrac><mn>49</mn><mn>4</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac72\times\frac72=\frac{49}{4}</annotation></semantics></math></span>。答え E(X＋Y)＝7・V(X＋Y)＝35/6・E(XY)＝49/4</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 6</div>
+<p>独立な確率変数 X と Y が V(X)＝4・V(Y)＝9 を満たす。V(X−Y) と V(3X＋2Y) を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 X−Y は X＋(−1)Y と見る。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mo>−</mo><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mi>V</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mn>9</mn></mrow><annotation encoding="application/x-tex">V(-Y)=(-1)^2V(Y)=9</annotation></semantics></math></span> である。<br>手順2 独立なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo>−</mo><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mn>4</mn><mo>+</mo><mn>9</mn><mo>=</mo><mn>13</mn></mrow><annotation encoding="application/x-tex">V(X-Y)=4+9=13</annotation></semantics></math></span><br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mn>3</mn><mi>X</mi><mo>+</mo><mn>2</mn><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mn>3</mn><mn>2</mn></msup><mo>×</mo><mn>4</mn><mo>+</mo><msup><mn>2</mn><mn>2</mn></msup><mo>×</mo><mn>9</mn><mo>=</mo><mn>36</mn><mo>+</mo><mn>36</mn><mo>=</mo><mn>72</mn></mrow><annotation encoding="application/x-tex">V(3X+2Y)=3^2\times 4+2^2\times 9=36+36=72</annotation></semantics></math></span>。答え 13 と 72</div></details></div>
+
+<p><strong>典型的な誤り</strong>は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo>−</mo><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>−</mo><mi>V</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">V(X-Y)=V(X)-V(Y)</annotation></semantics></math></span> とする誤りである。引いても散らばりは減らない。もう1つは独立でない2つの確率変数の分散を足し算する誤りである。たとえば X と 2X は独立ではないので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo>+</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">V(X+X)</annotation></semantics></math></span> は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">2V(X)</annotation></semantics></math></span> ではなく <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mn>2</mn><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mn>4</mn><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">V(2X)=4V(X)</annotation></semantics></math></span> である。</p>
+
+<aside class="an an-biz"><b>投資で言えば</b>
+<p class="an-h">分散投資の効果は V(X＋Y)＝V(X)＋V(Y) から生じる</p>
+<p>分散が V の独立な2資産に半分ずつ投資すると分散は (V＋V)÷4＝V/2 になる。期待値は変わらずリスクだけが下がる。</p>
+<p class="an-x">現実の株価どうしは独立ではないので分散は半分まで下がらない。</p>
+</aside>
+
+<h2 id="s6">二項分布</h2>
+<p>1回の試行で事象 A が起こる確率を p とする。この試行を n 回くり返す反復試行で A が起こる回数を X とする。第6章の反復試行の確率から X の確率分布は次の式で表される。ここで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mo>=</mo><mn>1</mn><mo>−</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">q=1-p</annotation></semantics></math></span> である。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo>=</mo><mi>r</mi><mo stretchy="false">)</mo><mo>=</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mtext> </mtext><msup><mi>p</mi><mi>r</mi></msup><msup><mi>q</mi><mrow><mtext> </mtext><mi>n</mi><mo>−</mo><mi>r</mi></mrow></msup><mspace width="2em"/><mo stretchy="false">(</mo><mi>r</mi><mo>=</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(X=r)={}_n\mathrm{C}_r\,p^r q^{\,n-r}\qquad (r=0,1,2,\ldots,n)</annotation></semantics></math></span></div>
+<p>この確率分布を<strong>二項分布</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo stretchy="false">(</mo><mi>n</mi><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">B(n,p)</annotation></semantics></math></span> で表す。B は binomial の頭文字である。確率の合計が1になることは二項定理 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>p</mi><mo>+</mo><mi>q</mi><msup><mo stretchy="false">)</mo><mi>n</mi></msup><mo>=</mo><mo>∑</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><msup><mi>p</mi><mi>r</mi></msup><msup><mi>q</mi><mrow><mi>n</mi><mo>−</mo><mi>r</mi></mrow></msup></mrow><annotation encoding="application/x-tex">(p+q)^n=\sum{}_n\mathrm{C}_r p^r q^{n-r}</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>+</mo><mi>q</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">p+q=1</annotation></semantics></math></span> とおけば確かめられる。第5章の二項定理の各項がそのまま確率になっている。</p>
+<p>二項分布の期待値と分散は次の式で表される。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mi>n</mi><mi>p</mi><mo separator="true">,</mo><mspace width="2em"/><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mi>n</mi><mi>p</mi><mi>q</mi><mo>=</mo><mi>n</mi><mi>p</mi><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><mi>σ</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><msqrt><mrow><mi>n</mi><mi>p</mi><mi>q</mi></mrow></msqrt></mrow><annotation encoding="application/x-tex">E(X)=np ,\qquad V(X)=npq=np(1-p) ,\qquad \sigma(X)=\sqrt{npq}</annotation></semantics></math></span></div>
+<p>導き方は X を n 個の確率変数の和に分けるのが最も短い。k 回目に A が起これば1で起こらなければ0をとる確率変数を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">X_k</annotation></semantics></math></span> とする。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><msub><mi>X</mi><mn>1</mn></msub><mo>+</mo><msub><mi>X</mi><mn>2</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X=X_1+X_2+\cdots+X_n</annotation></semantics></math></span> である。</p>
+<ul>
+<li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><msub><mi>X</mi><mi>k</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn><mo>⋅</mo><mi>p</mi><mo>+</mo><mn>0</mn><mo>⋅</mo><mi>q</mi><mo>=</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">E(X_k)=1\cdot p+0\cdot q=p</annotation></semantics></math></span> である。和の期待値は和なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mi>n</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">E(X)=np</annotation></semantics></math></span></li>
+<li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><msubsup><mi>X</mi><mi>k</mi><mn>2</mn></msubsup><mo stretchy="false">)</mo><mo>=</mo><msup><mn>1</mn><mn>2</mn></msup><mo>⋅</mo><mi>p</mi><mo>+</mo><msup><mn>0</mn><mn>2</mn></msup><mo>⋅</mo><mi>q</mi><mo>=</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">E(X_k^2)=1^2\cdot p+0^2\cdot q=p</annotation></semantics></math></span> なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><msub><mi>X</mi><mi>k</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mi>p</mi><mo>−</mo><msup><mi>p</mi><mn>2</mn></msup><mo>=</mo><mi>p</mi><mi>q</mi></mrow><annotation encoding="application/x-tex">V(X_k)=p-p^2=pq</annotation></semantics></math></span> である</li>
+<li>各回の試行は独立なので分散も足し算になり <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mi>n</mi><mi>p</mi><mi>q</mi></mrow><annotation encoding="application/x-tex">V(X)=npq</annotation></semantics></math></span></li>
+</ul>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 285" role="img" aria-label="二項分布 B(10, 0.2) と B(10, 0.5) の比較">
+<line x1="70" y1="230" x2="70" y2="40" stroke="var(--ink)" stroke-width="1"/>
+<text x="64" y="234" font-size="12" text-anchor="end" fill="var(--sub)">0.0</text>
+<line x1="70" y1="170.6" x2="690" y2="170.6" stroke="var(--line)" stroke-dasharray="3 3"/>
+<text x="64" y="174.6" font-size="12" text-anchor="end" fill="var(--sub)">0.1</text>
+<line x1="70" y1="111.2" x2="690" y2="111.2" stroke="var(--line)" stroke-dasharray="3 3"/>
+<text x="64" y="115.2" font-size="12" text-anchor="end" fill="var(--sub)">0.2</text>
+<line x1="70" y1="51.9" x2="690" y2="51.9" stroke="var(--line)" stroke-dasharray="3 3"/>
+<text x="64" y="55.9" font-size="12" text-anchor="end" fill="var(--sub)">0.3</text>
+<line x1="70" y1="230" x2="690" y2="230" stroke="var(--ink)" stroke-width="1"/>
+<line x1="108.1" y1="230" x2="108.1" y2="235" stroke="var(--ink)"/>
+<text x="108.1" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">0</text>
+<line x1="162.5" y1="230" x2="162.5" y2="235" stroke="var(--ink)"/>
+<text x="162.5" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">1</text>
+<line x1="216.8" y1="230" x2="216.8" y2="235" stroke="var(--ink)"/>
+<text x="216.8" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">2</text>
+<line x1="271.2" y1="230" x2="271.2" y2="235" stroke="var(--ink)"/>
+<text x="271.2" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">3</text>
+<line x1="325.6" y1="230" x2="325.6" y2="235" stroke="var(--ink)"/>
+<text x="325.6" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">4</text>
+<line x1="380" y1="230" x2="380" y2="235" stroke="var(--ink)"/>
+<text x="380" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">5</text>
+<line x1="434.4" y1="230" x2="434.4" y2="235" stroke="var(--ink)"/>
+<text x="434.4" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">6</text>
+<line x1="488.8" y1="230" x2="488.8" y2="235" stroke="var(--ink)"/>
+<text x="488.8" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">7</text>
+<line x1="543.2" y1="230" x2="543.2" y2="235" stroke="var(--ink)"/>
+<text x="543.2" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">8</text>
+<line x1="597.5" y1="230" x2="597.5" y2="235" stroke="var(--ink)"/>
+<text x="597.5" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">9</text>
+<line x1="651.9" y1="230" x2="651.9" y2="235" stroke="var(--ink)"/>
+<text x="651.9" y="249" font-size="12" text-anchor="middle" fill="var(--sub)">10</text>
+<rect x="87.1" y="166.2" width="20" height="63.8" fill="var(--warm)" opacity="0.85"/>
+<rect x="109.1" y="229.4" width="20" height="0.6" fill="var(--cool)" opacity="0.85"/>
+<rect x="141.5" y="70.6" width="20" height="159.4" fill="var(--warm)" opacity="0.85"/>
+<rect x="163.5" y="224.2" width="20" height="5.8" fill="var(--cool)" opacity="0.85"/>
+<rect x="195.8" y="50.7" width="20" height="179.3" fill="var(--warm)" opacity="0.85"/>
+<rect x="217.8" y="203.9" width="20" height="26.1" fill="var(--cool)" opacity="0.85"/>
+<rect x="250.2" y="110.5" width="20" height="119.5" fill="var(--warm)" opacity="0.85"/>
+<rect x="272.2" y="160.4" width="20" height="69.6" fill="var(--cool)" opacity="0.85"/>
+<rect x="304.6" y="177.7" width="20" height="52.3" fill="var(--warm)" opacity="0.85"/>
+<rect x="326.6" y="108.2" width="20" height="121.8" fill="var(--cool)" opacity="0.85"/>
+<rect x="359" y="214.3" width="20" height="15.7" fill="var(--warm)" opacity="0.85"/>
+<rect x="381" y="83.9" width="20" height="146.1" fill="var(--cool)" opacity="0.85"/>
+<rect x="413.4" y="226.7" width="20" height="3.3" fill="var(--warm)" opacity="0.85"/>
+<rect x="435.4" y="108.2" width="20" height="121.8" fill="var(--cool)" opacity="0.85"/>
+<rect x="467.8" y="229.5" width="20" height="0.5" fill="var(--warm)" opacity="0.85"/>
+<rect x="489.8" y="160.4" width="20" height="69.6" fill="var(--cool)" opacity="0.85"/>
+<rect x="522.2" y="230" width="20" height="0" fill="var(--warm)" opacity="0.85"/>
+<rect x="544.2" y="203.9" width="20" height="26.1" fill="var(--cool)" opacity="0.85"/>
+<rect x="576.5" y="230" width="20" height="0" fill="var(--warm)" opacity="0.85"/>
+<rect x="598.5" y="224.2" width="20" height="5.8" fill="var(--cool)" opacity="0.85"/>
+<rect x="630.9" y="230" width="20" height="0" fill="var(--warm)" opacity="0.85"/>
+<rect x="652.9" y="229.4" width="20" height="0.6" fill="var(--cool)" opacity="0.85"/>
+<line x1="216.8" y1="40" x2="216.8" y2="230" stroke="var(--warm)" stroke-dasharray="4 3"/>
+<line x1="380" y1="40" x2="380" y2="230" stroke="var(--cool)" stroke-dasharray="4 3"/>
+<rect x="440" y="44" width="14" height="14" fill="var(--warm)"/><text x="460" y="56" font-size="13" fill="var(--ink)">B(10, 0.2) 期待値2 分散1.6</text>
+<rect x="440" y="66" width="14" height="14" fill="var(--cool)"/><text x="460" y="78" font-size="13" fill="var(--ink)">B(10, 0.5) 期待値5 分散2.5</text>
+<text x="690" y="268" font-size="12" text-anchor="end" fill="var(--muted)">成功の回数 X</text>
+</svg>
+<figcaption>n＝10 の二項分布を2つ並べた。p＝0.5 の分布は期待値5を中心に左右対称である。p＝0.2 の分布は期待値2の近くに集まり右に長く伸びる。分散は np(1−p) で p＝0.5 のとき最大になる。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 7</div>
+<p>1個のさいころを4回投げて3の倍数の目が出る回数を X とする。P(X＝2) と X の期待値と分散を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 3の倍数の目は3と6で確率は 1/3 である。X は B(4, 1/3) に従う。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo>=</mo><mn>2</mn><mo stretchy="false">)</mo><mo>=</mo><msub><mrow></mrow><mn>4</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><msup><mrow><mo fence="true">(</mo><mfrac><mn>1</mn><mn>3</mn></mfrac><mo fence="true">)</mo></mrow><mn>2</mn></msup><msup><mrow><mo fence="true">(</mo><mfrac><mn>2</mn><mn>3</mn></mfrac><mo fence="true">)</mo></mrow><mn>2</mn></msup><mo>=</mo><mn>6</mn><mo>×</mo><mfrac><mn>1</mn><mn>9</mn></mfrac><mo>×</mo><mfrac><mn>4</mn><mn>9</mn></mfrac><mo>=</mo><mfrac><mn>24</mn><mn>81</mn></mfrac><mo>=</mo><mfrac><mn>8</mn><mn>27</mn></mfrac></mrow><annotation encoding="application/x-tex">P(X=2)={}_4\mathrm{C}_2\left(\frac13\right)^2\left(\frac23\right)^2=6\times\frac19\times\frac49=\frac{24}{81}=\frac{8}{27}</annotation></semantics></math></span><br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mn>4</mn><mo>×</mo><mfrac><mn>1</mn><mn>3</mn></mfrac><mo>=</mo><mfrac><mn>4</mn><mn>3</mn></mfrac></mrow><annotation encoding="application/x-tex">E(X)=4\times\frac13=\frac43</annotation></semantics></math></span>・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mn>4</mn><mo>×</mo><mfrac><mn>1</mn><mn>3</mn></mfrac><mo>×</mo><mfrac><mn>2</mn><mn>3</mn></mfrac><mo>=</mo><mfrac><mn>8</mn><mn>9</mn></mfrac></mrow><annotation encoding="application/x-tex">V(X)=4\times\frac13\times\frac23=\frac89</annotation></semantics></math></span>。答え 8/27・4/3・8/9</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 8</div>
+<p>二項分布 B(n, p) に従う X の期待値が 12 で分散が 9 である。n と p を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 np＝12 と np(1−p)＝9 を連立する。<br>手順2 2式目を1式目で割ると 1−p＝9/12＝3/4 で p＝1/4 である。<br>手順3 n＝12÷(1/4)＝48。答え n＝48・p＝1/4</div></details></div>
+
+<p><strong>典型的な誤り</strong>は二項分布でない場面に np を使う誤りである。二項分布の条件は「同じ確率の独立な試行を決まった回数くり返す」ことである。例題2のように袋から玉を戻さずに取り出す場合は各回の確率が変わるので二項分布ではない。</p>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">打率3割の打者の4打数は B(4, 0.3) である</p>
+<p>各打席が独立なら安打数の期待値は 1.2本である。4打数無安打の確率は 0.7⁴＝0.2401 で約4試合に1試合ある。</p>
+<p class="an-x">実際の打席は相手投手や球場で確率が変わるので独立で同じ確率という仮定は近似である。</p>
+</aside>
+
+<h2 id="s7">現実世界の確率変数</h2>
+<p>二項分布の考え方は品質管理と保険と臨床試験の計算の出発点である。不良品率 p の工程から n 個を検査したときの不良品の個数は B(n, p) で表される。不良品率2%の工程から50個を抜き取ると不良品の個数 X は B(50, 0.02) に従い期待値は1個である。1個も含まれない確率は 0.98<sup>50</sup>≒0.364 で2個以上含まれる確率は約0.264 である。期待値が1個でも3回に1回以上は不良品を1個も検出できない。抜き取る個数を決めるときはこの確率を計算して検査の見逃しを評価する。保険会社は1件あたりの支払額を確率変数とみて期待値に経費を加えて保険料を定める。加入者が多いほど1人あたりの支払額の平均の散らばりが小さくなる。この性質は第10章の大数の法則で扱う。</p>
+<aside class="an an-rw"><b>現実世界</b>
+<p>反復試行の成功回数を体系的に扱った最初の書物の1つはヤコブ・ベルヌーイの『推測術』である。ベルヌーイの没後の1713年に刊行され試行回数を増やすと相対度数が確率に近づく定理を含む。1回の試行で成功か失敗の2通りをとる試行は現在でもベルヌーイ試行と呼ばれる。</p>
+</aside>
+
+<h2 id="s8">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ Σ の計算</div>
+<p class="qz-q"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mn>10</mn></munderover><mo stretchy="false">(</mo><mn>3</mn><mi>k</mi><mo>−</mo><mn>2</mn><mo stretchy="false">)</mo></mstyle></mrow><annotation encoding="application/x-tex">\displaystyle\sum_{k=1}^{10}(3k-2)</annotation></semantics></math></span> の値として正しいものを1つ選べ。</p>
+<ol><li>135</li><li>145</li><li>155</li><li>165</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>∑</mo><mi>k</mi><mo>−</mo><mo>∑</mo><mn>2</mn><mo>=</mo><mn>3</mn><mo>×</mo><mn>55</mn><mo>−</mo><mn>2</mn><mo>×</mo><mn>10</mn><mo>=</mo><mn>165</mn><mo>−</mo><mn>20</mn><mo>=</mo><mn>145</mn></mrow><annotation encoding="application/x-tex">3\sum k-\sum 2=3\times 55-2\times 10=165-20=145</annotation></semantics></math></span>。定数2の和を2とすると 163 になり選択肢にない。4 は −2 の和を引き忘れた値である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ 分布表の空欄と期待値</div>
+<p class="qz-q">確率変数 X の確率分布が次のとおりである。X の期待値を小数で答えよ。</p>
+<div class="tb-tw"><table><thead><tr><th>X</th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead><tbody><tr><td>P</td><td>0.1</td><td>0.3</td><td>a</td><td>0.2</td></tr></tbody></table></div>
+<details><summary>解答と解説</summary><div>正解は 1.7 である。合計が1なので a＝1−0.1−0.3−0.2＝0.4 である。E(X)＝0×0.1＋1×0.3＋2×0.4＋3×0.2＝0.3＋0.8＋0.6＝1.7</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 分散と標準偏差</div>
+<p class="qz-q">問2の X の標準偏差を小数で答えよ。</p>
+<details><summary>解答と解説</summary><div>正解は 0.9 である。E(X²)＝0×0.1＋1×0.3＋4×0.4＋9×0.2＝0.3＋1.6＋1.8＝3.7 である。V(X)＝3.7−1.7²＝3.7−2.89＝0.81 で σ(X)＝0.9 となる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ aX＋b の変換</div>
+<p class="qz-q">E(X)＝5・σ(X)＝2 の確率変数 X に対し Y＝−3X＋4 とする。Y の期待値と標準偏差の組として正しいものを1つ選べ。</p>
+<ol><li>期待値 −11・標準偏差 6</li><li>期待値 −11・標準偏差 −6</li><li>期待値 −11・標準偏差 36</li><li>期待値 −15・標準偏差 6</li></ol>
+<details><summary>解答と解説</summary><div>正解は 1 である。E(Y)＝−3×5＋4＝−11 である。σ(Y)＝|−3|×2＝6 である。2 は絶対値を付け忘れた値で標準偏差が負になることはない。3 の36は分散である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 独立な確率変数の分散</div>
+<p class="qz-q">独立な確率変数 X と Y が V(X)＝4・V(Y)＝9 を満たす。2X−Y の標準偏差として正しいものを1つ選べ。</p>
+<ol><li>√7</li><li>1</li><li>√17</li><li>5</li></ol>
+<details><summary>解答と解説</summary><div>正解は 4 である。V(2X−Y)＝2²×4＋(−1)²×9＝16＋9＝25 で標準偏差は5である。1 は 4×4−9 の誤り。3 は 2×4＋9 で係数を2乗し忘れた値である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 二項分布の n と p</div>
+<p class="qz-q">二項分布 B(n, p) に従う X の期待値が 20 で標準偏差が 4 である。n を答えよ。</p>
+<details><summary>解答と解説</summary><div>正解は 100 である。分散は 4²＝16 である。np＝20 と np(1−p)＝16 から 1−p＝0.8 で p＝0.2 である。n＝20÷0.2＝100</div></details></div>
+
+<div class="qz"><div class="qz-h">問7 ・ 常に成り立つ式</div>
+<p class="qz-q">任意の確率変数 X と Y について常に成り立つものを1つ選べ。</p>
+<ol><li>E(XY)＝E(X)E(Y)</li><li>E(X＋Y)＝E(X)＋E(Y)</li><li>V(X＋Y)＝V(X)＋V(Y)</li><li>V(X−Y)＝V(X)−V(Y)</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。和の期待値の式は独立かどうかに関係なく成り立つ。1 と 3 は X と Y が独立のときに成り立つ。4 は独立でも成り立たず正しくは V(X)＋V(Y) である。</div></details></div>
+
+<h2 id="s9">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+確率分布は値と確率の対応で確率の合計は1である。<br>
+期待値 E(X)＝Σ x<sub>k</sub>p<sub>k</sub> は分布の釣り合いの位置である。<br>
+分散 V(X)＝E(X²)−{E(X)}² で標準偏差はその正の平方根である。<br>
+E(aX＋b)＝aE(X)＋b・V(aX＋b)＝a²V(X)・σ(aX＋b)＝|a|σ(X)。<br>
+和の期待値は常に和である。積の期待値と和の分散が分かれるのは独立なときだけである。<br>
+二項分布 B(n, p) は E＝np・V＝np(1−p) で n 個のベルヌーイ試行の和として導ける。</div>
+
+<h2 id="s10">残っている問い</h2>
+<ul>
+<li class="tb-vnote">この章は値が飛び飛びの離散型確率変数だけを扱った。値が連続する確率変数の期待値と分散は積分で定義される。第9章で扱う。</li>
+<li class="tb-vnote">V(X＋Y) の展開に現れる E(XY)−E(X)E(Y) は大学の統計学で共分散と呼ばれる。高校の数学Bでは共分散を確率変数に対して定義しない。第3章のデータの共分散と同じ構造である。</li>
+<li class="tb-vnote">ベルヌーイの定理が執筆された正確な年は出典によって幅がある。1713年は刊行年として確認できた。</li>
+</ul>
+
+<h2 id="s11">出典</h2>
+<ol>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 解説 数学編 理数編 — https://www.mext.go.jp/a_menu/shotou/new-cs/1407074.htm</li>
+<li>大学入試センター 過去3年分の試験問題 — https://www.dnc.ac.jp/kyotsu/kakomondai/</li>
+<li>Binomial distribution — Wikipedia — https://en.wikipedia.org/wiki/Binomial_distribution</li>
+<li>Variance — Wikipedia — https://en.wikipedia.org/wiki/Variance</li>
+<li>Ars Conjectandi — Wikipedia — https://en.wikipedia.org/wiki/Ars_Conjectandi</li>
+<li>Law of large numbers — Wikipedia — https://en.wikipedia.org/wiki/Law_of_large_numbers</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="07_conditional.html">← 条件付き確率と期待値</a><a class="tb-nav-a" href="09_normal.html">正規分布 →</a></div>
+</div>
+<script>
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){ if (!tick) { tick = true; requestAnimationFrame(draw); } }, {passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>散布図と相関・仮説検定の考え方｜確率・統計</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../021_profile/index.html">profile</a><a href="../../02A_plan/index.html">plan</a><a href="../../023_travel/index.html">travel</a><a href="../../027_cinema/index.html">cinema</a><a href="../../02B_reading/index.html">reading</a><a href="../../024_method/index.html">method</a><a href="../../026_handbook/index.html">handbook</a><a href="../../025_fitness/index.html">fitness</a><a href="../../028_english/index.html">english</a><a href="../../029_mental_math/index.html">mental math</a><a href="../../02C_chemistry/index.html">chemistry</a><a href="../index.html">probability</a><a href="../../02E_calculus/index.html">calculus</a><a href="../../02F_linear_algebra/index.html">linear algebra</a><a href="../../02G_physics/index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../024_method/index.html">method</a>
+    <a class="snav-a" href="../../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../028_english/index.html">english</a>
+    <a class="snav-a" href="../../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../index.html">probability</a>
+    <a class="snav-a" href="../../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../02G_physics/index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / personal /
+    <a href="../index.html">02D probability</a> / 第3章</div>
+
+  <div class="tb-ch">数学Ⅰ — 第3章</div>
+  <h1>散布図と相関・仮説検定の考え方</h1>
+  <p class="tb-thesis">2つの変量の関係は散布図で形を見て共分散と相関係数で強さを測る。相関係数は−1以上1以下の値をとり直線的な関係の強さだけを表す。相関は因果を意味しない。数学Ⅰの仮説検定は主張と反対の仮定のもとで観測結果がどれほど起こりにくいかをシミュレーションで調べて判断する。</p>
+
+<p class="tb-ok"><strong>この章は2026-10-15に出典照合を通した。</strong> 検証した事実は26件である。出典と一致したものは25件である。食い違ったものは1件で本文を修正済みである。出典で確認できなかったものは0件である。これらは末尾の「残っている問い」に列挙した。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">散布図と相関</a></li><li><a href="#s2">共分散</a></li><li><a href="#s3">相関係数</a></li><li><a href="#s4">相関と因果</a></li><li><a href="#s5">変量の変換と相関係数</a></li><li><a href="#s6">仮説検定の考え方</a></li><li><a href="#s7">現実世界の相関 ゴルトンからノーベル賞とチョコレートまで</a></li><li><a href="#s8">確認問題</a></li><li><a href="#s9">この章の要点</a></li><li><a href="#s10">残っている問い</a></li><li><a href="#s11">出典</a></li></ol></nav>
+
+<p>第1章と第2章では1つの変量の中心と散らばりを扱った。この章では2つの変量の関係を扱う。数学の得点と物理の得点・気温と電力需要・広告費と売上のように1人や1日ごとに2つの値が組になったデータである。</p>
+<p>前半では散布図・共分散・相関係数を定義し相関係数がなぜ−1から1の範囲に収まるかを示す。後半では数学Ⅰの最後の内容である仮説検定の考え方を扱う。共通テストでは相関係数の計算と変量の変換による変化・散布図からの読み取り・シミュレーション結果に基づく主張の判断が問われる。令和7年度の本試験の第2問もデータの分析と実験に基づく判断を組み合わせた出題であった。</p>
+
+<h2 id="s1">散布図と相関</h2>
+<p>2つの変量 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> の値の組 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>y</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mo separator="true">,</mo><mo stretchy="false">(</mo><msub><mi>x</mi><mn>2</mn></msub><mo separator="true">,</mo><msub><mi>y</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><mo stretchy="false">(</mo><msub><mi>x</mi><mi>n</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_1,y_1),(x_2,y_2),\ldots,(x_n,y_n)</annotation></semantics></math></span> を座標平面上の点として表した図を<strong>散布図</strong>と呼ぶ。1つの点が1人や1日にあたる。</p>
+<p>散布図で点が右上がりの帯状に並ぶとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> が大きいほど <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> も大きい傾向がある。この関係を<strong>正の相関</strong>と呼ぶ。右下がりに並ぶときは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> が大きいほど <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> が小さい傾向があり<strong>負の相関</strong>と呼ぶ。どちらの傾向も見られないときは<strong>相関がない</strong>という。点が直線に近く並ぶほど相関が強い。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 270" role="img" aria-label="相関係数が異なる3つの散布図">
+<rect x="30" y="40" width="190" height="180" fill="none" stroke="var(--line)"/>
+<circle cx="145.9" cy="94.9" r="3.6" fill="var(--cool)"/>
+<circle cx="166.8" cy="125.4" r="3.6" fill="var(--cool)"/>
+<circle cx="177.2" cy="126.8" r="3.6" fill="var(--cool)"/>
+<circle cx="201.6" cy="51.1" r="3.6" fill="var(--cool)"/>
+<circle cx="166.8" cy="149.9" r="3.6" fill="var(--cool)"/>
+<circle cx="198.1" cy="108.7" r="3.6" fill="var(--cool)"/>
+<circle cx="43.2" cy="185.5" r="3.6" fill="var(--cool)"/>
+<circle cx="119.8" cy="105.7" r="3.6" fill="var(--cool)"/>
+<circle cx="201.6" cy="117.9" r="3.6" fill="var(--cool)"/>
+<circle cx="151.1" cy="178.4" r="3.6" fill="var(--cool)"/>
+<circle cx="194.6" cy="90.8" r="3.6" fill="var(--cool)"/>
+<circle cx="57.1" cy="200.0" r="3.6" fill="var(--cool)"/>
+<circle cx="119.8" cy="158.0" r="3.6" fill="var(--cool)"/>
+<circle cx="81.5" cy="165.4" r="3.6" fill="var(--cool)"/>
+<circle cx="132.0" cy="138.4" r="3.6" fill="var(--cool)"/>
+<circle cx="137.2" cy="133.9" r="3.6" fill="var(--cool)"/>
+<circle cx="39.7" cy="208.9" r="3.6" fill="var(--cool)"/>
+<circle cx="76.3" cy="152.5" r="3.6" fill="var(--cool)"/>
+<circle cx="86.7" cy="141.7" r="3.6" fill="var(--cool)"/>
+<circle cx="198.1" cy="100.9" r="3.6" fill="var(--cool)"/>
+<circle cx="172.0" cy="126.8" r="3.6" fill="var(--cool)"/>
+<circle cx="65.8" cy="169.9" r="3.6" fill="var(--cool)"/>
+<circle cx="177.2" cy="105.3" r="3.6" fill="var(--cool)"/>
+<circle cx="62.4" cy="206.6" r="3.6" fill="var(--cool)"/>
+<circle cx="145.9" cy="143.2" r="3.6" fill="var(--cool)"/>
+<circle cx="60.6" cy="166.9" r="3.6" fill="var(--cool)"/>
+<circle cx="38.0" cy="203.7" r="3.6" fill="var(--cool)"/>
+<circle cx="189.4" cy="113.5" r="3.6" fill="var(--cool)"/>
+<circle cx="74.5" cy="174.7" r="3.6" fill="var(--cool)"/>
+<circle cx="76.3" cy="178.4" r="3.6" fill="var(--cool)"/>
+<text x="125.0" y="28" font-size="13" text-anchor="middle" font-weight="600" fill="var(--ink)">正の相関</text>
+<text x="125.0" y="242" font-size="12.5" text-anchor="middle" fill="var(--sub)">相関係数 0.85</text>
+<rect x="265" y="40" width="190" height="180" fill="none" stroke="var(--line)"/>
+<circle cx="410.5" cy="138.3" r="3.6" fill="var(--cool)"/>
+<circle cx="415.7" cy="140.7" r="3.6" fill="var(--cool)"/>
+<circle cx="358.3" cy="74.2" r="3.6" fill="var(--cool)"/>
+<circle cx="318.2" cy="133.0" r="3.6" fill="var(--cool)"/>
+<circle cx="273.0" cy="103.4" r="3.6" fill="var(--cool)"/>
+<circle cx="387.8" cy="69.9" r="3.6" fill="var(--cool)"/>
+<circle cx="354.8" cy="171.4" r="3.6" fill="var(--cool)"/>
+<circle cx="405.2" cy="55.9" r="3.6" fill="var(--cool)"/>
+<circle cx="337.4" cy="83.3" r="3.6" fill="var(--cool)"/>
+<circle cx="407.0" cy="141.8" r="3.6" fill="var(--cool)"/>
+<circle cx="320.0" cy="152.4" r="3.6" fill="var(--cool)"/>
+<circle cx="412.2" cy="161.9" r="3.6" fill="var(--cool)"/>
+<circle cx="400.0" cy="85.8" r="3.6" fill="var(--cool)"/>
+<circle cx="344.3" cy="209.4" r="3.6" fill="var(--cool)"/>
+<circle cx="367.0" cy="86.1" r="3.6" fill="var(--cool)"/>
+<circle cx="391.3" cy="112.9" r="3.6" fill="var(--cool)"/>
+<circle cx="306.1" cy="142.9" r="3.6" fill="var(--cool)"/>
+<circle cx="368.7" cy="136.9" r="3.6" fill="var(--cool)"/>
+<circle cx="413.9" cy="131.9" r="3.6" fill="var(--cool)"/>
+<circle cx="320.0" cy="127.0" r="3.6" fill="var(--cool)"/>
+<circle cx="412.2" cy="87.6" r="3.6" fill="var(--cool)"/>
+<circle cx="393.1" cy="148.5" r="3.6" fill="var(--cool)"/>
+<circle cx="419.2" cy="80.5" r="3.6" fill="var(--cool)"/>
+<circle cx="332.2" cy="84.0" r="3.6" fill="var(--cool)"/>
+<circle cx="288.7" cy="127.7" r="3.6" fill="var(--cool)"/>
+<circle cx="412.2" cy="97.4" r="3.6" fill="var(--cool)"/>
+<circle cx="412.2" cy="137.9" r="3.6" fill="var(--cool)"/>
+<circle cx="351.3" cy="116.8" r="3.6" fill="var(--cool)"/>
+<circle cx="288.7" cy="101.3" r="3.6" fill="var(--cool)"/>
+<circle cx="307.8" cy="50.6" r="3.6" fill="var(--cool)"/>
+<text x="360.0" y="28" font-size="13" text-anchor="middle" font-weight="600" fill="var(--ink)">相関がない</text>
+<text x="360.0" y="242" font-size="12.5" text-anchor="middle" fill="var(--sub)">相関係数 0.00</text>
+<rect x="500" y="40" width="190" height="180" fill="none" stroke="var(--line)"/>
+<circle cx="565.4" cy="190.7" r="3.6" fill="var(--cool)"/>
+<circle cx="678.5" cy="145.7" r="3.6" fill="var(--cool)"/>
+<circle cx="675.0" cy="157.7" r="3.6" fill="var(--cool)"/>
+<circle cx="668.1" cy="148.7" r="3.6" fill="var(--cool)"/>
+<circle cx="645.5" cy="195.7" r="3.6" fill="var(--cool)"/>
+<circle cx="661.1" cy="171.7" r="3.6" fill="var(--cool)"/>
+<circle cx="508.0" cy="105.0" r="3.6" fill="var(--cool)"/>
+<circle cx="617.6" cy="136.0" r="3.6" fill="var(--cool)"/>
+<circle cx="551.5" cy="50.0" r="3.6" fill="var(--cool)"/>
+<circle cx="635.0" cy="210.0" r="3.6" fill="var(--cool)"/>
+<circle cx="582.8" cy="116.3" r="3.6" fill="var(--cool)"/>
+<circle cx="605.4" cy="169.3" r="3.6" fill="var(--cool)"/>
+<circle cx="602.0" cy="153.0" r="3.6" fill="var(--cool)"/>
+<circle cx="608.9" cy="130.7" r="3.6" fill="var(--cool)"/>
+<circle cx="652.4" cy="190.7" r="3.6" fill="var(--cool)"/>
+<circle cx="678.5" cy="207.0" r="3.6" fill="var(--cool)"/>
+<circle cx="568.9" cy="130.3" r="3.6" fill="var(--cool)"/>
+<circle cx="648.9" cy="178.0" r="3.6" fill="var(--cool)"/>
+<circle cx="662.9" cy="182.3" r="3.6" fill="var(--cool)"/>
+<circle cx="575.9" cy="127.7" r="3.6" fill="var(--cool)"/>
+<circle cx="528.9" cy="117.3" r="3.6" fill="var(--cool)"/>
+<circle cx="595.0" cy="144.7" r="3.6" fill="var(--cool)"/>
+<circle cx="640.2" cy="171.7" r="3.6" fill="var(--cool)"/>
+<circle cx="598.5" cy="131.0" r="3.6" fill="var(--cool)"/>
+<circle cx="539.3" cy="99.0" r="3.6" fill="var(--cool)"/>
+<circle cx="631.5" cy="180.3" r="3.6" fill="var(--cool)"/>
+<circle cx="563.7" cy="153.3" r="3.6" fill="var(--cool)"/>
+<circle cx="662.9" cy="199.3" r="3.6" fill="var(--cool)"/>
+<circle cx="537.6" cy="111.0" r="3.6" fill="var(--cool)"/>
+<circle cx="610.7" cy="132.7" r="3.6" fill="var(--cool)"/>
+<text x="595.0" y="28" font-size="13" text-anchor="middle" font-weight="600" fill="var(--ink)">負の相関</text>
+<text x="595.0" y="242" font-size="12.5" text-anchor="middle" fill="var(--sub)">相関係数 -0.70</text>
+</svg>
+<figcaption>30組のデータの散布図を3つ並べた。左は右上がりの帯で相関係数0.85の正の相関である。中央は点が一様に散らばり相関係数は0.00である。右は右下がりの帯で相関係数−0.70の負の相関である。相関係数は第3節で定義する。</figcaption>
+</figure>
+<p>相関は<strong class="hit">直線的な傾向</strong>について言う。点が山なりの放物線の上に並ぶ場合は2つの変量に明確な関係があっても右上がりの部分と右下がりの部分が打ち消し合い相関係数が0に近くなることがある。相関がないことは無関係であることを意味しない。散布図を見ずに数値だけで判断してはならない。</p>
+<div class="ex"><div class="ex-h">例題 1</div>
+<p>次の (a)(b) の関係は正の相関・負の相関・相関がないのどれに近いか。(a) 都市の1日の最高気温と暖房用の電力使用量 (b) 生徒の身長と通学時間</p>
+<details open><summary>解き方</summary><div>手順1 (a) 気温が高い日ほど暖房は使われないので右下がりの傾向が予想される。<br>手順2 (b) 身長と通学時間を結びつける仕組みは考えにくく点は一様に散らばると予想される。<br>答え (a) 負の相関 ／ (b) 相関がない。実際の判断は散布図を描いて行う</div></details></div>
+
+<h2 id="s2">共分散</h2>
+<p>相関の向きと強さを数で表すには散布図を平均値の線で4つの区画に分けて考える。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> の平均値 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover></mrow><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math></span> を通る縦線と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> の平均値 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover></mrow><annotation encoding="application/x-tex">\bar{y}</annotation></semantics></math></span> を通る横線を引く。</p>
+<p>右上の区画の点は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> の偏差も <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> の偏差も正なので偏差の積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo><mo stretchy="false">(</mo><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_k-\bar{x})(y_k-\bar{y})</annotation></semantics></math></span> は正である。左下の区画では両方の偏差が負なので積は正である。左上と右下の区画では積が負になる。<strong class="hit">右上と左下に点が多ければ積の合計は正になり右上がりの傾向を示す</strong>。この積の平均を<strong>共分散</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub></mrow><annotation encoding="application/x-tex">s_{xy}</annotation></semantics></math></span> で表す。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mrow><mo fence="true">{</mo><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>−</mo><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo><mo stretchy="false">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>−</mo><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo><mo>+</mo><mo>⋯</mo><mo>+</mo><mo stretchy="false">(</mo><msub><mi>x</mi><mi>n</mi></msub><mo>−</mo><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo><mo stretchy="false">(</mo><msub><mi>y</mi><mi>n</mi></msub><mo>−</mo><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo><mo fence="true">}</mo></mrow><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false">(</mo><msub><mi>x</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo><mo stretchy="false">(</mo><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">s_{xy}=\frac{1}{n}\left\{(x_1-\bar{x})(y_1-\bar{y})+\cdots+(x_n-\bar{x})(y_n-\bar{y})\right\}=\frac{1}{n}\sum_{k=1}^{n}(x_k-\bar{x})(y_k-\bar{y})</annotation></semantics></math></span></div>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 290" role="img" aria-label="平均値で4つの区画に分けて偏差の積の符号を調べる">
+<rect x="270.0" y="30.0" width="180.0" height="88.0" fill="var(--warm)" fill-opacity=".12"/>
+<rect x="90.0" y="118.0" width="180.0" height="132.0" fill="var(--warm)" fill-opacity=".12"/>
+<rect x="90.0" y="30.0" width="180.0" height="88.0" fill="var(--cool)" fill-opacity=".10"/>
+<rect x="270.0" y="118.0" width="180.0" height="132.0" fill="var(--cool)" fill-opacity=".10"/>
+<line x1="90" y1="250" x2="450" y2="250" stroke="var(--ink)"/><line x1="90" y1="250" x2="90" y2="30" stroke="var(--ink)"/>
+<text x="90.0" y="268" font-size="12" text-anchor="middle" fill="var(--sub)">0</text>
+<text x="150.0" y="268" font-size="12" text-anchor="middle" fill="var(--sub)">2</text>
+<text x="210.0" y="268" font-size="12" text-anchor="middle" fill="var(--sub)">4</text>
+<text x="270.0" y="268" font-size="12" text-anchor="middle" fill="var(--sub)">6</text>
+<text x="330.0" y="268" font-size="12" text-anchor="middle" fill="var(--sub)">8</text>
+<text x="390.0" y="268" font-size="12" text-anchor="middle" fill="var(--sub)">10</text>
+<text x="450.0" y="268" font-size="12" text-anchor="middle" fill="var(--sub)">12</text>
+<text x="82" y="254.0" font-size="12" text-anchor="end" fill="var(--sub)">0</text>
+<text x="82" y="210.0" font-size="12" text-anchor="end" fill="var(--sub)">2</text>
+<text x="82" y="166.0" font-size="12" text-anchor="end" fill="var(--sub)">4</text>
+<text x="82" y="122.0" font-size="12" text-anchor="end" fill="var(--sub)">6</text>
+<text x="82" y="78.0" font-size="12" text-anchor="end" fill="var(--sub)">8</text>
+<text x="82" y="34.0" font-size="12" text-anchor="end" fill="var(--sub)">10</text>
+<line x1="270.0" y1="30.0" x2="270.0" y2="250" stroke="var(--accent)" stroke-dasharray="5 3" stroke-width="1.6"/>
+<line x1="90" y1="118.0" x2="450.0" y2="118.0" stroke="var(--accent)" stroke-dasharray="5 3" stroke-width="1.6"/>
+<text x="274.0" y="44.0" font-size="12" fill="var(--accent)">x の平均値 6</text>
+<text x="450.0" y="112.0" font-size="12" text-anchor="end" fill="var(--accent)">y の平均値 6</text>
+<text x="405.0" y="52.0" font-size="14" text-anchor="middle" fill="var(--warm)" font-weight="700">積 ＋</text>
+<text x="135.0" y="228.0" font-size="14" text-anchor="middle" fill="var(--warm)" font-weight="700">積 ＋</text>
+<text x="135.0" y="52.0" font-size="14" text-anchor="middle" fill="var(--cool)" font-weight="700">積 −</text>
+<text x="405.0" y="228.0" font-size="14" text-anchor="middle" fill="var(--cool)" font-weight="700">積 −</text>
+<circle cx="150.0" cy="184.0" r="5.5" fill="var(--ink)"/>
+<circle cx="210.0" cy="118.0" r="5.5" fill="var(--ink)"/>
+<circle cx="270.0" cy="140.0" r="5.5" fill="var(--ink)"/>
+<circle cx="330.0" cy="52.0" r="5.5" fill="var(--ink)"/>
+<circle cx="390.0" cy="96.0" r="5.5" fill="var(--ink)"/>
+<text x="490" y="40" font-size="12.5" fill="var(--sub)">x  y  偏差の積</text>
+<text x="490" y="64" font-size="12.5" fill="var(--ink)"> 2  3  (-4)×(-3) = 12</text>
+<text x="490" y="88" font-size="12.5" fill="var(--ink)"> 4  6  (-2)×(+0) = 0</text>
+<text x="490" y="112" font-size="12.5" fill="var(--ink)"> 6  5  (+0)×(-1) = 0</text>
+<text x="490" y="136" font-size="12.5" fill="var(--ink)"> 8  9  (+2)×(+3) = 6</text>
+<text x="490" y="160" font-size="12.5" fill="var(--ink)">10  7  (+4)×(+1) = 4</text>
+<text x="490" y="194" font-size="12.5" fill="var(--warm)" font-weight="600">合計 22 共分散 22÷5=4.4</text>
+</svg>
+<figcaption>5組のデータ (2,3) (4,6) (6,5) (8,9) (10,7) である。平均値はどちらも6で破線が平均値の線である。積が正の区画を橙で積が負の区画を青で示した。点は橙の区画と境界の上にだけあり積の合計は22で共分散は4.4である。</figcaption>
+</figure>
+<p>共分散の符号が正なら正の相関・負なら負の相関の傾向を示す。0に近ければ直線的な傾向は弱い。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> に置き換えると共分散は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> の分散に一致する。分散は共分散の特別な場合である。</p>
+<p>分散の公式と同じ展開で次の公式が成り立つ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mo>=</mo><mover accent="true"><mrow><mi>x</mi><mi>y</mi></mrow><mo stretchy="true">‾</mo></mover><mo>−</mo><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover><mtext> </mtext><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover></mrow><annotation encoding="application/x-tex">s_{xy}=\overline{xy}-\bar{x}\,\bar{y}</annotation></semantics></math></span></div>
+<p>ここで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mrow><mi>x</mi><mi>y</mi></mrow><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{xy}</annotation></semantics></math></span> は積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">x_ky_k</annotation></semantics></math></span> の平均である。(共分散)＝(積の平均)−(平均の積) と暗記する。</p>
+<div class="ex"><div class="ex-h">例題 2</div>
+<p>上の図の5組のデータの共分散を定義と公式の2通りで求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 定義で求める。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> の偏差は −4 −2 0 2 4 で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> の偏差は −3 0 −1 3 1 である。積は 12 0 0 6 4 で合計22である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mo>=</mo><mn>22</mn><mo>÷</mo><mn>5</mn><mo>=</mo><mn>4.4</mn></mrow><annotation encoding="application/x-tex">s_{xy}=22\div5=4.4</annotation></semantics></math></span><br>手順2 公式で求める。積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>k</mi></msub><msub><mi>y</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">x_ky_k</annotation></semantics></math></span> は 6 24 30 72 70 で合計202である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mrow><mi>x</mi><mi>y</mi></mrow><mo stretchy="true">‾</mo></mover><mo>=</mo><mn>202</mn><mo>÷</mo><mn>5</mn><mo>=</mo><mn>40.4</mn></mrow><annotation encoding="application/x-tex">\overline{xy}=202\div5=40.4</annotation></semantics></math></span><br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mo>=</mo><mn>40.4</mn><mo>−</mo><mn>6</mn><mo>×</mo><mn>6</mn><mo>=</mo><mn>4.4</mn></mrow><annotation encoding="application/x-tex">s_{xy}=40.4-6\times6=4.4</annotation></semantics></math></span><br>答え 4.4。2通りの結果が一致する</div></details></div>
+<p>共分散には欠点がある。値の大きさが単位に依存することである。身長を cm で測るか m で測るかで共分散は100倍異なる。共分散の大きさだけでは相関が強いかどうかを判断できない。</p>
+<aside class="an an-lv"><b>恋愛で言えば</b>
+<p class="an-h">共分散の符号は2人の機嫌が同じ日に上下するかどうかである</p>
+<p>2人とも平均より機嫌のよい日と2人とも悪い日が多ければ正。片方がよい日にもう片方が悪いことが多ければ負である。</p>
+</aside>
+
+<h2 id="s3">相関係数</h2>
+<p>共分散の単位への依存を取り除くには <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> の標準偏差で割る。これを<strong>相関係数</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> で表す。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>r</mi><mo>=</mo><mfrac><msub><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mrow><msub><mi>s</mi><mi>x</mi></msub><mtext> </mtext><msub><mi>s</mi><mi>y</mi></msub></mrow></mfrac><mo>=</mo><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false">(</mo><msub><mi>x</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo><mo stretchy="false">(</mo><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo></mrow><mrow><msqrt><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false">(</mo><msub><mi>x</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow></msqrt><mtext> </mtext><msqrt><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false">(</mo><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow></msqrt></mrow></mfrac></mrow><annotation encoding="application/x-tex">r=\frac{s_{xy}}{s_x\,s_y}=\frac{\sum_{k=1}^{n}(x_k-\bar{x})(y_k-\bar{y})}{\sqrt{\sum_{k=1}^{n}(x_k-\bar{x})^2}\,\sqrt{\sum_{k=1}^{n}(y_k-\bar{y})^2}}</annotation></semantics></math></span></div>
+<p>右側の形は分子と分母の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mi>n</mi></mfrac></mrow><annotation encoding="application/x-tex">\frac1n</annotation></semantics></math></span> を約分したものである。手計算ではこの形の方が速い。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> の単位を変えると分子と分母が同じ倍率で変わり打ち消し合う。相関係数は単位をもたない数である。</p>
+<h3>相関係数が−1以上1以下である理由</h3>
+<p>相関係数には次の性質がある。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo>−</mo><mn>1</mn><mo>≤</mo><mi>r</mi><mo>≤</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">-1\le r\le 1</annotation></semantics></math></span></div>
+<p>数学Ⅰの2次関数で証明できる。任意の実数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span> について次の値を考える。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo fence="true">{</mo><mi>t</mi><mo stretchy="false">(</mo><msub><mi>x</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo><mo>+</mo><mo stretchy="false">(</mo><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo><mo fence="true">}</mo></mrow><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">f(t)=\frac{1}{n}\sum_{k=1}^{n}\left\{t(x_k-\bar{x})+(y_k-\bar{y})\right\}^2</annotation></semantics></math></span></div>
+<p>2乗の平均なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">f(t)\ge0</annotation></semantics></math></span> がすべての <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span> で成り立つ。展開すると次の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span> の2次式になる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><msubsup><mi>s</mi><mi>x</mi><mrow><mtext> </mtext><mn>2</mn></mrow></msubsup><mtext> </mtext><msup><mi>t</mi><mn>2</mn></msup><mo>+</mo><mn>2</mn><msub><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mtext> </mtext><mi>t</mi><mo>+</mo><msubsup><mi>s</mi><mi>y</mi><mrow><mtext> </mtext><mn>2</mn></mrow></msubsup></mrow><annotation encoding="application/x-tex">f(t)=s_x^{\,2}\,t^2+2s_{xy}\,t+s_y^{\,2}</annotation></semantics></math></span></div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>s</mi><mi>x</mi><mrow><mtext> </mtext><mn>2</mn></mrow></msubsup><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">s_x^{\,2}&gt;0</annotation></semantics></math></span> のとき2次式がつねに0以上であるための条件は判別式が0以下であることである。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mi>D</mi><mn>4</mn></mfrac><mo>=</mo><msubsup><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow><mrow><mtext> </mtext><mn>2</mn></mrow></msubsup><mo>−</mo><msubsup><mi>s</mi><mi>x</mi><mrow><mtext> </mtext><mn>2</mn></mrow></msubsup><msubsup><mi>s</mi><mi>y</mi><mrow><mtext> </mtext><mn>2</mn></mrow></msubsup><mo>≤</mo><mn>0</mn><mspace width="2em"/><mtext>よって</mtext><mspace width="2em"/><mi mathvariant="normal">∣</mi><msub><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mi mathvariant="normal">∣</mi><mo>≤</mo><msub><mi>s</mi><mi>x</mi></msub><msub><mi>s</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">\frac{D}{4}=s_{xy}^{\,2}-s_x^{\,2}s_y^{\,2}\le0\qquad\text{よって}\qquad |s_{xy}|\le s_x s_y</annotation></semantics></math></span></div>
+<p>両辺を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mi>x</mi></msub><msub><mi>s</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">s_xs_y</annotation></semantics></math></span> で割ると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>r</mi><mi mathvariant="normal">∣</mi><mo>≤</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">|r|\le1</annotation></semantics></math></span> が得られる。等号が成り立つのは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">f(t)=0</annotation></semantics></math></span> となる <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span> があるとき つまりすべての点で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo stretchy="false">(</mo><msub><mi>x</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo><mo>+</mo><mo stretchy="false">(</mo><msub><mi>y</mi><mi>k</mi></msub><mo>−</mo><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover><mo stretchy="false">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">t(x_k-\bar{x})+(y_k-\bar{y})=0</annotation></semantics></math></span> となるときである。これは<strong class="hit">すべての点が1本の直線の上にある</strong>ことを意味する。直線が右上がりなら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r=1</annotation></semantics></math></span> で右下がりなら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r=-1</annotation></semantics></math></span> である。</p>
+<div class="ex"><div class="ex-h">例題 3</div>
+<p>例題2の5組のデータの相関係数を小数第2位まで求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> の偏差の2乗は 16 4 0 4 16 で合計40である。分散は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>s</mi><mi>x</mi><mrow><mtext> </mtext><mn>2</mn></mrow></msubsup><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">s_x^{\,2}=8</annotation></semantics></math></span> である。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> の偏差の2乗は 9 0 1 9 1 で合計20である。分散は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>s</mi><mi>y</mi><mrow><mtext> </mtext><mn>2</mn></mrow></msubsup><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">s_y^{\,2}=4</annotation></semantics></math></span> である。<br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>4.4</mn><mrow><msqrt><mn>8</mn></msqrt><mo>×</mo><msqrt><mn>4</mn></msqrt></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>4.4</mn><mrow><mn>4</mn><msqrt><mn>2</mn></msqrt></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1.1</mn><msqrt><mn>2</mn></msqrt></mfrac></mstyle><mo>=</mo><mn>0.777</mn><mo>⋯</mo></mrow><annotation encoding="application/x-tex">r=\dfrac{4.4}{\sqrt8\times\sqrt4}=\dfrac{4.4}{4\sqrt2}=\dfrac{1.1}{\sqrt2}=0.777\cdots</annotation></semantics></math></span><br>答え 約0.78。強い正の相関がある</div></details></div>
+<h3>相関係数の典型的な誤り</h3>
+<ul>
+<li>相関係数0.8を「80％の点が直線上にある」や「関係の80％を説明する」と解釈する誤り。相関係数は割合ではない</li>
+<li>相関係数を直線の傾きと混同する誤り。傾きが小さくても点が直線の近くに並べば相関係数は1に近い</li>
+<li>相関係数が0なら2つの変量は無関係とする誤り。放物線のような曲線の関係は相関係数に現れない</li>
+<li>1個の外れ値を見落とす誤り。外れ値1個で相関係数は大きく変わることがある。散布図を必ず確認する</li>
+</ul>
+<aside class="an an-biz"><b>投資で言えば</b>
+<p class="an-h">分散投資は相関係数の小さい資産の組み合わせである</p>
+<p>相関係数が1未満の2資産を組み合わせると値動きの一部が打ち消し合い組み合わせた資産の標準偏差は個別の標準偏差の加重平均より小さくなる。</p>
+</aside>
+
+<h2 id="s4">相関と因果</h2>
+<p>2つの変量に強い相関があっても一方が他方の原因であるとは限らない。相関から因果を主張できない理由は主に3つある。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>理由</th><th>内容</th><th>例</th></tr></thead>
+<tbody>
+<tr><td>第3の変量</td><td>両方に影響する別の変量があり2つが同時に動く</td><td>アイスクリームの売上と水難事故の件数はともに気温が高い日に増える</td></tr>
+<tr><td>因果の向きが逆</td><td>y が原因で x が結果である</td><td>年俸の高い選手ほど成績がよいのは過去の成績が年俸を決めるからである</td></tr>
+<tr><td>偶然</td><td>多数の変量の組を調べると偶然に高い相関の組が見つかる</td><td>無関係な2つの年次統計が数年間だけ同じ方向に動く</td></tr>
+</tbody></table></div>
+<p>第3の変量によって生じる見せかけの相関を<strong>擬似相関</strong>と呼ぶ。因果を確かめるには第3の変量をそろえた比較や原因と考える変量を意図的に変える実験が必要である。フィッシャーが確立した実験計画法はこの考え方に立つ。<strong class="hit">相関係数は関係の有無を調べる出発点であり結論ではない</strong>。</p>
+<div class="ex"><div class="ex-h">例題 4</div>
+<p>小学生の調査で靴のサイズが大きい児童ほど漢字テストの得点が高い傾向があった。靴のサイズが大きくなると漢字の力が伸びると結論してよいか。</p>
+<details open><summary>解き方</summary><div>手順1 2つの変量の両方に影響する変量を考える。<br>手順2 学年が上がるほど足は大きくなり習った漢字も増える。学年が第3の変量である。<br>手順3 同じ学年の中で比べて相関が残るかを調べなければ因果は判断できない。<br>答え 結論してはならない。学年による擬似相関である</div></details></div>
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">年俸の高い選手ほど打つのは年俸が打たせるからではない</p>
+<p>前年までに打った選手が高い年俸を得る。原因と結果の向きが逆である。</p>
+</aside>
+
+<h2 id="s5">変量の変換と相関係数</h2>
+<p>第2章で変量 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mi>a</mi><mi>x</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">u=ax+b</annotation></semantics></math></span> と変換すると偏差が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span> 倍になることを示した。同様に <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mi>c</mi><mi>y</mi><mo>+</mo><mi>d</mi></mrow><annotation encoding="application/x-tex">v=cy+d</annotation></semantics></math></span> とすると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> の偏差は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi></mrow><annotation encoding="application/x-tex">c</annotation></semantics></math></span> 倍になる。共分散は偏差の積の平均なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">ac</annotation></semantics></math></span> 倍になる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>s</mi><mrow><mi>u</mi><mi>v</mi></mrow></msub><mo>=</mo><mi>a</mi><mi>c</mi><mtext> </mtext><msub><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mspace width="2em"/><msub><mi>s</mi><mi>u</mi></msub><mo>=</mo><mi mathvariant="normal">∣</mi><mi>a</mi><mi mathvariant="normal">∣</mi><mtext> </mtext><msub><mi>s</mi><mi>x</mi></msub><mspace width="2em"/><msub><mi>s</mi><mi>v</mi></msub><mo>=</mo><mi mathvariant="normal">∣</mi><mi>c</mi><mi mathvariant="normal">∣</mi><mtext> </mtext><msub><mi>s</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">s_{uv}=ac\,s_{xy}\qquad s_u=|a|\,s_x\qquad s_v=|c|\,s_y</annotation></semantics></math></span></div>
+<p>相関係数に代入すると次の結果を得る。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>r</mi><mrow><mi>u</mi><mi>v</mi></mrow></msub><mo>=</mo><mfrac><mrow><mi>a</mi><mi>c</mi><mtext> </mtext><msub><mi>s</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub></mrow><mrow><mi mathvariant="normal">∣</mi><mi>a</mi><mi mathvariant="normal">∣</mi><mtext> </mtext><msub><mi>s</mi><mi>x</mi></msub><mtext> </mtext><mi mathvariant="normal">∣</mi><mi>c</mi><mi mathvariant="normal">∣</mi><mtext> </mtext><msub><mi>s</mi><mi>y</mi></msub></mrow></mfrac><mo>=</mo><mfrac><mrow><mi>a</mi><mi>c</mi></mrow><mrow><mi mathvariant="normal">∣</mi><mi>a</mi><mi>c</mi><mi mathvariant="normal">∣</mi></mrow></mfrac><mtext> </mtext><msub><mi>r</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub></mrow><annotation encoding="application/x-tex">r_{uv}=\frac{ac\,s_{xy}}{|a|\,s_x\,|c|\,s_y}=\frac{ac}{|ac|}\,r_{xy}</annotation></semantics></math></span></div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>a</mi><mi>c</mi></mrow><mrow><mi mathvariant="normal">∣</mi><mi>a</mi><mi>c</mi><mi mathvariant="normal">∣</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{ac}{|ac|}</annotation></semantics></math></span> は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>c</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">ac&gt;0</annotation></semantics></math></span> なら1で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>c</mi><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">ac&lt;0</annotation></semantics></math></span> なら−1である。<strong class="hit">変換で相関係数の絶対値は変わらず a と c の符号が異なるときだけ符号が反転する</strong>。単位を変えても相関係数が変わらないのはこの性質による。共分散は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">ac</annotation></semantics></math></span> 倍に変わる点と区別する。</p>
+<div class="ex"><div class="ex-h">例題 5</div>
+<p>変量 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> の共分散は 12 で相関係数は 0.6 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mo>−</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">u=-2x+3</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>5</mn><mi>y</mi></mrow><annotation encoding="application/x-tex">v=5y</annotation></semantics></math></span> の共分散と相関係数を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">a=-2</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">c=5</annotation></semantics></math></span> なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>c</mi><mo>=</mo><mo>−</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">ac=-10</annotation></semantics></math></span> である。<br>手順2 共分散は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>10</mn><mo>×</mo><mn>12</mn><mo>=</mo><mo>−</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">-10\times12=-120</annotation></semantics></math></span> である。<br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>c</mi><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">ac&lt;0</annotation></semantics></math></span> なので相関係数は符号だけが反転し <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>0.6</mn></mrow><annotation encoding="application/x-tex">-0.6</annotation></semantics></math></span> である。<br>答え 共分散 −120 ／ 相関係数 −0.6</div></details></div>
+
+<h2 id="s6">仮説検定の考え方</h2>
+<p>平成30年告示の学習指導要領で数学Ⅰに仮説検定の考え方が加わった。数学Ⅰでは確率の計算を使わずに実験やシミュレーションの結果で判断する。第11章では同じ考え方を二項分布と正規分布で計算する。</p>
+<h3>問題の設定</h3>
+<p>ある会社が新しい飲料Aと従来の飲料Bを20人に飲み比べてもらったところ15人がAの方がおいしいと答えた。この結果から<strong>Aの方が好まれる</strong>と判断してよいか。</p>
+<p>好みに差がなくても偶然で20人中15人がAを選ぶことはありうる。そこで判断の手順を次のように組み立てる。</p>
+<ol>
+<li>示したい<strong>主張</strong>を立てる。「Aの方が好まれる」</li>
+<li>主張に反する<strong>仮定</strong>を立てる。「AとBの好みに差はなく各人が確率2分の1でAを選ぶ」</li>
+<li>仮定のもとで観測された結果以上に偏った結果がどのくらいの割合で起こるかを調べる</li>
+<li>その割合が基準より小さければ仮定は正しくなかったと考え主張は正しいと判断する。基準以上なら主張が正しいとは判断できない</li>
+</ol>
+<p>基準となる割合には5％や1％がよく使われる。この本では断りがない限り5％とする。</p>
+<h3>コイン投げのシミュレーション</h3>
+<p>仮定「各人が確率2分の1でAを選ぶ」は公正なコインを20回投げて表の枚数を数える実験と同じである。表をAとみなす。コンピュータで20回投げる実験を1000セット行った結果を次の図に示す。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 290" role="img" aria-label="公正な硬貨を20回投げる実験を1000セット行った結果">
+<line x1="70" y1="240" x2="670" y2="240" stroke="var(--ink)"/>
+<line x1="70" y1="240" x2="70" y2="50" stroke="var(--ink)"/>
+<line x1="66" y1="240.0" x2="670" y2="240.0" stroke="var(--line)" stroke-width="0"/>
+<text x="62" y="244.0" font-size="12" text-anchor="end" fill="var(--sub)">0</text>
+<line x1="66" y1="192.5" x2="670" y2="192.5" stroke="var(--line)" stroke-width="0.8"/>
+<text x="62" y="196.5" font-size="12" text-anchor="end" fill="var(--sub)">50</text>
+<line x1="66" y1="145.0" x2="670" y2="145.0" stroke="var(--line)" stroke-width="0.8"/>
+<text x="62" y="149.0" font-size="12" text-anchor="end" fill="var(--sub)">100</text>
+<line x1="66" y1="97.5" x2="670" y2="97.5" stroke="var(--line)" stroke-width="0.8"/>
+<text x="62" y="101.5" font-size="12" text-anchor="end" fill="var(--sub)">150</text>
+<line x1="66" y1="50.0" x2="670" y2="50.0" stroke="var(--line)" stroke-width="0.8"/>
+<text x="62" y="54.0" font-size="12" text-anchor="end" fill="var(--sub)">200</text>
+<text x="40" y="36" font-size="12" text-anchor="start" fill="var(--sub)">セット数</text>
+<text x="670" y="276" font-size="12" text-anchor="end" fill="var(--sub)">表の枚数</text>
+<text x="84.3" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">0</text>
+<text x="141.4" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">2</text>
+<rect x="156.7" y="239.1" width="26.6" height="0.9" fill="var(--cool)" fill-opacity=".7"/>
+<rect x="185.3" y="238.1" width="26.6" height="1.9" fill="var(--cool)" fill-opacity=".7"/>
+<text x="198.6" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">4</text>
+<rect x="213.9" y="228.6" width="26.6" height="11.4" fill="var(--cool)" fill-opacity=".7"/>
+<rect x="242.4" y="205.8" width="26.6" height="34.2" fill="var(--cool)" fill-opacity=".7"/>
+<text x="255.7" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">6</text>
+<rect x="271.0" y="178.2" width="26.6" height="61.8" fill="var(--cool)" fill-opacity=".7"/>
+<rect x="299.6" y="125.0" width="26.6" height="115.0" fill="var(--cool)" fill-opacity=".7"/>
+<text x="312.9" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">8</text>
+<rect x="328.1" y="93.7" width="26.6" height="146.3" fill="var(--cool)" fill-opacity=".7"/>
+<rect x="356.7" y="67.1" width="26.6" height="172.9" fill="var(--cool)" fill-opacity=".7"/>
+<text x="370.0" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">10</text>
+<rect x="385.3" y="107.9" width="26.6" height="132.1" fill="var(--cool)" fill-opacity=".7"/>
+<rect x="413.9" y="120.3" width="26.6" height="119.7" fill="var(--cool)" fill-opacity=".7"/>
+<text x="427.1" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">12</text>
+<rect x="442.4" y="155.4" width="26.6" height="84.5" fill="var(--cool)" fill-opacity=".7"/>
+<text x="455.7" y="150.4" font-size="12" text-anchor="middle" fill="var(--ink)">89</text>
+<rect x="471.0" y="193.4" width="26.6" height="46.5" fill="var(--cool)" fill-opacity=".7"/>
+<text x="484.3" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">14</text>
+<text x="484.3" y="188.4" font-size="12" text-anchor="middle" fill="var(--ink)">49</text>
+<rect x="499.6" y="224.8" width="26.6" height="15.2" fill="var(--warm)" fill-opacity=".7"/>
+<text x="512.9" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">15</text>
+<text x="512.9" y="219.8" font-size="12" text-anchor="middle" fill="var(--ink)">16</text>
+<rect x="528.1" y="233.3" width="26.6" height="6.7" fill="var(--warm)" fill-opacity=".7"/>
+<text x="541.4" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">16</text>
+<text x="541.4" y="228.3" font-size="12" text-anchor="middle" fill="var(--ink)">7</text>
+<rect x="556.7" y="239.1" width="26.6" height="0.9" fill="var(--warm)" fill-opacity=".7"/>
+<text x="570.0" y="234.1" font-size="12" text-anchor="middle" fill="var(--ink)">1</text>
+<text x="598.6" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">18</text>
+<text x="655.7" y="258" font-size="12" text-anchor="middle" fill="var(--sub)">20</text>
+<text x="666" y="62" font-size="12.5" text-anchor="end" fill="var(--warm)">15枚以上は 16+7+1=24 セット</text>
+<text x="666" y="80" font-size="12.5" text-anchor="end" fill="var(--warm)">相対度数 0.024</text>
+</svg>
+<figcaption>表が出る確率が2分の1のコインを20回投げる実験を1000セット行い表の枚数ごとのセット数を数えた。10枚を中心に左右対称に近い山になる。15枚以上は橙で示し合計24セットである。図の値はこの本のために行った1回のシミュレーションの結果であり実験をやり直すと数セット程度変わる。</figcaption>
+</figure>
+<div class="ex"><div class="ex-h">例題 6</div>
+<p>上のシミュレーション結果を用い基準を5％として20人中15人がAを選んだ結果からAの方が好まれると判断してよいか答えよ。</p>
+<details open><summary>解き方</summary><div>手順1 仮定のもとで15人以上がAを選ぶ割合を図から求める。15枚以上は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>16</mn><mo>+</mo><mn>7</mn><mo>+</mo><mn>1</mn><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">16+7+1=24</annotation></semantics></math></span> セットである。<br>手順2 割合は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>24</mn><mo>÷</mo><mn>1000</mn><mo>=</mo><mn>0.024</mn></mrow><annotation encoding="application/x-tex">24\div1000=0.024</annotation></semantics></math></span> で2.4％である。<br>手順3 2.4％は基準の5％より小さい。仮定のもとでは起こりにくいことが起きたと考え仮定は正しくなかったと判断する。<br>答え Aの方が好まれると判断してよい</div></details></div>
+<div class="ex"><div class="ex-h">例題 7</div>
+<p>同じ条件で20人中14人がAを選んだ場合はどうか。</p>
+<details open><summary>解き方</summary><div>手順1 14枚以上は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>49</mn><mo>+</mo><mn>16</mn><mo>+</mo><mn>7</mn><mo>+</mo><mn>1</mn><mo>=</mo><mn>73</mn></mrow><annotation encoding="application/x-tex">49+16+7+1=73</annotation></semantics></math></span> セットである。<br>手順2 割合は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>73</mn><mo>÷</mo><mn>1000</mn><mo>=</mo><mn>0.073</mn></mrow><annotation encoding="application/x-tex">73\div1000=0.073</annotation></semantics></math></span> で7.3％である。<br>手順3 7.3％は5％以上なので仮定のもとでも珍しくない結果である。<br>答え Aの方が好まれるとは判断できない</div></details></div>
+<p>例題7の結論は「好みに差はない」ではない。<strong class="hit">仮定を否定できなかったことは仮定が正しいと示したことにはならない</strong>。人数を増やして調べ直せば差が検出される可能性は残る。共通テストの選択肢ではこの区別が問われる。</p>
+<h3>仮説検定の典型的な誤り</h3>
+<ul>
+<li>観測された値ちょうどの割合だけで判断する誤り。調べるのは観測結果<strong>以上に偏った</strong>結果全体の割合である。15人のときは15・16・17・18・19・20人の合計を使う</li>
+<li>基準より大きいときに「主張は誤りである」と結論する誤り。正しくは「主張が正しいとは判断できない」である</li>
+<li>シミュレーションの結果を確定した確率とみなす誤り。1000セットの結果は真の確率の近似でありセット数を増やすほど真の値に近づく。15人以上の真の確率は第8章の二項分布で計算でき約0.021である</li>
+</ul>
+
+<h2 id="s7">現実世界の相関 ゴルトンからノーベル賞とチョコレートまで</h2>
+<p>相関の考え方はイギリスのフランシス・ゴルトンが1888年の論文で示した。ゴルトンは親子の身長や人体の各部の長さの関係を調べて2つの量の関係の強さを1つの係数で表した。現在の相関係数の形はその後カール・ピアソンが標準偏差を用いて整えた。そのため相関係数はピアソンの積率相関係数とも呼ばれる。</p>
+<aside class="an an-rw"><b>現実世界</b>
+<p class="an-h">国別のチョコレート消費量とノーベル賞受賞者数の相関係数は0.791である</p>
+<p>2012年に医学誌に載った報告である。国の豊かさのような第3の変量の影響が考えられ因果の根拠にはならない例として引用される。</p>
+</aside>
+<p>この報告は人口1000万人あたりのノーベル賞受賞者数と1人あたりのチョコレート消費量を23か国で比べた。著者自身も因果を確かめるにはさらに調べる必要があると書いている。報告ではスウェーデンを除くと相関係数が0.862に上がった。消費量から予測される受賞者数を大きく上回る1か国が全体の相関係数を下げていた。外れ値1個が相関係数を動かす実例である。相関係数が大きいことと因果があることを区別する練習の題材として統計の授業で繰り返し用いられてきた。</p>
+
+<h2 id="s8">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ 共分散</div>
+<p class="qz-q">5組のデータ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span> が (1,2) (2,4) (3,5) (4,4) (5,5) である。共分散を求めよ。</p>
+<details><summary>解答と解説</summary><div>正解は 1.2 である。平均値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\bar{x}=3</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover><mo>=</mo><mn>20</mn><mo>÷</mo><mn>5</mn><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">\bar{y}=20\div5=4</annotation></semantics></math></span> である。偏差は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> が −2 −1 0 1 2 で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> が −2 0 1 0 1 である。積は 4 0 0 0 2 で合計6である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>÷</mo><mn>5</mn><mo>=</mo><mn>1.2</mn></mrow><annotation encoding="application/x-tex">6\div5=1.2</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ 相関係数</div>
+<p class="qz-q">問1のデータの相関係数に最も近い値を1つ選べ。</p>
+<ol><li>0.39</li><li>0.60</li><li>0.77</li><li>0.95</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>s</mi><mi>x</mi><mrow><mtext> </mtext><mn>2</mn></mrow></msubsup><mo>=</mo><mo stretchy="false">(</mo><mn>4</mn><mo>+</mo><mn>1</mn><mo>+</mo><mn>0</mn><mo>+</mo><mn>1</mn><mo>+</mo><mn>4</mn><mo stretchy="false">)</mo><mo>÷</mo><mn>5</mn><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">s_x^{\,2}=(4+1+0+1+4)\div5=2</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>s</mi><mi>y</mi><mrow><mtext> </mtext><mn>2</mn></mrow></msubsup><mo>=</mo><mo stretchy="false">(</mo><mn>4</mn><mo>+</mo><mn>0</mn><mo>+</mo><mn>1</mn><mo>+</mo><mn>0</mn><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>÷</mo><mn>5</mn><mo>=</mo><mn>1.2</mn></mrow><annotation encoding="application/x-tex">s_y^{\,2}=(4+0+1+0+1)\div5=1.2</annotation></semantics></math></span> である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>1.2</mn><mo>÷</mo><msqrt><mrow><mn>2</mn><mo>×</mo><mn>1.2</mn></mrow></msqrt><mo>=</mo><mn>1.2</mn><mo>÷</mo><msqrt><mn>2.4</mn></msqrt><mo>=</mo><mn>0.774</mn><mo>⋯</mo></mrow><annotation encoding="application/x-tex">r=1.2\div\sqrt{2\times1.2}=1.2\div\sqrt{2.4}=0.774\cdots</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 定義からの計算</div>
+<p class="qz-q">変量 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> の標準偏差は4で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> の標準偏差は5で共分散は −12 である。相関係数を求めよ。</p>
+<details><summary>解答と解説</summary><div>正解は −0.6 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mo>−</mo><mn>12</mn><mo>÷</mo><mo stretchy="false">(</mo><mn>4</mn><mo>×</mo><mn>5</mn><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mn>0.6</mn></mrow><annotation encoding="application/x-tex">r=-12\div(4\times5)=-0.6</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ 変量の変換</div>
+<p class="qz-q"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span> の相関係数は 0.6 で共分散は 8 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mo>−</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">u=-2x+1</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>3</mn><mi>y</mi><mo>−</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">v=3y-5</annotation></semantics></math></span> の共分散と相関係数の組として正しいものを1つ選べ。</p>
+<ol><li>共分散 −48 相関係数 −0.6</li><li>共分散 −48 相関係数 −3.6</li><li>共分散 48 相関係数 0.6</li><li>共分散 −8 相関係数 −0.6</li></ol>
+<details><summary>解答と解説</summary><div>正解は 1 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>c</mi><mo>=</mo><mo stretchy="false">(</mo><mo>−</mo><mn>2</mn><mo stretchy="false">)</mo><mo>×</mo><mn>3</mn><mo>=</mo><mo>−</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">ac=(-2)\times3=-6</annotation></semantics></math></span> なので共分散は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>6</mn><mo>×</mo><mn>8</mn><mo>=</mo><mo>−</mo><mn>48</mn></mrow><annotation encoding="application/x-tex">-6\times8=-48</annotation></semantics></math></span> である。相関係数は絶対値が変わらず符号が反転して −0.6 である。2 は相関係数が−1から1の範囲を外れるのでありえない。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 相関係数の性質</div>
+<p class="qz-q">相関係数についての記述として正しいものを1つ選べ。</p>
+<ol><li>相関係数が0ならば2つの変量の間にはどのような関係もない</li><li>すべての点が右下がりの1本の直線上にあれば相関係数は−1である</li><li>相関係数が0.9ならば x が y の原因である</li><li>y の単位を cm から m に変えると相関係数は100分の1になる</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。1 は曲線的な関係を見落としている。3 は相関と因果の混同である。4 は単位を変えても相関係数は変わらないので誤りである。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 擬似相関</div>
+<p class="qz-q">市区町村ごとのデータで消防署の数と火災の件数に正の相関があった。この相関の説明として最も適当なものを1つ選べ。</p>
+<ol><li>消防署が火災を起こしている</li><li>人口や建物の数という第3の変量が両方を増やしている</li><li>相関係数が正なので消防署を減らせば火災は減る</li><li>相関は偶然でしか生じない</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。人口や建物の多い市区町村ほど消防署が多く置かれ火災の件数も多い。第3の変量による擬似相関である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問7 ・ 仮説検定</div>
+<p class="qz-q">本文のシミュレーション結果を使う。基準を5％とする。20人中14人がAを選んだときの判断として正しいものを1つ選べ。</p>
+<ol><li>14枚以上の割合は0.049で5％より小さいのでAの方が好まれると判断する</li><li>14枚以上の割合は0.073で5％以上なのでAの方が好まれるとは判断できない</li><li>14枚以上の割合は0.073で5％以上なので好みに差はないと判断する</li><li>14枚ちょうどの割合は0.049なのでAの方が好まれると判断する</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。14枚以上は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>49</mn><mo>+</mo><mn>16</mn><mo>+</mo><mn>7</mn><mo>+</mo><mn>1</mn><mo>=</mo><mn>73</mn></mrow><annotation encoding="application/x-tex">49+16+7+1=73</annotation></semantics></math></span> セットで割合は0.073である。1 と 4 は14枚ちょうどの49セットだけを数えた誤りである。3 は仮定を否定できないことを仮定が正しいことと取り違えた誤りである。</div></details></div>
+
+<div class="qz"><div class="qz-h">問8 ・ 基準の変更</div>
+<p class="qz-q">本文のシミュレーション結果を使い基準を1％とする。20人中15人がAを選んだ結果と20人中17人がAを選んだ結果についてAの方が好まれると判断できるものを答えよ。</p>
+<details><summary>解答と解説</summary><div>正解は 17人の場合だけである。15枚以上の割合は0.024で1％以上なので判断できない。17枚以上は1セットで割合は0.001であり1％より小さいので判断できる。同じ観測結果でも基準を厳しくすると判断が変わる。</div></details></div>
+
+<h2 id="s9">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+共分散は偏差の積の平均で s<sub>xy</sub>＝(積の平均)−(平均の積) でも求まる。<br>
+相関係数 r＝s<sub>xy</sub>÷(s<sub>x</sub>s<sub>y</sub>) は単位をもたず −1≦r≦1 である。<br>
+|r|＝1 はすべての点が1本の直線上にあるときに限る。r は直線的な関係の強さだけを表す。<br>
+u＝ax＋b と v＝cy＋d では共分散が ac 倍で相関係数は ac の符号に応じて符号だけが変わる。<br>
+相関は因果を意味しない。第3の変量・逆の因果・偶然を疑う。<br>
+仮説検定は主張に反する仮定のもとで観測以上に偏った結果の割合を調べ基準より小さければ主張を正しいと判断する。</div>
+
+<h2 id="s10">残っている問い</h2>
+<ul>
+<li class="tb-vnote">相関係数の強さを弱い・中程度・強いと言い分ける境界の値は教科書や分野によって異なり統一された基準はない。</li>
+<li class="tb-vnote">本文のシミュレーション結果は乱数を用いた1回の実行の値である。真の確率は二項分布から計算でき15人以上で約0.0207・14人以上で約0.0577である。</li>
+<li class="tb-vnote">数学Ⅰの仮説検定では基準の割合を5％とすることが多いが学習指導要領は基準の値を定めていない。有意水準の用語は数学Bで扱う。</li>
+<li class="tb-vnote">ピアソンが積率相関係数の形を示した年は1895年とする資料と1896年とする資料があり確定できなかった。</li>
+<li class="tb-vnote">チョコレートとノーベル賞の報告の相関係数0.791と23か国はNEJMのブログでスウェーデンを除いた0.862はCardiology Todayの紹介記事で確認した。原論文の全文は確認していない。</li>
+</ul>
+
+<h2 id="s11">出典</h2>
+<ol>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 — https://www.mext.go.jp/content/20230120-mxt_kyoiku02-100002604_03.pdf</li>
+<li>文部科学省 高等学校学習指導要領解説 — https://www.mext.go.jp/a_menu/shotou/new-cs/1407074.htm</li>
+<li>大学入試センター 令和7年度 問題評価・分析委員会報告書 本試験 — https://www.dnc.ac.jp/kyotsu/hyouka/r7_hyouka/r7_hyoukahoukokusyo_honshiken.html</li>
+<li>Galton as statistician — galton.org — https://www.galton.org/statistician.html</li>
+<li>Pearson correlation coefficient — Wikipedia — https://en.wikipedia.org/wiki/Pearson_correlation_coefficient</li>
+<li>Messerli F. H. Chocolate Consumption, Cognitive Function, and Nobel Laureates. N Engl J Med 2012 — https://www.nejm.org/doi/full/10.1056/NEJMon1211064</li>
+<li>Chocolate and Nobel Prizes Linked — NEJM CardioExchange — https://blogs.nejm.org/cardioexchange/2012/10/10/chocolate-and-nobel-prizes-linked/</li>
+<li>Messerli: Chocolate Consumption Linked to Nobel Laureates — Healio Cardiology Today — https://cm.healio.com/news/cardiology/20121012/ct1012messerli_10_3928_1081_597x_20121001_12</li>
+<li>Spurious relationship — Wikipedia — https://en.wikipedia.org/wiki/Spurious_relationship</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="02_dispersion.html">← 散らばりと箱ひげ図・分散と標準偏差</a><a class="tb-nav-a" href="04_counting.html">集合と場合の数・順列 →</a></div>
+</div>
+<script>
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){ if (!tick) { tick = true; requestAnimationFrame(draw); } }, {passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>

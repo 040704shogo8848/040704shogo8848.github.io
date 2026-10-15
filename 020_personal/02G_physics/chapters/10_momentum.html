@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>運動量と力積｜物理</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../021_profile/index.html">profile</a><a href="../../02A_plan/index.html">plan</a><a href="../../023_travel/index.html">travel</a><a href="../../027_cinema/index.html">cinema</a><a href="../../02B_reading/index.html">reading</a><a href="../../024_method/index.html">method</a><a href="../../026_handbook/index.html">handbook</a><a href="../../025_fitness/index.html">fitness</a><a href="../../028_english/index.html">english</a><a href="../../029_mental_math/index.html">mental math</a><a href="../../02C_chemistry/index.html">chemistry</a><a href="../../02D_probability/index.html">probability</a><a href="../../02E_calculus/index.html">calculus</a><a href="../../02F_linear_algebra/index.html">linear algebra</a><a href="../index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../024_method/index.html">method</a>
+    <a class="snav-a" href="../../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../028_english/index.html">english</a>
+    <a class="snav-a" href="../../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / personal /
+    <a href="../index.html">02G physics</a> / 第10章</div>
+
+  <div class="tb-ch">物理 — 第10章</div>
+  <h1>運動量と力積</h1>
+  <p class="tb-thesis">運動方程式を時間で積み上げると運動量の変化は力積に等しいという関係が得られる。物体どうしが及ぼし合う力は作用反作用で打ち消し合うので外力がなければ全体の運動量は保存する。衝突の後の速度は運動量保存則と反発係数の2式で決まる。</p>
+
+<p class="tb-ok"><strong>この章は2026-10-15に出典照合を通した。</strong> 検証した事実は23件である。出典と一致したものは21件である。食い違ったものは1件で本文を修正済みである。出典で確認できなかったものは1件である。これらは末尾の「残っている問い」に列挙した。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">運動量と力積の関係</a></li><li><a href="#s2">F−tグラフの面積と平均の力</a></li><li><a href="#s3">運動量保存則と使える条件</a></li><li><a href="#s4">衝突と反発係数</a></li><li><a href="#s5">弾性衝突と非弾性衝突でのエネルギー</a></li><li><a href="#s6">平面での衝突</a></li><li><a href="#s7">現実世界の運動量</a></li><li><a href="#s8">確認問題</a></li><li><a href="#s9">この章の要点</a></li><li><a href="#s10">残っている問い</a></li><li><a href="#s11">出典</a></li></ol></nav>
+
+<p>第3章では運動方程式 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>a</mi><mo>=</mo><mi>F</mi></mrow><annotation encoding="application/x-tex">ma=F</annotation></semantics></math></span> を使い「ある瞬間に働く力が加速度を決める」という見方で運動を扱った。第4章では力を距離について積み上げて仕事と運動エネルギーの関係を導いた。この章では力を<strong>時間</strong>について積み上げる。その結果として得られる量が運動量と力積である。衝突のように力が短時間に大きく変化して個々の瞬間の力を特定できない場面でも運動量を使えば前後の速度を計算できる。</p>
+<p>共通テストの「物理」でこの範囲から問われる論点は5つである。運動量と力積の関係・F−tグラフの面積・運動量保存則が使える条件・反発係数を使った衝突後の速度・衝突や分裂での運動エネルギーの増減である。平面での衝突は成分に分けて同じ手順で解く。この章はこの順に積み上げる。</p>
+
+<h2 id="s1">運動量と力積の関係</h2>
+<p>質量 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span> の物体が速度 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>v</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">\vec{v}</annotation></semantics></math></span> で運動しているとき次の量を<strong>運動量</strong>と呼ぶ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mi>p</mi><mo>⃗</mo></mover><mo>=</mo><mi>m</mi><mover accent="true"><mi>v</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">\vec{p}=m\vec{v}</annotation></semantics></math></span></div>
+<p>運動量は速度に質量を掛けたベクトルで向きは速度と同じである。単位は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">k</mi><mi mathvariant="normal">g</mi><mo>⋅</mo><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow><annotation encoding="application/x-tex">\mathrm{kg\cdot m/s}</annotation></semantics></math></span> である。同じ速さでも質量が大きいほど運動量は大きい。時速 40 km のトラックと自転車では止めるときの難しさが異なる。その差を表す量が運動量である。</p>
+<p>次に一定の力 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>F</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">\vec{F}</annotation></semantics></math></span> が時間 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math></span> の間だけ働く場面を考える。力と時間の積を<strong>力積</strong>と呼ぶ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mi>I</mi><mo>⃗</mo></mover><mo>=</mo><mover accent="true"><mi>F</mi><mo>⃗</mo></mover><mtext> </mtext><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\vec{I}=\vec{F}\,\Delta t</annotation></semantics></math></span></div>
+<p>力積の単位は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">N</mi><mo>⋅</mo><mi mathvariant="normal">s</mi></mrow><annotation encoding="application/x-tex">\mathrm{N\cdot s}</annotation></semantics></math></span> である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mtext> </mtext><mi mathvariant="normal">N</mi><mo>=</mo><mn>1</mn><mtext> </mtext><mrow><mi mathvariant="normal">k</mi><mi mathvariant="normal">g</mi><mo>⋅</mo><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><msup><mi mathvariant="normal">s</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">1\,\mathrm{N}=1\,\mathrm{kg\cdot m/s^2}</annotation></semantics></math></span> なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">N</mi><mo>⋅</mo><mi mathvariant="normal">s</mi></mrow><mo>=</mo><mrow><mi mathvariant="normal">k</mi><mi mathvariant="normal">g</mi><mo>⋅</mo><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">\mathrm{N\cdot s}=\mathrm{kg\cdot m/s}</annotation></semantics></math></span> となり運動量と同じ単位になる。</p>
+<h3>運動方程式からの導出</h3>
+<p>運動量と力積が同じ単位をもつのは偶然ではない。力が一定のとき加速度も一定である。時間 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math></span> の間に速度が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>v</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">\vec{v}</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mtext> </mtext><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">\vec{v}\,&#x27;</annotation></semantics></math></span> へ変化したとすると加速度は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>a</mi><mo>⃗</mo></mover><mo>=</mo><mo stretchy="false">(</mo><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mtext> </mtext><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>−</mo><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\vec{a}=(\vec{v}\,&#x27;-\vec{v})/\Delta t</annotation></semantics></math></span> である。これを運動方程式 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mover accent="true"><mi>a</mi><mo>⃗</mo></mover><mo>=</mo><mover accent="true"><mi>F</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">m\vec{a}=\vec{F}</annotation></semantics></math></span> に代入して両辺に <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math></span> を掛ける。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>m</mi><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mtext> </mtext><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>−</mo><mi>m</mi><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mo>=</mo><mover accent="true"><mi>F</mi><mo>⃗</mo></mover><mtext> </mtext><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">m\vec{v}\,&#x27;-m\vec{v}=\vec{F}\,\Delta t</annotation></semantics></math></span></div>
+<p><strong class="hit">運動量の変化は受けた力積に等しい</strong>。これが運動量と力積の関係である。運動方程式を時間で積み上げた式なので新しい法則ではない。力が時間とともに変化する場合も時間を細かく区切って各区間で同じ式を立て足し合わせれば同じ結論になる。</p>
+<p>この式はベクトルの式である。一直線上の運動では正の向きを1つ定めて速度と力に符号を付ける。正の向きの決め方は自由であるが1つの問題の中では変えない。</p>
+
+<div class="ex"><div class="ex-h">例題 1</div>
+<p>質量 0.15 kg のボールが速さ 40 m/s で水平に飛んできた。バットで打ち返すとボールは逆向きに速さ 50 m/s で飛んだ。ボールが受けた力積の大きさを求めよ。接触時間が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.0</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>3</mn></mrow></msup></mrow><annotation encoding="application/x-tex">1.0\times10^{-3}</annotation></semantics></math></span> s のときバットがボールに及ぼした平均の力の大きさも求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 打ち返した後の向きを正とする。打つ前の速度は −40 m/s で打った後は +50 m/s である。<br>手順2 力積＝運動量の変化＝ 0.15 × {50 − (−40)} ＝ 0.15 × 90 ＝ 13.5 N·s である。<br>手順3 平均の力＝力積 ÷ 時間＝ 13.5 ÷ (1.0×10<sup>−3</sup>) ＝ 1.35×10<sup>4</sup> N である。<br>答え 力積 13.5 N·s ／ 平均の力 1.35×10<sup>4</sup> N</div></details></div>
+
+<p>典型的な誤りは速さの差 50 − 40 ＝ 10 を使い 1.5 N·s と答えることである。向きが逆になる場合は速度の符号が変わるので変化量は速さの和になる。もう1つの誤りは力積の向きを考えないことである。ボールが受けた力積の向きは打ち返した後の向きと同じである。</p>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">捕球でグラブを引くのは力積の分割払いである</p>
+<p>止めるのに必要な力積は球速で決まる。グラブを引いて時間を延ばすと同じ総額を小さな力で支払える。</p>
+</aside>
+
+<h2 id="s2">F−tグラフの面積と平均の力</h2>
+<p>現実の衝突では力は一定ではない。ボールがバットに触れた瞬間から力は急に増え最大値に達してから0に戻る。この変化を横軸に時間・縦軸に力をとって描いたものが<strong>F−tグラフ</strong>である。</p>
+<p>時間を幅 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><msub><mi>t</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\Delta t_i</annotation></semantics></math></span> の細い区間に分けると各区間では力を一定とみなせる。各区間の力積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>i</mi></msub><mi mathvariant="normal">Δ</mi><msub><mi>t</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">F_i\Delta t_i</annotation></semantics></math></span> は細い長方形の面積に等しい。それらを合計すると<strong class="hit">F−tグラフと時間軸で囲まれた面積が力積になる</strong>。v−tグラフの面積が変位を表したのと同じ構造である。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 280" role="img" aria-label="力が時間とともに山形に変化するF−tグラフと面積が等しい長方形">
+  <g stroke="var(--ink)" stroke-width="1.5"><line x1="80" y1="230" x2="650" y2="230"/><line x1="80" y1="230" x2="80" y2="24"/></g>
+  <g stroke="var(--line)" stroke-width="1"><line x1="80" y1="180" x2="640" y2="180"/><line x1="80" y1="130" x2="640" y2="130"/><line x1="80" y1="80" x2="640" y2="80"/><line x1="80" y1="30" x2="640" y2="30"/></g>
+  <g font-size="12" fill="var(--sub)" text-anchor="end"><text x="72" y="234">0</text><text x="72" y="184">500</text><text x="72" y="134">1000</text><text x="72" y="84">1500</text><text x="72" y="34">2000</text></g>
+  <g font-size="12" fill="var(--sub)" text-anchor="middle"><text x="80" y="248">0</text><text x="192" y="248">2</text><text x="304" y="248">4</text><text x="416" y="248">6</text><text x="528" y="248">8</text><text x="640" y="248">10</text></g>
+  <text x="660" y="248" font-size="12" fill="var(--muted)">時間 ms</text>
+  <text x="86" y="18" font-size="12" fill="var(--muted)">力 N</text>
+  <polygon points="136.0,230.0 147.2,218.2 158.4,206.5 169.6,195.0 180.8,183.6 192.0,172.6 203.2,161.9 214.4,151.6 225.6,141.8 236.8,132.6 248.0,123.9 259.2,115.9 270.4,108.6 281.6,102.1 292.8,96.3 304.0,91.4 315.2,87.3 326.4,84.1 337.6,81.8 348.8,80.5 360.0,80.0 371.2,80.5 382.4,81.8 393.6,84.1 404.8,87.3 416.0,91.4 427.2,96.3 438.4,102.1 449.6,108.6 460.8,115.9 472.0,123.9 483.2,132.6 494.4,141.8 505.6,151.6 516.8,161.9 528.0,172.6 539.2,183.6 550.4,195.0 561.6,206.5 572.8,218.2 584.0,230.0" fill="var(--warm)" fill-opacity="0.25" stroke="var(--warm)" stroke-width="2.2"/>
+  <rect x="136" y="134.5" width="448" height="95.5" fill="none" stroke="var(--cool)" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="360" y="72" font-size="12.5" text-anchor="middle" fill="var(--warm)">最大 1500 N</text>
+  <text x="596" y="138" font-size="12.5" fill="var(--cool)">平均 955 N</text>
+  <text x="360" y="200" font-size="13" text-anchor="middle" font-weight="600" fill="var(--ink)">面積＝力積 約 7.6 N·s</text>
+</svg>
+<figcaption>接触時間8 msの間に力が最大1500 Nまで増えて0に戻る例である。曲線の下の面積が力積で約7.6 N·sである。同じ8 msで面積が等しい長方形の高さが平均の力で約955 Nになる。</figcaption>
+</figure>
+
+<p>同じ力積を同じ時間で与える一定の力を<strong>平均の力</strong>と呼ぶ。平均の力は力積を接触時間で割って求める。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mi>F</mi><mo>ˉ</mo></mover><mo>=</mo><mfrac><mi>I</mi><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\bar{F}=\frac{I}{\Delta t}</annotation></semantics></math></span></div>
+<p>運動量の変化が同じであれば接触時間を長くするほど平均の力は小さくなる。自動車のエアバッグ・体操競技のマット・卵を受け止めるときに手を引く動作はどれもこの関係を使う。止めるために必要な力積は変えられないので時間を延ばして力を小さくする。</p>
+
+<div class="ex"><div class="ex-h">例題 2</div>
+<p>なめらかな水平面上で静止している質量 2.0 kg の物体に水平方向の力を加えた。力の大きさは 0 s から 0.20 s までに 0 N から 30 N まで一様に増え 0.20 s から 0.40 s までに 0 N まで一様に減った。0.40 s 後の物体の速さを求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 F−tグラフは底辺 0.40 s・高さ 30 N の三角形である。<br>手順2 力積＝面積＝ ½ × 0.40 × 30 ＝ 6.0 N·s である。<br>手順3 初めは静止しているので 2.0 × v ＝ 6.0 から v ＝ 3.0 m/s である。<br>答え 3.0 m/s</div></details></div>
+
+<p>典型的な誤りは最大の力 30 N に全時間 0.40 s を掛けて 12 N·s とすることである。力が変化する場合は必ず面積で求める。</p>
+
+<h2 id="s3">運動量保存則と使える条件</h2>
+<p>2つの物体AとBが衝突する場面を考える。衝突している短い時間 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math></span> の間にBはAに力 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>F</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">\vec{F}</annotation></semantics></math></span> を及ぼす。作用反作用の法則によりAはBに力 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mover accent="true"><mi>F</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">-\vec{F}</annotation></semantics></math></span> を及ぼす。2つの力は同じ時間だけ働くので各物体が受ける力積は次のとおりである。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>m</mi><mi>A</mi></msub><msub><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi>A</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>−</mo><msub><mi>m</mi><mi>A</mi></msub><msub><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi>A</mi></msub><mo>=</mo><mover accent="true"><mi>F</mi><mo>⃗</mo></mover><mtext> </mtext><mi mathvariant="normal">Δ</mi><mi>t</mi><mspace width="2em"/><msub><mi>m</mi><mi>B</mi></msub><msub><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi>B</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>−</mo><msub><mi>m</mi><mi>B</mi></msub><msub><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi>B</mi></msub><mo>=</mo><mo>−</mo><mover accent="true"><mi>F</mi><mo>⃗</mo></mover><mtext> </mtext><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">m_A\vec{v}_A{}&#x27;-m_A\vec{v}_A=\vec{F}\,\Delta t \qquad m_B\vec{v}_B{}&#x27;-m_B\vec{v}_B=-\vec{F}\,\Delta t</annotation></semantics></math></span></div>
+<p>2式を足すと右辺が打ち消し合う。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>m</mi><mi>A</mi></msub><msub><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi>A</mi></msub><mo>+</mo><msub><mi>m</mi><mi>B</mi></msub><msub><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi>B</mi></msub><mo>=</mo><msub><mi>m</mi><mi>A</mi></msub><msub><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi>A</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>+</mo><msub><mi>m</mi><mi>B</mi></msub><msub><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi>B</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">m_A\vec{v}_A+m_B\vec{v}_B=m_A\vec{v}_A{}&#x27;+m_B\vec{v}_B{}&#x27;</annotation></semantics></math></span></div>
+<p><strong class="hit">物体どうしが及ぼし合う力だけが働く場合は運動量の和が変化しない</strong>。これを<strong>運動量保存則</strong>と呼ぶ。着目する物体の集まりを物体系と呼び系の内部で及ぼし合う力を内力・系の外から働く力を外力と呼ぶ。内力は必ず作用反作用の組で現れ力積の和は0になる。運動量の和を変えるのは外力の力積だけである。</p>
+<h3>使える条件は3つの場合に整理できる</h3>
+<div class="tb-tw"><table>
+<thead><tr><th>場合</th><th>理由</th><th>例</th></tr></thead>
+<tbody>
+<tr><td>外力が働かない</td><td>外力の力積が0である</td><td>宇宙空間での物体の分裂</td></tr>
+<tr><td>外力の和が0である</td><td>重力と垂直抗力がつり合っている</td><td>なめらかな水平面上の台車の衝突</td></tr>
+<tr><td>外力の力積が内力の力積に比べて小さい</td><td>衝突時間が短く重力の力積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>g</mi><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">mg\Delta t</annotation></semantics></math></span> が無視できる</td><td>空中での瞬間的な衝突・爆発</td></tr>
+</tbody></table></div>
+<p>さらに<strong>ある方向だけ</strong>外力が働かない場合はその方向の成分だけ運動量が保存する。たとえばなめらかな床の上で斜めに飛び込む人が台車に乗る場面では鉛直方向に床からの力が働くが水平方向には外力がない。この場合は水平成分だけで保存則を立てる。</p>
+<p>運動量保存則は力学的エネルギーの保存とは別の法則である。衝突で熱や音が発生しても運動量の和は保存する。逆に摩擦のある床の上を物体がすべる場面では摩擦力が外力になり運動量は保存しない。</p>
+
+<div class="ex"><div class="ex-h">例題 3</div>
+<p>質量 50 kg の人が静かな水面に浮かぶ質量 150 kg の静止したボートの上に立っている。人がボートに対してではなく水面に対して東向きに 3.0 m/s の速度で飛び出した。飛び出した直後のボートの速度を求めよ。水の抵抗は無視する。</p>
+<details open><summary>解き方</summary><div>手順1 水平方向には外力が働かないので水平方向の運動量が保存する。東向きを正とする。<br>手順2 初めは全体が静止しているので運動量の和は0である。<br>手順3 0 ＝ 50 × 3.0 ＋ 150 × V から V ＝ −1.0 m/s である。<br>答え 西向きに 1.0 m/s</div></details></div>
+
+<p>典型的な誤りは2つある。1つは負の符号を見落として向きを答えないことである。もう1つは速度の基準を混同することである。保存則に代入する速度は必ず地面や水面に対する速度である。問題が「ボートに対して」と書いていれば相対速度を地面基準に直してから代入する。</p>
+
+<aside class="an an-biz"><b>会計で言えば</b>
+<p class="an-h">運動量保存則は連結決算の内部取引消去である</p>
+<p>グループ会社間の売上と仕入は連結で相殺される。内力の力積も同じで系全体の運動量を変えるのは外部との取引にあたる外力だけである。</p>
+</aside>
+
+<h3>重心の速度</h3>
+<p>系の運動量の和を全質量で割った量は重心の速度になる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi>G</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>m</mi><mi>A</mi></msub><msub><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi>A</mi></msub><mo>+</mo><msub><mi>m</mi><mi>B</mi></msub><msub><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi>B</mi></msub></mrow><mrow><msub><mi>m</mi><mi>A</mi></msub><mo>+</mo><msub><mi>m</mi><mi>B</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\vec{v}_G=\frac{m_A\vec{v}_A+m_B\vec{v}_B}{m_A+m_B}</annotation></semantics></math></span></div>
+<p>運動量が保存する場合は重心の速度が一定である。例題3では重心は静止したままである。人とボートは重心をはさんで逆向きに動く。</p>
+
+<h2 id="s4">衝突と反発係数</h2>
+<p>運動量保存則だけでは衝突後の2つの速度を決められない。未知数が2つで式が1つだからである。もう1つの式を与えるのが<strong>反発係数</strong>である。はね返り係数とも呼ぶ。</p>
+<p>一直線上で2物体が衝突するとき衝突前の速度を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>A</mi></msub><mo separator="true">,</mo><mtext> </mtext><msub><mi>v</mi><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">v_A,\ v_B</annotation></semantics></math></span> とし衝突後の速度を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>A</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo separator="true">,</mo><mtext> </mtext><msub><mi>v</mi><mi>B</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">v_A{}&#x27;,\ v_B{}&#x27;</annotation></semantics></math></span> とする。反発係数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi></mrow><annotation encoding="application/x-tex">e</annotation></semantics></math></span> を次の式で定める。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>e</mi><mo>=</mo><mo>−</mo><mfrac><mrow><msub><mi>v</mi><mi>A</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>−</mo><msub><mi>v</mi><mi>B</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><mrow><msub><mi>v</mi><mi>A</mi></msub><mo>−</mo><msub><mi>v</mi><mi>B</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">e=-\frac{v_A{}&#x27;-v_B{}&#x27;}{v_A-v_B}</annotation></semantics></math></span></div>
+<p>分母の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>A</mi></msub><mo>−</mo><msub><mi>v</mi><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">v_A-v_B</annotation></semantics></math></span> は衝突前にAがBに近づく速さである。分子の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mo stretchy="false">(</mo><msub><mi>v</mi><mi>A</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>−</mo><msub><mi>v</mi><mi>B</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">-(v_A{}&#x27;-v_B{}&#x27;)</annotation></semantics></math></span> は衝突後にBがAから遠ざかる速さである。<strong class="hit">反発係数は近づく速さに対する遠ざかる速さの比である</strong>。値は物体の材質と形で定まり <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>≦</mo><mi>e</mi><mo>≦</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">0\leqq e\leqq 1</annotation></semantics></math></span> の範囲にある。</p>
+<p>床や壁のように動かない物体に衝突する場合は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>B</mi></msub><mo>=</mo><msub><mi>v</mi><mi>B</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v_B=v_B{}&#x27;=0</annotation></semantics></math></span> なので次の式になる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>e</mi><mo>=</mo><mo>−</mo><mfrac><msup><mi>v</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mi>v</mi></mfrac><mo>=</mo><mfrac><mrow><mi mathvariant="normal">∣</mi><msup><mi>v</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mi mathvariant="normal">∣</mi></mrow><mrow><mi mathvariant="normal">∣</mi><mi>v</mi><mi mathvariant="normal">∣</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">e=-\frac{v&#x27;}{v}=\frac{|v&#x27;|}{|v|}</annotation></semantics></math></span></div>
+<p>高さ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi></mrow><annotation encoding="application/x-tex">h</annotation></semantics></math></span> から自由落下させたボールが床ではね返り高さ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>h</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">h&#x27;</annotation></semantics></math></span> まで上がった場合を考える。衝突直前の速さは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mrow><mn>2</mn><mi>g</mi><mi>h</mi></mrow></msqrt></mrow><annotation encoding="application/x-tex">\sqrt{2gh}</annotation></semantics></math></span> で直後の速さは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mrow><mn>2</mn><mi>g</mi><msup><mi>h</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">\sqrt{2gh&#x27;}</annotation></semantics></math></span> である。したがって <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><msqrt><mrow><msup><mi>h</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mi mathvariant="normal">/</mi><mi>h</mi></mrow></msqrt></mrow><annotation encoding="application/x-tex">e=\sqrt{h&#x27;/h}</annotation></semantics></math></span> となり <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>h</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><msup><mi>e</mi><mn>2</mn></msup><mi>h</mi></mrow><annotation encoding="application/x-tex">h&#x27;=e^2h</annotation></semantics></math></span> である。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 250" role="img" aria-label="一直線上の2球の衝突前後の速度">
+  <defs><marker id="ah10a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker></defs>
+  <text x="20" y="30" font-size="13" fill="var(--muted)">衝突前</text>
+  <text x="20" y="160" font-size="13" fill="var(--muted)">衝突後</text>
+  <g stroke="var(--line)" stroke-width="1.5"><line x1="40" y1="100" x2="690" y2="100"/><line x1="40" y1="230" x2="690" y2="230"/></g>
+  <circle cx="200" cy="76" r="24" fill="var(--warm)"/><text x="200" y="81" font-size="13" fill="#fff" text-anchor="middle" font-weight="600">A</text>
+  <circle cx="380" cy="82" r="18" fill="var(--cool)"/><text x="380" y="87" font-size="13" fill="#fff" text-anchor="middle" font-weight="600">B</text>
+  <line x1="228" y1="76" x2="348" y2="76" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#ah10a)"/>
+  <text x="288" y="62" font-size="12.5" text-anchor="middle" fill="var(--ink)">3.0 m/s</text>
+  <text x="200" y="40" font-size="12.5" text-anchor="middle" fill="var(--sub)">2.0 kg</text>
+  <text x="380" y="52" font-size="12.5" text-anchor="middle" fill="var(--sub)">1.0 kg 静止</text>
+  <circle cx="300" cy="206" r="24" fill="var(--warm)"/><text x="300" y="211" font-size="13" fill="#fff" text-anchor="middle" font-weight="600">A</text>
+  <circle cx="470" cy="212" r="18" fill="var(--cool)"/><text x="470" y="217" font-size="13" fill="#fff" text-anchor="middle" font-weight="600">B</text>
+  <line x1="328" y1="206" x2="388" y2="206" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#ah10a)"/>
+  <line x1="492" y1="212" x2="612" y2="212" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#ah10a)"/>
+  <text x="358" y="190" font-size="12.5" text-anchor="middle" fill="var(--ink)">1.5 m/s</text>
+  <text x="552" y="196" font-size="12.5" text-anchor="middle" fill="var(--ink)">3.0 m/s</text>
+  <text x="560" y="140" font-size="12.5" text-anchor="middle" fill="var(--sub)">e＝0.50 のとき</text>
+</svg>
+<figcaption>矢印の長さは速さに比例する。衝突前の運動量の和は 2.0×3.0＝6.0 kg·m/s で衝突後も 2.0×1.5＋1.0×3.0＝6.0 kg·m/s である。近づく速さ 3.0 m/s に対し遠ざかる速さは 1.5 m/s で比は0.50である。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 4</div>
+<p>なめらかな水平面上で速度 3.0 m/s で進む質量 2.0 kg の小球Aが静止している質量 1.0 kg の小球Bに正面衝突した。反発係数を 0.50 として衝突後のAとBの速度を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 Aの進む向きを正とする。運動量保存則より 2.0 × 3.0 ＝ 2.0 v<sub>A</sub>′ ＋ 1.0 v<sub>B</sub>′ である。<br>手順2 反発係数の式より v<sub>B</sub>′ − v<sub>A</sub>′ ＝ 0.50 × (3.0 − 0) ＝ 1.5 である。<br>手順3 2式から v<sub>B</sub>′ を消去すると 6.0 ＝ 3.0 v<sub>A</sub>′ ＋ 1.5 となり v<sub>A</sub>′ ＝ 1.5 m/s である。<br>手順4 v<sub>B</sub>′ ＝ 1.5 ＋ 1.5 ＝ 3.0 m/s である。<br>答え A は正の向きに 1.5 m/s ／ B は正の向きに 3.0 m/s</div></details></div>
+
+<p>典型的な誤りは反発係数の式の符号である。分母と分子の引き算の順序をそろえて先頭に負の符号を付ける。迷ったら「遠ざかる速さ＝ e ×近づく速さ」と言葉で立てると符号を誤らない。</p>
+
+<h2 id="s5">弾性衝突と非弾性衝突でのエネルギー</h2>
+<p>反発係数の値で衝突を3つに分類する。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>分類</th><th>反発係数</th><th>運動エネルギーの和</th></tr></thead>
+<tbody>
+<tr><td>弾性衝突 ／ 完全弾性衝突</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">e=1</annotation></semantics></math></span></td><td>保存する</td></tr>
+<tr><td>非弾性衝突</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>&lt;</mo><mi>e</mi><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">0\lt e\lt 1</annotation></semantics></math></span></td><td>減少する</td></tr>
+<tr><td>完全非弾性衝突</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">e=0</annotation></semantics></math></span></td><td>減少量が最大になる。2物体は一体となって動く</td></tr>
+</tbody></table></div>
+<p>例題4の運動エネルギーを確かめる。衝突前は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>×</mo><mn>2.0</mn><mo>×</mo><msup><mn>3.0</mn><mn>2</mn></msup><mo>=</mo><mn>9.0</mn></mrow><annotation encoding="application/x-tex">\frac{1}{2}\times2.0\times3.0^2=9.0</annotation></semantics></math></span> J である。衝突後は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>×</mo><mn>2.0</mn><mo>×</mo><msup><mn>1.5</mn><mn>2</mn></msup><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>×</mo><mn>1.0</mn><mo>×</mo><msup><mn>3.0</mn><mn>2</mn></msup><mo>=</mo><mn>2.25</mn><mo>+</mo><mn>4.5</mn><mo>=</mo><mn>6.75</mn></mrow><annotation encoding="application/x-tex">\frac{1}{2}\times2.0\times1.5^2+\frac{1}{2}\times1.0\times3.0^2=2.25+4.5=6.75</annotation></semantics></math></span> J である。2.25 J が減少した。減少分は物体の変形・熱・音のエネルギーになる。<strong class="hit">運動量は保存するが運動エネルギーは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">e=1</annotation></semantics></math></span> のときしか保存しない</strong>。2つの保存則を混同しないことがこの単元の要点である。</p>
+<p>運動エネルギーの減少量は一般に次の式で表せる。導出は2式から衝突後の速度を求めて代入すれば得られる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>K</mi><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>⋅</mo><mfrac><mrow><msub><mi>m</mi><mi>A</mi></msub><msub><mi>m</mi><mi>B</mi></msub></mrow><mrow><msub><mi>m</mi><mi>A</mi></msub><mo>+</mo><msub><mi>m</mi><mi>B</mi></msub></mrow></mfrac><mtext> </mtext><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mn>2</mn></msup><mo stretchy="false">)</mo><mtext> </mtext><mo stretchy="false">(</mo><msub><mi>v</mi><mi>A</mi></msub><mo>−</mo><msub><mi>v</mi><mi>B</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\Delta K=\frac{1}{2}\cdot\frac{m_Am_B}{m_A+m_B}\,(1-e^2)\,(v_A-v_B)^2</annotation></semantics></math></span></div>
+<p>例題4に当てはめると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>×</mo><mfrac><mn>2</mn><mn>3</mn></mfrac><mo>×</mo><mn>0.75</mn><mo>×</mo><mn>9.0</mn><mo>=</mo><mn>2.25</mn></mrow><annotation encoding="application/x-tex">\frac{1}{2}\times\frac{2}{3}\times0.75\times9.0=2.25</annotation></semantics></math></span> J で一致する。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">e=1</annotation></semantics></math></span> なら減少量は0である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">e=0</annotation></semantics></math></span> なら減少量が最大になる。</p>
+<h3>質量の等しい2物体の弾性衝突</h3>
+<p>質量の等しい2物体が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">e=1</annotation></semantics></math></span> で正面衝突すると速度が入れ替わる。静止した球に同じ質量の球が当たると当てた球は静止し当てられた球が同じ速度で進む。運動量保存則 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>A</mi></msub><mo>+</mo><msub><mi>v</mi><mi>B</mi></msub><mo>=</mo><msub><mi>v</mi><mi>A</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>+</mo><msub><mi>v</mi><mi>B</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">v_A+v_B=v_A{}&#x27;+v_B{}&#x27;</annotation></semantics></math></span> と反発係数の式 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>A</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>−</mo><msub><mi>v</mi><mi>B</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><mo>−</mo><mo stretchy="false">(</mo><msub><mi>v</mi><mi>A</mi></msub><mo>−</mo><msub><mi>v</mi><mi>B</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">v_A{}&#x27;-v_B{}&#x27;=-(v_A-v_B)</annotation></semantics></math></span> を連立すると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>A</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><msub><mi>v</mi><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">v_A{}&#x27;=v_B</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>B</mi></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><msub><mi>v</mi><mi>A</mi></msub></mrow><annotation encoding="application/x-tex">v_B{}&#x27;=v_A</annotation></semantics></math></span> が得られる。</p>
+
+<h3>分裂と合体</h3>
+<p>静止していた物体が内力で2つに分裂する場合は運動量の和が0のまま保存する。分裂後は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>m</mi><mn>1</mn></msub><msub><mi>v</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub><msub><mi>v</mi><mn>2</mn></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">m_1v_1+m_2v_2=0</annotation></semantics></math></span> なので2つの破片は逆向きに飛ぶ。速さの比は質量の逆比 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>1</mn></msub><mo>:</mo><msub><mi>v</mi><mn>2</mn></msub><mo>=</mo><msub><mi>m</mi><mn>2</mn></msub><mo>:</mo><msub><mi>m</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">v_1:v_2=m_2:m_1</annotation></semantics></math></span> である。運動エネルギー <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>=</mo><mfrac><msup><mi>p</mi><mn>2</mn></msup><mrow><mn>2</mn><mi>m</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">K=\frac{p^2}{2m}</annotation></semantics></math></span> で運動量の大きさが等しいので<strong>運動エネルギーの比も質量の逆比</strong>になる。分裂では火薬やばねの位置エネルギーが運動エネルギーに変わるので運動エネルギーの和は増える。</p>
+<p>2つの物体が衝突して一体になる合体は完全非弾性衝突である。一体となった後の速度は運動量保存則だけで決まる。</p>
+
+<div class="ex"><div class="ex-h">例題 5</div>
+<p>質量 0.010 kg の弾丸が速さ 400 m/s で水平に飛び なめらかな水平面上で静止している質量 1.99 kg の木片に打ち込まれて一体となった。一体となった後の速さと失われた運動エネルギーを求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 運動量保存則より 0.010 × 400 ＝ (0.010 ＋ 1.99) V で V ＝ 4.0 ÷ 2.00 ＝ 2.0 m/s である。<br>手順2 衝突前の運動エネルギーは ½ × 0.010 × 400<sup>2</sup> ＝ 800 J である。<br>手順3 衝突後は ½ × 2.00 × 2.0<sup>2</sup> ＝ 4.0 J である。<br>答え 2.0 m/s ／ 失われたのは 796 J</div></details></div>
+
+<p>弾丸の運動エネルギーの99％以上が熱と変形に変わる。運動量保存則から速度を求めた後で力学的エネルギー保存則を使って木片の上がる高さを求める問題が頻出である。衝突の瞬間には力学的エネルギー保存則を使わず衝突後の振り子の運動にだけ使う。この区別が典型的な誤りの分かれ目である。</p>
+
+<aside class="an an-lv"><b>恋愛で言えば</b>
+<p class="an-h">完全非弾性衝突は交際の開始である</p>
+<p>2人は以後同じ速度で進み運動量の和は保存する。失われるのは個人の運動エネルギーの一部である。</p>
+</aside>
+
+<h2 id="s6">平面での衝突</h2>
+<p>運動量はベクトルなので平面内の衝突でも運動量保存則はそのまま成り立つ。計算では x 成分と y 成分に分けて2本の式を立てる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>m</mi><mi>A</mi></msub><msub><mi>v</mi><mrow><mi>A</mi><mi>x</mi></mrow></msub><mo>+</mo><msub><mi>m</mi><mi>B</mi></msub><msub><mi>v</mi><mrow><mi>B</mi><mi>x</mi></mrow></msub><mo>=</mo><msub><mi>m</mi><mi>A</mi></msub><msub><mi>v</mi><mrow><mi>A</mi><mi>x</mi></mrow></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>+</mo><msub><mi>m</mi><mi>B</mi></msub><msub><mi>v</mi><mrow><mi>B</mi><mi>x</mi></mrow></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mspace width="2em"/><msub><mi>m</mi><mi>A</mi></msub><msub><mi>v</mi><mrow><mi>A</mi><mi>y</mi></mrow></msub><mo>+</mo><msub><mi>m</mi><mi>B</mi></msub><msub><mi>v</mi><mrow><mi>B</mi><mi>y</mi></mrow></msub><mo>=</mo><msub><mi>m</mi><mi>A</mi></msub><msub><mi>v</mi><mrow><mi>A</mi><mi>y</mi></mrow></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>+</mo><msub><mi>m</mi><mi>B</mi></msub><msub><mi>v</mi><mrow><mi>B</mi><mi>y</mi></mrow></msub><msup><mrow></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></mrow><annotation encoding="application/x-tex">m_Av_{Ax}+m_Bv_{Bx}=m_Av_{Ax}{}&#x27;+m_Bv_{Bx}{}&#x27; \qquad m_Av_{Ay}+m_Bv_{By}=m_Av_{Ay}{}&#x27;+m_Bv_{By}{}&#x27;</annotation></semantics></math></span></div>
+<p>図で考える場合は衝突前の運動量の和のベクトルと衝突後の各運動量のベクトルの和が一致するように矢印をつなぐ。衝突後の2つのベクトルと衝突前のベクトルが三角形をつくる。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 270" role="img" aria-label="平面での衝突と運動量のベクトルの三角形">
+  <defs>
+    <marker id="ah10b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--warm)"/></marker>
+    <marker id="ah10c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--cool)"/></marker>
+    <marker id="ah10d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker>
+  </defs>
+  <text x="20" y="24" font-size="13" fill="var(--muted)">衝突の様子</text>
+  <text x="400" y="24" font-size="13" fill="var(--muted)">運動量のベクトルの三角形</text>
+  <line x1="40" y1="140" x2="168" y2="140" stroke="var(--ink)" stroke-width="2.2" marker-end="url(#ah10d)"/>
+  <text x="90" y="128" font-size="12.5" text-anchor="middle">A 4.0 m/s</text>
+  <circle cx="190" cy="140" r="14" fill="var(--cool)" fill-opacity="0.85"/><text x="190" y="170" font-size="12.5" text-anchor="middle">B 静止</text>
+  <line x1="190" y1="140" x2="230" y2="70.7" stroke="var(--warm)" stroke-width="2.2" marker-end="url(#ah10b)"/>
+  <text x="240" y="66" font-size="12.5" fill="var(--warm)">A 2.0 m/s 60°</text>
+  <line x1="190" y1="140" x2="310" y2="209.3" stroke="var(--cool)" stroke-width="2.2" marker-end="url(#ah10c)"/>
+  <text x="250" y="232" font-size="12.5" fill="var(--cool)">B 3.5 m/s 30°</text>
+  <line x1="190" y1="140" x2="330" y2="140" stroke="var(--line)" stroke-dasharray="4 4"/>
+  <line x1="430" y1="200" x2="670" y2="200" stroke="var(--ink)" stroke-width="2.4" marker-end="url(#ah10d)"/>
+  <line x1="430" y1="200" x2="490" y2="96.1" stroke="var(--warm)" stroke-width="2.4" marker-end="url(#ah10b)"/>
+  <line x1="490" y1="96.1" x2="670" y2="200" stroke="var(--cool)" stroke-width="2.4" marker-end="url(#ah10c)"/>
+  <text x="550" y="222" font-size="12.5" text-anchor="middle">衝突前の和 4.0</text>
+  <text x="440" y="140" font-size="12.5" text-anchor="end" fill="var(--warm)">A後 2.0</text>
+  <text x="600" y="136" font-size="12.5" fill="var(--cool)">B後 3.5</text>
+  <text x="491" y="140" font-size="12" text-anchor="middle" fill="var(--sub)">直角</text>
+  <path d="M 502.1 103.1 L 495.1 115.2 L 483 108.2" fill="none" stroke="var(--sub)"/>
+</svg>
+<figcaption>質量1.0 kgの等しい2球の弾性衝突である。Aは60°の向きへ2.0 m/sで進みBは反対側30°の向きへ約3.5 m/sで進む。右の三角形は衝突前の運動量が衝突後の2つの運動量の和に等しいことを示す。質量の等しい弾性衝突では2つの速度のなす角が直角になる。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 6</div>
+<p>なめらかな水平面上で x 軸の正の向きに 4.0 m/s で進む質量 1.0 kg の球Aが静止している質量 1.0 kg の球Bに衝突した。衝突後Aは x 軸から 60° の向きに 2.0 m/s で進んだ。衝突後のBの速度の x 成分と y 成分を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 衝突後のAの成分は x 成分 2.0 cos 60° ＝ 1.0 m/s・y 成分 2.0 sin 60° ＝ 1.73 m/s である。<br>手順2 x 成分の保存則 1.0 × 4.0 ＝ 1.0 × 1.0 ＋ 1.0 × v<sub>Bx</sub>′ から v<sub>Bx</sub>′ ＝ 3.0 m/s である。<br>手順3 y 成分の保存則 0 ＝ 1.0 × 1.73 ＋ 1.0 × v<sub>By</sub>′ から v<sub>By</sub>′ ＝ −1.73 m/s である。<br>手順4 速さは √(3.0<sup>2</sup> ＋ 1.73<sup>2</sup>) ＝ √12 ≒ 3.5 m/s で x 軸から −30° の向きである。<br>答え x 成分 3.0 m/s ／ y 成分 −1.7 m/s</div></details></div>
+
+<p>運動エネルギーを確かめると衝突前は 8.0 J で衝突後は 2.0 ＋ 6.0 ＝ 8.0 J である。この衝突は弾性衝突である。</p>
+<h3>なめらかな面への斜めの衝突</h3>
+<p>ボールがなめらかな床に斜めに当たる場合は床に平行な方向には力が働かない。<strong class="hit">床に平行な成分は変化せず垂直な成分だけが向きを変えて e 倍になる</strong>。入射角 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span> で速さ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span> のボールがはね返ると平行成分は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mi>sin</mi><mo>⁡</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">v\sin\theta</annotation></semantics></math></span> のままで垂直成分は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>v</mi><mi>cos</mi><mo>⁡</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">ev\cos\theta</annotation></semantics></math></span> になる。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">e\lt 1</annotation></semantics></math></span> なら反射後は床に対して寝た向きに進む。</p>
+<p>典型的な誤りは速さ全体に e を掛けることである。e が掛かるのは面に垂直な成分だけである。</p>
+
+<h2 id="s7">現実世界の運動量</h2>
+<p>運動量の考え方は工学と競技規則の両方で数値として使われる。</p>
+<aside class="an an-rw"><b>現実世界</b>
+<p>日本野球機構は試合球の反発係数を検査している。2015年からは反発係数の目標値を0.4134とした。それ以前は平均値が0.4034から0.4234の範囲に入ることを基準とした。2013年には基準を満たすよう球を調整した事実を公表せずに変更して問題になった。反発係数は球を板に当てたときの衝突前後の速さの比として求める。</p>
+<p>ロケットは燃焼ガスを後方へ高速で噴射し その反作用で前に進む。宇宙空間には押し返す空気がない。ロケットと噴射ガスを合わせた系の運動量が保存することだけで加速が説明できる。</p>
+</aside>
+
+<h2 id="s8">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ 力積の計算</div>
+<p class="qz-q">質量 0.50 kg の物体が東向きに 6.0 m/s で進んでいる。ある力積を受けて西向きに 2.0 m/s で進むようになった。受けた力積として正しいものを1つ選べ。</p>
+<ol><li>東向きに 2.0 N·s</li><li>西向きに 2.0 N·s</li><li>西向きに 4.0 N·s</li><li>東向きに 4.0 N·s</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。東向きを正とすると運動量の変化は 0.50 × (−2.0 − 6.0) ＝ −4.0 N·s である。負なので向きは西向きである。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ F−tグラフ</div>
+<p class="qz-q">静止している質量 4.0 kg の物体に一直線上で力を加えた。0 s から 2.0 s までは 6.0 N の一定の力を加え 2.0 s から 4.0 s までは逆向きに 2.0 N の一定の力を加えた。4.0 s 後の物体の速さ [m/s] を求めよ。摩擦は無視する。</p>
+<details><summary>解答と解説</summary><div>答えは 2.0 m/s である。力積の和は 6.0 × 2.0 − 2.0 × 2.0 ＝ 8.0 N·s である。4.0 × v ＝ 8.0 から v ＝ 2.0 m/s である。F−tグラフで時間軸より下の面積は負の力積として差し引く。</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 運動量保存則の条件</div>
+<p class="qz-q">運動量の和が保存しないものを1つ選べ。物体系は各選択肢に現れる物体すべてとする。</p>
+<ol><li>なめらかな水平面上で衝突する2台の台車</li><li>空中で爆発して2つに分かれる花火玉の直前と直後</li><li>粗い水平面上をすべって減速する1個の木片</li><li>宇宙空間でばねを押し縮めてから離れる2つの物体</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。粗い面では動摩擦力が外力として働き続け木片の運動量を減らす。2 は重力が働くが爆発の時間は短く重力の力積は無視できる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ 反発係数と衝突後の速度</div>
+<p class="qz-q">なめらかな水平面上で右向きに 4.0 m/s で進む質量 1.0 kg の球Aが右向きに 1.0 m/s で進む質量 2.0 kg の球Bに追突した。反発係数を 0.50 とする。衝突後のBの速さ [m/s] を求めよ。</p>
+<details><summary>解答と解説</summary><div>答えは 2.5 m/s である。右向きを正とする。運動量保存則 1.0×4.0 ＋ 2.0×1.0 ＝ 6.0 ＝ v<sub>A</sub>′ ＋ 2.0 v<sub>B</sub>′ である。反発係数より v<sub>B</sub>′ − v<sub>A</sub>′ ＝ 0.50 × (4.0 − 1.0) ＝ 1.5 である。代入すると 6.0 ＝ (v<sub>B</sub>′ − 1.5) ＋ 2.0 v<sub>B</sub>′ で v<sub>B</sub>′ ＝ 2.5 m/s である。v<sub>A</sub>′ ＝ 1.0 m/s で A も右向きに進む。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 床でのはね返り</div>
+<p class="qz-q">高さ 1.6 m から静かに放したボールがなめらかな床ではね返り 0.90 m の高さまで上がった。床とボールの反発係数として正しいものを1つ選べ。</p>
+<ol><li>0.56</li><li>0.75</li><li>0.80</li><li>0.94</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。e ＝ √(h′/h) ＝ √(0.90/1.6) ＝ √0.5625 ＝ 0.75 である。高さの比 0.5625 をそのまま答える誤りが 1 である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 分裂の運動エネルギー</div>
+<p class="qz-q">なめらかな水平面上で静止していた物体が内部のばねによって質量 1.0 kg の部分と質量 3.0 kg の部分に分裂した。分裂で解放されたエネルギーは 24 J でそのすべてが運動エネルギーになった。質量 1.0 kg の部分の運動エネルギー [J] を求めよ。</p>
+<details><summary>解答と解説</summary><div>答えは 18 J である。運動量の大きさが等しいので運動エネルギーは質量に反比例し 1.0 kg 側と 3.0 kg 側の比は 3:1 である。24 × 3/4 ＝ 18 J である。検算すると 1.0 kg 側の速さは 6.0 m/s で 3.0 kg 側は 2.0 m/s となり運動量はどちらも 6.0 kg·m/s で等しい。</div></details></div>
+
+<div class="qz"><div class="qz-h">問7 ・ 斜めの衝突</div>
+<p class="qz-q">なめらかな床に速さ 10 m/s のボールが床と 30° の角をなして斜めに当たった。反発係数が 0.60 のときはね返った直後の速度の床に平行な成分と垂直な成分の組み合わせとして正しいものを1つ選べ。</p>
+<ol><li>平行 8.7 m/s ・ 垂直 3.0 m/s</li><li>平行 5.2 m/s ・ 垂直 3.0 m/s</li><li>平行 8.7 m/s ・ 垂直 5.0 m/s</li><li>平行 5.0 m/s ・ 垂直 5.2 m/s</li></ol>
+<details><summary>解答と解説</summary><div>正解は 1 である。床と 30° なので平行成分は 10 cos 30° ≒ 8.7 m/s で垂直成分は 10 sin 30° ＝ 5.0 m/s である。床はなめらかなので平行成分は変化しない。垂直成分だけが 0.60 倍になり 3.0 m/s になる。2 は平行成分にも e を掛けた誤りである。</div></details></div>
+
+<h2 id="s9">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+運動量 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>p</mi><mo>⃗</mo></mover><mo>=</mo><mi>m</mi><mover accent="true"><mi>v</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">\vec{p}=m\vec{v}</annotation></semantics></math></span> ／ 力積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>F</mi><mo>⃗</mo></mover><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\vec{F}\Delta t</annotation></semantics></math></span>。運動量の変化は受けた力積に等しい。<br>
+力が変化する場合の力積はF−tグラフの面積である。平均の力は力積を時間で割る。<br>
+内力の力積は打ち消し合うので外力の力積が0なら運動量の和は保存する。成分ごとにも成り立つ。<br>
+反発係数は遠ざかる速さを近づく速さで割った値で 0 ≦ e ≦ 1 である。床では h′＝e²h となる。<br>
+運動エネルギーが保存するのは e＝1 のときだけである。分裂では運動エネルギーが質量の逆比に分かれる。<br>
+斜めの衝突は成分に分ける。なめらかな面では平行成分は不変で垂直成分だけが e 倍になる。</div>
+
+<h2 id="s10">残っている問い</h2>
+<ul>
+<li class="tb-vnote">反発係数を材質だけで決まる定数とするのは近似である。実際の値は衝突の速さや温度で変化する。野球のボールも速く当てるほど反発係数が小さくなる傾向が報告されている。</li>
+<li class="tb-vnote">衝突中に重力の力積を無視するのは衝突時間が短い場合の近似である。接触時間が長い場面では鉛直方向の運動量保存は成り立たない。</li>
+<li class="tb-vnote">日本野球機構の検査で用いる打ち出し速度と測定装置の詳細は公表資料で確認できなかった。</li>
+</ul>
+
+<h2 id="s11">出典</h2>
+<ol>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 解説 理科編 理数編 — https://www.mext.go.jp/a_menu/shotou/new-cs/1407074.htm</li>
+<li>大学入試センター 令和7年度以降の試験の出題教科・科目 — https://www.dnc.ac.jp/kyotsu/shiken_jouhou/r7/</li>
+<li>日本野球機構 試合球の反発係数に関するお知らせ 2015年2月3日 — https://npb.jp/npb/20150203release.html</li>
+<li>Momentum — Wikipedia — https://en.wikipedia.org/wiki/Momentum</li>
+<li>Coefficient of restitution — Wikipedia — https://en.wikipedia.org/wiki/Coefficient_of_restitution</li>
+<li>Elastic collision — Wikipedia — https://en.wikipedia.org/wiki/Elastic_collision</li>
+<li>Tsiolkovsky rocket equation — Wikipedia — https://en.wikipedia.org/wiki/Tsiolkovsky_rocket_equation</li>
+<li>J-CAST ニュース こっそり「飛ぶボール」に変更 日本野球機構ダンマリの「なぜ」 2013年6月12日 — https://www.j-cast.com/2013/06/12177139.html</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="09_plane-motion.html">← 平面運動と剛体のつり合い</a><a class="tb-nav-a" href="11_circular.html">円運動・単振動・万有引力 →</a></div>
+</div>
+<script>
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){ if (!tick) { tick = true; requestAnimationFrame(draw); } }, {passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>

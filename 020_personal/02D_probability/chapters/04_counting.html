@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>集合と場合の数・順列｜確率・統計</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../021_profile/index.html">profile</a><a href="../../02A_plan/index.html">plan</a><a href="../../023_travel/index.html">travel</a><a href="../../027_cinema/index.html">cinema</a><a href="../../02B_reading/index.html">reading</a><a href="../../024_method/index.html">method</a><a href="../../026_handbook/index.html">handbook</a><a href="../../025_fitness/index.html">fitness</a><a href="../../028_english/index.html">english</a><a href="../../029_mental_math/index.html">mental math</a><a href="../../02C_chemistry/index.html">chemistry</a><a href="../index.html">probability</a><a href="../../02E_calculus/index.html">calculus</a><a href="../../02F_linear_algebra/index.html">linear algebra</a><a href="../../02G_physics/index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../024_method/index.html">method</a>
+    <a class="snav-a" href="../../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../028_english/index.html">english</a>
+    <a class="snav-a" href="../../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../index.html">probability</a>
+    <a class="snav-a" href="../../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../02G_physics/index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / personal /
+    <a href="../index.html">02D probability</a> / 第4章</div>
+
+  <div class="tb-ch">数学A — 第4章</div>
+  <h1>集合と場合の数・順列</h1>
+  <p class="tb-thesis">場合の数はもれなく重複なく数える技術である。集合で数える対象を区切り和の法則と積の法則で数を組み立てる。順列・円順列・重複順列の公式はどれも積の法則から導ける。</p>
+
+<p class="tb-ok"><strong>この章は2026-10-15に出典照合を通した。</strong> 検証した事実は43件である。出典と一致したものは43件である。食い違ったものは0件で本文を修正済みである。出典で確認できなかったものは0件である。これらは末尾の「残っている問い」に列挙した。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">集合と要素</a></li><li><a href="#s2">集合の要素の個数</a></li><li><a href="#s3">和の法則と積の法則・樹形図</a></li><li><a href="#s4">順列と階乗</a></li><li><a href="#s5">円順列と重複順列</a></li><li><a href="#s6">隣り合う並べ方と隣り合わない並べ方</a></li><li><a href="#s7">現実世界の場合の数 パスワードの強さ</a></li><li><a href="#s8">確認問題</a></li><li><a href="#s9">この章の要点</a></li><li><a href="#s10">残っている問い</a></li><li><a href="#s11">出典</a></li></ol></nav>
+
+<p>第1章から第3章では手元にあるデータを整理して要約する方法を扱った。この章から数学Aの「場合の数と確率」に入る。確率は第6章で「起こり得る場合の数」に対する「その事象が起こる場合の数」の比として定義する。分母と分子を正確に数えられなければ確率は求まらない。そこでまず数え方を固める。</p>
+<p>共通テスト「数学Ⅰ・数学A」で数学Aの出題範囲は図形の性質と場合の数と確率である。場合の数の小問では集合の要素の個数・積の法則・順列と円順列・隣り合う条件の処理が繰り返し問われる。この章はこの順に積み上げる。</p>
+
+<h2 id="s1">集合と要素</h2>
+<p>範囲がはっきり定まったものの集まりを<strong>集合</strong>と呼ぶ。集合をつくる1つ1つのものを<strong>要素</strong>と呼ぶ。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span> が集合 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> の要素であることを <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>∈</mo><mi>A</mi></mrow><annotation encoding="application/x-tex">a\in A</annotation></semantics></math></span> と書き <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span> は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> に属すると読む。属さないときは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo mathvariant="normal">∉</mo><mi>A</mi></mrow><annotation encoding="application/x-tex">a\notin A</annotation></semantics></math></span> と書く。集合の基本は数学Ⅰの「集合と命題」で学ぶ内容である。数学Aではそれを数える道具として使う。</p>
+<p>集合の表し方は2通りある。要素を書き並べる方法では <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mo stretchy="false">{</mo><mn>2</mn><mo separator="true">,</mo><mn>4</mn><mo separator="true">,</mo><mn>6</mn><mo separator="true">,</mo><mn>8</mn><mo separator="true">,</mo><mn>10</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">A=\{2,4,6,8,10\}</annotation></semantics></math></span> と書く。要素の条件を書く方法では <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mo stretchy="false">{</mo><mi>x</mi><mo>∣</mo><mi>x</mi><mtext> は 10 以下の正の偶数</mtext><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">A=\{x\mid x \text{ は 10 以下の正の偶数}\}</annotation></semantics></math></span> と書く。2つは同じ集合を表す。</p>
+<p>集合 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> の要素がすべて集合 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の要素であるとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の<strong>部分集合</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>⊂</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\subset B</annotation></semantics></math></span> と書く。要素を1つももたない集合を<strong>空集合</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∅</mi></mrow><annotation encoding="application/x-tex">\varnothing</annotation></semantics></math></span> で表す。考える対象全体の集合を<strong>全体集合</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi></mrow><annotation encoding="application/x-tex">U</annotation></semantics></math></span> で表す。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>名称</th><th>記号</th><th>意味</th></tr></thead>
+<tbody>
+<tr><td>共通部分</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cap B</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の両方に属する要素の集合</td></tr>
+<tr><td>和集合</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∪</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cup B</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の少なくとも一方に属する要素の集合</td></tr>
+<tr><td>補集合</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{A}</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi></mrow><annotation encoding="application/x-tex">U</annotation></semantics></math></span> の要素のうち <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> に属さない要素の集合</td></tr>
+</tbody></table></div>
+<p>補集合は全体集合を決めて初めて定まる。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mo stretchy="false">{</mo><mn>2</mn><mo separator="true">,</mo><mn>4</mn><mo separator="true">,</mo><mn>6</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">A=\{2,4,6\}</annotation></semantics></math></span> の補集合は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>=</mo><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><mn>6</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">U=\{1,2,\dots,6\}</annotation></semantics></math></span> なら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>5</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{1,3,5\}</annotation></semantics></math></span> であり <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>=</mo><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><mn>10</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">U=\{1,2,\dots,10\}</annotation></semantics></math></span> なら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>5</mn><mo separator="true">,</mo><mn>7</mn><mo separator="true">,</mo><mn>8</mn><mo separator="true">,</mo><mn>9</mn><mo separator="true">,</mo><mn>10</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{1,3,5,7,8,9,10\}</annotation></semantics></math></span> である。問題文で全体集合を確かめずに補集合を書くと誤る。</p>
+
+<div class="ex"><div class="ex-h">例題 1</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>=</mo><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><mn>10</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">U=\{1,2,\dots,10\}</annotation></semantics></math></span> とする。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> を偶数の集合とし <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> を3の倍数の集合とする。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cap B</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∪</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cup B</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>∩</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">\overline{A}\cap B</annotation></semantics></math></span> を要素を書き並べて表せ。</p>
+<details open><summary>解き方</summary><div>手順1 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mo stretchy="false">{</mo><mn>2</mn><mo separator="true">,</mo><mn>4</mn><mo separator="true">,</mo><mn>6</mn><mo separator="true">,</mo><mn>8</mn><mo separator="true">,</mo><mn>10</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">A=\{2,4,6,8,10\}</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo>=</mo><mo stretchy="false">{</mo><mn>3</mn><mo separator="true">,</mo><mn>6</mn><mo separator="true">,</mo><mn>9</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">B=\{3,6,9\}</annotation></semantics></math></span> である。<br>手順2 両方に属するのは 6 だけなので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi><mo>=</mo><mo stretchy="false">{</mo><mn>6</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">A\cap B=\{6\}</annotation></semantics></math></span> である。<br>手順3 少なくとも一方に属する要素を重複なく並べて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∪</mo><mi>B</mi><mo>=</mo><mo stretchy="false">{</mo><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>4</mn><mo separator="true">,</mo><mn>6</mn><mo separator="true">,</mo><mn>8</mn><mo separator="true">,</mo><mn>9</mn><mo separator="true">,</mo><mn>10</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">A\cup B=\{2,3,4,6,8,9,10\}</annotation></semantics></math></span> である。<br>手順4 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>=</mo><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>5</mn><mo separator="true">,</mo><mn>7</mn><mo separator="true">,</mo><mn>9</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\overline{A}=\{1,3,5,7,9\}</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> と共通する要素は 3 と 9 である。答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>∩</mo><mi>B</mi><mo>=</mo><mo stretchy="false">{</mo><mn>3</mn><mo separator="true">,</mo><mn>9</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\overline{A}\cap B=\{3,9\}</annotation></semantics></math></span></div></details></div>
+
+<h3>ド・モルガンの法則</h3>
+<p>補集合と共通部分と和集合の間には次の関係がある。これを<strong>ド・モルガンの法則</strong>と呼ぶ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mrow><mi>A</mi><mo>∪</mo><mi>B</mi></mrow><mo stretchy="true">‾</mo></mover><mo>=</mo><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>∩</mo><mover accent="true"><mi>B</mi><mo stretchy="true">‾</mo></mover><mspace width="2em"/><mover accent="true"><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><mo stretchy="true">‾</mo></mover><mo>=</mo><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>∪</mo><mover accent="true"><mi>B</mi><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{A\cup B}=\overline{A}\cap\overline{B} \qquad \overline{A\cap B}=\overline{A}\cup\overline{B}</annotation></semantics></math></span></div>
+<p>理由は言葉に直すと明らかである。「<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> または <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> に属する」の否定は「<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> に属さずかつ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> にも属さない」である。「<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の両方に属する」の否定は「<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の少なくとも一方に属さない」である。<strong class="hit">補集合をとると「または」と「かつ」が入れ替わる</strong>。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 270" role="img" aria-label="ド・モルガンの法則を2つのベン図で示す">
+  <defs>
+    <mask id="m04a"><rect x="0" y="0" width="720" height="270" fill="white"/><circle cx="135" cy="140" r="70" fill="black"/><circle cx="225" cy="140" r="70" fill="black"/></mask>
+    <mask id="m04b"><rect x="0" y="0" width="720" height="270" fill="white"/><circle cx="495" cy="140" r="70" fill="black"/></mask>
+    <mask id="m04c"><rect x="0" y="0" width="720" height="270" fill="white"/><circle cx="585" cy="140" r="70" fill="black"/></mask>
+  </defs>
+  <text x="30" y="24" font-size="13" fill="var(--muted)">A∪B の補集合</text>
+  <text x="390" y="24" font-size="13" fill="var(--muted)">A の補集合と B の補集合を重ねる</text>
+  <rect x="30" y="40" width="300" height="200" fill="var(--accent)" fill-opacity="0.35" mask="url(#m04a)"/>
+  <rect x="30" y="40" width="300" height="200" fill="none" stroke="var(--ink)"/>
+  <circle cx="135" cy="140" r="70" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+  <circle cx="225" cy="140" r="70" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+  <rect x="390" y="40" width="300" height="200" fill="var(--cool)" fill-opacity="0.22" mask="url(#m04b)"/>
+  <rect x="390" y="40" width="300" height="200" fill="var(--warm)" fill-opacity="0.22" mask="url(#m04c)"/>
+  <rect x="390" y="40" width="300" height="200" fill="none" stroke="var(--ink)"/>
+  <circle cx="495" cy="140" r="70" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+  <circle cx="585" cy="140" r="70" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+  <g font-size="14" font-weight="600" fill="var(--ink)" text-anchor="middle">
+    <text x="110" y="145">A</text><text x="250" y="145">B</text>
+    <text x="470" y="145">A</text><text x="610" y="145">B</text>
+    <text x="48" y="60">U</text><text x="408" y="60">U</text>
+  </g>
+  <g font-size="12" fill="var(--sub)" text-anchor="middle">
+    <text x="180" y="262">濃い部分が A∪B の外側</text>
+    <text x="540" y="262">2色が重なる外側だけが両方の補集合</text>
+  </g>
+</svg>
+<figcaption>左は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∪</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cup B</annotation></semantics></math></span> の補集合である。右は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> の外側を青で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の外側を橙で塗った図で2色が重なるのは両方の円の外側だけである。左右の網掛けが一致することが <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mrow><mi>A</mi><mo>∪</mo><mi>B</mi></mrow><mo stretchy="true">‾</mo></mover><mo>=</mo><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>∩</mo><mover accent="true"><mi>B</mi><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{A\cup B}=\overline{A}\cap\overline{B}</annotation></semantics></math></span> を示す。</figcaption>
+</figure>
+
+<h2 id="s2">集合の要素の個数</h2>
+<p>有限集合 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> の要素の個数を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n(A)</annotation></semantics></math></span> で表す。2つの集合の和集合の要素の個数は次の式で求める。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∪</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>+</mo><mi>n</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>−</mo><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n(A\cup B)=n(A)+n(B)-n(A\cap B)</annotation></semantics></math></span></div>
+<p>理由は重複の処理にある。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>+</mo><mi>n</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n(A)+n(B)</annotation></semantics></math></span> は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> の要素と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の要素を別々に数えて足したものである。共通部分 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cap B</annotation></semantics></math></span> の要素は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> の側でも <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の側でも数えられ2回計上されている。<strong class="hit">2回数えた分を1回引けば各要素をちょうど1回ずつ数えたことになる</strong>。特に <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi><mo>=</mo><mi mathvariant="normal">∅</mi></mrow><annotation encoding="application/x-tex">A\cap B=\varnothing</annotation></semantics></math></span> のときは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∪</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>+</mo><mi>n</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n(A\cup B)=n(A)+n(B)</annotation></semantics></math></span> である。</p>
+<p>補集合の要素の個数は全体から引いて求める。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo stretchy="false">)</mo><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>U</mi><mo stretchy="false">)</mo><mo>−</mo><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n(\overline{A})=n(U)-n(A)</annotation></semantics></math></span></div>
+<p>3つの集合では同じ考えを繰り返す。各集合を足し・2つずつの共通部分を引き・3つの共通部分を足し戻す。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∪</mo><mi>B</mi><mo>∪</mo><mi>C</mi><mo stretchy="false">)</mo><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>+</mo><mi>n</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>+</mo><mi>n</mi><mo stretchy="false">(</mo><mi>C</mi><mo stretchy="false">)</mo><mo>−</mo><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo><mo>−</mo><mi>n</mi><mo stretchy="false">(</mo><mi>B</mi><mo>∩</mo><mi>C</mi><mo stretchy="false">)</mo><mo>−</mo><mi>n</mi><mo stretchy="false">(</mo><mi>C</mi><mo>∩</mo><mi>A</mi><mo stretchy="false">)</mo><mo>+</mo><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo>∩</mo><mi>C</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n(A\cup B\cup C)=n(A)+n(B)+n(C)-n(A\cap B)-n(B\cap C)-n(C\cap A)+n(A\cap B\cap C)</annotation></semantics></math></span></div>
+<p>3つ全部に属する要素は最初に3回足され次に3回引かれて0回になる。最後の項はその1回分を戻すために置く。</p>
+
+<div class="ex"><div class="ex-h">例題 2</div>
+<p>1 から 100 までの整数のうち 2・3・5 の少なくとも1つで割り切れる数の個数を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 2・3・5 の倍数の集合を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span>・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span>・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span> とする。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>=</mo><mn>50</mn></mrow><annotation encoding="application/x-tex">n(A)=50</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mn>33</mn></mrow><annotation encoding="application/x-tex">n(B)=33</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>C</mi><mo stretchy="false">)</mo><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">n(C)=20</annotation></semantics></math></span> である。<br>手順2 2つずつの共通部分は6の倍数16個・15の倍数6個・10の倍数10個である。<br>手順3 3つの共通部分は30の倍数で 30・60・90 の3個である。<br>手順4 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>50</mn><mo>+</mo><mn>33</mn><mo>+</mo><mn>20</mn><mo>−</mo><mn>16</mn><mo>−</mo><mn>6</mn><mo>−</mo><mn>10</mn><mo>+</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">50+33+20-16-6-10+3</annotation></semantics></math></span> を計算する。<br>答え 74個</div></details></div>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 280" role="img" aria-label="1から100までの整数で2の倍数と3の倍数の個数を示すベン図">
+  <rect x="30" y="30" width="410" height="235" fill="none" stroke="var(--ink)"/>
+  <circle cx="175" cy="162" r="85" fill="var(--cool)" fill-opacity="0.18" stroke="var(--cool)" stroke-width="2"/>
+  <circle cx="285" cy="162" r="85" fill="var(--warm)" fill-opacity="0.18" stroke="var(--warm)" stroke-width="2"/>
+  <g font-size="13" fill="var(--sub)">
+    <text x="42" y="50">U 1から100の整数 100個</text>
+    <text x="115" y="70">A 2の倍数</text>
+    <text x="285" y="70">B 3の倍数</text>
+  </g>
+  <g font-size="20" font-weight="700" text-anchor="middle" fill="var(--ink)">
+    <text x="130" y="168">34</text><text x="230" y="168">16</text><text x="330" y="168">17</text><text x="400" y="255">33</text>
+  </g>
+  <g font-size="12" text-anchor="middle" fill="var(--sub)">
+    <text x="130" y="186">A だけ</text><text x="230" y="186">6の倍数</text><text x="330" y="186">B だけ</text><text x="395" y="232">どちらでもない</text>
+  </g>
+  <g font-size="13" fill="var(--ink)">
+    <text x="470" y="70">n(A) ＝ 50</text>
+    <text x="470" y="96">n(B) ＝ 33</text>
+    <text x="470" y="122">n(A∩B) ＝ 16</text>
+    <text x="470" y="160" font-weight="700">n(A∪B) ＝ 50＋33−16 ＝ 67</text>
+    <text x="470" y="198">どちらでもない数</text>
+    <text x="470" y="222">100−67 ＝ 33</text>
+  </g>
+</svg>
+<figcaption>4つの領域の数 34・16・17・33 の合計は 100 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>=</mo><mn>34</mn><mo>+</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">n(A)=34+16</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mn>16</mn><mo>+</mo><mn>17</mn></mrow><annotation encoding="application/x-tex">n(B)=16+17</annotation></semantics></math></span> である。6の倍数の 16 個は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>+</mo><mi>n</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n(A)+n(B)</annotation></semantics></math></span> の中で2回数えられている。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 3</div>
+<p>1 から 100 までの整数のうち 2 でも 3 でも割り切れない数の個数を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 2の倍数の集合を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> とし3の倍数の集合を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> とする。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>=</mo><mn>50</mn></mrow><annotation encoding="application/x-tex">n(A)=50</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mn>33</mn></mrow><annotation encoding="application/x-tex">n(B)=33</annotation></semantics></math></span> である。100÷3 の商の整数部分が 33 である。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cap B</annotation></semantics></math></span> は6の倍数の集合で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">n(A\cap B)=16</annotation></semantics></math></span> である。<br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∪</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mn>50</mn><mo>+</mo><mn>33</mn><mo>−</mo><mn>16</mn><mo>=</mo><mn>67</mn></mrow><annotation encoding="application/x-tex">n(A\cup B)=50+33-16=67</annotation></semantics></math></span> である。<br>手順4 求める数は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>∩</mo><mover accent="true"><mi>B</mi><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{A}\cap\overline{B}</annotation></semantics></math></span> の要素である。ド・モルガンの法則で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>∩</mo><mover accent="true"><mi>B</mi><mo stretchy="true">‾</mo></mover><mo>=</mo><mover accent="true"><mrow><mi>A</mi><mo>∪</mo><mi>B</mi></mrow><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{A}\cap\overline{B}=\overline{A\cup B}</annotation></semantics></math></span> である。<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>−</mo><mn>67</mn><mo>=</mo><mn>33</mn></mrow><annotation encoding="application/x-tex">100-67=33</annotation></semantics></math></span> 個</div></details></div>
+
+<p>典型的な誤りは2つある。1つ目は「2の倍数かつ3の倍数」を数えるときに2と3の積ではなく最小公倍数で割ることを忘れる誤りである。4の倍数と6の倍数の共通部分は24の倍数ではなく12の倍数である。2つ目は「2でも3でも割り切れない」を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{A\cap B}</annotation></semantics></math></span> と取り違える誤りである。こちらは6で割り切れない数で 84 個になる。</p>
+
+<aside class="an an-biz"><b>会計で言えば</b>
+<p class="an-h">共通部分を引く操作は連結決算の内部取引の消去である</p>
+<p>親会社と子会社の売上を単純に足すとグループ内の取引が2回計上される。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">-n(A\cap B)</annotation></semantics></math></span> はその重複を1回分消す操作に対応する。</p>
+</aside>
+
+<h2 id="s3">和の法則と積の法則・樹形図</h2>
+<p>場合の数を求める基本の原則は2つである。</p>
+<p><strong>和の法則</strong> 2つの事柄 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> が同時には起こらないとする。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> の起こり方が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span> 通りで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の起こり方が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 通りなら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> または <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の起こり方は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>+</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">m+n</annotation></semantics></math></span> 通りである。これは前節の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∩</mo><mi>B</mi><mo>=</mo><mi mathvariant="normal">∅</mi></mrow><annotation encoding="application/x-tex">A\cap B=\varnothing</annotation></semantics></math></span> のときの <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∪</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>+</mo><mi>n</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n(A\cup B)=n(A)+n(B)</annotation></semantics></math></span> と同じ内容である。</p>
+<p><strong>積の法則</strong> 事柄 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> の起こり方が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span> 通りあるとする。そのどの場合についても事柄 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> の起こり方が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 通りあるとする。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> がともに起こる場合は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">mn</annotation></semantics></math></span> 通りである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> の結果ごとに枝が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 本ずつ伸びる図を描くと枝の先端が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span> 組の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 本で合計 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">mn</annotation></semantics></math></span> 本になる。</p>
+<p>この枝分かれの図を<strong>樹形図</strong>と呼ぶ。樹形図は起こり得る場合を1つ残らず書き出す方法で数が小さいときは最も確実である。数が大きいときは樹形図の形から積の法則を見いだして掛け算に置き換える。</p>
+<p>学習指導要領解説はもれなく重複なく数えるための考え方を「数え上げの原則」として整理している。何かに着目して場合を分類する・数えやすい別のものと1対1に対応させる・規則に従って順に並べる の3つである。和の法則は分類に対応し積の法則は段階を追って順に決める数え方に対応する。どちらを使うかは事柄が「または」で結ばれるか「続けて」起こるかで判断する。樹形図を書くときはアルファベット順や数の小さい順のように規則を決めて枝を並べる。規則がないと書き漏らしと重複が起こる。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 300" role="img" aria-label="A B C の3文字を並べる樹形図">
+  <g stroke="var(--line)" stroke-width="1.6" fill="none">
+    <line x1="70" y1="155" x2="190" y2="65"/><line x1="70" y1="155" x2="190" y2="155"/><line x1="70" y1="155" x2="190" y2="245"/>
+    <line x1="210" y1="65" x2="330" y2="45"/><line x1="210" y1="65" x2="330" y2="85"/>
+    <line x1="210" y1="155" x2="330" y2="135"/><line x1="210" y1="155" x2="330" y2="175"/>
+    <line x1="210" y1="245" x2="330" y2="225"/><line x1="210" y1="245" x2="330" y2="265"/>
+    <line x1="350" y1="45" x2="470" y2="45"/><line x1="350" y1="85" x2="470" y2="85"/>
+    <line x1="350" y1="135" x2="470" y2="135"/><line x1="350" y1="175" x2="470" y2="175"/>
+    <line x1="350" y1="225" x2="470" y2="225"/><line x1="350" y1="265" x2="470" y2="265"/>
+  </g>
+  <circle cx="62" cy="155" r="6" fill="var(--ink)"/>
+  <g font-size="15" font-weight="700" text-anchor="middle" fill="var(--cool)">
+    <text x="200" y="70">A</text><text x="200" y="160">B</text><text x="200" y="250">C</text>
+  </g>
+  <g font-size="15" font-weight="700" text-anchor="middle" fill="var(--warm)">
+    <text x="340" y="50">B</text><text x="340" y="90">C</text><text x="340" y="140">A</text><text x="340" y="180">C</text><text x="340" y="230">A</text><text x="340" y="270">B</text>
+  </g>
+  <g font-size="15" font-weight="700" text-anchor="middle" fill="var(--accent)">
+    <text x="480" y="50">C</text><text x="480" y="90">B</text><text x="480" y="140">C</text><text x="480" y="180">A</text><text x="480" y="230">B</text><text x="480" y="270">A</text>
+  </g>
+  <g font-size="14" fill="var(--ink)">
+    <text x="530" y="50">ABC</text><text x="530" y="90">ACB</text><text x="530" y="140">BAC</text><text x="530" y="180">BCA</text><text x="530" y="230">CAB</text><text x="530" y="270">CBA</text>
+  </g>
+  <g font-size="12" fill="var(--sub)" text-anchor="middle">
+    <text x="200" y="22">1番目 3通り</text><text x="340" y="22">2番目 2通り</text><text x="480" y="22">3番目 1通り</text>
+  </g>
+  <text x="600" y="160" font-size="14" fill="var(--ink)">3×2×1 ＝ 6</text>
+</svg>
+<figcaption>1番目の3通りのどれに対しても2番目は残りの2通りである。3番目は残った1文字に限られる。枝の先端の数 6 は積の法則の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>2</mn><mo>×</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">3\times2\times1</annotation></semantics></math></span> に一致する。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 4</div>
+<p>大小2個のさいころを投げる。(1) 目の和が5の倍数になる場合の数を求めよ。(2) 目の積が奇数になる場合の数を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 和が5の倍数になるのは和が5か10のときで2つは同時に起こらない。<br>手順2 和が5は (1,4)(2,3)(3,2)(4,1) の4通りである。和が10は (4,6)(5,5)(6,4) の3通りである。<br>手順3 和の法則で (1) は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>+</mo><mn>3</mn><mo>=</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">4+3=7</annotation></semantics></math></span> 通りである。<br>手順4 積が奇数になるのは2つの目がともに奇数のときである。大の目が 1・3・5 の3通りのそれぞれに小の目が3通りある。<br>答え (1) 7通り (2) 積の法則で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>9</mn></mrow><annotation encoding="application/x-tex">3\times3=9</annotation></semantics></math></span> 通り</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 5</div>
+<p>72 の正の約数の個数とその総和を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 素因数分解すると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>72</mn><mo>=</mo><msup><mn>2</mn><mn>3</mn></msup><mo>⋅</mo><msup><mn>3</mn><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">72=2^3\cdot3^2</annotation></semantics></math></span> である。<br>手順2 約数は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>a</mi></msup><mo>⋅</mo><msup><mn>3</mn><mi>b</mi></msup></mrow><annotation encoding="application/x-tex">2^a\cdot3^b</annotation></semantics></math></span> の形で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span> は 0 から 3 の4通り・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span> は 0 から 2 の3通りである。<br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span> の選び方の組が約数と1対1に対応するので個数は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">4\times3=12</annotation></semantics></math></span> 個である。<br>手順4 総和は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mn>2</mn><mo>+</mo><mn>4</mn><mo>+</mo><mn>8</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mn>3</mn><mo>+</mo><mn>9</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1+2+4+8)(1+3+9)</annotation></semantics></math></span> を展開した12項の和に等しい。展開した各項が約数1つに対応するからである。<br>答え 12個 ・ 総和 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>15</mn><mo>×</mo><mn>13</mn><mo>=</mo><mn>195</mn></mrow><annotation encoding="application/x-tex">15\times13=195</annotation></semantics></math></span></div></details></div>
+
+<aside class="an an-biz"><b>スタートアップで言えば</b>
+<p class="an-h">商品の品目数は積の法則で増える</p>
+<p>Tシャツの色が5種類でサイズが4種類なら在庫を管理する品目は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo>×</mo><mn>4</mn><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">5\times4=20</annotation></semantics></math></span> である。色を1つ足すと品目は4つ増える。</p>
+</aside>
+
+<h2 id="s4">順列と階乗</h2>
+<p>異なる <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 個のものから <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個を取り出して1列に並べたものを<strong>順列</strong>と呼ぶ。その総数を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">P</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{P}_{r}</annotation></semantics></math></span> で表す。</p>
+<p>1番目に置くものは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 通りある。2番目は1番目に使ったもの以外の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> 通りである。同じように <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 番目は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mi>r</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-r+1</annotation></semantics></math></span> 通りである。積の法則で次の式が得られる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">P</mi><mi>r</mi></msub><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>2</mn><mo stretchy="false">)</mo><mo>⋯</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{P}_{r}=n(n-1)(n-2)\cdots(n-r+1)</annotation></semantics></math></span></div>
+<p>右辺は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> から1ずつ小さくなる <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個の数の積である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">r=n</annotation></semantics></math></span> のときは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 個全部を並べる場合で 1 から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> までの積になる。これを <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> の<strong>階乗</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">n!</annotation></semantics></math></span> で表す。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">P</mi><mi>n</mi></msub><mo>=</mo><mi>n</mi><mo stretchy="false">!</mo><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>⋯</mo><mn>2</mn><mo>⋅</mo><mn>1</mn><mspace width="2em"/><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">P</mi><mi>r</mi></msub><mo>=</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><mo stretchy="false">!</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{P}_{n}=n!=n(n-1)\cdots2\cdot1 \qquad {}_{n}\mathrm{P}_{r}=\frac{n!}{(n-r)!}</annotation></semantics></math></span></div>
+<p>右の式は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">n!</annotation></semantics></math></span> を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">(n-r)!</annotation></semantics></math></span> で割って <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">n-r</annotation></semantics></math></span> 以下の因数を消したものである。この式が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">r=n</annotation></semantics></math></span> でも成り立つように <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo stretchy="false">!</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">0!=1</annotation></semantics></math></span> と定める。同じ理由で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">P</mi><mn>0</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{P}_{0}=1</annotation></semantics></math></span> と定める。何も並べない並べ方は1通りと数えるからである。</p>
+
+<div class="ex"><div class="ex-h">例題 6</div>
+<p>7人の中から委員長・副委員長・書記を1人ずつ選ぶ。兼任はしない。選び方は何通りか。</p>
+<details open><summary>解き方</summary><div>手順1 役職に区別があるので選んだ3人を役職の順に並べる順列である。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>7</mn></msub><msub><mi mathvariant="normal">P</mi><mn>3</mn></msub><mo>=</mo><mn>7</mn><mo>×</mo><mn>6</mn><mo>×</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">{}_{7}\mathrm{P}_{3}=7\times6\times5</annotation></semantics></math></span> である。<br>答え 210通り</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 7</div>
+<p>0・1・2・3・4・5 の6個の数字から異なる4個を使って4桁の整数をつくる。(1) 全部で何個できるか。(2) そのうち偶数は何個か。</p>
+<details open><summary>解き方</summary><div>手順1 千の位に 0 は置けない。千の位は 0 以外の5通りである。<br>手順2 残りの3つの位には千の位で使わなかった5個から3個を並べる。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">P</mi><mn>3</mn></msub><mo>=</mo><mn>60</mn></mrow><annotation encoding="application/x-tex">{}_{5}\mathrm{P}_{3}=60</annotation></semantics></math></span> 通りである。(1) は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo>×</mo><mn>60</mn><mo>=</mo><mn>300</mn></mrow><annotation encoding="application/x-tex">5\times60=300</annotation></semantics></math></span> 個である。<br>手順3 偶数は一の位が 0・2・4 のどれかである。一の位が 0 のとき残り5個から3個を並べて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">P</mi><mn>3</mn></msub><mo>=</mo><mn>60</mn></mrow><annotation encoding="application/x-tex">{}_{5}\mathrm{P}_{3}=60</annotation></semantics></math></span> 個である。<br>手順4 一の位が 2 のとき千の位は 0 と 2 を除く4通りで百と十の位は残り4個から2個を並べて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>4</mn></msub><msub><mi mathvariant="normal">P</mi><mn>2</mn></msub><mo>=</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">{}_{4}\mathrm{P}_{2}=12</annotation></semantics></math></span> 通りである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>×</mo><mn>12</mn><mo>=</mo><mn>48</mn></mrow><annotation encoding="application/x-tex">4\times12=48</annotation></semantics></math></span> 個である。一の位が 4 のときも 48 個である。<br>答え (1) 300個 (2) <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>60</mn><mo>+</mo><mn>48</mn><mo>+</mo><mn>48</mn><mo>=</mo><mn>156</mn></mrow><annotation encoding="application/x-tex">60+48+48=156</annotation></semantics></math></span> 個</div></details></div>
+<p>例題7の要点は<strong class="hit">制限の強い位置から先に決める</strong>ことである。一の位と千の位に条件があるのでこの2つを先に決めて残りの位を順列で数える。一の位が 0 かどうかで千の位の選択肢が変わるので場合を分ける。場合分けを省いて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>4</mn><mo>×</mo><mn>4</mn><mo>×</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">3\times4\times4\times3</annotation></semantics></math></span> のように一律に掛けると誤る。</p>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">打順は9人の順列である</p>
+<p>先発9人が決まっていても打順の組み方は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>9</mn><mo stretchy="false">!</mo><mo>=</mo><mn>362,880</mn></mrow><annotation encoding="application/x-tex">9!=362{,}880</annotation></semantics></math></span> 通りある。1番から順に残りの人数を掛けていく計算はこの節の導出そのものである。</p>
+</aside>
+
+<h2 id="s5">円順列と重複順列</h2>
+<h3>円順列</h3>
+<p>異なるものを円形に並べたものを<strong>円順列</strong>と呼ぶ。円形の並びでは回転して重なる並べ方を同じものとみなす。異なる <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 個の円順列の総数は次のとおりである。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><mi>n</mi></mfrac><mo>=</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">\frac{n!}{n}=(n-1)!</annotation></semantics></math></span></div>
+<p>理由を示す。円順列を1つ選び特定の席から時計回りに読んで1列に直すと読み始めの席の選び方で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 通りの異なる1列が得られる。つまり1列の並び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">n!</annotation></semantics></math></span> 通りは円順列1つあたり <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 通りずつ重複している。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">n!</annotation></semantics></math></span> を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> で割れば円順列の数になる。<strong class="hit">1人の位置を固定して残り <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> 人を並べる</strong>と考えても同じ式になる。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 250" role="img" aria-label="4人の円順列で回転した4つの配置が同じであることを示す">
+  <g fill="none" stroke="var(--line)" stroke-width="1.5">
+    <circle cx="100" cy="115" r="55"/><circle cx="270" cy="115" r="55"/><circle cx="440" cy="115" r="55"/><circle cx="610" cy="115" r="55"/>
+  </g>
+  <g font-size="15" font-weight="700" text-anchor="middle" fill="#fff">
+    <circle cx="100" cy="60" r="15" fill="var(--warm)"/><text x="100" y="65">A</text>
+    <circle cx="155" cy="115" r="15" fill="var(--cool)"/><text x="155" y="120">B</text>
+    <circle cx="100" cy="170" r="15" fill="var(--accent)"/><text x="100" y="175">C</text>
+    <circle cx="45" cy="115" r="15" fill="var(--sub)"/><text x="45" y="120">D</text>
+
+    <circle cx="270" cy="60" r="15" fill="var(--sub)"/><text x="270" y="65">D</text>
+    <circle cx="325" cy="115" r="15" fill="var(--warm)"/><text x="325" y="120">A</text>
+    <circle cx="270" cy="170" r="15" fill="var(--cool)"/><text x="270" y="175">B</text>
+    <circle cx="215" cy="115" r="15" fill="var(--accent)"/><text x="215" y="120">C</text>
+
+    <circle cx="440" cy="60" r="15" fill="var(--accent)"/><text x="440" y="65">C</text>
+    <circle cx="495" cy="115" r="15" fill="var(--sub)"/><text x="495" y="120">D</text>
+    <circle cx="440" cy="170" r="15" fill="var(--warm)"/><text x="440" y="175">A</text>
+    <circle cx="385" cy="115" r="15" fill="var(--cool)"/><text x="385" y="120">B</text>
+
+    <circle cx="610" cy="60" r="15" fill="var(--cool)"/><text x="610" y="65">B</text>
+    <circle cx="665" cy="115" r="15" fill="var(--accent)"/><text x="665" y="120">C</text>
+    <circle cx="610" cy="170" r="15" fill="var(--sub)"/><text x="610" y="175">D</text>
+    <circle cx="555" cy="115" r="15" fill="var(--warm)"/><text x="555" y="120">A</text>
+  </g>
+  <g font-size="13" text-anchor="middle" fill="var(--ink)">
+    <text x="100" y="215">ABCD</text><text x="270" y="215">DABC</text><text x="440" y="215">CDAB</text><text x="610" y="215">BCDA</text>
+  </g>
+  <text x="360" y="242" font-size="12" text-anchor="middle" fill="var(--sub)">上の席から時計回りに読んだ1列の並び 4通りが1つの円順列にあたる</text>
+</svg>
+<figcaption>4つの円はどれも A の時計回りの隣が B でその隣が C である。回転すれば重なるので円順列としては同じ1通りである。1列の並び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo stretchy="false">!</mo><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">4!=24</annotation></semantics></math></span> 通りを4で割って円順列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false">!</mo><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3!=6</annotation></semantics></math></span> 通りになる。</figcaption>
+</figure>
+
+<p>首飾りのように裏返しても同じとみなす並びを<strong>じゅず順列</strong>と呼ぶ。円順列のうち裏返して重なる2つを1つと数えるので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">!</mo></mrow><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{(n-1)!}{2}</annotation></semantics></math></span> 通りになる。円卓の席は裏返せないので円順列であり裏返しで割らない。</p>
+
+<div class="ex"><div class="ex-h">例題 8</div>
+<p>6人が円形のテーブルに着く。(1) 座り方は何通りか。(2) 特定の2人 A と B が隣り合う座り方は何通りか。</p>
+<details open><summary>解き方</summary><div>手順1 (1) は6人の円順列で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>6</mn><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">!</mo><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">(6-1)!=120</annotation></semantics></math></span> 通りである。<br>手順2 (2) では A と B を1組にまとめて1人とみなす。5人の円順列で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo stretchy="false">!</mo><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">4!=24</annotation></semantics></math></span> 通りである。<br>手順3 組の中の A と B の並びが AB と BA の2通りある。<br>答え (1) 120通り (2) <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>24</mn><mo>×</mo><mn>2</mn><mo>=</mo><mn>48</mn></mrow><annotation encoding="application/x-tex">24\times2=48</annotation></semantics></math></span> 通り</div></details></div>
+
+<aside class="an an-lv"><b>恋愛で言えば</b>
+<p class="an-h">円卓の席次で意味をもつのは誰の隣かだけである</p>
+<p>全員が1席ずつずれても隣どうしの関係は変わらない。円順列で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> で割るのは関係が同じ並びを1つに数えるためである。</p>
+</aside>
+
+<h3>重複順列</h3>
+<p>異なる <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 種類のものから同じものを繰り返し使うことを許して <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個を1列に並べたものを<strong>重複順列</strong>と呼ぶ。各位置に <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 通りずつ選べるので積の法則で総数は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>n</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">n^r</annotation></semantics></math></span> である。</p>
+<div class="ex"><div class="ex-h">例題 9</div>
+<p>5人を2つの部屋 A と B に分ける。(1) 1人も入らない部屋があってもよいとき分け方は何通りか。(2) どちらの部屋にも1人以上入るとき分け方は何通りか。</p>
+<details open><summary>解き方</summary><div>手順1 各人が A か B の2通りを選ぶので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>5</mn></msup><mo>=</mo><mn>32</mn></mrow><annotation encoding="application/x-tex">2^5=32</annotation></semantics></math></span> 通りである。<br>手順2 このうち全員が A の1通りと全員が B の1通りは空の部屋を含む。<br>答え (1) 32通り (2) <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>32</mn><mo>−</mo><mn>2</mn><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">32-2=30</annotation></semantics></math></span> 通り</div></details></div>
+<p>重複順列の底と指数を逆にする誤りが多い。「5人がそれぞれ2部屋から選ぶ」ので選ぶ側の人数が指数で選択肢の数が底である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>5</mn><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">5^2</annotation></semantics></math></span> と書くと「2人がそれぞれ5通りから選ぶ」問題になる。</p>
+
+<h2 id="s6">隣り合う並べ方と隣り合わない並べ方</h2>
+<p>条件付きの並べ方で頻出なのは「隣り合う」と「隣り合わない」である。処理の仕方が異なるので区別する。</p>
+<p><strong>隣り合う</strong>ものは1つのまとまりとみなして並べる。次にまとまりの中の並べ方を掛ける。</p>
+<p><strong>隣り合わない</strong>ものは後から入れる。先に他のものを並べ・その間と両端の位置から選んで入れる。こうすると入れたもの同士の間には必ず他のものが1つ以上あるので隣り合わない。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 250" role="img" aria-label="隣り合う場合のまとめ方と隣り合わない場合の間に入れる方法">
+  <text x="20" y="26" font-size="13" fill="var(--muted)">隣り合う 子ども3人を1つにまとめる</text>
+  <g font-size="14" font-weight="700" text-anchor="middle">
+    <rect x="30" y="42" width="56" height="40" rx="6" fill="var(--cool)"/><text x="58" y="68" fill="#fff">大人</text>
+    <rect x="96" y="42" width="56" height="40" rx="6" fill="var(--cool)"/><text x="124" y="68" fill="#fff">大人</text>
+    <rect x="162" y="38" width="190" height="48" rx="8" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+    <rect x="170" y="42" width="56" height="40" rx="6" fill="var(--warm)"/><text x="198" y="68" fill="#fff">子</text>
+    <rect x="232" y="42" width="56" height="40" rx="6" fill="var(--warm)"/><text x="260" y="68" fill="#fff">子</text>
+    <rect x="294" y="42" width="56" height="40" rx="6" fill="var(--warm)"/><text x="322" y="68" fill="#fff">子</text>
+    <rect x="362" y="42" width="56" height="40" rx="6" fill="var(--cool)"/><text x="390" y="68" fill="#fff">大人</text>
+    <rect x="428" y="42" width="56" height="40" rx="6" fill="var(--cool)"/><text x="456" y="68" fill="#fff">大人</text>
+  </g>
+  <text x="510" y="58" font-size="13" fill="var(--ink)">5つのものの並び 5!</text>
+  <text x="510" y="80" font-size="13" fill="var(--ink)">まとまりの中 3!</text>
+  <line x1="20" y1="118" x2="700" y2="118" stroke="var(--line)" stroke-dasharray="4 4"/>
+  <text x="20" y="146" font-size="13" fill="var(--muted)">隣り合わない 先に大人4人を並べて間と両端の5か所から選ぶ</text>
+  <g font-size="14" font-weight="700" text-anchor="middle">
+    <rect x="80" y="166" width="56" height="40" rx="6" fill="var(--cool)"/><text x="108" y="192" fill="#fff">大人</text>
+    <rect x="196" y="166" width="56" height="40" rx="6" fill="var(--cool)"/><text x="224" y="192" fill="#fff">大人</text>
+    <rect x="312" y="166" width="56" height="40" rx="6" fill="var(--cool)"/><text x="340" y="192" fill="#fff">大人</text>
+    <rect x="428" y="166" width="56" height="40" rx="6" fill="var(--cool)"/><text x="456" y="192" fill="#fff">大人</text>
+  </g>
+  <g fill="var(--warm)">
+    <path d="M40 210 L50 180 L60 210 Z"/><path d="M156 210 L166 180 L176 210 Z"/><path d="M272 210 L282 180 L292 210 Z"/><path d="M388 210 L398 180 L408 210 Z"/><path d="M504 210 L514 180 L524 210 Z"/>
+  </g>
+  <g font-size="12" text-anchor="middle" fill="var(--sub)">
+    <text x="50" y="230">1</text><text x="166" y="230">2</text><text x="282" y="230">3</text><text x="398" y="230">4</text><text x="514" y="230">5</text>
+  </g>
+  <text x="560" y="182" font-size="13" fill="var(--ink)">大人の並び 4!</text>
+  <text x="560" y="204" font-size="13" fill="var(--ink)">子どもの入れ方</text>
+  <text x="560" y="224" font-size="13" fill="var(--ink)">5か所から3か所 順列</text>
+</svg>
+<figcaption>上は子ども3人を囲んで1つのまとまりとみなす方法である。下は大人4人を並べてできる5か所の位置に子どもを1人ずつ入れる方法である。同じ位置に2人入れないので子どもどうしは隣り合わない。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 10</div>
+<p>大人4人と子ども3人の合計7人が1列に並ぶ。(1) 子ども3人が続いて並ぶ並び方は何通りか。(2) 子どもどうしがどの2人も隣り合わない並び方は何通りか。</p>
+<details open><summary>解き方</summary><div>手順1 (1) 子ども3人を1つのまとまりとみなすと大人4人とまとまり1つの合計5つの並びで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo stretchy="false">!</mo><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">5!=120</annotation></semantics></math></span> 通りである。<br>手順2 まとまりの中で子ども3人の並び方が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false">!</mo><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3!=6</annotation></semantics></math></span> 通りある。(1) は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>120</mn><mo>×</mo><mn>6</mn><mo>=</mo><mn>720</mn></mrow><annotation encoding="application/x-tex">120\times6=720</annotation></semantics></math></span> 通りである。<br>手順3 (2) 先に大人4人を並べて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo stretchy="false">!</mo><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">4!=24</annotation></semantics></math></span> 通りである。間と両端の5か所から3か所を選んで子ども3人を1人ずつ入れる並べ方は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">P</mi><mn>3</mn></msub><mo>=</mo><mn>60</mn></mrow><annotation encoding="application/x-tex">{}_{5}\mathrm{P}_{3}=60</annotation></semantics></math></span> 通りである。<br>答え (1) 720通り (2) <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>24</mn><mo>×</mo><mn>60</mn><mo>=</mo><mn>1440</mn></mrow><annotation encoding="application/x-tex">24\times60=1440</annotation></semantics></math></span> 通り</div></details></div>
+<p>(2) を「全体から (1) を引く」で求めると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5040</mn><mo>−</mo><mn>720</mn><mo>=</mo><mn>4320</mn></mrow><annotation encoding="application/x-tex">5040-720=4320</annotation></semantics></math></span> 通りとなり誤りである。全体から (1) を引いた残りには子ども2人だけが隣り合う並びが含まれる。<strong class="hit">「3人が続いて並ぶ」の否定は「どの2人も隣り合わない」ではない</strong>。対象が2人なら2つは一致するので全体から引く方法でも正しい。3人以上では一致しない。</p>
+
+<h2 id="s7">現実世界の場合の数 パスワードの強さ</h2>
+<p>パスワードの強さは重複順列の総数で測れる。数字4桁の暗証番号は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>10</mn><mn>4</mn></msup><mo>=</mo><mn>10,000</mn></mrow><annotation encoding="application/x-tex">10^4=10{,}000</annotation></semantics></math></span> 通りである。英大文字と英小文字と数字の62種類から8文字を選ぶと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>62</mn><mn>8</mn></msup></mrow><annotation encoding="application/x-tex">62^8</annotation></semantics></math></span> 通りで約 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2.18</mn><mo>×</mo><msup><mn>10</mn><mn>14</mn></msup></mrow><annotation encoding="application/x-tex">2.18\times10^{14}</annotation></semantics></math></span> 通りになる。</p>
+<aside class="an an-rw"><b>現実世界</b>
+<p class="an-h">文字の種類を増やすより桁数を増やすほうが総数は大きく増える</p>
+<p>総数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>n</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">n^r</annotation></semantics></math></span> は指数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> が1増えるごとに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 倍になる。62種類で8文字から9文字にすると総数は62倍になる。</p>
+</aside>
+
+<h2 id="s8">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ 要素の個数</div>
+<p class="qz-q">1 から 200 までの整数のうち 4 の倍数または 6 の倍数であるものの個数として正しいものを1つ選べ。</p>
+<ol><li>83</li><li>67</li><li>75</li><li>58</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。4の倍数は 50 個で6の倍数は 33 個である。両方に属するのは4と6の最小公倍数12の倍数で 16 個である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>50</mn><mo>+</mo><mn>33</mn><mo>−</mo><mn>16</mn><mo>=</mo><mn>67</mn></mrow><annotation encoding="application/x-tex">50+33-16=67</annotation></semantics></math></span> である。1 は共通部分を引き忘れた値である。3 は24の倍数8個を引いた値である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ ド・モルガンの法則</div>
+<p class="qz-q">全体集合 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi></mrow><annotation encoding="application/x-tex">U</annotation></semantics></math></span> の部分集合 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span> について <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mrow><mi>A</mi><mo>∩</mo><mi>B</mi></mrow><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{A\cap B}</annotation></semantics></math></span> と常に等しいものを1つ選べ。</p>
+<ol><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>∩</mo><mover accent="true"><mi>B</mi><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{A}\cap\overline{B}</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>∪</mo><mover accent="true"><mi>B</mi><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{A}\cup\overline{B}</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>∪</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\cup B</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>A</mi><mo stretchy="true">‾</mo></mover><mo>∩</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">\overline{A}\cap B</annotation></semantics></math></span></li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。「両方に属する」の否定は「少なくとも一方に属さない」である。補集合をとると共通部分は和集合に入れ替わる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 約数の個数</div>
+<p class="qz-q">360 の正の約数の個数を求めよ。</p>
+<details><summary>解答と解説</summary><div>正解は 24 個である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>360</mn><mo>=</mo><msup><mn>2</mn><mn>3</mn></msup><mo>⋅</mo><msup><mn>3</mn><mn>2</mn></msup><mo>⋅</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">360=2^3\cdot3^2\cdot5</annotation></semantics></math></span> である。指数の選び方は 2 について4通り・3 について3通り・5 について2通りで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>×</mo><mn>3</mn><mo>×</mo><mn>2</mn><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">4\times3\times2=24</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ 順列</div>
+<p class="qz-q">1・2・3・4・5 の5個の数字から異なる3個を並べて3桁の整数をつくる。300 以上の整数は何個できるか。</p>
+<ol><li>24</li><li>36</li><li>48</li><li>60</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。百の位は 3・4・5 の3通りである。十の位と一の位は残り4個から2個を並べて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>4</mn></msub><msub><mi mathvariant="normal">P</mi><mn>2</mn></msub><mo>=</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">{}_{4}\mathrm{P}_{2}=12</annotation></semantics></math></span> 通りである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>12</mn><mo>=</mo><mn>36</mn></mrow><annotation encoding="application/x-tex">3\times12=36</annotation></semantics></math></span> 個である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 円順列</div>
+<p class="qz-q">大人2人と子ども4人の合計6人が円形のテーブルに着く。大人2人が向かい合う座り方は何通りか。</p>
+<details><summary>解答と解説</summary><div>正解は 24 通りである。大人の1人の席を固定すると回転で重なる並びの重複がなくなる。もう1人の大人の席は向かいの1通りに定まる。残り4席に子ども4人を並べて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo stretchy="false">!</mo><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">4!=24</annotation></semantics></math></span> 通りである。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 重複順列</div>
+<p class="qz-q">4人がそれぞれ A・B・C の3つの部屋のどれか1つに入る。空の部屋があってもよいとき入り方は何通りか。</p>
+<ol><li>12</li><li>64</li><li>81</li><li>24</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。4人がそれぞれ3通りから選ぶので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>3</mn><mn>4</mn></msup><mo>=</mo><mn>81</mn></mrow><annotation encoding="application/x-tex">3^4=81</annotation></semantics></math></span> 通りである。2 の 64 は底と指数を逆にした <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>4</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">4^3</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問7 ・ 隣り合わない</div>
+<p class="qz-q">大人3人と子ども2人が1列に並ぶ。子ども2人が隣り合わない並び方は何通りか。</p>
+<details><summary>解答と解説</summary><div>正解は 72 通りである。大人3人を並べて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false">!</mo><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3!=6</annotation></semantics></math></span> 通りである。間と両端の4か所から2か所を選んで子どもを並べて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>4</mn></msub><msub><mi mathvariant="normal">P</mi><mn>2</mn></msub><mo>=</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">{}_{4}\mathrm{P}_{2}=12</annotation></semantics></math></span> 通りである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>×</mo><mn>12</mn><mo>=</mo><mn>72</mn></mrow><annotation encoding="application/x-tex">6\times12=72</annotation></semantics></math></span> である。対象が2人なので全体 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo stretchy="false">!</mo><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">5!=120</annotation></semantics></math></span> から隣り合う <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo stretchy="false">!</mo><mo>×</mo><mn>2</mn><mo>=</mo><mn>48</mn></mrow><annotation encoding="application/x-tex">4!\times2=48</annotation></semantics></math></span> を引いても 72 になる。</div></details></div>
+
+<h2 id="s9">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+補集合は全体集合を決めて定まる。補集合をとると「または」と「かつ」が入れ替わる。<br>
+<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∪</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>+</mo><mi>n</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>−</mo><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo>∩</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n(A\cup B)=n(A)+n(B)-n(A\cap B)</annotation></semantics></math></span> は2回数えた共通部分を1回引く式である。<br>
+同時に起こらない事柄は足し・続けて起こる事柄は掛ける。<br>
+<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">P</mi><mi>r</mi></msub><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>⋯</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><mo stretchy="false">!</mo></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{P}_{r}=n(n-1)\cdots(n-r+1)=\dfrac{n!}{(n-r)!}</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo stretchy="false">!</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">0!=1</annotation></semantics></math></span> と定める。<br>
+円順列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">(n-1)!</annotation></semantics></math></span> で重複順列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>n</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">n^r</annotation></semantics></math></span> である。<br>
+隣り合うものはまとめて並べ・隣り合わないものは後から間と両端に入れる。</div>
+
+<h2 id="s10">残っている問い</h2>
+<ul>
+<li class="tb-vnote">集合の記号は教科書によって異なる。部分集合を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⊆</mo></mrow><annotation encoding="application/x-tex">\subseteq</annotation></semantics></math></span> と書く本もある。高校では <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>⊂</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A\subset B</annotation></semantics></math></span> が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A=B</annotation></semantics></math></span> の場合を含む。</li>
+<li class="tb-vnote">共通テストの「数学Ⅰ・数学A」で場合の数と確率の大問が何点を占めるかは年度の問題冊子で確かめる。この章では大学入試センターの公表資料で配点を確認していない。</li>
+<li class="tb-vnote">パスワードの強さを総数だけで測る説明は簡略である。実際の攻撃は辞書に載った語から試すので人が選んだ文字列の強さは総数より小さい。</li>
+</ul>
+
+<h2 id="s11">出典</h2>
+<ol>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 解説 数学編 理数編 — https://www.mext.go.jp/content/20260115-mxt_kyoiku02-100002620_04.pdf</li>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 — https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm</li>
+<li>大学入試センター 大学入学共通テスト — https://www.dnc.ac.jp/kyotsu/</li>
+<li>De Morgan's laws — Wikipedia — https://en.wikipedia.org/wiki/De_Morgan%27s_laws</li>
+<li>Inclusion–exclusion principle — Wikipedia — https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle</li>
+<li>Permutation — Wikipedia — https://en.wikipedia.org/wiki/Permutation</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="03_correlation.html">← 散布図と相関・仮説検定の考え方</a><a class="tb-nav-a" href="05_combination.html">組合せと二項定理 →</a></div>
+</div>
+<script>
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){ if (!tick) { tick = true; requestAnimationFrame(draw); } }, {passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>

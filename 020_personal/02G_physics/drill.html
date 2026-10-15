@@ -1,0 +1,1592 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>物理 計算ドリル</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a;
+    --accent:#2563EB; --line:#E5E2DA; --card:#fff;
+    --ok:#3B7F58; --ng:#B3261E;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.85;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 22px 90px}
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+  sub,sup{font-size:.68em;line-height:0}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  h1{font-size:27px;margin:0 0 4px;letter-spacing:-.01em}
+  .romaji{font-size:12px;color:var(--muted);letter-spacing:.08em;margin-bottom:20px}
+  .lead{color:var(--sub);font-size:14px;margin:14px 0 0}
+
+  h2{font-size:16.5px;margin:44px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .en{display:block;font-size:10.5px;color:var(--muted);font-weight:400;
+    letter-spacing:.09em;text-transform:uppercase}
+  h3{font-size:14px;margin:22px 0 6px}
+  h3 .sm{font-size:11px;color:var(--muted);font-weight:400}
+
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px;margin:18px 0;font-size:13.5px;color:var(--sub)}
+  .note a,.fb a,.tipbody a{color:var(--accent);text-decoration:none}
+
+  /* ---- setup ---- */
+  .pick{margin:18px 0 0}
+  .pick .lb{font-size:11.5px;color:var(--muted);letter-spacing:.04em;margin-bottom:7px}
+  .seg{display:flex;flex-wrap:wrap;gap:7px}
+  .seg button{font:inherit;font-size:13px;padding:7px 14px;border-radius:8px;
+    border:1px solid var(--line);background:var(--card);color:var(--sub);cursor:pointer;
+    transition:border-color .12s,color .12s}
+  .seg button:hover{border-color:var(--accent);color:var(--accent)}
+  .seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .seg button .s{display:block;font-size:10.5px;opacity:.62;letter-spacing:0}
+  button.go{font:inherit;font-size:14px;font-weight:600;padding:11px 30px;border-radius:8px;
+    border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;margin-top:22px}
+  button.go:hover{opacity:.85}
+  button.t{font:inherit;font-size:12.5px;padding:6px 13px;border-radius:999px;
+    border:1px solid var(--line);background:var(--card);color:var(--sub);cursor:pointer}
+  button.t:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ---- drill ---- */
+  .hide{display:none!important}
+  #drill{margin-top:30px}
+  .head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    font-size:12.5px;color:var(--muted);margin-bottom:6px}
+  .track{height:3px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:26px}
+  .fill{height:100%;width:0;background:var(--ink);transition:width .18s}
+
+  .qbox{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:28px 20px 24px;text-align:center}
+  .ctx{font-size:12.5px;color:var(--muted);margin-bottom:12px;letter-spacing:.02em}
+  .q{font-size:clamp(19px,4.8vw,26px);line-height:1.6;letter-spacing:.01em;
+    font-variant-numeric:tabular-nums}
+  .q .op{color:var(--muted);margin:0 .14em}
+  .q .nm{font-size:.62em;color:var(--sub)}
+  .q u{text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-color:var(--accent)}
+  .desc{margin-top:10px;font-size:14px;color:var(--sub);line-height:1.8}
+  .ask{margin-top:14px;font-size:14px;color:var(--sub)}
+  .ask .u{display:inline-block;margin-left:4px;padding:1px 8px;border-radius:5px;
+    background:#F1EFE8;color:var(--ink);font-size:13px;font-variant-numeric:tabular-nums}
+
+  .ans{margin-top:20px;display:flex;gap:8px;justify-content:center;align-items:stretch}
+  .ans input{font:inherit;font-size:24px;font-variant-numeric:tabular-nums;text-align:center;
+    padding:8px 12px;border-radius:9px;border:1.5px solid var(--line);background:#fff;
+    flex:1 1 auto;min-width:0;max-width:300px;letter-spacing:.02em}
+  .ans input:focus{outline:none;border-color:var(--accent)}
+  .ans button{font:inherit;font-size:14px;padding:0 18px;border-radius:9px;flex:0 0 auto;
+    border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+  .keys{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+  .keys button{font:inherit;font-size:14px;min-width:44px;padding:6px 8px;border-radius:8px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
+    font-variant-numeric:tabular-nums}
+  .keys button:hover{border-color:var(--accent);color:var(--accent)}
+  .choices{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .choices button{font:inherit;font-size:17px;padding:12px 10px;border-radius:9px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;text-align:center}
+  .choices button:hover{border-color:var(--accent)}
+  .choices button .k{display:block;font-size:10.5px;color:var(--muted)}
+  .choices button.right{border-color:var(--ok);background:#F2F8F4}
+  .choices button.wrong{border-color:var(--ng);background:#FCF3F2}
+  .choices button:disabled{cursor:default}
+
+  .fb{margin-top:20px;border-radius:10px;padding:14px 16px;font-size:13.5px;text-align:left}
+  .fb.ok{background:#F2F8F4;border:1px solid #CFE3D6;color:var(--ok)}
+  .fb.ng{background:#FCF3F2;border:1px solid #EBD3D0;color:var(--ng)}
+  .fb b{font-size:15px}
+  .fb .how{margin-top:9px;padding-top:9px;border-top:1px solid rgba(0,0,0,.08);
+    color:var(--sub);font-size:13px;line-height:1.95}
+  .fb .how em,.how2 em{font-style:normal;color:var(--ink);font-variant-numeric:tabular-nums}
+  .fb .how ol{margin:0;padding-left:1.4em}
+  .sub{margin-top:16px;text-align:center;font-size:12px;color:var(--muted)}
+  .sub button{margin:0 4px}
+
+  /* ---- result ---- */
+  .score{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 0}
+  .kpi{flex:1 1 120px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:13px 15px}
+  .kpi .v{font-size:25px;font-variant-numeric:tabular-nums;line-height:1.25}
+  .kpi .k{font-size:11px;color:var(--muted);letter-spacing:.04em}
+  .kpi .n{font-size:11.5px;color:var(--muted)}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.04em}
+  td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.miss{color:var(--ng)}
+  .how2{font-size:12px;color:var(--sub);line-height:1.8;margin-top:3px}
+  .how2 ol{margin:0;padding-left:1.3em}
+
+  details.tip{border-bottom:1px solid var(--line);padding:2px 0}
+  details.tip>summary{cursor:pointer;padding:9px 2px;font-size:14px;list-style:none}
+  details.tip>summary::-webkit-details-marker{display:none}
+  details.tip>summary::before{content:"＋ ";color:var(--muted)}
+  details.tip[open]>summary::before{content:"− "}
+  .tipbody{padding:2px 2px 16px;font-size:13.5px;color:var(--sub);line-height:1.85}
+  .tipbody .ex{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:10px 13px;margin:9px 0;font-variant-numeric:tabular-nums;color:var(--ink);font-size:13px}
+  .tipbody .ex i{font-style:normal;color:var(--muted)}
+  .tipbody ul{margin:6px 0;padding-left:1.3em}
+  .tipbody table{font-size:12.5px}
+  .tipbody td{padding:5px 9px}
+  #d-ref{margin-top:18px;text-align:left}
+
+  .amt{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:6px;margin-top:10px}
+  .amt div{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:6px 8px;text-align:center;font-variant-numeric:tabular-nums}
+  .amt b{display:block;font-size:16px}
+  .amt span{font-size:12px;color:var(--sub)}
+  .const{margin-top:10px;font-size:13px}
+  .const td{padding:5px 9px}
+
+  @media(max-width:430px){
+    #d-meta{display:none}
+    .qbox{padding:22px 13px 20px}
+    .ans input{font-size:21px}
+    .kpi{flex:1 1 calc(50% - 10px)}
+    .choices button{font-size:15px;padding:10px 6px}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a><a href="../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../021_profile/index.html">profile</a><a href="../02A_plan/index.html">plan</a><a href="../023_travel/index.html">travel</a><a href="../027_cinema/index.html">cinema</a><a href="../02B_reading/index.html">reading</a><a href="../024_method/index.html">method</a><a href="../026_handbook/index.html">handbook</a><a href="../025_fitness/index.html">fitness</a><a href="../028_english/index.html">english</a><a href="../029_mental_math/index.html">mental math</a><a href="../02C_chemistry/index.html">chemistry</a><a href="../02D_probability/index.html">probability</a><a href="../02E_calculus/index.html">calculus</a><a href="../02F_linear_algebra/index.html">linear algebra</a><a href="index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../024_method/index.html">method</a>
+    <a class="snav-a" href="../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../028_english/index.html">english</a>
+    <a class="snav-a" href="../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../index.html">shogo</a> / personal / <a href="index.html">02G physics</a> / drill</div>
+  <h1>物理 計算ドリル</h1>
+  <div class="romaji">PHYSICS DRILL</div>
+  <p class="lead" id="lead">物理の計算問題は 状況を図にして式を1本立て 数値を代入する手順の繰り返しで解ける。このドリルは物理基礎の7分野と物理の3分野を毎回異なる数値で出題する。式の選択と比例関係は4択で確認する。誤答には式の立て方から順に解き方を表示する。重力加速度は g = 9.8 m/s<sup>2</sup> とする。記録はこの端末のブラウザに保存する。</p>
+
+  <!-- ================= SETUP ================= -->
+  <section id="setup">
+    <h2>何を練習するか<span class="en">start</span></h2>
+    <div class="pick"><div class="lb">物理基礎</div><div class="seg" id="cats-kiso"></div></div>
+    <div class="pick"><div class="lb">物理</div><div class="seg" id="cats-phys"></div></div>
+    <div class="pick"><div class="lb">混ぜる</div><div class="seg" id="cats-mix"></div></div>
+    <div class="pick"><div class="lb">問題数</div><div class="seg" id="counts"></div></div>
+    <button class="go" id="b-start">始める</button>
+    <div class="note" id="cat-note"></div>
+  </section>
+
+  <!-- ================= DRILL ================= -->
+  <section id="drill" class="hide">
+    <div class="head">
+      <span class="num" id="d-prog">1 / 20</span>
+      <span id="d-meta"></span>
+      <span class="num" id="d-time">0.0s</span>
+    </div>
+    <div class="track"><div class="fill" id="d-fill"></div></div>
+
+    <div class="qbox">
+      <div id="d-ctx" class="ctx"></div>
+      <div id="d-q" class="q"></div>
+      <div id="d-desc" class="desc"></div>
+      <div id="d-ask" class="ask"></div>
+      <div class="ans" id="d-ansbox">
+        <input id="d-in" type="text" inputmode="decimal" autocomplete="off"
+               autocorrect="off" spellcheck="false" placeholder="答え">
+        <button id="b-ok">確定</button>
+      </div>
+      <div class="choices hide" id="d-choices"></div>
+      <div id="d-fb" class="fb hide"></div>
+    </div>
+    <div class="sub">
+      <button class="t" id="b-quit">中断する</button>
+      <span id="d-hintnote"></span>
+    </div>
+    <details class="tip" id="d-ref"><summary>定数と三角比を開く</summary><div class="tipbody" id="d-refbody"></div></details>
+  </section>
+
+  <!-- ================= RESULT ================= -->
+  <section id="result" class="hide">
+    <h2>結果<span class="en">result</span></h2>
+    <div class="score" id="r-kpi"></div>
+    <div id="r-missbox"></div>
+    <div style="margin-top:20px">
+      <button class="go" id="b-again">同じ条件でもう一度</button>
+      <button class="t" id="b-redo" style="margin-left:8px">間違えた問題だけ</button>
+      <button class="t" id="b-back" style="margin-left:4px">条件を変える</button>
+    </div>
+  </section>
+
+  <!-- ================= LOG ================= -->
+  <section id="logsec">
+    <h2>記録<span class="en">log</span></h2>
+    <div class="score" id="l-kpi"></div>
+    <div id="l-body"></div>
+  </section>
+
+  <!-- ================= REFERENCE ================= -->
+  <section id="refsec">
+    <h2>定数と三角比<span class="en">reference</span></h2>
+    <div id="refbody"></div>
+  </section>
+
+  <!-- ================= METHOD ================= -->
+  <section id="techsec">
+    <h2>問題の解き方の型<span class="en">method</span></h2>
+    <p class="lead">どの分野も 物体に働く力や保存される量を先に書き出し 式を1本立ててから数値を入れる。数値を入れる前に単位を SI 単位の m・kg・s・K にそろえる。cm・g・分・℃ のまま式に入れると答えの桁や値が誤りになる。</p>
+
+    <details class="tip"><summary>1. 等加速度直線運動は3公式から未知数に合う式を選ぶ</summary><div class="tipbody">
+      与えられた量と求める量を並べ 含まれない量が t なら3本目の式を使う。自由落下は v<sub>0</sub> = 0 で a = g とし 鉛直投げ上げは上向きを正にして a = −g とする。
+      <table>
+        <tr><td>速度</td><td>v = v<sub>0</sub> + at</td></tr>
+        <tr><td>変位</td><td>x = v<sub>0</sub>t + ½at<sup>2</sup></td></tr>
+        <tr><td>時間を含まない</td><td>v<sup>2</sup> − v<sub>0</sub><sup>2</sup> = 2ax</td></tr>
+      </table>
+      <div class="ex">初速度 19.6 m/s で真上に投げた小球の最高点の高さ<br><i>→</i> 最高点で v = 0<br><i>→</i> 0 − 19.6<sup>2</sup> = 2 × (−9.8) × H<br><i>→</i> H = 384.16 ÷ 19.6 = <b>19.6 m</b></div>
+      <a href="chapters/01_motion.html">第1章 等加速度直線運動を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>2. つり合いは力を直交する2方向に分けて和を 0 にする</summary><div class="tipbody">
+      斜面では斜面に平行な方向と垂直な方向に分ける。重力 mg の平行な成分は mg sinθ で垂直な成分は mg cosθ である。静止摩擦力は つり合いの式から求める。最大静止摩擦力 μN を使うのは すべり出す直前だけである。
+      <div class="ex">質量 2.0 kg の物体が傾き 30° の粗い斜面上で静止している<br><i>→</i> 静止摩擦力は平行な成分とつり合う<br><i>→</i> f = 2.0 × 9.8 × sin30° = 2.0 × 9.8 × 1/2 = <b>9.8 N</b></div>
+      <a href="chapters/02_force.html">第2章 力のつり合いと摩擦を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>3. 運動方程式は物体ごとに ma = 力の和 を書く</summary><div class="tipbody">
+      糸でつながった2物体は 物体ごとに運動方程式を書いて足すと張力が消える。加速度の向きを正にとると符号の誤りが減る。
+      <div class="ex">滑らかな台上の A 3.0 kg と 吊るした B 1.0 kg を糸でつなぐ<br><i>→</i> A は 3.0a = T　B は 1.0a = 1.0 × 9.8 − T<br><i>→</i> 足すと 4.0a = 9.8<br><i>→</i> <b>a = 2.45 m/s<sup>2</sup></b>　T = 3.0 × 2.45 = 7.35 N</div>
+      <a href="chapters/03_laws-of-motion.html">第3章 運動方程式を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>4. エネルギーは始めと終わりの2点で比べる</summary><div class="tipbody">
+      重力と弾性力だけが仕事をするなら力学的エネルギー K + U は保存される。摩擦が働くときは 運動エネルギーの変化 = 摩擦力がした仕事 で書く。途中の経路は考えなくてよい。
+      <div class="ex">滑らかな曲面の高さ 2.5 m から静かに放した小球の最下点の速さ<br><i>→</i> mgh = ½mv<sup>2</sup> より v<sup>2</sup> = 2gh<br><i>→</i> v<sup>2</sup> = 2 × 9.8 × 2.5 = 49<br><i>→</i> <b>v = 7.0 m/s</b></div>
+      <a href="chapters/04_energy.html">第4章 仕事とエネルギーを開く</a>
+    </div></details>
+
+    <details class="tip"><summary>5. 混合は 失った熱量 = 受け取った熱量 で式を立てる</summary><div class="tipbody">
+      Q = mcΔT の ΔT は高い温度から低い温度を引いて正にする。混合後の温度 T を未知数にして 高温側は (T<sub>高</sub> − T) 低温側は (T − T<sub>低</sub>) と書く。
+      <div class="ex">80 ℃ の水 100 g と 20 ℃ の水 200 g を混ぜる<br><i>→</i> 100 × 4.2 × (80 − T) = 200 × 4.2 × (T − 20)<br><i>→</i> T = (100 × 80 + 200 × 20) ÷ 300<br><i>→</i> <b>T = 40 ℃</b></div>
+      <a href="chapters/05_heat.html">第5章 熱量と比熱を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>6. 固有振動は端の条件から波長を先に求める</summary><div class="tipbody">
+      固定端と閉口端は節で 開口端は腹である。図に定常波を描いて 長さが半波長の何個分かを数え 波長を求めてから f = v/λ で振動数に直す。うなりの回数は2つの振動数の差である。
+      <table>
+        <tr><td>弦・開管</td><td>L = n × λ/2</td><td>n = 1, 2, 3 …</td></tr>
+        <tr><td>閉管</td><td>L = m × λ/4</td><td>m = 1, 3, 5 …</td></tr>
+      </table>
+      <div class="ex">長さ 0.85 m の閉管の基本振動　音速 340 m/s<br><i>→</i> λ = 4L = 3.4 m<br><i>→</i> f = 340 ÷ 3.4 = <b>100 Hz</b></div>
+      <a href="chapters/06_waves.html">第6章 波を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>7. 回路は内側の並列から順に1個の抵抗に置き換える</summary><div class="tipbody">
+      直列は和で 並列は逆数の和の逆数である。2個の並列は 積 ÷ 和 で求める。全体の抵抗から電流を出し 消費電力は P = VI = I<sup>2</sup>R = V<sup>2</sup>/R のうち与えられた量で使える形を選ぶ。
+      <div class="ex">R<sub>1</sub> = 4 Ω に 6 Ω と 12 Ω の並列を直列でつなぎ 24 V を加える<br><i>→</i> 並列部分 6 × 12 ÷ 18 = 4 Ω<br><i>→</i> 全体 4 + 4 = 8 Ω<br><i>→</i> <b>I = 24 ÷ 8 = 3.0 A</b></div>
+      <a href="chapters/07_electricity.html">第7章 電気回路を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>8. 衝突は運動量保存と反発係数の2式を連立する</summary><div class="tipbody">
+      向きを1つ決めて速度に符号をつける。反発係数の式は 衝突後の遠ざかる速さ = e × 衝突前の近づく速さ である。
+      <div class="ex">右向きを正　A 2 kg が 3 m/s で静止した B 1 kg に衝突　e = 0.5<br><i>→</i> 2v<sub>A</sub>′ + 1v<sub>B</sub>′ = 6<br><i>→</i> v<sub>B</sub>′ − v<sub>A</sub>′ = 0.5 × 3 = 1.5<br><i>→</i> 3v<sub>A</sub>′ = 6 − 1.5 より <b>v<sub>A</sub>′ = 1.5 m/s</b>　v<sub>B</sub>′ = 3.0 m/s</div>
+      <a href="chapters/10_momentum.html">第10章 運動量保存と反発係数を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>9. 円運動は中心向きの力の和を mv<sup>2</sup>/r とおく</summary><div class="tipbody">
+      向心力という新しい力はない。張力や重力の中心方向の成分の和が mv<sup>2</sup>/r = mrω<sup>2</sup> に等しい。単振動の周期は ばね振り子 T = 2π√(m/k) と 単振り子 T = 2π√(L/g) の2つで 振幅によらない。
+      <div class="ex">長さ 0.98 m の単振り子の周期<br><i>→</i> L/g = 0.98 ÷ 9.8 = 0.1<br><i>→</i> T = 2π√0.1 = 6.28 × 0.3162<br><i>→</i> <b>T = 1.99 s</b></div>
+      <a href="chapters/11_circular.html">第11章 円運動と単振動を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>10. 気体は単位を Pa・m<sup>3</sup>・K にそろえて PV = nRT に入れる</summary><div class="tipbody">
+      温度は必ず絶対温度 T = t + 273 に直す。1 L = 1×10<sup>−3</sup> m<sup>3</sup> である。熱力学第一法則は ΔU = Q − W で W は気体が外部にした仕事である。単原子分子の理想気体では ΔU = (3/2)nRΔT である。
+      <div class="ex">1.0 mol の気体が 300 K で 20×10<sup>−3</sup> m<sup>3</sup> を占める<br><i>→</i> P = 1.0 × 8.31 × 300 ÷ (20×10<sup>−3</sup>)<br><i>→</i> P = 124650 Pa<br><i>→</i> <b>P = 1.25×10<sup>5</sup> Pa</b></div>
+      <a href="chapters/12_thermodynamics.html">第12章 気体の状態方程式を開く</a>
+    </div></details>
+  </section>
+</div>
+
+<script id="gen">
+/* Question generators. Pure functions with no DOM access so that a node script
+   can load this block alone and check every answer. */
+var PHYS=(function(){
+'use strict';
+
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function shuffle(a){
+  a=a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function r6(x){ return Math.round(x*1e6)/1e6; }
+/* given data: shown as computed with float noise removed */
+function fx(x){ x=r6(x); return x<0 ? '−'+String(-x) : String(x); }
+/* answers: three significant figures */
+function s3(x){
+  if(Math.abs(x)<1e-9) return '0';
+  var a=Math.abs(x), s = a>=100 ? String(Number(a.toPrecision(3))) : a.toPrecision(3);
+  return (x<0?'−':'')+s;
+}
+function em(s){ return '<em>'+s+'</em>'; }
+function p2(s){ return s+'<sup>2</sup>'; }
+function pr(x){ return x<0 ? '('+fx(x)+')' : fx(x); }
+
+/* ── constants ───────────────────────────────────────────────────────── */
+var g=9.8, R=8.31, VS=340, CW=4.2;
+var MS2='m/s<sup>2</sup>', M3='×10<sup>−3</sup> m<sup>3</sup>', P5='×10<sup>5</sup> Pa';
+var SQ3=Math.sqrt(3), SQ2=Math.sqrt(2);
+var ANG=[
+  {d:30,s:0.5,c:SQ3/2,t:1/SQ3,sT:'1/2',cT:'√3/2',tT:'1/√3'},
+  {d:45,s:SQ2/2,c:SQ2/2,t:1,sT:'√2/2',cT:'√2/2',tT:'1'},
+  {d:60,s:SQ3/2,c:0.5,t:SQ3,sT:'√3/2',cT:'1/2',tT:'√3'},
+  {d:0,s:0.6,c:0.8,t:0.75,sT:'0.60',cT:'0.80',tT:'0.75'}
+];
+function aN(A){ return A.d ? A.d+'°' : 'θ'; }
+function aDesc(A){ return A.d ? '傾きの角 '+A.d+'°' : '傾きの角 θ は sinθ = 0.60　cosθ = 0.80'; }
+function tri(f,A,val,txt){ return f+aN(A)+' = '+txt+(txt.indexOf('√')>=0 ? ' ≈ '+val.toFixed(3) : ''); }
+function sinT(A){ return tri('sin',A,A.s,A.sT); }
+function cosT(A){ return tri('cos',A,A.c,A.cT); }
+function tanT(A){ return tri('tan',A,A.t,A.tT); }
+
+/* rational form of an answer when the denominator is small */
+function toFr(x){
+  for(var d=1; d<=1000; d++){
+    var n=Math.round(x*d);
+    /* answers are stored rounded to 6 decimals so allow that much */
+    if(Math.abs(n/d-x)<1e-6*Math.max(1,Math.abs(x))) return {n:n,d:d};
+  }
+  return null;
+}
+function frT(f){ return (f.n<0?'−':'')+Math.abs(f.n)+'/'+f.d; }
+
+/* ── templates ───────────────────────────────────────────────────────── */
+var T=[
+/* ── 1 等加速度直線運動 ──────────────────────────────── */
+{cat:'mot',ctx:'速度 v = v₀ + at',gen:function(){
+  var v0=pick([0,1,2,3,4,5,10]), a=pick([0.5,1,1.5,2,2.5,3,4]), t=pick([2,3,4,5,6,8,10]);
+  var v=r6(v0+a*t);
+  return {t:'mv',v:{v0:v0,a:a,t:t},
+    line:'v<sub>0</sub> = '+fx(v0)+' m/s　a = '+fx(a)+' '+MS2+'　t = '+fx(t)+' s',
+    desc:'一定の加速度で直線上を進む物体',ask:fx(t)+' s 後の速さは',unit:'m/s',ans:v,
+    steps:['等加速度直線運動の速度の式 '+em('v = v<sub>0</sub> + at'),
+      em('v = '+fx(v0)+' + '+fx(a)+' × '+fx(t)+' = '+s3(v)+' m/s')]};
+}},
+{cat:'mot',ctx:'変位 x = v₀t + ½at²',gen:function(){
+  var v0=pick([0,1,2,3,4,5]), a=pick([0.5,1,2,3,4]), t=pick([2,3,4,5,6,10]);
+  var x=r6(v0*t+0.5*a*t*t);
+  return {t:'mx',v:{v0:v0,a:a,t:t},
+    line:'v<sub>0</sub> = '+fx(v0)+' m/s　a = '+fx(a)+' '+MS2+'　t = '+fx(t)+' s',
+    desc:'一定の加速度で直線上を進む物体',ask:fx(t)+' s 間の変位は',unit:'m',ans:x,
+    steps:['変位の式 '+em('x = v<sub>0</sub>t + ½at<sup>2</sup>'),
+      em('x = '+fx(v0)+' × '+fx(t)+' + ½ × '+fx(a)+' × '+p2(fx(t))),
+      em('= '+fx(v0*t)+' + '+fx(0.5*a*t*t)+' = '+s3(x)+' m')]};
+}},
+{cat:'mot',ctx:'停止までの距離と時間',gen:function(){
+  var v0=pick([10,12,15,20,25,30]), a=pick([2,2.5,4,5,6]), askT=Math.random()<0.4;
+  var x=r6(v0*v0/(2*a)), t=r6(v0/a);
+  var st=['進む向きを正とし 減速を加速度 −'+fx(a)+' '+MS2+' とおく'];
+  if(askT) st.push('止まる時刻は v = 0 '+em('0 = '+fx(v0)+' − '+fx(a)+' × t'),
+    em('t = '+fx(v0)+' ÷ '+fx(a)+' = '+s3(t)+' s'));
+  else st.push('時間を含まない式 '+em('v<sup>2</sup> − v<sub>0</sub><sup>2</sup> = 2ax')+' を使う',
+    em('0 − '+p2(fx(v0))+' = 2 × (−'+fx(a)+') × x'),
+    em('x = '+fx(v0*v0)+' ÷ '+fx(2*a)+' = '+s3(x)+' m'));
+  return {t:'mbrake',v:{v0:v0,a:a,askT:askT},
+    line:'v<sub>0</sub> = '+fx(v0)+' m/s　減速の加速度の大きさ '+fx(a)+' '+MS2,
+    desc:'走行中の車がブレーキをかけて一定の割合で減速した',
+    ask:askT?'止まるまでの時間は':'止まるまでの距離は',unit:askT?'s':'m',ans:askT?t:x,steps:st};
+}},
+{cat:'mot',ctx:'加速度 v² − v₀² = 2ax',gen:function(){
+  var v0=pick([0,2,4,5]), v=v0+pick([2,4,6,10]), a=pick([0.5,1,2,4]);
+  var x=r6((v*v-v0*v0)/(2*a));
+  return {t:'macc',v:{v0:v0,v:v,x:x},
+    line:'v<sub>0</sub> = '+fx(v0)+' m/s → v = '+fx(v)+' m/s　x = '+fx(x)+' m',
+    desc:'一定の加速度で '+fx(x)+' m 進む間に速さが変化した',ask:'加速度の大きさは',unit:MS2,ans:a,
+    steps:['時間が与えられていないので '+em('v<sup>2</sup> − v<sub>0</sub><sup>2</sup> = 2ax'),
+      em(p2(fx(v))+' − '+p2(fx(v0))+' = 2 × a × '+fx(x)),
+      em('a = '+fx(v*v-v0*v0)+' ÷ '+fx(2*x)+' = '+s3(a)+' '+MS2)]};
+}},
+{cat:'mot',ctx:'自由落下の時間',gen:function(){
+  var t=pick([0.5,1,1.5,2,2.5,3,4,5]), h=r6(4.9*t*t);
+  return {t:'fallT',v:{h:h},line:'h = '+fx(h)+' m　g = 9.8 '+MS2,
+    desc:'高さ '+fx(h)+' m から小球を静かに放した',ask:'地面に達するまでの時間は',unit:'s',ans:t,
+    steps:['自由落下は v<sub>0</sub> = 0 で a = g の等加速度運動', em('h = ½gt<sup>2</sup>'),
+      em('t<sup>2</sup> = 2h ÷ g = 2 × '+fx(h)+' ÷ 9.8 = '+fx(t*t)), em('t = √'+fx(t*t)+' = '+s3(t)+' s')]};
+}},
+{cat:'mot',ctx:'自由落下の速さ',gen:function(){
+  var t=pick([0.5,1,1.5,2,2.5,3,4,5]), h=r6(4.9*t*t), v=r6(9.8*t), X=r6(19.6*h);
+  return {t:'fallV',v:{h:h},line:'h = '+fx(h)+' m　g = 9.8 '+MS2,
+    desc:'高さ '+fx(h)+' m から小球を静かに放した',ask:'地面に達する直前の速さは',unit:'m/s',ans:v,
+    steps:['時間を含まない式に v<sub>0</sub> = 0 と a = g を入れる '+em('v<sup>2</sup> = 2gh'),
+      em('v<sup>2</sup> = 2 × 9.8 × '+fx(h)+' = '+fx(X)), em('v = √'+fx(X)+' = '+s3(v)+' m/s')]};
+}},
+{cat:'mot',ctx:'鉛直投げ上げの最高点',gen:function(){
+  var v0=pick([4.9,7,9.8,14,14.7,19.6,21,24.5,29.4]), H=r6(v0*v0/19.6);
+  return {t:'upH',v:{v0:v0},line:'v<sub>0</sub> = '+fx(v0)+' m/s　g = 9.8 '+MS2,
+    desc:'小球を真上に投げ上げた',ask:'最高点の高さは',unit:'m',ans:H,
+    steps:['上向きを正とすると加速度は −g で 最高点では v = 0',
+      em('0 − '+p2(fx(v0))+' = 2 × (−9.8) × H'),
+      em('H = '+fx(v0*v0)+' ÷ 19.6 = '+s3(H)+' m')]};
+}},
+{cat:'mot',ctx:'鉛直投げ上げの時間',gen:function(){
+  var v0=pick([4.9,9.8,14.7,19.6,24.5,29.4]), back=Math.random()<0.5;
+  var t1=r6(v0/9.8), ans=back?r6(2*t1):t1;
+  var st=['上向きを正として '+em('v = v<sub>0</sub> − gt'),
+    '最高点では v = 0 '+em('t = '+fx(v0)+' ÷ 9.8 = '+s3(t1)+' s')];
+  if(back) st.push('上昇と下降は対称なので戻るまでの時間は2倍 '+em('2 × '+s3(t1)+' = '+s3(ans)+' s'));
+  return {t:'upT',v:{v0:v0,back:back},line:'v<sub>0</sub> = '+fx(v0)+' m/s　g = 9.8 '+MS2,
+    desc:'小球を真上に投げ上げた',ask:back?'投げた点に戻るまでの時間は':'最高点に達するまでの時間は',unit:'s',ans:ans,steps:st};
+}},
+{cat:'mot',ctx:'水平投射の到達距離',gen:function(){
+  var t=pick([0.5,1,1.5,2,3]), h=r6(4.9*t*t), v0=pick([2,3,4,5,8,10,15]), x=r6(v0*t);
+  return {t:'projX',v:{h:h,v0:v0},line:'h = '+fx(h)+' m　v<sub>0</sub> = '+fx(v0)+' m/s',
+    desc:'高さ '+fx(h)+' m の台から小球を水平に投げ出した　g = 9.8 '+MS2,ask:'台の真下から着地点までの水平距離は',unit:'m',ans:x,
+    steps:['鉛直方向は自由落下 '+em('t<sup>2</sup> = 2 × '+fx(h)+' ÷ 9.8 = '+fx(t*t)),
+      em('t = '+s3(t)+' s'),
+      '水平方向は速さ v<sub>0</sub> の等速運動',
+      em('x = '+fx(v0)+' × '+fx(t)+' = '+s3(x)+' m')]};
+}},
+{cat:'mot',ctx:'3公式の選択',gen:function(){
+  var it=pick(MF);
+  return choiceQ('mform',{q:it.q},it.q+' を表す式','初速度 v<sub>0</sub>　加速度 a の等加速度直線運動','正しい式は',
+    {right:it.r,wrong:it.w},it.s.concat(['正しい式は '+em(it.r)]));
+}},
+
+/* ── 2 力のつり合いと摩擦 ────────────────────────────── */
+{cat:'force',ctx:'ばねの伸び',gen:function(){
+  var k=pick([9.8,19.6,20,49,50,98,196]), m=pick([0.1,0.2,0.25,0.5,1]);
+  var x=r6(m*9.8/k), cm=r6(x*100);
+  return {t:'hooke',v:{k:k,m:m},line:'k = '+fx(k)+' N/m　m = '+fx(m)+' kg',
+    desc:'ばねの上端を天井に固定し 下端におもりをつるして静止させた',ask:'ばねの伸びは',unit:'cm',ans:cm,
+    steps:['つり合いの式 '+em('kx = mg'),
+      em('x = '+fx(m)+' × 9.8 ÷ '+fx(k)+' = '+s3(x)+' m'), 'm を cm に直す '+em(s3(cm)+' cm')]};
+}},
+{cat:'force',ctx:'斜面上で静止する物体',gen:function(){
+  var A=pick(ANG), m=pick([1,2,3,5,10]), askN=Math.random()<0.5;
+  var f=r6(m*9.8*A.s), N=r6(m*9.8*A.c);
+  var st=['重力 mg を斜面に平行な成分 mg sin'+aN(A)+' と垂直な成分 mg cos'+aN(A)+' に分ける'];
+  if(askN) st.push('垂直抗力は垂直な成分とつり合う', cosT(A), em('N = '+fx(m)+' × 9.8 × '+A.cT+' = '+s3(N)+' N'));
+  else st.push('静止摩擦力は平行な成分とつり合う', sinT(A), em('f = '+fx(m)+' × 9.8 × '+A.sT+' = '+s3(f)+' N'));
+  return {t:'sstat',v:{d:A.d,m:m,askN:askN},line:'m = '+fx(m)+' kg　'+aDesc(A),
+    desc:'粗い斜面上に物体を置くと静止した　g = 9.8 '+MS2,
+    ask:askN?'垂直抗力の大きさは':'静止摩擦力の大きさは',unit:'N',ans:askN?N:f,steps:st};
+}},
+{cat:'force',ctx:'動摩擦力',gen:function(){
+  var mu=pick([0.1,0.2,0.25,0.3,0.4,0.5]), m=pick([1,2,2.5,4,5,10]), f=r6(mu*m*9.8);
+  return {t:'kin',v:{mu:mu,m:m},line:'m = '+fx(m)+' kg　μ′ = '+fx(mu),
+    desc:'粗い水平面上で物体を水平に引いて一定の速さで動かす　g = 9.8 '+MS2,ask:'引く力の大きさは',unit:'N',ans:f,
+    steps:['一定の速さなので引く力と動摩擦力がつり合う','水平面なので垂直抗力 N = mg',
+      em('F = μ′mg = '+fx(mu)+' × '+fx(m)+' × 9.8 = '+s3(f)+' N')]};
+}},
+{cat:'force',ctx:'すべり出す角と静止摩擦係数',gen:function(){
+  var A=pick(ANG);
+  return {t:'slip',v:{d:A.d},line:aDesc(A).replace('傾きの角','すべり出す角'),
+    desc:'板に物体を載せて板をゆっくり傾けると この角ですべり出した',ask:'静止摩擦係数は',unit:'',ans:A.t,
+    steps:['すべり出す直前は最大静止摩擦力 μN と重力の斜面方向の成分が等しい',
+      em('μ mg cos'+aN(A)+' = mg sin'+aN(A)),
+      em('μ = tan'+aN(A)+' = '+A.tT+(A.tT.indexOf('√')>=0?' = '+s3(A.t):''))]};
+}},
+{cat:'force',ctx:'糸の張力と水平の力',gen:function(){
+  var A=pick(ANG.slice(0,3)), m=pick([0.5,1,2,3,5]), askT=Math.random()<0.5;
+  var Tn=r6(m*9.8/A.c), F=r6(m*9.8*A.t);
+  var st=['おもりに働く力は 重力 mg・糸の張力 T・水平の力 F の3つ'];
+  if(askT) st.push('鉛直方向のつり合い '+em('T cos'+aN(A)+' = mg'), cosT(A),
+    em('T = '+fx(m)+' × 9.8 ÷ '+A.cT+' = '+s3(Tn)+' N'));
+  else st.push('鉛直方向 '+em('T cos'+aN(A)+' = mg')+'　水平方向 '+em('T sin'+aN(A)+' = F'),
+    '2式を割ると '+em('F = mg tan'+aN(A)), tanT(A), em('F = '+fx(m)+' × 9.8 × '+A.tT+' = '+s3(F)+' N'));
+  return {t:'tens',v:{d:A.d,m:m,askT:askT},line:'m = '+fx(m)+' kg　鉛直からの糸の角 '+A.d+'°',
+    desc:'天井からつるしたおもりを水平な力で引くと 糸が鉛直から '+A.d+'° 傾いて静止した　g = 9.8 '+MS2,
+    ask:askT?'糸の張力の大きさは':'水平に引く力の大きさは',unit:'N',ans:askT?Tn:F,steps:st};
+}},
+{cat:'force',ctx:'浮力',gen:function(){
+  var V=pick([50,100,200,250,400,500]), m=pick([0.5,1,1.5,2,3]), askF=Math.random()<0.5;
+  if(m*1000<=V*1.5) m=r6(V*3/1000);
+  var Vm=r6(V*1e-6), F=r6(1000*V*1e-6*9.8), W=r6(m*9.8), Tn=r6(W-F);
+  var st=['浮力は押しのけた水の重さ '+em('F = ρVg'),
+    '体積を m<sup>3</sup> に直す '+em(fx(V)+' cm<sup>3</sup> = '+fx(V)+'×10<sup>−6</sup> m<sup>3</sup>'),
+    em('F = 1.0×10<sup>3</sup> × '+fx(V)+'×10<sup>−6</sup> × 9.8 = '+s3(F)+' N')];
+  if(!askF) st.push('ばねばかりの値は 重力 − 浮力 '+em(fx(m)+' × 9.8 − '+s3(F)+' = '+s3(Tn)+' N'));
+  return {t:'buoy',v:{V:V,m:m,askF:askF},line:'m = '+fx(m)+' kg　V = '+fx(V)+' cm<sup>3</sup>',
+    desc:'ばねばかりにつるした物体を水中に全部沈めて静止させた　水の密度 1.0×10<sup>3</sup> kg/m<sup>3</sup>　g = 9.8 '+MS2,
+    ask:askF?'物体が受ける浮力の大きさは':'ばねばかりが示す力の大きさは',unit:'N',ans:askF?F:Tn,steps:st};
+}},
+{cat:'force',ctx:'作用反作用とつり合い',gen:function(){
+  var it=pick(RF);
+  return choiceQ('react',{q:it.q},'机の上に静止した本',it.d,it.q,{right:it.r,wrong:it.w},it.s);
+}},
+
+/* ── 3 運動方程式 ───────────────────────────────────── */
+{cat:'eom',ctx:'水平面上の運動方程式',gen:function(){
+  var m=pick([1,2,4,5,10]), mu=pick([0,0,0.1,0.2]), F=pick([4,6,8,10,20,30,40]);
+  if(F<=mu*m*9.8+0.5) mu=0;
+  var f=r6(mu*m*9.8), a=r6((F-f)/m);
+  var st=['運動方程式 '+em('ma = F'+(mu?' − μ′mg':''))];
+  if(mu) st.push('動摩擦力 '+em('μ′mg = '+fx(mu)+' × '+fx(m)+' × 9.8 = '+fx(f)+' N'));
+  st.push(em(fx(m)+' × a = '+fx(F)+(mu?' − '+fx(f):'')), em('a = '+s3(a)+' '+MS2));
+  return {t:'fma',v:{m:m,mu:mu,F:F},line:'m = '+fx(m)+' kg　F = '+fx(F)+' N'+(mu?'　μ′ = '+fx(mu):''),
+    desc:(mu?'粗い':'滑らかな')+'水平面上の物体を水平な力 F で引く'+(mu?'　g = 9.8 '+MS2:''),ask:'加速度の大きさは',unit:MS2,ans:a,steps:st};
+}},
+{cat:'eom',ctx:'滑らかな斜面の加速度',gen:function(){
+  var A=pick(ANG), a=r6(9.8*A.s);
+  return {t:'slopeA',v:{d:A.d},line:aDesc(A),desc:'滑らかな斜面に物体を置いて静かに放した　g = 9.8 '+MS2,
+    ask:'斜面に沿った加速度の大きさは',unit:MS2,ans:a,
+    steps:['斜面方向の力は重力の成分 mg sin'+aN(A)+' だけ',em('ma = mg sin'+aN(A)+' より a = g sin'+aN(A)),
+      sinT(A),em('a = 9.8 × '+A.sT+' = '+s3(a)+' '+MS2),'質量は約分されて答えに残らない']};
+}},
+{cat:'eom',ctx:'粗い斜面をすべり下りる加速度',gen:function(){
+  var A=pick(ANG), mu=pick([0.1,0.2,0.25,0.3,0.4,0.5]);
+  var a=r6(9.8*(A.s-mu*A.c));
+  return {t:'slopeF',v:{d:A.d,mu:mu},line:aDesc(A)+'　μ′ = '+fx(mu),
+    desc:'粗い斜面を物体がすべり下りている　g = 9.8 '+MS2,ask:'加速度の大きさは',unit:MS2,ans:a,
+    steps:['斜面方向 下向きに mg sin'+aN(A)+'　上向きに動摩擦力 μ′N','垂直抗力 '+em('N = mg cos'+aN(A)),
+      em('ma = mg sin'+aN(A)+' − μ′mg cos'+aN(A)),
+      sinT(A)+'　'+cosT(A),
+      em('a = 9.8 × ('+A.sT+' − '+fx(mu)+' × '+A.cT+') = '+s3(a)+' '+MS2)]};
+}},
+{cat:'eom',ctx:'接触する2物体',gen:function(){
+  var m1=pick([1,2,3,4,5]), m2=pick([1,2,3,4,6]), F=pick([6,10,12,15,20,24,30]), askN=Math.random()<0.5;
+  var a=r6(F/(m1+m2)), N=r6(m2*F/(m1+m2));
+  var st=['2物体を1つとみなす '+em('('+fx(m1)+' + '+fx(m2)+') × a = '+fx(F)),em('a = '+s3(a)+' '+MS2)];
+  if(askN) st.push('B だけの運動方程式 '+em(fx(m2)+' × a = N'),em('N = '+fx(m2)+' × '+fx(F)+'/'+fx(m1+m2)+' = '+s3(N)+' N'));
+  return {t:'push2',v:{m1:m1,m2:m2,F:F,askN:askN},frac:true,line:'A '+fx(m1)+' kg　B '+fx(m2)+' kg　F = '+fx(F)+' N',
+    desc:'滑らかな水平面上で接して置いた A と B を A の側から水平な力 F で押す',
+    ask:askN?'A が B を押す力の大きさは':'加速度の大きさは',unit:askN?'N':MS2,ans:askN?N:a,steps:st};
+}},
+{cat:'eom',ctx:'台上の物体と吊るした物体',gen:function(){
+  var m1=pick([1,2,3,4,5]), m2=pick([1,2,3,4]), askT=Math.random()<0.5;
+  var a=r6(m2*9.8/(m1+m2)), Tn=r6(m1*m2*9.8/(m1+m2));
+  var st=['A は '+em(fx(m1)+' a = T')+'　B は '+em(fx(m2)+' a = '+fx(m2)+' × 9.8 − T'),
+    '2式を足すと T が消える '+em('('+fx(m1)+' + '+fx(m2)+') a = '+fx(m2*9.8)),
+    em('a = '+fx(m2*9.8)+' ÷ '+fx(m1+m2)+' = '+s3(a)+' '+MS2)];
+  if(askT) st.push(em('T = '+fx(m1)+' × a = '+s3(Tn)+' N'));
+  return {t:'table',v:{m1:m1,m2:m2,askT:askT},line:'A '+fx(m1)+' kg　B '+fx(m2)+' kg',
+    desc:'滑らかな水平な台上の A と 台の端の滑車を通して吊るした B を糸でつなぎ 静かに放した　g = 9.8 '+MS2,
+    ask:askT?'糸の張力の大きさは':'加速度の大きさは',unit:askT?'N':MS2,ans:askT?Tn:a,steps:st};
+}},
+{cat:'eom',ctx:'滑車の両側の2物体',gen:function(){
+  var m2=pick([1,2,3]), m1=m2+pick([1,2,3]), askT=Math.random()<0.5;
+  var a=r6((m1-m2)*9.8/(m1+m2)), Tn=r6(2*m1*m2*9.8/(m1+m2));
+  var st=['A は下向きに '+em(fx(m1)+' a = '+fx(m1)+' × 9.8 − T')+'　B は上向きに '+em(fx(m2)+' a = T − '+fx(m2)+' × 9.8'),
+    '2式を足す '+em('('+fx(m1)+' + '+fx(m2)+') a = ('+fx(m1)+' − '+fx(m2)+') × 9.8'),
+    em('a = '+fx((m1-m2)*9.8)+' ÷ '+fx(m1+m2)+' = '+s3(a)+' '+MS2)];
+  if(askT) st.push('B の式に戻す '+em('T = '+fx(m2)+' × (9.8 + '+s3(a)+') = '+s3(Tn)+' N'));
+  return {t:'atwood',v:{m1:m1,m2:m2,askT:askT},line:'A '+fx(m1)+' kg　B '+fx(m2)+' kg',
+    desc:'天井に固定した滑車に糸をかけ 両端に A と B をつるして静かに放した　g = 9.8 '+MS2,
+    ask:askT?'糸の張力の大きさは':'加速度の大きさは',unit:askT?'N':MS2,ans:askT?Tn:a,steps:st};
+}},
+{cat:'eom',ctx:'エレベーター内の垂直抗力',gen:function(){
+  var m=pick([40,50,60,70]), a=pick([0.2,0.5,1,1.2,1.5,2]), up=Math.random()<0.5;
+  var N=r6(m*(9.8+(up?a:-a)));
+  return {t:'elev',v:{m:m,a:a,up:up},line:'m = '+fx(m)+' kg　加速度 '+fx(a)+' '+MS2+' '+(up?'上向き':'下向き'),
+    desc:'エレベーターの床の体重計に人が乗っている　g = 9.8 '+MS2,ask:'体重計が人を押す力の大きさは',unit:'N',ans:N,
+    steps:['上向きを正として人の運動方程式を書く',
+      em(fx(m)+' × '+(up?fx(a):'(−'+fx(a)+')')+' = N − '+fx(m)+' × 9.8'),
+      em('N = '+fx(m)+' × (9.8 '+(up?'+':'−')+' '+fx(a)+') = '+s3(N)+' N'),
+      up?'上向きに加速するとき体重計の値は重力より大きい':'下向きに加速するとき体重計の値は重力より小さい']};
+}},
+
+/* ── 4 仕事とエネルギー ─────────────────────────────── */
+{cat:'ene',ctx:'仕事 W = Fx cosθ',gen:function(){
+  var F=pick([2,5,10,20,50]), x=pick([2,3,4,5,10]), d=pick([0,0,30,60]);
+  var c = d===0?1 : d===60?0.5 : SQ3/2, W=r6(F*x*c);
+  var st=['仕事は力の移動方向の成分 × 移動距離 '+em('W = Fx cosθ')];
+  if(d===0) st.push('力と移動の向きが同じなので cos0° = 1',em('W = '+fx(F)+' × '+fx(x)+' = '+s3(W)+' J'));
+  else st.push('cos'+d+'° = '+(d===60?'1/2':'√3/2 ≈ 0.866'),em('W = '+fx(F)+' × '+fx(x)+' × '+(d===60?'1/2':'√3/2')+' = '+s3(W)+' J'));
+  return {t:'work',v:{F:F,x:x,d:d},line:'F = '+fx(F)+' N　x = '+fx(x)+' m　移動の向きと力のなす角 '+d+'°',
+    desc:'物体に一定の力 F を加えて直線上を x だけ動かした',ask:'力 F がした仕事は',unit:'J',ans:W,steps:st};
+}},
+{cat:'ene',ctx:'運動エネルギーと位置エネルギー',gen:function(){
+  var m=pick([0.5,1,2,4,5,10]), K=Math.random()<0.5, v=pick([2,3,4,5,6,10]), h=pick([2,3,5,10,20]);
+  var E = K ? r6(0.5*m*v*v) : r6(m*9.8*h);
+  return {t:'kpe',v:{m:m,K:K,v:v,h:h},line:'m = '+fx(m)+' kg　'+(K?'v = '+fx(v)+' m/s':'h = '+fx(h)+' m'),
+    desc:K?'直線上を速さ v で動く物体':'基準面から高さ h の位置にある物体　g = 9.8 '+MS2,
+    ask:K?'運動エネルギーは':'重力による位置エネルギーは',unit:'J',ans:E,
+    steps:K?[em('K = ½mv<sup>2</sup>'),em('K = ½ × '+fx(m)+' × '+p2(fx(v))+' = '+s3(E)+' J')]
+           :[em('U = mgh'),em('U = '+fx(m)+' × 9.8 × '+fx(h)+' = '+s3(E)+' J')]};
+}},
+{cat:'ene',ctx:'力学的エネルギー保存で速さ',gen:function(){
+  var k=pick([1,2,3,4,5,6,7,10]), h=r6(k*k/10), v=r6(1.4*k), X=r6(19.6*h);
+  return {t:'dropV',v:{h:h},line:'h = '+fx(h)+' m　g = 9.8 '+MS2,
+    desc:'滑らかな曲面上の高さ h の点から小球を静かに放した',ask:'最下点での速さは',unit:'m/s',ans:v,
+    steps:['滑らかな面の垂直抗力は仕事をしないので力学的エネルギーが保存される',
+      em('mgh = ½mv<sup>2</sup>')+' より '+em('v<sup>2</sup> = 2gh'),
+      em('v<sup>2</sup> = 2 × 9.8 × '+fx(h)+' = '+fx(X)),em('v = '+s3(v)+' m/s')]};
+}},
+{cat:'ene',ctx:'力学的エネルギー保存で高さ',gen:function(){
+  var v=pick([1.4,2.8,4.2,5.6,7,9.8,3,5,10]), h=r6(v*v/19.6);
+  return {t:'riseH',v:{v:v},line:'v = '+fx(v)+' m/s　g = 9.8 '+MS2,
+    desc:'滑らかな曲面の最下点を速さ v で通過した小球が曲面を上る',ask:'到達する最高点の高さは',unit:'m',ans:h,
+    steps:['最高点で速さ 0 になり運動エネルギーが全部位置エネルギーに変わる',
+      em('½mv<sup>2</sup> = mgh')+' より '+em('h = v<sup>2</sup> ÷ 2g'),
+      em('h = '+fx(v*v)+' ÷ 19.6 = '+s3(h)+' m')]};
+}},
+{cat:'ene',ctx:'ばねで打ち出す速さ',gen:function(){
+  var m=pick([0.1,0.2,0.25,0.5,1]), s=pick([5,10,20]), k=r6(m*s*s), xc=pick([2,4,5,10,20]);
+  var x=r6(xc/100), v=r6(x*s);
+  return {t:'sprV',v:{m:m,k:k,xc:xc},line:'k = '+fx(k)+' N/m　m = '+fx(m)+' kg　縮み '+fx(xc)+' cm',
+    desc:'滑らかな水平面上でばねを縮めて物体を押し当て 静かに放した',ask:'ばねを離れた後の物体の速さは',unit:'m/s',ans:v,
+    steps:['弾性エネルギーが運動エネルギーに変わる '+em('½kx<sup>2</sup> = ½mv<sup>2</sup>'),
+      '縮みを m に直す '+em(fx(xc)+' cm = '+fx(x)+' m'),
+      em('v = x √(k/m) = '+fx(x)+' × √('+fx(k)+' ÷ '+fx(m)+') = '+fx(x)+' × '+fx(s)),
+      em('v = '+s3(v)+' m/s')]};
+}},
+{cat:'ene',ctx:'弾性エネルギー',gen:function(){
+  var k=pick([10,20,40,50,100,200,400]), xc=pick([2,5,10,20]), x=r6(xc/100), U=r6(0.5*k*x*x);
+  return {t:'sprU',v:{k:k,xc:xc},line:'k = '+fx(k)+' N/m　伸び '+fx(xc)+' cm',
+    desc:'ばねを自然の長さから伸ばした',ask:'ばねに蓄えられた弾性エネルギーは',unit:'J',ans:U,
+    steps:[em('U = ½kx<sup>2</sup>')+'　x は m で入れる','伸び '+em(fx(xc)+' cm = '+fx(x)+' m'),
+      em('U = ½ × '+fx(k)+' × '+p2(fx(x))+' = '+s3(U)+' J')]};
+}},
+{cat:'ene',ctx:'摩擦で止まるまでの距離',gen:function(){
+  var v=pick([2,3,4,5,6,7,9.8]), mu=pick([0.2,0.25,0.4,0.5]), x=r6(v*v/(2*mu*9.8));
+  return {t:'fric',v:{v:v,mu:mu},line:'v = '+fx(v)+' m/s　μ′ = '+fx(mu),
+    desc:'粗い水平面上をすべる物体が動摩擦力を受けて止まった　g = 9.8 '+MS2,ask:'止まるまでにすべった距離は',unit:'m',ans:x,
+    steps:['運動エネルギーの変化 = 動摩擦力がした仕事 '+em('0 − ½mv<sup>2</sup> = −μ′mg x'),
+      '質量は約分される '+em('x = v<sup>2</sup> ÷ (2μ′g)'),
+      em('x = '+fx(v*v)+' ÷ (2 × '+fx(mu)+' × 9.8) = '+s3(x)+' m')]};
+}},
+{cat:'ene',ctx:'仕事率',gen:function(){
+  var m=pick([10,20,50,100]), h=pick([2,5,10,20]), t=pick([2,4,5,10,20]), P=r6(m*9.8*h/t);
+  return {t:'power',v:{m:m,h:h,t:t},line:'m = '+fx(m)+' kg　h = '+fx(h)+' m　t = '+fx(t)+' s',
+    desc:'モーターで荷物を一定の速さで引き上げた　g = 9.8 '+MS2,ask:'モーターの仕事率は',unit:'W',ans:P,
+    steps:['一定の速さなので引く力は重力 mg に等しい',em('W = mgh = '+fx(m)+' × 9.8 × '+fx(h)+' = '+fx(m*9.8*h)+' J'),
+      em('P = W ÷ t = '+fx(m*9.8*h)+' ÷ '+fx(t)+' = '+s3(P)+' W')]};
+}},
+
+/* ── 5 熱量と比熱 ────────────────────────────────────── */
+{cat:'heat',ctx:'熱量 Q = mcΔT',gen:function(){
+  var M=pick(MAT), m=pick([50,100,150,200,250,500]), t1=pick([10,15,20,25]), t2=t1+pick([10,20,30,40,50,60]);
+  var Q=r6(m*M[1]*(t2-t1));
+  return {t:'hq',v:{c:M[1],m:m,t1:t1,t2:t2},line:M[0]+' '+fx(m)+' g　'+t1+' ℃ → '+t2+' ℃',
+    desc:M[0]+'の比熱 '+fx(M[1])+' J/(g·K)',ask:'温度を上げるのに要する熱量は',unit:'J',ans:Q,
+    steps:['温度差 1 K は 1 ℃ と同じ大きさ '+em('ΔT = '+(t2-t1)+' K'),
+      em('Q = mcΔT = '+fx(m)+' × '+fx(M[1])+' × '+(t2-t1)+' = '+s3(Q)+' J')]};
+}},
+{cat:'heat',ctx:'熱量から上がった温度',gen:function(){
+  var M=pick(MAT), m=pick([50,100,200,250,500]), dT=pick([5,10,12,15,20,25,30]), t1=pick([10,15,20]);
+  var Q=r6(m*M[1]*dT), t2=t1+dT;
+  return {t:'hT',v:{c:M[1],m:m,Q:Q,t1:t1},line:M[0]+' '+fx(m)+' g　Q = '+fx(Q)+' J',
+    desc:t1+' ℃ の'+M[0]+'に熱量 Q を与えた　'+M[0]+'の比熱 '+fx(M[1])+' J/(g·K)',ask:'温度は何 ℃ になるか',unit:'℃',ans:t2,
+    steps:[em('ΔT = Q ÷ (mc) = '+fx(Q)+' ÷ ('+fx(m)+' × '+fx(M[1])+') = '+s3(dT)+' K'),
+      em(t1+' + '+s3(dT)+' = '+s3(t2)+' ℃')]};
+}},
+{cat:'heat',ctx:'熱容量',gen:function(){
+  var M=pick(MAT), m=pick([50,100,200,250,500,1000]), C=r6(m*M[1]);
+  return {t:'hcap',v:{c:M[1],m:m},line:M[0]+' '+fx(m)+' g',desc:M[0]+'の比熱 '+fx(M[1])+' J/(g·K)',
+    ask:'この物体の熱容量は',unit:'J/K',ans:C,
+    steps:['熱容量は物体全体の温度を 1 K 上げる熱量 '+em('C = mc'),em('C = '+fx(m)+' × '+fx(M[1])+' = '+s3(C)+' J/K')]};
+}},
+{cat:'heat',ctx:'水と水の混合',gen:function(){
+  var m1=pick([50,100,150,200,300]), m2=pick([50,100,200,250,300]), t1=pick([60,70,80,90]), t2=pick([10,15,20,25]);
+  var T=r6((m1*t1+m2*t2)/(m1+m2));
+  return {t:'mixW',v:{m1:m1,m2:m2,t1:t1,t2:t2},frac:true,line:t1+' ℃ の水 '+fx(m1)+' g　'+t2+' ℃ の水 '+fx(m2)+' g',
+    desc:'断熱容器の中で混ぜた　熱は外部に逃げない',ask:'混ぜた後の温度は',unit:'℃',ans:T,
+    steps:['高温の水が失う熱量 = 低温の水が受け取る熱量','混合後の温度を T とおく',
+      em(fx(m1)+' × 4.2 × ('+t1+' − T) = '+fx(m2)+' × 4.2 × (T − '+t2+')'),
+      '比熱は両辺で約分される '+em('T = ('+fx(m1)+' × '+t1+' + '+fx(m2)+' × '+t2+') ÷ '+fx(m1+m2)),
+      em('T = '+fx(m1*t1+m2*t2)+' ÷ '+fx(m1+m2)+' = '+s3(T)+' ℃')]};
+}},
+{cat:'heat',ctx:'金属と水の混合',gen:function(){
+  var M=pick(MAT.slice(1)), mm=pick([100,200,250,300,500]), mw=pick([100,200,250,300,500]), t1=pick([80,90,100]), t2=pick([10,15,20]);
+  var a=mm*M[1], b=mw*CW, T=r6((a*t1+b*t2)/(a+b));
+  return {t:'mixM',v:{c:M[1],mm:mm,mw:mw,t1:t1,t2:t2},
+    line:t1+' ℃ の'+M[0]+' '+fx(mm)+' g　'+t2+' ℃ の水 '+fx(mw)+' g',
+    desc:M[0]+'を水に入れた　比熱は'+M[0]+' '+fx(M[1])+' J/(g·K) と水 4.2 J/(g·K)　熱は容器と外部に逃げない',
+    ask:'全体の温度は',unit:'℃',ans:T,
+    steps:['金属が失う熱量 = 水が受け取る熱量','金属の熱容量 '+em(fx(mm)+' × '+fx(M[1])+' = '+fx(a)+' J/K')+'　水の熱容量 '+em(fx(mw)+' × 4.2 = '+fx(b)+' J/K'),
+      em(fx(a)+' × ('+t1+' − T) = '+fx(b)+' × (T − '+t2+')'),
+      em('T = ('+fx(a)+' × '+t1+' + '+fx(b)+' × '+t2+') ÷ ('+fx(a)+' + '+fx(b)+') = '+s3(T)+' ℃')]};
+}},
+{cat:'heat',ctx:'混合から比熱を求める',gen:function(){
+  var M=pick(MAT.slice(1)), mm=pick([100,200,300,500]), mw=pick([100,200,250]), t1=100, t2=pick([15,20]);
+  var a=mm*M[1], b=mw*CW, Tf=Math.round((a*t1+b*t2)/(a+b)*10)/10;
+  var c=r6(mw*CW*(Tf-t2)/(mm*(t1-Tf))), Qw=r6(mw*CW*(Tf-t2));
+  return {t:'findC',v:{mm:mm,mw:mw,t2:t2,Tf:Tf},
+    line:'100 ℃ の金属 '+fx(mm)+' g　'+t2+' ℃ の水 '+fx(mw)+' g → '+fx(Tf)+' ℃',
+    desc:'沸騰水で温めた金属を水に入れると全体が '+fx(Tf)+' ℃ になった　水の比熱 4.2 J/(g·K)　熱は外部に逃げない',
+    ask:'金属の比熱は',unit:'J/(g·K)',ans:c,
+    steps:['水が受け取った熱量 '+em(fx(mw)+' × 4.2 × ('+fx(Tf)+' − '+t2+') = '+fx(Qw)+' J'),
+      '金属が失った熱量も同じ '+em(fx(mm)+' × c × (100 − '+fx(Tf)+') = '+fx(Qw)),
+      em('c = '+fx(Qw)+' ÷ '+fx(mm*(t1-Tf))+' = '+s3(c)+' J/(g·K)')]};
+}},
+
+/* ── 6 波 ─────────────────────────────────────────────── */
+{cat:'wave',ctx:'波の式 v = fλ',gen:function(){
+  var snd=Math.random()<0.5, v, f, lam, ask=pick(['lam','f','v']);
+  if(snd){ v=VS; f=pick([170,340,425,500,680,850,1000,1700]); }
+  else { v=pick([2,3,4,6,8,10,12]); f=pick([0.5,1,2,4,5]); }
+  lam=r6(v/f);
+  var gv={v:'v = '+fx(v)+' m/s',f:'f = '+fx(f)+' Hz',lam:'λ = '+fx(lam)+' m'};
+  var line=['v','f','lam'].filter(function(k){ return k!==ask; }).map(function(k){ return gv[k]; }).join('　');
+  var ans = ask==='lam'?lam : ask==='f'?f : v;
+  var st=['1周期 T の間に波は1波長 λ 進むので '+em('v = λ/T = fλ')];
+  if(ask==='lam') st.push(em('λ = v ÷ f = '+fx(v)+' ÷ '+fx(f)+' = '+s3(lam)+' m'));
+  if(ask==='f') st.push(em('f = v ÷ λ = '+fx(v)+' ÷ '+fx(lam)+' = '+s3(f)+' Hz'));
+  if(ask==='v') st.push(em('v = fλ = '+fx(f)+' × '+fx(lam)+' = '+s3(v)+' m/s'));
+  return {t:'vfl',v:{v:v,f:f,lam:lam,ask:ask},line:line,desc:snd?'空気中を伝わる音波':'ロープを伝わる正弦波',
+    ask:ask==='lam'?'波長は':ask==='f'?'振動数は':'波の速さは',unit:ask==='lam'?'m':ask==='f'?'Hz':'m/s',ans:ans,steps:st};
+}},
+{cat:'wave',ctx:'周期と振動数',gen:function(){
+  var f=pick([0.25,0.5,2,4,5,10,20,50]), toT=Math.random()<0.5, Tp=r6(1/f);
+  return {t:'period',v:{f:f,Tp:Tp,toT:toT},line:toT?'f = '+fx(f)+' Hz':'T = '+fx(Tp)+' s',desc:'媒質の1点の振動',
+    ask:toT?'周期は':'振動数は',unit:toT?'s':'Hz',ans:toT?Tp:f,
+    steps:['振動数は1秒あたりの振動の回数で周期の逆数 '+em('f = 1/T'),
+      toT?em('T = 1 ÷ '+fx(f)+' = '+s3(Tp)+' s'):em('f = 1 ÷ '+fx(Tp)+' = '+s3(f)+' Hz')]};
+}},
+{cat:'wave',ctx:'弦の固有振動数',gen:function(){
+  var L=pick([0.4,0.5,0.6,0.8,1,1.2]), v=pick([120,160,200,240,300,360,400]), n=pick([1,2,3]);
+  var lam=r6(2*L/n), f=r6(n*v/(2*L));
+  return {t:'string',v:{L:L,v:v,n:n},line:'L = '+fx(L)+' m　v = '+fx(v)+' m/s',
+    desc:'両端を固定した弦に腹が '+n+' 個の定常波が生じた',ask:'この振動の振動数は',unit:'Hz',ans:f,
+    steps:['両端は節 腹1個は半波長',em('L = '+n+' × λ/2')+' より '+em('λ = 2 × '+fx(L)+' ÷ '+n+' = '+fx(lam)+' m'),
+      em('f = v ÷ λ = '+fx(v)+' ÷ '+fx(lam)+' = '+s3(f)+' Hz')]};
+}},
+{cat:'wave',ctx:'閉管の固有振動数',gen:function(){
+  var L=pick([0.17,0.25,0.34,0.5,0.68,0.85]), m=pick([1,1,3,5]);
+  var lam=r6(4*L/m), f=r6(m*VS/(4*L));
+  var nm = m===1?'基本振動':m+'倍振動';
+  return {t:'closed',v:{L:L,m:m},line:'L = '+fx(L)+' m　音速 340 m/s',
+    desc:'一端を閉じた管の'+nm+'　開口端補正は無視する',ask:nm+'の振動数は',unit:'Hz',ans:f,
+    steps:['閉口端は節で開口端は腹 基本振動では管の長さが λ/4',
+      m===1?em('λ = 4L = '+fx(lam)+' m'):em(m+'倍振動では L = '+m+' × λ/4 より λ = 4L ÷ '+m+' = '+fx(lam)+' m'),
+      em('f = 340 ÷ '+fx(lam)+' = '+s3(f)+' Hz'),'閉管には奇数倍の振動だけが生じる']};
+}},
+{cat:'wave',ctx:'開管の固有振動数',gen:function(){
+  var L=pick([0.17,0.25,0.34,0.5,0.68,0.85,1]), n=pick([1,1,2,3]);
+  var lam=r6(2*L/n), f=r6(n*VS/(2*L));
+  var nm = n===1?'基本振動':n+'倍振動';
+  return {t:'open',v:{L:L,n:n},line:'L = '+fx(L)+' m　音速 340 m/s',
+    desc:'両端を開いた管の'+nm+'　開口端補正は無視する',ask:nm+'の振動数は',unit:'Hz',ans:f,
+    steps:['両端とも腹 基本振動では管の長さが λ/2',
+      n===1?em('λ = 2L = '+fx(lam)+' m'):em(n+'倍振動では L = '+n+' × λ/2 より λ = 2L ÷ '+n+' = '+fx(lam)+' m'),
+      em('f = 340 ÷ '+fx(lam)+' = '+s3(f)+' Hz')]};
+}},
+{cat:'wave',ctx:'うなり',gen:function(){
+  var f1=pick([436,438,440,442,445,500]), d=pick([1,2,3,4,5,6]), rev=Math.random()<0.5;
+  var f2=f1+d, t=pick([2,4,5,10]), N=d*t;
+  if(!rev) return {t:'beat',v:{f1:f1,f2:f2,rev:false,t:t},line:'f<sub>1</sub> = '+fx(f1)+' Hz　f<sub>2</sub> = '+fx(f2)+' Hz',
+    desc:'2つのおんさを同時に鳴らした',ask:'1秒あたりのうなりの回数は',unit:'回',ans:d,
+    steps:['うなりの回数は振動数の差 '+em('|f<sub>1</sub> − f<sub>2</sub>|'),em(fx(f2)+' − '+fx(f1)+' = '+d+' 回')]};
+  return {t:'beat',v:{f1:f1,f2:f2,rev:true,t:t,N:N},line:'f<sub>1</sub> = '+fx(f1)+' Hz　'+t+' 秒間にうなり '+N+' 回',
+    desc:'おんさ A と 振動数が A より大きいおんさ B を同時に鳴らした',ask:'B の振動数は',unit:'Hz',ans:f2,
+    steps:['1秒あたりのうなり '+em(N+' ÷ '+t+' = '+d+' 回'),'うなりの回数は振動数の差 B は A より大きい',
+      em('f<sub>2</sub> = '+fx(f1)+' + '+d+' = '+fx(f2)+' Hz')]};
+}},
+{cat:'wave',ctx:'気温と音速',gen:function(){
+  var t=pick([0,5,10,15,20,25,30,35]), V=r6(331.5+0.6*t);
+  return {t:'sound',v:{t:t},line:'気温 '+t+' ℃',desc:'乾燥した空気中の音速は '+em('V = 331.5 + 0.6t')+' m/s',
+    ask:'音速は',unit:'m/s',ans:V,
+    steps:['t に摂氏温度を入れる',em('V = 331.5 + 0.6 × '+t+' = '+s3(V)+' m/s')]};
+}},
+{cat:'wave',ctx:'固有振動数の比',gen:function(){
+  var it=pick(WR);
+  return choiceQ('wratio',{q:it.q},it.q,'開口端補正は無視する','低い順に3つの固有振動数の比は',
+    {right:it.r,wrong:WOPT.filter(function(x){ return x!==it.r; })},it.s);
+}},
+
+/* ── 7 電気回路 ─────────────────────────────────────── */
+{cat:'elec',ctx:'オームの法則',gen:function(){
+  var Rr=pick([2,4,5,10,20,25,50,100]), I=pick([0.1,0.2,0.3,0.5,1,2,3]), V=r6(Rr*I), ask=pick(['V','I','R']);
+  var line = ask==='V'?'R = '+fx(Rr)+' Ω　I = '+fx(I)+' A' : ask==='I'?'R = '+fx(Rr)+' Ω　V = '+fx(V)+' V' : 'V = '+fx(V)+' V　I = '+fx(I)+' A';
+  var ans = ask==='V'?V : ask==='I'?I : Rr;
+  return {t:'ohm',v:{R:Rr,I:I,V:V,ask:ask},line:line,desc:'抵抗に電源をつないだ',
+    ask:ask==='V'?'抵抗の両端の電圧は':ask==='I'?'流れる電流は':'抵抗の値は',unit:ask==='V'?'V':ask==='I'?'A':'Ω',ans:ans,
+    steps:['オームの法則 '+em('V = RI'),
+      ask==='V'?em('V = '+fx(Rr)+' × '+fx(I)+' = '+s3(V)+' V') : ask==='I'?em('I = V ÷ R = '+fx(V)+' ÷ '+fx(Rr)+' = '+s3(I)+' A') : em('R = V ÷ I = '+fx(V)+' ÷ '+fx(I)+' = '+s3(Rr)+' Ω')]};
+}},
+{cat:'elec',ctx:'直列の合成抵抗',gen:function(){
+  var n=pick([2,3]), Rs=[], i; for(i=0;i<n;i++) Rs.push(pick([2,3,4,5,6,8,10,12,15,20]));
+  var V=pick([6,9,12,24,30,100]), Rt=Rs.reduce(function(a,b){ return a+b; },0), askI=Math.random()<0.6, I=r6(V/Rt);
+  var st=['直列は抵抗の和 '+em('R = '+Rs.join(' + ')+' = '+Rt+' Ω')];
+  if(askI) st.push('直列では各抵抗に同じ電流が流れる',em('I = '+V+' ÷ '+Rt+' = '+s3(I)+' A'));
+  return {t:'series',v:{Rs:Rs,V:V,askI:askI},frac:true,line:Rs.map(function(r){ return r+' Ω'; }).join(' と ')+' を直列'+(askI?'　電源 '+V+' V':''),
+    desc:'抵抗を直列につないだ',ask:askI?'回路を流れる電流は':'合成抵抗は',unit:askI?'A':'Ω',ans:askI?I:Rt,steps:st};
+}},
+{cat:'elec',ctx:'並列の合成抵抗',gen:function(){
+  var n=pick([2,2,3]), Rs=[], i; for(i=0;i<n;i++) Rs.push(pick([2,3,4,5,6,10,12,15,20,30]));
+  var inv=Rs.reduce(function(a,b){ return a+1/b; },0), Rt=r6(1/inv), V=pick([6,12,24,30,60]), askI=Math.random()<0.4, I=r6(V*inv);
+  var fr=toFr(1/inv);
+  var st=['並列は逆数の和 '+em('1/R = '+Rs.map(function(r){ return '1/'+r; }).join(' + ')),
+    em('R = '+(fr?frT(fr)+' = ':'')+s3(1/inv)+' Ω')];
+  if(n===2) st.push('2個なら '+em('R = 積 ÷ 和 = '+(Rs[0]*Rs[1])+' ÷ '+(Rs[0]+Rs[1])));
+  if(askI) st.push('電源から流れる電流 '+em('I = '+V+' ÷ R = '+s3(I)+' A'));
+  return {t:'para',v:{Rs:Rs,V:V,askI:askI},frac:true,line:Rs.map(function(r){ return r+' Ω'; }).join(' と ')+' を並列'+(askI?'　電源 '+V+' V':''),
+    desc:'抵抗を並列につないだ',ask:askI?'電源から流れる電流は':'合成抵抗は',unit:askI?'A':'Ω',ans:askI?I:Rt,steps:st};
+}},
+{cat:'elec',ctx:'直列と並列の組み合わせ',gen:function(){
+  var R1=pick([2,3,4,5,6,10]), R2=pick([3,4,6,10,12,20]), R3=pick([4,6,12,15,20,30]), V=pick([6,12,24,30]);
+  var Rp=R2*R3/(R2+R3), Rt=R1+Rp, I=V/Rt, askI=Math.random()<0.6;
+  var fp=toFr(Rp), ft=toFr(Rt);
+  var st=['並列部分 '+em(R2+' × '+R3+' ÷ ('+R2+' + '+R3+') = '+(fp&&fp.d>1?frT(fp)+' = ':'')+s3(Rp)+' Ω'),
+    '全体は R<sub>1</sub> と直列 '+em('R = '+R1+' + '+s3(Rp)+' = '+(ft&&ft.d>1?frT(ft)+' = ':'')+s3(Rt)+' Ω')];
+  if(askI) st.push(em('I = '+V+' ÷ '+s3(Rt)+' = '+s3(I)+' A'));
+  return {t:'mixed',v:{R1:R1,R2:R2,R3:R3,V:V,askI:askI},frac:true,
+    line:'R<sub>1</sub> = '+R1+' Ω　R<sub>2</sub> = '+R2+' Ω　R<sub>3</sub> = '+R3+' Ω'+(askI?'　電源 '+V+' V':''),
+    desc:'R<sub>2</sub> と R<sub>3</sub> を並列にし その組に R<sub>1</sub> を直列につないだ',
+    ask:askI?'R<sub>1</sub> を流れる電流は':'回路全体の合成抵抗は',unit:askI?'A':'Ω',ans:askI?r6(I):r6(Rt),steps:st};
+}},
+{cat:'elec',ctx:'消費電力',gen:function(){
+  var kind=pick(['VI','VR','IR']), V=pick([1.5,3,6,12,100]), I=pick([0.2,0.5,1,2,3]), Rr=pick([2,4,5,10,20,50]);
+  var P, line, st;
+  if(kind==='VI'){ P=r6(V*I); line='V = '+fx(V)+' V　I = '+fx(I)+' A'; st=[em('P = VI = '+fx(V)+' × '+fx(I)+' = '+s3(P)+' W')]; }
+  else if(kind==='VR'){ P=r6(V*V/Rr); line='V = '+fx(V)+' V　R = '+fx(Rr)+' Ω'; st=['I = V/R を P = VI に入れる '+em('P = V<sup>2</sup>/R'),em('P = '+p2(fx(V))+' ÷ '+fx(Rr)+' = '+s3(P)+' W')]; }
+  else { P=r6(I*I*Rr); line='I = '+fx(I)+' A　R = '+fx(Rr)+' Ω'; st=['V = RI を P = VI に入れる '+em('P = I<sup>2</sup>R'),em('P = '+p2(fx(I))+' × '+fx(Rr)+' = '+s3(P)+' W')]; }
+  return {t:'power',v:{kind:kind,V:V,I:I,R:Rr},frac:true,line:line,desc:'抵抗で電力が消費される',ask:'消費電力は',unit:'W',ans:P,steps:st};
+}},
+{cat:'elec',ctx:'電力量とジュール熱',gen:function(){
+  var P=pick([100,200,500,600,800,1000,1200]), kwh=Math.random()<0.4, t, E, st;
+  if(kwh){ t=pick([0.5,1,2,3,5]); E=r6(P*t/1000);
+    st=['電力量 = 電力 × 時間 kW と h で計算すると kWh になる',em(fx(P)+' W = '+fx(P/1000)+' kW'),em(fx(P/1000)+' × '+fx(t)+' = '+s3(E)+' kWh')];
+  } else { t=pick([1,2,5,10,30]); E=r6(P*t*60/1000);
+    st=['ジュール熱 '+em('Q = Pt')+'　t は秒で入れる',em(fx(t)+' 分 = '+fx(t*60)+' s'),em(fx(P)+' × '+fx(t*60)+' = '+fx(P*t*60)+' J = '+s3(E)+' kJ')]; }
+  return {t:'joule',v:{P:P,t:t,kwh:kwh},line:'電熱器 '+fx(P)+' W　'+(kwh?fx(t)+' 時間':fx(t)+' 分'),desc:'定格どおりの電力で使い続けた',
+    ask:kwh?'消費した電力量は':'発生したジュール熱は',unit:kwh?'kWh':'kJ',ans:E,steps:st};
+}},
+{cat:'elec',ctx:'電気の式の選択',gen:function(){
+  var it=pick(EF);
+  return choiceQ('eform',{q:it.q},it.q+' を表す式','','正しい式は',{right:it.r,wrong:it.w},it.s.concat(['正しい式は '+em(it.r)]));
+}},
+
+/* ── 8 運動量と反発係数 ─────────────────────────────── */
+{cat:'mom',ctx:'力積と平均の力',gen:function(){
+  var m=pick([0.1,0.15,0.2,0.5]), v1=pick([10,20,30,40]), v2=pick([5,10,20,30,40]), askF=Math.random()<0.5, dt=pick([0.01,0.02,0.05,0.1]);
+  var J=r6(m*(v1+v2)), F=r6(J/dt);
+  var st=['ボールが戻る向きを正とする 衝突前の速度は −'+fx(v1)+' m/s',
+    '力積 = 運動量の変化 '+em(fx(m)+' × '+fx(v2)+' − '+fx(m)+' × (−'+fx(v1)+') = '+s3(J)+' N·s')];
+  if(askF) st.push(em('F = 力積 ÷ 時間 = '+s3(J)+' ÷ '+fx(dt)+' = '+s3(F)+' N'));
+  return {t:'impulse',v:{m:m,v1:v1,v2:v2,dt:dt,askF:askF},
+    line:'m = '+fx(m)+' kg　'+fx(v1)+' m/s で飛んできて '+fx(v2)+' m/s で逆向きに戻る'+(askF?'　接触時間 '+fx(dt)+' s':''),
+    desc:'バットでボールを打ち返した',ask:askF?'バットがボールに及ぼした平均の力の大きさは':'ボールが受けた力積の大きさは',
+    unit:askF?'N':'N·s',ans:askF?F:J,steps:st};
+}},
+{cat:'mom',ctx:'合体する衝突',gen:function(){
+  var m1, m2, v1, v2, V, gd=0;
+  do{ m1=pick([1,2,3,4]); m2=pick([1,2,3,4,6]); v1=pick([2,3,4,6]); v2=pick([0,0,-1,-2,1]); V=(m1*v1+m2*v2)/(m1+m2); gd++; }
+  while(Math.abs(V)<1e-9 && gd<50);
+  return {t:'merge',v:{m1:m1,m2:m2,v1:v1,v2:v2},frac:true,signed:true,
+    line:'A '+fx(m1)+' kg '+fx(v1)+' m/s　B '+fx(m2)+' kg '+fx(v2)+' m/s',
+    desc:'右向きを正とする　一直線上で A が B に衝突して一体になった',ask:'一体になった後の速度は',unit:'m/s',ans:r6(V),
+    steps:['衝突の前後で運動量の和は保存される',
+      em(fx(m1)+' × '+fx(v1)+' + '+fx(m2)+' × '+pr(v2)+' = ('+fx(m1)+' + '+fx(m2)+') V'),
+      em('V = '+fx(m1*v1+m2*v2)+' ÷ '+fx(m1+m2)+' = '+s3(V)+' m/s'),
+      V<0?'負の値は左向きを示す':'正の値は右向きを示す']};
+}},
+{cat:'mom',ctx:'反発係数と衝突後の速度',gen:function(){
+  var m1, m2, v1, v2, e, u1, u2, gd=0, who;
+  do{
+    m1=pick([1,2,3,4]); m2=pick([1,2,3,4]); v1=pick([2,3,4,6]); v2=pick([0,0,-1,-2]); e=pick([0,0.2,0.4,0.5,0.6,0.8,1]);
+    u1=((m1-e*m2)*v1+(1+e)*m2*v2)/(m1+m2); u2=((m2-e*m1)*v2+(1+e)*m1*v1)/(m1+m2);
+    u1=r6(u1); u2=r6(u2); who=pick([1,2]); gd++;
+  } while(Math.abs(who===1?u1:u2)<1e-9 && gd<50);
+  var P=m1*v1+m2*v2, D=e*(v1-v2), ans=r6(who===1?u1:u2);
+  return {t:'ecoll',v:{m1:m1,m2:m2,v1:v1,v2:v2,e:e,who:who},frac:true,signed:true,
+    line:'A '+fx(m1)+' kg '+fx(v1)+' m/s　B '+fx(m2)+' kg '+fx(v2)+' m/s　e = '+fx(e),
+    desc:'右向きを正とする　一直線上で A が B に衝突した',ask:'衝突後の '+(who===1?'A':'B')+' の速度は',unit:'m/s',ans:ans,
+    steps:['運動量保存 '+em(fx(m1)+' v<sub>A</sub>′ + '+fx(m2)+' v<sub>B</sub>′ = '+fx(m1)+' × '+fx(v1)+' + '+fx(m2)+' × '+pr(v2)+' = '+fx(P)),
+      '反発係数の式 '+em('v<sub>B</sub>′ − v<sub>A</sub>′ = e(v<sub>A</sub> − v<sub>B</sub>) = '+fx(e)+' × ('+fx(v1)+' − '+pr(v2)+') = '+fx(D)),
+      'v<sub>B</sub>′ = v<sub>A</sub>′ + '+fx(D)+' を運動量の式に入れる '+em('('+fx(m1)+' + '+fx(m2)+') v<sub>A</sub>′ = '+fx(P)+' − '+fx(m2)+' × '+pr(D)),
+      em('v<sub>A</sub>′ = '+s3(u1)+' m/s　v<sub>B</sub>′ = '+s3(u2)+' m/s')]};
+}},
+{cat:'mom',ctx:'分裂',gen:function(){
+  var m1=pick([1,2,3,4,5]), m2=pick([1,2,3,4,6]), v1=pick([2,3,4,6,10]), v2=-m1*v1/m2;
+  return {t:'recoil',v:{m1:m1,m2:m2,v1:v1},frac:true,signed:true,line:'A '+fx(m1)+' kg　B '+fx(m2)+' kg　A は右向きに '+fx(v1)+' m/s',
+    desc:'右向きを正とする　静止していた物体がばねの力で A と B に分かれた',ask:'B の速度は',unit:'m/s',ans:r6(v2),
+    steps:['分裂の前の運動量は 0 なので後も和は 0',em(fx(m1)+' × '+fx(v1)+' + '+fx(m2)+' × v<sub>B</sub> = 0'),
+      em('v<sub>B</sub> = −'+fx(m1*v1)+' ÷ '+fx(m2)+' = '+s3(v2)+' m/s'),'負の値は左向きを示す']};
+}},
+{cat:'mom',ctx:'床ではね返る高さ',gen:function(){
+  var h=pick([1,2,2.5,4,5,10]), e=pick([0.4,0.5,0.6,0.7,0.8,0.9]), h2=r6(e*e*h);
+  return {t:'bounce',v:{h:h,e:e},line:'h = '+fx(h)+' m　e = '+fx(e),desc:'小球を高さ h から静かに放すと床で1回はね返った',
+    ask:'はね返った後に達する最高点の高さは',unit:'m',ans:h2,
+    steps:['床に当たる直前の速さ '+em('v = √(2gh)'),'はね返った直後の速さは '+em('ev'),
+      '上がる高さは速さの2乗に比例する '+em('h′ = e<sup>2</sup>h'),
+      em('h′ = '+p2(fx(e))+' × '+fx(h)+' = '+s3(h2)+' m')]};
+}},
+{cat:'mom',ctx:'高さから反発係数',gen:function(){
+  var h=pick([1,2,4,5]), e=pick([0.5,0.6,0.7,0.8,0.9]), h2=r6(e*e*h);
+  return {t:'eh',v:{h:h,h2:h2},line:'h = '+fx(h)+' m　h′ = '+fx(h2)+' m',desc:'高さ h から静かに放した小球が床ではね返り 高さ h′ まで上がった',
+    ask:'床と小球の反発係数は',unit:'',ans:e,
+    steps:['速さは高さの平方根に比例する '+em('v = √(2gh)'),em('e = v′/v = √(h′/h)'),
+      em('e = √('+fx(h2)+' ÷ '+fx(h)+') = √'+fx(e*e)+' = '+s3(e))]};
+}},
+{cat:'mom',ctx:'保存される量',gen:function(){
+  var it=pick(MC);
+  return choiceQ('conserve',{q:it.q},it.q,'外力は働かない','前後で保存される量は',{right:it.r,wrong:MOPT.filter(function(x){ return x!==it.r; })},it.s);
+}},
+
+/* ── 9 円運動と単振動 ───────────────────────────────── */
+{cat:'circ',ctx:'角速度と速さ',gen:function(){
+  var Tp=pick([0.5,1,2,4,5,10]), r=pick([0.2,0.5,1,2,5]), askV=Math.random()<0.5;
+  var w=2*Math.PI/Tp, v=r*w;
+  var st=['1周 2π rad を周期 T で回る '+em('ω = 2π/T = 2π ÷ '+fx(Tp)+' = '+s3(w)+' rad/s')];
+  if(askV) st.push(em('v = rω = '+fx(r)+' × '+s3(w)+' = '+s3(v)+' m/s'),'1周の長さ 2πr を T で割っても同じ');
+  return {t:'omega',v:{Tp:Tp,r:r,askV:askV},line:'r = '+fx(r)+' m　T = '+fx(Tp)+' s',desc:'物体が等速円運動をしている　π = 3.14',
+    ask:askV?'速さは':'角速度は',unit:askV?'m/s':'rad/s',ans:r6(askV?v:w),steps:st};
+}},
+{cat:'circ',ctx:'向心力',gen:function(){
+  var m=pick([0.1,0.2,0.5,1,2]), r=pick([0.2,0.5,1,2]), useW=Math.random()<0.4, v=pick([1,2,3,4,5,10]), w=pick([2,3,4,5,10]);
+  var F=useW ? r6(m*r*w*w) : r6(m*v*v/r);
+  return {t:'cent',v:{m:m,r:r,useW:useW,v:v,w:w},line:'m = '+fx(m)+' kg　r = '+fx(r)+' m　'+(useW?'ω = '+fx(w)+' rad/s':'v = '+fx(v)+' m/s'),
+    desc:'糸につけた物体が滑らかな水平面上で等速円運動をしている',ask:'糸の張力の大きさは',unit:'N',ans:F,
+    steps:['張力が向心力になる',useW?em('F = mrω<sup>2</sup> = '+fx(m)+' × '+fx(r)+' × '+p2(fx(w))+' = '+s3(F)+' N')
+      :em('F = mv<sup>2</sup>/r = '+fx(m)+' × '+p2(fx(v))+' ÷ '+fx(r)+' = '+s3(F)+' N')]};
+}},
+{cat:'circ',ctx:'向心加速度',gen:function(){
+  var r=pick([0.5,1,2,4,5,10,20]), v=pick([2,3,4,5,10,20]), a=r6(v*v/r);
+  return {t:'cacc',v:{r:r,v:v},line:'r = '+fx(r)+' m　v = '+fx(v)+' m/s',desc:'物体が等速円運動をしている',ask:'加速度の大きさは',unit:MS2,ans:a,
+    steps:['等速円運動の加速度は中心を向く '+em('a = v<sup>2</sup>/r = rω<sup>2</sup>'),em('a = '+p2(fx(v))+' ÷ '+fx(r)+' = '+s3(a)+' '+MS2)]};
+}},
+{cat:'circ',ctx:'ばね振り子の周期',gen:function(){
+  var m=pick([0.1,0.2,0.4,0.5,1,2]), k=pick([10,20,40,50,80,100,200]), Tp=2*Math.PI*Math.sqrt(m/k);
+  return {t:'springT',v:{m:m,k:k},line:'m = '+fx(m)+' kg　k = '+fx(k)+' N/m',desc:'ばねにつけたおもりが単振動をしている　π = 3.14',ask:'周期は',unit:'s',ans:r6(Tp),
+    steps:[em('T = 2π√(m/k)'),em('m/k = '+fx(m)+' ÷ '+fx(k)+' = '+fx(m/k)),em('T = 2π × √'+fx(m/k)+' = '+s3(Tp)+' s'),'振幅によらない']};
+}},
+{cat:'circ',ctx:'単振り子の周期',gen:function(){
+  var L=pick([0.25,0.5,0.98,1,2,2.45,4,9.8]), Tp=2*Math.PI*Math.sqrt(L/9.8);
+  return {t:'pendT',v:{L:L},line:'L = '+fx(L)+' m　g = 9.8 '+MS2,desc:'糸の長さ L の単振り子が小さな振幅で振動している　π = 3.14',ask:'周期は',unit:'s',ans:r6(Tp),
+    steps:[em('T = 2π√(L/g)'),em('L/g = '+fx(L)+' ÷ 9.8 = '+s3(L/9.8)),em('T = 2π × √'+s3(L/9.8)+' = '+s3(Tp)+' s'),'おもりの質量によらない']};
+}},
+{cat:'circ',ctx:'単振動の最大の速さと加速度',gen:function(){
+  var A=pick([0.02,0.05,0.1,0.2]), m=pick([0.1,0.2,0.5,1]), s=pick([2,4,5,10]), k=r6(m*s*s), askA=Math.random()<0.4;
+  var vm=r6(A*s), am=r6(A*s*s);
+  var st=['角振動数 '+em('ω = √(k/m) = √('+fx(k)+' ÷ '+fx(m)+') = '+fx(s)+' rad/s')];
+  if(askA) st.push('端で加速度が最大 '+em('a = Aω<sup>2</sup> = '+fx(A)+' × '+p2(fx(s))+' = '+s3(am)+' '+MS2));
+  else st.push('振動の中心で速さが最大 '+em('v = Aω = '+fx(A)+' × '+fx(s)+' = '+s3(vm)+' m/s'));
+  return {t:'shm',v:{A:A,m:m,k:k,askA:askA},line:'A = '+fx(A)+' m　m = '+fx(m)+' kg　k = '+fx(k)+' N/m',desc:'滑らかな水平面上のばね振り子が振幅 A で単振動をしている',
+    ask:askA?'加速度の大きさの最大値は':'速さの最大値は',unit:askA?MS2:'m/s',ans:askA?am:vm,steps:st};
+}},
+{cat:'circ',ctx:'周期と向心力の比例関係',gen:function(){
+  var it=pick(CR);
+  return choiceQ('cratio',{q:it.q},it.q,'','正しいものは',{right:it.r,wrong:it.w},it.s);
+}},
+
+/* ── 10 気体の状態方程式 ────────────────────────────── */
+{cat:'gas',ctx:'状態方程式で圧力',gen:function(){
+  var n=pick([0.5,1,2,3]), Tk=pick([273,300,400,500,600]), V=pick([10,20,25,30,50]), P=r6(n*R*Tk/(V*100));
+  return {t:'gasP',v:{n:n,T:Tk,V:V},line:'n = '+fx(n)+' mol　T = '+Tk+' K　V = '+fx(V)+M3.replace('×',' ×'),
+    desc:'容器に理想気体を閉じこめた　R = 8.31 J/(mol·K)',ask:'圧力は',unit:P5,ans:P,
+    steps:[em('PV = nRT')+' より '+em('P = nRT/V'),em('P = '+fx(n)+' × 8.31 × '+Tk+' ÷ ('+fx(V)+'×10<sup>−3</sup>) = '+s3(P*1e5)+' Pa'),
+      '答えの単位に合わせる '+em(s3(P)+'×10<sup>5</sup> Pa')]};
+}},
+{cat:'gas',ctx:'状態方程式で温度',gen:function(){
+  var n=pick([0.5,1,2]), P=pick([1,1.5,2,2.5,3]), V=pick([10,20,25,30,50]), Tk=r6(P*V*100/(n*R));
+  return {t:'gasT',v:{n:n,P:P,V:V},line:'n = '+fx(n)+' mol　P = '+fx(P)+P5.replace('×',' ×')+'　V = '+fx(V)+M3.replace('×',' ×'),
+    desc:'容器に理想気体を閉じこめた　R = 8.31 J/(mol·K)',ask:'絶対温度は',unit:'K',ans:Tk,
+    steps:[em('T = PV/(nR)'),em('PV = '+fx(P)+'×10<sup>5</sup> × '+fx(V)+'×10<sup>−3</sup> = '+fx(P*V*100)+' J'),
+      em('T = '+fx(P*V*100)+' ÷ ('+fx(n)+' × 8.31) = '+s3(Tk)+' K')]};
+}},
+{cat:'gas',ctx:'ボイル・シャルルの法則',gen:function(){
+  var P1=pick([1,1.5,2]), V1=pick([10,12,20,30]), t1=pick([27,0,127,-73]), t2=pick([27,127,227,327,77]), askV=Math.random()<0.5;
+  var T1=t1+273, T2=t2+273, P2, V2, ans;
+  if(askV){ P2=pick([1,2,3,4]); V2=r6(P1*V1*T2/(T1*P2)); ans=V2; }
+  else { V2=pick([5,10,15,20,40]); P2=r6(P1*V1*T2/(T1*V2)); ans=P2; }
+  return {t:'comb',v:{P1:P1,V1:V1,t1:t1,t2:t2,P2:askV?P2:null,V2:askV?null:V2,askV:askV},
+    line:'状態1 '+fx(P1)+P5.replace('×',' ×')+'　'+fx(V1)+M3.replace('×',' ×')+'　'+fx(t1)+' ℃',
+    desc:'一定量の理想気体を状態2 '+(askV? fx(P2)+P5.replace('×',' ×'):fx(V2)+M3.replace('×',' ×'))+'　'+fx(t2)+' ℃ にした',
+    ask:askV?'状態2の体積は':'状態2の圧力は',unit:askV?M3:P5,ans:ans,
+    steps:['温度は絶対温度に直す '+em(fx(t1)+' ℃ = '+T1+' K')+'　'+em(fx(t2)+' ℃ = '+T2+' K'),
+      em('P<sub>1</sub>V<sub>1</sub>/T<sub>1</sub> = P<sub>2</sub>V<sub>2</sub>/T<sub>2</sub>'),
+      askV?em('V<sub>2</sub> = '+fx(P1)+' × '+fx(V1)+' × '+T2+' ÷ ('+T1+' × '+fx(P2)+') = '+s3(V2))
+          :em('P<sub>2</sub> = '+fx(P1)+' × '+fx(V1)+' × '+T2+' ÷ ('+T1+' × '+fx(V2)+') = '+s3(P2)),
+      '両辺の 10<sup>5</sup> と 10<sup>−3</sup> は約分されるので単位をそろえたまま計算する']};
+}},
+{cat:'gas',ctx:'単原子分子の内部エネルギー',gen:function(){
+  var n=pick([0.5,1,2,3]), dT=pick([10,20,50,100,200]), U=r6(1.5*n*R*dT);
+  return {t:'gasU',v:{n:n,dT:dT},line:'n = '+fx(n)+' mol　ΔT = '+dT+' K',desc:'単原子分子の理想気体の温度を上げた　R = 8.31 J/(mol·K)',
+    ask:'内部エネルギーの増加は',unit:'J',ans:U,
+    steps:['単原子分子の内部エネルギー '+em('U = (3/2)nRT'),em('ΔU = 1.5 × '+fx(n)+' × 8.31 × '+dT+' = '+s3(U)+' J'),'内部エネルギーは温度だけで定まり 過程によらない']};
+}},
+{cat:'gas',ctx:'定圧変化の仕事',gen:function(){
+  var P=pick([1,1.5,2,3]), V1=pick([10,20,30]), dV=pick([2,5,10,20]), W=r6(P*dV*100);
+  return {t:'gasW',v:{P:P,V1:V1,dV:dV},line:'P = '+fx(P)+P5.replace('×',' ×')+'　V '+fx(V1)+' → '+fx(V1+dV)+M3.replace('×',' ×'),
+    desc:'圧力を一定に保って気体を膨張させた',ask:'気体が外部にした仕事は',unit:'J',ans:W,
+    steps:[em('W = PΔV'),em('ΔV = '+fx(dV)+'×10<sup>−3</sup> m<sup>3</sup>'),em('W = '+fx(P)+'×10<sup>5</sup> × '+fx(dV)+'×10<sup>−3</sup> = '+s3(W)+' J')]};
+}},
+{cat:'gas',ctx:'熱力学第一法則',gen:function(){
+  var kind=pick(['QW','QW','Vp','Vv']), n=pick([0.5,1,2]), dT=pick([10,20,50,100]);
+  if(kind==='QW'){
+    var Q=pick([200,300,500,800,1000]), W=pick([50,100,150,250]), on=Math.random()<0.4, U=on?Q+W:Q-W;
+    return {t:'first',v:{kind:kind,Q:Q,W:W,on:on},signed:true,line:'Q = '+Q+' J　'+(on?'外部からされた仕事 ':'外部にした仕事 ')+W+' J',
+      desc:'気体に熱量 Q を与えると同時に'+(on?'気体が圧縮された':'気体が膨張した'),ask:'内部エネルギーの変化は',unit:'J',ans:U,
+      steps:['第一法則 '+em('ΔU = Q − W')+'　W は気体が外部にした仕事',on?'圧縮されたので W = −'+W+' J':'膨張したので W = '+W+' J',
+        em('ΔU = '+Q+' − '+pr(on?-W:W)+' = '+U+' J')]};
+  }
+  var c = kind==='Vp' ? 2.5 : 1.5, Qh=r6(c*n*R*dT);
+  return {t:'first',v:{kind:kind,n:n,dT:dT},line:'n = '+fx(n)+' mol　ΔT = '+dT+' K',
+    desc:'単原子分子の理想気体の温度を'+(kind==='Vp'?'圧力一定':'体積一定')+'で上げた　R = 8.31 J/(mol·K)',ask:'気体が受け取った熱量は',unit:'J',ans:Qh,
+    steps:[em('ΔU = (3/2)nRΔT'),
+      kind==='Vp'?'定圧では '+em('W = PΔV = nRΔT')+' なので '+em('Q = ΔU + W = (5/2)nRΔT'):'定積では W = 0 なので '+em('Q = ΔU'),
+      em('Q = '+fx(c)+' × '+fx(n)+' × 8.31 × '+dT+' = '+s3(Qh)+' J')]};
+}},
+{cat:'gas',ctx:'熱効率',gen:function(){
+  var Qin=pick([1000,2000,2500,4000,5000]), e=pick([0.1,0.2,0.25,0.3,0.4]), Qout=r6(Qin*(1-e)), W=r6(Qin-Qout);
+  return {t:'eff',v:{Qin:Qin,Qout:Qout},line:'受け取る熱量 '+Qin+' J　捨てる熱量 '+fx(Qout)+' J',desc:'熱機関が1サイクルで高温の熱源から熱を受け取り 低温の熱源に熱を捨てる',
+    ask:'熱効率は',unit:'%',ans:r6(e*100),
+    steps:['1サイクルで内部エネルギーは元に戻る '+em('W = '+Qin+' − '+fx(Qout)+' = '+fx(W)+' J'),
+      em('e = W ÷ Q<sub>in</sub> = '+fx(W)+' ÷ '+Qin+' = '+fx(e)),em(fx(e*100)+' %')]};
+}},
+{cat:'gas',ctx:'状態変化で 0 になる量',gen:function(){
+  var it=pick(GZ);
+  return choiceQ('gzero',{q:it.q},it.q,'ΔU は内部エネルギーの変化　W は気体がした仕事　Q は受け取った熱量','0 になる量は',
+    {right:it.r,wrong:GOPT.filter(function(x){ return x!==it.r; })},it.s);
+}}
+];
+
+/* ── choice tables ───────────────────────────────────────────────────── */
+var MF=[
+  {q:'時刻 t の速度 v',r:'v = v<sub>0</sub> + at',w:['v = v<sub>0</sub>t + at','v = v<sub>0</sub> + ½at<sup>2</sup>','v = at<sup>2</sup> + v<sub>0</sub>'],
+   s:['v-t グラフは傾き a の直線 切片が v<sub>0</sub>']},
+  {q:'時刻 t までの変位 x',r:'x = v<sub>0</sub>t + ½at<sup>2</sup>',w:['x = v<sub>0</sub> + at','x = v<sub>0</sub>t + at<sup>2</sup>','x = ½v<sub>0</sub>t<sup>2</sup> + at'],
+   s:['変位は v-t グラフの面積 長方形 v<sub>0</sub>t と三角形 ½ × t × at の和']},
+  {q:'時間 t を含まない関係',r:'v<sup>2</sup> − v<sub>0</sub><sup>2</sup> = 2ax',w:['v − v<sub>0</sub> = 2ax','v<sup>2</sup> + v<sub>0</sub><sup>2</sup> = 2ax','v<sup>2</sup> − v<sub>0</sub><sup>2</sup> = ax'],
+   s:['速度の式から t = (v − v<sub>0</sub>)/a を変位の式に代入して t を消す']}
+];
+var RF=[
+  {q:'本に働く重力の反作用は',d:'本は地球に引かれている',r:'本が地球を引く力',w:['机が本を押す力','本が机を押す力','地球が本を引く力'],
+   s:['作用反作用は2物体の間で対になる力 主語と目的語を入れ替えると相手が特定できる','地球が本を引く力の反作用は '+em('本が地球を引く力')]},
+  {q:'机が本を押す垂直抗力の反作用は',d:'本は机から垂直抗力を受けている',r:'本が机を押す力',w:['地球が本を引く力','本が地球を引く力','机が床を押す力'],
+   s:['作用反作用は2物体の間で対になる力 主語と目的語を入れ替える','机が本を押す力の反作用は '+em('本が机を押す力')]},
+  {q:'本に働く重力とつり合う力は',d:'本は静止している',r:'机が本を押す力',w:['本が地球を引く力','本が机を押す力','机が床を押す力'],
+   s:['つり合いは1つの物体に働く力どうしの関係','本に働く力は 重力 と 机が本を押す力 の2つ','つり合う力は '+em('机が本を押す力')]}
+];
+var MAT=[['水',4.2],['銅',0.38],['鉄',0.45],['アルミニウム',0.90]];
+var WOPT=['1 : 2 : 3','1 : 3 : 5','1 : 2 : 4','1 : 4 : 9'];
+var WR=[
+  {q:'一端を閉じた管',r:'1 : 3 : 5',s:['閉口端は節で開口端は腹','管の長さは λ/4 の奇数倍だけが許される','振動数は基本振動の 1 倍・3 倍・5 倍 → '+em('1 : 3 : 5')]},
+  {q:'両端を開いた管',r:'1 : 2 : 3',s:['両端とも腹','管の長さは λ/2 の整数倍','振動数は基本振動の整数倍 → '+em('1 : 2 : 3')]},
+  {q:'両端を固定した弦',r:'1 : 2 : 3',s:['両端とも節','弦の長さは λ/2 の整数倍','振動数は基本振動の整数倍 → '+em('1 : 2 : 3')]}
+];
+var EF=[
+  {q:'抵抗 R に電圧 V を加えたときの消費電力 P',r:'P = V<sup>2</sup>/R',w:['P = VR','P = V/R<sup>2</sup>','P = V<sup>2</sup>R'],s:['P = VI に I = V/R を代入する']},
+  {q:'抵抗 R に電流 I が流れるときの消費電力 P',r:'P = I<sup>2</sup>R',w:['P = I/R','P = IR<sup>2</sup>','P = I<sup>2</sup>/R'],s:['P = VI に V = RI を代入する']},
+  {q:'抵抗 R<sub>1</sub> と R<sub>2</sub> を並列にした合成抵抗 R',r:'R = R<sub>1</sub>R<sub>2</sub>/(R<sub>1</sub> + R<sub>2</sub>)',
+   w:['R = R<sub>1</sub> + R<sub>2</sub>','R = (R<sub>1</sub> + R<sub>2</sub>)/R<sub>1</sub>R<sub>2</sub>','R = 1/R<sub>1</sub> + 1/R<sub>2</sub>'],
+   s:['並列は 1/R = 1/R<sub>1</sub> + 1/R<sub>2</sub>　通分して逆数をとると積 ÷ 和']},
+  {q:'長さ L　断面積 S　抵抗率 ρ の導線の抵抗 R',r:'R = ρL/S',w:['R = ρS/L','R = L/ρS','R = ρLS'],
+   s:['長いほど抵抗は大きく 太いほど抵抗は小さい']}
+];
+var MOPT=['運動量だけ','運動エネルギーだけ','運動量と運動エネルギーの両方','どちらも保存されない'];
+var MC=[
+  {q:'2物体が衝突して一体になった',r:'運動量だけ',s:['外力が働かないので運動量は常に保存される','完全非弾性衝突 e = 0 では運動エネルギーの一部が熱などに変わる']},
+  {q:'2物体が反発係数 1 で衝突した',r:'運動量と運動エネルギーの両方',s:['外力が働かないので運動量は保存される','e = 1 の弾性衝突では運動エネルギーも保存される']},
+  {q:'静止した物体が内部のばねの力で2つに分かれた',r:'運動量だけ',s:['内力だけなので運動量の和は 0 のまま','ばねの弾性エネルギーが運動エネルギーに変わるので運動エネルギーは増える']},
+  {q:'2物体が反発係数 0.5 で衝突した',r:'運動量だけ',s:['外力が働かないので運動量は保存される','0 ≦ e < 1 では運動エネルギーが減る']}
+];
+var CR=[
+  {q:'単振り子の糸の長さを 4 倍にすると周期は',r:'2 倍',w:['4 倍','1/2 倍','16 倍'],s:[em('T = 2π√(L/g)')+' なので周期は √L に比例','√4 = 2 → '+em('2 倍')]},
+  {q:'単振り子のおもりの質量を 2 倍にすると周期は',r:'変わらない',w:['2 倍','√2 倍','1/√2 倍'],s:[em('T = 2π√(L/g)')+' に質量は含まれない']},
+  {q:'ばね振り子のおもりの質量を 4 倍にすると周期は',r:'2 倍',w:['4 倍','1/2 倍','変わらない'],s:[em('T = 2π√(m/k)')+' なので周期は √m に比例','√4 = 2 → '+em('2 倍')]},
+  {q:'ばね振り子のばね定数を 4 倍にすると周期は',r:'1/2 倍',w:['2 倍','4 倍','1/4 倍'],s:[em('T = 2π√(m/k)')+' なので周期は 1/√k に比例','1/√4 → '+em('1/2 倍')]},
+  {q:'ばね振り子の振幅を 2 倍にすると周期は',r:'変わらない',w:['2 倍','√2 倍','4 倍'],s:['単振動の周期は振幅によらない '+em('T = 2π√(m/k)')]},
+  {q:'等速円運動の半径を変えずに速さを 2 倍にすると向心力は',r:'4 倍',w:['2 倍','1/2 倍','変わらない'],s:[em('F = mv<sup>2</sup>/r')+' なので v の2乗に比例','2<sup>2</sup> = 4 → '+em('4 倍')]}
+];
+var GOPT=['W','ΔU','Q','どれも 0 でない'];
+var GZ=[
+  {q:'定積変化',r:'W',s:['体積が変わらないので気体は仕事をしない '+em('W = 0'),'Q = ΔU になる']},
+  {q:'定温変化',r:'ΔU',s:['理想気体の内部エネルギーは温度だけで定まる '+em('ΔU = 0'),'Q = W になる']},
+  {q:'断熱変化',r:'Q',s:['熱の出入りがない '+em('Q = 0'),'ΔU = −W になる']},
+  {q:'温度が上がる定圧変化',r:'どれも 0 でない',s:['体積が変わるので W ≠ 0','温度が変わるので ΔU ≠ 0','Q = ΔU + W > 0']}
+];
+
+function choiceQ(t,v,line,desc,ask,ch,steps){
+  var all=shuffle([ch.right].concat(ch.wrong));
+  return {t:t,v:v,kind:'choice',line:line,desc:desc,ask:ask,unit:'',
+    choices:all,ans:all.indexOf(ch.right),ansText:ch.right,steps:steps};
+}
+
+/* ── categories ──────────────────────────────────────────────────────── */
+var CATS=[
+  {k:'mot',lb:'等加速度直線運動',s:'3公式・落下・投げ上げ',ch:'chapters/01_motion.html',cn:'第1章',lv:'kiso'},
+  {k:'force',lb:'力のつり合いと摩擦',s:'ばね・斜面・浮力',ch:'chapters/02_force.html',cn:'第2章',lv:'kiso'},
+  {k:'eom',lb:'運動方程式',s:'斜面・2物体',ch:'chapters/03_laws-of-motion.html',cn:'第3章',lv:'kiso'},
+  {k:'ene',lb:'仕事とエネルギー',s:'仕事・保存則',ch:'chapters/04_energy.html',cn:'第4章',lv:'kiso'},
+  {k:'heat',lb:'熱量と比熱',s:'Q = mcΔT・混合',ch:'chapters/05_heat.html',cn:'第5章',lv:'kiso'},
+  {k:'wave',lb:'波',s:'v = fλ・固有振動・うなり',ch:'chapters/06_waves.html',cn:'第6章',lv:'kiso'},
+  {k:'elec',lb:'電気回路',s:'合成抵抗・電力',ch:'chapters/07_electricity.html',cn:'第7章',lv:'kiso'},
+  {k:'mom',lb:'運動量と反発係数',s:'衝突・分裂',ch:'chapters/10_momentum.html',cn:'第10章',lv:'phys'},
+  {k:'circ',lb:'円運動と単振動',s:'向心力・周期',ch:'chapters/11_circular.html',cn:'第11章',lv:'phys'},
+  {k:'gas',lb:'気体の状態方程式',s:'PV = nRT・第一法則',ch:'chapters/12_thermodynamics.html',cn:'第12章',lv:'phys'},
+  {k:'kiso',lb:'物理基礎を混ぜる',s:'7分野',ch:'',cn:'',lv:'mix'},
+  {k:'phys',lb:'物理を混ぜる',s:'3分野',ch:'',cn:'',lv:'mix'},
+  {k:'all',lb:'全部混ぜる',s:'10分野',ch:'',cn:'',lv:'mix'}
+];
+function poolCats(cat){
+  return CATS.filter(function(c){ return c.lv!=='mix' && (cat==='all' || c.lv===cat || c.k===cat); });
+}
+
+function genQ(cat){
+  var c=pick(poolCats(cat)).k;
+  var pool=T.filter(function(t){ return t.cat===c; });
+  var tp=pick(pool), q=tp.gen();
+  q.ctx=tp.ctx; q.cat=c;
+  if(!q.kind) q.kind='num';
+  if(q.ansText===undefined){
+    q.ansText=s3(q.ans);
+    if(q.frac){ var f=toFr(q.ans); if(f && f.d>1) q.ansText+=' = '+frT(f); }
+  }
+  q.html=q.line+(q.desc?'　'+q.desc:'')+'　→ '+q.ask+(q.unit?' ('+q.unit+')':'');
+  return q;
+}
+
+/* ── answer check ────────────────────────────────────────────────────── */
+function parse1(s){
+  if(s==='' || s==='+' || s==='-') return NaN;
+  return Number(s);
+}
+function parse(raw){
+  var s=String(raw)
+    .replace(/[０-９]/g,function(ch){ return String.fromCharCode(ch.charCodeAt(0)-0xFEE0); })
+    .replace(/[．。]/g,'.').replace(/＋/g,'+').replace(/[−－‐ー―]/g,'-').replace(/[／÷]/g,'/')
+    .replace(/[\s,，]/g,'')
+    .replace(/(×|x|X|\*|＊)10\^?/g,'e');
+  var parts=s.split('/');
+  if(parts.length===2){
+    var a=parse1(parts[0]), b=parse1(parts[1]);
+    if(!isFinite(a) || !isFinite(b) || b===0) return NaN;
+    return a/b;
+  }
+  if(parts.length>2) return NaN;
+  return parse1(s);
+}
+function near(a,b){ return Math.abs(a-b)<=1e-9*Math.max(1,Math.abs(b)); }
+function check(q,v){
+  if(q.kind==='choice') return v===q.ans;
+  if(typeof v!=='number' || !isFinite(v)) return false;
+  if(q.ans===0) return Math.abs(v)<1e-9;
+  if(Math.abs(v-q.ans)<=Math.abs(q.ans)*0.01) return true;
+  /* an exact half such as 24.5 may be rounded either way */
+  return [q.ans, q.ans*(1+1e-9), q.ans*(1-1e-9)].some(function(a){
+    return near(v,Number(a.toPrecision(2))) || near(v,Number(a.toPrecision(3)));
+  });
+}
+
+return {T:T,CATS:CATS,ANG:ANG,poolCats:poolCats,genQ:genQ,parse:parse,check:check,s3:s3,toFr:toFr,
+  MF:MF,RF:RF,WR:WR,EF:EF,MC:MC,CR:CR,GZ:GZ};
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+var C=PHYS;
+function $(id){ return document.getElementById(id); }
+
+/* ── reference panel ──────────────────────────────────────────────────── */
+function refHTML(){
+  return '<table class="const">'
+    +'<tr><td>重力加速度</td><td class="n">g = 9.8 m/s<sup>2</sup></td></tr>'
+    +'<tr><td>水の比熱</td><td class="n">4.2 J/(g·K)</td></tr>'
+    +'<tr><td>水の密度</td><td class="n">1.0×10<sup>3</sup> kg/m<sup>3</sup></td></tr>'
+    +'<tr><td>気体定数</td><td class="n">R = 8.31 J/(mol·K)</td></tr>'
+    +'<tr><td>音速　問題文の値を優先する</td><td class="n">340 m/s</td></tr>'
+    +'<tr><td>絶対温度</td><td class="n">T = t + 273</td></tr>'
+    +'<tr><td>円周率</td><td class="n">π = 3.14</td></tr>'
+    +'</table>'
+    +'<table class="const"><thead><tr><th>角</th><th class="n">sin</th><th class="n">cos</th><th class="n">tan</th></tr></thead><tbody>'
+    +'<tr><td>30°</td><td class="n">1/2</td><td class="n">√3/2 ≈ 0.866</td><td class="n">1/√3 ≈ 0.577</td></tr>'
+    +'<tr><td>45°</td><td class="n">√2/2 ≈ 0.707</td><td class="n">√2/2 ≈ 0.707</td><td class="n">1</td></tr>'
+    +'<tr><td>60°</td><td class="n">√3/2 ≈ 0.866</td><td class="n">1/2</td><td class="n">√3 ≈ 1.73</td></tr>'
+    +'<tr><td>3 : 4 : 5 の斜面</td><td class="n">0.60</td><td class="n">0.80</td><td class="n">0.75</td></tr>'
+    +'</tbody></table>';
+}
+$('refbody').innerHTML=refHTML();
+$('d-refbody').innerHTML=refHTML();
+
+/* ── session ──────────────────────────────────────────────────────────── */
+var S=null, clock=null;
+function show(which){
+  ['setup','drill','result'].forEach(function(id){ $(id).classList.toggle('hide', id!==which); });
+  var drilling = which==='drill';
+  ['lead','logsec','refsec','techsec'].forEach(function(id){ $(id).classList.toggle('hide', drilling); });
+}
+function catOf(k){
+  for(var i=0;i<C.CATS.length;i++) if(C.CATS[i].k===k) return C.CATS[i];
+  return C.CATS[0];
+}
+function label(cfg){ return catOf(cfg.cat).lb; }
+
+function start(cfg, queue){
+  S={cfg:cfg, i:0, items:[], queue:queue||null,
+     count:queue?queue.length:cfg.count, phase:'input'};
+  show('drill');
+  window.scrollTo({top:0,behavior:'smooth'});
+  nextQ();
+}
+function nextQ(){
+  if(S.i>=S.count){ finish(); return; }
+  $('d-fb').classList.add('hide');
+  $('d-in').value='';
+  $('d-hintnote').textContent='';
+  $('d-prog').textContent=(S.i+1)+' / '+S.count;
+  $('d-fill').style.width=(S.i/S.count*100)+'%';
+  var q = S.queue ? S.queue[S.i] : C.genQ(S.cfg.cat);
+  S.cur=q; S.phase='input';
+  var cc=catOf(q.cat);
+  $('d-meta').textContent=(cc.lv==='phys'?'物理':'物理基礎')+'　'+cc.lb;
+  $('d-ctx').textContent=q.ctx;
+  $('d-q').innerHTML=q.line;
+  $('d-desc').innerHTML=q.desc||'';
+  $('d-desc').classList.toggle('hide', !q.desc);
+  $('d-ask').innerHTML=q.ask+(q.unit?' <span class="u">'+q.unit+'</span>':'');
+  var isC = q.kind==='choice';
+  $('d-ansbox').classList.toggle('hide', isC);
+  $('d-choices').classList.toggle('hide', !isC);
+  if(isC){
+    $('d-choices').innerHTML=q.choices.map(function(c,i){
+      return '<button type="button" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+c+'</button>';
+    }).join('');
+    Array.prototype.forEach.call($('d-choices').children, function(b){
+      b.addEventListener('click', function(){ if(S.phase==='input') judge(Number(b.dataset.i)); });
+    });
+    $('d-hintnote').textContent='数字キー 1〜4 でも選べる';
+  } else {
+    var el=$('d-in');
+    /* a decimal keypad has no minus sign or slash on some phones */
+    el.setAttribute('inputmode', (q.signed||q.frac) ? 'text' : 'decimal');
+    el.placeholder = q.signed ? '答え　負なら −' : '答え';
+    el.focus(); el.select();
+  }
+  S.qStart=performance.now();
+  stopClock();
+  clock=setInterval(function(){
+    $('d-time').textContent=((performance.now()-S.qStart)/1000).toFixed(1)+'s';
+  },100);
+}
+function stopClock(){ if(clock){ clearInterval(clock); clock=null; } }
+
+function stepsHTML(q){ return '<ol><li>'+q.steps.join('</li><li>')+'</li></ol>'; }
+function mineText(q,v){
+  if(q.kind==='choice') return q.choices[v];
+  var x=Math.round(v*1e6)/1e6;
+  return x<0 ? '−'+(-x) : String(x);
+}
+function unitTxt(q){ return q.unit ? ' '+q.unit : ''; }
+function judge(v){
+  if(S.phase!=='input') return;
+  stopClock();
+  var q=S.cur, ms=performance.now()-S.qStart;
+  var ok=C.check(q,v);
+  S.items.push({q:q, mine:mineText(q,v), ok:ok, ms:ms});
+  S.i++;
+  if(q.kind==='choice'){
+    Array.prototype.forEach.call($('d-choices').children, function(b,i){
+      b.disabled=true;
+      if(i===q.ans) b.classList.add('right');
+      else if(i===v) b.classList.add('wrong');
+    });
+  }
+  var fb=$('d-fb');
+  fb.classList.remove('hide','ok','ng');
+  if(ok){
+    fb.classList.add('ok');
+    fb.innerHTML='<b>正解</b>　'+(ms/1000).toFixed(1)+'秒';
+    S.phase='wait';
+    setTimeout(function(){ if(S && S.phase==='wait') nextQ(); }, 520);
+  } else {
+    fb.classList.add('ng');
+    var ch=catOf(q.cat);
+    fb.innerHTML='<b>不正解</b>　正解は '+q.ansText+unitTxt(q)
+      +'　自分の答え '+mineText(q,v)
+      +'<div class="how">'+stepsHTML(q)
+      +(ch.ch?'<a href="'+ch.ch+'" target="_blank" rel="noopener">'+ch.cn+'で確認する</a>':'')+'</div>';
+    S.phase='hold';
+    $('d-hintnote').textContent='Enter または確定で次へ';
+  }
+}
+function submit(){
+  if(S.phase==='hold'){ nextQ(); return; }
+  if(S.phase!=='input' || S.cur.kind==='choice') return;
+  var v=C.parse($('d-in').value);
+  if(!isFinite(v)) return;
+  judge(v);
+}
+function quit(){
+  if(S) S.phase='dead';
+  stopClock();
+  $('d-hintnote').textContent='';
+  if(S && S.items.length) finish(); else show('setup');
+}
+
+/* ── result ───────────────────────────────────────────────────────────── */
+function finish(){
+  S.phase='done';
+  stopClock();
+  $('d-hintnote').textContent='';
+  var it=S.items, n=it.length, ok=0, tot=0, fast=Infinity, slow=0;
+  it.forEach(function(x){ if(x.ok){ ok++; fast=Math.min(fast,x.ms); slow=Math.max(slow,x.ms); } tot+=x.ms; });
+  var avg=n? tot/n/1000 : 0;
+  $('r-kpi').innerHTML=
+    kpi(Math.round(ok/n*100)+'%','正答率',ok+' / '+n)
+   +kpi(avg.toFixed(1)+'s','1問あたり','合計 '+(tot/1000).toFixed(0)+'秒')
+   +kpi(isFinite(fast)?(fast/1000).toFixed(1)+'s':'—','最速',ok?'最遅 '+(slow/1000).toFixed(1)+'s':'正解なし')
+   +kpi('<span style="font-size:15px">'+label(S.cfg)+'</span>','分野','');
+
+  var miss=it.filter(function(x){ return !x.ok; }), h='';
+  if(miss.length){
+    h='<h3>間違えた '+miss.length+'問</h3><table><thead><tr><th>問題</th><th class="n">自分</th><th class="n">正解</th></tr></thead><tbody>';
+    miss.forEach(function(x){
+      h+='<tr><td>'+x.q.html+'<div class="how2">'+stepsHTML(x.q)+'</div></td>'
+        +'<td class="n miss">'+x.mine+'</td><td class="n">'+x.q.ansText+'</td></tr>';
+    });
+    h+='</tbody></table>';
+  } else {
+    h='<div class="note">全問正解。混ぜる に切り替えると分野の判別から練習できる。</div>';
+  }
+  var slowest=it.filter(function(x){ return x.ok; }).sort(function(a,b){ return b.ms-a.ms; }).slice(0,3);
+  if(slowest.length){
+    h+='<h3>時間がかかった問題<span class="sm"> — 正解でも遅い型は本番で時間が不足する</span></h3><table><tbody>';
+    slowest.forEach(function(x){
+      h+='<tr><td>'+x.q.html+' = '+x.q.ansText+'<div class="how2">'+stepsHTML(x.q)+'</div></td>'
+        +'<td class="n">'+(x.ms/1000).toFixed(1)+'s</td></tr>';
+    });
+    h+='</tbody></table>';
+  }
+  var by={};
+  it.forEach(function(x){
+    var k=x.q.ctx;
+    if(!by[k]) by[k]={n:0,ok:0,ms:0};
+    by[k].n++; by[k].ok+=x.ok?1:0; by[k].ms+=x.ms;
+  });
+  var keys=Object.keys(by);
+  if(keys.length>1){
+    h+='<h3>型ごとの成績</h3><table><thead><tr><th>型</th><th class="n">正答</th><th class="n">1問</th></tr></thead><tbody>';
+    keys.sort(function(a,b){ return by[a].ok/by[a].n - by[b].ok/by[b].n; }).forEach(function(k){
+      h+='<tr><td>'+k+'</td><td class="n">'+by[k].ok+'/'+by[k].n+'</td>'
+        +'<td class="n">'+(by[k].ms/by[k].n/1000).toFixed(1)+'s</td></tr>';
+    });
+    h+='</tbody></table>';
+  }
+  $('r-missbox').innerHTML=h;
+  $('b-redo').classList.toggle('hide', miss.length===0);
+  S.miss=miss.map(function(x){ return x.q; });
+  saveRun({t:Date.now(), cat:S.cfg.cat, lb:label(S.cfg), n:n, ok:ok, ms:tot});
+  drawLog();
+  show('result');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function kpi(v,k,n){
+  return '<div class="kpi"><div class="v num">'+v+'</div><div class="k">'+k+'</div>'
+    +(n?'<div class="n">'+n+'</div>':'')+'</div>';
+}
+
+/* ── log ──────────────────────────────────────────────────────────────── */
+var KEY='phys.hist.v1', PREF='phys.pref.v1';
+function loadRuns(){ try{ return JSON.parse(localStorage.getItem(KEY))||[]; }catch(e){ return []; } }
+function saveRun(r){
+  try{ var h=loadRuns(); h.push(r); localStorage.setItem(KEY,JSON.stringify(h.slice(-300))); }catch(e){}
+}
+function ymd(t){
+  var d=new Date(t);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function drawLog(){
+  var h=loadRuns();
+  if(!h.length){
+    $('l-kpi').innerHTML='';
+    $('l-body').innerHTML='<div class="note">まだ記録がない。1セッションを終えるとここに正答率と1問あたりの秒数が残る。</div>';
+    return;
+  }
+  var today=ymd(Date.now()), days={}, tn=0, tok=0, tms=0, todayN=0;
+  h.forEach(function(r){
+    days[ymd(r.t)]=1; tn+=r.n; tok+=r.ok; tms+=r.ms;
+    if(ymd(r.t)===today) todayN+=r.n;
+  });
+  var streak=0, d=new Date();
+  if(!days[today]) d.setDate(d.getDate()-1);
+  while(days[ymd(d.getTime())]){ streak++; d.setDate(d.getDate()-1); }
+  $('l-kpi').innerHTML=
+    kpi(todayN+'問','今日','連続 '+streak+'日')
+   +kpi(tn+'問','通算',Object.keys(days).length+'日')
+   +kpi(Math.round(tok/tn*100)+'%','通算の正答率','')
+   +kpi((tms/tn/1000).toFixed(1)+'s','通算の1問あたり','');
+
+  var agg={};
+  h.forEach(function(r){
+    if(!agg[r.lb]) agg[r.lb]={n:0,ok:0,ms:0};
+    agg[r.lb].n+=r.n; agg[r.lb].ok+=r.ok; agg[r.lb].ms+=r.ms;
+  });
+  var body='<h3>直近のセッション</h3><table><thead><tr><th>日時</th><th>分野</th><th class="n">正答</th><th class="n">1問</th></tr></thead><tbody>';
+  h.slice(-12).reverse().forEach(function(r){
+    var dt=new Date(r.t);
+    body+='<tr><td class="n">'+ymd(r.t).slice(5)+' '+String(dt.getHours()).padStart(2,'0')+':'
+      +String(dt.getMinutes()).padStart(2,'0')+'</td><td>'+r.lb+'</td>'
+      +'<td class="n">'+r.ok+'/'+r.n+'</td><td class="n">'+(r.ms/r.n/1000).toFixed(1)+'s</td></tr>';
+  });
+  body+='</tbody></table>';
+  var ak=Object.keys(agg);
+  if(ak.length){
+    body+='<h3>分野ごとの通算<span class="sm"> — 正答率の低い順</span></h3><table><tbody>';
+    ak.sort(function(a,b){ return agg[a].ok/agg[a].n - agg[b].ok/agg[b].n; }).forEach(function(k){
+      body+='<tr><td>'+k+'</td><td class="n">'+agg[k].n+'問</td>'
+        +'<td class="n">'+Math.round(agg[k].ok/agg[k].n*100)+'%</td>'
+        +'<td class="n">'+(agg[k].ms/agg[k].n/1000).toFixed(1)+'s / 問</td></tr>';
+    });
+    body+='</tbody></table>';
+  }
+  body+='<div style="margin-top:14px"><button class="t" id="b-clear">記録を消す</button></div>';
+  $('l-body').innerHTML=body;
+  $('b-clear').addEventListener('click', function(){
+    if(!confirm('この端末に保存した記録を全部消す。')) return;
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    drawLog();
+  });
+}
+
+/* ── setup UI ─────────────────────────────────────────────────────────── */
+var cfg={cat:'mot', count:10};
+try{
+  var p=JSON.parse(localStorage.getItem(PREF));
+  if(p && p.cat){ for(var i=0;i<C.CATS.length;i++) if(C.CATS[i].k===p.cat) cfg.cat=p.cat; cfg.count=p.count||10; }
+}catch(e){}
+
+var catRows=[$('cats-kiso'),$('cats-phys'),$('cats-mix')];
+function segItems(el, items, val){
+  el.innerHTML=items.map(function(it){
+    return '<button type="button" data-v="'+it.v+'" aria-pressed="'+(it.v===val)+'">'+it.lb
+      +(it.s? '<span class="s">'+it.s+'</span>':'')+'</button>';
+  }).join('');
+}
+/* one selection shared across several rows of buttons */
+function bindSeg(rows, onSel){
+  rows.forEach(function(el){
+    Array.prototype.forEach.call(el.children, function(b){
+      b.addEventListener('click', function(){
+        rows.forEach(function(r){ Array.prototype.forEach.call(r.children, function(x){ x.setAttribute('aria-pressed','false'); }); });
+        b.setAttribute('aria-pressed','true');
+        onSel(b.dataset.v);
+      });
+    });
+  });
+}
+function catNote(){
+  var ks=C.poolCats(cfg.cat).map(function(c){ return c.k; });
+  var pool=C.T.filter(function(t){ return ks.indexOf(t.cat)>=0; });
+  var c=catOf(cfg.cat), head;
+  if(c.ch) head='対応する章 <a href="'+c.ch+'">'+c.cn+' '+c.lb+'</a><br>出題する型 '+pool.length+'種類　—　'+pool.map(function(t){ return t.ctx; }).join(' / ');
+  else head=c.s+'から均等に出題する　出題する型は合計 '+pool.length+'種類';
+  $('cat-note').innerHTML=head
+    +'<br>答えは問題に示した単位で入力する。数値の答えは有効数字2桁か3桁で入力する。正解との誤差が1%以内でも正解とする。割り切れない答えは 20/3 のような分数でも入力できる。向きのある答えは負の値に − をつける。π は 3.14 で計算してよい。';
+}
+function catList(lv){ return C.CATS.filter(function(c){ return c.lv===lv; }).map(function(c){ return {v:c.k, lb:c.lb, s:c.s}; }); }
+segItems(catRows[0], catList('kiso'), cfg.cat);
+segItems(catRows[1], catList('phys'), cfg.cat);
+segItems(catRows[2], catList('mix'), cfg.cat);
+bindSeg(catRows, function(v){ cfg.cat=v; catNote(); });
+segItems($('counts'), [10,20,30].map(function(c){ return {v:String(c), lb:c+'問'}; }), String(cfg.count));
+bindSeg([$('counts')], function(v){ cfg.count=Number(v); });
+catNote();
+drawLog();
+
+/* ── wiring ───────────────────────────────────────────────────────────── */
+$('b-start').addEventListener('click', function(){
+  try{ localStorage.setItem(PREF, JSON.stringify(cfg)); }catch(e){}
+  start({cat:cfg.cat, count:cfg.count});
+});
+$('b-ok').addEventListener('click', submit);
+$('b-quit').addEventListener('click', quit);
+$('b-again').addEventListener('click', function(){ start(S.cfg); });
+$('b-redo').addEventListener('click', function(){
+  if(!S.miss||!S.miss.length) return;
+  var q=S.miss.slice(), c={cat:S.cfg.cat, count:q.length};
+  start(c,q);
+});
+$('b-back').addEventListener('click', function(){
+  show('setup'); window.scrollTo({top:0,behavior:'smooth'});
+});
+document.addEventListener('keydown', function(e){
+  if($('drill').classList.contains('hide')) return;
+  if(e.key==='Enter'){ e.preventDefault(); submit(); }
+  else if(e.key==='Escape'){ e.preventDefault(); quit(); }
+  else if(S && S.cur && S.cur.kind==='choice' && S.phase==='input' && /^[1-4]$/.test(e.key)){
+    var i=Number(e.key)-1;
+    if(i<S.cur.choices.length){ e.preventDefault(); judge(i); }
+  }
+});
+})();
+</script>
+</body>
+</html>

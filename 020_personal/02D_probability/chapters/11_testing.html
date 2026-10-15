@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>仮説検定｜確率・統計</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../021_profile/index.html">profile</a><a href="../../02A_plan/index.html">plan</a><a href="../../023_travel/index.html">travel</a><a href="../../027_cinema/index.html">cinema</a><a href="../../02B_reading/index.html">reading</a><a href="../../024_method/index.html">method</a><a href="../../026_handbook/index.html">handbook</a><a href="../../025_fitness/index.html">fitness</a><a href="../../028_english/index.html">english</a><a href="../../029_mental_math/index.html">mental math</a><a href="../../02C_chemistry/index.html">chemistry</a><a href="../index.html">probability</a><a href="../../02E_calculus/index.html">calculus</a><a href="../../02F_linear_algebra/index.html">linear algebra</a><a href="../../02G_physics/index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../024_method/index.html">method</a>
+    <a class="snav-a" href="../../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../028_english/index.html">english</a>
+    <a class="snav-a" href="../../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../index.html">probability</a>
+    <a class="snav-a" href="../../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../02G_physics/index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / personal /
+    <a href="../index.html">02D probability</a> / 終章</div>
+
+  <div class="tb-ch">数学B — 終章</div>
+  <h1>仮説検定</h1>
+  <p class="tb-thesis">否定したい仮説を帰無仮説として立てそれが正しいと仮定して観測結果の起こりにくさを確率で測る。観測値が棄却域に入るかその確率が有意水準より小さければ帰無仮説を棄却する。棄却できなかったときは帰無仮説が正しいと証明されたのではなく判断を保留したのである。</p>
+
+<p class="tb-ok"><strong>この章は2026-10-15に出典照合を通した。</strong> 検証した事実は35件である。出典と一致したものは28件である。食い違ったものは5件で本文を修正済みである。出典で確認できなかったものは2件である。これらは末尾の「残っている問い」に列挙した。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">帰無仮説と対立仮説</a></li><li><a href="#s2">有意水準と棄却域</a></li><li><a href="#s3">両側検定と片側検定</a></li><li><a href="#s4">母比率の検定</a></li><li><a href="#s5">母平均の検定</a></li><li><a href="#s6">結論の言い方と2種類の誤り</a></li><li><a href="#s7">現実世界の仮説検定</a></li><li><a href="#s8">確認問題</a></li><li><a href="#s9">この章の要点</a></li><li><a href="#s10">この本の要点と共通テスト</a></li><li><a href="#s11">残っている問い</a></li><li><a href="#s12">出典</a></li></ol></nav>
+
+<p>第3章では数学Ⅰの範囲で仮説検定の考え方を扱った。「偶然でこれほど偏る確率は小さい」と判断する手順であった。数学Ⅰでは確率を実験やシミュレーションの相対度数で見積もった。この章では第9章の正規分布と第10章の標本平均の分布を使ってその確率を計算で求める。</p>
+<p>共通テストの「統計的な推測」の大問では推定の後に検定を問う構成がある。問われるのは帰無仮説と対立仮説の立て方・検定統計量 Z の計算・棄却域との比較・結論の言い方の4点である。とくに最後の結論の言い方は計算が正しくても誤りやすい。最後の節ではこの本全体の要点と共通テストの出題形式をまとめる。</p>
+
+<h2 id="s1">帰無仮説と対立仮説</h2>
+<p>「新しい薬は従来の薬より効果が高い」のように確かめたい主張がある。仮説検定ではこの主張をそのまま証明するのではなく反対の仮説を立ててそれを否定できるかを調べる。</p>
+<ul>
+<li>否定することを目的として立てる仮説を<strong>帰無仮説</strong>と呼び H<sub>0</sub> で表す。「差がない」「効果がない」「偶然である」という形をとる</li>
+<li>帰無仮説が否定されたときに採る仮説を<strong>対立仮説</strong>と呼び H<sub>1</sub> で表す。確かめたい主張がこちらに入る</li>
+</ul>
+<p>帰無仮説を「差がない」の側に置く理由は確率を計算できるからである。「硬貨の表が出る確率は 1/2 である」と仮定すれば400回投げたときの表の回数の分布は B(400, 1/2) と定まる。「1/2 ではない」と仮定しただけでは分布が1つに定まらず確率を計算できない。</p>
+
+<div class="ex"><div class="ex-h">例題 1</div>
+<p>あるさいころは1の目が出やすいと疑われている。1の目が出る確率を p とするとき帰無仮説と対立仮説を立てよ。</p>
+<details open><summary>解き方</summary><div>手順1 否定したいのは「偏りがない」である。帰無仮説 H<sub>0</sub> は p＝1/6<br>手順2 確かめたいのは「出やすい」である。対立仮説 H<sub>1</sub> は p＞1/6。答え H<sub>0</sub> p＝1/6・H<sub>1</sub> p＞1/6</div></details></div>
+
+<p><strong>典型的な誤り</strong>は確かめたい主張を帰無仮説に置く誤りである。帰無仮説は等号で書ける仮説で対立仮説は不等号か ≠ で書ける仮説になる。</p>
+
+<aside class="an an-rw"><b>現実世界</b>
+<p class="an-h">帰無仮説は刑事裁判の推定無罪である</p>
+<p>無罪を仮定し有罪の証拠が十分なときだけ覆す。証拠不十分の無罪判決は潔白の証明ではない。</p>
+</aside>
+
+<h2 id="s2">有意水準と棄却域</h2>
+<p>帰無仮説のもとで観測結果がどれほど起こりにくければ帰無仮説を否定するかの基準を前もって決める。この基準の確率を<strong>有意水準</strong>と呼ぶ。5% または 1% を使うことが多い。</p>
+<p>帰無仮説のもとで検定統計量がその範囲に入る確率が有意水準に等しくなるように定めた極端な値の範囲を<strong>棄却域</strong>と呼ぶ。観測した値が棄却域に入れば帰無仮説を<strong>棄却する</strong>と言い対立仮説を採る。このとき結果は有意水準5%で<strong>有意である</strong>とも言う。棄却域に入らなければ帰無仮説を棄却しない。</p>
+<p>標本から計算して棄却域と比べる値を検定統計量と呼ぶ。高校では標準化した値 Z を使う。帰無仮説のもとで Z は近似的に N(0, 1) に従う。有意水準5%の両側の棄却域は次のとおりである。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>Z</mi><mi mathvariant="normal">∣</mi><mo>≥</mo><mn>1.96</mn><mspace width="2em"/><mrow><mo fence="true">(</mo><mi>P</mi><mo stretchy="false">(</mo><mi mathvariant="normal">∣</mi><mi>Z</mi><mi mathvariant="normal">∣</mi><mo>≥</mo><mn>1.96</mn><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn><mo>−</mo><mn>2</mn><mo>×</mo><mn>0.4750</mn><mo>=</mo><mn>0.05</mn><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">|Z|\ge 1.96 \qquad\left(P(|Z|\ge 1.96)=1-2\times 0.4750=0.05\right)</annotation></semantics></math></span></div>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 265" role="img" aria-label="有意水準5パーセントの両側検定の棄却域">
+<line x1="40" y1="220" x2="680" y2="220" stroke="var(--ink)" stroke-width="1"/>
+<line x1="107.4" y1="220" x2="107.4" y2="225" stroke="var(--ink)"/>
+<text x="107.4" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">-3</text>
+<line x1="191.6" y1="220" x2="191.6" y2="225" stroke="var(--ink)"/>
+<text x="191.6" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">-2</text>
+<line x1="275.8" y1="220" x2="275.8" y2="225" stroke="var(--ink)"/>
+<text x="275.8" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">-1</text>
+<line x1="360" y1="220" x2="360" y2="225" stroke="var(--ink)"/>
+<text x="360" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">0</text>
+<line x1="444.2" y1="220" x2="444.2" y2="225" stroke="var(--ink)"/>
+<text x="444.2" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">1</text>
+<line x1="528.4" y1="220" x2="528.4" y2="225" stroke="var(--ink)"/>
+<text x="528.4" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">2</text>
+<line x1="612.6" y1="220" x2="612.6" y2="225" stroke="var(--ink)"/>
+<text x="612.6" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">3</text>
+<polygon points="40,220 40,219.9 41.9,219.9 43.9,219.9 45.8,219.8 47.7,219.8 49.7,219.8 51.6,219.8 53.6,219.8 55.5,219.8 57.4,219.7 59.4,219.7 61.3,219.7 63.2,219.7 65.2,219.6 67.1,219.6 69.1,219.6 71,219.5 72.9,219.5 74.9,219.4 76.8,219.4 78.7,219.3 80.7,219.3 82.6,219.2 84.5,219.2 86.5,219.1 88.4,219 90.4,219 92.3,218.9 94.2,218.8 96.2,218.7 98.1,218.6 100,218.5 102,218.4 103.9,218.3 105.9,218.2 107.8,218.1 109.7,217.9 111.7,217.8 113.6,217.6 115.5,217.5 117.5,217.3 119.4,217.1 121.3,216.9 123.3,216.7 125.2,216.5 127.2,216.2 129.1,216 131,215.7 133,215.5 134.9,215.2 136.8,214.9 138.8,214.5 140.7,214.2 142.7,213.8 144.6,213.5 146.5,213.1 148.5,212.7 150.4,212.2 152.3,211.8 154.3,211.3 156.2,210.8 158.1,210.3 160.1,209.7 162,209.1 164,208.5 165.9,207.9 167.8,207.3 169.8,206.6 171.7,205.9 173.6,205.1 175.6,204.3 177.5,203.5 179.5,202.7 181.4,201.8 183.3,200.9 185.3,200 187.2,199 189.1,198 191.1,197 193,195.9 194.9,194.8 194.9,220" fill="var(--warm)" opacity="0.55"/>
+<polygon points="525.1,220 525.1,194.8 527,195.9 528.9,197 530.9,198 532.8,199 534.7,200 536.7,200.9 538.6,201.8 540.5,202.7 542.5,203.5 544.4,204.3 546.4,205.1 548.3,205.9 550.2,206.6 552.2,207.3 554.1,207.9 556,208.5 558,209.1 559.9,209.7 561.9,210.3 563.8,210.8 565.7,211.3 567.7,211.8 569.6,212.2 571.5,212.7 573.5,213.1 575.4,213.5 577.3,213.8 579.3,214.2 581.2,214.5 583.2,214.9 585.1,215.2 587,215.5 589,215.7 590.9,216 592.8,216.2 594.8,216.5 596.7,216.7 598.7,216.9 600.6,217.1 602.5,217.3 604.5,217.5 606.4,217.6 608.3,217.8 610.3,217.9 612.2,218.1 614.1,218.2 616.1,218.3 618,218.4 620,218.5 621.9,218.6 623.8,218.7 625.8,218.8 627.7,218.9 629.6,219 631.6,219 633.5,219.1 635.5,219.2 637.4,219.2 639.3,219.3 641.3,219.3 643.2,219.4 645.1,219.4 647.1,219.5 649,219.5 650.9,219.6 652.9,219.6 654.8,219.6 656.8,219.7 658.7,219.7 660.6,219.7 662.6,219.7 664.5,219.8 666.4,219.8 668.4,219.8 670.3,219.8 672.3,219.8 674.2,219.8 676.1,219.9 678.1,219.9 680,219.9 680,220" fill="var(--warm)" opacity="0.55"/>
+<polyline points="40,219.9 42.7,219.9 45.3,219.8 48,219.8 50.7,219.8 53.3,219.8 56,219.7 58.7,219.7 61.3,219.7 64,219.6 66.7,219.6 69.3,219.6 72,219.5 74.7,219.4 77.3,219.4 80,219.3 82.7,219.2 85.3,219.2 88,219.1 90.7,219 93.3,218.9 96,218.7 98.7,218.6 101.3,218.5 104,218.3 106.7,218.1 109.3,217.9 112,217.7 114.7,217.5 117.3,217.3 120,217 122.7,216.8 125.3,216.5 128,216.1 130.7,215.8 133.3,215.4 136,215 138.7,214.6 141.3,214.1 144,213.6 146.7,213 149.3,212.5 152,211.8 154.7,211.2 157.3,210.5 160,209.7 162.7,208.9 165.3,208.1 168,207.2 170.7,206.2 173.3,205.2 176,204.2 178.7,203 181.3,201.9 184,200.6 186.7,199.3 189.3,197.9 192,196.5 194.7,194.9 197.3,193.3 200,191.7 202.7,189.9 205.3,188.1 208,186.2 210.7,184.2 213.3,182.2 216,180.1 218.7,177.9 221.3,175.6 224,173.2 226.7,170.8 229.3,168.3 232,165.7 234.7,163.1 237.3,160.4 240,157.6 242.7,154.7 245.3,151.8 248,148.9 250.7,145.8 253.3,142.8 256,139.6 258.7,136.5 261.3,133.3 264,130 266.7,126.8 269.3,123.5 272,120.2 274.7,116.9 277.3,113.6 280,110.3 282.7,107 285.3,103.7 288,100.5 290.7,97.3 293.3,94.1 296,90.9 298.7,87.9 301.3,84.8 304,81.9 306.7,79 309.3,76.3 312,73.6 314.7,71 317.3,68.5 320,66.1 322.7,63.9 325.3,61.7 328,59.7 330.7,57.9 333.3,56.2 336,54.6 338.7,53.2 341.3,51.9 344,50.8 346.7,49.9 349.3,49.1 352,48.5 354.7,48.1 357.3,47.8 360,47.7 362.7,47.8 365.3,48.1 368,48.5 370.7,49.1 373.3,49.9 376,50.8 378.7,51.9 381.3,53.2 384,54.6 386.7,56.2 389.3,57.9 392,59.7 394.7,61.7 397.3,63.9 400,66.1 402.7,68.5 405.3,71 408,73.6 410.7,76.3 413.3,79 416,81.9 418.7,84.8 421.3,87.9 424,90.9 426.7,94.1 429.3,97.3 432,100.5 434.7,103.7 437.3,107 440,110.3 442.7,113.6 445.3,116.9 448,120.2 450.7,123.5 453.3,126.8 456,130 458.7,133.3 461.3,136.5 464,139.6 466.7,142.8 469.3,145.8 472,148.9 474.7,151.8 477.3,154.7 480,157.6 482.7,160.4 485.3,163.1 488,165.7 490.7,168.3 493.3,170.8 496,173.2 498.7,175.6 501.3,177.9 504,180.1 506.7,182.2 509.3,184.2 512,186.2 514.7,188.1 517.3,189.9 520,191.7 522.7,193.3 525.3,194.9 528,196.5 530.7,197.9 533.3,199.3 536,200.6 538.7,201.9 541.3,203 544,204.2 546.7,205.2 549.3,206.2 552,207.2 554.7,208.1 557.3,208.9 560,209.7 562.7,210.5 565.3,211.2 568,211.8 570.7,212.5 573.3,213 576,213.6 578.7,214.1 581.3,214.6 584,215 586.7,215.4 589.3,215.8 592,216.1 594.7,216.5 597.3,216.8 600,217 602.7,217.3 605.3,217.5 608,217.7 610.7,217.9 613.3,218.1 616,218.3 618.7,218.5 621.3,218.6 624,218.7 626.7,218.9 629.3,219 632,219.1 634.7,219.2 637.3,219.2 640,219.3 642.7,219.4 645.3,219.4 648,219.5 650.7,219.6 653.3,219.6 656,219.6 658.7,219.7 661.3,219.7 664,219.7 666.7,219.8 669.3,219.8 672,219.8 674.7,219.8 677.3,219.9 680,219.9" fill="none" stroke="var(--ink)" stroke-width="2"/>
+<line x1="525.1" y1="90.5" x2="525.1" y2="220" stroke="var(--warm)" stroke-dasharray="4 3"/>
+<text x="525.1" y="82.1" font-size="13" text-anchor="middle" fill="var(--warm)">1.96</text>
+<line x1="194.9" y1="90.5" x2="194.9" y2="220" stroke="var(--warm)" stroke-dasharray="4 3"/>
+<text x="194.9" y="82.1" font-size="13" text-anchor="middle" fill="var(--warm)">−1.96</text>
+<text x="115.8" y="168.2" font-size="13" text-anchor="middle" fill="var(--warm)">棄却域 2.5%</text>
+<text x="604.2" y="168.2" font-size="13" text-anchor="middle" fill="var(--warm)">棄却域 2.5%</text>
+<text x="360" y="155.2" font-size="13" text-anchor="middle" fill="var(--ink)">棄却しない 95%</text>
+<circle cx="545.3" cy="220" r="6" fill="var(--accent)"/>
+<text x="545.3" y="258" font-size="13" text-anchor="middle" fill="var(--accent)">例題の z＝2.2</text>
+</svg>
+<figcaption>帰無仮説のもとでの Z の分布である。左右の裾の面積がそれぞれ2.5%で合わせて5%が棄却域になる。例題2の z＝2.2 は右側の棄却域に入る。</figcaption>
+</figure>
+<p>有意水準1%なら 2×p(2.58)≒0.99 なので棄却域は |Z|≥2.58 である。<strong class="hit">有意水準を小さくするほど棄却域は狭くなり帰無仮説を棄却するにはより強い証拠が要る</strong>。</p>
+
+<h2 id="s3">両側検定と片側検定</h2>
+<p>対立仮説の形によって棄却域の置き方が変わる。</p>
+<div class="tb-vs">
+<div><h5>両側検定</h5><ul>
+<li>対立仮説 p≠p<sub>0</sub> ／ m≠m<sub>0</sub></li>
+<li>大きすぎる場合も小さすぎる場合も棄却する</li>
+<li>有意水準5%の棄却域は |Z|≥1.96</li>
+</ul></div>
+<div><h5>片側検定</h5><ul>
+<li>対立仮説 p＞p<sub>0</sub> ／ m＜m<sub>0</sub> など</li>
+<li>主張する向きの片側だけで棄却する</li>
+<li>有意水準5%の右側の棄却域は Z≥1.64 程度</li>
+</ul></div>
+</div>
+<p>片側検定では5%をすべて一方の裾に置く。P(Z≥z)＝0.05 となる z は p(z)＝0.45 から求まる。表では p(1.64)＝0.4495 と p(1.65)＝0.4505 の間なので z≒1.645 である。教科書によって 1.64 または 1.645 を使う。問題文の指示に従う。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 265" role="img" aria-label="有意水準5パーセントの右側の片側検定の棄却域">
+<line x1="40" y1="220" x2="680" y2="220" stroke="var(--ink)" stroke-width="1"/>
+<line x1="107.4" y1="220" x2="107.4" y2="225" stroke="var(--ink)"/>
+<text x="107.4" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">-3</text>
+<line x1="191.6" y1="220" x2="191.6" y2="225" stroke="var(--ink)"/>
+<text x="191.6" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">-2</text>
+<line x1="275.8" y1="220" x2="275.8" y2="225" stroke="var(--ink)"/>
+<text x="275.8" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">-1</text>
+<line x1="360" y1="220" x2="360" y2="225" stroke="var(--ink)"/>
+<text x="360" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">0</text>
+<line x1="444.2" y1="220" x2="444.2" y2="225" stroke="var(--ink)"/>
+<text x="444.2" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">1</text>
+<line x1="528.4" y1="220" x2="528.4" y2="225" stroke="var(--ink)"/>
+<text x="528.4" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">2</text>
+<line x1="612.6" y1="220" x2="612.6" y2="225" stroke="var(--ink)"/>
+<text x="612.6" y="239" font-size="12" text-anchor="middle" fill="var(--sub)">3</text>
+<polygon points="498.1,220 498.1,175.1 500.4,177.1 502.7,179 504.9,180.8 507.2,182.6 509.5,184.3 511.7,186 514,187.7 516.3,189.2 518.6,190.7 520.8,192.2 523.1,193.6 525.4,195 527.7,196.3 529.9,197.5 532.2,198.7 534.5,199.9 536.8,201 539,202 541.3,203 543.6,204 545.9,204.9 548.1,205.8 550.4,206.6 552.7,207.4 554.9,208.2 557.2,208.9 559.5,209.6 561.8,210.2 564,210.9 566.3,211.4 568.6,212 570.9,212.5 573.1,213 575.4,213.5 577.7,213.9 580,214.3 582.2,214.7 584.5,215.1 586.8,215.4 589.1,215.7 591.3,216 593.6,216.3 595.9,216.6 598.1,216.8 600.4,217.1 602.7,217.3 605,217.5 607.2,217.7 609.5,217.9 611.8,218 614.1,218.2 616.3,218.3 618.6,218.5 620.9,218.6 623.2,218.7 625.4,218.8 627.7,218.9 630,219 632.3,219.1 634.5,219.2 636.8,219.2 639.1,219.3 641.3,219.4 643.6,219.4 645.9,219.5 648.2,219.5 650.4,219.6 652.7,219.6 655,219.6 657.3,219.7 659.5,219.7 661.8,219.7 664.1,219.7 666.4,219.8 668.6,219.8 670.9,219.8 673.2,219.8 675.5,219.8 677.7,219.9 680,219.9 680,220" fill="var(--warm)" opacity="0.55"/>
+<polyline points="40,219.9 42.7,219.9 45.3,219.8 48,219.8 50.7,219.8 53.3,219.8 56,219.7 58.7,219.7 61.3,219.7 64,219.6 66.7,219.6 69.3,219.6 72,219.5 74.7,219.4 77.3,219.4 80,219.3 82.7,219.2 85.3,219.2 88,219.1 90.7,219 93.3,218.9 96,218.7 98.7,218.6 101.3,218.5 104,218.3 106.7,218.1 109.3,217.9 112,217.7 114.7,217.5 117.3,217.3 120,217 122.7,216.8 125.3,216.5 128,216.1 130.7,215.8 133.3,215.4 136,215 138.7,214.6 141.3,214.1 144,213.6 146.7,213 149.3,212.5 152,211.8 154.7,211.2 157.3,210.5 160,209.7 162.7,208.9 165.3,208.1 168,207.2 170.7,206.2 173.3,205.2 176,204.2 178.7,203 181.3,201.9 184,200.6 186.7,199.3 189.3,197.9 192,196.5 194.7,194.9 197.3,193.3 200,191.7 202.7,189.9 205.3,188.1 208,186.2 210.7,184.2 213.3,182.2 216,180.1 218.7,177.9 221.3,175.6 224,173.2 226.7,170.8 229.3,168.3 232,165.7 234.7,163.1 237.3,160.4 240,157.6 242.7,154.7 245.3,151.8 248,148.9 250.7,145.8 253.3,142.8 256,139.6 258.7,136.5 261.3,133.3 264,130 266.7,126.8 269.3,123.5 272,120.2 274.7,116.9 277.3,113.6 280,110.3 282.7,107 285.3,103.7 288,100.5 290.7,97.3 293.3,94.1 296,90.9 298.7,87.9 301.3,84.8 304,81.9 306.7,79 309.3,76.3 312,73.6 314.7,71 317.3,68.5 320,66.1 322.7,63.9 325.3,61.7 328,59.7 330.7,57.9 333.3,56.2 336,54.6 338.7,53.2 341.3,51.9 344,50.8 346.7,49.9 349.3,49.1 352,48.5 354.7,48.1 357.3,47.8 360,47.7 362.7,47.8 365.3,48.1 368,48.5 370.7,49.1 373.3,49.9 376,50.8 378.7,51.9 381.3,53.2 384,54.6 386.7,56.2 389.3,57.9 392,59.7 394.7,61.7 397.3,63.9 400,66.1 402.7,68.5 405.3,71 408,73.6 410.7,76.3 413.3,79 416,81.9 418.7,84.8 421.3,87.9 424,90.9 426.7,94.1 429.3,97.3 432,100.5 434.7,103.7 437.3,107 440,110.3 442.7,113.6 445.3,116.9 448,120.2 450.7,123.5 453.3,126.8 456,130 458.7,133.3 461.3,136.5 464,139.6 466.7,142.8 469.3,145.8 472,148.9 474.7,151.8 477.3,154.7 480,157.6 482.7,160.4 485.3,163.1 488,165.7 490.7,168.3 493.3,170.8 496,173.2 498.7,175.6 501.3,177.9 504,180.1 506.7,182.2 509.3,184.2 512,186.2 514.7,188.1 517.3,189.9 520,191.7 522.7,193.3 525.3,194.9 528,196.5 530.7,197.9 533.3,199.3 536,200.6 538.7,201.9 541.3,203 544,204.2 546.7,205.2 549.3,206.2 552,207.2 554.7,208.1 557.3,208.9 560,209.7 562.7,210.5 565.3,211.2 568,211.8 570.7,212.5 573.3,213 576,213.6 578.7,214.1 581.3,214.6 584,215 586.7,215.4 589.3,215.8 592,216.1 594.7,216.5 597.3,216.8 600,217 602.7,217.3 605.3,217.5 608,217.7 610.7,217.9 613.3,218.1 616,218.3 618.7,218.5 621.3,218.6 624,218.7 626.7,218.9 629.3,219 632,219.1 634.7,219.2 637.3,219.2 640,219.3 642.7,219.4 645.3,219.4 648,219.5 650.7,219.6 653.3,219.6 656,219.6 658.7,219.7 661.3,219.7 664,219.7 666.7,219.8 669.3,219.8 672,219.8 674.7,219.8 677.3,219.9 680,219.9" fill="none" stroke="var(--ink)" stroke-width="2"/>
+<line x1="498.1" y1="90.5" x2="498.1" y2="220" stroke="var(--warm)" stroke-dasharray="4 3"/>
+<text x="498.1" y="82.1" font-size="13" text-anchor="middle" fill="var(--warm)">1.64</text>
+<text x="604.2" y="168.2" font-size="13" text-anchor="middle" fill="var(--warm)">棄却域 5%</text>
+<text x="326.3" y="155.2" font-size="13" text-anchor="middle" fill="var(--ink)">棄却しない 95%</text>
+<line x1="525.1" y1="133.6" x2="525.1" y2="220" stroke="var(--sub)" stroke-dasharray="2 3"/>
+<text x="529.1" y="129.6" font-size="12" fill="var(--sub)">両側なら 1.96</text>
+<circle cx="500.6" cy="220" r="6" fill="var(--accent)"/>
+<text x="500.6" y="258" font-size="13" text-anchor="middle" fill="var(--accent)">例題の z≒1.67</text>
+</svg>
+<figcaption>有意水準5%の右側の片側検定の棄却域である。右の裾だけで5%をとるので境界は約1.64になり両側検定の1.96より内側にある。例題3の z≒1.67 は片側では棄却域に入り両側では入らない。</figcaption>
+</figure>
+<p>両側か片側かはデータを見る前に問題の目的から決める。「効果が高いか」を調べるなら片側で「差があるか」を調べるなら両側である。データを見てから都合のよい側を選ぶと実際の有意水準が名目の値より大きくなる。</p>
+
+<h2 id="s4">母比率の検定</h2>
+<p>仮説検定の手順は次の5段階にまとめられる。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 200" role="img" aria-label="仮説検定の5つの手順">
+  <defs><marker id="ah11c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+  <g font-size="15" font-weight="700" text-anchor="middle" fill="#fff">
+    <circle cx="72" cy="60" r="22" fill="var(--cool)"/><text x="72" y="66">1</text>
+    <circle cx="216" cy="60" r="22" fill="var(--cool)"/><text x="216" y="66">2</text>
+    <circle cx="360" cy="60" r="22" fill="var(--cool)"/><text x="360" y="66">3</text>
+    <circle cx="504" cy="60" r="22" fill="var(--cool)"/><text x="504" y="66">4</text>
+    <circle cx="648" cy="60" r="22" fill="var(--warm)"/><text x="648" y="66">5</text>
+  </g>
+  <g stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ah11c)">
+    <line x1="100" y1="60" x2="186" y2="60"/><line x1="244" y1="60" x2="330" y2="60"/><line x1="388" y1="60" x2="474" y2="60"/><line x1="532" y1="60" x2="618" y2="60"/>
+  </g>
+  <g font-size="13" text-anchor="middle" fill="var(--ink)">
+    <text x="72" y="112">仮説を立てる</text><text x="72" y="132" fill="var(--sub)">H₀ と H₁</text>
+    <text x="216" y="112">水準を決める</text><text x="216" y="132" fill="var(--sub)">5% か 1%</text><text x="216" y="152" fill="var(--sub)">両側か片側か</text>
+    <text x="360" y="112">Z を計算する</text><text x="360" y="132" fill="var(--sub)">H₀ のもとで</text><text x="360" y="152" fill="var(--sub)">標準化する</text>
+    <text x="504" y="112">棄却域と比べる</text><text x="504" y="132" fill="var(--sub)">|Z|≥1.96 など</text><text x="504" y="152" fill="var(--sub)">または確率で比べる</text>
+    <text x="648" y="112">結論を述べる</text><text x="648" y="132" fill="var(--sub)">棄却する</text><text x="648" y="152" fill="var(--sub)">または棄却しない</text>
+  </g>
+  <text x="360" y="188" font-size="12" text-anchor="middle" fill="var(--muted)">1 と 2 はデータを見る前に決める</text>
+</svg>
+<figcaption>仮説検定の手順である。手順3の Z の計算に第9章の二項分布の近似と第10章の標本平均の分布を使う。</figcaption>
+</figure>
+<p>母比率の検定では帰無仮説 p＝p<sub>0</sub> のもとで成功回数 X が B(n, p<sub>0</sub>) に従う。n が大きければ X は近似的に N(np<sub>0</sub>, np<sub>0</sub>(1−p<sub>0</sub>)) に従うので次の Z を使う。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>Z</mi><mo>=</mo><mfrac><mrow><mi>X</mi><mo>−</mo><mi>n</mi><msub><mi>p</mi><mn>0</mn></msub></mrow><msqrt><mrow><mi>n</mi><msub><mi>p</mi><mn>0</mn></msub><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mn>0</mn></msub><mo stretchy="false">)</mo></mrow></msqrt></mfrac></mrow><annotation encoding="application/x-tex">Z=\frac{X-np_0}{\sqrt{np_0(1-p_0)}}</annotation></semantics></math></span></div>
+
+<div class="ex"><div class="ex-h">例題 2</div>
+<p>ある硬貨を400回投げると表が222回出た。この硬貨は表と裏の出やすさに偏りがあると判断してよいか。有意水準5%で検定せよ。</p>
+<details open><summary>解き方</summary><div>手順1 表の出る確率を p とする。H<sub>0</sub> p＝1/2・H<sub>1</sub> p≠1/2 で両側検定である。<br>手順2 H<sub>0</sub> のもとで X は B(400, 1/2) に従い期待値200・標準偏差 √(400×1/2×1/2)＝10 である。<br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>=</mo><mo stretchy="false">(</mo><mn>222</mn><mo>−</mo><mn>200</mn><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mn>10</mn><mo>=</mo><mn>2.2</mn></mrow><annotation encoding="application/x-tex">Z=(222-200)/10=2.2</annotation></semantics></math></span><br>手順4 |Z|＝2.2≥1.96 なので棄却域に入る。<br>手順5 帰無仮説を棄却する。答え 有意水準5%で偏りがあると判断してよい</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 3</div>
+<p>従来の薬で治る割合は60%である。新しい薬を150人に使うと100人が治った。新しい薬は従来の薬より治る割合が高いと判断してよいか。有意水準5%で検定せよ。</p>
+<details open><summary>解き方</summary><div>手順1 新しい薬で治る割合を p とする。H<sub>0</sub> p＝0.6・H<sub>1</sub> p＞0.6 で右側の片側検定である。<br>手順2 H<sub>0</sub> のもとで期待値は 150×0.6＝90 で標準偏差は √(150×0.6×0.4)＝√36＝6 である。<br>手順3 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>=</mo><mo stretchy="false">(</mo><mn>100</mn><mo>−</mo><mn>90</mn><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mn>6</mn><mo>≒</mo><mn>1.67</mn></mrow><annotation encoding="application/x-tex">Z=(100-90)/6\fallingdotseq 1.67</annotation></semantics></math></span><br>手順4 Z≥1.64 なので片側の棄却域に入る。<br>手順5 帰無仮説を棄却する。答え 有意水準5%で治る割合が高いと判断してよい</div></details></div>
+
+<p>棄却域と比べる代わりに確率を直接比べる方法もある。学習指導要領解説はこの手順で仮説検定を説明している。帰無仮説のもとで観測結果以上に極端な結果が起こる確率を正規分布表で求め有意水準と比べる。例題3では <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>Z</mi><mo>≥</mo><mn>1.67</mn><mo stretchy="false">)</mo><mo>=</mo><mn>0.5</mn><mo>−</mo><mi>p</mi><mo stretchy="false">(</mo><mn>1.67</mn><mo stretchy="false">)</mo><mo>=</mo><mn>0.5</mn><mo>−</mo><mn>0.4525</mn><mo>=</mo><mn>0.0475</mn></mrow><annotation encoding="application/x-tex">P(Z\ge 1.67)=0.5-p(1.67)=0.5-0.4525=0.0475</annotation></semantics></math></span> で 0.05 より小さいので帰無仮説を棄却する。結論は棄却域と比べた場合と一致する。両側検定では片側の裾の確率を有意水準の半分と比べる。</p>
+<p>例題3で両側検定を使うと 1.67＜1.96 なので棄却しない。同じデータでも対立仮説の立て方で結論が変わる。だからこそ両側か片側かを事前に決める。</p>
+<p><strong>典型的な誤り</strong>は Z の分母に分散 np<sub>0</sub>(1−p<sub>0</sub>) をそのまま使う誤りと標本比率 R から計算した標準偏差を使う誤りである。検定では帰無仮説の p<sub>0</sub> で標準偏差を計算する。推定では未知の p の代わりに R を使ったので区別する。</p>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">リクエストの映像判定は帰無仮説の検定である</p>
+<p>元の判定が H<sub>0</sub> で映像が明白に矛盾するときだけ覆る。きわどい映像では判定は変わらないが元の判定が正しかったと証明されたわけではない。</p>
+</aside>
+
+<h2 id="s5">母平均の検定</h2>
+<p>母平均の検定では帰無仮説 m＝m<sub>0</sub> のもとで標本平均 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>X</mi><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{X}</annotation></semantics></math></span> が近似的に N(m<sub>0</sub>, σ²/n) に従うことを使う。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>Z</mi><mo>=</mo><mfrac><mrow><mover accent="true"><mi>X</mi><mo stretchy="true">‾</mo></mover><mo>−</mo><msub><mi>m</mi><mn>0</mn></msub></mrow><mrow><mi>σ</mi><mi mathvariant="normal">/</mi><msqrt><mi>n</mi></msqrt></mrow></mfrac></mrow><annotation encoding="application/x-tex">Z=\frac{\overline{X}-m_0}{\sigma/\sqrt{n}}</annotation></semantics></math></span></div>
+<p>母標準偏差 σ が未知で n が大きいときは推定と同様に標本の標準偏差で代用する。</p>
+
+<div class="ex"><div class="ex-h">例題 4</div>
+<p>内容量が500 g と表示された製品から36個を無作為に抽出すると内容量の平均は 497.8 g であった。母標準偏差を 6 g とする。内容量の平均は表示と異なると判断してよいか。有意水準5%と1%でそれぞれ検定せよ。</p>
+<details open><summary>解き方</summary><div>手順1 H<sub>0</sub> m＝500・H<sub>1</sub> m≠500 で両側検定である。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mi mathvariant="normal">/</mi><msqrt><mi>n</mi></msqrt><mo>=</mo><mn>6</mn><mi mathvariant="normal">/</mi><mn>6</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma/\sqrt{n}=6/6=1</annotation></semantics></math></span> なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>=</mo><mo stretchy="false">(</mo><mn>497.8</mn><mo>−</mo><mn>500</mn><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mn>1</mn><mo>=</mo><mo>−</mo><mn>2.2</mn></mrow><annotation encoding="application/x-tex">Z=(497.8-500)/1=-2.2</annotation></semantics></math></span><br>手順3 有意水準5%では |Z|＝2.2≥1.96 なので棄却する。<br>手順4 有意水準1%では 2.2＜2.58 なので棄却しない。答え 5%では表示と異なると判断してよい。1%では異なるとは判断できない</div></details></div>
+
+<p><strong>典型的な誤り</strong>は Z の分母に σ をそのまま使う誤りである。例題4で6で割ると Z≒−0.37 になり結論が逆になる。標本平均の標準偏差は σ/√n である。</p>
+
+<aside class="an an-biz"><b>スタートアップで言えば</b>
+<p class="an-h">A/B テストの「有意差なし」は「差がない」ではない</p>
+<p>新しい画面の購入率が有意に高くならなくても標本が小さければ差を検出できなかっただけである。</p>
+</aside>
+
+<h2 id="s6">結論の言い方と2種類の誤り</h2>
+<p>検定の結論は次の2通りのどちらかで述べる。</p>
+<div class="tb-vs">
+<div><h5>棄却域に入った</h5><ul>
+<li>帰無仮説を棄却する</li>
+<li>対立仮説が正しいと判断してよい</li>
+<li>例 偏りがあると判断してよい</li>
+</ul></div>
+<div><h5>棄却域に入らなかった</h5><ul>
+<li>帰無仮説を棄却しない</li>
+<li>対立仮説が正しいとは判断できない</li>
+<li>例 偏りがあるとは言えない</li>
+</ul></div>
+</div>
+<p><strong class="hit">棄却しないことは帰無仮説が正しいことの証明ではない</strong>。帰無仮説のもとで起こりうる結果だったと言えるだけである。例題4の有意水準1%の結論を「内容量は500 g である」と書くのは誤りである。標本を大きくすれば同じ差でも棄却域に入る可能性がある。</p>
+<p>検定の判断はいつも正しいとは限らない。誤りには次の2種類がある。</p>
+<div class="tb-tw"><table>
+<thead><tr><th></th><th>帰無仮説が正しい</th><th>帰無仮説が誤り</th></tr></thead>
+<tbody>
+<tr><td>棄却する</td><td>第1種の誤り 確率は有意水準</td><td>正しい判断</td></tr>
+<tr><td>棄却しない</td><td>正しい判断</td><td>第2種の誤り</td></tr>
+</tbody></table></div>
+<p>帰無仮説が正しいときに棄却してしまう確率は棄却域の面積そのものなので有意水準に等しい。有意水準を5%にするとは第1種の誤りを5%まで許すという意味である。有意水準を小さくすると第1種の誤りは減るが棄却しにくくなるので第2種の誤りは増える。</p>
+<p>第1種の誤りと第2種の誤りという用語は高校の学習指導要領の内容には含まれない。大学の統計学で扱う。学習指導要領解説の仮説検定の記述にもこの用語は現れない。高校で求められるのは有意水準が帰無仮説の正しいときに棄却してしまう確率に当たるという考え方である。</p>
+
+<aside class="an an-biz"><b>投資で言えば</b>
+<p class="an-h">効果のない売買戦略を20本試すと平均1本は偶然に有意になる</p>
+<p>有意水準5%で効果のない戦略を20本検定すると棄却される本数の期待値は 20×0.05＝1 本である。過去のデータで最良の戦略を選ぶ前にこの数を確かめる。</p>
+</aside>
+
+<h2 id="s7">現実世界の仮説検定</h2>
+<p>有意水準を使う現在の検定の形は20世紀前半にフィッシャーやネイマンとピアソンによって整えられた。</p>
+<aside class="an an-rw"><b>現実世界</b>
+<p>フィッシャーは1935年の著書『実験計画法』で紅茶の実験を紹介した。ミルクを先に入れたかを区別できると主張する人に4杯ずつ計8杯を無作為な順に出す。区別できないという帰無仮説のもとで全問正解する確率は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi mathvariant="normal">/</mi><msub><mrow></mrow><mn>8</mn></msub><msub><mi mathvariant="normal">C</mi><mn>4</mn></msub><mo>=</mo><mn>1</mn><mi mathvariant="normal">/</mi><mn>70</mn></mrow><annotation encoding="application/x-tex">1/{}_8\mathrm{C}_4=1/70</annotation></semantics></math></span> で約1.4%である。全問正解なら有意水準5%で帰無仮説を棄却できる。</p>
+</aside>
+<p>医薬品の承認のための臨床試験やウェブサービスの A/B テストや工場の抜き取り検査はこの章と同じ手順で行われる。</p>
+
+<h2 id="s8">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ 仮説の立て方</div>
+<p class="qz-q">ある機械の不良品率は従来2%であった。調整後に不良品率が下がったかを調べる。不良品率を p とするときの帰無仮説と対立仮説の組として正しいものを1つ選べ。</p>
+<ol><li>H<sub>0</sub> p＜0.02・H<sub>1</sub> p＝0.02</li><li>H<sub>0</sub> p＝0.02・H<sub>1</sub> p＜0.02</li><li>H<sub>0</sub> p＝0.02・H<sub>1</sub> p＞0.02</li><li>H<sub>0</sub> p≠0.02・H<sub>1</sub> p＝0.02</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。帰無仮説は「変化がない」の等号の形にする。確かめたいのは「下がった」なので対立仮説は p＜0.02 で左側の片側検定になる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ 検定統計量</div>
+<p class="qz-q">ある硬貨を100回投げると表が61回出た。表の出る確率を 1/2 とする帰無仮説のもとで検定統計量 Z の値を答えよ。</p>
+<details><summary>解答と解説</summary><div>正解は 2.2 である。期待値は50で標準偏差は √(100×1/2×1/2)＝5 である。Z＝(61−50)/5＝2.2</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 有意水準と結論</div>
+<p class="qz-q">問2の硬貨について表と裏の出やすさに偏りがあるかを両側検定する。正しい記述を1つ選べ。</p>
+<ol><li>有意水準5%でも1%でも帰無仮説は棄却される</li><li>有意水準5%では棄却され1%では棄却されない</li><li>有意水準5%では棄却されず1%では棄却される</li><li>有意水準1%で棄却されないので表の出る確率は 1/2 である</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。|Z|＝2.2 は 1.96 以上で 2.58 未満である。4 は棄却されないことを帰無仮説の証明とみなす誤りである。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ 母平均の検定</div>
+<p class="qz-q">母標準偏差10の母集団から大きさ25の標本を取り出すと標本平均は74であった。帰無仮説 m＝70 を有意水準5%で両側検定する。Z の値と結論の組として正しいものを1つ選べ。</p>
+<ol><li>Z＝0.4 で棄却しない</li><li>Z＝2.0 で棄却する</li><li>Z＝2.0 で棄却しない</li><li>Z＝0.08 で棄却しない</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。σ/√n＝10/5＝2 で Z＝(74−70)/2＝2.0 である。2.0≥1.96 なので棄却する。1 は σ で割った誤りで 4 は σ×√n＝50 で割った誤りである。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 棄却される最小の個数</div>
+<p class="qz-q">ある商品の購入率は従来20%であった。広告の後に400人を無作為に調べ購入した人数を X とする。帰無仮説 p＝0.2 対立仮説 p＞0.2 として有意水準5%で検定する。棄却域の境界を 1.64 とするとき帰無仮説が棄却される最小の X を答えよ。</p>
+<details><summary>解答と解説</summary><div>正解は 94 である。期待値は 400×0.2＝80 で標準偏差は √(400×0.2×0.8)＝8 である。(X−80)/8≥1.64 から X≥93.12 なので最小の整数は94である。境界を 1.645 としても X≥93.16 で同じ答えになる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 結論の解釈</div>
+<p class="qz-q">新しい教材で平均点が上がったかを有意水準5%で検定したところ帰無仮説は棄却されなかった。この結果の解釈として最も適当なものを1つ選べ。</p>
+<ol><li>新しい教材には効果がないことが証明された</li><li>平均点が上がったとは判断できない</li><li>平均点が下がったと判断してよい</li><li>有意水準を10%にすれば必ず棄却される</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。棄却しないことは帰無仮説の証明ではないので 1 は誤りである。3 は検定していない向きの主張である。4 は観測値の位置によって決まり必ずとは言えない。</div></details></div>
+
+<div class="qz"><div class="qz-h">問7 ・ 有意水準の意味</div>
+<p class="qz-q">有意水準5%の検定をくり返し行う。帰無仮説が正しい場合に帰無仮説を棄却してしまう割合として最も近いものを1つ選べ。</p>
+<ol><li>0.5%</li><li>2.5%</li><li>5%</li><li>95%</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。帰無仮説のもとで検定統計量が棄却域に入る確率は棄却域の面積であり有意水準に等しい。両側検定でも左右の2.5%を合わせて5%である。</div></details></div>
+
+<h2 id="s9">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+帰無仮説 H<sub>0</sub> は否定したい等号の仮説で確かめたい主張は対立仮説 H<sub>1</sub> に置く。<br>
+H<sub>0</sub> のもとで検定統計量 Z を計算し棄却域に入れば H<sub>0</sub> を棄却する。<br>
+有意水準5%の棄却域は両側で |Z|≥1.96・右側の片側で Z≥1.64 程度。1%の両側は |Z|≥2.58。<br>
+母比率は Z＝(X−np<sub>0</sub>)/√(np<sub>0</sub>(1−p<sub>0</sub>)) で母平均は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>=</mo><mo stretchy="false">(</mo><mover accent="true"><mi>X</mi><mo stretchy="true">‾</mo></mover><mo>−</mo><msub><mi>m</mi><mn>0</mn></msub><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mi>σ</mi><mi mathvariant="normal">/</mi><msqrt><mi>n</mi></msqrt><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Z=(\overline{X}-m_0)/(\sigma/\sqrt{n})</annotation></semantics></math></span>。<br>
+棄却しないことは H<sub>0</sub> の証明ではなく判断の保留である。<br>
+有意水準は H<sub>0</sub> が正しいのに棄却する確率である。</div>
+
+<h2 id="s10">この本の要点と共通テスト</h2>
+<p>この本は学習指導要領の3つの単元を順に積み上げた。数学Ⅰの「データの分析」で記述統計を・数学Aの「場合の数と確率」で確率の計算を・数学Bの「統計的な推測」で確率分布を使った推測を扱った。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>科目と単元</th><th>章</th><th>中心の公式と考え方</th></tr></thead>
+<tbody>
+<tr><td>数学Ⅰ データの分析</td><td>第1〜3章</td><td>平均・中央値・四分位数・分散＝2乗の平均−平均の2乗・相関係数＝共分散÷標準偏差の積・仮説検定の考え方</td></tr>
+<tr><td>数学A 場合の数と確率</td><td>第4〜7章</td><td>和と積の法則・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">P</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_n\mathrm{P}_r</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_n\mathrm{C}_r</annotation></semantics></math></span>・二項定理・独立な試行と反復試行・条件付き確率と乗法定理・期待値</td></tr>
+<tr><td>数学B 統計的な推測</td><td>第8〜11章</td><td>E(aX＋b)・V(aX＋b)・B(n, p) の np と np(1−p)・標準化と正規分布表・σ/√n・信頼区間 ±1.96σ/√n・棄却域 |Z|≥1.96</td></tr>
+</tbody></table></div>
+<p>3つの単元は1本の線でつながる。データの平均と分散は確率分布の期待値と分散になり期待値と分散は標本平均の分布を決める。標本平均の分布から推定と検定が導かれる。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>試験</th><th>この本の範囲の扱い</th></tr></thead>
+<tbody>
+<tr><td>数学①「数学Ⅰ，数学A」 70分</td><td>令和7年度から全問必答である。データの分析と場合の数と確率はどちらも必ず解答する範囲である。</td></tr>
+<tr><td>数学②「数学Ⅱ，数学B，数学C」 70分</td><td>数学Ⅱは必答である。数学Bの数列と統計的な推測と数学Cのベクトルと平面上の曲線と複素数平面の4項目から3項目を選んで解答する。統計的な推測の問題には正規分布表が付く。</td></tr>
+</tbody></table></div>
+<p>統計的な推測を選ぶかどうかは数列・ベクトル・複素数平面との比較で決める。この単元は計算の型が少なく手順が決まっている。期待値と分散の公式・標準化・表の引き方・σ/√n の4つを確実にすれば得点が安定する。どの単元でも誤答の多くは分散と標準偏差の取り違えと √n の付け忘れである。</p>
+
+<h2 id="s11">残っている問い</h2>
+<ul>
+<li class="tb-vnote">観測値以上に極端な値が出る確率を大学の統計学では p 値と呼ぶ。学習指導要領解説はこの確率を p と書いて有意水準と比べる手順を示すが p 値という名称は用いない。教科書が名称をどこまで扱うかは全社では確認していない。</li>
+<li class="tb-vnote">第1種の誤りと第2種の誤りが高校の教科書で発展的な内容として触れられているかは全社の教科書で確認していない。</li>
+<li class="tb-vnote">片側検定の境界を 1.64 とするか 1.645 とするかは教科書と問題によって異なる。共通テストでは問題文の指示に従う。</li>
+<li class="tb-vnote">共通テストの各大問の配点と試験時間は年度ごとに大学入試センターの公表資料で確認する。本文の70分は令和7年度以降の公表内容として記した。</li>
+</ul>
+
+<h2 id="s12">出典</h2>
+<ol>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 解説 数学編 理数編 — https://www.mext.go.jp/a_menu/shotou/new-cs/1407074.htm</li>
+<li>大学入試センター 過去3年分の試験問題 — https://www.dnc.ac.jp/kyotsu/kakomondai/</li>
+<li>文部科学省 令和7年度大学入学共通テストからの出題教科・科目について — https://www.mext.go.jp/content/20211014-mxt_daigakuc02-000018441_3.pdf</li>
+<li>Statistical hypothesis testing — Wikipedia — https://en.wikipedia.org/wiki/Statistical_hypothesis_testing</li>
+<li>Type I and type II errors — Wikipedia — https://en.wikipedia.org/wiki/Type_I_and_type_II_errors</li>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 解説 数学編 理数編 PDF — https://www.mext.go.jp/content/20260115-mxt_kyoiku02-100002620_04.pdf</li>
+<li>Lady tasting tea — Wikipedia — https://en.wikipedia.org/wiki/Lady_tasting_tea</li>
+<li>Benesse 新課程の大学入学共通テスト 数学のポイント — https://benesse.jp/daigakukento/_shere/pdf/series9/point.pdf</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="10_estimation.html">← 標本調査と推定</a><a class="tb-nav-a" href="../drill.html">計算ドリル →</a></div>
+</div>
+<script>
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){ if (!tick) { tick = true; requestAnimationFrame(draw); } }, {passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>

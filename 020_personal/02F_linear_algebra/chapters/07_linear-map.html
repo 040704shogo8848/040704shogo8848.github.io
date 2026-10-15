@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線形変換と行列式｜ベクトルと線形代数</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../021_profile/index.html">profile</a><a href="../../02A_plan/index.html">plan</a><a href="../../023_travel/index.html">travel</a><a href="../../027_cinema/index.html">cinema</a><a href="../../02B_reading/index.html">reading</a><a href="../../024_method/index.html">method</a><a href="../../026_handbook/index.html">handbook</a><a href="../../025_fitness/index.html">fitness</a><a href="../../028_english/index.html">english</a><a href="../../029_mental_math/index.html">mental math</a><a href="../../02C_chemistry/index.html">chemistry</a><a href="../../02D_probability/index.html">probability</a><a href="../../02E_calculus/index.html">calculus</a><a href="../index.html">linear algebra</a><a href="../../02G_physics/index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../024_method/index.html">method</a>
+    <a class="snav-a" href="../../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../028_english/index.html">english</a>
+    <a class="snav-a" href="../../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../index.html">linear algebra</a>
+    <a class="snav-a" href="../../02G_physics/index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / personal /
+    <a href="../index.html">02F linear algebra</a> / 第7章</div>
+
+  <div class="tb-ch">大学の線形代数 — 第7章</div>
+  <h1>線形変換と行列式</h1>
+  <p class="tb-thesis">2×2 行列は平面の点を動かす規則であり2本の基本ベクトルの行き先だけで決まる。変換を続けて行うことは行列の積である。行列式は面積が何倍になるかを表し0なら平面が直線以下に縮んで元に戻せない。</p>
+
+<p class="tb-warn"><strong>この章の大部分は高校の学習指導要領の範囲外である。</strong>大学の入門で扱う内容で共通テストには出題されない。</p>
+<p class="tb-ok"><strong>この章は2026-10-15に出典照合を通した。</strong> 検証した事実は40件である。出典と一致したものは38件である。食い違ったものは2件で本文を修正済みである。出典で確認できなかったものは0件である。これらは末尾の「残っている問い」に列挙した。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">線形変換の定義</a></li><li><a href="#s2">行列が表す平面の変換</a></li><li><a href="#s3">合成変換と行列の積</a></li><li><a href="#s4">行列式と面積の拡大率</a></li><li><a href="#s5">3×3 の行列式と体積</a></li><li><a href="#s6">行列式が0のとき逆行列がない理由</a></li><li><a href="#s7">複素数の積との対応</a></li><li><a href="#s8">現実世界の線形変換 画面の中の図形</a></li><li><a href="#s9">確認問題</a></li><li><a href="#s10">この章の要点</a></li><li><a href="#s11">残っている問い</a></li><li><a href="#s12">出典</a></li></ol></nav>
+
+<p>第6章では行列の積を代入の合成として定めた。この章ではその代入を平面上の点の移動として描く。行列 A で点 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">x</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{x}</annotation></semantics></math></span> を点 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi mathvariant="bold-italic">x</mi></mrow><annotation encoding="application/x-tex">A\boldsymbol{x}</annotation></semantics></math></span> に移すと平面全体が回転したり伸びたり傾いたりする。この見方を得ると第6章で結果だけを示した2つの事実に図形の理由が付く。積の順序を入れ替えると結果が変わる理由と行列式が0のとき逆行列がない理由である。</p>
+<p>後半では行列式を面積と体積の拡大率として定め 3×3 の計算法を扱う。最後に第5章の複素数の積がこの章の行列の特別な場合であることを示す。高校の範囲外の内容である。1970年改訂の課程では一次変換の名称で扱い平成11年告示の数学Cでも行列による点の移動として一部を扱っていた。</p>
+
+<h2 id="s1">線形変換の定義</h2>
+<p>平面上の各点 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">x</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{x}</annotation></semantics></math></span> に平面上の点 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(\boldsymbol{x})</annotation></semantics></math></span> を1つずつ対応させる規則を平面の<strong>変換</strong>と呼ぶ。変換 f が次の2つの条件を満たすとき f を<strong>線形変換</strong>または一次変換と呼ぶ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo>+</mo><mi mathvariant="bold-italic">y</mi><mo stretchy="false">)</mo><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>+</mo><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">y</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><mi>f</mi><mo stretchy="false">(</mo><mi>k</mi><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>k</mi><mtext> </mtext><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(\boldsymbol{x}+\boldsymbol{y})=f(\boldsymbol{x})+f(\boldsymbol{y}),\qquad f(k\boldsymbol{x})=k\,f(\boldsymbol{x})</annotation></semantics></math></span></div>
+<p>1つ目は和を移した点が移した点の和に等しいという条件である。2つ目は k 倍を移した点が移した点の k 倍に等しいという条件である。2つ目で k＝0 とすると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold">0</mi><mo stretchy="false">)</mo><mo>=</mo><mi mathvariant="bold">0</mi></mrow><annotation encoding="application/x-tex">f(\boldsymbol{0})=\boldsymbol{0}</annotation></semantics></math></span> となる。<strong class="hit">線形変換は原点を動かさない</strong>。</p>
+<p>線形変換は2つの基本ベクトル <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold-italic">e</mi><mn>1</mn></msub><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo separator="true">,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\boldsymbol{e}_1=(1,0)</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold-italic">e</mi><mn>2</mn></msub><mo>=</mo><mo stretchy="false">(</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\boldsymbol{e}_2=(0,1)</annotation></semantics></math></span> の行き先だけで決まる。任意の点は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">x</mi><mo>=</mo><mi>x</mi><msub><mi mathvariant="bold-italic">e</mi><mn>1</mn></msub><mo>+</mo><mi>y</mi><msub><mi mathvariant="bold-italic">e</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\boldsymbol{x}=x\boldsymbol{e}_1+y\boldsymbol{e}_2</annotation></semantics></math></span> と書けるので2つの条件から次が成り立つからである。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>x</mi><mtext> </mtext><mi>f</mi><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">e</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mo>+</mo><mi>y</mi><mtext> </mtext><mi>f</mi><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">e</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(\boldsymbol{x})=x\,f(\boldsymbol{e}_1)+y\,f(\boldsymbol{e}_2)</annotation></semantics></math></span></div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">e</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>a</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>c</mi></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(\boldsymbol{e}_1)=\begin{pmatrix} a \\ c \end{pmatrix}</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">e</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>b</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>d</mi></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(\boldsymbol{e}_2)=\begin{pmatrix} b \\ d \end{pmatrix}</annotation></semantics></math></span> とすると右辺は第6章の行列の積そのものである。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>a</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>b</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>c</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>d</mi></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>x</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>y</mi></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(\boldsymbol{x})=\begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix}\begin{pmatrix} x \\ y \end{pmatrix}</annotation></semantics></math></span></div>
+<p><strong class="hit">行列の第1列は e₁ の行き先で第2列は e₂ の行き先である</strong>。この1行が線形変換の問題の出発点になる。逆にどの 2×2 行列 A についても <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">x</mi><mo>↦</mo><mi>A</mi><mi mathvariant="bold-italic">x</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{x}\mapsto A\boldsymbol{x}</annotation></semantics></math></span> は2つの条件を満たすので線形変換である。平面の線形変換と 2×2 行列は1対1に対応する。</p>
+
+<div class="ex"><div class="ex-h">例題 1</div>
+<p>線形変換 f が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">e</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mn>2</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(\boldsymbol{e}_1)=(2,1)</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">e</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(\boldsymbol{e}_2)=(-1,3)</annotation></semantics></math></span> を満たす。f を表す行列と点 (3, 2) の行き先を求めよ。</p>
+<details open><summary>解き方</summary><div>行き先を列として並べる。行列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>3</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 2 &amp; -1 \\ 1 &amp; 3 \end{pmatrix}</annotation></semantics></math></span> である。<br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mn>3</mn><mo separator="true">,</mo><mn>2</mn><mo stretchy="false">)</mo><mo>=</mo><mn>3</mn><mo stretchy="false">(</mo><mn>2</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><mn>2</mn><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mn>3</mn><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mn>6</mn><mo>−</mo><mn>2</mn><mo separator="true">,</mo><mtext> </mtext><mn>3</mn><mo>+</mo><mn>6</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(3,2)=3(2,1)+2(-1,3)=(6-2,\ 3+6)</annotation></semantics></math></span> である。<br>答えは (4, 9) である。</div></details></div>
+
+<p>典型的な誤りは平行移動を線形変換とみなすことである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">x</mi><mo>↦</mo><mi mathvariant="bold-italic">x</mi><mo>+</mo><mo stretchy="false">(</mo><mn>1</mn><mo separator="true">,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\boldsymbol{x}\mapsto\boldsymbol{x}+(1,0)</annotation></semantics></math></span> は原点を (1, 0) に移すので線形変換ではない。2×2 行列だけでは平行移動を表せない。</p>
+
+<h2 id="s2">行列が表す平面の変換</h2>
+<p>第1節の原理から代表的な変換の行列が求まる。どれも e₁ と e₂ の行き先を列に並べるだけである。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>変換</th><th>e₁ の行き先</th><th>e₂ の行き先</th><th>行列</th></tr></thead>
+<tbody>
+<tr><td>原点のまわりの角 θ の回転</td><td>(cosθ, sinθ)</td><td>(−sinθ, cosθ)</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>cos</mi><mo>⁡</mo><mi>θ</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mi>sin</mi><mo>⁡</mo><mi>θ</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>sin</mi><mo>⁡</mo><mi>θ</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>cos</mi><mo>⁡</mo><mi>θ</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} \cos\theta &amp; -\sin\theta \\ \sin\theta &amp; \cos\theta \end{pmatrix}</annotation></semantics></math></span></td></tr>
+<tr><td>x 方向に k 倍・y 方向に l 倍の拡大</td><td>(k, 0)</td><td>(0, l)</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>k</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>l</mi></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} k &amp; 0 \\ 0 &amp; l \end{pmatrix}</annotation></semantics></math></span></td></tr>
+<tr><td>x 方向のせん断</td><td>(1, 0)</td><td>(1, 1)</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 1 &amp; 1 \\ 0 &amp; 1 \end{pmatrix}</annotation></semantics></math></span></td></tr>
+<tr><td>x 軸への正射影</td><td>(1, 0)</td><td>(0, 0)</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 1 &amp; 0 \\ 0 &amp; 0 \end{pmatrix}</annotation></semantics></math></span></td></tr>
+<tr><td>x 軸に関する対称移動</td><td>(1, 0)</td><td>(0, −1)</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 1 &amp; 0 \\ 0 &amp; -1 \end{pmatrix}</annotation></semantics></math></span></td></tr>
+<tr><td>直線 y＝x に関する対称移動</td><td>(0, 1)</td><td>(1, 0)</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 0 &amp; 1 \\ 1 &amp; 0 \end{pmatrix}</annotation></semantics></math></span></td></tr>
+</tbody></table></div>
+<p>回転の e₂ の行き先は e₂ が角 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>90</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">90^\circ</annotation></semantics></math></span> の位置にあるので角 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>90</mn><mo>∘</mo></msup><mo>+</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">90^\circ+\theta</annotation></semantics></math></span> の位置の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>cos</mi><mo>⁡</mo><mo stretchy="false">(</mo><msup><mn>90</mn><mo>∘</mo></msup><mo>+</mo><mi>θ</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mi>sin</mi><mo>⁡</mo><mo stretchy="false">(</mo><msup><mn>90</mn><mo>∘</mo></msup><mo>+</mo><mi>θ</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mo>−</mo><mi>sin</mi><mo>⁡</mo><mi>θ</mi><mo separator="true">,</mo><mi>cos</mi><mo>⁡</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\cos(90^\circ+\theta), \sin(90^\circ+\theta))=(-\sin\theta, \cos\theta)</annotation></semantics></math></span> である。せん断は高さ y の点を y だけ横にずらす変換で正方形を平行四辺形に変える。正射影は各点から x 軸へ垂線を下ろした足に移す変換である。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 250" role="img" aria-label="単位正方形が回転と拡大とせん断と射影で移る先">
+  <g font-size="13" fill="var(--ink)" text-anchor="middle"><text x="90" y="28">回転 90°</text><text x="270" y="28">x 方向に2倍</text><text x="450" y="28">せん断</text><text x="630" y="28">x 軸への射影</text></g>
+  <g stroke="var(--line)"><line x1="180" y1="40" x2="180" y2="235"/><line x1="360" y1="40" x2="360" y2="235"/><line x1="540" y1="40" x2="540" y2="235"/></g>
+  <g stroke="var(--ink)" stroke-width="1.2">
+    <line x1="10" y1="180" x2="170" y2="180"/><line x1="75" y1="200" x2="75" y2="60"/>
+    <line x1="190" y1="180" x2="350" y2="180"/><line x1="255" y1="200" x2="255" y2="60"/>
+    <line x1="370" y1="180" x2="530" y2="180"/><line x1="435" y1="200" x2="435" y2="60"/>
+    <line x1="550" y1="180" x2="710" y2="180"/><line x1="615" y1="200" x2="615" y2="60"/>
+  </g>
+  <g fill="none" stroke="var(--sub)" stroke-dasharray="4 3">
+    <polygon points="75,180 125,180 125,130 75,130"/><polygon points="255,180 305,180 305,130 255,130"/>
+    <polygon points="435,180 485,180 485,130 435,130"/><polygon points="615,180 665,180 665,130 615,130"/>
+  </g>
+  <g fill="var(--warm)" fill-opacity="0.25" stroke="var(--warm)" stroke-width="2">
+    <polygon points="75,180 75,130 25,130 25,180"/>
+    <polygon points="255,180 355,180 355,130 255,130"/>
+    <polygon points="435,180 485,180 535,130 485,130"/>
+  </g>
+  <line x1="615" y1="180" x2="665" y2="180" stroke="var(--warm)" stroke-width="5"/>
+  <g fill="var(--accent)"><circle cx="75" cy="130" r="4"/><circle cx="355" cy="180" r="4"/><circle cx="485" cy="180" r="4"/><circle cx="665" cy="180" r="4"/></g>
+  <g fill="var(--cool)"><circle cx="25" cy="180" r="4"/><circle cx="255" cy="130" r="4"/><circle cx="485" cy="130" r="4"/><circle cx="615" cy="180" r="4" fill-opacity="0.6"/></g>
+  <g font-size="12.5" fill="var(--sub)" text-anchor="middle">
+    <text x="90" y="222">面積 1 倍</text><text x="270" y="222">面積 2 倍</text><text x="450" y="222">面積 1 倍</text><text x="630" y="222">面積 0 倍</text>
+  </g>
+</svg>
+<figcaption>点線は元の単位正方形で色の付いた図形が移った先である。e₁ の行き先を青の点で e₂ の行き先を緑の点で示す。せん断は高さ1の辺を横に1ずらすので底辺と高さは変わらず面積も変わらない。射影では正方形が線分になり面積は0になる。</figcaption>
+</figure>
+
+<p>線形変換は直線を直線か1点に移す。直線 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">p</mi><mo>+</mo><mi>t</mi><mi mathvariant="bold-italic">v</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{p}+t\boldsymbol{v}</annotation></semantics></math></span> の行き先は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi mathvariant="bold-italic">p</mi><mo>+</mo><mi>t</mi><mi>A</mi><mi mathvariant="bold-italic">v</mi></mrow><annotation encoding="application/x-tex">A\boldsymbol{p}+tA\boldsymbol{v}</annotation></semantics></math></span> で第3章の直線のベクトル方程式の形だからである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi mathvariant="bold-italic">v</mi><mo>=</mo><mi mathvariant="bold">0</mi></mrow><annotation encoding="application/x-tex">A\boldsymbol{v}=\boldsymbol{0}</annotation></semantics></math></span> のときだけ1点になる。平行な2直線は平行な2直線か1本の直線に移る。</p>
+
+<p>直線 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mo stretchy="false">(</mo><mi>tan</mi><mo>⁡</mo><mi>θ</mi><mo stretchy="false">)</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">y=(\tan\theta)x</annotation></semantics></math></span> に関する対称移動も同じ方法で求まる。e₁ は角0の位置にあり直線に関して折り返すと角 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>θ</mi></mrow><annotation encoding="application/x-tex">2\theta</annotation></semantics></math></span> の位置に移る。e₂ は角 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>90</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">90^\circ</annotation></semantics></math></span> の位置にあり角 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>θ</mi><mo>−</mo><msup><mn>90</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">2\theta-90^\circ</annotation></semantics></math></span> の位置に移る。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>cos</mi><mo>⁡</mo><mn>2</mn><mi>θ</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>sin</mi><mo>⁡</mo><mn>2</mn><mi>θ</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>sin</mi><mo>⁡</mo><mn>2</mn><mi>θ</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mi>cos</mi><mo>⁡</mo><mn>2</mn><mi>θ</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} \cos 2\theta &amp; \sin 2\theta \\ \sin 2\theta &amp; -\cos 2\theta \end{pmatrix}</annotation></semantics></math></span></div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><msup><mn>45</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">\theta=45^\circ</annotation></semantics></math></span> とすると表の直線 y＝x に関する対称移動の行列と一致する。</p>
+
+<div class="ex"><div class="ex-h">例題 2</div>
+<p>点 (2, 1) を原点のまわりに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>90</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">90^\circ</annotation></semantics></math></span> 回転した点を行列で求めよ。また第5章の複素数の計算と比べよ。</p>
+<details open><summary>解き方</summary><div><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><msup><mn>90</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">\theta=90^\circ</annotation></semantics></math></span> の回転行列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 0 &amp; -1 \\ 1 &amp; 0 \end{pmatrix}</annotation></semantics></math></span> である。<br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 0 &amp; -1 \\ 1 &amp; 0 \end{pmatrix}\begin{pmatrix} 2 \\ 1 \end{pmatrix}=\begin{pmatrix} -1 \\ 2 \end{pmatrix}</annotation></semantics></math></span> である。<br>答えは (−1, 2) である。<br>第5章で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo stretchy="false">(</mo><mn>2</mn><mo>+</mo><mi>i</mi><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mn>1</mn><mo>+</mo><mn>2</mn><mi>i</mi></mrow><annotation encoding="application/x-tex">i(2+i)=-1+2i</annotation></semantics></math></span> と求めた結果と一致する。</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 3</div>
+<p>直線 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><msqrt><mn>3</mn></msqrt><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">y=\sqrt{3}\,x</annotation></semantics></math></span> に関する対称移動の行列を求めよ。また直線 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">y=2x+1</annotation></semantics></math></span> を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">A=\begin{pmatrix} 1 &amp; 1 \\ 0 &amp; 2 \end{pmatrix}</annotation></semantics></math></span> で移した図形を求めよ。</p>
+<details open><summary>解き方</summary><div>直線の傾きは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>tan</mi><mo>⁡</mo><msup><mn>60</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">\tan 60^\circ</annotation></semantics></math></span> なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><msup><mn>60</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">\theta=60^\circ</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>θ</mi><mo>=</mo><msup><mn>120</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">2\theta=120^\circ</annotation></semantics></math></span> である。<br>行列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} -\frac{1}{2} &amp; \frac{\sqrt{3}}{2} \\ \frac{\sqrt{3}}{2} &amp; \frac{1}{2} \end{pmatrix}</annotation></semantics></math></span> である。点 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo separator="true">,</mo><msqrt><mn>3</mn></msqrt><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1, \sqrt{3})</annotation></semantics></math></span> を移すと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo fence="true">(</mo><mo>−</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>+</mo><mfrac><mn>3</mn><mn>2</mn></mfrac><mo separator="true">,</mo><mtext> </mtext><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac><mo>+</mo><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac><mo fence="true">)</mo></mrow><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo separator="true">,</mo><msqrt><mn>3</mn></msqrt><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\left(-\frac{1}{2}+\frac{3}{2},\ \frac{\sqrt{3}}{2}+\frac{\sqrt{3}}{2}\right)=(1, \sqrt{3})</annotation></semantics></math></span> で直線上の点は動かない。<br>後半は直線上の点を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mn>2</mn><mi>t</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t, 2t+1)</annotation></semantics></math></span> と置く。<br>A で移すと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo>+</mo><mn>2</mn><mi>t</mi><mo>+</mo><mn>1</mn><mo separator="true">,</mo><mtext> </mtext><mn>4</mn><mi>t</mi><mo>+</mo><mn>2</mn><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mn>3</mn><mi>t</mi><mo>+</mo><mn>1</mn><mo separator="true">,</mo><mtext> </mtext><mn>4</mn><mi>t</mi><mo>+</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t+2t+1,\ 4t+2)=(3t+1,\ 4t+2)</annotation></semantics></math></span> である。<br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><mn>3</mn><mi>t</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">X=3t+1</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><mn>4</mn><mi>t</mi><mo>+</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">Y=4t+2</annotation></semantics></math></span> から t を消去する。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mi>X</mi><mo>−</mo><mn>1</mn></mrow><mn>3</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">t=\dfrac{X-1}{3}</annotation></semantics></math></span> を代入して <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>4</mn><mi>X</mi><mo>+</mo><mn>2</mn></mrow><mn>3</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">Y=\dfrac{4X+2}{3}</annotation></semantics></math></span> である。<br>答えは直線 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>4</mn><mn>3</mn></mfrac></mstyle><mi>x</mi><mo>+</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>2</mn><mn>3</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">y=\dfrac{4}{3}x+\dfrac{2}{3}</annotation></semantics></math></span> である。</div></details></div>
+
+<p>A が逆行列をもつとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">A^{-1}</annotation></semantics></math></span> は A の逆の変換を表す。A で移した点に <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">A^{-1}</annotation></semantics></math></span> を掛けると元の点に戻るからである。角 θ の回転の逆は角 −θ の回転であり対称移動の逆はその対称移動自身である。対称移動の行列 F について <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>F</mi><mn>2</mn></msup><mo>=</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">F^2=E</annotation></semantics></math></span> が成り立つ。</p>
+
+<h2 id="s3">合成変換と行列の積</h2>
+<p>変換 f を行った後に変換 g を行う変換を f と g の<strong>合成変換</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo>∘</mo><mi>f</mi></mrow><annotation encoding="application/x-tex">g\circ f</annotation></semantics></math></span> と書く。f が行列 A で g が行列 B で表されるとき次が成り立つ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo stretchy="false">(</mo><mi>g</mi><mo>∘</mo><mi>f</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>B</mi><mo stretchy="false">(</mo><mi>A</mi><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mi>B</mi><mi>A</mi><mo stretchy="false">)</mo><mi mathvariant="bold-italic">x</mi></mrow><annotation encoding="application/x-tex">(g\circ f)(\boldsymbol{x})=B(A\boldsymbol{x})=(BA)\boldsymbol{x}</annotation></semantics></math></span></div>
+<p><strong class="hit">先に行う変換の行列が右に来る</strong>。第6章で積を代入の合成として定めたのはこの性質のためである。積の順序を入れ替えると結果が変わる理由もここにある。回転してから対称移動するのと対称移動してから回転するのでは一般に異なる位置に移る。</p>
+
+<div class="ex"><div class="ex-h">例題 4</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>90</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">90^\circ</annotation></semantics></math></span> 回転を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">R=\begin{pmatrix} 0 &amp; -1 \\ 1 &amp; 0 \end{pmatrix}</annotation></semantics></math></span> で x 軸に関する対称移動を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">F=\begin{pmatrix} 1 &amp; 0 \\ 0 &amp; -1 \end{pmatrix}</annotation></semantics></math></span> で表す。回転してから対称移動する変換と対称移動してから回転する変換の行列を求めよ。</p>
+<details open><summary>解き方</summary><div>回転が先なので R が右に来る。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mi>R</mi><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">FR=\begin{pmatrix} 0 &amp; -1 \\ -1 &amp; 0 \end{pmatrix}</annotation></semantics></math></span> である。<br>これは e₁ を (0, −1) に e₂ を (−1, 0) に移すので直線 y＝−x に関する対称移動である。<br>対称移動が先なら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>F</mi><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">RF=\begin{pmatrix} 0 &amp; 1 \\ 1 &amp; 0 \end{pmatrix}</annotation></semantics></math></span> で直線 y＝x に関する対称移動である。<br>2つは異なる変換である。</div></details></div>
+
+<p>回転を2回続けると角が足される。角 α の回転の後に角 β の回転を行う行列を計算する。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>cos</mi><mo>⁡</mo><mi>β</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mi>sin</mi><mo>⁡</mo><mi>β</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>sin</mi><mo>⁡</mo><mi>β</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>cos</mi><mo>⁡</mo><mi>β</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>cos</mi><mo>⁡</mo><mi>α</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mi>sin</mi><mo>⁡</mo><mi>α</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>sin</mi><mo>⁡</mo><mi>α</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>cos</mi><mo>⁡</mo><mi>α</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>cos</mi><mo>⁡</mo><mi>β</mi><mi>cos</mi><mo>⁡</mo><mi>α</mi><mo>−</mo><mi>sin</mi><mo>⁡</mo><mi>β</mi><mi>sin</mi><mo>⁡</mo><mi>α</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mo lspace="0em" rspace="0em">∗</mo></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>sin</mi><mo>⁡</mo><mi>β</mi><mi>cos</mi><mo>⁡</mo><mi>α</mi><mo>+</mo><mi>cos</mi><mo>⁡</mo><mi>β</mi><mi>sin</mi><mo>⁡</mo><mi>α</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mo lspace="0em" rspace="0em">∗</mo></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{pmatrix} \cos\beta &amp; -\sin\beta \\ \sin\beta &amp; \cos\beta \end{pmatrix}\begin{pmatrix} \cos\alpha &amp; -\sin\alpha \\ \sin\alpha &amp; \cos\alpha \end{pmatrix}=\begin{pmatrix} \cos\beta\cos\alpha-\sin\beta\sin\alpha &amp; * \\ \sin\beta\cos\alpha+\cos\beta\sin\alpha &amp; * \end{pmatrix}</annotation></semantics></math></span></div>
+<p>合成は角 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>+</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">\alpha+\beta</annotation></semantics></math></span> の回転なので左辺の第1列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>cos</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>α</mi><mo>+</mo><mi>β</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mi>sin</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>α</mi><mo>+</mo><mi>β</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\cos(\alpha+\beta), \sin(\alpha+\beta))</annotation></semantics></math></span> に等しい。成分を比べると数学Ⅱの加法定理が得られる。回転どうしは順序を入れ替えても結果が同じである。行列の積が交換できる数少ない例である。</p>
+<p>合成の考え方で変換の性質を式に表せる。x 軸への正射影 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">Q=\begin{pmatrix} 1 &amp; 0 \\ 0 &amp; 0 \end{pmatrix}</annotation></semantics></math></span> は1回射影した点をもう1回射影しても動かないので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>Q</mi><mn>2</mn></msup><mo>=</mo><mi>Q</mi></mrow><annotation encoding="application/x-tex">Q^2=Q</annotation></semantics></math></span> である。対称移動 F は2回続けると元に戻るので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>F</mi><mn>2</mn></msup><mo>=</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">F^2=E</annotation></semantics></math></span> である。角 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>2</mn><mi>π</mi></mrow><mi>n</mi></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{2\pi}{n}</annotation></semantics></math></span> の回転 R は n 回続けると1周するので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mi>n</mi></msup><mo>=</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">R^n=E</annotation></semantics></math></span> である。第5章の1の n 乗根 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>z</mi><mi>n</mi></msup><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">z^n=1</annotation></semantics></math></span> と同じ構造である。</p>
+<p>典型的な誤りは「A の後に B」を AB と書くことである。式 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo stretchy="false">(</mo><mi>A</mi><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">B(A\boldsymbol{x})</annotation></semantics></math></span> を書いてから括弧を外す手順を守ると誤らない。</p>
+
+<h2 id="s4">行列式と面積の拡大率</h2>
+<p>第6章で 2×2 行列の行列式を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mi>A</mi><mo>=</mo><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">\det A=ad-bc</annotation></semantics></math></span> と定めた。この値には図形の意味がある。単位正方形は e₁ と e₂ で張られる。A で移すと列ベクトル <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">u</mi><mo>=</mo><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\boldsymbol{u}=(a,c)</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">v</mi><mo>=</mo><mo stretchy="false">(</mo><mi>b</mi><mo separator="true">,</mo><mi>d</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\boldsymbol{v}=(b,d)</annotation></semantics></math></span> で張られる平行四辺形になる。その面積が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|ad-bc|</annotation></semantics></math></span> である。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 80 720 210" role="img" aria-label="ベクトル 3 1 と 1 2 で張られる平行四辺形の面積は5">
+  <defs>
+    <marker id="ah07a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--warm)"/></marker>
+    <marker id="ah07b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--cool)"/></marker>
+  </defs>
+  <g stroke="var(--line)"><line x1="200" y1="100" x2="200" y2="270"/><line x1="250" y1="100" x2="250" y2="270"/><line x1="300" y1="100" x2="300" y2="270"/><line x1="350" y1="100" x2="350" y2="270"/><line x1="140" y1="110" x2="380" y2="110"/><line x1="140" y1="160" x2="380" y2="160"/><line x1="140" y1="210" x2="380" y2="210"/></g>
+  <line x1="130" y1="260" x2="390" y2="260" stroke="var(--ink)" stroke-width="1.5"/>
+  <line x1="150" y1="280" x2="150" y2="90" stroke="var(--ink)" stroke-width="1.5"/>
+  <g font-size="12" fill="var(--muted)" text-anchor="middle"><text x="200" y="276">1</text><text x="250" y="276">2</text><text x="300" y="276">3</text><text x="350" y="276">4</text><text x="142" y="276">O</text></g>
+  <g font-size="12" fill="var(--muted)" text-anchor="end"><text x="144" y="214">1</text><text x="144" y="164">2</text><text x="144" y="114">3</text></g>
+  <rect x="150" y="110" width="200" height="150" fill="none" stroke="var(--sub)" stroke-dasharray="5 4"/>
+  <polygon points="150,260 300,210 350,110 200,160" fill="var(--accent)" fill-opacity="0.15" stroke="var(--accent)" stroke-width="1.5"/>
+  <line x1="150" y1="260" x2="297" y2="211" stroke="var(--warm)" stroke-width="3" marker-end="url(#ah07a)"/>
+  <line x1="150" y1="260" x2="198.7" y2="162.7" stroke="var(--cool)" stroke-width="3" marker-end="url(#ah07b)"/>
+  <g font-size="13" font-weight="600"><text x="306" y="226" fill="var(--warm)">u = (3, 1)</text><text x="160" y="150" fill="var(--cool)">v = (1, 2)</text></g>
+  <text x="250" y="196" font-size="14" font-weight="700" fill="var(--accent)" text-anchor="middle">面積 5</text>
+  <g font-size="13" fill="var(--ink)">
+    <text x="420" y="110">外側の長方形 4 × 3 ＝ 12</text>
+    <text x="420" y="136">直角三角形 2個 3 × 1 ÷ 2 × 2 ＝ 3</text>
+    <text x="420" y="162">直角三角形 2個 1 × 2 ÷ 2 × 2 ＝ 2</text>
+    <text x="420" y="188">隅の正方形 2個 1 × 1 × 2 ＝ 2</text>
+    <text x="420" y="220" font-weight="600">12 − 3 − 2 − 2 ＝ 5 ＝ 3 × 2 − 1 × 1</text>
+  </g>
+</svg>
+<figcaption>u＝(3, 1) と v＝(1, 2) で張られる平行四辺形は 4×3 の長方形から周りの三角形と隅の正方形を除いた部分である。残りの面積は5で行列式 3×2−1×1 に等しい。</figcaption>
+</figure>
+
+<p>図の計算を文字で行う。a・b・c・d が正で図と同じ配置のとき外側の長方形の面積は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>c</mi><mo>+</mo><mi>d</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(a+b)(c+d)</annotation></semantics></math></span> である。そこから三角形 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mi>a</mi><mi>c</mi></mrow><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{ac}{2}</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mi>b</mi><mi>d</mi></mrow><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{bd}{2}</annotation></semantics></math></span> を2個ずつと隅の長方形 bc を2個除く。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>c</mi><mo>+</mo><mi>d</mi><mo stretchy="false">)</mo><mo>−</mo><mi>a</mi><mi>c</mi><mo>−</mo><mi>b</mi><mi>d</mi><mo>−</mo><mn>2</mn><mi>b</mi><mi>c</mi><mo>=</mo><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">(a+b)(c+d)-ac-bd-2bc=ad-bc</annotation></semantics></math></span></div>
+<p>単位正方形の面積1が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>a</mi><mi>d</mi><mo>−</mo><mi>b</mi><mi>c</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|ad-bc|</annotation></semantics></math></span> になるので平面上のどの図形の面積も <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>det</mi><mo>⁡</mo><mi>A</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|\det A|</annotation></semantics></math></span> 倍になる。図形を細かい正方形に分けるとどの正方形も同じ倍率で変わるからである。<strong class="hit">行列式の絶対値は面積の拡大率である</strong>。</p>
+<p>符号にも意味がある。正なら e₁ から e₂ への回転の向きが保たれる。負なら向きが反転し図形が裏返る。x 軸に関する対称移動の行列式は −1 である。</p>
+<p>合成変換では拡大率が掛け算になる。したがって次が成り立つ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>det</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>det</mi><mo>⁡</mo><mi>A</mi><mo>⋅</mo><mi>det</mi><mo>⁡</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">\det(AB)=\det A\cdot\det B</annotation></semantics></math></span></div>
+<p>特に <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">AA^{-1}=E</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mi>E</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\det E=1</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mo stretchy="false">(</mo><msup><mi>A</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo stretchy="false">)</mo><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mrow><mi>det</mi><mo>⁡</mo><mi>A</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\det(A^{-1})=\dfrac{1}{\det A}</annotation></semantics></math></span> である。</p>
+<p>この結果は第2章の三角形の面積の公式と一致する。O と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>a</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>a</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(a_1,a_2)</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>b</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>b</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(b_1,b_2)</annotation></semantics></math></span> を頂点とする三角形の面積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mi mathvariant="normal">∣</mi><msub><mi>a</mi><mn>1</mn></msub><msub><mi>b</mi><mn>2</mn></msub><mo>−</mo><msub><mi>a</mi><mn>2</mn></msub><msub><mi>b</mi><mn>1</mn></msub><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">\dfrac{1}{2}|a_1b_2-a_2b_1|</annotation></semantics></math></span> は平行四辺形の半分である。</p>
+
+<div class="ex"><div class="ex-h">例題 5</div>
+<p>O(0, 0)・P(3, 1)・Q(1, 2) を頂点とする三角形を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>3</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">A=\begin{pmatrix} 2 &amp; 1 \\ 1 &amp; 3 \end{pmatrix}</annotation></semantics></math></span> で移した図形の面積を求めよ。</p>
+<details open><summary>解き方</summary><div>元の三角形の面積は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mi mathvariant="normal">∣</mi><mn>3</mn><mo>⋅</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo>⋅</mo><mn>1</mn><mi mathvariant="normal">∣</mi><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>5</mn><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{2}|3\cdot 2-1\cdot 1|=\dfrac{5}{2}</annotation></semantics></math></span> である。<br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mi>A</mi><mo>=</mo><mn>2</mn><mo>⋅</mo><mn>3</mn><mo>−</mo><mn>1</mn><mo>⋅</mo><mn>1</mn><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">\det A=2\cdot 3-1\cdot 1=5</annotation></semantics></math></span> である。<br>面積は5倍になるので答えは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>25</mn><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{25}{2}</annotation></semantics></math></span> である。<br>検算する。P と Q の行き先は (7, 6) と (4, 7) である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mi mathvariant="normal">∣</mi><mn>7</mn><mo>⋅</mo><mn>7</mn><mo>−</mo><mn>6</mn><mo>⋅</mo><mn>4</mn><mi mathvariant="normal">∣</mi><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>25</mn><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{2}|7\cdot 7-6\cdot 4|=\dfrac{25}{2}</annotation></semantics></math></span> で一致する。</div></details></div>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">行列式が負の変換は右打者を左打者に変える</p>
+<p>鏡に映すと打席が左右入れ替わる。面積の倍率は絶対値に現れ左右の反転は符号に現れる。</p>
+</aside>
+
+<aside class="an an-biz"><b>投資で言えば</b>
+<p class="an-h">det(AB)＝det A・det B は希薄化の掛け算と同じである</p>
+<p>持分が1回目の増資で0.8倍・2回目で0.75倍なら合計0.6倍である。面積の倍率も各段階の倍率の積になる。</p>
+</aside>
+
+<h2 id="s5">3×3 の行列式と体積</h2>
+<p>空間の線形変換は 3×3 行列で表される。第4章の空間ベクトル e₁・e₂・e₃ の行き先を列に並べる。3×3 行列の行列式は次の式で定める。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>det</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>11</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>12</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>13</mn></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>21</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>22</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>23</mn></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>31</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>32</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>33</mn></msub></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mo>=</mo><msub><mi>a</mi><mn>11</mn></msub><msub><mi>a</mi><mn>22</mn></msub><msub><mi>a</mi><mn>33</mn></msub><mo>+</mo><msub><mi>a</mi><mn>12</mn></msub><msub><mi>a</mi><mn>23</mn></msub><msub><mi>a</mi><mn>31</mn></msub><mo>+</mo><msub><mi>a</mi><mn>13</mn></msub><msub><mi>a</mi><mn>21</mn></msub><msub><mi>a</mi><mn>32</mn></msub><mo>−</mo><msub><mi>a</mi><mn>13</mn></msub><msub><mi>a</mi><mn>22</mn></msub><msub><mi>a</mi><mn>31</mn></msub><mo>−</mo><msub><mi>a</mi><mn>12</mn></msub><msub><mi>a</mi><mn>21</mn></msub><msub><mi>a</mi><mn>33</mn></msub><mo>−</mo><msub><mi>a</mi><mn>11</mn></msub><msub><mi>a</mi><mn>23</mn></msub><msub><mi>a</mi><mn>32</mn></msub></mrow><annotation encoding="application/x-tex">\det\begin{pmatrix} a_{11} &amp; a_{12} &amp; a_{13} \\ a_{21} &amp; a_{22} &amp; a_{23} \\ a_{31} &amp; a_{32} &amp; a_{33} \end{pmatrix}=a_{11}a_{22}a_{33}+a_{12}a_{23}a_{31}+a_{13}a_{21}a_{32}-a_{13}a_{22}a_{31}-a_{12}a_{21}a_{33}-a_{11}a_{23}a_{32}</annotation></semantics></math></span></div>
+<p>暗記の方法として<strong>サラスの方法</strong>がある。左上から右下へ向かう3本の斜めの積を正の符号で足し右上から左下へ向かう3本の斜めの積を負の符号で足す。斜めの線は行列の右端で折り返して左端へつなぐ。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 230" role="img" aria-label="サラスの方法の斜めの線">
+  <g font-size="15" text-anchor="middle" fill="var(--ink)">
+    <text x="120" y="70">a₁₁</text><text x="190" y="70">a₁₂</text><text x="260" y="70">a₁₃</text><text x="330" y="70" fill="var(--muted)">a₁₁</text><text x="400" y="70" fill="var(--muted)">a₁₂</text>
+    <text x="120" y="130">a₂₁</text><text x="190" y="130">a₂₂</text><text x="260" y="130">a₂₃</text><text x="330" y="130" fill="var(--muted)">a₂₁</text><text x="400" y="130" fill="var(--muted)">a₂₂</text>
+    <text x="120" y="190">a₃₁</text><text x="190" y="190">a₃₂</text><text x="260" y="190">a₃₃</text><text x="330" y="190" fill="var(--muted)">a₃₁</text><text x="400" y="190" fill="var(--muted)">a₃₂</text>
+  </g>
+  <line x1="295" y1="40" x2="295" y2="205" stroke="var(--line)" stroke-dasharray="4 4"/>
+  <g stroke="var(--warm)" stroke-width="2" fill="none" stroke-opacity="0.55">
+    <line x1="106" y1="52" x2="274" y2="196"/><line x1="176" y1="52" x2="344" y2="196"/><line x1="246" y1="52" x2="414" y2="196"/>
+  </g>
+  <g stroke="var(--cool)" stroke-width="2" fill="none" stroke-dasharray="6 4" stroke-opacity="0.55">
+    <line x1="274" y1="52" x2="106" y2="196"/><line x1="344" y1="52" x2="176" y2="196"/><line x1="414" y1="52" x2="246" y2="196"/>
+  </g>
+  <g font-size="13" fill="var(--ink)">
+    <text x="460" y="80" fill="var(--warm)">実線 右下がり 3本 ＋</text>
+    <text x="460" y="110" fill="var(--cool)">破線 右上がり 3本 −</text>
+    <text x="460" y="150" fill="var(--sub)">右の灰色の2列は</text>
+    <text x="460" y="172" fill="var(--sub)">左の2列の写しである</text>
+  </g>
+</svg>
+<figcaption>行列の右に第1列と第2列を書き写すと6本の斜めの積がすべて直線で結べる。右下がりの3本は正の符号で右上がりの3本は負の符号で足す。サラスの方法は 3×3 までしか使えない。</figcaption>
+</figure>
+
+<p>図形の意味は面積の場合と同じである。3本の列ベクトルが張る平行六面体の体積が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>det</mi><mo>⁡</mo><mi>A</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|\det A|</annotation></semantics></math></span> であり空間図形の体積は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>det</mi><mo>⁡</mo><mi>A</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|\det A|</annotation></semantics></math></span> 倍になる。行列式が0なら3本の列ベクトルは同じ平面上にあり平行六面体はつぶれて体積0になる。</p>
+<p>4×4 以上では<strong>余因子展開</strong>を使う。1つの行または列について各成分と残りの小さな行列の行列式を掛けて符号を交互に付けて足す方法である。第1行で展開すると次の形になる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>det</mi><mo>⁡</mo><mi>A</mi><mo>=</mo><msub><mi>a</mi><mn>11</mn></msub><mrow><mo fence="true">∣</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>22</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>23</mn></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>32</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>33</mn></msub></mstyle></mtd></mtr></mtable><mo fence="true">∣</mo></mrow><mo>−</mo><msub><mi>a</mi><mn>12</mn></msub><mrow><mo fence="true">∣</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>21</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>23</mn></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>31</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>33</mn></msub></mstyle></mtd></mtr></mtable><mo fence="true">∣</mo></mrow><mo>+</mo><msub><mi>a</mi><mn>13</mn></msub><mrow><mo fence="true">∣</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>21</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>22</mn></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>31</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>32</mn></msub></mstyle></mtd></mtr></mtable><mo fence="true">∣</mo></mrow></mrow><annotation encoding="application/x-tex">\det A=a_{11}\begin{vmatrix} a_{22} &amp; a_{23} \\ a_{32} &amp; a_{33} \end{vmatrix}-a_{12}\begin{vmatrix} a_{21} &amp; a_{23} \\ a_{31} &amp; a_{33} \end{vmatrix}+a_{13}\begin{vmatrix} a_{21} &amp; a_{22} \\ a_{31} &amp; a_{32} \end{vmatrix}</annotation></semantics></math></span></div>
+
+<div class="ex"><div class="ex-h">例題 6</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>3</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\det\begin{pmatrix} 2 &amp; 1 &amp; 0 \\ 1 &amp; 3 &amp; 1 \\ 0 &amp; 1 &amp; 2 \end{pmatrix}</annotation></semantics></math></span> を求めよ。</p>
+<details open><summary>解き方</summary><div>サラスの方法で正の3項は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>⋅</mo><mn>3</mn><mo>⋅</mo><mn>2</mn><mo>+</mo><mn>1</mn><mo>⋅</mo><mn>1</mn><mo>⋅</mo><mn>0</mn><mo>+</mo><mn>0</mn><mo>⋅</mo><mn>1</mn><mo>⋅</mo><mn>1</mn><mo>=</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">2\cdot 3\cdot 2+1\cdot 1\cdot 0+0\cdot 1\cdot 1=12</annotation></semantics></math></span> である。<br>負の3項は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>⋅</mo><mn>3</mn><mo>⋅</mo><mn>0</mn><mo>+</mo><mn>1</mn><mo>⋅</mo><mn>1</mn><mo>⋅</mo><mn>2</mn><mo>+</mo><mn>2</mn><mo>⋅</mo><mn>1</mn><mo>⋅</mo><mn>1</mn><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">0\cdot 3\cdot 0+1\cdot 1\cdot 2+2\cdot 1\cdot 1=4</annotation></semantics></math></span> である。<br>答えは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>12</mn><mo>−</mo><mn>4</mn><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">12-4=8</annotation></semantics></math></span> である。<br>第1行の余因子展開で検算する。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo stretchy="false">(</mo><mn>3</mn><mo>⋅</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo>⋅</mo><mn>1</mn><mo stretchy="false">)</mo><mo>−</mo><mn>1</mn><mo stretchy="false">(</mo><mn>1</mn><mo>⋅</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo>⋅</mo><mn>0</mn><mo stretchy="false">)</mo><mo>+</mo><mn>0</mn><mo>=</mo><mn>10</mn><mo>−</mo><mn>2</mn><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">2(3\cdot 2-1\cdot 1)-1(1\cdot 2-1\cdot 0)+0=10-2=8</annotation></semantics></math></span> で一致する。</div></details></div>
+
+<p>典型的な誤りはサラスの方法を 4×4 に当てはめることである。4×4 の行列式は24項の和であり斜めの線8本では足りない。</p>
+
+<h2 id="s6">行列式が0のとき逆行列がない理由</h2>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mi>A</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\det A=0</annotation></semantics></math></span> なら単位正方形の行き先の面積が0である。2本の列ベクトルが同じ直線上にあり平面全体が1本の直線か原点に移る。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 290" role="img" aria-label="行列式0の行列は平面を直線に移し異なる2点が同じ点に移る">
+  <defs><marker id="ah07c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--sub)"/></marker></defs>
+  <g font-size="13" fill="var(--ink)" text-anchor="middle"><text x="160" y="28">移す前</text><text x="520" y="28">A ＝ (1 2 / 2 4) で移した後</text></g>
+  <line x1="340" y1="40" x2="340" y2="280" stroke="var(--line)"/>
+  <g stroke="var(--ink)" stroke-width="1.2"><line x1="30" y1="190" x2="300" y2="190"/><line x1="130" y1="280" x2="130" y2="50"/>
+    <line x1="380" y1="250" x2="700" y2="250"/><line x1="460" y1="280" x2="460" y2="50"/></g>
+  <polygon points="130,190 170,190 170,150 130,150" fill="var(--warm)" fill-opacity="0.2" stroke="var(--warm)" stroke-width="2"/>
+  <line x1="50" y1="150" x2="250" y2="250" stroke="var(--cool)" stroke-width="2" stroke-dasharray="6 4"/>
+  <circle cx="130" cy="190" r="5" fill="var(--accent)"/><circle cx="210" cy="230" r="5" fill="var(--accent)"/>
+  <text x="218" y="226" font-size="12.5" fill="var(--accent)">(2, −1)</text>
+  <text x="54" y="142" font-size="12.5" fill="var(--cool)">x + 2y ＝ 0</text>
+  <g font-size="12" fill="var(--muted)"><text x="164" y="206">1</text><text x="116" y="154">1</text></g>
+  <line x1="450" y1="270" x2="530" y2="110" stroke="var(--warm)" stroke-width="4" stroke-opacity="0.7"/>
+  <circle cx="460" cy="250" r="6" fill="var(--accent)"/>
+  <g fill="var(--warm)"><circle cx="480" cy="210" r="4"/><circle cx="500" cy="170" r="4"/><circle cx="520" cy="130" r="4"/></g>
+  <g font-size="12.5" fill="var(--sub)"><text x="488" y="214">(1, 2)</text><text x="508" y="174">(2, 4)</text><text x="528" y="134">(3, 6)</text></g>
+  <text x="540" y="104" font-size="12.5" fill="var(--warm)">直線 y ＝ 2x</text>
+  <text x="470" y="272" font-size="12.5" fill="var(--accent)">(0, 0) と (2, −1) がともに原点へ</text>
+  <path d="M300 230 Q 380 260 450 252" fill="none" stroke="var(--sub)" stroke-width="1.5" marker-end="url(#ah07c)"/>
+  <g font-size="12.5" fill="var(--ink)"><text x="570" y="150">正方形は線分に</text><text x="570" y="172">平面は直線に移る</text></g>
+</svg>
+<figcaption>A＝(1 2 / 2 4) の行列式は 4−4＝0 である。左の正方形は右の直線 y＝2x 上の線分に移る。点線の直線 x＋2y＝0 上の点はすべて原点に移る。原点に移った点から元の点を1つに決める方法はない。右の図は縦横とも1目盛り20ピクセルで描いた。</figcaption>
+</figure>
+
+<p>逆行列が存在しない理由は2つある。1つ目は<strong>行き先が重なる</strong>ことである。図では (0, 0) と (2, −1) がどちらも原点に移る。逆の変換があるとすれば原点を2つの点に戻さなければならず1つの変換にならない。2つ目は<strong>届かない点がある</strong>ことである。直線 y＝2x の外の点は何の行き先にもならない。</p>
+<p>連立方程式で言い換える。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi mathvariant="bold-italic">x</mi><mo>=</mo><mi mathvariant="bold-italic">b</mi></mrow><annotation encoding="application/x-tex">A\boldsymbol{x}=\boldsymbol{b}</annotation></semantics></math></span> は b が直線 y＝2x 上にあれば解が無数にあり直線の外にあれば解がない。<strong class="hit">行列式が0の行列は解を1つに定められない</strong>。第6章のランクで言えば rank A＝1 であり行き先の直線の次元が1であることに対応する。</p>
+
+<div class="ex"><div class="ex-h">例題 7</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>4</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">A=\begin{pmatrix} 1 &amp; 2 \\ 2 &amp; 4 \end{pmatrix}</annotation></semantics></math></span> について <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi mathvariant="bold-italic">x</mi><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">A\boldsymbol{x}=(1,2)</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi mathvariant="bold-italic">x</mi><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo separator="true">,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">A\boldsymbol{x}=(1,0)</annotation></semantics></math></span> の解をそれぞれ調べよ。</p>
+<details open><summary>解き方</summary><div><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi mathvariant="bold-italic">x</mi><mo>=</mo><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>2</mn><mi>y</mi><mo separator="true">,</mo><mtext> </mtext><mn>2</mn><mi>x</mi><mo>+</mo><mn>4</mn><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">A\boldsymbol{x}=(x+2y,\ 2x+4y)</annotation></semantics></math></span> で第2成分は第1成分の2倍である。<br>(1, 2) は第2成分が第1成分の2倍なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mn>2</mn><mi>y</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x+2y=1</annotation></semantics></math></span> だけが条件になる。解は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mn>2</mn><mi>t</mi><mo separator="true">,</mo><mtext> </mtext><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1-2t,\ t)</annotation></semantics></math></span> で無数にある。<br>(1, 0) は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mn>2</mn><mi>y</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x+2y=1</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>2</mn><mi>y</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">2(x+2y)=0</annotation></semantics></math></span> が両立しないので解はない。</div></details></div>
+
+<aside class="an an-rw"><b>現実世界</b>
+<p class="an-h">行列式0の変換は書類のシュレッダーである</p>
+<p>異なる書類が同じ紙くずになり紙くずから元の書類を1つに決められない。情報を失った変換に逆はない。</p>
+</aside>
+
+<h2 id="s7">複素数の積との対応</h2>
+<p>第5章で複素数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mi>a</mi><mo>+</mo><mi>b</mi><mi>i</mi></mrow><annotation encoding="application/x-tex">w=a+bi</annotation></semantics></math></span> を掛ける操作は原点のまわりの回転と拡大であった。この操作を行列で書く。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mi>x</mi><mo>+</mo><mi>y</mi><mi>i</mi></mrow><annotation encoding="application/x-tex">z=x+yi</annotation></semantics></math></span> とすると次の計算になる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>w</mi><mi>z</mi><mo>=</mo><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mi>i</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mi>i</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mi>a</mi><mi>x</mi><mo>−</mo><mi>b</mi><mi>y</mi><mo stretchy="false">)</mo><mo>+</mo><mo stretchy="false">(</mo><mi>b</mi><mi>x</mi><mo>+</mo><mi>a</mi><mi>y</mi><mo stretchy="false">)</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">wz=(a+bi)(x+yi)=(ax-by)+(bx+ay)i</annotation></semantics></math></span></div>
+<p>実部と虚部を縦に並べると行列の積で表せる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>a</mi><mi>x</mi><mo>−</mo><mi>b</mi><mi>y</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>b</mi><mi>x</mi><mo>+</mo><mi>a</mi><mi>y</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>a</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mi>b</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>b</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>a</mi></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>x</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>y</mi></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{pmatrix} ax-by \\ bx+ay \end{pmatrix}=\begin{pmatrix} a &amp; -b \\ b &amp; a \end{pmatrix}\begin{pmatrix} x \\ y \end{pmatrix}</annotation></semantics></math></span></div>
+<p><strong class="hit">複素数 a＋bi を掛ける変換は行列 (a −b / b a) の線形変換である</strong>。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mi>r</mi><mo stretchy="false">(</mo><mi>cos</mi><mo>⁡</mo><mi>θ</mi><mo>+</mo><mi>i</mi><mi>sin</mi><mo>⁡</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">w=r(\cos\theta+i\sin\theta)</annotation></semantics></math></span> なら行列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>cos</mi><mo>⁡</mo><mi>θ</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mi>sin</mi><mo>⁡</mo><mi>θ</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>sin</mi><mo>⁡</mo><mi>θ</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>cos</mi><mo>⁡</mo><mi>θ</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">r\begin{pmatrix} \cos\theta &amp; -\sin\theta \\ \sin\theta &amp; \cos\theta \end{pmatrix}</annotation></semantics></math></span> で第2節の回転行列の r 倍である。</p>
+<p>この対応から3つの事実が読み取れる。1つ目は行列式が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>a</mi><mn>2</mn></msup><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup><mo>=</mo><mi mathvariant="normal">∣</mi><mi>w</mi><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">a^2+b^2=|w|^2</annotation></semantics></math></span> になることである。長さが <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>w</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|w|</annotation></semantics></math></span> 倍なので面積は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>w</mi><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">|w|^2</annotation></semantics></math></span> 倍になる。2つ目はこの形の行列どうしの積がまたこの形になり複素数の積に対応することである。複素数の積は交換できるのでこの形の行列どうしの積も交換できる。3つ目は i に対応する行列 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">J=\begin{pmatrix} 0 &amp; -1 \\ 1 &amp; 0 \end{pmatrix}</annotation></semantics></math></span> が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>J</mi><mn>2</mn></msup><mo>=</mo><mo>−</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">J^2=-E</annotation></semantics></math></span> を満たすことである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>i</mi><mn>2</mn></msup><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i^2=-1</annotation></semantics></math></span> の行列版である。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 270" role="img" aria-label="1 足す i を掛ける変換は単位正方形を45度回して ルート2 倍に広げる">
+  <line x1="200" y1="230" x2="500" y2="230" stroke="var(--ink)" stroke-width="1.2"/>
+  <line x1="360" y1="255" x2="360" y2="40" stroke="var(--ink)" stroke-width="1.2"/>
+  <g font-size="12" fill="var(--muted)" text-anchor="middle"><text x="420" y="246">1</text><text x="300" y="246">−1</text><text x="352" y="246">O</text></g>
+  <g font-size="12" fill="var(--muted)" text-anchor="end"><text x="354" y="174">i</text><text x="354" y="114">2i</text></g>
+  <polygon points="360,230 420,230 420,170 360,170" fill="none" stroke="var(--sub)" stroke-dasharray="4 3"/>
+  <polygon points="360,230 420,170 360,110 300,170" fill="var(--warm)" fill-opacity="0.2" stroke="var(--warm)" stroke-width="2"/>
+  <circle cx="420" cy="170" r="4" fill="var(--accent)"/><circle cx="300" cy="170" r="4" fill="var(--cool)"/>
+  <text x="428" y="166" font-size="12.5" fill="var(--accent)">1 の行き先 1 + i</text>
+  <text x="292" y="166" font-size="12.5" fill="var(--cool)" text-anchor="end">i の行き先 −1 + i</text>
+  <g font-size="13" fill="var(--ink)">
+    <text x="540" y="90">w ＝ 1 + i</text>
+    <text x="540" y="114">行列 (1 −1 / 1 1)</text>
+    <text x="540" y="138">回転 45° 長さ √2 倍</text>
+    <text x="540" y="162">行列式 1 + 1 ＝ 2 ＝ |w|²</text>
+  </g>
+</svg>
+<figcaption>1＋i を掛ける変換で単位正方形は45°回って1辺が √2 の正方形になる。面積は2倍で行列式 1×1−(−1)×1＝2 と |1＋i|²＝2 に等しい。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 8</div>
+<p>第5章では <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>i</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><mo>+</mo><mi>i</mi><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn><mo>+</mo><mn>3</mn><mi>i</mi></mrow><annotation encoding="application/x-tex">(1+i)(2+i)=1+3i</annotation></semantics></math></span> を求めた。同じ計算を行列で行え。</p>
+<details open><summary>解き方</summary><div>1＋i に対応する行列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 1 &amp; -1 \\ 1 &amp; 1 \end{pmatrix}</annotation></semantics></math></span> である。<br>2＋i を列ベクトル (2, 1) で表す。<br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>3</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 1 &amp; -1 \\ 1 &amp; 1 \end{pmatrix}\begin{pmatrix} 2 \\ 1 \end{pmatrix}=\begin{pmatrix} 1 \\ 3 \end{pmatrix}</annotation></semantics></math></span> である。<br>答えは (1, 3) で 1＋3i と一致する。</div></details></div>
+
+<p>一般の 2×2 行列は複素数より多くの変換を表す。せん断や射影や片方向だけの拡大は形が (a −b / b a) にならないので複素数の積では表せない。複素数平面は線形変換の中で回転と拡大だけを取り出した世界である。</p>
+
+<h2 id="s8">現実世界の線形変換 画面の中の図形</h2>
+<p>行列式の考え方は行列より古い。日本の関孝和は1683年の著作で連立方程式から文字を消去する計算の中で行列式に当たる式を扱った。ドイツのライプニッツも1693年の書簡で同じ考えを示している。行列式は行列という名称が生まれる前から連立方程式の解の公式の一部として扱われた。</p>
+<p>その解の公式を<strong>クラメルの公式</strong>と呼ぶ。スイスのクラメルが1750年に発表した。2元の場合は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>x</mi><mo>+</mo><mi>b</mi><mi>y</mi><mo>=</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">ax+by=p</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>x</mi><mo>+</mo><mi>d</mi><mi>y</mi><mo>=</mo><mi>q</mi></mrow><annotation encoding="application/x-tex">cx+dy=q</annotation></semantics></math></span> の解が次の形になる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>x</mi><mo>=</mo><mfrac><mrow><mo fence="true">∣</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>p</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>b</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>q</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>d</mi></mstyle></mtd></mtr></mtable><mo fence="true">∣</mo></mrow><mrow><mo fence="true">∣</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>a</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>b</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>c</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>d</mi></mstyle></mtd></mtr></mtable><mo fence="true">∣</mo></mrow></mfrac><mo separator="true">,</mo><mspace width="2em"/><mi>y</mi><mo>=</mo><mfrac><mrow><mo fence="true">∣</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>a</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>p</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>c</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>q</mi></mstyle></mtd></mtr></mtable><mo fence="true">∣</mo></mrow><mrow><mo fence="true">∣</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>a</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>b</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>c</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>d</mi></mstyle></mtd></mtr></mtable><mo fence="true">∣</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">x=\frac{\begin{vmatrix} p &amp; b \\ q &amp; d \end{vmatrix}}{\begin{vmatrix} a &amp; b \\ c &amp; d \end{vmatrix}},\qquad y=\frac{\begin{vmatrix} a &amp; p \\ c &amp; q \end{vmatrix}}{\begin{vmatrix} a &amp; b \\ c &amp; d \end{vmatrix}}</annotation></semantics></math></span></div>
+<p>分母が係数行列の行列式なので行列式が0なら公式は使えない。第6節の結論と一致する。未知数が多いと計算量が急に増えるので実際の計算には第6章の掃き出し法を使う。</p>
+<aside class="an an-rw"><b>現実世界</b>
+<p>コンピュータの画面で図形を回したり拡大したりする処理は行列の積で計算する。平行移動は 2×2 行列では表せないので座標に1を付け加えた3成分の列ベクトルと 3×3 行列を使う。こうすると平行移動も含めて変換の合成が行列の積1回で済む。</p>
+</aside>
+
+<h2 id="s9">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ 回転行列</div>
+<p class="qz-q">点 (2, 0) を原点のまわりに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>60</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">60^\circ</annotation></semantics></math></span> 回転した点を求めよ。</p>
+<details><summary>解答と解説</summary><div>答えは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo separator="true">,</mo><msqrt><mn>3</mn></msqrt><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1, \sqrt{3})</annotation></semantics></math></span> である。回転行列の第1列 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>cos</mi><mo>⁡</mo><msup><mn>60</mn><mo>∘</mo></msup><mo separator="true">,</mo><mi>sin</mi><mo>⁡</mo><msup><mn>60</mn><mo>∘</mo></msup><mo stretchy="false">)</mo><mo>=</mo><mrow><mo fence="true">(</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo separator="true">,</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac></mstyle><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">(\cos 60^\circ, \sin 60^\circ)=\left(\dfrac{1}{2}, \dfrac{\sqrt{3}}{2}\right)</annotation></semantics></math></span> を2倍する。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ 平行四辺形の面積</div>
+<p class="qz-q">2つのベクトル (2, 1) と (1, 3) で張られる平行四辺形の面積を求めよ。</p>
+<details><summary>解答と解説</summary><div>答えは 5 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mn>2</mn><mo>⋅</mo><mn>3</mn><mo>−</mo><mn>1</mn><mo>⋅</mo><mn>1</mn><mi mathvariant="normal">∣</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">|2\cdot 3-1\cdot 1|=5</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 面積の拡大率</div>
+<p class="qz-q">半径1の円を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>3</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 3 &amp; 1 \\ 0 &amp; 2 \end{pmatrix}</annotation></semantics></math></span> で移した図形の面積として正しいものを1つ選べ。</p>
+<ol><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mi>π</mi></mrow><annotation encoding="application/x-tex">5\pi</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mi>π</mi></mrow><annotation encoding="application/x-tex">6\pi</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>7</mn><mi>π</mi></mrow><annotation encoding="application/x-tex">7\pi</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>36</mn><mi>π</mi></mrow><annotation encoding="application/x-tex">36\pi</annotation></semantics></math></span></li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。行列式は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>⋅</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo>⋅</mo><mn>0</mn><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3\cdot 2-1\cdot 0=6</annotation></semantics></math></span> で面積は6倍になる。元の面積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi></mrow><annotation encoding="application/x-tex">\pi</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mi>π</mi></mrow><annotation encoding="application/x-tex">6\pi</annotation></semantics></math></span> である。移った図形は楕円であるが面積は行列式だけで求まる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ 3×3 の行列式</div>
+<p class="qz-q"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>3</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\det\begin{pmatrix} 1 &amp; 2 &amp; 0 \\ 0 &amp; 1 &amp; 3 \\ 2 &amp; 0 &amp; 1 \end{pmatrix}</annotation></semantics></math></span> を求めよ。</p>
+<details><summary>解答と解説</summary><div>答えは 13 である。正の3項は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>⋅</mo><mn>1</mn><mo>⋅</mo><mn>1</mn><mo>+</mo><mn>2</mn><mo>⋅</mo><mn>3</mn><mo>⋅</mo><mn>2</mn><mo>+</mo><mn>0</mn><mo>⋅</mo><mn>0</mn><mo>⋅</mo><mn>0</mn><mo>=</mo><mn>13</mn></mrow><annotation encoding="application/x-tex">1\cdot 1\cdot 1+2\cdot 3\cdot 2+0\cdot 0\cdot 0=13</annotation></semantics></math></span> で負の3項は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>⋅</mo><mn>1</mn><mo>⋅</mo><mn>2</mn><mo>+</mo><mn>2</mn><mo>⋅</mo><mn>0</mn><mo>⋅</mo><mn>1</mn><mo>+</mo><mn>1</mn><mo>⋅</mo><mn>3</mn><mo>⋅</mo><mn>0</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">0\cdot 1\cdot 2+2\cdot 0\cdot 1+1\cdot 3\cdot 0=0</annotation></semantics></math></span> である。第1行の余因子展開でも <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mn>0</mn><mo stretchy="false">)</mo><mo>−</mo><mn>2</mn><mo stretchy="false">(</mo><mn>0</mn><mo>−</mo><mn>6</mn><mo stretchy="false">)</mo><mo>+</mo><mn>0</mn><mo>=</mo><mn>13</mn></mrow><annotation encoding="application/x-tex">1(1-0)-2(0-6)+0=13</annotation></semantics></math></span> となる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 合成変換</div>
+<p class="qz-q">原点のまわりに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>90</mn><mo>∘</mo></msup></mrow><annotation encoding="application/x-tex">90^\circ</annotation></semantics></math></span> 回転してから x 方向に2倍に拡大する変換の行列として正しいものを1つ選べ。</p>
+<ol><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 0 &amp; -2 \\ 1 &amp; 0 \end{pmatrix}</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 0 &amp; -1 \\ 2 &amp; 0 \end{pmatrix}</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 0 &amp; -2 \\ 2 &amp; 0 \end{pmatrix}</annotation></semantics></math></span></li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 2 &amp; -1 \\ 1 &amp; 0 \end{pmatrix}</annotation></semantics></math></span></li></ol>
+<details><summary>解答と解説</summary><div>正解は 1 である。先に行う回転 R を右に置き <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mo>=</mo><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 2 &amp; 0 \\ 0 &amp; 1 \end{pmatrix}\begin{pmatrix} 0 &amp; -1 \\ 1 &amp; 0 \end{pmatrix}=\begin{pmatrix} 0 &amp; -2 \\ 1 &amp; 0 \end{pmatrix}</annotation></semantics></math></span> である。2 は順序を逆にした積である。e₁ で確かめると回転で (0, 1) に移り x 方向の拡大では動かないので行き先は (0, 1) である。1 の第1列と一致する。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 行列式の積</div>
+<p class="qz-q"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mi>A</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\det A=2</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mi>B</mi><mo>=</mo><mo>−</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\det B=-3</annotation></semantics></math></span> のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mo stretchy="false">(</mo><msup><mi>A</mi><mn>2</mn></msup><msup><mi>B</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\det(A^2B^{-1})</annotation></semantics></math></span> を求めよ。</p>
+<details><summary>解答と解説</summary><div>答えは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>4</mn><mn>3</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">-\dfrac{4}{3}</annotation></semantics></math></span> である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mo stretchy="false">(</mo><msup><mi>A</mi><mn>2</mn></msup><mo stretchy="false">)</mo><mo>=</mo><msup><mn>2</mn><mn>2</mn></msup><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">\det(A^2)=2^2=4</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mo stretchy="false">(</mo><msup><mi>B</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>1</mn><mn>3</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\det(B^{-1})=-\dfrac{1}{3}</annotation></semantics></math></span> である。積は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>4</mn><mn>3</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">-\dfrac{4}{3}</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問7 ・ 複素数との対応</div>
+<p class="qz-q">複素数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><msqrt><mn>3</mn></msqrt><mtext> </mtext><mi>i</mi></mrow><annotation encoding="application/x-tex">1+\sqrt{3}\,i</annotation></semantics></math></span> を掛ける変換について正しいものを1つ選べ。</p>
+<ol><li>行列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msqrt><mn>3</mn></msqrt></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><msqrt><mn>3</mn></msqrt></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 1 &amp; \sqrt{3} \\ -\sqrt{3} &amp; 1 \end{pmatrix}</annotation></semantics></math></span> で面積は2倍になる</li><li>行列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><msqrt><mn>3</mn></msqrt></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msqrt><mn>3</mn></msqrt></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 1 &amp; -\sqrt{3} \\ \sqrt{3} &amp; 1 \end{pmatrix}</annotation></semantics></math></span> で面積は4倍になる</li><li>行列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><msqrt><mn>3</mn></msqrt></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msqrt><mn>3</mn></msqrt></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 1 &amp; -\sqrt{3} \\ \sqrt{3} &amp; 1 \end{pmatrix}</annotation></semantics></math></span> で面積は2倍になる</li><li>行列は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msqrt><mn>3</mn></msqrt></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} 1 &amp; 0 \\ 0 &amp; \sqrt{3} \end{pmatrix}</annotation></semantics></math></span> で面積は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mn>3</mn></msqrt></mrow><annotation encoding="application/x-tex">\sqrt{3}</annotation></semantics></math></span> 倍になる</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。a＋bi に対応する行列は (a −b / b a) である。行列式は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mn>3</mn><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">1+3=4</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mn>1</mn><mo>+</mo><msqrt><mn>3</mn></msqrt><mtext> </mtext><mi>i</mi><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">|1+\sqrt{3}\,i|^2=4</annotation></semantics></math></span> と一致する。長さが2倍なので面積は4倍である。1 は時計回りの回転になり <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><msqrt><mn>3</mn></msqrt><mtext> </mtext><mi>i</mi></mrow><annotation encoding="application/x-tex">1-\sqrt{3}\,i</annotation></semantics></math></span> に対応する。</div></details></div>
+
+<div class="qz"><div class="qz-h">問8 ・ 逆行列をもたない条件</div>
+<p class="qz-q"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>k</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>4</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>k</mi></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\begin{pmatrix} k &amp; 1 \\ 4 &amp; k \end{pmatrix}</annotation></semantics></math></span> が平面全体を1本の直線に移すような実数 k をすべて求めよ。</p>
+<details><summary>解答と解説</summary><div>答えは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mo>±</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">k=\pm 2</annotation></semantics></math></span> である。行列式 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>k</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">k^2-4</annotation></semantics></math></span> が0になる条件である。このとき列ベクトル (k, 4) と (1, k) は平行で零ベクトルではないので行き先は原点だけでなく直線になる。</div></details></div>
+
+<h2 id="s10">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+線形変換は和と定数倍を保つ変換で原点を動かさない。<br>
+行列の第1列は e₁ の行き先で第2列は e₂ の行き先である。<br>
+角 θ の回転行列は (cosθ −sinθ / sinθ cosθ) である。<br>
+f の後に g を行う変換は BA で表され先に行う変換の行列が右に来る。<br>
+|det A| は面積の拡大率で det(AB)＝det A・det B が成り立つ。<br>
+3×3 の行列式はサラスの方法か余因子展開で求め体積の拡大率を表す。<br>
+det A＝0 なら平面が直線以下に移り行き先が重なるので逆行列はない。<br>
+a＋bi を掛ける変換は行列 (a −b / b a) で行列式は |w|² である。</div>
+
+<h2 id="s11">残っている問い</h2>
+<ul>
+<li class="tb-vnote">面積が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>det</mi><mo>⁡</mo><mi>A</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|\det A|</annotation></semantics></math></span> 倍になることを曲線で囲まれた図形にまで広げるには積分による議論が要る。本文では正方形に分ける直感的な説明にとどめた。</li>
+<li class="tb-vnote">4×4 以上の行列式の定義は置換を用いる。余因子展開がその定義と一致することの証明は大学の線形代数で扱う。</li>
+<li class="tb-vnote">関孝和の1683年の著作で行列式に当たる計算がどの範囲まで一般的に扱われたかについては研究者の評価が分かれる。本文では年と概要だけを記した。</li>
+</ul>
+
+<h2 id="s12">出典</h2>
+<ol>
+<li>Linear map — Wikipedia — https://en.wikipedia.org/wiki/Linear_map</li>
+<li>Rotation matrix — Wikipedia — https://en.wikipedia.org/wiki/Rotation_matrix</li>
+<li>Determinant — Wikipedia — https://en.wikipedia.org/wiki/Determinant</li>
+<li>Rule of Sarrus — Wikipedia — https://en.wikipedia.org/wiki/Rule_of_Sarrus</li>
+<li>Complex number — Matrix representation — Wikipedia — https://en.wikipedia.org/wiki/Complex_number#Matrix_representation_of_complex_numbers</li>
+<li>Seki Takakazu — MacTutor History of Mathematics — https://mathshistory.st-andrews.ac.uk/Biographies/Seki/</li>
+<li>Gabriel Cramer — MacTutor History of Mathematics — https://mathshistory.st-andrews.ac.uk/Biographies/Cramer/</li>
+<li>Cramer's rule — Wikipedia — https://en.wikipedia.org/wiki/Cramer%27s_rule</li>
+<li>Homogeneous coordinates — Wikipedia — https://en.wikipedia.org/wiki/Homogeneous_coordinates</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="06_matrix.html">← 行列と連立一次方程式</a><a class="tb-nav-a" href="08_eigen.html">固有値と固有ベクトル →</a></div>
+</div>
+<script>
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){ if (!tick) { tick = true; requestAnimationFrame(draw); } }, {passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>

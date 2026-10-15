@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>数列と数学的帰納法｜微分積分</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../021_profile/index.html">profile</a><a href="../../02A_plan/index.html">plan</a><a href="../../023_travel/index.html">travel</a><a href="../../027_cinema/index.html">cinema</a><a href="../../02B_reading/index.html">reading</a><a href="../../024_method/index.html">method</a><a href="../../026_handbook/index.html">handbook</a><a href="../../025_fitness/index.html">fitness</a><a href="../../028_english/index.html">english</a><a href="../../029_mental_math/index.html">mental math</a><a href="../../02C_chemistry/index.html">chemistry</a><a href="../../02D_probability/index.html">probability</a><a href="../index.html">calculus</a><a href="../../02F_linear_algebra/index.html">linear algebra</a><a href="../../02G_physics/index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../024_method/index.html">method</a>
+    <a class="snav-a" href="../../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../028_english/index.html">english</a>
+    <a class="snav-a" href="../../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../index.html">calculus</a>
+    <a class="snav-a" href="../../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../02G_physics/index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / personal /
+    <a href="../index.html">02E calculus</a> / 第8章</div>
+
+  <div class="tb-ch">数学B — 第8章</div>
+  <h1>数列と数学的帰納法</h1>
+  <p class="tb-thesis">数列は自然数 n を入力として値を返す関数である。等差は足し算の繰り返しで等比は掛け算の繰り返しである。和の公式も漸化式の解法も同じ数列を2通りに並べて差をとる操作から導ける。</p>
+
+<p class="tb-ok"><strong>この章は2026-10-15に出典照合を通した。</strong> 検証した事実は48件である。出典と一致したものは43件である。食い違ったものは2件で本文を修正済みである。出典で確認できなかったものは3件である。これらは末尾の「残っている問い」に列挙した。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">数列と等差数列</a></li><li><a href="#s2">等比数列とその和</a></li><li><a href="#s3">Σ記号と和の公式</a></li><li><a href="#s4">階差数列と和から一般項を求める方法</a></li><li><a href="#s5">漸化式</a></li><li><a href="#s6">数学的帰納法</a></li><li><a href="#s7">現実世界の数列 複利と積立</a></li><li><a href="#s8">確認問題</a></li><li><a href="#s9">この章の要点</a></li><li><a href="#s10">残っている問い</a></li><li><a href="#s11">出典</a></li></ol></nav>
+
+<p>第1章の1次関数は x が1増えるたびに y が一定量だけ増える関数であった。第2章の指数関数は x が1増えるたびに y が一定の倍率で増える関数であった。この章ではこの2つを自然数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mo>…</mo></mrow><annotation encoding="application/x-tex">n=1,2,3,\dots</annotation></semantics></math></span> だけで考える。それが等差数列と等比数列である。続いて和を Σ 記号で表し和の公式を導く。最後に前の項から次の項を決める漸化式と自然数すべてについての命題を証明する数学的帰納法を扱う。</p>
+<p>共通テスト「数学Ⅱ・数学B・数学C」では数列・統計的な推測・ベクトル・平面上の曲線と複素数平面の4項目から3項目を選んで解答する。この章は一般項・和・漸化式の順に積み上げる。第9章で扱う数列の極限はこの章で求めた一般項を基に考える。</p>
+
+<h2 id="s1">数列と等差数列</h2>
+<p>数を1列に並べたものを<strong>数列</strong>と呼ぶ。並んだ各数を<strong>項</strong>と呼び最初から順に第1項・第2項・第3項と数える。第1項を<strong>初項</strong>と呼ぶ。第 n 項を n の式で表したものを<strong>一般項</strong>と呼び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">a_n</annotation></semantics></math></span> と書く。項の個数が有限なら最後の項を<strong>末項</strong>と呼び項の個数を<strong>項数</strong>と呼ぶ。</p>
+<p>一般項が分かれば任意の項を計算できる。数列は自然数 n を入力として値 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">a_n</annotation></semantics></math></span> を返す関数である。関数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x)</annotation></semantics></math></span> の x を自然数に限ったものと考えてよい。</p>
+<h3>等差数列の一般項</h3>
+<p>各項に一定の数 d を足すと次の項になる数列を<strong>等差数列</strong>と呼ぶ。d を<strong>公差</strong>と呼ぶ。初項 a から第 n 項までに d を足す回数は n 回ではなく <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> 回である。第1項から第2項へ1回・第3項へ2回と数えるとこの回数が確かめられる。したがって一般項は次の式になる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mi>a</mi><mo>+</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mi>d</mi></mrow><annotation encoding="application/x-tex">a_n=a+(n-1)d</annotation></semantics></math></span></div>
+<p>3つの数 a・b・c がこの順に等差数列になる条件は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>−</mo><mi>a</mi><mo>=</mo><mi>c</mi><mo>−</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">b-a=c-b</annotation></semantics></math></span> である。整理すると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>b</mi><mo>=</mo><mi>a</mi><mo>+</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">2b=a+c</annotation></semantics></math></span> となる。b を<strong>等差中項</strong>と呼ぶ。</p>
+
+<div class="ex"><div class="ex-h">例題 1</div>
+<p>第3項が 11 で第10項が 32 の等差数列の一般項を求めよ。</p>
+<details open><summary>解き方</summary><div>初項を a・公差を d とする。<br>第3項から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>+</mo><mn>2</mn><mi>d</mi><mo>=</mo><mn>11</mn></mrow><annotation encoding="application/x-tex">a+2d=11</annotation></semantics></math></span> ・ 第10項から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>+</mo><mn>9</mn><mi>d</mi><mo>=</mo><mn>32</mn></mrow><annotation encoding="application/x-tex">a+9d=32</annotation></semantics></math></span><br>辺々引くと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>7</mn><mi>d</mi><mo>=</mo><mn>21</mn></mrow><annotation encoding="application/x-tex">7d=21</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">d=3</annotation></semantics></math></span> ・ 代入して <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">a=5</annotation></semantics></math></span><br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>5</mn><mo>+</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>⋅</mo><mn>3</mn><mo>=</mo><mn>3</mn><mi>n</mi><mo>+</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">a_n=5+(n-1)\cdot 3=3n+2</annotation></semantics></math></span><br>検算 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>3</mn></msub><mo>=</mo><mn>11</mn></mrow><annotation encoding="application/x-tex">a_3=11</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>10</mn></msub><mo>=</mo><mn>32</mn></mrow><annotation encoding="application/x-tex">a_{10}=32</annotation></semantics></math></span> で一致する。</div></details></div>
+
+<h3>等差数列の和</h3>
+<p>1 から 5 までの和を考える。同じ和を逆順に並べて上下に足すと各列は 1＋5＝2＋4＝3＋3＝6 でそろう。6 が5列あるので合計は 30 で求める和はその半分の 15 である。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 260" role="img" aria-label="1から5までの和を逆順に並べて長方形にする">
+<rect x="50" y="210" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="50" y="180" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<rect x="50" y="150" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<rect x="50" y="120" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<rect x="50" y="90" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<rect x="50" y="60" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<text x="64" y="258" font-size="12" text-anchor="middle" fill="var(--sub)" >1</text>
+<rect x="80" y="210" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="80" y="180" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="80" y="150" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<rect x="80" y="120" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<rect x="80" y="90" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<rect x="80" y="60" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<text x="94" y="258" font-size="12" text-anchor="middle" fill="var(--sub)" >2</text>
+<rect x="110" y="210" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="110" y="180" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="110" y="150" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="110" y="120" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<rect x="110" y="90" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<rect x="110" y="60" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<text x="124" y="258" font-size="12" text-anchor="middle" fill="var(--sub)" >3</text>
+<rect x="140" y="210" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="140" y="180" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="140" y="150" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="140" y="120" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="140" y="90" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<rect x="140" y="60" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<text x="154" y="258" font-size="12" text-anchor="middle" fill="var(--sub)" >4</text>
+<rect x="170" y="210" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="170" y="180" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="170" y="150" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="170" y="120" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="170" y="90" width="28" height="28" fill="var(--warm)" opacity="0.85"/>
+<rect x="170" y="60" width="28" height="28" fill="var(--cool)" opacity="0.85"/>
+<text x="184" y="258" font-size="12" text-anchor="middle" fill="var(--sub)" >5</text>
+<text x="125" y="22" font-size="13" text-anchor="middle" fill="var(--muted)" >横5列 縦6段</text>
+<rect x="260" y="60" width="14" height="14" fill="var(--warm)"/>
+<text x="282" y="72" font-size="13" text-anchor="start" fill="var(--ink)" >下から 1 2 3 4 5 個</text>
+<rect x="260" y="90" width="14" height="14" fill="var(--cool)"/>
+<text x="282" y="102" font-size="13" text-anchor="start" fill="var(--ink)" >上から 5 4 3 2 1 個 逆順に並べた同じ和</text>
+<text x="260" y="140" font-size="13" text-anchor="start" fill="var(--ink)" >どの列も 1＋5＝2＋4＝…＝6 個で高さがそろう</text>
+<text x="260" y="170" font-size="13" text-anchor="start" fill="var(--ink)" >長方形の個数は 5×6＝30 個</text>
+<text x="260" y="200" font-size="14" text-anchor="start" fill="var(--accent)" font-weight="600">求める和はその半分で 15 個</text>
+<text x="260" y="232" font-size="13" text-anchor="start" fill="var(--sub)" >一般に 和＝項数×（初項＋末項）÷2</text>
+</svg>
+<figcaption>暖色の列は 1・2・3・4・5 個で寒色の列は同じ和を逆順に積んだもの。どの列も高さが6になり全体は 5×6 の長方形になる。</figcaption>
+</figure>
+<p>一般の等差数列でも同じ操作が成り立つ。初項 a から末項 l までの和 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">S_n</annotation></semantics></math></span> を正順と逆順に書いて足すと各組の和はどれも <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>+</mo><mi>l</mi></mrow><annotation encoding="application/x-tex">a+l</annotation></semantics></math></span> になる。組は n 個あるので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>l</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">2S_n=n(a+l)</annotation></semantics></math></span> である。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>l</mi><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac><mo>=</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">{</mo><mn>2</mn><mi>a</mi><mo>+</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mi>d</mi><mo stretchy="false">}</mo></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">S_n=\frac{n(a+l)}{2}=\frac{n\{2a+(n-1)d\}}{2}</annotation></semantics></math></span></div>
+<p>右の式は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mo>=</mo><mi>a</mi><mo>+</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mi>d</mi></mrow><annotation encoding="application/x-tex">l=a+(n-1)d</annotation></semantics></math></span> を代入したものである。末項が分かれば左の式・公差が分かれば右の式を使う。</p>
+
+<div class="ex"><div class="ex-h">例題 2</div>
+<p>2桁の自然数のうち 3 で割ると 1 余る数の和を求めよ。</p>
+<details open><summary>解き方</summary><div>該当する数は 10・13・16・…・97 で初項 10 ・公差 3 の等差数列である。<br>項数は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10</mn><mo>+</mo><mn>3</mn><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mn>97</mn></mrow><annotation encoding="application/x-tex">10+3(n-1)=97</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">n=30</annotation></semantics></math></span><br>和は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mn>30</mn><mo stretchy="false">(</mo><mn>10</mn><mo>+</mo><mn>97</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac><mo>=</mo><mn>15</mn><mo>×</mo><mn>107</mn><mo>=</mo><mn>1605</mn></mrow><annotation encoding="application/x-tex">\frac{30(10+97)}{2}=15\times 107=1605</annotation></semantics></math></span><br>答え 1605</div></details></div>
+
+<h3>和の最大値</h3>
+<p>公差が負の等差数列では項が正から負へ変わる。正の項をすべて足し終えた時点で和が最大になる。和の式を n の2次関数とみて最大値を求めてもよいが n は自然数に限られるので項の符号を調べるほうが確実である。</p>
+<div class="ex"><div class="ex-h">例題 3</div>
+<p>初項 50 ・公差 −3 の等差数列の初項から第 n 項までの和 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">S_n</annotation></semantics></math></span> の最大値を求めよ。</p>
+<details open><summary>解き方</summary><div>一般項は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>50</mn><mo>−</mo><mn>3</mn><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mn>53</mn><mo>−</mo><mn>3</mn><mi>n</mi></mrow><annotation encoding="application/x-tex">a_n=50-3(n-1)=53-3n</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">a_n&gt;0</annotation></semantics></math></span> を解くと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>&lt;</mo><mn>17.66</mn><mo>⋯</mo></mrow><annotation encoding="application/x-tex">n&lt;17.66\cdots</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>17</mn></msub><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">a_{17}=2</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>18</mn></msub><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_{18}=-1</annotation></semantics></math></span><br>第17項までは正で第18項から負なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>17</mn></msub></mrow><annotation encoding="application/x-tex">S_{17}</annotation></semantics></math></span> が最大<br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>17</mn></msub><mo>=</mo><mfrac><mrow><mn>17</mn><mo stretchy="false">(</mo><mn>50</mn><mo>+</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac><mo>=</mo><mn>442</mn></mrow><annotation encoding="application/x-tex">S_{17}=\frac{17(50+2)}{2}=442</annotation></semantics></math></span><br>答え n＝17 のとき最大値 442</div></details></div>
+<p><strong>典型的な誤り</strong>は項数の数え違いである。10 から 97 までを <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>97</mn><mo>−</mo><mn>10</mn><mo stretchy="false">)</mo><mo>÷</mo><mn>3</mn><mo>=</mo><mn>29</mn></mrow><annotation encoding="application/x-tex">(97-10)\div 3=29</annotation></semantics></math></span> 項と数えるのは誤りで両端を含めると 30 項である。植木算と同じく間の個数に1を足す。</p>
+
+<aside class="an an-biz"><b>会計で言えば</b>
+<p class="an-h">定額法の減価償却は等差数列である</p>
+<p>毎期同じ額を引くので帳簿価額は公差が負の等差数列になる。定率法は毎期同じ割合を掛けるので等比数列になる。</p>
+</aside>
+
+<h2 id="s2">等比数列とその和</h2>
+<p>各項に一定の数 r を掛けると次の項になる数列を<strong>等比数列</strong>と呼ぶ。r を<strong>公比</strong>と呼ぶ。初項 a から第 n 項までに r を掛ける回数は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> 回なので一般項は次の式になる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mi>a</mi><msup><mi>r</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">a_n=ar^{n-1}</annotation></semantics></math></span></div>
+<p>0 でない3つの数 a・b・c がこの順に等比数列になる条件は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mi>b</mi><mi>a</mi></mfrac><mo>=</mo><mfrac><mi>c</mi><mi>b</mi></mfrac></mrow><annotation encoding="application/x-tex">\frac{b}{a}=\frac{c}{b}</annotation></semantics></math></span> で整理すると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>b</mi><mn>2</mn></msup><mo>=</mo><mi>a</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">b^2=ac</annotation></semantics></math></span> である。b を<strong>等比中項</strong>と呼ぶ。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 275" role="img" aria-label="初項100の等差数列と等比数列の増え方の比較">
+<line x1="70" y1="20" x2="70" y2="250" stroke="var(--line)" stroke-width="0.7"/>
+<line x1="165" y1="20" x2="165" y2="250" stroke="var(--line)" stroke-width="0.7"/>
+<line x1="260" y1="20" x2="260" y2="250" stroke="var(--line)" stroke-width="0.7"/>
+<line x1="355" y1="20" x2="355" y2="250" stroke="var(--line)" stroke-width="0.7"/>
+<line x1="450" y1="20" x2="450" y2="250" stroke="var(--line)" stroke-width="0.7"/>
+<line x1="545" y1="20" x2="545" y2="250" stroke="var(--line)" stroke-width="0.7"/>
+<line x1="640" y1="20" x2="640" y2="250" stroke="var(--line)" stroke-width="0.7"/>
+<line x1="70" y1="250" x2="640" y2="250" stroke="var(--line)" stroke-width="0.7"/>
+<line x1="70" y1="173.3" x2="640" y2="173.3" stroke="var(--line)" stroke-width="0.7"/>
+<line x1="70" y1="96.7" x2="640" y2="96.7" stroke="var(--line)" stroke-width="0.7"/>
+<line x1="70" y1="20" x2="640" y2="20" stroke="var(--line)" stroke-width="0.7"/>
+<line x1="70" y1="250" x2="640" y2="250" stroke="var(--ink)" stroke-width="1"/>
+<line x1="70" y1="20" x2="70" y2="250" stroke="var(--ink)" stroke-width="1"/>
+<line x1="70" y1="247" x2="70" y2="253" stroke="var(--ink)"/>
+<text x="70" y="267" font-size="12" text-anchor="middle" fill="var(--sub)">0</text>
+<line x1="165" y1="247" x2="165" y2="253" stroke="var(--ink)"/>
+<text x="165" y="267" font-size="12" text-anchor="middle" fill="var(--sub)">2</text>
+<line x1="260" y1="247" x2="260" y2="253" stroke="var(--ink)"/>
+<text x="260" y="267" font-size="12" text-anchor="middle" fill="var(--sub)">4</text>
+<line x1="355" y1="247" x2="355" y2="253" stroke="var(--ink)"/>
+<text x="355" y="267" font-size="12" text-anchor="middle" fill="var(--sub)">6</text>
+<line x1="450" y1="247" x2="450" y2="253" stroke="var(--ink)"/>
+<text x="450" y="267" font-size="12" text-anchor="middle" fill="var(--sub)">8</text>
+<line x1="545" y1="247" x2="545" y2="253" stroke="var(--ink)"/>
+<text x="545" y="267" font-size="12" text-anchor="middle" fill="var(--sub)">10</text>
+<line x1="640" y1="247" x2="640" y2="253" stroke="var(--ink)"/>
+<text x="640" y="267" font-size="12" text-anchor="middle" fill="var(--sub)">12</text>
+<line x1="67" y1="250" x2="73" y2="250" stroke="var(--ink)"/>
+<text x="64" y="254" font-size="12" text-anchor="end" fill="var(--sub)">0</text>
+<line x1="67" y1="173.3" x2="73" y2="173.3" stroke="var(--ink)"/>
+<text x="64" y="177.3" font-size="12" text-anchor="end" fill="var(--sub)">300</text>
+<line x1="67" y1="96.7" x2="73" y2="96.7" stroke="var(--ink)"/>
+<text x="64" y="100.7" font-size="12" text-anchor="end" fill="var(--sub)">600</text>
+<line x1="67" y1="20" x2="73" y2="20" stroke="var(--ink)"/>
+<text x="64" y="24" font-size="12" text-anchor="end" fill="var(--sub)">900</text>
+<text x="644" y="254" font-size="13" font-style="italic" fill="var(--ink)">n</text>
+<text x="75" y="22" font-size="13" font-style="italic" fill="var(--ink)"></text>
+<polyline fill="none" stroke="var(--cool)" stroke-width="2" points="70,224.4 117.5,219.3 165,214.2 212.5,209.1 260,204 307.5,198.9 355,193.8 402.5,188.7 450,183.6 497.5,178.4 545,173.3 592.5,168.2 640,163.1"/>
+<polyline fill="none" stroke="var(--warm)" stroke-width="2" points="70,224.4 117.5,219.3 165,213.2 212.5,205.8 260,197 307.5,186.4 355,173.7 402.5,158.4 450,140.1 497.5,118.1 545,91.8 592.5,60.1 640,22.1"/>
+<circle cx="70" cy="224.4" r="3.5" fill="var(--cool)"/>
+<circle cx="117.5" cy="219.3" r="3.5" fill="var(--cool)"/>
+<circle cx="165" cy="214.2" r="3.5" fill="var(--cool)"/>
+<circle cx="212.5" cy="209.1" r="3.5" fill="var(--cool)"/>
+<circle cx="260" cy="204" r="3.5" fill="var(--cool)"/>
+<circle cx="307.5" cy="198.9" r="3.5" fill="var(--cool)"/>
+<circle cx="355" cy="193.8" r="3.5" fill="var(--cool)"/>
+<circle cx="402.5" cy="188.7" r="3.5" fill="var(--cool)"/>
+<circle cx="450" cy="183.6" r="3.5" fill="var(--cool)"/>
+<circle cx="497.5" cy="178.4" r="3.5" fill="var(--cool)"/>
+<circle cx="545" cy="173.3" r="3.5" fill="var(--cool)"/>
+<circle cx="592.5" cy="168.2" r="3.5" fill="var(--cool)"/>
+<circle cx="640" cy="163.1" r="3.5" fill="var(--cool)"/>
+<circle cx="70" cy="224.4" r="3.5" fill="var(--warm)"/>
+<circle cx="117.5" cy="219.3" r="3.5" fill="var(--warm)"/>
+<circle cx="165" cy="213.2" r="3.5" fill="var(--warm)"/>
+<circle cx="212.5" cy="205.8" r="3.5" fill="var(--warm)"/>
+<circle cx="260" cy="197" r="3.5" fill="var(--warm)"/>
+<circle cx="307.5" cy="186.4" r="3.5" fill="var(--warm)"/>
+<circle cx="355" cy="173.7" r="3.5" fill="var(--warm)"/>
+<circle cx="402.5" cy="158.4" r="3.5" fill="var(--warm)"/>
+<circle cx="450" cy="140.1" r="3.5" fill="var(--warm)"/>
+<circle cx="497.5" cy="118.1" r="3.5" fill="var(--warm)"/>
+<circle cx="545" cy="91.8" r="3.5" fill="var(--warm)"/>
+<circle cx="592.5" cy="60.1" r="3.5" fill="var(--warm)"/>
+<circle cx="640" cy="22.1" r="3.5" fill="var(--warm)"/>
+<text x="646" y="26.1" font-size="13" text-anchor="start" fill="var(--warm)" >等比 約892</text>
+<text x="646" y="167.1" font-size="13" text-anchor="start" fill="var(--cool)" >等差 340</text>
+<text x="90" y="40" font-size="13" text-anchor="start" fill="var(--cool)" >等差 毎回 ＋20</text>
+<text x="90" y="58" font-size="13" text-anchor="start" fill="var(--warm)" >等比 毎回 ×1.2</text>
+</svg>
+<figcaption>100から毎回20足す 100＋20n と毎回1.2倍する 100×1.2ⁿ を n＝0 から12まで比べた。n＝1 ではどちらも120で n＝2 以降は等比が上回る。n＝12 では約892と340で約2.6倍になる。</figcaption>
+</figure>
+<h3>等比数列の和の公式の導出</h3>
+<p>和 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mi>a</mi><mo>+</mo><mi>a</mi><mi>r</mi><mo>+</mo><mi>a</mi><msup><mi>r</mi><mn>2</mn></msup><mo>+</mo><mo>⋯</mo><mo>+</mo><mi>a</mi><msup><mi>r</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">S_n=a+ar+ar^2+\dots+ar^{n-1}</annotation></semantics></math></span> の両辺に r を掛けると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mi>a</mi><mi>r</mi><mo>+</mo><mi>a</mi><msup><mi>r</mi><mn>2</mn></msup><mo>+</mo><mo>⋯</mo><mo>+</mo><mi>a</mi><msup><mi>r</mi><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">rS_n=ar+ar^2+\dots+ar^{n}</annotation></semantics></math></span> となる。2つの式は右辺の大部分が一致する。上から下を引くと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">ar</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><msup><mi>r</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">ar^{n-1}</annotation></semantics></math></span> までが消えて両端だけが残る。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub><mo>−</mo><mi>r</mi><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mi>a</mi><mo>−</mo><mi>a</mi><msup><mi>r</mi><mi>n</mi></msup><mspace width="1em"/><mo>⟹</mo><mspace width="1em"/><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mi>a</mi><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msup><mi>r</mi><mi>n</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">S_n-rS_n=a-ar^n \quad\Longrightarrow\quad (1-r)S_n=a(1-r^n)</annotation></semantics></math></span></div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo mathvariant="normal">≠</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r\neq 1</annotation></semantics></math></span> なら両辺を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">1-r</annotation></semantics></math></span> で割れる。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r=1</annotation></semantics></math></span> なら全項が a なので和は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>a</mi></mrow><annotation encoding="application/x-tex">na</annotation></semantics></math></span> である。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mfrac><mrow><mi>a</mi><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msup><mi>r</mi><mi>n</mi></msup><mo stretchy="false">)</mo></mrow><mrow><mn>1</mn><mo>−</mo><mi>r</mi></mrow></mfrac><mo>=</mo><mfrac><mrow><mi>a</mi><mo stretchy="false">(</mo><msup><mi>r</mi><mi>n</mi></msup><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mrow><mi>r</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mspace width="1em"/><mo stretchy="false">(</mo><mi>r</mi><mo mathvariant="normal">≠</mo><mn>1</mn><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mi>n</mi><mi>a</mi><mspace width="1em"/><mo stretchy="false">(</mo><mi>r</mi><mo>=</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">S_n=\frac{a(1-r^n)}{1-r}=\frac{a(r^n-1)}{r-1}\quad (r\neq 1) ,\qquad S_n=na\quad (r=1)</annotation></semantics></math></span></div>
+<p>2つの形は分母と分子の両方に −1 を掛けたもので値は等しい。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>&gt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r&gt;1</annotation></semantics></math></span> なら右の形を使うと符号の誤りが減る。</p>
+
+<div class="ex"><div class="ex-h">例題 4</div>
+<p>初項 3 ・公比 2 の等比数列の初項から第 8 項までの和を求めよ。また和が初めて 1000 を超えるのは第何項までの和か。</p>
+<details open><summary>解き方</summary><div><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>8</mn></msub><mo>=</mo><mfrac><mrow><mn>3</mn><mo stretchy="false">(</mo><msup><mn>2</mn><mn>8</mn></msup><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mrow><mn>2</mn><mo>−</mo><mn>1</mn></mrow></mfrac><mo>=</mo><mn>3</mn><mo>×</mo><mn>255</mn><mo>=</mo><mn>765</mn></mrow><annotation encoding="application/x-tex">S_8=\frac{3(2^8-1)}{2-1}=3\times 255=765</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mn>3</mn><mo stretchy="false">(</mo><msup><mn>2</mn><mi>n</mi></msup><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>&gt;</mo><mn>1000</mn></mrow><annotation encoding="application/x-tex">S_n=3(2^n-1)&gt;1000</annotation></semantics></math></span> を解く。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup><mo>−</mo><mn>1</mn><mo>&gt;</mo><mn>333.3</mn><mo>⋯</mo></mrow><annotation encoding="application/x-tex">2^n-1&gt;333.3\cdots</annotation></semantics></math></span> なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup><mo>&gt;</mo><mn>334.3</mn><mo>⋯</mo></mrow><annotation encoding="application/x-tex">2^n&gt;334.3\cdots</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>8</mn></msup><mo>=</mo><mn>256</mn></mrow><annotation encoding="application/x-tex">2^8=256</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>9</mn></msup><mo>=</mo><mn>512</mn></mrow><annotation encoding="application/x-tex">2^9=512</annotation></semantics></math></span> より最小の n は 9<br>答え 765 ・ 第9項まで</div></details></div>
+
+<h3>等差×等比の和</h3>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mi>k</mi><mo>⋅</mo><msup><mn>2</mn><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}k\cdot 2^{k-1}</annotation></semantics></math></span> のように等差数列と等比数列の積の和も同じ操作で求まる。和を S とし公比の 2 を掛けた 2S を1項ずらして並べて引くと等比数列の和が残る。</p>
+<div class="ex"><div class="ex-h">例題 5</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mn>1</mn><mo>⋅</mo><mn>1</mn><mo>+</mo><mn>2</mn><mo>⋅</mo><mn>2</mn><mo>+</mo><mn>3</mn><mo>⋅</mo><msup><mn>2</mn><mn>2</mn></msup><mo>+</mo><mo>⋯</mo><mo>+</mo><mi>n</mi><mo>⋅</mo><msup><mn>2</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">S=1\cdot 1+2\cdot 2+3\cdot 2^2+\dots+n\cdot 2^{n-1}</annotation></semantics></math></span> を求めよ。</p>
+<details open><summary>解き方</summary><div><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>S</mi><mo>=</mo><mn>1</mn><mo>⋅</mo><mn>2</mn><mo>+</mo><mn>2</mn><mo>⋅</mo><msup><mn>2</mn><mn>2</mn></msup><mo>+</mo><mo>⋯</mo><mo>+</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><msup><mn>2</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>+</mo><mi>n</mi><mo>⋅</mo><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">2S=1\cdot 2+2\cdot 2^2+\dots+(n-1)2^{n-1}+n\cdot 2^n</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>−</mo><mn>2</mn><mi>S</mi><mo>=</mo><mn>1</mn><mo>+</mo><mn>2</mn><mo>+</mo><msup><mn>2</mn><mn>2</mn></msup><mo>+</mo><mo>⋯</mo><mo>+</mo><msup><mn>2</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>−</mo><mi>n</mi><mo>⋅</mo><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">S-2S=1+2+2^2+\dots+2^{n-1}-n\cdot 2^n</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mi>S</mi><mo>=</mo><mo stretchy="false">(</mo><msup><mn>2</mn><mi>n</mi></msup><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>−</mo><mi>n</mi><mo>⋅</mo><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">-S=(2^n-1)-n\cdot 2^n</annotation></semantics></math></span><br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><msup><mn>2</mn><mi>n</mi></msup><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">S=(n-1)2^n+1</annotation></semantics></math></span><br>検算 n＝3 で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mn>4</mn><mo>+</mo><mn>12</mn><mo>=</mo><mn>17</mn></mrow><annotation encoding="application/x-tex">1+4+12=17</annotation></semantics></math></span> ・ 式は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>⋅</mo><mn>8</mn><mo>+</mo><mn>1</mn><mo>=</mo><mn>17</mn></mrow><annotation encoding="application/x-tex">2\cdot 8+1=17</annotation></semantics></math></span></div></details></div>
+<p>引き算の右辺で最後の項 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>⋅</mo><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">n\cdot 2^n</annotation></semantics></math></span> の符号を誤りやすい。2S の側にだけある項は引かれて負になる。</p>
+<p><strong>典型的な誤り</strong>は2つある。1つは一般項の指数を n とする誤りで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mi>a</mi><msup><mi>r</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">a_n=ar^{n-1}</annotation></semantics></math></span> の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> を確認する。もう1つは公比が文字のときに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r=1</annotation></semantics></math></span> の場合分けを忘れる誤りである。</p>
+
+<aside class="an an-biz"><b>投資で言えば</b>
+<p class="an-h">単利は等差数列で複利は等比数列である</p>
+<p>元本100万円・年5％の単利は毎年5万円ずつ増える。複利は毎年1.05倍になり10年後に約162.9万円である。</p>
+</aside>
+
+<h2 id="s3">Σ記号と和の公式</h2>
+<p>数列の和 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><msub><mi>a</mi><mn>2</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>a</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">a_1+a_2+\dots+a_n</annotation></semantics></math></span> を次のように書く。Σ はギリシャ文字のシグマで和を表す。下の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k=1</annotation></semantics></math></span> から上の n まで k を1ずつ変えて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">a_k</annotation></semantics></math></span> を足す意味である。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>a</mi><mi>k</mi></msub><mo>=</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><msub><mi>a</mi><mn>2</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mi>a</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}a_k=a_1+a_2+\dots+a_n</annotation></semantics></math></span></div>
+<p>Σ には次の性質がある。足す順序の入れ替えと分配法則により和と定数倍は Σ の外に出せる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false">(</mo><mi>p</mi><msub><mi>a</mi><mi>k</mi></msub><mo>+</mo><mi>q</mi><msub><mi>b</mi><mi>k</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mi>p</mi><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>a</mi><mi>k</mi></msub><mo>+</mo><mi>q</mi><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>b</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}(pa_k+qb_k)=p\sum_{k=1}^{n}a_k+q\sum_{k=1}^{n}b_k</annotation></semantics></math></span></div>
+<p>一方で積は外に出せない。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><msub><mi>a</mi><mi>k</mi></msub><msub><mi>b</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\sum a_kb_k</annotation></semantics></math></span> は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo fence="true">(</mo><mo>∑</mo><msub><mi>a</mi><mi>k</mi></msub><mo fence="true">)</mo></mrow><mrow><mo fence="true">(</mo><mo>∑</mo><msub><mi>b</mi><mi>k</mi></msub><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\left(\sum a_k\right)\left(\sum b_k\right)</annotation></semantics></math></span> と一般に一致しない。n＝2 で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><msub><mi>b</mi><mn>1</mn></msub><mo>+</mo><msub><mi>a</mi><mn>2</mn></msub><msub><mi>b</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">a_1b_1+a_2b_2</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><msub><mi>a</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mo stretchy="false">(</mo><msub><mi>b</mi><mn>1</mn></msub><mo>+</mo><msub><mi>b</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(a_1+a_2)(b_1+b_2)</annotation></semantics></math></span> を比べると後者には <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><msub><mi>b</mi><mn>2</mn></msub><mo>+</mo><msub><mi>a</mi><mn>2</mn></msub><msub><mi>b</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">a_1b_2+a_2b_1</annotation></semantics></math></span> が余分に含まれる。</p>
+<h3>基本の4公式</h3>
+<div class="tb-tw"><table>
+<thead><tr><th>和</th><th>結果</th><th>根拠</th></tr></thead>
+<tbody>
+<tr><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mi>c</mi></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}c</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">cn</annotation></semantics></math></span></td><td>c を n 回足す</td></tr>
+<tr><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mi>k</mi></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}k</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\frac{1}{2}n(n+1)</annotation></semantics></math></span></td><td>等差数列の和</td></tr>
+<tr><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><msup><mi>k</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}k^2</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>6</mn></mfrac><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\frac{1}{6}n(n+1)(2n+1)</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>3</mn></msup><mo>−</mo><msup><mi>k</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">(k+1)^3-k^3</annotation></semantics></math></span> の和</td></tr>
+<tr><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><msup><mi>k</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}k^3</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo fence="true">{</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo fence="true">}</mo></mrow><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\left\{\frac{1}{2}n(n+1)\right\}^2</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>4</mn></msup><mo>−</mo><msup><mi>k</mi><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">(k+1)^4-k^4</annotation></semantics></math></span> の和</td></tr>
+</tbody></table></div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><msup><mi>k</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\sum k^2</annotation></semantics></math></span> の導出を示す。恒等式 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>3</mn></msup><mo>−</mo><msup><mi>k</mi><mn>3</mn></msup><mo>=</mo><mn>3</mn><msup><mi>k</mi><mn>2</mn></msup><mo>+</mo><mn>3</mn><mi>k</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">(k+1)^3-k^3=3k^2+3k+1</annotation></semantics></math></span> を k＝1 から n まで足す。左辺は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>3</mn></msup><mo>−</mo><msup><mn>1</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">2^3-1^3</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>3</mn><mn>3</mn></msup><mo>−</mo><msup><mn>2</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">3^3-2^3</annotation></semantics></math></span> のように隣どうしが打ち消し合い <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>3</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">(n+1)^3-1</annotation></semantics></math></span> だけが残る。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>3</mn></msup><mo>−</mo><mn>1</mn><mo>=</mo><mn>3</mn><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mi>k</mi><mn>2</mn></msup><mo>+</mo><mn>3</mn><mo>⋅</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac><mo>+</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">(n+1)^3-1=3\sum_{k=1}^{n}k^2+3\cdot\frac{n(n+1)}{2}+n</annotation></semantics></math></span></div>
+<p>これを <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><msup><mi>k</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\sum k^2</annotation></semantics></math></span> について解く。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>3</mn></msup><mo>−</mo><mn>1</mn><mo>−</mo><mi>n</mi><mo>=</mo><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">{</mo><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>−</mo><mn>1</mn><mo stretchy="false">}</mo><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(n+1)^3-1-n=(n+1)\{(n+1)^2-1\}=n(n+1)(n+2)</annotation></semantics></math></span> を使うと次の式になる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>3</mn><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mi>k</mi><mn>2</mn></msup><mo>=</mo><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>2</mn><mo stretchy="false">)</mo><mo>−</mo><mfrac><mrow><mn>3</mn><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac><mo>=</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">3\sum_{k=1}^{n}k^2=n(n+1)(n+2)-\frac{3n(n+1)}{2}=\frac{n(n+1)(2n+1)}{2}</annotation></semantics></math></span></div>
+<p>両辺を3で割れば公式が得られる。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><msup><mi>k</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\sum k^3</annotation></semantics></math></span> も同じ方法で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>4</mn></msup><mo>−</mo><msup><mi>k</mi><mn>4</mn></msup><mo>=</mo><mn>4</mn><msup><mi>k</mi><mn>3</mn></msup><mo>+</mo><mn>6</mn><msup><mi>k</mi><mn>2</mn></msup><mo>+</mo><mn>4</mn><mi>k</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">(k+1)^4-k^4=4k^3+6k^2+4k+1</annotation></semantics></math></span> を足して導ける。結果は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">\sum k</annotation></semantics></math></span> の2乗に等しい。n＝3 なら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mn>8</mn><mo>+</mo><mn>27</mn><mo>=</mo><mn>36</mn><mo>=</mo><msup><mn>6</mn><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">1+8+27=36=6^2</annotation></semantics></math></span> で確かめられる。</p>
+<p>隣どうしが打ち消し合う和は分数でも使える。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mrow><mi>k</mi><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mfrac><mo>=</mo><mfrac><mn>1</mn><mi>k</mi></mfrac><mo>−</mo><mfrac><mn>1</mn><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{k(k+1)}=\frac{1}{k}-\frac{1}{k+1}</annotation></semantics></math></span> と分解すると次のように両端だけが残る。この分解を<strong>部分分数分解</strong>と呼ぶ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mfrac><mn>1</mn><mrow><mi>k</mi><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mfrac><mo>=</mo><mrow><mo fence="true">(</mo><mn>1</mn><mo>−</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo fence="true">)</mo></mrow><mo>+</mo><mrow><mo fence="true">(</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>−</mo><mfrac><mn>1</mn><mn>3</mn></mfrac><mo fence="true">)</mo></mrow><mo>+</mo><mo>⋯</mo><mo>+</mo><mrow><mo fence="true">(</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mo>−</mo><mfrac><mn>1</mn><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></mfrac><mo fence="true">)</mo></mrow><mo>=</mo><mn>1</mn><mo>−</mo><mfrac><mn>1</mn><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></mfrac><mo>=</mo><mfrac><mi>n</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></mfrac></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}\frac{1}{k(k+1)}=\left(1-\frac{1}{2}\right)+\left(\frac{1}{2}-\frac{1}{3}\right)+\dots+\left(\frac{1}{n}-\frac{1}{n+1}\right)=1-\frac{1}{n+1}=\frac{n}{n+1}</annotation></semantics></math></span></div>
+
+<div class="ex"><div class="ex-h">例題 6</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mo stretchy="false">(</mo><mn>2</mn><mi>k</mi><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}(2k-1)^2</annotation></semantics></math></span> を求めよ。</p>
+<details open><summary>解き方</summary><div>展開して <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>2</mn><mi>k</mi><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>=</mo><mn>4</mn><msup><mi>k</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>k</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">(2k-1)^2=4k^2-4k+1</annotation></semantics></math></span><br>和の性質で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>∑</mo><msup><mi>k</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mo>∑</mo><mi>k</mi><mo>+</mo><mo>∑</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">4\sum k^2-4\sum k+\sum 1</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mn>4</mn><mo>⋅</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>6</mn></mfrac><mo>−</mo><mn>4</mn><mo>⋅</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac><mo>+</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">=4\cdot\frac{n(n+1)(2n+1)}{6}-4\cdot\frac{n(n+1)}{2}+n</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mfrac><mi>n</mi><mn>3</mn></mfrac><mo stretchy="false">{</mo><mn>2</mn><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>−</mo><mn>6</mn><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><mn>3</mn><mo stretchy="false">}</mo><mo>=</mo><mfrac><mi>n</mi><mn>3</mn></mfrac><mo stretchy="false">(</mo><mn>4</mn><msup><mi>n</mi><mn>2</mn></msup><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">=\frac{n}{3}\{2(n+1)(2n+1)-6(n+1)+3\}=\frac{n}{3}(4n^2-1)</annotation></semantics></math></span><br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>3</mn></mfrac><mi>n</mi><mo stretchy="false">(</mo><mn>2</mn><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\frac{1}{3}n(2n-1)(2n+1)</annotation></semantics></math></span><br>検算 n＝2 で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mn>9</mn><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">1+9=10</annotation></semantics></math></span> ・ 式は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>3</mn></mfrac><mo>⋅</mo><mn>2</mn><mo>⋅</mo><mn>3</mn><mo>⋅</mo><mn>5</mn><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\frac{1}{3}\cdot 2\cdot 3\cdot 5=10</annotation></semantics></math></span> で一致する。</div></details></div>
+
+<p><strong>典型的な誤り</strong>は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mn>5</mn></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}5</annotation></semantics></math></span> を 5 とする誤りである。5 を n 回足すので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mi>n</mi></mrow><annotation encoding="application/x-tex">5n</annotation></semantics></math></span> になる。もう1つは上端が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> の和に <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\frac{1}{2}n(n+1)</annotation></semantics></math></span> をそのまま使う誤りである。n を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> に置き換えて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">\frac{1}{2}(n-1)n</annotation></semantics></math></span> とする。</p>
+
+<h2 id="s4">階差数列と和から一般項を求める方法</h2>
+<p>数列 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><msub><mi>a</mi><mi>n</mi></msub><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{a_n\}</annotation></semantics></math></span> の隣り合う項の差 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>n</mi></msub><mo>=</mo><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>a</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">b_n=a_{n+1}-a_n</annotation></semantics></math></span> を並べた数列を<strong>階差数列</strong>と呼ぶ。一般項が直接分からなくても階差に規則があれば一般項を求められる。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 245" role="img" aria-label="数列 2 5 10 17 26 37 とその階差数列 3 5 7 9 11">
+<text x="20" y="60" font-size="13" text-anchor="start" fill="var(--muted)" >数列 aₙ</text>
+<text x="20" y="150" font-size="13" text-anchor="start" fill="var(--muted)" >階差 bₙ</text>
+<circle cx="120" cy="55" r="20" fill="var(--warm)"/>
+<text x="120" y="60" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">2</text>
+<text x="120" y="26" font-size="12" text-anchor="middle" fill="var(--sub)" >a₁</text>
+<circle cx="220" cy="55" r="20" fill="var(--warm)"/>
+<text x="220" y="60" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">5</text>
+<text x="220" y="26" font-size="12" text-anchor="middle" fill="var(--sub)" >a₂</text>
+<circle cx="320" cy="55" r="20" fill="var(--warm)"/>
+<text x="320" y="60" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">10</text>
+<text x="320" y="26" font-size="12" text-anchor="middle" fill="var(--sub)" >a₃</text>
+<circle cx="420" cy="55" r="20" fill="var(--warm)"/>
+<text x="420" y="60" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">17</text>
+<text x="420" y="26" font-size="12" text-anchor="middle" fill="var(--sub)" >a₄</text>
+<circle cx="520" cy="55" r="20" fill="var(--warm)"/>
+<text x="520" y="60" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">26</text>
+<text x="520" y="26" font-size="12" text-anchor="middle" fill="var(--sub)" >a₅</text>
+<circle cx="620" cy="55" r="20" fill="var(--warm)"/>
+<text x="620" y="60" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">37</text>
+<text x="620" y="26" font-size="12" text-anchor="middle" fill="var(--sub)" >a₆</text>
+<line x1="132" y1="76" x2="166" y2="128" stroke="var(--line)" stroke-width="1.5"/>
+<line x1="208" y1="76" x2="174" y2="128" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="150" y="133" width="40" height="28" rx="4" fill="var(--cool)"/>
+<text x="170" y="152" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">3</text>
+<line x1="232" y1="76" x2="266" y2="128" stroke="var(--line)" stroke-width="1.5"/>
+<line x1="308" y1="76" x2="274" y2="128" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="250" y="133" width="40" height="28" rx="4" fill="var(--cool)"/>
+<text x="270" y="152" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">5</text>
+<line x1="332" y1="76" x2="366" y2="128" stroke="var(--line)" stroke-width="1.5"/>
+<line x1="408" y1="76" x2="374" y2="128" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="350" y="133" width="40" height="28" rx="4" fill="var(--cool)"/>
+<text x="370" y="152" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">7</text>
+<line x1="432" y1="76" x2="466" y2="128" stroke="var(--line)" stroke-width="1.5"/>
+<line x1="508" y1="76" x2="474" y2="128" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="450" y="133" width="40" height="28" rx="4" fill="var(--cool)"/>
+<text x="470" y="152" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">9</text>
+<line x1="532" y1="76" x2="566" y2="128" stroke="var(--line)" stroke-width="1.5"/>
+<line x1="608" y1="76" x2="574" y2="128" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="550" y="133" width="40" height="28" rx="4" fill="var(--cool)"/>
+<text x="570" y="152" font-size="14" text-anchor="middle" fill="#fff" font-weight="700">11</text>
+<text x="120" y="200" font-size="14" text-anchor="start" fill="var(--ink)" >a₄＝a₁＋(b₁＋b₂＋b₃)＝2＋(3＋5＋7)＝17</text>
+<text x="120" y="226" font-size="13" text-anchor="start" fill="var(--sub)" >第n項は初項に階差を n−1 個だけ足した値である</text>
+</svg>
+<figcaption>上段の数列 2・5・10・17・26・37 は規則が一見して分からない。下段の差は 3・5・7・9・11 で公差2の等差数列である。</figcaption>
+</figure>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>2</mn></msub><mo>=</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">a_2=a_1+b_1</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>3</mn></msub><mo>=</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mo>+</mo><msub><mi>b</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">a_3=a_1+b_1+b_2</annotation></semantics></math></span> と続くので第 n 項は初項に階差を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> 個足した値になる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></munderover><msub><mi>b</mi><mi>k</mi></msub><mspace width="2em"/><mo stretchy="false">(</mo><mi>n</mi><mo>≥</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">a_n=a_1+\sum_{k=1}^{n-1}b_k\qquad (n\ge 2)</annotation></semantics></math></span></div>
+<p>この式は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\ge 2</annotation></semantics></math></span> でしか使えない。n＝1 では足す個数が0個になり Σ の上端が0になるからである。得た式が n＝1 でも成り立つかを最後に確かめる。</p>
+
+<div class="ex"><div class="ex-h">例題 7</div>
+<p>数列 2・5・10・17・26・… の一般項を求めよ。</p>
+<details open><summary>解き方</summary><div>階差数列は 3・5・7・9・… で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>k</mi></msub><mo>=</mo><mn>2</mn><mi>k</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">b_k=2k+1</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\ge 2</annotation></semantics></math></span> のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>2</mn><mo>+</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msubsup><mo stretchy="false">(</mo><mn>2</mn><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mn>2</mn><mo>+</mo><mn>2</mn><mo>⋅</mo><mfrac><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mi>n</mi></mrow><mn>2</mn></mfrac><mo>+</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">a_n=2+\sum_{k=1}^{n-1}(2k+1)=2+2\cdot\frac{(n-1)n}{2}+(n-1)</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mn>2</mn><mo>+</mo><msup><mi>n</mi><mn>2</mn></msup><mo>−</mo><mi>n</mi><mo>+</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo>=</mo><msup><mi>n</mi><mn>2</mn></msup><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">=2+n^2-n+n-1=n^2+1</annotation></semantics></math></span><br>n＝1 のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>1</mn><mn>2</mn></msup><mo>+</mo><mn>1</mn><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1^2+1=2</annotation></semantics></math></span> で初項と一致する<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><msup><mi>n</mi><mn>2</mn></msup><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_n=n^2+1</annotation></semantics></math></span></div></details></div>
+
+<h3>和 S<sub>n</sub> から一般項を求める</h3>
+<p>初項から第 n 項までの和 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">S_n</annotation></semantics></math></span> が分かっているとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">S_n</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">S_{n-1}</annotation></semantics></math></span> の差は第 n 項だけである。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><msub><mi>S</mi><mn>1</mn></msub><mo separator="true">,</mo><mspace width="2em"/><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><msub><mi>S</mi><mi>n</mi></msub><mo>−</mo><msub><mi>S</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mspace width="1em"/><mo stretchy="false">(</mo><mi>n</mi><mo>≥</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">a_1=S_1,\qquad a_n=S_n-S_{n-1}\quad (n\ge 2)</annotation></semantics></math></span></div>
+<p>ここでも <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\ge 2</annotation></semantics></math></span> の制限がある。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">S_0</annotation></semantics></math></span> は定義されていないからである。</p>
+
+<div class="ex"><div class="ex-h">例題 8</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><msup><mi>n</mi><mn>2</mn></msup><mo>+</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">S_n=n^2+2n+3</annotation></semantics></math></span> のとき一般項 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">a_n</annotation></semantics></math></span> を求めよ。</p>
+<details open><summary>解き方</summary><div><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><msub><mi>S</mi><mn>1</mn></msub><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">a_1=S_1=6</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\ge 2</annotation></semantics></math></span> のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo>+</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>3</mn><mo stretchy="false">)</mo><mo>−</mo><mo stretchy="false">{</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>+</mo><mn>2</mn><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><mn>3</mn><mo stretchy="false">}</mo><mo>=</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_n=(n^2+2n+3)-\{(n-1)^2+2(n-1)+3\}=2n+1</annotation></semantics></math></span><br>n＝1 を代入すると 3 で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">a_1=6</annotation></semantics></math></span> と一致しない<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">a_1=6</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\ge 2</annotation></semantics></math></span> のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_n=2n+1</annotation></semantics></math></span></div></details></div>
+
+<p><strong>典型的な誤り</strong>は n＝1 の確認を省いて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_n=2n+1</annotation></semantics></math></span> と1本の式で答えることである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">S_n</annotation></semantics></math></span> に定数項があると n＝1 だけが式から外れる。</p>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">通算本塁打が数列で1試合ごとの本塁打が階差数列である</p>
+<p>通算記録は初戦の値に毎試合の増分を足したもの。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><mo>∑</mo><msub><mi>b</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">a_n=a_1+\sum b_k</annotation></semantics></math></span> はこの計算そのものである。</p>
+</aside>
+
+<h2 id="s5">漸化式</h2>
+<p>初項と「前の項から次の項を決める規則」で数列を定める式を<strong>漸化式</strong>と呼ぶ。漸化式が与えられれば項を1つずつ順に計算できる。試験では一般項を求めることが問われる。基本の型は次の4つである。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>型</th><th>漸化式</th><th>一般項の求め方</th></tr></thead>
+<tbody>
+<tr><td>等差型</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>a</mi><mi>n</mi></msub><mo>+</mo><mi>d</mi></mrow><annotation encoding="application/x-tex">a_{n+1}=a_n+d</annotation></semantics></math></span></td><td>公差 d の等差数列</td></tr>
+<tr><td>等比型</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>r</mi><msub><mi>a</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">a_{n+1}=ra_n</annotation></semantics></math></span></td><td>公比 r の等比数列</td></tr>
+<tr><td>階差型</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>a</mi><mi>n</mi></msub><mo>+</mo><mi>f</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">a_{n+1}=a_n+f(n)</annotation></semantics></math></span></td><td>階差が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(n)</annotation></semantics></math></span> なので第4節の式</td></tr>
+<tr><td>1次型</td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>p</mi><msub><mi>a</mi><mi>n</mi></msub><mo>+</mo><mi>q</mi></mrow><annotation encoding="application/x-tex">a_{n+1}=pa_n+q</annotation></semantics></math></span></td><td><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mi>p</mi><mi>α</mi><mo>+</mo><mi>q</mi></mrow><annotation encoding="application/x-tex">\alpha=p\alpha+q</annotation></semantics></math></span> の解 α を引いて等比型にする</td></tr>
+</tbody></table></div>
+<h3>a<sub>n+1</sub>＝pa<sub>n</sub>＋q 型の解き方と理由</h3>
+<p>p≠1 とする。数 α が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mi>p</mi><mi>α</mi><mo>+</mo><mi>q</mi></mrow><annotation encoding="application/x-tex">\alpha=p\alpha+q</annotation></semantics></math></span> を満たすとする。漸化式からこの式を辺々引くと q が消える。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><mi>α</mi><mo>=</mo><mi>p</mi><mo stretchy="false">(</mo><msub><mi>a</mi><mi>n</mi></msub><mo>−</mo><mi>α</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">a_{n+1}-\alpha=p(a_n-\alpha)</annotation></semantics></math></span></div>
+<p>この式は数列 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><msub><mi>a</mi><mi>n</mi></msub><mo>−</mo><mi>α</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{a_n-\alpha\}</annotation></semantics></math></span> が公比 p の等比数列であることを示す。したがって <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>−</mo><mi>α</mi><mo>=</mo><mo stretchy="false">(</mo><msub><mi>a</mi><mn>1</mn></msub><mo>−</mo><mi>α</mi><mo stretchy="false">)</mo><msup><mi>p</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">a_n-\alpha=(a_1-\alpha)p^{n-1}</annotation></semantics></math></span> で一般項が求まる。α は数列の項ではない。式を等比型に変えるために用いる補助の数である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mi>p</mi><mi>α</mi><mo>+</mo><mi>q</mi></mrow><annotation encoding="application/x-tex">\alpha=p\alpha+q</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mfrac><mi>q</mi><mrow><mn>1</mn><mo>−</mo><mi>p</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\alpha=\frac{q}{1-p}</annotation></semantics></math></span> である。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 275" role="img" aria-label="漸化式 aₙ₊₁＝½aₙ＋3 の値が6に近づく様子">
+<line x1="60" y1="255" x2="300" y2="255" stroke="var(--ink)" stroke-width="1"/>
+<line x1="60" y1="15" x2="60" y2="255" stroke="var(--ink)" stroke-width="1"/>
+<line x1="120" y1="252" x2="120" y2="258" stroke="var(--ink)"/>
+<text x="120" y="272" font-size="12" text-anchor="middle" fill="var(--sub)">2</text>
+<line x1="180" y1="252" x2="180" y2="258" stroke="var(--ink)"/>
+<text x="180" y="272" font-size="12" text-anchor="middle" fill="var(--sub)">4</text>
+<line x1="240" y1="252" x2="240" y2="258" stroke="var(--ink)"/>
+<text x="240" y="272" font-size="12" text-anchor="middle" fill="var(--sub)">6</text>
+<line x1="300" y1="252" x2="300" y2="258" stroke="var(--ink)"/>
+<text x="300" y="272" font-size="12" text-anchor="middle" fill="var(--sub)">8</text>
+<line x1="57" y1="195" x2="63" y2="195" stroke="var(--ink)"/>
+<text x="54" y="199" font-size="12" text-anchor="end" fill="var(--sub)">2</text>
+<line x1="57" y1="135" x2="63" y2="135" stroke="var(--ink)"/>
+<text x="54" y="139" font-size="12" text-anchor="end" fill="var(--sub)">4</text>
+<line x1="57" y1="75" x2="63" y2="75" stroke="var(--ink)"/>
+<text x="54" y="79" font-size="12" text-anchor="end" fill="var(--sub)">6</text>
+<line x1="57" y1="15" x2="63" y2="15" stroke="var(--ink)"/>
+<text x="54" y="19" font-size="12" text-anchor="end" fill="var(--sub)">8</text>
+<text x="304" y="259" font-size="13" font-style="italic" fill="var(--ink)">aₙ</text>
+<text x="65" y="17" font-size="13" font-style="italic" fill="var(--ink)">aₙ₊₁</text>
+<polyline fill="none" points="60,255 180,135 300,15" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+<polyline fill="none" points="60,165 180,105 300,45" stroke="var(--cool)" stroke-width="2"/>
+<polyline fill="none" stroke="var(--warm)" stroke-width="1.8" points="60,255 60,165 150,165 150,120 195,120 195,97.5 217.5,97.5 217.5,86.2 228.8,86.2 228.8,80.6 234.4,80.6 234.4,77.8 237.2,77.8"/>
+<circle cx="240" cy="75" r="4.5" fill="var(--accent)"/>
+<text x="300" y="105" font-size="13" text-anchor="end" fill="var(--cool)" >y＝½x＋3</text>
+<text x="288" y="21" font-size="13" text-anchor="end" fill="var(--muted)" >y＝x</text>
+<text x="232" y="67" font-size="12" text-anchor="end" fill="var(--accent)" >(6, 6)</text>
+<text x="380" y="40" font-size="13" text-anchor="start" fill="var(--muted)" >a₁＝0 から漸化式を繰り返す</text>
+<text x="380" y="68" font-size="13" text-anchor="start" fill="var(--ink)" >a₁</text>
+<text x="440" y="68" font-size="13" text-anchor="start" fill="var(--warm)" >0</text>
+<text x="540" y="68" font-size="13" text-anchor="start" fill="var(--sub)" >6との差 6</text>
+<text x="380" y="92" font-size="13" text-anchor="start" fill="var(--ink)" >a₂</text>
+<text x="440" y="92" font-size="13" text-anchor="start" fill="var(--warm)" >3</text>
+<text x="540" y="92" font-size="13" text-anchor="start" fill="var(--sub)" >6との差 3</text>
+<text x="380" y="116" font-size="13" text-anchor="start" fill="var(--ink)" >a₃</text>
+<text x="440" y="116" font-size="13" text-anchor="start" fill="var(--warm)" >4.5</text>
+<text x="540" y="116" font-size="13" text-anchor="start" fill="var(--sub)" >6との差 1.5</text>
+<text x="380" y="140" font-size="13" text-anchor="start" fill="var(--ink)" >a₄</text>
+<text x="440" y="140" font-size="13" text-anchor="start" fill="var(--warm)" >5.25</text>
+<text x="540" y="140" font-size="13" text-anchor="start" fill="var(--sub)" >6との差 0.75</text>
+<text x="380" y="164" font-size="13" text-anchor="start" fill="var(--ink)" >a₅</text>
+<text x="440" y="164" font-size="13" text-anchor="start" fill="var(--warm)" >5.625</text>
+<text x="540" y="164" font-size="13" text-anchor="start" fill="var(--sub)" >6との差 0.375</text>
+<text x="380" y="188" font-size="13" text-anchor="start" fill="var(--ink)" >a₆</text>
+<text x="440" y="188" font-size="13" text-anchor="start" fill="var(--warm)" >5.8125</text>
+<text x="540" y="188" font-size="13" text-anchor="start" fill="var(--sub)" >6との差 0.1875</text>
+<text x="380" y="212" font-size="13" text-anchor="start" fill="var(--ink)" >a₇</text>
+<text x="440" y="212" font-size="13" text-anchor="start" fill="var(--warm)" >5.90625</text>
+<text x="540" y="212" font-size="13" text-anchor="start" fill="var(--sub)" >6との差 0.09375</text>
+<text x="380" y="250" font-size="13" text-anchor="start" fill="var(--accent)" >差は毎回 ½ 倍になり 0 に近づく</text>
+</svg>
+<figcaption>直線 y＝½x＋3 で次の項を求め直線 y＝x で横軸に戻す操作を繰り返すと階段状の線になる。2本の直線の交点 (6, 6) の x 座標が α である。6との差は毎回半分になる。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 9</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">a_1=0</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><msub><mi>a</mi><mi>n</mi></msub><mo>+</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">a_{n+1}=\frac{1}{2}a_n+3</annotation></semantics></math></span> で定まる数列の一般項を求めよ。</p>
+<details open><summary>解き方</summary><div><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>α</mi><mo>+</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\alpha=\frac{1}{2}\alpha+3</annotation></semantics></math></span> を解いて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">\alpha=6</annotation></semantics></math></span><br>漸化式から引くと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><mn>6</mn><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo stretchy="false">(</mo><msub><mi>a</mi><mi>n</mi></msub><mo>−</mo><mn>6</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">a_{n+1}-6=\frac{1}{2}(a_n-6)</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><msub><mi>a</mi><mi>n</mi></msub><mo>−</mo><mn>6</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{a_n-6\}</annotation></semantics></math></span> は初項 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>−</mo><mn>6</mn><mo>=</mo><mo>−</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">0-6=-6</annotation></semantics></math></span> ・公比 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{2}</annotation></semantics></math></span> の等比数列<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>6</mn><mo>−</mo><mn>6</mn><msup><mrow><mo fence="true">(</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo fence="true">)</mo></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">a_n=6-6\left(\frac{1}{2}\right)^{n-1}</annotation></semantics></math></span><br>検算 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>2</mn></msub><mo>=</mo><mn>6</mn><mo>−</mo><mn>3</mn><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">a_2=6-3=3</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>3</mn></msub><mo>=</mo><mn>6</mn><mo>−</mo><mfrac><mn>3</mn><mn>2</mn></mfrac><mo>=</mo><mn>4.5</mn></mrow><annotation encoding="application/x-tex">a_3=6-\frac{3}{2}=4.5</annotation></semantics></math></span> で漸化式の値と一致する。</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 10</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_1=1</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mn>3</mn><msub><mi>a</mi><mi>n</mi></msub><mo>+</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">a_{n+1}=3a_n+2</annotation></semantics></math></span> で定まる数列の一般項を求めよ。</p>
+<details open><summary>解き方</summary><div><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>3</mn><mi>α</mi><mo>+</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\alpha=3\alpha+2</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\alpha=-1</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>+</mo><mn>1</mn><mo>=</mo><mn>3</mn><mo stretchy="false">(</mo><msub><mi>a</mi><mi>n</mi></msub><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">a_{n+1}+1=3(a_n+1)</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><msub><mi>a</mi><mi>n</mi></msub><mo>+</mo><mn>1</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{a_n+1\}</annotation></semantics></math></span> は初項2 ・公比3の等比数列<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>2</mn><mo>⋅</mo><msup><mn>3</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_n=2\cdot 3^{n-1}-1</annotation></semantics></math></span><br>検算 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>2</mn></msub><mo>=</mo><mn>3</mn><mo>⋅</mo><mn>1</mn><mo>+</mo><mn>2</mn><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">a_2=3\cdot 1+2=5</annotation></semantics></math></span> ・ 式は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>⋅</mo><mn>3</mn><mo>−</mo><mn>1</mn><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">2\cdot 3-1=5</annotation></semantics></math></span></div></details></div>
+
+<div class="ex"><div class="ex-h">例題 11</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_1=1</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>a</mi><mi>n</mi></msub><mo>+</mo><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">a_{n+1}=a_n+2^n</annotation></semantics></math></span> で定まる数列の一般項を求めよ。</p>
+<details open><summary>解き方</summary><div>階差数列が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>n</mi></msub><mo>=</mo><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">b_n=2^n</annotation></semantics></math></span> の階差型である<br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\ge 2</annotation></semantics></math></span> のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>1</mn><mo>+</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msubsup><msup><mn>2</mn><mi>k</mi></msup><mo>=</mo><mn>1</mn><mo>+</mo><mfrac><mrow><mn>2</mn><mo stretchy="false">(</mo><msup><mn>2</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mrow><mn>2</mn><mo>−</mo><mn>1</mn></mrow></mfrac><mo>=</mo><msup><mn>2</mn><mi>n</mi></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_n=1+\sum_{k=1}^{n-1}2^k=1+\frac{2(2^{n-1}-1)}{2-1}=2^n-1</annotation></semantics></math></span><br>n＝1 のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>1</mn></msup><mo>−</mo><mn>1</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^1-1=1</annotation></semantics></math></span> で初項と一致する<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><msup><mn>2</mn><mi>n</mi></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_n=2^n-1</annotation></semantics></math></span></div></details></div>
+<p>階差型では Σ の上端が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> になる。等比数列の和の公式に入れるときの項数も <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> である。</p>
+<p><strong>典型的な誤り</strong>は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>−</mo><mi>α</mi><mo>=</mo><mo stretchy="false">(</mo><msub><mi>a</mi><mn>1</mn></msub><mo>−</mo><mi>α</mi><mo stretchy="false">)</mo><msup><mi>p</mi><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">a_n-\alpha=(a_1-\alpha)p^{n}</annotation></semantics></math></span> と指数を n にする誤りである。初項が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">a_1-\alpha</annotation></semantics></math></span> なので指数は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> になる。n＝1 を代入して <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">a_1</annotation></semantics></math></span> に戻るかで確かめられる。</p>
+
+<aside class="an an-biz"><b>経済で言えば</b>
+<p class="an-h">α は資本ストックの定常状態である</p>
+<p>毎期 δ の割合が減耗し I だけ投資すると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>δ</mi><mo stretchy="false">)</mo><msub><mi>K</mi><mi>n</mi></msub><mo>+</mo><mi>I</mi></mrow><annotation encoding="application/x-tex">K_{n+1}=(1-\delta)K_n+I</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">K_n</annotation></semantics></math></span> は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mi mathvariant="normal">/</mi><mi>δ</mi></mrow><annotation encoding="application/x-tex">I/\delta</annotation></semantics></math></span> に近づく。</p>
+</aside>
+
+<h2 id="s6">数学的帰納法</h2>
+<p>自然数 n についての命題 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(n)</annotation></semantics></math></span> がすべての自然数で成り立つことを示す方法の1つが<strong>数学的帰納法</strong>である。次の2つを示す。</p>
+<div class="tb-vs">
+<div><h5>Ⅰ 出発点</h5><ul><li>n＝1 のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(1)</annotation></semantics></math></span> が成り立つことを示す</li></ul></div>
+<div><h5>Ⅱ 引き継ぎ</h5><ul><li>n＝k のとき成り立つと仮定する</li><li>その仮定を使って n＝k＋1 のときも成り立つことを示す</li></ul></div>
+</div>
+<p>この2つで十分な理由は次のとおりである。Ⅰから <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(1)</annotation></semantics></math></span> が成り立つ。Ⅱで k＝1 とすると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(2)</annotation></semantics></math></span> が成り立つ。続いて k＝2 とすると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mn>3</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(3)</annotation></semantics></math></span> が成り立つ。この連鎖はどの自然数にも有限回で到達する。Ⅱで示すのは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k)</annotation></semantics></math></span> そのものではなく「<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k)</annotation></semantics></math></span> ならば <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k+1)</annotation></semantics></math></span>」という含意である。</p>
+
+<div class="ex"><div class="ex-h">例題 12</div>
+<p>すべての自然数 n について <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><msup><mi>k</mi><mn>2</mn></msup><mo>=</mo><mfrac><mn>1</mn><mn>6</mn></mfrac><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{n}k^2=\frac{1}{6}n(n+1)(2n+1)</annotation></semantics></math></span> が成り立つことを数学的帰納法で証明せよ。</p>
+<details open><summary>解き方</summary><div>Ⅰ n＝1 のとき 左辺は 1 ・ 右辺は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>6</mn></mfrac><mo>⋅</mo><mn>1</mn><mo>⋅</mo><mn>2</mn><mo>⋅</mo><mn>3</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\frac{1}{6}\cdot 1\cdot 2\cdot 3=1</annotation></semantics></math></span> で成り立つ。<br>Ⅱ n＝k で成り立つと仮定する。n＝k＋1 の左辺は仮定を使って<br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>6</mn></mfrac><mi>k</mi><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>=</mo><mfrac><mn>1</mn><mn>6</mn></mfrac><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">{</mo><mi>k</mi><mo stretchy="false">(</mo><mn>2</mn><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><mn>6</mn><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\frac{1}{6}k(k+1)(2k+1)+(k+1)^2=\frac{1}{6}(k+1)\{k(2k+1)+6(k+1)\}</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mfrac><mn>1</mn><mn>6</mn></mfrac><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><msup><mi>k</mi><mn>2</mn></msup><mo>+</mo><mn>7</mn><mi>k</mi><mo>+</mo><mn>6</mn><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mn>6</mn></mfrac><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><mi>k</mi><mo>+</mo><mn>3</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">=\frac{1}{6}(k+1)(2k^2+7k+6)=\frac{1}{6}(k+1)(k+2)(2k+3)</annotation></semantics></math></span><br>これは右辺の n に k＋1 を代入した式 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>6</mn></mfrac><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">{</mo><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><mn>1</mn><mo stretchy="false">}</mo><mo stretchy="false">{</mo><mn>2</mn><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><mn>1</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\frac{1}{6}(k+1)\{(k+1)+1\}\{2(k+1)+1\}</annotation></semantics></math></span> と一致する。<br>Ⅰ・Ⅱよりすべての自然数 n で成り立つ。</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 13</div>
+<p>n が4以上の自然数のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup><mo>&gt;</mo><mn>3</mn><mi>n</mi></mrow><annotation encoding="application/x-tex">2^n&gt;3n</annotation></semantics></math></span> を証明せよ。</p>
+<details open><summary>解き方</summary><div>Ⅰ n＝4 のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>4</mn></msup><mo>=</mo><mn>16</mn><mo>&gt;</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">2^4=16&gt;12</annotation></semantics></math></span> で成り立つ。<br>Ⅱ k≧4 で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>k</mi></msup><mo>&gt;</mo><mn>3</mn><mi>k</mi></mrow><annotation encoding="application/x-tex">2^k&gt;3k</annotation></semantics></math></span> と仮定する。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msup><mo>=</mo><mn>2</mn><mo>⋅</mo><msup><mn>2</mn><mi>k</mi></msup><mo>&gt;</mo><mn>6</mn><mi>k</mi></mrow><annotation encoding="application/x-tex">2^{k+1}=2\cdot 2^k&gt;6k</annotation></semantics></math></span><br><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mi>k</mi><mo>−</mo><mn>3</mn><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mn>3</mn><mi>k</mi><mo>−</mo><mn>3</mn><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">6k-3(k+1)=3k-3&gt;0</annotation></semantics></math></span> なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mi>k</mi><mo>&gt;</mo><mn>3</mn><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">6k&gt;3(k+1)</annotation></semantics></math></span><br>よって <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msup><mo>&gt;</mo><mn>3</mn><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">2^{k+1}&gt;3(k+1)</annotation></semantics></math></span> で n＝k＋1 でも成り立つ。<br>Ⅰ・Ⅱより4以上のすべての自然数で成り立つ。</div></details></div>
+
+<p>数学的帰納法は漸化式と組み合わせて使うことが多い。漸化式で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">a_1</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>4</mn></msub></mrow><annotation encoding="application/x-tex">a_4</annotation></semantics></math></span> 程度まで計算して一般項を推測する。推測した式がすべての n で正しいことを帰納法で証明する。Ⅱでは漸化式 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mo>⋯</mo></mrow><annotation encoding="application/x-tex">a_{k+1}=\cdots</annotation></semantics></math></span> に仮定の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">a_k</annotation></semantics></math></span> の式を代入して <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">a_{k+1}</annotation></semantics></math></span> の式を導く。推測だけでは証明にならないので帰納法の段階が必要になる。</p>
+<p>出発点は n＝1 に限らない。例題13のように命題が成り立つ最小の n から始める。n＝3 では <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>8</mn><mo>&gt;</mo><mn>9</mn></mrow><annotation encoding="application/x-tex">8&gt;9</annotation></semantics></math></span> が成り立たないので出発点を誤ると証明にならない。</p>
+<p><strong>典型的な誤り</strong>は3つある。Ⅰを省くこと・Ⅱで示すべき n＝k＋1 の式を最初から仮定に使うこと・Ⅱの式変形で仮定を一度も使わないことである。仮定を使わずに n＝k＋1 が示せたならそもそも帰納法は不要である。</p>
+
+
+<h2 id="s7">現実世界の数列 複利と積立</h2>
+<p>金融の計算は等比数列とその和で書ける。元本 P を年利 r の複利で n 年預けると残高は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><msup><mo stretchy="false">)</mo><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">P(1+r)^n</annotation></semantics></math></span> である。これは公比 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">1+r</annotation></semantics></math></span> の等比数列の項である。</p>
+<p>毎年末に A 円ずつ積み立てる場合を考える。1年目末の A 円は残り <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> 年の利息がついて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><msup><mo stretchy="false">)</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">A(1+r)^{n-1}</annotation></semantics></math></span> になる。最後の A 円は利息がつかない。n 年目末の合計は公比 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">1+r</annotation></semantics></math></span> の等比数列の和である。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>A</mi><mo>+</mo><mi>A</mi><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><mo stretchy="false">)</mo><mo>+</mo><mo>⋯</mo><mo>+</mo><mi>A</mi><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><msup><mo stretchy="false">)</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><mfrac><mrow><mi>A</mi><mo stretchy="false">{</mo><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><msup><mo stretchy="false">)</mo><mi>n</mi></msup><mo>−</mo><mn>1</mn><mo stretchy="false">}</mo></mrow><mi>r</mi></mfrac></mrow><annotation encoding="application/x-tex">A+A(1+r)+\dots+A(1+r)^{n-1}=\frac{A\{(1+r)^n-1\}}{r}</annotation></semantics></math></span></div>
+<div class="ex"><div class="ex-h">例題 14</div>
+<p>毎年末に10万円を年利3％の複利で10年間積み立てる。10年目末の残高を求めよ。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>1.03</mn><mn>10</mn></msup><mo>=</mo><mn>1.3439</mn></mrow><annotation encoding="application/x-tex">1.03^{10}=1.3439</annotation></semantics></math></span> とする。</p>
+<details open><summary>解き方</summary><div><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mn>10</mn><mo>×</mo><mo stretchy="false">(</mo><mn>1.3439</mn><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>0.03</mn></mfrac><mo>=</mo><mfrac><mn>3.439</mn><mn>0.03</mn></mfrac><mo>=</mo><mn>114.63</mn><mo>⋯</mo></mrow><annotation encoding="application/x-tex">\frac{10\times(1.3439-1)}{0.03}=\frac{3.439}{0.03}=114.63\cdots</annotation></semantics></math></span><br>答え 約114.6万円 ・ 積立額100万円に対して利息は約14.6万円</div></details></div>
+<p>住宅ローンの元利均等返済も同じ式で決まる。借入額 L を n 回で返す毎回の返済額 x は「借入額を n 回後まで複利で増やした値」と「返済額を積み立てた値」が等しいという条件 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><msup><mo stretchy="false">)</mo><mi>n</mi></msup><mo>=</mo><mfrac><mrow><mi>x</mi><mo stretchy="false">{</mo><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><msup><mo stretchy="false">)</mo><mi>n</mi></msup><mo>−</mo><mn>1</mn><mo stretchy="false">}</mo></mrow><mi>r</mi></mfrac></mrow><annotation encoding="application/x-tex">L(1+r)^n=\frac{x\{(1+r)^n-1\}}{r}</annotation></semantics></math></span> から求まる。</p>
+<div class="ex"><div class="ex-h">例題 15</div>
+<p>300万円を年利2％で借り毎年末に同じ額 x 万円を返して5回で完済する。x を求めよ。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>1.02</mn><mn>5</mn></msup><mo>=</mo><mn>1.1041</mn></mrow><annotation encoding="application/x-tex">1.02^5=1.1041</annotation></semantics></math></span> とする。</p>
+<details open><summary>解き方</summary><div>借入額を5年後まで増やした値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>300</mn><mo>×</mo><mn>1.1041</mn><mo>=</mo><mn>331.23</mn></mrow><annotation encoding="application/x-tex">300\times 1.1041=331.23</annotation></semantics></math></span><br>返済額を5年後まで積み立てた値は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>x</mi><mo stretchy="false">(</mo><mn>1.1041</mn><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>0.02</mn></mfrac><mo>=</mo><mn>5.205</mn><mi>x</mi></mrow><annotation encoding="application/x-tex">\frac{x(1.1041-1)}{0.02}=5.205x</annotation></semantics></math></span><br>両者が等しいので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mfrac><mn>331.23</mn><mn>5.205</mn></mfrac><mo>=</mo><mn>63.6</mn><mo>⋯</mo></mrow><annotation encoding="application/x-tex">x=\frac{331.23}{5.205}=63.6\cdots</annotation></semantics></math></span><br>答え 約63.6万円 ・ 返済総額は約318万円で利息は約18万円</div></details></div>
+<aside class="an an-rw"><b>現実世界</b>
+<p>「72の法則」は残高が2倍になる年数を 72÷年利（％）で概算する方法である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><msup><mo stretchy="false">)</mo><mi>n</mi></msup><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">(1+r)^n=2</annotation></semantics></math></span> の両辺の自然対数をとると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mfrac><mrow><mi>log</mi><mo>⁡</mo><mtext>  </mtext><mn>2</mn></mrow><mrow><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">n=\frac{\log\;2}{\log(1+r)}</annotation></semantics></math></span> で r が小さいとき約 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>0.693</mn><mi>r</mi></mfrac></mrow><annotation encoding="application/x-tex">\frac{0.693}{r}</annotation></semantics></math></span> になる。年利6％なら12年である。</p>
+</aside>
+
+<h2 id="s8">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ 等差数列の一般項</div>
+<p class="qz-q">第5項が 17 で第12項が 38 の等差数列がある。第20項として正しいものを1つ選べ。</p>
+<ol><li>59</li><li>62</li><li>65</li><li>68</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>+</mo><mn>4</mn><mi>d</mi><mo>=</mo><mn>17</mn></mrow><annotation encoding="application/x-tex">a+4d=17</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>+</mo><mn>11</mn><mi>d</mi><mo>=</mo><mn>38</mn></mrow><annotation encoding="application/x-tex">a+11d=38</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>7</mn><mi>d</mi><mo>=</mo><mn>21</mn></mrow><annotation encoding="application/x-tex">7d=21</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">d=3</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">a=5</annotation></semantics></math></span>。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>20</mn></msub><mo>=</mo><mn>5</mn><mo>+</mo><mn>19</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>62</mn></mrow><annotation encoding="application/x-tex">a_{20}=5+19\times 3=62</annotation></semantics></math></span>。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ 等差数列の和</div>
+<p class="qz-q">初項 3 ・公差 4 の等差数列の初項から第20項までの和を求めよ。</p>
+<details><summary>解答と解説</summary><div>答えは 820 である。末項は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>+</mo><mn>19</mn><mo>×</mo><mn>4</mn><mo>=</mo><mn>79</mn></mrow><annotation encoding="application/x-tex">3+19\times 4=79</annotation></semantics></math></span> で和は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mn>20</mn><mo stretchy="false">(</mo><mn>3</mn><mo>+</mo><mn>79</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac><mo>=</mo><mn>10</mn><mo>×</mo><mn>82</mn><mo>=</mo><mn>820</mn></mrow><annotation encoding="application/x-tex">\frac{20(3+79)}{2}=10\times 82=820</annotation></semantics></math></span>。</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 等比数列の和</div>
+<p class="qz-q">初項 2 ・公比 3 の等比数列の初項から第6項までの和として正しいものを1つ選べ。</p>
+<ol><li>242</li><li>486</li><li>728</li><li>1456</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mn>2</mn><mo stretchy="false">(</mo><msup><mn>3</mn><mn>6</mn></msup><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mrow><mn>3</mn><mo>−</mo><mn>1</mn></mrow></mfrac><mo>=</mo><msup><mn>3</mn><mn>6</mn></msup><mo>−</mo><mn>1</mn><mo>=</mo><mn>728</mn></mrow><annotation encoding="application/x-tex">\frac{2(3^6-1)}{3-1}=3^6-1=728</annotation></semantics></math></span>。1 は第5項までの和 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>3</mn><mn>5</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">3^5-1</annotation></semantics></math></span> で項数の数え違いである。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ Σの計算</div>
+<p class="qz-q"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mn>10</mn></msubsup><mi>k</mi><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\sum_{k=1}^{10}k(k+1)</annotation></semantics></math></span> の値を求めよ。</p>
+<details><summary>解答と解説</summary><div>答えは 440 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><msup><mi>k</mi><mn>2</mn></msup><mo>+</mo><mo>∑</mo><mi>k</mi><mo>=</mo><mfrac><mrow><mn>10</mn><mo>⋅</mo><mn>11</mn><mo>⋅</mo><mn>21</mn></mrow><mn>6</mn></mfrac><mo>+</mo><mfrac><mrow><mn>10</mn><mo>⋅</mo><mn>11</mn></mrow><mn>2</mn></mfrac><mo>=</mo><mn>385</mn><mo>+</mo><mn>55</mn><mo>=</mo><mn>440</mn></mrow><annotation encoding="application/x-tex">\sum k^2+\sum k=\frac{10\cdot 11\cdot 21}{6}+\frac{10\cdot 11}{2}=385+55=440</annotation></semantics></math></span>。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 階差数列</div>
+<p class="qz-q">数列 1・2・5・10・17・… の第10項を求めよ。</p>
+<details><summary>解答と解説</summary><div>答えは 82 である。階差は 1・3・5・7・… で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>k</mi></msub><mo>=</mo><mn>2</mn><mi>k</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">b_k=2k-1</annotation></semantics></math></span>。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\ge 2</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>1</mn><mo>+</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msubsup><mo stretchy="false">(</mo><mn>2</mn><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn><mo>+</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">a_n=1+\sum_{k=1}^{n-1}(2k-1)=1+(n-1)^2</annotation></semantics></math></span> となり n＝1 でも成り立つ。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>10</mn></msub><mo>=</mo><mn>1</mn><mo>+</mo><mn>81</mn><mo>=</mo><mn>82</mn></mrow><annotation encoding="application/x-tex">a_{10}=1+81=82</annotation></semantics></math></span>。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 漸化式</div>
+<p class="qz-q"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">a_1=2</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mn>2</mn><msub><mi>a</mi><mi>n</mi></msub><mo>−</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">a_{n+1}=2a_n-3</annotation></semantics></math></span> で定まる数列の第5項を一般項から求めよ。</p>
+<details><summary>解答と解説</summary><div>答えは −13 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>2</mn><mi>α</mi><mo>−</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\alpha=2\alpha-3</annotation></semantics></math></span> から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\alpha=3</annotation></semantics></math></span>。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>−</mo><mn>3</mn><mo>=</mo><mo stretchy="false">(</mo><mn>2</mn><mo>−</mo><mn>3</mn><mo stretchy="false">)</mo><mo>⋅</mo><msup><mn>2</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">a_n-3=(2-3)\cdot 2^{n-1}</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>3</mn><mo>−</mo><msup><mn>2</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">a_n=3-2^{n-1}</annotation></semantics></math></span>。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>5</mn></msub><mo>=</mo><mn>3</mn><mo>−</mo><mn>16</mn><mo>=</mo><mo>−</mo><mn>13</mn></mrow><annotation encoding="application/x-tex">a_5=3-16=-13</annotation></semantics></math></span>。順に計算しても 2・1・−1・−5・−13 で一致する。</div></details></div>
+
+<div class="qz"><div class="qz-h">問7 ・ 和から一般項</div>
+<p class="qz-q"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><msup><mi>n</mi><mn>2</mn></msup><mo>+</mo><mn>3</mn><mi>n</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">S_n=n^2+3n+1</annotation></semantics></math></span> で与えられる数列について正しい記述を1つ選べ。</p>
+<ol><li>すべての n で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">a_n=2n+2</annotation></semantics></math></span> である</li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">a_1=5</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\ge 2</annotation></semantics></math></span> のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">a_n=2n+2</annotation></semantics></math></span> である</li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">a_1=4</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\ge 2</annotation></semantics></math></span> のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">a_n=2n+2</annotation></semantics></math></span> である</li><li>すべての n で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">a_n=2n+4</annotation></semantics></math></span> である</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><msub><mi>S</mi><mn>1</mn></msub><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">a_1=S_1=5</annotation></semantics></math></span>。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\ge 2</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><msub><mi>S</mi><mi>n</mi></msub><mo>−</mo><msub><mi>S</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>=</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">a_n=S_n-S_{n-1}=2n+2</annotation></semantics></math></span>。この式に n＝1 を入れると 4 で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">a_1=5</annotation></semantics></math></span> と一致しないので1本の式にはまとまらない。</div></details></div>
+
+<div class="qz"><div class="qz-h">問8 ・ 数学的帰納法の構造</div>
+<p class="qz-q">命題 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(n)</annotation></semantics></math></span> がすべての自然数で成り立つことを数学的帰納法で示すとき Ⅱ で示すべき内容として正しいものを1つ選べ。</p>
+<ol><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k)</annotation></semantics></math></span> が成り立つこと</li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k+1)</annotation></semantics></math></span> が成り立つと仮定すれば <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k)</annotation></semantics></math></span> が成り立つこと</li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k)</annotation></semantics></math></span> が成り立つと仮定すれば <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k+1)</annotation></semantics></math></span> が成り立つこと</li><li><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k)</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k+1)</annotation></semantics></math></span> がともに成り立つこと</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。Ⅱは含意「<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k)</annotation></semantics></math></span> ならば <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(k+1)</annotation></semantics></math></span>」を示す段階である。1 と 4 は示すべき結論を前提にしている。2 は向きが逆で n＝1 から先へ連鎖しない。</div></details></div>
+
+<h2 id="s9">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+等差 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mi>a</mi><mo>+</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mi>d</mi></mrow><annotation encoding="application/x-tex">a_n=a+(n-1)d</annotation></semantics></math></span> ・ 和 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>l</mi><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">S_n=\frac{n(a+l)}{2}</annotation></semantics></math></span>。逆順に並べて足して導く。<br>
+等比 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mi>a</mi><msup><mi>r</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">a_n=ar^{n-1}</annotation></semantics></math></span> ・ 和 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mfrac><mrow><mi>a</mi><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msup><mi>r</mi><mi>n</mi></msup><mo stretchy="false">)</mo></mrow><mrow><mn>1</mn><mo>−</mo><mi>r</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">S_n=\frac{a(1-r^n)}{1-r}</annotation></semantics></math></span>（r≠1）。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>n</mi></msub><mo>−</mo><mi>r</mi><msub><mi>S</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">S_n-rS_n</annotation></semantics></math></span> で導く。r＝1 は na。<br>
+<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><mi>k</mi><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\sum k=\frac{1}{2}n(n+1)</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><msup><mi>k</mi><mn>2</mn></msup><mo>=</mo><mfrac><mn>1</mn><mn>6</mn></mfrac><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\sum k^2=\frac{1}{6}n(n+1)(2n+1)</annotation></semantics></math></span> ・ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><msup><mi>k</mi><mn>3</mn></msup><mo>=</mo><msup><mrow><mo fence="true">{</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo fence="true">}</mo></mrow><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\sum k^3=\left\{\frac{1}{2}n(n+1)\right\}^2</annotation></semantics></math></span>。<br>
+階差 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msubsup><msub><mi>b</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">a_n=a_1+\sum_{k=1}^{n-1}b_k</annotation></semantics></math></span> と和 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><msub><mi>S</mi><mi>n</mi></msub><mo>−</mo><msub><mi>S</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">a_n=S_n-S_{n-1}</annotation></semantics></math></span> はどちらも <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\ge 2</annotation></semantics></math></span> で n＝1 を別に確かめる。<br>
+<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>p</mi><msub><mi>a</mi><mi>n</mi></msub><mo>+</mo><mi>q</mi></mrow><annotation encoding="application/x-tex">a_{n+1}=pa_n+q</annotation></semantics></math></span> は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mi>p</mi><mi>α</mi><mo>+</mo><mi>q</mi></mrow><annotation encoding="application/x-tex">\alpha=p\alpha+q</annotation></semantics></math></span> の α を引いて <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><msub><mi>a</mi><mi>n</mi></msub><mo>−</mo><mi>α</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{a_n-\alpha\}</annotation></semantics></math></span> を等比数列にする。<br>
+数学的帰納法は出発点と「k ならば k＋1」の2段で全自然数を示す。</div>
+
+<h2 id="s10">残っている問い</h2>
+<ul>
+<li class="tb-vnote">ガウスが少年時代に1から100までの和を逆順の組で求めたという逸話は広く知られている。ただし一次資料での裏づけは乏しく本文では人物名を挙げなかった。</li>
+<li class="tb-vnote">72の法則は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>r</mi><mo stretchy="false">)</mo><mo>≈</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">\log(1+r)\approx r</annotation></semantics></math></span> という近似に基づく。年利が大きくなると誤差が増える。72 を使う理由は約数が多く暗算しやすいからとされるが定数の由来を確定する出典は確認できなかった。</li>
+<li class="tb-vnote">数学Bの解説は「簡単な漸化式」を一次の形の隣接二項間の漸化式と定める。隣接3項間の漸化式 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>2</mn></mrow></msub><mo>=</mo><mi>p</mi><msub><mi>a</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>+</mo><mi>q</mi><msub><mi>a</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">a_{n+2}=pa_{n+1}+qa_n</annotation></semantics></math></span> は理数数学Ⅱの解説で発展・拡充させる内容に挙がる。この章では扱っていない。</li>
+<li class="tb-vnote">減価償却の定率法は実務では保証額や改定償却率の規定があり純粋な等比数列ではない。</li>
+</ul>
+
+<h2 id="s11">出典</h2>
+<ol>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 解説 — https://www.mext.go.jp/a_menu/shotou/new-cs/1407074.htm</li>
+<li>国立大学協会掲載 令和9年度大学入学者選抜に係る大学入学共通テスト出題教科・科目の出題方法等 — https://www.janu.jp/cms/wp-content/uploads/2026/06/r9syutsudai.pdf</li>
+<li>Arithmetic progression — Wikipedia — https://en.wikipedia.org/wiki/Arithmetic_progression</li>
+<li>Geometric series — Wikipedia — https://en.wikipedia.org/wiki/Geometric_series</li>
+<li>Mathematical induction — Wikipedia — https://en.wikipedia.org/wiki/Mathematical_induction</li>
+<li>Rule of 72 — Wikipedia — https://en.wikipedia.org/wiki/Rule_of_72</li>
+<li>Solow–Swan model — Wikipedia — https://en.wikipedia.org/wiki/Solow%E2%80%93Swan_model</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="07_integral.html">← 積分と面積</a><a class="tb-nav-a" href="09_limit.html">極限 →</a></div>
+</div>
+<script>
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){ if (!tick) { tick = true; requestAnimationFrame(draw); } }, {passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>

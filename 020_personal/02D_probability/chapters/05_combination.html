@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>組合せと二項定理｜確率・統計</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../021_profile/index.html">profile</a><a href="../../02A_plan/index.html">plan</a><a href="../../023_travel/index.html">travel</a><a href="../../027_cinema/index.html">cinema</a><a href="../../02B_reading/index.html">reading</a><a href="../../024_method/index.html">method</a><a href="../../026_handbook/index.html">handbook</a><a href="../../025_fitness/index.html">fitness</a><a href="../../028_english/index.html">english</a><a href="../../029_mental_math/index.html">mental math</a><a href="../../02C_chemistry/index.html">chemistry</a><a href="../index.html">probability</a><a href="../../02E_calculus/index.html">calculus</a><a href="../../02F_linear_algebra/index.html">linear algebra</a><a href="../../02G_physics/index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../024_method/index.html">method</a>
+    <a class="snav-a" href="../../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../028_english/index.html">english</a>
+    <a class="snav-a" href="../../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../index.html">probability</a>
+    <a class="snav-a" href="../../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../02G_physics/index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / personal /
+    <a href="../index.html">02D probability</a> / 第5章</div>
+
+  <div class="tb-ch">数学A — 第5章</div>
+  <h1>組合せと二項定理</h1>
+  <p class="tb-thesis">組合せは順列を並べ方の数で割ったものである。選んでから並べると順列になるので nPr を r! で割れば nCr が得られる。組分け・同じものを含む順列・最短経路・重複組合せはすべてこの割り算の応用であり二項定理の係数も組合せの数である。</p>
+
+<p class="tb-ok"><strong>この章は2026-10-15に出典照合を通した。</strong> 検証した事実は55件である。出典と一致したものは49件である。食い違ったものは5件で本文を修正済みである。出典で確認できなかったものは1件である。これらは末尾の「残っている問い」に列挙した。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">組合せの定義と公式</a></li><li><a href="#s2">組合せの性質</a></li><li><a href="#s3">組分け</a></li><li><a href="#s4">同じものを含む順列</a></li><li><a href="#s5">重複組合せ</a></li><li><a href="#s6">二項定理とパスカルの三角形</a></li><li><a href="#s7">現実世界の組合せ 数字選択式宝くじ</a></li><li><a href="#s8">確認問題</a></li><li><a href="#s9">この章の要点</a></li><li><a href="#s10">残っている問い</a></li><li><a href="#s11">出典</a></li></ol></nav>
+
+<p>第4章では異なるものを1列に並べる順列を扱った。順列は並べる順序を区別して数える。ところが委員を3人選ぶ場合のように選んだ顔ぶれだけが問題で順序を問わない場面も多い。この章ではその数え方である組合せを順列から導き・組合せを使う典型的な数え方を積み上げる。</p>
+<p>共通テストでは組合せは確率の分母と分子を数える道具として使われる。袋から玉を取り出す問題の多くは組合せの比で解ける。最後の節で扱う二項定理は数学Ⅱの内容であるが組合せの数が係数になる理由をここで確認しておくと第6章の反復試行と第8章の二項分布が見通しよく理解できる。</p>
+
+<h2 id="s1">組合せの定義と公式</h2>
+<p>異なる <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 個のものから順序を考えずに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個を取り出して1組にしたものを<strong>組合せ</strong>と呼ぶ。その総数を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}</annotation></semantics></math></span> で表す。</p>
+<p>公式は順列から導く。異なる <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 個から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個を取り出して並べる操作は2段階に分けられる。まず <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個を選び次に選んだ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個を並べる。選び方は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}</annotation></semantics></math></span> 通りで並べ方は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">r!</annotation></semantics></math></span> 通りである。積の法則で次の関係が成り立つ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">P</mi><mi>r</mi></msub><mo>=</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mo>×</mo><mi>r</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{P}_{r}={}_{n}\mathrm{C}_{r}\times r!</annotation></semantics></math></span></div>
+<p>両辺を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">r!</annotation></semantics></math></span> で割ると組合せの公式が得られる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mo>=</mo><mfrac><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">P</mi><mi>r</mi></msub></mrow><mrow><mi>r</mi><mo stretchy="false">!</mo></mrow></mfrac><mo>=</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>⋯</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mrow><mi>r</mi><mo stretchy="false">(</mo><mi>r</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>⋯</mo><mn>2</mn><mo>⋅</mo><mn>1</mn></mrow></mfrac><mo>=</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><mrow><mi>r</mi><mo stretchy="false">!</mo><mtext> </mtext><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><mo stretchy="false">!</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}=\frac{{}_{n}\mathrm{P}_{r}}{r!}=\frac{n(n-1)\cdots(n-r+1)}{r(r-1)\cdots2\cdot1}=\frac{n!}{r!\,(n-r)!}</annotation></semantics></math></span></div>
+<p><strong class="hit">順列では同じ顔ぶれが <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">r!</annotation></semantics></math></span> 回ずつ重複して数えられている。その重複を割って除いたものが組合せである</strong>。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mn>0</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{0}=1</annotation></semantics></math></span> と定める。何も選ばない選び方は1通りだからである。</p>
+<p>計算では分子と分母の項の数を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個にそろえて約分してから掛ける。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>10</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">{}_{10}\mathrm{C}_{3}</annotation></semantics></math></span> なら分子は 10 から始まる3個の数の積 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10</mn><mo>⋅</mo><mn>9</mn><mo>⋅</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">10\cdot9\cdot8</annotation></semantics></math></span> で分母は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false">!</mo><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3!=6</annotation></semantics></math></span> である。分母の 6 を先に 9 と 8 の一部で約分すると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10</mn><mo>⋅</mo><mn>3</mn><mo>⋅</mo><mn>4</mn><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">10\cdot3\cdot4=120</annotation></semantics></math></span> と暗算できる。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">n!</annotation></semantics></math></span> を全部書き出す必要はない。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 260" role="img" aria-label="5人から3人を選ぶ順列60通りが組合せ10通りの6倍であることを示す">
+  <g font-size="13" fill="var(--muted)">
+    <text x="20" y="24">組合せ 10通り</text>
+    <text x="170" y="24">それぞれの並べ方 3! ＝ 6通り</text>
+  </g>
+  <g font-size="14" font-weight="700" fill="var(--warm)">
+    <text x="30" y="58">{A, B, C}</text>
+    <text x="30" y="98">{A, B, D}</text>
+    <text x="30" y="138">{A, B, E}</text>
+  </g>
+  <g fill="var(--sub)" font-size="14"><text x="60" y="172">⋮</text></g>
+  <g font-size="14" font-weight="700" fill="var(--warm)">
+    <text x="30" y="210">{C, D, E}</text>
+  </g>
+  <g stroke="var(--line)" stroke-width="1.4">
+    <line x1="120" y1="53" x2="160" y2="53"/><line x1="120" y1="93" x2="160" y2="93"/><line x1="120" y1="133" x2="160" y2="133"/><line x1="120" y1="205" x2="160" y2="205"/>
+  </g>
+  <g font-size="14" fill="var(--ink)">
+    <text x="170" y="58">ABC ACB BAC BCA CAB CBA</text>
+    <text x="170" y="98">ABD ADB BAD BDA DAB DBA</text>
+    <text x="170" y="138">ABE AEB BAE BEA EAB EBA</text>
+    <text x="170" y="210">CDE CED DCE DEC ECD EDC</text>
+  </g>
+  <g fill="var(--sub)" font-size="14"><text x="260" y="172">⋮</text></g>
+  <line x1="470" y1="40" x2="470" y2="225" stroke="var(--line)" stroke-dasharray="4 4"/>
+  <g font-size="14" fill="var(--ink)">
+    <text x="490" y="70">順列 5P3 ＝ 60通り</text>
+    <text x="490" y="110">＝ 組合せ 10 × 並べ方 6</text>
+    <text x="490" y="160" font-weight="700" fill="var(--accent)">5C3 ＝ 60 ÷ 6 ＝ 10</text>
+  </g>
+  <text x="360" y="250" font-size="12" text-anchor="middle" fill="var(--sub)">1つの行が1つの組合せで行の中の6つが順列である</text>
+</svg>
+<figcaption>5人 A〜E から3人を選んで並べる順列は60通りである。60通りを顔ぶれごとにまとめると1行に6通りずつ並び10行になる。行の数が組合せの数である。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 1</div>
+<p>10人の中から委員を3人選ぶ。選び方は何通りか。また委員長・副委員長・書記を1人ずつ選ぶ場合は何通りか。</p>
+<details open><summary>解き方</summary><div>手順1 委員3人は役職の区別がないので組合せである。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>10</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>10</mn><mo>⋅</mo><mn>9</mn><mo>⋅</mo><mn>8</mn></mrow><mrow><mn>3</mn><mo>⋅</mo><mn>2</mn><mo>⋅</mo><mn>1</mn></mrow></mfrac></mstyle><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">{}_{10}\mathrm{C}_{3}=\dfrac{10\cdot9\cdot8}{3\cdot2\cdot1}=120</annotation></semantics></math></span> 通りである。<br>手順3 役職がある場合は選んだ3人を役職の順に並べるので順列 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>10</mn></msub><msub><mi mathvariant="normal">P</mi><mn>3</mn></msub><mo>=</mo><mn>720</mn></mrow><annotation encoding="application/x-tex">{}_{10}\mathrm{P}_{3}=720</annotation></semantics></math></span> 通りである。<br>答え 120通り ・ 720通り。720 は 120 の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false">!</mo><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3!=6</annotation></semantics></math></span> 倍である</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 2</div>
+<p>正八角形の3つの頂点を結んでできる三角形の個数と対角線の本数を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 正八角形のどの3頂点も一直線上にないので3頂点の組1つに三角形が1つ対応する。三角形は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>8</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>=</mo><mn>56</mn></mrow><annotation encoding="application/x-tex">{}_{8}\mathrm{C}_{3}=56</annotation></semantics></math></span> 個である。<br>手順2 2頂点を結ぶ線分は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>8</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>28</mn></mrow><annotation encoding="application/x-tex">{}_{8}\mathrm{C}_{2}=28</annotation></semantics></math></span> 本である。このうち8本は辺である。<br>答え 三角形 56個 ・ 対角線 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>28</mn><mo>−</mo><mn>8</mn><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">28-8=20</annotation></semantics></math></span> 本</div></details></div>
+<p>組合せか順列かの判断は<strong class="hit">選んだものを入れ替えたとき別のものになるかどうか</strong>で行う。委員の顔ぶれは入れ替えても同じなので組合せである。役職つきの選出は入れ替えると別の選出になるので順列である。判断に迷ったら4人から2人を選ぶような小さな数で書き出して確かめる。</p>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">ベンチ入りから先発を選ぶのは組合せで打順を組むのは順列である</p>
+<p>18人から先発9人を選ぶ方法は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>18</mn></msub><msub><mi mathvariant="normal">C</mi><mn>9</mn></msub><mo>=</mo><mn>48,620</mn></mrow><annotation encoding="application/x-tex">{}_{18}\mathrm{C}_{9}=48{,}620</annotation></semantics></math></span> 通りである。打順まで決めるとさらに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>9</mn><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">9!</annotation></semantics></math></span> 倍になる。</p>
+</aside>
+
+<h2 id="s2">組合せの性質</h2>
+<h3>選ぶ側と残す側は1対1に対応する</h3>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mo>=</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mrow><mi>n</mi><mo>−</mo><mi>r</mi></mrow></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}={}_{n}\mathrm{C}_{n-r}</annotation></semantics></math></span></div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 個から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個を選ぶことは選ばない <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">n-r</annotation></semantics></math></span> 個を決めることと同じである。選ぶ組と残す組は1対1に対応するので総数は等しい。公式 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><mrow><mi>r</mi><mo stretchy="false">!</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><mo stretchy="false">!</mo></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{n!}{r!(n-r)!}</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">n-r</annotation></semantics></math></span> を入れ替えても式が変わらないことからも確かめられる。計算では <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> が大きいときに使う。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>20</mn></msub><msub><mi mathvariant="normal">C</mi><mn>18</mn></msub><mo>=</mo><msub><mrow></mrow><mn>20</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>190</mn></mrow><annotation encoding="application/x-tex">{}_{20}\mathrm{C}_{18}={}_{20}\mathrm{C}_{2}=190</annotation></semantics></math></span> である。</p>
+
+<h3>特定の1個を含むか含まないか</h3>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mo>=</mo><msub><mrow></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi mathvariant="normal">C</mi><mrow><mi>r</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mrow></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}={}_{n-1}\mathrm{C}_{r-1}+{}_{n-1}\mathrm{C}_{r}</annotation></semantics></math></span></div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 個の中の特定の1個 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span> に着目する。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span> を含む選び方は残り <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> 個から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r-1</annotation></semantics></math></span> 個を選ぶので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi mathvariant="normal">C</mi><mrow><mi>r</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">{}_{n-1}\mathrm{C}_{r-1}</annotation></semantics></math></span> 通りである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span> を含まない選び方は残り <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> 個から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個を選ぶので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n-1}\mathrm{C}_{r}</annotation></semantics></math></span> 通りである。2つは同時に起こらないので和の法則で足す。この式は第6節のパスカルの三角形のつくり方そのものである。</p>
+<p>数値で確かめる。5人 a・b・c・d・e から2人を選ぶ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">{}_{5}\mathrm{C}_{2}=10</annotation></semantics></math></span> 通りを a を含むかどうかで分ける。a を含む組は相手を残り4人から選ぶので4通りである。a を含まない組は残り4人から2人を選ぶので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>4</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">{}_{4}\mathrm{C}_{2}=6</annotation></semantics></math></span> 通りである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>+</mo><mn>6</mn><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">4+6=10</annotation></semantics></math></span> で一致する。</p>
+
+<div class="ex"><div class="ex-h">例題 3</div>
+<p>男子6人と女子4人から4人を選ぶ。女子を少なくとも1人含む選び方は何通りか。</p>
+<details open><summary>解き方</summary><div>手順1 「少なくとも1人」は場合が多いので補集合を数える。補集合は女子を1人も含まない選び方である。<br>手順2 10人から4人を選ぶ方法は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>10</mn></msub><msub><mi mathvariant="normal">C</mi><mn>4</mn></msub><mo>=</mo><mn>210</mn></mrow><annotation encoding="application/x-tex">{}_{10}\mathrm{C}_{4}=210</annotation></semantics></math></span> 通りである。<br>手順3 男子だけから4人を選ぶ方法は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>6</mn></msub><msub><mi mathvariant="normal">C</mi><mn>4</mn></msub><mo>=</mo><msub><mrow></mrow><mn>6</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">{}_{6}\mathrm{C}_{4}={}_{6}\mathrm{C}_{2}=15</annotation></semantics></math></span> 通りである。<br>答え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>210</mn><mo>−</mo><mn>15</mn><mo>=</mo><mn>195</mn></mrow><annotation encoding="application/x-tex">210-15=195</annotation></semantics></math></span> 通り</div></details></div>
+<p>この問題で「女子を先に1人選んで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn></mrow><annotation encoding="application/x-tex">4</annotation></semantics></math></span> 通り・残り9人から3人を選んで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>9</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>=</mo><mn>84</mn></mrow><annotation encoding="application/x-tex">{}_{9}\mathrm{C}_{3}=84</annotation></semantics></math></span> 通り・合計 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>×</mo><mn>84</mn><mo>=</mo><mn>336</mn></mrow><annotation encoding="application/x-tex">4\times84=336</annotation></semantics></math></span> 通り」とする誤りが多い。女子 a と b を含む組は「a を先に選んで b を後で選ぶ」と「b を先に選んで a を後で選ぶ」の2回数えられる。<strong class="hit">「少なくとも」は補集合で数える</strong>と重複が生じない。</p>
+
+<h2 id="s3">組分け</h2>
+<p>人やものをいくつかの組に分ける数え方では組に区別があるかどうかで答えが変わる。</p>
+<p>9人を3人ずつ A・B・C の3組に分ける場合を考える。A に入る3人を9人から選び・B に入る3人を残り6人から選ぶ。C は残り3人で定まる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow></mrow><mn>9</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>×</mo><msub><mrow></mrow><mn>6</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>×</mo><msub><mrow></mrow><mn>3</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>=</mo><mn>84</mn><mo>×</mo><mn>20</mn><mo>×</mo><mn>1</mn><mo>=</mo><mn>1680</mn></mrow><annotation encoding="application/x-tex">{}_{9}\mathrm{C}_{3}\times{}_{6}\mathrm{C}_{3}\times{}_{3}\mathrm{C}_{3}=84\times20\times1=1680</annotation></semantics></math></span></div>
+<p>組の名前を外して単に3人ずつ3組に分ける場合は答えが異なる。名前つきの分け方では同じ分け方が組の名前の付け方 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">3!</annotation></semantics></math></span> 通りの分だけ別々に数えられている。たとえば {甲乙丙}{丁戊己}{庚辛壬} の3組に A・B・C を割り当てる方法は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false">!</mo><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3!=6</annotation></semantics></math></span> 通りある。したがって区別のない組分けは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1680</mn><mo>÷</mo><mn>6</mn><mo>=</mo><mn>280</mn></mrow><annotation encoding="application/x-tex">1680\div6=280</annotation></semantics></math></span> 通りである。</p>
+<div class="tb-vs">
+<div><h5>組に区別がある</h5><ul>
+<li>A・B・C のように名前や役割がある</li>
+<li>順に組合せを掛ける</li>
+<li>9人を3人ずつ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\to</annotation></semantics></math></span> 1680通り</li>
+</ul></div>
+<div><h5>組に区別がない</h5><ul>
+<li>同じ人数の組が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span> 個あれば <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">k!</annotation></semantics></math></span> で割る</li>
+<li>人数の異なる組は名前がなくても区別できるので割らない</li>
+<li>9人を3人ずつ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\to</annotation></semantics></math></span> 280通り</li>
+</ul></div>
+</div>
+
+<div class="ex"><div class="ex-h">例題 4</div>
+<p>(1) 9人を2人・3人・4人の3組に分ける方法は何通りか。(2) 10人を4人・4人・2人の3組に分ける方法は何通りか。</p>
+<details open><summary>解き方</summary><div>手順1 (1) 2人の組を選び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>9</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>36</mn></mrow><annotation encoding="application/x-tex">{}_{9}\mathrm{C}_{2}=36</annotation></semantics></math></span> 通り・3人の組を残り7人から選び <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>7</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>=</mo><mn>35</mn></mrow><annotation encoding="application/x-tex">{}_{7}\mathrm{C}_{3}=35</annotation></semantics></math></span> 通りである。4人の組は残りで定まる。<br>手順2 人数がすべて異なるので組は人数で区別できる。割らずに <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>36</mn><mo>×</mo><mn>35</mn><mo>=</mo><mn>1260</mn></mrow><annotation encoding="application/x-tex">36\times35=1260</annotation></semantics></math></span> 通りである。<br>手順3 (2) 名前をつけて数えると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>10</mn></msub><msub><mi mathvariant="normal">C</mi><mn>4</mn></msub><mo>×</mo><msub><mrow></mrow><mn>6</mn></msub><msub><mi mathvariant="normal">C</mi><mn>4</mn></msub><mo>=</mo><mn>210</mn><mo>×</mo><mn>15</mn><mo>=</mo><mn>3150</mn></mrow><annotation encoding="application/x-tex">{}_{10}\mathrm{C}_{4}\times{}_{6}\mathrm{C}_{4}=210\times15=3150</annotation></semantics></math></span> 通りである。<br>手順4 4人の組が2つあり入れ替えても同じ分け方なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">2!</annotation></semantics></math></span> で割る。<br>答え (1) 1260通り (2) <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3150</mn><mo>÷</mo><mn>2</mn><mo>=</mo><mn>1575</mn></mrow><annotation encoding="application/x-tex">3150\div2=1575</annotation></semantics></math></span> 通り</div></details></div>
+
+<aside class="an an-lv"><b>男女で言えば</b>
+<p class="an-h">6人で2人ずつ3組のペアを作る方法は15通りである</p>
+<p>ペアに番号がなければ組を並べる順序は意味をもたない。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>6</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>×</mo><msub><mrow></mrow><mn>4</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>90</mn></mrow><annotation encoding="application/x-tex">{}_{6}\mathrm{C}_{2}\times{}_{4}\mathrm{C}_{2}=90</annotation></semantics></math></span> を <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">3!</annotation></semantics></math></span> で割って15通りになる。</p>
+</aside>
+<p>組に区別があるかどうかは問題文の言葉で判断する。「A・B・C の3つの部屋に入れる」なら部屋に名前があるので区別がある。「3つのグループに分ける」だけなら区別がない。「部屋に入れる」問題でも部屋に名前がなく人数も同じなら区別はない。迷ったときは2つの組の中身をそっくり入れ替えて別の分け方になるかを確かめる。別の分け方になるなら区別がある。</p>
+
+<h2 id="s4">同じものを含む順列</h2>
+<p>a・a・a・b・b・c の6文字を1列に並べる方法を数える。全部異なる文字とみなすと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">6!</annotation></semantics></math></span> 通りである。しかし3つの a を入れ替えても並びは変わらない。a の入れ替え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">3!</annotation></semantics></math></span> 通りと b の入れ替え <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">2!</annotation></semantics></math></span> 通りの分だけ同じ並びが重複して数えられている。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mn>6</mn><mo stretchy="false">!</mo></mrow><mrow><mn>3</mn><mo stretchy="false">!</mo><mtext> </mtext><mn>2</mn><mo stretchy="false">!</mo><mtext> </mtext><mn>1</mn><mo stretchy="false">!</mo></mrow></mfrac><mo>=</mo><mfrac><mn>720</mn><mrow><mn>6</mn><mo>⋅</mo><mn>2</mn><mo>⋅</mo><mn>1</mn></mrow></mfrac><mo>=</mo><mn>60</mn></mrow><annotation encoding="application/x-tex">\frac{6!}{3!\,2!\,1!}=\frac{720}{6\cdot2\cdot1}=60</annotation></semantics></math></span></div>
+<p>一般に <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 個のうち同じものが <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span> 個・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi></mrow><annotation encoding="application/x-tex">q</annotation></semantics></math></span> 個・<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個ずつあり <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>+</mo><mi>q</mi><mo>+</mo><mi>r</mi><mo>=</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">p+q+r=n</annotation></semantics></math></span> のとき並べ方は次のとおりである。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><mrow><mi>p</mi><mo stretchy="false">!</mo><mtext> </mtext><mi>q</mi><mo stretchy="false">!</mo><mtext> </mtext><mi>r</mi><mo stretchy="false">!</mo></mrow></mfrac><mo>=</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>p</mi></msub><mo>×</mo><msub><mrow></mrow><mrow><mi>n</mi><mo>−</mo><mi>p</mi></mrow></msub><msub><mi mathvariant="normal">C</mi><mi>q</mi></msub></mrow><annotation encoding="application/x-tex">\frac{n!}{p!\,q!\,r!}={}_{n}\mathrm{C}_{p}\times{}_{n-p}\mathrm{C}_{q}</annotation></semantics></math></span></div>
+<p>右辺は別の見方である。6つの位置から a を置く3か所を選び・残り3か所から b を置く2か所を選ぶ。c の位置は残りで定まる。<strong class="hit">同じものを含む順列は「位置を選ぶ組合せ」として数えられる</strong>。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>6</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>×</mo><msub><mrow></mrow><mn>3</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>20</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>60</mn></mrow><annotation encoding="application/x-tex">{}_{6}\mathrm{C}_{3}\times{}_{3}\mathrm{C}_{2}=20\times3=60</annotation></semantics></math></span> で一致する。</p>
+
+<div class="ex"><div class="ex-h">例題 5</div>
+<p>BASEBALL の8文字を1列に並べる方法は何通りか。</p>
+<details open><summary>解き方</summary><div>手順1 文字の内訳は B が2個・A が2個・L が2個・S が1個・E が1個である。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>8</mn><mo stretchy="false">!</mo></mrow><mrow><mn>2</mn><mo stretchy="false">!</mo><mtext> </mtext><mn>2</mn><mo stretchy="false">!</mo><mtext> </mtext><mn>2</mn><mo stretchy="false">!</mo><mtext> </mtext><mn>1</mn><mo stretchy="false">!</mo><mtext> </mtext><mn>1</mn><mo stretchy="false">!</mo></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>40320</mn><mn>8</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{8!}{2!\,2!\,2!\,1!\,1!}=\dfrac{40320}{8}</annotation></semantics></math></span> である。<br>答え 5040通り</div></details></div>
+
+<div class="ex"><div class="ex-h">例題 6</div>
+<p>a・b・c・d・e の5文字を1列に並べる。a・b・c がこの順に並ぶ並べ方は何通りか。間に他の文字が入ってもよい。</p>
+<details open><summary>解き方</summary><div>手順1 a・b・c を区別のない同じ文字 ○ とみなして ○・○・○・d・e を並べる。<br>手順2 並べ方は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>5</mn><mo stretchy="false">!</mo></mrow><mrow><mn>3</mn><mo stretchy="false">!</mo></mrow></mfrac></mstyle><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">\dfrac{5!}{3!}=20</annotation></semantics></math></span> 通りである。<br>手順3 3つの ○ に左から a・b・c を書き込むと順序の条件を満たす並びが1つずつ定まる。<br>答え 20通り</div></details></div>
+<p>この方法は全体 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo stretchy="false">!</mo><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">5!=120</annotation></semantics></math></span> 通りのうち a・b・c の並び方 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false">!</mo><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">3!=6</annotation></semantics></math></span> 通りの中で指定の順が1通りだけ含まれることを使っている。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>120</mn><mo>÷</mo><mn>6</mn><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">120\div6=20</annotation></semantics></math></span> と計算しても同じである。</p>
+<h3>最短経路</h3>
+<p>碁盤の目の道を左下の O から右上の G まで最短で進む道順を数える。右へ4区画・上へ3区画の場合はどの最短経路も「右」4回と「上」3回を並べたものである。逆に「右」4つと「上」3つの並び1つに最短経路が1本対応する。したがって最短経路の数は同じものを含む順列の数に等しい。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mn>7</mn><mo stretchy="false">!</mo></mrow><mrow><mn>4</mn><mo stretchy="false">!</mo><mtext> </mtext><mn>3</mn><mo stretchy="false">!</mo></mrow></mfrac><mo>=</mo><msub><mrow></mrow><mn>7</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>=</mo><mn>35</mn></mrow><annotation encoding="application/x-tex">\frac{7!}{4!\,3!}={}_{7}\mathrm{C}_{3}=35</annotation></semantics></math></span></div>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 300" role="img" aria-label="横4区画縦3区画の碁盤の目で各交差点までの最短経路の数を示す">
+  <g stroke="var(--line)" stroke-width="1.5">
+    <line x1="80" y1="250" x2="400" y2="250"/><line x1="80" y1="190" x2="400" y2="190"/><line x1="80" y1="130" x2="400" y2="130"/><line x1="80" y1="70" x2="400" y2="70"/>
+    <line x1="80" y1="70" x2="80" y2="250"/><line x1="160" y1="70" x2="160" y2="250"/><line x1="240" y1="70" x2="240" y2="250"/><line x1="320" y1="70" x2="320" y2="250"/><line x1="400" y1="70" x2="400" y2="250"/>
+  </g>
+  <polyline points="80,250 240,250 240,190 320,190 320,70 400,70" fill="none" stroke="var(--accent)" stroke-width="4" stroke-opacity="0.55"/>
+  <g font-size="13" font-weight="700" fill="var(--ink)">
+    <text x="86" y="244">1</text><text x="166" y="244">1</text><text x="246" y="244">1</text><text x="326" y="244">1</text><text x="406" y="244">1</text>
+    <text x="86" y="184">1</text><text x="166" y="184">2</text><text x="246" y="184" fill="var(--warm)">3</text><text x="326" y="184">4</text><text x="406" y="184">5</text>
+    <text x="86" y="124">1</text><text x="166" y="124">3</text><text x="246" y="124">6</text><text x="326" y="124">10</text><text x="406" y="124">15</text>
+    <text x="86" y="64">1</text><text x="166" y="64">4</text><text x="246" y="64">10</text><text x="326" y="64">20</text><text x="406" y="64" fill="var(--accent)">35</text>
+  </g>
+  <circle cx="240" cy="190" r="6" fill="var(--warm)"/>
+  <g font-size="14" font-weight="700" fill="var(--ink)">
+    <text x="58" y="270">O</text><text x="410" y="90">G</text><text x="222" y="210" fill="var(--warm)">P</text>
+  </g>
+  <g font-size="13" fill="var(--ink)">
+    <text x="450" y="90">各交差点の数</text>
+    <text x="450" y="112">＝ 左の数 ＋ 下の数</text>
+    <text x="450" y="150">G までの数 35 ＝ 7C3</text>
+    <text x="450" y="188">太線の経路</text>
+    <text x="450" y="210">右右上右上上右</text>
+  </g>
+</svg>
+<figcaption>交差点の数はそこまでの最短経路の数である。最短経路では左か下からしか来られないので左の数と下の数を足せばよい。G の 35 は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>7</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">{}_{7}\mathrm{C}_{3}</annotation></semantics></math></span> に一致する。P までの数は 3 である。</figcaption>
+</figure>
+
+<div class="ex"><div class="ex-h">例題 7</div>
+<p>上の図で O から P を通って G へ行く最短経路は何通りか。P を通らない最短経路は何通りか。</p>
+<details open><summary>解き方</summary><div>手順1 O から P までは右2回と上1回の並びで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>3</mn></msub><msub><mi mathvariant="normal">C</mi><mn>1</mn></msub><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">{}_{3}\mathrm{C}_{1}=3</annotation></semantics></math></span> 通りである。<br>手順2 P から G までは右2回と上2回の並びで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>4</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">{}_{4}\mathrm{C}_{2}=6</annotation></semantics></math></span> 通りである。<br>手順3 積の法則で P を通る経路は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo>×</mo><mn>6</mn><mo>=</mo><mn>18</mn></mrow><annotation encoding="application/x-tex">3\times6=18</annotation></semantics></math></span> 通りである。<br>答え 18通り ・ 通らない経路は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>35</mn><mo>−</mo><mn>18</mn><mo>=</mo><mn>17</mn></mrow><annotation encoding="application/x-tex">35-18=17</annotation></semantics></math></span> 通り</div></details></div>
+<p>最短経路の問題で多い誤りは2つある。1つ目は通れない区間がある問題で全体から引く数を誤ることである。区間の両端を P と Q とするとその区間を通って O から G へ行く経路の数は O から P までの数と Q から G までの数の積である。2つ目は左へ戻ったり下へ戻ったりする道を数えることである。最短経路は右と上の2方向の移動だけでできている。迷ったら図のように交差点に数を書き込んで左と下の数を足していく。この方法は通れない区間があっても使える。</p>
+
+<h2 id="s5">重複組合せ</h2>
+<p class="tb-warn">学習指導要領解説は重複組合せを明記していない。発展として扱う教科書がある。ここでは同じものを含む順列の応用として扱う。</p>
+<p>りんご・みかん・かきの3種類の果物から合わせて5個を買う。どの果物も十分にあり買わない種類があってもよい。買い方は何通りかを考える。</p>
+<p>買い方1つは「りんご2個・みかん1個・かき2個」のように個数の組で表せる。これを ○ 5個と仕切り ｜ 2本の並びに置き換える。仕切りの左がりんご・仕切りの間がみかん・右がかきの個数である。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 230" role="img" aria-label="丸5個と仕切り2本の並びが買い方に対応する">
+  <g font-size="13" fill="var(--muted)">
+    <text x="30" y="26">○ と ｜ の並び</text><text x="470" y="26">りんご ・ みかん ・ かき</text>
+  </g>
+  <g fill="var(--warm)">
+    <circle cx="50" cy="60" r="12"/><circle cx="85" cy="60" r="12"/><circle cx="155" cy="60" r="12"/><circle cx="225" cy="60" r="12"/><circle cx="260" cy="60" r="12"/>
+    <circle cx="50" cy="120" r="12"/><circle cx="85" cy="120" r="12"/><circle cx="120" cy="120" r="12"/><circle cx="155" cy="120" r="12"/><circle cx="190" cy="120" r="12"/>
+    <circle cx="85" cy="180" r="12"/><circle cx="120" cy="180" r="12"/><circle cx="155" cy="180" r="12"/><circle cx="225" cy="180" r="12"/><circle cx="260" cy="180" r="12"/>
+  </g>
+  <g stroke="var(--cool)" stroke-width="4">
+    <line x1="120" y1="44" x2="120" y2="76"/><line x1="190" y1="44" x2="190" y2="76"/>
+    <line x1="225" y1="104" x2="225" y2="136"/><line x1="260" y1="104" x2="260" y2="136"/>
+    <line x1="50" y1="164" x2="50" y2="196"/><line x1="190" y1="164" x2="190" y2="196"/>
+  </g>
+  <g stroke="var(--line)" stroke-width="1.4"><line x1="300" y1="60" x2="450" y2="60"/><line x1="300" y1="120" x2="450" y2="120"/><line x1="300" y1="180" x2="450" y2="180"/></g>
+  <g font-size="15" fill="var(--ink)">
+    <text x="480" y="65">2 ・ 1 ・ 2</text><text x="480" y="125">5 ・ 0 ・ 0</text><text x="480" y="185">0 ・ 3 ・ 2</text>
+  </g>
+  <text x="360" y="222" font-size="12" text-anchor="middle" fill="var(--sub)">7つの位置から仕切りを置く2か所を選べば並びが1つ定まる</text>
+</svg>
+<figcaption>○ 5個と ｜ 2本の合計7個の並びと買い方は1対1に対応する。仕切りが端にあればその種類は0個である。並びの総数は7か所から仕切りの2か所を選ぶ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>7</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>21</mn></mrow><annotation encoding="application/x-tex">{}_{7}\mathrm{C}_{2}=21</annotation></semantics></math></span> 通りである。</figcaption>
+</figure>
+
+<p>一般に異なる <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 種類から重複を許して <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個を取り出す組合せを<strong>重複組合せ</strong>と呼ぶ。○ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個と ｜ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-1</annotation></semantics></math></span> 本の並べ方に等しいので総数は次のとおりである。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow></mrow><mrow><mi>n</mi><mo>+</mo><mi>r</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mo>=</mo><msub><mrow></mrow><mrow><mi>n</mi><mo>+</mo><mi>r</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi mathvariant="normal">C</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">{}_{n+r-1}\mathrm{C}_{r}={}_{n+r-1}\mathrm{C}_{n-1}</annotation></semantics></math></span></div>
+<p>仕切りの本数は種類の数より1つ少ない。3種類に分けるには仕切り2本で足りる。<strong class="hit">重複組合せは重複順列 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>n</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">n^r</annotation></semantics></math></span> とは異なる</strong>。5個を1つずつ順に選ぶ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>3</mn><mn>5</mn></msup><mo>=</mo><mn>243</mn></mrow><annotation encoding="application/x-tex">3^5=243</annotation></semantics></math></span> 通りでは同じ買い方を選んだ順序の違いで別々に数えてしまう。</p>
+
+<div class="ex"><div class="ex-h">例題 8</div>
+<p>(1) <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mo>+</mo><mi>z</mi><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">x+y+z=6</annotation></semantics></math></span> を満たす0以上の整数の組 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>z</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y,z)</annotation></semantics></math></span> は何組か。(2) 正の整数の組は何組か。</p>
+<details open><summary>解き方</summary><div>手順1 (1) ○ 6個を ｜ 2本で3つに分ける並べ方に対応する。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>8</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>28</mn></mrow><annotation encoding="application/x-tex">{}_{8}\mathrm{C}_{2}=28</annotation></semantics></math></span> 組である。<br>手順2 (2) 各変数が1以上なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msup><mi>x</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x=x&#x27;+1</annotation></semantics></math></span> のように置き直す。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>+</mo><msup><mi>y</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>+</mo><msup><mi>z</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">x&#x27;+y&#x27;+z&#x27;=3</annotation></semantics></math></span> の0以上の整数解に対応する。<br>手順3 ○ 3個と ｜ 2本の並べ方で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">{}_{5}\mathrm{C}_{2}=10</annotation></semantics></math></span> 組である。<br>答え (1) 28組 (2) 10組</div></details></div>
+<p>(2) は ○ 6個の間の5か所から仕切りを入れる2か所を選ぶと考えても <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">{}_{5}\mathrm{C}_{2}=10</annotation></semantics></math></span> になる。仕切りを同じ間に2本入れないので各変数は1以上になる。</p>
+<p>果物の例で各種類を1個以上買う場合も同じ方法で数える。先に3種類を1個ずつ買うと残りは2個である。残り2個を3種類から重複を許して選ぶので ○ 2個と ｜ 2本の並べ方 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>4</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">{}_{4}\mathrm{C}_{2}=6</annotation></semantics></math></span> 通りになる。「1個以上」の条件は先に1個ずつ配ってから数えるのが定石である。</p>
+
+<aside class="an an-biz"><b>投資で言えば</b>
+<p class="an-h">資金の配分案の数は重複組合せである</p>
+<p>3銘柄に100万円を10万円単位で配分する案は ○ 10個と ｜ 2本の並びで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>12</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>66</mn></mrow><annotation encoding="application/x-tex">{}_{12}\mathrm{C}_{2}=66</annotation></semantics></math></span> 通りある。0円の銘柄も1案に数える。</p>
+</aside>
+
+<h2 id="s6">二項定理とパスカルの三角形</h2>
+<p class="tb-warn">この節の二項定理は学習指導要領では数学Ⅱの内容 (1) で扱う。数学Aの組合せが係数として現れるので橋渡しとしてここで扱う。</p>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><msup><mo stretchy="false">)</mo><mn>3</mn></msup><mo>=</mo><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(a+b)^3=(a+b)(a+b)(a+b)</annotation></semantics></math></span> を展開する。展開は3つの因数のそれぞれから <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span> か <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span> を1つずつ選んで掛ける操作をすべての選び方について行い足すことである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>a</mi><mn>2</mn></msup><mi>b</mi></mrow><annotation encoding="application/x-tex">a^2b</annotation></semantics></math></span> の項は3つの因数のうち <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span> を選ぶ因数を1つ決めれば定まるので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>3</mn></msub><msub><mi mathvariant="normal">C</mi><mn>1</mn></msub><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">{}_{3}\mathrm{C}_{1}=3</annotation></semantics></math></span> 個できる。よって <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>a</mi><mn>2</mn></msup><mi>b</mi></mrow><annotation encoding="application/x-tex">a^2b</annotation></semantics></math></span> の係数は 3 である。</p>
+<p>同じ考えで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><msup><mo stretchy="false">)</mo><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">(a+b)^n</annotation></semantics></math></span> の展開の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>a</mi><mrow><mi>n</mi><mo>−</mo><mi>r</mi></mrow></msup><msup><mi>b</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">a^{n-r}b^r</annotation></semantics></math></span> の係数は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 個の因数から <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span> を選ぶ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> 個を決める方法の数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}</annotation></semantics></math></span> である。これを<strong>二項定理</strong>と呼ぶ。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><msup><mo stretchy="false">)</mo><mi>n</mi></msup><mo>=</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mn>0</mn></msub><msup><mi>a</mi><mi>n</mi></msup><mo>+</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mn>1</mn></msub><msup><mi>a</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup><mi>b</mi><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><msup><mi>a</mi><mrow><mi>n</mi><mo>−</mo><mi>r</mi></mrow></msup><msup><mi>b</mi><mi>r</mi></msup><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>n</mi></msub><msup><mi>b</mi><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">(a+b)^n={}_{n}\mathrm{C}_{0}a^n+{}_{n}\mathrm{C}_{1}a^{n-1}b+\cdots+{}_{n}\mathrm{C}_{r}a^{n-r}b^r+\cdots+{}_{n}\mathrm{C}_{n}b^n</annotation></semantics></math></span></div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><msup><mi>a</mi><mrow><mi>n</mi><mo>−</mo><mi>r</mi></mrow></msup><msup><mi>b</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}a^{n-r}b^r</annotation></semantics></math></span> を<strong>一般項</strong>と呼び係数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}</annotation></semantics></math></span> を<strong>二項係数</strong>と呼ぶ。</p>
+<p>二項係数を段ごとに並べたものを<strong>パスカルの三角形</strong>と呼ぶ。両端は 1 で内側の数は左上と右上の数の和である。これは第2節の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mo>=</mo><msub><mrow></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi mathvariant="normal">C</mi><mrow><mi>r</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mrow></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}={}_{n-1}\mathrm{C}_{r-1}+{}_{n-1}\mathrm{C}_{r}</annotation></semantics></math></span> を図にしたものである。最短経路の図の交差点の数を斜めに読んでも同じ数が並ぶ。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 280" role="img" aria-label="0段から6段までのパスカルの三角形">
+  <g font-size="12" fill="var(--sub)">
+    <text x="40" y="45">n ＝ 0</text><text x="40" y="79">n ＝ 1</text><text x="40" y="113">n ＝ 2</text><text x="40" y="147">n ＝ 3</text><text x="40" y="181">n ＝ 4</text><text x="40" y="215">n ＝ 5</text><text x="40" y="249">n ＝ 6</text>
+  </g>
+  <g stroke="var(--accent)" stroke-width="1.6" fill="none">
+    <line x1="310" y1="187" x2="326" y2="200"/><line x1="354" y1="187" x2="338" y2="200"/>
+    <line x1="282" y1="221" x2="298" y2="234"/><line x1="326" y1="221" x2="310" y2="234"/>
+  </g>
+  <g font-size="15" font-weight="700" text-anchor="middle" fill="var(--ink)">
+    <text x="360" y="45">1</text>
+    <text x="332" y="79">1</text><text x="388" y="79">1</text>
+    <text x="304" y="113">1</text><text x="360" y="113">2</text><text x="416" y="113">1</text>
+    <text x="276" y="147">1</text><text x="332" y="147">3</text><text x="388" y="147">3</text><text x="444" y="147">1</text>
+    <text x="248" y="181">1</text><text x="304" y="181">4</text><text x="360" y="181">6</text><text x="416" y="181">4</text><text x="472" y="181">1</text>
+    <text x="220" y="215">1</text><text x="276" y="215">5</text><text x="332" y="215" fill="var(--accent)">10</text><text x="388" y="215" fill="var(--accent)">10</text><text x="444" y="215">5</text><text x="500" y="215">1</text>
+    <text x="192" y="249">1</text><text x="248" y="249">6</text><text x="304" y="249" fill="var(--warm)">15</text><text x="360" y="249">20</text><text x="416" y="249">15</text><text x="472" y="249">6</text><text x="528" y="249">1</text>
+  </g>
+  <g font-size="12" fill="var(--sub)">
+    <text x="560" y="181">段の和 16</text><text x="560" y="215">段の和 32</text><text x="560" y="249">段の和 64</text>
+  </g>
+  <text x="360" y="274" font-size="12" text-anchor="middle" fill="var(--sub)">4 ＋ 6 ＝ 10 ・ 6 ＋ 4 ＝ 10 ・ 5 ＋ 10 ＝ 15 のように左上と右上の和になる</text>
+</svg>
+<figcaption>n 段目の左から r 番目 (r は 0 から数える) の数が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}</annotation></semantics></math></span> である。段の和は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">2^n</annotation></semantics></math></span> になる。二項定理で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mi>b</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a=b=1</annotation></semantics></math></span> とおくと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mn>0</mn></msub><mo>+</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mn>1</mn></msub><mo>+</mo><mo>⋯</mo><mo>+</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>n</mi></msub><mo>=</mo><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{0}+{}_{n}\mathrm{C}_{1}+\cdots+{}_{n}\mathrm{C}_{n}=2^n</annotation></semantics></math></span> が得られる。</figcaption>
+</figure>
+
+<p>段の和が <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">2^n</annotation></semantics></math></span> になることは数え方でも説明できる。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span> 個の要素をもつ集合の部分集合は各要素を入れるか入れないかの2通りずつで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">2^n</annotation></semantics></math></span> 個ある。これを要素の個数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> ごとに分けて数えると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}</annotation></semantics></math></span> の和になる。</p>
+<p>二項定理で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a=1</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">b=-1</annotation></semantics></math></span> とおくと <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mn>0</mn></msub><mo>−</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mn>1</mn></msub><mo>+</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>−</mo><mo>⋯</mo><mo>+</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mi>n</mi></msup><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>n</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{0}-{}_{n}\mathrm{C}_{1}+{}_{n}\mathrm{C}_{2}-\cdots+(-1)^n{}_{n}\mathrm{C}_{n}=0</annotation></semantics></math></span> が得られる。偶数個の要素をもつ部分集合と奇数個の要素をもつ部分集合の個数が等しいことを示す式である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">n=4</annotation></semantics></math></span> なら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mn>6</mn><mo>+</mo><mn>1</mn><mo>=</mo><mn>4</mn><mo>+</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">1+6+1=4+4</annotation></semantics></math></span> で確かめられる。</p>
+
+<div class="ex"><div class="ex-h">例題 9</div>
+<p><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>2</mn><mi>x</mi><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">(2x-1)^5</annotation></semantics></math></span> の展開式における <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">x^3</annotation></semantics></math></span> の係数を求めよ。</p>
+<details open><summary>解き方</summary><div>手順1 一般項は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mo stretchy="false">(</mo><mn>2</mn><mi>x</mi><msup><mo stretchy="false">)</mo><mrow><mn>5</mn><mo>−</mo><mi>r</mi></mrow></msup><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mi>r</mi></msup><mo>=</mo><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mtext> </mtext><msup><mn>2</mn><mrow><mn>5</mn><mo>−</mo><mi>r</mi></mrow></msup><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mi>r</mi></msup><msup><mi>x</mi><mrow><mn>5</mn><mo>−</mo><mi>r</mi></mrow></msup></mrow><annotation encoding="application/x-tex">{}_{5}\mathrm{C}_{r}(2x)^{5-r}(-1)^r={}_{5}\mathrm{C}_{r}\,2^{5-r}(-1)^r x^{5-r}</annotation></semantics></math></span> である。<br>手順2 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">x^3</annotation></semantics></math></span> の項は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo>−</mo><mi>r</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">5-r=3</annotation></semantics></math></span> より <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">r=2</annotation></semantics></math></span> である。<br>手順3 係数は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>⋅</mo><msup><mn>2</mn><mn>3</mn></msup><mo>⋅</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>=</mo><mn>10</mn><mo>⋅</mo><mn>8</mn><mo>⋅</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">{}_{5}\mathrm{C}_{2}\cdot2^3\cdot(-1)^2=10\cdot8\cdot1</annotation></semantics></math></span> である。<br>答え 80</div></details></div>
+<p>典型的な誤りは2つある。1つ目は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>2</mn><mi>x</mi><msup><mo stretchy="false">)</mo><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">(2x)^3</annotation></semantics></math></span> の <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">2^3</annotation></semantics></math></span> を掛け忘れて 10 とする誤りである。2つ目は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math></span> の符号を落とす誤りである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">(-1)^r</annotation></semantics></math></span> は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> が奇数のとき <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math></span> である。一般項を文字のまま書いてから <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span> を定めると両方を防げる。</p>
+
+<h2 id="s7">現実世界の組合せ 数字選択式宝くじ</h2>
+<p>ロト6は 1 から 43 までの数字から異なる6個を選ぶ数字選択式宝くじである。選んだ6個が抽選の本数字6個とすべて一致すると1等になる。選び方の総数は組合せで求まる。</p>
+<div class="mx"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow></mrow><mn>43</mn></msub><msub><mi mathvariant="normal">C</mi><mn>6</mn></msub><mo>=</mo><mfrac><mrow><mn>43</mn><mo>⋅</mo><mn>42</mn><mo>⋅</mo><mn>41</mn><mo>⋅</mo><mn>40</mn><mo>⋅</mo><mn>39</mn><mo>⋅</mo><mn>38</mn></mrow><mrow><mn>6</mn><mo stretchy="false">!</mo></mrow></mfrac><mo>=</mo><mn>6,096,454</mn></mrow><annotation encoding="application/x-tex">{}_{43}\mathrm{C}_{6}=\frac{43\cdot42\cdot41\cdot40\cdot39\cdot38}{6!}=6{,}096{,}454</annotation></semantics></math></span></div>
+<p>1口で1等に当たる確率はこの逆数で約610万分の1である。ロト6を販売する銀行の案内ページもこの値を1等の当せん確率として示している。</p>
+<p>2等は申込数字のうち5個が本数字と一致し残りの1個がボーナス数字と一致する場合である。一致する5個の選び方は本数字6個から5個を選ぶ <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>6</mn></msub><msub><mi mathvariant="normal">C</mi><mn>5</mn></msub><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">{}_{6}\mathrm{C}_{5}=6</annotation></semantics></math></span> 通りで残りの1個はボーナス数字の1通りに限られる。2等の組合せは6通りで確率は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>6</mn><mn>6,096,454</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{6}{6{,}096{,}454}</annotation></semantics></math></span> である。抽選の数字が出た順番は当せんに関係しないので順列ではなく組合せで数える。順列で数えると <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>43</mn></msub><msub><mi mathvariant="normal">P</mi><mn>6</mn></msub></mrow><annotation encoding="application/x-tex">{}_{43}\mathrm{P}_{6}</annotation></semantics></math></span> で組合せの <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo stretchy="false">!</mo><mo>=</mo><mn>720</mn></mrow><annotation encoding="application/x-tex">6!=720</annotation></semantics></math></span> 倍になる。</p>
+<aside class="an an-rw"><b>現実世界</b>
+<p class="an-h">パスカルの三角形はパスカルより数百年早く中国で使われていた</p>
+<p>11世紀の賈憲が用いた数表が13世紀の楊輝の著作に引用されて伝わる。パスカルの論文は死後の1665年に刊行された。</p>
+</aside>
+
+<h2 id="s8">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ 組合せ</div>
+<p class="qz-q">男子5人と女子4人から3人を選ぶ。男子と女子がどちらも1人以上含まれる選び方は何通りか。</p>
+<ol><li>84</li><li>70</li><li>80</li><li>40</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。全体は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>9</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>=</mo><mn>84</mn></mrow><annotation encoding="application/x-tex">{}_{9}\mathrm{C}_{3}=84</annotation></semantics></math></span> 通りである。男子だけは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>5</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">{}_{5}\mathrm{C}_{3}=10</annotation></semantics></math></span> 通りで女子だけは <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>4</mn></msub><msub><mi mathvariant="normal">C</mi><mn>3</mn></msub><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">{}_{4}\mathrm{C}_{3}=4</annotation></semantics></math></span> 通りである。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>84</mn><mo>−</mo><mn>10</mn><mo>−</mo><mn>4</mn><mo>=</mo><mn>70</mn></mrow><annotation encoding="application/x-tex">84-10-4=70</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ 組分け</div>
+<p class="qz-q">8人を4人ずつの2組に分ける。組に区別がないとき分け方は何通りか。</p>
+<details><summary>解答と解説</summary><div>正解は 35 通りである。名前つきなら <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>8</mn></msub><msub><mi mathvariant="normal">C</mi><mn>4</mn></msub><mo>=</mo><mn>70</mn></mrow><annotation encoding="application/x-tex">{}_{8}\mathrm{C}_{4}=70</annotation></semantics></math></span> 通りである。同じ人数の組が2つあり入れ替えても同じなので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">2!</annotation></semantics></math></span> で割る。</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 同じものを含む順列</div>
+<p class="qz-q">COCOA の5文字を1列に並べる方法は何通りか。</p>
+<ol><li>120</li><li>60</li><li>30</li><li>20</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。C が2個・O が2個・A が1個なので <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>5</mn><mo stretchy="false">!</mo></mrow><mrow><mn>2</mn><mo stretchy="false">!</mo><mtext> </mtext><mn>2</mn><mo stretchy="false">!</mo><mtext> </mtext><mn>1</mn><mo stretchy="false">!</mo></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mn>120</mn><mn>4</mn></mfrac></mstyle><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">\dfrac{5!}{2!\,2!\,1!}=\dfrac{120}{4}=30</annotation></semantics></math></span> である。2 の 60 は片方の文字の重複だけを割った値である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ 最短経路</div>
+<p class="qz-q">碁盤の目の道を右へ5区画・上へ4区画進む最短経路は何通りか。</p>
+<details><summary>解答と解説</summary><div>正解は 126 通りである。「右」5回と「上」4回の並べ方で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>9</mn></msub><msub><mi mathvariant="normal">C</mi><mn>4</mn></msub><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>9</mn><mo>⋅</mo><mn>8</mn><mo>⋅</mo><mn>7</mn><mo>⋅</mo><mn>6</mn></mrow><mn>24</mn></mfrac></mstyle><mo>=</mo><mn>126</mn></mrow><annotation encoding="application/x-tex">{}_{9}\mathrm{C}_{4}=\dfrac{9\cdot8\cdot7\cdot6}{24}=126</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 重複組合せ</div>
+<p class="qz-q"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mo>+</mo><mi>z</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">x+y+z=10</annotation></semantics></math></span> を満たす正の整数の組 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>z</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y,z)</annotation></semantics></math></span> は何組か。</p>
+<ol><li>66</li><li>45</li><li>36</li><li>28</li></ol>
+<details><summary>解答と解説</summary><div>正解は 3 である。○ 10個の間の9か所から仕切りを入れる2か所を選ぶ。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>9</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>36</mn></mrow><annotation encoding="application/x-tex">{}_{9}\mathrm{C}_{2}=36</annotation></semantics></math></span> である。1 の 66 は0以上の整数解の個数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>12</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">{}_{12}\mathrm{C}_{2}</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 二項定理 (数学Ⅱ)</div>
+<p class="qz-q"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>2</mn><msup><mo stretchy="false">)</mo><mn>6</mn></msup></mrow><annotation encoding="application/x-tex">(x+2)^6</annotation></semantics></math></span> の展開式における <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">x^4</annotation></semantics></math></span> の係数を求めよ。</p>
+<details><summary>解答と解説</summary><div>正解は 60 である。一般項は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>6</mn></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><msup><mi>x</mi><mrow><mn>6</mn><mo>−</mo><mi>r</mi></mrow></msup><msup><mn>2</mn><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">{}_{6}\mathrm{C}_{r}x^{6-r}2^r</annotation></semantics></math></span> である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>−</mo><mi>r</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">6-r=4</annotation></semantics></math></span> より <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">r=2</annotation></semantics></math></span> で <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>6</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>⋅</mo><msup><mn>2</mn><mn>2</mn></msup><mo>=</mo><mn>15</mn><mo>⋅</mo><mn>4</mn><mo>=</mo><mn>60</mn></mrow><annotation encoding="application/x-tex">{}_{6}\mathrm{C}_{2}\cdot2^2=15\cdot4=60</annotation></semantics></math></span> である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問7 ・ 組合せの性質</div>
+<p class="qz-q">正十角形の対角線の本数として正しいものを1つ選べ。</p>
+<ol><li>45</li><li>35</li><li>40</li><li>90</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。2頂点を結ぶ線分は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mn>10</mn></msub><msub><mi mathvariant="normal">C</mi><mn>2</mn></msub><mo>=</mo><mn>45</mn></mrow><annotation encoding="application/x-tex">{}_{10}\mathrm{C}_{2}=45</annotation></semantics></math></span> 本でそのうち10本が辺である。<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>45</mn><mo>−</mo><mn>10</mn><mo>=</mo><mn>35</mn></mrow><annotation encoding="application/x-tex">45-10=35</annotation></semantics></math></span> である。</div></details></div>
+
+<h2 id="s9">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">P</mi><mi>r</mi></msub></mrow><mrow><mi>r</mi><mo stretchy="false">!</mo></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><mrow><mi>r</mi><mo stretchy="false">!</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><mo stretchy="false">!</mo></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}=\dfrac{{}_{n}\mathrm{P}_{r}}{r!}=\dfrac{n!}{r!(n-r)!}</annotation></semantics></math></span> は順列の重複 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">r!</annotation></semantics></math></span> を割ったものである。<br>
+<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mo>=</mo><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mrow><mi>n</mi><mo>−</mo><mi>r</mi></mrow></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}={}_{n}\mathrm{C}_{n-r}</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub><mo>=</mo><msub><mrow></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi mathvariant="normal">C</mi><mrow><mi>r</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mrow></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}={}_{n-1}\mathrm{C}_{r-1}+{}_{n-1}\mathrm{C}_{r}</annotation></semantics></math></span> は数え方の言い換えで証明できる。<br>
+「少なくとも」は補集合で数える。<br>
+区別のない組分けでは同じ人数の組の個数の階乗で割る。<br>
+同じものを含む順列 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mi>n</mi><mo stretchy="false">!</mo></mrow><mrow><mi>p</mi><mo stretchy="false">!</mo><mi>q</mi><mo stretchy="false">!</mo><mi>r</mi><mo stretchy="false">!</mo></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{n!}{p!q!r!}</annotation></semantics></math></span> は最短経路の数にもなる。<br>
+重複組合せは ○ と ｜ の並びで <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mrow><mi>n</mi><mo>+</mo><mi>r</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n+r-1}\mathrm{C}_{r}</annotation></semantics></math></span> である。<br>
+二項定理 (数学Ⅱ) の係数 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}</annotation></semantics></math></span> は <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span> を選ぶ因数の組合せの数である。</div>
+
+<h2 id="s10">残っている問い</h2>
+<ul>
+<li class="tb-vnote">重複組合せの記号 <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">H</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{H}_{r}</annotation></semantics></math></span> は教科書によって扱いが異なる。学習指導要領解説の数学Aの用語・記号には <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">P</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{P}_{r}</annotation></semantics></math></span> と <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">C</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{C}_{r}</annotation></semantics></math></span> が挙がり <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">H</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{H}_{r}</annotation></semantics></math></span> は挙がっていない。この章では <span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow></mrow><mi>n</mi></msub><msub><mi mathvariant="normal">H</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">{}_{n}\mathrm{H}_{r}</annotation></semantics></math></span> を使わず組合せで表した。</li>
+<li class="tb-vnote">パスカルがこの三角形を論文にまとめた年は資料によって1654年とするものがある。刊行が1665年であることは確認したが執筆年は確定していない。</li>
+<li class="tb-vnote">ロト6の当せん確率は本数字6個がすべて一致する1等の値である。2等以下はボーナス数字を含む別の条件で数える。</li>
+</ul>
+
+<h2 id="s11">出典</h2>
+<ol>
+<li>文部科学省 高等学校学習指導要領 平成30年告示 解説 数学編 理数編 — https://www.mext.go.jp/content/20260115-mxt_kyoiku02-100002620_04.pdf</li>
+<li>三菱UFJ銀行 ロト6 — https://www.bk.mufg.jp/tsukau/sonota/takarakuji/loto6/index.html</li>
+<li>Pascal's triangle — Wikipedia — https://en.wikipedia.org/wiki/Pascal%27s_triangle</li>
+<li>Binomial theorem — Wikipedia — https://en.wikipedia.org/wiki/Binomial_theorem</li>
+<li>Stars and bars (combinatorics) — Wikipedia — https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)</li>
+<li>Combination — Wikipedia — https://en.wikipedia.org/wiki/Combination</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="04_counting.html">← 集合と場合の数・順列</a><a class="tb-nav-a" href="06_probability.html">確率と独立な試行 →</a></div>
+</div>
+<script>
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){ if (!tick) { tick = true; requestAnimationFrame(draw); } }, {passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>

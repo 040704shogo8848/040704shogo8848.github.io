@@ -1,0 +1,1416 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>確率・統計 計算ドリル</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a;
+    --accent:#2563EB; --line:#E5E2DA; --card:#fff;
+    --ok:#3B7F58; --ng:#B3261E;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.85;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 22px 90px}
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+  sub,sup{font-size:.68em;line-height:0}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  h1{font-size:27px;margin:0 0 4px;letter-spacing:-.01em}
+  .romaji{font-size:12px;color:var(--muted);letter-spacing:.08em;margin-bottom:20px}
+  .lead{color:var(--sub);font-size:14px;margin:14px 0 0}
+
+  h2{font-size:16.5px;margin:44px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .en{display:block;font-size:10.5px;color:var(--muted);font-weight:400;
+    letter-spacing:.09em;text-transform:uppercase}
+  h3{font-size:14px;margin:22px 0 6px}
+  h3 .sm{font-size:11px;color:var(--muted);font-weight:400}
+
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px;margin:18px 0;font-size:13.5px;color:var(--sub)}
+  .note a,.fb a,.tipbody a{color:var(--accent);text-decoration:none}
+
+  /* ---- setup ---- */
+  .pick{margin:18px 0 0}
+  .pick .lb{font-size:11.5px;color:var(--muted);letter-spacing:.04em;margin-bottom:7px}
+  .seg{display:flex;flex-wrap:wrap;gap:7px}
+  .seg button{font:inherit;font-size:13px;padding:7px 14px;border-radius:8px;
+    border:1px solid var(--line);background:var(--card);color:var(--sub);cursor:pointer;
+    transition:border-color .12s,color .12s}
+  .seg button:hover{border-color:var(--accent);color:var(--accent)}
+  .seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .seg button .s{display:block;font-size:10.5px;opacity:.62;letter-spacing:0}
+  button.go{font:inherit;font-size:14px;font-weight:600;padding:11px 30px;border-radius:8px;
+    border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;margin-top:22px}
+  button.go:hover{opacity:.85}
+  button.t{font:inherit;font-size:12.5px;padding:6px 13px;border-radius:999px;
+    border:1px solid var(--line);background:var(--card);color:var(--sub);cursor:pointer}
+  button.t:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ---- drill ---- */
+  .hide{display:none!important}
+  #drill{margin-top:30px}
+  .head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    font-size:12.5px;color:var(--muted);margin-bottom:6px}
+  .track{height:3px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:26px}
+  .fill{height:100%;width:0;background:var(--ink);transition:width .18s}
+
+  .qbox{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:28px 20px 24px;text-align:center}
+  .ctx{font-size:12.5px;color:var(--muted);margin-bottom:12px;letter-spacing:.02em}
+  .q{font-size:clamp(17px,4.4vw,23px);line-height:1.65;letter-spacing:.01em;
+    font-variant-numeric:tabular-nums}
+  .q .dl{letter-spacing:.03em}
+  .desc{margin-top:10px;font-size:14px;color:var(--sub);line-height:1.8}
+  .ask{margin-top:14px;font-size:14px;color:var(--sub)}
+  .ask .u{display:inline-block;margin-left:4px;padding:1px 8px;border-radius:5px;
+    background:#F1EFE8;color:var(--ink);font-size:13px;font-variant-numeric:tabular-nums}
+  table.dt{width:auto;margin:4px auto 0;font-size:.78em;border-collapse:collapse}
+  table.dt th,table.dt td{text-align:center;padding:4px 11px;border:1px solid var(--line);
+    font-variant-numeric:tabular-nums}
+  table.dt th{font-size:.85em;color:var(--sub);font-weight:500;background:#FAF9F5}
+
+  .ans{margin-top:20px;display:flex;gap:8px;justify-content:center;align-items:stretch}
+  .ans input{font:inherit;font-size:24px;font-variant-numeric:tabular-nums;text-align:center;
+    padding:8px 12px;border-radius:9px;border:1.5px solid var(--line);background:#fff;
+    flex:1 1 auto;min-width:0;max-width:300px;letter-spacing:.02em}
+  .ans input:focus{outline:none;border-color:var(--accent)}
+  .ans button{font:inherit;font-size:14px;padding:0 18px;border-radius:9px;flex:0 0 auto;
+    border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+  .choices{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .choices button{font:inherit;font-size:17px;padding:12px 10px;border-radius:9px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;text-align:center}
+  .choices button:hover{border-color:var(--accent)}
+  .choices button .k{display:block;font-size:10.5px;color:var(--muted)}
+  .choices button.right{border-color:var(--ok);background:#F2F8F4}
+  .choices button.wrong{border-color:var(--ng);background:#FCF3F2}
+  .choices button:disabled{cursor:default}
+
+  .fb{margin-top:20px;border-radius:10px;padding:14px 16px;font-size:13.5px;text-align:left}
+  .fb.ok{background:#F2F8F4;border:1px solid #CFE3D6;color:var(--ok)}
+  .fb.ng{background:#FCF3F2;border:1px solid #EBD3D0;color:var(--ng)}
+  .fb b{font-size:15px}
+  .fb .how{margin-top:9px;padding-top:9px;border-top:1px solid rgba(0,0,0,.08);
+    color:var(--sub);font-size:13px;line-height:1.95}
+  .fb .how em,.how2 em{font-style:normal;color:var(--ink);font-variant-numeric:tabular-nums}
+  .fb .how ol{margin:0;padding-left:1.4em}
+  .sub{margin-top:16px;text-align:center;font-size:12px;color:var(--muted)}
+  .sub button{margin:0 4px}
+
+  /* ---- result ---- */
+  .score{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 0}
+  .kpi{flex:1 1 120px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:13px 15px}
+  .kpi .v{font-size:25px;font-variant-numeric:tabular-nums;line-height:1.25}
+  .kpi .k{font-size:11px;color:var(--muted);letter-spacing:.04em}
+  .kpi .n{font-size:11.5px;color:var(--muted)}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.04em}
+  td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.miss{color:var(--ng)}
+  td table.dt{margin:4px 0;font-size:12px}
+  .how2{font-size:12px;color:var(--sub);line-height:1.8;margin-top:3px}
+  .how2 ol{margin:0;padding-left:1.3em}
+
+  details.tip{border-bottom:1px solid var(--line);padding:2px 0}
+  details.tip>summary{cursor:pointer;padding:9px 2px;font-size:14px;list-style:none}
+  details.tip>summary::-webkit-details-marker{display:none}
+  details.tip>summary::before{content:"＋ ";color:var(--muted)}
+  details.tip[open]>summary::before{content:"− "}
+  .tipbody{padding:2px 2px 16px;font-size:13.5px;color:var(--sub);line-height:1.85}
+  .tipbody .ex{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:10px 13px;margin:9px 0;font-variant-numeric:tabular-nums;color:var(--ink);font-size:13px}
+  .tipbody .ex i{font-style:normal;color:var(--muted)}
+  .tipbody ul{margin:6px 0;padding-left:1.3em}
+  .tipbody table{font-size:12.5px}
+  .tipbody td{padding:5px 9px}
+  #d-ref{margin-top:18px;text-align:left}
+
+  .zt{max-width:420px;font-size:13px}
+  .zt td,.zt th{padding:5px 12px}
+  .zt td.n,.zt th.n{text-align:right}
+  .zcap{font-size:12.5px;color:var(--sub);margin-top:8px}
+
+  @media(max-width:430px){
+    #d-meta{display:none}
+    .qbox{padding:22px 13px 20px}
+    .ans input{font-size:21px}
+    .kpi{flex:1 1 calc(50% - 10px)}
+    .choices button{font-size:15px;padding:10px 6px}
+    table.dt th,table.dt td{padding:3px 6px}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a><a href="../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../021_profile/index.html">profile</a><a href="../02A_plan/index.html">plan</a><a href="../023_travel/index.html">travel</a><a href="../027_cinema/index.html">cinema</a><a href="../02B_reading/index.html">reading</a><a href="../024_method/index.html">method</a><a href="../026_handbook/index.html">handbook</a><a href="../025_fitness/index.html">fitness</a><a href="../028_english/index.html">english</a><a href="../029_mental_math/index.html">mental math</a><a href="../02C_chemistry/index.html">chemistry</a><a href="index.html">probability</a><a href="../02E_calculus/index.html">calculus</a><a href="../02F_linear_algebra/index.html">linear algebra</a><a href="../02G_physics/index.html">physics</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../024_method/index.html">method</a>
+    <a class="snav-a" href="../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../028_english/index.html">english</a>
+    <a class="snav-a" href="../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="index.html">probability</a>
+    <a class="snav-a" href="../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../02G_physics/index.html">physics</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../index.html">shogo</a> / personal / <a href="index.html">02D probability</a> / drill</div>
+  <h1>確率・統計 計算ドリル</h1>
+  <div class="romaji">PROBABILITY DRILL</div>
+  <p class="lead" id="lead">確率・統計の計算問題は数える対象と割る対象を決めれば手順が定まる。このドリルは代表値・相関係数・場合の数・確率・条件付き確率・確率変数・正規分布・推定を毎回異なる数値で出題する。誤答には途中の式を順に示した解き方を表示する。記録はこの端末のブラウザに保存する。</p>
+
+  <!-- ================= SETUP ================= -->
+  <section id="setup">
+    <h2>何を練習するか<span class="en">start</span></h2>
+    <div class="pick"><div class="lb">分野</div><div class="seg" id="cats"></div></div>
+    <div class="pick"><div class="lb">問題数</div><div class="seg" id="counts"></div></div>
+    <button class="go" id="b-start">始める</button>
+    <div class="note" id="cat-note"></div>
+  </section>
+
+  <!-- ================= DRILL ================= -->
+  <section id="drill" class="hide">
+    <div class="head">
+      <span class="num" id="d-prog">1 / 20</span>
+      <span id="d-meta"></span>
+      <span class="num" id="d-time">0.0s</span>
+    </div>
+    <div class="track"><div class="fill" id="d-fill"></div></div>
+
+    <div class="qbox">
+      <div id="d-ctx" class="ctx"></div>
+      <div id="d-q" class="q"></div>
+      <div id="d-desc" class="desc"></div>
+      <div id="d-ask" class="ask"></div>
+      <div class="ans" id="d-ansbox">
+        <input id="d-in" type="text" inputmode="decimal" autocomplete="off"
+               autocorrect="off" spellcheck="false" placeholder="答え">
+        <button id="b-ok">確定</button>
+      </div>
+      <div class="choices hide" id="d-choices"></div>
+      <div id="d-fb" class="fb hide"></div>
+    </div>
+    <div class="sub">
+      <button class="t" id="b-quit">中断する</button>
+      <span id="d-hintnote"></span>
+    </div>
+    <details class="tip" id="d-ref"><summary>正規分布表を開く</summary><div class="tipbody" id="d-refbody"></div></details>
+  </section>
+
+  <!-- ================= RESULT ================= -->
+  <section id="result" class="hide">
+    <h2>結果<span class="en">result</span></h2>
+    <div class="score" id="r-kpi"></div>
+    <div id="r-missbox"></div>
+    <div style="margin-top:20px">
+      <button class="go" id="b-again">同じ条件でもう一度</button>
+      <button class="t" id="b-redo" style="margin-left:8px">間違えた問題だけ</button>
+      <button class="t" id="b-back" style="margin-left:4px">条件を変える</button>
+    </div>
+  </section>
+
+  <!-- ================= LOG ================= -->
+  <section id="logsec">
+    <h2>記録<span class="en">log</span></h2>
+    <div class="score" id="l-kpi"></div>
+    <div id="l-body"></div>
+  </section>
+
+  <!-- ================= REFERENCE ================= -->
+  <section id="refsec">
+    <h2>正規分布表<span class="en">reference</span></h2>
+    <div id="refbody"></div>
+  </section>
+
+  <!-- ================= METHOD ================= -->
+  <section id="techsec">
+    <h2>問題の解き方の型<span class="en">method</span></h2>
+    <p class="lead">どの分野も公式に数値を代入する前に 何を数えて何で割るかを1行で書く。確率は分数のまま約分して最後に小数に直す。</p>
+
+    <details class="tip"><summary>1. 四分位数は中央値で前半と後半に分けてから求める</summary><div class="tipbody">
+      平均値は合計を個数で割った値である。中央値は小さい順に並べた中央の値で 個数が偶数なら中央の2つの平均をとる。四分位数は共通テストの方式で求める。個数が奇数なら中央値を除いて前半と後半に分け 前半の中央値を第1四分位数 後半の中央値を第3四分位数とする。分散は偏差の2乗の平均で 標準偏差は分散の正の平方根である。
+      <div class="ex">データ 2, 3, 5, 6, 8, 9, 12　個数 7<br><i>→</i> 中央値は4番目の 6<br><i>→</i> 6 を除いた前半 2, 3, 5 の中央値 3 が第1四分位数<br><i>→</i> 後半 8, 9, 12 の中央値 9 が第3四分位数<br><i>→</i> 四分位範囲 = 9 − 3 = <b>6</b></div>
+      <div class="ex">データ 2, 4, 6, 8, 10<br><i>→</i> 平均値 6　偏差 −4, −2, 0, 2, 4<br><i>→</i> 偏差の2乗の和 = 16 + 4 + 0 + 4 + 16 = 40<br><i>→</i> 分散 = 40/5 = <b>8</b>　標準偏差 = √8 ≒ 2.83</div>
+      <a href="chapters/02_dispersion.html">第2章 代表値と散らばりを開く</a>
+    </div></details>
+
+    <details class="tip"><summary>2. 相関係数は偏差の積の和を2乗和の平方根で割る</summary><div class="tipbody">
+      相関係数 r は共分散を x と y の標準偏差の積で割った値である。共分散も標準偏差も個数 n で割って求めるので n は分子と分母で約分される。偏差の積の和 ÷ √(x の偏差の2乗の和 × y の偏差の2乗の和) で計算すると割り算は1回で済む。r は −1 以上 1 以下になる。
+      <div class="ex">x 1, 2, 3, 4, 5　y 2, 4, 5, 4, 5<br><i>→</i> 平均値 x 3　y 4<br><i>→</i> x の偏差 −2, −1, 0, 1, 2　y の偏差 −2, 0, 1, 0, 1<br><i>→</i> 偏差の積の和 = 4 + 0 + 0 + 0 + 2 = 6<br><i>→</i> 2乗の和 x 10　y 6<br><i>→</i> r = 6 ÷ √(10 × 6) = 6 ÷ √60 ≒ <b>0.775</b></div>
+      <a href="chapters/03_correlation.html">第3章 相関係数を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>3. 並べるなら P で 選ぶだけなら C</summary><div class="tipbody">
+      <table>
+        <tr><td>異なる n 個から r 個を並べる</td><td><sub>n</sub>P<sub>r</sub> = n × (n−1) × … を r 個</td></tr>
+        <tr><td>異なる n 個から r 個を選ぶ</td><td><sub>n</sub>C<sub>r</sub> = <sub>n</sub>P<sub>r</sub> ÷ r!</td></tr>
+        <tr><td>n 人が円形に並ぶ</td><td>(n−1)!　1人を固定する</td></tr>
+        <tr><td>同じものを含む n 個を並べる</td><td>n! ÷ (p! q! r!)</td></tr>
+        <tr><td>n 種類から重複を許して r 個を並べる</td><td>n<sup>r</sup></td></tr>
+      </table>
+      <div class="ex">男子 5 人と女子 4 人から男子 2 人と女子 2 人を選ぶ<br><i>→</i> 男子の選び方 <sub>5</sub>C<sub>2</sub> = 10　女子の選び方 <sub>4</sub>C<sub>2</sub> = 6<br><i>→</i> 積の法則で 10 × 6 = <b>60 通り</b></div>
+      <a href="chapters/04_counting.html">第4章 順列を開く</a>　<a href="chapters/05_combination.html">第5章 組合せを開く</a>
+    </div></details>
+
+    <details class="tip"><summary>4. 少なくとも の確率は余事象から計算する</summary><div class="tipbody">
+      1回の確率が p の試行を n 回くり返して ちょうど r 回起こる確率は <sub>n</sub>C<sub>r</sub> p<sup>r</sup> (1 − p)<sup>n−r</sup> である。少なくとも1回 の確率は 1 から 1回も起こらない確率を引く。独立な2つの事象が両方起こる確率は確率の積になる。
+      <div class="ex">さいころを 4 回投げて 1 の目がちょうど 2 回出る確率<br><i>→</i> <sub>4</sub>C<sub>2</sub> × (1/6)<sup>2</sup> × (5/6)<sup>2</sup> = 6 × 1/36 × 25/36<br><i>→</i> = 150/1296 = <b>25/216</b></div>
+      <div class="ex">さいころを 3 回投げて少なくとも1回 6 の目が出る確率<br><i>→</i> 1 − (5/6)<sup>3</sup> = 1 − 125/216 = <b>91/216</b></div>
+      <a href="chapters/06_probability.html">第6章 確率を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>5. 条件付き確率は人数に直して数える</summary><div class="tipbody">
+      P<sub>A</sub>(B) = P(A ∩ B) ÷ P(A) である。検査の問題は 10000 人の集団を仮定して人数で数えると分母と分子の取り違えを防げる。期待値は 値 × その値をとる確率 の和である。
+      <div class="ex">感染率 1%　感染者が陽性になる確率 90%　非感染者が陽性になる確率 5%<br><i>→</i> 10000 人のうち感染者 100 人で陽性は 90 人<br><i>→</i> 非感染者 9900 人で陽性は 495 人<br><i>→</i> 陽性の人が感染者である確率 = 90 ÷ (90 + 495) = 90/585 = <b>2/13</b> ≒ 0.154</div>
+      <a href="chapters/07_conditional.html">第7章 条件付き確率と期待値を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>6. 二項分布は np と np(1 − p) で済む</summary><div class="tipbody">
+      X が二項分布 B(n, p) に従うとき E(X) = np で V(X) = np(1 − p) である。Y = aX + b に対して E(Y) = aE(X) + b　V(Y) = a<sup>2</sup>V(X)　σ(Y) = |a|σ(X) が成り立つ。b は散らばりを変えない。
+      <div class="ex">X は B(72, 1/3) に従う　Y = 3X − 5<br><i>→</i> E(X) = 72 × 1/3 = 24　V(X) = 72 × 1/3 × 2/3 = 16<br><i>→</i> E(Y) = 3 × 24 − 5 = <b>67</b><br><i>→</i> V(Y) = 3<sup>2</sup> × 16 = <b>144</b>　σ(Y) = 12</div>
+      <a href="chapters/08_random-variable.html">第8章 確率変数と二項分布を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>7. 正規分布は Z = (X − m)/σ で標準化して表を引く</summary><div class="tipbody">
+      X が N(m, σ<sup>2</sup>) に従うとき Z = (X − m)/σ は N(0, 1) に従う。表の p(z) は 0 ≤ Z ≤ z の確率である。Z ≥ 0 の確率は 0.5 で 分布は 0 について対称なので P(Z ≤ −z) = P(Z ≥ z) になる。
+      <div class="ex">X は N(50, 10<sup>2</sup>) に従う　P(X ≥ 65)<br><i>→</i> Z = (65 − 50)/10 = 1.50<br><i>→</i> P(Z ≥ 1.50) = 0.5 − p(1.50) = 0.5 − 0.4332 = <b>0.0668</b></div>
+      <a href="chapters/09_normal.html">第9章 正規分布を開く</a>
+    </div></details>
+
+    <details class="tip"><summary>8. 95% 信頼区間は 標本の値 ± 1.96 × 標準偏差</summary><div class="tipbody">
+      母平均 m の信頼度 95% の信頼区間は <span style="text-decoration:overline">X</span> − 1.96σ/√n ≤ m ≤ <span style="text-decoration:overline">X</span> + 1.96σ/√n である。母比率は標本比率 R を用いて R ± 1.96√(R(1 − R)/n) で求める。1.96 は p(z) = 0.4750 となる z の値である。
+      <div class="ex">大きさ 100 の標本の平均値 52.0　母標準偏差 10<br><i>→</i> 1.96 × 10/√100 = 1.96 × 1 = 1.96<br><i>→</i> 52.0 − 1.96 = 50.04　52.0 + 1.96 = 53.96<br><i>→</i> <b>50.04 ≤ m ≤ 53.96</b></div>
+      <a href="chapters/10_estimation.html">第10章 推定を開く</a>
+    </div></details>
+  </section>
+</div>
+
+<script id="gen">
+/* Question generators. Pure functions with no DOM access so that a node script
+   can load this block alone and check every answer. */
+var PROB=(function(){
+'use strict';
+
+function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function shuffle(a){
+  a=a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function r6(x){ return Math.round(x*1e6)/1e6; }
+function neg(s){ return String(s).replace(/-/g,'−'); }
+/* given data: shown as computed, float noise removed */
+function fx(x){ return neg(String(r6(x))); }
+/* answers: three significant figures */
+function s3(x){
+  if(x===0) return '0';
+  if(Math.abs(x)>=100) return neg(String(Number(x.toPrecision(3))));
+  return neg(x.toPrecision(3));
+}
+function em(s){ return '<em>'+s+'</em>'; }
+function pn(x){ return x<0 ? '('+fx(x)+')' : fx(x); }
+
+/* ── exact fractions ─────────────────────────────────────────────────── */
+function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ var t=a%b; a=b; b=t; } return a; }
+function F(n,d){
+  if(d===undefined) d=1;
+  if(d<0){ n=-n; d=-d; }
+  var g=gcd(n,d)||1;
+  return {n:n/g, d:d/g};
+}
+function fadd(a,b){ return F(a.n*b.d+b.n*a.d, a.d*b.d); }
+function fsub(a,b){ return F(a.n*b.d-b.n*a.d, a.d*b.d); }
+function fmul(a,b){ return F(a.n*b.n, a.d*b.d); }
+function fdiv(a,b){ return F(a.n*b.d, a.d*b.n); }
+function fpow(a,k){ var r=F(1); for(var i=0;i<k;i++) r=fmul(r,a); return r; }
+function fv(a){ return a.n/a.d; }
+function ft(a){ return a.d===1 ? neg(a.n) : neg(a.n)+'/'+a.d; }
+/* decimal string when the fraction terminates within 4 places */
+function fdec(a){
+  var d=a.d; while(d%2===0) d/=2; while(d%5===0) d/=5;
+  if(d!==1) return null;
+  var s=String(r6(a.n/a.d));
+  var k=s.indexOf('.');
+  return (k<0 || s.length-k-1<=4) ? neg(s) : null;
+}
+function dec(a){ return fdec(a) || ft(a); }
+function fracText(a){
+  if(a.d===1) return ft(a);
+  var dd=fdec(a);
+  return dd ? ft(a)+' = '+dd : ft(a)+' ≒ '+s3(fv(a));
+}
+function fpw(a,k){ return k===0 ? '' : (k===1 ? '('+ft(a)+')' : '('+ft(a)+')<sup>'+k+'</sup>'); }
+
+function fact(n){ var r=1; for(var i=2;i<=n;i++) r*=i; return r; }
+function perm(n,r){ var x=1; for(var i=0;i<r;i++) x*=n-i; return x; }
+function comb(n,r){ return perm(n,r)/fact(r); }
+function P_(n,r){ return '<sub>'+n+'</sub>P<sub>'+r+'</sub>'; }
+function C_(n,r){ return '<sub>'+n+'</sub>C<sub>'+r+'</sub>'; }
+function prodText(n,r){ var a=[]; for(var i=0;i<r;i++) a.push(n-i); return a.join(' × '); }
+
+/* ── data helpers ────────────────────────────────────────────────────── */
+function sumA(a){ var s=0; a.forEach(function(x){ s+=x; }); return s; }
+function sqA(a){ var s=0; a.forEach(function(x){ s+=x*x; }); return s; }
+function dotA(a,b){ var s=0; a.forEach(function(x,i){ s+=x*b[i]; }); return s; }
+function srt(a){ return a.slice().sort(function(x,y){ return x-y; }); }
+function dl(a){ return '<span class="dl">'+a.map(fx).join(', ')+'</span>'; }
+function lst(a){ return a.map(fx).join(', '); }
+function dataSet(n,lo,hi){ var a=[]; for(var i=0;i<n;i++) a.push(rnd(lo,hi)); return a; }
+/* n integers in [-lim, lim] summing to 0, not all 0 */
+function devs(n,lim){
+  var d, g=0;
+  do{
+    d=[]; var s=0;
+    for(var i=0;i<n-1;i++){ var x=rnd(-lim,lim); d.push(x); s+=x; }
+    d.push(-s); g++;
+  } while((Math.abs(d[n-1])>lim || d.every(function(x){ return x===0; })) && g<500);
+  return d;
+}
+function medF(s){ var n=s.length; return n%2 ? F(s[(n-1)/2]) : F(s[n/2-1]+s[n/2],2); }
+function quart(s){
+  var n=s.length, h=Math.floor(n/2), lo=s.slice(0,h), hi=s.slice(n-h);
+  return {lo:lo, hi:hi, q1:medF(lo), q2:medF(s), q3:medF(hi)};
+}
+function medText(s,name){
+  var n=s.length;
+  if(n%2) return name+'は '+n+' 個の中央 '+((n+1)/2)+' 番目の値 '+em(fx(s[(n-1)/2]));
+  return name+'は '+n+' 個の '+(n/2)+' 番目と '+(n/2+1)+' 番目の平均 '+em('('+s[n/2-1]+' + '+s[n/2]+') ÷ 2 = '+dec(medF(s)));
+}
+function qSteps(s,which){
+  var n=s.length, Q=quart(s), st=['小さい順に並べる '+em(lst(s))];
+  if(n%2) st.push('個数 '+n+' は奇数なので中央値 '+em(dec(Q.q2))+' を除いて前半 '+Q.lo.length+' 個と後半 '+Q.hi.length+' 個に分ける');
+  else st.push('個数 '+n+' は偶数なので前半 '+(n/2)+' 個と後半 '+(n/2)+' 個に分ける');
+  if(which!=='q3') st.push('前半 '+em(lst(Q.lo))+' の中央値が第1四分位数 '+em(dec(Q.q1)));
+  if(which!=='q1') st.push('後半 '+em(lst(Q.hi))+' の中央値が第3四分位数 '+em(dec(Q.q3)));
+  if(which==='iqr') st.push(em('四分位範囲 = '+dec(Q.q3)+' − '+dec(Q.q1)+' = '+dec(fsub(Q.q3,Q.q1))));
+  return st;
+}
+function varSet(n,needSquare){
+  var d, S, g=0;
+  do{ d=devs(n,4); S=sqA(d); g++; }
+  while(needSquare && g<3000 && !isSq(F(S,n)));
+  return {d:d, S:S, m:rnd(5,12)};
+}
+function isSq(f){
+  var a=Math.round(Math.sqrt(f.n)), b=Math.round(Math.sqrt(f.d));
+  return a*a===f.n && b*b===f.d;
+}
+function fsqrt(f){ return F(Math.round(Math.sqrt(f.n)), Math.round(Math.sqrt(f.d))); }
+function varSteps(v){
+  var n=v.d.length, xs=v.d.map(function(x){ return v.m+x; });
+  return ['平均値 = '+em(sumA(xs)+' ÷ '+n+' = '+v.m),
+    '偏差 = 値 − 平均値 → '+em(lst(v.d)),
+    em('偏差の2乗の和 = '+v.d.map(function(x){ return x*x; }).join(' + ')+' = '+v.S),
+    em('分散 = '+v.S+' ÷ '+n+' = '+fracText(F(v.S,n)))];
+}
+
+/* ── normal table: p(z) = P(0 ≤ Z ≤ z) in units of 1/10000 ─────────────── */
+var ZT=[[0.25,987],[0.5,1915],[0.75,2734],[1,3413],[1.25,3944],[1.5,4332],[1.75,4599],
+        [1.96,4750],[2,4772],[2.5,4938],[3,4987]];
+function zs(z){ return z.toFixed(2); }
+function p4(k){ return (k/10000).toFixed(4); }
+function zRow(z){ for(var i=0;i<ZT.length;i++) if(ZT[i][0]===z) return ZT[i]; return null; }
+function tblText(z){ return '正規分布表から '+em('p('+zs(z)+') = '+p4(zRow(z)[1])); }
+
+/* ── correlation data ────────────────────────────────────────────────── */
+function corrData(){
+  var c=null;
+  for(var g=0;g<4000;g++){
+    var dx=devs(5,4), dy=devs(5,4), Sxx=sqA(dx), Syy=sqA(dy), Sxy=dotA(dx,dy);
+    if(!Sxx || !Syy || !Sxy) continue;
+    var P=Sxx*Syy, rt=Math.round(Math.sqrt(P));
+    if(Math.abs(Sxy)*Math.abs(Sxy)===P) continue;   /* skip r = ±1 */
+    c={dx:dx, dy:dy, Sxx:Sxx, Syy:Syy, Sxy:Sxy, P:P, root:rt*rt===P ? rt : 0};
+    if(c.root) break;
+  }
+  c.mx=rnd(5,15); c.my=rnd(5,15);
+  c.xs=c.dx.map(function(d){ return c.mx+d; });
+  c.ys=c.dy.map(function(d){ return c.my+d; });
+  return c;
+}
+function pairTable(xs,ys){
+  function row(lb,a){ return '<tr><th>'+lb+'</th>'+a.map(function(v){ return '<td>'+fx(v)+'</td>'; }).join('')+'</tr>'; }
+  return '<table class="dt">'+row('x',xs)+row('y',ys)+'</table>';
+}
+function corrHead(c){
+  return ['平均値 x は '+em(c.mx)+'　y は '+em(c.my),
+    'x の偏差 '+em(lst(c.dx))+'　y の偏差 '+em(lst(c.dy)),
+    em('偏差の積の和 = '+c.dx.map(function(d,i){ return pn(d)+'×'+pn(c.dy[i]); }).join(' + ')+' = '+fx(c.Sxy))];
+}
+
+/* ── binomial pairs whose variance is a perfect square ───────────────── */
+var BSQ=(function(){
+  var out=[], ps=[F(1,2),F(1,3),F(1,4),F(1,5),F(1,6),F(2,5)];
+  ps.forEach(function(p){
+    for(var n=10;n<=900;n++){
+      var V=fmul(F(n),fmul(p,fsub(F(1),p)));
+      if(V.d!==1) continue;
+      var s=Math.round(Math.sqrt(V.n));
+      if(s*s===V.n && s>=2 && s<=20 && fv(fmul(F(n),p))%1===0) out.push({n:n,p:p,s:s});
+    }
+  });
+  return out;
+})();
+function lin(a,b){
+  var s=(a===1?'':(a===-1?'−':fx(a)))+'X';
+  if(b>0) s+=' + '+b; else if(b<0) s+=' − '+(-b);
+  return s;
+}
+
+/* ── templates ────────────────────────────────────────────────────────── */
+var CH4={ch:'chapters/04_counting.html',cn:'第4章'}, CH5={ch:'chapters/05_combination.html',cn:'第5章'};
+var EV=[['1 の目',F(1,6)],['6 の目',F(1,6)],['3 の倍数の目',F(1,3)],['偶数の目',F(1,2)],
+        ['5 以上の目',F(1,3)],['4 以下の目',F(2,3)]];
+var PL=[F(1,2),F(1,3),F(2,3),F(1,4),F(3,4),F(2,5),F(3,5),F(4,5)];
+
+var T=[
+/* ── 代表値と散らばり ─────────────────────────────────────── */
+{cat:'disp',ctx:'平均値',gen:function(){
+  var n=rnd(5,8), a=dataSet(n,1,20), s=sumA(a), m=F(s,n);
+  return {t:'mean',v:{a:a},line:dl(a),desc:'大きさ '+n+' のデータ',ask:'平均値は',unit:'',frac:m,
+    steps:[em('合計 = '+a.join(' + ')+' = '+s),em('平均値 = '+s+' ÷ '+n+' = '+fracText(m))]};
+}},
+{cat:'disp',ctx:'中央値',gen:function(){
+  var n=rnd(6,9), a=dataSet(n,1,30), s=srt(a), m=medF(s);
+  return {t:'median',v:{a:a},line:dl(a),desc:'大きさ '+n+' のデータ',ask:'中央値は',unit:'',frac:m,ansText:dec(m),
+    steps:['小さい順に並べる '+em(lst(s)), medText(s,'中央値')]};
+}},
+{cat:'disp',ctx:'四分位数',gen:function(){
+  var n=rnd(7,11), a=dataSet(n,1,30), s=srt(a), Q=quart(s), w=pick(['q1','q3']);
+  var f= w==='q1' ? Q.q1 : Q.q3;
+  return {t:w,v:{a:a},line:dl(a),desc:'大きさ '+n+' のデータ',
+    ask:(w==='q1'?'第1四分位数は':'第3四分位数は'),unit:'',frac:f,ansText:dec(f),steps:qSteps(s,w)};
+}},
+{cat:'disp',ctx:'四分位範囲',gen:function(){
+  var n=rnd(7,11), a=dataSet(n,1,30), s=srt(a), Q=quart(s), f=fsub(Q.q3,Q.q1);
+  return {t:'iqr',v:{a:a},line:dl(a),desc:'大きさ '+n+' のデータ',ask:'四分位範囲は',unit:'',frac:f,ansText:dec(f),
+    steps:qSteps(s,'iqr')};
+}},
+{cat:'disp',ctx:'分散',gen:function(){
+  var v=varSet(rnd(5,6),false), xs=v.d.map(function(x){ return v.m+x; });
+  return {t:'var',v:{a:xs},line:dl(xs),desc:'大きさ '+xs.length+' のデータ',ask:'分散は',unit:'',frac:F(v.S,xs.length),
+    steps:varSteps(v)};
+}},
+{cat:'disp',ctx:'標準偏差',gen:function(){
+  var v=varSet(rnd(4,5),true), n=v.d.length, xs=v.d.map(function(x){ return v.m+x; }), V=F(v.S,n);
+  var st=varSteps(v), q={t:'sd',v:{a:xs},line:dl(xs),desc:'大きさ '+n+' のデータ',ask:'標準偏差は',unit:''};
+  if(isSq(V)){ q.frac=fsqrt(V); st.push(em('標準偏差 = √'+dec(V)+' = '+dec(q.frac))); }
+  else { q.ans=Math.sqrt(fv(V)); st.push(em('標準偏差 = √'+dec(V)+' ≒ '+s3(q.ans))); }
+  q.steps=st;
+  return q;
+}},
+{cat:'disp',ctx:'2乗の平均から分散',gen:function(){
+  var m=rnd(2,12), v=pick([2,3,4,5,6,8,9,10,12,16,20,2.5,4.5,6.4]), q2=r6(m*m+v);
+  return {t:'ex2',v:{m:m,q:q2},line:'x の平均値 '+m+'　x<sup>2</sup> の平均値 '+fx(q2),
+    desc:'変量 x のデータについて',ask:'x の分散は',unit:'',ans:v,
+    steps:['分散 = (x<sup>2</sup> の平均値) − (x の平均値)<sup>2</sup>',
+      em(fx(q2)+' − '+m+'<sup>2</sup> = '+fx(q2)+' − '+(m*m)+' = '+fx(v))]};
+}},
+
+/* ── 相関係数 ─────────────────────────────────────────────── */
+{cat:'corr',ctx:'共分散',gen:function(){
+  var c=corrData(), f=F(c.Sxy,5);
+  return {t:'cov',v:c,im:'text',line:pairTable(c.xs,c.ys),desc:'5 組のデータ',ask:'x と y の共分散は',unit:'',frac:f,
+    steps:corrHead(c).concat([em('共分散 = '+fx(c.Sxy)+' ÷ 5 = '+fracText(f))])};
+}},
+{cat:'corr',ctx:'相関係数',gen:function(){
+  var c=corrData(), q={t:'r5',v:c,im:'text',line:pairTable(c.xs,c.ys),desc:'5 組のデータ',ask:'x と y の相関係数は',unit:''};
+  var st=corrHead(c);
+  st.push(em('x の偏差の2乗の和 = '+c.Sxx+'　y の偏差の2乗の和 = '+c.Syy));
+  st.push('r = 偏差の積の和 ÷ √(2つの2乗の和の積)　個数 5 は分子と分母で約分される');
+  if(c.root){ q.frac=F(c.Sxy,c.root); st.push(em('r = '+fx(c.Sxy)+' ÷ √('+c.Sxx+' × '+c.Syy+') = '+fx(c.Sxy)+' ÷ '+c.root+' = '+fracText(q.frac))); }
+  else { q.ans=c.Sxy/Math.sqrt(c.P); st.push(em('r = '+fx(c.Sxy)+' ÷ √('+c.Sxx+' × '+c.Syy+') = '+fx(c.Sxy)+' ÷ √'+c.P+' ≒ '+s3(q.ans))); }
+  q.steps=st;
+  return q;
+}},
+{cat:'corr',ctx:'共分散と標準偏差から相関係数',gen:function(){
+  var sx=pick([2,3,4,5,6,8,10]), sy=pick([2,3,4,5,6,8,10,12]), k=pick([-9,-8,-7,-6,-5,-4,-3,-2,2,3,4,5,6,7,8,9]);
+  var r=F(k,10), sxy=r6(k*sx*sy/10);
+  return {t:'rcov',v:{sx:sx,sy:sy,sxy:sxy},im:'text',line:'x の標準偏差 '+sx+'　y の標準偏差 '+sy,
+    desc:'x と y の共分散 '+fx(sxy),ask:'相関係数は',unit:'',frac:r,
+    steps:['相関係数 = 共分散 ÷ (x の標準偏差 × y の標準偏差)',
+      em(fx(sxy)+' ÷ ('+sx+' × '+sy+') = '+fx(sxy)+' ÷ '+(sx*sy)+' = '+dec(r))]};
+}},
+{cat:'corr',ctx:'相関係数から共分散',gen:function(){
+  var sx=pick([2,3,4,5,6,8,10]), sy=pick([2,3,4,5,6,8,10,12]), k=pick([-9,-8,-7,-6,-5,-4,-3,-2,2,3,4,5,6,7,8,9]);
+  var f=F(k*sx*sy,10);
+  return {t:'covr',v:{sx:sx,sy:sy,r:k/10},im:'text',line:'x の標準偏差 '+sx+'　y の標準偏差 '+sy,
+    desc:'x と y の相関係数 '+fx(k/10),ask:'共分散は',unit:'',frac:f,
+    steps:['共分散 = 相関係数 × x の標準偏差 × y の標準偏差',
+      em(fx(k/10)+' × '+sx+' × '+sy+' = '+dec(f))]};
+}},
+
+/* ── 順列と組合せ ─────────────────────────────────────────── */
+{cat:'count',ctx:'順列',ch:CH4,gen:function(){
+  var n=rnd(5,9), r=rnd(2,4), kind=rnd(0,2), line, ask;
+  if(kind===0){ line='異なる '+n+' 個の文字から '+r+' 個を選んで1列に並べる'; ask='並べ方は'; }
+  else if(kind===1){ r=3; line=n+' 人の中から委員長と副委員長と書記を1人ずつ選ぶ'; ask='選び方は'; }
+  else { line=n+' 人の中から '+r+' 人を選んで1列に並べる'; ask='並び方は'; }
+  var a=perm(n,r);
+  return {t:'perm',v:{n:n,r:r},exact:true,line:line,ask:ask,unit:'通り',ans:a,
+    steps:['異なる '+n+' 個から '+r+' 個を取って並べる順列 '+em(P_(n,r)),
+      em(P_(n,r)+' = '+prodText(n,r)+' = '+a)]};
+}},
+{cat:'count',ctx:'組合せ',ch:CH5,gen:function(){
+  var n=rnd(5,12), r=rnd(2,5), kind=rnd(0,2), line, ask;
+  if(r>=n) r=n-1;
+  if(kind===0){ line=n+' 人の中から '+r+' 人の委員を選ぶ'; ask='選び方は'; }
+  else if(kind===1){ line='異なる '+n+' 冊の本から '+r+' 冊を選ぶ'; ask='選び方は'; }
+  else { r=3; n=rnd(5,10); line='正'+n+'角形の頂点から3個を選んで結ぶと三角形ができる'; ask='三角形の個数は'; }
+  var a=comb(n,r);
+  return {t:'comb',v:{n:n,r:r},exact:true,line:line,ask:ask,unit:(kind===2?'個':'通り'),ans:a,
+    steps:['選ぶだけで順序は区別しないので組合せ '+em(C_(n,r)),
+      em(C_(n,r)+' = ('+prodText(n,r)+') ÷ ('+prodText(r,r)+') = '+perm(n,r)+' ÷ '+fact(r)+' = '+a)]};
+}},
+{cat:'count',ctx:'円順列',ch:CH4,gen:function(){
+  var n=rnd(4,8), adj=Math.random()<0.5, a;
+  if(!adj){
+    a=fact(n-1);
+    return {t:'circ',v:{n:n,adj:false},exact:true,line:n+' 人が円形のテーブルに座る',ask:'座り方は',unit:'通り',ans:a,
+      steps:['回転して重なる並び方は同じとみなす　1人を固定して残りを並べる',
+        em('('+n+' − 1)! = '+(n-1)+'! = '+a)]};
+  }
+  a=2*fact(n-2);
+  return {t:'circ',v:{n:n,adj:true},exact:true,line:n+' 人が円形のテーブルに座る',desc:'特定の2人は隣り合う',ask:'座り方は',unit:'通り',ans:a,
+    steps:['隣り合う2人を1組とみなすと '+(n-1)+' 個の円順列 '+em('('+(n-1)+' − 1)! = '+fact(n-2)),
+      '組の中の2人の並び方は '+em('2! = 2'),
+      em(fact(n-2)+' × 2 = '+a)]};
+}},
+{cat:'count',ctx:'同じものを含む順列',ch:CH5,gen:function(){
+  var L=['A','B','C','D'], k, cnt, tot, g=0;
+  do{
+    k=rnd(2,4); cnt=[]; tot=0;
+    for(var i=0;i<k;i++){ var c=rnd(1,4); cnt.push(c); tot+=c; }
+    g++;
+  } while((tot<5 || tot>8 || Math.max.apply(null,cnt)<2) && g<200);
+  var seq=[], den=1, dt=[];
+  cnt.forEach(function(c,i){ for(var j=0;j<c;j++) seq.push(L[i]); den*=fact(c); dt.push(c+'!'); });
+  var a=fact(tot)/den;
+  return {t:'multi',v:{cnt:cnt},exact:true,line:seq.join(' '),desc:'この '+tot+' 文字を1列に並べる',ask:'並べ方は',unit:'通り',ans:a,
+    steps:[cnt.map(function(c,i){ return L[i]+' が '+c+' 個'; }).join('　')+'　合計 '+tot+' 個',
+      em(tot+'! ÷ ('+dt.join(' × ')+') = '+fact(tot)+' ÷ '+den+' = '+a)]};
+}},
+{cat:'count',ctx:'重複順列',ch:CH4,gen:function(){
+  var kind=rnd(0,1), k, r, line, ask;
+  if(kind===0){ k=rnd(3,6); r=rnd(3,4); line='数字 1 から '+k+' までを重複を許して並べた '+r+' 桁の整数'; ask='個数は'; }
+  else { k=pick([2,3,4]); r=rnd(3,6); line=r+' 人を '+['A','B','C','D'].slice(0,k).join(' ')+' の '+k+' 部屋に入れる'; ask='入れ方は'; }
+  var a=Math.pow(k,r);
+  return {t:'rep',v:{k:k,r:r},exact:true,line:line,desc:(kind===1?'空室があってもよい':''),ask:ask,unit:(kind===0?'個':'通り'),ans:a,
+    steps:[(kind===0?'各桁に '+k+' 通りの数字を置ける':'1人ごとに '+k+' 通りの部屋を選べる'),
+      em(k+'<sup>'+r+'</sup> = '+a)]};
+}},
+{cat:'count',ctx:'組合せの積',ch:CH5,gen:function(){
+  var m=rnd(4,8), f=rnd(3,7), a=rnd(1,3), b=rnd(1,3);
+  if(a>=m) a=m-1; if(b>=f) b=f-1;
+  var x=comb(m,a), y=comb(f,b);
+  return {t:'mf',v:{m:m,f:f,a:a,b:b},exact:true,line:'男子 '+m+' 人と女子 '+f+' 人',desc:'男子 '+a+' 人と女子 '+b+' 人を選ぶ',ask:'選び方は',unit:'通り',ans:x*y,
+    steps:['男子の選び方 '+em(C_(m,a)+' = '+x)+'　女子の選び方 '+em(C_(f,b)+' = '+y),
+      '積の法則 '+em(x+' × '+y+' = '+(x*y))]};
+}},
+{cat:'count',ctx:'式の選択',ch:CH4,gen:function(){
+  var n=rnd(5,8), r=rnd(2,4), kind=rnd(0,3), line, ask='求める式は', right, wrong, st, ch=CH4;
+  if(kind===0){ line=n+' 人の中から '+r+' 人を選んで1列に並べる'; right=P_(n,r);
+    st=['選んだ後に並べるので順列 '+em(P_(n,r))]; }
+  else if(kind===1){ line=n+' 人の中から '+r+' 人の委員を選ぶ'; right=C_(n,r); ch=CH5;
+    st=['選ぶだけで順序は区別しないので組合せ '+em(C_(n,r))]; }
+  else if(kind===2){ line=r+' 人がそれぞれ '+n+' 種類の飲み物から1つを選ぶ'; right=n+'<sup>'+r+'</sup>';
+    st=['1人ごとに '+n+' 通りで同じ飲み物を何人が選んでもよいので重複順列 '+em(n+'<sup>'+r+'</sup>')]; }
+  else { line=n+' 人が円形のテーブルに座る'; right='('+n+' − 1)!';
+    st=['回転して重なる並び方は同じとみなすので円順列 '+em('('+n+' − 1)!')]; }
+  if(kind<3) wrong=[P_(n,r),C_(n,r),n+'<sup>'+r+'</sup>',r+'<sup>'+n+'</sup>'].filter(function(s){ return s!==right; });
+  else wrong=[n+'!','('+n+' − 1)! ÷ 2',P_(n,r)];
+  var q=choiceQ('fsel',{n:n,r:r,kind:kind},line,'',ask,{right:right,wrong:wrong.slice(0,3)},st);
+  q.ch=ch.ch; q.cn=ch.cn;
+  return q;
+}},
+
+/* ── 確率 ─────────────────────────────────────────────────── */
+{cat:'prob',ctx:'反復試行',gen:function(){
+  var e=pick(EV), n=rnd(3,6), k=rnd(1,n), p=e[1], q=fsub(F(1),p);
+  var f=fmul(F(comb(n,k)),fmul(fpow(p,k),fpow(q,n-k)));
+  return {t:'binom',v:{p:p,n:n,k:k},line:'さいころを '+n+' 回投げる',ask:e[0]+'がちょうど '+k+' 回出る確率は',unit:'',frac:f,
+    steps:['1回で'+e[0]+'が出る確率は '+em(ft(p))+'　出ない確率は '+em(ft(q)),
+      e[0]+'が出る回の選び方は '+em(C_(n,k)+' = '+comb(n,k)),
+      em(comb(n,k)+' × '+fpw(p,k)+(n-k?' × '+fpw(q,n-k):'')+' = '+fracText(f))]};
+}},
+{cat:'prob',ctx:'余事象',gen:function(){
+  var e=pick(EV), n=rnd(2,5), p=e[1], q=fsub(F(1),p), qn=fpow(q,n), f=fsub(F(1),qn);
+  return {t:'atleast',v:{p:p,n:n},line:'さいころを '+n+' 回投げる',ask:'少なくとも1回'+e[0]+'が出る確率は',unit:'',frac:f,
+    steps:['余事象は '+n+' 回とも'+e[0]+'が出ない　その確率は '+em(fpw(q,n)+' = '+ft(qn)),
+      em('1 − '+ft(qn)+' = '+fracText(f))]};
+}},
+{cat:'prob',ctx:'余事象のくじ',gen:function(){
+  var N=rnd(6,12), a=rnd(2,4), k=rnd(2,3);
+  if(N-a<k+1) N=a+k+1+rnd(0,3);
+  var miss=F(comb(N-a,k),comb(N,k)), f=fsub(F(1),miss);
+  return {t:'lot',v:{N:N,a:a,k:k},line:'当たり '+a+' 本を含む '+N+' 本のくじ',desc:'同時に '+k+' 本を引く',ask:'少なくとも1本当たる確率は',unit:'',frac:f,
+    steps:['余事象は '+k+' 本とも外れる',
+      em('外れだけを引く確率 = '+C_(N-a,k)+' ÷ '+C_(N,k)+' = '+comb(N-a,k)+'/'+comb(N,k)+' = '+ft(miss)),
+      em('1 − '+ft(miss)+' = '+fracText(f))]};
+}},
+{cat:'prob',ctx:'独立な試行',gen:function(){
+  var pa=pick(PL), pb=pick(PL), qa=fsub(F(1),pa), qb=fsub(F(1),pb), w=rnd(0,2), f, ask, st;
+  if(w===0){ f=fmul(pa,pb); ask='2人とも命中する確率は'; st=[em(ft(pa)+' × '+ft(pb)+' = '+fracText(f))]; }
+  else if(w===1){ f=fadd(fmul(pa,qb),fmul(qa,pb)); ask='ちょうど1人が命中する確率は';
+    st=['A だけ命中する場合と B だけ命中する場合の和',
+      em(ft(pa)+' × '+ft(qb)+' + '+ft(qa)+' × '+ft(pb)+' = '+ft(fmul(pa,qb))+' + '+ft(fmul(qa,pb))+' = '+fracText(f))]; }
+  else { f=fsub(F(1),fmul(qa,qb)); ask='少なくとも1人が命中する確率は';
+    st=['余事象は2人とも外れる',em('1 − '+ft(qa)+' × '+ft(qb)+' = 1 − '+ft(fmul(qa,qb))+' = '+fracText(f))]; }
+  return {t:'indep',v:{pa:pa,pb:pb,w:w},line:'A と B が的に向かって1回ずつ矢を射る',
+    desc:'命中する確率は A が '+ft(pa)+' で B が '+ft(pb)+'　2人の結果は互いに独立',ask:ask,unit:'',frac:f,
+    steps:['外れる確率は A が '+em(ft(qa))+' で B が '+em(ft(qb))].concat(st)};
+}},
+{cat:'prob',ctx:'反復試行の和',gen:function(){
+  var e=pick(EV), n=rnd(3,5), p=e[1], q=fsub(F(1),p);
+  var a=fmul(F(n),fmul(fpow(p,n-1),q)), b=fpow(p,n), f=fadd(a,b);
+  return {t:'binom2',v:{p:p,n:n},line:'さいころを '+n+' 回投げる',ask:e[0]+'が '+(n-1)+' 回以上出る確率は',unit:'',frac:f,
+    steps:[(n-1)+' 回出る場合と '+n+' 回出る場合の和',
+      em((n-1)+' 回 = '+C_(n,n-1)+' × '+fpw(p,n-1)+' × '+fpw(q,1)+' = '+ft(a)),
+      em(n+' 回 = '+fpw(p,n)+' = '+ft(b)),
+      em(ft(a)+' + '+ft(b)+' = '+fracText(f))]};
+}},
+
+/* ── 条件付き確率と期待値 ─────────────────────────────────── */
+{cat:'cond',ctx:'検査の陽性',gen:function(){
+  var t=testSet(), f=F(t.tp,t.tp+t.fp);
+  return {t:'ppv',v:t,line:'感染率 '+t.a+'% の集団で検査をする',desc:testDesc(t),
+    ask:'陽性と判定された人が感染者である確率は',unit:'',frac:f,
+    steps:testSteps(t).concat([em('求める確率 = '+t.tp+' ÷ ('+t.tp+' + '+t.fp+') = '+fracText(f))])};
+}},
+{cat:'cond',ctx:'陽性になる確率',gen:function(){
+  var t=testSet(), f=F(t.tp+t.fp,10000);
+  return {t:'ppos',v:t,line:'感染率 '+t.a+'% の集団で検査をする',desc:testDesc(t),
+    ask:'1人を選んで検査すると陽性と判定される確率は',unit:'',frac:f,
+    steps:testSteps(t).concat([em('('+t.tp+' + '+t.fp+') ÷ 10000 = '+fracText(f))])};
+}},
+{cat:'cond',ctx:'不良品の出どころ',gen:function(){
+  var x=pick([20,30,40,50,60,70,80]), da=rnd(1,5), db=rnd(1,5);
+  var A=x*100, B=(100-x)*100, ta=A*da/100, tb=B*db/100, f=F(ta,ta+tb);
+  return {t:'factory',v:{x:x,da:da,db:db},line:'製品の '+x+'% を工場 A で 残りを工場 B で製造する',
+    desc:'不良品の割合は A が '+da+'% で B が '+db+'%',ask:'取り出した1個が不良品であったとき A の製品である確率は',unit:'',frac:f,
+    steps:['製品 10000 個で数える',
+      'A の製品 '+A+' 個のうち不良品 '+em(A+' × '+da+'/100 = '+ta+' 個'),
+      'B の製品 '+B+' 個のうち不良品 '+em(B+' × '+db+'/100 = '+tb+' 個'),
+      em('求める確率 = '+ta+' ÷ ('+ta+' + '+tb+') = '+fracText(f))]};
+}},
+{cat:'cond',ctx:'戻さないくじ',gen:function(){
+  var N=rnd(5,12), a=rnd(2,4), w=rnd(0,1), f, ask, st;
+  if(w===0){ f=F(a-1,N-1); ask='A が当たったとき B も当たる条件付き確率は';
+    st=['A が当たった後は '+(N-1)+' 本のうち当たりが '+(a-1)+' 本', em('P<sub>A</sub>(B) = '+(a-1)+'/'+(N-1)+' = '+fracText(f))]; }
+  else { var x=F(a*(a-1),N*(N-1)), y=F((N-a)*a,N*(N-1)); f=fadd(x,y); ask='B が当たる確率は';
+    st=['A が当たり B も当たる '+em(a+'/'+N+' × '+(a-1)+'/'+(N-1)+' = '+ft(x)),
+      'A が外れ B が当たる '+em((N-a)+'/'+N+' × '+a+'/'+(N-1)+' = '+ft(y)),
+      em(ft(x)+' + '+ft(y)+' = '+fracText(f)),'引く順番によらず当たる確率は '+a+'/'+N+' に等しい']; }
+  return {t:'nolot',v:{N:N,a:a,w:w},line:'当たり '+a+' 本を含む '+N+' 本のくじ',desc:'A が1本引き 戻さずに B が1本引く',ask:ask,unit:'',frac:f,steps:st};
+}},
+{cat:'cond',ctx:'条件付き確率の定義',gen:function(){
+  var pa=pick([F(1,2),F(1,3),F(2,3),F(3,5),F(3,4),F(2,5),F(5,6),F(4,5)]), r=pick([F(1,2),F(1,3),F(2,3),F(1,4),F(3,4),F(2,5),F(3,5)]);
+  var pab=fmul(pa,r);
+  return {t:'cdef',v:{pa:pa,pab:pab},line:'P(A) = '+ft(pa)+'　P(A ∩ B) = '+ft(pab),ask:'P<sub>A</sub>(B) は',unit:'',frac:r,
+    steps:['P<sub>A</sub>(B) は A が起こったときに B が起こる確率',
+      em('P<sub>A</sub>(B) = P(A ∩ B) ÷ P(A) = '+ft(pab)+' ÷ '+ft(pa)+' = '+fracText(r))]};
+}},
+{cat:'cond',ctx:'くじの期待値',gen:function(){
+  var N=pick([20,50,100,200]), pr=[pick([5000,10000,20000]),pick([1000,2000,3000]),pick([100,200,500])];
+  var c=[1,rnd(2,5),rnd(5,15)], tot=0, terms=[];
+  if(N===20){ c=[1,rnd(1,3),rnd(2,6)]; }
+  pr.forEach(function(x,i){ tot+=x*c[i]; terms.push(x+' × '+c[i]+'/'+N); });
+  var f=F(tot,N);
+  return {t:'ev',v:{N:N,pr:pr,c:c},line:N+' 本のくじ',
+    desc:'1等 '+pr[0]+' 円が '+c[0]+' 本　2等 '+pr[1]+' 円が '+c[1]+' 本　3等 '+pr[2]+' 円が '+c[2]+' 本　残りは外れ',
+    ask:'1本引くときの賞金の期待値は',unit:'円',frac:f,ansText:dec(f),
+    steps:['期待値 = 賞金 × その賞金を得る確率 の和　外れは 0 円',
+      em(terms.join(' + ')+' = '+tot+'/'+N+' = '+dec(f)+' 円')]};
+}},
+
+/* ── 確率変数と二項分布 ───────────────────────────────────── */
+{cat:'rv',ctx:'二項分布の期待値',gen:function(){
+  var b=binPick(), E=fmul(F(b.n),b.p);
+  return {t:'bE',v:b,line:'X は二項分布 B('+b.n+', '+ft(b.p)+') に従う',ask:'E(X) は',unit:'',frac:E,
+    steps:[em('E(X) = np = '+b.n+' × '+ft(b.p)+' = '+fracText(E))]};
+}},
+{cat:'rv',ctx:'二項分布の分散',gen:function(){
+  var b=binPick(), q=fsub(F(1),b.p), V=fmul(F(b.n),fmul(b.p,q));
+  return {t:'bV',v:b,line:'X は二項分布 B('+b.n+', '+ft(b.p)+') に従う',ask:'V(X) は',unit:'',frac:V,
+    steps:[em('V(X) = np(1 − p) = '+b.n+' × '+ft(b.p)+' × '+ft(q)+' = '+fracText(V))]};
+}},
+{cat:'rv',ctx:'二項分布の標準偏差',gen:function(){
+  var b=pick(BSQ), q=fsub(F(1),b.p), V=fmul(F(b.n),fmul(b.p,q));
+  return {t:'bS',v:{n:b.n,p:b.p},line:'X は二項分布 B('+b.n+', '+ft(b.p)+') に従う',ask:'σ(X) は',unit:'',frac:F(b.s),
+    steps:[em('V(X) = '+b.n+' × '+ft(b.p)+' × '+ft(q)+' = '+ft(V)),em('σ(X) = √'+ft(V)+' = '+b.s)]};
+}},
+{cat:'rv',ctx:'確率分布の期待値',gen:function(){
+  var d=distPick(), E=distE(d);
+  return {t:'dE',v:d,line:distTable(d),desc:'確率変数 X の確率分布',ask:'E(X) は',unit:'',frac:E,
+    steps:[em('E(X) = '+d.x.map(function(x,i){ return x+' × '+d.w[i]+'/'+d.D; }).join(' + ')+' = '+fracText(E))]};
+}},
+{cat:'rv',ctx:'確率分布の分散',gen:function(){
+  var d=distPick(), E=distE(d), E2=F(0);
+  d.x.forEach(function(x,i){ E2=fadd(E2,F(x*x*d.w[i],d.D)); });
+  var V=fsub(E2,fmul(E,E));
+  return {t:'dV',v:d,line:distTable(d),desc:'確率変数 X の確率分布',ask:'V(X) は',unit:'',frac:V,
+    steps:[em('E(X) = '+ft(E)),
+      em('E(X<sup>2</sup>) = '+d.x.map(function(x,i){ return (x*x)+' × '+d.w[i]+'/'+d.D; }).join(' + ')+' = '+ft(E2)),
+      em('V(X) = E(X<sup>2</sup>) − {E(X)}<sup>2</sup> = '+ft(E2)+' − ('+ft(E)+')<sup>2</sup> = '+fracText(V))]};
+}},
+{cat:'rv',ctx:'aX + b の期待値と分散',gen:function(){
+  var m=rnd(2,20), s=rnd(2,6), V=s*s, a=pick([-3,-2,2,3,4,5]), b=pick([-10,-6,-5,-3,-1,1,2,3,5,8,10]);
+  var w=rnd(0,2), ans, ask, st;
+  if(w===0){ ans=a*m+b; ask='E(Y) は'; st=[em('E(Y) = aE(X) + b = '+pn(a)+' × '+m+(b<0?' − '+(-b):' + '+b)+' = '+fx(ans))]; }
+  else if(w===1){ ans=a*a*V; ask='V(Y) は'; st=['b は散らばりを変えない',em('V(Y) = a<sup>2</sup>V(X) = '+pn(a)+'<sup>2</sup> × '+V+' = '+ans)]; }
+  else { ans=Math.abs(a)*s; ask='σ(Y) は'; st=[em('σ(X) = √'+V+' = '+s),em('σ(Y) = |a|σ(X) = '+Math.abs(a)+' × '+s+' = '+ans)]; }
+  return {t:'lin',v:{m:m,V:V,a:a,b:b,w:w},im:'text',exact:true,line:'E(X) = '+m+'　V(X) = '+V,desc:'Y = '+lin(a,b),ask:ask,unit:'',ans:ans,steps:st};
+}},
+{cat:'rv',ctx:'二項分布の1次式',gen:function(){
+  var b=pick(BSQ), a=pick([2,3,4,5,10]), c=pick([-20,-10,-5,5,10,20]), E=fmul(F(b.n),b.p), w=rnd(0,1), ans, st;
+  var V=fmul(F(b.n),fmul(b.p,fsub(F(1),b.p)));
+  if(w===0){ ans=fadd(fmul(F(a),E),F(c)); st=[em('E(X) = '+b.n+' × '+ft(b.p)+' = '+ft(E)),em('E(Y) = '+a+' × '+ft(E)+(c<0?' − '+(-c):' + '+c)+' = '+ft(ans))]; }
+  else { ans=fmul(F(a*a),V); st=[em('V(X) = '+b.n+' × '+ft(b.p)+' × '+ft(fsub(F(1),b.p))+' = '+ft(V)),em('V(Y) = '+a+'<sup>2</sup> × '+ft(V)+' = '+ft(ans))]; }
+  return {t:'blin',v:{n:b.n,p:b.p,a:a,c:c,w:w},im:'text',line:'X は二項分布 B('+b.n+', '+ft(b.p)+') に従う',desc:'Y = '+lin(a,c),
+    ask:(w===0?'E(Y) は':'V(Y) は'),unit:'',frac:ans,steps:st};
+}},
+{cat:'rv',ctx:'aX + b の公式',gen:function(){
+  var w=rnd(0,2), right, wrong, ask, st;
+  if(w===0){ ask='E(aX + b) を表す式は'; right='aE(X) + b'; wrong=['aE(X)','a<sup>2</sup>E(X) + b','E(X) + b'];
+    st=['X を a 倍して b を加えると平均も a 倍して b を加えた値になる']; }
+  else if(w===1){ ask='V(aX + b) を表す式は'; right='a<sup>2</sup>V(X)'; wrong=['aV(X) + b','a<sup>2</sup>V(X) + b','aV(X)'];
+    st=['分散は偏差の2乗の平均なので a<sup>2</sup> 倍になり b は散らばりを変えない']; }
+  else { ask='σ(aX + b) を表す式は'; right='|a|σ(X)'; wrong=['aσ(X) + b','a<sup>2</sup>σ(X)','|a|σ(X) + b'];
+    st=['標準偏差は分散 a<sup>2</sup>V(X) の正の平方根なので |a| 倍になる']; }
+  return choiceQ('linf',{w:w},'a と b は定数','X は確率変数',ask,{right:right,wrong:wrong},st);
+}},
+
+/* ── 正規分布 ─────────────────────────────────────────────── */
+{cat:'norm',ctx:'標準正規分布 片側',gen:function(){
+  var r=pick(ZT), z=r[0], w=rnd(0,3), k, ask, st;
+  if(w===0){ ask='P(Z ≥ '+zs(z)+') は'; k=5000-r[1]; st=['Z ≥ 0 の確率は 0.5',em('0.5 − '+p4(r[1])+' = '+p4(k))]; }
+  else if(w===1){ ask='P(Z ≤ −'+zs(z)+') は'; k=5000-r[1]; st=['分布は 0 について対称なので P(Z ≤ −'+zs(z)+') = P(Z ≥ '+zs(z)+')',em('0.5 − '+p4(r[1])+' = '+p4(k))]; }
+  else if(w===2){ ask='P(Z ≤ '+zs(z)+') は'; k=5000+r[1]; st=['Z ≤ 0 の確率 0.5 に 0 ≤ Z ≤ '+zs(z)+' の確率を加える',em('0.5 + '+p4(r[1])+' = '+p4(k))]; }
+  else { ask='P(Z ≥ −'+zs(z)+') は'; k=5000+r[1]; st=['対称なので −'+zs(z)+' ≤ Z ≤ 0 の確率は p('+zs(z)+') に等しい',em('p('+zs(z)+') + 0.5 = '+p4(r[1])+' + 0.5 = '+p4(k))]; }
+  return {t:'z1',v:{z:z,w:w},line:'Z は標準正規分布 N(0, 1) に従う',ask:ask,unit:'',frac:F(k,10000),ansText:p4(k),
+    steps:[tblText(z)].concat(st)};
+}},
+{cat:'norm',ctx:'標準正規分布 区間',gen:function(){
+  var i=rnd(0,ZT.length-1), j=rnd(0,ZT.length-1), w=rnd(0,1), k, ask, st;
+  if(w===0){ ask='P(−'+zs(ZT[i][0])+' ≤ Z ≤ '+zs(ZT[j][0])+') は'; k=ZT[i][1]+ZT[j][1];
+    st=['0 をまたぐので左右を足す',em(p4(ZT[i][1])+' + '+p4(ZT[j][1])+' = '+p4(k))]; }
+  else { if(i===j) j=(i+1)%ZT.length; var lo=Math.min(i,j), hi=Math.max(i,j); i=lo; j=hi;
+    ask='P('+zs(ZT[i][0])+' ≤ Z ≤ '+zs(ZT[j][0])+') は'; k=ZT[j][1]-ZT[i][1];
+    st=['0 から '+zs(ZT[j][0])+' までの確率から 0 から '+zs(ZT[i][0])+' までの確率を引く',em(p4(ZT[j][1])+' − '+p4(ZT[i][1])+' = '+p4(k))]; }
+  return {t:'z2',v:{a:ZT[i][0],b:ZT[j][0],w:w},line:'Z は標準正規分布 N(0, 1) に従う',ask:ask,unit:'',frac:F(k,10000),ansText:p4(k),
+    steps:[tblText(ZT[i][0]),tblText(ZT[j][0])].concat(st)};
+}},
+{cat:'norm',ctx:'標準化して片側',gen:function(){
+  var g=normPick(), up=Math.random()<0.5, k, st;
+  var x=r6(g.m+(up?1:-1)*g.z*g.s);
+  k=5000-g.p;
+  st=[em('Z = (X − '+g.m+')/'+g.s),em('X = '+fx(x)+' のとき Z = ('+fx(x)+' − '+g.m+')/'+g.s+' = '+(up?'':'−')+zs(g.z)),tblText(g.z),
+    em((up?'P(Z ≥ ':'P(Z ≤ −')+zs(g.z)+') = 0.5 − '+p4(g.p)+' = '+p4(k))];
+  return {t:'xn1',v:{m:g.m,s:g.s,x:x,up:up},line:'X は正規分布 N('+g.m+', '+g.s+'<sup>2</sup>) に従う',
+    ask:'P(X '+(up?'≥':'≤')+' '+fx(x)+') は',unit:'',frac:F(k,10000),ansText:p4(k),steps:st};
+}},
+{cat:'norm',ctx:'標準化して区間',gen:function(){
+  var g=normPick(), h=normPickFor(g.m,g.s), k=g.p+h.p;
+  var a=r6(g.m-g.z*g.s), b=r6(g.m+h.z*g.s);
+  return {t:'xn2',v:{m:g.m,s:g.s,a:a,b:b},line:'X は正規分布 N('+g.m+', '+g.s+'<sup>2</sup>) に従う',
+    ask:'P('+fx(a)+' ≤ X ≤ '+fx(b)+') は',unit:'',frac:F(k,10000),ansText:p4(k),
+    steps:[em('Z = (X − '+g.m+')/'+g.s),em('X = '+fx(a)+' のとき Z = −'+zs(g.z)+'　X = '+fx(b)+' のとき Z = '+zs(h.z)),
+      tblText(g.z),tblText(h.z),em('P(−'+zs(g.z)+' ≤ Z ≤ '+zs(h.z)+') = '+p4(g.p)+' + '+p4(h.p)+' = '+p4(k))]};
+}},
+{cat:'norm',ctx:'人数の見積もり',gen:function(){
+  var N, g, k, j=0;
+  do{ N=pick([500,1000,2000,10000]); g=normPick(); k=5000-g.p; j++; } while(N*k/10000<10 && j<200);
+  var x=r6(g.m+g.z*g.s), ans=r6(N*k/10000);
+  return {t:'cnt',v:{N:N,m:g.m,s:g.s,x:x},tol:0.5,line:'受験者 '+N+' 人の得点は正規分布 N('+g.m+', '+g.s+'<sup>2</sup>) に従う',
+    ask:'得点が '+fx(x)+' 点以上の人数は約何人か',unit:'人',ans:ans,ansText:'約 '+Math.round(ans),
+    steps:[em('Z = ('+fx(x)+' − '+g.m+')/'+g.s+' = '+zs(g.z)),tblText(g.z),
+      em('P(Z ≥ '+zs(g.z)+') = 0.5 − '+p4(g.p)+' = '+p4(k)),
+      em(N+' × '+p4(k)+' = '+fx(ans)+' → 約 '+Math.round(ans)+' 人')]};
+}},
+{cat:'norm',ctx:'二項分布の正規近似',gen:function(){
+  var b, z, g=0;
+  do{ b=pick(BSQ); z=pick(ZT); g++; } while((Math.abs(z[0]*b.s-Math.round(z[0]*b.s))>1e-9 || z[0]*b.s<1) && g<500);
+  var m=fv(fmul(F(b.n),b.p)), up=Math.random()<0.5, kx=up ? m+Math.round(z[0]*b.s) : m-Math.round(z[0]*b.s), k=5000-z[1];
+  return {t:'napprox',v:{n:b.n,p:b.p,kx:kx,up:up},line:'X は二項分布 B('+b.n+', '+ft(b.p)+') に従う',
+    desc:'n は十分に大きいので X は正規分布で近似する',ask:'P(X '+(up?'≥':'≤')+' '+kx+') は',unit:'',frac:F(k,10000),ansText:p4(k),
+    steps:[em('E(X) = '+b.n+' × '+ft(b.p)+' = '+m)+'　'+em('σ(X) = √('+b.n+' × '+ft(b.p)+' × '+ft(fsub(F(1),b.p))+') = '+b.s),
+      'X は近似的に '+em('N('+m+', '+b.s+'<sup>2</sup>)')+' に従う',
+      em('Z = ('+kx+' − '+m+')/'+b.s+' = '+(up?'':'−')+zs(z[0])),tblText(z[0]),
+      em('0.5 − '+p4(z[1])+' = '+p4(k))]};
+}},
+
+/* ── 推定 ─────────────────────────────────────────────────── */
+{cat:'est',ctx:'標本平均の標準偏差',gen:function(){
+  var e=estPick();
+  return {t:'se',v:{n:e.n,s:e.sig},line:'母標準偏差 '+e.sig+' の母集団から大きさ '+e.n+' の標本を無作為に抽出する',
+    ask:'標本平均の標準偏差は',unit:'',ans:e.u,
+    steps:['標本平均の標準偏差は σ/√n',em(e.sig+'/√'+e.n+' = '+e.sig+'/'+e.rt+' = '+fx(e.u))]};
+}},
+{cat:'est',ctx:'母平均の信頼区間',gen:function(){
+  var e=estPick(), xb=r6(rnd(300,800)/10), h=r6(1.96*e.u), lo=Math.random()<0.5, ans=r6(lo? xb-h : xb+h);
+  return {t:'ci',v:{n:e.n,s:e.sig,xb:xb,lo:lo},tol:0.05,line:'大きさ '+e.n+' の標本の平均値は '+fx(xb),
+    desc:'母標準偏差は '+e.sig+'　母平均 m に対する信頼度 95% の信頼区間を求める',ask:'信頼区間の'+(lo?'下限':'上限')+'は',unit:'',ans:ans,ansText:fx(ans),
+    steps:['信頼区間は 標本平均 ± 1.96 × σ/√n',
+      em('1.96 × '+e.sig+'/√'+e.n+' = 1.96 × '+fx(e.u)+' = '+fx(h)),
+      em(fx(xb)+(lo?' − ':' + ')+fx(h)+' = '+fx(ans)),
+      '信頼区間は '+em(fx(r6(xb-h))+' ≤ m ≤ '+fx(r6(xb+h)))]};
+}},
+{cat:'est',ctx:'信頼区間の幅',gen:function(){
+  var e=estPick(), h=r6(1.96*e.u), w=r6(2*h);
+  return {t:'ciw',v:{n:e.n,s:e.sig},line:'母標準偏差 '+e.sig+' の母集団から大きさ '+e.n+' の標本を抽出する',
+    desc:'母平均に対する信頼度 95% の信頼区間を求める',ask:'信頼区間の幅は',unit:'',ans:w,
+    steps:['幅は上限 − 下限 = 2 × 1.96 × σ/√n',em('2 × 1.96 × '+e.sig+'/√'+e.n+' = 3.92 × '+fx(e.u)+' = '+fx(w))]};
+}},
+{cat:'est',ctx:'母比率の信頼区間',gen:function(){
+  var n=pick([100,400,1600,2500,6400,10000]), pq=pick([[0.1,0.3],[0.2,0.4],[0.5,0.5],[0.8,0.4],[0.9,0.3]]);
+  var R=pq[0], k=Math.round(R*n), rt=Math.round(Math.sqrt(n)), se=r6(pq[1]/rt), h=r6(1.96*se), lo=Math.random()<0.5, ans=r6(lo? R-h : R+h);
+  return {t:'pci',v:{n:n,k:k,lo:lo},tol:0.001,line:'大きさ '+n+' の標本のうち '+k+' 人が賛成した',
+    desc:'賛成の母比率 p に対する信頼度 95% の信頼区間を求める',ask:'信頼区間の'+(lo?'下限':'上限')+'は',unit:'',ans:ans,ansText:fx(ans),
+    steps:[em('標本比率 R = '+k+'/'+n+' = '+fx(R)),
+      em('√(R(1 − R)/n) = √('+fx(R)+' × '+fx(r6(1-R))+'/'+n+') = '+fx(pq[1])+'/'+rt+' = '+fx(se)),
+      em('1.96 × '+fx(se)+' = '+fx(h)),
+      em(fx(R)+(lo?' − ':' + ')+fx(h)+' = '+fx(ans)),
+      '信頼区間は '+em(fx(r6(R-h))+' ≤ p ≤ '+fx(r6(R+h)))]};
+}},
+{cat:'est',ctx:'必要な標本の大きさ',gen:function(){
+  var sig, e, E, num, den, n, g=0;
+  do{ sig=pick([5,6,8,10,12,15,20]); e=pick([1,1.5,2,2.5,3,4,5]); E=Math.round(e*10);
+      num=(196*sig)*(196*sig); den=100*E*E; n=Math.floor((num+den-1)/den); g++; }
+  while((e>=sig || n<10 || n>2000) && g<200);
+  var a=r6(1.96*sig/e), a2=r6(num/den);
+  return {t:'nmin',v:{sig:sig,e:e},exact:true,line:'母標準偏差 '+sig+' の母集団の母平均を信頼度 95% で推定する',
+    desc:'信頼区間の幅の半分を '+fx(e)+' 以下にしたい',ask:'標本の大きさ n の最小値は',unit:'',ans:n,
+    steps:[em('1.96 × '+sig+'/√n ≤ '+fx(e)),em('√n ≥ 1.96 × '+sig+'/'+fx(e)+' = '+fx(a)),
+      em('n ≥ '+fx(a)+'<sup>2</sup> = '+fx(a2)),'条件を満たす最小の整数は '+em(n)]};
+}}
+];
+
+/* ── cond helpers ────────────────────────────────────────────────────── */
+function testSet(){
+  var a=pick([1,2,5,10,20]), s=pick([80,90,95,98,99]), f=pick([1,2,5,10]);
+  return {a:a,s:s,f:f,inf:100*a,non:100*(100-a),tp:a*s,fp:(100-a)*f};
+}
+function testDesc(t){ return '感染者が陽性と判定される確率 '+t.s+'%　非感染者が陽性と判定される確率 '+t.f+'%'; }
+function testSteps(t){
+  return ['10000 人の集団で数える',
+    '感染者 '+t.inf+' 人のうち陽性 '+em(t.inf+' × '+t.s+'/100 = '+t.tp+' 人'),
+    '非感染者 '+t.non+' 人のうち陽性 '+em(t.non+' × '+t.f+'/100 = '+t.fp+' 人')];
+}
+
+/* ── rv helpers ──────────────────────────────────────────────────────── */
+function binPick(){
+  var p=pick([F(1,2),F(1,3),F(1,4),F(1,5),F(1,6),F(2,5),F(3,4),F(2,3)]);
+  var n=pick([10,12,15,18,20,24,30,36,40,48,50,60,72,90,100,120,150,180,200,300,400,600]);
+  return {n:n,p:p};
+}
+function distPick(){
+  var D=pick([6,8,10,12]), x0=rnd(0,1), w, g=0;
+  do{ w=[]; var s=0; for(var i=0;i<3;i++){ var t=rnd(1,D-3); w.push(t); s+=t; } w.push(D-s); g++; }
+  while(w[3]<1 && g<500);
+  return {D:D, x:[x0,x0+1,x0+2,x0+3], w:w};
+}
+function distE(d){ var E=F(0); d.x.forEach(function(x,i){ E=fadd(E,F(x*d.w[i],d.D)); }); return E; }
+function distTable(d){
+  return '<table class="dt"><tr><th>X</th>'+d.x.map(function(x){ return '<td>'+x+'</td>'; }).join('')+'<th>計</th></tr>'
+    +'<tr><th>P</th>'+d.w.map(function(w){ return '<td>'+w+'/'+d.D+'</td>'; }).join('')+'<td>1</td></tr></table>';
+}
+
+/* ── normal helpers ──────────────────────────────────────────────────── */
+/* z from the table with z·σ a multiple of 0.1 so that X stays short */
+function normPickFor(m,s){
+  var ok=ZT.filter(function(r){ var v=r[0]*s*10; return Math.abs(v-Math.round(v))<1e-9; });
+  var r=pick(ok);
+  return {m:m,s:s,z:r[0],p:r[1]};
+}
+function normPick(){
+  var g, k=0;
+  do{ g=normPickFor(pick([50,55,60,65,70,100,160,170]), pick([2,4,5,8,10,12,15,20])); k++; }
+  while(g.m-3*g.s<0 && k<200);
+  return g;
+}
+
+/* ── estimation helpers ──────────────────────────────────────────────── */
+function estPick(){
+  var n, rt, u, sig, g=0;
+  do{ n=pick([16,25,36,49,64,81,100,144,225,400,900]); rt=Math.round(Math.sqrt(n));
+      u=pick([0.5,1,1.5,2,2.5,3]); sig=r6(u*rt); g++; }
+  while((sig%1!==0 || sig<4 || sig>60) && g<300);
+  return {n:n,rt:rt,u:u,sig:sig};
+}
+
+function choiceQ(t,v,line,desc,ask,ch,steps){
+  var all=shuffle([ch.right].concat(ch.wrong));
+  return {t:t,v:v,kind:'choice',line:line,desc:desc,ask:ask,unit:'',
+    choices:all,ans:all.indexOf(ch.right),ansText:ch.right,steps:steps};
+}
+
+/* ── categories ───────────────────────────────────────────────────────── */
+var CATS=[
+  {k:'disp',lb:'代表値と散らばり',s:'平均・四分位数・分散',ch:'chapters/02_dispersion.html',cn:'第2章'},
+  {k:'corr',lb:'相関係数',s:'共分散 ÷ 標準偏差の積',ch:'chapters/03_correlation.html',cn:'第3章'},
+  {k:'count',lb:'順列と組合せ',s:'P・C・円順列・重複順列',ch:CH4.ch,cn:CH4.cn,ch2:CH5.ch,cn2:CH5.cn},
+  {k:'prob',lb:'確率',s:'反復試行・余事象・独立',ch:'chapters/06_probability.html',cn:'第6章'},
+  {k:'cond',lb:'条件付き確率と期待値',s:'検査の陽性・くじ',ch:'chapters/07_conditional.html',cn:'第7章'},
+  {k:'rv',lb:'確率変数と二項分布',s:'np・np(1 − p)・aX + b',ch:'chapters/08_random-variable.html',cn:'第8章'},
+  {k:'norm',lb:'正規分布',s:'標準化して表を引く',ch:'chapters/09_normal.html',cn:'第9章'},
+  {k:'est',lb:'推定',s:'95% 信頼区間',ch:'chapters/10_estimation.html',cn:'第10章'},
+  {k:'all',lb:'全部混ぜる',s:'8分野',ch:'',cn:''}
+];
+
+function genQ(cat){
+  var c = cat==='all' ? pick(CATS.slice(0,-1)).k : cat;
+  var pool=T.filter(function(t){ return t.cat===c; });
+  var tp=pick(pool), q=tp.gen();
+  q.ctx=tp.ctx; q.cat=c;
+  if(tp.ch && !q.ch){ q.ch=tp.ch.ch; q.cn=tp.ch.cn; }
+  if(!q.kind) q.kind='num';
+  if(q.frac){
+    q.ans=fv(q.frac);
+    if(q.ansText===undefined) q.ansText=fracText(q.frac);
+    if(!q.im) q.im='text';
+  }
+  if(q.exact===undefined) q.exact=false;
+  if(q.ansText===undefined) q.ansText = q.exact ? neg(String(q.ans)) : s3(q.ans);
+  q.html=q.line+(q.desc?'　'+q.desc:'')+'　→ '+q.ask+(q.unit?' ('+q.unit+')':'');
+  return q;
+}
+
+/* ── answer check ─────────────────────────────────────────────────────── */
+function parse(raw){
+  var s=String(raw)
+    .replace(/[０-９]/g,function(ch){ return String.fromCharCode(ch.charCodeAt(0)-0xFEE0); })
+    .replace(/[．。]/g,'.').replace(/＋/g,'+').replace(/[−－‐ー―]/g,'-').replace(/／/g,'/')
+    .replace(/[\s,，]/g,'')
+    .replace(/(×|x|X|\*|＊)10\^?/,'e');
+  if(s==='' || s==='+' || s==='-') return NaN;
+  var m=s.match(/^([+-]?(?:\d+\.?\d*|\.\d+))\/(\d+\.?\d*|\.\d+)$/);
+  if(m){ var d=Number(m[2]); return d===0 ? NaN : Number(m[1])/d; }
+  return Number(s);
+}
+function near(a,b){ return Math.abs(a-b)<=1e-9*Math.max(1,Math.abs(b)); }
+function check(q,v){
+  if(q.kind==='choice') return v===q.ans;
+  if(typeof v!=='number' || !isFinite(v)) return false;
+  if(q.exact) return near(v,q.ans);
+  if(q.tol) return Math.abs(v-q.ans)<=q.tol+1e-9;
+  if(q.ans===0) return Math.abs(v)<1e-9;
+  if(Math.abs(v-q.ans)<=Math.abs(q.ans)*0.01) return true;
+  return near(v,Number(q.ans.toPrecision(2))) || near(v,Number(q.ans.toPrecision(3)));
+}
+
+return {F:F,fv:fv,ft:ft,comb:comb,perm:perm,fact:fact,ZT:ZT,BSQ:BSQ,quart:quart,
+  T:T,CATS:CATS,genQ:genQ,parse:parse,check:check,s3:s3,p4:p4,zs:zs};
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+var C=PROB;
+function $(id){ return document.getElementById(id); }
+
+/* ── reference panel ──────────────────────────────────────────────────── */
+function refHTML(){
+  var h='<table class="zt"><thead><tr><th>z</th><th class="n">p(z)</th></tr></thead><tbody>';
+  C.ZT.forEach(function(r){ h+='<tr><td class="num">'+C.zs(r[0])+'</td><td class="n">'+C.p4(r[1])+'</td></tr>'; });
+  h+='</tbody></table><div class="zcap">p(z) は Z が N(0, 1) に従うときの P(0 ≤ Z ≤ z) である。ドリルの正規分布の問題はこの表の z だけを用いる。</div>';
+  return h;
+}
+$('refbody').innerHTML=refHTML();
+$('d-refbody').innerHTML=refHTML();
+
+/* ── session ──────────────────────────────────────────────────────────── */
+var S=null, clock=null;
+function show(which){
+  ['setup','drill','result'].forEach(function(id){ $(id).classList.toggle('hide', id!==which); });
+  var drilling = which==='drill';
+  ['lead','logsec','refsec','techsec'].forEach(function(id){ $(id).classList.toggle('hide', drilling); });
+}
+function catOf(k){
+  for(var i=0;i<C.CATS.length;i++) if(C.CATS[i].k===k) return C.CATS[i];
+  return C.CATS[0];
+}
+function label(cfg){ return catOf(cfg.cat).lb; }
+
+function start(cfg, queue){
+  S={cfg:cfg, i:0, items:[], queue:queue||null,
+     count:queue?queue.length:cfg.count, phase:'input'};
+  show('drill');
+  window.scrollTo({top:0,behavior:'smooth'});
+  nextQ();
+}
+function nextQ(){
+  if(S.i>=S.count){ finish(); return; }
+  $('d-fb').classList.add('hide');
+  $('d-in').value='';
+  $('d-hintnote').textContent='';
+  $('d-prog').textContent=(S.i+1)+' / '+S.count;
+  $('d-fill').style.width=(S.i/S.count*100)+'%';
+  var q = S.queue ? S.queue[S.i] : C.genQ(S.cfg.cat);
+  S.cur=q; S.phase='input';
+  $('d-meta').textContent=catOf(q.cat).lb;
+  $('d-ctx').textContent=q.ctx;
+  $('d-q').innerHTML=q.line;
+  $('d-desc').innerHTML=q.desc||'';
+  $('d-desc').classList.toggle('hide', !q.desc);
+  $('d-ask').innerHTML=q.ask+(q.unit?' <span class="u">'+q.unit+'</span>':'');
+  $('d-ref').classList.toggle('hide', q.cat!=='norm');
+  var isC = q.kind==='choice';
+  $('d-ansbox').classList.toggle('hide', isC);
+  $('d-choices').classList.toggle('hide', !isC);
+  if(isC){
+    $('d-choices').innerHTML=q.choices.map(function(c,i){
+      return '<button type="button" data-i="'+i+'"><span class="k">'+(i+1)+'</span>'+c+'</button>';
+    }).join('');
+    Array.prototype.forEach.call($('d-choices').children, function(b){
+      b.addEventListener('click', function(){ if(S.phase==='input') judge(Number(b.dataset.i)); });
+    });
+    $('d-hintnote').textContent='数字キー 1〜4 でも選べる';
+  } else {
+    var el=$('d-in');
+    el.setAttribute('inputmode', q.im||'decimal');
+    el.placeholder = q.frac ? '分数 a/b も可' : '答え';
+    el.focus(); el.select();
+  }
+  S.qStart=performance.now();
+  stopClock();
+  clock=setInterval(function(){
+    $('d-time').textContent=((performance.now()-S.qStart)/1000).toFixed(1)+'s';
+  },100);
+}
+function stopClock(){ if(clock){ clearInterval(clock); clock=null; } }
+
+function stepsHTML(q){ return '<ol><li>'+q.steps.join('</li><li>')+'</li></ol>'; }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function mineText(q,v,raw){
+  if(q.kind==='choice') return q.choices[v];
+  if(raw!==undefined && String(raw).trim()!=='') return esc(String(raw).trim());
+  return String(Math.round(v*1e6)/1e6);
+}
+function judge(v,raw){
+  if(S.phase!=='input') return;
+  stopClock();
+  var q=S.cur, ms=performance.now()-S.qStart;
+  var ok=C.check(q,v), mine=mineText(q,v,raw);
+  S.items.push({q:q, mine:mine, ok:ok, ms:ms});
+  S.i++;
+  if(q.kind==='choice'){
+    Array.prototype.forEach.call($('d-choices').children, function(b,i){
+      b.disabled=true;
+      if(i===q.ans) b.classList.add('right');
+      else if(i===v) b.classList.add('wrong');
+    });
+  }
+  var fb=$('d-fb');
+  fb.classList.remove('hide','ok','ng');
+  if(ok){
+    fb.classList.add('ok');
+    fb.innerHTML='<b>正解</b>　'+(ms/1000).toFixed(1)+'秒';
+    S.phase='wait';
+    setTimeout(function(){ if(S && S.phase==='wait') nextQ(); }, 520);
+  } else {
+    fb.classList.add('ng');
+    var ch=catOf(q.cat), href=q.ch||ch.ch, cn=q.cn||ch.cn;
+    fb.innerHTML='<b>不正解</b>　正解は '+q.ansText+(q.unit?' '+q.unit:'')
+      +'　自分の答え '+mine
+      +'<div class="how">'+stepsHTML(q)
+      +(href?'<a href="'+href+'" target="_blank" rel="noopener">'+cn+'で確認する</a>':'')+'</div>';
+    S.phase='hold';
+    $('d-hintnote').textContent='Enter または確定で次へ';
+  }
+}
+function submit(){
+  if(S.phase==='hold'){ nextQ(); return; }
+  if(S.phase!=='input' || S.cur.kind==='choice') return;
+  var raw=$('d-in').value, v=C.parse(raw);
+  if(!isFinite(v)) return;
+  judge(v,raw);
+}
+function quit(){
+  if(S) S.phase='dead';
+  stopClock();
+  $('d-hintnote').textContent='';
+  if(S && S.items.length) finish(); else show('setup');
+}
+
+/* ── result ───────────────────────────────────────────────────────────── */
+function finish(){
+  S.phase='done';
+  stopClock();
+  $('d-hintnote').textContent='';
+  var it=S.items, n=it.length, ok=0, tot=0, fast=Infinity, slow=0;
+  it.forEach(function(x){ if(x.ok){ ok++; fast=Math.min(fast,x.ms); slow=Math.max(slow,x.ms); } tot+=x.ms; });
+  var avg=n? tot/n/1000 : 0;
+  $('r-kpi').innerHTML=
+    kpi(Math.round(ok/n*100)+'%','正答率',ok+' / '+n)
+   +kpi(avg.toFixed(1)+'s','1問あたり','合計 '+(tot/1000).toFixed(0)+'秒')
+   +kpi(isFinite(fast)?(fast/1000).toFixed(1)+'s':'—','最速',ok?'最遅 '+(slow/1000).toFixed(1)+'s':'正解なし')
+   +kpi('<span style="font-size:15px">'+label(S.cfg)+'</span>','分野','');
+
+  var miss=it.filter(function(x){ return !x.ok; }), h='';
+  if(miss.length){
+    h='<h3>間違えた '+miss.length+'問</h3><table><thead><tr><th>問題</th><th class="n">自分</th><th class="n">正解</th></tr></thead><tbody>';
+    miss.forEach(function(x){
+      h+='<tr><td>'+x.q.html+'<div class="how2">'+stepsHTML(x.q)+'</div></td>'
+        +'<td class="n miss">'+x.mine+'</td><td class="n">'+x.q.ansText+'</td></tr>';
+    });
+    h+='</tbody></table>';
+  } else {
+    h='<div class="note">全問正解。分野を全部混ぜるに切り替えると どの公式を使うかの判別まで練習できる。</div>';
+  }
+  var slowest=it.filter(function(x){ return x.ok; }).sort(function(a,b){ return b.ms-a.ms; }).slice(0,3);
+  if(slowest.length){
+    h+='<h3>時間がかかった問題<span class="sm"> — 正解でも遅い型は本番で時間が不足する</span></h3><table><tbody>';
+    slowest.forEach(function(x){
+      h+='<tr><td>'+x.q.html+' = '+x.q.ansText+'<div class="how2">'+stepsHTML(x.q)+'</div></td>'
+        +'<td class="n">'+(x.ms/1000).toFixed(1)+'s</td></tr>';
+    });
+    h+='</tbody></table>';
+  }
+  var by={};
+  it.forEach(function(x){
+    var k=x.q.ctx;
+    if(!by[k]) by[k]={n:0,ok:0,ms:0};
+    by[k].n++; by[k].ok+=x.ok?1:0; by[k].ms+=x.ms;
+  });
+  var keys=Object.keys(by);
+  if(keys.length>1){
+    h+='<h3>型ごとの成績</h3><table><thead><tr><th>型</th><th class="n">正答</th><th class="n">1問</th></tr></thead><tbody>';
+    keys.sort(function(a,b){ return by[a].ok/by[a].n - by[b].ok/by[b].n; }).forEach(function(k){
+      h+='<tr><td>'+k+'</td><td class="n">'+by[k].ok+'/'+by[k].n+'</td>'
+        +'<td class="n">'+(by[k].ms/by[k].n/1000).toFixed(1)+'s</td></tr>';
+    });
+    h+='</tbody></table>';
+  }
+  $('r-missbox').innerHTML=h;
+  $('b-redo').classList.toggle('hide', miss.length===0);
+  S.miss=miss.map(function(x){ return x.q; });
+  saveRun({t:Date.now(), cat:S.cfg.cat, lb:label(S.cfg), n:n, ok:ok, ms:tot});
+  drawLog();
+  show('result');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function kpi(v,k,n){
+  return '<div class="kpi"><div class="v num">'+v+'</div><div class="k">'+k+'</div>'
+    +(n?'<div class="n">'+n+'</div>':'')+'</div>';
+}
+
+/* ── log ──────────────────────────────────────────────────────────────── */
+var KEY='prob.hist.v1', PREF='prob.pref.v1';
+function loadRuns(){ try{ return JSON.parse(localStorage.getItem(KEY))||[]; }catch(e){ return []; } }
+function saveRun(r){
+  try{ var h=loadRuns(); h.push(r); localStorage.setItem(KEY,JSON.stringify(h.slice(-300))); }catch(e){}
+}
+function ymd(t){
+  var d=new Date(t);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function drawLog(){
+  var h=loadRuns();
+  if(!h.length){
+    $('l-kpi').innerHTML='';
+    $('l-body').innerHTML='<div class="note">まだ記録がない。1セッションを終えるとここに正答率と1問あたりの秒数が残る。</div>';
+    return;
+  }
+  var today=ymd(Date.now()), days={}, tn=0, tok=0, tms=0, todayN=0;
+  h.forEach(function(r){
+    days[ymd(r.t)]=1; tn+=r.n; tok+=r.ok; tms+=r.ms;
+    if(ymd(r.t)===today) todayN+=r.n;
+  });
+  var streak=0, d=new Date();
+  if(!days[today]) d.setDate(d.getDate()-1);
+  while(days[ymd(d.getTime())]){ streak++; d.setDate(d.getDate()-1); }
+  $('l-kpi').innerHTML=
+    kpi(todayN+'問','今日','連続 '+streak+'日')
+   +kpi(tn+'問','通算',Object.keys(days).length+'日')
+   +kpi(Math.round(tok/tn*100)+'%','通算の正答率','')
+   +kpi((tms/tn/1000).toFixed(1)+'s','通算の1問あたり','');
+
+  var agg={};
+  h.forEach(function(r){
+    if(!agg[r.lb]) agg[r.lb]={n:0,ok:0,ms:0};
+    agg[r.lb].n+=r.n; agg[r.lb].ok+=r.ok; agg[r.lb].ms+=r.ms;
+  });
+  var body='<h3>直近のセッション</h3><table><thead><tr><th>日時</th><th>分野</th><th class="n">正答</th><th class="n">1問</th></tr></thead><tbody>';
+  h.slice(-12).reverse().forEach(function(r){
+    var dt=new Date(r.t);
+    body+='<tr><td class="n">'+ymd(r.t).slice(5)+' '+String(dt.getHours()).padStart(2,'0')+':'
+      +String(dt.getMinutes()).padStart(2,'0')+'</td><td>'+r.lb+'</td>'
+      +'<td class="n">'+r.ok+'/'+r.n+'</td><td class="n">'+(r.ms/r.n/1000).toFixed(1)+'s</td></tr>';
+  });
+  body+='</tbody></table>';
+  var ak=Object.keys(agg);
+  if(ak.length){
+    body+='<h3>分野ごとの通算<span class="sm"> — 正答率の低い順</span></h3><table><tbody>';
+    ak.sort(function(a,b){ return agg[a].ok/agg[a].n - agg[b].ok/agg[b].n; }).forEach(function(k){
+      body+='<tr><td>'+k+'</td><td class="n">'+agg[k].n+'問</td>'
+        +'<td class="n">'+Math.round(agg[k].ok/agg[k].n*100)+'%</td>'
+        +'<td class="n">'+(agg[k].ms/agg[k].n/1000).toFixed(1)+'s / 問</td></tr>';
+    });
+    body+='</tbody></table>';
+  }
+  body+='<div style="margin-top:14px"><button class="t" id="b-clear">記録を消す</button></div>';
+  $('l-body').innerHTML=body;
+  $('b-clear').addEventListener('click', function(){
+    if(!confirm('この端末に保存した記録を全部消す。')) return;
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    drawLog();
+  });
+}
+
+/* ── setup UI ─────────────────────────────────────────────────────────── */
+var cfg={cat:'disp', count:10};
+try{
+  var p=JSON.parse(localStorage.getItem(PREF));
+  if(p && p.cat){ cfg.cat=p.cat; cfg.count=p.count||10; }
+}catch(e){}
+
+function seg(el, items, val, onSel){
+  el.innerHTML=items.map(function(it){
+    return '<button type="button" data-v="'+it.v+'" aria-pressed="'+(it.v===val)+'">'+it.lb
+      +(it.s? '<span class="s">'+it.s+'</span>':'')+'</button>';
+  }).join('');
+  Array.prototype.forEach.call(el.children, function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(el.children, function(x){ x.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      onSel(b.dataset.v);
+    });
+  });
+}
+function catNote(){
+  var pool = cfg.cat==='all' ? C.T : C.T.filter(function(t){ return t.cat===cfg.cat; });
+  var c=catOf(cfg.cat), link='';
+  if(c.ch){
+    link='<br>対応する章 <a href="'+c.ch+'">'+c.cn+'</a>';
+    if(c.ch2) link+='　<a href="'+c.ch2+'">'+c.cn2+'</a>';
+  }
+  else link='<br>8分野から均等に出題する';
+  $('cat-note').innerHTML='出題する型 '+pool.length+'種類　—　'+pool.map(function(t){ return t.ctx; }).join(' / ')
+    +link
+    +'<br>数値の答えは小数か分数 a/b で入力する。正解との誤差が1%以内か 有効数字2桁か3桁に丸めた値なら正解とする。場合の数と標本の大きさは整数で答える。人数は四捨五入した整数で答える。信頼区間の端点は母平均なら小数第1位まで 母比率なら小数第3位まで合えば正解とする。正規分布の問題はページ下の正規分布表を用いる。';
+}
+seg($('cats'), C.CATS.map(function(c){ return {v:c.k, lb:c.lb, s:c.s}; }), cfg.cat,
+    function(v){ cfg.cat=v; catNote(); });
+seg($('counts'), [10,20,30].map(function(c){ return {v:String(c), lb:c+'問'}; }), String(cfg.count),
+    function(v){ cfg.count=Number(v); });
+catNote();
+drawLog();
+
+/* ── wiring ───────────────────────────────────────────────────────────── */
+$('b-start').addEventListener('click', function(){
+  try{ localStorage.setItem(PREF, JSON.stringify(cfg)); }catch(e){}
+  start({cat:cfg.cat, count:cfg.count});
+});
+$('b-ok').addEventListener('click', submit);
+$('b-quit').addEventListener('click', quit);
+$('b-again').addEventListener('click', function(){ start(S.cfg); });
+$('b-redo').addEventListener('click', function(){
+  if(!S.miss||!S.miss.length) return;
+  var q=S.miss.slice(), c={cat:S.cfg.cat, count:q.length};
+  start(c,q);
+});
+$('b-back').addEventListener('click', function(){
+  show('setup'); window.scrollTo({top:0,behavior:'smooth'});
+});
+document.addEventListener('keydown', function(e){
+  if($('drill').classList.contains('hide')) return;
+  if(e.key==='Enter'){ e.preventDefault(); submit(); }
+  else if(e.key==='Escape'){ e.preventDefault(); quit(); }
+  else if(S && S.cur && S.cur.kind==='choice' && S.phase==='input' && /^[1-4]$/.test(e.key)){
+    var i=Number(e.key)-1;
+    if(i<S.cur.choices.length){ e.preventDefault(); judge(i); }
+  }
+});
+})();
+</script>
+</body>
+</html>

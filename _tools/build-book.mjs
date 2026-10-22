@@ -5,7 +5,8 @@
 //   node _tools/build-book.mjs <section dir> --check  exit 1 if any output is stale
 //
 // Same format as 020_personal/02C_chemistry/build.mjs, plus:
-//   - data/book.json gives the subject name and the crumb label
+//   - data/book.json gives the subject name and the crumb label, and optionally
+//     tail {file,label} for the link after the last chapter (default: the drill)
 //   - \( … \) and \[ … \] in fragments are rendered to MathML with KaTeX at
 //     build time, so pages need no script or font at view time. Dollar signs
 //     are left alone because chapters quote prices in dollars.
@@ -86,7 +87,8 @@ function page(meta, body, nav) {
   const toc = hs.length ? `<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol>${hs
     .map((h) => `<li><a href="#${h.id}">${esc(h.text)}</a></li>`).join('')}</ol></nav>` : '';
   const prev = nav.prev ? `<a class="tb-nav-a" href="${esc(nav.prev.file)}">← ${esc(nav.prev.title)}</a>` : '<a class="tb-nav-a" href="../index.html">← 目次</a>';
-  const next = nav.next ? `<a class="tb-nav-a" href="${esc(nav.next.file)}">${esc(nav.next.title)} →</a>` : '<a class="tb-nav-a" href="../drill.html">計算ドリル →</a>';
+  const tail = BOOK.tail ?? { file: '../drill.html', label: '計算ドリル' };
+  const next = nav.next ? `<a class="tb-nav-a" href="${esc(nav.next.file)}">${esc(nav.next.title)} →</a>` : `<a class="tb-nav-a" href="${esc(tail.file)}">${esc(tail.label)} →</a>`;
   return `<!doctype html>
 <html lang="ja">
 <head>

@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>理解度テストと用語集｜存在と時間</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+
+  /* ── 02H heidegger: German terms, quotations, definitions, demos ────────────
+     The demos share one script (../demos.js). Their colours come from the
+     tokens below; the three ecstases of time always keep the same hue. */
+  :root{
+    --ink-2:var(--sub); --ink-3:var(--muted); --rule:var(--line); --paper:var(--dim); --paper-2:#EFEDE6;
+    --spruce:var(--accent); --spruce-soft:var(--chip);
+    --fut:#2563EB; --past:#B45309; --pres:#0F766E; --warn:#9F1239;
+    --fut-soft:#EEF2FF; --past-soft:#FDF6E7; --pres-soft:#ECF6F5; --warn-soft:#FDF0F3;
+    --f-body:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+  }
+  .de{font-family:Georgia,"Times New Roman",serif;font-style:italic;color:var(--sub);margin:0 .15em}
+  .mono{font-variant-numeric:tabular-nums;font-size:.92em}
+  .sz-sec{font-size:12px;color:var(--muted);letter-spacing:.06em;margin:-6px 0 18px}
+  .term{font-weight:700}
+  .fut{color:var(--fut)} .past{color:var(--past)} .pres{color:var(--pres)}
+  td.k{font-weight:600;white-space:nowrap}
+  .note{font-size:13px;color:var(--sub)}
+  ul.plain,ol.plain{padding-left:24px}
+
+  .orig{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--ink);
+    border-radius:0 10px 10px 0;padding:13px 18px;margin:20px 0}
+  .orig .de{display:block;margin:0;font-size:16px;line-height:1.6;color:var(--ink)}
+  .orig .ja{display:block;margin-top:6px;font-size:14.5px}
+  .orig .src{display:block;margin-top:4px;font-size:11px;color:var(--muted);letter-spacing:.06em}
+
+  .defs{display:grid;grid-template-columns:minmax(130px,190px) 1fr;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;margin:20px 0;overflow:hidden}
+  .defs > div{padding:10px 14px;border-bottom:1px solid var(--line);font-size:14px;line-height:1.75}
+  .defs > div:nth-last-child(-n+2){border-bottom:none}
+  .defs > div:nth-child(odd){font-weight:700;background:#FCFBF8}
+  .defs > div:nth-child(odd) .de{display:block;margin:0;font-weight:400;font-size:13px}
+  .defs > div:nth-child(even){color:var(--sub)}
+  @media(max-width:640px){ .defs{grid-template-columns:1fr}
+    .defs > div:nth-child(odd){border-bottom:none;padding-bottom:2px}
+    .defs > div:nth-last-child(2){border-bottom:none} }
+
+  .myth{display:grid;gap:0;margin:22px 0;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .myth > div{display:grid;grid-template-columns:3.6em 1fr;gap:10px;padding:9px 16px;font-size:13.5px;line-height:1.75}
+  .myth > div.o{border-bottom:1px solid var(--line)}
+  .myth > div:last-child{border-bottom:none}
+  .myth b{font-size:11px;letter-spacing:.08em;padding-top:3px}
+  .myth .x b{color:var(--warn)} .myth .o b{color:var(--pres)}
+
+  .demo{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--accent);
+    border-radius:10px;padding:16px 18px 14px;margin:26px 0}
+  .demo-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:8px}
+  .demo-h .tag{font-size:10.5px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+  .demo-h strong{font-size:15.5px}
+  .demo-h .sub{font-size:12.5px;color:var(--muted)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .ctrl button,.chip{font:inherit;font-size:13px;line-height:1.5;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer}
+  .ctrl button:hover{border-color:var(--accent)}
+  .ctrl button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .ctrl button[aria-pressed="true"] .de{color:#fff}
+  .readout{background:var(--dim);border-radius:8px;padding:10px 14px;font-size:14px;line-height:1.8;color:var(--sub);min-height:3.4em}
+  .readout b{color:var(--ink)}
+  .svgwrap{overflow-x:auto}
+  .svgwrap svg{display:block;width:100%;max-width:720px;margin:0 auto;height:auto;min-width:520px}
+  .svgwrap svg text,.demo canvas{font-family:-apple-system,"Hiragino Sans",sans-serif}
+  svg text{fill:var(--ink)}
+  label.range{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub);flex-wrap:wrap}
+  label.range input{flex:1;min-width:140px;accent-color:var(--accent)}
+  .plan-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+  .plan-cell{font:inherit;text-align:left;border:1px solid var(--line);border-radius:6px;padding:8px 9px 10px;
+    min-height:88px;font-size:12px;line-height:1.5;color:var(--sub);background:var(--card);cursor:pointer}
+  .plan-cell.pub{background:var(--ink);border-color:var(--ink);color:#fff}
+  .plan-cell.unpub{border-style:dashed}
+  .plan-cell .mono{display:block;font-size:10.5px;margin-bottom:3px;opacity:.75}
+  @media(max-width:640px){ .plan-row{grid-template-columns:repeat(3,minmax(0,1fr))} }
+
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:12px 0}
+  .q p.qq{font-weight:600;margin:0 0 8px;font-size:14.5px}
+  .q .opts{display:grid;gap:6px}
+  .q .opts button{font:inherit;font-size:14px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:7px;padding:7px 12px;cursor:pointer;color:var(--ink)}
+  .q .opts button:hover{border-color:var(--accent)}
+  .q .opts button.ok{border-color:var(--pres);background:var(--pres-soft)}
+  .q .opts button.ng{border-color:var(--warn);background:var(--warn-soft)}
+  .q .why{margin-top:8px;font-size:13.5px;color:var(--sub)}
+  .search{font:inherit;width:100%;max-width:420px;padding:8px 13px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+  .gl{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-top:12px;overflow:hidden}
+  .gl-row{display:grid;grid-template-columns:minmax(120px,170px) minmax(110px,170px) 1fr;gap:12px;padding:9px 16px;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.7}
+  .gl-row:last-child{border-bottom:none}
+  .gl-row .de{margin:0;color:var(--ink)}
+  .gl-row .j{font-weight:700}
+  .gl-row .alt{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+  .gl-row a{font-size:12px;margin-left:6px;white-space:nowrap}
+  @media(max-width:640px){ .gl-row{grid-template-columns:1fr;gap:2px} }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a><a href="../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../021_profile/index.html">profile</a><a href="../02A_plan/index.html">plan</a><a href="../023_travel/index.html">travel</a><a href="../027_cinema/index.html">cinema</a><a href="../02B_reading/index.html">reading</a><a href="../024_method/index.html">method</a><a href="../026_handbook/index.html">handbook</a><a href="../025_fitness/index.html">fitness</a><a href="../028_english/index.html">english</a><a href="../029_mental_math/index.html">mental math</a><a href="../02C_chemistry/index.html">chemistry</a><a href="../02D_probability/index.html">probability</a><a href="../02E_calculus/index.html">calculus</a><a href="../02F_linear_algebra/index.html">linear algebra</a><a href="../02G_physics/index.html">physics</a><a href="index.html">heidegger</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../024_method/index.html">method</a>
+    <a class="snav-a" href="../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../028_english/index.html">english</a>
+    <a class="snav-a" href="../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../02G_physics/index.html">physics</a>
+    <a class="snav-a" href="index.html">heidegger</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../index.html">shogo</a> / personal / <a href="index.html">02H heidegger</a> / 確認と用語</div>
+  <div class="tb-ch">確認と用語</div>
+  <h1>理解度テストと用語集</h1>
+  <p class="tb-thesis">選択肢を選ぶと正誤と解説を表示する。誤答の場合は該当する章を読み直す。用語集は独語・訳語・説明のいずれでも検索できる。</p>
+
+  <h2 id="s1">理解度テスト</h2>
+  <div id="quizBox"></div>
+  <div class="readout" id="quizScore" style="margin-top:12px"></div>
+
+  <h2 id="s2">用語集</h2>
+  <p>訳語は細谷貞雄訳を基準とし、他の訳で用いられる語を別訳として示す。別訳がどの訳者のものかは特定していない。</p>
+  <input class="search" id="glQ" type="search" placeholder="例：Sorge、被投性、時間" aria-label="用語を検索">
+  <div class="note" id="glN" style="margin-top:8px"></div>
+  <div class="gl" id="gl"></div>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="chapters/13_reception.html">← 影響と批判</a><a class="tb-nav-a" href="index.html">目次 →</a></div>
+</div>
+<script src="demos.js"></script>
+</body>
+</html>

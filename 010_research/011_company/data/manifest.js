@@ -17,7 +17,7 @@ window.REPORTS = [
     ],
     "date": "2026-10-22",
     "summary": "16歳CEOが2026年3月に設立した宇宙電力インフラのスタートアップ。衛星向けレーザー送電Heliosを構想し、前澤ファンドのリードで300万米ドルのプレシードを調達。衛星間送電の初実証は2030年の計画で、先行するStar Catcherとは約4年の差がある。",
-    "sourceCount": 16,
+    "sourceCount": 34,
     "variant": "startup-case",
     "file": "reports/zero_industries_research_261022.html"
   },

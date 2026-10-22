@@ -27,7 +27,7 @@ node "$ROOT/_tools/normalize-html.mjs" "$HUB/reports/$BASE"
 node "$ROOT/_tools/build-nav.mjs" >/dev/null
 
 # stdin の JSON を reports.json にマージ + manifest.js 再生成
-node "$HUB/bin/update-manifest.js" "reports/$BASE"
+node "$HUB/bin/update-manifest.cjs" "reports/$BASE"
 
 # 公開リポなので、push前に必ず漏洩チェックを通す
 node "$ROOT/_tools/leak-check.mjs" "$HUB/reports/$BASE"
@@ -37,7 +37,7 @@ git pull --rebase --autostash -q origin main || true
 # このハブが触ったものだけを stage する。`git add -A` にすると、別セッションが
 # 同じリポで書きかけているファイルまでレポート追加コミットに巻き込む。
 # 実際に巻き込んで作業を消したことがあるので、対象を明示すること。
-git add "$HUB/reports/$BASE" "$HUB/data" "$HUB/index.html"
+git add "$HUB/reports/$BASE" "$HUB/data" "$HUB/index.html" "$HUB/bin"
 git -c user.email="s.kubota@wander-lust.io" -c user.name="040704shogo8848" \
   commit -q -m "Add report: $BASE" || { echo "nothing to commit"; }
 git push -q origin main

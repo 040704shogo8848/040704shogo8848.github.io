@@ -226,6 +226,31 @@ a.prow{color:inherit;text-decoration:none}
 .reasons .mode{padding:12px}
 .memo{width:100%;margin-top:10px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 12px;font:inherit;font-size:16px;resize:vertical;outline:none}
 .memo:focus{border-color:var(--accent)}
+.mix{font-size:13px;color:var(--sub);margin:2px 0 10px;line-height:1.5}
+.mix b{font-size:24px;color:var(--ink);margin-right:2px}
+.mix span{margin-right:10px}
+.newcard{display:flex;align-items:center;gap:12px;padding:14px 16px;margin-top:10px;border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+.newcard .nt{flex:1;min-width:0;font-size:13px;color:var(--sub);line-height:1.45}
+.newcard .nt b{display:block;color:var(--ink);font-size:15px}
+.newcard .btn{height:40px;padding:0 14px;font-size:13px}
+.newcard .x{color:var(--faint);padding:6px}
+.vnote{font-size:12.5px;color:var(--sub);margin:-2px 0 8px;line-height:1.6}
+.vnote.leech{color:var(--bad);font-weight:600}
+#rvNext{position:relative;overflow:hidden}
+#rvNext.auto::before{content:"";position:absolute;inset:0;background:rgba(255,255,255,.22);transform-origin:left;animation:autofill 1.4s linear forwards}
+@keyframes autofill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.mtag.re{background:var(--bad-soft);color:var(--bad)}
+.ready{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;z-index:40;background:var(--bg)}
+.ready b{font-size:26px;letter-spacing:-.01em;animation:rdy .5s ease}
+.ready span{font-size:13px;color:var(--sub)}
+@keyframes rdy{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+.goalbar{display:flex;align-items:center;gap:12px;padding:14px 16px;margin-bottom:10px;background:var(--good-soft);border-color:var(--good);color:var(--good);font-weight:700;font-size:14px}
+.confirm h2{margin-bottom:6px}
+:root[data-fs="l"] body{font-size:16px}
+:root[data-fs="l"] .qtext{font-size:21px}
+:root[data-fs="l"] .opt,:root[data-fs="l"] .oi{font-size:17.5px}
+:root[data-fs="l"] .expl{font-size:15.5px}
+:root[data-fs="l"] .evq{font-size:13.5px}
 .flash{position:fixed;inset:0;pointer-events:none;z-index:25;opacity:0}
 .flash.ok{animation:flash .5s ease;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--good) 26%,transparent),transparent 70%)}
 .flash.ng{animation:flash .5s ease;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--bad) 22%,transparent),transparent 70%)}
@@ -317,6 +342,7 @@ a.prow{color:inherit;text-decoration:none}
     <div class="brand"><b>早押し</b> 復習</div>
     <div class="chips">
       <div class="chip num"><i>連続</i><span id="hStreak">0</span>日</div>
+      <div class="chip num"><i>レート</i><span id="hRate">1000</span></div>
       <div class="chip num"><i>Lv</i><span id="hLv">1</span></div>
     </div>
   </div>
@@ -326,11 +352,12 @@ a.prow{color:inherit;text-decoration:none}
       <div class="rv"><b class="num" id="hToday">0</b><small id="hGoal">/ 30問</small></div>
     </div>
     <div style="flex:1;min-width:0">
-      <div class="t">今日の復習</div>
-      <div class="big num"><span id="hDue">0</span><small>問</small></div>
-      <button class="btn pri wide" id="hReview">復習を始める</button>
+      <div class="t">今日の学習</div>
+      <div class="mix num" id="hMix"></div>
+      <button class="btn pri wide" id="hToday10">今日の10問を始める</button>
     </div>
   </div>
+  <div id="hNew"></div>
   <div class="tiles">
     <button class="card tile" data-quick="mix">
       <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div>
@@ -370,7 +397,7 @@ a.prow{color:inherit;text-decoration:none}
   <div class="card chart" id="rChart"></div>
   <div class="sec">記憶の段階</div>
   <div class="card chart"><div class="boxes" id="rBoxes"></div>
-    <p class="note" style="margin:10px 0 0">正解するごとに段階が上がり、次の出題までの間隔が延びます。間隔は段階1から順に1日・3日・7日・14日・30日・60日です。不正解の問題は段階0に戻り、翌日に再び出題されます。</p></div>
+    <p class="note" style="margin:10px 0 0">正解するごとに段階が上がり、次の出題までの間隔が延びます。間隔は段階1から順に1日・3日・7日・14日・30日・60日です。不正解の問題は段階0に戻り、同じ回の3問後と翌日に再び出題されます。時間をかけて正解した問題は段階を上げず、翌日に出題します。段階2以上で答えが短い問題は、4択ではなく文字パネルで出題します。</p></div>
   <div id="rMiss"></div>
   <div class="sec">分野別の習得率</div>
   <div class="glist" id="rGenres"></div>
@@ -383,14 +410,15 @@ a.prow{color:inherit;text-decoration:none}
   <div class="card set">
     <div class="srow"><div><b>効果音</b><small>正解・不正解の音</small></div><button class="tg" data-pref="sound"></button></div>
     <div class="srow"><div><b>振動</b><small>Android のみ対応</small></div><button class="tg" data-pref="vib"></button></div>
-    <div class="srow"><div><b>自動で次の問題へ</b><small>正解時は1.6秒後に進む</small></div><button class="tg" data-pref="auto"></button></div>
+    <div class="srow"><div><b>自動で次の問題へ</b><small>正解時は1.4秒後に進む。不正解時は止まる</small></div><button class="tg" data-pref="auto"></button></div>
     <div class="srow"><div><b>CPU 対戦</b><small>3人の CPU と得点を競う</small></div><button class="tg" data-pref="cpu"></button></div>
   </div>
   <div class="card set" style="margin-top:10px">
-    <div class="srow"><div><b>制限時間</b><small>4択の1問あたり</small></div><div class="seg" data-seg="time"><button data-v="8">8秒</button><button data-v="12">12秒</button><button data-v="20">20秒</button></div></div>
+    <div class="srow"><div><b>制限時間</b><small>4択の基準。長い問題文には自動で加算する</small></div><div class="seg" data-seg="time"><button data-v="8">8秒</button><button data-v="12">12秒</button><button data-v="20">20秒</button><button data-v="0">なし</button></div></div>
+    <div class="srow"><div><b>文字の大きさ</b></div><div class="seg" data-seg="fs"><button data-v="m">標準</button><button data-v="l">大</button></div></div>
     <div class="srow"><div><b>問題文の表示速度</b></div><div class="seg" data-seg="speed"><button data-v="70">遅い</button><button data-v="40">標準</button><button data-v="0">一括</button></div></div>
     <div class="srow"><div><b>1日の目標</b></div><div class="seg" data-seg="goal"><button data-v="20">20問</button><button data-v="30">30問</button><button data-v="50">50問</button></div></div>
-    <div class="srow"><div><b>CPU の強さ</b></div><div class="seg" data-seg="cpuLv"><button data-v="0">弱</button><button data-v="1">中</button><button data-v="2">強</button></div></div>
+    <div class="srow"><div><b>CPU の強さ</b><small>自動はレートに合わせる</small></div><div class="seg" data-seg="cpuLv"><button data-v="auto">自動</button><button data-v="0">弱</button><button data-v="1">中</button><button data-v="2">強</button></div></div>
     <div class="srow"><div><b>表示</b></div><div class="seg" data-seg="theme"><button data-v="auto">自動</button><button data-v="light">明</button><button data-v="dark">暗</button></div></div>
   </div>
   <div class="sec">データ</div>
@@ -428,7 +456,9 @@ a.prow{color:inherit;text-decoration:none}
   </div>
   <div class="rank" id="rsRank"></div>
   <div class="stats3" id="rsStats"></div>
+  <div id="rsGoal"></div>
   <div class="card xpbar" id="rsXp"></div>
+  <div id="rsRetry"></div>
   <div style="display:flex;gap:8px;margin:14px 0">
     <button class="btn sec2" style="flex:1" id="rsHome">ホーム</button>
     <button class="btn pri" style="flex:1.4" id="rsAgain">もう一度</button>
@@ -487,10 +517,12 @@ const panelable = it => it.kind==='q' && /^[^\s、。,.・()（）「」]{2,8}$/
 //  storage
 // ====================================================================
 const KEY='hq.v1';
-const DEF={srs:{},days:{},xp:0,matches:0,flag:{},pref:{sound:true,vib:true,auto:false,cpu:true,time:12,speed:40,goal:30,cpuLv:1,theme:'auto'}};
+const DEF={v:2,srs:{},days:{},xp:0,matches:0,flag:{},rate:1000,known:null,goalDay:null,pref:{sound:true,vib:true,auto:true,cpu:true,time:12,speed:40,goal:30,cpuLv:'auto',theme:'auto',fs:'m'}};
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){S={}}
+const fromV=S.v||1;
 S={...structuredClone(DEF),...S,pref:{...DEF.pref,...(S.pref||{})}};
+if(fromV<2){S.v=2;S.pref.auto=true;S.pref.cpuLv='auto'}  // v1 shipped with these off
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 // Reported questions stay out of every round. The signature lets a corrected
 // version (same id, new answer or choices) come back after a rebuild.
@@ -502,9 +534,14 @@ const TODAY=()=>dayNo();
 const IV=[1,1,3,7,14,30,60];
 
 function srsOf(id){return S.srs[id]}
-function record(id,ok){
-  const t=TODAY(); let r=S.srs[id]||{b:0,due:t,n:0,c:0};
-  r.n++; if(ok){r.c++; r.b=Math.min(6,r.b+1); r.due=t+IV[r.b]}
+// o.retry: second try inside the same round, counted but the schedule stays as the miss set it.
+// o.slow: right answer that took most of the time; no promotion, seen again tomorrow.
+function record(id,ok,o={}){
+  const t=TODAY(); let r=S.srs[id]||{b:0,due:t,n:0,c:0,w:0};
+  r.n++; if(ok)r.c++; else r.w=(r.w||0)+1;
+  if(o.retry){}
+  else if(ok&&o.slow){r.b=Math.max(1,r.b); r.due=t+1}
+  else if(ok){r.b=Math.min(6,r.b+1); r.due=t+IV[r.b]}
   else{r.b=0; r.due=t+1}
   r.l=t; S.srs[id]=r;
   const k=dayKey(t); const d=S.days[k]||{n:0,c:0}; d.n++; if(ok)d.c++; S.days[k]=d;
@@ -549,7 +586,7 @@ function deepUrl(it){
   return pageUrl(it.p)+(t.length?'#:~:text='+t.map(encT).join('&text='):'');
 }
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),1800)}
-function applyTheme(){const v=S.pref.theme;if(v==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=v}
+function applyTheme(){const v=S.pref.theme;if(v==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=v;document.documentElement.dataset.fs=S.pref.fs}
 function pickWeighted(pool,n){
   const t=TODAY();
   const w=pool.map(it=>{const r=S.srs[it.id];if(!r)return 3;if(r.due<=t)return 5;const acc=r.c/r.n;return r.b>=4?.25:(r.b>=2?.8:1.6)+(1-acc)*2});
@@ -565,6 +602,31 @@ function pickWeighted(pool,n){
 // ====================================================================
 //  navigation
 // ====================================================================
+// Android back: every overlay (sheet, match, result) is a history entry, so the
+// back button closes it instead of leaving the app.
+const layers=[];
+const topLayer=()=>layers[layers.length-1];
+function pushLayer(n){layers.push(n);history.pushState({n},'')}
+function swapLayer(n){if(layers.length){layers[layers.length-1]=n;history.replaceState({n},'')}else pushLayer(n)}
+window.addEventListener('popstate',()=>{
+  const n=layers.pop();
+  if(n==='sheet'){_closeSheet();return}
+  if(n==='match'){if(M){pushLayer('match');askQuit()}else tab(curTab);return}
+  if(n==='result'){tab('home')}
+});
+function askConfirm(title,body,okLabel,danger){
+  return new Promise(res=>{
+    // resolves once the sheet is really closed (after its history entry is gone)
+    let done=false,val=false;const fin=v=>{if(done)return;done=true;val=v;closeSheet()};
+    $('#sheet').innerHTML=`<div class="grab"></div><div class="confirm"><h2>${esc(title)}</h2><p class="sub">${esc(body)}</p>
+      <div style="display:flex;gap:8px;margin:14px 0 4px"><button class="btn sec2" style="flex:1" id="cfNo">やめる</button>
+      <button class="btn pri" style="flex:1;${danger?'background:var(--bad);color:#fff':''}" id="cfYes">${esc(okLabel)}</button></div></div>`;
+    $('#cfNo').onclick=()=>fin(false); $('#cfYes').onclick=()=>fin(true);
+    confirmPending=()=>res(val);
+    openSheetLayer();
+  });
+}
+let confirmPending=null;
 let curTab='home';
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));window.scrollTo(0,0);document.body.classList.toggle('playing',id==='match')}
 function tab(id){curTab=id;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===id));show(id);R[id]&&R[id]()}
@@ -581,11 +643,16 @@ function genreRow(g,opt={}){
 const R={
   home(){
     const t=TODAY(), d=S.days[dayKey(t)]||{n:0}, goal=S.pref.goal;
-    $('#hStreak').textContent=streak(); $('#hLv').textContent=level(S.xp);
+    $('#hStreak').textContent=streak(); $('#hLv').textContent=level(S.xp); $('#hRate').textContent=Math.round(S.rate).toLocaleString();
     $('#hToday').textContent=d.n; $('#hGoal').textContent='/ '+goal+'問';
     $('#hRing').style.strokeDashoffset=232.5*(1-Math.min(1,d.n/goal));
-    const due=dueItems().length; $('#hDue').textContent=due;
-    const b=$('#hReview'); b.textContent=due?'復習を始める':'新しい問題を解く'; b.dataset.mode=due?'review':'new';
+    const due=dueItems().length, nr=Math.min(due,N), nn=N-nr;
+    $('#hMix').innerHTML=`<span><b>${nr}</b>復習</span><span><b>${nn}</b>新規</span>`+(due>N?`<br>復習の残り ${due-N}問`:'');
+    const nw=newPages();
+    $('#hNew').innerHTML=nw.length?`<div class="card newcard"><div class="nt"><b>新しい問題 ${ITEMS.filter(it=>nw.includes(it.p)).length}問</b>${nw.slice(0,2).map(i=>esc(PAGES[i].title)).join('、')}${nw.length>2?` ほか${nw.length-2}ページ`:''}</div>
+      <button class="btn pri" id="hNewGo">解く</button><button class="x" id="hNewX" aria-label="閉じる"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`:'';
+    if(nw.length){$('#hNewGo').onclick=()=>{buzz('tap');const pool=ITEMS.filter(it=>nw.includes(it.p));markKnown();startMatch(buildRound(pool,'mix'),{label:'新しい問題',again:()=>startMatch(buildRound(pool,'mix'),{label:'新しい問題'})})};
+      $('#hNewX').onclick=()=>{markKnown();R.home()}}
     const order=GROUPS.flatMap(g=>g[1]).map(g=>({g,n:ITEMS.filter(it=>gOf(it)===g).length})).filter(x=>x.n);
     $('#hGenres').innerHTML=order.map(x=>genreRow(x.g)).join('');
   },
@@ -636,9 +703,9 @@ document.querySelectorAll('[data-pref]').forEach(b=>b.onclick=()=>{S.pref[b.data
 document.querySelectorAll('[data-seg]').forEach(s=>s.querySelectorAll('button').forEach(b=>b.onclick=()=>{const v=b.dataset.v;S.pref[s.dataset.seg]=isNaN(+v)?v:+v;save();applyTheme();R.settings()}));
 $('#sExport').onclick=()=>{const blob=new Blob([JSON.stringify(S)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hayaoshi_'+dayKey(TODAY()).replace(/-/g,'').slice(2)+'.json';a.click()};
 $('#sImport').onclick=()=>$('#sFile').click();
-$('#sUnflag').onclick=()=>{if(confirm('報告した問題を、すべて出題に戻しますか。')){S.flag={};save();location.reload()}};
+$('#sUnflag').onclick=async()=>{if(await askConfirm('報告した問題を戻す','出題から外した問題を、すべて出題に戻します。','戻す')){S.flag={};save();location.reload()}};
 $('#sFile').onchange=async e=>{try{const o=JSON.parse(await e.target.files[0].text());if(!o.srs)throw 0;S={...structuredClone(DEF),...o,pref:{...DEF.pref,...o.pref}};save();applyTheme();toast('記録を読み込みました');R.settings()}catch(err){toast('読み込めない形式です')}};
-$('#sReset').onclick=()=>{if(confirm('学習記録をすべて消去しますか。')){const p=S.pref;S=structuredClone(DEF);S.pref=p;save();toast('記録を消去しました');R.settings()}};
+$('#sReset').onclick=async()=>{if(await askConfirm('記録を消去する','解答履歴・復習の予定・レベルをすべて消去します。元に戻せません。','消去する',true)){const p=S.pref;S=structuredClone(DEF);S.pref=p;S.known=PAGES.map(x=>x.id);save();toast('記録を消去しました');R.settings()}};
 
 // ====================================================================
 //  sheet (genre / page picker)
@@ -649,10 +716,11 @@ function pageRow(i){
   return `<button class="prow${pick.page===i?' sel':''}" data-page="${i}"><div class="pt">${esc(p.title)}<small>${GENRES[p.genre]?.n||''}・${list.length}問</small></div><div class="pp num">${m}%</div></button>`;
 }
 function openSheet(genre,page=null){
-  pick={genre,page,mode:pick.mode||'mix'}; renderSheet();
-  $('#scrim').classList.add('on'); $('#sheet').classList.add('on');
+  pick={genre,page,mode:pick.mode||'mix'}; renderSheet(); openSheetLayer();
 }
-function closeSheet(){$('#scrim').classList.remove('on');$('#sheet').classList.remove('on')}
+function openSheetLayer(){if(!$('#sheet').classList.contains('on'))pushLayer('sheet');$('#scrim').classList.add('on');$('#sheet').classList.add('on');$('#sheet').scrollTop=0}
+function _closeSheet(){$('#scrim').classList.remove('on');$('#sheet').classList.remove('on');if(confirmPending){const f=confirmPending;confirmPending=null;f()}}
+function closeSheet(){if(topLayer()==='sheet')history.back();else _closeSheet()}
 
 // ====================================================================
 //  report a broken question -> prefilled GitHub issue (label: quiz)
@@ -681,7 +749,7 @@ function openReport(it){
       flagItem(it,reason); window.open(url,'_blank','noopener'); closeSheet(); toast('報告しました。この問題は出題されません');
     };
   };
-  draw(); $('#scrim').classList.add('on'); $('#sheet').classList.add('on');
+  draw(); openSheetLayer();
 }
 function flagItem(it,reason){S.flag[it.id]={s:sig(it),r:reason,t:TODAY()};save();const i=ITEMS.indexOf(it);if(i>=0)ITEMS.splice(i,1)}
 $('#scrim').onclick=closeSheet;
@@ -718,7 +786,8 @@ const N=10;
 function asQ(it,mode){ // -> {it, type}
   if(it.kind==='o')return {it,type:'order'};
   if(mode==='panel')return {it,type:'panel'};
-  if(mode==='mix'||mode==='review')return {it,type:panelable(it)&&Math.random()<.28?'panel':'mc'};
+  // recall beats recognition once an item is half learned: stage 2+ short answers go to the panel
+  if(mode==='mix'||mode==='review'){const r=S.srs[it.id];return {it,type:panelable(it)&&((r&&r.b>=2)||Math.random()<.2)?'panel':'mc'}}
   return {it,type:'mc'};
 }
 function buildRound(pool,mode){
@@ -739,8 +808,18 @@ document.querySelectorAll('[data-quick]').forEach(b=>b.onclick=()=>{
   if(k==='weak'){const w=ITEMS.filter(it=>{const r=S.srs[it.id];return r&&r.n>0&&(r.c/r.n<.7||r.b<=1)}).sort((a,b)=>(S.srs[a.id].c/S.srs[a.id].n)-(S.srs[b.id].c/S.srs[b.id].n));
     if(w.length<3)return toast('苦手な問題はまだありません');return startMatch(buildRound(shuffle(w.slice(0,30)),'review').slice(0,N),{label:'苦手を集中',again:()=>b.click()})}
 });
-$('#hReview').onclick=()=>{buzz('tap');if($('#hReview').dataset.mode==='review')startMatch(buildRound(dueItems(),'review'),{label:'今日の復習',again:()=>$('#hReview').click()});
-  else{const fresh=ITEMS.filter(it=>!S.srs[it.id]);startMatch(buildRound(fresh.length?fresh:ITEMS,'mix'),{label:'新しい問題',again:()=>$('#hReview').click()})}};
+// Today's 10: reviews that are due come first, the rest is new material.
+function todayRound(){
+  const due=dueItems().slice(0,N).map(it=>asQ(it,'review'));
+  if(due.length>=N)return due;
+  const fresh=ITEMS.filter(it=>!S.srs[it.id]);
+  const fill=buildRound(fresh.length>=N?fresh:ITEMS,'mix').filter(q=>!due.some(d=>d.it===q.it)).slice(0,N-due.length);
+  return shuffle([...due,...fill]);
+}
+$('#hToday10').onclick=()=>{buzz('tap');startMatch(todayRound(),{label:'今日の10問',again:()=>startMatch(todayRound(),{label:'今日の10問'})})};
+// pages added since the last visit
+function newPages(){if(!S.known){S.known=PAGES.map(x=>x.id);save();return[]}const k=new Set(S.known);return PAGES.map((p,i)=>k.has(p.id)?-1:i).filter(i=>i>=0)}
+function markKnown(){S.known=PAGES.map(x=>x.id);save()}
 
 // ====================================================================
 //  match
@@ -750,18 +829,24 @@ let M=null;
 function startMatch(round,opt){
   if(!round.length)return toast('出題できる問題がありません');
   ac();
-  const lv=S.pref.cpuLv, base=[[.42,.58],[.55,.74],[.7,.88]][lv];
-  const bots=S.pref.cpu?shuffle(BOTS).slice(0,3).map(([n,c])=>({n,c,s:base[0]+Math.random()*(base[1]-base[0]),score:0})):[];
-  M={round,i:0,opt,players:[{n:'あなた',c:'var(--accent)',score:0,me:true},...bots],log:[],combo:0,maxCombo:0,timers:[]};
+  const lv=S.pref.cpuLv, auto=lv==='auto';
+  // auto: CPU skill follows the rating so matches stay close (1000 -> about 0.6 accuracy)
+  const mid=auto?Math.max(.35,Math.min(.9,.6+(S.rate-1000)/1200)):[.5,.65,.8][lv], base=[mid-.09,mid+.09];
+  const bots=S.pref.cpu&&!opt.solo?shuffle(BOTS).slice(0,3).map(([n,c])=>({n,c,s:base[0]+Math.random()*(base[1]-base[0]),score:0})):[];
+  M={round,i:0,opt,players:[{n:'あなた',c:'var(--accent)',score:0,me:true},...bots],log:[],combo:0,maxCombo:0,timers:[],retries:0,rated:auto&&bots.length>0,goalHit:false};
+  if(topLayer()==='sheet'){_closeSheet();swapLayer('match')}else if(topLayer()==='result')swapLayer('match');else pushLayer('match');
+  try{navigator.wakeLock?.request('screen').then(l=>{M&&(M.lock=l)}).catch(()=>{})}catch(e){}
   show('match');
   $('#mTot').textContent=round.length;
   $('#mBoard').style.display=bots.length?'grid':'none';
   renderBoard();
-  countdown(()=>nextQ());
+  ready(opt.label,round.length,()=>nextQ());
 }
-function countdown(cb){
-  const el=document.createElement('div');el.className='count';document.body.appendChild(el);
-  let n=3;const step=()=>{if(n===0){el.remove();SFX.start();buzz('tap');cb();return}el.innerHTML=`<span>${n}</span>`;SFX.tick();n--;setTimeout(step,620)};step();
+// short title card instead of a 3-2-1 countdown; tap to skip
+function ready(label,n,cb){
+  const el=document.createElement('div');el.className='ready';el.innerHTML=`<b>${esc(label)}</b><span class="num">${n}問</span>`;document.body.appendChild(el);
+  let gone=false;const go=()=>{if(gone)return;gone=true;el.remove();SFX.start();buzz('tap');cb()};
+  el.onclick=go;setTimeout(go,850);
 }
 function renderBoard(){
   $('#mBoard').innerHTML=M.players.map((p,i)=>`<div class="pl${p.me?' me':''}" id="pl${i}"><div class="st" id="st${i}"></div><div class="gain" id="gn${i}"></div>
@@ -774,12 +859,15 @@ function nextQ(){
   M.cur={Q,answered:false,t0:0,bots:[]};
   $('#reveal').classList.remove('on');
   $('#mNo').textContent=M.i+1;
-  const tag=$('#mTag'); tag.textContent=last&&M.round.length>3?'得点2倍':({mc:'4択',panel:'文字パネル',order:'並べ替え'})[Q.type]; tag.classList.toggle('x2',last&&M.round.length>3);
+  const x2=last&&M.round.length>3&&!Q.retry, tag=$('#mTag'); tag.textContent=Q.retry?'もう一度':x2?'得点2倍':({mc:'4択',panel:'文字パネル',order:'並べ替え'})[Q.type]; tag.classList.toggle('x2',x2); tag.classList.toggle('re',!!Q.retry);
   const g=GENRES[gOf(it)]||{n:'',c:'#888'}; $('#mGdot').style.background=g.c; $('#mGname').textContent=g.n+'・'+PAGES[it.p].title;
   M.players.forEach((p,i)=>{const s=$('#st'+i);s.className='st'});
   $('#match').classList.remove('locked');
-  const limit=(Q.type==='mc'?S.pref.time:Q.type==='panel'?S.pref.time+8:S.pref.time+14)*1000;
-  M.cur.limit=limit;
+  // longer questions get more time: +0.08 s per character beyond 30. time 0 = no limit
+  const extra=Q.type==='panel'?8:Q.type==='order'?14:0, qlen=it.q.length;
+  const limit=S.pref.time?(S.pref.time+extra+Math.max(0,qlen-30)*.08)*1000:Infinity;
+  M.cur.limit=limit; M.cur.ref=isFinite(limit)?limit:(12+extra)*1000;
+  $('#mTimer').style.visibility=isFinite(limit)?'visible':'hidden';
   // area
   const A=$('#mArea');
   if(Q.type==='mc'){
@@ -812,16 +900,16 @@ function nextQ(){
     M.timers.push(iv);
   }
   // timer bar
-  M.cur.t0=performance.now(); const bar=$('#mBar'), tm=$('#mTimer'); let lastSec=99;
-  const loop=now=>{if(M.cur.answered)return;const el2=now-M.cur.t0, r=Math.max(0,1-el2/limit);bar.style.transform=`scaleX(${r})`;
+  M.cur.t0=performance.now(); const bar=$('#mBar'), tm=$('#mTimer'); let lastSec=99; bar.style.transform='scaleX(1)'; tm.classList.remove('low');
+  const loop=now=>{if(!M||M.cur.answered)return;if(M.paused){M.raf=requestAnimationFrame(loop);return}const el2=now-M.cur.t0, r=Math.max(0,1-el2/limit);bar.style.transform=`scaleX(${r})`;
     const sec=Math.ceil((limit-el2)/1000);tm.classList.toggle('low',sec<=3);if(sec<=3&&sec<lastSec&&sec>0){SFX.tick();lastSec=sec}
     if(r<=0){finishQ(false,null,true);return}M.raf=requestAnimationFrame(loop)};
-  M.raf=requestAnimationFrame(loop);
+  if(isFinite(limit))M.raf=requestAnimationFrame(loop);
   // bots
   M.players.forEach((p,i)=>{if(p.me)return;
     const adj=it.lv===1?.08:it.lv===3?-.1:0, typeAdj=Q.type==='order'?-.12:Q.type==='panel'?-.05:0;
     const ok=Math.random()<Math.max(.15,Math.min(.97,p.s+adj+typeAdj));
-    const t=limit*Math.min(.95,(.18+Math.random()*.5)*(1.25-p.s*.6)); const willAnswer=Math.random()<.93;
+    const t=M.cur.ref*Math.min(.95,(.18+Math.random()*.5)*(1.25-p.s*.6)); const willAnswer=Math.random()<.93;
     const b={i,ok,t,done:false}; M.cur.bots.push(b);
     if(willAnswer)M.timers.push(setTimeout(()=>{b.done=true;if(!M.cur.answered){const s=$('#st'+i);s.className='st on wait';s.textContent='…'}},t));
   });
@@ -860,9 +948,10 @@ function renderOrder(final){
 function finishQ(ok,given,timeout=false){
   if(M.cur.answered)return; M.cur.answered=true; clearTimers();
   $('#match').classList.add('locked');
-  const Q=M.cur.Q, it=Q.it, t=Math.min(elapsed(),M.cur.limit), last=M.i===M.round.length-1&&M.round.length>3;
-  const mult=last?2:1;
-  const pts=ok?Math.round((40+60*(1-t/M.cur.limit))*mult):0;
+  const Q=M.cur.Q, it=Q.it, t=Math.min(elapsed(),M.cur.limit), last=M.i===M.round.length-1&&M.round.length>3&&!Q.retry;
+  const mult=last?2:1, ref=M.cur.ref;
+  const pts=ok?Math.round((40+60*Math.max(0,1-t/ref))*mult):0;
+  const slow=ok&&!Q.retry&&t>ref*.6;
   $('#mText').textContent=it.q;
   if(Q.type==='panel')renderSlots(true);
   if(Q.type==='order')renderOrder(true);
@@ -874,25 +963,33 @@ function finishQ(ok,given,timeout=false){
   // bots reveal: those who would have answered by "now" or later still resolve
   M.cur.bots.forEach(b=>{const p=M.players[b.i];const s=$('#st'+b.i);
     if(b.t<M.cur.limit){s.className='st on '+(b.ok?'ok':'ng');s.textContent=b.ok?'○':'×';
-      if(b.ok){const bp=Math.round((40+60*(1-b.t/M.cur.limit))*mult);p.score+=bp;const g=$('#gn'+b.i);g.textContent='+'+bp;g.classList.remove('on');void g.offsetWidth;g.classList.add('on')}}});
+      if(b.ok){const bp=Math.round((40+60*Math.max(0,1-b.t/ref))*mult);p.score+=bp;const g=$('#gn'+b.i);g.textContent='+'+bp;g.classList.remove('on');void g.offsetWidth;g.classList.add('on')}}});
   M.players.forEach((p,i)=>{const e=$('#sc'+i);if(e)e.textContent=p.score});
   // feedback
   const fl=$('#flash');fl.className='flash';void fl.offsetWidth;fl.className='flash '+(ok?'ok':'ng');
   if(ok){SFX.ok();buzz('ok');M.combo++;M.maxCombo=Math.max(M.maxCombo,M.combo);$('#mQ').classList.remove('pop');void $('#mQ').offsetWidth;$('#mQ').classList.add('pop');
     if(M.combo>=3){const c=$('#combo');c.textContent=M.combo+'問連続正解';c.classList.remove('on');void c.offsetWidth;c.classList.add('on');setTimeout(()=>{SFX.combo();buzz('combo')},180)}}
   else{SFX.ng();buzz('ng');M.combo=0;$('#mQ').classList.remove('shake');void $('#mQ').offsetWidth;$('#mQ').classList.add('shake')}
-  record(it.id,ok); save();
-  M.log.push({it,ok,pts,t,type:Q.type,given});
-  showReveal(ok,pts,timeout);
+  record(it.id,ok,{retry:!!Q.retry,slow}); 
+  const td=S.days[dayKey(TODAY())];if(td&&td.n>=S.pref.goal&&S.goalDay!==TODAY()){S.goalDay=TODAY();M.goalHit=true}
+  save();
+  // a miss comes back three questions later in the same round (two per round at most)
+  if(!ok&&!Q.retry&&M.retries<2){M.retries++;M.round.splice(Math.min(M.i+4,M.round.length),0,{it,type:Q.type,retry:true});$('#mTot').textContent=M.round.length}
+  M.log.push({it,ok,pts,t,type:Q.type,given,retry:!!Q.retry,slow});
+  showReveal(ok,pts,timeout,slow);
 }
-function showReveal(ok,pts,timeout){
-  const {it}=M.cur.Q, R2=$('#reveal'), isO=it.kind==='o';
+function showReveal(ok,pts,timeout,slow){
+  const {it,retry}=M.cur.Q, R2=$('#reveal'), isO=it.kind==='o', r=S.srs[it.id]||{};
+  const note=!ok&&(r.w||0)>=3?`<div class="vnote leech">この問題は${r.w}回目の不正解です。解き直すより、ページを読み直す方が定着します。</div>`
+    :!ok&&!retry&&M.retries<=2&&M.round.some((q,j)=>j>M.i&&q.retry&&q.it===it)?'<div class="vnote">この問題は3問後にもう一度出題します。</div>'
+    :retry&&ok?'<div class="vnote">再出題で正解しました。明日もう一度出題します。</div>'
+    :slow?'<div class="vnote">時間をかけた正解のため段階は上げず、明日もう一度出題します。</div>':'';
   const ans=isO?'<ol class="oans">'+it.its.slice().sort((a,b)=>a[2]-b[2]).map(x=>`<li><span class="num">${esc(x[1])}</span>${esc(x[0])}</li>`).join('')+'</ol>':esc(it.a);
   const ev=isO?it.ev.slice(0,2).join(' ／ '):it.ev;
   const last=M.i===M.round.length-1;
   R2.innerHTML=`<div class="verdict ${ok?'ok':'ng'}"><div class="vi">${ok?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></svg>':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>'}</div>
    <b>${ok?'正解':timeout?'時間切れ':'不正解'}</b><div class="pts num">${pts?'+'+pts:''}</div></div>
-   <div class="ans"><small>正解</small>${isO?'':ans}</div>${isO?ans:''}
+   ${note}<div class="ans"><small>正解</small>${isO?'':ans}</div>${isO?ans:''}
    ${isO?'':`<p class="expl">${esc(it.e)}</p>`}
    <div class="evq">${esc(ev)}</div>
    ${ok?`<a class="rlink" href="${deepUrl(it)}" target="_blank" rel="noopener">${esc(PAGES[it.p].title)} の該当箇所<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>`
@@ -901,23 +998,42 @@ function showReveal(ok,pts,timeout){
    <button class="btn pri wide" id="rvNext">${last?'結果を見る':'次の問題'}</button>`;
   R2.classList.add('on');
   $('#rvNext').onclick=()=>{buzz('tap');advance()};
-  $('#rvRep').onclick=()=>{buzz('tap');clearTimers();openReport(it)};
-  if(S.pref.auto&&ok)M.timers.push(setTimeout(advance,1600));
+  $('#rvRep').onclick=()=>{buzz('tap');hold();openReport(it)};
+  // correct answers move on by themselves; touching the panel (to read) stops it
+  const hold=()=>{clearTimers();$('#rvNext').classList.remove('auto')};
+  if(S.pref.auto&&ok&&!slow){$('#rvNext').classList.add('auto');M.timers.push(setTimeout(advance,1400));
+    R2.onpointerdown=e=>{if(!e.target.closest('#rvNext'))hold()}}else R2.onpointerdown=null;
 }
-function advance(){clearTimers();$('#reveal').classList.remove('on');M.i++;if(M.i>=M.round.length)return endMatch();setTimeout(nextQ,220)}
-$('#mQuit').onclick=()=>{if(!confirm('対戦を中断しますか。解答済みの問題は記録されます。'))return;clearTimers();$('#reveal').classList.remove('on');M=null;tab(curTab)};
+function advance(){if(!M||M.cur.next)return;M.cur.next=true;clearTimers();$('#reveal').classList.remove('on');M.i++;if(M.i>=M.round.length)return endMatch();setTimeout(nextQ,220)}
+async function askQuit(){
+  if(!M)return; const held=!M.cur?.answered; if(held)M.paused=performance.now();
+  const ok=await askConfirm('対戦を中断する','解答済みの問題は記録されます。','中断する',true);
+  if(!M)return;
+  if(ok){clearTimers();releaseLock();$('#reveal').classList.remove('on');M=null;if(topLayer()==='match')history.back();else tab(curTab)}
+  else if(held&&M.paused){M.cur.t0+=performance.now()-M.paused;M.paused=0}
+}
+$('#mQuit').onclick=()=>{buzz('tap');askQuit()};
+function releaseLock(){try{M&&M.lock&&M.lock.release()}catch(e){}}
 
 function endMatch(){
   const me=M.players[0], sorted=M.players.slice().sort((a,b)=>b.score-a.score), place=sorted.indexOf(me)+1;
   const nOk=M.log.filter(x=>x.ok).length, xp=Math.round(me.score/10)+nOk*2+(place===1&&M.players.length>1?20:0);
-  const lv0=level(S.xp); S.xp+=xp; S.matches++; save(); const lv1=level(S.xp);
+  const lv0=level(S.xp); S.xp+=xp; S.matches++;
+  let dr=0; if(M.rated){dr=[24,8,-8,-20][place-1];S.rate=Math.max(400,S.rate+dr)}
+  save(); const lv1=level(S.xp);
+  releaseLock(); swapLayer('result');
   show('result'); SFX.win(); buzz('end');
   const solo=M.players.length===1;
   $('#rsPlace').innerHTML=solo?`${nOk}<small>/ ${M.log.length}</small>`:`${place}<small>位</small>`;
-  $('#rsMsg').textContent=M.opt.label+(solo?'・正解数':'・'+M.players.length+'人中');
+  $('#rsMsg').textContent=M.opt.label+(solo?'・正解数':'・'+M.players.length+'人中')+(M.rated?`・レート ${Math.round(S.rate).toLocaleString()}（${dr>0?'+':''}${dr}）`:'');
+  $('#rsGoal').innerHTML=M.goalHit?`<div class="card goalbar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></svg>今日の目標 ${S.pref.goal}問を達成しました</div>`:'';
+  if(M.goalHit)setTimeout(()=>{SFX.combo();buzz('combo')},500);
   $('#rsRank').innerHTML=solo?'':sorted.map((p,i)=>`<div class="card rk${i===0?' p1':''}${p.me?' me':''}"><div class="pos num">${i+1}</div><div class="av" style="background:${p.c}">${p.me?'自':p.n[0]}</div><div class="nm">${p.n}</div><div class="sc num">${p.score}</div></div>`).join('');
   const avgT=M.log.filter(x=>x.ok).reduce((s,x)=>s+x.t,0)/Math.max(1,nOk)/1000;
-  $('#rsStats').innerHTML=[['正解',`${nOk}/${M.log.length}`],['最大連続',M.maxCombo],['平均解答',nOk?avgT.toFixed(1)+'秒':'-']].map(([k,v])=>`<div class="card st3"><b class="num">${v}</b><span>${k}</span></div>`).join('');
+  // first tries only; in-round retries are shown on their own
+  const first=M.log.some(x=>!x.retry)?M.log.filter(x=>!x.retry):M.log, re=M.log.filter(x=>x.retry&&first!==M.log);
+  const okLabel=re.length?`正解・再出題 ${re.filter(x=>x.ok).length}/${re.length}`:'正解';
+  $('#rsStats').innerHTML=[[okLabel,`${first.filter(x=>x.ok).length}/${first.length}`],['最大連続',M.maxCombo],['平均解答',nOk?avgT.toFixed(1)+'秒':'-']].map(([k,v])=>`<div class="card st3"><b class="num">${v}</b><span>${k}</span></div>`).join('');
   const base=lvBase(lv1), next=lvBase(lv1+1);
   $('#rsXp').innerHTML=`<div class="row"><span>${lv1>lv0?'レベルが上がりました':'経験値'}</span><b class="num">+${xp} XP</b></div><div class="bar"><i style="width:${(S.xp-base)/(next-base)*100}%"></i></div><div class="row" style="margin-top:6px"><span class="num">Lv ${lv1}</span><span class="num">次まで ${next-S.xp} XP</span></div>`;
   $('#rsLog').innerHTML=M.log.map(x=>{const a=x.it.kind==='o'?x.it.its.slice().sort((p,q)=>p[2]-q[2]).map(y=>y[0]).join(' → '):x.it.a;
@@ -925,9 +1041,12 @@ function endMatch(){
   const miss=[...new Map(M.log.filter(x=>!x.ok).map(x=>[x.it.p,x.it])).values()];
   $('#rsRead').innerHTML=miss.length?`<div class="sec">読み直すページ</div><div class="card" style="padding:2px 14px">${miss.map(it=>{const n=M.log.filter(x=>!x.ok&&x.it.p===it.p).length;
     return `<a class="prow" href="${deepUrl(it)}" target="_blank" rel="noopener"><div class="pt">${esc(PAGES[it.p].title)}<small>${GENRES[PAGES[it.p].genre]?.n||''}・今回 ${n}問 不正解</small></div><div class="pp">開く</div></a>`}).join('')}</div>`:'';
-  const again=M.opt.again; $('#rsAgain').onclick=()=>{buzz('tap');again()}; M=null;
+  const wrong=[...new Map(M.log.filter(x=>!x.ok).map(x=>[x.it.id,x])).values()];
+  $('#rsRetry').innerHTML=wrong.length?`<button class="btn sec2 wide" style="margin-top:10px" id="rsRetryGo">間違えた${wrong.length}問をもう一度</button>`:'';
+  if(wrong.length)$('#rsRetryGo').onclick=()=>{buzz('tap');startMatch(wrong.map(x=>({it:x.it,type:x.type,retry:true})),{label:'間違えた問題',solo:true})};
+  const again=M.opt.again||(()=>tab('home')); $('#rsAgain').onclick=()=>{buzz('tap');again()}; M=null;
 }
-$('#rsHome').onclick=()=>{buzz('tap');tab('home')};
+$('#rsHome').onclick=()=>{buzz('tap');if(topLayer()==='result')history.back();else tab('home')};
 
 // ====================================================================
 applyTheme(); R.home();

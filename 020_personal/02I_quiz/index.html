@@ -213,6 +213,13 @@ body.playing .tabbar{display:none}
 .oans li{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--line)}
 .oans li:last-child{border-bottom:none}
 .oans span{flex:0 0 auto;min-width:76px;color:var(--sub);font-size:12.5px;padding-top:1px}
+.readbtn{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:2px 0 12px;border-radius:14px;background:var(--accent-soft);color:var(--accent);text-decoration:none;border:1.5px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.readbtn:active{transform:scale(.985)}
+.readbtn .ri{flex:0 0 34px;height:34px;border-radius:10px;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;justify-content:center}
+.readbtn .rt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}
+.readbtn .rt b{font-size:15px}
+.readbtn .rt small{font-size:12px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+a.prow{color:inherit;text-decoration:none}
 .flash{position:fixed;inset:0;pointer-events:none;z-index:25;opacity:0}
 .flash.ok{animation:flash .5s ease;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--good) 26%,transparent),transparent 70%)}
 .flash.ng{animation:flash .5s ease;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--bad) 22%,transparent),transparent 70%)}
@@ -358,6 +365,7 @@ body.playing .tabbar{display:none}
   <div class="sec">記憶の段階</div>
   <div class="card chart"><div class="boxes" id="rBoxes"></div>
     <p class="note" style="margin:10px 0 0">正解するごとに段階が上がり、次の出題までの間隔が延びます。間隔は段階1から順に1日・3日・7日・14日・30日・60日です。不正解の問題は段階0に戻り、翌日に再び出題されます。</p></div>
+  <div id="rMiss"></div>
   <div class="sec">分野別の習得率</div>
   <div class="glist" id="rGenres"></div>
 </section>
@@ -418,6 +426,7 @@ body.playing .tabbar{display:none}
     <button class="btn sec2" style="flex:1" id="rsHome">ホーム</button>
     <button class="btn pri" style="flex:1.4" id="rsAgain">もう一度</button>
   </div>
+  <div id="rsRead"></div>
   <div class="sec">今回の問題</div>
   <div class="card" style="padding:4px 14px"><div class="qlog" id="rsLog"></div></div>
 </section>
@@ -458,11 +467,11 @@ const GROUPS = [
   ['経済と社会',['company','industry','finance','politics','net']],
   ['教養',['reading','heidegger']]
 ];
-const PAGES = QD.pages.map(([id,path,title,genre])=>({id,path,title:title.split(/\s*[—–|｜]\s*|\s-\s/)[0].trim(),full:title,genre}));
+const PAGES = QD.pages.map(([id,path,title,genre,heads])=>({id,path,title:title.split(/\s*[—–|｜]\s*|\s-\s/)[0].trim(),full:title,genre,heads:heads||[]}));
 // item: {id, kind:'q'|'o', p, ...}
 const ITEMS = [];
-for(const [id,p,q,a,d,e,ev,lv] of QD.q) ITEMS.push({id,kind:'q',p,q,a,d,e,ev,lv});
-for(const [id,p,q,its,ev] of QD.o) ITEMS.push({id,kind:'o',p,q,its,ev,lv:2});
+for (const [id,p,q,a,d,e,ev,lv,f,hi] of QD.q) ITEMS.push({id,kind:'q',p,q,a,d,e,ev,lv,f,hi});
+for (const [id,p,q,its,ev,f,hi] of QD.o) ITEMS.push({id,kind:'o',p,q,its,ev,lv:2,f,hi});
 const BYID = Object.fromEntries(ITEMS.map(x=>[x.id,x]));
 const gOf = it => PAGES[it.p].genre;
 const panelable = it => it.kind==='q' && /^[^\s、。,.・()（）「」]{2,8}$/.test(it.a) && !/^[A-Za-z]+$/.test(it.a);
@@ -520,6 +529,14 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const pageUrl=p=>'../../'+PAGES[p].path;
+// Link that opens the page scrolled to the evidence (Chrome text fragments). The section
+// heading is a second directive, used when the evidence text cannot be matched.
+const encT=s=>encodeURIComponent(s).replace(/-/g,'%2D');
+function deepUrl(it){
+  const f=it.f===''?(it.kind==='o'?it.ev[0]:it.ev):it.f, h=PAGES[it.p].heads[it.hi];
+  const t=[f,h].filter(Boolean);
+  return pageUrl(it.p)+(t.length?'#:~:text='+t.map(encT).join('&text='):'');
+}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),1800)}
 function applyTheme(){const v=S.pref.theme;if(v==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=v}
 function pickWeighted(pool,n){
@@ -591,6 +608,10 @@ const R={
     const bx=[0,0,0,0,0,0,0]; all.forEach(r=>bx[r.b]++); const bm=Math.max(1,...bx);
     $('#rBoxes').innerHTML=bx.map((v,i)=>`<div><em class="num">${v}</em><i style="height:${v/bm*60}px;opacity:${.35+i*.11}"></i><span>段階${i}</span></div>`).join('');
     $('#rGenres').innerHTML=GROUPS.flatMap(g=>g[1]).map(g=>genreRow(g)).join('');
+    const miss={};for(const it of ITEMS){const r=S.srs[it.id];if(r&&r.n>r.c){const m=miss[it.p]||(miss[it.p]={w:0,n:0,last:null});m.w+=r.n-r.c;m.n+=r.n;if(r.b===0)m.last=it}}
+    const top=Object.entries(miss).sort((a,b)=>b[1].w-a[1].w).slice(0,8);
+    $('#rMiss').innerHTML=top.length?`<div class="sec">間違いの多いページ</div><div class="card" style="padding:2px 14px">${top.map(([p,m])=>
+      `<a class="prow" href="${m.last?deepUrl(m.last):pageUrl(+p)}" target="_blank" rel="noopener"><div class="pt">${esc(PAGES[p].title)}<small>${GENRES[PAGES[p].genre]?.n||''}・不正解 ${m.w}回 / 解答 ${m.n}回</small></div><div class="pp">開く</div></a>`).join('')}</div>`:'';
   },
   settings(){
     document.querySelectorAll('[data-pref]').forEach(b=>b.classList.toggle('on',!!S.pref[b.dataset.pref]));
@@ -830,7 +851,8 @@ function showReveal(ok,pts,timeout){
    <div class="ans"><small>正解</small>${isO?'':ans}</div>${isO?ans:''}
    ${isO?'':`<p class="expl">${esc(it.e)}</p>`}
    <div class="evq">${esc(ev)}</div>
-   <a class="rlink" href="${pageUrl(it.p)}" target="_blank" rel="noopener">${esc(PAGES[it.p].title)} を開く<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+   ${ok?`<a class="rlink" href="${deepUrl(it)}" target="_blank" rel="noopener">${esc(PAGES[it.p].title)} の該当箇所<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>`
+   :`<a class="readbtn" href="${deepUrl(it)}" target="_blank" rel="noopener"><span class="ri"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></span><span class="rt"><b>該当箇所を読む</b><small>${esc(PAGES[it.p].title)}</small></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>`}
    <button class="btn pri wide" id="rvNext">${last?'結果を見る':'次の問題'}</button>`;
   R2.classList.add('on');
   $('#rvNext').onclick=()=>{buzz('tap');advance()};
@@ -853,7 +875,10 @@ function endMatch(){
   const base=lvBase(lv1), next=lvBase(lv1+1);
   $('#rsXp').innerHTML=`<div class="row"><span>${lv1>lv0?'レベルが上がりました':'経験値'}</span><b class="num">+${xp} XP</b></div><div class="bar"><i style="width:${(S.xp-base)/(next-base)*100}%"></i></div><div class="row" style="margin-top:6px"><span class="num">Lv ${lv1}</span><span class="num">次まで ${next-S.xp} XP</span></div>`;
   $('#rsLog').innerHTML=M.log.map(x=>{const a=x.it.kind==='o'?x.it.its.slice().sort((p,q)=>p[2]-q[2]).map(y=>y[0]).join(' → '):x.it.a;
-    return `<div class="ql"><div class="m ${x.ok?'ok':'ng'}">${x.ok?'○':'×'}</div><div class="tx">${esc(x.it.q)}<b>${esc(a)}</b><a href="${pageUrl(x.it.p)}" target="_blank" rel="noopener">${esc(PAGES[x.it.p].title)}</a></div></div>`}).join('');
+    return `<div class="ql"><div class="m ${x.ok?'ok':'ng'}">${x.ok?'○':'×'}</div><div class="tx">${esc(x.it.q)}<b>${esc(a)}</b><a href="${deepUrl(x.it)}" target="_blank" rel="noopener">${x.ok?esc(PAGES[x.it.p].title):'該当箇所を読む・'+esc(PAGES[x.it.p].title)}</a></div></div>`}).join('');
+  const miss=[...new Map(M.log.filter(x=>!x.ok).map(x=>[x.it.p,x.it])).values()];
+  $('#rsRead').innerHTML=miss.length?`<div class="sec">読み直すページ</div><div class="card" style="padding:2px 14px">${miss.map(it=>{const n=M.log.filter(x=>!x.ok&&x.it.p===it.p).length;
+    return `<a class="prow" href="${deepUrl(it)}" target="_blank" rel="noopener"><div class="pt">${esc(PAGES[it.p].title)}<small>${GENRES[PAGES[it.p].genre]?.n||''}・今回 ${n}問 不正解</small></div><div class="pp">開く</div></a>`}).join('')}</div>`:'';
   const again=M.opt.again; $('#rsAgain').onclick=()=>{buzz('tap');again()}; M=null;
 }
 $('#rsHome').onclick=()=>{buzz('tap');tab('home')};

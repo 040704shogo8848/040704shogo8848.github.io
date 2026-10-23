@@ -39,11 +39,48 @@ def tex2u(s):
     return conv(re.match(r'(.*)', s, re.S)) if '\\' in s else s
 
 
+def frag(ev):
+    """Plain span of the evidence for a #:~:text= link: no table separators, no TeX, cut at punctuation.
+    None when nothing usable is left (formula-only evidence)."""
+    parts = [x.strip(' 　、。，．・:：') for x in re.split(r'\s*\|\s*|\$[^$]*\$|\s{2,}|\n', ev)]
+    parts = [x for x in parts if '\\' not in x and '$' not in x]
+    t = max(parts, key=len) if parts else ''
+    if len(t) > 60:
+        cut = max(t.rfind('、', 0, 60), t.rfind('。', 0, 60))
+        t = t[:cut] if cut >= 12 else t
+    return t if len(t) >= 6 else None
+
+
+def headings(src):
+    """[(normalized offset, heading text)] for the ## / ### lines of an extracted page."""
+    out, pos = [], 0
+    for line in src.split('\n'):
+        m = re.match(r'#{2,3} (.+)', line)
+        if m:
+            words = [w for w in re.split(r'\s+', m.group(1)) if len(w) >= 2 and not re.fullmatch(r'[\d.]+', w)]
+            if words: out.append((pos, max(words, key=len)))
+        pos += len(re.sub(r'\s+', '', line))
+    return out
+
+
+def link(ev, src_norm, heads, hlist):
+    """(fragment, heading index) for the question's 'read it on the page' link."""
+    f = frag(ev)
+    at = src_norm.find(re.sub(r'\s+', '', ev))
+    hi = -1
+    if at >= 0:
+        before = [t for o, t in heads if o <= at]
+        if before:
+            if before[-1] not in hlist: hlist.append(before[-1])
+            hi = hlist.index(before[-1])
+    fe = tex2u(ev)
+    return ('' if f == fe else f), hi
+
 W = sys.argv[1]
 spec = importlib.util.spec_from_file_location('v', os.path.join(W, 'tools/validate.py')); v = importlib.util.module_from_spec(spec); spec.loader.exec_module(v)
 pages = json.load(open(os.path.join(W, 'pages.json')))
 idx = {p['id']: i for i, p in enumerate(pages)}
-Q, O, seen, dropped = [], [], set(), 0
+Q, O, seen, dropped, HEADS = [], [], set(), 0, {}
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../..'))
 tracked = set(subprocess.run(['git', 'ls-files', '*.html'], cwd=REPO, capture_output=True, text=True).stdout.split())
 h = lambda s: hashlib.sha1(s.encode()).hexdigest()[:10]
@@ -54,23 +91,25 @@ for p in pages:
     errs, _, _ = v.check(f)
     bad = {e.split(':')[0] for e in errs}
     o = json.load(open(f)); i = idx[p['id']]
+    src = open(os.path.join(W, 'src', p['id'] + '.txt')).read()
+    src_norm, heads, hlist = re.sub(r'\s+', '', src), headings(src), HEADS.setdefault(i, [])
     for k, q in enumerate(o.get('questions', [])):
         if f'q{k}' in bad: dropped += 1; continue
         qid = 'q' + h(p['id'] + q['q'])
         if qid in seen: continue
         seen.add(qid)
-        Q.append([qid, i, q['q'], q['a'], q['d'], tex2u(q['e']), tex2u(q['ev']), q['lv']])
+        Q.append([qid, i, q['q'], q['a'], q['d'], tex2u(q['e']), tex2u(q['ev']), q['lv'], *link(q['ev'], src_norm, heads, hlist)])
     for k, od in enumerate(o.get('orders', [])):
         if f'order{k}' in bad: dropped += 1; continue
         oid = 'o' + h(p['id'] + od['q'] + ''.join(x['t'] for x in od['items']))
         if oid in seen: continue
         seen.add(oid)
-        O.append([oid, i, od['q'], [[x['t'], x['y'], x['k']] for x in od['items']], [tex2u(e) for e in od['ev']]])
+        O.append([oid, i, od['q'], [[x['t'], x['y'], x['k']] for x in od['items']], [tex2u(e) for e in od['ev']], *link(od['ev'][0], src_norm, heads, hlist)])
 used = sorted({x[1] for x in Q + O})
 remap = {old: new for new, old in enumerate(used)}
 for x in Q + O: x[1] = remap[x[1]]
 data = {'built': datetime.date.today().isoformat(),
-        'pages': [[pages[i]['id'], pages[i]['path'], pages[i]['title'], pages[i]['genre']] for i in used],
+        'pages': [[pages[i]['id'], pages[i]['path'], pages[i]['title'], pages[i]['genre'], HEADS.get(i, [])] for i in used],
         'q': Q, 'o': O}
 out = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'questions.js')
 write = lambda: open(out, 'w').write('window.QDATA=' + json.dumps(data, ensure_ascii=False, separators=(',', ':')) + ';\n')
@@ -88,6 +127,8 @@ for _ in range(20):
     has = lambda x: any(t in json.dumps(x, ensure_ascii=False) for t in hits)
     n0 = len(data['q']) + len(data['o'])
     data['q'] = [x for x in data['q'] if not has(x)]; data['o'] = [x for x in data['o'] if not has(x)]
+    for pg in data['pages']:
+        pg[4] = ['' if has(t) else t for t in pg[4]]  # keep indices stable; '' = no heading link
     print(f'leak-check: dropped {n0 - len(data["q"]) - len(data["o"])} items for {sorted(hits)}')
     write()
 else:

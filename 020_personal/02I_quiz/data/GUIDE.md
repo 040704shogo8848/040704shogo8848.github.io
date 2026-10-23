@@ -3,10 +3,10 @@
 You write quiz questions for a personal memorization game (like the Japanese quiz app "みんはや"). The player is a Keio economics student who wrote/read these pages and wants to memorize their content: people, places, years, numbers, technical terms, definitions, causal links.
 
 ## Input
-Each page is a plain-text file in `src/<page_id>.txt` (header lines PAGE_ID / PATH / TITLE / GENRE, then the body). Read the whole file before writing.
+Each page is a plain-text file in `data/src/<page_id>.txt` (header lines PAGE_ID / PATH / TITLE / GENRE, then the body). Read the whole file before writing.
 
 ## Output
-For each page write `out/<page_id>.json` (UTF-8, valid JSON):
+For each page write `data/out/<page_id>.json` (UTF-8, valid JSON):
 
 ```json
 {
@@ -42,8 +42,8 @@ About 1 question per 1,000 characters of body text, minimum 5, maximum 40 per pa
 ## Self-check
 After writing each file run:
 ```
-python3 tools/validate.py out/<page_id>.json
+python3 tools/validate.py data/out/<page_id>.json
 ```
 Fix every error (most common: `ev` not verbatim — copy it again from the src file, keeping punctuation and full-width/half-width characters exactly; a table row looks like `| A | B |` in the src, so pick a span inside one cell or include the ` | ` separators exactly). Repeat until 0 errors. Do not finish with errors.
 
-Work inside the quiz directory only. Do not touch anything else (no git, no other directories).
+Run every command from `020_personal/02I_quiz/` (the folder holding tools/ and data/). Work inside that folder only. Do not touch anything else (no git, no other directories).

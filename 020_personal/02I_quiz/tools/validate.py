@@ -1,5 +1,6 @@
 import json,sys,re,os
-BASE=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# page text lives in <quiz>/data/src/ (QUIZ_DATA overrides the data folder)
+BASE=os.environ.get('QUIZ_DATA') or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),'data')
 def norm(s): return re.sub(r'\s+','',s)
 BAN=re.compile(r'このページ|本ページ|本章|この章|本稿|本レポート|このレポート|上記|以下のうち正しい')
 def check(path):

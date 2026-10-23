@@ -1,10 +1,10 @@
 """Extract the plain text of every page used for questions into <workdir>/src/ and write <workdir>/pages.json.
 
-usage: python3 tools/extract.py <workdir>
+usage: python3 tools/extract.py [workdir]   (default: data/ next to tools/)
 """
 import os,re,html,json,sys
 ROOT=os.path.expanduser('~/System/040704shogo8848.github.io')
-OUT=sys.argv[1]
+OUT=sys.argv[1] if len(sys.argv)>1 else os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),'data')
 os.makedirs(os.path.join(OUT,'src'),exist_ok=True)
 pages=[]
 def want(rel):

@@ -220,6 +220,12 @@ body.playing .tabbar{display:none}
 .readbtn .rt b{font-size:15px}
 .readbtn .rt small{font-size:12px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 a.prow{color:inherit;text-decoration:none}
+.rvfoot{display:flex;justify-content:flex-end;margin:-6px 0 10px}
+.rep{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--sub);padding:6px 4px}
+.reasons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.reasons .mode{padding:12px}
+.memo{width:100%;margin-top:10px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 12px;font:inherit;font-size:16px;resize:vertical;outline:none}
+.memo:focus{border-color:var(--accent)}
 .flash{position:fixed;inset:0;pointer-events:none;z-index:25;opacity:0}
 .flash.ok{animation:flash .5s ease;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--good) 26%,transparent),transparent 70%)}
 .flash.ng{animation:flash .5s ease;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--bad) 22%,transparent),transparent 70%)}
@@ -391,6 +397,7 @@ a.prow{color:inherit;text-decoration:none}
   <div class="card set">
     <div class="srow"><div><b>記録を書き出す</b><small>別の端末へ移す時に使う</small></div><button class="btn sec2" style="height:38px;font-size:13px" id="sExport">書き出し</button></div>
     <div class="srow"><div><b>記録を読み込む</b><small>書き出したファイルを選択</small></div><button class="btn sec2" style="height:38px;font-size:13px" id="sImport">読み込み</button></div>
+    <div class="srow"><div><b>報告した問題</b><small id="sFlag">0問を出題から外しています</small></div><button class="btn sec2" style="height:38px;font-size:13px" id="sUnflag">元に戻す</button></div>
     <div class="srow"><div><b>記録を消去する</b><small>元に戻せません</small></div><button class="btn sec2" style="height:38px;font-size:13px;color:var(--bad)" id="sReset">消去</button></div>
   </div>
   <p class="note">問題はポータルサイトの各ページの本文から作成しています。どの問題にも根拠となる本文の一文を付けてあり、解答後に元のページを開けます。ホーム画面に追加すると、通信の無い場所でも遊べます。</p>
@@ -480,11 +487,15 @@ const panelable = it => it.kind==='q' && /^[^\s、。,.・()（）「」]{2,8}$/
 //  storage
 // ====================================================================
 const KEY='hq.v1';
-const DEF={srs:{},days:{},xp:0,matches:0,pref:{sound:true,vib:true,auto:false,cpu:true,time:12,speed:40,goal:30,cpuLv:1,theme:'auto'}};
+const DEF={srs:{},days:{},xp:0,matches:0,flag:{},pref:{sound:true,vib:true,auto:false,cpu:true,time:12,speed:40,goal:30,cpuLv:1,theme:'auto'}};
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){S={}}
 S={...structuredClone(DEF),...S,pref:{...DEF.pref,...(S.pref||{})}};
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+// Reported questions stay out of every round. The signature lets a corrected
+// version (same id, new answer or choices) come back after a rebuild.
+const sig=it=>{const t=it.q+'|'+(it.kind==='q'?it.a+'|'+it.d.join('|'):it.its.map(x=>x[0]+x[2]).join('|'));let h=5381;for(let i=0;i<t.length;i++)h=(h*33^t.charCodeAt(i))>>>0;return h.toString(36)};
+for(let i=ITEMS.length-1;i>=0;i--){const f=S.flag[ITEMS[i].id];if(f&&f.s===sig(ITEMS[i]))ITEMS.splice(i,1)}
 const dayNo=(t=Date.now())=>Math.floor((t-new Date(t).getTimezoneOffset()*6e4)/864e5);
 const dayKey=(n)=>{const d=new Date(n*864e5);return d.toISOString().slice(0,10)};
 const TODAY=()=>dayNo();
@@ -616,6 +627,7 @@ const R={
   settings(){
     document.querySelectorAll('[data-pref]').forEach(b=>b.classList.toggle('on',!!S.pref[b.dataset.pref]));
     document.querySelectorAll('[data-seg]').forEach(s=>s.querySelectorAll('button').forEach(b=>b.classList.toggle('on',String(S.pref[s.dataset.seg])===b.dataset.v)));
+    const nf=Object.keys(S.flag).length;$('#sFlag').textContent=`${nf}問を出題から外しています`;$('#sUnflag').disabled=!nf;
     $('#sInfo').textContent=`収録 ${ITEMS.length.toLocaleString()}問・${PAGES.length}ページ`+(QD.built?`・${QD.built} 更新`:'');
   }
 };
@@ -624,6 +636,7 @@ document.querySelectorAll('[data-pref]').forEach(b=>b.onclick=()=>{S.pref[b.data
 document.querySelectorAll('[data-seg]').forEach(s=>s.querySelectorAll('button').forEach(b=>b.onclick=()=>{const v=b.dataset.v;S.pref[s.dataset.seg]=isNaN(+v)?v:+v;save();applyTheme();R.settings()}));
 $('#sExport').onclick=()=>{const blob=new Blob([JSON.stringify(S)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hayaoshi_'+dayKey(TODAY()).replace(/-/g,'').slice(2)+'.json';a.click()};
 $('#sImport').onclick=()=>$('#sFile').click();
+$('#sUnflag').onclick=()=>{if(confirm('報告した問題を、すべて出題に戻しますか。')){S.flag={};save();location.reload()}};
 $('#sFile').onchange=async e=>{try{const o=JSON.parse(await e.target.files[0].text());if(!o.srs)throw 0;S={...structuredClone(DEF),...o,pref:{...DEF.pref,...o.pref}};save();applyTheme();toast('記録を読み込みました');R.settings()}catch(err){toast('読み込めない形式です')}};
 $('#sReset').onclick=()=>{if(confirm('学習記録をすべて消去しますか。')){const p=S.pref;S=structuredClone(DEF);S.pref=p;save();toast('記録を消去しました');R.settings()}};
 
@@ -640,6 +653,37 @@ function openSheet(genre,page=null){
   $('#scrim').classList.add('on'); $('#sheet').classList.add('on');
 }
 function closeSheet(){$('#scrim').classList.remove('on');$('#sheet').classList.remove('on')}
+
+// ====================================================================
+//  report a broken question -> prefilled GitHub issue (label: quiz)
+// ====================================================================
+const ISSUE_URL='https://github.com/040704shogo8848/040704shogo8848.github.io/issues/new';
+const REASONS=['正解が誤っている','正解が複数ある','問題文が不明確','選択肢が不自然','その他'];
+function openReport(it){
+  let reason=REASONS[0];
+  const draw=()=>{
+    $('#sheet').innerHTML=`<div class="grab"></div><h2>問題の不備を報告</h2>
+    <p class="sub">${esc(it.q)}</p>
+    <div class="reasons">${REASONS.map(r=>`<button class="mode${r===reason?' sel':''}" data-r="${r}"><b>${r}</b></button>`).join('')}</div>
+    <textarea class="memo" id="repMemo" rows="3" placeholder="補足（任意）：正しい答え、気付いた点など"></textarea>
+    <div style="display:flex;gap:8px;margin:12px 0 6px">
+      <button class="btn sec2" style="flex:1" id="repOnly">出題から外す</button>
+      <button class="btn pri" style="flex:1.4" id="repSend">GitHub で報告</button></div>
+    <p class="note" style="margin:6px 2px 0">報告した問題は、この端末では出題されなくなります。GitHub の issue は次回の更新時に確認し、問題を修正または削除します。</p>`;
+    $('#sheet').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{buzz('tap');const m=$('#repMemo').value;reason=b.dataset.r;draw();$('#repMemo').value=m});
+    $('#repOnly').onclick=()=>{flagItem(it,reason);closeSheet();toast('この問題を出題から外しました')};
+    $('#repSend').onclick=()=>{
+      const memo=$('#repMemo').value.trim(), p=PAGES[it.p];
+      const lines=[`- id: ${it.id}`,`- page: ${p.path}`,`- 理由: ${reason}`,`- 補足: ${memo||'なし'}`,'',`問題: ${it.q}`];
+      if(it.kind==='q')lines.push(`正解: ${it.a}`,`誤答: ${it.d.join(' / ')}`,`根拠: ${it.ev}`);
+      else lines.push('正しい順: '+it.its.slice().sort((a,b)=>a[2]-b[2]).map(x=>`${x[1]} ${x[0]}`).join(' → '));
+      const url=ISSUE_URL+'?labels=quiz&title='+encodeURIComponent(`[quiz] ${reason}: ${it.q.slice(0,40)}`)+'&body='+encodeURIComponent(lines.join('\n'));
+      flagItem(it,reason); window.open(url,'_blank','noopener'); closeSheet(); toast('報告しました。この問題は出題されません');
+    };
+  };
+  draw(); $('#scrim').classList.add('on'); $('#sheet').classList.add('on');
+}
+function flagItem(it,reason){S.flag[it.id]={s:sig(it),r:reason,t:TODAY()};save();const i=ITEMS.indexOf(it);if(i>=0)ITEMS.splice(i,1)}
 $('#scrim').onclick=closeSheet;
 function poolFor(genre,page,mode){
   let L=ITEMS.filter(it=>(page!=null?it.p===page:(!genre||gOf(it)===genre)));
@@ -853,9 +897,11 @@ function showReveal(ok,pts,timeout){
    <div class="evq">${esc(ev)}</div>
    ${ok?`<a class="rlink" href="${deepUrl(it)}" target="_blank" rel="noopener">${esc(PAGES[it.p].title)} の該当箇所<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>`
    :`<a class="readbtn" href="${deepUrl(it)}" target="_blank" rel="noopener"><span class="ri"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></span><span class="rt"><b>該当箇所を読む</b><small>${esc(PAGES[it.p].title)}</small></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>`}
+   <div class="rvfoot"><button class="rep" id="rvRep"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4M4 4h12l-2 4 2 4H4"/></svg>問題を報告</button></div>
    <button class="btn pri wide" id="rvNext">${last?'結果を見る':'次の問題'}</button>`;
   R2.classList.add('on');
   $('#rvNext').onclick=()=>{buzz('tap');advance()};
+  $('#rvRep').onclick=()=>{buzz('tap');clearTimers();openReport(it)};
   if(S.pref.auto&&ok)M.timers.push(setTimeout(advance,1600));
 }
 function advance(){clearTimers();$('#reveal').classList.remove('on');M.i++;if(M.i>=M.round.length)return endMatch();setTimeout(nextQ,220)}

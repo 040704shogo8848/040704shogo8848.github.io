@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Bundle per-page question JSON into questions.js for the quiz app.
 
-usage: python3 tools/build.py <workdir>
-  workdir holds src/ (from tools/extract.py), out/ and pages.json; data/ in this
-  folder keeps the last out/ and pages.json.
+usage: python3 tools/build.py [workdir]   (default: data/ next to tools/)
+  workdir holds src/ and pages.json (from tools/extract.py) and out/ (question JSON).
 Only questions that pass tools/validate.py are bundled. Pages that git does not
 track yet (drafts from other sessions) are left out so nothing unpublished leaks.
 """
@@ -76,8 +75,9 @@ def link(ev, src_norm, heads, hlist):
     fe = tex2u(ev)
     return ('' if f == fe else f), hi
 
-W = sys.argv[1]
-spec = importlib.util.spec_from_file_location('v', os.path.join(W, 'tools/validate.py')); v = importlib.util.module_from_spec(spec); spec.loader.exec_module(v)
+W = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data')
+os.environ['QUIZ_DATA'] = W
+spec = importlib.util.spec_from_file_location('v', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'validate.py')); v = importlib.util.module_from_spec(spec); spec.loader.exec_module(v)
 pages = json.load(open(os.path.join(W, 'pages.json')))
 idx = {p['id']: i for i, p in enumerate(pages)}
 Q, O, seen, dropped, HEADS = [], [], set(), 0, {}

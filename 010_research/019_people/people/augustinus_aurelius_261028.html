@@ -1,0 +1,959 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>アウグスティヌス — 自分で書き、自分で点検した記録</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --s2:#eb6834; --s3:#1baf7a; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  header.top h1{font-size:28px;margin:0 0 2px;letter-spacing:-.02em}
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--accent);font-size:11.5px;padding:2px 9px;border-radius:11px}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px;letter-spacing:-.01em}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:4px solid var(--accent);background:var(--card);
+    padding:14px 18px;margin:18px 0;border-radius:0 8px 8px 0}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .bars{display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:112px 1fr auto;align-items:center;gap:10px}
+  .bar .lb{font-size:12.5px;color:var(--sub);text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .tr{background:var(--grid);border-radius:4px;height:18px;position:relative;overflow:hidden}
+  .bar .fl{background:var(--s1);height:100%;border-radius:4px;min-width:2px;display:block}
+  .bar .vl{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;
+    min-width:74px;text-align:right}
+  .bar.est .fl{background:var(--s1-light)}
+  .bar.s2 .fl{background:var(--s2)}
+  .bar.s3 .fl{background:var(--s3)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:10px;background:var(--card)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--ink)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#FAFAF7}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--accent);background:var(--chip);border-radius:9px;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#F0EEE8}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F4F3EE;border:1px solid var(--line);border-radius:4px;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  .q-tabs{display:flex;gap:5px;flex-wrap:wrap;margin:16px 0 14px}
+  .q-tab{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:12px;cursor:pointer;font-family:inherit}
+  .q-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .q-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .q-list{display:grid;gap:8px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .q.hide{display:none}
+  .q .txt{font-size:14px}
+  .q .meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+  /* 2桁の出典番号が隣接すると 1 と 13 が「113」に見えるので、間を空ける */
+  sup + sup{margin-left:3px}
+
+  .chart.wide .bar{grid-template-columns:148px 1fr auto}
+
+  @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .bar{grid-template-columns:88px 1fr auto}
+    .chart.wide .bar{grid-template-columns:112px 1fr auto}
+    .bar .vl{min-width:60px}
+    .tl-d{min-width:0}
+  }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../../014_industry/index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a><a href="../../../030_ideas/034_foundation/index.html">foundation</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/02B_reading/index.html">reading</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a><a href="../../../020_personal/02C_chemistry/index.html">chemistry</a><a href="../../../020_personal/02D_probability/index.html">probability</a><a href="../../../020_personal/02E_calculus/index.html">calculus</a><a href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a><a href="../../../020_personal/02G_physics/index.html">physics</a><a href="../../../020_personal/02H_heidegger/index.html">heidegger</a><a href="../../../020_personal/02I_quiz/index.html">quiz</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../../030_ideas/034_foundation/index.html">foundation</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../../020_personal/02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../../020_personal/02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../../020_personal/02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../../020_personal/02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../../020_personal/02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../../020_personal/02I_quiz/index.html">quiz</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+
+<p class="crumb"><a href="../../../index.html">home</a> / <a href="../index.html">people</a> / アウグスティヌス</p>
+
+<header class="top">
+  <h1>アウグスティヌス</h1>
+  <div class="en">Aurelius Augustinus / Augustine of Hippo — 354.11.13 – 430.8.28</div>
+  <div class="tags">
+    <span class="tag">ヒッポ・レギウス司教</span><span class="tag">告白</span><span class="tag">神の国</span>
+    <span class="tag">ドナトゥス派</span><span class="tag">ペラギウス論争</span><span class="tag">再考録</span>
+    <span class="tag">史料批判</span>
+  </div>
+</header>
+
+<p class="lead">
+  ローマ領北アフリカの内陸都市タガステで、小土地所有の市参事会員の子として生まれた。カルタゴとローマとミラノで修辞学を教えた後、32歳で受洗した。391年にヒッポ・レギウスで司祭に叙階され、395年か396年に同地の司教となり、430年にヴァンダル族の包囲下で死去するまでその職にあった。本ページは神学の解説としてではなく、<strong class="hit">この人物について残る記録の大半を本人が書き、本人が点検し、本人の弟子が書いた</strong>という事実を軸に読む。前半生の記述は大半が『告白』に依存し、著作の目録は本人の『再考録』と弟子ポッシディウスの『アウグスティヌス伝』に依存する。論争相手の文章の多くは、本人の反駁書の中の引用として残っている。
+</p>
+<p class="srcnote">
+  作成日 2026年10月28日。表記は日本の教父学の慣行に従い「アウグスティヌス」とする。
+  誕生日は本人が『幸福な生について』1.6で「11月のイドゥス（13日）」と記す<sup><a href="#s11">11</a></sup>。生年354年は、母モニカの死を本人の「33年目」と記す『告白』9.11.28から逆算される<sup><a href="#s7">7</a></sup>。
+  <strong>年表の満年齢は、月日まで確定する項目は誕生日（11月13日）で判定し、年しか分からない項目は西暦年の差で出す。</strong>年だけの項目は、出来事が11月13日より前なら実際の満年齢より1歳多く表示される。例: 386年8月の回心は31歳と出るが、387年4月の受洗は年差でなく月日で判定して32歳と出る。没後の項目は没年430年との年差である。
+  ポッシディウスは享年を「76年」と書く<sup><a href="#s20">20</a></sup>。数え方の差であり、生没の月日から計算した満年齢は75歳である<sup><a href="#s34">34</a></sup>。
+  一次資料は『告白』『神の国』『再考録』『書簡』とポッシディウス『伝』を上位に置く。研究書は Brown / O'Donnell / Lancel / Chadwick に依拠する。Wikipediaは日付の突合にとどめる。
+</p>
+
+<h2 id="overview"><span class="num">①</span>概要<span class="en">Overview</span></h2>
+
+<div class="kpi">
+  <div class="card"><div class="k">生没</div><div class="v">354–430<small>11月13日生、8月28日没。満75歳（ポッシディウスは76年と記す）</small></div></div>
+  <div class="card"><div class="k">司教在任</div><div class="v">約34年<small>395/396年–430年。ヒッポ・レギウス</small></div></div>
+  <div class="card"><div class="k">『再考録』の点検対象</div><div class="v">93作品<small>426–427年。巻数232は書簡224（428年頃）の自己申告</small></div></div>
+  <div class="card"><div class="k">現存著作の総量</div><div class="v">500万語超<small>推定。single-source（O'Donnell）</small></div></div>
+</div>
+
+<div class="callout">
+<p style="margin-top:0"><strong>先に結論を3つ置く。</strong></p>
+<p><strong>1. 前半生の像は、43歳前後の司教が書いた1冊の自伝で大部分が決まっている。</strong>
+タガステでの少年期とカルタゴでの内縁関係、マニ教への9年と386年8月のミラノの庭は、いずれも397年頃に書き始めた『告白』を主な典拠とする<sup><a href="#s41">41</a></sup>。内縁の女性の名は『告白』に書かれておらず、現在も特定できない<sup><a href="#s5">5</a></sup>。O'Donnell は『告白』を「並外れた技巧の作品」と呼び、司教となった本人が公的な自己を組み立てた文書として読む<sup><a href="#s25">25</a></sup>。同じ出来事を外部から記録した同時代の文書は、ミラノ期については確認できない。</p>
+<p><strong>2. 著作の目録まで本人が管理した。</strong>
+426年から427年にかけて、本人は自分の93作品を年代順に読み直し、修正すべき箇所を書き添えた『再考録』を作成した<sup><a href="#s16">16</a></sup><sup><a href="#s41">41</a></sup>。428年頃の書簡224では、読み直した巻数を232と記す<sup><a href="#s19">19</a></sup>。弟子ポッシディウスは伝記の末尾に著作目録（Indiculum）を付し、本人が教会の図書館と蔵書を保存するよう命じたことを書き残した<sup><a href="#s20">20</a></sup>。<strong class="hit">著作の範囲と年代を、本人と弟子の2つの目録で確認できる。</strong>SEP は、その著作量が古代のほとんどの著述家を上回ると記す<sup><a href="#s31">31</a></sup>。Chadwick の概説も、思想の展開をこの年代順の目録に沿って記述する<sup><a href="#s28">28</a></sup>。</p>
+<p><strong>3. 論争の相手は、主に本人の文章の中に残っている。</strong>
+エクラヌムのユリアヌスが本人に反論した8巻の著作は、本人の『ユリアヌス駁論・未完の書』に引用された形で知られる<sup><a href="#s36">36</a></sup>。O'Donnell は、ドナトゥス派が北アフリカでは2派のうち「はるかに大きい側」だったと繰り返し指摘する<sup><a href="#s25">25</a></sup>。この評価が正しければ、勝った側の司教の文書だけで北アフリカの教会史を組み立ててきた読み方に偏りがある。<strong>その偏りを外から補正できる資料は、本人が目録に入れなかった書簡と説教である。</strong>1974年（1975年とする記述もある）に発見された29通の書簡と1990年に発見された26編の説教は、晩年の司教の日常を示した。権威が盤石でなかった実態もそこに現れる<sup><a href="#s29">29</a></sup><sup><a href="#s24">24</a></sup>。</p>
+</div>
+
+<h2 id="timeline"><span class="num">②</span>年表<span class="en">Timeline</span></h2>
+<p>年または月日が特定できる出来事だけを置いた。各項目は事実、具体、後への影響の3層である。
+期のボタンで絞り込める。日付の右は、リード文の規則で計算した満年齢である。</p>
+
+<div class="tl-tools">
+  <input id="tlq" type="search" placeholder="年表を検索（例: モニカ、マニ教、ドナトゥス、ペラギウス、ヴァンダル）" aria-label="年表を検索">
+  <span class="tl-count" id="tlcount"></span>
+</div>
+<div class="tl-eras" id="tleras"></div>
+<div class="tl" id="tl"></div>
+<div class="tl-empty" id="tlempty">該当する項目がない。</div>
+
+
+<h2 id="phases"><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+
+<h3>I 出自と教育（354–373年）</h3>
+<p>タガステは現在のアルジェリア東部スーク・アハラスにあたる内陸の町である<sup><a href="#s34">34</a></sup>。父パトリキウスは市参事会員の身分に属し、本人は『告白』で父を「資力の乏しいタガステの市民」と書く<sup><a href="#s1">1</a></sup>。ポッシディウスは両親を「市参事会員の身分の名誉あるキリスト教徒」と記すが<sup><a href="#s20">20</a></sup>、『告白』によれば父は晩年まで洗礼を受けておらず、死の前に受洗した<sup><a href="#s7">7</a></sup>。<strong>伝記作者は、本人が記した父の異教徒としての経歴を書いていない。</strong>弟子による伝記が師の家系を整えて書いている箇所である。日本語の概説である出村和彦の岩波新書も、少年期の記述は『告白』に依拠する<sup><a href="#s48">48</a></sup>。</p>
+<p>初等教育の後、近隣のマダウラで文法と文学を学んだ<sup><a href="#s1">1</a></sup>。16歳の1年は学資が整わずタガステで過ごし、その年に仲間と梨を盗んだ挿話が『告白』第2巻の中心に置かれる<sup><a href="#s1">1</a></sup>。370年からカルタゴで修辞学を学び、その学資には父の努力に加えて同郷の有力者ロマニアヌスの援助があった<sup><a href="#s24">24</a></sup><sup><a href="#s27">27</a></sup>。本人は19歳の年に、父がその2年前に死んでいたことと、母の出す金で学んでいたことを書いている<sup><a href="#s2">2</a></sup>。</p>
+<p>同じ時期に内縁の女性と同居を始め、372年に息子アデオダトゥスが生まれた<sup><a href="#s7">7</a></sup><sup><a href="#s45">45</a></sup>。本人は「1人だけで、その女性には忠実だった」と書く<sup><a href="#s3">3</a></sup>。関係の期間を「約15年」とするのは現代の研究と事典の算定であり<sup><a href="#s32">32</a></sup>、『告白』本文に年数の記載はない<sup><a href="#s5">5</a></sup>。</p>
+
+<h3>II マニ教の9年と修辞学教師（373–384年）</h3>
+<p>373年、19歳でキケロの『ホルテンシウス』を読み、知恵の探求に向かった<sup><a href="#s2">2</a></sup>。同じ年にマニ教の聴聞者（auditor）となり、選良（electus）には進まなかった<sup><a href="#s31">31</a></sup>。本人は期間を「19歳から28歳まで」の9年と書く<sup><a href="#s3">3</a></sup>。英語版Wikipediaは10年と書くが<sup><a href="#s34">34</a></sup>、本ページは本人の記述に従う。</p>
+<p>この間にタガステで文法を教え、友人の死を機にカルタゴへ戻って修辞学の学校を開いた<sup><a href="#s3">3</a></sup><sup><a href="#s34">34</a></sup>。20歳前後でアリストテレス『範疇論』を独学で読み<sup><a href="#s3">3</a></sup>、26歳か27歳で最初の著作『美と適合について』を書いた<sup><a href="#s3">3</a></sup>。29歳の年にマニ教の司教ファウストゥスがカルタゴに来たが、その学識に失望した<sup><a href="#s4">4</a></sup>。<strong>離脱の契機は教義上の反駁ではなく、教団の代表的な論者が自分の問いに答えられなかったという経験である。</strong></p>
+<p>383年、カルタゴの学生が騒がしいことを主な理由としてローマへ移った。母には友人を見送ると偽って出航した<sup><a href="#s4">4</a></sup>。384年、ミラノ市が修辞学教師をローマ市長官に求めた。本人はマニ教徒の知人の仲介でシンマクスの試験を受け、ミラノの職を得た<sup><a href="#s4">4</a></sup><sup><a href="#s34">34</a></sup>。シンマクスは同じ384年に、勝利の女神の祭壇の撤去をめぐってミラノの司教アンブロシウスと争った異教徒の元老院議員である<sup><a href="#s24">24</a></sup>。<strong>反キリスト教側の有力者の推薦で宮廷都市に入り、そこで司教の説教を聞いた</strong>という経路である。</p>
+
+<h3>III ミラノ、386年8月（384–387年）</h3>
+<p>ミラノではアンブロシウスの説教を、最初は弁論の技術として聞いた<sup><a href="#s4">4</a></sup>。385年に母モニカが到着し、婚約が整った。相手は結婚できる年齢に2年足りない少女で、本人はその成長を待つことにした<sup><a href="#s5">5</a></sup>。婚約の障害として内縁の女性が引き離され、「他の男を知らない」と誓ってアフリカへ帰った。息子は本人の手元に残った<sup><a href="#s5">5</a></sup>。本人はその直後に別の女性を得たと書く<sup><a href="#s5">5</a></sup>。</p>
+<p>386年夏、マリウス・ウィクトリヌスがラテン語に訳した「プラトン派の書物」を読んだ。プロティノスとポルフュリオスの論考を含むとみられる<sup><a href="#s31">31</a></sup>。同年8月、ポンティキアヌスからエジプトの修道者アントニオスの話を聞いた。その直後にミラノの宿舎の庭で子どもの声の「取りて読め」を聞き、ローマ書13章13–14節を開いた<sup><a href="#s6">6</a></sup><sup><a href="#s34">34</a></sup>。友人アリピウスは続く14章1節を自分に当てはめた<sup><a href="#s6">6</a></sup>。</p>
+<p>秋に胸の病を理由に教職を退いた。ミラノ近郊カッシキアクムの友人の別荘で、母と息子と弟子たちとともに対話篇を書いた<sup><a href="#s7">7</a></sup><sup><a href="#s41">41</a></sup>。『幸福な生について』は386年11月13日の本人の誕生日に始まる対話として書かれている<sup><a href="#s11">11</a></sup>。387年4月24日から25日の復活徹夜祭に、アリピウスと息子とともにアンブロシウスから受洗した<sup><a href="#s7">7</a></sup><sup><a href="#s34">34</a></sup>。<strong>カッシキアクムの対話篇は回心の約3か月後に書かれ、『告白』は約11年後に書かれた。</strong>前者には庭の場面が書かれていない。研究者はこの2つの記述の距離を論じてきた<sup><a href="#s24">24</a></sup>。</p>
+
+<h3>IV 母の死、帰郷、強いられた叙階（387–396年）</h3>
+<p>387年、アフリカへの船を待つオスティアで、母と2人で窓辺から庭を見ながら対話した。その数日後に母は熱病で死んだ。本人は母が56歳、自分が33年目だったと書く<sup><a href="#s7">7</a></sup>。カトリック百科事典は387年秋とし<sup><a href="#s32">32</a></sup>、英語版Wikipediaは388年とするが<sup><a href="#s34">34</a></sup>、本人の年齢の記述から計算すると387年である。</p>
+<p>簒奪者マクシムスの死（388年8月）の後にアフリカへ渡り、タガステの父の地所で同志と共同生活を始めた<sup><a href="#s32">32</a></sup>。息子アデオダトゥスとの対話篇『教師論』はこの時期に書かれ、息子はその後まもなく死んだ<sup><a href="#s7">7</a></sup><sup><a href="#s24">24</a></sup>。没年は389年頃とする推定が多く、388年とする記述もある（諸説）<sup><a href="#s45">45</a></sup>。</p>
+<p>391年、ヒッポ・レギウスを訪れた際に会衆に捕らえられ、司教ウァレリウスのもとで司祭に叙階された。ポッシディウスは本人が「激しく泣いた」と書く<sup><a href="#s20">20</a></sup>。395年か396年に、ウァレリウスの存命中に補佐司教として叙階された。叙階者はヌミディアの首席司教メガリウスで、本人は当初、司教の存命中の叙階は教会の慣行に反するとして拒んだ<sup><a href="#s20">20</a></sup><sup><a href="#s32">32</a></sup>。<strong>本人の希望は修道共同体での著述であり、司教職は会衆と前任者が先に決めた。</strong>以後の34年余の活動は、この職務の範囲で行われた。</p>
+
+<h3>V 司教と『告白』（396–405年）</h3>
+<p>司教就任の直後に『キリスト教の教え』を書き始め、397年頃から『告白』全13巻を書いた（完成年は397–401年の幅で諸説）<sup><a href="#s41">41</a></sup><sup><a href="#s34">34</a></sup>。399年に『三位一体論』、401年頃に『創世記逐語注解』に着手した<sup><a href="#s41">41</a></sup>。</p>
+<p>『告白』の第1巻から第9巻は母の死までの自伝であり、第10巻は執筆時点の自己の吟味、第11巻から第13巻は創世記冒頭の注解である<sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup>。<strong>自伝の部分は387年で止まり、司教となった後の本人はほとんど登場しない。</strong>就任直後の司教が、マニ教の過去と内縁関係を自ら書いて公にしたことは、論敵が使う可能性のある材料を先に自分の言葉で提出した行為とも解釈できる。O'Donnell はこの側面を強調し<sup><a href="#s25">25</a></sup>、Brown は内面の記録としての側面を重く見る<sup><a href="#s24">24</a></sup>。</p>
+
+<h3>VI ドナトゥス派と国家強制（405–413年）</h3>
+<p>北アフリカの教会は、4世紀初頭の迫害期の背教者の扱いをめぐり、カトリック側とドナトゥス派に分かれていた<sup><a href="#s50">50</a></sup>。本人は当初、統一のために誰も強制されるべきではないと考えていた。408年の書簡93で、その考えを改めたと書く<sup><a href="#s17">17</a></sup>。理由として挙げるのは、皇帝の勅令への恐れからカトリックに移った自分の町の例である<sup><a href="#s17">17</a></sup>。同じ書簡で、ルカ福音書14章23節の「強いて連れて来い」を強制の根拠として引いた<sup><a href="#s17">17</a></sup><sup><a href="#s50">50</a></sup>。</p>
+<p>409年にホノリウス帝の宮廷がドナトゥス派を異端とする勅令を出し<sup><a href="#s50">50</a></sup>、411年6月には皇帝の代理マルケッリヌスが主宰するカルタゴ協議会が開かれた<sup><a href="#s35">35</a></sup>。カトリック百科事典は出席者をカトリック側286人、ドナトゥス派279人の司教とする（single-source）<sup><a href="#s32">32</a></sup>。マルケッリヌスはドナトゥス派を異端と判定し、教会堂のカトリック側への引き渡しを命じた<sup><a href="#s35">35</a></sup>。417年頃の書簡185では「教会が不敬虔な者に加える正しい迫害」があると書き、強制を体系的に正当化した<sup><a href="#s18">18</a></sup>。ただし死刑には反対した<sup><a href="#s50">50</a></sup>。</p>
+<p>413年、マルケッリヌスはヘラクリアヌスの反乱への関与を問われ、9月13日に処刑された。本人は助命を働きかけたが、果たせなかった<sup><a href="#s35">35</a></sup>。<strong>協議会で本人の側に立った国家権力の代理人が、2年後にその国家権力に処刑されている。</strong>翌年ホノリウスはマルケッリヌスの名誉を回復した<sup><a href="#s35">35</a></sup>。</p>
+
+<h3>VII 410年、『神の国』、ペラギウス（410–421年）</h3>
+<p>410年8月24日、アラリック率いる西ゴート軍がローマ市に入り、3日間略奪した<sup><a href="#s42">42</a></sup>。避難者がアフリカに渡り、ローマの神々を捨てたことが災厄を招いたという異教徒の議論が広がった。本人は『再考録』で、この議論への反論が『神の国』執筆の動機だと記す<sup><a href="#s16">16</a></sup>。413年に着手し、第1巻から第3巻をマルケッリヌスに献じた<sup><a href="#s12">12</a></sup><sup><a href="#s35">35</a></sup>。完成は426年頃で全22巻である<sup><a href="#s41">41</a></sup>。<strong>着手から完成まで約13年かかり、その間に執筆の動機となった危機の性格は変わっていた。</strong>前半10巻が異教への反論、後半12巻が2つの国の起源と経過と終末を扱う構成になっている<sup><a href="#s16">16</a></sup>。</p>
+<p>同じ411年、カルタゴの教会会議がペラギウスの弟子カエレスティウスの6つの命題を退けた<sup><a href="#s33">33</a></sup>。本人は411年から412年に『罪の報いと赦し』を書き、論争に入った<sup><a href="#s21">21</a></sup>。415年12月、ディオスポリスで14人の司教がペラギウスを審理し、断罪に当たる点はないとした<sup><a href="#s33">33</a></sup>。416年秋、カルタゴで67人とミレウィスで59人の司教が反ペラギウスの決議を出した。教皇インノケンティウス1世は417年1月27日にペラギウスとカエレスティウスを交わりから外した<sup><a href="#s33">33</a></sup>。後継の教皇ゾシムスは審理の再開に動いたが、418年4月30日にホノリウス帝がペラギウス派をイタリアの諸都市から追放する勅答を出し、5月1日のカルタゴ教会会議（約200人の司教）が8か9の規定で断罪した<sup><a href="#s33">33</a></sup><sup><a href="#s46">46</a></sup>。</p>
+<p>ゾシムスの回状への署名を拒んだイタリアの18人の司教の1人が、エクラヌムのユリアヌスである<sup><a href="#s33">33</a></sup><sup><a href="#s36">36</a></sup>。ユリアヌスは本人を「気質においてなおマニ教徒である」と非難した<sup><a href="#s36">36</a></sup>。<strong>9年間の聴聞者時代が、30年以上後の論敵の攻撃材料になっている。</strong>本人は421年頃に『ユリアヌス駁論』を書き、死の時点で『未完の書』の執筆を続けていた<sup><a href="#s41">41</a></sup>。</p>
+
+<h3>VIII 自己の著作の点検とヴァンダル（426–430年）</h3>
+<p>426年から427年、本人は『再考録』で93作品を年代順に点検した<sup><a href="#s16">16</a></sup><sup><a href="#s41">41</a></sup>。428年頃の書簡224は、点検の対象が232巻だったことと、次に書簡と説教を点検する予定だったことを書く<sup><a href="#s19">19</a></sup>。書簡と説教の点検は、ユリアヌスへの反論に時間を取られて実施されなかった<sup><a href="#s19">19</a></sup>。<strong>本人が点検しなかった書簡と説教が、のちに本人の自己像を外から検証する資料になった。</strong></p>
+<p>429年、ガイセリック率いるヴァンダル族がイベリア半島から北アフリカへ渡った。プロコピオスは8万人と記し、ピーター・ヘザーは兵力を1万5,000〜2万人と見積もる（諸説）<sup><a href="#s39">39</a></sup>。430年5月か6月にヒッポが包囲された。包囲は約14か月続いた<sup><a href="#s20">20</a></sup><sup><a href="#s38">38</a></sup>。本人は包囲の3か月目に熱病にかかり、8月28日に死んだ<sup><a href="#s20">20</a></sup><sup><a href="#s34">34</a></sup>。ポッシディウスによれば、晩年の本人は悔い改めの詩編を壁に貼らせて読み、遺言を残さなかった。神の貧者として遺すものを持たなかったからだという<sup><a href="#s20">20</a></sup>。一方で教会の図書館と全蔵書を保存するよう指示した<sup><a href="#s20">20</a></sup>。</p>
+
+
+<h2 id="numbers"><span class="num">④</span>実績の数字<span class="en">Record</span></h2>
+
+<p>著述家の業績は著作の数で語られやすい。ただしその数は、本人と弟子と近代の校訂者のどれが数えたかで異なる。ここでは史料の数と現代の推計を分けて置く。</p>
+
+<h3>主要著作と執筆時の年齢</h3>
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>著作</th><th>執筆期間</th><th class="num">巻数</th><th class="num">着手時の満年齢</th><th>確度</th></tr></thead>
+<tbody>
+<tr><td class="name">カッシキアクム対話篇</td><td>386–387年</td><td class="num">4作品</td><td class="num">31–32</td><td>複数資料<sup><a href="#s41">41</a></sup></td></tr>
+<tr><td class="name">キリスト教の教え</td><td>396/397–426/427年</td><td class="num">4</td><td class="num">41–42</td><td>中断と再開を含む<sup><a href="#s41">41</a></sup></td></tr>
+<tr><td class="name">告白</td><td>397–401年頃</td><td class="num">13</td><td class="num">42–43</td><td>完成年は諸説<sup><a href="#s41">41</a></sup><sup><a href="#s34">34</a></sup></td></tr>
+<tr><td class="name">三位一体論</td><td>399–419年または426年</td><td class="num">15</td><td class="num">44–45</td><td>完成年は諸説<sup><a href="#s41">41</a></sup></td></tr>
+<tr><td class="name">創世記逐語注解</td><td>401/402–416年</td><td class="num">12</td><td class="num">46–47</td><td>複数資料<sup><a href="#s41">41</a></sup></td></tr>
+<tr><td class="name">神の国</td><td>413–426年頃</td><td class="num">22</td><td class="num">58</td><td>本人の『再考録』<sup><a href="#s16">16</a></sup><sup><a href="#s41">41</a></sup></td></tr>
+<tr><td class="name">再考録</td><td>426–427年</td><td class="num">2</td><td class="num">71–72</td><td>複数資料<sup><a href="#s41">41</a></sup></td></tr>
+<tr><td class="name">ユリアヌス駁論・未完の書</td><td>428/429–430年</td><td class="num">6（未完）</td><td class="num">74–75</td><td>死亡時に執筆中<sup><a href="#s41">41</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>著作・書簡・説教の現存数</h3>
+<div class="tbl-scroll">
+<table>
+<thead><tr><th>指標</th><th class="num">値</th><th>時点</th><th>出典の性格</th></tr></thead>
+<tbody>
+<tr><td class="name">『再考録』が扱う作品</td><td class="num">93作品</td><td>426–427年</td><td>本人の点検<sup><a href="#s16">16</a></sup>。うち10作品は現存しない（研究者の集計）<sup><a href="#s41">41</a></sup></td></tr>
+<tr><td class="name">点検した巻数</td><td class="num">232巻</td><td>428年頃</td><td>本人の書簡224。single-source<sup><a href="#s19">19</a></sup></td></tr>
+<tr><td class="name">現存書簡</td><td class="num">約300通</td><td>1981年の新出分を含む</td><td>うち29通がDivjak発見分<sup><a href="#s26">26</a></sup><sup><a href="#s29">29</a></sup></td></tr>
+<tr><td class="name">現存説教</td><td class="num">300超 / 約500 / 約600</td><td>集計者により異なる</td><td>諸説。真正と判定されたものは350超とする整理もある<sup><a href="#s26">26</a></sup><sup><a href="#s34">34</a></sup><sup><a href="#s31">31</a></sup></td></tr>
+<tr><td class="name">生涯の説教回数</td><td class="num">6,000〜10,000回</td><td>391–430年</td><td>推定<sup><a href="#s34">34</a></sup></td></tr>
+<tr><td class="name">現存著作の総語数</td><td class="num">500万語超</td><td>現代の校訂版</td><td>推定。single-source<sup><a href="#s26">26</a></sup></td></tr>
+<tr><td class="name">Dolbeau発見の説教</td><td class="num">26編</td><td>1990年発見、1996年刊行</td><td>マインツ市立図書館の15世紀写本<sup><a href="#s29">29</a></sup><sup><a href="#s30">30</a></sup></td></tr>
+<tr><td class="name">2026年公表の新出説教</td><td class="num">2編</td><td>2026年7月</td><td>12世紀写本。single-source<sup><a href="#s30">30</a></sup></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="chart wide">
+  <div class="cap">説教: 現存数と、生涯に行った回数の推定</div>
+  <div class="sub">単位は編または回。現存数は集計者により幅があるため両端を置いた。推定回数は上限を取った</div>
+  <div class="bars" id="c-sermon"></div>
+  <p class="srcnote" style="margin:14px 0 0">現存説教は300超（O'Donnell）から約600（SEP）まで<sup><a href="#s26">26</a></sup><sup><a href="#s31">31</a></sup>。生涯の説教回数は6,000〜10,000回と推定される<sup><a href="#s34">34</a></sup>。<strong>上限の推定を取れば、現存しているのは6%前後（600÷10,000）である。</strong>説教の大半が失われている以上、司教としての日常の発言は、残った一部から推し量るしかない。</p>
+</div>
+
+<h3>教会会議の規模</h3>
+<div class="chart wide">
+  <div class="cap">論争の局面ごとの出席司教数</div>
+  <div class="sub">単位は人。411年はドナトゥス派との協議会、それ以外はペラギウス問題を扱った会議</div>
+  <div class="bars" id="c-council"></div>
+  <p class="srcnote" style="margin:14px 0 0">411年の数字はカトリック百科事典による（single-source）<sup><a href="#s32">32</a></sup>。415年から418年は同百科事典のペラギウス派の項による<sup><a href="#s33">33</a></sup>。418年は約200人とされ、214人とする古い記述と、翌419年の会議を217人とする記述がある（諸説）<sup><a href="#s46">46</a></sup>。<strong>ペラギウスを無罪とした会議の司教は14人、断罪した会議は約200人である。</strong>同じ問題に対する判断が、会議の地域と規模で反転している。</p>
+</div>
+
+<h3>411年カルタゴ協議会の比率</h3>
+<p>カトリック側286人とドナトゥス派279人の差は7人であり、比率は約1.03倍である<sup><a href="#s32">32</a></sup>。協議会の出席者数の上では、2派の司教団の規模は同程度だった。O'Donnell が信徒数ではドナトゥス派を「はるかに大きい側」とする点と合わせると<sup><a href="#s25">25</a></sup>、協議会の判定は数の優劣ではなく、皇帝の代理人の裁定で決まったことになる<sup><a href="#s35">35</a></sup>。</p>
+
+
+<h2 id="failures"><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
+
+<p>本人の著作は、自分の誤りを自分で書く形式を持つ。『告白』は若年の過ちを、『再考録』は著作の誤りを本人が列挙する。ただし本人が誤りと認めた事柄と、後世から見て問題とされる事柄は一致しない。以下の5類型は記録に残る事実から組み立てた分析であり、史料がそう分類しているわけではない。</p>
+
+<h3>類型A — 宗教的強制の理論化（408–417年）</h3>
+<p>408年の書簡93で、本人は以前の非強制の立場を撤回した<sup><a href="#s17">17</a></sup>。417年頃の書簡185では「正しい迫害」という概念を立てた<sup><a href="#s18">18</a></sup>。ルカ福音書14章23節の「強いて連れて来い」の解釈は、以後のラテン世界で異端に対する強制を正当化する際の典拠になった<sup><a href="#s50">50</a></sup><sup><a href="#s25">25</a></sup>。本人は死刑に反対した<sup><a href="#s50">50</a></sup>。<strong>しかし強制の範囲を限定する条件は理論の中に置かれず、本人の個別の働きかけに委ねられた。</strong>マルケッリヌスの処刑を止められなかったことは、その働きかけの限界を示す<sup><a href="#s35">35</a></sup>。O'Donnell は、国家権力と結んだ教会人の型を本人が作ったと評価する<sup><a href="#s25">25</a></sup>。</p>
+
+<h3>類型B — 内縁の女性と息子の扱い（385年）</h3>
+<p>約15年（推定）同居した女性は、身分のつり合う結婚の障害として385年にアフリカへ帰された<sup><a href="#s5">5</a></sup><sup><a href="#s32">32</a></sup>。息子は父の手元に残された<sup><a href="#s5">5</a></sup>。本人はその後すぐ別の女性を得ており、婚約相手との結婚も386年の回心で実現しなかった<sup><a href="#s5">5</a></sup>。<strong>女性の名は『告白』に書かれず、その後の消息も記録されていない。</strong>本人は別離の痛みを書いたが、女性の側の事情を書く手段は残されていない。この非対称は、類型の記述そのものが本人の文章にしか依拠できないことを示す。</p>
+
+<h3>類型C — ペラギウス論争での立場の先鋭化（411–430年）</h3>
+<p>411年から412年の『罪の報いと赦し』で、洗礼を受けずに死んだ幼児は「すべての中で最も軽い断罪」を受けると書いた<sup><a href="#s21">21</a></sup>。軽重の差はあっても断罪であることに変わりはない<sup><a href="#s51">51</a></sup>。論争が続くにつれ、恩恵と予定の議論は狭められ、晩年の著作では救われる者の数があらかじめ定まっているという立場が前面に出た<sup><a href="#s51">51</a></sup><sup><a href="#s31">31</a></sup>。O'Donnell は原罪の教説を本人が「ほとんど単独で作成した」ものと評し、反ユリアヌスの著作を読者の敬意を遠ざける文書と書く<sup><a href="#s25">25</a></sup>。<strong>論争の相手が変わるたびに、主張は相手の極に合わせて先鋭化している。</strong>この立場は1640年のジャンセニウス『アウグスティヌス』と、1653年の教皇による5命題の断罪をめぐる論争に引き継がれた<sup><a href="#s40">40</a></sup>。</p>
+
+<h3>類型D — マニ教への9年（373–382/383年）</h3>
+<p>19歳から28歳までの9年を、聴聞者としてマニ教のもとで過ごした<sup><a href="#s3">3</a></sup>。離脱の契機はファウストゥスとの面談であり、教義の検討の結果ではない<sup><a href="#s4">4</a></sup>。ローマとミラノの職も、マニ教徒の知人の人脈で得た<sup><a href="#s4">4</a></sup>。<strong>9年の傾倒は、離脱後には論敵の攻撃材料として残った。</strong>ユリアヌスは本人を気質においてマニ教徒と呼び<sup><a href="#s36">36</a></sup>、原罪の教説の背後に二元論の残存を見た。本人の反マニ教の著作群がこの非難を解消したかどうかは、現代の研究でも評価が分かれている<sup><a href="#s25">25</a></sup><sup><a href="#s24">24</a></sup>。</p>
+
+<h3>類型E — 組織の継承の失敗（429–439年）</h3>
+<p>本人の死の時点で、ヒッポは包囲下にあった<sup><a href="#s20">20</a></sup>。1年後の431年に包囲は解かれたが、ヴァンダル族は町を占領し、435年から439年まで王国の首都とした<sup><a href="#s38">38</a></sup><sup><a href="#s39">39</a></sup>。アリウス派のヴァンダル王のもとで北アフリカのカトリック司教は追放され、その一部がサルデーニャへ渡ったことが、のちの遺骨の移送につながる<sup><a href="#s37">37</a></sup>。本人が整えた著作群は図書館の保存命令とポッシディウスの目録によって残った<sup><a href="#s20">20</a></sup>。<strong>しかし本人が属した北アフリカの教会組織そのものは、ヴァンダル支配とその後の変動を経て継承されなかった。</strong>O'Donnell は、ドナトゥス派の排除がラテン世界で最も古い北アフリカのキリスト教を弱めたと論じる<sup><a href="#s25">25</a></sup>。ヴァンダルの侵入は本人の判断の外にある。ただし教会の分裂を国家権力で処理したことが、外部の侵入に対する地域教会の結束に影響したかどうかは、残る問いである。</p>
+
+
+<h2 id="method"><span class="num">⑥</span>思想と方法<span class="en">Method</span></h2>
+
+<h3>自己を神への呼びかけの形で書く</h3>
+<p>『告白』は読者ではなく神に向けて書かれた文章として構成され、冒頭で「あなたのうちに憩うまで、私たちの心は安らぎを得ない」と述べる<sup><a href="#s10">10</a></sup>。第10巻では執筆時点の自分の誘惑を、感覚の種類ごとに点検している<sup><a href="#s8">8</a></sup>。<strong>過去の自分を語る文章と、現在の自分を検査する文章が1冊に同居している。</strong>『再考録』は同じ方法を著作に適用したものである<sup><a href="#s16">16</a></sup>。</p>
+
+<h3>時間を心の側に置く</h3>
+<p>『告白』第11巻は「時間とは何か。誰も私に問わなければ、私は知っている。問う者に説明しようとすると、私は知らない」と書き出す<sup><a href="#s9">9</a></sup>。過去は記憶として、未来は期待として、現在は注意として心のうちにあるとした。そのうえで時間を心の伸び広がりとして扱った<sup><a href="#s9">9</a></sup><sup><a href="#s31">31</a></sup>。1953年刊のウィトゲンシュタイン『哲学探究』は、第1節を『告白』第1巻の言語習得の記述の引用から始める<sup><a href="#s44">44</a></sup>。</p>
+
+<h3>疑う者の存在から出発する</h3>
+<p>『神の国』11.26で「もし私が誤るなら、私は存在する」と書いた<sup><a href="#s13">13</a></sup>。SEP は、これをデカルトのコギトに類する論証として扱う<sup><a href="#s31">31</a></sup>。懐疑論への反論として、誤るという事実そのものが誤る主体の存在を前提にするという構造である。</p>
+
+<h3>2つの愛が2つの国を作った</h3>
+<p>『神の国』14.28は、地の国を「神を軽んじるに至る自己愛」、天の国を「自己を軽んじるに至る神への愛」が形成したと書く<sup><a href="#s14">14</a></sup>。国家と教会を制度で分けたのではなく、構成員の愛の向きで分けた点が要である。この区別により、ローマ帝国の興亡を救済の歴史と切り離して論じることが可能になった<sup><a href="#s12">12</a></sup><sup><a href="#s14">14</a></sup>。</p>
+
+<h3>戦争を条件付きで認める</h3>
+<p>『ファウストゥス駁論』22.74は、戦争における悪が死そのものではなく、暴力への愛と復讐の残酷さと支配欲であると書く<sup><a href="#s22">22</a></sup>。『神の国』19.7は、賢者は正しい戦争を行うが、それを強いられることを嘆くと書く<sup><a href="#s15">15</a></sup>。後代の正戦論は、これらの記述を体系化の出発点とした<sup><a href="#s31">31</a></sup>。</p>
+
+<h3>愛を行為の基準に置く</h3>
+<p>『ヨハネの手紙一講解』7.8の「愛せよ、そして欲することをなせ」は、黙ることも叫ぶことも愛からなされるべきだという文脈に置かれている<sup><a href="#s23">23</a></sup>。同じ論理が強制の正当化にも使われた。書簡185は、教会は愛から迫害し、ドナトゥス派は怒りから迫害すると対比する<sup><a href="#s18">18</a></sup>。<strong>動機を基準にした倫理は、外形が同じ行為を正反対に評価できる。</strong>⑤の類型Aは、この方法の適用例である。</p>
+
+<h3>後代への影響</h3>
+<p>SEP は、本人の神学上の権威がラテン中世を通じて受け入れられ、19世紀まで西方キリスト教でほとんど挑戦を受けなかったと記す<sup><a href="#s31">31</a></sup>。マルティン・ルターは1505年にエアフルトのアウグスティノ隠修士会に入った<sup><a href="#s43">43</a></sup>。ジャンセニウスの『アウグスティヌス』は1640年に死後出版され、1642年に教皇勅書で断罪された<sup><a href="#s40">40</a></sup>。恩恵論をめぐる近世の論争は、カトリックとプロテスタントの双方が本人を典拠に引く形で行われた<sup><a href="#s31">31</a></sup><sup><a href="#s40">40</a></sup>。</p>
+
+
+<h2 id="quotes"><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
+
+<p>本人の発言は著作の中の文章として残っているため、出典の箇所は特定できる。ここでは著作の箇所が確定するものと、本人の言葉として流通しているが著作の中に同じ文が見当たらないものを分けて置く。ラテン語は原文、日本語は本ページの訳である。日本語の定訳としては山田晶訳がある<sup><a href="#s49">49</a></sup>。</p>
+
+<div class="q-tabs" id="qtabs"></div>
+<div class="q-list" id="qlist"></div>
+
+<div class="risk">
+<p style="margin-top:0"><strong>出典の文と一致しない有名な言い回しについて。</strong>
+「ローマは語った。訴訟は終わった（Roma locuta, causa finita）」は本人の言葉として流通している。説教131.10の実際の文は、2つの教会会議の決議が使徒座に送られて返書が届いたので「訴訟は終わった」とする趣旨である。「ローマは語った」に当たる句はない<sup><a href="#s47">47</a></sup>。本ページは<strong>本文の根拠としては使わない</strong>。
+同様に「世界は1冊の本であり、旅をしない者はその1頁しか読んでいない」という句は日本語圏でも本人の言葉として引用されるが、本ページは著作中に該当する文を確認できなかった。</p>
+</div>
+
+
+<h2 id="open"><span class="num">⑧</span>残っている問い / 出典<span class="en">Open Questions / Sources</span></h2>
+
+<h3>本人が目録に入れなかった資料</h3>
+<p>1974年（1975年とする記述もある）、ヨハネス・ディヴヤクはマルセイユとパリの写本から未知の書簡29通を見つけた<sup><a href="#s29">29</a></sup>。1981年に CSEL 第88巻として刊行され、晩年の約10年の書簡が中心である<sup><a href="#s26">26</a></sup><sup><a href="#s29">29</a></sup>。1990年にはフランソワ・ドルボーがマインツ市立図書館の15世紀写本から26編の説教を見つけ、1996年に初版を刊行した<sup><a href="#s29">29</a></sup><sup><a href="#s30">30</a></sup>。Brown は2000年の新版に付した後記で、これらの新出資料が司教としての最初と最後の10年に新しい光を当てたとする<sup><a href="#s24">24</a></sup>。2026年7月には、ヴュルツブルク大学のクリスティアン・トルナウらが12世紀写本から2編の説教を真正と判定したと報じられた<sup><a href="#s30">30</a></sup>。サウルの悔い改めの可能性を論じる内容で、本人の他の著作の評価と異なるという<sup><a href="#s30">30</a></sup>。<strong class="hit">本人の管理を経ていない資料が現れるたびに、自己記述で作られた像に修正が加わっている。</strong></p>
+
+<h3>遺骨の移送</h3>
+<p>ベーダの殉教者録によれば、遺骸はヴァンダル王に追放された北アフリカの司教たちによってサルデーニャのカリャリへ運ばれた<sup><a href="#s37">37</a></sup>。追放した王をフネリックとする記述と、504年のトラサムンドとする伝承があり、一致しない（諸説）<sup><a href="#s37">37</a></sup>。720年頃、ランゴバルド王リウトプランドの叔父であるパヴィア司教ペトルスが遺骸を買い戻し、サン・ピエトロ・イン・チエル・ドーロ教会に納めた<sup><a href="#s37">37</a></sup><sup><a href="#s34">34</a></sup>。1695年10月1日に地下聖堂で骨片の入った箱が見つかり、真偽をめぐる修道会間の争いを経て1728年に教皇ベネディクトゥス13世が認めた<sup><a href="#s37">37</a></sup>。1842年に右腕の一部がアンナバ（旧ヒッポ）に戻された<sup><a href="#s34">34</a></sup>。</p>
+
+<h3>残っている問い</h3>
+<ul>
+<li>内縁の女性の名と、アフリカに帰った後の消息は記録されていない<sup><a href="#s5">5</a></sup></li>
+<li>アデオダトゥスの没年は389年頃とする推定と388年とする記述があり、確定していない<sup><a href="#s24">24</a></sup><sup><a href="#s45">45</a></sup></li>
+<li>司教叙階が395年か396年かは確定していない。カトリック百科事典は42歳での叙階とし、司教在任を396–430年とする<sup><a href="#s32">32</a></sup><sup><a href="#s34">34</a></sup></li>
+<li>『告白』の完成年は397年から401年の幅で割れている<sup><a href="#s41">41</a></sup><sup><a href="#s34">34</a></sup></li>
+<li>411年協議会の出席司教数は、本ページでは1資料（カトリック百科事典）でしか確認できなかった<sup><a href="#s32">32</a></sup></li>
+<li>ディヴヤク書簡の発見年は1974年とする記述と1975年とする記述がある<sup><a href="#s29">29</a></sup></li>
+<li>現存する説教の数は300超から約600まで集計により異なる。真正性の判定が揃っていないためである<sup><a href="#s26">26</a></sup><sup><a href="#s31">31</a></sup><sup><a href="#s34">34</a></sup></li>
+<li>ヒッポ・レギウスの5世紀初頭の人口は、本ページでは推計を確認できなかった（N/A）<sup><a href="#s38">38</a></sup></li>
+<li>ドナトゥス派とカトリックの信徒数の比は、O'Donnell の評価以外に数値の根拠を確認できなかった<sup><a href="#s25">25</a></sup></li>
+<li>パヴィアの遺骨が本人のものかどうかは、1728年の教皇の承認以後も科学的には検証されていない<sup><a href="#s37">37</a></sup></li>
+</ul>
+
+<h3>出典一覧</h3>
+<ol class="sources">
+<li id="s1">Augustine『Confessions』Book II（J. G. Pilkington 英訳／NPNF 第1集第1巻／New Advent） — <a href="https://www.newadvent.org/fathers/110102.htm">https://www.newadvent.org/fathers/110102.htm</a>（一次資料。マダウラ／父の資力／梨の窃盗）</li>
+<li id="s2">Augustine『Confessions』Book III（New Advent） — <a href="https://www.newadvent.org/fathers/110103.htm">https://www.newadvent.org/fathers/110103.htm</a>（一次資料。カルタゴ／『ホルテンシウス』／19歳の年／父の死）</li>
+<li id="s3">Augustine『Confessions』Book IV（New Advent） — <a href="https://www.newadvent.org/fathers/110104.htm">https://www.newadvent.org/fathers/110104.htm</a>（一次資料。マニ教の9年／内縁の女性／『範疇論』／最初の著作）</li>
+<li id="s4">Augustine『Confessions』Book V（New Advent） — <a href="https://www.newadvent.org/fathers/110105.htm">https://www.newadvent.org/fathers/110105.htm</a>（一次資料。ファウストゥス／ローマ行き／シンマクス／アンブロシウス）</li>
+<li id="s5">Augustine『Confessions』Book VI（New Advent） — <a href="https://www.newadvent.org/fathers/110106.htm">https://www.newadvent.org/fathers/110106.htm</a>（一次資料。婚約／内縁の女性との別離）</li>
+<li id="s6">Augustine『Confessions』Book VIII（New Advent） — <a href="https://www.newadvent.org/fathers/110108.htm">https://www.newadvent.org/fathers/110108.htm</a>（一次資料。ポンティキアヌス／庭の場面／ローマ書13:13–14）</li>
+<li id="s7">Augustine『Confessions』Book IX（New Advent） — <a href="https://www.newadvent.org/fathers/110109.htm">https://www.newadvent.org/fathers/110109.htm</a>（一次資料。教職の辞任／受洗／アデオダトゥスの年齢／オスティア／モニカの死）</li>
+<li id="s8">Augustine『Confessions』Book X（New Advent） — <a href="https://www.newadvent.org/fathers/110110.htm">https://www.newadvent.org/fathers/110110.htm</a>（一次資料。執筆時点の自己吟味／10.27.38）</li>
+<li id="s9">Augustine『Confessions』Book XI（New Advent） — <a href="https://www.newadvent.org/fathers/110111.htm">https://www.newadvent.org/fathers/110111.htm</a>（一次資料。時間論／11.14.17）</li>
+<li id="s10">Augustinus『Confessiones』Liber I（ラテン語原文／The Latin Library） — <a href="https://www.thelatinlibrary.com/augustine/conf1.shtml">https://www.thelatinlibrary.com/augustine/conf1.shtml</a>（一次資料。1.1.1 の原文）</li>
+<li id="s11">Augustinus『De beata vita』1.6（Bibliothek der Kirchenväter／フリブール大学） — <a href="https://bkv.unifr.ch/en/works/cpl-254/versions/AugHip-DeBeVi/divisions/8">https://bkv.unifr.ch/en/works/cpl-254/versions/AugHip-DeBeVi/divisions/8</a>（一次資料。誕生日「11月のイドゥス」）</li>
+<li id="s12">Augustine『The City of God』Book I（Marcus Dods 英訳／New Advent） — <a href="https://www.newadvent.org/fathers/120101.htm">https://www.newadvent.org/fathers/120101.htm</a>（一次資料。序文のマルケッリヌスへの献辞）</li>
+<li id="s13">Augustine『The City of God』Book XI（New Advent） — <a href="https://www.newadvent.org/fathers/120111.htm">https://www.newadvent.org/fathers/120111.htm</a>（一次資料。11.26）</li>
+<li id="s14">Augustine『The City of God』Book XIV（New Advent） — <a href="https://www.newadvent.org/fathers/120114.htm">https://www.newadvent.org/fathers/120114.htm</a>（一次資料。14.28 の2つの愛）</li>
+<li id="s15">Augustine『The City of God』Book XIX（New Advent） — <a href="https://www.newadvent.org/fathers/120119.htm">https://www.newadvent.org/fathers/120119.htm</a>（一次資料。19.7 の正しい戦争）</li>
+<li id="s16">Augustinus『Retractationes』（ラテン語原文／Sant'Agostino / augustinus.it） — <a href="https://www.augustinus.it/latino/ritrattazioni/index2.htm">https://www.augustinus.it/latino/ritrattazioni/index2.htm</a>（一次資料。作品の年代順点検／2.43 の『神の国』の執筆動機と構成）</li>
+<li id="s17">Augustine「Letter 93」（408年／ウィンケンティウス宛／New Advent） — <a href="https://www.newadvent.org/fathers/1102093.htm">https://www.newadvent.org/fathers/1102093.htm</a>（一次資料。強制についての考えの変更／「強いて連れて来い」）</li>
+<li id="s18">Augustine「Letter 185」（ボニファティウス宛／別名『ドナトゥス派の矯正について』／New Advent） — <a href="https://www.newadvent.org/fathers/1102185.htm">https://www.newadvent.org/fathers/1102185.htm</a>（一次資料。「正しい迫害」）</li>
+<li id="s19">Augustine「Letter 224」（428年頃／クォドウルトデウス宛／Roman Letters 英訳。AI補助の翻訳で査読なし） — <a href="https://romanletters.org/letters/augustine_hippo/224/">https://romanletters.org/letters/augustine_hippo/224/</a>（一次資料。点検した232巻／書簡と説教の点検予定）</li>
+<li id="s20">Possidius『Sancti Augustini Vita』（F. R. Hoare 英訳／tertullian.org） — <a href="https://www.tertullian.org/fathers/possidius_life_of_augustine_02_text.htm">https://www.tertullian.org/fathers/possidius_life_of_augustine_02_text.htm</a>（一次資料。司祭叙階／司教叙階／包囲14か月／享年76年／遺言なし／図書館の保存）</li>
+<li id="s21">Augustine『On Merit and the Forgiveness of Sins, and the Baptism of Infants』Book I（New Advent） — <a href="https://www.newadvent.org/fathers/15011.htm">https://www.newadvent.org/fathers/15011.htm</a>（一次資料。1.16.21 の「最も軽い断罪」）</li>
+<li id="s22">Augustine『Contra Faustum』Book XXII（New Advent） — <a href="https://www.newadvent.org/fathers/140622.htm">https://www.newadvent.org/fathers/140622.htm</a>（一次資料。22.74 の戦争における悪）</li>
+<li id="s23">Augustine『Homily 7 on the First Epistle of John』（New Advent） — <a href="https://www.newadvent.org/fathers/170207.htm">https://www.newadvent.org/fathers/170207.htm</a>（一次資料。7.8「愛せよ／そして欲することをなせ」）</li>
+<li id="s24">Peter Brown『Augustine of Hippo: A Biography』New Edition with an Epilogue、University of California Press、2000年（初版1967年） — <a href="https://findingaugustine.org/Record/4385">Finding Augustine 書誌</a>（研究書。後記で新出の書簡と説教を扱う）</li>
+<li id="s25">Thomas Williams による James J. O'Donnell『Augustine: A New Biography』（HarperCollins／2005年）の書評。Notre Dame Philosophical Reviews／2007年2月10日 — <a href="https://ndpr.nd.edu/reviews/augustine-a-new-biography/">https://ndpr.nd.edu/reviews/augustine-a-new-biography/</a>（研究書とその要約）</li>
+<li id="s26">James J. O'Donnell『Augustine』（Twayne／1985年）書誌の章、著者サイト（ジョージタウン大学） — <a href="https://faculty.georgetown.edu/jod/twayne/twaynebib.html">https://faculty.georgetown.edu/jod/twayne/twaynebib.html</a>（現存著作500万語超／書簡約300通／説教300超）</li>
+<li id="s27">Serge Lancel『Saint Augustine』Antonia Nevill 英訳／SCM Press／2002年（原著 Fayard／1999年）の書評。Journal of Ecclesiastical History — <a href="https://www.cambridge.org/core/journals/journal-of-ecclesiastical-history/article/saint-augustine-by-serge-lancel-translated-by-antonia-nevill-pp-xviii590-london-scm-press-2002-first-publ-librairie-artheme-fayard-1999-25-paper-0-334-02866-3/2046F1D1BB276A1EED0F1C5E14E0A179">Cambridge Core</a>（研究書）</li>
+<li id="s28">Henry Chadwick『Augustine: A Very Short Introduction』Oxford University Press、2001年（初版1986年） — <a href="https://academic.oup.com/book/789">https://academic.oup.com/book/789</a>（研究書。思想の展開の概観）</li>
+<li id="s29">Roger Pearse「New sermons of Augustine」2008年9月30日 — <a href="https://www.roger-pearse.com/weblog/2008/09/30/new-sermons-of-augustine">https://www.roger-pearse.com/weblog/2008/09/30/new-sermons-of-augustine</a>（Divjak 書簡29通の発見／Dolbeau 説教26編の発見）</li>
+<li id="s30">Deseret News「New St. Augustine sermons uncovered」2026年7月30日 — <a href="https://www.deseret.com/faith/2026/07/30/new-st-augustine-bible-manuscript-sermon-uncovered/">https://www.deseret.com/faith/2026/07/30/new-st-augustine-bible-manuscript-sermon-uncovered/</a>（ヴュルツブルク大学トルナウらによる新出説教2編／Dolbeau 発見の経緯）</li>
+<li id="s31">Stanford Encyclopedia of Philosophy「Saint Augustine」（2019年9月25日初出／2024年4月26日改訂） — <a href="https://plato.stanford.edu/entries/augustine/">https://plato.stanford.edu/entries/augustine/</a>（マニ教聴聞者／プラトン派の書物／si fallor sum／著作量／影響）</li>
+<li id="s32">Eugène Portalié「St. Augustine of Hippo」Catholic Encyclopedia、1907年（New Advent） — <a href="https://www.newadvent.org/cathen/02084a.htm">https://www.newadvent.org/cathen/02084a.htm</a>（内縁約15年／387年秋のモニカの死／388年帰郷／42歳の叙階／411年協議会の司教数）</li>
+<li id="s33">「Pelagius and Pelagianism」Catholic Encyclopedia（New Advent） — <a href="https://www.newadvent.org/cathen/11604a.htm">https://www.newadvent.org/cathen/11604a.htm</a>（411年から431年までの会議と人数／418年4月30日の勅答／5月1日の会議）</li>
+<li id="s34">Wikipedia「Augustine of Hippo」（日付の突合） — <a href="https://en.wikipedia.org/wiki/Augustine_of_Hippo">https://en.wikipedia.org/wiki/Augustine_of_Hippo</a></li>
+<li id="s35">Wikipedia「Flavius Marcellinus」（411年協議会の主宰／413年9月13日の処刑） — <a href="https://en.wikipedia.org/wiki/Flavius_Marcellinus">https://en.wikipedia.org/wiki/Flavius_Marcellinus</a></li>
+<li id="s36">Wikipedia「Julian of Eclanum」（回状への署名拒否／フロルス宛8巻／マニ教徒との非難） — <a href="https://en.wikipedia.org/wiki/Julian_of_Eclanum">https://en.wikipedia.org/wiki/Julian_of_Eclanum</a></li>
+<li id="s37">Wikipedia「San Pietro in Ciel d'Oro」（サルデーニャ経由の移送／720年頃のパヴィア／1362年の棺／1695年の発見） — <a href="https://en.wikipedia.org/wiki/San_Pietro_in_Ciel_d%27Oro">https://en.wikipedia.org/wiki/San_Pietro_in_Ciel_d'Oro</a></li>
+<li id="s38">Wikipedia「Siege of Hippo Regius」（430年5月か6月から約14か月） — <a href="https://en.wikipedia.org/wiki/Siege_of_Hippo_Regius">https://en.wikipedia.org/wiki/Siege_of_Hippo_Regius</a></li>
+<li id="s39">Wikipedia「Vandal Kingdom」（429年の渡航／8万人の記述とヘザーの推計／435年の講和） — <a href="https://en.wikipedia.org/wiki/Vandal_Kingdom">https://en.wikipedia.org/wiki/Vandal_Kingdom</a></li>
+<li id="s40">Wikipedia「Jansenism」（1640年の『アウグスティヌス』／1642年・1653年・1713年の断罪） — <a href="https://en.wikipedia.org/wiki/Jansenism">https://en.wikipedia.org/wiki/Jansenism</a></li>
+<li id="s41">Wikipedia「Bibliography of Augustine of Hippo」（主要著作の執筆年） — <a href="https://en.wikipedia.org/wiki/Bibliography_of_Augustine_of_Hippo">https://en.wikipedia.org/wiki/Bibliography_of_Augustine_of_Hippo</a></li>
+<li id="s42">Wikipedia「Sack of Rome (410)」（410年8月24日） — <a href="https://en.wikipedia.org/wiki/Sack_of_Rome_(410)">https://en.wikipedia.org/wiki/Sack_of_Rome_(410)</a></li>
+<li id="s43">Wikipedia「Martin Luther」（1505年のアウグスティノ隠修士会入会） — <a href="https://en.wikipedia.org/wiki/Martin_Luther">https://en.wikipedia.org/wiki/Martin_Luther</a></li>
+<li id="s44">Wikipedia「Philosophical Investigations」（1953年刊／第1節の『告白』引用） — <a href="https://en.wikipedia.org/wiki/Philosophical_Investigations">https://en.wikipedia.org/wiki/Philosophical_Investigations</a></li>
+<li id="s45">Wikipedia「Adeodatus」（372–388年とする記述） — <a href="https://en.wikipedia.org/wiki/Adeodatus">https://en.wikipedia.org/wiki/Adeodatus</a></li>
+<li id="s46">Wikipedia「Councils of Carthage」（418年5月1日の会議／419年の217人） — <a href="https://en.wikipedia.org/wiki/Councils_of_Carthage">https://en.wikipedia.org/wiki/Councils_of_Carthage</a></li>
+<li id="s47">Wikipedia「Roma locuta, causa finita」（説教131.10 の原文との対照） — <a href="https://en.wikipedia.org/wiki/Roma_locuta,_causa_finita">https://en.wikipedia.org/wiki/Roma_locuta,_causa_finita</a></li>
+<li id="s48">出村和彦『アウグスティヌス 「心」の哲学者』岩波新書（新赤版1682）、岩波書店、2017年10月。紹介記事: クリスチャントゥデイ 2018年1月13日 — <a href="https://www.christiantoday.co.jp/articles/25062/20180113/theological-books-22.htm">christiantoday.co.jp</a>（日本語の概説）</li>
+<li id="s49">山田晶 訳『告白』（『世界の名著16 アウグスティヌス』中央公論社／1968年。中公バックス版1978年） — <a href="https://booklog.jp/item/1/4124006268">booklog 書誌</a>（日本語訳。本ページの訳文は英訳と原文からの独自訳）</li>
+<li id="s50">Wikipedia「Donatism」（409年の勅令／書簡93の強制の論拠／死刑への反対） — <a href="https://en.wikipedia.org/wiki/Donatism">https://en.wikipedia.org/wiki/Donatism</a></li>
+<li id="s51">Wikipedia「Pelagianism」（洗礼を受けない幼児についての立場／411年から431年の経過） — <a href="https://en.wikipedia.org/wiki/Pelagianism">https://en.wikipedia.org/wiki/Pelagianism</a></li>
+</ol>
+
+</div>
+
+
+<script type="application/json" id="facts">
+[
+  {"claim":"生年月日","value":"354-11-13","unit":"date","as_of":"354","source":"https://bkv.unifr.ch/en/works/cpl-254/versions/AugHip-DeBeVi/divisions/8","confidence":"reported"},
+  {"claim":"没年月日","value":"430-08-28","unit":"date","as_of":"430","source":"https://en.wikipedia.org/wiki/Augustine_of_Hippo","confidence":"reported"},
+  {"claim":"享年（ポッシディウスの記述）","value":76,"unit":"年","as_of":"430","source":"https://www.tertullian.org/fathers/possidius_life_of_augustine_02_text.htm","confidence":"disputed"},
+  {"claim":"享年（満年齢）","value":75,"unit":"歳","as_of":"430","source":"https://en.wikipedia.org/wiki/Augustine_of_Hippo","confidence":"reported"},
+  {"claim":"マニ教聴聞者の期間（本人の記述）","value":9,"unit":"年","as_of":"373-382/383","source":"https://www.newadvent.org/fathers/110104.htm","confidence":"reported"},
+  {"claim":"内縁関係の期間","value":15,"unit":"年","as_of":"371頃-385","source":"https://www.newadvent.org/cathen/02084a.htm","confidence":"estimated"},
+  {"claim":"受洗時のアデオダトゥスの年齢","value":15,"unit":"歳（未満）","as_of":"387-04","source":"https://www.newadvent.org/fathers/110109.htm","confidence":"reported"},
+  {"claim":"アデオダトゥス没年","value":"389頃 / 388","unit":"year","as_of":"388-390","source":"https://en.wikipedia.org/wiki/Adeodatus","confidence":"disputed"},
+  {"claim":"モニカの没年齢","value":56,"unit":"歳","as_of":"387","source":"https://www.newadvent.org/fathers/110109.htm","confidence":"reported"},
+  {"claim":"モニカの没年","value":"387（本人の記述から計算）/ 388","unit":"year","as_of":"387","source":"https://www.newadvent.org/cathen/02084a.htm","confidence":"disputed"},
+  {"claim":"受洗日","value":"387-04-24/25","unit":"date","as_of":"387","source":"https://en.wikipedia.org/wiki/Augustine_of_Hippo","confidence":"reported"},
+  {"claim":"司祭叙階","value":391,"unit":"year","as_of":"391","source":"https://www.tertullian.org/fathers/possidius_life_of_augustine_02_text.htm","confidence":"reported"},
+  {"claim":"司教叙階","value":"395 / 396","unit":"year","as_of":"395-396","source":"https://www.newadvent.org/cathen/02084a.htm","confidence":"disputed"},
+  {"claim":"『再考録』の点検作品数","value":93,"unit":"作品","as_of":"426-427","source":"https://www.augustinus.it/latino/ritrattazioni/index2.htm","confidence":"reported"},
+  {"claim":"点検した巻数（書簡224）","value":232,"unit":"巻","as_of":"428","source":"https://romanletters.org/letters/augustine_hippo/224/","confidence":"single-source"},
+  {"claim":"現存書簡数","value":300,"unit":"通（約）","as_of":"1981","source":"https://faculty.georgetown.edu/jod/twayne/twaynebib.html","confidence":"estimated"},
+  {"claim":"Divjak 発見の書簡","value":29,"unit":"通","as_of":"1974/1975","source":"https://www.roger-pearse.com/weblog/2008/09/30/new-sermons-of-augustine","confidence":"reported"},
+  {"claim":"Dolbeau 発見の説教","value":26,"unit":"編","as_of":"1990","source":"https://www.roger-pearse.com/weblog/2008/09/30/new-sermons-of-augustine","confidence":"reported"},
+  {"claim":"現存説教数","value":"300超 / 約500 / 約600","unit":"編","as_of":"2026","source":"https://plato.stanford.edu/entries/augustine/","confidence":"disputed"},
+  {"claim":"生涯の説教回数","value":"6000-10000","unit":"回","as_of":"391-430","source":"https://en.wikipedia.org/wiki/Augustine_of_Hippo","confidence":"estimated"},
+  {"claim":"現存著作の総語数","value":5000000,"unit":"語（超）","as_of":"現代の校訂版","source":"https://faculty.georgetown.edu/jod/twayne/twaynebib.html","confidence":"single-source"},
+  {"claim":"411年カルタゴ協議会 カトリック側司教","value":286,"unit":"人","as_of":"411-06","source":"https://www.newadvent.org/cathen/02084a.htm","confidence":"single-source"},
+  {"claim":"411年カルタゴ協議会 ドナトゥス派司教","value":279,"unit":"人","as_of":"411-06","source":"https://www.newadvent.org/cathen/02084a.htm","confidence":"single-source"},
+  {"claim":"マルケッリヌス処刑","value":"413-09-13","unit":"date","as_of":"413","source":"https://en.wikipedia.org/wiki/Flavius_Marcellinus","confidence":"reported"},
+  {"claim":"ディオスポリス会議の司教数","value":14,"unit":"人","as_of":"415-12","source":"https://www.newadvent.org/cathen/11604a.htm","confidence":"reported"},
+  {"claim":"416年カルタゴ会議の司教数","value":67,"unit":"人","as_of":"416","source":"https://www.newadvent.org/cathen/11604a.htm","confidence":"reported"},
+  {"claim":"416年ミレウィス会議の司教数","value":59,"unit":"人","as_of":"416","source":"https://www.newadvent.org/cathen/11604a.htm","confidence":"reported"},
+  {"claim":"418年カルタゴ教会会議の司教数","value":"約200 / 214","unit":"人","as_of":"418-05-01","source":"https://www.newadvent.org/cathen/11604a.htm","confidence":"disputed"},
+  {"claim":"ローマ略奪","value":"410-08-24","unit":"date","as_of":"410","source":"https://en.wikipedia.org/wiki/Sack_of_Rome_(410)","confidence":"reported"},
+  {"claim":"『神の国』の巻数","value":22,"unit":"巻","as_of":"413-426","source":"https://en.wikipedia.org/wiki/Bibliography_of_Augustine_of_Hippo","confidence":"reported"},
+  {"claim":"ヴァンダル族の渡航人数","value":"80000（プロコピオス）/ 兵15000-20000（ヘザー）","unit":"人","as_of":"429","source":"https://en.wikipedia.org/wiki/Vandal_Kingdom","confidence":"disputed"},
+  {"claim":"ヒッポ包囲の期間","value":14,"unit":"か月（約）","as_of":"430-431","source":"https://www.tertullian.org/fathers/possidius_life_of_augustine_02_text.htm","confidence":"reported"},
+  {"claim":"遺骸のパヴィア移送","value":"720頃","unit":"year","as_of":"720","source":"https://en.wikipedia.org/wiki/San_Pietro_in_Ciel_d%27Oro","confidence":"estimated"}
+]
+</script>
+
+<script>
+/* 誕生日は『幸福な生について』1.6 により11月13日。
+   d に月日がある項目は誕生日で判定し、年しかない項目は西暦年の差で出す。 */
+const BORN = '354-11-13';
+const DIED = '430-08-28';
+function ageAt(x) {
+  if (x.a) return { t: x.a, out: !!x.out };
+  const m = String(x.d).match(/(\d{3,4})年(?:(\d{1,2})月(?:(\d{1,2})日)?)?/);
+  if (!m) return null;
+  const y = +m[1], mo = m[2] ? +m[2] : null, dd = m[3] ? +m[3] : null;
+  const [by, bm, bd] = BORN.split('-').map(Number);
+  const dy = +DIED.split('-')[0];
+  if (y > dy) return { t: '没後' + (y - dy) + '年', out: true };
+  if (y < by) return { t: '生誕' + (by - y) + '年前', out: true };
+  let a = y - by;
+  if (mo !== null && (mo < bm || (mo === bm && dd !== null && dd < bd))) a -= 1;
+  return { t: a + '歳', out: false };
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sup(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(n => '<sup><a href="#s' + n + '">' + n + '</a></sup>').join('');
+}
+
+const ERAS = [
+  '',
+  'I タガステとカルタゴ 354–373',
+  'II マニ教と修辞学 373–384',
+  'III ミラノ 384–387',
+  'IV 帰郷と叙階 387–396',
+  'V 司教と著述 396–405',
+  'VI ドナトゥス派 405–413',
+  'VII 神の国とペラギウス 410–421',
+  'VIII 晩年 426–430',
+  'IX 死後 431–',
+];
+
+const TL = [
+ {d:'354年11月13日',e:1,t:'タガステに生まれる',
+  w:'現在のアルジェリア東部スーク・アハラス。父パトリキウスは市参事会員の身分、母モニカはキリスト教徒。誕生日は本人が『幸福な生について』1.6で記す。',
+  y:'誕生日まで本人の著作で確定する。古代の人物としては例が少なく、年表の満年齢を月日で判定できる。',
+  f:['11月13日'],s:[11,34]},
+ {d:'366年頃',e:1,t:'マダウラで文法と文学を学ぶ',
+  w:'タガステの南の町。ラテン文学の教育を受けた。',
+  y:'修辞学教師としての職業の基礎がここで形成された。',s:[1,34]},
+ {d:'369年',e:1,a:'15歳',t:'学資が整わず1年をタガステで過ごす',
+  w:'16歳の年（満15歳）。父は息子をカルタゴで学ばせるために資金を工面していた。',
+  y:'地方の小土地所有者の家にとって、子の高等教育は家計の限界に近い投資だった。',s:[1]},
+ {d:'369年',e:1,a:'15歳',t:'仲間と梨を盗む',
+  w:'空腹でも欲しくもない梨を盗み、豚に投げた。『告白』第2巻はこの挿話に1巻の大半を割く。',
+  y:'動機のない悪という問いが、後の悪と意志の議論の起点として本人によって配置されている。',s:[1]},
+ {d:'370年',e:1,t:'カルタゴで修辞学を学び始める',
+  w:'同郷の有力者ロマニアヌスの援助があった。本人は着いた町を「汚れた愛の大鍋」と書く。',
+  y:'属州の首都で、地方出身者が上昇する経路に入った。',s:[2,24,27]},
+ {d:'371年頃',e:1,t:'父パトリキウスが死去する',
+  w:'本人は19歳の年に、父がその2年前に死んでいたと書く。父は死の前に受洗していた。',
+  y:'以後の学資は母が負担した。母の影響力が強まる。',s:[2,7]},
+ {d:'371年頃',e:1,t:'内縁の女性と同居を始める',
+  w:'名は記録されていない。本人は1人だけで、その女性には忠実だったと書く。',
+  y:'身分の異なる相手との内縁は、後の婚約で解消を迫られる関係だった。',s:[3,32]},
+ {d:'372年',e:1,t:'息子アデオダトゥスが生まれる',
+  w:'名は「神から与えられた」の意。387年の受洗時に「15歳になるかならないか」と本人が書く。',
+  y:'回心後も手元に残り、受洗と対話篇に同席した。',s:[7,45]},
+ {d:'373年',e:2,t:'キケロ『ホルテンシウス』を読む',
+  w:'19歳の年。母の出す金で修辞学を学ぶ過程で、課程の書物として読んだ。',
+  y:'修辞の技術の書物が、知恵そのものへの関心に転じる契機になった。',f:['19歳の年'],s:[2]},
+ {d:'373年',e:2,t:'マニ教の聴聞者になる',
+  w:'選良には進まず聴聞者にとどまった。本人は期間を19歳から28歳までの9年と書く。',
+  y:'悪の起源を善悪2原理で説明する体系に9年依拠した。後に論敵の攻撃材料になる。',f:['9年（本人の記述）'],s:[3,31]},
+ {d:'374年頃',e:2,t:'タガステで文法を教える',
+  w:'カルタゴでの学業を終えて帰郷し、教職に就いた。',
+  y:'教師として生計を立てる段階に入った。',s:[34]},
+ {d:'374年頃',e:2,a:'20歳頃',t:'アリストテレス『範疇論』を独学で読む',
+  w:'本人は20歳になるかならないかの頃と書く。',
+  y:'教師の説明なしに論理学の書物を読めたことを、本人は後に知性の過信として書いている。',s:[3]},
+ {d:'375年頃',e:2,t:'親友の死を機にカルタゴへ戻る',
+  w:'タガステの友人が病で死に、悲嘆から町を離れた。『告白』第4巻に記される。',
+  y:'個人的な喪失が移住の理由として本人に記録されている。',s:[3]},
+ {d:'380年頃',e:2,a:'26〜27歳',t:'最初の著作『美と適合について』を書く',
+  w:'ローマの弁論家ヒエリウスに献じた。現存しない。',
+  y:'『再考録』の対象外である。本人が点検できなかった著作の最初の例。',s:[3]},
+ {d:'383年',e:2,a:'28歳',t:'マニ教の司教ファウストゥスと会う',
+  w:'29歳の年（満28歳）。弁舌は巧みだが学識は文法の域を出ないと判断した。',
+  y:'離脱の契機は教義の反駁ではなく、代表的な論者への失望だった。',s:[4]},
+ {d:'383年',e:2,t:'母を欺いてローマへ渡る',
+  w:'カルタゴの学生の騒がしさが主な理由。母には友人を見送ると偽って出航した。',
+  y:'母の影響から離れようとした最初の行動として本人が記録している。',s:[4]},
+ {d:'384年',e:3,t:'シンマクスの試験を経てミラノの修辞学教授となる',
+  w:'ミラノ市がローマ市長官に修辞学教師を求め、マニ教徒の知人の仲介で選ばれた。秋に赴任。',
+  y:'宮廷都市の公職であり、属州総督への道も視野に入る地位だった。',s:[4,34]},
+ {d:'384年',e:3,t:'司教アンブロシウスの説教を聞き始める',
+  w:'最初は弁論の技術を評価するために聞いた。',
+  y:'旧約聖書の比喩的解釈を知り、マニ教による聖書批判への答えを得た。',s:[4,24]},
+ {d:'385年',e:3,t:'母モニカがミラノに到着し、婚約が整う',
+  w:'相手は結婚できる年齢に2年足りない少女。本人はその成長を待つことにした。',
+  y:'身分に見合う結婚で公職の経歴を固める計画だった。',s:[5]},
+ {d:'385年',e:3,t:'内縁の女性をアフリカへ帰す',
+  w:'婚約の障害として引き離され、他の男を知らないと誓って去った。息子は手元に残った。本人はその後すぐ別の女性を得た。',
+  y:'約15年（推定）の関係の終わり。女性の名も消息も残っていない。',f:['名は不明'],s:[5,32]},
+ {d:'386年',e:3,a:'31歳',t:'プラトン派の書物を読む',
+  w:'マリウス・ウィクトリヌスのラテン語訳。プロティノスとポルフュリオスの論考を含むとみられる。',
+  y:'悪を実体ではなく善の欠如とみる見方を得て、マニ教の二元論から離れる理論的な根拠になった。',s:[31]},
+ {d:'386年8月',e:3,t:'ミラノの庭で「取りて読め」を聞き、ローマ書13章13–14節を読む',
+  w:'ポンティキアヌスから修道者アントニオスの話を聞いた直後。友人アリピウスは続く14章1節を自分に当てはめた。',
+  y:'『告白』の構成の頂点に置かれた場面。記述は約11年後の司教による。',f:['31歳'],s:[6,34]},
+ {d:'386年',e:3,a:'31歳',t:'胸の病を理由に修辞学教授を辞す',
+  w:'秋の葡萄の収穫休暇を待って辞職した。',
+  y:'公職の経歴を放棄した。',s:[7]},
+ {d:'386年11月13日',e:3,t:'カッシキアクムで誕生日の対話を行う',
+  w:'『幸福な生について』は本人の誕生日に始まる対話として書かれた。同時期に『アカデミア派駁論』『秩序について』『ソリロクィア』を書いた。',
+  y:'回心直後の記述であり、約11年後の『告白』と比較できる同時代資料である。',s:[11,41]},
+ {d:'387年4月24日',e:3,t:'復活徹夜祭にアンブロシウスから受洗する',
+  w:'息子アデオダトゥスと友人アリピウスがともに受洗した。日付は4月24日夜から25日。',
+  y:'ミラノの司教との関係は、これ以降の本人の記述にほとんど現れない。',f:['32歳'],s:[7,34]},
+ {d:'387年',e:4,a:'32歳',t:'オスティアで母と対話する',
+  w:'アフリカへの船を待つ間、窓辺で母と2人で永遠の生について語った。『告白』第9巻に記される。',
+  y:'自伝部分の最後の場面として配置されている。',s:[7]},
+ {d:'387年',e:4,a:'32歳',t:'母モニカがオスティアで死去する',
+  w:'本人は母が56歳、自分が33年目だったと書く。カトリック百科事典は秋とする。英語版Wikipediaの388年は本人の記述と合わない。',
+  y:'『告白』の自伝部分はここで終わる。',f:['母56歳'],s:[7,32]},
+ {d:'388年',e:4,t:'アフリカへ帰る',
+  w:'簒奪者マクシムスの死（388年8月）の後に出航し、カルタゴを経てタガステに戻った。',
+  y:'帝国の内戦で約1年ローマに足止めされた。',s:[32]},
+ {d:'388年',e:4,t:'タガステで修道的な共同生活を始める',
+  w:'父の地所で友人と弟子たちと暮らし、著述を続けた。',
+  y:'本人が望んだ生活の形。3年後に中断される。',s:[20,32]},
+ {d:'389年頃',e:4,t:'息子アデオダトゥスが死去する',
+  w:'対話篇『教師論』の対話相手。死亡年は389年頃とする推定が多く、388年とする記述もある（諸説）。',
+  y:'本人は『告白』で息子の才を書くが、死の経緯は記していない。',f:['諸説'],s:[24,45]},
+ {d:'391年',e:4,t:'ヒッポ・レギウスで司祭に叙階される',
+  w:'町を訪れた際に会衆に捕らえられ、司教ウァレリウスのもとで叙階された。本人は激しく泣いた。',
+  y:'本人の計画にない職務が、以後39年の活動の範囲を決めた。',s:[20,32]},
+ {d:'393年',e:4,t:'ヒッポの教会会議で『信仰と信条について』を講じる',
+  w:'司祭の身で司教団の前で講じた。',
+  y:'北アフリカの司教団の中で発言者としての地位を得た。',s:[41]},
+ {d:'395年',e:4,t:'補佐司教に叙階される（395年か396年）',
+  w:'ウァレリウスの存命中。叙階者はヌミディアの首席司教メガリウス。本人は当初、慣行に反するとして拒んだ。',
+  y:'カトリック百科事典は42歳の叙階として396年とする。年は確定しない。',f:['395/396年'],s:[20,32,34]},
+ {d:'396年',e:5,t:'『キリスト教の教え』を書き始める',
+  w:'聖書解釈の方法論。中断を経て426年か427年に完成した。',
+  y:'古典修辞学を聖書の読解と説教に転用する方法を示した。',s:[41]},
+ {d:'397年',e:5,t:'『告白』を書き始める',
+  w:'全13巻。完成年は397–401年の幅で諸説。第1–9巻が自伝、第10巻が執筆時の自己吟味、第11–13巻が創世記注解。',
+  y:'前半生の記述の大半がこの1冊に依存することになった。',f:['13巻','諸説'],s:[41,34,8]},
+ {d:'399年',e:5,t:'『三位一体論』に着手する',
+  w:'全15巻。完成は419年とする説と426年とする説がある。',
+  y:'約20年をかけた体系的な神学書。',s:[41]},
+ {d:'401年',e:5,t:'『創世記逐語注解』に着手する',
+  w:'全12巻。416年頃に完成。',
+  y:'創世記を比喩ではなく字義どおりに解釈する試み。',s:[41]},
+ {d:'408年',e:6,t:'書簡93で強制についての考えを改める',
+  w:'ウィンケンティウス宛。以前は誰も強制されるべきでないと考えていたが、勅令への恐れからカトリックに移った自分の町の例で考えを改めたと書く。「強いて連れて来い」を引く。',
+  y:'宗教的強制を正当化する論拠の典型になった。',f:['ルカ14:23'],s:[17,50]},
+ {d:'409年',e:6,t:'ホノリウス帝の宮廷がドナトゥス派を異端とする',
+  w:'教会堂の引き渡しを命じる勅令。',
+  y:'教会の分裂の処理が、皇帝の法の執行に移った。',s:[50]},
+ {d:'410年8月24日',e:7,t:'アラリックの西ゴート軍がローマ市を略奪する',
+  w:'3日間の略奪。避難者が北アフリカに渡った。',
+  y:'神々を捨てたことが災厄を招いたという議論が起こり、『神の国』の執筆動機になった。',s:[42,16]},
+ {d:'411年6月',e:6,t:'カルタゴ協議会でドナトゥス派と論争する',
+  w:'皇帝の代理マルケッリヌスが主宰。カトリック側286人、ドナトゥス派279人の司教が出席したとされる（single-source）。',
+  y:'マルケッリヌスはドナトゥス派を異端と判定し、教会堂の引き渡しを命じた。',f:['286 対 279'],s:[32,35]},
+ {d:'411年',e:7,t:'カルタゴの教会会議がカエレスティウスの命題を退ける',
+  w:'ペラギウスの弟子カエレスティウスの6つの命題。本人は審理に加わっていない。',
+  y:'ペラギウス論争の起点。',s:[33]},
+ {d:'412年',e:7,t:'『罪の報いと赦し』を書く',
+  w:'マルケッリヌスの質問に答えた著作。411年から412年。洗礼を受けない幼児を「最も軽い断罪」の下に置く。',
+  y:'本人がペラギウス論争に入った最初の著作。',s:[21,33]},
+ {d:'413年',e:7,t:'『神の国』に着手し、第1–3巻をマルケッリヌスに献じる',
+  w:'完成は426年頃、全22巻。前半10巻が異教への反論、後半12巻が2つの国の起源と経過と終末。',
+  y:'約13年をかけた最大の著作。',f:['22巻'],s:[12,35,41]},
+ {d:'413年9月13日',e:6,t:'マルケッリヌスが処刑される',
+  w:'ヘラクリアヌスの反乱への関与を問われた。本人は助命を働きかけたが果たせなかった。翌年に名誉回復。',
+  y:'協議会で本人の側に立った国家の代理人が、2年後に同じ国家に処刑された。',s:[35]},
+ {d:'415年12月',e:7,t:'ディオスポリスの会議がペラギウスを無罪とする',
+  w:'14人の司教が審理し、断罪に当たる点はないとした。',
+  y:'東方の会議の判断が、アフリカの司教団の反発を招いた。',f:['14人'],s:[33]},
+ {d:'416年',e:7,t:'カルタゴとミレウィスの会議がペラギウス説を退ける',
+  w:'秋。カルタゴに67人、ミレウィスに59人の司教。両会議は教皇に書簡を送った。',
+  y:'アフリカの司教団が教皇の判断を求める経路を作成した。',f:['67人','59人'],s:[33]},
+ {d:'417年1月27日',e:7,t:'教皇インノケンティウス1世がペラギウスらを交わりから外す',
+  w:'アフリカの会議への返書。インノケンティウスは3月12日に死去し、後継のゾシムスは審理の再開に動いた。',
+  y:'教皇の交代で判断が揺れた。',s:[33]},
+ {d:'417年',e:6,t:'書簡185で強制を体系的に正当化する',
+  w:'ボニファティウス宛。「教会が不敬虔な者に加える正しい迫害」があると書く。417年頃。',
+  y:'動機を基準にした迫害の区別が理論として示された。',s:[18]},
+ {d:'418年4月30日',e:7,t:'ホノリウス帝がペラギウス派をイタリアの諸都市から追放する',
+  w:'ラヴェンナからの勅答。',
+  y:'教義の争いが、再び皇帝の法で決着に向かった。',s:[33]},
+ {d:'418年5月1日',e:7,t:'カルタゴ教会会議がペラギウス説を断罪する',
+  w:'約200人の司教。8または9の規定。214人とする記述、419年の会議を217人とする記述がある（諸説）。',
+  y:'ゾシムスはこの後、回状で全司教に断罪への署名を求めた。',f:['約200人','諸説'],s:[33,46]},
+ {d:'418年',e:7,t:'エクラヌムのユリアヌスら18人の司教が署名を拒む',
+  w:'イタリアの司教。追放された。',
+  y:'本人の晩年の論争相手が現れた。',f:['18人'],s:[33,36]},
+ {d:'421年',e:7,t:'『ユリアヌス駁論』を書く',
+  w:'ユリアヌスの4巻の著作への反論。',
+  y:'ユリアヌスは本人を気質においてマニ教徒であると非難し、論争は本人の死まで続いた。',s:[41,36]},
+ {d:'426年',e:8,t:'『神の国』全22巻が完成する',
+  w:'426年頃。『再考録』で本人が執筆の経緯と構成を記した。',
+  y:'2つの国の区別が、帝国の興亡と救済史を切り離す枠組みとして後代に引き継がれた。',s:[41,16,14]},
+ {d:'427年',e:8,t:'『再考録』で93作品を点検する',
+  w:'426年から427年。作品を年代順に並べ、修正すべき箇所を本人が書き添えた。',
+  y:'著作の目録と年代を本人が確定させた。研究者の年代推定の基準になっている。',f:['93作品'],s:[16,41,28]},
+ {d:'428年',e:8,t:'書簡224で点検した巻数を232と記す',
+  w:'クォドウルトデウス宛。次に書簡と説教を点検する予定だったが、ユリアヌスへの反論で手が回らないと書く。',
+  y:'書簡と説教は本人の点検を経ずに残り、のちに外部からの検証資料になった。',f:['232巻'],s:[19]},
+ {d:'429年',e:8,t:'ヴァンダル族が北アフリカへ渡る',
+  w:'王ガイセリック。プロコピオスは8万人と記し、ヘザーは兵力1万5,000〜2万人と推計する（諸説）。',
+  y:'北アフリカのローマ支配の終わりの始まり。',f:['諸説'],s:[39]},
+ {d:'430年5月',e:8,t:'ヴァンダル族がヒッポを包囲する',
+  w:'5月か6月。伯ボニファティウスが市内に退いて籠城した。包囲は約14か月続いた。',
+  y:'本人の最後の3か月は包囲下の町で過ぎた。',f:['約14か月'],s:[20,38]},
+ {d:'430年8月28日',e:8,t:'ヒッポで死去する',
+  w:'包囲3か月目の熱病。悔い改めの詩編を壁に貼らせて読んだ。遺言は残さず、教会の図書館と蔵書の保存を命じた。ポッシディウスは享年76年と書く。',
+  y:'著作群は図書館に残り、『ユリアヌス駁論・未完の書』は未完のままとなった。',f:['満75歳'],s:[20,34,41]},
+ {d:'431年8月',e:9,t:'ヴァンダル族がヒッポの包囲を解く',
+  w:'補給の不足による。その後ヴァンダル族は町を占領した。',
+  y:'本人の教会があった町が、異端とされたアリウス派の王の支配下に入った。',s:[38]},
+ {d:'431年',e:9,t:'エフェソス公会議がペラギウス派の断罪を繰り返す',
+  w:'東方の教会でも断罪が確認された。',
+  y:'本人の側の立場が、帝国の東西で教会の公式の立場になった。',s:[33]},
+ {d:'435年',e:9,t:'ヒッポがヴァンダル王国の首都となる',
+  w:'ウァレンティニアヌス3世との講和による。439年のカルタゴ占領まで首都だった。',
+  y:'北アフリカの教会組織はアリウス派の王権の下に置かれた。',s:[39]},
+ {d:'720年頃',e:9,t:'遺骸がサルデーニャからパヴィアへ移される',
+  w:'ランゴバルド王リウトプランドの叔父、パヴィア司教ペトルスが買い戻した。サン・ピエトロ・イン・チエル・ドーロ教会に安置。',
+  y:'北アフリカから追放された司教団が運んだ遺骸が、イタリアの王権の下で保存された。',s:[37,34]},
+ {d:'1362年',e:9,t:'パヴィアで大理石の棺の制作が始まる',
+  w:'1362年から1365年。浮き彫りに生涯の場面を刻む。',
+  y:'中世後期の像の形成。',s:[37]},
+ {d:'1505年',e:9,t:'ルターがアウグスティノ隠修士会に入る',
+  w:'エアフルト。',
+  y:'恩恵論の典拠として本人を引く宗教改革者が、本人の名を冠する修道会から出た。',s:[43]},
+ {d:'1640年',e:9,t:'ジャンセニウス『アウグスティヌス』が刊行される',
+  w:'死後出版。1642年に教皇勅書で断罪、1653年に5命題が断罪された。',
+  y:'晩年の恩恵論をめぐる争いが、1,200年後の教会の論争になった。',s:[40]},
+ {d:'1695年10月1日',e:9,t:'パヴィアの地下聖堂で骨片の入った箱が見つかる',
+  w:'修道会間の真偽の争いを経て、1728年に教皇ベネディクトゥス13世が認めた。',
+  y:'遺骨の同定は現在も科学的に検証されていない。',s:[37]},
+ {d:'1842年',e:9,t:'右腕の一部がアンナバに戻される',
+  w:'パヴィアから旧ヒッポの地へ。',
+  y:'遺骨の一部が、本人が司教を務めた土地に戻った。',s:[34]},
+ {d:'1953年',e:9,t:'ウィトゲンシュタイン『哲学探究』が『告白』の引用で始まる',
+  w:'第1節が『告白』第1巻の言語習得の記述の引用。',
+  y:'言語哲学の主要著作が、本人の自己記述を批判の出発点に置いた。',s:[44]},
+ {d:'1974年',e:9,t:'ディヴヤクが未知の書簡29通を発見する',
+  w:'マルセイユとパリの写本。1975年とする記述もある。1981年に CSEL 第88巻で刊行。',
+  y:'本人が点検しなかった晩年の書簡が、司教の日常を外から示した。',f:['29通','諸説'],s:[29,26]},
+ {d:'1990年',e:9,t:'ドルボーがマインツで26編の説教を発見する',
+  w:'マインツ市立図書館の15世紀写本。1996年に初版刊行。',
+  y:'権威が盤石でない司教の姿を示す資料として読まれた。',f:['26編'],s:[29,30,24]},
+ {d:'2017年',e:9,t:'出村和彦『アウグスティヌス』が岩波新書で刊行される',
+  w:'副題「心」の哲学者。日本語の概説。',
+  y:'日本語で生涯と思想を通覧できる概説。',s:[48]},
+ {d:'2026年7月',e:9,t:'新出の説教2編が報じられる',
+  w:'ヴュルツブルク大学のトルナウらが12世紀写本から真正と判定した。サウルの悔い改めの可能性を論じる。',
+  y:'他の著作でのサウルの評価と異なり、本人像の修正が続いている。',f:['2編'],s:[30]},
+];
+
+const QUOTES = [
+ {q:'Fecisti nos ad te et inquietum est cor nostrum, donec requiescat in te.',
+  w:'訳: あなたは私たちをあなたに向けて造られた。私たちの心は、あなたのうちに憩うまで安らぎを得ない。『告白』1.1.1',t:'告白',s:[10]},
+ {q:'Da mihi castitatem et continentiam, sed noli modo.',
+  w:'訳: 私に貞潔と節制を与えてください。ただし今すぐではなく。『告白』8.7.17。回心前の若年の祈りとして本人が回想する',t:'告白',s:[6]},
+ {q:'Tolle lege, tolle lege.',
+  w:'訳: 取りて読め、取りて読め。『告白』8.12.29。386年8月、ミラノの庭で聞いた子どもの声として記す',t:'告白',s:[6]},
+ {q:'Sero te amavi, pulchritudo tam antiqua et tam nova, sero te amavi.',
+  w:'訳: 遅すぎました、あなたを愛するのが。これほど古く、これほど新しい美よ。『告白』10.27.38',t:'告白',s:[8]},
+ {q:'Quid est ergo tempus? Si nemo ex me quaerat, scio; si quaerenti explicare velim, nescio.',
+  w:'訳: では時間とは何か。誰も私に問わなければ、私は知っている。問う者に説明しようとすると、私は知らない。『告白』11.14.17',t:'時間',s:[9]},
+ {q:'Si enim fallor, sum.',
+  w:'訳: もし私が誤るなら、私は存在する。『神の国』11.26',t:'神の国',s:[13,31]},
+ {q:'Fecerunt itaque civitates duas amores duo, terrenam scilicet amor sui usque ad contemptum Dei, caelestem vero amor Dei usque ad contemptum sui.',
+  w:'訳: 2つの愛が2つの国を造った。神を軽んじるに至る自己愛が地の国を、自己を軽んじるに至る神への愛が天の国を。『神の国』14.28',t:'神の国',s:[14]},
+ {q:'Dilige, et quod vis fac.',
+  w:'訳: 愛せよ、そして欲することをなせ。『ヨハネの手紙一講解』7.8',t:'倫理',s:[23]},
+ {q:'Whomsoever you shall find, compel them to come in.',
+  w:'訳: 見つけた者は誰でも、強いて連れて来い。408年の書簡93でルカ福音書14章23節を強制の根拠として引いた箇所（英訳）',t:'強制',s:[17]},
+ {q:'There is a righteous persecution, which the Church of Christ inflicts upon the impious.',
+  w:'訳: キリストの教会が不敬虔な者に加える、正しい迫害がある。書簡185（417年頃、英訳）',t:'強制',s:[18]},
+];
+</script>
+
+<script>
+const activeEras = new Set();
+document.getElementById('tleras').innerHTML = ERAS.slice(1).map((label, i) =>
+  '<button type="button" class="tl-era" data-e="' + (i + 1) + '">' + esc(label) + '</button>'
+).join('');
+document.getElementById('tleras').addEventListener('click', e => {
+  const b = e.target.closest('.tl-era');
+  if (!b) return;
+  const n = Number(b.dataset.e);
+  activeEras.has(n) ? activeEras.delete(n) : activeEras.add(n);
+  b.classList.toggle('on', activeEras.has(n));
+  filterTL();
+});
+
+document.getElementById('tl').innerHTML = TL.map((x, i) => {
+  const ag = ageAt(x);
+  return `
+  <div class="tl-item" data-i="${i}">
+    <details>
+      <summary>
+        <span class="tl-d">${esc(x.d)}</span>
+        ${ag ? `<span class="tl-age${ag.out ? ' out' : ''}">${esc(ag.t)}</span>` : ''}
+        <span class="tl-t">${esc(x.t)}</span>
+      </summary>
+      <div class="tl-body">
+        <p class="w">${esc(x.w)}${sup(x.s)}</p>
+        ${x.f ? `<div class="tl-fig">${x.f.map(f => '<span>' + esc(f) + '</span>').join('')}</div>` : ''}
+        <p class="y" style="margin-top:10px"><b>後への影響。</b>${esc(x.y)}</p>
+      </div>
+    </details>
+  </div>`;
+}).join('');
+
+function filterTL() {
+  const q = document.getElementById('tlq').value.trim().toLowerCase();
+  let n = 0;
+  for (const el of document.querySelectorAll('.tl-item')) {
+    const x = TL[Number(el.dataset.i)];
+    const okEra = !activeEras.size || activeEras.has(x.e);
+    const hay = [x.d, ageAt(x)?.t, x.t, x.w, x.y, ...(x.f || [])].join(' ').toLowerCase();
+    const okQ = !q || hay.includes(q);
+    const show = okEra && okQ;
+    el.classList.toggle('hide', !show);
+    if (show) n++;
+  }
+  document.getElementById('tlcount').textContent = n + ' / ' + TL.length + ' 件';
+  document.getElementById('tlempty').style.display = n ? 'none' : 'block';
+}
+document.getElementById('tlq').addEventListener('input', filterTL);
+filterTL();
+
+const qThemes = [...new Set(QUOTES.map(q => q.t))];
+let qActive = null;
+document.getElementById('qtabs').innerHTML =
+  '<button class="q-tab on" data-t="">すべて <span style="opacity:.6">' + QUOTES.length + '</span></button>' +
+  qThemes.map(t => {
+    const n = QUOTES.filter(q => q.t === t).length;
+    return '<button class="q-tab" data-t="' + esc(t) + '">' + esc(t) + ' <span style="opacity:.6">' + n + '</span></button>';
+  }).join('');
+document.getElementById('qlist').innerHTML = QUOTES.map((q, i) => `
+  <div class="q" data-i="${i}">
+    <div class="txt">${esc(q.q)}</div>
+    <div class="meta">${esc(q.w)}${sup(q.s)}</div>
+  </div>`).join('');
+document.getElementById('qtabs').addEventListener('click', e => {
+  const b = e.target.closest('.q-tab');
+  if (!b) return;
+  qActive = b.dataset.t || null;
+  for (const t of document.querySelectorAll('.q-tab')) t.classList.toggle('on', t === b);
+  for (const el of document.querySelectorAll('.q'))
+    el.classList.toggle('hide', !!qActive && QUOTES[Number(el.dataset.i)].t !== qActive);
+});
+
+function bars(id, rows, unit) {
+  const max = Math.max(...rows.map(r => Math.abs(r.v)), 1);
+  document.getElementById(id).innerHTML = rows.map(r => `
+    <div class="bar${r.cls ? ' ' + r.cls : ''}${r.est ? ' est' : ''}">
+      <span class="lb">${esc(r.k)}</span>
+      <span class="tr"><span class="fl" style="width:${(Math.abs(r.v) / max * 100).toFixed(1)}%"></span></span>
+      <span class="vl">${r.v.toLocaleString('ja-JP', { maximumFractionDigits: 1 })}${unit}${r.sub ? ' <span style="color:var(--muted)">' + esc(r.sub) + '</span>' : ''}</span>
+    </div>`).join('');
+}
+
+
+bars('c-sermon', [
+  {k:'現存（O\'Donnell）', v:300, sub:'以上'},
+  {k:'現存（SEP）', v:600, sub:'概数'},
+  {k:'生涯の説教（推定上限）', v:10000, cls:'s2', est:false},
+], '');
+
+bars('c-council', [
+  {k:'411 カトリック側', v:286},
+  {k:'411 ドナトゥス派', v:279, cls:'s2'},
+  {k:'415 ディオスポリス', v:14, cls:'s3'},
+  {k:'416 カルタゴ', v:67},
+  {k:'416 ミレウィス', v:59},
+  {k:'418 カルタゴ', v:200, sub:'概数'},
+], '人');
+</script>
+</body>
+</html>

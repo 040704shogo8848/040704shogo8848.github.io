@@ -3,6 +3,29 @@
 // index.html はこの window.PEOPLE を <script> で読む（file:// でも Pages でも動く）。
 window.PEOPLE = [
   {
+    "name": "アウグスティヌス",
+    "nameEn": "Aurelius Augustinus",
+    "born": 354,
+    "died": 430,
+    "country": "DZ",
+    "role": "ヒッポ・レギウス司教（395/396–430）。『告白』『神の国』著者",
+    "field": "scientist",
+    "status": "deceased",
+    "tags": [
+      "教父",
+      "告白",
+      "神の国",
+      "ドナトゥス派",
+      "ペラギウス論争",
+      "史料批判"
+    ],
+    "date": "2026-10-28",
+    "summary": "354年11月13日タガステ生まれ。マニ教聴聞者の9年を経て386年8月ミラノで回心し、391年ヒッポで司祭、395/396年に司教となり、411年カルタゴ協議会（カトリック286対ドナトゥス派279司教）と418年の反ペラギウス決議の側に立った。426–427年の『再考録』で自作93作品を点検し、430年8月28日ヴァンダル包囲下で死去（満75歳）。",
+    "file": "people/augustinus_aurelius_261028.html",
+    "sourceCount": 51,
+    "variant": "life-arc"
+  },
+  {
     "name": "チンギス・カン",
     "nameEn": "Chinggis Khan",
     "born": 1162,

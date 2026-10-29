@@ -60,6 +60,9 @@ h1.h{font-size:26px;line-height:1.25;margin:0 2px 4px;letter-spacing:-.01em}
 
 /* ---------- cards ---------- */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.diffrow{margin-top:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px 12px;flex-wrap:wrap}
+.diffrow b{font-size:14px}.diffrow small{display:block;color:var(--sub);font-size:11.5px;margin-top:2px}
+.qmeta .lvb{margin-left:auto;padding:1px 7px;border-radius:6px;background:var(--surface2);color:var(--sub)}
 .hero{padding:20px;display:flex;gap:18px;align-items:center;position:relative;overflow:hidden}
 .ring{flex:0 0 auto;width:86px;height:86px;position:relative}
 .ring svg{transform:rotate(-90deg)}
@@ -357,6 +360,7 @@ a.prow{color:inherit;text-decoration:none}
       <button class="btn pri wide" id="hToday10">今日の10問を始める</button>
     </div>
   </div>
+  <div class="card diffrow"><div><b>難易度</b><small>A は基本の事実が中心、C は細部が中心</small></div><div class="seg" data-seg="diff"><button data-v="a">A 簡単</button><button data-v="b">B 標準</button><button data-v="c">C 難しめ</button></div></div>
   <div id="hNew"></div>
   <div class="tiles">
     <button class="card tile" data-quick="mix">
@@ -418,6 +422,7 @@ a.prow{color:inherit;text-decoration:none}
     <div class="srow"><div><b>文字の大きさ</b></div><div class="seg" data-seg="fs"><button data-v="m">標準</button><button data-v="l">大</button></div></div>
     <div class="srow"><div><b>問題文の表示速度</b></div><div class="seg" data-seg="speed"><button data-v="70">遅い</button><button data-v="40">標準</button><button data-v="0">一括</button></div></div>
     <div class="srow"><div><b>1日の目標</b></div><div class="seg" data-seg="goal"><button data-v="20">20問</button><button data-v="30">30問</button><button data-v="50">50問</button></div></div>
+    <div class="srow"><div><b>難易度</b><small>A は基本の事実が中心、C は細部が中心。復習の期限が来た問題は難易度によらず出す</small></div><div class="seg" data-seg="diff"><button data-v="a">A</button><button data-v="b">B</button><button data-v="c">C</button></div></div>
     <div class="srow"><div><b>CPU の強さ</b><small>自動はレートに合わせる</small></div><div class="seg" data-seg="cpuLv"><button data-v="auto">自動</button><button data-v="0">弱</button><button data-v="1">中</button><button data-v="2">強</button></div></div>
     <div class="srow"><div><b>表示</b></div><div class="seg" data-seg="theme"><button data-v="auto">自動</button><button data-v="light">明</button><button data-v="dark">暗</button></div></div>
   </div>
@@ -442,7 +447,7 @@ a.prow{color:inherit;text-decoration:none}
   <div class="board" id="mBoard"></div>
   <div class="timer" id="mTimer"><i id="mBar"></i></div>
   <div class="card qcard" id="mQ">
-    <div class="qmeta"><span class="gdot" id="mGdot"></span><span id="mGname"></span></div>
+    <div class="qmeta"><span class="gdot" id="mGdot"></span><span id="mGname"></span><span class="lvb" id="mLv"></span></div>
     <div class="qtext" id="mText"></div>
   </div>
   <div id="mArea"></div>
@@ -517,7 +522,7 @@ const panelable = it => it.kind==='q' && /^[^\s、。,.・()（）「」]{2,8}$/
 //  storage
 // ====================================================================
 const KEY='hq.v1';
-const DEF={v:2,srs:{},days:{},xp:0,matches:0,flag:{},rate:1000,known:null,goalDay:null,pref:{sound:true,vib:true,auto:true,cpu:true,time:12,speed:40,goal:30,cpuLv:'auto',theme:'auto',fs:'m'}};
+const DEF={v:2,srs:{},days:{},xp:0,matches:0,flag:{},rate:1000,known:null,goalDay:null,pref:{sound:true,vib:true,auto:true,cpu:true,time:12,speed:40,goal:30,cpuLv:'auto',theme:'auto',fs:'m',diff:'b'}};
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){S={}}
 const fromV=S.v||1;
@@ -587,9 +592,11 @@ function deepUrl(it){
 }
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),1800)}
 function applyTheme(){const v=S.pref.theme;if(v==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=v;document.documentElement.dataset.fs=S.pref.fs}
+// Difficulty A/B/C reweights by the question's lv (1 core fact / 2 / 3 detail). Due reviews keep their weight.
+const DIFFW={a:{1:3,2:1,3:.15},b:{1:1,2:1,3:1},c:{1:.15,2:1,3:2.5}};
 function pickWeighted(pool,n){
-  const t=TODAY();
-  const w=pool.map(it=>{const r=S.srs[it.id];if(!r)return 3;if(r.due<=t)return 5;const acc=r.c/r.n;return r.b>=4?.25:(r.b>=2?.8:1.6)+(1-acc)*2});
+  const t=TODAY(), dw=DIFFW[S.pref.diff]||DIFFW.b;
+  const w=pool.map(it=>{const r=S.srs[it.id];if(r&&r.due<=t)return 5;const k=dw[it.lv]??1;if(!r)return 3*k;const acc=r.c/r.n;return ((r.b>=4?.25:(r.b>=2?.8:1.6)+(1-acc)*2))*k});
   const out=[],used=new Set();
   for(let k=0;k<n&&out.length<pool.length;k++){
     let sum=0;for(let i=0;i<pool.length;i++)if(!used.has(i))sum+=w[i];
@@ -642,6 +649,7 @@ function genreRow(g,opt={}){
 }
 const R={
   home(){
+    document.querySelectorAll('#home [data-seg]').forEach(s=>s.querySelectorAll('button').forEach(b=>b.classList.toggle('on',String(S.pref[s.dataset.seg])===b.dataset.v)));
     const t=TODAY(), d=S.days[dayKey(t)]||{n:0}, goal=S.pref.goal;
     $('#hStreak').textContent=streak(); $('#hLv').textContent=level(S.xp); $('#hRate').textContent=Math.round(S.rate).toLocaleString();
     $('#hToday').textContent=d.n; $('#hGoal').textContent='/ '+goal+'問';
@@ -860,7 +868,7 @@ function nextQ(){
   $('#reveal').classList.remove('on');
   $('#mNo').textContent=M.i+1;
   const x2=last&&M.round.length>3&&!Q.retry, tag=$('#mTag'); tag.textContent=Q.retry?'もう一度':x2?'得点2倍':({mc:'4択',panel:'文字パネル',order:'並べ替え'})[Q.type]; tag.classList.toggle('x2',x2); tag.classList.toggle('re',!!Q.retry);
-  const g=GENRES[gOf(it)]||{n:'',c:'#888'}; $('#mGdot').style.background=g.c; $('#mGname').textContent=g.n+'・'+PAGES[it.p].title;
+  const g=GENRES[gOf(it)]||{n:'',c:'#888'}; $('#mGdot').style.background=g.c; $('#mGname').textContent=g.n+'・'+PAGES[it.p].title; $('#mLv').textContent='ABC'[(it.lv||2)-1]||'B';
   M.players.forEach((p,i)=>{const s=$('#st'+i);s.className='st'});
   $('#match').classList.remove('locked');
   // longer questions get more time: +0.08 s per character beyond 30. time 0 = no limit

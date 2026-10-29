@@ -9,9 +9,10 @@ os.makedirs(os.path.join(OUT,'src'),exist_ok=True)
 pages=[]
 def want(rel):
     if rel.endswith('index.html') or rel.endswith('drill.html'): return False
+    if rel.endswith('silicon_valley_vc_atlas.html'): return False  # content lives in a JS array; extracted text is only the verify box
     if rel.startswith('010_research/'): return True
     if rel.startswith('020_personal/02B_reading/'): return True
-    if re.match(r'020_personal/02[C-H]_[^/]+/chapters/',rel): return True
+    if re.match(r'020_personal/02[C-HJK]_[^/]+/chapters/',rel): return True
     return False
 def genre(rel):
     p=rel.split('/')

@@ -49,7 +49,7 @@ const label = (m) => (m.chapter === 0 ? '序章' : m.chapter === 16 ? '終章' :
 function status(meta) {
   const v = meta.verify;
   if (!v) return `<p class="tb-warn"><strong>この章はまだ出典照合を通していない。</strong>数値と定義は執筆時に調べた値である。本文の出典リンクから確かめること。</p>`;
-  return `<p class="tb-ok"><strong>この章は${esc(v.date)}に出典照合を通した。</strong> 検証した事実は${v.checked}件である。出典と一致したものは${v.match}件である。食い違ったものは${v.fixed}件で本文を修正済みである。出典で確認できなかったものは${v.unconfirmed}件である。これらは末尾の「残っている問い」に列挙した。</p>`;
+  return `<p class="tb-ok"><strong>この章は${esc(v.date)}に出典照合を通した。</strong> 検証した事実は${v.checked}件である。出典と一致したものは${v.match}件である。食い違ったものは${v.fixed}件で本文を修正済みである。出典で確認できなかったものは${v.unconfirmed}件である。${v.unconfirmed ? 'これらは本文で断定していない。' : ''}</p>`;
 }
 
 function page(meta, body, nav) {

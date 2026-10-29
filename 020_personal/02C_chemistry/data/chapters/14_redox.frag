@@ -219,7 +219,7 @@
 <div class="fx">(MnO<sub>4</sub><sup>−</sup> ＋ 8H<sup>+</sup> ＋ 5e<sup>−</sup> → Mn<sup>2+</sup> ＋ 4H<sub>2</sub>O) × 2<br>((COOH)<sub>2</sub> → 2CO<sub>2</sub> ＋ 2H<sup>+</sup> ＋ 2e<sup>−</sup>) × 5<br>2MnO<sub>4</sub><sup>−</sup> ＋ 6H<sup>+</sup> ＋ 5(COOH)<sub>2</sub> → 2Mn<sup>2+</sup> ＋ 10CO<sub>2</sub> ＋ 8H<sub>2</sub>O<small>e⁻ は両辺とも10個で消える。左の H⁺ 16個から右の H⁺ 10個を差し引いて6個が残る</small></div>
 <p>イオン反応式に反応しなかったイオンを加えると化学反応式になる。KMnO<sub>4</sub> の K<sup>+</sup> と酸性にするための H<sub>2</sub>SO<sub>4</sub> の SO<sub>4</sub><sup>2−</sup> を両辺に加える。</p>
 <div class="fx">2KMnO<sub>4</sub> ＋ 5(COOH)<sub>2</sub> ＋ 3H<sub>2</sub>SO<sub>4</sub> → K<sub>2</sub>SO<sub>4</sub> ＋ 2MnSO<sub>4</sub> ＋ 10CO<sub>2</sub> ＋ 8H<sub>2</sub>O<small>H⁺ 6個は H₂SO₄ 3個から供給される。S は左右とも3個である</small></div>
-<p>酸性にするのに硫酸を使う理由も出題される。塩酸を使うと Cl<sup>−</sup> が MnO<sub>4</sub><sup>−</sup> に酸化されて Cl<sub>2</sub> になり KMnO<sub>4</sub> の消費量が過大になる。硝酸はそれ自身が酸化剤なので還元剤の一部を酸化してしまう。硫酸の SO<sub>4</sub><sup>2−</sup> の S はすでに ＋6 で最高の酸化数なのでこの条件では反応しない。</p>
+<p>酸性にするのに硫酸を使う理由も出題される。塩酸を使うと Cl<sup>−</sup> が MnO<sub>4</sub><sup>−</sup> に酸化されて Cl<sub>2</sub> になり KMnO<sub>4</sub> の消費量が過大になる。硝酸はそれ自身が酸化剤なので還元剤の一部を酸化してしまう。硫酸の SO<sub>4</sub><sup>2−</sup> の S はすでに ＋6 で最高の酸化数なのでこの条件では反応しない。中性や塩基性の条件では MnO<sub>4</sub><sup>−</sup> は MnO<sub>2</sub> までしか還元されず、受け取る電子は3個になる。</p>
 
 <aside class="an an-biz"><b>スタートアップで言えば</b>
 <p class="an-h">半反応式の足し算は株式交換の比率計算である</p>
@@ -346,13 +346,11 @@
 半反応式は O を H₂O で合わせ H を H⁺ で合わせ電荷を e⁻ で合わせる。e⁻ の数をそろえて足すとイオン反応式になる。<br>
 酸化還元滴定は受け取る e⁻ の物質量＝渡す e⁻ の物質量で解く。KMnO₄ 滴定は無色から薄い赤紫で終点とする。</div>
 
-<h2 id="s9">残っている問い</h2>
+<h2 id="s9">考えるための問い</h2>
+<p>答えが一つに定まらない問いを挙げた。手がかりは本文の内容から示した。</p>
 <ul>
-<li class="tb-vnote">酸化数は共有電子対を電気陰性度の大きい原子に全部割り当てる約束から計算した帳簿上の値である。実際の原子の電荷とは一致しない。KMnO<sub>4</sub> の Mn に ＋7 の電荷が実在するわけではない。</li>
-<li class="tb-vnote">KMnO<sub>4</sub> は中性や塩基性では MnO<sub>2</sub> まで還元され受け取る電子は3個になる。共通テストは硫酸酸性の5個を前提とするが条件で係数が変わる点は化学で扱う。</li>
-<li class="tb-vnote">ハロゲンの酸化力の順や H<sub>2</sub>O<sub>2</sub> がどの相手まで酸化剤として働くかは標準電極電位で定量的に比べられる。電極電位は高校の範囲外である。</li>
-<li class="tb-vnote">Super COURSE50 の削減率43%は内容積 12 m<sup>3</sup> の試験高炉での値である。数千 m<sup>3</sup> 規模の実機高炉で同じ削減率が得られるかは出典で確認できていない。</li>
-<li class="tb-vnote">HYBRIT の工業規模の設備がいつ稼働するかは計画の変更が報じられており出典で確定していない。</li>
+<li class="tb-vnote"><strong>実際の電荷とは異なる酸化数を、反応の説明に使ってよいか。</strong> 本文は酸化数を、共有電子対を電気陰性度の大きい原子に全部割り当てたと仮定した電荷と定義する。HCl の電子対は実際には共有されており、電子の移動を数値で追える点と実際の電荷との差のどちらを重く見るかで評価が異なる。</li>
+<li class="tb-vnote"><strong>水素還元製鉄は、CO<sub>2</sub> を出さない製鉄といえるか。</strong> 本文は還元剤を水素に置き換えると生成物は水になるとする一方、水素の製造に要する電力の確保が実用化の条件であるとする。反応の段階だけを見るか、水素の製造までを含めて見るかで評価が異なる。</li>
 </ul>
 
 <h2 id="s10">出典</h2>

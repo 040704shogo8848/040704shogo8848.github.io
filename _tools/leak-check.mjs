@@ -95,6 +95,17 @@ const ACCEPTED = [
     why: '人脈ドセの表内。2026-07-27 時点で公開済み。ただし現行クライアントの常務名が'
       + '「当方ヒアリング」と併記されており、第三者情報としては要再判断（Shogo に報告済み）',
   },
+  {
+    file: '020_personal/02K_world_history/chapters/00_doors.html',
+    hit: 'デューデリジェンス',
+    why: '世界史の教科書の比喩の見出し「史料批判はデューデリジェンスである」。一般名詞としての用法で、'
+      + '取引や案件の情報は含まない。2026-10-29 レビュー',
+  },
+  {
+    file: '020_personal/02K_world_history/data/chapters/00_doors.frag',
+    hit: 'デューデリジェンス',
+    why: '上と同じ見出しの正本（frag）。2026-10-29 レビュー',
+  },
 ];
 
 const accepted = (file, hit) => ACCEPTED.some((a) => a.file === file && a.hit === hit);

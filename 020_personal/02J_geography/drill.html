@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>理解度テストと用語集</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+
+  /* ── 02H heidegger: German terms, quotations, definitions, demos ────────────
+     The demos share one script (../demos.js). Their colours come from the
+     tokens below; the three ecstases of time always keep the same hue. */
+  :root{
+    --ink-2:var(--sub); --ink-3:var(--muted); --rule:var(--line); --paper:var(--dim); --paper-2:#EFEDE6;
+    --spruce:var(--accent); --spruce-soft:var(--chip);
+    --fut:#2563EB; --past:#B45309; --pres:#0F766E; --warn:#9F1239;
+    --fut-soft:#EEF2FF; --past-soft:#FDF6E7; --pres-soft:#ECF6F5; --warn-soft:#FDF0F3;
+    --f-body:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+  }
+  .de{font-family:Georgia,"Times New Roman",serif;font-style:italic;color:var(--sub);margin:0 .15em}
+  .mono{font-variant-numeric:tabular-nums;font-size:.92em}
+  .sz-sec{font-size:12px;color:var(--muted);letter-spacing:.06em;margin:-6px 0 18px}
+  .term{font-weight:700}
+  .fut{color:var(--fut)} .past{color:var(--past)} .pres{color:var(--pres)}
+  td.k{font-weight:600;white-space:nowrap}
+  .note{font-size:13px;color:var(--sub)}
+  ul.plain,ol.plain{padding-left:24px}
+
+  .orig{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--ink);
+    border-radius:0 10px 10px 0;padding:13px 18px;margin:20px 0}
+  .orig .de{display:block;margin:0;font-size:16px;line-height:1.6;color:var(--ink)}
+  .orig .ja{display:block;margin-top:6px;font-size:14.5px}
+  .orig .src{display:block;margin-top:4px;font-size:11px;color:var(--muted);letter-spacing:.06em}
+
+  .defs{display:grid;grid-template-columns:minmax(130px,190px) 1fr;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;margin:20px 0;overflow:hidden}
+  .defs > div{padding:10px 14px;border-bottom:1px solid var(--line);font-size:14px;line-height:1.75}
+  .defs > div:nth-last-child(-n+2){border-bottom:none}
+  .defs > div:nth-child(odd){font-weight:700;background:#FCFBF8}
+  .defs > div:nth-child(odd) .de{display:block;margin:0;font-weight:400;font-size:13px}
+  .defs > div:nth-child(even){color:var(--sub)}
+  @media(max-width:640px){ .defs{grid-template-columns:1fr}
+    .defs > div:nth-child(odd){border-bottom:none;padding-bottom:2px}
+    .defs > div:nth-last-child(2){border-bottom:none} }
+
+  .myth{display:grid;gap:0;margin:22px 0;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .myth > div{display:grid;grid-template-columns:3.6em 1fr;gap:10px;padding:9px 16px;font-size:13.5px;line-height:1.75}
+  .myth > div.o{border-bottom:1px solid var(--line)}
+  .myth > div:last-child{border-bottom:none}
+  .myth b{font-size:11px;letter-spacing:.08em;padding-top:3px}
+  .myth .x b{color:var(--warn)} .myth .o b{color:var(--pres)}
+
+  .demo{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--accent);
+    border-radius:10px;padding:16px 18px 14px;margin:26px 0}
+  .demo-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:8px}
+  .demo-h .tag{font-size:10.5px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+  .demo-h strong{font-size:15.5px}
+  .demo-h .sub{font-size:12.5px;color:var(--muted)}
+  .ctrl{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .ctrl button,.chip{font:inherit;font-size:13px;line-height:1.5;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer}
+  .ctrl button:hover{border-color:var(--accent)}
+  .ctrl button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .ctrl button[aria-pressed="true"] .de{color:#fff}
+  .readout{background:var(--dim);border-radius:8px;padding:10px 14px;font-size:14px;line-height:1.8;color:var(--sub);min-height:3.4em}
+  .readout b{color:var(--ink)}
+  .svgwrap{overflow-x:auto}
+  .svgwrap svg{display:block;width:100%;max-width:720px;margin:0 auto;height:auto;min-width:520px}
+  .svgwrap svg text,.demo canvas{font-family:-apple-system,"Hiragino Sans",sans-serif}
+  svg text{fill:var(--ink)}
+  label.range{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub);flex-wrap:wrap}
+  label.range input{flex:1;min-width:140px;accent-color:var(--accent)}
+  .plan-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+  .plan-cell{font:inherit;text-align:left;border:1px solid var(--line);border-radius:6px;padding:8px 9px 10px;
+    min-height:88px;font-size:12px;line-height:1.5;color:var(--sub);background:var(--card);cursor:pointer}
+  .plan-cell.pub{background:var(--ink);border-color:var(--ink);color:#fff}
+  .plan-cell.unpub{border-style:dashed}
+  .plan-cell .mono{display:block;font-size:10.5px;margin-bottom:3px;opacity:.75}
+  @media(max-width:640px){ .plan-row{grid-template-columns:repeat(3,minmax(0,1fr))} }
+
+  .q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:12px 0}
+  .q p.qq{font-weight:600;margin:0 0 8px;font-size:14.5px}
+  .q .opts{display:grid;gap:6px}
+  .q .opts button{font:inherit;font-size:14px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:7px;padding:7px 12px;cursor:pointer;color:var(--ink)}
+  .q .opts button:hover{border-color:var(--accent)}
+  .q .opts button.ok{border-color:var(--pres);background:var(--pres-soft)}
+  .q .opts button.ng{border-color:var(--warn);background:var(--warn-soft)}
+  .q .why{margin-top:8px;font-size:13.5px;color:var(--sub)}
+  .search{font:inherit;width:100%;max-width:420px;padding:8px 13px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+  .gl{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-top:12px;overflow:hidden}
+  .gl-row{display:grid;grid-template-columns:minmax(120px,170px) minmax(110px,170px) 1fr;gap:12px;padding:9px 16px;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.7}
+  .gl-row:last-child{border-bottom:none}
+  .gl-row .de{margin:0;color:var(--ink)}
+  .gl-row .j{font-weight:700}
+  .gl-row .alt{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+  .gl-row a{font-size:12px;margin-left:6px;white-space:nowrap}
+  @media(max-width:640px){ .gl-row{grid-template-columns:1fr;gap:2px} }
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a><a href="../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a><a href="../../030_ideas/034_foundation/index.html">foundation</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../021_profile/index.html">profile</a><a href="../02A_plan/index.html">plan</a><a href="../023_travel/index.html">travel</a><a href="../027_cinema/index.html">cinema</a><a href="../02B_reading/index.html">reading</a><a href="../024_method/index.html">method</a><a href="../026_handbook/index.html">handbook</a><a href="../025_fitness/index.html">fitness</a><a href="../028_english/index.html">english</a><a href="../029_mental_math/index.html">mental math</a><a href="../02C_chemistry/index.html">chemistry</a><a href="../02D_probability/index.html">probability</a><a href="../02E_calculus/index.html">calculus</a><a href="../02F_linear_algebra/index.html">linear algebra</a><a href="../02G_physics/index.html">physics</a><a href="../02H_heidegger/index.html">heidegger</a><a href="../02I_quiz/index.html">quiz</a><a href="index.html">geography</a><a href="../02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../030_ideas/034_foundation/index.html">foundation</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../024_method/index.html">method</a>
+    <a class="snav-a" href="../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../028_english/index.html">english</a>
+    <a class="snav-a" href="../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="index.html">geography</a>
+    <a class="snav-a" href="../02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../index.html">shogo</a> / personal / <a href="index.html">02J geography</a> / 確認と用語</div>
+  <div class="tb-ch">確認と用語</div>
+  <h1>理解度テストと用語集</h1>
+  <p class="tb-thesis">選択肢を選ぶと正誤と解説を表示する。誤答の場合は該当する章を読み直す。用語集は用語・読み・説明のいずれでも検索できる。</p>
+
+  <h2 id="s1">理解度テスト</h2>
+  <p class="note">全30問。共通テストの過去問ではなく、本書の各章の内容から作成した問題である。</p>
+  <div id="quizBox"></div>
+  <div class="readout" id="quizScore" style="margin-top:12px"></div>
+
+  <h2 id="s2">用語集</h2>
+  <p>全章の重要語209語を章の順に並べた。説明は各章の本文に基づく。</p>
+  <input class="search" id="glQ" type="search" placeholder="例：扇状地、ケッペン、EEZ" aria-label="用語を検索">
+  <div class="note" id="glN" style="margin-top:8px"></div>
+  <div class="gl" id="gl"></div>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="chapters/22_national-land.html">← これからの日本の国土像</a><a class="tb-nav-a" href="index.html">目次 →</a></div>
+</div>
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const QZ=[{"q": "メルカトル図法の世界全図で\u3001グリーンランドが南アメリカ大陸に近い大きさに描かれる理由として最も適当なものを1つ選べ。", "o": ["正距方位図法と同じく中心からの距離を正しく示すため", "グリーンランドの実際の面積が南アメリカ大陸に近いため", "正角を保つために高緯度ほど緯線の間隔を広げ\u3001面積が拡大されるため", "経線を極で1点に集め\u3001高緯度の形を保つため"], "a": 2, "x": "メルカトル図法は正角を保つため高緯度ほど緯線の間隔を広げる。その代償として高緯度ほど面積が拡大される。", "ch": 0, "f": "00_position.html", "tt": "地球上の位置と時差"}, {"q": "東京からサンフランシスコへの最短経路をメルカトル図法の地図に描いた。その形として最も適当なものを1つ選べ。", "o": ["2地点を結ぶ直線になる", "北へふくらんだ曲線になる", "南へふくらんだ曲線になる", "いったん赤道まで南下する折れ線になる"], "a": 1, "x": "最短経路は大圏航路であり\u3001メルカトル図法の上では極の側へふくらんだ曲線になる。図上の直線は等角航路である。", "ch": 0, "f": "00_position.html", "tt": "地球上の位置と時差"}, {"q": "排他的経済水域で沿岸国に認められる権利として最も適当なものを1つ選べ。", "o": ["外国船の航行を沿岸国の許可制にする権利", "上空を外国の航空機が飛ぶことを禁止する権利", "外国による海底ケーブルの敷設を禁止する権利", "水産資源と鉱物資源を独占的に利用する権利"], "a": 3, "x": "排他的とは資源について他国を排除するという意味である。航行・上空飛行・海底ケーブルの敷設は外国にも認められる。", "ch": 1, "f": "01_territory.html", "tt": "日本の位置と領域・国家間の結び付き"}, {"q": "2万5千分1地形図と20万分1地勢図を比べた記述として最も適当なものを1つ選べ。", "o": ["2万5千分1地形図のほうが大縮尺であり\u3001狭い範囲を詳しく示す", "2万5千分1地形図のほうが小縮尺であり\u3001広い範囲を示す", "20万分1地勢図のほうが大縮尺であり\u3001建物を1棟ずつ示す", "縮尺の分母が大きいほど地図上の1cmは実際の短い距離を表す"], "a": 0, "x": "分母が小さい縮尺を大縮尺と呼ぶ。大縮尺の地図は示す範囲が狭いかわりに地表の様子を詳しく示す。", "ch": 2, "f": "02_maps-gis.html", "tt": "地図と地理情報システム"}, {"q": "ある地域の食習慣を\u3001その地域の気候と宗教の成り立ちの中で捉え\u3001自分の文化と優劣をつけずに説明する態度を何と呼ぶか。最も適当なものを1つ選べ。", "o": ["自文化中心主義", "同化主義", "文化相対主義", "グローカル化"], "a": 2, "x": "文化相対主義は文化が成り立った環境と歴史の中でその文化を捉える考え方である。自文化の基準で他の文化を劣ったものとみなす態度は自文化中心主義である。", "ch": 3, "f": "03_life-culture.html", "tt": "生活文化の多様性と国際理解"}, {"q": "先進国の政府が国際機関への拠出を通じて発展途上国を支援する形態として最も適当なものを1つ選べ。", "o": ["二国間援助", "多国間援助", "フェアトレード", "NGOによる民間協力"], "a": 1, "x": "ODAは相手国へ直接提供する二国間援助と\u3001国際機関への拠出を通じた多国間援助に分かれる。", "ch": 4, "f": "04_global-issues.html", "tt": "地球的課題と国際協力"}, {"q": "短時間の強い雨で\u3001市街地に降った雨水が下水道や水路で排水しきれずにあふれる氾濫を何と呼ぶか。最も適当なものを1つ選べ。", "o": ["外水氾濫", "高潮", "液状化", "内水氾濫"], "a": 3, "x": "内水氾濫は堤防の内側に降った雨が排水しきれずにあふれる氾濫である。河川の水が堤防を越えてあふれる氾濫は外水氾濫と呼ぶ。", "ch": 5, "f": "05_disaster.html", "tt": "自然環境と防災"}, {"q": "マグニチュードと震度の関係について述べた文として最も適当なものを1つ選べ。", "o": ["1つの地震でマグニチュードは1つの値であるが\u3001震度は地点ごとに異なる", "1つの地震で震度は1つの値であるが\u3001マグニチュードは地点ごとに異なる", "マグニチュードが大きい地震では\u3001すべての地点の震度が大きくなる", "震度は地震そのものの規模を表し\u3001マグニチュードは揺れの強さを表す"], "a": 0, "x": "マグニチュードは地震そのものの規模を表し\u3001震度はある地点での揺れの強さを表す。同じ地震でも震源からの距離や地盤によって震度は異なる。", "ch": 5, "f": "05_disaster.html", "tt": "自然環境と防災"}, {"q": "GISで商店や病院から半径500mの範囲を描き\u3001その範囲の外に住む人口を合算した。この分析の名称として最も適当なものを1つ選べ。", "o": ["フォールスカラー", "バッファ分析", "階級区分図", "ハザードマップ"], "a": 1, "x": "施設からの距離で範囲を描く分析をバッファ分析と呼ぶ。地域メッシュ統計と組み合わせると徒歩圏の外に住む人口を算出できる。", "ch": 6, "f": "06_local-survey.html", "tt": "生活圏の調査と地域の展望"}, {"q": "大地形の区分と\u3001その地域に多い資源の組合せとして最も適当なものを1つ選べ。", "o": ["新期造山帯 ― 石炭", "古期造山帯 ― 鉄鉱石", "安定陸塊 ― 石油", "安定陸塊 ― 鉄鉱石"], "a": 3, "x": "資源の傾向は安定陸塊に鉄鉱石\u3001古期造山帯に石炭\u3001新期造山帯とその周辺に石油と銅である。", "ch": 7, "f": "07_landforms.html", "tt": "地形"}, {"q": "石灰岩が雨水に溶かされてできた地形のうち\u3001地表にできたすり鉢状のくぼ地を何と呼ぶか。最も適当なものを1つ選べ。", "o": ["カール", "メサ", "ドリーネ", "ワジ"], "a": 2, "x": "石灰岩が溶ける作用を溶食と呼び\u3001溶食でできた地形をカルスト地形と呼ぶ。ドリーネはその代表である。カールは山頂付近の氷河が斜面を削ったお椀形のくぼ地である。", "ch": 7, "f": "07_landforms.html", "tt": "地形"}, {"q": "サバナ気候の地域で\u3001雨季と乾季が1年の中で交代する理由として最も適当なものを1つ選べ。", "o": ["1年中\u3001偏西風が海から湿った空気を運ぶため", "寒流の沿岸で\u3001大気が1年中安定するため", "標高が高く\u3001気温の逓減率の影響を受けるため", "夏は熱帯収束帯に\u3001冬は亜熱帯高圧帯に入るため"], "a": 3, "x": "気圧帯は太陽が真上から照らす緯度に合わせて季節移動する。熱帯収束帯に入る夏が雨季\u3001亜熱帯高圧帯に入る冬が乾季になる。", "ch": 8, "f": "08_climate.html", "tt": "気候と生態系"}, {"q": "土壌と\u3001その分布地域と母岩の組合せとして最も適当なものを1つ選べ。", "o": ["テラロッサ ― 地中海沿岸 ― 石灰岩", "テラローシャ ― デカン高原 ― 石灰岩", "レグール ― ブラジル高原南部 ― 玄武岩", "テラロッサ ― ブラジル高原南部 ― 玄武岩"], "a": 0, "x": "テラロッサは石灰岩が風化した赤色の土壌で地中海沿岸に分布する。テラローシャはブラジル高原南部\u3001レグールはデカン高原の土壌で\u3001いずれも玄武岩などが母岩である。", "ch": 8, "f": "08_climate.html", "tt": "気候と生態系"}, {"q": "地球環境問題に関する条約と\u3001その主な対象の組合せとして最も適当なものを1つ選べ。", "o": ["京都議定書 ― 酸性雨の原因物質の削減", "モントリオール議定書 ― オゾン層を破壊する物質の規制", "長距離越境大気汚染条約 ― 温室効果ガスの削減", "ウィーン条約 ― 砂漠化の防止"], "a": 1, "x": "1985年のウィーン条約がオゾン層保護の枠組みを定め\u30011987年のモントリオール議定書がフロンなどの規制物質と削減の日程を定めた。", "ch": 9, "f": "09_environment.html", "tt": "地球環境問題"}, {"q": "1960年代に発展途上国で進んだ緑の革命の説明として最も適当なものを1つ選べ。", "o": ["焼畑の面積を広げて穀物の生産量を増やした", "化学肥料を使わない有機農業に転換して土壌を保全した", "高収量品種と化学肥料と灌漑を組み合わせて単位面積当たりの収量を高めた", "穀物の栽培をやめて輸出向けの商品作物に特化した"], "a": 2, "x": "緑の革命は高収量品種・化学肥料・灌漑の組合せで穀物の土地生産性を高めた技術革新である。", "ch": 10, "f": "10_agriculture.html", "tt": "農林水産業と食料問題"}, {"q": "寒流と暖流がぶつかり\u3001栄養分の多い水とさまざまな魚種が集まる海域を何と呼ぶか。最も適当なものを1つ選べ。", "o": ["バンク", "大陸棚", "湧昇流", "潮目"], "a": 3, "x": "寒流と暖流がぶつかる海域を潮目または潮境と呼ぶ。バンクと大陸棚は浅い海底\u3001湧昇流は深層の水がわき上がる流れである。", "ch": 10, "f": "10_agriculture.html", "tt": "農林水産業と食料問題"}, {"q": "一次エネルギーと二次エネルギーのうち\u3001二次エネルギーにあたるものとして最も適当なものを1つ選べ。", "o": ["電力", "原油", "石炭", "天然ガス"], "a": 0, "x": "自然界から得たままの形のエネルギーが一次エネルギーで\u3001それを使いやすい形に変換したものが二次エネルギーである。電力は二次エネルギーである。", "ch": 11, "f": "11_resources.html", "tt": "資源とエネルギー"}, {"q": "天然ガスを海外から海を越えて輸入する際に\u3001マイナス160℃前後まで冷やして液体にする理由として最も適当なものを1つ選べ。", "o": ["気体のままではかさが大きく\u3001海を越えて運ぶのが難しいため", "液体にすると燃焼時の二酸化炭素の排出量がゼロになるため", "国際条約で気体のままの輸送が禁止されているため", "液体にすると石油と混ぜて同じタンカーで運べるため"], "a": 0, "x": "天然ガスは気体のままではかさが大きい。陸続きの地域ではパイプラインで送り\u3001海を越える場合は液化天然ガス（LNG）として専用の船で運ぶ。", "ch": 11, "f": "11_resources.html", "tt": "資源とエネルギー"}, {"q": "設計をアメリカ合衆国で行い\u3001部品を台湾で生産し\u3001組立をベトナムで行う生産の仕組みとして最も適当なものを1つ選べ。", "o": ["垂直分業", "水平分業", "工程間分業", "産業の空洞化"], "a": 2, "x": "1つの製品の工程を複数の国に分ける分業を工程間分業と呼ぶ。多国籍企業は工程ごとに費用の最も低い国を選ぶ。", "ch": 12, "f": "12_industry.html", "tt": "工業と第三次産業"}, {"q": "シンガポール港のコンテナ取扱量が多い理由として最も適当なものを1つ選べ。", "o": ["マラッカ海峡の出口にあり\u3001周辺国の貨物を積み替えるハブ港となったため", "国内に大規模な工業地域があり\u3001輸出貨物を自国で生産するため", "パナマ運河と直結し\u3001大西洋の貨物が集まるため", "国内の人口が多く\u3001輸入貨物の消費地として大きいため"], "a": 0, "x": "大型船は寄港地を絞り\u3001寄港地から外れた港の貨物はハブ港で積み替えられる。この積み替えをトランシップと呼ぶ。", "ch": 13, "f": "13_transport.html", "tt": "交通・通信と観光"}, {"q": "ある市では出生数が死亡数を下回ったが\u30011年間で人口が増えた。その理由として最も適当なものを1つ選べ。", "o": ["自然増加が社会減少を上回ったため", "合計特殊出生率が置き換え水準を上回ったため", "転入数が転出数を上回り\u3001その差が自然減少より大きかったため", "老年人口の割合が上がったため"], "a": 2, "x": "人口の増減は出生と死亡による自然増加と\u3001転入と転出による社会増加の合計で決まる。自然減少でも社会増加が大きければ人口は増える。", "ch": 14, "f": "14_population.html", "tt": "人口"}, {"q": "クリスタラーの中心地理論について述べた文として最も適当なものを1つ選べ。", "o": ["高次の財は需要の閾値が小さく\u3001小さな中心地にも置ける", "高次の財は需要の閾値が大きく\u3001少数の大きな中心地にしか置けない", "低次の中心地ほど数が少なく\u3001互いの間隔が広い", "中心地は河川に沿って一列に並ぶ"], "a": 1, "x": "日用品のような低次の財は閾値が小さく\u3001小さな中心地にも置ける。百貨店のような高次の財は閾値が大きく\u3001大きな中心地にしか置けない。その結果\u3001少数の高次の中心地と多数の低次の中心地からなる階層が生じる。", "ch": 15, "f": "15_settlements.html", "tt": "村落と都市"}, {"q": "インナーシティが再開発されて地価と家賃が上がり\u3001高所得層が流入して元の住民が転出を迫られる現象を何と呼ぶか。最も適当なものを1つ選べ。", "o": ["スプロール現象", "ドーナツ化現象", "過剰都市化", "ジェントリフィケーション"], "a": 3, "x": "ジェントリフィケーションは再開発が新たな問題の原因にもなる例である。スプロール現象は郊外で市街地が虫食い状に広がる現象である。", "ch": 15, "f": "15_settlements.html", "tt": "村落と都市"}, {"q": "民族を区分する主な指標として最も適当なものを1つ選べ。", "o": ["皮膚の色などの身体的な特徴", "言語や宗教などの文化と\u3001同じ集団に属するという意識", "その人がもつ国籍", "その人が住む国の国境"], "a": 1, "x": "民族は言語・宗教・生活様式などの文化を共有し\u3001帰属意識をもつ集団である。民族の分布は国境と一致しない。", "ch": 16, "f": "16_ethnicity.html", "tt": "民族・宗教と領土問題"}, {"q": "中国の黒竜江省の黒河と雲南省の騰衝を結ぶ胡煥庸線が示すものとして最も適当なものを1つ選べ。", "o": ["北の畑作と南の稲作の境界", "経済特区が置かれた沿岸部と内陸部の境界", "人口の多い東南部と人口の少ない北西部の境界", "漢族と少数民族の居住地の境界"], "a": 2, "x": "胡煥庸線の東側に中国の人口の大部分が集まる。北の畑作と南の稲作を分けるのは秦嶺・淮河線である。", "ch": 17, "f": "17_east-asia.html", "tt": "地域区分と東アジア"}, {"q": "1970年代以降の東南アジア諸国が\u3001輸出加工区に外国企業を誘致して工業製品を輸出する方式に転換した。この方式の名称として最も適当なものを1つ選べ。", "o": ["輸入代替型工業化", "モノカルチャー経済", "ドイモイ", "輸出指向型工業化"], "a": 3, "x": "独立後はまず輸入していた工業製品を国内で生産する輸入代替型工業化を進め\u3001その後に輸出指向型工業化へ転換した。", "ch": 18, "f": "18_south-asia.html", "tt": "東南アジアと南アジア"}, {"q": "資源の豊かな国がかえって経済成長や政治の安定に恵まれない現象を何と呼ぶか。最も適当なものを1つ選べ。", "o": ["資源の呪い", "資源ナショナリズム", "産業の多角化", "エネルギー革命"], "a": 0, "x": "資源の呪いは資源収入への依存が他の産業の成長を妨げ\u3001資源をめぐる対立を生む現象である。資源ナショナリズムは資源国が自国の資源を自ら管理しようとする動きである。", "ch": 19, "f": "19_west-asia-africa.html", "tt": "西アジア・中央アジアとアフリカ"}, {"q": "地中海式農業で\u3001夏はオリーブやぶどうなどの樹木作物を育て\u3001小麦を冬に栽培する理由として最も適当なものを1つ選べ。", "o": ["夏に熱帯収束帯に入って雨が多く\u3001冬は乾燥するため", "夏に亜熱帯高圧帯に覆われて乾燥し\u3001冬は偏西風帯に入って雨が降るため", "1年中偏西風が暖流で暖められた湿った空気を運ぶため", "冬に大陸から乾いた季節風が吹き\u3001夏は海から湿った季節風が吹くため"], "a": 1, "x": "地中海沿岸は夏に乾燥するため乾燥に強い樹木作物を育て\u3001冬の雨を利用して小麦を栽培する。", "ch": 20, "f": "20_europe-russia.html", "tt": "ヨーロッパとロシア"}, {"q": "アメリカ合衆国で\u3001西経100度付近より西側では放牧や灌漑農業が中心になる。その理由として最も適当なものを1つ選べ。", "o": ["ロッキー山脈の火山灰で土壌がやせているため", "メキシコ湾からの湿った空気が届きにくく\u3001年降水量が少ないため", "寒流の影響で夏の気温が低く\u3001作物が育たないため", "タウンシップ制が西側では実施されなかったため"], "a": 1, "x": "西経100度の経線付近はメキシコ湾から北へ流れ込む湿った空気が届く西の限界にあたる。西側は年降水量がおおむね500mmを下回り\u3001雨水に頼る畑作が難しい。", "ch": 21, "f": "21_americas-oceania.html", "tt": "南北アメリカとオセアニア"}, {"q": "主要な幹線道路や鉄道を複数の経路で整備し\u3001一方が被災しても物流を維持できるようにしておく考え方を何と呼ぶか。最も適当なものを1つ選べ。", "o": ["リダンダンシー", "拠点開発構想", "コンパクトシティ", "関係人口"], "a": 0, "x": "リダンダンシーは1つの経路や施設が使えなくなっても代わりが働くように\u3001複数の経路や機能を備えておくことである。国土強靱化を進める手段の1つである。", "ch": 22, "f": "22_national-land.html", "tt": "これからの日本の国土像"}];
+const GL=[{"t": "緯度", "r": "latitude", "d": "赤道を0度として南北にそれぞれ90度まで測った角度である。", "ch": 0, "f": "00_position.html", "l": "序章"}, {"t": "経度", "r": "longitude", "d": "本初子午線を0度として東西にそれぞれ180度まで測った角度である。", "ch": 0, "f": "00_position.html", "l": "序章"}, {"t": "対蹠点", "r": "たいせきてん", "d": "地球の中心をはさんだ反対側の地点で\u3001緯度と経度の向きを入れ替え\u3001経度は180度から引いて求める。", "ch": 0, "f": "00_position.html", "l": "序章"}, {"t": "大圏航路", "r": "great circle route", "d": "地球の中心を通る平面で切った円に沿う経路で\u3001球面上の2地点を結ぶ最短の経路である。", "ch": 0, "f": "00_position.html", "l": "序章"}, {"t": "等角航路", "r": "rhumb line", "d": "経線と常に一定の角度で交わる経路で\u3001メルカトル図法の上では直線になる。", "ch": 0, "f": "00_position.html", "l": "序章"}, {"t": "正距方位図法", "r": "azimuthal equidistant projection", "d": "中心からの距離と方位が正しく表される図法である。", "ch": 0, "f": "00_position.html", "l": "序章"}, {"t": "標準時", "r": "standard time", "d": "国や地域が共通に使うよう定めた時刻で\u3001基準の経線を標準時子午線と呼ぶ。", "ch": 0, "f": "00_position.html", "l": "序章"}, {"t": "日付変更線", "r": "International Date Line", "d": "経度180度付近に設けた日付を切り替える線である。", "ch": 0, "f": "00_position.html", "l": "序章"}, {"t": "メルカトル図法", "r": "Mercator projection", "d": "1569年に考案された正角の円筒図法で\u3001等角航路が直線になるかわりに高緯度ほど面積が拡大される。", "ch": 0, "f": "00_position.html", "l": "序章"}, {"t": "正積図法", "r": "equal-area projection", "d": "地図上の面積の比が実際の面積の比と等しい図法で\u3001モルワイデ図法やサンソン図法が該当する。", "ch": 0, "f": "00_position.html", "l": "序章"}, {"t": "国家の三要素", "r": "", "d": "領域・国民・主権の3つで\u3001国家が成り立つ条件である。", "ch": 1, "f": "01_territory.html", "l": "第1章"}, {"t": "基線", "r": "baseline", "d": "領海や排他的経済水域の距離を測る起点の線である。", "ch": 1, "f": "01_territory.html", "l": "第1章"}, {"t": "排他的経済水域", "r": "EEZ", "d": "基線から200海里までのうち領海を除く水域で\u3001沿岸国が水産資源と鉱物資源を独占的に利用できる。", "ch": 1, "f": "01_territory.html", "l": "第1章"}, {"t": "北方領土", "r": "", "d": "択捉島・国後島・色丹島・歯舞群島の4島で\u3001日本固有の領土であるがロシアが不法占拠している。", "ch": 1, "f": "01_territory.html", "l": "第1章"}, {"t": "竹島", "r": "", "d": "島根県の隠岐諸島の北西にある日本固有の領土で\u3001韓国が不法占拠している。", "ch": 1, "f": "01_territory.html", "l": "第1章"}, {"t": "尖閣諸島", "r": "", "d": "沖縄県の石垣島の北方にある日本固有の領土で\u3001日本政府は解決すべき領有権の問題は存在しないとの立場である。", "ch": 1, "f": "01_territory.html", "l": "第1章"}, {"t": "自然的国境", "r": "natural boundary", "d": "山脈・河川・湖沼・海洋などの自然の地形に沿う国境である。", "ch": 1, "f": "01_territory.html", "l": "第1章"}, {"t": "数理的国境", "r": "mathematical boundary", "d": "人為的国境のうち緯線や経線に沿って直線で引いた国境である。", "ch": 1, "f": "01_territory.html", "l": "第1章"}, {"t": "主題図", "r": "thematic map", "d": "特定の主題を選んで表した地図である。", "ch": 2, "f": "02_maps-gis.html", "l": "第2章"}, {"t": "縮尺", "r": "scale", "d": "地図上の長さと実際の長さの比で\u3001分母が小さいものを大縮尺と呼ぶ。", "ch": 2, "f": "02_maps-gis.html", "l": "第2章"}, {"t": "等高線", "r": "contour line", "d": "同じ標高の地点を結んだ線で\u3001主曲線5本ごとに太い計曲線を描く。", "ch": 2, "f": "02_maps-gis.html", "l": "第2章"}, {"t": "階級区分図", "r": "choropleth map", "d": "地域ごとの割合などの相対値を階級に分けて色で塗り分ける主題図である。", "ch": 2, "f": "02_maps-gis.html", "l": "第2章"}, {"t": "ドットマップ", "r": "dot map", "d": "人口などの絶対値を点の数で示す主題図である。", "ch": 2, "f": "02_maps-gis.html", "l": "第2章"}, {"t": "地理情報システム", "r": "GIS", "d": "位置の情報と属性の情報をコンピュータで結び付けて管理し\u3001重ね合わせて分析する仕組みである。", "ch": 2, "f": "02_maps-gis.html", "l": "第2章"}, {"t": "ラスタデータ", "r": "raster data", "d": "方眼の1マスごとに値をもつデータで\u3001衛星画像が代表である。", "ch": 2, "f": "02_maps-gis.html", "l": "第2章"}, {"t": "リモートセンシング", "r": "remote sensing", "d": "離れた場所から対象に触れずに観測する技術である。", "ch": 2, "f": "02_maps-gis.html", "l": "第2章"}, {"t": "GNSS", "r": "全球測位衛星システム", "d": "人工衛星の電波を受信して現在地を求める仕組みである。", "ch": 2, "f": "02_maps-gis.html", "l": "第2章"}, {"t": "日干しれんが", "r": "adobe", "d": "土を固めて天日で乾かしたれんがで\u3001樹木の乏しい乾燥地の住居に使われる。", "ch": 3, "f": "03_life-culture.html", "l": "第3章"}, {"t": "世界宗教", "r": "world religion", "d": "民族や国の枠を越えて広まった宗教で\u3001キリスト教・イスラーム・仏教が該当する。", "ch": 3, "f": "03_life-culture.html", "l": "第3章"}, {"t": "民族宗教", "r": "ethnic religion", "d": "特定の民族と結びついた宗教で\u3001ヒンドゥー教・ユダヤ教が代表である。", "ch": 3, "f": "03_life-culture.html", "l": "第3章"}, {"t": "ラマダーン", "r": "Ramadan", "d": "イスラーム暦の第9月で\u3001夜明けから日没まで飲食を断つ。", "ch": 3, "f": "03_life-culture.html", "l": "第3章"}, {"t": "ハラール", "r": "halal", "d": "イスラームの教えで許されたもので\u3001教えに沿って処理された食品を指す。", "ch": 3, "f": "03_life-culture.html", "l": "第3章"}, {"t": "焼畑農業", "r": "shifting cultivation", "d": "森を焼いた灰を肥料にして作物を育てる農業である。", "ch": 3, "f": "03_life-culture.html", "l": "第3章"}, {"t": "グローカル化", "r": "glocalization", "d": "世界共通の仕組みと地域の文化が組み合わさる現象である。", "ch": 3, "f": "03_life-culture.html", "l": "第3章"}, {"t": "自文化中心主義", "r": "エスノセントリズム", "d": "自分の文化の基準でほかの文化を評価し\u3001劣ったものとみなす態度である。", "ch": 3, "f": "03_life-culture.html", "l": "第3章"}, {"t": "文化相対主義", "r": "cultural relativism", "d": "それぞれの文化を成り立った環境と歴史の中で捉え\u3001優劣をつけない考え方である。", "ch": 3, "f": "03_life-culture.html", "l": "第3章"}, {"t": "地球的課題", "r": "global issues", "d": "一国の努力だけでは解決できず\u3001複数の国や地域にまたがって現れる問題である。", "ch": 4, "f": "04_global-issues.html", "l": "第4章"}, {"t": "南北問題", "r": "North-South problem", "d": "先進国と発展途上国の経済格差の問題である。", "ch": 4, "f": "04_global-issues.html", "l": "第4章"}, {"t": "南南問題", "r": "South-South problem", "d": "発展途上国どうしの間で生じた経済格差の問題である。", "ch": 4, "f": "04_global-issues.html", "l": "第4章"}, {"t": "トレードオフ", "r": "trade-off", "d": "ある課題の解決策が別の課題を悪化させる関係である。", "ch": 4, "f": "04_global-issues.html", "l": "第4章"}, {"t": "持続可能な開発目標", "r": "SDGs", "d": "2015年に国連で採択された2030年までの17の目標である。", "ch": 4, "f": "04_global-issues.html", "l": "第4章"}, {"t": "政府開発援助", "r": "ODA", "d": "先進国の政府が発展途上国の経済開発と福祉の向上を目的として行う資金や技術の提供である。", "ch": 4, "f": "04_global-issues.html", "l": "第4章"}, {"t": "フェアトレード", "r": "fair trade", "d": "発展途上国の生産者から適正な価格で継続的に購入する取組である。", "ch": 4, "f": "04_global-issues.html", "l": "第4章"}, {"t": "マグニチュード", "r": "magnitude", "d": "地震そのものの規模を表す値である。", "ch": 5, "f": "05_disaster.html", "l": "第5章"}, {"t": "震度", "r": "seismic intensity", "d": "ある地点での地震の揺れの強さを表す値である。", "ch": 5, "f": "05_disaster.html", "l": "第5章"}, {"t": "液状化", "r": "liquefaction", "d": "地下水を多く含む砂の地盤が揺れによって液体のようになる現象である。", "ch": 5, "f": "05_disaster.html", "l": "第5章"}, {"t": "外水氾濫", "r": "", "d": "河川の水が堤防を越えたり堤防を壊したりしてあふれる氾濫である。", "ch": 5, "f": "05_disaster.html", "l": "第5章"}, {"t": "内水氾濫", "r": "", "d": "市街地に降った雨が下水道や水路で排水しきれずにあふれる氾濫である。", "ch": 5, "f": "05_disaster.html", "l": "第5章"}, {"t": "高潮", "r": "storm surge", "d": "台風や発達した低気圧によって海面が異常に上昇する現象である。", "ch": 5, "f": "05_disaster.html", "l": "第5章"}, {"t": "ハザードマップ", "r": "hazard map", "d": "自然災害による被害が及ぶおそれのある範囲と程度を示した地図である。", "ch": 5, "f": "05_disaster.html", "l": "第5章"}, {"t": "減災", "r": "disaster reduction", "d": "被害が出ることを前提にその被害を最小にする取組である。", "ch": 5, "f": "05_disaster.html", "l": "第5章"}, {"t": "自助・共助・公助", "r": "", "d": "自分で守る自助\u3001地域で助け合う共助\u3001行政や消防などによる公助の3つの組合せである。", "ch": 5, "f": "05_disaster.html", "l": "第5章"}, {"t": "地域調査", "r": "", "d": "資料と現地での観察から事実を集め\u3001地域の課題の原因と解決策を考察する学習活動である。", "ch": 6, "f": "06_local-survey.html", "l": "第6章"}, {"t": "国勢調査", "r": "census", "d": "5年ごとに全世帯を対象として人口・世帯・通勤通学先などを調べる統計調査である。", "ch": 6, "f": "06_local-survey.html", "l": "第6章"}, {"t": "地域メッシュ統計", "r": "", "d": "地域を同じ大きさの方眼に区切って集計した統計で\u3001市町村合併の影響を受けずに比較できる。", "ch": 6, "f": "06_local-survey.html", "l": "第6章"}, {"t": "人口集中地区", "r": "DID", "d": "国勢調査で設定する\u3001人口密度の高い地区が連なる都市的地域である。", "ch": 6, "f": "06_local-survey.html", "l": "第6章"}, {"t": "昼夜間人口比率", "r": "", "d": "常住人口100人あたりの昼間人口で\u3001生活圏の結び付きを示す指標である。", "ch": 6, "f": "06_local-survey.html", "l": "第6章"}, {"t": "バッファ分析", "r": "buffer analysis", "d": "GISで施設からの距離によって範囲を描き\u3001その範囲を分析する方法である。", "ch": 6, "f": "06_local-survey.html", "l": "第6章"}, {"t": "コンパクトシティ", "r": "compact city", "d": "住宅と都市機能を公共交通の沿線や中心部に集め\u3001市街地の広がりを抑えた都市構造である。", "ch": 6, "f": "06_local-survey.html", "l": "第6章"}, {"t": "プレートテクトニクス", "r": "plate tectonics", "d": "プレートの運動で地震・火山・山脈の分布を説明する考え方である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "内的営力", "r": "endogenic force", "d": "地球内部の熱を源として地殻を動かし\u3001起伏をつくる力である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "外的営力", "r": "exogenic force", "d": "太陽の熱と重力を源として地表を侵食・運搬・堆積させる力である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "安定陸塊", "r": "stable land mass", "d": "先カンブリア時代以降に造山運動を受けていない地域で\u3001平原や台地が広がり鉄鉱石が多い。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "古期造山帯", "r": "", "d": "古生代に造山運動を受けた地域で\u3001低くなだらかな山地が多く石炭が多い。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "新期造山帯", "r": "", "d": "中生代末から現在まで造山運動が続く地域で\u3001高く険しい山脈と地震や火山が多い。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "扇状地", "r": "alluvial fan", "d": "河川が山地から平地に出る谷口に砂礫が扇形に積もった地形である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "自然堤防", "r": "natural levee", "d": "洪水のたびに河川の両側に積もった砂がつくる微高地である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "後背湿地", "r": "back marsh", "d": "自然堤防の外側にある泥の低地である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "三角州", "r": "delta", "d": "河口付近で流れが弱まり細かい土砂が積もってできた低平な地形である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "河岸段丘", "r": "river terrace", "d": "河川沿いに階段状に並ぶ平坦面と崖からなる地形である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "リアス海岸", "r": "rias coast", "d": "山地の谷が沈水してできた\u3001のこぎりの歯のように出入りの多い海岸である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "フィヨルド", "r": "fjord", "d": "氷河が削ったU字谷に海水が入り込んだ奥行きの長い湾である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "エスチュアリー", "r": "三角江", "d": "河口部が沈水してラッパ状に開いた入り江である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "カルスト地形", "r": "karst", "d": "石灰岩が雨水や地下水に溶かされる溶食によってできた地形である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "ドリーネ", "r": "doline", "d": "石灰岩の地表が溶けてできたすり鉢状のくぼ地である。", "ch": 7, "f": "07_landforms.html", "l": "第7章"}, {"t": "気候因子", "r": "climatic factor", "d": "緯度・海抜高度・海からの距離・海流・地形など\u3001気候要素の地域差を生む条件である。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "気温の逓減率", "r": "lapse rate", "d": "高度が上がるほど気温が下がる割合で\u3001標準大気では100mあたり約0.65℃である。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "年較差", "r": "annual range", "d": "最暖月平均気温と最寒月平均気温の差である。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "熱帯収束帯", "r": "赤道低圧帯", "d": "赤道付近で上昇気流が生じ\u3001雨が多い低圧帯である。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "亜熱帯高圧帯", "r": "subtropical high", "d": "緯度20〜30度付近で下降気流が卓越し\u3001乾燥する高圧帯である。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "貿易風", "r": "trade winds", "d": "亜熱帯高圧帯から熱帯収束帯へ吹く東寄りの風である。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "偏西風", "r": "westerlies", "d": "亜熱帯高圧帯から亜寒帯低圧帯へ吹く西寄りの風である。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "季節風", "r": "モンスーン", "d": "季節によって風向が大きく変わる風で\u3001大陸と海洋の温まり方の差から生じる。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "エルニーニョ現象", "r": "El Niño", "d": "太平洋赤道域の中部から南米沿岸の海面水温が平年より高い状態が続く現象である。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "ケッペンの気候区分", "r": "Köppen climate classification", "d": "樹木が育つ気候と育たない気候を最初に分け\u3001樹木気候をさらに気温で分ける気候区分である。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "乾燥限界", "r": "", "d": "乾燥帯Bを判定する年降水量の境界値で\u3001年平均気温などから求める。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "テラロッサ", "r": "terra rossa", "d": "石灰岩が風化した赤色の土壌で\u3001地中海沿岸に分布する。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "テラローシャ", "r": "terra roxa", "d": "玄武岩などが風化した赤紫色の土壌で\u3001ブラジル高原南部のコーヒー栽培を支える。", "ch": 8, "f": "08_climate.html", "l": "第8章"}, {"t": "温室効果ガス", "r": "greenhouse gas", "d": "地表から出る熱の一部を大気中にとどめて地表付近を暖める\u3001温室効果をもつ気体である。", "ch": 9, "f": "09_environment.html", "l": "第9章"}, {"t": "気候変動枠組条約", "r": "UNFCCC", "d": "1992年に採択された温室効果ガスの濃度の安定化を目的とする条約である。", "ch": 9, "f": "09_environment.html", "l": "第9章"}, {"t": "京都議定書", "r": "Kyoto Protocol", "d": "1997年のCOP3で採択され\u3001先進国に温室効果ガスの削減の数値目標を課した。", "ch": 9, "f": "09_environment.html", "l": "第9章"}, {"t": "パリ協定", "r": "Paris Agreement", "d": "2015年のCOP21で採択され\u3001すべての締約国が削減目標を提出する枠組みである。", "ch": 9, "f": "09_environment.html", "l": "第9章"}, {"t": "モントリオール議定書", "r": "Montreal Protocol", "d": "1987年に採択され\u3001オゾン層を破壊する物質の規制と削減の日程を定めた。", "ch": 9, "f": "09_environment.html", "l": "第9章"}, {"t": "酸性雨", "r": "acid rain", "d": "硫黄酸化物や窒素酸化物が大気中で硫酸や硝酸に変わり\u3001雨や雪に溶けて降る現象である。", "ch": 9, "f": "09_environment.html", "l": "第9章"}, {"t": "砂漠化", "r": "desertification", "d": "乾燥地域などで気候の変動や人間の活動によって土地が劣化する現象である。", "ch": 9, "f": "09_environment.html", "l": "第9章"}, {"t": "サヘル", "r": "Sahel", "d": "サハラ砂漠の南縁に帯状に広がる半乾燥地域で\u3001砂漠化の代表例である。", "ch": 9, "f": "09_environment.html", "l": "第9章"}, {"t": "土地生産性", "r": "land productivity", "d": "単位面積当たりの収量である。", "ch": 10, "f": "10_agriculture.html", "l": "第10章"}, {"t": "チューネンの孤立国", "r": "Thünen", "d": "都市からの距離による輸送費の差で農業の配置が同心円状になることを示したモデルである。", "ch": 10, "f": "10_agriculture.html", "l": "第10章"}, {"t": "適地適作", "r": "", "d": "気候と土壌に合った作物を地域ごとに大規模に栽培する方式である。", "ch": 10, "f": "10_agriculture.html", "l": "第10章"}, {"t": "センターピボット", "r": "center pivot", "d": "地下水をくみ上げて回転するスプリンクラーで散水する灌漑方式で\u3001円形の畑が並ぶ。", "ch": 10, "f": "10_agriculture.html", "l": "第10章"}, {"t": "フィードロット", "r": "feedlot", "d": "肉牛を集めて濃厚飼料で短期間に太らせる肥育場である。", "ch": 10, "f": "10_agriculture.html", "l": "第10章"}, {"t": "アグリビジネス", "r": "agribusiness", "d": "種子・肥料・農業機械の供給から穀物の集荷・加工・販売までを担う産業である。", "ch": 10, "f": "10_agriculture.html", "l": "第10章"}, {"t": "緑の革命", "r": "Green Revolution", "d": "1960年代に高収量品種と化学肥料と灌漑を組み合わせて穀物の単収を高めた技術革新である。", "ch": 10, "f": "10_agriculture.html", "l": "第10章"}, {"t": "モノカルチャー経済", "r": "monoculture economy", "d": "特定の一次産品の輸出に経済が依存する状態である。", "ch": 10, "f": "10_agriculture.html", "l": "第10章"}, {"t": "潮目", "r": "潮境", "d": "寒流と暖流がぶつかり\u3001好漁場となる海域である。", "ch": 10, "f": "10_agriculture.html", "l": "第10章"}, {"t": "食料自給率", "r": "food self-sufficiency ratio", "d": "国内で消費される食料のうち国内で生産された割合で\u3001カロリーベースと生産額ベースがある。", "ch": 10, "f": "10_agriculture.html", "l": "第10章"}, {"t": "再生可能エネルギー", "r": "renewable energy", "d": "太陽光・風力・水力・地熱・バイオマスなど\u3001自然の循環の中で絶えず補充されるエネルギーである。", "ch": 11, "f": "11_resources.html", "l": "第11章"}, {"t": "一次エネルギー", "r": "primary energy", "d": "自然界から得たままの形のエネルギーである。", "ch": 11, "f": "11_resources.html", "l": "第11章"}, {"t": "二次エネルギー", "r": "secondary energy", "d": "一次エネルギーを電力などの使いやすい形に変換したエネルギーである。", "ch": 11, "f": "11_resources.html", "l": "第11章"}, {"t": "エネルギー革命", "r": "energy revolution", "d": "主に使われるエネルギーの種類が交代することで\u3001石炭から石油への転換が代表である。", "ch": 11, "f": "11_resources.html", "l": "第11章"}, {"t": "背斜構造", "r": "anticline", "d": "地層が山のように上へ曲がった構造で\u3001頂部に石油と天然ガスがたまりやすい。", "ch": 11, "f": "11_resources.html", "l": "第11章"}, {"t": "シェール革命", "r": "shale revolution", "d": "頁岩の層から石油と天然ガスを取り出す技術によって\u30012010年代にアメリカ合衆国の生産が急増したことである。", "ch": 11, "f": "11_resources.html", "l": "第11章"}, {"t": "液化天然ガス", "r": "LNG", "d": "天然ガスをマイナス160℃前後まで冷やして液体にしたもので\u3001専用の船で運ぶ。", "ch": 11, "f": "11_resources.html", "l": "第11章"}, {"t": "資源ナショナリズム", "r": "resource nationalism", "d": "資源を持つ国が自国の資源を自ら管理し\u3001その利益を自国の発展に使おうとする動きである。", "ch": 11, "f": "11_resources.html", "l": "第11章"}, {"t": "レアメタル", "r": "rare metal", "d": "埋蔵量や産出量が少ない金属や\u3001取り出すのが技術的に難しい金属である。", "ch": 11, "f": "11_resources.html", "l": "第11章"}, {"t": "チョークポイント", "r": "chokepoint", "d": "輸送が集中し\u3001通れなくなると世界の輸送に影響する狭い海峡や運河である。", "ch": 11, "f": "11_resources.html", "l": "第11章"}, {"t": "局地原料", "r": "localized material", "d": "鉄鉱石や石灰石のように特定の場所でしか採れない原料である。", "ch": 12, "f": "12_industry.html", "l": "第12章"}, {"t": "原料指数", "r": "material index", "d": "製品の重量に対する局地原料の重量の比で\u30011より大きい工業は原料産地に立地する。", "ch": 12, "f": "12_industry.html", "l": "第12章"}, {"t": "集積の利益", "r": "agglomeration economies", "d": "関連する工場が1か所に集まることで部品の調達や技術者の確保が容易になる利点である。", "ch": 12, "f": "12_industry.html", "l": "第12章"}, {"t": "ファウンドリ", "r": "foundry", "d": "半導体の製造を受託する企業である。", "ch": 12, "f": "12_industry.html", "l": "第12章"}, {"t": "垂直分業", "r": "vertical division of labor", "d": "先進国が工業製品を作り発展途上国が原料を供給する分業である。", "ch": 12, "f": "12_industry.html", "l": "第12章"}, {"t": "水平分業", "r": "horizontal division of labor", "d": "先進国どうしが工業製品を互いに輸出し合う分業である。", "ch": 12, "f": "12_industry.html", "l": "第12章"}, {"t": "工程間分業", "r": "", "d": "1つの製品の工程を複数の国に分ける分業である。", "ch": 12, "f": "12_industry.html", "l": "第12章"}, {"t": "多国籍企業", "r": "multinational corporation", "d": "複数の国に子会社や工場を持ち国境を越えて事業を行う企業である。", "ch": 12, "f": "12_industry.html", "l": "第12章"}, {"t": "産業の空洞化", "r": "hollowing out", "d": "国内の工場が海外へ移り国内の製造業の生産と雇用が減る現象である。", "ch": 12, "f": "12_industry.html", "l": "第12章"}, {"t": "ペティ＝クラークの法則", "r": "Petty-Clark's law", "d": "経済の発展に伴い就業者の比重が第一次産業から第二次産業\u3001第三次産業へ移るという経験則である。", "ch": 12, "f": "12_industry.html", "l": "第12章"}, {"t": "トンキロ", "r": "ton-kilometer", "d": "輸送した重量に輸送距離を掛けた輸送量の単位である。", "ch": 13, "f": "13_transport.html", "l": "第13章"}, {"t": "コンテナ化", "r": "containerization", "d": "規格化した箱に貨物を詰めて船・鉄道・トラックで一貫して運ぶ方式への転換である。", "ch": 13, "f": "13_transport.html", "l": "第13章"}, {"t": "TEU", "r": "20フィートコンテナ換算", "d": "コンテナの取扱量を20フィートのコンテナの個数に換算して数える単位である。", "ch": 13, "f": "13_transport.html", "l": "第13章"}, {"t": "トランシップ", "r": "transshipment", "d": "ハブ港で貨物を別の船に積み替えることである。", "ch": 13, "f": "13_transport.html", "l": "第13章"}, {"t": "ハブ・アンド・スポーク", "r": "hub and spoke", "d": "中心のハブ空港に路線を集め\u3001各地の空港と放射状の路線で結ぶ航空網の形である。", "ch": 13, "f": "13_transport.html", "l": "第13章"}, {"t": "デジタル・デバイド", "r": "情報格差", "d": "情報通信技術を利用できる人とできない人の間に生じる格差である。", "ch": 13, "f": "13_transport.html", "l": "第13章"}, {"t": "海底ケーブル", "r": "submarine cable", "d": "国と国の間の通信を運ぶ海底に敷設した通信線である。", "ch": 13, "f": "13_transport.html", "l": "第13章"}, {"t": "オーバーツーリズム", "r": "観光公害", "d": "観光客が特定の地域や時間帯に集中し\u3001住民の生活や旅行者の満足度に悪い影響が生じる状態である。", "ch": 13, "f": "13_transport.html", "l": "第13章"}, {"t": "自然増加", "r": "natural increase", "d": "出生数から死亡数を引いた値である。", "ch": 14, "f": "14_population.html", "l": "第14章"}, {"t": "社会増加", "r": "social increase", "d": "転入数から転出数を引いた値である。", "ch": 14, "f": "14_population.html", "l": "第14章"}, {"t": "人口転換", "r": "demographic transition", "d": "多産多死から多産少死を経て少産少死へ移る過程である。", "ch": 14, "f": "14_population.html", "l": "第14章"}, {"t": "人口ピラミッド", "r": "population pyramid", "d": "男女別・年齢別の人口を横棒で積み上げた図である。", "ch": 14, "f": "14_population.html", "l": "第14章"}, {"t": "合計特殊出生率", "r": "total fertility rate", "d": "1人の女性が生涯に産む子どもの平均数である。", "ch": 14, "f": "14_population.html", "l": "第14章"}, {"t": "置き換え水準", "r": "replacement level", "d": "人口が長期に同じ規模を保つ出生の水準で\u3001合計特殊出生率で約2.1である。", "ch": 14, "f": "14_population.html", "l": "第14章"}, {"t": "人口モメンタム", "r": "population momentum", "d": "出生率が下がっても若い年齢構成のためにしばらく人口が増え続ける性質である。", "ch": 14, "f": "14_population.html", "l": "第14章"}, {"t": "人口ボーナス", "r": "demographic dividend", "d": "生産年齢人口の割合が上がり\u3001経済成長を押し上げる期間である。", "ch": 14, "f": "14_population.html", "l": "第14章"}, {"t": "谷口集落", "r": "", "d": "山地と平野の境の谷の出口に成立し\u3001山の産物と平野の産物を交換する集落である。", "ch": 15, "f": "15_settlements.html", "l": "第15章"}, {"t": "集村・散村", "r": "", "d": "家屋が1か所に集まる村落が集村で\u3001家屋が耕地の中に点在する村落が散村である。", "ch": 15, "f": "15_settlements.html", "l": "第15章"}, {"t": "中心業務地区", "r": "CBD", "d": "都市の中心部で官公庁・企業の本社・銀行が集まる地区である。", "ch": 15, "f": "15_settlements.html", "l": "第15章"}, {"t": "インナーシティ", "r": "inner city", "d": "CBDに隣接する古い市街地である。", "ch": 15, "f": "15_settlements.html", "l": "第15章"}, {"t": "中心地理論", "r": "central place theory", "d": "1933年にクリスタラーが示した\u3001中心地が財の需要の閾値と到達範囲に応じて階層をもつという理論である。", "ch": 15, "f": "15_settlements.html", "l": "第15章"}, {"t": "メガロポリス", "r": "巨帯都市", "d": "複数の大都市圏が交通と通信で結ばれて帯状に連なった地域である。", "ch": 15, "f": "15_settlements.html", "l": "第15章"}, {"t": "首位都市", "r": "プライメートシティ", "d": "国内で人口が最も多く\u30012位以下を大きく引き離して政治・経済の機能を集中させる都市である。", "ch": 15, "f": "15_settlements.html", "l": "第15章"}, {"t": "ドーナツ化現象", "r": "", "d": "都心の夜間人口が減り郊外の人口が増える現象である。", "ch": 15, "f": "15_settlements.html", "l": "第15章"}, {"t": "スプロール現象", "r": "urban sprawl", "d": "郊外の開発が計画なしに進み\u3001市街地が虫食い状に広がる現象である。", "ch": 15, "f": "15_settlements.html", "l": "第15章"}, {"t": "ジェントリフィケーション", "r": "gentrification", "d": "再開発で地価と家賃が上がり\u3001高所得層が流入して元の住民が転出を迫られる現象である。", "ch": 15, "f": "15_settlements.html", "l": "第15章"}, {"t": "過剰都市化", "r": "overurbanization", "d": "都市の人口増加が雇用と住宅の供給を上回る状態である。", "ch": 15, "f": "15_settlements.html", "l": "第15章"}, {"t": "民族", "r": "ethnic group", "d": "言語・宗教・生活様式などの文化を共有し\u3001同じ集団に属するという意識をもつ人々の集団である。", "ch": 16, "f": "16_ethnicity.html", "l": "第16章"}, {"t": "語族", "r": "language family", "d": "系統が共通する言語のまとまりである。", "ch": 16, "f": "16_ethnicity.html", "l": "第16章"}, {"t": "多民族国家", "r": "multiethnic state", "d": "複数の民族で構成される国である。", "ch": 16, "f": "16_ethnicity.html", "l": "第16章"}, {"t": "同化主義", "r": "assimilationism", "d": "少数の民族に多数派の言語や文化に合わせることを求める方針である。", "ch": 16, "f": "16_ethnicity.html", "l": "第16章"}, {"t": "多文化主義", "r": "multiculturalism", "d": "それぞれの民族の言語や文化を尊重し共存を図る方針である。", "ch": 16, "f": "16_ethnicity.html", "l": "第16章"}, {"t": "白豪主義", "r": "White Australia policy", "d": "オーストラリアがかつて白人以外の移民を制限した方針である。", "ch": 16, "f": "16_ethnicity.html", "l": "第16章"}, {"t": "ブミプトラ政策", "r": "", "d": "マレーシアでマレー系などの先住の人々（ブミプトラ）を教育・雇用・企業の所有で優遇する政策である。", "ch": 16, "f": "16_ethnicity.html", "l": "第16章"}, {"t": "等質地域", "r": "uniform region", "d": "同じ性質をもつ場所が連続して広がる範囲である。", "ch": 17, "f": "17_east-asia.html", "l": "第17章"}, {"t": "機能地域", "r": "結節地域", "d": "中心地とその周辺が人・物・情報の流れで結び付いた範囲である。", "ch": 17, "f": "17_east-asia.html", "l": "第17章"}, {"t": "秦嶺・淮河線", "r": "", "d": "中国東部で北の畑作と南の稲作を分ける境界線で\u3001年降水量800mmの線におおむね一致する。", "ch": 17, "f": "17_east-asia.html", "l": "第17章"}, {"t": "胡煥庸線", "r": "", "d": "黒河と騰衝を結ぶ線で\u3001人口の多い東南部と少ない北西部を分ける。", "ch": 17, "f": "17_east-asia.html", "l": "第17章"}, {"t": "生産責任制", "r": "", "d": "農家が生産を請け負い\u3001収穫の一部を自分の取り分とする中国の農業制度である。", "ch": 17, "f": "17_east-asia.html", "l": "第17章"}, {"t": "改革開放", "r": "", "d": "1978年に中国が始めた外国の資本と技術を受け入れる政策である。", "ch": 17, "f": "17_east-asia.html", "l": "第17章"}, {"t": "経済特区", "r": "special economic zone", "d": "改革開放の窓口として外国企業を優遇して受け入れた地区である。", "ch": 17, "f": "17_east-asia.html", "l": "第17章"}, {"t": "農民工", "r": "", "d": "農村戸籍のまま都市や沿岸部で働く人である。", "ch": 17, "f": "17_east-asia.html", "l": "第17章"}, {"t": "上座仏教", "r": "Theravada Buddhism", "d": "インドから伝わり\u3001ミャンマー・タイ・ラオス・カンボジアに広がる仏教である。", "ch": 18, "f": "18_south-asia.html", "l": "第18章"}, {"t": "華人・華僑", "r": "", "d": "移住先の国籍を得た中国系の人々が華人\u3001中国籍のまま住む人々が華僑である。", "ch": 18, "f": "18_south-asia.html", "l": "第18章"}, {"t": "ドイモイ", "r": "刷新", "d": "1986年にベトナムが採択した市場経済を取り入れる政策である。", "ch": 18, "f": "18_south-asia.html", "l": "第18章"}, {"t": "輸入代替型工業化", "r": "import substitution", "d": "輸入していた工業製品を国内で生産する工業化である。", "ch": 18, "f": "18_south-asia.html", "l": "第18章"}, {"t": "輸出指向型工業化", "r": "export-oriented industrialization", "d": "外国企業を誘致して工業製品を輸出する工業化である。", "ch": 18, "f": "18_south-asia.html", "l": "第18章"}, {"t": "ASEAN", "r": "東南アジア諸国連合", "d": "1967年に5か国で発足した東南アジアの地域協力機構である。", "ch": 18, "f": "18_south-asia.html", "l": "第18章"}, {"t": "レグール", "r": "regur", "d": "玄武岩が風化した黒色の土壌で\u3001デカン高原の綿花栽培を支える。", "ch": 18, "f": "18_south-asia.html", "l": "第18章"}, {"t": "カースト制度", "r": "caste system", "d": "ヒンドゥー教と結び付いた身分と職業の制度である。", "ch": 18, "f": "18_south-asia.html", "l": "第18章"}, {"t": "外来河川", "r": "exotic river", "d": "湿潤な地域に水源をもち\u3001乾燥地域を貫いて流れる河川である。", "ch": 19, "f": "19_west-asia-africa.html", "l": "第19章"}, {"t": "カナート", "r": "qanat", "d": "山麓の地下水を地下の水路で集落まで導くイランの灌漑施設である。", "ch": 19, "f": "19_west-asia-africa.html", "l": "第19章"}, {"t": "OPEC", "r": "石油輸出国機構", "d": "1960年に産油国5か国がバグダッドで結成した組織である。", "ch": 19, "f": "19_west-asia-africa.html", "l": "第19章"}, {"t": "産業の多角化", "r": "diversification", "d": "石油収入を元手に石油以外の産業を育てることである。", "ch": 19, "f": "19_west-asia-africa.html", "l": "第19章"}, {"t": "スンナ派・シーア派", "r": "", "d": "イスラームの宗派で\u3001多数派がスンナ派\u3001少数派がシーア派である。", "ch": 19, "f": "19_west-asia-africa.html", "l": "第19章"}, {"t": "アフリカ大地溝帯", "r": "Great Rift Valley", "d": "アフリカ東部をプレートが広がる境界に沿って南北に走る谷である。", "ch": 19, "f": "19_west-asia-africa.html", "l": "第19章"}, {"t": "カッパーベルト", "r": "Copperbelt", "d": "コンゴ民主共和国とザンビアにまたがる銅の産出地帯である。", "ch": 19, "f": "19_west-asia-africa.html", "l": "第19章"}, {"t": "資源の呪い", "r": "resource curse", "d": "資源の豊かな国がかえって経済成長や政治の安定に恵まれない現象である。", "ch": 19, "f": "19_west-asia-africa.html", "l": "第19章"}, {"t": "西岸海洋性気候", "r": "Cfb", "d": "偏西風と暖流の影響で年較差が小さい大陸西岸の気候である。", "ch": 20, "f": "20_europe-russia.html", "l": "第20章"}, {"t": "地中海性気候", "r": "Cs", "d": "夏に亜熱帯高圧帯に覆われて乾燥し\u3001冬に偏西風帯に入って雨が降る気候である。", "ch": 20, "f": "20_europe-russia.html", "l": "第20章"}, {"t": "混合農業", "r": "mixed farming", "d": "穀物・飼料作物の栽培と家畜の飼育を組み合わせる農業である。", "ch": 20, "f": "20_europe-russia.html", "l": "第20章"}, {"t": "酪農", "r": "dairy farming", "d": "牧草を栽培して乳牛を飼育し\u3001乳製品を生産する農業である。", "ch": 20, "f": "20_europe-russia.html", "l": "第20章"}, {"t": "地中海式農業", "r": "Mediterranean agriculture", "d": "夏の乾燥に強い樹木作物と冬の雨を利用する小麦を組み合わせる農業である。", "ch": 20, "f": "20_europe-russia.html", "l": "第20章"}, {"t": "共通農業政策", "r": "CAP", "d": "EUが1962年に始めた\u3001域内の農産物の価格を一定以上に保ち農家の所得を守る政策である。", "ch": 20, "f": "20_europe-russia.html", "l": "第20章"}, {"t": "ブルーバナナ", "r": "青いバナナ", "d": "イギリス南部からベネルクス\u3001ライン川沿いを経て北イタリアに至る\u3001人口と工業が集中する帯状の地域である。", "ch": 20, "f": "20_europe-russia.html", "l": "第20章"}, {"t": "タイガ", "r": "taiga", "d": "冷帯に広がる針葉樹林である。", "ch": 20, "f": "20_europe-russia.html", "l": "第20章"}, {"t": "チェルノーゼム", "r": "chernozem", "d": "ロシア南西部からウクライナに分布する肥沃な黒土である。", "ch": 20, "f": "20_europe-russia.html", "l": "第20章"}, {"t": "西経100度の経線", "r": "", "d": "アメリカ合衆国で年降水量500mm前後の境界にあたり\u3001東の湿潤と西の半乾燥を分ける線である。", "ch": 21, "f": "21_americas-oceania.html", "l": "第21章"}, {"t": "サンベルト", "r": "Sun Belt", "d": "アメリカ合衆国の北緯37度より南の地域で\u30011970年代以降に工業の中心が移った。北緯36度30分以南とする定義もある。", "ch": 21, "f": "21_americas-oceania.html", "l": "第21章"}, {"t": "ラストベルト", "r": "Rust Belt", "d": "アメリカ合衆国北東部で鉄鋼業や自動車工業の工場の閉鎖が進んだ古い工業地域である。", "ch": 21, "f": "21_americas-oceania.html", "l": "第21章"}, {"t": "パンパ", "r": "pampa", "d": "アルゼンチンのラプラタ川の流域に広がる温帯草原である。", "ch": 21, "f": "21_americas-oceania.html", "l": "第21章"}, {"t": "メスチーソ", "r": "mestizo", "d": "先住民とヨーロッパ系の混血の人々である。", "ch": 21, "f": "21_americas-oceania.html", "l": "第21章"}, {"t": "大土地所有制", "r": "", "d": "少数の地主が広い土地を所有し\u3001多数の農民が雇われて働く仕組みである。", "ch": 21, "f": "21_americas-oceania.html", "l": "第21章"}, {"t": "マキラドーラ", "r": "maquiladora", "d": "部品を関税なしで輸入し\u3001組み立てて輸出するメキシコの工場である。", "ch": 21, "f": "21_americas-oceania.html", "l": "第21章"}, {"t": "MERCOSUR", "r": "南米南部共同市場", "d": "1995年にブラジル・アルゼンチン・ウルグアイ・パラグアイで発足した関税同盟である。", "ch": 21, "f": "21_americas-oceania.html", "l": "第21章"}, {"t": "全国総合開発計画", "r": "全総", "d": "1962年から1998年まで5回閣議決定された\u3001地域間の均衡ある発展を目標とする国土計画である。", "ch": 22, "f": "22_national-land.html", "l": "終章"}, {"t": "東京一極集中", "r": "", "d": "人口・企業の本社・行政機能・情報などが東京圏に集中する状態である。", "ch": 22, "f": "22_national-land.html", "l": "終章"}, {"t": "国土形成計画", "r": "", "d": "国土形成計画法に基づく計画で\u3001全国計画と広域地方計画の二層からなる。", "ch": 22, "f": "22_national-land.html", "l": "終章"}, {"t": "コンパクト＋ネットワーク", "r": "", "d": "生活に必要な機能を中心部に集めて拠点を形成し\u3001拠点どうしを交通と情報通信で結ぶ国土構造である。", "ch": 22, "f": "22_national-land.html", "l": "終章"}, {"t": "地方創生", "r": "", "d": "2014年のまち・ひと・しごと創生法の制定で始まった\u3001地方の人口減少に対応する国の政策である。", "ch": 22, "f": "22_national-land.html", "l": "終章"}, {"t": "関係人口", "r": "", "d": "移住した定住人口でも観光に来た交流人口でもなく\u3001特定の地域に継続的に関わる人々である。", "ch": 22, "f": "22_national-land.html", "l": "終章"}, {"t": "国土強靱化", "r": "national resilience", "d": "大規模自然災害が起きても致命的な被害を負わず\u3001速やかに回復する国土・経済社会をあらかじめ整える取組である。", "ch": 22, "f": "22_national-land.html", "l": "終章"}, {"t": "リダンダンシー", "r": "redundancy", "d": "1つの経路や施設が使えなくなっても代わりが働くように\u3001複数の経路や機能を備えておくことである。", "ch": 22, "f": "22_national-land.html", "l": "終章"}];
+const box=$("#quizBox");let done=0,ok=0;
+QZ.forEach((z,i)=>{
+  const d=document.createElement("div");d.className="q";
+  d.innerHTML=`<p class="qq">問${i+1}. ${esc(z.q)}</p><div class="opts">${z.o.map((o,j)=>`<button data-j="${j}">${esc(o)}</button>`).join("")}</div><div class="why" hidden></div>`;
+  $$(".opts button",d).forEach(b=>b.addEventListener("click",()=>{
+    if(d.dataset.done)return;d.dataset.done=1;done++;const j=+b.dataset.j;
+    if(j===z.a){ok++;b.classList.add("ok")}else{b.classList.add("ng");$$(".opts button",d)[z.a].classList.add("ok")}
+    const w=$(".why",d);w.hidden=false;
+    w.innerHTML=`<b style="color:var(${j===z.a?"--pres":"--warn"})">${j===z.a?"正解":"不正解"}</b>。${esc(z.x)} <a href="chapters/${z.f}">${esc(z.tt)}へ</a>`;
+    $("#quizScore").textContent=`${QZ.length}問中 ${done}問に回答済み。正解 ${ok}問。`+(done===QZ.length?(ok>=Math.ceil(QZ.length*0.8)?" 本書の基礎を把握できている。":" 不正解の章を読み直す。"):"");
+  }));
+  box.appendChild(d);
+});
+$("#quizScore").textContent=`${QZ.length}問中 0問に回答済み。`;
+const gl=$("#gl"),q=$("#glQ");
+function draw(){
+  const s=q.value.trim().toLowerCase();
+  const rows=GL.filter(r=>!s||[r.t,r.r,r.d].join(" ").toLowerCase().includes(s));
+  gl.innerHTML=rows.map(r=>`<div class="gl-row"><div class="j">${esc(r.t)}</div><div class="de">${esc(r.r||"")}</div><div>${esc(r.d)}<a href="chapters/${r.f}">→ ${r.l}</a></div></div>`).join("");
+  $("#glN").textContent=`${GL.length}語中 ${rows.length}語を表示`;
+}
+q.addEventListener("input",draw);draw();
+})();
+</script>
+</body>
+</html>

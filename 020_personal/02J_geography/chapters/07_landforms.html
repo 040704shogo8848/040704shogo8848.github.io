@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>地形｜地理</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#666; --muted:#8a8a8a; --accent:#2563EB;
+    --line:#E5E2DA; --card:#fff; --chip:#EEF2FF;
+    --grid:#E9E5DC; --deep:#1E3A8A; --warm:#B45309; --cool:#0F766E; --dim:#F2EFE8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.9;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 28px 90px}
+
+  /* Reading progress. The chapters run long; the bar is the only cue that says
+     how much is left without scrolling to find out. */
+  .tb-prog{position:fixed;top:56px;left:0;height:2px;width:0;background:var(--accent);
+    z-index:9996;transition:width .1s linear}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  .tb-ch{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:29px;margin:4px 0 12px;letter-spacing:-.015em;line-height:1.4}
+  .tb-thesis{font-size:15px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+    padding:13px 18px;margin:0 0 22px;line-height:1.8}
+  .tb-warn{font-size:13px;color:#7A4A00;background:#FDF6E7;border:1px solid #EBD9AE;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+  .tb-warn strong{color:#5C3800}
+
+  .tb-toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px 14px;margin:0 0 34px}
+  .tb-toc-l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px}
+  .tb-toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+    display:grid;grid-template-columns:1fr 1fr;gap:1px 22px}
+  .tb-toc li{counter-increment:toc;margin:0}
+  .tb-toc a{color:var(--sub);text-decoration:none;font-size:13px;display:flex;gap:9px;
+    padding:4px 0;border-bottom:1px solid transparent;line-height:1.55}
+  .tb-toc a::before{content:counter(toc,decimal-leading-zero);color:var(--muted);
+    font-size:10.5px;font-variant-numeric:tabular-nums;padding-top:3px;flex:none}
+  .tb-toc a:hover{color:var(--accent)}
+  .tb-toc a.on{color:var(--ink);font-weight:600}
+  .tb-toc a.on::before{color:var(--accent)}
+  @media(max-width:640px){ .tb-toc ol{grid-template-columns:1fr} }
+
+  /* Section and figure numbers are generated, not typed, so the Markdown stays
+     prose and inserting one never renumbers the rest by hand. */
+  .wrap{counter-reset:sec fig}
+  h2{font-size:20.5px;margin:52px 0 12px;padding-top:20px;border-top:1px solid var(--line);
+    letter-spacing:-.01em;scroll-margin-top:74px;counter-increment:sec;
+    display:flex;gap:12px;align-items:baseline;line-height:1.5}
+  h2::before{content:counter(sec,decimal-leading-zero);font-size:11.5px;font-weight:600;
+    color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums;flex:none;
+    position:relative;top:-1px}
+  h3{font-size:16.5px;margin:30px 0 6px;letter-spacing:-.005em}
+  h4{font-size:14.5px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:13px 0}
+  a{color:var(--accent)}
+  strong{font-weight:700}
+  strong.hit{background:#FEF9C3;padding:0 3px;box-decoration-break:clone;
+    -webkit-box-decoration-break:clone}
+  code{background:#EFEDE6;padding:1px 5px;border-radius:4px;font-size:13px}
+  hr{border:none;border-top:1px solid var(--line);margin:30px 0}
+  blockquote{border-left:3px solid var(--line);margin:14px 0;padding:2px 0 2px 16px;
+    color:var(--sub)}
+  ul,ol{margin:13px 0;padding-left:24px}
+  li{margin:5px 0}
+
+  /* Source markers sit between sentences by the dozen. At body size they cut the
+     line in half; small and grey they stay reachable without being read. */
+  .tb-src{font-size:10.5px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:0 4px;margin:0 2px;
+    vertical-align:1.5px;white-space:nowrap;background:var(--card)}
+  .tb-src:hover{color:var(--accent);border-color:var(--accent)}
+
+  .tb-tw{overflow-x:auto;margin:20px 0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;line-height:1.7}
+  th{background:#F0EEE8;font-weight:600;font-size:12px;white-space:nowrap;color:var(--sub)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FBFAF7}
+  td a{word-break:break-all}
+
+  /* ── figures ─────────────────────────────────────────────────────────────
+     Every diagram is a <figure class="tb-fig"> with a <figcaption>. The caption
+     states what the figure shows; the figure is not decoration and is numbered
+     so the prose can point at it. */
+  .tb-fig{margin:26px 0;padding:0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;counter-increment:fig}
+  .tb-fig > svg{display:block;width:100%;height:auto;background:var(--card)}
+  .tb-fig figcaption{font-size:12.5px;color:var(--sub);line-height:1.7;
+    padding:11px 16px;border-top:1px solid var(--line);background:#FCFBF8}
+  .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
+  .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
+
+  /* ── key numbers ─────────────────────────────────────────────────────────── */
+  .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin:22px 0}
+  .tb-kpi > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px}
+  .tb-kpi b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;
+    line-height:1.25;font-variant-numeric:tabular-nums}
+  .tb-kpi b small{font-size:13px;font-weight:600;color:var(--sub);margin-left:2px}
+  .tb-kpi i{display:block;font-style:normal;font-size:12px;color:var(--sub);
+    line-height:1.6;margin-top:5px}
+  .tb-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+  /* ── comparison bars ─────────────────────────────────────────────────────
+     A row is: label, track with an inline width, value. The width is a share of
+     the largest value in the set, so the bars are readable without an axis. */
+  .tb-bars{margin:22px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .tb-bars h5{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--sub);
+    letter-spacing:.03em}
+  .tb-bar{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;
+    align-items:center;margin:7px 0;font-size:12.5px}
+  .tb-bar span:first-child{color:var(--sub);line-height:1.45}
+  .tb-bar u{display:block;height:9px;background:var(--dim);border-radius:5px;
+    text-decoration:none;overflow:hidden}
+  .tb-bar u > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+  .tb-bar u.w > i{background:var(--warm)}
+  .tb-bar u.c > i{background:var(--cool)}
+  .tb-bar u.m > i{background:#A8A29A}
+  .tb-bar b{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;
+    white-space:nowrap}
+
+  /* ── two-sided comparison ────────────────────────────────────────────────── */
+  .tb-vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+  .tb-vs > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 17px}
+  .tb-vs h5{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .tb-vs ul{margin:0;padding-left:17px;font-size:13px;line-height:1.75}
+  .tb-vs li{margin:5px 0;color:var(--sub)}
+  .tb-vs li strong{color:var(--ink);font-weight:600}
+  @media(max-width:640px){ .tb-vs{grid-template-columns:1fr} }
+
+  /* ── sequence / timeline ─────────────────────────────────────────────────── */
+  .tb-tl{margin:22px 0;padding:0 0 0 22px;border-left:2px solid var(--line);list-style:none}
+  .tb-tl li{position:relative;margin:0 0 18px;padding:0;font-size:13.5px;line-height:1.75}
+  .tb-tl li::before{content:"";position:absolute;left:-28px;top:9px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+  .tb-tl li b{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);
+    font-weight:600;margin-bottom:1px}
+  .tb-tl li strong{font-weight:700}
+
+  /* ── takeaway callout ────────────────────────────────────────────────────── */
+  .tb-key{background:var(--chip);border:1px solid #D5DDF7;border-radius:10px;
+    padding:14px 18px;margin:22px 0;font-size:14px;line-height:1.8}
+  .tb-key b{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--deep);margin-bottom:5px}
+
+  .tb-nav{display:flex;justify-content:space-between;gap:16px;margin-top:50px;
+    padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+  .tb-nav-a{color:var(--accent);text-decoration:none;max-width:46%}
+  .tb-nav-a:hover{text-decoration:underline}
+
+  @media(max-width:640px){
+    .wrap{padding:28px 18px 70px} h1{font-size:23px}
+    h2{font-size:18.5px;margin-top:42px} body{font-size:15px}
+    .tb-kpi{grid-template-columns:1fr 1fr} .tb-kpi b{font-size:20px}
+    .tb-bar{grid-template-columns:minmax(64px,34%) 1fr auto;gap:9px;font-size:12px}
+  }
+  @media print{ .tb-prog,.snav,.snav-footer{display:none!important}
+    body{padding:0!important;font-size:11pt} .tb-fig,.tb-tw{break-inside:avoid} }
+
+  /* ── 02C chemistry: analogy boxes ─────────────────────────────────────────
+     Each analogy is labelled by its domain so the reader always knows which
+     part is chemistry and which part is the comparison. */
+  .an{border:1px solid;border-radius:10px;padding:13px 18px;margin:22px 0;
+    font-size:14.5px;line-height:1.85}
+  .an > b:first-child{display:block;font-size:10.5px;letter-spacing:.12em;margin-bottom:5px}
+  .an p{margin:6px 0}
+  .an-bb{background:#EEF7F1;border-color:#C6E3D2} .an-bb > b:first-child{color:#1E5E3A}
+  .an-lv{background:#FDF0F3;border-color:#F2CCD6} .an-lv > b:first-child{color:#9F1239}
+  .an-biz{background:#FDF6E7;border-color:#EBD9AE} .an-biz > b:first-child{color:#7A4A00}
+  .an-rw{background:#ECF6F5;border-color:#BFE0DC} .an-rw > b:first-child{color:#0F766E}
+
+  /* chemical equations and formulas set apart from prose */
+  .fx{background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:12px 16px;margin:16px 0;text-align:center;font-size:16.5px;
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-x:auto}
+  .fx small{display:block;font-size:12px;color:var(--sub);letter-spacing:0;margin-top:4px}
+  sub,sup{font-size:.72em;line-height:0}
+
+  /* ── quiz (common-test style) ───────────────────────────────────────────── */
+  .qz{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px 10px;margin:18px 0}
+  .qz-h{font-size:10.5px;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .qz-q{font-size:14.5px;line-height:1.85;margin:0 0 8px}
+  .qz ol{margin:6px 0 10px;padding-left:26px;font-size:14px}
+  .qz ol li{margin:3px 0}
+  .qz details{border-top:1px solid var(--line);padding:8px 0 4px;font-size:14px}
+  .qz summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .qz details > div{padding:8px 0 4px;line-height:1.85}
+
+  .tb-ok{font-size:13px;color:#1E5E3A;background:#EEF7F1;border:1px solid #C6E3D2;
+    border-radius:8px;padding:11px 15px;margin:0 0 26px;line-height:1.75}
+
+  /* Short analogy: one headline that states the shared structure, then the
+     mapping in one or two lines. .an-x is the optional one-line caveat. */
+  .an .an-h{font-size:15.5px;font-weight:700;line-height:1.6;margin:2px 0 4px;color:var(--ink)}
+  .an .an-x{font-size:12.5px;color:var(--sub);margin-top:6px}
+
+  /* math rendered to MathML at build time */
+  .mx{overflow-x:auto;margin:16px 0;padding:4px 0;text-align:center}
+  .katex math{font-size:1.06em}
+  .mx .katex math{font-size:1.12em}
+  .fx .katex math{font-size:1em}
+
+  /* worked example */
+  .ex{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--warm);
+    border-radius:0 10px 10px 0;padding:13px 18px 8px;margin:18px 0}
+  .ex-h{font-size:10.5px;letter-spacing:.12em;color:var(--warm);font-weight:700;margin-bottom:4px}
+  .ex p{margin:4px 0 8px}
+  .ex details{border-top:1px solid var(--line);padding:6px 0 2px}
+  .ex summary{cursor:pointer;color:var(--accent);font-size:13px;font-weight:600}
+  .ex details > div{padding:6px 0 4px;line-height:1.95}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a><a href="../../../030_ideas/034_foundation/index.html">foundation</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../021_profile/index.html">profile</a><a href="../../02A_plan/index.html">plan</a><a href="../../023_travel/index.html">travel</a><a href="../../027_cinema/index.html">cinema</a><a href="../../02B_reading/index.html">reading</a><a href="../../024_method/index.html">method</a><a href="../../026_handbook/index.html">handbook</a><a href="../../025_fitness/index.html">fitness</a><a href="../../028_english/index.html">english</a><a href="../../029_mental_math/index.html">mental math</a><a href="../../02C_chemistry/index.html">chemistry</a><a href="../../02D_probability/index.html">probability</a><a href="../../02E_calculus/index.html">calculus</a><a href="../../02F_linear_algebra/index.html">linear algebra</a><a href="../../02G_physics/index.html">physics</a><a href="../../02H_heidegger/index.html">heidegger</a><a href="../../02I_quiz/index.html">quiz</a><a href="../index.html">geography</a><a href="../../02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../../030_ideas/034_foundation/index.html">foundation</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../024_method/index.html">method</a>
+    <a class="snav-a" href="../../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../028_english/index.html">english</a>
+    <a class="snav-a" href="../../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../index.html">geography</a>
+    <a class="snav-a" href="../../02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<div class="wrap">
+  <div class="crumb"><a href="../../../index.html">shogo</a> / personal /
+    <a href="../index.html">02J geography</a> / 第7章</div>
+
+  <div class="tb-ch">地理探究 A 現代世界の系統地理的考察 — 第7章</div>
+  <h1>地形</h1>
+  <p class="tb-thesis">地形は地球内部の力が起伏をつくり、外部の力がそれを削って運んで積もらせた結果である。大地形は最後の造山運動からの経過時間で高さと資源が分かれる。小地形は河川・海・氷河・溶食・乾燥のどの作用が働いたかで形が決まり、その形が土地利用と災害の起こり方を左右する。</p>
+
+<p class="tb-ok"><strong>この章は2026-10-28に出典照合を通した。</strong> 検証した事実は66件である。出典と一致したものは62件である。食い違ったものは4件で本文を修正済みである。出典で確認できなかったものは0件である。これらは末尾の「残っている問い」に列挙した。</p>
+
+<nav class="tb-toc"><div class="tb-toc-l">この章の構成</div><ol><li><a href="#s1">プレートテクトニクスと2つの営力</a></li><li><a href="#s2">大地形 安定陸塊・古期造山帯・新期造山帯</a></li><li><a href="#s3">河川がつくる平野</a></li><li><a href="#s4">海岸の地形</a></li><li><a href="#s5">氷河地形・カルスト地形・乾燥地形</a></li><li><a href="#s6">地形と人間生活</a></li><li><a href="#s7">現実世界 地形と産業</a></li><li><a href="#s8">確認問題</a></li><li><a href="#s9">この章の要点</a></li><li><a href="#s10">残っている問い</a></li><li><a href="#s11">出典</a></li></ol></nav>
+
+<p>地理総合の第5章では日本の地形を防災の観点から扱った。この章はその知識を世界に広げ、地形を系統的に整理する。山脈の位置・平野の形・海岸線の出入りはばらばらに暗記する対象ではない。地球内部から働く力と地表で働く力の2種類の組合せで説明できる。</p>
+<p>共通テストで問われる論点は主に4つである。プレート境界の種類と分布・大地形の3区分と資源の関係・河川や海岸がつくる小地形の判別・地形と土地利用の対応である。地形図や断面図・写真から地形名を判別する問題が多いので、この章では形の特徴とでき方を必ず組で示す。</p>
+
+<h2 id="s1">プレートテクトニクスと2つの営力</h2>
+<p>地球の表面は十数枚の硬い岩盤に分かれている。この岩盤を<strong>プレート</strong>と呼ぶ。プレートは地殻とマントル最上部からなり、その下のやわらかい層の上を年に数cmの速さで移動する。プレートの運動で地震・火山・山脈の分布を説明する考え方を<strong>プレートテクトニクス</strong>と呼ぶ。</p>
+<p>地形をつくる力は2つに分かれる。地球内部の熱を源として地殻を動かす力を<strong>内的営力</strong>と呼ぶ。地殻変動・火山活動・地震がこれにあたる。太陽の熱と重力を源として地表を削り運び積もらせる力を<strong>外的営力</strong>と呼ぶ。河川・氷河・波・風・雨水による<strong>侵食・運搬・堆積</strong>と岩石の風化がこれにあたる。<strong class="hit">内的営力は起伏を大きくし、外的営力は起伏を小さくする</strong>。山が高いのは隆起が侵食を上回っている場所であり、平らな大陸の内部は長い時間の侵食が隆起を上回った場所である。</p>
+
+<h3>プレート境界の3類型</h3>
+<p>プレートどうしが接する場所を<strong>プレート境界</strong>と呼ぶ。動きの向きによって3つに分かれる。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>境界</th><th>動き</th><th>できる地形</th><th>代表例</th></tr></thead>
+<tbody>
+<tr><td>広がる境界</td><td>2枚が離れていく</td><td>海嶺・地溝</td><td>大西洋中央海嶺 ／ アフリカ大地溝帯 ／ アイスランド</td></tr>
+<tr><td>狭まる境界（沈み込み型）</td><td>重い海洋プレートが下へ沈む</td><td>海溝・弧状列島・火山列</td><td>日本海溝 ／ アンデス山脈沿いの海溝</td></tr>
+<tr><td>狭まる境界（衝突型）</td><td>大陸どうしがぶつかる</td><td>大山脈・高原</td><td>ヒマラヤ山脈 ／ チベット高原</td></tr>
+<tr><td>ずれる境界</td><td>2枚が水平にすれ違う</td><td>トランスフォーム断層</td><td>サンアンドレアス断層</td></tr>
+</tbody></table></div>
+<p>移動の速さはプレートごとに異なる。太平洋プレートは東南東の方向から年間8cm程度の速さで日本列島に近づく（地震調査研究推進本部の解説、出典2）。フィリピン海プレートは南東方向から年間3〜7cm程度で近づく（同、出典2）。大西洋中央海嶺で両側のプレートが離れる速さは平均で年約2.5cmである（米国地質調査所、出典3）。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 250" role="img" aria-label="プレート境界の3類型の断面">
+  <defs><marker id="j07m1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker></defs>
+  <g font-size="13" font-weight="600" fill="var(--ink)" text-anchor="middle">
+    <text x="120" y="24">広がる境界</text><text x="360" y="24">狭まる境界</text><text x="600" y="24">ずれる境界（上から見た図）</text>
+  </g>
+  <!-- divergent -->
+  <rect x="20" y="120" width="92" height="40" fill="var(--cool)" opacity="0.55"/>
+  <rect x="128" y="120" width="92" height="40" fill="var(--cool)" opacity="0.55"/>
+  <path d="M100 120 L120 96 L140 120" fill="var(--warm)" opacity="0.8"/>
+  <path d="M120 200 L120 165" stroke="var(--warm)" stroke-width="3" marker-end="url(#j07m1)"/>
+  <path d="M90 140 L40 140" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#j07m1)"/>
+  <path d="M150 140 L200 140" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#j07m1)"/>
+  <g font-size="12" fill="var(--sub)" text-anchor="middle"><text x="120" y="88">海嶺</text><text x="120" y="222">マグマが上昇</text></g>
+  <!-- convergent -->
+  <path d="M250 110 L370 110 L470 170 L470 190 L360 128 L250 128 Z" fill="var(--cool)" opacity="0.55"/>
+  <path d="M370 106 L470 106 L470 128 L392 128 Z" fill="#B9AE9F"/>
+  <path d="M420 106 L432 80 L444 106 Z" fill="var(--warm)" opacity="0.85"/>
+  <path d="M290 100 L345 100" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#j07m1)"/>
+  <path d="M395 165 L430 186" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#j07m1)"/>
+  <g font-size="12" fill="var(--sub)" text-anchor="middle">
+    <text x="300" y="148">海洋プレート</text><text x="440" y="70">火山</text><text x="372" y="96">海溝</text><text x="432" y="122">大陸プレート</text>
+  </g>
+  <!-- transform (map view) -->
+  <rect x="530" y="60" width="140" height="70" fill="var(--cool)" opacity="0.55"/>
+  <rect x="530" y="130" width="140" height="70" fill="#B9AE9F"/>
+  <line x1="530" y1="130" x2="670" y2="130" stroke="var(--warm)" stroke-width="3"/>
+  <path d="M640 95 L560 95" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#j07m1)"/>
+  <path d="M560 165 L640 165" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#j07m1)"/>
+  <text x="600" y="222" font-size="12" fill="var(--sub)" text-anchor="middle">断層に沿ってすれ違う</text>
+  <line x1="240" y1="40" x2="240" y2="230" stroke="var(--line)" stroke-dasharray="4 4"/>
+  <line x1="500" y1="40" x2="500" y2="230" stroke="var(--line)" stroke-dasharray="4 4"/>
+</svg>
+<figcaption>左と中央は断面図で右は上から見た図である。広がる境界では地下からマグマが上がり新しいプレートがつくられる。狭まる境界では重い海洋プレートが大陸プレートの下へ沈み、海溝と並行して火山が並ぶ。ずれる境界ではプレートがつくられも失われもしない。</figcaption>
+</figure>
+
+<aside class="an an-lv"><b>恋愛で言えば</b>
+<p class="an-h">プレート境界は関係の3類型である。離れる・ぶつかる・すれ違う</p>
+<p>離れる2人の間には新しい空間（海嶺）が生まれる。ぶつかれば一方が下に入るか双方が盛り上がる。すれ違うだけでも摩擦で揺れる。</p>
+</aside>
+
+<div class="ex"><div class="ex-h">例題 1</div>
+<p>ある地域には深さ7,000mを超える細長い海底の溝があり、それと平行に陸側に火山が並ぶ。この地域のプレート境界の種類を答えよ。</p>
+<details open><summary>解き方</summary><div>手順1 細長い深い溝は海溝である。<br>手順2 海溝は海洋プレートが沈み込む場所にできる。<br>手順3 沈み込んだプレートが地下深くでマグマを生じさせるので、海溝と平行に火山が並ぶ。<br>答え 狭まる境界のうち沈み込み型である。</div></details></div>
+
+<h2 id="s2">大地形 安定陸塊・古期造山帯・新期造山帯</h2>
+<p>大陸規模の起伏を<strong>大地形</strong>と呼ぶ。高校地理は大地形を最後に造山運動を受けた時期によって3つに分ける。造山運動とは褶曲や断層を伴って山脈をつくる地殻変動である。<strong class="hit">造山運動が古いほど侵食を受けた時間が長く、山は低くなだらかになる</strong>。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>区分</th><th>最後の造山運動</th><th>地形</th><th>代表例</th><th>多い資源</th></tr></thead>
+<tbody>
+<tr><td><strong>安定陸塊</strong></td><td>先カンブリア時代（約5.4億年前より前）</td><td>楯状地・卓状地。平原と台地</td><td>カナダ楯状地 ／ バルト楯状地 ／ シベリア卓状地 ／ ブラジル高原 ／ オーストラリア西部 ／ アフリカ大陸の大部分</td><td>鉄鉱石</td></tr>
+<tr><td><strong>古期造山帯</strong></td><td>古生代（約5.4億〜2.5億年前）</td><td>低くなだらかな山地</td><td>アパラチア山脈 ／ ウラル山脈 ／ グレートディヴァイディング山脈 ／ スカンディナヴィア山脈 ／ テンシャン山脈</td><td>石炭</td></tr>
+<tr><td><strong>新期造山帯</strong></td><td>中生代末から新生代（現在も継続）</td><td>高く険しい山脈。地震と火山が多い</td><td>環太平洋造山帯（アンデス・ロッキー・日本列島） ／ アルプス＝ヒマラヤ造山帯</td><td>石油・銅・銀</td></tr>
+</tbody></table></div>
+<p>年代の境界は国際層序委員会の年代表による。古生代の始まりは約5億3,880万年前で、古生代と中生代の境界は約2億5,190万年前である（2024年版、出典9）。安定陸塊のうち古い岩盤が地表に出て盾を伏せた形の平原を<strong>楯状地</strong>と呼ぶ。古い岩盤の上に水平な地層が重なり卓のように平らな台地を<strong>卓状地</strong>と呼ぶ。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 340" role="img" aria-label="安定陸塊・古期造山帯・新期造山帯の分布">
+<clipPath id="j07ac"><rect x="0" y="0" width="720" height="306.9"/></clipPath>
+<g clip-path="url(#j07ac)">
+<rect x="0" y="0" width="720" height="306.9" fill="#F3F6FA"/>
+<path d="M67.2 306.9L61.0 301.9L55.2 296.8L49.6 291.7L44.5 286.5L39.6 281.3L35.1 276.0L30.7 270.7L26.7 265.4L23.1 260.0L19.7 254.7L16.7 249.3L13.9 244.0L11.7 238.6L9.5 233.3L7.9 227.9L6.4 222.5L5.0 217.2L3.7 211.8L2.7 206.5L1.8 201.1L1.1 195.7L0.6 190.4L0.2 185.0L0.0 179.7L-0.0 174.3L0.2 168.9L0.6 163.6L1.1 158.2L1.8 152.9L2.7 147.5L3.7 142.1L5.0 136.8L6.4 131.4L7.9 126.1L9.5 120.7L11.7 115.3L13.9 110.0L16.7 104.6L19.6 99.3L23.0 93.9L26.6 88.6L30.7 83.2L35.0 77.9L39.6 72.7L44.4 67.5L49.5 62.3L55.1 57.1L60.9 52.0L67.1 47.1L73.3 42.1L80.0 37.3L86.6 32.5L93.6 27.9L100.6 23.3L108.3 18.9L116.0 14.6L124.7 10.5L133.5 6.6L142.0 3.2L150.4 -0.0M116.0 306.9L110.8 301.9L106.0 296.8L101.3 291.7L97.1 286.5L93.0 281.3L89.2 276.0L85.6 270.7L82.2 265.4L79.2 260.0L76.4 254.7L73.9 249.3L71.6 244.0L69.7 238.6L67.9 233.3L66.6 227.9L65.3 222.5L64.2 217.2L63.1 211.8L62.3 206.5L61.5 201.1L61.0 195.7L60.5 190.4L60.2 185.0L60.0 179.7L60.0 174.3L60.2 168.9L60.5 163.6L60.9 158.2L61.5 152.9L62.3 147.5L63.1 142.1L64.2 136.8L65.3 131.4L66.6 126.1L67.9 120.7L69.7 115.3L71.6 110.0L73.9 104.6L76.4 99.3L79.2 93.9L82.2 88.6L85.6 83.2L89.2 77.9L93.0 72.7L97.0 67.5L101.3 62.3L105.9 57.1L110.7 52.0L115.9 47.1L121.1 42.1L126.6 37.3L132.2 32.5L138.0 27.9L143.9 23.3L150.3 18.9L156.7 14.6L163.9 10.5L171.3 6.6L178.4 3.2L185.3 -0.0M164.8 306.9L160.6 301.9L156.8 296.8L153.1 291.7L149.6 286.5L146.4 281.3L143.4 276.0L140.5 270.7L137.8 265.4L135.4 260.0L133.1 254.7L131.2 249.3L129.3 244.0L127.8 238.6L126.3 233.3L125.3 227.9L124.3 222.5L123.4 217.2L122.5 211.8L121.8 206.5L121.2 201.1L120.8 195.7L120.4 190.4L120.2 185.0L120.0 179.7L120.0 174.3L120.2 168.9L120.4 163.6L120.8 158.2L121.2 152.9L121.8 147.5L122.5 142.1L123.3 136.8L124.2 131.4L125.3 126.1L126.3 120.7L127.8 115.3L129.3 110.0L131.1 104.6L133.1 99.3L135.4 93.9L137.8 88.6L140.4 83.2L143.3 77.9L146.4 72.7L149.6 67.5L153.0 62.3L156.7 57.1L160.6 52.0L164.7 47.1L168.9 42.1L173.3 37.3L177.7 32.5L182.4 27.9L187.1 23.3L192.2 18.9L197.4 14.6L203.1 10.5L209.0 6.6L214.7 3.2L220.3 -0.0M213.6 306.9L210.5 301.9L207.6 296.8L204.8 291.7L202.2 286.5L199.8 281.3L197.5 276.0L195.4 270.7L193.3 265.4L191.5 260.0L189.8 254.7L188.4 249.3L187.0 244.0L185.8 238.6L184.8 233.3L184.0 227.9L183.2 222.5L182.5 217.2L181.9 211.8L181.4 206.5L180.9 201.1L180.6 195.7L180.3 190.4L180.1 185.0L180.0 179.7L180.0 174.3L180.1 168.9L180.3 163.6L180.6 158.2L180.9 152.9L181.4 147.5L181.8 142.1L182.5 136.8L183.2 131.4L184.0 126.1L184.7 120.7L185.8 115.3L186.9 110.0L188.3 104.6L189.8 99.3L191.5 93.9L193.3 88.6L195.3 83.2L197.5 77.9L199.8 72.7L202.2 67.5L204.8 62.3L207.6 57.1L210.4 52.0L213.5 47.1L216.7 42.1L220.0 37.3L223.3 32.5L226.8 27.9L230.3 23.3L234.2 18.9L238.0 14.6L242.3 10.5L246.8 6.6L251.0 3.2L255.2 -0.0M262.4 306.9L260.3 301.9L258.4 296.8L256.5 291.7L254.8 286.5L253.2 281.3L251.7 276.0L250.2 270.7L248.9 265.4L247.7 260.0L246.6 254.7L245.6 249.3L244.6 244.0L243.9 238.6L243.2 233.3L242.6 227.9L242.1 222.5L241.7 217.2L241.2 211.8L240.9 206.5L240.6 201.1L240.4 195.7L240.2 190.4L240.1 185.0L240.0 179.7L240.0 174.3L240.1 168.9L240.2 163.6L240.4 158.2L240.6 152.9L240.9 147.5L241.2 142.1L241.7 136.8L242.1 131.4L242.6 126.1L243.2 120.7L243.9 115.3L244.6 110.0L245.6 104.6L246.5 99.3L247.7 93.9L248.9 88.6L250.2 83.2L251.7 77.9L253.2 72.7L254.8 67.5L256.5 62.3L258.4 57.1L260.3 52.0L262.4 47.1L264.4 42.1L266.7 37.3L268.9 32.5L271.2 27.9L273.5 23.3L276.1 18.9L278.7 14.6L281.6 10.5L284.5 6.6L287.3 3.2L290.1 -0.0M311.2 306.9L310.2 301.9L309.2 296.8L308.3 291.7L307.4 286.5L306.6 281.3L305.8 276.0L305.1 270.7L304.4 265.4L303.8 260.0L303.3 254.7L302.8 249.3L302.3 244.0L301.9 238.6L301.6 233.3L301.3 227.9L301.1 222.5L300.8 217.2L300.6 211.8L300.5 206.5L300.3 201.1L300.2 195.7L300.1 190.4L300.0 185.0L300.0 179.7L300.0 174.3L300.0 168.9L300.1 163.6L300.2 158.2L300.3 152.9L300.5 147.5L300.6 142.1L300.8 136.8L301.1 131.4L301.3 126.1L301.6 120.7L301.9 115.3L302.3 110.0L302.8 104.6L303.3 99.3L303.8 93.9L304.4 88.6L305.1 83.2L305.8 77.9L306.6 72.7L307.4 67.5L308.3 62.3L309.2 57.1L310.1 52.0L311.2 47.1L312.2 42.1L313.3 37.3L314.4 32.5L315.6 27.9L316.8 23.3L318.1 18.9L319.3 14.6L320.8 10.5L322.3 6.6L323.7 3.2L325.1 -0.0M360.0 306.9L360.0 301.9L360.0 296.8L360.0 291.7L360.0 286.5L360.0 281.3L360.0 276.0L360.0 270.7L360.0 265.4L360.0 260.0L360.0 254.7L360.0 249.3L360.0 244.0L360.0 238.6L360.0 233.3L360.0 227.9L360.0 222.5L360.0 217.2L360.0 211.8L360.0 206.5L360.0 201.1L360.0 195.7L360.0 190.4L360.0 185.0L360.0 179.7L360.0 174.3L360.0 168.9L360.0 163.6L360.0 158.2L360.0 152.9L360.0 147.5L360.0 142.1L360.0 136.8L360.0 131.4L360.0 126.1L360.0 120.7L360.0 115.3L360.0 110.0L360.0 104.6L360.0 99.3L360.0 93.9L360.0 88.6L360.0 83.2L360.0 77.9L360.0 72.7L360.0 67.5L360.0 62.3L360.0 57.1L360.0 52.0L360.0 47.1L360.0 42.1L360.0 37.3L360.0 32.5L360.0 27.9L360.0 23.3L360.0 18.9L360.0 14.6L360.0 10.5L360.0 6.6L360.0 3.2L360.0 -0.0M408.8 306.9L409.8 301.9L410.8 296.8L411.7 291.7L412.6 286.5L413.4 281.3L414.2 276.0L414.9 270.7L415.6 265.4L416.2 260.0L416.7 254.7L417.2 249.3L417.7 244.0L418.1 238.6L418.4 233.3L418.7 227.9L418.9 222.5L419.2 217.2L419.4 211.8L419.5 206.5L419.7 201.1L419.8 195.7L419.9 190.4L420.0 185.0L420.0 179.7L420.0 174.3L420.0 168.9L419.9 163.6L419.8 158.2L419.7 152.9L419.5 147.5L419.4 142.1L419.2 136.8L418.9 131.4L418.7 126.1L418.4 120.7L418.1 115.3L417.7 110.0L417.2 104.6L416.7 99.3L416.2 93.9L415.6 88.6L414.9 83.2L414.2 77.9L413.4 72.7L412.6 67.5L411.7 62.3L410.8 57.1L409.9 52.0L408.8 47.1L407.8 42.1L406.7 37.3L405.6 32.5L404.4 27.9L403.2 23.3L401.9 18.9L400.7 14.6L399.2 10.5L397.7 6.6L396.3 3.2L394.9 -0.0M457.6 306.9L459.7 301.9L461.6 296.8L463.5 291.7L465.2 286.5L466.8 281.3L468.3 276.0L469.8 270.7L471.1 265.4L472.3 260.0L473.4 254.7L474.4 249.3L475.4 244.0L476.1 238.6L476.8 233.3L477.4 227.9L477.9 222.5L478.3 217.2L478.8 211.8L479.1 206.5L479.4 201.1L479.6 195.7L479.8 190.4L479.9 185.0L480.0 179.7L480.0 174.3L479.9 168.9L479.8 163.6L479.6 158.2L479.4 152.9L479.1 147.5L478.8 142.1L478.3 136.8L477.9 131.4L477.4 126.1L476.8 120.7L476.1 115.3L475.4 110.0L474.4 104.6L473.5 99.3L472.3 93.9L471.1 88.6L469.8 83.2L468.3 77.9L466.8 72.7L465.2 67.5L463.5 62.3L461.6 57.1L459.7 52.0L457.6 47.1L455.6 42.1L453.3 37.3L451.1 32.5L448.8 27.9L446.5 23.3L443.9 18.9L441.3 14.6L438.4 10.5L435.5 6.6L432.7 3.2L429.9 -0.0M506.4 306.9L509.5 301.9L512.4 296.8L515.2 291.7L517.8 286.5L520.2 281.3L522.5 276.0L524.6 270.7L526.7 265.4L528.5 260.0L530.2 254.7L531.6 249.3L533.0 244.0L534.2 238.6L535.2 233.3L536.0 227.9L536.8 222.5L537.5 217.2L538.1 211.8L538.6 206.5L539.1 201.1L539.4 195.7L539.7 190.4L539.9 185.0L540.0 179.7L540.0 174.3L539.9 168.9L539.7 163.6L539.4 158.2L539.1 152.9L538.6 147.5L538.2 142.1L537.5 136.8L536.8 131.4L536.0 126.1L535.3 120.7L534.2 115.3L533.1 110.0L531.7 104.6L530.2 99.3L528.5 93.9L526.7 88.6L524.7 83.2L522.5 77.9L520.2 72.7L517.8 67.5L515.2 62.3L512.4 57.1L509.6 52.0L506.5 47.1L503.3 42.1L500.0 37.3L496.7 32.5L493.2 27.9L489.7 23.3L485.8 18.9L482.0 14.6L477.7 10.5L473.2 6.6L469.0 3.2L464.8 -0.0M555.2 306.9L559.4 301.9L563.2 296.8L566.9 291.7L570.4 286.5L573.6 281.3L576.6 276.0L579.5 270.7L582.2 265.4L584.6 260.0L586.9 254.7L588.8 249.3L590.7 244.0L592.2 238.6L593.7 233.3L594.7 227.9L595.7 222.5L596.6 217.2L597.5 211.8L598.2 206.5L598.8 201.1L599.2 195.7L599.6 190.4L599.8 185.0L600.0 179.7L600.0 174.3L599.8 168.9L599.6 163.6L599.2 158.2L598.8 152.9L598.2 147.5L597.5 142.1L596.7 136.8L595.8 131.4L594.7 126.1L593.7 120.7L592.2 115.3L590.7 110.0L588.9 104.6L586.9 99.3L584.6 93.9L582.2 88.6L579.6 83.2L576.7 77.9L573.6 72.7L570.4 67.5L567.0 62.3L563.3 57.1L559.4 52.0L555.3 47.1L551.1 42.1L546.7 37.3L542.3 32.5L537.6 27.9L532.9 23.3L527.8 18.9L522.6 14.6L516.9 10.5L511.0 6.6L505.3 3.2L499.7 -0.0M604.0 306.9L609.2 301.9L614.0 296.8L618.7 291.7L622.9 286.5L627.0 281.3L630.8 276.0L634.4 270.7L637.8 265.4L640.8 260.0L643.6 254.7L646.1 249.3L648.4 244.0L650.3 238.6L652.1 233.3L653.4 227.9L654.7 222.5L655.8 217.2L656.9 211.8L657.7 206.5L658.5 201.1L659.0 195.7L659.5 190.4L659.8 185.0L660.0 179.7L660.0 174.3L659.8 168.9L659.5 163.6L659.1 158.2L658.5 152.9L657.7 147.5L656.9 142.1L655.8 136.8L654.7 131.4L653.4 126.1L652.1 120.7L650.3 115.3L648.4 110.0L646.1 104.6L643.6 99.3L640.8 93.9L637.8 88.6L634.4 83.2L630.8 77.9L627.0 72.7L623.0 67.5L618.7 62.3L614.1 57.1L609.3 52.0L604.1 47.1L598.9 42.1L593.4 37.3L587.8 32.5L582.0 27.9L576.1 23.3L569.7 18.9L563.3 14.6L556.1 10.5L548.7 6.6L541.6 3.2L534.7 -0.0M652.8 306.9L659.0 301.9L664.8 296.8L670.4 291.7L675.5 286.5L680.4 281.3L684.9 276.0L689.3 270.7L693.3 265.4L696.9 260.0L700.3 254.7L703.3 249.3L706.1 244.0L708.3 238.6L710.5 233.3L712.1 227.9L713.6 222.5L715.0 217.2L716.3 211.8L717.3 206.5L718.2 201.1L718.9 195.7L719.4 190.4L719.8 185.0L720.0 179.7L720.0 174.3L719.8 168.9L719.4 163.6L718.9 158.2L718.2 152.9L717.3 147.5L716.3 142.1L715.0 136.8L713.6 131.4L712.1 126.1L710.5 120.7L708.3 115.3L706.1 110.0L703.3 104.6L700.4 99.3L697.0 93.9L693.4 88.6L689.3 83.2L685.0 77.9L680.4 72.7L675.6 67.5L670.5 62.3L664.9 57.1L659.1 52.0L652.9 47.1L646.7 42.1L640.0 37.3L633.4 32.5L626.4 27.9L619.4 23.3L611.7 18.9L604.0 14.6L595.3 10.5L586.5 6.6L578.0 3.2L569.6 -0.0M14.3 244.9L20.0 244.9L25.8 244.9L31.6 244.9L37.3 244.9L43.1 244.9L48.9 244.9L54.6 244.9L60.4 244.9L66.1 244.9L71.9 244.9L77.7 244.9L83.4 244.9L89.2 244.9L95.0 244.9L100.7 244.9L106.5 244.9L112.2 244.9L118.0 244.9L123.8 244.9L129.5 244.9L135.3 244.9L141.0 244.9L146.8 244.9L152.6 244.9L158.3 244.9L164.1 244.9L169.9 244.9L175.6 244.9L181.4 244.9L187.1 244.9L192.9 244.9L198.7 244.9L204.4 244.9L210.2 244.9L216.0 244.9L221.7 244.9L227.5 244.9L233.2 244.9L239.0 244.9L244.8 244.9L250.5 244.9L256.3 244.9L262.0 244.9L267.8 244.9L273.6 244.9L279.3 244.9L285.1 244.9L290.9 244.9L296.6 244.9L302.4 244.9L308.1 244.9L313.9 244.9L319.7 244.9L325.4 244.9L331.2 244.9L337.0 244.9L342.7 244.9L348.5 244.9L354.2 244.9L360.0 244.9L365.8 244.9L371.5 244.9L377.3 244.9L383.0 244.9L388.8 244.9L394.6 244.9L400.3 244.9L406.1 244.9L411.9 244.9L417.6 244.9L423.4 244.9L429.1 244.9L434.9 244.9L440.7 244.9L446.4 244.9L452.2 244.9L458.0 244.9L463.7 244.9L469.5 244.9L475.2 244.9L481.0 244.9L486.8 244.9L492.5 244.9L498.3 244.9L504.0 244.9L509.8 244.9L515.6 244.9L521.3 244.9L527.1 244.9L532.9 244.9L538.6 244.9L544.4 244.9L550.1 244.9L555.9 244.9L561.7 244.9L567.4 244.9L573.2 244.9L579.0 244.9L584.7 244.9L590.5 244.9L596.2 244.9L602.0 244.9L607.8 244.9L613.5 244.9L619.3 244.9L625.0 244.9L630.8 244.9L636.6 244.9L642.3 244.9L648.1 244.9L653.9 244.9L659.6 244.9L665.4 244.9L671.1 244.9L676.9 244.9L682.7 244.9L688.4 244.9L694.2 244.9L700.0 244.9L705.7 244.9M-0.1 176.9L5.9 176.9L11.9 176.9L17.9 176.9L23.9 176.9L29.9 176.9L35.9 176.9L41.9 176.9L47.9 176.9L53.9 176.9L59.9 176.9L65.9 176.9L71.9 176.9L77.9 176.9L83.9 176.9L89.9 176.9L95.9 176.9L101.9 176.9L107.9 176.9L113.9 176.9L119.9 176.9L125.9 176.9L131.9 176.9L137.9 176.9L143.9 176.9L149.9 176.9L155.9 176.9L161.9 176.9L167.9 176.9L173.9 176.9L179.9 176.9L185.9 176.9L191.9 176.9L197.9 176.9L203.9 176.9L209.9 176.9L216.0 176.9L222.0 176.9L228.0 176.9L234.0 176.9L240.0 176.9L246.0 176.9L252.0 176.9L258.0 176.9L264.0 176.9L270.0 176.9L276.0 176.9L282.0 176.9L288.0 176.9L294.0 176.9L300.0 176.9L306.0 176.9L312.0 176.9L318.0 176.9L324.0 176.9L330.0 176.9L336.0 176.9L342.0 176.9L348.0 176.9L354.0 176.9L360.0 176.9L366.0 176.9L372.0 176.9L378.0 176.9L384.0 176.9L390.0 176.9L396.0 176.9L402.0 176.9L408.0 176.9L414.0 176.9L420.0 176.9L426.0 176.9L432.0 176.9L438.0 176.9L444.0 176.9L450.0 176.9L456.0 176.9L462.0 176.9L468.0 176.9L474.0 176.9L480.0 176.9L486.0 176.9L492.0 176.9L498.0 176.9L504.0 176.9L510.1 176.9L516.1 176.9L522.1 176.9L528.1 176.9L534.1 176.9L540.1 176.9L546.1 176.9L552.1 176.9L558.1 176.9L564.1 176.9L570.1 176.9L576.1 176.9L582.1 176.9L588.1 176.9L594.1 176.9L600.1 176.9L606.1 176.9L612.1 176.9L618.1 176.9L624.1 176.9L630.1 176.9L636.1 176.9L642.1 176.9L648.1 176.9L654.1 176.9L660.1 176.9L666.1 176.9L672.1 176.9L678.1 176.9L684.1 176.9L690.1 176.9L696.1 176.9L702.1 176.9L708.1 176.9L714.1 176.9L720.1 176.9M14.3 109.0L20.0 109.0L25.8 109.0L31.6 109.0L37.3 109.0L43.1 109.0L48.9 109.0L54.6 109.0L60.4 109.0L66.1 109.0L71.9 109.0L77.7 109.0L83.4 109.0L89.2 109.0L95.0 109.0L100.7 109.0L106.5 109.0L112.2 109.0L118.0 109.0L123.8 109.0L129.5 109.0L135.3 109.0L141.0 109.0L146.8 109.0L152.6 109.0L158.3 109.0L164.1 109.0L169.9 109.0L175.6 109.0L181.4 109.0L187.1 109.0L192.9 109.0L198.7 109.0L204.4 109.0L210.2 109.0L216.0 109.0L221.7 109.0L227.5 109.0L233.2 109.0L239.0 109.0L244.8 109.0L250.5 109.0L256.3 109.0L262.0 109.0L267.8 109.0L273.6 109.0L279.3 109.0L285.1 109.0L290.9 109.0L296.6 109.0L302.4 109.0L308.1 109.0L313.9 109.0L319.7 109.0L325.4 109.0L331.2 109.0L337.0 109.0L342.7 109.0L348.5 109.0L354.2 109.0L360.0 109.0L365.8 109.0L371.5 109.0L377.3 109.0L383.0 109.0L388.8 109.0L394.6 109.0L400.3 109.0L406.1 109.0L411.9 109.0L417.6 109.0L423.4 109.0L429.1 109.0L434.9 109.0L440.7 109.0L446.4 109.0L452.2 109.0L458.0 109.0L463.7 109.0L469.5 109.0L475.2 109.0L481.0 109.0L486.8 109.0L492.5 109.0L498.3 109.0L504.0 109.0L509.8 109.0L515.6 109.0L521.3 109.0L527.1 109.0L532.9 109.0L538.6 109.0L544.4 109.0L550.1 109.0L555.9 109.0L561.7 109.0L567.4 109.0L573.2 109.0L579.0 109.0L584.7 109.0L590.5 109.0L596.2 109.0L602.0 109.0L607.8 109.0L613.5 109.0L619.3 109.0L625.0 109.0L630.8 109.0L636.6 109.0L642.3 109.0L648.1 109.0L653.9 109.0L659.6 109.0L665.4 109.0L671.1 109.0L676.9 109.0L682.7 109.0L688.4 109.0L694.2 109.0L700.0 109.0L705.7 109.0M72.4 42.8L77.2 42.8L82.0 42.8L86.8 42.8L91.6 42.8L96.4 42.8L101.2 42.8L106.0 42.8L110.8 42.8L115.5 42.8L120.3 42.8L125.1 42.8L129.9 42.8L134.7 42.8L139.5 42.8L144.3 42.8L149.1 42.8L153.9 42.8L158.7 42.8L163.5 42.8L168.3 42.8L173.1 42.8L177.9 42.8L182.7 42.8L187.4 42.8L192.2 42.8L197.0 42.8L201.8 42.8L206.6 42.8L211.4 42.8L216.2 42.8L221.0 42.8L225.8 42.8L230.6 42.8L235.4 42.8L240.2 42.8L245.0 42.8L249.8 42.8L254.5 42.8L259.3 42.8L264.1 42.8L268.9 42.8L273.7 42.8L278.5 42.8L283.3 42.8L288.1 42.8L292.9 42.8L297.7 42.8L302.5 42.8L307.3 42.8L312.1 42.8L316.9 42.8L321.7 42.8L326.4 42.8L331.2 42.8L336.0 42.8L340.8 42.8L345.6 42.8L350.4 42.8L355.2 42.8L360.0 42.8L364.8 42.8L369.6 42.8L374.4 42.8L379.2 42.8L384.0 42.8L388.8 42.8L393.6 42.8L398.3 42.8L403.1 42.8L407.9 42.8L412.7 42.8L417.5 42.8L422.3 42.8L427.1 42.8L431.9 42.8L436.7 42.8L441.5 42.8L446.3 42.8L451.1 42.8L455.9 42.8L460.7 42.8L465.5 42.8L470.2 42.8L475.0 42.8L479.8 42.8L484.6 42.8L489.4 42.8L494.2 42.8L499.0 42.8L503.8 42.8L508.6 42.8L513.4 42.8L518.2 42.8L523.0 42.8L527.8 42.8L532.6 42.8L537.3 42.8L542.1 42.8L546.9 42.8L551.7 42.8L556.5 42.8L561.3 42.8L566.1 42.8L570.9 42.8L575.7 42.8L580.5 42.8L585.3 42.8L590.1 42.8L594.9 42.8L599.7 42.8L604.5 42.8L609.2 42.8L614.0 42.8L618.8 42.8L623.6 42.8L628.4 42.8L633.2 42.8L638.0 42.8L642.8 42.8L647.6 42.8" fill="none" stroke="#D5DCE6" stroke-width="0.6"/>
+<path d="M499 92.9l-4.9 1-2.4-4.1-2.2 3.1-6.9-1-4.5 5.2-2.9-.8-.2 5.8 3.3 4.6-1.4 2.6 10.3 .1 .3-3.1 4.7-1.7 .1-4.7 2.2-.1-.3-5.4zM397.5 82.1l-2.4-.6 2.2 5.7 1.4-2.2zM362.2 129.1l4.4 4.9 4.8-1.1 12-9.2-5.2-6 .7-6.7-4.7-10.8 1.9-6.9-10.6 .3-7.4 2.5-2.3 1.4 1.9 6.8-3.2 0-5.2 5.8-6 1.9-.1 3.1zM407.4 201.9l-3.2 .5-.7-9-4.5-.6-.4 2.3-3.5 .2-2.1-5-8.5 .5 3 11.3-4.3 13.9 22.9 .9-2.6-3.3 .1-7.2 4 0zM229.1 229l-2.6 4 1.2 5.2-2.6 9.6 2.8 6.7-1.1 5.9 1.9 12.2 3.5 5.1-1.6 .5 2.2 4.2-.6 7.2 4.7 4.4 6.4 .9-2.7-1.6 .9-3.2-1.3-.3 1.9-.1 2.2-4.5-4.7-4.3 2.9-2.4 .9-4.3-1.4-.8 2.4-.1-2.9-1.1-1-2.8 5.1 .1-1.3-4.7 8.7-1.5 .7-3.9-4.5-4.8-.2-8.5 6.9-9.7-2-1.5-1.7 4.2-5.6-.3 1-4.8-10.6-7.2-2.2 0-.5 1.9-4-2.4zM245.4 300.3l5.5-.5-7.7-4.3zM442.3 83.6l-2.7 .3 .9 2.2 5.7 2.8zM611.9 249.2l3.5 1.3 1 5.7 5.8-5.6-4.4 6.2 3.5-2.6-1.5 3.4 2.6-.5-1.1 5.7 4.7 2.1 3.8-2.2-1 1 2.2 1.9 8.7-3.8 13.1-14.5 3.3-5.4 1.3-7.7-3-4 .4-2.6-2.1 .3-.5-5.1-4.2-2.9-.1-9.1-2.9-1.2-1.3-8.5-6.5 15.8-8.9-6.1 3.1-6.9-1.2 1.3-.1-1.6-1.5 1.2-6.1-2.7 1.3 2.3-4.4 .6-2.5 6.4-2.3-1-1.2 1.6-.7-3.5-2.7-.1-3.9 3.7 .7 2-2.5-.5-.5 3.2-.9-2.7-4.7 7.1-8.9 2.3-5.7 4.4-.5-1.2-2.1 5.5 .6 4.3-.9-1.8 .1 2.3-1.2-.8 1.5 7.5-.8 7.1-2.8 3.7 1.4 1.3 15-2 12.8-5.2zM628 274.7l3.9-5.5-6.7 .5-1.2 5.8zM389.6 67.2l-3.4-.9-3.8 2 .5 1.4-6.1 .5 9 1.9 3.4-1.3zM442.5 83.6l3.7 5.3 2.4-1.8 1.7 2.9 .9-4 1.6-.1-4.1-3.6zM541.1 126.8l-1.1-3.5-1 1.7-1.2-1.8 2.3-2.7-5.4-.8-3.4-3.1 3.5 11.3 2.4-1.2-.3-3.2 4.3 6.5zM400.6 60.8l12 .7 1.7-1.9-1.1-2.4 2.1-.5-4-4.7-4.8-1.1-2.3 1-.9 3.2-3.7 .5zM364.4 62l5.1 3.3 1.5-1.8-2.4-2.6zM183.5 140.9l1.9-1.4 .7-4.4zM366.9 150.1l-2.1-.9-3.2 3.5 1.6 10.2 2.2-.4zM534.7 113.2l-1.8 0-.8 2.7 6.2 .2zM222.9 216.9l4.6 11.9 2.8-2.5 4 2.4 .5-1.9 2.6 .5 1.2-5.9 5.2-.8 2.5 1.6 .5-3.9-2.1-4.5-3.6 0-1-5.6-9.3-4.1-1.1-5.2-8.1 2.8 2 3.6zM392.1 79.8l1.5 .8 1.6-2.2-.4-3-6.5-.7zM409.6 217.2l-8.3 1.2-.2 8.3-2 .1 1 11 4.7-3.6 4.7 1 7.9-8zM249.6 245.5l7.9 4 1.1 3.7 1.2-.8 1.7-7.5 1.5 1-2.2 3.9 5.2-8.2-.8-7.2 14.5-7.6 3.1-9.8-.1-11.2 1.2 .4 5.8-8.4 .9-4.6-1.5-4.6-3.4-.5-5.6-4.7-6.9-1.2-2.7 2.2 .3-3.5-4.5-2.3-2.4-.2-3.2 4.6 .5-2-2.9 .4 0-2.4-3.7 1.6 5.6-6.3-3.1-7.4-3 5.1-6-.8 0 1.5-6.6 1.1-1.8-8.8-5.4 3.9-3.8-1.7 2.8 4.6-4.3 3.6-3.2-1.1-.6-2.2-4.9 1 1.4 2.4-1.8 .1 1.3 4-1 7.1-5.9 1.9-1.9 5.4 3.8 5.6 3.3-1.3 0 3.6 4 .2 6.2-3.2 1.1 5.2 9.3 4.1 1 5.6 3.6 0 2.1 4.4-.3 8.7 4.2 .5 5.2 9zM263.1 178l-4.3-.6 0 3.6 3.4-.6zM408.1 82.5l3-.5-1.2-1.2 1.7-2.8-11.2-.6 1.5 6zM364.1 149l-5.5-6.2-7.2 4.3-2.4 6.2 5.5 2.4-.1-3.7 7.5 .1 2.6-1.6zM421 182.4l-3 .5 .8 4.1 2.8-2.7zM572.9 143.8l-2.6 1.6-6.2-.6-1 2.1 2.1 5.4 6.1 .3-1-2 3.3-1.7zM382.7 171.7l9.6 1.3-3.6-9.7 2.3-4-3.2-4.2 3.4-.8-2.6-7 .5 3.5-5.4 10.1-1.2 1.5-2.3-1.3-2.5 2.6-.7 3 2.5 .9 .1 4.2zM194.6 65.7l4.4 2.8 5.9-.6 5.7 3.9 1.7 2.7-3.9 7.3 1 .8 24.1-11.3 3.9-3-2.1-.7 2.3 .6 7.2-4.6 11.3 0 8.2-3.7 1.3-2.8-3.1-2.1-4.8 2.1-.3-1.3 6.5-1.6-5.3-.9 1.3-1.6-2.8-2.2 2.3-.6-.9-2.3-1.6 .4 1.8-1-1.9 .3 1.6-.8-1.6-.7 1.3-.5-1-2.2-4.2 4.2-6 1.2 2.7-1.7-3.1-.4 2.2-2.3-2.1-.5 3.6-1.7-3.3-.5-1.8-2.7-7.2 .4-1.2 4.5-3.8 3.1 1.7 1.6-.8 3-7.4 3.7-.2 5.3-3.2 3.3-2.6-.7 1.5-1.5-1.7-1 2.5-6.4-5.4 .3-5.7-4.7-4.2 .7 2-3.9-2.6 1.1 .1-1.7 2.4-3 10.2-5.3-3.2-2.3 3.5 1.3 5.1-1.2 3.1-2.2-5.6-1.3 5.3 1.2 2.6-2.4 4.1 .7-1.2-1.4 5.6-.2 .2-2.8 2.6-.6-2-1.5 1.7-.2-4.5-.4 .3 1.6-7.1 3.7 1.6-3.5-4 1.3 0-2.2 1.7-.2-3.4-.4 2.8-.9-1.1-3.4-5.1 2.2-1 1.7 3.3 1-7.9 5.4 2.5-3.3-10.2 1.2-3.8-2.5-4.9 1.3 5.2-.7-4.2 1.1-2.1 3.4-1.2-3.2-7.9 .3 2.2-2-12.7-1 1.7-1.5-3.3 1.6-.8-2.4-11.4 3.6 8.2-3-11.5 3.1-6.2-1.9-21.1 18.5 3.1 0-.4 3 5.3-1.4-.6 6.2 2 1.1-2.2 2.3 2-1-3.7 2.4 1.5 .2-1.1 1.9 2.2-1.4-2.6 3.8 3.4-1.2-4 4.1 4.5 0-1.5 1.9 1.9-.2-.3 2.6zM251 29.2l-2.8 1.2 .7 1.3-3.8 1.5-2.1-1.5-2.3 2.1 7.5-.5 2 2.1-1.2 .9 7 2.7-2.2-3.9 4.7 2.4 2.2-2.9-4-4.3 6.9-.3-2.3 1.1 2 1.7 5.2-3.3-9.6-4.3 4.4-.8-4.5-.6 4.4-.4-4.7-.2 3-1.7-4.3 1.3 2.6-1.9-3.3 .5 2.6-1.3-5.4 .6 2.4-1.4-3.2 .5 2.4-1.1-1.9-.8-7.1 1.5 2.4-2.2-2.2-1.2-5.2 1.6 .8 1.6-2.7 0 1.5 .6-1.4 1.4-2.8-.1 3.3-.6-.4-2.6 4.2-1.9-2.2-.2-8.6 4.4 3.5 .9-3.6 .4 3.8 1.4 9.9 .2 1-1.4 2.8 2.7-2.2 1 3.1-.7 1.6 1.6zM214.8 23.1l-3.1-2.2 1.4-3.9-2.6 .1-2.2 2.8-.6-2.5-7 .8 1.6-1.5-9.7 2.9 5.2 .5-5.9 1 8.5 1.2-9.4 1.1 4.3 1-1 1.5 11.6-2.1 4 1.4 2.4-.8-2.2 .2 .6-1.1zM239.7 74.7l5-1.9-.9 1.7 2.9-.1-5.7 2.1 .6 2.1 9.3-4-5.8-2.1 .8-3.5-3.5-.4 5.1-1.2-1.9-1.6-19.6 9.4 7.1-.5 4.7-4.9 2.2 .8zM286.9 2.2l-18.2-.9-6.9 .5 2.5 1.1-15.2 .1 7.7 .6-4.7 .9 7.4-.7-5.6 .8 12.4-.4-9.2 .7 2 1.2-6.1-1.2-.9 .9 2.6 1.1-1.7 .1 4.1 0-9.3 1.5 6.6 .1-8 .3 .9 1.2-5.2 1 14.7 .2 1.3-1-4.9-.4 10.9-1.8-3.7-1.2 5.8-.2-4.3-.3zM267 69.5l0-1.3-2 .7 1.7-3.2-3.5 .5-.5-2.4-1.7 1.3 3.1-4.5-8.7 8.2 7.8 .2-2 2.1 3.6-2.3 .2 2.8zM201.5 16.2l-11-1.3-7 4.4 2.4 1.6zM252.9 13.7l-20-2.9 4.4 .7-1.1 2.9zM236.6 35l-2.5-.4 1-1-3.7-2.8-5.8 4.7zM219.6 12.5l-3.3-.1 1.4-1.8-3.3 2.3-5.5-1.7-6.8 2.1 8.9 0-5.8 1 2.2 .5zM240.3 5.3l2 .4-2.1 .9 6.1 0-5.5 .5 2.5 .7-1.1 .6 11-1.8-6.6-3.1zM225.9 18.2l-2.3-.6 2.8-1.9-9 2.2 2.9 2.6zM143.9 67l-1.2-3.6-4.4-.9 2.1 3.9 1.8-.6-1.2 1.1zM235.8 15.5l-5.8 0-3.4 3.7zM230.2 12.6l1.3-1.4-3.2-.2-5.6 1.8zM202.2 11.8l7.9-2-11.8 1.7zM221.2 25l-2.2-1.9-3.8 1.7zM226.7 6.9l2.2 .6-2.5 .7 4.8 .9 2.2-1.4zM249 16.4l.6 1.4 5.1-.2zM235.7 9l3.2-.9-3.7-.7zM405.1 152.1l-8 6.6-6.7 1.8-1.4 4.5 3.4 6.9 .9-3 3.9 .2 1.6-3.8 5.8 2.3 6.4-2.8 3.8 .7-8-8.3zM388.6 147.3l2.6 7-3.4 .8 3.1 4.8 2.6 0 12-7.7-2.2-4.2 2-6.3 2.2-.4-.3-8.5-16-9-1.9 1.1 2.1 6-.9 7.8-3.8 5.5zM222.6 216.9l-1.3 1.6 .9 24 2 10.4-1.7 8.6 2.8 9.9 2.4-.8 2.1 9-.9 2.6-1.6-1.8-1.6 2 5.5 2.9-2.5 .1 3.1 3.7-1.3 1 2.2 .5 1.5 3.6 1.5-.6-1.2-.8 1.4 .8 .5 1.4-2.5-.9 .8 1.5 3.4-.3-2.3 1.3 1.9 .8 .9-1.7-1.2 1.4 2.5 1.1-.4-2.6 3.7-.9-6.3-.7-5.1-5.3 1-6.3-2.2-4.2 1.6-.5-3.5-5.1-1.9-12.2 1.1-5.9-2.8-6.9 2.6-9.4-1.2-5.2 2.6-4-1.8-.4zM245 300.1l-1.8-4.6-2.9 .2 4 3.7-4.9 .3zM510.1 101.5l.4 4.5 15.6 7.8 5-.5 1 1.8 2-2.4 3.6 1.4 4.3-3.6 3-.1 .8 2.2 5 1.9-.6 8.2 2.6-.4 3.5 6.1 3.2 .7-.6-3.1 4.4 0 2.3-2 4.7 4 4.4-.3 1.9 3.4-.3-2.7 5.8-1.6-.5-2.2 2.4 1.5 5.5-2.9 3.2-3.7-1.6-1.8 1.5-.5 .1-3.9 2-.5-1.3-1.2 1.2-2.4-4-.7 2.8-1.7-5.6-3.1 4.9 1.3-7.9-7.3 .5-2.8 3.6-2.7-4.1-.9-2.3 1.5-4.6-4.4 2.3-.1 3.3-4.1 2.1 4.8 5.7-6.5 3.2 .8-1-1.4 2-2.2 1.8 1-2.3-5.2 3.5-.6-1-5.7-1.7-1.5-5.1 1.5-17.6-11.7-8.4-.5 2.3 6.9-4.2 .6 .2 3.8 5.6 .3 4 2.9-4.2 .2-4.4 4.1-3.4-.8 1.6 3.1-1.7 2.1-8.6 2.6-16.9-2.5-3.3-3.5-9-2-3.4-5.5-7.6-3.2-.4 4.6-4.5-.4 1.1 4.6-4.6 .5 3 6.4-5.9 3.8-2.8-.4-1.5 2.4 2.9 2.3 1.2 2.4-1.2 .6 7.9 3.7zM578 131.7l-3.3 .2-.6 3.1 2.7 .3zM202.7 174.1l7.6 3.2 3.9 5.1 5.6 .5-1.2 2.6 1.6 1 1-6.9-1.3-4 1.8-.1-1.4-2.4 4.9-1 1 1.8-1.9-3.3 1-7.7-8.9-1.8-2.6-4.9 4.6-7.2-8.2 3.5-3.3 6.5-1.2-1.6 .4 10.7zM193.5 152.3l-3.7-.7-.7 2.2 5.6 4.9 .8-3.4zM389.1 71.8l-4.7 3.1 1.7-.4 5.9 5.3-3.7-5 6.5-.1zM212.5 131.8l1.7-.9-11.6-6.4-5.2 .3-3.7 2.6 6.2-1.8 8.6 4.6-1.2 1.8zM385.5 62.4l-4.6 1.1 3.7 3.7 5.1 0 3.1-2zM397.3 169.4l-5.5 16.4-2.5 2.2-.6-1.4-2.5 .7-1.7 2.8 8.6 .2 2 5 3.5-.2 .4-2.3 4.5 .6 .7 9 9.8 .7 5.1 4.3 .1-2.9-2.8-1.4 .1-5.2 4.8-2.4-3.6-12.9 4.8-10.4-.7-3.2-2.6-2.6-2.5 .9-5.7-2.5-6.4 2.8-5.8-2.3zM374.6 53.5l1.7 .2-.4-1.9 2.1-1.3-1.9-.7 1.3-2.3-3.8 2 2.7-.5-2.8 .8zM380 53.5l.9-2.4-2.2 .1zM445.9 150.8l-1.4-.1 1.6-2-1.8-.1-1.2 3.4zM218.9 132.6l.2 4.5 1.6-1.9 4.7-.3-2.9-2.5zM202.3 173.8l-2.5 1.3-1.8 6.7 1.6 1.3 .9-1.6-1.3 5.4 2.8 1.4 1.4-3.7 6.1-5.5-.1-1.9zM425.4 106l-6-.6-3.8 1.7-7.7-1.8 1 21.8 23.3 0-3.4-1.8 1-2.5-7.6-12.9 4 4.2 .9-3.9zM181.6 146l3.9 1.1 .6-1.4-3.3-1.5zM355.7 60.4l-5.6 3.6 10.4-1.5 2.5-3.7-3-.9-3.4-6.3-2.7 2.8zM379.5 171.7l-.7 2.7 3.9 .3-.1-2.7zM445.5 147.9l-6.8-5.1-2.6-6.6-3.1 2.1-.6 6.3 2.1 .4 .6-1.8 4.4 1 4.7 4.5zM399.7 47.3l5 .7 .6-3.9-7.5 .3zM421.9 235.8l-2.2 .9 .6 1.8 1.5 .3zM428 157.4l-2.2 1.6 6 7.7 7.2 2.5 10.8-3.4 5.9-7-8-2.3-2.3-4.5-2.3 0 1.1-3.3-3.2-3.7-5.9-1.8-.6 1.8-2.1-.4-4.2 8.4zM401.9 24.6l-1.9-1.9-3.6 3-6.4-.9 4.8 2.1 .7 3.3 2.8 1.5-5.5 5.4 1.2 4.5 2.7 1.6 7.4-1.4 4.9-4.9-2.8-1.7-3-6.3 1.1-1.5zM363.3 62l-2.6 3.3-4.1-.6 1 2.4-6 .3 6.4 4.9 1.1 2.9-1-1.3-1.3 5.1 7.8 2.2 2.5-2.7 5 .7 1.8-1.9-1.5-.7-.3-4.5-1.5 .4 3.7-6.1zM251.9 172l2.8-.4 2.1-4.1-4.5-3.6zM483.1 287.9l-2.3-1.1-1.1 2.3zM386.6 171.9l-3.9-.2 0 3-3.5-.1 .9 1.9-2.7 1.8 4.8 7.6 1.6-.7-.7-3 2.2-1.1 2.9 1.5 .6-1.4-1.1-3.8 1.2-2.5-2.6-.8zM435.7 81.1l.8 2.1 8.9 .7-3.4-3.6-9.4-1.9zM384 66.6l-3.1-3.1 4.9-1.7-1.7-5.8-9.6-2.5 2.1 3-4.4-.3-.2 3.1-1.8 .9 .9 5.1 3.2 1.1-.9 3.1 9.5 .2zM359.4 151.7l-5 .3-.6 13.4 2 .8 6.6-3.1zM398.5 84.6l-1.6 2.5 2.4 3.1 3.9 .3-3.9 .7 4.2 3.2-1.1-2.5 2.4-1.4-3.1-1.5 1.5-.8-1.7-2.9 2.7 1.2-.6-1.8 4.3 0 .7-1.9zM298.1 32.4l5.3-2.6 .6 1.3 4-1.1 4.6-4.4 4.3 .8 11.3-3.7-9.2 .1 3.3-.6-4.1 0 1.5-1.1 4.4-.7-4.3-1.3 9.2 3 .2-2.4-7.5-2.6 4.3-.6-1.1-.9 6.9 1-1.7-2.1 4.2 .2-4.4-1.3 4.3-.9-4-1.6 5.5-.1-2.8-1.3 2.4-.3-3.7 0 4.6-2.5-1.2-1.5 5.5-.4-6.2-.2 11.9-1.2-15.6 1.2 3.7-2-13.9 .3 14.2-1-16.9-.2 12.1-.8-23.4 .2 6 1.1-26.4 .7-9.5 2 4.4 .3-3.9 1.6-10.6 1.6 8 1-7.4 .9 3.8 .6-1.4 1 12.8 .6 1.7 2.2-2 .7 1.8-.4 .7 3.3-3.1 1.5 6-.1-2.1 .6 2.4-.2-2 .6 2.1 1.5-5.6-.5 5.7 1.1-.9 2.1-5.1 1.2 4.4 .8-5.6 .8 5.7-.4-5.8 .5 4.8 .5-5.2 .1 2.1 .6-2.8 1.4 6.2-1.7-6 2 4.2 .5-3.4 .8 1.7 .6-2 1.5 3.8-1.2-3.3 2.3 2.4 1.3-1.4 1.2 2 .8 0 2.6 4.3-1-.8 1.6 2.2-.1-1.4 1 3.3 0-1.4-1.1 2.2 .1-.9-1.1 3.1-2.6-1.3-.7 4.7-2-1.3-1.1zM284.6 23.9l-2.4-1.6-1.5 1.2zM182.9 144.2l2.6-2.9-2-.4 .7-4.3-3.6 0-1.1 1.3 1.7 2.6-2.6 .1-1.4 3.4 4.1 1.8zM333.7 156.4l4-2.1 .9 3.9 1.9-.7 1.3 3.2 1.8-.8 1-3.5-2.4-7.5-3.5 1.1-6-1.8-2.7 4.1zM329.8 148.2l-3 .8 3.4 .8-.2 2.4 2.9-3.5zM246.9 172.4l-2.9-4.9 1.9-4.3-2.3-1.9-.7 1.2 .4-2.3-2.9-2.6-3 5.9 3.3 3.5-.2 5.7 1.8 1.6zM218.8 132.3l-3.1-.3 1.8 3-4.2 .4 5.2 .7zM183.3 144.4l3.9 3.1 4.6-4.1 3.5-.4-3.4-2.3-5.4 .2zM400.2 68.6l-3.7-1.3-6.3 1.2-1.7 2.6 4.3 2.4 4.6-1zM337.9 29.9l-8.6 .6-1.3 1.8-2.3-2.6 .5 1.2-3.3 .7 4.3 .1-3.8 1.1 3.8 .5-2.1 1.7 6 .9 7.8-2.9zM505.2 97.4l-5.6 1.1 3.9 5.6-4.7 9.5-3-.1-1.2 2 3.9 6.2-4.5 .1-1 1.7 4.7 1.1-2.8 1.8 3.9 3.6 3.9-3.5 2.5 14 9.5 18.1 4.3-5-.2-12.2 11-9.8 2.2-5.4 2.5 1.8-3.2-11.3 3.4 3 5.4 .8-2.2 2.9 1.1 1.6 1-1.7 1.8 3.9 2.6-10.5 3.6-1.1 0-2.1-3.2-3.1-7.9 3.5 1.1 2.3-5.4 0-1.5-2.9-.5 3.9-10.6-2.5-5.8-3.1 1.3-3.1-5-2.5-1.3-2.8 2 .1-.4-1.7-3.9-5zM594.7 167.5l-3.2-.5-2.4 6.7-8 1.3-2.5-2.4-.7 3.6 2.5 7.5 8.2 .5 .5 2.2 2.7-1.3 4-10.7 2.2 .3-2.6-2.4zM561.6 172.3l-6.8-7.2-4.2-1 .1 1.9 6.8 7 7 13 4.3 4.4 2.3-.1 .9-6.6-2.3-1.6-.7 1.1-.2-3.9-2.1-.8 .8-2.2-2.3 .3 .7-1.2zM641.5 182.9l-5.8-2.6-5.2 4.3-2.5-6-3.1-.9-3 2.4 5.9 1.6-4 1.6 1.8 2.9 2-2.6 .1 2.1 8.1 3.5 1.9 3.5-1.2-.1 1.3 .5-.9 2.6 2.6-.9 1.4 2.8zM599.5 178.4l-2.1 5.5 1.7 2.1-.6 3.6 2.1 .1-.3-6.1 1.6-.6 1.3 4.9 2.3-.9-2.9-5.9 4.3-2.4-5.6 1.4-.9-3.7 8.3-.4 1.6-2.9-2.4 2-6.2-1.2zM580.3 195.3l8.2 1.4-.4-2.2-6.5-3-4.2 1-5.6-2.2-1.8 2zM615.5 177.6l1.4 1.4-1-3.1 2 .6-1.4-1.3 .9-1.8-2.1 1.4 .7-2.9zM621.5 184.8l-2.5-1.6-3.5 .9zM607.9 198l-2.1 2.4 3.1-1.6 .4-1.5zM442.3 86.9l0 4.2 4.8 4.8-1.2 4.1 7.2 9 3-.4 3.2 5.1 4.8 2.7 5.9-.9 1.3 3 8.4 1.6 2.9-4.6-5.7-6.2 1.4-2.6-3.3-4.6-.5-8.1-8.2-3.7-9.1 3.8-5.6-2.3-3-4.7-3.1 1.9zM443.3 92.8l-3.5-.5-2.3 1.9 .3 3.9-4.2 3.3 .6 2 11.8 7.4 3.6 .2 1-2.1 2.7 .2-7.4-9.1 1.2-4.1zM348 53l-5 2-.2 1.7 2.1 .5-1.8 1.4 2-.3-3 1.1 .5 1.3 6.6-1.3 .5-4-3.4-.9zM425.7 106.7l1.5 3.3 .8-8.7zM372.4 73.3l1.1 4.6 4.7-.5 2 3.6 8.6 5.2 .4 4.8 2.6-2.3-.6-3.4 2.7 1.5-11.6-9.9-.6-2.4 3-.6-.4-2.1-2.7-1.2zM388.4 90.4l-5.3 1 5.2 2.5zM377.8 84.7l-2.8-.5 1 4.7 1.7-.6zM344 154.1l.7 3.9-1.9 4.2 2.3 1.5-.2 3.3 9.6-1.7 .1-9.8-7-2.9zM612.1 98.9l3.6-.5 1.8 2.8 .5-3.7 4.2 1.1 .6-2.4 1.7 1.1-1.9-9.7-3.8-4.4-1.8 1.8 2.3 5.6-2.4 3.1-1.7-1.4 .7 3.9-5.6 .1-2.8 2.7 2.7 1.4zM623.6 78.8l-10.3-4.6 2.9 9 1.6-.8-2.4-1.8 5.9 1.5-.2-2.1zM610.7 103.4l-2.7-3.4-2.1 1.4 4.1 5.3zM615.2 100.3l-2-1.2-2.7 2.3 2.5 1.5zM427.6 103l-.4 7.5 2.1 .3 3.5-2.9-2.2-2.3 4.3-1.7-1.3-2.5-3.5 2.4zM512.3 65.9l-8.5-3.9-5.7 .5-9.1-8-4.8 2.2-.1-1.4-4.4 0-1.7-2.6-3.3-.3-12 3.2 2.7 2.1-2.8 2.2 3.3 2.5-11.6 .6-7.3-2.7-3.1 2.5 .8 1.5-2.7-.8-.5 4.1 6 4.7 6.5-1.3 1.3 3.4-5 1.8 5.5 4.1 0 2.2 2.7-1.4 4 2.3-2.1-8.2 4.2-1.2 7.6 4.6 5.1-.5 5 5.7 3.5 1.3 3.6-4.9 4.3 .8 .6-1.9 11.9 2.3-2.9-6 4.6-.5-1.1-4.6 4.5 .4-.9-2.9zM431.3 166.5l-3.4 .9 2.1 5.2-2.2 6.6 10.9 8.2 4.4-6.6-1.2-10.2 1.8-2.7-2.2-.7-2.5 2zM396.6 80.8l1.1 1.5 1.9-1.8-1.9-1.4zM451.6 108.8l-2 2.2 3.8 1.3zM505.4 81l-11.1-1.9-.6 1.9-4.1-.9-1.3 2.9 6 1.6-6.5 2.3 8.6 .7 1.2-2.4 2.9 .4 5.8-3.8zM559.5 126.1l0 2.9-1.3-.9-1.6 2.7 2.5 1.9-.1 4.4 5.9-1.7 4.1 6-.3 3.4 4.2-.8-.5-3.5-8.1-7.3 1.9-1.5-.9-1.5-3-.5zM404.6 48l-3.8-1.2-1.9 2.4-2.2-1.7-2 3.2 11.1 .9zM415.7 242.3l-3.7 1.7 1.2 2.2 2.8-1.5zM337.2 161.4l7.7 5.7 .2-3.4-4.6-6.2zM381.8 102.4l-4 6.3 2.2 12.6 7.8 4.4 3.4-1.9 16 9 1.9-1.1-1.4-27.1-6.6-2.3-2.9 1.8 .3 2.8-1.9 1.5-6.5-2.5-1.2-2.3zM404 51.9l-3-1.6-6.2 .7 5 4.7 3.5-.6zM446.6 223.4l-2 3.9 1.1 6.3 2.1 1.3 3.9-1.5 6.5-21.3 1.7-.2-2-7.9-2.8 6.4-7.2 3.2zM429.5 203l-1.1-4-2.8-.8 1.4 2.7-2.2 6.8 3.6 2.3-.7 2.9 1.9 2.8 1.5-5-2.6-3.6zM590.2 166l-7.4 4.8 0 3.1-3.5-.6 1.8 1.7 8-1.3 2.4-6.7 5.4 .1-.9-1.2 2.2-.7-5.2-4.2zM563.8 163.1l-1.9 1.1-2-2.4 1.4 6.3 7.2 5.7-1.8-7.7zM335.9 143.8l1.6 5.9 4.3-1 2.3 5.2 3.5-1.3 .4 1.3 4.1-7.5 6.5-3.6 8.3-.6 1.4-8.6-1.8 .3-.2-1.9-15.7-11.7-3.4 0 1.9 21.5-11.9-.3zM343.1 118.1l-6.4 0-2.2 10.5-7.8 0 1.7 7.3-1.1 5.2 .5-1.6 3.7-.3 4.6 4.4 1.1-2.1 11.9 .3-1.9-21.5 3.4 0-7.4-5.2zM171.1 118.1l-3.3-1-2.7-7.6-4.2 1.7-4-6.2-9.1 1-6-3.1-4.7 .4 .5 6.2 2.4 3-.3 1.8-2-.2 4.2 3.4 .2 3.9 2.9 3.7 1.4-1.1-6.4-14.9 .6-4.6 2.9 1.6 .5 5.2 4.4 6.1-1 1.5 5.8 7.1 .3 7.1 13.1 7.7 5.9-1.1 4.7 4.3 1.4-3.4 2.6-.1-1.7-2.6 1.1-1.3 4.2-.2 1.9-2.2 .2 1.5 3-6.7-7.1 .3-3 5.9-8.5-.6-2.7-8.8zM406.9 67.9l3.5 6.3 1-2.2 2.1 0-2.3-3.4zM562.5 64.3l-4.5-.8-4.6 2.5-4.1-.4-20.4-6.1 .4 5.2-10-2.4-6 3.7 6 3.3 3.4 5.5 9 2 3.3 3.5 16.9 2.5 8.6-2.6 1.7-2.1-1.6-3.1 3.4 .8 4.4-4.1 4.3-.2-4.3-2.9-5 .2zM393.7 81l1.6 1.2 1.6-2.3-2.6-1.5zM343.2 114.3l2.1-3.9 4-.3 3.7-2.7 0-2.1 5-2-2.2-5.8-6.9-1.6-1.8 3.9-4.7 3.4-2.1 7.4-8.4 7-5.2 10.8 4.4-.2 6.8-12.1zM423.7 237.7l.2-2.9 5.3-3.3-1.3-10.2 12.4-9.3 .3-11.3-6.1 2.8-5.7-.3-.3 3.9 2.6 3.6-1.4 5-1.6-6.2-8.3 1.4 .3 2.3 5 1.5-.2 7.6-3.7 5.4 1 10zM541.4 128.3l4.8 7.7 .2 4.8 .8-1.3 1.6 1.8 2.3-3.9 2 2 3.1 14.9 1.8-4.1-3.6-7.5 1.1-2.9-3.8-4.9 1-2.8 3.9-1.2 1.6-2.9-4.2-1.2-1.2-4.5-2.6 .4 .6-8.2-2.7-2.2-.1 3.3-3.6 1.1zM392.2 241.4l6.3-.1 2.8-22.9 5.2 .4 2.9-2-8.4 1-17.8-1.8 5.2 12 1.2 10.8zM530 113.8l-4 0-8.5-5.6-3 1.3 .4 2.6 11.5 4.7 4.3 .3zM372 57.1l-3.9 .6-.7 3.3-1.5-.2 4.5 1.7zM686.8 227.2l-4.6-4.8 1.1 2.9zM673.1 274.6l6.5-4.8-2.7 .6 .4-1.7-20.6 12.7 4.6 .7zM687 266.4l5.7-4.1-4.7-.1 .8-2.6-2.2 .9 1.9-3.8-2.1-1.8 .5 6.1-5.5 4.9 1.4 1.9-3.1 2.6zM189.7 151.6l3.8 .9 1.8-9.5-9.3 4.5zM367.3 150.3l2.3-4.5 9.4 2.1 8-2 3.6-7.3 .8-7.7-2.1-6-5.9-1.2-15.1 9.9-.7 7.8-7.3 2.6 4.4 6 .9-1.1zM367 150.8l-1.6 11.7 5.2 1.1 1.6 3.7 4.8-1 3.2-5.2 2.5 1.2 6.4-12.9-2.1-3.5-8 2-8-2.4-2.8 .9zM598.1 89.4l-2.6-1.6 2.6-3.3-.2-3.3-2.3-1.6-2.1 2.3 1 1.4-3.2-.8-2.1 3.7 2.6 1.2 1.3 2.1-1.3 1.1 1.8 1zM397.5 82.2l1 2.3 3.5-1.1-1.5-2.3zM347.9 53.2l-1.1 1.8 4-.3zM390.1 24.6l6.3 1.1 1.8-2.7 3.9 1.8 2.6-1-3.7-1.2 3.2-.5-3.3-.8-.7 1.4-1-1.9-12.9 3.1-2.2 1.9 2.1 .2-4.4 1.1 1.6 1.3-3.2 .5-.6 1.4 1.6-.3-2.2 .5 .6 1.5-4.9 3.1 2.7-.7-.6 1.3-8.8 2.6 2.7 .7-2.9 .2 .4 1.3 3.9-.2-4.2 .3 1.3 2.2 2.1-1.1-3 2 2.2 0-1.4 2.1 4.1 1 3.9-3.8 1.7 2 1.5-5-1.5-4.6 2.9-1.1 .1-3.9 2.9-3.4zM386.2 7.7l-5.6-2.4 .2 1.9-7.4-1.1 3.3 2.3 5.4-.4-4.7 .6 4.5 .2-3.9 .7 3.5 1.6zM393.8 5.2l-11.7 0 8.2 1.5zM391.4 8.9l-4.6-.4 2.7 1.5zM469.7 120.4l-1.7 11.3-5.7 2.2 2.6 5.3 3.7-.8 5.2-4.5-.2-2.8 3.4-4.5zM502.1 94l-7.9 .4 .3 5.4-2.2 .1-.1 4.7-4.7 1.7-.3 3.1-10.3-.1 5.7 6.2-2.6 2 .2 2.8 8.8-1.4 3 4.1 6.5-1.3-3.9-6.2 1.2-2 3 .1 4-7.1 .8-2.6-3.1-2.1-.9-3.3 5.6-1.1zM195.5 155.3l-.8 3.4 3.7 .3 .3 1.6 3.8-4.3 2.5 2.2-1.4 .2 1 1.8 1.5-1.5-3.4-3.7-4.7 1.8zM641.4 191.3l-.2 6.6 4.5-.6-2.3-1.7 4.9-1.7 3 1.3 2.8 4.6 6.3 .3-4.3-2.6-2.9-4.8 1.9-1.4-4-2-2.3-3.7-7-2.8zM664.1 186.7l-2.7 2.7-1.5-1.1-3.7 1.5 4.2 1.4 3.4-1.9zM665.7 186.1l-4.2-3.4 4 5.2zM237.5 227.3l10.1 6.7-1 4.8 4.4 .6 2.8-2.1 .4-5.9-2.3-.2-1.2-3.8-4.2-.5-.8-5-1.9-1.3-5.2 .8zM222.8 216.3l.8-11-2-3.6-2.1 .2 0-3.6-3.3 1.3-3.8-5.6 1.9-5.4 5.8-1.9-1.5-1.2 1.4-2.4-5.8-.7-5.5-5.2 .2 3.2-5.5 4.2-1.4 3.7-2.8-1.3 .3-2.3-1 .7-.5 5.2 4.5 5 7 14.5 11.8 8.4zM600.8 135.2l-3.3-.2-.2 7 2.3 1.8-.3 1.9 4 1.4-.3-1.8 3.4 3.2-.6-2.8-4.5-.9zM612.5 160.2l-2.6-5.5 .2 1.8-3.5 2.4-.7-1.7-2.7 3.8 3.5-1.7 3.7 5 .3-3.8 1.2 2.2zM605.7 152.2l-1.9 2.4 1.4 1.9zM609.9 151.5l-1.1-2.9-2-.1zM604.8 150.9l-2.5-.9 .4 3.3zM598.1 152.8l-.5-1.7-4 7zM393 65.3l6.9 1.1 1.8-3.4-2.3-7.9-9-1.4-6.5 1.9 1.6 6.7zM346.9 89l-.9-1.9 2.7-4.2-4.4-1.1-1.1 11.3 3-.3zM395.9 72.7l-2.3 .6 1.1 5.3 6.1 2.6 .1-5.1zM397.1 169l-3.9 0-1.1 4.2-5.5-1.2-.3 2.1 2.6 .8-1.2 2.5 1.2 3.4-.7 1.8-2.9-1.5-2.2 1.1 .7 3-1.6 .7 1.8 2.4 4.7-1.7 .6 1.4 2.5-2.2 3.7-7.7zM400.1 68.8l-4.1 3.9 2.4 3 2.9 2.1 10.3 .2 1.4-3.6-2.9-.5-2.7-5.7zM513.6 66l5.7-3.7 10 2.4-.3-5.2 20.3 6.1 4.1 .4 4.6-2.5 7.3 1.7 1.7-1.3-.6-4.1-2.3-1.6 4.7-1.8 5.5 1.7 7.5 6.5 6.8 2 2.2 2.6 5.8-1.2 1.9 6.9-3.5 .6 2.9 5.7 .7-2.3 3.3 1.5 2.5-1.9 1.4-11-6.4-10.5-4.6-2.2-2.7 1.7-.8-1.7-.6 1.2-4.6-2.3 3-9.1 10.1-1.4 5.2 2 5.4-.7-3.1-1.5 .2-3.6 4.4-.6 3.2 2.8 2.2-2.2-2.2-1.9 3.8 .3-1.8 .4 2.9 2.8-1.7 .9 0 5.2-2.1 .5 14.7 14.7-1.5-4.7 2.6-.2-2.3-2.3 2.3-1.3-3.4-3.4 2.1 .4-6.8-4-2-4.1 7.4-1.2 3.5 1.4-.1-3 4-2.4-1.2-.6 4.8 1.2-7.3-4.4-6.4-.5 7.4-.7-14.7-8.5-14-1.4 4.1 2.7-12.4-2-2.6 .6 1.3 1.8-8.6-4.3-31.6-3.8 1.3 .5-1.9 .7 3.3 1.4-11.5-.9 .5 2.2-8.7-3.1 3.3 .6-3.5-1 1.3-.7-8.8-1.4-.1 1.8-13.5-1.4 2 1.8-8.4-2.6 1.8 .6-6.2 1.7 6.2-4.1-2.7-1.4 2.1 0-16.9-3.2-2.7 1.3 3 1-4.8-.2 2.5 1.2-15.6 1.1 .8 .9-1.7 0 4 3-1.4-1.7-8.1 .6 7.2 3.6 1.7 2.9-2.2-1-.1-2.1-8.2-1.2-2.3 .9 5.7 1.6-3.2-.1-5.5-3.2 1.3 1.3-1.8 1.3 4 4.2 5.9 .5 3.8 2.6-8-2.3 1.5 2.1-2.2 2.8-5.3-1.1 4 .3 .9-3.5-8.6-8.4-3.1 0-1.5 3.4 2 2.8 4.2 1.2-.5 1.5-12.5-3.3 1.1 1.9-1.4 1.1-1.8-1.3-7.4 1.5 .2-1.4-9.2 4.3-2.7-1.2 1.8-1.5-5.1-1 3.3 5.4-3.5-1.2-2.9 1.8 1.8 2-6-1.2 1.8 2.7-4.7-1.5-.5-2.7-5.2-2.4 10.6 2.1 3.5-1.4-.8-1.7-16.2-4.1-2.8 2.4 2.7 1.7-1.1 1.5 3 6.3 2.8 1.7-4.8 4.8 4.1 1.1-3.5 .5-.2 4.6 10.7 8.8-2.3 .9 1.3 2 3.3-.6 4.1 4.4 8.2 1.7 .1 3.8-2.5 1.2 2.2 .4-2.8 1 1.8 1.4-3.2 1.9 6.8 4 9.7 1.5 5.7 3.4 1-1.4-4.8-6.1 .7-2.7 3.1-1.1-6.2-4.8 .7-4.4 2.5 1.1-.8-1.5 3.1-2.5 7.3 2.7 11.6-.6-3.3-2.5 2.8-2.2-2.7-2.1 12-3.2 3.3 .3 1.7 2.6 4.4 0 .1 1.4 4.8-2.2 9.1 8 5.7-.5zM87.3 32.3l5.5-2.4-2.7 1.8 3.6 0-.9 1.4 2 1 4.5-2.9 5.9-.8-3.1-1.9-3.6 1.6 2.8-2.7-3.1-2.5zM599.3 54.9l12.5 16.9 3.7 1.1-5.8-6.8 3.9 1zM436.5 14.3l-3.1 1.7 4.8 .9-.9-1.1 2.6-.7-1.1-.6 11.8-3.4-10 .5-5.6 1.9zM432.3 19.7l9.8 1.8-4.6-2.2 .3-2.3-4.3 0zM420 73l-1.9 1.3 2.6 2.2 4.8-2.1zM553.7 12.7l-11.3-.6 5.9 2.3 5.4-.6-4.1-1.3zM485.9 6.9l-2.7-1.6-6.9 .8zM398.1 54.5l-2.5-1.8-2.7 1.8zM494 7.7l-6.6-.9 .3 2zM418 182.9l3.6-.6-.7-2.9zM458.9 120.9l-5.4-8.5-7.5-1.6-9-6.2-6.4 1 2.2 2.3-3.4 2.9-2.2-.3-.4 3 8.2 9.6 1.8 6 7.8 10.8 1-2.6 7.5 1.3 3.5-3.7 11.4-3.2-.1-6.2-5.2-.5zM356.6 51.5l-2.9-.5 3.3-3.2-3.9 .2 2-2.4-3.2 .1-2.2 4 2.1 0-1.4 3 1.5-2.1-.1 3.5zM335.3 143.2l-3.6-3.9-3.9 .2-2.5 4 1.8 2.7 5.5 .3-5.8 .6-.1 1.4 2.7-.6-2.6 1.1 10.6-.2zM339.4 157.7l-1.8-3.4-4.1 2.2 3.6 4.8zM399.1 66.1l-6.6-.9-2.9 2.5 3.3 1.3 5.9-1.3zM384.6 74.2l2.8 0 1.5-3.1-4.6 .7zM449.8 165.8l-5.7 1.7-2.2 3 1.2 10.3 12.7-14 6.5-13.4-.4-3.3-4.6 1.4 .2 4zM456.8 151.3l-8 2.1-2.7-2.5-1.2 2 2.8 3.7 8 2.2 1.8-3.3zM398.5 241.3l-3.5 1.1-2-2-1.2 1.4 3.1 7.4-.1 5.4 3 1.2 13.6-2.9 11.4-12.2 .9-3-4 0 2.5-2.7-1-7.3-4.4-.4-7.3 7.9-4.7-1-2.8 3.6-1.9 0-1.2-4.8zM415.9 242.4l.1 2.3-2.8 1.5-1.2-2.2zM598.1 89.6l-2.4 1.8 3.7 7.9 4.2-2.8zM431.5 166.2l-5.7-7.2 2.2-1.6-2-8.1-2.2 .5 .7 2-2.4 3-2.3-1.1-2.3 2.1-4.5-.3-1.6-2.2-3.2 3.9 8.5 10 2.3-.8 2.1 2.4 3.2 .2zM356.5 78.9l-10.4-1-2.9 1.6 .6 2.6 4.9 .8-2.7 4.2 0 4.8 3.5 3.5 9.2-3.6 2.6-7.2 4.6-2.6zM523.3 160.3l-4-5.6 1.3 .8-1.7 2.8 1 4.7 2.5-.1zM405.8 152.7l1.1 4.5 4.5-3.9 1.6 2.2 4.5 .3 2.3-2.1 2.4 1.1 2.3-3-.7-2 2.2-.5 1.9 6.2 3.8-7.4 1.3-9.8 3.1-2.2-2.4-1.9-1.5-7.1-23.3 0 .2 4.5-2 .1 .4 9.6-2.2 .4-2 6.3zM252.1 169.1l0-5.4-5.8-.4-2 2.7 2.9 6.6 3.8-1zM389.2 24.8l-5.3 2.9-2.2 6.6-3.2 1.8 1.8 3.9-2.4 5 3.5 7.5 4.8-1.5 1.2-5.1-1.2-.3 4.3-2.3-3.2-1.9 .1-4.7 4.4-1.6 1-3.9 3.6-.2-1.6-4.1zM378.5 70.9l-3.4-1.9-2.8 .7-1.7 3 4.3-.7 1.2 1.4zM428.4 102.9l1.7 .8 7.3-4.7 1.7-6.4-10.6 .9-1.3 2.9 2 3.1zM597.5 120.3l-1.9-.1-1.1 2.9 2.1 4.2zM490.1 85.9l-1.1-1.8-4.4 3.5 2.6 5.7 4.5-3.5 2.4 4.1 6-1.4-4.1-4.9-7.9-.1zM564.6 150.3l-1.6-4.1 6.1-2.2-2.3-6.5-3.1-2.3-4.7 2 .1-4.5-2.1-1.9-4.3 1.3-1 2.8 3.8 4.9-1.1 2.9 3.6 7.5-2 8.1 7.3 5.6-5.9-10.4 1.5-7.2zM359.8 151.8l2.6 11.3 .8-6.7-1.4-4.4zM381.5 101.6l-2.6-2.1 2.1-2.3-.4-4.2-3.4-.4-1.9 1.6-.6 7.5 3.6 6.8zM439.6 83.8l-9.3 .5-9.5-2.4-7.4 1.7 1.6 1.1-1.5 .9-4.3-.1-1 2 1.6-.2 .6 2.6-1.7 .4 2.3 2.9 1.9-.1-1.6 .8 4.4 1.2 1.7-1.7 4.2 2 5.7-2.1 .6 2.5 .6-2.3 15.1-.7-2.2-5 1.4-.6zM410.7 81.9l-2.6 .5 .1 3.9 5-2.2zM475.4 96.3l2.7 .8 5.8-6.2-17.5-10.8-2 3.5-5.9-2.5-2.7 1.4 1.1 1.5-.3-2.1 1.5-.3 2.3 2.5-3.4-.1 0 1.3 3.6 7.1 5.7-2.1 8.2 3.7zM421.3 179.4l6.5-.2 2.2-6.6-2-5.2-6.2 1.2 .7 3.6-3.4 6.8zM413.6 59.6l-1.1 1.9-12-.9 1.2 2.4-2.9 4.3 1.5 1.4 10.3-.4 2.9 3.7-2.1 0-1 2.2 2.7 .5 3-4.5 1.8 1.3-1.3 .8 5.8 1.3 .1-1.8 7.5-2.9-.2-3.9-8.1-1.6-4.1-4.4zM469.2 118.9l-3.7 3.4-4.9 .1 2.1 2.6 5.1 .7zM355.7 60.4l-5.6 3.6 10.4-1.5 2.5-4-3-.6-3.5-6.5-2.8-.4 3.3-3.2-3.9 .2 2-2.4-3.2 .1-2.2 4 2.1 0-1.4 2.9 1.7-1.8-.7 2.8 3.6-.2 .4 3.5-2.5 .3-2 2.9zM347.6 53.3l-.8 1.7 4-.3-1-1.8zM425.7 198.2l2.7 .8 1.1 4.2 10.1-1.8-2.2-10.7 1-3.1-10.4-8.4-6.4 0-2.7 11.9 2.8 5.2zM145.4 66.4l-2.5 4.2 1.3-2.4-3.1-.5-1.8 4.7 1.5 .2-1.4-.1-8.2 12.9-.1 5.5 2.9 0-2.5 1.1 .6 6.7 3.6 1.2 1.4 3.4 4.7-.4 5.9 3.1 9.2-1 4 6.2 4.2-1.7 2.7 7.6 3.1 1.3 0-3.7 6.4-5.1 6.2-.2 4.3 2 .6-2.5-1.9-.4 4.9-1.2-.3 1.2 4.7-.2 .1 1.4 3.3-.5 2.1 9 2.3 1.7 1.3-3.7-.6-10.3 11.6-8-.9-1.4 2.7-.7-1.6-1.1 1.7 .5 .1-1.4 .2 2.1-.2-2.6-2.1-.9 2-.3-1.1-2.7 1.3 1.4 1.9-3.5-1.8 5.6 2.5-3-.2-2.7 1.3-.9-.6 2.5 1.3-1 2.2-4.3 7.6-.9-1.5-1.4 2.3-3 6.8-2.6 .2-5-2.2-.8-4.7 4.9-7.4 .5-16.7 7.4 3.3-8.2-7.5-6.5-5.8 .6-4.9-3zM156.1 23.5l-18.2-2 1.2-1.2-21.1 4.7-2.4 1.1 1.2 2.4 3.7 1.1-14.2 1.7 2 .8-2 1.3 8.6-.2-15.6 5.9-.8 1.5 2.5-1.1-2.5 1.4 2.3 .3-3.7 .4 .6 1.6 5.4-1.9-5 4.5 9.5-1.3-4.9 3.6-16 5.6 11-2.5 27.1-11.5-9.1 4.8 11.2-4.3 1.9 .3-.9 1.3 2.6-.5-.9 1.4 7.6 0-1.6 1 2.5 2.8 1-1.8 1.6 1.8 2-2.6-1.2 2.3 1.9-.3-.3 1.4-2 1.4 1.6 2-2.4 1.4 3-1.1-1.2 2.5 2.7-2.5-2-1.1 .5-6.5-5.2 1.7 .4-3-3.1 0zM249.4 245.3l0 8.5 4.7 2.3 3.7-.6 1.2-4.5zM490.8 85.8l3.4-1.3-5.9-1.5 1-1.7-3.5 3.8-3.5-1.3-5-5.7-5.1 .5-7.6-4.6-4.2 1.2 2.1 8.2 1.9 .2 2-3.5 17.7 12.2 2.5 .4 .5-2.3-2.5-2.8 2-.2 .7-2.8zM240 157.4l-2.8 .2 1.7-1.9-4.4-1.6 2.4-1.5-6.5 1.6-6-1-3.5-3.9 .3 1.7-3.6 1.5 .4 3.7-1.6-1.5 1.8-4.6-4.4 6 2.6 5 8.9 1.8-1 7.7 4.6 4.9 4.4-3.7-2.8-4.6 3.8 1.7 4.6-3.1-1.5-2.3zM573 144l.6 5-3.3 1.6 1 2-3.4 .7 .9 4.2 2.8-1.8-.9-1.4 1.5 .9 .2-2.4 4.4-1.6 0-5.7-8.9-11.6 1.3-4.6 2.4-1-6-4.3-2.3 2-3-.6 2 4.3 3.8 1.5-1.8 2 8.1 7.3zM354.8 57.1l-3.8 3.3 4.4 .3zM343 114.7l-5.1 1.4-6.8 12.1-4.4 .2-.2 1.5 .3-1.3 7.7 0 2.2-10.5 6.4 0zM456.6 134.9l-3.5 3.7-7.9-.9-.8 4.7 1.9 5.8 17-6.6 1.6-2.4-2.6-5.3zM425.3 198.1l-4-2.6-3.7 .7-1.2 6.8 2.8 1.5-.1 2.9-5.1-4.3-2.4 .8-3.9-2.3-.1 4.8-4 0 .1 8 2.4 2.5 6.5 1 7.6-5.6-.4-1.4 6-2.2 1.2-7.8zM409.7 217.4l5.1 8.4 6.4 1.9 2.4-2.5 1.5-10.5-6.1-2.4-5.7 5.3z" fill="#E3E7EC" stroke="#fff" stroke-width="0.5" stroke-linejoin="round" fill-rule="nonzero"/>
+</g>
+<path d="M232.7 296.2L225.4 267.5L225.6 244.9L224.0 217.7L208.6 197.3L203.9 176.9L210.4 158.8" fill="none" stroke="var(--warm)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<path d="M194.6 156.6L177.8 143.0L155.6 131.6L148.7 109.0L153.5 86.4L156.0 68.6L151.2 53.3L138.5 40.7L119.5 40.7L84.4 53.3L53.9 59.8" fill="none" stroke="var(--warm)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<path d="M628.3 51.2L630.9 64.1L623.3 77.4L624.2 90.9L619.3 99.9L608.8 106.7L601.8 122.6L599.7 143.0L609.4 161.1L614.1 176.9L629.8 186.0L649.5 190.5L669.3 192.8L690.8 210.9L709.8 222.2L687.5 263.0L659.3 280.9" fill="none" stroke="var(--warm)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<path d="M345.0 95.4L360.0 93.2L374.3 75.2L386.6 70.8L395.9 75.2L411.1 81.9L425.1 90.9L441.9 90.9L455.0 102.2L472.0 113.5L484.9 99.9L497.1 95.4L512.5 104.5L529.9 113.5L543.4 113.5L550.6 131.6L551.2 154.3L555.9 170.1L567.6 190.5L589.3 195.1L603.1 197.3" fill="none" stroke="var(--warm)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<path d="M198.5 102.2L210.5 93.2L222.5 84.1L233.8 77.4L244.9 70.8" fill="none" stroke="var(--cool)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<path d="M461.7 62.0L457.7 51.2L454.0 38.7L455.2 28.7" fill="none" stroke="var(--cool)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<path d="M631.7 263.0L643.1 251.7L653.5 240.4L648.9 222.2L647.2 210.9" fill="none" stroke="var(--cool)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<path d="M369.7 44.9L375.5 36.7L382.3 28.7L389.1 24.8" fill="none" stroke="var(--cool)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<path d="M411.5 249.4L418.1 238.1" fill="none" stroke="var(--cool)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<path d="M492.0 84.1L505.9 81.9L519.6 79.7L530.5 79.7" fill="none" stroke="var(--cool)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+<text x="203.4" y="42.8" font-size="12" text-anchor="middle" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke">カナダ楯状地</text>
+<text x="414.0" y="51.0" font-size="12" text-anchor="middle" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke">バルト楯状地</text>
+<text x="521.2" y="34.6" font-size="12" text-anchor="middle" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke">シベリア卓状地</text>
+<text x="395.9" y="163.4" font-size="12" text-anchor="middle" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke">アフリカ楯状地</text>
+<text x="256.4" y="199.6" font-size="12" text-anchor="middle" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke">ブラジル楯状地</text>
+<text x="584.0" y="235.8" font-size="12" text-anchor="middle" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke">オーストラリア楯状地</text>
+<text x="514.0" y="160.0" font-size="12" text-anchor="middle" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke">インド半島</text>
+<text x="249.5" y="73.0" font-size="12" text-anchor="start" fill="var(--sub)" stroke="#fff" stroke-width="3" paint-order="stroke">アパラチア</text>
+<text x="466.0" y="51.2" font-size="12" text-anchor="start" fill="var(--sub)" stroke="#fff" stroke-width="3" paint-order="stroke">ウラル</text>
+<text x="600.0" y="298.0" font-size="12" text-anchor="middle" fill="var(--sub)" stroke="#fff" stroke-width="3" paint-order="stroke">グレートディヴァイディング</text>
+<text x="228.0" y="235.8" font-size="12" text-anchor="start" fill="var(--sub)" stroke="#fff" stroke-width="3" paint-order="stroke">アンデス</text>
+<text x="146.1" y="86.4" font-size="12" text-anchor="end" fill="var(--sub)" stroke="#fff" stroke-width="3" paint-order="stroke">ロッキー</text>
+<text x="524.0" y="130.5" font-size="12" text-anchor="middle" fill="var(--sub)" stroke="#fff" stroke-width="3" paint-order="stroke">ヒマラヤ</text>
+<text x="381.0" y="66.3" font-size="12" text-anchor="middle" fill="var(--sub)" stroke="#fff" stroke-width="3" paint-order="stroke">アルプス</text>
+
+  <g font-size="12">
+    <rect x="12" y="312" width="22" height="6" fill="var(--warm)"/><text x="40" y="320" fill="var(--ink)">新期造山帯</text>
+    <rect x="132" y="312" width="22" height="6" fill="var(--cool)"/><text x="160" y="320" fill="var(--ink)">古期造山帯</text>
+    <text x="270" y="320" fill="var(--ink)">文字のみ＝安定陸塊の主な楯状地・卓状地</text>
+  </g>
+</svg>
+<figcaption>ロビンソン図法。太い線は造山帯のおおよその位置を示す。範囲はおおよそである。新期造山帯は太平洋を取り巻く環太平洋造山帯と、地中海からヒマラヤを経てインドネシアへ続くアルプス＝ヒマラヤ造山帯の2本に分かれる。安定陸塊は大陸の内部に広がる。</figcaption>
+</figure>
+
+<h3>高さの違いは時間の違い</h3>
+<p>3区分の差は各区分の最高峰の標高に表れる。新期造山帯の山は高く、古期造山帯の山は2,000m前後にとどまる。</p>
+<div class="tb-bars"><h5>各造山帯の最高峰の標高 単位 m</h5>
+<div class="tb-bar"><span>エベレスト 新期</span><u class="w"><i style="width:100%"></i></u><b>8,848.86</b></div>
+<div class="tb-bar"><span>アコンカグア 新期</span><u class="w"><i style="width:79%"></i></u><b>6,959</b></div>
+<div class="tb-bar"><span>コジオスコ 古期</span><u class="c"><i style="width:25%"></i></u><b>2,228</b></div>
+<div class="tb-bar"><span>ミッチェル 古期</span><u class="c"><i style="width:23%"></i></u><b>2,037</b></div>
+<div class="tb-bar"><span>ナロードナヤ 古期</span><u class="c"><i style="width:21%"></i></u><b>1,895</b></div>
+</div>
+<p>エベレストは中国とネパールが2020年に共同で発表した値である（出典4）。アコンカグアはアルゼンチン軍事地理院の値である（ブリタニカ百科事典、出典5）。コジオスコはオーストラリア地球科学機構の値である（出典8）。ミッチェルは6,684フィート（出典7）をメートルに換算した本書による算出値である。ナロードナヤはウラル山脈の最高峰でブリタニカ百科事典の値である（出典6）。</p>
+
+<h3>大地形と資源の因果</h3>
+<p>大地形の区分は資源の分布の説明にも使われる。因果の流れは次のとおりである。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>背景</th><th>出来事</th><th>結果</th></tr></thead>
+<tbody>
+<tr><td>先カンブリア時代の海で鉄分が酸化して沈殿した</td><td>その地層が長い侵食で地表近くに現れた</td><td>安定陸塊に大規模な鉄鉱床が分布する（オーストラリア西部・ブラジル高原）</td></tr>
+<tr><td>古生代の石炭紀に大森林が広がった</td><td>植物の遺骸が地層に閉じ込められ、のちの造山運動で地層が持ち上がった</td><td>古期造山帯の周辺に炭田が分布する（アパラチア炭田・ドネツ炭田）</td></tr>
+<tr><td>海底に生物の遺骸がたまり新しい地層ができた</td><td>褶曲で背斜構造ができ、石油と天然ガスが集まった</td><td>新期造山帯とその周辺の堆積盆地に油田が多い（ペルシア湾岸）</td></tr>
+</tbody></table></div>
+<p class="tb-sub">この対応は傾向である。例外は残っている問いに記す。資源の統計は第11章で扱う。</p>
+
+<aside class="an an-biz"><b>投資で言えば</b>
+<p class="an-h">古期造山帯は成長期を終えた成熟企業である</p>
+<p>山を高くする造山運動はとうに止まり、侵食で背は低くなった。その代わり石炭紀に蓄えた資産を地層の中に持つ。</p>
+</aside>
+
+<div class="ex"><div class="ex-h">例題 2</div>
+<p>次の3つの山の標高 A 6,959m・B 2,228m・C 8,848.86m のうち、古期造山帯に属する山を選び、低い理由を説明せよ。</p>
+<details open><summary>解き方</summary><div>手順1 古期造山帯の山は2,000m前後の高さにとどまる。<br>手順2 選択肢でこの範囲にあるのは B のみである。B はオーストラリアのコジオスコである。<br>手順3 最後の造山運動が古生代に終わり、その後2億年以上侵食を受け続けたため低い。<br>答え B。造山運動の後の侵食の期間が長いからである。</div></details></div>
+
+<h2 id="s3">河川がつくる平野</h2>
+<p>河川は山地を削り、削った土砂を運び、流れが弱まった場所に積もらせる。土砂が積もってできた平野を<strong>堆積平野</strong>と呼ぶ。堆積平野のうち最終氷期以降に河川が運んだ土砂でできた低い平野を<strong>沖積平野</strong>と呼ぶ。これに対して長い侵食で起伏が小さくなった平野を<strong>侵食平野</strong>と呼ぶ。安定陸塊に広がる楯状地と構造平野は侵食平野である。</p>
+<p>沖積平野では土砂の粒の大きさで積もる場所が分かれる。流れが速い場所では細かい粒は運ばれ続け、重い礫だけが止まる。流れが遅くなるほど細かい粒まで止まる。<strong class="hit">山地から河口に向かうにつれて堆積物は礫から砂、砂から泥へと細かくなる</strong>。この順に3つの地形が並ぶ。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 320" role="img" aria-label="山地から河口までの河川の地形の並び">
+  <path d="M10 60 L60 40 L110 70 L150 50 L170 120 L180 130 L10 130 Z" fill="#B9AE9F"/>
+  <path d="M180 130 L300 190 L180 190 Z" fill="var(--warm)" opacity="0.55"/>
+  <path d="M180 130 C 230 158, 270 178, 300 190 L560 205 L560 215 L10 215 L10 130 Z" fill="none"/>
+  <rect x="300" y="190" width="260" height="15" fill="var(--cool)" opacity="0.35"/>
+  <path d="M560 190 L640 205 L560 205 Z" fill="var(--accent)" opacity="0.55"/>
+  <rect x="560" y="205" width="150" height="10" fill="#9CC3E6"/>
+  <line x1="10" y1="215" x2="710" y2="215" stroke="var(--ink)"/>
+  <path d="M165 118 L178 130" stroke="var(--ink)" stroke-width="1.5"/>
+  <g font-size="13" font-weight="600" fill="var(--ink)" text-anchor="middle">
+    <text x="90" y="30">山地</text><text x="240" y="230">扇状地</text><text x="430" y="230">氾濫原</text><text x="610" y="230">三角州</text>
+  </g>
+  <g font-size="12" fill="var(--sub)" text-anchor="middle">
+    <text x="90" y="160">V字谷</text>
+    <text x="180" y="112">谷口</text>
+    <text x="240" y="250">礫が多い</text><text x="240" y="268">水はけがよい</text>
+    <text x="430" y="250">砂と泥</text><text x="430" y="268">自然堤防と後背湿地</text>
+    <text x="610" y="250">泥が多い</text><text x="610" y="268">低く平ら</text>
+    <text x="680" y="198">海</text>
+  </g>
+  <path d="M20 310 L700 310" stroke="var(--accent)" stroke-width="2" marker-end="url(#j07m1)"/>
+  <text x="360" y="300" font-size="12" text-anchor="middle" fill="var(--accent)">河口へ向かうほど勾配が小さく粒が細かい</text>
+</svg>
+<figcaption>縦方向を誇張した模式断面である。谷口で勾配が急に小さくなり、礫が扇状に積もって扇状地ができる。その先は洪水のたびに土砂が広がる氾濫原である。河口では流れが海に入って止まり泥が三角州をつくる。</figcaption>
+</figure>
+
+<div class="tb-tw"><table>
+<thead><tr><th>地形</th><th>でき方</th><th>形と堆積物</th><th>土地利用の典型</th></tr></thead>
+<tbody>
+<tr><td><strong>扇状地</strong></td><td>谷口で勾配が急に小さくなり礫が積もる</td><td>扇頂・扇央・扇端に分かれる。扇央では川が地下を流れる水無川になりやすい</td><td>扇央は果樹園や畑。扇端は湧水があり集落と水田</td></tr>
+<tr><td><strong>氾濫原</strong></td><td>洪水のたびに川からあふれた土砂が積もる</td><td>川沿いに砂の微高地の<strong>自然堤防</strong>、その外側に泥の低地の<strong>後背湿地</strong>。蛇行の跡の<strong>三日月湖</strong></td><td>自然堤防は集落と畑。後背湿地は水田</td></tr>
+<tr><td><strong>三角州</strong></td><td>河口で流れが弱まり泥が積もる</td><td>低く平らで分流が多い。地盤が軟らかい</td><td>水田と大都市。広島・ナイル川河口</td></tr>
+</tbody></table></div>
+<p>扇状地の扇央で川が地下を流れるのは、礫の層のすき間を水が通り抜けるからである。扇端で水が再び地表に湧き出る。<strong class="hit">集落が扇端に並ぶのは水を得やすいからである</strong>。日本では土砂が多く河床が周囲の土地より高くなった<strong>天井川</strong>も扇状地に多い。</p>
+<p>土地が隆起するか海面が下がると、河川が再び下方へ侵食して階段状の地形をつくる。これを<strong>河岸段丘</strong>と呼ぶ。平らな段丘面は畑や集落に、段丘崖は林に使われる。かつての扇状地や三角州が隆起して一段高くなった台地は<strong>洪積台地</strong>と呼ばれる。関東平野の武蔵野台地や下総台地がその例である。</p>
+
+<h3>日本の河川の規模</h3>
+<div class="tb-tw"><table>
+<thead><tr><th>河川（水系）</th><th>幹川流路延長</th><th>流域面積</th><th>全国順位</th></tr></thead>
+<tbody>
+<tr><td>信濃川</td><td>367 km</td><td>11,900 km²</td><td>延長1位 ／ 流域面積3位</td></tr>
+<tr><td>利根川</td><td>322 km</td><td>16,840 km²</td><td>延長2位 ／ 流域面積1位</td></tr>
+</tbody></table></div>
+<p>値は国土交通省による（信濃川は出典10、利根川は出典11）。流域面積の2位は石狩川である（出典10）。日本の河川は大陸の河川に比べて短く勾配が急である。国土の中央を山地が占めて河口までの距離が短いからである。その結果、山地の土砂が一度の豪雨で平野まで運ばれ、扇状地が発達しやすい。</p>
+
+<aside class="an an-bb"><b>野球で言えば</b>
+<p class="an-h">粒の大きさで止まる場所が分かれるのは遠投の距離の差である</p>
+<p>重い礫は谷口の手前で止まり、軽い泥は河口まで届く。勾配が流れの肩の強さにあたる。</p>
+</aside>
+
+<div class="ex"><div class="ex-h">例題 3</div>
+<p>地形図に扇状の等高線が見られる。扇の中央部には果樹園の記号が広がり、扇の縁に沿って集落と水田の記号が並ぶ。中央部で川の線が途切れている。この地形と土地利用の理由を説明せよ。</p>
+<details open><summary>解き方</summary><div>手順1 等高線が谷口から扇状に広がるので扇状地である。<br>手順2 扇央は礫が厚く積もり水はけがよい。川の線が途切れるのは川が地下を流れる水無川だからである。水田には不向きで果樹園に使われる。<br>手順3 扇端では地下の水が湧き出るので水を得やすい。集落と水田が並ぶ。<br>答え 扇状地。扇央は水はけがよく果樹園、扇端は湧水があり集落と水田である。</div></details></div>
+
+<h2 id="s4">海岸の地形</h2>
+<p>海岸の地形は陸地と海面の高さの関係で2つに分かれる。陸地が沈むか海面が上がって海が陸に入り込んだ海岸を<strong>沈水海岸</strong>と呼ぶ。陸地が隆起するか海面が下がってかつての海底が陸になった海岸を<strong>離水海岸</strong>と呼ぶ。最終氷期には海面が現在より低かった。その後の海面上昇で世界の多くの海岸は沈水海岸の性格をもつ。</p>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 270" role="img" aria-label="リアス海岸とフィヨルドと海岸段丘のでき方">
+  <g font-size="13" font-weight="600" fill="var(--ink)" text-anchor="middle">
+    <text x="120" y="22">リアス海岸</text><text x="360" y="22">フィヨルド</text><text x="600" y="22">海岸段丘</text>
+  </g>
+  <!-- ria: V valley cross-section -->
+  <path d="M20 60 L100 170 L140 170 L220 60 L220 220 L20 220 Z" fill="#B9AE9F"/>
+  <path d="M65 120 L175 120 L140 170 L100 170 Z" fill="#9CC3E6"/>
+  <line x1="20" y1="120" x2="220" y2="120" stroke="var(--cool)" stroke-dasharray="5 4"/>
+  <text x="120" y="244" font-size="12" text-anchor="middle" fill="var(--sub)">河川の V字谷が沈む</text>
+  <text x="120" y="262" font-size="12" text-anchor="middle" fill="var(--sub)">三陸海岸 ／ 志摩半島</text>
+  <!-- fjord: U valley -->
+  <path d="M260 50 L290 60 C 300 190, 420 190, 430 60 L460 50 L460 220 L260 220 Z" fill="#B9AE9F"/>
+  <path d="M294 100 L426 100 C 418 180, 302 180, 294 100 Z" fill="#9CC3E6"/>
+  <line x1="260" y1="100" x2="460" y2="100" stroke="var(--cool)" stroke-dasharray="5 4"/>
+  <text x="360" y="244" font-size="12" text-anchor="middle" fill="var(--sub)">氷河の U字谷が沈む</text>
+  <text x="360" y="262" font-size="12" text-anchor="middle" fill="var(--sub)">ノルウェー ／ チリ南部</text>
+  <!-- marine terrace: steps -->
+  <path d="M500 60 L560 60 L560 100 L620 100 L620 140 L700 140 L700 220 L500 220 Z" fill="#B9AE9F"/>
+  <rect x="640" y="160" width="60" height="60" fill="#9CC3E6"/>
+  <line x1="640" y1="160" x2="700" y2="160" stroke="var(--cool)" stroke-dasharray="5 4"/>
+  <g font-size="12" fill="var(--sub)"><text x="505" y="54">古い段丘面</text><text x="566" y="94">新しい段丘面</text></g>
+  <text x="600" y="244" font-size="12" text-anchor="middle" fill="var(--sub)">隆起で海底の平坦面が段になる</text>
+  <text x="600" y="262" font-size="12" text-anchor="middle" fill="var(--sub)">室戸岬 ／ 房総半島南部</text>
+  <line x1="240" y1="30" x2="240" y2="260" stroke="var(--line)" stroke-dasharray="4 4"/>
+  <line x1="480" y1="30" x2="480" y2="260" stroke="var(--line)" stroke-dasharray="4 4"/>
+</svg>
+<figcaption>谷の横断面と海岸の断面の模式図である。破線は現在の海面である。左と中央は沈水海岸で、谷の断面の形がそのまま入江の形を決める。右は離水海岸で、波が削った平坦面が隆起のたびに一段ずつ持ち上がる。</figcaption>
+</figure>
+<div class="tb-tw"><table>
+<thead><tr><th>種類</th><th>地形</th><th>でき方と特徴</th><th>例</th></tr></thead>
+<tbody>
+<tr><td rowspan="3">沈水</td><td><strong>リアス海岸</strong></td><td>河川の谷が沈んで入江と岬が交互に並ぶ。湾内は波が穏やかで養殖に向く。湾奥で津波が高くなりやすい</td><td>三陸海岸 ／ 若狭湾 ／ スペイン北西部</td></tr>
+<tr><td><strong>フィヨルド</strong></td><td>氷河が削った U字谷が沈む。奥行きが長く水深が深い</td><td>ノルウェー ／ チリ南部 ／ ニュージーランド南島</td></tr>
+<tr><td><strong>エスチュアリー</strong>（三角江）</td><td>河口が沈んでラッパ状に広がる。潮の干満で土砂が運び去られ三角州ができない。港湾都市が発達しやすい</td><td>テムズ川 ／ エルベ川 ／ ラプラタ川</td></tr>
+<tr><td rowspan="2">離水</td><td><strong>海岸段丘</strong></td><td>波が削った平坦面が隆起して階段状になる</td><td>室戸岬 ／ 房総半島南部</td></tr>
+<tr><td><strong>海岸平野</strong></td><td>浅い海底の堆積面が陸になる。海岸線が単調</td><td>九十九里平野 ／ アメリカ合衆国の大西洋岸</td></tr>
+</tbody></table></div>
+<p>ノルウェー最長のソグネフィヨルドは長さ205km・最大水深1,303mである（ノルウェー大百科事典、出典12）。氷河は海面より深くまで谷を削ることができるので、フィヨルドは奥行きと水深がともに大きい。</p>
+
+<h3>砂の地形とサンゴ礁</h3>
+<p>沿岸流が運ぶ砂が積もると別の地形ができる。海に向かって嘴のように突き出た砂の地形を<strong>砂嘴</strong>と呼ぶ。砂嘴が伸びて湾をふさぐと<strong>砂州</strong>になる。砂州で海から切り離された水域を<strong>潟湖</strong>（ラグーン）と呼ぶ。砂州で陸とつながった島を陸繋島と呼び、その砂州を<strong>トンボロ</strong>と呼ぶ。野付半島は砂嘴、天橋立は砂州、函館は陸繋砂州の上に市街地が広がる例である。</p>
+<p>熱帯と亜熱帯の浅く澄んだ海では、サンゴの骨格が積み重なって<strong>サンゴ礁</strong>ができる。島の海岸に接する裾礁、島との間に礁湖をはさむ堡礁、島が沈んで環状の礁だけが残った環礁の3種類がある。グレートバリアリーフは堡礁の代表例である。</p>
+
+<aside class="an an-biz"><b>経済で言えば</b>
+<p class="an-h">沈水と離水は為替と同じ相対値である</p>
+<p>陸が上がっても海面が下がっても同じ離水になる。どちらが動いたかは海岸の形だけでは判別できない。</p>
+</aside>
+
+<div class="ex"><div class="ex-h">例題 4</div>
+<p>ある海岸は入江と岬が交互に並び、湾の奥ほど幅が狭い。湾の横断面は V 字形で水深は数十mである。この海岸の名称と、フィヨルドと区別する根拠を答えよ。</p>
+<details open><summary>解き方</summary><div>手順1 入江と岬が交互に並ぶのは谷が沈んだ沈水海岸である。<br>手順2 横断面が V 字形なので河川が削った谷である。氷河が削った谷なら U 字形になる。<br>手順3 水深が数十mにとどまる点も、最大1,303mに達するソグネフィヨルドのようなフィヨルドと異なる。<br>答え リアス海岸。谷の断面が V 字形である点で区別する。</div></details></div>
+
+<h2 id="s5">氷河地形・カルスト地形・乾燥地形</h2>
+<h3>氷河地形</h3>
+<p>氷河は自らの重さで斜面を流れ下る厚い氷である。現在の氷河と氷床は陸地の約10%を覆う（米国雪氷データセンターの解説、出典13）。最終氷期には北アメリカ北部と北ヨーロッパも氷床に覆われていた。氷河地形は現在の高山と高緯度地方に加え、かつて氷床があった地域にも残る。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>地形</th><th>でき方</th><th>例</th></tr></thead>
+<tbody>
+<tr><td><strong>カール</strong>（圏谷）</td><td>山頂付近の氷河が斜面を削ったお椀形のくぼ地</td><td>日本アルプスの稜線付近</td></tr>
+<tr><td><strong>ホルン</strong>（尖峰）</td><td>複数のカールに削られて残った鋭い峰</td><td>マッターホルン</td></tr>
+<tr><td><strong>U字谷</strong></td><td>谷を流れる氷河が谷底と側壁を削る</td><td>ヨセミテ渓谷 ／ フィヨルドの陸上部</td></tr>
+<tr><td><strong>モレーン</strong></td><td>氷河が運んだ岩くずが末端や側面に積もった丘</td><td>北ドイツ平原</td></tr>
+<tr><td><strong>氷河湖</strong></td><td>氷河の侵食でできたくぼ地やモレーンでせき止められた湖</td><td>五大湖 ／ フィンランドの湖沼群</td></tr>
+</tbody></table></div>
+<p>北ヨーロッパや五大湖周辺の土地がやせているのは、氷床が表土を削り取り、モレーンの礫の多い土地を残したからである。北ドイツ平原の農業が酪農や混合農業を主とする背景の1つである。</p>
+
+<h3>カルスト地形</h3>
+<p>石灰岩の主成分は炭酸カルシウムである。二酸化炭素を含む雨水や地下水は石灰岩を少しずつ溶かす。この作用を<strong>溶食</strong>と呼び、溶食でできた地形を<strong>カルスト地形</strong>と呼ぶ。名称はスロベニアのクラス地方に由来する。</p>
+<ul>
+<li><strong>ドリーネ</strong> 地表が溶けてできた直径数mから数百mのすり鉢状のくぼ地。複数がつながったものはウバーレ</li>
+<li><strong>鍾乳洞</strong> 地下水が石灰岩を溶かしてできた洞窟。秋芳洞</li>
+<li><strong>タワーカルスト</strong> 高温多雨の地域で溶食が進み塔状の岩山が残った地形。中国のコイリン（桂林）とベトナムのハロン湾</li>
+</ul>
+<p>日本のカルスト台地には秋吉台・平尾台・四国カルストがある。水が地下に浸み込むので地表は乾きやすく、畑や草地に使われる。</p>
+
+<h3>乾燥地形</h3>
+<p>乾燥地域は陸地の約41%を占める（国連砂漠化対処条約事務局、出典14）。この値は極度乾燥地域（砂漠）の6.6%を含み、極度乾燥地域を除くと34.6%である（2005年のミレニアム生態系評価の値、出典20）。乾燥地域では植生が少ないので、風と一時的な豪雨が地表を直接削る。砂漠の多くは砂の砂漠ではなく岩石砂漠と礫砂漠である。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>地形</th><th>特徴</th></tr></thead>
+<tbody>
+<tr><td><strong>ワジ</strong></td><td>ふだんは水のない谷。豪雨の時だけ流れる。交通路に使われる</td></tr>
+<tr><td><strong>外来河川</strong></td><td>湿潤な地域に水源をもち砂漠を貫いて流れる川。ナイル川・ティグリス川・ユーフラテス川</td></tr>
+<tr><td><strong>内陸河川</strong></td><td>海に達せず内陸の湖や砂漠で途絶える川。流入先に塩湖ができやすい</td></tr>
+<tr><td><strong>メサ・ビュート</strong></td><td>硬い地層が残ったテーブル状の台地とその侵食が進んだ塔状の丘</td></tr>
+<tr><td><strong>砂丘</strong></td><td>風が運んだ砂が積もる。三日月形のバルハンなど</td></tr>
+</tbody></table></div>
+<p>乾燥の原因である気圧帯と気候区分は第8章で扱う。</p>
+
+<div class="ex"><div class="ex-h">例題 5</div>
+<p>写真に、平らな草地の中にすり鉢状のくぼ地が点在し、白い岩が地表に突き出た台地が写っている。くぼ地の名称と、この台地で河川が少ない理由を答えよ。</p>
+<details open><summary>解き方</summary><div>手順1 白い岩が突き出た台地とすり鉢状のくぼ地の組合せは石灰岩の台地のカルスト地形である。<br>手順2 すり鉢状のくぼ地はドリーネである。<br>手順3 雨水は割れ目や溶食でできた穴から地下へ浸み込む。地表を流れる水が少ないので河川が発達しにくい。<br>答え ドリーネ。雨水が地下へ浸み込み地下水や鍾乳洞の流れになるからである。</div></details></div>
+
+<h2 id="s6">地形と人間生活</h2>
+<p>日本列島は4枚のプレートが接する場所にある。太平洋プレートとフィリピン海プレートが陸側のプレートの下に沈み込む。そのため国土の大部分が山地で、地震と火山が多い。気象庁は概ね過去1万年以内に噴火した火山と現在活発な噴気活動のある火山を<strong>活火山</strong>とし、国内の活火山は111である（出典16）。</p>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 547" role="img" aria-label="日本列島周辺のプレートと海溝・トラフ">
+  <defs><marker id="j07ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker></defs>
+<clipPath id="j07bc"><rect x="0" y="0" width="520" height="546.9"/></clipPath>
+<g clip-path="url(#j07bc)">
+<rect x="0" y="0" width="520" height="546.9" fill="#F3F6FA"/>
+<path d="M-761 325.5l6.2 .8-2.1 5.3 5 5.4-3.1 4-2.1-1.2-6.6 5.1-2.9-2.4-.6-3.4-6.1 1.7 1.2 6.5 5 5.4-1.3 4 2.6 3.3-2.1 2 .8 4.1 3.1 .7 2.5-3.8 1.1 .4 4.7 8.4 3.1 1.8 4.4-.5 5.6 3.4 1.3 1.4-.9 3.3 7.2 2 6.6 4.1 2.1 4.8 2.1 .2 2.3-3 .6-4.4 2.1 1 1.8-1.8 8.3 1.7 1.1 5.5 6.7 2.7 5.1 5.2 4 1.6 1.9-.8 6 8.7 2 .6 4.8-2.7 3.1 .6 2.5 7.1 3.7 3.3 6.3 3.8 4.2-1.9 1.8 .9-1.3 5.7 9.1 1 1.4-1.6 5 8.8 2.3-.8-.7-2.9 1.5-1.6 .8 3 3.8 1.8 2.3-3.8 2.2 0 8.2 5.5 3.7 .4 6.2-.1 1.9-1.9 4.9 .9-.1-1.7 8.6-3.1 3.6 2.2-1 10.9 3.7 2.4 .1-4.2 4.3-5.5 5.8-6.4 6.1-3.5 5.4-.9 1.1 1.9 5.2 .6-2 3.2 3.4-.4 6.6 2.5 4.2-2.5 11.4 7.2 5-2.8 1.1 1.6 6.6-2.5-.1-4.3 9.2-4.1 1.9-5.2 2.2-1.4 8.4-.2 1.1-3.2 6.1-3.5-1-2.5 5.4-3.3 3.1 2.9 10.2 2.6 2.1-.6 1.3-3.5 2.7 .5 .5-2.4 6.9-.6 1.6 2.6 1.7-.8-.3 2.1-2.5 1.3 .4 3.3 3-1.9 1.5 .8 2.5 5.7-5.2 5.7 7.2-.3 4.3 2.1 2-.9 4.2 3.1 2.2-1.6 1.4-4.6 2.4 .4 1.7 3.2 2.3-.1 3.8 4.2-.2 3.3 3.3 8.5 1.5-.3 .5-2.5 4.6 2.1 1.4 18.5-2 7.2 1.1 1.5-2.8 1.3 2.5 4.7-3.3 .6-3.2 5.3-3-1-1.7 5.7-2.3 2-1.9-.6-1.7 3.3 1.1 4.4-4 2.2-.4 5.4 2.3 .1 1.3 5.4-3.5 3.9 1.9 1.8 8.3-4.8 8.3 .5 4.9-1.3-3.6 3.5 .1 3.1 2.2 .7 1.1 2.8-1.3 1.5 1.9 2.4-.5 4.3 6.2 2.3 2-1.4 2.7 1.4 .8 2.4-2.1-.1-1.9 3.5 .9 4.7-3.7 6.4 13.8 2 .2 6.1 3.3 1.2-1 2 1.3 2.1 3.2-1.7 4.8 1.1 8-5.5 2.8 10.6 4.7-.9 4.2 1.9 1.1-1.7-1.8-1.6 .3-4.7 1.2-1-5-11.6 3-4.4 3.1 1.9 2.2-1.3 3.9 .7 4.3-6.7 9.7 6.3 4.9-6.7 3.4 3.9 2.4-4.1 5.5 5.5 2.2-5.3 2.6-.6 1.8 2.5 3.7-2.8 2.5 .4 2.1-2 .8-4.6 5.8-1.6 1.9-2.2 4.2 5.8 5.2 2.9 4.8-1.3 2.2 2.3 4-1.3 5.2 2.4-4.5 6.7 2.3 4-.1 4.8 6.1 .8-.1 2.1 4.7 1.8 1.3 2.2 8-.9 2.8 4 1.9-1-1.6-1.2 3.8-1.7 .1 2.6 1.2-.8 1-3.4 2.3 1-1.4 1.8 1.4 .3 1.6-2.2-1.5-.4-.4-4.1 .6 1.2 1.4-1.8 .4 4 1.4-1.4 1.2 3.9 2-.8-1-3.2 2.1 1-1.2 1.5 1.3 1.3 3.6 .2-1.7 2.9 1.7 .9 1.8-1.6 .1 1 4.9-1.1 .8-1.7-1.9-1.5 2.2-1.6 1 4.3 2.1 .6 0-1.8 .7 2.3 2.3-.6-.4 2.4-2.7 .1-1.8 8 2.2 4.4 1.2-.5-1.8 .8 1.2 2.9 3.2 1.5-.4 1.5-2.1-1 .9 3.1 2.1-1.1 4.2 .9 4.4-4.2-4-3.3 .7-3.1 1.2 1.3-.7-1.8-3.7 0 .7-4.1 3.5-2-.7-4.8 2.2 1.9-1 2.7 3.6-.7 0-2.9 2.1-1.1-2.1 1.4 .3 2 2-2.6 3.9-.5 1.3-.9-1.5 .6 .8-1.8 1 1.2 3.7-.5-.6 1.2 2.9-3.1 .8 1.7 1.8-1.3 .8 1 2.8-1.6-1.9-3.1 2.7 .3 .5 1.6 2.3-1.8-1.9-2.8 1.4 1.9 1.2-1.1-.2 1.6 2.9-.9-.2 1.7 1.8 .8 2-1.7-.1-5-.1 2.1 1.8-.2-1.2 2.3 2.2 1.3 4.8-3.6 1.4 2.1 2-1.7 1-4.9 1.3 3.4 2.5-2.9 1.7 0-4.1-7.4 5.6 7.9 1.8-1.6 .1-6.3-3.8-3.6 2-.1-4.8-2.5 4.7-.3-1.2-3.3 7.2-.4-4.3 .4-1 1.6 .9 1.4 .7-1.8-.4 2.2 .7-2.2-.5 3.5 2.6 1.8 2.3 5.6 1.3-1.6 7.5-1.4 2 3 1.8-1.1-2.1-.9 1.6-1.6-1.2-1.1 4.4-2.1-.5 3.9 2.6 1.1 1.3-2.4-1.8-1.6 2.1 1.4 5.5-4-1.2 2.1 3.1 0-.7 1.8 3.5 .5-.8-1.9 1.4-1.8-2.5 .3-1-1.4 2.7 1.4 2.9-1.6-.8 1 2.2 2.5 4.6-2.3-.6-1.2 1.8 1.6 2.3-2.1-1.1-.4 4.8 .8 2-5.1-1.7-.5 2.4 1.4 .3-2.3 2.4 .9-4.9-3.5 4.4 1.4 2.5-6 2.6 .2 .3 1.9 2.5-2.6 .1 1.6 .7-3.3 3.7-1-1.3-2.2 2.7 .9 .4 3.1 1.3-6.2 2.2 .8-.8 2.2 2.5-2.3 .2-3 3.8-1.4-1.9-1.3 .5-1.5-2.4 .4-2-1.5 4 .4 .6-1.4-1.4-.7 2.3-.6 .9-2 1 2.9 3.3-1.3 .4-1.8 2.1 3.5 1.2-.5 2.5-4.2-2.2-.2-1.2-2.1 1.8 .2-.1-1.5 .8 2.1 4.1-.5-.7-1.6 1.9-.1-.3-1.8-.8 .9-1.9-1.3 2.2-2.1-1.7-1.2 2.6-.6-1 1 1.8 .1-.7 1.5 1.2 .6 .3-2 2.4 .7 1.5-1.2-1.1-1.7-1.3 1.3-1.7-3.1 3.5-3.5 2.4 3.2 1.1-.7-.5 2 1.7-1.9 0 2.4 1.3-.3-3.6-6.3 2.5 0-.4-3.5 2.2-2.6-3-.8-3.3 2-4.1-3.9 6.3 3.1 3.4-5.6 5.1-1.8-2.1-1.2-2.5 2.2-2-2.7 1.5-.8 2.4 1.6-.1-3.2-3.2 .2-.9-3.5 1-.9 2 1.9-.6-2.2 1.2 1.4 1.5-2.2-.9 3.2 1.5 .6 .8-2.6 2.7-.1-4.1 5.3 5-2.4-1.7-4.9 3.2-.3-1.2-1.3 1.8-.3-.2-2.7 3.1-.2-1.3-1.9-2.8 .5 .2-1.6 2-.4-.1 1.5 3.7 .8-.2-2.8 3-2.7-1.5-1.7 1.4-1.8-.7-2 1.5 .9 2.5-3.2-5.3-4.5 .8 1.3 6.2 1.1 2.8-4.9-1.7-1.3 2.5-1.6 1.6 .4-.7 2.5 2.1 1.8 1.1-3.1 3.1 .9 1.2-1.6-.8-2.7-1.7-.2 1.2-.4-1.2-3-4.4-.3 .7-1-2.7-2.4 3.6 2.6 4.7-.4 .8-1.8-3-2 3.3 .2 .1-2-2.7 0 1.5-1.9-3.8 .1 .1-1 2.9-2.9 .9 2.3 .2-2.3 .2 2.4 1.3 0 1.1-3.8-.1 4.1 2.8-.5 .5-7.9-3.1-.2-.9 1.1 1.8 .2-.6 .9-1.7-1-4 3-.7-2.7 4.2-.7 7.7-6.8-7.1-1.2-5-6.6-3.1-1.1-6.2 3.5-2.5-1.1-1.8 2 2.5 1.2-2.7-1.1 1.7-2.2-1.9-2.8-3 0-1.1 2.4-2-.5-2.2 1.5 2-1.9 2.1 .4 1.7-2.6 6.1 2 2.9-5.1 9.4-5.2 7.3-1.1-.2-2.2-3.9-6.1-10.1-8.2-7.1-2.6 1.6-.3-1.3-3.1-4.9-.9-4.1 2.3-3.9-.8-4.1-3.6 .3-1.5-3.1 .1 1.3-2-1.2-1.3 4 1.2 2.6 5.8 2.4 1.5 8.7-2.8 3.1 1.1 2.9 4.3 2.3 .4 3-2 9.2 4.1 1.8-1.3-2.1-4.4-6.2-2.9-1.4-2.5 .5-3.1-9.7-6.4 1.1-6.6-7.1-13.1-3.9-13.9-10.6-4.7-3.6-4.4-4.3 .6 0-6 2.9-2 5-10.4 4.5-.9 0-2.5 1.7 .3 1.6-3.7 3.5-1.5-2.2-.4-1.3-5 3.2 1 .4-2.1 .8 5 4.8-1.6 1.3-.8-1-3.6 1.3-.2-.1-2.1 1.6-.7 1 1.8 1.5-1.7 .2-2-2-1.2-1.7 1.4 0-1.6 4.7 .7 6.6-2.8 1-2.5 2.6-.4-2 1.6 2.3 .7 .2-2 5.4-2.3-.4-1.2 2.1 .3-.3 1.8 2.3-2.5 1.8 2.5-1.4 1 2.3 .6 2-1-.5-1.1 1.8 .5 .5-2.8-2.4 .1 .9-2.9 .3 1 2.8-1.8-1.4-2.8 2.4-2-8.8-.1-1-3.2-2.3 3-6.2-1.2-.8 .6 1.6 .3-1.9 .2-3-4.2-3.9 1-.6-2.7-6.9-2.9-9.1 3.2 1.9 1.2-8 5.9 .6 2.4-2.2 2.2-10.8-.6-3.2-2.6 .1-6.5 1.8-3.2 2.5 1.4 .8-.9-5.4-8.3-1.9-1.3-5.2 1.9-8.2-1.6-6.1-5.2-3-5.4 .7-4.2 2.1-4.1 1.2 .3-1-2.9 5.4-2.5 5.2 4.3 3.5-2.7 4.6 0 1.4-1.4 1.6 .5-.7 1.3 6.1-5.6 0-4.3-1.2 .1 5.7-7.2 16.2-7.4 1.3-4.2 4.8-6.2 3.4-1.1-1.4-.5 .7-1.9 1.2 .7 2.2-2.9 3.2-.4 3.7 2.3 2.9-.2 2.2-3.4-.3 3.8 5.3 2.9-.1 2.3 2.6 2.3-8.2 10.9 .8 .7-7 4.1 1.1 4.2-5.4 2.1 3.7 .5 1.6 3.2 7.2-.8-6.1 3.1 1.4 3.9-9.6 3.2 1.1 5 .9-1.7 8-1.5-1.9-1.7 2.4-2 2.5 1.8-.7-1.9 3.7-.6 4.3-6.5 12.5-7.4 3.7 0 .5-3.1 2.8-.1 .2 2.2 2.8-1.3 1.2-3.1 2 2.3 6.3-.5 13.2-14.6 2.5 .5-.3-1.6 4.6-2.7 2.1 .4 6.1-5.8 4.2-.3 2-4 6.9-6.4 .8-6.1 2.8-2-.8-.8 1.9 .9 2.4-2.4 4.4 5-.8 1.5 8.7 2.1 6.3-1 2.5 2.2 2.7-4.7-4.4-6.6-.2-3 15.7-1 4.7-4.3-.3-2.3 2.5-3 3.4 1.8 1-1.8 1.9 .1 3.1-13.1 4.1 .4-.4 1.4 2.5 .5 .4 4.5 3.3 3.8 .8-1.5 .5 1.9 .7-2.1-2.9-1.3 .1-1.4 12.1-4.1-.5-2.9 3.5-8.3-2-3.6 1.7-12.6-3.4-15.2-2.3-3.9 8.7-2.9 7.3-9.3 2 2.6 16.5 5.1 3-2 1.5-9.5 5.1-3.3 0-4.8 3.1-2.9 .5-5.1 3.8-3 .5-3.3-1.5-2 2.9-4.9 1-8 2.7-3.5-.7-5.3 6.4-3.7 3.8-6.2-3.7-7.7 2.7-6.6-5.7-3-11.3 3.4-3.7 4-7.5-.3-4.9 4.4-2.3-.4-2.6 6.3-16 1.2-3.2-2.1-6.8 1.6-2-5.2-4.1-4.7 2.6-6.6-1.1-4.4-2.3 .1-1.7-3.5 2.5-6.7-8.2-.3-4.7-3.8-3.8-6.5-2.7-.5-1.3-3.5-1.7-.1-.7 2.3-2.1-1.4-1.8 1.2-2-2.5-4.2-.8 .8-2.5-2.3-1.2-8.2 1.9-5.9-1.2-5.5-5.5-.9-6.4 1.8-4.9-4.5-3.2-.8-3.8 1.4-3.1-1.4-4.7-6.1-8.6 .6-7.2-1.7 2-1.1-1 1.8-2.8-1.9-.8 .1-3.2-2.3-1.2 .9-3.7-5-8.1 2-3.8-4.1-1.9 2.1-2.1-2.1-1.2 .6-1.7-2.6-2.6 .2-1.9-3.9-1.5 1.7-5.4-1.9 .3-2.4-4.1-3.3 .7 1.5-2.8-2-2.3-1.7 .5-7.8-4.9-3 .8-.5 2.2-3.8-2.9-4.6-1-2.3-3.8-2.3 .6-8.8-6.1-1.2 1.5-.5-1.4-.5 1.2-4-1.4-6.8 2.7-8 .7-1.4-1.3-19.3 6.4-5.8-.1-14.5 14.9 .8 4.9 6.5-1.4 4.6 2.8-1.6 5.5 2.6 6.5-2.3 5.8-9.5 7.1-3.2 9.1-2.6 3.2-.4 4-3.9 4.6-.3 4.6-6.2 9.4 3.8 1.4-.8 6.7-3.8 2.9-7.8 .8-14 12-13.5-4.4-6.5-4-11.3 28.1-4 6.2 0 7.5-5 2.9 1.1 5.7 5.9 5.8 5.7-4.6 10-.3 9.4 5.8 7-8.8 7.2-.9 6.2 1.6 3.9 5.4 5.5 2.4 .9 3.4 3 1.4-.4 1.5 7.2 6.6 3.4 6.6-.7 6.1-3 1.7-6.3-.5-8.2-3.9-2.2 2.2-7.8-1.1-8.2 5.1-2.1 .1-1.9-2.2-3 .8-1 5.4-9-.8-4.3 2.4-6.1 9.6 .6 2.6-1.4 2.4-2.9 .8-5.8 5.5-19.6 1.7-2 4.5-5.8 5.9-8.3 5.4-14.9-3-5.8-5-7.9-.4-3.8 2.9-5.9 14.1 2.5 5.6 5.1 5.2 1.7 5.8-3.1 .8-3.3 3.9-10.3 4.4-9.8 13-16 7.5-11.9 1.2-10.7-1.3-24.5 3.9-27.1 12.7-4 3.7-1.4-1.4-6.7-.3 0-4.9-14.1 2.6-10.7-5.8-18-4.2-5.2-6.4-3.6-1.8-26.2-3.3-9.4 2.6-39.5-5.2-14.5 1.5-.7-4.4-7.7-8-5.9-17-3.7-1.5 1.4-6.3-6.3 .6-5.9-2.1-8.9-7.8-4.4-.3-7-6.8-11.7-2.1-10.9 .7-3.1-1.6-8.8 .1-1.7-1.8-3.3 .4-3.3-2.2-3.2 .8-3.8-7.6 1-6.4 5.1-6.7-1.9-7 2.6-6.7-2.8-9.6-3-1.7-4.2-7.5-2.1-9-4.6-2.5-.6-3.2-5.1 1.4-3.6-5.3-8.6 1-2.3-3-5.5-2.4-1.6-5-9.1-4.2-.7-1.2 2.1-2.9-5.6-4.2 2.3-2.6-1-5.3-7.2 2.5-4.9-1.5-4.4 .6-2.6 4 1.3 3.1-.6 3.2-3.2 5-14.7 4.3-3.5 11.4 2.8 16.6-3.1 5.7-4.7 .3-8.5 5.7-1.3-4.3-13.1 .3-15.4-5.9-.6 6.7-12 35.3 5.9 2.9-1.6 7.2-5.1-2.6-5.1 2.1-2.7-1.3-2.3-3.7-14 5.5-13 2.3-4.3 3.1 2.3 2.7 4.4-.5 4.3 2.1-2.4 1.8-.3 12.9 6.5 15.9-1.2 3.2 2.6 4.2-7.4 2.9 3.2 3.5-5.2 1.5-1.8 4 2.1 9.6-.6 4.8-6.8 .7-1.6 2.9-8.1 2.2-10.8 5.8-5.2 3.6-.2 2.5-4.7 5.3-4.2-.5-5.7 1.8-11.1-.7-4.4 9.5-5.1 5.8-1.2-2.2-6 3.2-3.8 .2-2.1-7.8-6.3 4.4-6.3-1.6-.8 2 1.3 2.2-2.7-.1-6.4 5.4-6.2 1.1-2.8 5.8 1.8 4.6-1.4 2.4-3.6 .6-.4 5.4 3.8 5.2-2.6 2.3 2.4 6.3 3.7 1.4 1.6-3.2 3.7 .1 8.7 4.7-.8 8.2 3 6.9-1.3 3.7 4.7 4.3-4.7 3.7-1.7 .4-1.2-1.8-5.9 3.7 2.8 2.3 4.3 .1 1.4 2.4 3.9-1.9 3.7 1.4 2.1 4.5 3.8-.7 3.4 2.3 2.9 9-2 3.6 3.3 1.8 1.3 3.7 6.4-2.1 .6 3.2 6 3.6 8.1 2.4 7.2-.5 1.5 1.4 2.8-1.3-.8 4.7 5.1 13.6 6.4 2.1 5.4 4.6 0 1.9-4.2 2.9-.2 1.8 1.8 11.1zM-23.2 359.1l-5.9-3.6-2.5 .9 2.4 2.6 9.3 4.4 2.2-2zM-12.3 391.1l-5.7-1.5 1 2.9 4.8 1.3zM92.9 209.9l-6-4-4.4-5.7-6.4-1.9 0-3.2 1.4-.1-1.6-.7 2-1.2 1.2 2.6-1-9 2-2.6 4.4-1.4 2.3-3.4 2.6 .6 1.8-1.3 1.2 1.1 5.2-3.5 .1-3 7.7-3.6 2.6-5.4 1.3 .8 4.6-3.8 2.5 .1 1.6-12.5-2.6-2 .6-4.3 6.6-10 5.7-3.8 .1-1.9 5.1 .7-3.2-7.2-1.1 1.2-3.3-3.8-.4-4.5-2.5-.5 .4-1.4-4.1-.4-3.1 13.1-1.9-.1-1 1.8-3.4-1.8-2.5 3 .3 2.3-4.7 4.3-15.7 1 .2 3 4.4 6.6-2.7 4.7-2.5-2.2-6.3 1-8.7-2.1 .8-1.5-4.4-5-2.4 2.4-1.9-.9 .8 .8-2.8 2-.8 6.1-6.9 6.4-2 4-4.2 .3-6.1 5.8-2.1-.4-4.6 2.7 .3 1.6-2.5-.5-9.2 8.8 2.3 1.7-1.6-.1-1.5 2.6 4.2 2.2 1.3 5 1.8-1.2 .1-3.1 6.4 4.9 1.9-.6 1 1.6 2.9-1.1-1.9 3.1 2 1.1-.8 3.8-2.2 1.4 .9 1.5-2.4 2.2-1.1 4 .9 1.5 .9-1.2 .7 2 2.9-1.7 3.7 3.3-3.4-1.7-5.9 .9 .1 1.9-2.5-.3 .5 2.1-2.3 3.4-.2 1.9 2.1 .7-5.6 2.2 10.4 1.1-.4 1.3-2.4-.4 1.2 1.5-3.4 1 3.4 1.2 1.5-1.4-.4 2.4 1.2 .3 2.4-.7-.4-1.6 1.5 .4 .2 1.7-2.3 .5 1 .5-1.7 2.1 3.1-2.6 1.6 .7 .2-3.5 1.9 0-2.5-2.4 3.5 .9 2.1 3.2 1.2 .5-.5-2 1.7 .9 .9 2.9 1.2-2.2 3.8-1.1 3.4 2.6 1.2-3.6 7.4-7.7 16.5-.4 3.2-2.1zM-25.7 595.2l-2.9 .3 2.6 2.2zM-607.4 -43.6l3.2-2.7 1-4.8 7.2-1.1 4.4 1.5 0-2.7 1.8 2.2 3.8-1.7 .4-3 2.7 1.4 5.7-3.7-1.5-3.3 .9-2.3 5.3-1.1 .9-2.8 7.8-3.9 3.7 0 5.6-5.7 7-1 5.8-6 7.1-.2 3.5-4.9 5 5.3 2.6-3.1 2.8 .3 .9 4.2 1.6 .7 20 1.1 1.7 9.1 4.3 5.5 5.5-.7 2.7 2.7 4.8-.1 2.6 1.7 5.6-3.6 2.1 2.2 1.9-1.6 5 2.9 2.7-.9 1.4 1.8 2.1-1.6 4.6 .8 3.2 3.7 3.3 .4 4-3.1-.1-1.8 3.2-1.2 1.3 1 3.8-2.7 3.7-7.1 .5-6.3-4.4-2.9-.9-6.1-3.1-4.3 4.1-12.6 3.1-.5 1.9-6.8 6.1-2.8 4.3-8.7 6.8 5.5 6.7 1.5 3.6 3.7 10.3 .6 14.5 7.7 3.1-.7 9.5 2.8 2 1.9-.8 5.8 1.3 8.2 1.9 2.2-.4 4.2 10.8 7.1 4.7 .2 1.3 2.7 5.7 1.7 3.1-1.4 5.9 1 4.9-4.1 12.1-2.4 3.9-2.4 11.4 2.1 4.1 2.9 7.5-.9 5.5 3.5 3.8 5.2 13.1 1.9-.4 7.1 10.6 9.2 13-.4 15.5 4.7 3.3-2.1 6.2 2.8 10.6-6.1 12-1.2 7.6-3.3 5.3 .9 4.9-2.5 2.1-5.5 6.9-5.9 12.3-7 8.1 1.1 11 9.4 5.6 .3 8.7-3.6 6.2 2.4 8.4 6.7 14.1 4.3 13.4-11.9 7.8-.8 3.8-2.9 .8-6.7-3.8-1.4 6.2-9.4 .3-4.6 3.9-4.6 .4-4 2.6-3.2 3.2-9.1 10.5-9 1.4-5-2.7-5.4 1.6-5.5-4.6-2.8-6.5 1.4-.8-4.9 14.5-14.9 5.8 .1 19.3-6.4 1.4 1.3 8-.7 6.8-2.7 4 1.4 .5-1.2 .5 1.4 1.2-1.5 8.8 6.1 2.3-.6 2.3 3.8 4.6 1 3.8 2.9 .5-2.2 3-.8 7.8 4.9 1.7-.5 2 2.3-1.5 2.8 3.3-.7 2.4 4.1 1.9-.3-1.7 5.4 3.9 1.5-.2 1.9 2.6 2.6-.6 1.7 2.1 1.2-2.1 2.1 4.1 1.9-2 3.8 5 8.1-.9 3.7 2.3 1.2-.1 3.2 1.9 .8-1.8 2.8 1.1 1 1.7-2-.6 7.2 6.1 8.6 1.4 4.7-1.4 3.1 .8 3.8 4.5 3.2-1.8 4.9 .9 6.4 5.5 5.5 5.9 1.2 8.2-1.9 2.3 1.2-.8 2.5 4.2 .8 2 2.5 1.8-1.2 2.1 1.4 .7-2.3 1.7 .1 1.3 3.5 2.7 .5 3.8 6.5 4.7 3.8 8.2 .3-2.5 6.7 1.7 3.5 2.3-.1 1.1 5-2.6 6 4.1 4.7 1 4.6 8.2-.9 2.8 2 16-1.2 2.6-6.3 2.3 .4 4.9-4.4 7.5 .3 3.7-4 11.3-3.4 5.7 3-2.7 6.6 3.7 7.7-3.8 6.2-6.4 3.7 .7 5.3-2.7 3.5-1 8-2.9 4.9 1.5 2-.5 3.3-3.8 3-.5 5.1-3.1 2.9 0 4.8-5.1 3.3-1.5 9.5-3 2-16.5-5.1-2-2.6-7.3 9.3-8.7 2.9 2.3 3.9 3.4 15.2-1.7 12.6 2 3.6-3.5 8.3 .5 2.9-9 2.2-3.6 2.8 3.3 1.8-.7 2.1 3 5.6 3-5.5-3.8-3.2 2.9-.8-.6 1 2.8 0-2.3 .5 1.3 .8 3.9-1.6 1.8 2.7 .9-5.3 3.4-2.2-1.3-1.7 3-1.3 4.5-8.1 2.4 1.6 1.5-1-3.5 5.1 1.4 .7 7.2-5.4-.6 10.7 1.6-2.3 3 2.4 3.2-1.6 .9 3.6 3.1-1.7 1.5 1.9-1 1.2 2.4 .2 7.5-3.9 2.2 .9 3.6-1.6 4.6-4.6 16.4-10.2 .8-4.9 4.2-1.2 1.6-2.9-1-1.6 .9 .6 1.9-2.8 3.7-7.8 5.7-3.3 2.5-6 2.3-1 6.4-10 14.9-14.9 7.4-10.8 8.1-20.2 7-7.4 5.1-12 15.8-17.5 .7-8 3.2-6-2.1 .7-1-1.3 2.1-.8-.1-6.4 1.7-.2 2.2-7.5-.5-5.4-2-2.6 4.7-5.5-2.9-2 .4-5.2-1.8-5 1.6-9.1 3-4.7-.3-7.8 3.2-1.6 .4-1.6-1.7-.7 1.8-1.1 .2-3.6 3.4-1.6 1.6-4 3.9-2.9-2.1-2.7 .9-2.4 3.4-1.5-7.4-7.4 3.3-6.8-2-3.3 1-2.2-3.1-.9-2.6-4.3-3.9-2.2 2.7-.2 5.7 3.7 1.2-1.4-1.3-.4 3.1-.6 1.2-2.2-1.3-2.1 .9-2.4-8.3-3.9 .3-1.5 2.6 .4-9-4.8-5.6-6.7 1.3-3-1.6-2.6-7.3-4.6-.9-2.7-8 3.4-11.4-3.2 1.7 1.7-1.4 4.8 1.8-.8 .1 2.6-2 8.4-3.8 6.4-3.9 .6 6.4-9.8-.1-5.1-3.7 2.7-1.4 5-2.3 1.9-4 2.5-10.1 1.7-2.1-2.1 4.7-2 2.1-4.8 4.4-3.9-4.7 .3-4.7-2.7-.2-2.1 2.2-.8 .9 1.8 4.3-7-5.9 .4-5.8 4.8 1.7 3 2.3 .3-1.8 5.4-1.4 1.3-3.6-1.2-2.1 2.2-1.6-1-.4-3.8 2.6-6.6-1.3-7.6 1.8-.5-.3-6.4-2.5 .9-.3-2.1-2.2 2.7-5.7-.7-7.9 1.5-1.7-2.9-7.1-1-1.2-3.6 5.1-7.2 12-7.9 4.7-7.5 5.9-3 9.1-9.2 1.6 .4 1-3.2 4.8-2.7 3.3-7 2.7-2.4 2.7 .4-1.6-5 2.2-1 3.4-7 1.6-.7 .6 2.4 .4-5.1 4.8-2.4 .9-3.7 1.6-.1 2.9-4.3 3.9-.7 3.5-5.5 2.9-.5 4.3-7.5 4.6-1.1 3.4-3.2 2.9-11.3 4.1-6.3 11.8-7.8 7.5-12.7 4.3-4.3 15.6-8.7 5.7 2.1 7.1-3.5 19.1 1.8 11.6-2.3 2.4 2.4 .1-1.7 2.4 0-2.3 6 3.9 3.4 2.7-2.2 2.1 .8-.1-7.5 3.2-2.1 3.7 2.8 9.6 1.7 4.8 3.2 .7-2.3 4.1 1.2 .3-3.6 6.5-1.1 3.1 1 .7 4 6.1 .8 .9-1.3 1.6 1.4 1-4.8-1.3-.7-.9 1.4 0-1.7-2.2 1.3 .1-3.6 1.8-2.7 .8 2.9 5.5-.1-2.9-5.9 5.8-2.8 0-1.7 16.1 4.4 5.1 3.6 3-.8-4.7 2.5 4.6 .2 .2 1.8 2.8-1-.6-3.4 7.2 .1 1.3-1.6 4.7 5 1.2 5.1 4.2 1.5 2.7-1.1 3.2 3-6.9 2.4-8.4-1.1-3.8 2.6-2.2-.3 4.6 9 11.5-1.4 6-6.2 3.3 3.7 6 1.5 1.8-5.2 5.7-1-.9-2 1.5-3.1 4.8 1.7 2.1-1.9-1.3 2.1 6.2 4.4 5.3-1.9-.4-2.8 1.8-.8 6.1 2.9 .4-2.1 6.6 .6 .3-5.7-4.3-5.2-1.4 1.2-4.1-2.8-1.6 1-2.1-1.1 1.8 4.2-1.9 .1-.4-3.9-1.8 3.1-2.8-.5-1.1-1.7 2.5-5.4 2.6 3.1-2.4-5.3-.1-4.8 4.3-.4-1.1-6.3 2.7-1.1-1.3 5.1 3.5-8.8 4.5-5.8 6.8-5.6 2.4-.3 6.1-6.9 1.4 .9 .5-7.8 7.5-8.1 3-2.1 1.9 .4 .2-11.5 4.4-1.4 1.8-3.6 5.9-1.2 2.9-3.9 9.5 2.1 3.1-3.4 3.9 1.4 1.1-1.5 5 .3 1-2.7 3.8-.8 4.2 .9 0 2.8 2.1 1.9 1.5-1.9-.9 4.2 1.1 1.8 2.3-2.5 3 .6 2.7-5.2 5.3-3.6 1.2 6.6-2.7 2.7 .5 5-4.4 3.4 1.3 1.1-3.4 4.2 1.5 1.1-3.1-.2-.7 1.7 2.8-.1 1 5-3.5 6.2 1.8 .6 5.2-4.4 4.2 .1-3.3 7.5-1.4 0 1.4 1.9-.6 3.8-1.2 .1 .7 2.9 4.2-6 .7 1.8 3.7-2.2 1.9 1.5 2.1-6.5 9.2-7.9 .4-2.7 1.7 .5 4.2-6.8 1.4 1.3 0-3.5 1.7 2.1 7.4-11 6.2 3-2.6-2.4 3.7-1.7 1.8 2.1-1.4 1.7 2.7 3.1 1.7-1.1 0-2.5 3.7-1.5 .3-1.8-6.4-3.4 3.8-9.9-1.5-.4-.3-5.5 4.8-3.8-3.5-3.8 4-5.4 1.4 1.1 5-2.1 2.5 .7 2.5-2.8 6.8-1.2 2.6 .6 2.9 4.3 6 2.8 9.4 .9-9.2 .3 3 4.8-1.2-2.2-8.4-2.9-3.5 .3-2.1 3.7-5 3.4-1.5 21.4-3.1 1.3-1.9 7.4 .4 1.1 1.2-1.5 1.8 .7 1.4 3.2-1.7 4-4.6 3.3-3.1 5.1 4.3 2.2 .3 2-5.5 1.8-2.1 4 .2-3-7.1 1.6-2.8 4-9.5 3.9-4.7 4.2-.7 7.5-7.4 5.9-10.8 14.3-6.1 2.3-2.7 6.5-9.3 9-1.3 7.1-9.2 11.4 .7 2.5-1.4-1.3-16.1 15.4 1.9 2.8-1.9-2.3-4.9 1.3-5.3-1.3-2.9 7.2-4 1.1-4.5-2.8-4 4.1 3.1 2.3 1.3 7.5-5.5 12.1-2.3-1.9-1.6 5.1-4.4 3-2.5 4.4 1.1-3.7-3.1 6.6-4.5 18.2-2.4 23.3 9.7 69.4 2.7 9.7 3.1 2.5-1.3 1.8-1.5-2.4 2.7 8.9 1.5 25.4 3.4 3.2 .7 3.2-1.6 5.9 14-13.7 1-3.5 6.6-4 6.4-9.5 1.8-7.2 2.9-2.5-.2-3.1-2.1 .3 1.9-2.2-1.9-4.9 2.5 .4 .5-1.9-1.7-1.9 2.6-3.4-3.7-.6 .1-3.1 2.6-1 2.1 4.9 7.8-7 11.5-4.3-.9 2.3 5 3.1-.8-4.9-.8 1.4-.9-1.5 1-1.8-3.2-5.4 2.9 .6-.5-4.4-1-.6 .8 2.2-1.7-2 1.4-9.5 2.7-5.7 11.9-10.7 7.1-1.8 2.8 3.2 7.1-.6 7-7.5 .4-3.1-5.8-9.6-.9-11.4 5.1-15.9 9.3-6.2-3.1-3.6 4.6-3.1 4 1.8 1.9-3.5 1.6 1.1-3 3.8-6.6 4.7 4.5 5.4 4 1.6 1.2-3.1 4.3-2.4-2.2-17.3-4.7 .9-3.2-1.8 1.3-9.2-1-9.4 4.7-3.7 4.5-8-2-3.4-3.7-.8-5.4-4.3-2.8 1-.2 6-2.8 2.1 1.7-3.1-6.5-3.2-1.5-6.7 7.1-18.7 6.7-5.9-.1-1.5-1.9 0 2.4-.4 1.3-3.1-.2 2.5 3.3-2.1-3.2-5.6 3.3-.3 1.6 3.7 1.7-1.6-3.4-5.2 1.1-1.9 2.7-.3-.7 2.1 1.2-1.7 .1-4.2-2.4-5 3.6-2.6-.5-6.7 3-2.7 2.7 .3 1.8-3.2-1.9 .6-1-2.6 3.6-.4 .4 1.2 6 .9-2.8 3.1 2.6 1.9-1.3-3 3.8-1.8-.3-3.3 2.9-.8 3.7 4.5 2.4 6.7 6.5-7-3.7-5 1.4 .7 1.9-2 .7 2.6 3.7-3.5 0-2.2 .3 1.4 3.6-1.1 9.4-7.2-4 2.8 .6-2.2 6.2-2.1-1 3.8-1.4-.2 .9 7-1.9 2.7-1.3 7.3 .1 2.8 2.4-.1 11.9-14.9-.6-1.4 2.6-1-.4-3.5 2.9 2.6 1.6-2.2 1.5 .4-.6-2.3 1.7 1.8 .8-1.7 1.9 .8 3.1-1.8 0-2 1.2 1.5 7.7-3 6.4 1.5 8.9-.5 .8-2.2 2.8 2.2-1.9 .6 7.4 4.7 1.1 5 3.8 1.5-2.2 1.7 1.9 4.3 5.4 4.8 2.3-1.6 1.8-10.6 2.7-2.1-2.5-4.2 3.5 .8 1.6-2.4-1-1.1 7.4-1.1 3.3-3 .5-4.9 1.2 1.8-.9 1.5 3.8-2-1.7-2.2 7.1-1.4 .2-3.8 1.5 3.3 2.7-4.1-3.3-4.5 6.3 3.2 2-2.4-3.9-1.3-.4-1 3.4 0-1.7-2.4 5.3 .7 2.1-2.6-1.7-2.5 3.9 2 1.1-1.3-1-2.1-3.2-2.2 3.2-1.4 4 2.7 3.5-5.5 2.6-.3 1.1-7 4.5 2 0 1.6 5.3-4.8-1.5-.6 .9-1.7 1.4 1.5 3.4-1.7 2.4 1.2 4.1-2.6-2.2-3.6 3.6 1.5-.7 1 7-3.9 1.5-5.4 1 2.2 1.4-.5-1.6 1.8 5.7-4.3 11.2-4.7 6.3-5.8 .3-2.4 1.1-.2-.2 1.5 9.6-3.3-3.7 .2-2.1-3.4 1.9-3.6-.8-3.8 3.4 6 1.3-.1 1.2-3.6 2.1-.3-2.4 2.6-.2 6.2 13.1 1.6 15.2 6.5 2.3 3 1.3-7.8 3.5-.4 1.5-4.2 2.2-.3-.4-8.5-3.9-2.1-1.2-3.8 3-2.4-.5-3.6-10-7.3 .6-2 2.8 3.2-4-10.7 1.1 6.2-2.5 1.9-1.8-.9 2.2-2.5-.1-3.7-3.5-.3-2.4 2.2-1.8-1.7 1.5-2.5 2 1.3 1-1.9 1.9 2.2 1.6-.8-2.1-2.7 2.6 2.1-2-14.8-.1 2.2-4.4-1.1 1.9-.6-1.9-.5 1.7-2.8 1.8 1.4-6.7-16.1 1.4 3.4-3.6 4 1.9 2-6.4-2-6.2-6.6-1.6-5.2 2.2-8.9-2.6-.5-6.1 2.9-4.3 5.6-4.9-4.9-1.6 2.4-2.7 .5-1.7 3.2 .6-3.5 4.8-3.3-5.9-8.5-6.4 5.9-10.5 .4-5.8 3.4-5.7-.5 5.3 .1 5-3.6 11.7-.6 5.8-6.9 6 4.2 .7 2 3.3-2.3 4.5 1 2.7 2.8 4.5-2-5.9-9.2-7.2 1.9-4.1-2.2 1.9-1.4 3.3 2.4 5.7-2.1 4 2.2 1.2 3.4 3.4 .7 1 3.2-1.8 .6 4.4 3.6-.7 .8 10.7 2.8 7.8-1.7 1.5 .7-4.6 2.9 1.3 .8 10.5-8.2 5.4-1.2 5.2-8 3.8-1.9 0-174.3-5.3-1.7-2.5-4.7 7.1 5.7-12.1-13.5-3.4-1.2-5.5 .7-1.6-1.7 .2-3.2 3 .9 1 2.1 2.9-.2-5.1-4.4-7-3.5-2.7 2.1-14.8-8.6-10.8-2.9-4-3.9-4.5-1 .5-2.3-2.5-3.8-6 .5 5.5 1.3 .7 3.9-2.5 .6-8.1-4.4 3.2-1.2-10.8 1.8-17.7-2.1-2.4 2.1-2.5-2-.8 1.7-4.8-4.9-5 1.7-.2 1.4 1.6-1.6 3.9 4.2-1.1 1.9-3.8 .7 .7-1.8-6.5-4.2-2.4-4-12.7-.6-26.2-7.5-1.3 1.4 2.6 1.1 .6 16.5-6.2 3.8-1.2 3.8 .3 1.4 7.4-.2 2.4 9.8 2.9 4.3-.2 6.5 2.2 5.6 2.3 .6-1.9 .7-1.3-1.3-5.1 5.6 .8 5.7-1.7-4.7-3.2 2.7 3.1 5.5-4.7-3.8-12.6 2.4-3-3.2-1.4-11.2-9-5.5-9.8-2.6-1.7-6.8 1.1-8.1-5.7-5.4 2.7-2.8-4.8-3.3-2.3 .2-13.5 13.7-3.7 0-.8-1.9-9.7 .6-6.9-3.6-14.6 1.4-6.8-2.7-7.2-7.6-4.4 4-3.2 .5-7.3-1.9-6.9 3.4-7.6-2.4-.5 2.5-1.9 .1-2.8 4.9-5.6 2.7-5 8.1-.3 5.4 3 14.6-4.4 6.3 .5 4.2-3.7 6.7-5.4 1.6-1.1-1.7 4.7 .2 1.3-2.2 5.4-18-2.3-3-5.6-3.1 1.3-4.3-2-13.1 1.5-5.7-1.6-3.5-6.9-2-3.4 1.7-1.1-3.3-2-.5 .5 1.3-5.4-4.3-1.6 1.4-1.3-7.5 3-4.2 .9-5.4-4-1.7 4.4 .3 2.7-9.4-4.4-14-10.5-13-21.6-11.6-35.6-2.7-5.7 1.7-1.3 4.8-.9-4.6-21.5 5.2-10 5.5-5.5-1.1-6.2 2.5-6.5 0-1.3 2.3-.6-3-14.3-6.8 6.6-.4 1.3-1.8-9.4-15.7-9.7-4.5-3.6 1.4-4 4.8 2.5-6.2-1.4 .2-4.3 5.7-6.3 4 8.1-7.3 2.7-7.9-1.5-1.6-8.1 .2-4.3 2.9 1.5-7.1 1-.4-.1 1.5 1.7-1.2-2.6-4.2-3.2 1.3-11.6-3.1-1.7 2-3-.4 3.1-1.6 .5-3-3.5-3 5.4 2.3 3.9-7.4 5.9 7.3 5.3-4.3 1-2.5-2.1-5.9-5.9-8.3-21-9.3-20.9-1.1-10 14.5-4.4 9.5-5.7 6.6-5.3 3.1-2.8-.6-4.1 4.4-4.4-1.9-1.3 1.2-.9-1.5-1 1.5-.1-5.3 2.4 0 3.3-4-4.2-4-.1-3.7 6.2 6.1 8.3-3.2-.3-5.6-2-.3-.9-2.6 2.2-7.3-2.3-2 1.3-.7 3.3 2.1-.6 3.3 1.7 .4 .4 4.7 1.9-5.6 2.7-.1 2 2.5-6.2 5.5-.3 9.7 9-11.7 7.6-14-32.3 2.8-5.5 1.7-2.6 3.3-3.2 0-5.4-5.8 4.1-.9 3.1 3.9 3.3-8.5 4-3.7 2.6 2.2 1.4-1.2 3.2 4.3 5.8-1 19.1 1.9 1.1-1.3-25.1-11.7-33.3-8.3-21.7-.1-11.8-4.2-4.9-5.4-9.4-2-2.3 .4-.2 1.5 7.1 9.3-1.1 6.2 3.1 .8-9.2 5.3-18-.1-3.7 4.3-4 10 1.7 4.8 2.7 1.7-1.6-2.6 4.8 .9-1.8-1.1 2.3-2.8 11 1-1.1 3.4-4.5-1.3-4.2 12.5-5.1 .3 4.1 1 4.1 4-2.1 3.8 .8 6.6 5.1 11-3-1.2-2.4 2-4.8-2.1-1.7 4-2.6 .4-1.4-.8-1.2-7.6-5-4.1-3.5 2 .4 3-2.4 .7-.6-2.2 1.7-1.8-7 1.7-1.4 5.9-3.3 4.7 2.4 .4 .8 2.2 6.1 1.1-3.7-.7-2.7 1.6 4.3 1.3-3 2.9-4.1-1.6-1.6 1.4 1.8 2.5 2.6-.5 1.4 3.1-1.7 .8-1.2-1.6-1.6 1.5-.9-2.5-4.1-2.8 2.9-.1 .2-3.4-3 2.1-2.2-2.1 1.5-3.4-4.4-1.1 .6-1-6.7-4.2-1.9-3.3-2-.3-2 2.8-1.8-5.4-7.9-3.2-6.3 .6-4.9 3.2 1.4 1.9-3.7-1.2-1.5 2-1.5-1.3-3.9 3.2-2 3.3 1.3 2.9-1.7 5.6 1.2-5.6-2.7-2.1-1.7 1.6-5.5 .3-4.5-1.5-4.5-2.1-8.6-7.7-2.9-7.8-4.4-2.7-.3-2.4 1.7-1.1-.3-4.4 2.4 0 1.7-2.5 2.1 .9 3.5 5.9-.3-2.9-4.7-4.8-6.1 1.4-3.1 3.5-7.5 20.2-2.8 13.6 4.3 2.8-5.9 .4 .3 3.2-1.8 .7-3.8 13.2-5.5 7.3-3.2 .5-2.7-1.2-2-11.4-2.6 5.9-2.7-3.2-5.2-2.2 1-1.3-2.5-4.8-2.8 .9-.9-2.3-4.1 1.3 2.3-3.4-1.9-6-4.5-4.7-2.5-11.1-1.8-3.4-4.7 .9-.9-3.4 1.5-2.7 3.2-.3 3.7-2.7 4.1 2.1-4-4.5-.4-4.4-4.3-7.6 2.5 11.8-4.5 3.8-4.5-6.8-.7-5.6-3-3.4-.2-4.3-4.3-7.3-7.1-4.4-.6-1.1 2-.4-3.4-5.6 3.3 .1 5.1 6.4 6.5 3.3-.6 3.2 4.9 3.1 2.8 4.2 6.9-1 2.7-2.1-4.3-.3 5.6-5.5-3.6-1.9-.3-2.3 2.8-1.6-4.5-4.8 .3-2.8-11.2-1.1-7.4-4.9-4.9-5.7 8.5-.4 1.5-3 12.4 4.1 2.8-2.8-17.4-5.3-3.9 .5 2.8-7.3 11.1-4.2 7.4 2.4 2.1-2.3-.6-3-6.6-5.9-5 3.4 1.3-5 1.9 .1 .2-1.4-2.2-.8 .8-1.6-4-2.6-3.8 1.5-3.6-1.8 2.3-5.4-7 .5 2-3.6-3.1-1.8 1.6-2.2-9.3-1.2-7-3.5-3.8 1.8 1.5 .9 .3 4.5-1.8-.6 0 3.1-1.7-3.3-1.6 3.8-1.3 0 1.6 4.7-1.6 4.2-.3-6.8-2.2-3.8-4.6 1.7 1.7-1.3-1.4-3.4 2.7 1.7 1.1-2 .2-3-2-2.7-4.8 2.9-1.2 5-.4-6.9-1.8 3 1.1 1.8-4.2 .2-1.3 3-.7-2.9 2.3-4.2-5-3.5-1.4 2.7-.9-1.7-.6 1-1.1-9.5-2.6 4.7-2.2-5.9-2.3 1-.5-2.1-5.7-2.7 .3-1.3-5.6 7.5-1.2-.4 1.1-2-1.2-2.2-1.9-.8 1.7 9-5.7 1.5 .2-2-1.7-.5 .5-4.6-3.8 3.4 .9 5-1.9-.8 1 2.1-2.1 .9 2.9 6.2-2.3-1.2 .4 2.3-1.5 1 3.4 1.1-1.4 2.4 1.1 3.5 1.8 1.1 .6 3.3 2.3 1-.1 2-2.6-.3 .6-1.3-2.5 1.4 1.1 5.6-1.2-.8-.9 6.3-3.6 4.1-9.1-6.7-2.6 .7 .7 1.7-1.3 .3 9.1 5.5-1.9 1.1-9.3-4 7.4 6.7-12-3.8-2.1-2 .7-2.2-3-.8-6.9 .1-5.8 2.6-6.9-2.7-15.5-1.8 1.4 3 12.6 4-.6 .9-14.1-5-3.3-5.7-10.7-3.9-9-7.1 .6-8.2-1.5-1.7 2.1-4.6 1.9-.5 2.3 2.6 3-.5 2-2.4-3.6-4-5.9-2-17.4 0-14.6-5.3-20.6-2.1-9.7 6.2-12.9 .5-3.4 4-7.7 1.9 5.3 9 4.5 .6-5.4 1.5-2.8 4.1-.3 16.5-6.7 9.1 1.4 5.1 2.6 3.2 12.2 4.6-10.3-2.5-5.6-5.1-1-7.5 6.4-6.1 .2-22.3-3.9-2.3-2.5-4.6 2.8-7.3 2.3-1.3 .1-2.6-5.2-15.4-4.9-7.1 1.7 12.8-2.1 2.7-7.8 2.6-9.9-2.4-6.3-4.3-2.5-3.5-1.7-6.8 6.7-3-.8-1.6-7.1 1.3-.4 5-2.5 2.6-6.6-5.1-9.7-1.5-3.5 8.6-4.5 2.7-.5 3.6 3.6 7 1.1-2.6 8.4-.1 6.6-5 4.4 1.3 .1 3.8-13.9 7.7-.3 3.9-6.8 3.8-3.5-.3-5.5-5.7-.2 2.6 4.4 5-3.9-2.5 .2 4.9-17.8 6.6 3.5 1.2-1.4 2.2-3.9-1.4-6.4 4.6-11.9-.8-4.5 2.4-7.2-3.1-3.2 6 1.4 7.5 6.3 4.2 8.4 2.3-7.8 1.5-9-4.7-1.7-2.5-1.9 3.8-7.7 7.1-7.1 .2-.1-1.2 3.8-.9 5.9-6 3.6-5.9 3.9-16.2 3-3 7.2 1 2.3-2.1 1.7-6.2 5-6.7-1.2-1.3 .8-2.7 10.4 .4 5-4 .6 2.6 7.3-8.5-.9-2.9 2 .4 7.7-12.7 8.4-3.9 5.4-5.3 3.2-8.6-5.8 .5-1.4-1.6 4.1 0 3.5-3.9 3.6 .1 2.7-2.9 .4-2.2-1.9-1.7 .9-1.2 3.9 1 7-4.4 1.6-2-1.1-1 7.2-6.3 6.4 1.4 3.1-4 3.4-9.8 12.7-7.6 12.6-19.8 1.1-5.7-2.3-1.4 3.1-1.4-.2-4.2-1.2-3.7-1.7 1.2-4.3-3.1-.4-6.9-4.8 2.8 .8 4-3.9-.3 1.2-6.3-2.3-3.5 1.3 .8 .8-1.7-3.5-4.3-2.6-.2-3.1-5.2 3.8-.2 10.1 9.9-1.3 1.9 9.6 1.9-3.3 8.1 2.2 0 2.8-5.5 3-16.5-1.9-6.1-2.8 1.1 .6 3.4-3 1.4 1.4-2.8-2.1-3.4 1.6-.8 .3-4.7-1.7-1.5 .1-7.7-1.7-4.6-2.1 .5 .4-4.5-5.7 .5 1.6 3.6 4.6 2.8 .2 4-4.2-3.5-1.7 7.2-6.8 1.3 3.3-2 1.7-5-1.3-3.5-2.6-.1-2.3-3.3 3.3 .5 .9-2.6-1.5-4 1.6-.9-8.5-8.8-7.4 8.3 6.4-9.6-6.5-9.3-6.6-2.5 1.9-4.1-6-1.8-1.5 2-.5-6.1-6.7 2.7-2.4-2.8-3.6 .6-5.2 4.8-11.5-5.1-19.2 4.2 .5-1.6-6.4-.9-.8 5 1.4 3.6-2.4 6.6-4.4 2.2-5.6-2.2-6.1 1.9-1.7 3-6.9-3-.4-7.1 3.7 3.3 3.3-8.6-1.3-3.3 3.5 .5 2.7-7.2 1.9 .5 1.6-2.7-1.6-.4 .6-1.2 2.2-.9-1.5-1.7 4-2.6-4.5-6.2 .8-1.1-4.9 1.3 .2-1.8-3.2-2.2-3.1 1.6 1.8 2.6-9.5-4.7-5.4 5.2-8-.4 .9-2.7 5.2-.5-.8-1.5 2.6-2.8 .7-3.7-10.2 4.3-2.5-1.7-5.6 1.5-1.8-2.4-10.9 2.6 22.8-11.8 1.4-2.1-1.8-.6 3.1-2.2 2.5-5.3 9.3 0-5.5-4.4-2.5-9.3 .7-2.2-9.3 2.2-8.1-5.8-2-7.5-8 2.6 0-5.2-4.6 .4-7.5 8.2-4.1 .9-2.8-3.1-5.1 6.2-.2 2.9-5.5 3.6-5.2 9.6-3.4-.8-5 9.6-10 13.3-.1 8.8-4.9 .7-1 10.6 2 3.9 4.4 1.5-1.8 2.5-.4 8.8-3.9 4.6 15.1 6.3 8.6 6.4-6.7-1.3-2.1-3.6-7.4-2.5-5.2 1.8 .8-2-3.6-4-9.5 5.8-1.3-2.2-12.5 1.7-11-3.9-1 2 3.5 9.8 4.3 .7 2.2 5.3 3.4 .6 .9 5.5 3.9 6.4-.7 6 1.3 7-5.7 10.4-2.6-.9 4.5-5.9 1.3-12.4-1.6-2.4-1.6 1.4-1.8-3.3 2.3-1.6-.5-1.7-6.2 1.8-2.1-2.5 2.5 0 1-2.9-1-1.4-9.1 1.4 1.8-4.6-15.6 10.5 5.3 1.4-1 .9-4.3 2.3-3.5-2.6-2.9 3 2.7 .1 2.1 4.6-7.4-.1-1.5 3.9-2.2 .3 .3-4.4 3.4-3.9-2.5 .3-6.7 8.2-.5 2.8-2.6-1.3-3.9 2.5 3.5-6.6-2.8-1 .3-2.7-4.4 1.7 1.3 1.5-7 1.6-3.4 6.6-2.9-2.3 7.5-7.4 .6-6.4 2.7-.5-14-5.5-5.8 3.8-8.3-3.5 2.8 3.2-4.8 4.6-1.5-5-11.9-.7-.9 .6 6.3 5-5.1-.6-4.8 3.6-1.6-4 1.7-2.8-5.4 .8 1.9 3-2.2 2.1-1.1-3.3-1.5 .2-.4 5.4-1.8 2 1.1 4.9 2 .6 1.8-1.7-2.5-1.4 5.4-3.7 2.5 7.8 2.2-5.7 .8 2.6 2.5 1.2 7.4-3.1-10.7 6.4-20.4 8-9.7 1.6-1.9-1.3-2.1 6.9-6.3 .4-1.5-2.4-2.6 3.2-1.6-3.5-5 4.1-11.2 2.4-.7 1.1 2.5 2.9-7.7 1.9 1.6 3.3-5.4-.3-2.6-4-1.9 3.7-6.5 2.5 4.3-1.2 1.3 2.2-2.7-.7-2.7 2.5 .8 1-3.6 1.2-1 2.1 1.3 3.2-1.9-1.1-2.5 1.9-1.1 5.4-6.2 5.1-16.1-4.3-2.2 5.1 15.5 4.2-3.9 4.1 .1 2.3-2.2-1.5-.3-3.6-4.4 1.4 3.7 2.8-5.6 6.9 0 7.6-2.6-2.2-2.6 3.5 3.3 1.4 .1 4.9-4.6-.9-1-4.9-2.8-1.8-2.7 1.1-1.8-3.8 2.6-.6-4.8-3.1-1 .5 1.2 5.1-3.5 .9-2.7 5.7 18 4.9-4.3 3.2 4.6 5.7 4.9-1.2 0 3.4 3.1 2.2-4.2-.7-.4 6.2-.8-4.7-2 2.6-2 0 4.1-5.6-5.7 .1-.6-3.2-2-1.3-7.4 2.7 3.6 1.7 .7 4.9-2.4-2.9-4.4 .2 .8 4 1.2 1.9 12 2.5 1.6 2.6-1.4 3.3 2.5 1.5 .5 2.4 8.1 1.4 1 2.2-8.3-1.3 6.1 12 2.8 1 1.5-5.5 2.1 1.4-.8 4.2-5.8 5.8-.6 2.4 1.7-.8-3.1 5.8-16.7 3.2-5.6 3.8-.5 7.4 1.4 3.1 5.5 2.8 7.1 7.5 2.1 9-2-7.2-5.8-3.5-1.7-4.5-6.9-4.6-.8-9.1 5.7-6.5 4.8-2.3 8.1-8.6 2.6-.9 1.2-5.8-5.2-1.9-13.3 2.2-2.5 2.7-4.9 .3-2.8 6.6-7.2 .2-3.8-3.4-22.6 6.8-26.5-.5-25 5.9-.2 4.2 3-.4-1.6 4.2-5.7 6.4 4.7 2.9 .6 3.6-5.7 2.8 5.8 2 .5 1.6-2.8 .8 5.5 3.8 1.1 3.8-.7 9.9-2.5 4.2 1 5.1 2.5 1.5-2.2 4.4 8.7 10.9 6.6 .2 10.6 4 1.9 5.6-2.2 5.1 5 4 3.6 8 5-1.1 6.8 3.2 4.5 11.6-1 6.6-3.1 2.5-.1 5.2-4 6.7 1.9 6.9-2.4 .2 4.6 4.3 6.8 29.2-4.2 7.5-10.1 .4 3.1 5.9 .8 6.5-5.1-.3-4.1-4.7 .3-4.1 6.1-8.6-.4-7.5 2.5-10.1 0-6.2-4-6.3-.5 4.4-2.4-2.6-2.7 3-1.8 5.6 1.3 2.2-2.1 3.6 .6 4.2-5.3 2.2 3.3 19.1-4.6-18.8 5.8-11.1-3.7-11.1 2.6-5.8-1.4-9.8 13.4-7.4-.6-6.2 5.1-7.1-1-3.7-4-.2-2.6-3.2-11.7 4.4-7.9 .4-6.9-3.5-1.6-5.3-10.7-10.5 1-1.8 2.2-.1-1.4 2 1.5 1.1 .2-3.3-14.3-7-10.7-10.2-15.5-1.2 .1 1.4-6.5-.1-8 10.9-3.3-1.6-1.7 6.3 2.3 2.7 3.5-3 4.8 .3 4.1 7.2-2 5.7-9.1 2.7-12.2-12.2-9.1 2.9-6.2 5 4.7 18.6 5.4 2.4 2.3 3.6 6.8 2.1 6.7 6.7-1-1.7 4.8 2.8 4.8-5.1-1 6.4 1.6-1.2 4.4 1.1-.7 8 4.5 3.4-2.6-2.9 2.6-.8 1.1 3.7-1.7 1.2-.3 5.8 2.1-2.6 3.3 1.5 2.5-2.2-2-.8 1-1.2 2.2 1.4 1.8-1.9 .7 1-1.3 3.6-7.6 .5-3.3 1.7-2.3-2.5-5.7-1.8-1.9-7.9-4.9-2.7-9.5-.5-1.6 6-.5-6.3-12.8-2.1-.7 1.3-14.6-8.7-.4-4.8 3.5-.5 1.5-4.3-2.4-4.2 1.7-2.6-4.5-6.2 .4-9.2 3.2-2.4 1.4-9.4 3.9-6.4-3.3-13.3 2.7-3.9-5-7.6-1.4 .8 3.3-3.4-3.7-4.6-4.9-3.7-4.9 3.7 5.3 13.1 .9 14.3-2 11.8-11.5 10.3-6.8 2.3-7.1 5.1-.5 8.7-8.3 12.9 9.3 9.5 2.5 9.9 3.4 5.2 .5 6.2 6.8 9.9-.1 7.7-10.5 18.5 1 4.2-4.3 16.8 6.6 16.1-2.4 12.4 3.5 4.1 6.1-3 8 3.2 5.8-1.2 .3-2.5 6.6-5.1 9.3 1.1 6.7 4.6 5.2 .6 3.4 5.9 5.3 1 3.1 3.1 4.1 .7 2.4 18.9 2.5-.2 .5 5.7 3.7 5.8-8 2.5-3 4.3-1.2 6.2 2 2.2-1.8 1.9 .2 7.1 4.3 .5 .6-1.7 3 2.3-1.3 2 2.4-.5 1.8 1.7 3.7-1 1.2 1.9 .7-3 3 1.9-2.6 1.3 1.8 1.4 5.2-2.3-1 1.3 4.3 2.5-5.5-1-6.5 1.7-2.2-1.4-3.3 1.9-3.2-1.5-2.9 1.4-.3-3.2-10.3-7.9 0-2 2.3 .1 1.6-3.7-2-3.4 2.9-11.6-3.4-2.8 2.3-4.1-.8-3.6 1.3-3.1-3.4-3.9-.3 1.8-1.8-4.1-6-5.2 .5-5.3-1.9-4.9-8.1-.2-8.5 3.8-7.5 1.2-9.7 4.8-3.8 7.4 .8 5.4-2.2 5.7 6.8 10.9 1.8 9.9-1.7 11.6-10.9 11.5-3.5 6.2 .9 3.8-1.4 9.3-3.7 2.7-2.8 5.2-8.5 3.7-1.1 3.6-8.1 2-3.2 4.8 2.1-.4-1.1 8.8-4.7 3.1-4.2 0-2.7-3.8-4.3-1.4-18.5 .9-7.9-3.5-3.1-3-5.9-1.2-3.1-2.5-1.6-2.1-.2-6.7-2.4-1.7 7.5-.9 3.5 1.8 .1-2.2 4 1 1.1-2.5 4.7 7.3 2.5 1.2 3.9-.9-1.3-.9 2.6-.9-1.4 0 .7-.8 2.6-.1-.8 2-6.7 3.4 2.1 3.3 4.8 2.1 5-.9-.7-2.1 2.5 .6-.4-2.4 3 0-1.2-1.5 2.3 .9 1.5-2.1-.6 1.2 1.9 .9 2.1-.9-1.1-9.6-3.7-3.4 1.6-.9 2.2 2.5 1.8-1.2 2.1 1.3 4.3-6.2 .4-2.5-1.8-.9 3.9-1.2-.2-2.1 1.7 2.1-.2-2.9-2.9-3.5 6.2-1.2-.2-6.2 2.4-2.4 .9-4.6 4.7-.7 3.2-4.2 1.3 1.7-.7-5.7 2.1-1.6 .2-4.9-2.3-6.2 .3-5.8 7.7-12.6 1.2 0 0 2.4 .7-1.2-1.8-5.8-11.9-10.4-4.8-6.8-1.7-11.5 2.9-5.6-2.7-6 2.6-1.4-2.4-10.2 3.3-9.5-3.5-10.3 2.3-6.2-3.2-6.3 5.8-7.2-1.6-10 2.7-12.7-3.5-8 0-6.5-9.2-8.5-5.2-10.3 .6-2.9 5.7-3.6 1.2-4.8 1.9-1.2 .1-8.7 2.9-3.2 1-6.9 5.1-13.4-1.3-7.5 .8-6.2-1.9-4.4 1.3-3.4-1.5-2.8 2-.4-12.2-7.1-4.3 2-1.2-.9 3.3-1.3-7.7-4.8-34.2 2.2-.5-2.1 3.7-1.3 .4-1.6-7.7 .6-2.1 8.7-4.4 6.4 1.3 2-1.3 .3-1.9 7.2 .9 2.8-4.8 25.6-5.8 17.7 .7 2.3-1.6-.7-5.4 8.7-6.2 6.2-11.7 6.5-1.7 7.2-3.4 5.5 1.3 3.1 2.2-5.4 1.2 1.2-4.9 10.6 1.4 5.8 7.8-3.8 2.1 .9 1.3 3.5-2 12.3 .8 5.6-2.9 10 2.6 3.9 .4-2.2 1 4.2-3.2 6.2-2.7 .7-.1-4.5-1.7 2.3-2 12.7 .5 8.8 2.8 2.4-1.8-5 2.5-.8 .3-2.5 10.6 5.6 3.4 4 3.8 1-.2-2.5 1.3-.4-1.4 11.3 7.5 16.3 4 3.2 9.2-2.1-4.6 2.9 2.7 1.1-3.2 11.6-6.3 12.5 1.6 2.6-6.3 6-.5-2.8-1.3 .3 1.3-4.3-2.2-4.2-5.9-2.6-3.6-5.9-6.8-4.9-2.7-4.3 .9-2.9-7.1-1.9-9.8-6.8-7.4-2.3-.9-2.1 4.6 .7-8.4-3.1-6.1-4.5-2.5 .4 .2 3.1-2.5 2.4 .7-7.1 3-.5-15.1-12.2-12.5-6-13.5-3.5-14.9-1-14.6-5.3-3.9 2.2-.9 7.5-7.3 .4-1.6 4.4 7 12.9 .8 8.9 2.1 1.3 1.2-3.4 2.2 2.7 1.1 10.4-2.6 .6-6.1 8.2-6.6 1.7-3-1.6-1.8 1.6-.8 2.3 3.5 8.2-1.9 4-3.1 2.1-10.2-3.8-.6-9.6 2.6-4.1 3.4 .2 .4-2.6-5.5-7-3.7-1.5 5.7-3.2-5.9-.2-10.6 5.3 .3 4.5 2.4 2.7-1.5 .4 .7-1-3-3.6 .7-2.7-1.3-.1-3.7 2.1-.5 4.6-5.6 .4-4.8 8.4-8.3-.3-3.8-3.3-2.4 2.7 .2-2.1-5.2 .4-3.6-1.9-5.1 3.9-5.4 .7-7.9 7.8-1.8 10.5-2.4-.1-3.3-6.4-5.2 4.8-.3-5.2-3.3 4.7-3.2-1.4-8.4 .4-2-1.2 1.9-3.7 2.1-1.2 4.3 1.3-1.4-3.2 3.4 3.2 2.4-2.9-3.9-11.9 1.7-1.5 .9-5.2 2.8-2.2-5.2-2.5-1.1 1.4-1.2-1.9 16.7-4.5-11.8 1.2-10.9 4.7-16 11.7-.8 1.6 2.3 .6 3.8-3.5-2.5 3.2 4.2 5.6-5.7 6.4-2.7 1-1.9-2.9 3.9-4.5-5.4-.8 2.2-4.3-10.7 4.7 .2 2.2-8.9 4-2.8 .4-2-1.7-13.5 15-2.7 1.9 3-3.4-15.4 10.5-5-.1-4.4-3.2 3.6 4.8-.3 4.7 1.4-.3 4.3 4.4-7.1-3.6-3.7 2.4-4-.8-2.8 4.1-.7-2.7-3.6 2.3 1.8 7.1-3.1 4.8 .3 3.8-1.7 2.6 .9 7.3-2.8 7.1-2.9-2.6-14.4 5.1-3 3 3.3-4.9-1.9-.9-8 2-3.5-2.9-4-11.5-9.3-5.7-2.5-3.9 2-7.3 5-2.7 .6-6.3 17.7-4.1 5.6 .2-2.7-13.5-1.4-.2 1.3-1-8.8-8.9-1.4-5.8-6.3-3.2-4.8-1.4-22.9-.3-8.8-5.6-2.8 .1 .2 2.5 15.6 15-.8 12.1 4-1.2-4.7 3.1 1.3 .3-1.6 2.5 2.5 .4-3.1 1.9-.3 7.8 1.3 1.6-1.8 0-4.8 18.2 .9 4.5 4.8 .8 3.3 3.2 1.6-.7-1.3 2.1 3.8 6.1-2.7 6 3.4 5.1-2.9 1.9-5.2 15.6 1.5 17-2.3-9.2-3.7-4.5-6.1 2.4-1.7 2.5 2 .8 .3 3.4-1.1-2.7-1.7-.2-1.2-2.1 7-6.3-2.3-3.7-3.3-1-1.1-3.4-13.1 1.7 2-2.5-8-3.9-1.4 1.2-8.3 14.4-5.2 4.7-11 3.9-4.1 6.7-12.5 11-.2 8.1 6.5 11.7 2.8 2.2 4.2 10.1-1.8 1.5 1.8 7.9-5.8-.7-5.8-4.7-1.1 3.2 2.4-.3-6.2 2.4-4.1-3.9-15.3-7.2 .5 3.1-2.4-.7-5 4.6 1.4-2-1.1-3.5 4-.9 1.9 1.2-.4-2.9-5.8-.4-4.4-2.7-2.1-4.7-11.5-5.7-3.3 1.1-.2 7.7-3.1 2.3-3.3-.5 2.3 3.5-1.2-.2 1 4.8 3.2 1.5 6.5 11.5 3.8 2.2 5.1-1.5 2-2.6 1.5 3.4 2.1-.3-.8 .9 1.9 1.3-2 2.8 2.5 3.7 .4 5.2-1.5 2.8-5.7 1.8-2.1 3.9-4.2-.7-2.1-3-8.1-1.2-7.1-3.4-1.2-5-2.9-3.2-1.4 .7-2.9-5.7-3.9-2.7 .1 3.5-4.2 1.1-.7-3.1-5.1-2-.1-2.9-4.6-2.5 4.1-2.2-2.5-3.5 3-1.8-4.3-1.3 3.2-3.4-4.2-5 2-2.6-.8-2.3-1.9-1.2-.4-4.7-2.7-1.6-.3-3.5-2.9-.8 1.2-1.5 2.5 .3 0-1.8 3 .1-.9-1.4 2.5-4.6-1.5-9 3.6 4.4 1.2-.9-1.7-2-.3-5.3-2.7-.4 .5-3.3-3-4.6-6.8-3.9-1-2.6-3.5 .8-5.2-4.4-5 .6 5.5-1.2-2-2.7 3.8-.8-2.6-1.5 .3-1.8-1.6 1.6-4.8-3-3.2 1.2-1.8-1 4.3-2.2 6 1.9-4.8-3.6-6.2 1.9-.6-1 3.4 0 1-2.3 3.5 .2-9.6-4.2 2.9 0-.8-1.8-8.2-4.6 1.4-2-1.8-1 2 .2 .7-2.2-4.1-2.7-.9-2.9-6 0-1.1-1.2 9.2-.3 10.2 3-2.7 1.3-.2 2.3 5.2 6.8 7.2 5.9 .1-2.6 1.8 1.5-1.9-2.4 .1-1.2 1.4 1.8-.2-1.8 4.1 5.9 2 .5 2.1-.8 1.3-3.1-.9 4.4 7.5 .7-2.9 1.2 2.2 4 5.6-3.3 13 9.8 14.7 4 8.4 .4 13.3 7 15.6 2.9 13.7-3.4 12.8-6.6 8.3-7.2 10.7-15.5 3.6-14-.8-4.4-1.7 .5-2.3-1.8 .7-7.6-2.7-2 .8-9.6-2.1-2.6-2.1 .3-2.5-4-3.3 2.5-2.5-3.9 1.6-1.3-7.1-6.7-3.7-6.8-1.4-.2 2.6 5.7-5.9-1.3-15.3-14.5-2.2 1 4.4 3.4-5.5-3.2-1 .8-1-4.7-4.6-3.2-6.7-9.6-3.9-1.6-4.2-4.7-23.2-17-12-4.1 1.4 3.1-1.6 1.7-1.4-2.2-2 1.6 .2-1.8-5.6-.9-4.2-3.1-9.8-1.3 .3 1.3-2.6 .4 0-1.6-2.6 1.6 .1 5.1-2.6 4.6-6.3 2.3-.7 5 .7-6.2 4.4-1.8 3.9-4.4-4.3-1 2.7-2.8-3.7 .8 2.4-1.8 2.6-5.9-3.6-1.2-5.7 2.9-2.9 4.5 4.6-8.6-3.4 .7-2.1 2.4 2.2-3.4-5.1-.1-1.1-1.3-4.3 3.9-1.7-.2 5.4-4-1.9-1 .1-2.3-4.6-.7-2.1 1.6 .7-3.6-1.5-.8 2.3-1 .2-4 1 4.9 4.6 .3 7.6 3.3 4.1-3.3 .4-4-3.7-2.5-6.9-1.2-.6-2.4-3.8-1.3-5.3-4.7-.8 1.7 3.2 7.3-1.2 .5-3.2-3.6-2.3 1.3-.2 4.5 1.9 2.5-5.8-.5-3.1 4.2 1.9-5.1-2.2-2.2-7.6-2.3 1.5 6.7-1.3 7.2-5.9-.5-4.9-5-1.9 .1 1.8 4.7-4.5 8.3-10.2 3.5-4.5 12.4-12.3 7.2 .6 1.5 5 .1 1.2 1.4-6.1 14.6 4.2 16.3 11.1 5.1 5.6 11.5 6.2 6.3-1.7 8.1-6.8 9.5-8.1 17.4 14.7 34.7 3.6 16.9-.2 2.3-1.6-.9-5.2 2.1 2.3 2.6-1.9 3.1-.2 6.8-2.4 3.9 4.4 1.2 .3 3.4-4.4 3.7-.1 1.7 3.3 8 5.9 1.1 1 5.1-3.9 3 2 3.9-.6 3 9.1 7.1-.1 7.9-6.1 9-3.8 2 8.3 10.5 12.9 10 1 4.3 5.3 7.5-5.6 15.2-5.5 7.5-4.9 4.1-25 34.6-7 5.4-17.4 20 1.2-1.2 .6 1.4 5.5-.7 3.2-4.1 5-2.6 .2 9.8-4.6-3.5 3.1 6.2 2.3 1.4 .9-.9 4.4 6.5 11.2-.6 2.6 1.2 1.7 4.7 5.2 1.9-1.5 3.7-17.3-4.6-3.2 2.5 0 3.4-2.5 1.5-6.2-2.2-1.8 6.4-2.6-.9-1.7-3.5-2 1.2 1.1 6.2-.9 3.3 2.8 4.3-5.2 2.7-2.9 9.6-4.1 3.9-1.2 4 2.5 12-1 5.7 2.3 4.4 .6 5.6 2.3 1.8-4.7 1.8-.3 3-3.1 4.3 .4 1.7 3.1 0-.3 3.2 5.7 4.5-.3 4.2-2.5 1.7 1.2 2-2.1 6.3 2.7-.8 2.2 1.6-.8 2.4 4.6 6.5 1.5 8.3-1.2 4 2.5 3 5.7-1.1 1.9 4.2 5.2-2.4 6 2.2 1.2 1.4-1.6 4.4 2.2 2.6 7.4-5 5.4-.4 4.3 1.9 4.8 6.2 1.8-.5 1.2 6.8-2.1 3.1 2.8 3.7 .8 4.3-1.6-.1 .1 2.2-1.8 .7-.7 4.3 6.8 4.9-1.7 3.9 2.5 1.3 2 6.5 8.6 5.3-1.4 7.5 5.9-.4 6.2 2.8-.2 4.5 5 3.5 0 3.1-4.5 1-.6 2.8-3.8 3-4.7 .3-2.4-.7-1-2.3-5.6-.2-2.9 5.4 5.5 6.5-1.4 3 2.5 3.8-1.3 1 .3 5.7 2.2 1.7 1.2 4.3 1.6 0 .9 2 5.6-1.5 2.8-6.9 8.9 2.4 4.8-3.5 5.1 .2 .5 2 5.1-1.9 4.6 5.5 .5 5.9 5.5 4.9-.6 1.9-5 1.2 2.3 4.2-.6 3.4 2.1 1.6-2.1 2.4 7.3 .4 1.1 1.8 7-1.1 1.2 4.2 3.6 .9-1.2 2.2 3.2 7.6-1.6 1.2 4.1 7.4 3.9-1.9 4.6 0 2.9 3.8 2.4-.6 3.2 2.7 4.4-3.2 9.8-3 3.2 3.9 0 2.5 7 8 2.8-1.1 .2-3.2 2.2 0 .9 2.1 5.4 .5 4.7 4.3 3.8-1.9 1.8 3.5 5.2 .5 1.1 3 3.1 1.9 3.4-1.7 2.3 .7-1.7 2.5 1.9 6.4-3.9 5.2-4.1 .8 1.4 3.3 5.1 .7-1.4 2.1-3.4-.5-2.5 5.8 3.5 .4 1.5 5.1-1.9 1.8 3.1 .9-4 6.7 0 4.7-16.1-.4-1.7 4.4-7.2 2.2-2.2 7.1 1.9 1-1.5 4.4 10.3-4.7-4.3 1.8-1.4 1.9 1.5 .7 6.4-1.9 .1-1.6 2.5-.9 3.1 .7 .3 4.4 1.8-.7-1.8 2.6-3.6-.5-4.7 3.5-6.7 1.6-.7 3.1 2.4-.6 1 2-4.5-.6-.7-1.4-5 2.9-4.4-1.3 3 6.5 1.6 1.5-.3-1.2 2.5 .6 7.8 6.8-.2 1.8-6.8-2.2-2.2 7.6 1-6-2.8 .9-1.9 6.7-2.8 2.1 .6 1.1-1.9-.3-.1 5 .8-4.3 1.2 1.1 .5 6.4-2.4 .3-1.3-1.9-2.4 1.5-3.8-.5 2.8 1.4-4.2 .8 1-2.4-5.3-2.7-2.8 2.9 2-1.5 1.1 .5-.8 1.4-.8-1.1 .6 1.6 3 .2-6.7 2.2 2.2 2.2 8.5 2.8 5.3 7.9 5.2 .8-.4-2.3 7.6 8.3 9.4 2.7 20.9 21.2 1.9-3.8 2.8-.6 4.9 1.7 2.3-.8 6.3 3.9 6.4 1 3.4 2.8 8 .9 5.5-1.4 4.5 2.4 3.7-.8 5.6 5.4 11.2 4.7-1.3 2.8 3.7 1.7 9.9-4.6 2.9 .6 1.7 2.7 1.5-3.6 4.5 1.4 3.5 4 6.5 .6-1.2 7.2 5.3 4 10.3 3.4 .7 2.2 3-1.5 4.9 6.9 2 .1 2.2 5.7 4.8 2.3 5.7-.1 3.1-5.8 5.5-2.8 3.6-6.1-3.3-2.2-5-9.6-6.4-7.4-.5-4.8-4.1-3.6 .4-4.6 1.7-2.1-1.6 .1 0-4 3.6-9.8-2.7 .2-2.4 8.5-.7-2.6 2.4-3.9-4.5-10.4-2.1-.2-1.7-3.3-4.6-1-1.4-3.1 .7-3.1 4.2-2.7 .5-3.7 1.5 3.2 .4-4.2 1.8-.3 1.6-5.3 1.3 0 1.5-5.1-1.3-.5 2-.4-.1-3.9 1.4 .5-3.3-4.6 4.7 4.8-1.6-5.3 4.4 4.1 .8-2.9 6.6 .3 .8-3.1 1.9 0-.7-.8 3.4-2.5 2.8 3.9 1.3-.7-.7-3.1-1.6 .2 1.2-1.6-1.7-1.7 1.5-1 1.8 1.8 .3-2.3 1.7 1.6 1.9-2.8 1.2 1.1-.9-2.5 1.5-2.1 2.7 1.8-6.7-5.3-6.6-2.3-1.4-2.4 1.8-2.5 3.5 2 4.2-2.2-8.3-16.3-6.1-7.8-13.2-3.2-.9 4-4.1-3.3 .6-1.6-2-3 2.6-2.2-1.5-.7-.1-4.3-10.8-3.8 4.8-13.2 5-6.3-4.6-4.8 2.1-13 7.1-6.1-.2-6.2 3-3.7 2.2-1.1 3.7 3.6 7.4 12.3 3.4 1.4 6.1-3.3 1.5-3.7-1.5-1.1-1.9-12.7-1.9-1.6 4.6 1.2 5.4-5.1 3.9-1.3 1.2-7.8 5.9 .3 3.6-3.6 5.9-2 .6-3.1 2.9-1.5 1-4.6 1.9 .6-.4 1.2 2.1-.8-.4-4.5 2.7 2.2 5.4-.1 2.3 1.5-.2 1.9-2.1 .7 1.2 1.8 4.8-1.7 1.9 2.2 3.1-6.1 3.8 .4 3.8-3.3 4.1 8.8 4.1-1.3 2.8 1.5 3.8-1.7 4.2 .9 3.5 2.6 1.1 4.7 4.6 .9 5.9 7.8 3.5 1.4-1.7 6.4 2 2.6 3.1-2.1-.6-7.8-2.4-1.1 2.4-2.8 7.1 4 4.4 6 2.8 .2 3.4 3.5 7.2-5.4 1.4-4.9 2.7 .6 2.9-5.2 3.6 2.8 .5-2.8 7.6-.8 3.1 5.6 2.3 1.1 1.5-1.7 2.9 .3 .8-5.8 6.9 1.8 2.5-2.7 1.2 2.2 3.7 1.3-.7 3.6 1.9 2.8 4.6 3.1 8.9 1.3 2.1 1.4-1.9 1.2 1.2 1.7 5.1-2.4 3.6-8 2 .3 2.8 4.3 7.2 .9 11.4-3.5 2.8-11.7 2.2-1.4-3.3-4.7-7.7-1.6-1.6-3.6-9.7-1.4 1.3-4-5.4-2.3-1.3 .8-1.3-2.6 .3-1.2 3.4 0 3.9-3.8 4.2-.4 6.4-5.4-1.8-4.4-2.1-1-.2-3-2.2-1.2 6.6-7.2-1.4-1.4 8.2-1.4 2.7 2.1 3.7-.9 2.5 1.2 2.3-1.6-.7-3.8-5-1.3-2.1-2.2-2.3 1-6-2.6 1.2-5.9 3.1 1.9 2.5-2-.9-2.4-3.9 1.3-6.9-2.6 2.2-.1 3.3-4.7-3.8-2.5 .3-1.7 3.7 .9-.3-3.2 2.5-1.3 4.2 3.3 3.6-1.5 3.7 2 0-2.5 7.1-.3-.4 2.5 2.4 2.1 .9-5.4 8.8-.9 1.2-2.8 3.7 .5 5.9-2.6 3.2 1.7 2-1.1-.1-2.7 10-1.9 2.4 1.5 3.3-2 4.8 2.7 .2-6.1 4.3-1.2 .1-2.1 5.1 .8 3.2-3.1 .8 2.7 21.4-5.5 1.7-1.9 6.7-.3 3.2-3 4.9 .4 2.5-3.5-2.3-3 7.5-.8 1.6-5 4.7 2.5-.8-4.7 3.4 1.1 1.1 2.2 2.6-1.8 5.9 1.5 9.3 6.2 4-4.6 6.5-.4-.4 1.9 3.2 4.7 .5 9.2 4.5 3.3-2.2 3 .9 7.3-3.8 .4 3.3 6 2.7-2.9 2.3 .6 .4 2.1 3 0 2-4.1 3.8 .5 3.4 2.8-1.9-2.6-.5-4.6 4.9 3.7-.4 2.3 3.2 1.2-2.2 1.3 .6 5.4 2.9-2 2.4 .6-.7-2.6-2.7-.2 2.1-2.5 5.5 .4 2.1 4.2 5.2 1.2 2.7-.5 1.5-3.4 2.4 .4-1 5.4-4.4 .3-3.5 5.9 0 2.7 2.8 1.5 .4 2.6 4.2-5.2 4.3-.9 2.7 .4 .3 1.7 2.5-.8 2.9 3.9 .9-6.2 3-.2 2.7-4.4 4.5 .7 7-5.3-1.2-2.2 1.1-.8 3.7-.3 9.4-4.5 .9-2.9 4.2 .8 2.5-1 .9-2.4 3.9-.8-2.5 2.5 1.5 2.4-3 4.9-5-.6 2 4.7 23.8 21.1 37.3 70.6 1.2 .4-1.3-2.4 2.2 .6 5.2-3.9-.3-6.3 3-.6 1.5-2.6 3.9 .5 2 3 2.2-.3-1.7 6.4 6.1-.1 1 6.3 4.9-1.5 7 2.3 3.1-1.4 2.6 1 3.4-2.1 .9-3 4.4 .5 2.2-3 5.7 0 9 5.8 4.2 7.4 .9 6.8 12.8 5.2-.5 4.3 1.7 .9 2.9 7.5 6.8-.6 1 1.5 4.6 0 .1 2.1 2.2-1.2 1.8 1.7 7.5-8.9 2.4 .4 .5 2.3-3.2 2.9 4 2.1 3.5 6.9 4.3 1.2 .9 3.2zM337 -186.4l-2.8-1.1 7.4 10.5-1.8 7.4 2.3-4.4 1.2 4.1-1.5 2-1.4-1.2-2.4 .7 .2 3.2 1.3-.8 1.7 1.3-4 4.4-3.3 0-.4-4.4-8.2 4.6 2.8 10.2-1.5 12.3-3.5 7.7 1 4.3-1 8 3.2 3.9-2.4-.1 6.8 7.7 3.3 10-4 15.4 2.3 12.6-.8 16.8-2.7 15.9-1.9 2.3 4.7 11.5 1 9.5-3.9 9.2 1.6 14.3-4.2 13 2.1 12.6 2.6 3.4 6.5-18.3 2.7-2.2 1.9-.6 1.2 3.7 6.3-.1 2.5 2.1-.4-1.1 1.6 .1 1 13.3 3.4-8.8-1.2-.5-1.7-11.4-.7 1.2-4.2-.3 3 1.6-.1 1.6-2.9-.6-1.6-2.6 1.6-1.3-1.3-.3-1.5-9.6-5.2-4.7-2.9-8.5-.2-6.3 7.9-23.7 .3-5.4 2.9-3.3 8.5-1.8-5.8 0-1.2-2.1 13.8 3.7 7.7 8.1 3 7.7 1.4 .3-1.2-6-5.2-5.3-6.6-25.1-3.7-8-4.7-26.8-.7 2-1.8-3.8 1.7 .2-.5-4.6-1.4-3.8-.5 3.8-2-.4 1.7-5.1-3.4-7.3 1-9.8-1.1-.7 2.5-7.4-1.2 7.4 1.8-3.3 1.1-11.9-2.6-14.2-2-.6 .5-4-2.3-1.3 1.4-1-2.8-4.9 .3-1.9 1.3 3.8-1.2-4.6-1.4-.4 2.8-7.3-5-9.1-1.6 4.7zM574 -86.1l-1.3-.7-2.6 2.3-3.5 7.8-8.4 3 .2 6.1 3.1 1.9 1.9-3.8 6.6-3.1 4.7-7.2zM471.2 33.9l-6.5 7-2.5 .7-4 6.6 3.5-.6 9.7-7.9 .8-2.7 5.7-4.9zM91.5 212l-.9 4.1-3.2 2.1-16.5 .4-7.4 7.7 .3 5.5 1.3 1.1-1.6-2.7-2.2-.2 1.4 8.5 4.4 2.4-3.7 .3 .5 2.7 3.1-1-1.9 2.8 2.3-1 .4 1.8-1.5 .2 1.5 1.6 2.3-1.4-3.2 2.7-.1 2.5-1-4.4-2-.8-.9 1.8 0-1.9-2.2-1.2 1.4 3.4-1.1-1.1-.6 2.3-.7-3.5-1.6 .1 1.2 1.7-1.1 2.8-1.3-.3 .5-3.5-3.2 4.4 .1 1.3 .4-1.3 1 .8-.6 1.1 1.6-1 .4 3 .8-3.4 1.4 2.9 1-3.1 .3 6.5 2.1-.5-2.1 1.1 1.9 5.3-2 .9 1.7 0 1.8 2.8 3.1-1.3-6.1 1.9 1.6 1.8 3.9-.1-2.3 1 1.4 1.9-2.1-.7-3.4 3.2 3.9 2.3-3.5 .2-.5 3.8-2.6 2.4 2.4 2.8-.4 1.7-1.5-2.9-1.5 .7 2.1 2.3-1 1.6 2.1-.9-1.1 4 2.4 .2 .9-2.5 1.7 2-5.2 1.2 4.5 2.5-4.2-1.7 1.5 2.7-3.1-3.5 .1 3.4 4.3 .5-1.3 2 .9 3.7 3.6-2.9 .9-3.2 2.1 3.5 1.9-4.1 4.1-3.3 1.9 1.5-.7 1-.7-1.2-.5 2.6-.6-1.1-1.5 2 3.8 2 1.6-2-1.5-.9 2.7-.2-2.4-4.9 2.7-1.4 2 5.8 2.4-4.9-2.1 .8-1.4-2.2 2.5-1.6 3 .9 3.1-2.8-.3 3.2 2.7 .8 2.2-1.2 1.7 2.2 .9-4.4-2 .8 1.9-1.8 3 .8-.9-3.2 1.7 2.5 3.8 .3 .7-1.2 .7 1.9 6.2-6.5 .3-3.8 .7 1.3 .7-.9 2.3-10.7-.6-1.4-1.7 1.9-1.3-1.1 1.6-14.8-.7-7.4-18.5-34.1zM68.2 321.8l-2.5-2.1-5.3 .9-3 1.2-2.4 4.1 1.7 1.4 5.8-.9 4.1-1.4zM99.6 292l-.7-3.1-1 3-2.8 .5 2.1 .7-.4 2.7 1.9-.6zM58 299.2l-1.7-.6-2.3 2.9 .5 1.7 3.5-1.1zM86 293.7l-1-2.8-1.3 1.5 .6 2.9 1.3-.8 2 1.5 .3-2.5zM61.4 233l-.5-3-1.8-1.2-.7 4.2zM59 258l-1.1-2.7 0 3.6 1.6 .7zM-17.2 490.1l-7.4-5.3-2.5 .8 .1 2-6.6 1.6-15.2 24.5-2.2 13.6 1.9 .2 2 8.5 5.9 5.4 1.6 6.7 2.2 .6 1.8-11.7 7.9-11.6 3.6-17.6 4.7-9.9-1-4.9z" fill="#E3E7EC" stroke="#fff" stroke-width="0.5" stroke-linejoin="round" fill-rule="nonzero"/>
+<path d="M180.8 300.7l1.6-.2-.9 1.3 4.4-2.2 1.2 1.8 2.5-.2 1.9-2.8-1.9-.1 3.6-.2 2.3-2.1-1.2-.6 2.5 .4 2.4-1.7 4.4 .4 5.2 3 6.4-1.4-.7 4.4-5.4 4.6 2.2 2.4-2.3 5.7 5.8 3.4-1.1 .9 2 2.5 5.5 2.5 3.4-3.4 2.6-6.2 2.9-1.6-1-2.2 2.1-2.3 6.4-3.1 3.3 1.4 .3-3.5-6.3-3.6-.6-1.6 2.5-6.4 2.9-2.1 .5 7.2 2 .9-1-1.7 1.1-3.1 .7 3 4.5-.5 1.1 1.7-4.7 1.3-1 1.8 9.2-2.1 11.9 1.8-.3-2.5 5.9-8.1 4.3-.6 1.8 2-2.5 1-.3 6.1 1.6 2 2.7-1.1 2.6-4.7-1.1-4.3 1.8-4 6.3-.9 1.2 3.7 1.2-.1 1-2.4-1.6-1-.1-3.3 2.5-1.3-.4-3 .4 1.1 3.4-1.4 2 2.2-5.5 5.3 1.4 1.5 .1 5.2-1.9 .9 2.9 1.1 3.6-4.6 4.2-1.1 1.8-8.3 3.1-2.6 3.8-.7-4-6.3-1.5-5.8 3.1-10.4 3.8-4.3 .8-3.7-.7-22.6 2-4.2 1.5 .8 2.4-1.9 3.8 3.1 .4-2.6-1.4-1 1.4-1.9-1.4-1.2 1.2-1.4-1.3-.6 1.8-.9 .4-4 1.5 .7-.6-3 1.6 .8-.1-1.9 2.1 .3-.5-1.6 1.6-.1-1.2-1.2 2.4-4.5-1.3 .5 2.6-3.1-1.8 .1 2-2-.5-2-1.4 .7 .8-3.7-3-10.8-6.8-9.5-.9-8.3 1.3-9.2-3.2 1.8-6.4-4.3-2.5 9.1 7.7-2.8 1.2 2.5-2.6 6.5-4.1-3.1-.7 2.9-2.5 .7-1.3-7.9-2.9 .3-2.1-1.9-1.6 3.3 2.7 2.2-1.5 0-.8 4.9-3.9 1-3.3 3.7 2.9 5.7-.2 2.8-2.5 5.7-3-.2 1.1 3 2.8-.9 1.9 1.7 .3 7.2-4.8 15.3-4.8 8.1-1.2 6.7-9.8 7.1-5.3 9.8-5.4 4.3-13.8 5.4-2.6 3.8-5-1.7 .7-5.7-3.2 .5 1.5-3.4 1.1 1 3.8-2.3 2.1-4.7-9.9 2.9-2 4.9 1.7 3.7-1.3 5.4-5.3 7.3-4.5 3-2.8 5.4 2.3 4.8-.5 2.4-.8-2.1-.7 2.8-2.9-.2 .4 2.3-1.7-.8-.3 1.7-1.7 .1 .4-1.2-2 1.1-1.2-2.4-2.5 3.3-1.2-3.1-1 1 2-2.7-1.4-2.1-5.2 2.8-6.7-.7-5.2 2.7-11.4 .3-3.1 1.7-2.4-.9 .8-1.7-3.8-.5-7.9 3.4 .1 3.1-13.6 12.2-4.5 1.2-3.2 5-3.5 1.1 1.2-.8-1.9-.5 .1 1.3-3.7-1.2 1.3 .9-2.9 2.2 .8 7.6 2.1-2.8 3.8 2.6 2.3-2.4 .9 1.3 5.2-1.6 1.4 .6-.7 1.2 5.5 2-.7 2 1.8-1.4 1.1-8.3 2.1-2.3 3 0 .6 3.3 1.8-.1 7.5-4 1.3 .7-1.5 2 1.9-.4 1-3.1 .6 2.2zM392.8 101.8l-2.5 3.6-3.4-1.1-.9-1.7 2.2 1-5.6-11.2 5.2-11.5-.6-2.3-10.4 10.4-6.2-1-2.4-3.9-1.5 2.4-.6-2.7-6.8 .4-.8-1.6 1.6-.2-6.4-3.1-7.4-6.5-18.4-22.9-1.6 2.3-3.1-.3-1 6.7 3.6 12.8-2.4 8.9-.3 8.1-5.3 5.5 1.5 9.4-4.4 4.2-2.7-2.1-3.7 .8-5.4-4.2-2.2 1.1-.4 2.7 3.2 5.1-4.1 5.7-1.5-1.4-6.3 5.4-.6 8.2 6 6-2.9 9.3 1 3.2 3 1 3.9-3 .3-3.5 3.6-3.4 .8 1.9 5.2 .8 3.4-2.1-8.5-7.7-2.8 .6-4.5-3.6 .6-4.1 3.1-3.4 4 .3 4.2 6.2 7.8-6.2 6.8-.8 24.7 15.7 1.8-9.1 9.3-12.4 7.6-3.7 7.3 1.8 .9-2.9 3.8 1.4-.2-1.3 2.8-.8-.5-1.2 6.8-1 1.7-3.3 3.4-1.5zM151.4 341.9l-.5-1.8 6.5-7.5-3.1-.8 1.6-2.3-3.2-.7 1.6-2.9-6.8-.1-.1-1.9 1.6 .3 2.4-2.8-1.2-3.8-2.5-.2-2.7 2.1-4.5-1-2.5-4 .8-3.1-1.6 1.5-2.8-1.1-4.6 1.9-.8 2.8-2.7 .8 1.9 .3-.1 1.3-1.7 .6-1.5-1.9-2 2 1.3 .8-2.6 1.8-2.8-2.2 .3 2.3-1.5-.3 1.5 1.2-.3 2.4-3.1-2.4-1.6 .6-.5 3 2 2.5 .7-1.2 .6 2 3.5 1 1 3.5-3.6-.6 .5-2.2-2.5-2.3-.7 3.4 3.8 4.2-2.1 3.2 6.2-4.6 1.9 .9-1.3 1.4 .6 1.8 3.4-1.9-.4-3.5-4-.4 2-2-1.6-3.1 1.9-1.4 3.1 2.1 .4 3.4 2.9 2.9 .3 1.6-3.1 1.8 3.8-.6-2.7 6.4-3.3 4.5-2.4 .5 .9 5.6-1.1 .6 2.8 4.6-1.8 3.7-1.9-.6 1.8 3.3 4 0 2.3 1.9 1.3-2.4-2.3-4.9 2-4.1 2.3 .1-.3 3-2.9-.5 1.8 .8 1.7 4.1-2.4 7 8.3-5.7-2.1-1.6 1-1.8 4.6 1.6 5.6-22.6zM203.1 313.8l-1.2-.1 .8-2-1.7-1.7 .9-4.4-3.6 .7-5.1-3.9-3.6 .4-4.1 3-2.5-.6 1.4 3.8-2.2 2.4-6.7 .6-3.9-3.9-3.3 4.5-.6 4-11.5 7.6 7.1-2-.7 2.6 2.5 .1 .4 1.8-2.7 .5 1.7 1.5-1.9 2.3 1.6-.4 .5 3.1 3.6-.4-1.4 3.3 5-.6 1.5 1.4 0-5.7 3.8-3.6 1.2-4.2 7.7-3.6 3.3 .9 4.3 5.4 2.4-7zM91.1 453.8l-3.4 4.7-3.1-1 1.4 2.6-4.1 2.6-1.3 6.7 2.5-1.1 .6-3.4 1.6 .1-1.2-2.5 7.9-5.1zM267.7 223.8l1.2-6-3.5 3.4-1.1 4.2 1.6 .2-2 3.7 4.8-2.3 1.3-3.7zM115.7 422l-9.2 5.2 4 2.5 1.2-3.3 4.7-2.8zM204.5 301.3l-2.4 3.3 1.2 2.1 4-1.7-1.1-2.2 2.3-4.3zM121.4 341.1l-.4 4.1 1.4 .5-1.7 1.1 .5 1.3 3.7-3.1-.8-4.2zM137.6 378.9l-1.2 6.6 1.6-.5 1.7-4.8-.1-4.7zM130 383l-2.1 1.5 1.9 3.4 3.2-3zM112.5 297.3l-.4-1.4-3.1 2.8-1 4.5 1.4-.6 .6 1.8zM100.7 335.6l-2.6 .3-1 3.5 3 .9 .1-1.6 2 .1zM108.9 303.9l-1.3-.1 .2 5 2.2-4.2zM13.3 501.3l-1.7 2.3 3.5 .7 1.1-2zM178.4 261l-1.8 2.7 2.4 1.2 .7-2.5zM103.1 433.8l-.3 4.4 1.6-1.4zM21 500.7l-2.3 .3 1.1 1.7 1.7-.4 1.5-4.2zM127.6 341.2l-2.1 2.7 2.1 .4 1.9-2.8zM113.1 323l-3.2 4.7 2.6-1.3zM105.9 328l-2.2 4.3 1.1 2.8 2.4-3.4-1.5 0zM193.7 299.7l1.2 2.2 1.8-.3 .3-2.6zM117.8 315.1l-1.9-1.8-.7 2.1 1.3 1.6zM315.5 56.5l-.9 2.5 1.8 1.2 1.3-1.8zM39.2 492.4l0 2.9 3.3-.2zM284.7 129.9l.4 3.2 1.7-4.4zM161.5 313.1l1 .8 1.6-2-4.6-.1 .2 1.9zM311.4 51.3l1.2 4.8 .7-3.9zM448.1 50.8l-2.2-1.1-7.2 6.2-4.2 .6-2.2-4.3-1.4 1.7 .6 3.2-4.8 4-1.8-.6-.8 3-4.3 4.1-1.9-.7 1.5 2.7-1.8 1.9-1.6-.6 0 2.3-1.1-1.4-1.3 4.4 1.7 .6 1.7-2.8 2.9-1.1 7.3-8 .1-2.1 4.5 .8 6.4-6.4 9.3-2.7zM404.5 76.6l-3.8-1.9-6.7 11.2-5.5 5 2.5 4.4 .5-4.7 3.3-2 2.5-4.4 3.4-3.4 6.9-2.6 1-2.1z" fill="#C9D3DE" stroke="#fff" stroke-width="0.5" stroke-linejoin="round" fill-rule="evenodd"/>
+<circle cx="153.7" cy="241.5" r="3.2" fill="var(--accent)" stroke="#fff" stroke-width="1"/>
+<text x="159.7" y="237.5" font-size="12" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke">竹島</text>
+<circle cx="8.3" cy="475.8" r="3.2" fill="var(--accent)" stroke="#fff" stroke-width="1"/>
+<text x="14.3" y="487.8" font-size="12" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke">尖閣諸島</text>
+</g>
+<path d="M572.0 -65.8L502.7 25.4L424.7 129.7L381.3 162.1" fill="none" stroke="var(--warm)" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="476.7" y="106.1" font-size="12" text-anchor="start" fill="var(--warm)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="600">千島海溝</text>
+<path d="M381.3 162.1L367.5 224.9L346.7 268.3L332.8 306.5" fill="none" stroke="var(--warm)" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="374.4" y="233.7" font-size="12" text-anchor="start" fill="var(--warm)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="600">日本海溝</text>
+<path d="M332.8 306.5L334.5 372.3L343.2 432.1L351.9 509.2L364.0 546.9" fill="none" stroke="var(--warm)" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="350.1" y="441.9" font-size="12" text-anchor="start" fill="var(--warm)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="600">伊豆・小笠原海溝</text>
+<path d="M282.5 287.5L292.9 298.1L312.0 306.5L332.8 306.5" fill="none" stroke="var(--warm)" stroke-width="2.6" stroke-linejoin="round"/>
+<path d="M268.7 291.7L261.7 314.8L228.8 331.4L195.9 339.7L166.4 356.1L149.1 374.3" fill="none" stroke="var(--warm)" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="201.1" y="352.0" font-size="12" text-anchor="middle" fill="var(--warm)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="600">南海トラフ</text>
+<path d="M149.1 374.3L130.0 416.3L100.5 463.3L62.4 497.8L8.7 516.8" fill="none" stroke="var(--warm)" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="117.9" y="478.7" font-size="12" text-anchor="start" fill="var(--warm)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="600">南西諸島海溝</text>
+<text x="322.4" y="323.1" font-size="12" text-anchor="end" fill="var(--warm)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="600">相模トラフ</text>
+<path d="M320.7 -0.0L298.1 62.6L280.8 122.7L273.9 180.3L265.2 224.9L261.7 257.6L265.2 283.3L268.7 291.7" fill="none" stroke="var(--sub)" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="121.3" y="134.4" font-size="14" text-anchor="middle" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="700">ユーラシアプレート</text>
+<text x="398.7" y="22.9" font-size="14" text-anchor="middle" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="700">北アメリカプレート</text>
+<text x="459.3" y="331.4" font-size="14" text-anchor="middle" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="700">太平洋プレート</text>
+<text x="208.0" y="451.6" font-size="14" text-anchor="middle" fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="700">フィリピン海プレート</text>
+<path d="M494.0 285.4L426.4 255.4" fill="none" stroke="var(--accent)" stroke-width="3" marker-end="url(#j07ah)"/>
+<text x="476.7" y="304.4" font-size="12" text-anchor="middle" fill="var(--accent)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="600">年8cm程度</text>
+<path d="M268.7 418.3L239.2 384.4" fill="none" stroke="var(--accent)" stroke-width="3" marker-end="url(#j07ah)"/>
+<text x="280.8" y="432.1" font-size="12" text-anchor="middle" fill="var(--accent)" stroke="#fff" stroke-width="3" paint-order="stroke" font-weight="600">年3〜7cm程度</text>
+
+  <g font-size="12" fill="var(--ink)">
+    <line x1="535" y1="40" x2="565" y2="40" stroke="var(--warm)" stroke-width="2.6"/><text x="572" y="44">海溝・トラフ</text>
+    <line x1="535" y1="66" x2="565" y2="66" stroke="var(--sub)" stroke-width="1.6" stroke-dasharray="6 4"/><text x="572" y="70">陸側の境界</text>
+    <text x="572" y="88">（位置に諸説）</text>
+    <line x1="535" y1="110" x2="565" y2="110" stroke="var(--accent)" stroke-width="3" marker-end="url(#j07ah)"/><text x="572" y="114">海洋プレート</text>
+    <text x="572" y="132">の移動方向</text>
+    <text x="535" y="170">トラフは海溝より</text>
+    <text x="535" y="188">浅い溝である</text>
+  </g>
+</svg>
+<figcaption>メルカトル図法。海溝とトラフの位置と移動方向は地震調査研究推進本部の解説（出典2）に基づくおおよその位置である。北アメリカプレートとユーラシアプレートの境界は糸魚川・静岡構造線付近から日本海東縁を通るとする見方が教科書で一般的であるが、別の小さなプレートを想定する説もある。</figcaption>
+</figure>
+
+<h3>国土の地形別面積</h3>
+<div class="tb-bars"><h5>日本の国土の地形別面積の構成比 単位 ％ 1972年の調査</h5>
+<div class="tb-bar"><span>山地</span><u class="w"><i style="width:100%"></i></u><b>53</b></div>
+<div class="tb-bar"><span>低地</span><u class="c"><i style="width:25%"></i></u><b>13</b></div>
+<div class="tb-bar"><span>台地</span><u class="c"><i style="width:23%"></i></u><b>12</b></div>
+<div class="tb-bar"><span>丘陵</span><u class="w"><i style="width:21%"></i></u><b>11</b></div>
+<div class="tb-bar"><span>火山地</span><u class="w"><i style="width:13%"></i></u><b>7</b></div>
+<div class="tb-bar"><span>火山麓</span><u class="w"><i style="width:6%"></i></u><b>3</b></div>
+<div class="tb-bar"><span>山麓</span><u class="w"><i style="width:2%"></i></u><b>1</b></div>
+</div>
+<p>値は国土地理院の昭和47年全国都道府県別地形別面積調による（土木学会の資料に掲載、出典17）。山地・火山地・丘陵・山麓・火山麓を合わせると75％で、台地と低地は合わせて25％である（本書による算出値）。</p>
+<p><strong class="hit">人口と資産は面積の小さい低地に集中する</strong>。国土交通省によれば洪水時の河川水位より低い洪水氾濫区域は国土面積の約10%である。そこに人口の約50%と資産の約75%が集中する（2007年の河川局資料、出典15）。この統計は古い時点の推計であり、最新の値は確認できず。</p>
+<div class="tb-tw"><table>
+<thead><tr><th>背景</th><th>出来事</th><th>結果</th></tr></thead>
+<tbody>
+<tr><td>山地が国土の大半を占め、平地は沖積平野と台地に限られる</td><td>明治以降の人口増加と工業化で、都市が低地へ広がった</td><td>洪水氾濫区域に人口と資産が集中し、水害の被害額が大きくなりやすい</td></tr>
+<tr><td>三角州と後背湿地は泥が厚く地盤が軟らかい</td><td>地下水のくみ上げで地盤が沈下した地域がある</td><td>海抜ゼロメートル地帯が生じ、高潮と洪水への対策が欠かせない</td></tr>
+<tr><td>扇状地と自然堤防は周囲より高く水はけがよい</td><td>古くから集落と畑が置かれた</td><td>旧集落の多くは浸水しにくい微高地にある</td></tr>
+</tbody></table></div>
+<p>土地利用は微地形と対応する。自然堤防は集落と畑・後背湿地は水田・扇央は果樹園・台地は畑と住宅地・台地を刻む谷は水田という対応が典型である。新旧の地形図を比べると、かつての後背湿地や旧河道が住宅地に変わった場所を判別できる。その方法は第2章と第6章で扱い、災害の詳細は第5章で扱う。</p>
+
+<div class="ex"><div class="ex-h">例題 6</div>
+<p>ある平野の地形図で、川に沿う細長い微高地に古い集落と畑があり、その外側の低地には水田が広がる。近年その低地に新しい住宅地が造成された。洪水の際に浸水の危険が大きいのはどちらか。理由とともに答えよ。</p>
+<details open><summary>解き方</summary><div>手順1 川に沿う細長い微高地は自然堤防である。砂が積もってできて周囲より高い。<br>手順2 その外側の低地は後背湿地である。泥が積もった低く水はけの悪い土地で、伝統的に水田に使われた。<br>手順3 洪水の水は低い所へ集まり排水しにくい。<br>答え 後背湿地の新しい住宅地。周囲より低く水はけが悪いからである。</div></details></div>
+
+<h2 id="s7">現実世界 地形と産業</h2>
+<p>地形の区分は資源と産業の立地にそのまま結び付く。日本は鉱産資源の多くを輸入に頼るが、石灰石は国内の石灰岩地帯で大規模に採掘される。石灰石鉱業協会が経済産業省の審議会に示した資料では、用途の構成比はセメントの主原料が44%・コンクリート用骨材が22%・製鉄の副原料が18%である（2022年の資料、出典18）。同協会の生産・出荷推移表から2021年度の出荷量に占める割合を算出すると、セメント用43%・コンクリート骨材用22%・鉄鋼用14%である（本書による算出値、出典19）。鉄鋼の値は審議会資料と異なる。カルスト地形をつくる岩石がそのまま建設と鉄鋼の原料になる。</p>
+<aside class="an an-rw"><b>現実世界</b>
+<p>フィヨルドの深く穏やかな入江は養殖の場に使われ、ノルウェーはサケの養殖で知られる。リアス海岸の三陸海岸もカキとワカメの養殖が盛んである。氷河と河川が削った谷の形が水産業の立地を決めている。</p>
+</aside>
+<p>新期造山帯では地熱発電の条件もそろう。火山の地下に高温の熱水があるからである。アイスランドは広がる境界の上に位置し、火山と地熱が豊富である。資源とエネルギーの統計は第11章で扱う。</p>
+
+<h2 id="s8">確認問題</h2>
+<div class="qz"><div class="qz-h">問1 ・ プレート境界</div>
+<p class="qz-q">プレート境界とその例の組合せとして適当でないものを1つ選べ。</p>
+<ol><li>広がる境界 ― アイスランド</li><li>狭まる境界（衝突型） ― ヒマラヤ山脈</li><li>ずれる境界 ― サンアンドレアス断層</li><li>広がる境界 ― 日本海溝</li></ol>
+<details><summary>解答と解説</summary><div>正解は 4 である。日本海溝は太平洋プレートが陸側のプレートの下に沈み込む狭まる境界である。広がる境界には海嶺や地溝ができる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問2 ・ 統計の読み取り</div>
+<p class="qz-q">本文の資料によると、太平洋プレートは日本列島に年間8cm程度の速さで近づき、大西洋中央海嶺の拡大速度は平均で年約2.5cmである。この2つの値を比べた記述として最も適当なものを1つ選べ。</p>
+<ol><li>太平洋プレートの速さは大西洋の拡大速度の約3倍である</li><li>太平洋プレートの速さは大西洋の拡大速度の約半分である</li><li>2つの値は同程度である</li><li>太平洋プレートは10年で約8m動く</li></ol>
+<details><summary>解答と解説</summary><div>正解は 1 である。8 ÷ 2.5 ＝ 3.2 で約3倍である（本書による算出値）。4 は誤りで、年8cmなら10年で80cmである。8mに達するのは100年後である。</div></details></div>
+
+<div class="qz"><div class="qz-h">問3 ・ 大地形の判定</div>
+<p class="qz-q">標高の資料で、最高峰が A 1,895m・B 6,959m・C 2,228m の3つの山脈がある。A〜C と区分の組合せとして正しいものを1つ選べ。</p>
+<ol><li>A 新期造山帯 ／ B 古期造山帯 ／ C 古期造山帯</li><li>A 古期造山帯 ／ B 新期造山帯 ／ C 古期造山帯</li><li>A 古期造山帯 ／ B 古期造山帯 ／ C 新期造山帯</li><li>A 安定陸塊 ／ B 新期造山帯 ／ C 新期造山帯</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。A はウラル山脈のナロードナヤ、B はアンデス山脈のアコンカグア、C はグレートディヴァイディング山脈のコジオスコである。古期造山帯は2,000m前後にとどまり、新期造山帯は6,000mを超える山をもつ。</div></details></div>
+
+<div class="qz"><div class="qz-h">問4 ・ 地形図の読み取り</div>
+<p class="qz-q">ある地形図で、谷口から扇状に等高線が広がり、扇の縁に沿って湧水点と集落が並ぶ。この地形について述べた文として誤っているものを1つ選べ。</p>
+<ol><li>扇央は礫が多く水はけがよいので果樹園に利用されることが多い</li><li>扇央では川の水が地下を流れて水無川になることがある</li><li>扇端では地下水が湧き出るので集落が立地しやすい</li><li>扇状地は河口で流れが弱まり泥が積もってできた地形である</li></ol>
+<details><summary>解答と解説</summary><div>正解は 4 である。河口で泥が積もってできるのは三角州である。扇状地は谷口で勾配が急に小さくなり礫が積もってできる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問5 ・ 海岸地形の因果</div>
+<p class="qz-q">海岸地形について述べた文 X と Y の正誤の組合せとして正しいものを1つ選べ。<br>X フィヨルドは氷河が削った U字谷が沈水してできたので、奥行きが長く水深が深い。<br>Y エスチュアリーは河口に土砂が積もってできた低平な地形で、ナイル川河口が代表例である。</p>
+<ol><li>X 正 ／ Y 正</li><li>X 正 ／ Y 誤</li><li>X 誤 ／ Y 正</li><li>X 誤 ／ Y 誤</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。Y はエスチュアリーではなく三角州の説明である。エスチュアリーは河口が沈水してラッパ状に開いた地形で、潮の干満で土砂が運び去られるので三角州ができない。</div></details></div>
+
+<div class="qz"><div class="qz-h">問6 ・ 統計の読み取り</div>
+<p class="qz-q">本文の地形別面積の資料について述べた文として最も適当なものを1つ選べ。</p>
+<ol><li>台地と低地を合わせた面積は国土の半分を超える</li><li>山地・火山地・丘陵・山麓・火山麓を合わせると国土の4分の3を占める</li><li>低地の構成比は山地の構成比の半分を超える</li><li>火山地の構成比は丘陵の構成比より大きい</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。53＋7＋11＋1＋3＝75％である。1 は 12＋13＝25％で半分に満たない。3 は 13％で山地53％の半分の26.5％に満たない。4 は火山地7％が丘陵11％より小さい。</div></details></div>
+
+<div class="qz"><div class="qz-h">問7 ・ 地形と土地利用</div>
+<p class="qz-q">氾濫原の微地形と伝統的な土地利用の組合せとして最も適当なものを1つ選べ。</p>
+<ol><li>自然堤防 ― 水田 ／ 後背湿地 ― 集落</li><li>自然堤防 ― 集落と畑 ／ 後背湿地 ― 水田</li><li>自然堤防 ― 果樹園 ／ 後背湿地 ― 畑</li><li>自然堤防 ― 水田 ／ 後背湿地 ― 果樹園</li></ol>
+<details><summary>解答と解説</summary><div>正解は 2 である。自然堤防は砂が積もった微高地で水はけがよく浸水しにくいので集落と畑に使われる。後背湿地は泥が積もった低地で水はけが悪いので水田に使われる。</div></details></div>
+
+<div class="qz"><div class="qz-h">問8 ・ 乾燥地形とカルスト地形</div>
+<p class="qz-q">次の地形と、その地形を形成した主な作用の組合せとして誤っているものを1つ選べ。</p>
+<ol><li>ドリーネ ― 石灰岩の溶食</li><li>ワジ ― 一時的な豪雨による流水の侵食</li><li>モレーン ― 氷河による運搬と堆積</li><li>タワーカルスト ― 風による砂の堆積</li></ol>
+<details><summary>解答と解説</summary><div>正解は 4 である。タワーカルストは高温多雨の地域で石灰岩の溶食が進み、塔状の岩山が残った地形である。風による砂の堆積でできるのは砂丘である。</div></details></div>
+
+<h2 id="s9">この章の要点</h2>
+<div class="tb-key"><b>要点</b>
+内的営力は起伏をつくり、外的営力は侵食・運搬・堆積で起伏を小さくする。<br>
+プレート境界は広がる・狭まる・ずれるの3類型で、狭まる境界には沈み込み型と衝突型がある。<br>
+大地形は最後の造山運動の時期で安定陸塊・古期造山帯・新期造山帯に分かれ、古いほど低い。<br>
+資源の傾向は安定陸塊に鉄鉱石、古期造山帯に石炭、新期造山帯とその周辺に石油と銅である。<br>
+河川の小地形は山地から河口へ扇状地・氾濫原・三角州と並び、堆積物は細かくなる。<br>
+海岸は沈水海岸（リアス海岸・フィヨルド・エスチュアリー）と離水海岸（海岸段丘・海岸平野）に分かれる。<br>
+日本では人口と資産が面積の小さい低地に集中し、微地形が浸水の危険と土地利用を左右する。</div>
+
+<h2 id="s10">残っている問い</h2>
+<ul>
+<li class="tb-vnote">安定陸塊・古期造山帯・新期造山帯の3区分は高校地理の慣用的な整理である。テンシャン山脈のように古期造山帯とされながら新生代に再び隆起して高い山をもつ山脈がある。大学の地質学では造山運動の名称で細かく区分し、この3区分をそのまま用いない。</li>
+<li class="tb-vnote">資源と大地形の対応は傾向にとどまる。中国やインドの炭田のように古期造山帯以外にある大炭田もあり、北海油田やシベリアの油田は新期造山帯の外にある。</li>
+<li class="tb-vnote">日本付近の北アメリカプレートとユーラシアプレートの境界の位置は確定していない。オホーツクプレートやアムールプレートという小さなプレートを想定する説がある。日本付近を4枚のプレートの組合せで捉える見方そのものを見直すべきとする研究者もいる。</li>
+<li class="tb-vnote">ナイル川とアマゾン川のどちらが長いかは、源流と河口の定め方で結論が変わり決着していない。ナイル川の長さとして約6,650kmが広く使われるが、アマゾン川をこれより長いとする2007年の調査報道もある。本書では世界の河川の長さの順位を断定しない。</li>
+<li class="tb-vnote">国土の地形別面積の構成比は1972年の調査の値であり、より新しい全国集計は確認できず。洪水氾濫区域に人口の約50%と資産の約75%が集中するという値も古い推計で、最新の値は確認できず。</li>
+<li class="tb-vnote">明治期に来日したオランダ人技術者が日本の急流を見て「これは川ではない、滝だ」と述べたという逸話は広く引用される。発言者と発言の場面は一次資料で確認できず。</li>
+<li class="tb-vnote">石灰石の国内自給の程度を示す公的な統計の値は確認できず。</li>
+<li class="tb-vnote">石灰石の用途構成比を示す経済産業省の審議会資料（出典18）は閲覧が拒否され、44%・22%・18%の値は検索結果の抜粋でしか確認できず。製鉄向けの18%と協会の出荷統計から算出した14%が異なる理由も確認できず。</li>
+<li class="tb-vnote">ソグネフィヨルドの最大水深を1,308mとする資料もある。ブリタニカ百科事典の項目は閲覧できず、その値は確認できず。</li>
+</ul>
+
+<h2 id="s11">出典</h2>
+<ol>
+<li>文部科学省 高等学校学習指導要領（平成30年告示）解説 地理歴史編 — https://www.mext.go.jp/a_menu/shotou/new-cs/1407074.htm</li>
+<li>地震調査研究推進本部 地震に関する用語集（太平洋プレート・フィリピン海プレート） — https://www.jishin.go.jp/main/yogo/e.htm</li>
+<li>U.S. Geological Survey, This Dynamic Earth: Understanding plate motions — https://pubs.usgs.gov/gip/dynamic/understanding.html</li>
+<li>CNN, Mount Everest is officially taller, China and Nepal announce（2020年12月8日） — https://amp.cnn.com/cnn/travel/article/mount-everest-height-intl-hnk-scli</li>
+<li>Encyclopaedia Britannica, Mount Aconcagua — https://www.britannica.com/place/Mount-Aconcagua</li>
+<li>Encyclopaedia Britannica, Ural Mountains summary — https://www.britannica.com/summary/Ural-Mountains</li>
+<li>NCpedia, Mount Mitchell — https://www.ncpedia.org/mount-mitchell</li>
+<li>Geoscience Australia, Highest mountains — https://www.ga.gov.au/scientific-topics/national-location-information/landforms/highest-mountains</li>
+<li>International Commission on Stratigraphy, International Chronostratigraphic Chart v2024/12 — https://stratigraphy.org/ICSchart/ChronostratChart2024-12.pdf</li>
+<li>国土交通省 日本の川 信濃川 — https://www.mlit.go.jp/river/toukei_chousa/kasen/jiten/nihon_kawa/0405_shinano/0405_shinano_00.html</li>
+<li>国土交通省 関東地方整備局 利根川ダム統合管理事務所 利根川の概要 — https://www.ktr.mlit.go.jp/tonedamu/tonedamu00061.html</li>
+<li>Store norske leksikon, Sognefjorden — https://snl.no/Sognefjorden</li>
+<li>R. Barry, R. Armstrong (National Snow and Ice Data Center), The Cryosphere: Where the World is Frozen（SERC 収録） — https://serc.carleton.edu/resources/28622.html</li>
+<li>UNCCD, Fast facts: Drylands and rangelands — https://www.unccd.int/resources/unccd-library/fast-facts-drylands-and-rangelands-quick-rundown-our-planets-ecosystems</li>
+<li>国土交通省 河川局 河川事業概要2007 — https://www.mlit.go.jp/river/pamphlet_jirei/kasen/gaiyou/panf/gaiyou2007/pdf/c1-1.pdf</li>
+<li>気象庁 岐阜地方気象台 活火山とは — https://www.data.jma.go.jp/gifu/shosai/kazan/katsukazan.html</li>
+<li>土木学会 斜面を利用した生活の日本 表1 国土の地形別面積（国土地理院 昭和47年全国都道府県別地形別面積調） — https://www.jsce.or.jp/committee/jiban/slope/old/060930/1-6_ohno.pdf</li>
+<li>経済産業省 産業構造審議会 資源循環経済小委員会 石灰石鉱業協会 提出資料（2022年） — https://www.meti.go.jp/shingikai/sankoshin/sangyo_gijutsu/chikyu_kankyo/shigen_wg/pdf/2022_001_08_01.pdf</li>
+<li>石灰石鉱業協会調査部 石灰石の生産・出荷推移（2026年5月21日） — https://www.limestone.gr.jp/wp/wp-content/uploads/2026/abc10c093200744eb4abd24fae2c548a.pdf</li>
+<li>United Nations, Decade for Deserts and the Fight against Desertification, Global value（2005年ミレニアム生態系評価のデータ） — https://www.un.org/en/events/desertification_decade/value.shtml</li>
+</ol>
+
+  <div class="tb-nav"><a class="tb-nav-a" href="06_local-survey.html">← 生活圏の調査と地域の展望</a><a class="tb-nav-a" href="08_climate.html">気候と生態系 →</a></div>
+</div>
+<script>
+(function(){
+  var bar = document.createElement('div'); bar.className = 'tb-prog';
+  document.body.appendChild(bar);
+  var links = [].slice.call(document.querySelectorAll('.tb-toc a'));
+  var heads = links.map(function(a){ return document.getElementById(a.hash.slice(1)); });
+  var tick = false;
+  function draw(){
+    tick = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+    var at = -1;
+    for (var k = 0; k < heads.length; k++) {
+      if (heads[k] && heads[k].getBoundingClientRect().top < 120) at = k;
+    }
+    for (var j = 0; j < links.length; j++) links[j].classList.toggle('on', j === at);
+  }
+  addEventListener('scroll', function(){ if (!tick) { tick = true; requestAnimationFrame(draw); } }, {passive:true});
+  draw();
+})();
+</script>
+</body>
+</html>

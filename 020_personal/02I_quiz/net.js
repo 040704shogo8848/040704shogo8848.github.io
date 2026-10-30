@@ -93,11 +93,11 @@ function openSync() {
 //  The host's device picks the questions; the server keeps time and score.
 // ====================================================================
 const NET = { ws: null, you: null, players: [], room: null, host: false, scope: 'all', state: 'off' };
-const SCOPES = [['all', '全分野'], ...GROUPS.map(([n]) => [n, n]), ['map', '地図で国当て']];
+const SCOPES = [['all', '全分野'], ...GROUPS.map(([n]) => [n, n]), ['map', '地図']];
 const myName = () => (S.pref.name || '').trim();
 
 function scopePool(k) {
-  if (k === 'map') return ITEMS.filter(x => x.mp);
+  if (k === 'map') return ITEMS.filter(x => x.mp || x.pt);
   const g = GROUPS.find(([n]) => n === k);
   return ITEMS.filter(x => x.kind === 'q' && (!g || g[1].includes(gOf(x))));
 }
@@ -164,7 +164,7 @@ function startOnline(m) {
 // has the same question (so it counts for review); otherwise show what was sent.
 function onlineQ(m) {
   const x = m.item, local = BYID[x.id], a = x.opts[x.ans];
-  const it = local && local.a === a ? local : { id: x.id, kind: 'q', p: Math.max(0, PAGES.findIndex(p => p.path === x.path)), q: x.q, a, d: x.opts.filter((_, k) => k !== x.ans), e: x.e || '', ev: x.ev || '', lv: x.lv || 2, f: '', hi: -1, mp: x.mp };
+  const it = local && local.a === a ? local : { id: x.id, kind: 'q', p: Math.max(0, PAGES.findIndex(p => p.path === x.path)), q: x.q, a, d: x.opts.filter((_, k) => k !== x.ans), e: x.e || '', ev: x.ev || '', lv: x.lv || 2, f: '', hi: -1, mp: x.mp, pt: x.pt };
   M.round[m.i] = { it, type: 'mc', opts: x.opts, limit: m.limit };
   clearTimers(); $('#reveal').classList.remove('on');
   M.i = m.i;
@@ -226,7 +226,7 @@ function renderLobby() {
     buzz('tap');
     const picks = pickWeighted(scopePool(NET.scope), 10);
     if (!picks.length) return toast('出題できる問題がありません');
-    const items = picks.map(it => { const opts = shuffle([it.a, ...it.d]); return { id: it.id, q: it.q, opts, ans: opts.indexOf(it.a), e: it.e, ev: it.ev, lv: it.lv, path: PAGES[it.p].path, mp: it.mp } });
+    const items = picks.map(it => { const opts = shuffle([it.a, ...it.d]); return { id: it.id, q: it.q, opts, ans: opts.indexOf(it.a), e: it.e, ev: it.ev, lv: it.lv, path: PAGES[it.p].path, mp: it.mp, pt: it.pt } });
     NET.ws.send(JSON.stringify({ t: 'start', items, time: S.pref.time || 12, label: '友達と対戦・' + (SCOPES.find(([k]) => k === NET.scope) || ['', ''])[1] }));
   };
   if (!sh.classList.contains('on')) openSheetLayer();
@@ -246,3 +246,79 @@ $('#hFriends').onclick = () => { buzz('tap'); openFriends() };
 $('#sSyncGo').onclick = () => { buzz('tap'); openSync() };
 { const u = new URL(location.href), r = u.searchParams.get('room');
   if (r && /^\d{4}$/.test(r)) { u.searchParams.delete('room'); history.replaceState(null, '', u.pathname + u.search + u.hash); NET.joinHint = r; openFriends() } }
+
+// ====================================================================
+//  review reminders: Web Push from the server's hourly job. The device tells the
+//  server how many questions fall due on each day; the server sends an empty push
+//  at the chosen hour and the service worker fetches the text (sw.js).
+// ====================================================================
+const VAPID_PUB = 'BNCvIir_GpmSW0_9B-UsuNDNa8U0thgc3vZaOv7KVknH68z_WobgjjFIL_Fg9dvCsshACg34ZFTHX8Mem8YQ7Wg';
+const PUSH_KEY = 'hq.push';
+const pushCfg = () => { try { return JSON.parse(localStorage.getItem(PUSH_KEY)) } catch (e) { return null } };
+const setPushCfg = c => { try { c ? localStorage.setItem(PUSH_KEY, JSON.stringify(c)) : localStorage.removeItem(PUSH_KEY) } catch (e) {} };
+const pushOK = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const standalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const HOURS = [7, 12, 18, 21];
+
+// {dayNo: count} of the questions still in the deck
+function dueMap() { const m = {}; for (const [id, r] of Object.entries(S.srs)) if (BYID[id] && r.due != null) m[r.due] = (m[r.due] || 0) + 1; return m }
+async function pushSub() { try { const reg = await navigator.serviceWorker.ready; return await reg.pushManager.getSubscription() } catch (e) { return null } }
+// beacon: survives the page being hidden or closed; text/plain needs no CORS preflight
+function sendDue() {
+  const c = pushCfg(); if (!c || !c.ep) return;
+  const body = JSON.stringify({ endpoint: c.ep, due: dueMap(), tz: new Date().getTimezoneOffset() });
+  try { if (navigator.sendBeacon && navigator.sendBeacon(SERVER + '/push/due', new Blob([body], { type: 'text/plain' }))) return } catch (e) {}
+  fetch(SERVER + '/push/due', { method: 'POST', body, keepalive: true }).catch(() => {});
+}
+async function pushOn(hour) {
+  if (!pushOK()) throw new Error('この端末のブラウザは通知に対応していません');
+  if (isIOS && !standalone()) throw new Error('iPhone では、ホーム画面に追加したアプリから設定してください');
+  const perm = await Notification.requestPermission();
+  if (perm !== 'granted') throw new Error('通知が許可されませんでした。端末の設定で、このアプリの通知を許可してください');
+  const reg = await navigator.serviceWorker.ready;
+  const key = Uint8Array.from(atob(VAPID_PUB.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+  const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key });
+  const r = await fetch(SERVER + '/push/sub', { method: 'POST', body: JSON.stringify({ sub: sub.toJSON(), hour, tz: new Date().getTimezoneOffset(), due: dueMap() }) });
+  if (!r.ok) throw new Error('サーバーに登録できませんでした。通信状態を確認してください');
+  setPushCfg({ ep: sub.endpoint, hour });
+}
+async function pushOff() {
+  const c = pushCfg(); setPushCfg(null);
+  const sub = await pushSub();
+  const ep = (c && c.ep) || (sub && sub.endpoint);
+  if (ep) fetch(SERVER + '/push/off', { method: 'POST', body: JSON.stringify({ endpoint: ep }) }).catch(() => {});
+  try { sub && await sub.unsubscribe() } catch (e) {}
+}
+
+function pushRow() { const c = pushCfg(); $('#sPush').textContent = c ? `毎日 ${c.hour}時に、期限が来た復習の数を通知する` : '復習の期限が来たらスマホに通知する' }
+const _settings2 = R.settings;
+R.settings = function () { _settings2(); pushRow() };
+
+function openPush(msg) {
+  const c = pushCfg(), sel = c ? c.hour : 21;
+  $('#sheet').innerHTML = `<div class="grab"></div><h2>復習の通知</h2>
+    <p class="sub">指定した時刻に、期限が来た復習の問題があれば通知します。期限の問題が0問の日は通知しません。</p>
+    ${isIOS && !standalone() ? '<div class="vnote">iPhone では、Safari の共有ボタンから「ホーム画面に追加」を選び、追加したアプリを開いてから設定してください。iOS 16.4 以降が必要です。</div>' : ''}
+    ${msg ? `<div class="vnote">${esc(msg)}</div>` : ''}
+    <div class="sec">通知する時刻</div>
+    <div class="seg" id="puHour">${HOURS.map(h => `<button data-v="${h}" class="${h === sel ? 'on' : ''}">${h}時</button>`).join('')}</div>
+    <div style="display:flex;gap:8px;margin:16px 0 4px">${c ? '<button class="btn sec2" style="flex:1" id="puOff">通知をやめる</button>' : ''}<button class="btn pri" style="flex:1" id="puOn">${c ? '時刻を変更する' : '通知を受け取る'}</button></div>`;
+  let hour = sel;
+  $('#puHour').querySelectorAll('button').forEach(b => b.onclick = () => { buzz('tap'); hour = +b.dataset.v; $('#puHour').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)) });
+  $('#puOn').onclick = async () => { buzz('tap'); const b = $('#puOn'); b.disabled = true; try { await pushOn(hour); toast(`毎日 ${hour}時に通知します`); openPush(); R.settings() } catch (e) { openPush(e.message) } };
+  const off = $('#puOff'); if (off) off.onclick = async () => { buzz('tap'); await pushOff(); toast('通知をやめました'); openPush(); R.settings() };
+  openSheetLayer();
+}
+$('#sPushGo').onclick = () => { buzz('tap'); openPush() };
+// keep the server's counts current: after every match, when leaving the app, after a sync
+const _endMatch2 = endMatch;
+endMatch = function () { _endMatch2(); sendDue() };
+document.addEventListener('visibilitychange', () => { if (document.hidden) sendDue() });
+// on launch, register again: the server forgets a subscription the browser dropped
+if (pushCfg()) setTimeout(async () => {
+  const c = pushCfg(), sub = await pushSub();
+  if (!sub) { setPushCfg(null); return }
+  if (sub.endpoint !== c.ep) setPushCfg({ ...c, ep: sub.endpoint });
+  fetch(SERVER + '/push/sub', { method: 'POST', body: JSON.stringify({ sub: sub.toJSON(), hour: c.hour, tz: new Date().getTimezoneOffset(), due: dueMap() }) }).catch(() => {});
+}, 2500);

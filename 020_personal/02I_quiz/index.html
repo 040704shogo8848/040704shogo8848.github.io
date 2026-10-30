@@ -217,6 +217,7 @@ body.playing .tabbar{display:none}
 .qmap .o path{fill:var(--surface2);stroke:var(--faint)}
 .qmap .t{fill:var(--accent);stroke:var(--accent)}
 .qmap circle{fill:none;stroke:var(--accent);stroke-width:2;vector-effect:non-scaling-stroke}
+.qmap circle.pt{fill:var(--accent);stroke:var(--surface);stroke-width:1.5}
 .tiles>.tile:last-child:nth-child(odd){grid-column:1/-1}
 .dbar{height:5px;border-radius:3px;background:var(--surface2);margin-top:6px;overflow:hidden}
 .dbar i{display:block;height:100%;border-radius:3px}
@@ -400,7 +401,7 @@ a.prow{color:inherit;text-decoration:none}
     </button>
     <button class="card tile" data-quick="map">
       <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg></div>
-      <b>地図で国当て</b><span>色を付けた国・地域を答える</span>
+      <b>地図で答える</b><span>国・地域と都市の位置</span>
     </button>
   </div>
   <div class="sec">分野</div>
@@ -451,6 +452,7 @@ a.prow{color:inherit;text-decoration:none}
   </div>
   <div class="sec">データ</div>
   <div class="card set">
+    <div class="srow"><div><b>復習の通知</b><small id="sPush">復習の期限が来たらスマホに通知する</small></div><button class="btn sec2" style="height:38px;font-size:13px" id="sPushGo">設定</button></div>
     <div class="srow"><div><b>端末間の同期</b><small id="sSync">スマホと PC などで記録を共有する</small></div><button class="btn sec2" style="height:38px;font-size:13px" id="sSyncGo">設定</button></div>
     <div class="srow"><div><b>記録を書き出す</b><small>別の端末へ移す時に使う</small></div><button class="btn sec2" style="height:38px;font-size:13px" id="sExport">書き出し</button></div>
     <div class="srow"><div><b>記録を読み込む</b><small>書き出したファイルを選択</small></div><button class="btn sec2" style="height:38px;font-size:13px" id="sImport">読み込み</button></div>
@@ -537,22 +539,27 @@ const GROUPS = [
 const PAGES = QD.pages.map(([id,path,title,genre,heads])=>({id,path,title:title.split(/\s*[—–|｜]\s*|\s-\s/)[0].trim(),full:title,genre,heads:heads||[]}));
 // item: {id, kind:'q'|'o', p, ...}
 const ITEMS = [];
-for (const [id,p,q,a,d,e,ev,lv,f,hi,pn,mp] of QD.q) ITEMS.push({id,kind:'q',p,q,a,d,e,ev,lv,f,hi,pn,mp});
+for (const [id,p,q,a,d,e,ev,lv,f,hi,pn,mp,pt] of QD.q) ITEMS.push({id,kind:'q',p,q,a,d,e,ev,lv,f,hi,pn,mp,pt});
 for (const [id,p,q,its,ev,f,hi] of QD.o) ITEMS.push({id,kind:'o',p,q,its,ev,lv:2,f,hi});
 const BYID = Object.fromEntries(ITEMS.map(x=>[x.id,x]));
 const gOf = it => PAGES[it.p].genre;
 // build.py decides which questions still work without the choices (names, places, terms, years)
 // country shapes from map.js: name -> [path, bbox]; x = longitude, y = -latitude
 const QM=(window.QMAP||{}).s||{}, QMB=Object.entries(QM);
+// shapes inside a view; near the antimeridian the other side is drawn too, moved by 360 degrees
+const landIn=(lx0,lx1,y0,H,skip)=>[0,360,-360].map(sh=>{const ps=QMB.filter(([n,[,bb]])=>n!==skip&&bb[2]+sh>=lx0&&bb[0]+sh<=lx1&&bb[3]>=y0&&bb[1]<=y0+H).map(([,[dd]])=>`<path d="${dd}"/>`).join('');
+  return ps&&sh?`<g transform="translate(${sh},0)">${ps}</g>`:ps}).join('');
+// a city: a dot in a view about 16 degrees wide, enough to place it within its region
+function pointSvg([lon,lat]){
+  const k=Math.cos(lat*Math.PI/180), W=16, H=W/1.8, x0=lon*k-W/2, y0=-lat-H/2;
+  return `<div class="qmap"><svg viewBox="${x0} ${y0} ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g transform="scale(${k},1)"><g class="o">${landIn(x0/k,(x0+W)/k,y0,H)}</g></g><circle cx="${lon*k}" cy="${-lat}" r="${W*.03}"/><circle class="pt" cx="${lon*k}" cy="${-lat}" r="${W*.011}"/></svg></div>`;
+}
 function mapSvg(name,small){
   const [d,b]=QM[name], cx=(b[0]+b[2])/2, cy=(b[1]+b[3])/2, k=Math.cos(cy*Math.PI/180);
   const w=(b[2]-b[0])*k, h=b[3]-b[1];
   // wide enough to show the neighbours; x is squeezed by cos(latitude) so shapes keep their proportions
   const W=Math.min(200,Math.max(w*1.9,h*1.9*1.8,small?34:22)), H=W/1.8, x0=cx*k-W/2, y0=cy-H/2;
-  const lx0=x0/k, lx1=(x0+W)/k;
-  // views near the antimeridian also draw the shapes from the other side, moved by 360 degrees
-  const others=[0,360,-360].map(sh=>{const ps=QMB.filter(([n,[,bb]])=>n!==name&&bb[2]+sh>=lx0&&bb[0]+sh<=lx1&&bb[3]>=y0&&bb[1]<=y0+H).map(([,[dd]])=>`<path d="${dd}"/>`).join('');
-    return ps&&sh?`<g transform="translate(${sh},0)">${ps}</g>`:ps}).join('');
+  const others=landIn(x0/k,(x0+W)/k,y0,H,name);
   const tiny=w<W*.035&&h<H*.035?`<circle cx="${cx*k}" cy="${cy}" r="${W*.05}"/>`:'';
   return `<div class="qmap${small?' sm':''}"><svg viewBox="${x0} ${y0} ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g transform="scale(${k},1)"><g class="o">${others}</g><path class="t" d="${d}"/></g>${tiny}</svg></div>`;
 }
@@ -868,7 +875,7 @@ document.querySelectorAll('[data-quick]').forEach(b=>b.onclick=()=>{
   buzz('tap'); const k=b.dataset.quick;
   if(k==='mix')return startMatch(buildRound(ITEMS,'mix'),{label:'クイック対戦',again:()=>b.click()});
   if(k==='panel')return startMatch(buildRound(ITEMS.filter(panelable),'panel'),{label:'文字パネル',again:()=>b.click()});
-  if(k==='map')return startMatch(buildRound(ITEMS.filter(x=>x.mp),'mix'),{label:'地図で国当て',again:()=>b.click()});
+  if(k==='map')return startMatch(buildRound(ITEMS.filter(x=>x.mp||x.pt),'mix'),{label:'地図で答える',again:()=>b.click()});
   if(k==='order')return startMatch(buildRound(ITEMS.filter(x=>x.kind==='o'),'order'),{label:'年代並べ替え',again:()=>b.click()});
   if(k==='weak'){const w=ITEMS.filter(it=>{const r=S.srs[it.id];return r&&r.n>0&&(r.c/r.n<.7||r.b<=1)}).sort((a,b)=>(S.srs[a.id].c/S.srs[a.id].n)-(S.srs[b.id].c/S.srs[b.id].n));
     if(w.length<3)return toast('苦手な問題はまだありません');return startMatch(buildRound(shuffle(w.slice(0,30)),'review').slice(0,N),{label:'苦手を集中',again:()=>b.click()})}
@@ -959,6 +966,7 @@ function nextQ(){
     $('#odReset').onclick=()=>{M.cur.seq=[];renderOrder()};
   }
   if(it.mp&&QM[it.mp])A.insertAdjacentHTML('afterbegin',mapSvg(it.mp));
+  else if(it.pt)A.insertAdjacentHTML('afterbegin',pointSvg(it.pt));
   // question text typing
   const txt=Q.type==='order'?it.q:it.q, el=$('#mText'); const sp=S.pref.speed;
   if(!sp){el.textContent=txt}else{
@@ -1058,7 +1066,7 @@ function showReveal(ok,pts,timeout,slow){
   R2.innerHTML=`<div class="verdict ${ok?'ok':'ng'}"><div class="vi">${ok?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></svg>':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>'}</div>
    <b>${ok?'正解':timeout?'時間切れ':'不正解'}</b><div class="pts num">${pts?'+'+pts:''}</div></div>
    ${note}<div class="ans"><small>正解</small>${isO?'':ans}</div>${isO?ans:''}
-   ${!isO&&!it.mp&&QM[it.a]?mapSvg(it.a,true):''}
+   ${!isO&&!it.mp&&!it.pt&&QM[it.a]?mapSvg(it.a,true):''}
    ${isO?'':`<p class="expl">${esc(it.e)}</p>`}
    ${ev?`<div class="evq">${esc(ev)}</div>`:''}
    ${ok?`<a class="rlink" href="${deepUrl(it)}" target="_blank" rel="noopener">${esc(PAGES[it.p].title)} の該当箇所<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>`

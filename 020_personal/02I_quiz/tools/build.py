@@ -124,6 +124,14 @@ if os.path.exists(MAPF):
     mi = len(pages) - 1
     for q in json.load(open(MAPF)):
         Q.append(['q' + h('map_world' + q['a']), mi, q['q'], q['a'], q['d'], q['e'], '', q['lv'], '', -1, panel_ok(q['q'], q['a']), q['mp']])
+# city questions (tools/citygen.cjs) sit on the page each city came from; pt = [lon, lat]
+CITYF = os.path.join(W, 'city_items.json')
+if os.path.exists(CITYF):
+    for q in json.load(open(CITYF)):
+        if q['page'] not in idx or pages[idx[q['page']]]['path'] not in tracked: continue
+        i = idx[q['page']]; src = open(os.path.join(W, 'src', q['page'] + '.txt')).read()
+        Q.append(['q' + h(q['page'] + 'city' + q['a']), i, q['q'], q['a'], q['d'], q['e'], q['ev'], q['lv'],
+                  *link(q['ev'], re.sub(r'\s+', '', src), headings(src), HEADS.setdefault(i, [])), panel_ok(q['q'], q['a']), '', q['pt']])
 used = sorted({x[1] for x in Q + O})
 remap = {old: new for new, old in enumerate(used)}
 for x in Q + O: x[1] = remap[x[1]]

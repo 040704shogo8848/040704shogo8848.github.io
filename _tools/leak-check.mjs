@@ -191,8 +191,11 @@ for (const abs of targets) {
   // finance. The dictionary was built to spot an internal deck, so its financial
   // vocabulary fires on all of it by design. The built-in rules below — internal
   // links, local paths, withheld vocabulary, credentials — still apply here.
+  // A gloss data file (_gloss/pages/<page>.js) carries the English notes for
+  // one page, so it falls under the same rules as that page.
   const financial =
     file.startsWith('010_research/') ||
+    file.startsWith('_gloss/pages/010_research/') ||
     file.startsWith('_tools/') && file.endsWith('-template.md');
 
   const blocking = [...BLOCK, ...pii, ...(financial ? [PLACEHOLDER] : money)];

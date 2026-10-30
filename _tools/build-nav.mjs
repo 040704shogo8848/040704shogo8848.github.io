@@ -23,6 +23,10 @@ const NONE = '<!-- snav:none -->';
 const SKIP_DIRS = new Set(['.git', 'node_modules', '_tools']);
 
 const nav = JSON.parse(await readFile(path.join(ROOT, '_tools/nav.json'), 'utf8'));
+// Pages that have questions in the quiz (written by 020_personal/02I_quiz/tools/build.py).
+// They get a button that opens the quiz on that page.
+const QUIZ = '020_personal/02I_quiz/index.html';
+const quizPages = new Set(JSON.parse(await readFile(path.join(ROOT, '_tools/quiz-pages.json'), 'utf8').catch(() => '[]')));
 
 // ─── icons ───────────────────────────────────────────────────────────────────
 
@@ -75,6 +79,10 @@ body{padding-top:56px!important;padding-bottom:68px!important}
 .snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
 .snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
 .snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
 </style>`;
 
 function buildSnav(file) {
@@ -114,6 +122,10 @@ ${s.links.map((l) => `    <a class="snav-a" href="${esc(rel(file, l.href))}">${e
     ? `<div class="snav-footer-sns">${sns}</div>`
     : `<div class="snav-footer-txt">${esc(nav.logo)}</div>`;
 
+  const quiz = quizPages.has(file)
+    ? `<a class="snav-quiz" href="${esc(rel(file, QUIZ))}?page=${encodeURIComponent(file)}">このページのクイズ</a>`
+    : '';
+
   return `${START}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -132,7 +144,7 @@ ${panel}
 function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
 document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
-<footer class="snav-footer">${footerInner}</footer>
+<footer class="snav-footer">${footerInner}${quiz}</footer>
 ${END}`;
 }
 

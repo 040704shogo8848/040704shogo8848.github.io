@@ -75,6 +75,18 @@ def link(ev, src_norm, heads, hlist):
     fe = tex2u(ev)
     return ('' if f == fe else f), hi
 
+def panel_ok(q, a):
+    """Whether a multiple-choice question also works as a letter-panel question, where
+    the player types the answer without seeing the choices. Keeps names, places, terms
+    and years; drops questions that need the choices (次のうち, 含まれないもの),
+    statistics (typing 約68% or 260億ドル超 tests the wording, not the fact) and
+    phrases with kana, which have more than one correct wording."""
+    if not re.fullmatch(r'[^\s、。,.・()（）「」]{2,8}', a) or re.fullmatch(r'[A-Za-z]+', a): return 0
+    if re.search(r'次の|どれか|正しいもの|誤って|適切な|ないもの|ないのは|含まれない', q): return 0
+    if re.search(r'\d', a) and not re.fullmatch(r'(紀元前)?\d{1,4}年|\d{1,2}世紀', a): return 0
+    if re.search(r'[ぁ-ゖ]', a): return 0
+    return 1
+
 W = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data')
 os.environ['QUIZ_DATA'] = W
 spec = importlib.util.spec_from_file_location('v', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'validate.py')); v = importlib.util.module_from_spec(spec); spec.loader.exec_module(v)
@@ -98,7 +110,7 @@ for p in pages:
         qid = 'q' + h(p['id'] + q['q'])
         if qid in seen: continue
         seen.add(qid)
-        Q.append([qid, i, q['q'], q['a'], q['d'], tex2u(q['e']), tex2u(q['ev']), q['lv'], *link(q['ev'], src_norm, heads, hlist)])
+        Q.append([qid, i, q['q'], q['a'], q['d'], tex2u(q['e']), tex2u(q['ev']), q['lv'], *link(q['ev'], src_norm, heads, hlist), panel_ok(q['q'], q['a'])])
     for k, od in enumerate(o.get('orders', [])):
         if f'order{k}' in bad: dropped += 1; continue
         oid = 'o' + h(p['id'] + od['q'] + ''.join(x['t'] for x in od['items']))
@@ -133,5 +145,7 @@ for _ in range(20):
     write()
 else:
     sys.exit('leak-check still failing')
+# build-nav.mjs puts a "quiz for this page" button on these pages
+open(os.path.join(REPO, '_tools', 'quiz-pages.json'), 'w').write(json.dumps(sorted(pg[1] for pg in data['pages']), indent=0) + '\n')
 Q, O = data['q'], data['o']
 print(f'{len(used)} pages, {len(Q)} questions, {len(O)} orders, dropped {dropped}, {os.path.getsize(out)//1024} KB')

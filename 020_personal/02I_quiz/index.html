@@ -512,11 +512,12 @@ const GROUPS = [
 const PAGES = QD.pages.map(([id,path,title,genre,heads])=>({id,path,title:title.split(/\s*[—–|｜]\s*|\s-\s/)[0].trim(),full:title,genre,heads:heads||[]}));
 // item: {id, kind:'q'|'o', p, ...}
 const ITEMS = [];
-for (const [id,p,q,a,d,e,ev,lv,f,hi] of QD.q) ITEMS.push({id,kind:'q',p,q,a,d,e,ev,lv,f,hi});
+for (const [id,p,q,a,d,e,ev,lv,f,hi,pn] of QD.q) ITEMS.push({id,kind:'q',p,q,a,d,e,ev,lv,f,hi,pn});
 for (const [id,p,q,its,ev,f,hi] of QD.o) ITEMS.push({id,kind:'o',p,q,its,ev,lv:2,f,hi});
 const BYID = Object.fromEntries(ITEMS.map(x=>[x.id,x]));
 const gOf = it => PAGES[it.p].genre;
-const panelable = it => it.kind==='q' && /^[^\s、。,.・()（）「」]{2,8}$/.test(it.a) && !/^[A-Za-z]+$/.test(it.a);
+// build.py decides which questions still work without the choices (names, places, terms, years)
+const panelable = it => it.kind==='q' && !!it.pn;
 
 // ====================================================================
 //  storage
@@ -1058,6 +1059,11 @@ $('#rsHome').onclick=()=>{buzz('tap');if(topLayer()==='result')history.back();el
 
 // ====================================================================
 applyTheme(); R.home();
+// ?page=<path> comes from the button under each page of the site: open that page's sheet
+{const u=new URL(location.href), pg=u.searchParams.get('page');
+ if(pg){u.searchParams.delete('page');history.replaceState(null,'',u.pathname+u.search+u.hash);
+  const i=PAGES.findIndex(x=>x.path===pg);
+  if(i>=0){pick.mode='mix';openSheet(PAGES[i].genre,i)}else toast('このページの問題はまだありません')}}
 if('serviceWorker' in navigator && location.protocol==='https:'){navigator.serviceWorker.register('sw.js').catch(()=>{})}
 </script>
 </body>

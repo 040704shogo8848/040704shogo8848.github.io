@@ -19,6 +19,10 @@ const LANES = +arg('--lanes', 6);
 const BATCH = +arg('--batch', 50);
 const MODEL = arg('--model', 'sonnet');
 const LIMIT = +arg('--limit', Infinity);
+// --engine cursor runs the same prompt through Cursor CLI, which has its own quota.
+const ENGINE = arg('--engine', 'claude');
+// --from 0.5 starts halfway through the list, for a third run between the other two.
+const FROM = +arg('--from', 0);
 
 await mkdir(CACHE, { recursive: true });
 const TEMPLATE = await readFile(path.join(DIR, 'prompt.md'), 'utf8');
@@ -50,9 +54,11 @@ for (const s of todo) {
 if (cur.length) batches.push(cur);
 // --reverse lets a second run work from the end, so two runs meet in the middle.
 if (process.argv.includes('--reverse')) batches.reverse();
-const TAG = process.argv.includes('--reverse') ? 'r' : '';
+if (FROM) batches.splice(0, Math.floor(batches.length * FROM));
+const TAG = (process.argv.includes('--reverse') ? 'r' : '') + (ENGINE === 'cursor' ? 'c' : '') + (FROM ? 'm' : '');
 
 function claude(prompt) {
+  if (ENGINE === 'cursor') return cursor(prompt);
   return new Promise((resolve, reject) => {
     const env = { ...process.env };
     delete env.ANTHROPIC_API_KEY;
@@ -66,6 +72,18 @@ function claude(prompt) {
     p.stderr.on('data', (d) => (err += d));
     p.on('close', (code) => { clearTimeout(t); code === 0 ? resolve(out) : reject(new Error(`exit ${code}: ${(err || out).slice(0, 300)}`)); });
     p.stdin.end(prompt);
+  });
+}
+
+function cursor(prompt) {
+  return new Promise((resolve, reject) => {
+    const p = spawn('cursor-agent', ['-p', '--trust', '--model', MODEL, '--output-format', 'text', '--workspace', os.tmpdir(), prompt],
+      { cwd: os.tmpdir(), stdio: ['ignore', 'pipe', 'pipe'] });
+    let out = '', err = '';
+    const t = setTimeout(() => p.kill('SIGKILL'), 15 * 60 * 1000);
+    p.stdout.on('data', (d) => (out += d));
+    p.stderr.on('data', (d) => (err += d));
+    p.on('close', (code) => { clearTimeout(t); code === 0 ? resolve(out) : reject(new Error(`exit ${code}: ${(err || out).slice(0, 300)}`)); });
   });
 }
 

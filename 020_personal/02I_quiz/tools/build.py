@@ -117,6 +117,13 @@ for p in pages:
         if oid in seen: continue
         seen.add(oid)
         O.append([oid, i, od['q'], [[x['t'], x['y'], x['k']] for x in od['items']], [tex2u(e) for e in od['ev']], *link(od['ev'][0], src_norm, heads, hlist)])
+# country-map questions (tools/mapgen.cjs) hang off the geography book's contents page
+MAPF = os.path.join(W, 'map_items.json')
+if os.path.exists(MAPF):
+    pages.append({'id': 'map_world', 'path': '020_personal/02J_geography/index.html', 'title': '世界の国と地域（地図）', 'genre': 'geo_countries'})
+    mi = len(pages) - 1
+    for q in json.load(open(MAPF)):
+        Q.append(['q' + h('map_world' + q['a']), mi, q['q'], q['a'], q['d'], q['e'], '', q['lv'], '', -1, panel_ok(q['q'], q['a']), q['mp']])
 used = sorted({x[1] for x in Q + O})
 remap = {old: new for new, old in enumerate(used)}
 for x in Q + O: x[1] = remap[x[1]]

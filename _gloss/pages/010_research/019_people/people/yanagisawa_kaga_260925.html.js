@@ -1,0 +1,1 @@
+GlossData({"rz2rgi":["How to read this",[[0,3,"how to read (this)","p","見出しとして使われる簡潔な表現"]]],"f04rix":["8. Open Questions",[[1,7,"open question","p",""]]],"9l0ntm":["We have listed the questions that remain unanswered.",[[0,8,"unanswered","w",""]]],"1h2caz1":["Clues were drawn from the content of the main text.",[[0,4,"clue","w",""]]]});

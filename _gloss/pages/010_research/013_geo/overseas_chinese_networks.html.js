@@ -1,0 +1,1 @@
+GlossData({"cfmyf8":["Bottom line first.",[[0,4,"bottom line first","i","結論から述べるビジネス文書の定番表現"]]],"1xi90n1":["Total population",[[0,3,"total population","w",""]]],"14ll8oh":["Singapore",[]],"1256c6o":["Malaysia",[]],"4smqhz":["Indonesia",[]],"1y8htpq":["Vietnam",[]],"1bi5zgy":["⑦ Open Questions",[[1,7,"open question","p",""]]]});

@@ -1,0 +1,1 @@
+GlossData({"cfmyf8":["Bottom line first.",[[0,4,"bottom line first","i","結論から述べるビジネス文書の定番表現"]]],"162b4lx":["Real GDP growth rate",[[0,8,"real GDP growth rate","w",""]]],"f04rix":["8. Open Questions",[[1,7,"open question","p",""]]]});

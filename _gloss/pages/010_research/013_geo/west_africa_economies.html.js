@@ -1,0 +1,1 @@
+GlossData({"cfmyf8":["Bottom line first.",[[0,4,"bottom line first","i","結論から述べるビジネス文書の定番表現"]]],"17s2ae":["Nigeria",[[0,6,"Nigeria","w",""]]],"14ip8b0":["9. Open Questions",[[1,5,"remain","w",""]]]});

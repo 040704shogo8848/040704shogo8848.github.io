@@ -1,0 +1,1 @@
+GlossData({"1r623bw":["Positioning",[[0,4,"positioning","w",""]]],"3vol20":["FY2025 (Reiwa 7)",[[0,5,"FY2025","w","令和7年=西暦2025年"]]],"2uabpj":["Countries Covered",[[0,3,"country covered","p","「対象+名詞」で範囲を示す型"]]],"ney3r":["Total project cost",[[0,4,"total project cost","w",""]]]});

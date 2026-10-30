@@ -1,0 +1,1 @@
+GlossData({"7w0o3r":["Generator",[[0,3,"generator","w",""]]],"14plh9w":["Key points of this chapter",[[4,2,"key point","w",""]]],"1h2caz1":["Clues were drawn from the content of the main text.",[[0,4,"clue","w",""]]]});

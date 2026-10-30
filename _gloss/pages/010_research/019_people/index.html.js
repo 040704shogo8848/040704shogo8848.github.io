@@ -1,0 +1,1 @@
+GlossData({"v4gzlb":["Tile",[[0,3,"tile","w","UI部品のカード状表示を指す"]]],"1b7qobg":["Date created",[[0,3,"date created","p",""]]],"1071w86":["Founders",[[0,3,"founder","w",""]]],"1bcljx5":["Investors",[[0,3,"investor","w",""]]],"23xvkd":["Not applicable.",[[0,4,"not applicable","p",""]]]});

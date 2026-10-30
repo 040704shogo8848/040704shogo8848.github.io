@@ -1,0 +1,1 @@
+GlossData({"rz2rgi":["How to read this",[[0,3,"how to read (this)","p","見出しとして使われる簡潔な表現"]]],"ghmysd":["Needs confirmation",[[0,3,"needs confirmation","w","見出しやメモでよく使う短い表現"]]],"5bauqx":["Event",[[0,3,"event","w",""]]],"d194fe":["September 6, 2018",[[0,9,"September 6, 2018","w","日付の語順は月→日→年"]]]});

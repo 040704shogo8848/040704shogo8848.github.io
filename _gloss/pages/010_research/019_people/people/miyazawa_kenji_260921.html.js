@@ -1,0 +1,1 @@
+GlossData({"1vxcemi":["The Miyazawa Kenji Memorial Museum in Hanamaki and the Kusano Shinpei Memorial Museum of Literature in Iwaki present the same story from different angles.",[[35,5,"from different angles","p","異なる視点・側面からという意味"]]],"rz2rgi":["How to read this",[[0,3,"how to read (this)","p","見出しとして使われる簡潔な表現"]]]});

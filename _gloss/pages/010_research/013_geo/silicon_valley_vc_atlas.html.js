@@ -1,0 +1,1 @@
+GlossData({"10l0if7":["This report completed source verification on 2026-08-15.",[[16,4,"source verification","p",""],[21,3,"go through","p","手続きを通過させる意味"]]],"a0aoyo":["Facts that could not be confirmed are not stated as definitive in the text.",[[0,8,"couldn't be confirmed","i",""],[14,2,"state as definitive","p",""]]]});

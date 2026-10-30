@@ -1,0 +1,1 @@
+GlossData({"dslovf":["India",[[0,3,"India","w",""]]],"1y8htpq":["Vietnam",[]],"4smqhz":["Indonesia",[]],"1pe6xg7":["Tokyo",[[0,3,"Tokyo","w",""]]],"19f5jns":["Osaka Prefecture",[[0,3,"Osaka Prefecture","w",""]]],"14plh9w":["Key points of this chapter",[[4,2,"key point","w",""]]],"1h2caz1":["Clues were drawn from the content of the main text.",[[0,4,"clue","w",""]]]});

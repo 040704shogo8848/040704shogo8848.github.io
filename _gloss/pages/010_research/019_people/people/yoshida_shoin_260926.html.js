@@ -1,0 +1,1 @@
+GlossData({"17o9rzu":["After that,",[[0,3,"after that","p","文頭で使うとやや硬い書き言葉"]]],"1fveq2l":["Remaining questions",[[0,5,"remaining","w",""]]],"9l0ntm":["We have listed the questions that remain unanswered.",[[0,8,"unanswered","w",""]]],"1h2caz1":["Clues were drawn from the content of the main text.",[[0,4,"clue","w",""]]]});

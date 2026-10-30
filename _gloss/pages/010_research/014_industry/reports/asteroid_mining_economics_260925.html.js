@@ -1,0 +1,1 @@
+GlossData({"198o7sy":["Mission",[[0,5,"mission","w",""]]],"185r99s":["Scenario",[[0,4,"scenario","w",""]]],"tc53y6":["How it ended",[[0,4,"how it ended","p",""]]],"9l0ntm":["We have listed the questions that remain unanswered.",[[0,8,"unanswered","w",""]]],"1h2caz1":["Clues were drawn from the content of the main text.",[[0,4,"clue","w",""]]]});

@@ -9,6 +9,7 @@
 // file rather than JSON.
 
 import { readFile, writeFile, readdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -126,6 +127,12 @@ ${s.links.map((l) => `    <a class="snav-a" href="${esc(rel(file, l.href))}">${e
     ? `<a class="snav-quiz" href="${esc(rel(file, QUIZ))}?page=${encodeURIComponent(file)}">このページのクイズ</a>`
     : '';
 
+  // English hover glosses, for pages that have data (_tools/gloss/pack.mjs).
+  const gloss = existsSync(path.join(ROOT, '_gloss/pages', file + '.js'))
+    ? `\n<script defer src="${esc(rel(file, '_gloss/core.js'))}"></script>` +
+      `<script defer src="${esc(rel(file, '_gloss/gloss.js'))}" data-src="${esc(rel(file, '_gloss/pages/' + file + '.js'))}"></script>`
+    : '';
+
   return `${START}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -144,7 +151,7 @@ ${panel}
 function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
 document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
-<footer class="snav-footer">${footerInner}${quiz}</footer>
+<footer class="snav-footer">${footerInner}${quiz}</footer>${gloss}
 ${END}`;
 }
 

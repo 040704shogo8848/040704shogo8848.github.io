@@ -1,0 +1,1 @@
+GlossData({"dslovf":["India",[[0,3,"India","w",""]]],"1muyx65":["Russia",[]],"wabsrr":["Iran",[[0,3,"Iran","w",""]]],"d28zdu":["Relations with Japan",[[0,6,"relations with Japan","p",""]]],"14plh9w":["Key points of this chapter",[[4,2,"key point","w",""]]],"1h2caz1":["Clues were drawn from the content of the main text.",[[0,4,"clue","w",""]]]});

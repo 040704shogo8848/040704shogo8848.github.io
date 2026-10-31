@@ -16,8 +16,8 @@
     SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, TEMPLATE: 1, SVG: 1, svg: 1, MATH: 1, math: 1, CODE: 1, PRE: 1,
     TEXTAREA: 1, SELECT: 1, OPTION: 1, RT: 1, RP: 1, NAV: 1, IFRAME: 1, CANVAS: 1, KBD: 1
   };
-  // Source lists, the shared nav and math render output.
-  var SKIP_CLASS = /(^|\s)(tb-src|src|sources|srcnote|refs|mq-src|snav[\w-]*|katex-mathml|katex-html|gl-[\w-]+|no-gloss)(\s|$)/;
+  // Source lists, the shared nav, math render output and sort arrows (.ar).
+  var SKIP_CLASS = /(^|\s)(tb-src|src|sources|srcnote|refs|mq-src|snav[\w-]*|katex-mathml|katex-html|gl-[\w-]+|no-gloss|ar)(\s|$)/;
 
   function skipped(el) {
     if (SKIP_TAG[el.tagName]) return true;

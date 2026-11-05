@@ -2,6 +2,19 @@
 // 追加は bin/add-report.sh 経由。
 window.INDUSTRY = [
   {
+    "title": "KHネオケムの溶剤はAI半導体のどこで使われるか",
+    "date": "2026-11-05",
+    "tags": [
+      "semiconductor",
+      "materials",
+      "photoresist",
+      "ai-chip"
+    ],
+    "summary": "フォトレジストの溶剤（PGMEA）が塗布工程のどこで使われ、なぜAI向けで数量と単価が伸びるかを、写真・動画・工程図で整理。1Lあたりの価格の比較、フォトレジスト市場の規模、同じ溶剤の供給元と、味の素のように本業から半導体材料に参入した日本企業の工程別マップを含む。",
+    "source": "Desk research",
+    "file": "reports/khneochem_semiconductor_solvent_261105.html"
+  },
+  {
     "title": "エアバスとボーイングの寡占｜統合の経緯、参入障壁、COMAC の実績、受注残と生産レート",
     "date": "2026-09-25",
     "tags": [

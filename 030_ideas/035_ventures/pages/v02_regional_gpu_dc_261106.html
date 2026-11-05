@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>案02 地方分散型のGPUデータセンター</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  h4{font-size:14px;margin:18px 0 6px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .note{border-left:4px solid var(--warn);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk,.note{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px 22px;margin:16px 0}
+.grid2 figure,.fig{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 12px 8px}
+svg.chart{width:100%;height:auto;display:block;font-family:-apple-system,"Hiragino Sans",sans-serif}
+.fig{margin:16px 0}
+figcaption{font-size:12px;color:var(--sub);margin-top:4px}
+.legend{font-size:13px;margin:10px 0 0}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin:0 5px 0 0}
+details.data{margin:8px 0 18px;font-size:13px}
+details.data summary{cursor:pointer;color:var(--accent)}
+details.data table{font-size:12px;width:auto;min-width:220px}
+details.data .cols{display:flex;flex-wrap:wrap;gap:0 24px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+</style>
+
+<style>
+.verdict td:first-child{white-space:nowrap}
+.mark{font-weight:700;font-size:16px;text-align:center;white-space:nowrap}
+.case{font-size:13px;color:var(--sub);margin:4px 0 0}
+ul.plain{padding-left:20px}
+ul.plain li{margin:4px 0}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../031_frontier_trading/index.html">frontier trading</a><a href="../../032_evacsim/index.html">evacsim</a><a href="../../033_minhaya_llm/index.html">minhaya llm</a><a href="../../034_foundation/index.html">foundation</a><a href="../index.html">ventures</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/02B_reading/index.html">reading</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a><a href="../../../020_personal/02C_chemistry/index.html">chemistry</a><a href="../../../020_personal/02D_probability/index.html">probability</a><a href="../../../020_personal/02E_calculus/index.html">calculus</a><a href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a><a href="../../../020_personal/02G_physics/index.html">physics</a><a href="../../../020_personal/02H_heidegger/index.html">heidegger</a><a href="../../../020_personal/02I_quiz/index.html">quiz</a><a href="../../../020_personal/02J_geography/index.html">geography</a><a href="../../../020_personal/02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../034_foundation/index.html">foundation</a>
+    <a class="snav-a" href="../index.html">ventures</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../../020_personal/02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../../020_personal/02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../../020_personal/02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../../020_personal/02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../../020_personal/02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../../020_personal/02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../../../020_personal/02J_geography/index.html">geography</a>
+    <a class="snav-a" href="../../../020_personal/02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+  <div class="crumb"><a href="../index.html">ventures</a> / 案02</div>
+  <header class="top">
+    <div>
+      <h1>案02 地方分散型のGPUデータセンター</h1>
+      <div class="meta">案番号 02 ／ 資金源の型 B ／ 市場の桁 兆 ／ 作成日 2026-11-06</div>
+      <div style="margin-top:8px"><span class="tag">GPU</span><span class="tag">データセンター</span><span class="tag">ワット・ビット連携</span><span class="tag">資金源B</span></div>
+    </div>
+  </header>
+
+  <div class="kpi">
+    <div class="card"><div class="k">国内DCサービス市場 2028年予測</div><div class="v">5.1<small> 兆円</small></div></div>
+    <div class="card"><div class="k">首都圏と関西のDC電力需要</div><div class="v">88<small> %</small></div></div>
+    <div class="card"><div class="k">10年目売上 保守</div><div class="v">111<small> 億円</small></div></div>
+    <div class="card"><div class="k">10年目売上 楽観</div><div class="v">879<small> 億円</small></div></div>
+  </div>
+
+  <div class="callout"><strong>結論を先に置く。</strong>10年で国内のGPUクラウド市場の首位には届かない。10年目の売上は保守ケースで約111億円、楽観ケースで約879億円である。大手通信会社とクラウド事業者は1拠点あたり数百億円から1,000億円規模を投じており、資本の規模が2桁異なる。到達できる位置は、地方に分散した推論向けGPUクラウドで上位5社程度である。4,000万円で着手できるのはGPUサーバーの再販と既存施設のラック賃借だけで、自社の建屋は5年目以降になる。</div>
+
+  <h2><span class="num">01</span>一言で<span class="en">In one line</span></h2>
+  <p>送電に余力のある地方の既存施設にGPUサーバーを設置し、AIの学習と推論に使う計算資源を大企業と研究機関に月額契約で貸し出す。最初の2年はGPUサーバーの調達代行と再販、既存の地方データセンターのラックを借りた小規模なGPUクラウドで売上と顧客契約を確保する。顧客との1年から3年の利用契約を担保に、リースとプロジェクトファイナンスでGPUと建屋を増やす。</p>
+
+  <h2><span class="num">02</span>市場規模<span class="en">Market size</span></h2>
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>対象</th><th>基準年の値</th><th>予測</th><th>出典</th></tr></thead>
+    <tbody>
+      <tr><td>国内データセンターサービス市場</td><td>2023年 2兆7,361億円</td><td>2028年 5兆812億円 年平均13.2%</td><td>IDC Japan<sup>1</sup></td></tr>
+      <tr><td>日本のデータセンターサービス市場</td><td>2025年 253億ドル</td><td>2030年 351億ドル</td><td>Statista<sup>2</sup></td></tr>
+      <tr><td>世界のデータセンターサービス市場</td><td>2025年 5,275億ドル</td><td>2030年 7,391億ドル</td><td>Statista<sup>2</sup></td></tr>
+      <tr><td>国内の生成AI市場</td><td>2025年 6,879億円</td><td>2030年 1兆7,774億円</td><td>富士キメラ総研<sup>3</sup></td></tr>
+      <tr><td>国内のGPUクラウド市場 推計</td><td>2026年度 約800〜1,300億円</td><td>算出式は下記</td><td>推計</td></tr>
+    </tbody></table></div>
+  <p>IDC JapanとStatistaは市場の定義が異なり、値は一致しない。いずれの定義でも国内の市場は兆円単位である。</p>
+  <div class="note"><strong>推計 国内GPUクラウド市場。</strong>さくらインターネットのGPU基盤サービス売上は2026年4月から9月で約101億円である<sup>8</sup>。年換算で約200億円とする。同社の国内シェアを15〜25%と仮定すると、市場規模は 200億円 ÷ 0.25 = 800億円 から 200億円 ÷ 0.15 = 約1,330億円 の範囲になる。シェアの値は仮定であり、出典はない。</div>
+
+  <h2><span class="num">03</span>なぜ今か<span class="en">Why now</span></h2>
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>年月</th><th>変化</th><th>出典</th></tr></thead>
+    <tbody>
+      <tr><td>2025年3月</td><td>総務省と経済産業省がワット・ビット連携官民懇談会を設置した。6月に取りまとめ1.0を公表した。</td><td><sup>5</sup></td></tr>
+      <tr><td>2025年5月</td><td>同懇談会WGは、集積地の選定を電力インフラの状況から始め、既存の集積拠点から分散させる方針を示した。系統の空押さえを排除する規律の導入も示した。</td><td><sup>4</sup></td></tr>
+      <tr><td>2025年1月</td><td>電力広域的運営推進機関の需要想定で、2034年度の最大需要は1億6,459万kWとなった。2024年度比4.4%増で、データセンターと半導体工場の新増設が主因である。</td><td><sup>6</sup></td></tr>
+      <tr><td>2025年度想定</td><td>データセンターの電力需要は関東が64%、関西が24%を占める。</td><td><sup>3</sup></td></tr>
+      <tr><td>2021〜2024年度</td><td>東京圏と大阪圏以外のデータセンター等の整備に基金720億円を措置した。補助率は1/2である。2026年度予算の要求では分散DCの実証に27億円を計上した。</td><td><sup>3</sup></td></tr>
+      <tr><td>2026年9月</td><td>経済産業省がGX戦略地域18地域を認定した。データセンター集積型は北海道・秋田・宮城・栃木・茨城・富山・香川・福岡・鹿児島の9地域である。</td><td><sup>7</sup></td></tr>
+      <tr><td>2025年6月〜2026年10月</td><td>AWSは2025年6月にH100の料金を約44%下げた。2026年8月から10月には同社のCapacity Blocksが5.191ドルから5.970ドルに上がり、Nebiusも3.85ドルから4.50ドルに上げた。</td><td><sup>9</sup></td></tr>
+      <tr><td>2025年</td><td>東京圏のラック価格は約3%上昇した。福岡と九州は電力と土地の費用が低く、代替の立地として検討されている。</td><td><sup>10</sup></td></tr>
+    </tbody></table></div>
+  <p>電力の制約は首都圏に集中しており、国の補助は東京圏と大阪圏以外を対象にしている。GPUの時間単価は2025年に下落し、2026年後半に上昇へ転じた。単価の変動幅が大きいことは、この事業の収益の前提を不安定にする。</p>
+
+  <h2><span class="num">04</span>競合と首位の条件<span class="en">Competitors and what it takes to lead</span></h2>
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>事業者</th><th>地方拠点と規模</th><th>出典</th></tr></thead>
+    <tbody>
+      <tr><td>さくらインターネット</td><td>北海道石狩市。2026年3月期の売上353億円、営業損失4億円。2027年3月期上期のGPU基盤サービス売上は約101億円で、通期の売上予想は466億円。2027年12月末までにGPU約8,000基を購入する約1,000億円規模の計画が認定された。</td><td><sup>17</sup><sup>8</sup><sup>12</sup></td></tr>
+      <tr><td>ソフトバンク</td><td>北海道苫小牧市。2026年度の開業予定で、将来は受電容量300MW超を計画する。</td><td><sup>13</sup></td></tr>
+      <tr><td>KDDI</td><td>大阪府堺市のシャープ旧工場をデータセンターに転用する。</td><td><sup>18</sup></td></tr>
+      <tr><td>ハイレゾ</td><td>石川県志賀町、香川県高松市と綾川町、佐賀県玄海町。研究施設と廃校を転用する。香川県内2拠点の5年間の事業費は約210億円。</td><td><sup>14</sup><sup>15</sup></td></tr>
+      <tr><td>クラウドプログラム全体</td><td>経済産業省はAI開発向けのクラウド5件に最大725億円を助成した。</td><td><sup>16</sup></td></tr>
+    </tbody></table></div>
+  <p>首位になるには次の4点を押さえる。</p>
+  <ul class="plain">
+    <li>電力の確保。系統接続の順番待ちを避けるため、受電設備を持つ遊休施設を取得する。廃校と工場跡はハイレゾとKDDIが先行している。</li>
+    <li>GPUの調達枠。供給元からの割当は大口の購入者が優先される。新規事業者はサーバーメーカーと代理店を経由する。</li>
+    <li>長期の利用契約。1年から3年の予約契約がGPUの融資とリースの担保になる。</li>
+    <li>国の補助。地方のデータセンター整備には補助率1/2の制度がある<sup>3</sup>。</li>
+  </ul>
+  <p>首位の基準は、さくらインターネットのGPU基盤サービス売上の年換算約200億円である。この水準を越えるには、200億円 ÷ 1基230万円 = 約8,700基のGPUが要る。投資額は約520億円で、1基600万円として算出した。</p>
+
+  <h2><span class="num">05</span>4,000万円での最初の1年<span class="en">First year with 40 million yen</span></h2>
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>使途</th><th class="num">金額</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>人件費</td><td class="num">1,800万円</td><td>創業者、インフラ技術者1名、営業1名の12か月分</td></tr>
+      <tr><td>GPUサーバーの頭金</td><td class="num">960万円</td><td>8GPU搭載サーバー2台、総額約9,600万円の10%。残額は5年リース</td></tr>
+      <tr><td>ラック賃借と電力</td><td class="num">600万円</td><td>既存の地方データセンターで2ラックを12か月賃借。金額は推計</td></tr>
+      <tr><td>予備</td><td class="num">640万円</td><td>再販の仕入れと入金の時期の差に充てる。不足分は運転資金の借入で賄う</td></tr>
+      <tr><th>合計</th><th class="num">4,000万円</th><th></th></tr>
+    </tbody></table></div>
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>月</th><th>行うこと</th></tr></thead>
+    <tbody>
+      <tr><td>1〜2月</td><td>法人を設立し、日本政策金融公庫に創業資金を申し込む。GPUサーバーの仕入れ先2社と販売代理店契約を結ぶ。</td></tr>
+      <tr><td>3〜4月</td><td>大企業と大学の計10組織にAIの計算需要を聴取する。GPUサーバーの再販で最初の受注を得る。粗利率は8%を想定する。</td></tr>
+      <tr><td>5〜6月</td><td>北海道または九州の既存データセンター1拠点とラック契約を結ぶ。GPUサーバー2台をリースで導入する。</td></tr>
+      <tr><td>7〜9月</td><td>顧客3社と1年の利用契約を結ぶ。稼働率と障害対応の工数を測定する。</td></tr>
+      <tr><td>10〜12月</td><td>契約残高を示して地銀とリース会社に次の32GPU分の与信枠を申し込む。受電設備を持つ地方の遊休施設3件を調査する。</td></tr>
+    </tbody></table></div>
+  <p>1年目に検証するのは3点である。第1に、1年契約でGPU1基1時間あたり450円以上の単価が成立するか。第2に、稼働率60%を維持できるか。第3に、リース会社が顧客の契約残高を与信の根拠として認めるか。1年目の売上は再販0.3億円とGPUクラウド0.2億円の計0.5億円を見込む。</p>
+
+  <h2><span class="num">06</span>資金の組み方<span class="en">Financing</span></h2>
+  <div class="tbl-scroll"><table>
+    <thead><tr><th>段階</th><th>手段</th><th>金融機関</th><th>担保と条件</th></tr></thead>
+    <tbody>
+      <tr><td>1〜2年目</td><td>創業融資、GPUのリース、運転資金の当座貸越</td><td>日本政策金融公庫、総合リース会社、地銀</td><td>代表者の経営者保証の有無を交渉する。GPUはリース物件そのものが担保になる</td></tr>
+      <tr><td>3〜4年目</td><td>利用契約を担保とするGPUファイナンス</td><td>リース会社、地銀の協調融資</td><td>1年から3年の予約契約の残高を返済原資とする。借入比率は投資額の80%</td></tr>
+      <tr><td>5年目以降</td><td>受電設備付き施設の取得と改修</td><td>メガバンク、日本政策投資銀行のプロジェクトファイナンス</td><td>地方データセンター整備の補助 1/2<sup>3</sup> とGX戦略地域の支援<sup>7</sup>を併用する</td></tr>
+    </tbody></table></div>
+  <p>原則は、利用契約のないGPUを購入しないことである。GPUは5年で償却し、5年目に同数を更新する前提を置く。</p>
+
+  <h2><span class="num">07</span>10年の損益見通し<span class="en">10-year P&amp;L outlook</span></h2>
+  <h3>保守ケース</h3><div class="tbl-scroll"><table><thead><tr><th>億円</th><th class="num">1年目</th><th class="num">2年目</th><th class="num">3年目</th><th class="num">5年目</th><th class="num">7年目</th><th class="num">10年目</th></tr></thead><tbody><tr><td>売上</td><td class="num">0.5</td><td class="num">1.9</td><td class="num">4.9</td><td class="num">16.7</td><td class="num">42.3</td><td class="num">110.5</td></tr><tr><td>営業利益</td><td class="num">-0.3</td><td class="num">-0.2</td><td class="num">0.4</td><td class="num">2.5</td><td class="num">7.2</td><td class="num">19.9</td></tr><tr><td>累計投資</td><td class="num">1.0</td><td class="num">3.8</td><td class="num">12.0</td><td class="num">58.5</td><td class="num">174.3</td><td class="num">539.5</td></tr><tr><td>借入残高</td><td class="num">0.8</td><td class="num">2.9</td><td class="num">8.8</td><td class="num">39.8</td><td class="num">105.9</td><td class="num">270.3</td></tr></tbody></table></div>
+  <p class="case">GPU稼働数は10年目に7,000基。</p>
+  <h3>楽観ケース</h3><div class="tbl-scroll"><table><thead><tr><th>億円</th><th class="num">1年目</th><th class="num">2年目</th><th class="num">3年目</th><th class="num">5年目</th><th class="num">7年目</th><th class="num">10年目</th></tr></thead><tbody><tr><td>売上</td><td class="num">0.7</td><td class="num">4.7</td><td class="num">15.9</td><td class="num">93.0</td><td class="num">295.7</td><td class="num">879.2</td></tr><tr><td>営業利益</td><td class="num">-0.3</td><td class="num">0.2</td><td class="num">2.4</td><td class="num">22.3</td><td class="num">79.8</td><td class="num">246.2</td></tr><tr><td>累計投資</td><td class="num">1.4</td><td class="num">9.6</td><td class="num">36.0</td><td class="num">288.0</td><td class="num">948.6</td><td class="num">3,046.0</td></tr><tr><td>借入残高</td><td class="num">1.2</td><td class="num">7.4</td><td class="num">27.0</td><td class="num">203.7</td><td class="num">597.4</td><td class="num">1,569.0</td></tr></tbody></table></div>
+  <p class="case">GPU稼働数は10年目に40,000基。</p>
+  <h4>前提</h4>
+  <ul class="plain">
+    <li>GPU1基あたりの年間売上は保守230万円、楽観300万円で始める。保守は毎年3%、楽観は毎年2%下げる。保守の値は 450円 × 8,760時間 × 稼働率60% = 約236万円 から置いた。</li>
+    <li>単価の参照値は2026年10月時点のH100で、Lambdaの1基契約が4.29ドル、AWSのCapacity Blocksが5.970ドルである<sup>9</sup>。1ドル150円で換算した。</li>
+    <li>GPUの投資額は1基600万円。8GPU搭載サーバーと通信機器を含む。5年で同数を更新する。</li>
+    <li>自社の建屋は保守5年目、楽観4年目から設け、新規GPUの70%を収容する。建屋はGPU700基あたり1MW、1MWあたり10億円とした。</li>
+    <li>GPUサーバーの再販売上は保守で年3億円、楽観で年10億円が上限。</li>
+    <li>営業利益率は保守で3年目8%から10年目18%、楽観で3年目15%から10年目28%。</li>
+    <li>借入は投資額の80%を5年で均等返済する。金利は営業利益の算出に含めない。想定金利は2.5%で、10年目の支払利息は保守で約7億円になる。</li>
+  </ul>
+
+  <h2><span class="num">08</span>日本一への道筋<span class="en">Path to No.1 in Japan</span></h2>
+  <p>10年で首位には届かない。楽観ケースの10年目のGPU数は40,000基で、所要電力は約57MWになる。ソフトバンクが苫小牧の1拠点で計画する300MW超の約5分の1である<sup>13</sup>。保守ケースの10年目売上約111億円は、さくらインターネットの2026年時点のGPU売上の年換算約200億円にも届かない<sup>8</sup>。</p>
+  <p>止まる位置は、地方に分散した中規模の推論向けGPUクラウドである。この領域で首位を争う条件は2つある。1つは、受電設備付きの遊休施設を国の補助を使って安く取得することである。もう1つは、データを国内の閉域網に置くことを求める地方自治体・地銀・製造業との長期契約である。この領域の市場規模を示す統計は確認できなかった。</p>
+
+  <h2><span class="num">09</span>グローバル展開<span class="en">Global expansion</span></h2>
+  <p>海外展開の優先度は低い。GPUクラウドの世界市場では米国の大手クラウド事業者と専業事業者が価格を設定している。単価の比較は<sup>9</sup>に示した。日本の新規事業者が海外で競う根拠は少ない。</p>
+  <ul class="plain">
+    <li>第1段階は国内の地方拠点で、分散した拠点を光ネットワークで結んで運用する方式を確立する。総務省はこの方式の実証を2026年度に計画している<sup>3</sup>。</li>
+    <li>第2段階は、日本企業の東南アジア拠点向けに、現地でデータを保管する要件を満たすGPUを提供する。顧客は国内の契約先の海外拠点に限る。</li>
+    <li>第3段階は、再生可能エネルギーの電力価格が低い国に拠点を設ける。候補国の選定に用いる電力価格の比較は今回の調査で行っていない。</li>
+  </ul>
+
+  <h2><span class="num">10</span>群戦略<span class="en">Group strategy</span></h2>
+  <ul class="plain">
+    <li>受電設備を持つ地方の遊休施設の保有者。出資または共同事業で施設を確保する。</li>
+    <li>液冷と排熱利用の技術企業。GPUの消費電力の増加に対応する。</li>
+    <li>旧世代GPUの査定と再生を行う事業者。更新時の売却価格を高める。</li>
+    <li>推論APIを提供するAIスタートアップ。出資の一部をGPU時間で提供し、稼働率を高める。</li>
+    <li>地域の新電力と再生可能エネルギー発電事業者。電力の長期調達契約を結ぶ。</li>
+  </ul>
+
+  <h2><span class="num">11</span>評価<span class="en">Evaluation</span></h2>
+  <div class="tbl-scroll"><table class="verdict"><thead><tr><th>#</th><th>基準</th><th>判定</th><th>根拠</th></tr></thead><tbody><tr><td>1</td><td>50年、魂を燃やし続けられるか</td><td class="mark"></td><td>創業者が判定</td></tr><tr><td>2</td><td>10年以内に、国内市場規模1,000億円以上の市場でシェア1位になれるか</td><td class="mark">×</td><td>国内GPUクラウド市場は1,000億円を超える見込みだが、大手は1拠点で数百億円以上を投じており、10年目の楽観ケースでも首位の規模に届かない。</td></tr><tr><td>3</td><td>4,000万円で始められ、融資で伸ばせるか</td><td class="mark">△</td><td>再販とラック賃借は4,000万円で始められる。GPUの増設は利用契約がなければリースも融資も付かない。</td></tr><tr><td>4</td><td>グローバルなインフラになり得るか</td><td class="mark">△</td><td>計算資源は国境を越えて使われるが、世界市場の価格は米国の事業者が設定している。</td></tr><tr><td>5</td><td>営業力が最初の売上に直接結びつくか</td><td class="mark">○</td><td>大企業と研究機関への1年から3年の計算資源の契約は法人営業で獲得する。</td></tr><tr><td>6</td><td>同じビジョンを共有する仲間を誘える事業か</td><td class="mark"></td><td>創業者が判定</td></tr><tr><td>7</td><td>本業が早く現金を生み、返済と出資の原資になるか</td><td class="mark">△</td><td>再販は入金が早いが粗利率が低い。GPUクラウドは償却負担が重く、5年目まで営業利益は小さい。</td></tr><tr><td>8</td><td>投資先を束ねる群の中核になれるか</td><td class="mark">○</td><td>AIスタートアップと施設保有者に計算資源と電力を供給する立場で、出資先を束ねられる。</td></tr><tr><td>9</td><td>成長の資金源がA・B・Cのどれに当たるか</td><td class="mark">B</td><td>GPUと建屋を担保にリースとプロジェクトファイナンスで調達する。</td></tr></tbody></table></div>
+
+  <h2><span class="num">12</span>致命的なリスク<span class="en">Fatal risks</span></h2>
+  <div class="risk"><strong>GPU単価の下落と旧世代化。</strong>AWSは2025年6月にH100の料金を約44%下げた<sup>9</sup>。新しい世代のGPUが出るたびに旧世代の時間単価は下がる。対策は3つある。利用契約のないGPUを購入しないこと、償却期間を契約期間に合わせること、旧世代を推論用途に転用した後に売却することである。</div>
+  <div class="risk"><strong>大口顧客の契約終了。</strong>さくらインターネットは生成AI向けの大型案件の終了で、2026年3月期のGPU売上予想を158億円から85億円に下げた<sup>11</sup>。対策は、1社への売上依存を30%以下に保つことである。</div>
+  <div class="risk"><strong>系統接続の待ち時間。</strong>国は系統の空押さえを排除する規律を導入する方針である<sup>4</sup>。受電設備を持つ施設の取得で初期の待ち時間は避けられる。拠点の規模を大きくする段階では系統の増強が要り、その工期は事業者が短縮できない。</div>
+  <div class="risk"><strong>資本の規模の差。</strong>さくらインターネットの第2次計画は約1,000億円である<sup>12</sup>。融資は利用契約の残高に比例するため、大手と同じ速度で投資することはできない。このリスクは潰せない。</div>
+  <div class="risk"><strong>GPUの調達。</strong>供給が逼迫した時期は大口の購入者に割当が集中する。対策は、サーバーメーカーと代理店を複数持つこと、前世代のGPUも扱うことである。</div>
+
+  <h2><span class="num">13</span>残っている問い<span class="en">Open questions</span></h2>
+  <ul class="plain">
+    <li>地方に計算資源を置くことは、その地域に雇用と技能をどの程度残すのか。設備は高度に自動化されており、建設後の雇用は少ない。</li>
+    <li>GPUの時間を貸す事業は、電力を売る事業と何が異なるのか。付加価値をどこに置けば価格競争から離れられるのか。</li>
+    <li>国内に計算資源を持つことに、利用者はどの程度の価格差まで対価を払うのか。</li>
+  </ul>
+
+  <h2><span class="num">14</span>出典<span class="en">Sources</span></h2>
+  <ol class="sources"><li>総務省 令和7年版 情報通信白書 データセンター。IDC Japan 2024年10月の国内データセンターサービス市場予測を掲載。 <a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r07/html/nd218100.html">https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r07/html/nd218100.html</a></li><li>総務省 令和8年版 情報通信白書 データセンター。Statista Market Insights を基にした世界と日本の市場規模。 <a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r08/html/nd218100.html">https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r08/html/nd218100.html</a></li><li>総務省 総合通信基盤局 ワット・ビット連携に関する総務省の取組について 2025年11月。GX産業立地WG第6回 資料3。 <a href="https://www.cas.go.jp/jp/seisaku/gx_jikkou_kaigi/sangyoritchi_wg/dai6/shiryo3.pdf">https://www.cas.go.jp/jp/seisaku/gx_jikkou_kaigi/sangyoritchi_wg/dai6/shiryo3.pdf</a></li><li>総務省・経済産業省 ワット・ビット連携官民懇談会WG 第2回事務局説明資料 2025年5月。 <a href="https://www.soumu.go.jp/main_content/001009752.pdf">https://www.soumu.go.jp/main_content/001009752.pdf</a></li><li>総務省 村上総務大臣閣議後記者会見の概要 2025年6月17日。取りまとめ1.0の公表。 <a href="https://www.soumu.go.jp/menu_news/kaiken/01koho01_02001454.html">https://www.soumu.go.jp/menu_news/kaiken/01koho01_02001454.html</a></li><li>ニュースイッチ 2025年2月2日。電力広域的運営推進機関の2025年度需要想定。 <a href="https://newswitch.jp/p/44498">https://newswitch.jp/p/44498</a></li><li>香川県 GX戦略地域の認定について 2026年。データセンター集積型9地域の一覧。 <a href="https://www.pref.kagawa.lg.jp/kigyoritti/topics/2026gx01.html">https://www.pref.kagawa.lg.jp/kigyoritti/topics/2026gx01.html</a></li><li>ビジネス+IT 2026年10月28日。さくらインターネット 2027年3月期 中間決算。 <a href="https://www.sbbit.jp/article/cont1/187867">https://www.sbbit.jp/article/cont1/187867</a></li><li>IntuitionLabs H100 Rental Prices: Cloud Comparison 2026年10月11日更新。 <a href="https://intuitionlabs.ai/articles/h100-rental-prices-cloud-comparison">https://intuitionlabs.ai/articles/h100-rental-prices-cloud-comparison</a></li><li>Real Estate Asia Greater Tokyo data centre pipeline reaches 2,544 MW。CBREの調査。 <a href="https://realestateasia.com/industrial/news/greater-tokyo-data-centre-pipeline-reaches-2544-mw">https://realestateasia.com/industrial/news/greater-tokyo-data-centre-pipeline-reaches-2544-mw</a></li><li>gamebiz さくらインターネット 26年3月期の営業利益を大幅下方修正。 <a href="https://gamebiz.jp/news/409799">https://gamebiz.jp/news/409799</a></li><li>さくらインターネット 適時開示 2024年4月19日。経済安全保障推進法に基づく供給確保計画の認定。 <a href="https://www2.jpx.co.jp/disc/37780/140120240419573067.pdf">https://www2.jpx.co.jp/disc/37780/140120240419573067.pdf</a></li><li>ソフトバンク 北海道苫小牧AIデータセンター 公式ページ。 <a href="https://www.softbank.jp/business/service/platform/datacenter/tomakomai">https://www.softbank.jp/business/service/platform/datacenter/tomakomai</a></li><li>KSB瀬戸内海放送 2024年5月7日。ハイレゾの香川県内2拠点の事業費。 <a href="https://news.ksb.co.jp/article/15257762">https://news.ksb.co.jp/article/15257762</a></li><li>マイナビニュース 2025年9月10日。ハイレゾの拠点展開。 <a href="https://news.mynavi.jp/article/20250910-3429025/">https://news.mynavi.jp/article/20250910-3429025/</a></li><li>Impress Watch 経済産業省 クラウドプログラム5件に最大725億円を助成。 <a href="https://www.watch.impress.co.jp/docs/news/1585751.html">https://www.watch.impress.co.jp/docs/news/1585751.html</a></li><li>ブリッジレポート さくらインターネット 2026年6月8日。2026年3月期 通期実績。 <a href="https://www.bridge-salon.jp/report_bridge/pdf/20260608_3778.pdf">https://www.bridge-salon.jp/report_bridge/pdf/20260608_3778.pdf</a></li><li>CBRE プレスリリース KDDIによるシャープ堺工場のデータセンター転用の支援。 <a href="https://www.cbre.co.jp/en/press-releases/cbre-facilitates-kddi-sharp-data-center-development">https://www.cbre.co.jp/en/press-releases/cbre-facilitates-kddi-sharp-data-center-development</a></li></ol>
+
+</div>
+</body>
+</html>

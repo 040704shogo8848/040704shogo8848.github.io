@@ -19,7 +19,7 @@ window.REPORTS = [
     ],
     "date": "2026-11-05",
     "summary": "2026年12月期第3四半期は減収のなか営業利益が前年比22%増。利益の中心は冷凍機油原料から半導体向け溶剤（電子材料+63%）と基礎化学品に移った。筆頭株主のアクティビストを背景に、発行済株式の10.52%にあたる120億円の自社株買いを発表。",
-    "sourceCount": 6,
+    "sourceCount": 8,
     "variant": "thesis",
     "file": "reports/khneochem_3q_research_261105.html"
   },

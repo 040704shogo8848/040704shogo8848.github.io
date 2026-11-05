@@ -37,6 +37,9 @@
   .vids { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:16px 0; }
   @media (max-width:760px) { .vids { grid-template-columns:1fr; } }
   .vid iframe { width:100%; aspect-ratio:16/9; border:0; display:block; background:#000; }
+  .ytfb { position:relative; display:block; aspect-ratio:16/9; background:#000; }
+  .ytfb img { width:100%; height:100%; object-fit:cover; display:block; opacity:.85; }
+  .ytfb span { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:#1E3A5F; color:#fff; font-size:14px; padding:8px 16px; }
   .hl td { background:#EDF2F7; }
   .src { font-size:13px; color:var(--sub); word-break:break-all; line-height:1.7; }
   @keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
@@ -179,16 +182,16 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 </figure>
 <p class="msg">以下の動画で、実際の塗布の様子を確認できます。</p>
 <div class="vids">
-  <div class="vid"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/1iZ5XzF6hEo" title="TEL ACT8 Spin photoresist coating process" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  <div class="vid"><iframe loading="lazy" src="https://www.youtube.com/embed/1iZ5XzF6hEo" title="TEL ACT8 Spin photoresist coating process" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
   <div class="note"><a href="https://www.youtube.com/watch?v=1iZ5XzF6hEo" target="_blank" rel="noopener">YouTubeで見る</a></div>
   <figcaption>東京エレクトロンの量産用装置（CLEAN TRACK ACT8）での塗布。ノズルが中央に移動して滴下し、高速回転で広げる流れが映っています。</figcaption></div>
-  <div class="vid"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/4q8V3eGadzY" title="Photoresist Spin Coating in slow motion" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  <div class="vid"><iframe loading="lazy" src="https://www.youtube.com/embed/4q8V3eGadzY" title="Photoresist Spin Coating in slow motion" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
   <div class="note"><a href="https://www.youtube.com/watch?v=4q8V3eGadzY" target="_blank" rel="noopener">YouTubeで見る</a></div>
   <figcaption>塗布のスロー映像。中央に滴下した液体が回転で外周へ広がり、余分な液がウェハーの縁から飛ばされる様子が分かります。下の図の工程2と3にあたります。</figcaption></div>
-  <div class="vid"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/xsC3TmI2xno" title="多目的i線ステッパ、コータデベロッパによる微細パターン形成" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  <div class="vid"><iframe loading="lazy" src="https://www.youtube.com/embed/xsC3TmI2xno" title="多目的i線ステッパ、コータデベロッパによる微細パターン形成" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
   <div class="note"><a href="https://www.youtube.com/watch?v=xsC3TmI2xno" target="_blank" rel="noopener">YouTubeで見る</a></div>
   <figcaption>日本の大学の共用施設による紹介動画（日本語）。コータ・デベロッパでの塗布から、露光・現像までを通して見られます。</figcaption></div>
-  <div class="vid"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/AV-SeYZktu4" title="How to Spin Photoresist onto Wafers and Pieces" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  <div class="vid"><iframe loading="lazy" src="https://www.youtube.com/embed/AV-SeYZktu4" title="How to Spin Photoresist onto Wafers and Pieces" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
   <div class="note"><a href="https://www.youtube.com/watch?v=AV-SeYZktu4" target="_blank" rel="noopener">YouTubeで見る</a></div>
   <figcaption>Caltechの研究施設による手順の解説（英語）。滴下量、回転数、ベークの条件を説明しています。</figcaption></div>
 </div>
@@ -596,6 +599,16 @@ show(0);
   h+=`<text x="10" y="450" font-size="12" fill="#666">工程は左から右へ進みます。前工程（ウェハー〜研磨）を数十回繰り返したあと、後工程でパッケージに組み立てます。</text>`;
   document.getElementById("matmap").innerHTML=h;
 })();
+
+// ---------- local file: replace YouTube embeds with thumbnails ----------
+if (location.protocol === "file:") {
+  document.querySelectorAll('.vid iframe').forEach(f=>{
+    const id=f.src.split('/embed/')[1].split('?')[0];
+    const a=document.createElement('a'); a.className='ytfb'; a.href='https://www.youtube.com/watch?v='+id; a.target='_blank'; a.rel='noopener';
+    a.innerHTML='<img src="https://i.ytimg.com/vi/'+id+'/hqdefault.jpg" alt=""><span>YouTubeで再生する</span>';
+    f.replaceWith(a);
+  });
+}
 </script>
 </body>
 </html>

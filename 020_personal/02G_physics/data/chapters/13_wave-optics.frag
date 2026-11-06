@@ -43,6 +43,10 @@
 <p>屈折では媒質2での速さ \(v_2\) が媒質1での速さ \(v_1\) と異なる。波面の片端が境界に着いてから他端が境界に着くまでの時間 \(t\) に媒質1では \(v_1t\) 進み媒質2では \(v_2t\) 進む。境界上の同じ長さ \(\ell\) を斜辺とする2つの直角三角形から \(v_1t=\ell\sin\,i\) と \(v_2t=\ell\sin\,r\) が成り立つ。辺々を割ると屈折の法則が得られる。</p>
 \[ \frac{\sin\,i}{\sin\,r}=\frac{v_1}{v_2}=\frac{\lambda_1}{\lambda_2}=n_{12} \]
 <p>\(n_{12}\) を媒質1に対する媒質2の<strong>屈折率</strong>と呼ぶ。<strong class="hit">境界を越えても振動数は変わらない</strong>。境界の1点では媒質1から1秒間に届く山の数と媒質2へ1秒間に出ていく山の数が等しいからである。振動数が同じなので速さの比はそのまま波長の比になる。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_wave-optics-pencil.jpg" width="900" height="1200" loading="lazy" alt="水を入れたコップに斜めに差した鉛筆が水面で折れて見える様子">
+<figcaption>水を入れたコップに斜めに差した鉛筆である。水中の部分から出た光は水面で屈折してから目に届くので、鉛筆は水面の位置で折れたように見える。光でも水面波と同じく媒質ごとに速さが異なり、境界で進む向きが変わる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Pencil_in_glass_of_water_showing_refraction.JPG">Meganbeckett27</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="波面が境界で折れ曲がり屈折する様子">
@@ -95,6 +99,10 @@
 <p>節線の本数は 2つの波源を結ぶ線分上で数えると求めやすい。線分上の点では経路差が \(-d\) から \(d\) まで連続に変わる。\(d\) は波源の間隔である。したがって \(\left(m+\dfrac{1}{2}\right)\lambda\lt d\) を満たす値の個数の2倍が節線の本数である。図の例は \(d=2.5\lambda\) で \(\dfrac{\lambda}{2}\) と \(\dfrac{3\lambda}{2}\) の2通りが該当し節線は4本である。</p>
 <p>2つの波源が逆位相で振動する場合は条件が入れ替わる。経路差が整数倍の点で弱め合い半整数倍の点で強め合う。共通テストではこの入れ替えが頻出の論点である。</p>
 <p>波が障害物の裏側やすき間の先へ回り込む現象を<strong>回折</strong>と呼ぶ。すき間の幅が波長と同じ程度か波長より小さいとき回折は顕著になる。音の波長は数 cm から数 m で建物の角やドアのすき間と同じ程度なので音は物陰にも届く。光の波長は約 380 nm から 770 nm で日常の物体よりはるかに小さいので光の回折は日常では目立たない。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_wave-optics-breakwater.jpg" width="1200" height="900" loading="lazy" alt="防波堤のすき間を通った波が円弧状に広がる海岸">
+<figcaption>イスラエルのアシュケロンの海岸で、沖の防波堤のすき間を通った波である。すき間を抜けた波は直進するだけでなく、円弧の形に広がって防波堤の裏側にも届いている。すき間の幅が波長と同じ程度であるため回折が目に見える大きさで現れる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:BreakWaterDiffraction_Ashkelon1.jpg">Dmitris1</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 3</div>
 <p>クインケ管で音を2つの経路に分けて再び合わせる。片方の管を引き出していくと音が最も小さく聞こえる位置が 8.5 cm 間隔で現れた。音速を 340 m/s として音の振動数を求めよ。</p>
@@ -114,6 +122,10 @@
 <p>観測者が音源から遠ざかる向きに速さ \(v_o\) で動くと観測者から見た音の速さは \(V-v_o\) になる。1秒間に観測者を通過する波の数が観測される振動数であるから \(f'=\dfrac{V-v_o}{\lambda'}\) である。2つを合わせると次の式になる。</p>
 \[ f'=\frac{V-v_o}{V-v_s}\,f \]
 <p>ここで \(v_s\) と \(v_o\) は<strong class="hit">音源から観測者へ向かう向きを正とする速度</strong>である。音源が観測者に近づけば \(v_s\gt 0\) で分母が小さくなり振動数は高くなる。観測者が音源に近づけば \(v_o\lt 0\) で分子が大きくなる。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_wave-optics-radargun.jpg" width="705" height="1200" loading="lazy" alt="表示部に速さが出た携帯型のドップラーレーダー速度計">
+<figcaption>携帯型のドップラーレーダーの速度計である。動く物体に電波を当て、反射して戻る電波の振動数のずれから物体の速さを求める。音について導いたドップラー効果は電磁波でも生じ、球速や車の速さの測定に使われる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Pocket_Radar_Photo.jpg">Laveaux</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="動く音源から出た波面は前方で詰まり後方で広がる">
@@ -145,11 +157,19 @@
 <p>真空に対する物質の屈折率を<strong>絶対屈折率</strong> \(n\) と呼ぶ。物質中の光の速さを \(v\) とすると \(n=\dfrac{c}{v}\) である。水は約 1.33 でガラスは約 1.5 である。屈折の法則は絶対屈折率を使うと対称な形になる。</p>
 \[ n_1\sin\theta_1=n_2\sin\theta_2 \]
 <p>物質中では振動数が変わらないので波長は真空中の \(\dfrac{1}{n}\) になる。屈折率は光の色によって少し異なり紫の光ほど屈折率が大きくより大きく曲がる。この現象を<strong>分散</strong>と呼ぶ。プリズムで白色光が虹色に分かれ雨粒で虹が生じるのは分散による。色ごとに分けた光の並びを<strong>スペクトル</strong>と呼ぶ。</p>
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/13_wave-optics-prism.jpg" width="1200" height="798" loading="lazy" alt="三角柱のプリズムを通った白色光が虹色に分かれる様子"><img src="../img/13_wave-optics-rainbow.jpg" width="1200" height="692" loading="lazy" alt="住宅街の上空にかかる主虹と副虹"></div>
+<figcaption>左は三角柱のガラスのプリズムに白色光を通した写真で、出ていく光が赤から紫まで並ぶ帯に分かれている。右はオーストリアのグラーツで撮影された二重の虹である。どちらも屈折率が色によって異なる分散により、色ごとに曲がる角度が異なることで生じる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Prism_flat_rainbow.jpg">Kelvinsong</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:Double_rainbow,_Graz,_Austria,_2020-04-27.jpg">Dnalor 01</a>／CC BY-SA 3.0 at／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>全反射</h3>
 <p>屈折率の大きい媒質から小さい媒質へ光が進むと屈折角は入射角より大きい。入射角を増やすと屈折角が 90° に達する。このときの入射角を<strong>臨界角</strong> \(\theta_c\) と呼ぶ。入射角が臨界角を超えると屈折光はなくなりすべての光が反射する。これが<strong>全反射</strong>である。屈折率 \(n\) の物質から空気へ出る場合は \(n\sin\theta_c=1\times\sin 90^\circ\) より次の式になる。</p>
 \[ \sin\theta_c=\frac{1}{n} \]
 <div class="ex"><div class="ex-h">例題 5</div>
 <p>水の屈折率を 1.33 とする。水中から空気へ出る光の臨界角を求めよ。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_wave-optics-tir.jpg" width="1200" height="900" loading="lazy" alt="緑のレーザー光がアクリル棒の中をジグザグに進む様子">
+<figcaption>左の緑色のレーザー光をアクリルの棒に斜めに入れた写真である。光は棒の側面に臨界角より大きい角度で当たるので外へ出ず、全反射をくり返してジグザグに進む。光ファイバーで光を閉じ込める仕組みと同じである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Laser_in_fibre.jpg">Timwether</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <details open><summary>解き方</summary><div>\(\sin\theta_c=\dfrac{1}{1.33}\fallingdotseq 0.752\) である。<br>\(\sin 48^\circ\fallingdotseq 0.743\) と \(\sin 49^\circ\fallingdotseq 0.755\) の間にある。<br>答え臨界角は約 49° である。水中から水面を斜めに見上げると 49° より外側には水底の像が映る。</div></details></div>
 <h3>レンズの基本</h3>
 <p>凸レンズの焦点距離を \(f\) とし物体からレンズまでの距離を \(a\) でレンズから像までの距離を \(b\) とすると次の写像公式が成り立つ。倍率は \(\dfrac{b}{a}\) である。\(b\gt 0\) なら倒立の実像で \(b\lt 0\) なら正立の虚像である。凹レンズでは \(f\) を負の値として同じ式を使う。</p>
@@ -188,6 +208,10 @@
 <p>スリット間隔を \(d\) としスクリーンまでの距離を \(L\) とする。スクリーンの中心 O から \(x\) の点 P までの経路差は \(L\) が \(d\) と \(x\) より十分大きいとき \(\dfrac{dx}{L}\) で近似できる。2つのスリットの光は同位相なので明線と暗線の条件は次のとおりである。スクリーンが近く近似が成り立たない場合は、縞の間隔は等間隔からずれる。</p>
 \[ \frac{dx}{L}=m\lambda\ \text{で明線}\qquad \frac{dx}{L}=\left(m+\frac{1}{2}\right)\lambda\ \text{で暗線} \]
 <p>隣り合う明線の間隔は \(\Delta x=\dfrac{L\lambda}{d}\) である。<strong class="hit">間隔は波長に比例しスリット間隔に反比例する</strong>。赤い光の縞は青い光の縞より広い。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_wave-optics-young.jpg" width="1200" height="332" loading="lazy" alt="緑のレーザー光による明暗の縞模様">
+<figcaption>幅 0.1 mm で間隔 0.4 mm の2本のスリットに緑色のレーザー光を通し、壁に映した縞である。明るい点が等間隔に並ぶのは、経路差が波長の整数倍になる位置ごとに明線が生じるからである。中央から離れると明線が暗くなるのは各スリットでの回折による。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Young%27s_slits.jpg">Graham Beards</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="ex"><div class="ex-h">例題 6</div>
 <p>スリット間隔 0.20 mm の複スリットから 1.0 m 離れたスクリーンに波長 600 nm の光の干渉縞をつくる。明線の間隔を求めよ。</p>
 <details open><summary>解き方</summary><div>\(\Delta x=\dfrac{L\lambda}{d}=\dfrac{1.0\times 600\times 10^{-9}}{0.20\times 10^{-3}}\) である。<br>\(=3.0\times 10^{-3}\ \mathrm{m}\) である。<br>答え 3.0 mm である。</div></details></div>
@@ -199,11 +223,19 @@
 <p>シャボン玉や水面の油膜が色づくのは膜の表面で反射した光と裏面で反射した光が干渉するためである。2つの光の経路差は膜の厚さ \(d\) の往復 \(2d\) である。膜の中では波長が \(\dfrac{1}{n}\) になるので真空中の長さに換算した光路差は \(2nd\) になる。屈折率 \(n\) と長さの積を<strong>光路長</strong>と呼ぶ。</p>
 <p>もう1つの要素が反射による位相のずれである。<strong class="hit">屈折率の小さい媒質から大きい媒質への境界で反射すると位相が \(\pi\) ずれる</strong>。これは固定端反射にあたる。大きい媒質から小さい媒質への境界の反射では位相は変わらない。空気中のシャボン膜を真上から見る場合表面の反射だけで位相が反転するので条件は次のとおりである。</p>
 \[ 2nd=\left(m+\frac{1}{2}\right)\lambda\ \text{で明るい}\qquad 2nd=m\lambda\ \text{で暗い} \]
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/13_wave-optics-soapfilm.jpg" width="1200" height="900" loading="lazy" alt="ランプの光を反射して色の帯が流れるシャボン玉の表面"><img src="../img/13_wave-optics-oilfilm.jpg" width="1200" height="900" loading="lazy" alt="水面に広がった油膜の虹色の模様"></div>
+<figcaption>左はランプの光を反射するシャボン玉の表面で、右は水面に広がった油の膜である。どちらも膜の表面と裏面で反射した光が干渉している。膜の厚さが場所ごとに異なるので強め合う波長も場所ごとに異なり、色の帯の模様になる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Thin_Film_Interference_Soap_Bubble.jpg">Pksois23</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Rainbow_Pollution.jpg">gambier20</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="ex"><div class="ex-h">例題 7</div>
 <p>屈折率 1.33 のシャボン膜を真上から見る。波長 532 nm の光が強く反射する最小の膜厚を求めよ。</p>
 <details open><summary>解き方</summary><div>明るい条件で \(m=0\) とすると \(2nd=\dfrac{\lambda}{2}\) である。<br>\(d=\dfrac{\lambda}{4n}=\dfrac{532}{4\times 1.33}=100\ \mathrm{nm}\) である。<br>答え 100 nm である。</div></details></div>
 <h3>偏光</h3>
 <p>太陽や電球の光はあらゆる方向に振動する光が混ざった<strong>自然光</strong>である。偏光板は特定の方向の振動だけを通す。偏光板を通った光は振動方向が1つにそろった<strong>偏光</strong>である。2枚の偏光板の通過方向を直交させると光は通らない。この現象は振動が進行方向に垂直な横波でしか起こらない。<strong class="hit">偏光は光が横波である証拠である</strong>。縦波の音には偏光がない。水面やガラスで反射した光も一部が偏光になる。釣り用の偏光サングラスは水面の反射光を減らして水中を見やすくする。液晶ディスプレーも偏光板を使っている。</p>
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/13_wave-optics-polpar.jpg" width="1200" height="1200" loading="lazy" alt="通過方向をそろえて重ねた2枚の偏光板"><img src="../img/13_wave-optics-polperp.jpg" width="1200" height="1200" loading="lazy" alt="通過方向を直交させて重ねた2枚の偏光板"></div>
+<figcaption>同じ2枚の偏光板を重ねた写真である。左は通過方向をそろえた場合で、重なった部分も1枚分より少し暗いだけである。右は一方を90°回して通過方向を直交させた場合で、重なった部分が黒くなり光が通らない。光の振動が進行方向に垂直な横波であることを示す実験である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Polarizer_sheet_parallel.jpg">作者名の記載なし</a>／CC BY-SA 2.5 右：<a href="https://commons.wikimedia.org/wiki/File:Polarizer_sheet_perpendicular.jpg">作者名の記載なし</a>／CC BY-SA 2.5／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s7">現実世界の光ファイバー</h2>
 <p>光ファイバーは全反射を通信に使う。中心のコアを屈折率がわずかに小さいクラッドで包み臨界角を超える角度で進む光をコアとクラッドの境界で全反射させて閉じ込める。</p>

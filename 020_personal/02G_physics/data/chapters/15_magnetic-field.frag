@@ -8,6 +8,10 @@
 <p>磁石や電流のまわりで磁極が力を受ける空間を<strong>磁場</strong>と呼ぶ。学習指導要領は磁界と表記する。磁場の向きは方位磁針の N 極が指す向きである。磁場の強さ \(H\) の単位は A/m である。物理の計算では次の<strong>磁束密度</strong> \(B\) を主に使う。単位はテスラ T である。</p>
 \[ B=\mu H\qquad \mu_0=4\pi\times 10^{-7}\ \mathrm{N/A^2} \]
 <p>\(\mu\) を透磁率と呼び真空の透磁率を \(\mu_0\) と書く。磁場に垂直な面積 \(S\) を貫く \(\Phi=BS\) を<strong>磁束</strong>と呼び単位はウェーバ Wb である。磁束密度は 1 m² あたりの磁束であり磁束線の密度にあたる。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/15_magnetic-field-filings.jpg" width="1095" height="602" loading="lazy" alt="棒磁石のまわりに鉄粉が曲線状に並んだ様子">
+<figcaption>棒磁石の上に紙を置き、鉄粉をまいた写真である。細長い鉄粉は磁場の向きにそろって並ぶので、N極から出てS極に入る磁力線の形が見える。両端の近くで鉄粉が密に集まる所ほど磁束密度が大きい。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bar-magnet-iron-filings_max.jpg">MikeRun, Vera Wurmsdobler</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>3つの形の電流がつくる磁場</h3>
 <p>電流のまわりの磁場の向きは<strong>右ねじの法則</strong>で決まる。右ねじを電流の向きに進めるときねじを回転させる向きが磁場の向きである。大きさは電流の形ごとに次のとおりである。</p>
 <div class="tb-tw"><table>
@@ -18,6 +22,10 @@
 <tr><td>1 m あたり n 回巻きのソレノイドの内部</td><td>\(H=nI\)</td><td>内部では一様で位置や太さによらない</td></tr>
 </tbody></table></div>
 <p><strong class="hit">直線電流の磁場は距離に反比例し点電荷の電場のように2乗には反比例しない</strong>。点から出る電場は球面に広がるのに対し直線のまわりの磁場は円周に広がるからである。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/15_magnetic-field-solenoid.jpg" width="1200" height="1200" loading="lazy" alt="板を貫くコイルのまわりに鉄粉が並んだ様子">
+<figcaption>板を貫くように巻いた導線に電流を流し、まわりに鉄粉をまいた写真である。コイルの内側では鉄粉が軸に平行にそろい、ソレノイドの内部の磁場が一様に近いことが分かる。外側では鉄粉が両端を結ぶ曲線を描き、棒磁石のまわりと似た形になる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Magnetic_field_around_solenoid.jpg">Maciej J. Mrowinski</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 290" role="img" aria-label="直線電流のまわりの同心円の磁場と距離に反比例する磁束密度">
@@ -46,6 +54,10 @@
 <p>磁場の中の導線に電流を流すと導線は力を受ける。磁束密度 \(B\) の磁場と角 \(\theta\) をなす長さ \(L\) の導線に電流 \(I\) を流すと力の大きさは次のとおりである。</p>
 \[ F=IBL\sin\theta \]
 <p>電流と磁場が垂直なら \(F=IBL\) で平行なら力は 0 である。向きは<strong>フレミングの左手の法則</strong>で求める。左手の中指を電流の向きに人差し指を磁場の向きに合わせると親指が力の向きを指す。電流と磁場の両方に垂直な向きである。モーターはこの力でコイルを回転させる装置である。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/15_magnetic-field-motor.jpg" width="1200" height="799" loading="lazy" alt="分解したモーターの固定子と回転子と部品">
+<figcaption>テープレコーダーの交流モーターを分解した写真である。左の巻線を収めた固定子が磁場をつくり、中央の回転子がその中で力を受けて回転する。電流が磁場から受ける力を回転に変える部品の配置が見える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Yauza_209_(motor)_disassembled.jpg">Retired electrician</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="ex"><div class="ex-h">例題 2</div>
 <p>磁束密度 0.50 T の一様な磁場に垂直に長さ 0.20 m の導線を置き 2.0 A の電流を流す。導線が受ける力の大きさを求めよ。</p>
 <details open><summary>解き方</summary><div>\(F=IBL=2.0\times 0.50\times 0.20\) である。<br>答え 0.20 N である。</div></details></div>
@@ -61,6 +73,10 @@
 <p>ローレンツ力は常に速度に垂直なので<strong class="hit">仕事をせず粒子の速さを変えない</strong>。向きだけを変える一定の大きさの力は等速円運動の向心力になる。第11章の運動方程式に当てはめると次の式が得られる。</p>
 \[ m\frac{v^2}{r}=qvB\quad\Rightarrow\quad r=\frac{mv}{qB}\qquad T=\frac{2\pi r}{v}=\frac{2\pi m}{qB} \]
 <p>半径は速さに比例するが <strong class="hit">周期は速さによらない</strong>。速い粒子は大きな円を同じ時間で1周する。この性質を使って粒子を繰り返し加速する装置がサイクロトロンである。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/15_magnetic-field-cyclotron.jpg" width="1112" height="830" loading="lazy" alt="ふたを外したサイクロトロンの真空箱と半円形の電極">
+<figcaption>ローレンスが1932年に製作した27インチのサイクロトロンの真空箱で、1935年にふたを外して撮影された。内部に半円形の電極が2つ向かい合っている。箱は電磁石の極の間に挟まれ、粒子は磁場で円運動をしながら電極の間を通るたびに加速される。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Lawrence_27_inch_cyclotron_dees_1935.jpg">John B. Livingood</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="一様な磁場の中で正の荷電粒子が等速円運動をする">
@@ -138,6 +154,10 @@
 \[ \frac{V_1}{V_2}=\frac{N_1}{N_2}\qquad V_1I_1=V_2I_2 \]
 <aside class="an an-biz"><b>経済で言えば</b>
 <p class="an-h">変圧器は両替所である</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/15_magnetic-field-transformer.jpg" width="1200" height="900" loading="lazy" alt="変電所に設置された大型の電力用変圧器">
+<figcaption>変電所の電力用変圧器である。138 kV の電圧を 12.5 kV に下げる機器で、巻数の比は約 11 対 1 にあたる。上部に並ぶ白い碍子は高圧と低圧の導線を絶縁して引き込む端子である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Substation_Power_Transformer_1.jpg">Yoshieslunchbox</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>電圧を上げれば電流が同じ比率で下がり電力という総額は変わらない。手数料にあたる損失は鉄心と導線の熱である。</p>
 </aside>
 <div class="ex"><div class="ex-h">例題 5</div>
@@ -148,10 +168,18 @@
 <p>磁束密度 \(B\) の一様な磁場の中で面積 \(S\) で N 回巻きのコイルを角速度 \(\omega\) で回転させる。コイル面の法線が磁場となす角は \(\omega t\) なので磁束は \(\Phi=BS\cos\omega t\) である。磁束の時間変化から起電力が得られる。</p>
 \[ V=NBS\omega\sin\omega t=V_0\sin\omega t \]
 <p>向きと大きさが周期的に変わる電圧を<strong>交流</strong>電圧と呼ぶ。発電所の発電機はこの原理で交流をつくる。周波数は東日本で 50 Hz 西日本で 60 Hz である。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/15_magnetic-field-generator.jpg" width="1200" height="798" loading="lazy" alt="円形の発電機の上部が床に並ぶ水力発電所の発電機室">
+<figcaption>ロシアのサヤノ・シュシェンスカヤ水力発電所の発電機室である。床に並ぶ円形の部分の下にそれぞれ発電機がある。水車で磁石を回転させ、コイルを貫く磁束を周期的に変えて交流をつくる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sayano-Shushenskaya_HPS_-_generator_hall.jpg">Andrey Korzun</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>実効値</h3>
 <p>抵抗 \(R\) に交流 \(V_0\sin\omega t\) をかけると電力は \(\dfrac{V_0^2}{R}\sin^2\omega t\) である。\(\sin^2\) の1周期の平均は \(\dfrac{1}{2}\) なので平均の電力は \(\dfrac{V_0^2}{2R}\) である。これと同じ電力を出す直流の電圧を<strong>実効値</strong>と呼ぶ。</p>
 \[ V_e=\frac{V_0}{\sqrt{2}}\qquad I_e=\frac{I_0}{\sqrt{2}}\qquad \overline{P}=V_eI_e \]
 <p>家庭のコンセントの 100 V は実効値であり最大値は約 141 V である。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/15_magnetic-field-oscilloscope.jpg" width="1200" height="968" loading="lazy" alt="オシロスコープの画面に表示された正弦波">
+<figcaption>アナログのオシロスコープに表示した周波数 10 kHz の正弦波の電圧である。横の目盛り1つは 100 μs で、波の1周期が目盛り1つ分にあたる。電圧の大きさが時間とともに正負に周期的に変わる交流の形がそのまま見える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sine_wave_10_kHz_displayed_on_analog_oscilloscope.jpg">Pittigrilli</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-biz"><b>投資で言えば</b>
 <p class="an-h">実効値は利回りの年率換算と同じ発想である</p>
 <p>上下に揺れる電圧を同じ発熱を生む一定の直流に換算した値である。比較の基準をそろえるための換算値である。</p>
@@ -187,6 +215,10 @@
 <p>マクスウェルは変化する磁場が電場をつくり変化する電場が磁場をつくることを式にまとめ電場と磁場の振動が空間を伝わる波を予言した。これが<strong>電磁波</strong>である。予言された速さは次のとおりで測定された光の速さと一致した。光は電磁波である。</p>
 \[ c=\frac{1}{\sqrt{\varepsilon_0\mu_0}}\fallingdotseq 3.0\times 10^{8}\ \mathrm{m/s} \]
 <p>1888年にヘルツは火花放電の電気振動から電磁波を発生させて検出し反射や屈折や干渉を示した。電磁波は電場と磁場が互いに垂直で進行方向にも垂直な横波であり真空中も伝わる。エネルギーと情報を運ぶ。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/15_magnetic-field-righi.jpg" width="800" height="664" loading="lazy" alt="放物面の反射板と金属球をもつリギの火花発振器の複製">
+<figcaption>リギが1894年ごろに考案した火花発振器の複製である。左側の装置は放物面の反射板の前に金属球を並べ、球の間の火花放電の電気振動から波長 10 cm 以下の電磁波を出す。リギはこの装置で電磁波の屈折や回折を示し、ヘルツの実験と同じく電波と光が同じ電磁波であることを確かめた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Oscillatore_di_Righi_con_riflettore_parabolico_-_Museo_scienza_tecnologia_Milano_08757_1.jpg">Museo Nazionale della Scienza e della Tecnica "Leonardo da Vinci" (costruttore)</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 220" role="img" aria-label="電磁波の波長による分類">

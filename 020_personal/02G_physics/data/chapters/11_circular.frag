@@ -13,6 +13,11 @@
 <p>1周に要する時間を<strong>周期</strong> \( T \) と呼ぶ。1周は \( 2\pi \) rad なので \( T=2\pi/\omega \) である。1秒あたりの回転数 \( n \) は \( n=1/T \) で単位は Hz または 1/s である。</p>
 <p>角速度は同じ回転体の上ではどこでも等しい。速さは半径に比例する。回転する円盤の外側ほど速く動くのはこのためである。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/11_circular-star-trails.jpg" width="1200" height="799" loading="lazy" alt="天の北極を中心に円弧を描く星の軌跡">
+<figcaption>スウェーデンで北の空を長時間露光で撮影した写真である。地球の自転によって星は天の北極を中心とする円弧を描く。どの星も同じ時間に同じ角度だけ回るので円弧の中心角はそろい、中心から遠い星ほど弧が長い。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Circumpolar_stars_in_star_trails_over_antennas_in_Tuntorp,_Brastad.jpg">W.carter</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 1</div>
 <p>半径 0.50 m の円周上を周期 2.0 s で等速円運動する物体がある。角速度と速さを求めよ。</p>
 <details open><summary>解き方</summary><div>手順1 ω ＝ 2π ÷ T ＝ 2π ÷ 2.0 ＝ π ≒ 3.14 rad/s である。<br>手順2 v ＝ rω ＝ 0.50 × 3.14 ≒ 1.57 m/s である。<br>答え 角速度 3.1 rad/s ／ 速さ 1.6 m/s</div></details></div>
@@ -59,6 +64,11 @@
 \[ m\frac{v^2}{r}=F \qquad mr\omega^2=F \]
 <p>向心力は重力や弾性力のような新しい種類の力ではない。ひもの張力・摩擦力・万有引力など実際に働く力の合力が中心向きの役を担うときにその合力を向心力と呼ぶ。力の図に「向心力」を別の矢印として書き加えるのは典型的な誤りである。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/11_circular-hammer.jpg" width="1200" height="799" loading="lazy" alt="ハンマーを振り回して投げる競技者">
+<figcaption>スコットランド式のハンマー投げの競技者である。手を離すまでは柄を引く手の力が中心向きの力となり、おもりは円運動を続ける。手を離すと中心向きの力がなくなり、おもりはその瞬間の速度の向きである円の接線方向へ飛ぶ。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hammer_throw_4695.jpg">Chris Light</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-biz"><b>スタートアップで言えば</b>
 <p class="an-h">向心力は役職名で人の名前ではない</p>
 <p>CFO という職を誰かが担うように張力・摩擦力・重力のどれかが中心向きの役を担う。役職名を人数に数えると二重計上になる。</p>
@@ -75,8 +85,18 @@
 \[ \vec{F}_{\text{慣性}}=-m\vec{a} \]
 <p>これを<strong>慣性力</strong>と呼ぶ。向きは観測者の加速度と逆で大きさは物体の質量に比例する。慣性力には反作用がない。他の物体が及ぼす力ではないからである。</p>
 <p>上向きに加速度 \( a \) で加速するエレベーター内の人には下向きに \( ma \) の慣性力が加わる。体重計が示す値は垂直抗力 \( N=m(g+a) \) で静止時より大きい。下向きに加速すると \( N=m(g-a) \) となり \( a=g \) のとき体重計の値は0になる。これが無重量状態である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_circular-zero-g.jpg" width="1200" height="746" loading="lazy" alt="航空機の機内で無重量状態を体験して浮かぶ人">
+<figcaption>NASA の航空機 KC-135 の機内で無重量状態を体験するクリスタ・マコーリフである。機体が特別な放物線の経路を飛ぶ短い時間は、機体も人も重力だけを受けて同じ加速度で運動する。機内の観測者から見ると重力と慣性力がつり合い、体が浮いて見える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Christa_McAuliffe_Experiences_Weightlessness_During_KC-135_Flight_-_GPN-2002-000149.jpg">NASA</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>遠心力</h3>
 <p>等速円運動する物体と一緒に回る観測者から見ると物体は静止している。この観測者の加速度は中心向きに \( r\omega^2 \) なので物体には中心から外向きに大きさ \( mr\omega^2=mv^2/r \) の慣性力が加わる。これを<strong>遠心力</strong>と呼ぶ。回転する観測者から見ると実際の力の合力と遠心力がつり合う。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_circular-centrifuge.jpg" width="900" height="1200" loading="lazy" alt="ふたを開けた卓上の遠心分離機">
+<figcaption>卓上の遠心分離機である。試験管を差し込んだ回転子を高速で回転させると、回転子とともに回る立場では試料に外向きの遠心力が加わり、密度の大きい成分が外側に集まる。地面から見れば、試験管の底が試料に中心向きの力を及ぼして円運動させている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Tabletop_centrifuge.jpg">Magnus Manske</a>／CC BY 1.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p><strong class="hit">遠心力は回転する観測者の立場でだけ書く力である</strong>。地面から見た運動方程式 \( mv^2/r=F \) と回転する観測者のつり合いの式 \( F-mv^2/r=0 \) は同じ式を移項しただけである。どちらかの立場を1つ選び1つの式の中で混ぜない。地面から見て向心力と遠心力がつり合うと書くのは典型的な誤りである。つり合っていれば物体は等速直線運動をするはずである。</p>
 
 <div class="ex"><div class="ex-h">例題 3</div>
@@ -128,6 +148,11 @@
 </figure>
 
 <p>最高点でひもがたるまない条件を求める。最高点の式 \( mv_1{}^2/r=T_1+mg \) で \( T_1\geqq0 \) とすると \( v_1\geqq\sqrt{gr} \) である。最下点と最高点の高さの差は \( 2r \) なので力学的エネルギー保存則 \( \frac{1}{2}mv_2{}^2=\frac{1}{2}mv_1{}^2+mg\cdot2r \) より最下点の速さは \( v_2\geqq\sqrt{5gr} \) が必要である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_circular-loop2.jpg" width="900" height="1200" loading="lazy" alt="ジェットコースターの宙返りの軌道">
+<figcaption>ジェットコースターの宙返りの軌道である。車両が最高点を通過するときは重力と軌道からの力の合力が中心向きの力になり、最下点では軌道からの力が重力より大きくなる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Roller_coaster_loop_-_panoramio.jpg">Jiaqian AirplaneFan</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 4</div>
 <p>長さ 0.40 m の軽いひもに質量 0.10 kg の小球をつけ鉛直面内で円運動させる。小球がひもをたるませずに1周するための最下点での最小の速さと そのときの最下点での張力を求めよ。重力加速度を 9.8 m/s² とする。</p>
@@ -181,6 +206,11 @@
 \[ T=2\pi\sqrt{\frac{L}{g}} \]
 <p>単振り子の周期は糸の長さと重力加速度だけで決まりおもりの質量によらない。振れの角が大きくなると近似が成り立たず周期はわずかに長くなる。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/11_circular-pendulum-clock.jpg" width="773" height="1200" loading="lazy" alt="文字盤の下に振り子のおもりが見える振り子時計">
+<figcaption>ネパールで撮影した振り子時計である。文字盤の下の窓に振り子のおもりが見える。振れの角が小さい振り子の周期は長さで定まり振幅によらないので、時計の基準に使われる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Pendulum_clock.jpg">Janak Bhatta</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 5</div>
 <p>ばね定数 20 N/m のばねに質量 0.20 kg の物体をつけ なめらかな水平面上で振幅 0.10 m の単振動をさせた。周期と速さの最大値と加速度の大きさの最大値を求めよ。</p>
 <details open><summary>解き方</summary><div>手順1 ω ＝ √(k/m) ＝ √(20 ÷ 0.20) ＝ 10 rad/s である。<br>手順2 T ＝ 2π ÷ ω ＝ 0.628 s である。<br>手順3 速さの最大値は Aω ＝ 0.10 × 10 ＝ 1.0 m/s である。<br>手順4 加速度の最大値は Aω<sup>2</sup> ＝ 0.10 × 100 ＝ 10 m/s<sup>2</sup> である。<br>答え 周期 約 0.63 s ／ 最大の速さ 1.0 m/s ／ 最大の加速度 10 m/s<sup>2</sup></div></details></div>
@@ -199,6 +229,11 @@
 
 <h2 id="s6">ケプラーの法則と万有引力の法則</h2>
 <p>ケプラーはティコ・ブラーエの火星の観測記録を解析して惑星の運動に関する3つの法則を発表した。第1法則と第2法則は1609年・第3法則は1619年である。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/11_circular-kepler.jpg" width="836" height="1200" loading="lazy" alt="ヨハネス・ケプラーの肖像"><img src="../img/11_circular-astronomia.jpg" width="1200" height="799" loading="lazy" alt="ケプラーの新天文学の扉"></div>
+<figcaption>左はヨハネス・ケプラーの肖像で、右は第1法則と第2法則を発表した1609年の著書『新天文学』の扉である。扉には火星の運動を扱うことと、ティコ・ブラーエの観測に基づくことが記されている。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:JKepler.jpg">August Köhler</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Astronomia_Nova_Title_Page.jpg">Yaoshiiscool</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-tw"><table>
 <thead><tr><th>法則</th><th>内容</th></tr></thead>
 <tbody>
@@ -233,6 +268,11 @@
 <p>惑星が受ける力は惑星の質量に比例し距離の2乗に反比例する。作用反作用の法則により太陽も同じ大きさの力を受けるので力は太陽の質量 \( M \) にも比例するはずである。ニュートンはこの考えから1687年の著書で<strong>万有引力の法則</strong>を示した。</p>
 \[ F=G\frac{Mm}{r^2} \]
 <p>\( G \) は<strong>万有引力定数</strong>で約 \( 6.67\times10^{-11}\,\mathrm{N\cdot m^2/kg^2} \) である。キャベンディッシュは1798年にねじればかりを使った実験で地球の密度を求めた。G の値は後にこの測定結果から計算された。<strong class="hit">りんごを落下させる力と月を公転させる力は同じ万有引力である</strong>。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_circular-cavendish.jpg" width="1200" height="900" loading="lazy" alt="教育用のねじればかりの装置">
+<figcaption>キャベンディッシュの実験と同じ原理のねじればかりの教材である。大きな球を小さな球に近づけると万有引力で棒がわずかに回転し、つり下げた線のねじれの角から力の大きさを求める。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Cavendish_experiment_1.jpg">GOKLuLe 盧樂</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>重力加速度との関係</h3>
 <p>地表の物体が受ける重力は地球の万有引力である。地球の質量を \( M \) で半径を \( R \) とすると \( mg=GMm/R^2 \) なので次の関係がある。</p>
 \[ GM=gR^2 \]
@@ -273,9 +313,19 @@
 
 <h2 id="s8">現実世界の円軌道</h2>
 <p>例題8の高度は国際宇宙ステーションの軌道高度と同程度である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_circular-iss.jpg" width="1200" height="797" loading="lazy" alt="地球を背景に飛行する国際宇宙ステーション">
+<figcaption>2011年5月にスペースシャトル・エンデバーの乗員が撮影した国際宇宙ステーションである。ステーションは万有引力を向心力として地球のまわりを回り、中の乗員もステーションと同じ加速度で運動する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:STS-134_International_Space_Station_after_undocking.jpg">NASA</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>国際宇宙ステーションは高度約 400 km を約 90 分で1周する。例題8の計算値に近い。静止衛星は赤道上空約 35,786 km を地球の自転と同じ周期 23 時間 56 分 4 秒で回る。地上からは空の一点に静止して見えるので放送衛星や気象衛星に使われる。静止軌道の高さは T²/r³ が一定という関係から計算で決まる。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_circular-himawari.jpg" width="1200" height="1200" loading="lazy" alt="ひまわり9号が観測したアジアとオセアニアの雲画像">
+<figcaption>静止気象衛星ひまわり9号が2023年10月11日に観測した画像を、緯度と経度の格子に投影し直したものである。静止衛星は地上から見て空の一点に止まるので、日本を含むアジアとオセアニアの同じ範囲を続けて観測できる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Himawari-9_Fulldisk_True-color_2023-10-11_0230z.png">Japan Meteorological Agency</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s9">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 向心加速度</div>

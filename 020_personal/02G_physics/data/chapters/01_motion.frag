@@ -11,6 +11,11 @@
 <p>\[ \bar{v}=\frac{\Delta x}{\Delta t} \]</p>
 <p>速度は向きをもつ量で単位は \(\mathrm{m/s}\) である。速度の大きさを<strong>速さ</strong>と呼ぶ。日常語の速さは道のりを時間で割った値を指すことが多い。物理では向きを含む速度と大きさだけの速さを区別する。</p>
 <p>\(\Delta t\) を限りなく小さくしたときの平均の速度を<strong>瞬間の速度</strong>と呼ぶ。自動車の速度計が示す値は瞬間の速さである。単に速度と書けば瞬間の速度を指す。数学ではこの操作を極限と呼び、厳密な定義には微分を用いる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_velocity-radar-gun.jpg" width="1200" height="857" loading="lazy" alt="パトロールカーの窓からレーダー速度計を向ける警備員">
+<figcaption>アメリカ海軍の基地で、走行する車両にレーダー速度計を向ける警備員である。レーダー速度計が示すのは、測定した瞬間の車両の速さである。区間の距離を通過時間で割った平均の速さとは、途中で加速や減速があれば異なる値になる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:061022-N-3973P-002_-_MA3_Brandon_Pauley_uses_a_radar_gun_to_track_speeders_on_base.jpg">U.S. Navy, Hodges Pone III</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>大きさと向きをもつ量を<strong>ベクトル</strong>と呼び大きさだけの量を<strong>スカラー</strong>と呼ぶ。変位と速度はベクトルで道のりと速さはスカラーである。物理基礎の運動は直線上に限るので向きは正負の符号で表せる。</p>
 
 <div class="ex"><div class="ex-h">例題 1</div>
@@ -126,6 +131,11 @@
 <p>東向きに 25 m/s で走る列車 A と西向きに 15 m/s で走る列車 B がすれ違う。A の乗客から見た B の速度を求めよ。</p>
 <details open><summary>解き方</summary><div>手順1 東を正とすると \(v_A=+25\,\mathrm{m/s}\) で \(v_B=-15\,\mathrm{m/s}\) である。<br>手順2 \(v_{AB}=v_B-v_A=-15-25=-40\,\mathrm{m/s}\) である。<br>答え 西向きに 40 m/s である。向かい合って走ると相対速度の大きさは速さの和になる。</div></details></div>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/01_relative-shinkansen.jpg" width="1200" height="900" loading="lazy" alt="隣り合う線路を走る2本の新幹線"><img src="../img/01_relative-refueling.jpg" width="1200" height="799" loading="lazy" alt="給油機の窓から見た空中給油中の航空機"></div>
+<figcaption>左は隣り合う線路を走る2本の新幹線である。右は給油機の窓から写した空中給油中の航空機である。右の2機は地上から見ると高速で飛んでいるが、速度が等しいので相対速度は0で、給油管をつないだまま飛び続けられる。左の2本の相対速度は、同じ向きなら速さの差で反対向きなら速さの和になる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Shinkansens_passing_(4059699549).jpg">DearEdward</a>／CC BY 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:KC-135_refueling_E-6B.jpg">U.S. Air Force, Mark R. W. Orders-Woempner</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">同じ速さで並んで歩く二人の相対速度は0である</p>
 <p>地面から見て速くても互いには静止して見える。距離が縮むかどうかは速度の差だけで定まる。</p>
@@ -136,6 +146,11 @@
 <p>\[ \bar{a}=\frac{\Delta v}{\Delta t} \]</p>
 <p>単位は速度の単位 m/s を時間の単位 s で割った \(\mathrm{m/s^2}\) である。\(\Delta t\) を限りなく小さくした値が瞬間の加速度である。加速度もベクトルで直線上では正負の符号で向きを表す。v−tグラフの傾きが加速度である。</p>
 <p>加速度の符号は速度の符号と独立である。<strong class="hit">速度と加速度が同じ向きなら速さは増え反対向きなら速さは減る</strong>。正の向きに進みながらブレーキをかける自動車は \(v>0\) で \(a<0\) である。加速度が負であることは後ろ向きに進むことを意味しない。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_accel-rocket-sled.jpg" width="1200" height="900" loading="lazy" alt="レールの上に置かれた赤いロケットそり">
+<figcaption>1950年代にスタップが乗ったロケットそり Sonic Wind No. 1 で、ニューメキシコ宇宙史博物館に展示されている。そりはロケットでレールの上を急加速した後に急減速する。急減速の区間では速度が正のまま加速度が負になり、人体が受ける大きな減速を調べる試験に使われた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sonic_Wind_No_1_rocket_sled.jpg">AllenS</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-tw"><table>
 <thead><tr><th>速度の符号</th><th>加速度の符号</th><th>運動の様子</th></tr></thead>
 <tbody>
@@ -222,11 +237,26 @@
 
 <h2 id="s6">自由落下と鉛直投げ上げ</h2>
 <p>空気抵抗が無視できるとき地上付近で落下する物体は質量によらず同じ加速度で落下する。この加速度を<strong>重力加速度</strong>と呼び大きさを \(g\) で表す。値は \(\mathrm{9.8\,m/s^2}\) で向きは鉛直下向きである。ガリレイは斜面の実験で落下距離が時間の2乗に比例することを示した。9.8 m/s² は地表付近の代表値で、実際の値は緯度と高度によって異なる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_fall-galileo-incline.jpg" width="1200" height="798" loading="lazy" alt="博物館に展示された長い木製の斜面">
+<figcaption>フィレンツェのガリレオ博物館に展示された19世紀初めの斜面の実験装置で、長さは約 5.4 m である。球を斜面に沿って転がすと鉛直に落とすより加速度が小さくなり、時間と距離を測りやすい。ガリレイはこの方法で、落下距離が時間の2乗に比例することを示した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Piano_inclinato,_Museo_Galileo,_Florence,_Inv._104,_224108.jpg">Zde</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>静止状態から落下させる運動を<strong>自由落下</strong>と呼ぶ。鉛直下向きを正とすると初速度0で加速度 \(g\) の等加速度直線運動である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_fall-falling-ball.jpg" width="357" height="1200" loading="lazy" alt="一定の時間間隔で写した落下するボールと目盛り">
+<figcaption>静止状態から落下するボールを毎秒20回の閃光で0.5秒間撮影した写真である。目盛りの数字は最初の1/20秒間の落下距離を1とした値で、0, 1, 4, 9 と時間の2乗に比例して増える。像の間隔が下に行くほど広がることは、速さが一定の割合で増すことを示す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Falling_ball.jpg">MichaelMaggs</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>\[ v=gt \qquad y=\frac{1}{2}gt^2 \qquad v^2=2gy \]</p>
 <p>鉛直上向きに初速度 \(v_0\) で投げ上げる運動を<strong>鉛直投げ上げ</strong>と呼ぶ。鉛直上向きを正とすると加速度は \(-g\) である。</p>
 <p>\[ v=v_0-gt \qquad y=v_0t-\frac{1}{2}gt^2 \qquad v^2-v_0^2=-2gy \]</p>
 <p>最高点では速度が0になる。\(0=v_0-gt\) から最高点に達する時刻は \(t=v_0/g\) で高さは \(v_0^2/2g\) である。<strong class="hit">最高点で速度は0になるが加速度は0にならず下向きに \(g\) のままである</strong>。上昇と下降は対称で投げた点に戻る時刻は \(2v_0/g\) でそのときの速度は \(-v_0\) である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_fall-bouncing-ball.jpg" width="1200" height="772" loading="lazy" alt="跳ねるボールを一定の時間間隔で重ねて写した写真">
+<figcaption>跳ねるボールを毎秒25回の閃光で撮影した写真である。像の間隔は等しい時間に進んだ距離なので、弧の頂点付近で像が密に並ぶことは最高点で鉛直方向の速さが0に近づくことを示す。上昇と下降で像の並びが対称に近いことも本文の鉛直投げ上げと一致する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bouncing_ball_strobe_edit.jpg">MichaelMaggs, Richard Bartz</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 280" role="img" aria-label="初速度19.6 m/sで投げ上げた物体のy−tグラフとv−tグラフ">
@@ -277,6 +307,11 @@
 
 <h2 id="s7">現実世界の速度と加速度</h2>
 <p>陸上100 m の世界記録は2009年にウサイン・ボルトが出した 9.58 s である。平均の速さは \(100\div9.58\approx10.4\,\mathrm{m/s}\) で時速に直すと約 38 km である。スタート直後は加速度が大きく後半は速さが一定に近づく。区間ごとの通過時刻からv−tグラフを描くとこの章の傾きと面積の考え方で走りを分析できる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_real-sprint.jpg" width="730" height="1200" loading="lazy" alt="スタートブロックから飛び出す陸上選手">
+<figcaption>2000年のシドニー・パラリンピックの100 m 準決勝で、スタートブロックから飛び出すドン・エルギン選手である。スタート直後は速さが大きく変わる区間で、v−tグラフの傾きが最も大きい。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:211000_-_Athletics_track_100m_semi_Don_Elgin_action_-_3b_-_2000_Sydney_race_photo.jpg">Sport the library</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>自動車の停止距離は空走距離と制動距離の和である。空走距離は速さに比例し制動距離は速さの2乗に比例する。速さが2倍で制動距離が4倍になるのは例題5の \(v^2-v_0^2=2ax\) の帰結である。</p>
 </aside>

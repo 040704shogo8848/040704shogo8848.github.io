@@ -7,6 +7,11 @@
 <h2 id="s1">力の表し方と単位</h2>
 <p>力は物体の運動の状態を変えたり物体を変形させたりする働きである。力には3つの要素がある。<strong>大きさ・向き・作用点</strong>である。図では作用点から力の向きに矢印を描き矢印の長さを力の大きさに比例させる。作用点を通り力の向きに引いた直線を<strong>作用線</strong>と呼ぶ。</p>
 <p>力の単位は<strong>ニュートン</strong>で記号は N である。1 N は質量 1 kg の物体に \(\mathrm{1\,m/s^2}\) の加速度を生じさせる力の大きさで第3章で定義を確定させる。目安として質量 100 g の物体に働く重力の大きさが約 1 N である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_unit-spring-scale.jpg" width="861" height="1200" loading="lazy" alt="目盛りの窓とフックが付いたばねばかり">
+<figcaption>1980年代のソ連製のばねばかりである。フックにつるした物体に働く重力でばねが伸び、伸びた量を窓の目盛りで読み取る。目盛りは kg で刻まれているが、ばねが直接測っているのは力の大きさである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Spring_scale._Made_in_USSR.jpg">Bestalex</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>力は働き方で2つに分けられる。物体どうしが接触して働く力を<strong>接触力</strong>と呼ぶ。垂直抗力・張力・弾性力・摩擦力・浮力がこれにあたる。離れていても働く力を<strong>遠隔力</strong>と呼ぶ。重力・静電気力・磁力がこれにあたる。<strong class="hit">物体に働く力は重力などの遠隔力と接触している相手から受ける接触力ですべてである</strong>。粗い面からは垂直抗力と摩擦力の2つを受ける。接触している相手ごとに受ける力を数えると力の描き漏れと描き過ぎを防げる。</p>
 <div class="tb-tw"><table>
 <thead><tr><th>力</th><th>働く相手</th><th>向き</th><th>大きさの決まり方</th></tr></thead>
@@ -25,6 +30,11 @@
 <p>\(g\) は第1章の重力加速度 \(\mathrm{9.8\,m/s^2}\) である。重力の大きさを<strong>重さ</strong>とも呼ぶ。質量 50 kg の人の重さは \(50\times9.8=490\,\mathrm{N}\) である。厳密には重力は万有引力に地球の自転による遠心力が加わった力であり、万有引力そのものとは一致しない。</p>
 <p><strong>質量</strong>は物体そのものの量で場所によって変わらない。単位は kg である。重さは力で単位は N で場所によって変わる。月面の重力加速度は約 \(\mathrm{1.6\,m/s^2}\) で地球の約6分の1である。<strong class="hit">月面で変わるのは重さだけで質量は変わらない</strong>。体重計が示す kg の値は地球上で重さを測って質量に換算した値である。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/02_weight-moon-young.jpg" width="1200" height="1200" loading="lazy" alt="月面で跳び上がる宇宙飛行士と月着陸船">
+<figcaption>1972年4月、アポロ16号の月面活動で跳び上がるジョン・ヤング飛行士である。説明文によれば跳んだ高さは約 42 cm である。宇宙服と生命維持装置の質量は地球上と同じであるが、重さは約6分の1になるので、装備を着けたまま跳び上がれる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:John_W._Young_on_the_Moon.jpg">Charlie Duke, NASA</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 1</div>
 <p>質量 60 kg の宇宙飛行士の地球上と月面での質量と重さを求めよ。地球の重力加速度を 9.8 m/s² で月面を 1.6 m/s² とする。</p>
 <details open><summary>解き方</summary><div>手順1 質量は場所によらず 60 kg である。<br>手順2 地球上の重さは \(60\times9.8=588\approx5.9\times10^2\,\mathrm{N}\) である。<br>手順3 月面の重さは \(60\times1.6=96\,\mathrm{N}\) である。<br>答え 質量はどちらも 60 kg で重さは地球上で約 590 N・月面で 96 N である。</div></details></div>
@@ -35,6 +45,11 @@
 <p>ばねを伸ばしたり縮めたりするとばねは元に戻ろうとして物体に力を及ぼす。これを<strong>弾性力</strong>と呼ぶ。弾性力の大きさ \(F\) は自然の長さからの伸びや縮み \(x\) に比例する。</p>
 <p>\[ F=kx \]</p>
 <p>この関係を<strong>フックの法則</strong>と呼ぶ。比例定数 \(k\) を<strong>ばね定数</strong>と呼び単位は N/m である。\(k\) が大きいほど伸ばしにくい硬いばねである。フックの法則は伸びが小さい範囲で成り立つ。ばねの長さそのものではなく自然の長さからの変化量を \(x\) に代入する。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_elastic-coil-spring.jpg" width="800" height="1200" loading="lazy" alt="蒸気機関車の台車に取り付けられた太いコイルばね">
+<figcaption>ドイツの蒸気機関車博物館に展示された機関車のコイルばねである。上の部品を通して車体の重さを受けて縮み、縮みに比例する弾性力が重さとつり合う位置で静止する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Coil_spring_of_a_steam_locomotive.jpg">Jeuwre</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="ばね定数50 N/mのばねの弾性力と伸びの関係">
@@ -85,6 +100,11 @@
 <p>静止している物体に働く力の合力は0である。これを<strong>力のつり合い</strong>と呼ぶ。平面内の力のつり合いの条件は成分ごとに書く。</p>
 <p>\[ \sum F_x=0 \qquad \sum F_y=0 \]</p>
 <p><strong class="hit">軸の取り方は自由で計算が楽になる向きに取る</strong>。斜面上の物体では斜面に平行な方向と垂直な方向に軸を取ると未知の力が1つの軸に1つずつになる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_balance-slackline.jpg" width="1200" height="799" loading="lazy" alt="公園に張ったベルトの上に立つ人">
+<figcaption>フランスのトゥールーズの公園でスラックラインを渡る人である。足元でベルトが折れ曲がり、人は左右の斜め上向きに2つの張力を受ける。2つの張力を水平と鉛直に分解すると、水平成分は打ち消し合い、鉛直成分の和が重力とつり合う。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Slackline_Parc.jpg">KlemanGellek</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="滑らかな斜面上で糸に引かれて静止する物体に働く力">
@@ -190,6 +210,11 @@
 
 <p>典型的な誤りは「重力と垂直抗力は作用反作用である」とする記述である。2力はどちらも本に働くのでつり合いの関係である。もう1つの誤りは質量の大きい物体のほうが大きな力を及ぼすとする考えである。トラックと乗用車が衝突しても互いに及ぼす力の大きさは等しい。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/02_reaction-shuttle.jpg" width="766" height="1200" loading="lazy" alt="炎を噴いて上昇するスペースシャトル">
+<figcaption>発射台から上昇するスペースシャトル・ディスカバリーである。機体は燃焼ガスを下向きに押し出し、ガスは同じ大きさの力で機体を上向きに押す。2力は機体とガスという異なる物体に働くので、つり合いではなく作用反作用の組である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:STS120LaunchHiRes-edit1.jpg">NASA</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">作用と反作用には片思いが存在しない</p>
 <p>A が B を押せば B は同じ大きさで A を押し返す。一方だけが及ぼす力は存在しない。</p>
@@ -202,6 +227,11 @@
 <p>\(\mu_0\) を<strong>静止摩擦係数</strong>と呼ぶ。押す力が \(F_0\) を超えると物体は滑り出す。滑っている物体に働く動摩擦力の大きさは速さによらず垂直抗力に比例する。これらの比例関係と、摩擦力が接触面積によらないという性質は実験から得られた経験則である。</p>
 <p>\[ F'=\mu' N \]</p>
 <p>\(\mu'\) を<strong>動摩擦係数</strong>と呼ぶ。同じ面では一般に \(\mu'<\mu_0\) である。摩擦係数は単位をもたない。<strong class="hit">静止摩擦力に \(\mu_0N\) を使えるのは滑り出す直前だけである</strong>。それ以外の静止状態ではつり合いの式から静止摩擦力を求める。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_friction-disc-brake.jpg" width="1200" height="1007" loading="lazy" alt="自動車の車輪の金属円板と赤いブレーキの部品">
+<figcaption>自動車のディスクブレーキである。赤い部品が金属の円板を両側からパッドで挟み、パッドと円板の間に摩擦力を生じさせる。挟む力を強くすると垂直抗力が大きくなり、摩擦力も大きくなる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Disk_brake_dsc03682.jpg">作者名の記載なし</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="押す力と摩擦力の大きさの関係">
@@ -253,9 +283,19 @@
 <p>水中の圧力を<strong>水圧</strong>と呼ぶ。水面から深さ \(h\) の点の水圧は真上にある水柱の重さで求められる。底面積 \(S\)・高さ \(h\) の水柱の質量は \(\rho Sh\) で重さは \(\rho Shg\) である。これを面積 \(S\) で割り水面を押す大気圧 \(p_0\) を加える。</p>
 <p>\[ p=p_0+\rho gh \]</p>
 <p>\(\rho\) は水の密度で \(\mathrm{1.0\times10^3\,kg/m^3}\) である。深さ 10 m ごとに水圧は約 \(\mathrm{9.8\times10^4\,Pa}\) 増え1気圧分に相当する。水圧は面の向きによらず同じ深さなら同じ大きさで面に垂直に働く。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_pressure-trieste.jpg" width="1200" height="965" loading="lazy" alt="クレーンで吊り上げられた深海探査艇">
+<figcaption>クレーンで吊り上げられた深海探査艇トリエステである。1960年1月23日にマリアナ海溝のチャレンジャー海淵で深さ約 10911 m に達した。乗員は船体の下の直径約 2 m の鋼鉄の球に乗る。この深さの水圧を \(\rho gh\) で見積もると約 \(1.1\times10^8\) Pa で、大気圧の約1000倍である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bathyscaphe_Trieste.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>水中の物体は周囲から水圧を受ける。<strong class="hit">深いほど水圧が大きいので下面を押し上げる力が上面を押し下げる力より大きい</strong>。この差が<strong>浮力</strong>である。側面の力は左右で打ち消し合う。上面の深さ \(h_1\)・下面の深さ \(h_2\)・面積 \(S\) の直方体で計算すると次のとおりである。</p>
 <p>\[ F=(p_2-p_1)S=\rho g(h_2-h_1)S=\rho Vg \]</p>
 <p>\(V\) は水中の部分の体積である。浮力の大きさは物体が押しのけた流体の重さに等しい。これを<strong>アルキメデスの原理</strong>と呼ぶ。浮力は物体の材質や質量によらず押しのけた体積と流体の密度だけで定まる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_buoyancy-iceberg.jpg" width="1200" height="675" loading="lazy" alt="澄んだ海面の下の部分まで見える氷山">
+<figcaption>北極海の穏やかな海面で、水中の部分まで見える氷山である。氷山は水中の部分が押しのけた海水の重さが氷山全体の重さに等しくなる深さで浮いている。氷の密度は海水より小さいがその差は小さいので、水中の部分が大きい。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Iceberg_in_the_Arctic_with_its_underside_exposed,_brightened_underwater.jpg">AWeith</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="水中の直方体の上面と下面に働く水圧の力の差が浮力になる">
@@ -298,6 +338,11 @@
 
 <h2 id="s8">現実世界の力 鉄の船が浮く理由</h2>
 <p>鉄の密度は水の約8倍で鉄の塊は水に沈む。それでも鉄の船が浮くのは船体が内部に空間をもち大きな体積の水を押しのけるからである。船の重さと押しのけた水の重さが等しくなる深さまで沈んで静止する。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_ship-load-line.jpg" width="1200" height="900" loading="lazy" alt="船体に白く描かれた円と横線の標示">
+<figcaption>帆船カティーサークの船体に描かれたロイド船級協会の満載喫水線の標示である。円を横切る線は荷を積んだときに沈んでよい深さの上限を示す。荷を積むと船は深く沈み、押しのける水の重さが船全体の重さと再び等しくなる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Lloydsloadlinecuttysark.jpg">Robert Brook</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>船の大きさを表す排水量は船が押しのける水の質量である。アルキメデスの原理により排水量は船全体の質量に等しい。荷物を積むと船は深く沈み押しのける水が増える。</p>
 </aside>

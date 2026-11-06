@@ -8,7 +8,13 @@
 <p>金属の単体が水溶液中で電子を失って陽イオンになろうとする性質を<strong>イオン化傾向</strong>と呼ぶ。イオン化傾向の大きい順に金属を並べたものが<strong>イオン化列</strong>である。比較のために水素も列に入れる。</p>
 <div class="fx">Li ＞ K ＞ Ca ＞ Na ＞ Mg ＞ Al ＞ Zn ＞ Fe ＞ Ni ＞ Sn ＞ Pb ＞ (H<sub>2</sub>) ＞ Cu ＞ Hg ＞ Ag ＞ Pt ＞ Au<small>語呂合わせは「リッチに貸そうかな まあ あてにすな ひどすぎる借金」が広く使われる</small></div>
 <p><strong class="hit">イオン化傾向が大きい金属ほど電子を渡しやすく強い還元剤である</strong>。逆にイオン化傾向が小さい金属の陽イオンほど電子を受け取りやすい。Au や Pt が自然界で単体のまま産出するのはイオン化傾向が最も小さく陽イオンになりにくいからである。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_battery-metals-gold-nugget.jpg" width="1200" height="774" loading="lazy" alt="オーストラリア産の大きな金塊">
+<figcaption>オーストラリアで産出した約4ポンドの金塊で、米国シカゴのフィールド自然史博物館の展示である。表面はなめらかに削られた形で、川の流れで運ばれた金の塊と考えられている。金は陽イオンになりにくく、鉱石から還元しなくても単体のまま見つかる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gold_nugget_(Australia)_4_(16848647509).jpg">James St. John</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>イオン化傾向は第4章のイオン化エネルギーとは別の量である。イオン化エネルギーは気体の原子1個から電子を取り去るエネルギーである。イオン化傾向は水溶液中で陽イオンになる変化全体の起こりやすさで水和によるエネルギーも含む。Li のイオン化エネルギーは Na や K より大きいのにイオン化列の先頭に置かれるのはこの差による。この順は反応の速さの順ではなく、水との反応の激しさは K や Na のほうが Li より大きい。</p>
+
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="イオン化列と金属の反応性の区分">
@@ -61,6 +67,11 @@
 <tr><td>王水</td><td>Pt ・ Au も溶ける</td><td>反応式は化学で扱う</td></tr>
 </tbody></table></div>
 <p>Cu が硝酸や熱濃硫酸に溶けるとき H<sub>2</sub> は発生しない。電子を受け取るのは H<sup>+</sup> ではなく N や S の原子だからである。第14章の半反応式どおり濃硝酸は NO<sub>2</sub>・希硝酸は NO・熱濃硫酸は SO<sub>2</sub> を生じる。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/15_battery-metals-zn-hcl.jpg" width="1200" height="1067" loading="lazy" alt="塩酸に入れた亜鉛から泡が生じる試験管"><img src="../img/15_battery-metals-cu-hno3.jpg" width="1200" height="900" loading="lazy" alt="硝酸に入れた銅から赤褐色の気体が生じ液が青くなったフラスコ"></div>
+<figcaption>左は亜鉛を塩酸に入れた試験管で、亜鉛の表面から H<sub>2</sub> の泡が生じている。右は銅線を硝酸に入れた三角フラスコで、H<sub>2</sub> ではなく赤褐色の NO<sub>2</sub> が生じ、液は Cu<sup>2+</sup> の青色になる。Zn は H<sup>+</sup> に電子を渡し、Cu は N に電子を渡すという相手の違いが気体の色で確認できる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Zn_reaction_with_HCl.JPG">Chemicalinterest</a>／パブリックドメイン 右：<a href="https://commons.wikimedia.org/wiki/File:CopperReaction.JPG">The mad scientist</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>例外の2つ</h3>
 <ul>
 <li><strong>鉛</strong> Pb は H<sub>2</sub> より前にあるが希塩酸や希硫酸とはほとんど反応しない。表面に水に溶けにくい PbCl<sub>2</sub> や PbSO<sub>4</sub> の膜が生じるからである</li>
@@ -72,6 +83,11 @@
 <div class="fx">Cu ＋ 2Ag<sup>+</sup> → Cu<sup>2+</sup> ＋ 2Ag<small>硝酸銀水溶液に銅線を入れると銀樹ができ溶液は Cu²⁺ の青色になる</small></div>
 <div class="fx">Zn ＋ Cu<sup>2+</sup> → Zn<sup>2+</sup> ＋ Cu<small>硫酸銅(Ⅱ)水溶液に亜鉛板を入れると表面に銅が析出し溶液の青色が薄くなる</small></div>
 <p>逆の組み合わせでは何も起こらない。Cu を ZnSO<sub>4</sub> 水溶液に入れても Ag を CuSO<sub>4</sub> 水溶液に入れても変化しない。<strong class="hit">析出するのは列の後ろにある金属のイオンだけである</strong>。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_battery-metals-zn-cuso4.jpg" width="1200" height="900" loading="lazy" alt="硫酸銅水溶液中で亜鉛板の表面に赤褐色の銅が析出した様子">
+<figcaption>硫酸銅(Ⅱ)水溶液に亜鉛板を入れてしばらくおいた写真である。亜鉛板の表面を赤褐色の銅の粒子が厚く覆っている。Zn が溶けて Zn<sup>2+</sup> になり、受け取った電子で Cu<sup>2+</sup> が Cu として析出した結果である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Reaction_of_zinc_metal_and_copper(II)_sulfate.jpg">Luyao</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">金属樹は Cu 1人が Ag<sup>+</sup> 2人に1個ずつ渡す1対2の関係である</p>
@@ -89,6 +105,11 @@
 <h3>ダニエル電池</h3>
 <p>ダニエル電池は亜鉛板を硫酸亜鉛水溶液に・銅板を硫酸銅(Ⅱ)水溶液に浸し両液を素焼き板で仕切った電池である。起電力は約 1.1 V である。</p>
 <div class="fx">負極 Zn → Zn<sup>2+</sup> ＋ 2e<sup>−</sup><br>正極 Cu<sup>2+</sup> ＋ 2e<sup>−</sup> → Cu<br>全体 Zn ＋ Cu<sup>2+</sup> → Zn<sup>2+</sup> ＋ Cu<small>放電すると亜鉛板は軽くなり銅板は重くなる</small></div>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_battery-metals-daniell-demo.jpg" width="1024" height="576" loading="lazy" alt="硫酸亜鉛水溶液と硫酸銅水溶液のビーカーをテスターにつないだダニエル電池">
+<figcaption>硫酸亜鉛水溶液に亜鉛板を、硫酸銅(Ⅱ)水溶液に銅板を浸して組んだダニエル電池をテスターにつないだ写真である。表示は 1.07 V で、標準の起電力 1.10 V に近い値である。右のビーカーの青色は Cu<sup>2+</sup> の色である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Daniell_cell_demonstration.jpg">Taweetham</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="ダニエル電池の構造と電子とイオンの移動">
@@ -137,6 +158,11 @@
 </figure>
 
 <p>素焼き板には小さな穴が無数にあり両液がすぐには混ざらないがイオンは通過できる。仕切りがなければ Cu<sup>2+</sup> が亜鉛板に直接触れて電子が導線を通らずに移る。完全に通さない板で仕切ると両液の電荷の偏りが解消されず電流が止まる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_battery-metals-daniell-1836.jpg" width="1200" height="684" loading="lazy" alt="木枠に収めた6個の円筒形のダニエル電池">
+<figcaption>1836年のダニエル電池で、米国の国立アメリカ歴史博物館の展示である。金属の円筒容器の内側に素焼きの円筒が入れてあり、その中に電極の板が立てられている。2つの液をこの素焼きの壁で隔てる構造が、本文の素焼き板にあたる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:NMAH-Daniell_cell_batteries_1836.JPG">Daderot</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>正極側の CuSO<sub>4</sub> 水溶液を濃くし負極側の ZnSO<sub>4</sub> 水溶液を薄くすると長時間放電できる。Cu<sup>2+</sup> は正極で消費され Zn<sup>2+</sup> は負極で増えるからである。濃度の条件を変えたときの放電時間を問う設問は定番の形である。</p>
 
 <aside class="an an-bb"><b>野球で言えば</b>
@@ -164,6 +190,11 @@
 </tbody></table></div>
 <p>使い切りで充電できない電池を<strong>一次電池</strong>と呼ぶ。外部から放電と逆向きに電流を流して元の状態に戻せる電池を<strong>二次電池</strong>または蓄電池と呼び逆向きに電流を流す操作を充電と呼ぶ。燃料電池は活物質を外部から供給し続ける点で一次電池とも二次電池とも異なる。</p>
 <div class="fx">鉛蓄電池の放電<br>負極 Pb ＋ SO<sub>4</sub><sup>2−</sup> → PbSO<sub>4</sub> ＋ 2e<sup>−</sup><br>正極 PbO<sub>2</sub> ＋ 4H<sup>+</sup> ＋ SO<sub>4</sub><sup>2−</sup> ＋ 2e<sup>−</sup> → PbSO<sub>4</sub> ＋ 2H<sub>2</sub>O<small>Pb は 0 → ＋2 で酸化され PbO₂ の Pb は ＋4 → ＋2 で還元される。放電すると両極とも PbSO₄ が付いて質量が増え硫酸の濃度は下がる</small></div>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_battery-metals-lead-acid.jpg" width="1200" height="797" loading="lazy" alt="鉛蓄電池の材料。鉛の塊、格子状の電極、PbO2 の粉末の瓶">
+<figcaption>鉛蓄電池の工場で材料を並べた展示である。ロシア語の札には鉛とカルシウムの合金・純鉛・鉛の酸化物の粉末などと書かれ、瓶には PbO<sub>2</sub> と表示されている。手前の格子状の板は鋳造した電極で、この格子に活物質を保持させて極板にする。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Lead-acid_batteries_components.jpg">Mike-fiesta</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="fx">燃料電池<br>負極 H<sub>2</sub> → 2H<sup>+</sup> ＋ 2e<sup>−</sup><br>正極 O<sub>2</sub> ＋ 4H<sup>+</sup> ＋ 4e<sup>−</sup> → 2H<sub>2</sub>O<br>全体 2H<sub>2</sub> ＋ O<sub>2</sub> → 2H<sub>2</sub>O<small>H₂ 1 mol あたり e⁻ 2 mol が外部回路を流れる</small></div>
 
 <aside class="an an-biz"><b>会計で言えば</b>
@@ -214,6 +245,11 @@
 <p>黄銅鉱から得られる<strong>粗銅</strong>の純度は約99%である。電線に使うには不純物が多く電気抵抗が大きい。そこで粗銅を陽極・薄い純銅板を陰極にして硫酸酸性の硫酸銅(Ⅱ)水溶液中で電流を流す。陽極の Cu が Cu<sup>2+</sup> として溶け出し陰極に Cu が析出する。この操作を<strong>電解精錬</strong>と呼び純度99.99%以上の純銅が得られる。</p>
 <p>粗銅に含まれる不純物の行き先はイオン化列で特定できる。<strong class="hit">Cu よりイオン化傾向の大きい Zn・Fe・Ni は陽イオンとして溶液中に残る。Cu よりイオン化傾向の小さい Ag・Au は溶けずに陽極の下に沈む</strong>。この沈殿を<strong>陽極泥</strong>と呼び貴金属の回収源になる。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/15_battery-metals-tankhouse.jpg" width="800" height="1200" loading="lazy" alt="銅の電解工場でクレーンが陽極の板を吊り下げている様子">
+<figcaption>ロシアの銅製錬所にある陰極銅の電解工場である。クレーンが吊り下げている板の束は電解槽に入れる前の陽極である。陽極の銅は電解槽の中で Cu<sup>2+</sup> として溶け出し、陰極に純度の高い銅が析出する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Wiki-Uralelectromed_MG19480.jpg">Вадим Смальков</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 260" role="img" aria-label="銅の電解精錬で不純物が分かれる">
   <defs><marker id="ah15e" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker></defs>
@@ -257,6 +293,21 @@
 <p><strong>アルミニウムは電気の缶詰</strong> アルミニウムは製錬に大量の電力を要するため電気の缶詰と呼ばれる。電解工程の電力消費は 1 t あたり約 1万3千〜1万5千 kWh とされる。この呼び名には電力を地金の形で保存し輸送しているという含意がある。</p>
 <p><strong>EV と電池のサプライチェーン</strong> 電気自動車の電池の正極にはコバルトやニッケルを含む材料が使われてきた。米国地質調査所によればコバルトの鉱山生産はコンゴ民主共和国が2025年の推計で世界の約73%を占める。国際エネルギー機関 IEA は2025年の報告書で電池や再生可能エネルギーに使う重要鉱物20種のうち19種で中国が精製の首位にあり平均シェアは約70%と報告した。採掘と精製の両方が特定の国に集中している。コバルトを使わないリン酸鉄リチウム正極の採用が広がっているのはこの集中を避ける理由もある。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_battery-metals-yoshino.jpg" width="900" height="1200" loading="lazy" alt="吉野彰の肖像">
+<figcaption>吉野彰の肖像である。1985年に負極の Li 金属を炭素材料に置き換えた構成を作り、2019年にノーベル化学賞を受けた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Akira_Yoshino_20170920_(cropped).jpg">大臣官房人事課</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_battery-metals-li-ion-internals.jpg" width="1200" height="368" loading="lazy" alt="ノートパソコン用電池パックの内部の6本の円筒形リチウムイオン電池">
+<figcaption>ノートパソコン用の電池パックの内部で、円筒形のリチウムイオン電池6本が並ぶ。1本の電圧は 3.6 V で、3本を直列にした組を2組並列につなぎ 10.8 V を得ている。下の細長い基板は充電と安全のための回路で、左下のマッチ棒は大きさの目安である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Lithiumion-laptop-battery-internals.jpg">Lead holder</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_battery-metals-cobalt-miners.jpg" width="1200" height="900" loading="lazy" alt="コンゴ民主共和国の露天の採掘場で鉱石の袋を運ぶ人々">
+<figcaption>コンゴ民主共和国でコバルトを含む鉱石を手作業で採掘する人々である。掘り出した鉱石を袋に詰め、肩に担いで運んでいる。Commons の説明文は、この採掘が危険な作業場や児童労働などの人権問題と結びついていると記している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Artisanal_cobalt_miners_in_the_Democratic_Republic_of_Congo.jpg">The International Institute for Environment and Development</a>／CC BY 2.5／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>投資で言えば</b>
 <p class="an-h">コバルト調達の集中は1銘柄に約73%を置いたポートフォリオである</p>

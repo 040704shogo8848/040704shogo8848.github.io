@@ -13,6 +13,10 @@
 <tr><td>シャルルの法則</td><td>圧力</td><td>\( V/T=\text{一定} \)。体積は絶対温度に比例する</td></tr>
 <tr><td>ボイル・シャルルの法則</td><td>気体の量</td><td>\( \dfrac{pV}{T}=\text{一定} \)</td></tr>
 </tbody></table></div>
+<figure class="tb-fig tb-photo">
+<img src="../img/12_thermodynamics-boylepump.jpg" width="900" height="1200" loading="lazy" alt="ガラス球と筒を木の台に載せた空気ポンプの複製">
+<figcaption>ボイルとフックが用いた空気ポンプの複製である。下の筒のピストンを動かしてガラス球の中の空気を抜き、中の気体の圧力を下げる。ボイルはこの種の装置を使って空気の圧力を変える実験を行った。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Replica_of_the_Hooke-Boyle_Air_Pump,_Science_in_the_18th_Century,_The_King_George_III_Collection,_Science_Museum,_London.jpg">John Cummings</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>シャルルの法則では一定の圧力のもとで温度が1 K 上がるごとに体積が0 ℃のときの体積の 1/273 ずつ増える。この直線を低温側に延ばすと −273 ℃で体積が0になる。<strong class="hit">この直線が体積0に達する温度を0とする目盛りが絶対温度である</strong>。体積が絶対温度に比例するのはこのためである。現在の SI では 0 K はボルツマン定数の値を使って定義され −273.15 ℃にあたる。</p>
 <p>2つの法則を組み合わせるとボイル・シャルルの法則になる。状態1から状態2へ変化するとき次の式で未知の量を求める。</p>
 \[ \frac{p_1V_1}{T_1}=\frac{p_2V_2}{T_2} \]
@@ -87,6 +91,10 @@
 <p>この式を変形すると \( pV=\frac{2}{3}N\cdot\frac{1}{2}m\overline{v^2} \) である。状態方程式 \( pV=nRT \) と比べる。分子の数は \( N=nN_A \) で \( N_A\approx6.02\times10^{23}\,/\mathrm{mol} \) はアボガドロ定数である。</p>
 \[ \frac{1}{2}m\overline{v^2}=\frac{3}{2}\cdot\frac{R}{N_A}T=\frac{3}{2}kT \]
 <p>\( k=R/N_A\approx1.38\times10^{-23}\,\mathrm{J/K} \) を<strong>ボルツマン定数</strong>と呼ぶ。<strong class="hit">絶対温度は気体分子1個の平均の運動エネルギーに比例する量である</strong>。比例係数は気体の種類によらない。同じ温度なら軽い分子ほど速く動く。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/12_thermodynamics-boltzmann.jpg" width="772" height="1200" loading="lazy" alt="胸像の上に式が刻まれたボルツマンの墓">
+<figcaption>ウィーン中央墓地にあるボルツマンの墓である。胸像の上の石に S = k log W の式が刻まれている。式の中の k が本文のボルツマン定数であり、気体分子1個の運動と温度を結ぶ比例係数である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ludwig_Boltzmann_Grave_Zentralfriedhof_Vienna_2022.jpg">Feldkurat Katz</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>平均の運動エネルギーから分子の速さの目安として2乗平均速度 \( \sqrt{\overline{v^2}} \) が求まる。モル質量を \( M \) [kg/mol] とすると \( mN_A=M \) なので次の式になる。</p>
 \[ \sqrt{\overline{v^2}}=\sqrt{\frac{3RT}{M}} \]
 
@@ -124,6 +132,10 @@
 <p>気体の内部エネルギーを変える方法は熱を与えることと仕事をすることの2つである。気体が受け取った熱量を \( Q \)・気体が外からされた仕事を \( W \) とすると次の式が成り立つ。</p>
 \[ \Delta U=Q+W \]
 <p>これを<strong>熱力学第1法則</strong>と呼ぶ。熱も含めたエネルギー保存則である。気体がした仕事 \( W'=-W \) を使うと \( Q=\Delta U+W' \) と書ける。受け取った熱は内部エネルギーの増加と外への仕事に分かれる。どちらの形で書くかを問題ごとに確認し符号を取り違えないことが要点である。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/12_thermodynamics-joule.jpg" width="1200" height="1105" loading="lazy" alt="金属の容器と羽根車からなるジュールの実験装置">
+<figcaption>ジュールが熱の仕事当量の測定に使った装置である。右の羽根車を左の容器の水に沈め、おもりの落下で回転させる。羽根車が水にする仕事は水の内部エネルギーを増やして温度を上げる。熱を与えなくても仕事で内部エネルギーを変えられることを示す装置である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Joule_Apparatus.jpg">Dr. Mirko Junge</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>会計で言えば</b>
 <p class="an-h">第1法則は内部エネルギーの残高の増減表である</p>
@@ -165,6 +177,10 @@
 <tr><td>断熱変化</td><td>熱の出入りなし</td><td>\( W'=-\Delta U \)</td><td>膨張で減少・圧縮で増加</td><td>0</td></tr>
 </tbody></table></div>
 <p>内部エネルギーの列は単原子分子の場合である。断熱変化では \( Q=0 \) なので第1法則は \( \Delta U=-W' \) となる。断熱膨張では気体が外へ仕事をした分だけ内部エネルギーが減り温度が下がる。断熱圧縮では外からされた仕事の分だけ温度が上がる。自転車の空気入れの筒が熱くなるのは断熱圧縮に近い変化である。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/12_thermodynamics-firepiston.jpg" width="1200" height="799" loading="lazy" alt="透明な筒の中で綿が発火したファイヤーピストン">
+<figcaption>ファイヤーピストンの点火の瞬間である。透明な筒の中のピストンを手で急に押し込むと、熱が外へ逃げる前に気体が圧縮される。断熱圧縮で外からされた仕事が気体の温度を上げ、筒の底の綿が発火して光っている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Fire_piston.jpg">Chocolateoak</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 5</div>
 <p>1.0 mol の単原子分子理想気体を圧力を一定に保って 300 K から 400 K まで加熱した。気体がした仕事・内部エネルギーの変化・受け取った熱量を求めよ。気体定数を 8.31 J/(mol·K) とする。</p>
@@ -192,8 +208,16 @@
 
 <h2 id="s7">熱機関と熱効率</h2>
 <p>熱を受け取って仕事をくり返し取り出す装置を<strong>熱機関</strong>と呼ぶ。気体を元の状態に戻すまでの一連の変化をサイクルと呼ぶ。1サイクルで元の状態に戻るので内部エネルギーの変化は0である。第1法則より1サイクルで気体が外にした正味の仕事は受け取った熱から放出した熱を引いた値に等しい。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/12_thermodynamics-watt.jpg" width="1024" height="760" loading="lazy" alt="大きなはずみ車と梁をもつワット型の蒸気機関">
+<figcaption>ワット型のビーム機関である。1832年にロンドンのネイピア社が製造し、スペインの王立造幣局で硬貨の圧印機を動かした。蒸気でシリンダーのピストンを往復させ、上部の梁と右の大きなはずみ車を通して回転の仕事を取り出す。蒸気が膨張して仕事をし、冷やされて元に戻るサイクルをくり返す熱機関である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Maquina_vapor_Watt_ETSIIM.jpg">Nicolás Pérez</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 \[ W'=Q_{\text{in}}-Q_{\text{out}} \qquad e=\frac{W'}{Q_{\text{in}}}=1-\frac{Q_{\text{out}}}{Q_{\text{in}}} \]
 <p>\( e \) を<strong>熱効率</strong>と呼ぶ。<strong class="hit">正味の仕事は p−Vグラフでサイクルが囲む面積に等しい</strong>。サイクルを時計回りにたどると膨張で正の仕事・圧縮で負の仕事をし その差が囲まれた面積になる。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/12_thermodynamics-stirling.jpg" width="1200" height="1114" loading="lazy" alt="はずみ車とガラスの筒をもつ卓上のスターリングエンジン">
+<figcaption>卓上のスターリングエンジンである。右下のアルコールランプで右のガラスの筒を加熱し、上部のひれの付いた筒で冷やす。中の空気が加熱と冷却で膨張と圧縮をくり返すサイクルから、左のはずみ車を回転させる正味の仕事が得られる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Stirling_Engine.jpg">Zephyris at English Wikipedia</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 290" role="img" aria-label="長方形のサイクルとその面積が正味の仕事になる様子">
@@ -228,6 +252,10 @@
 <p>典型的な誤りは熱効率の分母に Q<sub>in</sub> − Q<sub>out</sub> や放出した熱を入れることである。分母は受け取った熱の合計だけである。</p>
 <h3>熱効率の上限</h3>
 <p>第5章で扱った熱力学第2法則により熱機関は受け取った熱をすべて仕事に変えることはできない。必ず低温の熱源に熱を捨てる。高温 \( T_H \) と低温 \( T_L \) の熱源の間で働く熱機関の熱効率は \( 1-T_L/T_H \) を超えない。この上限はカルノーが1824年に考察した理想的なサイクルの効率である。式の形は後に絶対温度を使って表された。600 K と 300 K の間なら上限は50％である。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/12_thermodynamics-coolingtower2.jpg" width="1200" height="799" loading="lazy" alt="白い湯気を上げる原子力発電所の冷却塔">
+<figcaption>ロシアのカリーニン原子力発電所の冷却塔である。発電所はタービンを回した後の蒸気を水で冷やし、温まった水の熱を冷却塔で大気へ放出する。塔から立ち上る白い湯気はこの熱で蒸発した水が冷えて生じたものであり、熱機関が低温の熱源に捨てる熱 Q<sub>out</sub> の行き先にあたる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Cooling_towers_of_a_nuclear_power_plant.jpg">Vsatinet</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>投資で言えば</b>
 <p class="an-h">熱機関の Q<sub>out</sub> は手数料ゼロにできない取引コストである</p>
@@ -236,6 +264,10 @@
 
 <h2 id="s8">現実世界の熱効率</h2>
 <p>自動車のエンジンは燃料の燃焼で高温になった気体の膨張から仕事を取り出す熱機関である。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/12_thermodynamics-engine.jpg" width="1200" height="799" loading="lazy" alt="シリンダーとピストンが見える航空機用エンジンの切断模型">
+<figcaption>ドイツ博物館にある航空機用の水平対向エンジンの切断模型である。右側の切断面にシリンダーとピストンが見える。シリンダーの外側に並ぶ薄いひれは空気で冷やすための構造であり、本文の冷却に伴う損失はここから熱として空気へ放出される。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sectioned_horizontally_opposed_aero_engine,_Deutsches_Museum.jpg">Wilfredor</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>トヨタ自動車は2016年に排気量 2.5 L のガソリンエンジンで最大熱効率 40％・ハイブリッド車用で 41％を達成したと発表した。残りの約6割は排気と冷却と機械の作動に伴う損失として失われる。高温側を仮に 2000 K・低温側を 300 K とすると上限は 85％である。実際の熱効率はその半分以下である。</p>
 </aside>

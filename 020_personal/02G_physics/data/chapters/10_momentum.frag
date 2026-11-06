@@ -23,6 +23,11 @@
 
 <p>典型的な誤りは速さの差 50 − 40 ＝ 10 を使い 1.5 N·s と答えることである。向きが逆になる場合は速度の符号が変わるので変化量は速さの和になる。もう1つの誤りは力積の向きを考えないことである。ボールが受けた力積の向きは打ち返した後の向きと同じである。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/10_momentum-catch.jpg" width="1200" height="800" loading="lazy" alt="飛球をグラブで捕ろうとする外野手">
+<figcaption>外野手が飛球をグラブで捕る直前の場面である。球を止めるのに必要な力積は球の運動量で決まる。グラブを引きながら捕ると接触時間が長くなり、手が受ける平均の力は小さくなる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Giancarlo_Stanton_Catch_2016.jpg">Johnmaxmena2</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">捕球でグラブを引くのは力積の分割払いである</p>
 <p>止めるのに必要な力積は球速で決まる。グラブを引いて時間を延ばすと同じ総額を小さな力で支払える。</p>
@@ -53,6 +58,11 @@
 \[ \bar{F}=\frac{I}{\Delta t} \]
 <p>運動量の変化が同じであれば接触時間を長くするほど平均の力は小さくなる。自動車のエアバッグ・体操競技のマット・卵を受け止めるときに手を引く動作はどれもこの関係を使う。止めるために必要な力積は変えられないので時間を延ばして力を小さくする。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/10_momentum-crash-test.jpg" width="1088" height="738" loading="lazy" alt="時速40 kmで衝突した車内の人形とエアバッグ">
+<figcaption>時速 40 km の衝突実験の瞬間である。前席の人形はシートベルトとふくらんだエアバッグで体を支えている。エアバッグは頭部が止まるまでの時間を延ばし、頭部が受ける平均の力を小さくする。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Crash-test-with-airbag-and-safty-belt.jpg">Transport for NSW</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 2</div>
 <p>なめらかな水平面上で静止している質量 2.0 kg の物体に水平方向の力を加えた。力の大きさは 0 s から 0.20 s までに 0 N から 30 N まで一様に増え 0.20 s から 0.40 s までに 0 N まで一様に減った。0.40 s 後の物体の速さを求めよ。</p>
 <details open><summary>解き方</summary><div>手順1 F−tグラフは底辺 0.40 s・高さ 30 N の三角形である。<br>手順2 力積＝面積＝ ½ × 0.40 × 30 ＝ 6.0 N·s である。<br>手順3 初めは静止しているので 2.0 × v ＝ 6.0 から v ＝ 3.0 m/s である。<br>答え 3.0 m/s</div></details></div>
@@ -73,6 +83,11 @@
 <tr><td>外力の和が0である</td><td>重力と垂直抗力がつり合っている</td><td>なめらかな水平面上の台車の衝突</td></tr>
 <tr><td>外力の力積が内力の力積に比べて小さい</td><td>衝突時間が短く重力の力積 \( mg\Delta t \) が無視できる</td><td>空中での瞬間的な衝突・爆発</td></tr>
 </tbody></table></div>
+<figure class="tb-fig tb-photo">
+<img src="../img/10_momentum-firework2.jpg" width="1200" height="675" loading="lazy" alt="夜空でほぼ球状に広がる多数の花火">
+<figcaption>中国の大連で新年に打ち上げられた花火である。空中で破裂した玉の破片は、破裂した点を中心に球状に広がる。破裂は短時間に内力で起こるので、破片の運動量の和は破裂直前の玉の運動量に等しい。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:2018_NYEC_in_Dalian_(Self-participation;_Firework-3rd).jpg">Jason M. C., Han</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>さらに<strong>ある方向だけ</strong>外力が働かない場合はその方向の成分だけ運動量が保存する。たとえばなめらかな床の上で斜めに飛び込む人が台車に乗る場面では鉛直方向に床からの力が働くが水平方向には外力がない。この場合は水平成分だけで保存則を立てる。</p>
 <p>運動量保存則は力学的エネルギーの保存とは別の法則である。衝突で熱や音が発生しても運動量の和は保存する。逆に摩擦のある床の上を物体がすべる場面では摩擦力が外力になり運動量は保存しない。</p>
 
@@ -146,6 +161,11 @@
 <h3>質量の等しい2物体の弾性衝突</h3>
 <p>質量の等しい2物体が \( e=1 \) で正面衝突すると速度が入れ替わる。静止した球に同じ質量の球が当たると当てた球は静止し当てられた球が同じ速度で進む。運動量保存則 \( v_A+v_B=v_A{}'+v_B{}' \) と反発係数の式 \( v_A{}'-v_B{}'=-(v_A-v_B) \) を連立すると \( v_A{}'=v_B \) と \( v_B{}'=v_A \) が得られる。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/10_momentum-newtons-cradle.jpg" width="1200" height="1068" loading="lazy" alt="端の球が振れているニュートンのゆりかご">
+<figcaption>ニュートンのゆりかごと呼ばれる装置である。端の球を持ち上げて当てると、当てた球は止まり反対側の端の球が飛び出す。質量の等しい球の弾性衝突に近い衝突が順に起こり、速度が隣の球へ入れ替わるからである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Newtons_Cradle.jpg">The Dean of Physics</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h3>分裂と合体</h3>
 <p>静止していた物体が内力で2つに分裂する場合は運動量の和が0のまま保存する。分裂後は \( m_1v_1+m_2v_2=0 \) なので2つの破片は逆向きに飛ぶ。速さの比は質量の逆比 \( v_1:v_2=m_2:m_1 \) である。運動エネルギー \( K=\frac{p^2}{2m} \) で運動量の大きさが等しいので<strong>運動エネルギーの比も質量の逆比</strong>になる。分裂では火薬やばねの位置エネルギーが運動エネルギーに変わるので運動エネルギーの和は増える。</p>
 <p>2つの物体が衝突して一体になる合体は完全非弾性衝突である。一体となった後の速度は運動量保存則だけで決まる。</p>
@@ -156,6 +176,11 @@
 
 <p>弾丸の運動エネルギーの99％以上が熱と変形に変わる。運動量保存則から速度を求めた後で力学的エネルギー保存則を使って木片の上がる高さを求める問題が頻出である。衝突の瞬間には力学的エネルギー保存則を使わず衝突後の振り子の運動にだけ使う。この区別が典型的な誤りの分かれ目である。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/10_momentum-ballistic-pendulum.jpg" width="1200" height="908" loading="lazy" alt="ばね式の発射装置と目盛り付きの弾道振り子">
+<figcaption>教材用の弾道振り子である。ばね式の発射装置から球を打ち出し、ひもでつり下げた受け止め箱に入れて一体にする。箱が振れ上がった角度を目盛りで読み、力学的エネルギー保存則から衝突直後の速さを求め、運動量保存則から球の速さを求める。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ballistic_pendulum.jpg">KeysPhotography.com</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">完全非弾性衝突は交際の開始である</p>
 <p>2人は以後同じ速度で進み運動量の和は保存する。失われるのは個人の運動エネルギーの一部である。</p>
@@ -163,6 +188,11 @@
 
 <h2 id="s6">平面での衝突</h2>
 <p>運動量はベクトルなので平面内の衝突でも運動量保存則はそのまま成り立つ。計算では x 成分と y 成分に分けて2本の式を立てる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_momentum-snooker.jpg" width="1200" height="583" loading="lazy" alt="スヌーカーで手球を打とうとする競技者">
+<figcaption>スヌーカーで手球を打とうとしている場面である。手球が的球に斜めに当たると2つの球は異なる向きへ進む。衝突の前後で2つの球の運動量のベクトルの和は保存する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Snooker_action_shot_(51221745642).jpg">Snooker Spot</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 \[ m_Av_{Ax}+m_Bv_{Bx}=m_Av_{Ax}{}'+m_Bv_{Bx}{}' \qquad m_Av_{Ay}+m_Bv_{By}=m_Av_{Ay}{}'+m_Bv_{By}{}' \]
 <p>図で考える場合は衝突前の運動量の和のベクトルと衝突後の各運動量のベクトルの和が一致するように矢印をつなぐ。衝突後の2つのベクトルと衝突前のベクトルが三角形をつくる。</p>
 
@@ -210,6 +240,16 @@
 <p>日本野球機構は試合球の反発係数を検査している。2015年からは反発係数の目標値を0.4134とした。それ以前は平均値が0.4034から0.4234の範囲に入ることを基準とした。2013年には基準を満たすよう球を調整した事実を公表せずに変更して問題になった。反発係数は球を板に当てたときの衝突前後の速さの比として求める。</p>
 <p>ロケットは燃焼ガスを後方へ高速で噴射し その反作用で前に進む。宇宙空間には押し返す空気がない。ロケットと噴射ガスを合わせた系の運動量が保存することだけで加速が説明できる。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_momentum-baseball-tester.jpg" width="1200" height="963" loading="lazy" alt="野球の球の反発を調べる米国標準局の打撃装置">
+<figcaption>1938年に米国標準局が野球の球の反発を調べるために設計した打撃装置である。圧縮空気で打ち出した木製の弾がバットの代わりに球を打ち、飛んだ球は弾道振り子に当たる。振り子の振れから球がどれだけ強く当たったかを読み取った。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bureau_of_Standards_designs_mechanical_batter_to_determine_liveliness_of_baseballs._Washington,_D.C.,_Feb._21._Using_a_newly_designed_apparatus,_the_U.S._Bureau_of_Standards_today_began_LCCN2016873068.jpg">Harris &amp; Ewing, photographer</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/10_momentum-h2a.jpg" width="797" height="1200" loading="lazy" alt="あかつきを載せたH-IIAロケット17号機の打ち上げ"><img src="../img/10_momentum-ion-engine.jpg" width="1200" height="946" loading="lazy" alt="青い光を放って噴射する試験中のイオンエンジン"></div>
+<figcaption>左は金星探査機あかつきを載せた H-IIA ロケット17号機の打ち上げである。右は NASA のジェット推進研究所で真空槽の中で試験中のキセノンイオンエンジンで、青い光は噴射されるイオンである。どちらも後方へ物質を噴射し、噴射した物質と逆向きの運動量を機体が得る。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:H-IIA_F17_launching_AKATSUKI.jpg">Naritama (NARITA Masahiro)</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Ion_Engine_Test_Firing_-_GPN-2000-000482.jpg">NASA</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 力積の計算</div>

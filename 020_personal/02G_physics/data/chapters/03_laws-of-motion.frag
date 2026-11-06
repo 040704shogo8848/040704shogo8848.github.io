@@ -7,8 +7,18 @@
 <h2 id="s1">慣性の法則</h2>
 <p>物体に力が働かないか働く力の合力が0のとき静止している物体は静止し続け運動している物体は等速直線運動を続ける。これを<strong>慣性の法則</strong>と呼ぶ。ニュートンの運動の第一法則である。物体が速度を保とうとする性質を<strong>慣性</strong>と呼ぶ。</p>
 <p>日常の経験では動いている物体はやがて止まる。これは力が働かないからではない。摩擦力や空気抵抗が運動と反対向きに働くからである。ガリレイは向かい合わせた2つの斜面で球を転がす考察を行った。上る側の斜面の傾きを小さくするほど球は遠くまで進む。そこから水平面なら力が働かない限り運動は続くと考えた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_inertia-air-hockey.jpg" width="1200" height="799" loading="lazy" alt="小さな穴が並ぶエアホッケー台の上のパックとマレット">
+<figcaption>エアホッケー台の上のパックである。台の面に並ぶ小さな穴から空気が噴き出し、パックは空気の層の上に浮く。台との摩擦力がほとんど働かないので、打たれたパックは速さをほとんど変えずに進み続ける。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Air_Hockey_Puck_On_Table_(Off_Centre)_(14309930358).jpg">Stuart Kerr</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p><strong class="hit">運動している物体の運動の向きに力が働いているとは限らない</strong>。学習指導要領の解説は運動の向きに常に力が働いているという考えを生徒が経験的にもつ誤った概念として挙げている。投げ上げたボールが上昇している間にボールに働く力は重力だけで向きは下向きである。手から離れた後に上向きの力は働かない。</p>
 <p>走っているバスが急ブレーキをかけると乗客は前に倒れそうになる。乗客は慣性で前向きの速度を保とうとしバスだけが減速するからである。前向きの力が乗客に働いたのではない。この章の運動の法則は加速していない観測者から見た場合に成り立ち、加速するバスの中から見た運動は第11章の慣性力で扱う。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_inertia-crash-dummy.jpg" width="773" height="1200" loading="lazy" alt="運転席でシートベルトを締めた衝突試験用ダミー">
+<figcaption>アメリカの道路安全保険協会の研究施設で、2010年型の乗用車の運転席に座らせた衝突試験用ダミーである。衝突で車体が急に減速しても、ダミーは慣性で前向きの速度を保とうとする。シートベルトはダミーに後ろ向きの力を加えて、車体と同じように減速させる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:IIHS_crash_test_dummy_in_Hyundai_Tucson.jpg">Brady Holt</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">打球が飛び続けるのはバットの力が続くからではない</p>
@@ -91,6 +101,11 @@
 
 <p>糸でつながれた物体では糸の張力が物体の間の力になる。軽い糸の張力は糸のどこでも等しい。滑らかな滑車を通すと向きが変わるだけで大きさは変わらない。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/03_bodies-couplers.jpg" width="1200" height="799" loading="lazy" alt="2両の貨車をつなぐ連結器">
+<figcaption>アメリカの貨物列車で2両の貨車をつなぐ自動連結器である。機関車が列車を引くと、連結器は前の貨車から後ろの貨車へ力を伝える。前の貨車が後ろの貨車を引く力と後ろの貨車が前の貨車を引き返す力は作用反作用の組で、貨車ごとに立てた運動方程式の両方に入る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:AAR_knuckle_couplers_April_2025.jpg">4300streetcar</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="水平な台の上の物体と滑車を通してつるした物体の運動と力">
   <defs>
@@ -149,6 +164,11 @@
 
 <h2 id="s4">斜面上の運動</h2>
 <p>傾きの角 \(\theta\) の滑らかな斜面上の物体に働く力は重力と垂直抗力の2つである。第2章と同じく重力を斜面に平行な成分 \(mg\sin\theta\) と垂直な成分 \(mg\cos\theta\) に分解する。斜面に垂直な方向には運動しないのでつり合いの式 \(N=mg\cos\theta\) が成り立つ。斜面に平行な方向の運動方程式は次のとおりである。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_incline-ski-jump.jpg" width="1200" height="900" loading="lazy" alt="雪の積もったジャンプ台の助走路を上から見下ろした写真">
+<figcaption>アメリカのレークプラシッドにあるジャンプ台を、助走路の上から見下ろした写真である。選手は傾いた助走路の上で重力の斜面に平行な成分によって加速する。摩擦と空気抵抗が小さければ、加速度は \(g\sin\theta\) に近づく。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Inrun_MacKenzie_Skijump_Lake_Placid.jpg">sweeneytoad</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>\[ ma=mg\sin\theta \qquad a=g\sin\theta \]</p>
 <p>加速度は質量によらない。\(\theta=90^\circ\) で \(a=g\) となり自由落下に一致する。</p>
 <p>粗い斜面を滑り下りる場合は斜面を上る向きに動摩擦力 \(\mu'N=\mu'mg\cos\theta\) が加わる。</p>
@@ -196,6 +216,11 @@
 
 <h2 id="s5">摩擦がある水平面上の運動</h2>
 <p>粗い水平面上を滑る物体には運動と反対向きに動摩擦力 \(\mu'mg\) が働く。他に水平な力がなければ運動方程式は \(ma=-\mu'mg\) で加速度は \(-\mu'g\) である。減速の大きさは質量によらない。初速度 \(v_0\) で滑り出した物体が止まるまでの距離は第1章の3つ目の公式から求められる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_friction-curling.jpg" width="900" height="1200" loading="lazy" alt="氷の上に置かれたカーリングのストーンと選手">
+<figcaption>2023年のデンマークのカーリング選手権で、ストーンを投げる前の選手である。ストーンは氷の上を滑り、氷との動摩擦力で一定の割合で減速する。氷の面の動摩擦係数が小さいので、減速の大きさ \(\mu'g\) が小さく、ストーンは遠くまで滑る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Liam_Goldbeck_at_the_individual_Danish_curling_championship_2023.jpg">Diepizza</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>\[ 0-v_0^2=2(-\mu'g)x \qquad x=\frac{v_0^2}{2\mu'g} \]</p>
 <p>水平に力 \(F\) で引きながら滑らせる場合の運動方程式は \(ma=F-\mu'mg\) である。<strong class="hit">引く力が動摩擦力と等しければ加速度は0で物体は等速で動き続ける</strong>。等速で動いていることから力が働いていないと判定するのは誤りである。合力が0なのであって個々の力は働いている。</p>
 
@@ -214,6 +239,11 @@
 <p>落下し始めは \(v=0\) で加速度は \(g\) である。速さが増すと空気抵抗が増し加速度は小さくなる。やがて \(mg=kv\) となると合力が0になり加速度は0になる。その後は一定の速さで落下する。この速さを<strong>終端速度</strong>と呼ぶ。</p>
 <p>\[ v_f=\frac{mg}{k} \]</p>
 <p><strong class="hit">終端速度に達した物体は落下を続けているが合力は0である</strong>。同じ形と大きさなら質量が大きいほど終端速度は大きい。物理基礎は空気抵抗の存在に定性的に触れる範囲である。抵抗力を \(kv\) とおく運動方程式と終端速度の計算は科目「物理」で扱う内容である。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/03_drag-skydivers.jpg" width="1126" height="1200" loading="lazy" alt="空中で隊形を組んで落下する3人のスカイダイバー"><img src="../img/03_drag-parachute.jpg" width="1200" height="900" loading="lazy" alt="傘を開いて降下する人"></div>
+<figcaption>左は隊形を組んで自由落下する3人のスカイダイバーである。3人が等しい速さで落下するので、互いの位置はほとんど変わらない。右は傘を開いて降下する人で、傘が空気抵抗の比例定数 \(k\) を大きくし、終端速度 \(mg/k\) を下げる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Group_of_Skydivers_in_Freefall_Formation_at_Sunset.jpg">Rstpch</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Opening_parachute_jump_of_Sel%C3%A4np%C3%A4%C3%A4_Airshow_(August_2010,_2).jpg">Markus Säynevirta</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="空気抵抗を受けて落下する物体の速さが終端速度に近づくv−tグラフ">
@@ -249,6 +279,11 @@
 
 <h2 id="s7">現実世界の運動の法則 スカイダイビング</h2>
 <p>ニュートンは1687年の『プリンキピア』で運動の3法則を示した。力の単位の名称 N はニュートンにちなむ。運動方程式は人工衛星の軌道計算から自動車の衝突安全設計まで同じ形で使われる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_real-principia.jpg" width="1200" height="901" loading="lazy" alt="書き込みのある紙が挟まれた古い本">
+<figcaption>ニュートン自身が所有した『プリンキピア』初版である。第2版に向けた修正を余白と挟み込んだ紙に書き込んでいる。左のページには万有引力に関する定理が印刷されている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Newton%27s_Annotated_copy_of_his_Principia_Mathematica.jpg">Billthom</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>腹を下にした姿勢のスカイダイバーの終端速度は約 55 m/s で時速に直すと約 200 km である。パラシュートを開くと空気抵抗の比例定数に相当する量が大きくなり終端速度が下がる。着地できる速さまで減速するのは \(v_f=mg/k\) の \(k\) を大きくした結果である。</p>
 <p class="an-x">高速の空気抵抗は速さの2乗に比例するので本文の kv の式は低速の近似である。</p>

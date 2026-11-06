@@ -59,6 +59,11 @@
 
 <p>典型的な誤りは2つある。1つ目は荷物を持って水平に歩くとき腕の力が仕事をすると考える誤りである。腕の力は上向きで移動は水平なので物理の仕事は0である。2つ目は負の仕事を「仕事をしていない」と読み替える誤りである。負の仕事は物体のエネルギーを減らす向きの仕事であり0とは異なる。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/04_work-weightlifter.jpg" width="900" height="1200" loading="lazy" alt="バーベルを頭上に差し上げた重量挙げの選手">
+<figcaption>2006年のコモンウェルスゲームズの男子69 kg 級で、バーベルを頭上に差し上げた選手である。持ち上げる間はバーベルが力の向きに移動するので、選手はバーベルに正の仕事をする。頭上で静止させている間は移動がないので、力を加え続けていても仕事は0である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ben_166kg_Clean_and_Jerk.jpg">Towerofvenice1</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-biz"><b>会計で言えば</b>
 <p class="an-h">仕事は入出金で運動エネルギーは口座残高である</p>
 <p>正の仕事は入金で負の仕事は出金である。垂直抗力は口座に触れない力である。</p>
@@ -70,6 +75,11 @@
 <p>単位は \( \mathrm{J/s} \) で これを<strong>ワット</strong> \( \mathrm{W} \) と呼ぶ。物体を一定の力 \( F \) で力の向きに一定の速さ \( v \) で動かす場合は \( W=Fx \) と \( x=vt \) から次の式も成り立つ。</p>
 \[ P=\frac{Fx}{t}=Fv \]
 <p>電力量の単位 \( \mathrm{kWh} \) は仕事率 1 kW で1時間に行う仕事である。\( 1\ \mathrm{kWh}=1000\ \mathrm{W}\times3600\ \mathrm{s}=3.6\times10^6\ \mathrm{J} \) である。仕事率の記号 \( \mathrm{W} \) と仕事の記号 \( W \) は同じ文字なので立体と斜体で区別する。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_power-prony-brake.jpg" width="1200" height="964" loading="lazy" alt="トラクターとベルトでつながれた木枠の動力計">
+<figcaption>1910年にカナダのウィニペグで行われたトラクターの性能試験である。奥のトラクターはベルトで手前のプロニーブレーキ式の動力計につながれ、木枠から吊るしたばねばかりで力を量る。量った力と回転の速さから、トラクターの仕事率を求める。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Winnipeg_Tractor_Contests_1910._Prony_Brake_Dynamometers.jpg">Unknown photographer</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 3</div>
 <p>クレーンが質量 50 kg の資材を一定の速さで 10 m 引き上げるのに 20 秒かかった。クレーンの仕事率を求めよ。重力加速度の大きさは \( 9.8\ \mathrm{m/s^2} \) とする。</p>
@@ -156,6 +166,11 @@
 <details open><summary>解き方</summary><div>始めの運動エネルギーは \( \frac{1}{2}\times2.0\times3.0^2=9.0\ \mathrm{J} \) である。<br>された仕事は \( 10\times4.0=40\ \mathrm{J} \) である。<br>終わりの運動エネルギーは \( 9.0+40=49\ \mathrm{J} \) である。<br>\( \frac{1}{2}\times2.0\times v^2=49 \) から \( v^2=49 \) で \( v=7.0\ \mathrm{m/s} \) である。</div></details></div>
 
 <p>速さが2倍になると運動エネルギーは4倍になる。自動車が同じ大きさの摩擦力で止まる場合を考える。止まるまでに摩擦力がする負の仕事は運動エネルギーに等しいので制動距離は速さの2乗に比例する。時速 40 km から時速 80 km にすると制動距離は4倍になる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_ke-meteor-crater.jpg" width="1200" height="900" loading="lazy" alt="砂漠に開いた円形のくぼ地を航空機から写した写真">
+<figcaption>アメリカのアリゾナ州のメテオール・クレーターを航空機から写した写真である。高速で衝突した隕石の運動エネルギーが、地面を押しのける仕事と熱に変わってくぼ地が生じた。運動エネルギーは速さの2乗に比例するので、小さな物体でも速さが大きければ大きな仕事をする。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:2008_Arizona_Meteor_Crater_aerial.jpg">Nicholas Hartmann</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>典型的な誤りは運動エネルギーを速さに比例すると扱う誤りと速度の向きで正負をつける誤りである。\( v^2 \) なので運動エネルギーは常に0以上で向きをもたない。</p>
 
 <h2 id="s4">位置エネルギーと保存力</h2>
@@ -194,6 +209,11 @@
 \[ U=\frac{1}{2}kx^2 \]
 <p>力が \( kx \) なのに \( kx\cdot x \) ではなく \( \frac{1}{2} \) が付く理由は力が一定ではないからである。伸びが0から \( x \) まで増える間に力は0から \( kx \) まで直線的に増える。上の図の右のとおり仕事は三角形の面積になり \( \frac{1}{2}\times x\times kx \) である。力が一般に変化する場合の仕事は、大学の力学で力を経路に沿って積分して求める。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/04_elastic-pole-vault.jpg" width="1044" height="1200" loading="lazy" alt="大きく曲がったポールにぶら下がって上昇する棒高跳びの選手">
+<figcaption>2025年6月にドイツのホーフで開かれた棒高跳びの大会で、ポールを曲げながら上昇する選手である。助走の運動エネルギーの一部が曲がったポールの弾性力による位置エネルギーになり、ポールがまっすぐに戻る間に選手の重力による位置エネルギーに変わる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:29._Internationales_Hofer_Sparkassen_Stabhochsprung_Meeting_20250628_HOF7442_RAW-Export_1.jpg">PantheraLeo1359531</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 5</div>
 <p>(1) ばね定数 200 N/m のばねを 0.10 m 縮めたときの弾性エネルギーを求めよ。(2) 床から高さ 3.0 m にある質量 2.0 kg の物体の位置エネルギーを床を基準として求めよ。また床から 1.0 m の高さの机の上面を基準とした値も求めよ。重力加速度の大きさは \( 9.8\ \mathrm{m/s^2} \) とする。</p>
 <details open><summary>解き方</summary><div>(1) \( \frac{1}{2}\times200\times0.10^2=1.0\ \mathrm{J} \) である。<br>(2) 床基準では \( 2.0\times9.8\times3.0=58.8\ \mathrm{J} \) で約 59 J である。<br>机の上面基準では高さが 2.0 m なので \( 2.0\times9.8\times2.0=39.2\ \mathrm{J} \) で約 39 J である。<br>2つの値は異なるが机の上面から床までの差 19.6 J はどちらの基準でも同じである。</div></details></div>
@@ -207,6 +227,11 @@
 <p>移項して点Aの量を左辺に点Bの量を右辺に集めると次の式を得る。</p>
 \[ \frac{1}{2}mv_A^2+mgh_A=\frac{1}{2}mv_B^2+mgh_B \]
 <p><strong class="hit">保存力だけが仕事をするとき力学的エネルギーは一定に保たれる</strong>。これを力学的エネルギー保存則と呼ぶ。弾性力の場合も同じ手順で \( \frac{1}{2}mv^2+\frac{1}{2}kx^2 \) が一定になる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_cons-roller-coaster.jpg" width="900" height="1200" loading="lazy" alt="ジェットコースターの垂直ループ">
+<figcaption>よみうりランドのジェットコースター MOMOnGA の垂直ループである。車両はループの頂上で位置エネルギーが大きく速さが小さくなり、最下部で運動エネルギーが大きく速さが大きくなる。摩擦と空気抵抗を無視すれば、ループ上のどの点でも力学的エネルギーの和は等しい。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Loop_Coaster_MOMOnGA_vertical_loop_-_Yomiuriland.jpg">Jeremy Thompson</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 265" role="img" aria-label="落下する物体の位置エネルギーと運動エネルギーの和は一定">
@@ -284,11 +309,21 @@
 
 <p>典型的な誤りは2つある。1つ目は振り子に糸の張力が働くので保存則が使えないと判断する誤りである。張力は仕事をしないので使える。2つ目は高さの基準を途中で変える誤りである。始めと終わりで同じ基準面を使う。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/04_cons-pendulum.jpg" width="1200" height="900" loading="lazy" alt="目盛り盤の上につるされた振り子のおもり">
+<figcaption>大阪大学に設置されたフーコーの振り子である。糸でつるした金属のおもりが目盛り盤の上を往復する。糸の張力はおもりの移動の向きと垂直なので仕事をせず、空気抵抗を無視すればおもりの力学的エネルギーは保存される。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Foucault_pendulum_in_Osaka_University,_03.jpg">Tengo las llaves</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <h2 id="s6">摩擦があるときのエネルギー収支</h2>
 <p>保存力以外の力がする仕事を \( W' \) とする。仕事と運動エネルギーの関係で保存力の仕事を位置エネルギーの差に置き換えると次の式になる。</p>
 \[ \left(\frac{1}{2}mv_B^2+U_B\right)-\left(\frac{1}{2}mv_A^2+U_A\right)=W' \]
 <p><strong class="hit">力学的エネルギーの変化は保存力以外の力がした仕事に等しい</strong>。動摩擦力の仕事は負なので力学的エネルギーは減る。減った分は消えたのではなく接触面の温度を上げる熱に変わる。熱については第5章で扱う。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_friction-brake-disc.jpg" width="1200" height="798" loading="lazy" alt="夜のサーキットで前輪のブレーキ円板が赤く光るレース車両">
+<figcaption>2012年のセブリング12時間レースで、カーブの手前でブレーキをかけた車両である。前輪のブレーキの円板が赤熱している。摩擦力がした負の仕事の分だけ車両の運動エネルギーが減り、その分が円板の温度を上げる熱に変わった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Butch_Leitzinger_52_PC_Sebring.JPG">Nave.notnilc</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>動摩擦力の大きさは動摩擦係数を \( \mu' \) として \( \mu'N \) である。水平面では垂直抗力 \( N=mg \) で傾き \( \theta \) の斜面では \( N=mg\cos\theta \) である。動摩擦力の仕事は \( -\mu'N\times(\text{滑った距離}) \) になる。</p>
 
 <figure class="tb-fig">
@@ -350,6 +385,11 @@
 
 <h2 id="s7">現実世界の力学的エネルギー</h2>
 <p>力学的エネルギーの変換は発電と輸送で大規模に使われている。揚水発電は電力の余る時間帯に下の貯水池から上の貯水池へ水をくみ上げ電力が不足する時間帯に水を落下させて発電する。電気エネルギーを水の位置エネルギーとして蓄える仕組みである。くみ上げに使った電力のうち発電で取り戻せる割合は 70〜80% とされ日本の従来型の設備では約70%とする資料がある。残りはポンプと水車の損失と配管の摩擦で熱に変わる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_real-pumped-storage.jpg" width="1200" height="799" loading="lazy" alt="堤防に囲まれた満水の貯水池の水面">
+<figcaption>アメリカのトーム・ソーク揚水発電所の上部貯水池が満水のときの水面である。くみ上げた水は、上部と下部の貯水池の高さの差に応じた重力による位置エネルギーをもつ。発電ではこの水を落下させて、位置エネルギーを水車の仕事に変える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Taum_Sauk_upper_reservoir_full_2005.jpg">Kbh3rd</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>ハイブリッド車と電車の回生ブレーキは減速時にモーターを発電機として使い運動エネルギーを電気エネルギーに変える。ハイブリッド車は蓄電池に蓄え電車は架線を通じてほかの電車へ送る。摩擦ブレーキでは熱として失われる分を再利用する。</p>
 </aside>

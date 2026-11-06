@@ -23,7 +23,15 @@
 <h3>イオン反応式</h3>
 <p>水溶液中の反応では実際に変化したイオンだけを書いた<strong>イオン反応式</strong>を使う。硝酸銀水溶液に塩化ナトリウム水溶液を加えると塩化銀の白色沈殿が生じる。Na<sup>+</sup> と NO<sub>3</sub><sup>−</sup> は反応の前後で水溶液中に残り変化しないので省く。</p>
 <div class="fx">AgNO<sub>3</sub> ＋ NaCl → AgCl ＋ NaNO<sub>3</sub> → イオン反応式 ： Ag<sup>+</sup> ＋ Cl<sup>−</sup> → AgCl<small>イオン反応式では原子の数に加えて両辺の電荷の合計も一致させる</small></div>
+<figure class="tb-fig tb-photo">
+<img src="../img/11_reaction-quantities-agcl.jpg" width="800" height="832" loading="lazy" alt="試験管の中に生じた塩化銀の白色沈殿">
+<figcaption>1 mol/L の硝酸銀水溶液に薄い塩酸を加えて生じた塩化銀の白色沈殿である。水溶液中の Ag<sup>+</sup> と Cl<sup>−</sup> が結びつき、水に溶けない AgCl として現れる。H<sup>+</sup> と NO<sub>3</sub><sup>−</sup> は変化せず水溶液中に残るので、イオン反応式には書かない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Silver_chloride_(AgCl).jpg">Luisbrudna</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>電荷の条件が加わる例が金属とイオンの反応である。Cu ＋ 2Ag<sup>+</sup> → Cu<sup>2+</sup> ＋ 2Ag では左辺の電荷が ＋2 で右辺も ＋2 である。Cu ＋ Ag<sup>+</sup> → Cu<sup>2+</sup> ＋ Ag は原子の数は合っているが電荷が合わないので誤りである。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/11_reaction-quantities-ag-cu.jpg" width="1200" height="799" loading="lazy" alt="硝酸銀水溶液中の銅線に析出した銀">
+<figcaption>硝酸銀水溶液に銅線のコイルを入れると、銅の表面に灰色の銀の結晶が析出する。溶液の青緑色は、溶け出した Cu<sup>2+</sup> によるものである。銅原子1個が Cu<sup>2+</sup> になるごとに Ag<sup>+</sup> 2個が銀になり、両辺の電荷が等しく保たれる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Precipitation_of_Silver_on_Copper_1.jpg">Toby Hudson</a>／CC BY-SA 3.0 au／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">イオン反応式は合コンの成立報告である。組にならなかった人は書かない</p>
@@ -89,6 +97,10 @@
 <tr><td>アボガドロの法則</td><td>アボガドロ ・ 1811年</td><td>同温同圧で同体積の気体は種類によらず同数の分子を含む</td><td>気体の体積は分子の数で特定される</td></tr>
 </tbody></table></div>
 <p>倍数比例の法則の典型例は炭素の酸化物である。CO では炭素 12 g と結びつく酸素は 16 g で CO<sub>2</sub> では 32 g である。16 対 32 ＝ 1 対 2 の整数比になる。定比例の法則と混同しない。定比例は1つの化合物の中の比であり倍数比例は2つの化合物の間の比較である。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/11_reaction-quantities-lavoisier.jpg" width="900" height="1200" loading="lazy" alt="ダヴィッドが描いたラボアジエ夫妻の肖像画">
+<figcaption>ジャック＝ルイ・ダヴィッドが1788年に描いたラボアジエ夫妻の肖像画である。机の上と床には、気体を扱うガラス製の実験器具が描かれている。ラボアジエは反応の前後の質量を量り、質量保存の法則を示した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:David_-_Portrait_of_Monsieur_Lavoisier_and_His_Wife.jpg">Jacques-Louis David</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">質量保存はトレードで球界の選手の総数が変わらないことである</p>
@@ -97,6 +109,10 @@
 
 <h2 id="s4">気体反応の法則とアボガドロの法則</h2>
 <p>ゲーリュサックは水素と酸素から水蒸気が生じる反応で体積の比が 2 対 1 対 2 になることを示した。当時のドルトンの原子説では気体の単体は原子1個ずつの粒子と考えられていた。この考えでは酸素1体積から水蒸気2体積が生じる説明に<strong class="hit">酸素原子を半分に割る必要が生じて原子は分割できないという前提と矛盾する</strong>。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/11_reaction-quantities-gay-lussac.jpg" width="905" height="1200" loading="lazy" alt="ゲーリュサックの肖像">
+<figcaption>ゲーリュサックの肖像で、ベリアールによる石版画である。気体どうしの反応で体積が簡単な整数比になるという結果が、アボガドロの分子の考えにつながった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Portrait_of_Louis-Joseph_Gay-Lussac_(1778_-_1850)_chemist_Wellcome_L0005556.jpg">作者名の記載なし</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 250" role="img" aria-label="水素2体積と酸素1体積から水蒸気2体積が生じることを分子で説明する">
@@ -132,6 +148,10 @@
 </figure>
 
 <p>1811年にアボガドロは気体の単体が複数の原子からなる分子であると考え同温同圧で同体積の気体は同数の分子を含むと提唱した。この2つの仮定で気体反応の法則は説明できる。2H<sub>2</sub> ＋ O<sub>2</sub> → 2H<sub>2</sub>O の係数の比 2 対 1 対 2 がそのまま体積の比になる。アボガドロの説は約50年間ほとんど受け入れられず1860年にカニッツァーロが再評価して定着した。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/11_reaction-quantities-cannizzaro.jpg" width="893" height="1200" loading="lazy" alt="カニッツァーロの肖像写真">
+<figcaption>スタニスラオ・カニッツァーロの肖像写真である。1860年にアボガドロの説を再評価し、分子という単位が化学に定着するきっかけをつくった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Stanislao_Cannizzaro_01_(cropped).jpg">作者不明</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>この法則から気体の計算には便利な性質が生じる。<strong>同温同圧の気体どうしなら体積のまま係数比を掛けてよい</strong>。mol に直す必要がない。</p>
 <div class="fx">例3 ・ 同温同圧で一酸化炭素 20 mL と酸素 20 mL を反応させた後の気体の体積<br>2CO ＋ O<sub>2</sub> → 2CO<sub>2</sub> ・ CO 20 mL と反応する O<sub>2</sub> は 10 mL<br>反応後 ： CO<sub>2</sub> 20 mL ＋ 余った O<sub>2</sub> 10 mL ＝ 30 mL<small>気体の体積は反応で必ず保存されるわけではない。40 mL が 30 mL に減る。保存されるのは質量と原子の数である</small></div>
 
@@ -144,6 +164,10 @@
 <p>反応物が係数比どおりの量で用意されるとは限らない。一方が先になくなると反応はそこで止まり他方は余る。<strong class="hit">生成物の量は先になくなる側の反応物の量で特定される</strong>。手順は2段である。各反応物を mol に直し係数で割って比べる。値が小さいほうが不足する側である。</p>
 <div class="fx">例4 ・ マグネシウム 0.36 g と 0.020 mol の HCl を含む塩酸の反応 ・ Mg＝24<br>Mg ＋ 2HCl → MgCl<sub>2</sub> ＋ H<sub>2</sub><br>Mg ＝ 0.36 ÷ 24 ＝ 0.015 mol ・ HCl ＝ 0.020 mol<br>係数で割る → Mg 0.015 ÷ 1 ＝ 0.015 ・ HCl 0.020 ÷ 2 ＝ 0.010 → HCl が不足する<br>H<sub>2</sub> ＝ 0.020 mol HCl × (1 mol H<sub>2</sub> ／ 2 mol HCl) ＝ 0.010 mol → 標準状態で 224 mL<small>余る Mg は 0.015 − 0.010 ＝ 0.005 mol ＝ 0.12 g</small></div>
 <p>共通テストはこの計算をグラフで問う。一定量の塩酸に加えるマグネシウムの量を変えて発生する水素の体積を測ると折れ線のグラフになる。<strong class="hit">折れ点は2つの反応物が係数比どおりに過不足なく反応する点である</strong>。折れ点より左ではマグネシウムが不足し加えた量に比例して水素が増える。折れ点より右では塩酸が不足し水素は増えない。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/11_reaction-quantities-mg-hcl.jpg" width="1200" height="900" loading="lazy" alt="塩酸とマグネシウムの反応で泡立つ試験管">
+<figcaption>塩酸にマグネシウムを加え、水素の泡が生じている試験管である。どちらかの反応物がなくなると泡の発生は止まる。生じる水素の量は、先になくなる側の物質量で特定される。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:HCl_%26_magnesium.jpg">Dr.T</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="一定量の塩酸に加えたマグネシウムの質量と発生した水素の体積のグラフ">
@@ -190,6 +214,10 @@
 
 <h2 id="s6">現実世界の量計算 ハーバー・ボッシュ法</h2>
 <p>空気中の窒素と水素からアンモニアを合成する方法がハーバー・ボッシュ法である。ハーバーが実験室で合成に成功しボッシュが高圧の工業設備を開発した。1913年にドイツの BASF 社のオッパウ工場で工業生産が始まった。ハーバーは1918年にボッシュは1931年にノーベル化学賞を受けた。反応式は次のとおりである。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/11_reaction-quantities-haber.jpg" width="552" height="784" loading="lazy" alt="白衣を着て実験室に立つフリッツ・ハーバー">
+<figcaption>実験室に立つフリッツ・ハーバーで、ドイツ連邦公文書館が所蔵する写真である。ハーバーは窒素と水素からアンモニアを合成する反応を実験室で成功させ、1918年にノーベル化学賞を受けた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bundesarchiv_Bild_183-S13651,_Fritz_Haber.jpg">Bundesarchiv</a>／CC BY-SA 3.0 de／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="fx">N<sub>2</sub> ＋ 3H<sub>2</sub> → 2NH<sub>3</sub><small>実際の工業反応は可逆反応で触媒と高温高圧を使う。反応の速さと平衡は化学で扱う。ここでは反応が完全に進むとして量の関係だけを計算する</small></div>
 
 <div class="fx">例5 ・ アンモニア 1.0 t をつくるのに要する水素と窒素の質量 ・ H＝1.0 ・ N＝14<br>NH<sub>3</sub> ＝ 1.0×10<sup>6</sup> g × (1 mol ／ 17 g) ＝ 5.88×10<sup>4</sup> mol<br>H<sub>2</sub> ＝ 5.88×10<sup>4</sup> mol × (3 ／ 2) × 2.0 g/mol ＝ 1.76×10<sup>5</sup> g ＝ 0.18 t<br>N<sub>2</sub> ＝ 5.88×10<sup>4</sup> mol × (1 ／ 2) × 28 g/mol ＝ 8.24×10<sup>5</sup> g ＝ 0.82 t<small>検算 ： 0.176 ＋ 0.824 ＝ 1.000 t で質量保存の法則と一致する。質量で見ると水素は 18 % にすぎないが分子の数では反応物の 75 % を占める</small></div>
@@ -216,6 +244,10 @@
 <p>米国地質調査所の2025年の資料ではアンモニアとして固定された窒素の世界生産量は2024年の推定で窒素換算 1億5,000万 t である。窒素の質量をアンモニアの質量に直すには NH<sub>3</sub> と N のモル質量の比 17 ／ 14 を掛ける。1.5×10<sup>8</sup> t × 17 ／ 14 ＝ 1.8×10<sup>8</sup> t のアンモニアに相当する。例5の比率を使うとこの量の合成には 1.8×10<sup>8</sup> × 0.176 ＝ 3.2×10<sup>7</sup> t の水素を要する計算になる。工業ではこの水素の多くを天然ガスなどの化石資源から得ている。</p>
 <p>合成されたアンモニアの大部分は窒素肥料になる。Erisman らの2008年の論文は合成窒素肥料によって支えられている人口の割合を2000年に44 % ・ 2008年に48 % と推計した。Smil は2000年ごろの値を約40 % としている。どちらも食料生産のモデルに基づく推計値であり直接の観測値ではない。</p>
 </aside>
+<figure class="tb-fig tb-photo">
+<img src="../img/11_reaction-quantities-kapuni2.jpg" width="900" height="687" loading="lazy" alt="塔と配管が並ぶアンモニア工場">
+<figcaption>1982年に撮影されたニュージーランドのカプニのアンモニア工場である。この工場は天然ガスから水素を得て、アンモニアと尿素を生産する。本文の計算のとおり、工業で使う水素の多くはこのように化石資源から得ている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Taranaki_Natural_Gas_Corp_of_NZ_Ammonia_lined_plant_at_Kapuni_(41487975731).jpg">Archives New Zealand</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s7">確認問題</h2>
 <p>必要があれば次の値を使うこと。H＝1.0 ・ C＝12 ・ N＝14 ・ O＝16 ・ Ca＝40 ・ 標準状態の気体のモル体積 22.4 L/mol。</p>

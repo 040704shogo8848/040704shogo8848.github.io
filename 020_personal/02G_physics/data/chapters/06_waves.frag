@@ -6,6 +6,11 @@
 
 <h2 id="s1">波の発生と横波・縦波</h2>
 <p>池に石を投げ込むと水面の上下の振動が同心円状に広がる。このように1か所で生じた振動が次々に周囲へ伝わる現象を<strong>波</strong>または波動と呼ぶ。最初に振動を始めた点を<strong>波源</strong>と呼び波を伝える物質を<strong>媒質</strong>と呼ぶ。水面の波では水が媒質で音では空気が媒質である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_waves-ripple.jpg" width="1200" height="799" loading="lazy" alt="雨粒が当たった水たまりに広がる波紋">
+<figcaption>雨粒が当たった水たまりの水面である。雨粒が当たった点が波源であり、そこから同心円の波紋が周囲へ広がる。水面の各点はその場で上下に振動するだけで、波紋とともに外側へ移動するわけではない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Water_drop_ripple.jpg">Amos777eligius</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p><strong class="hit">媒質の各点はその場で振動するだけで波とともに移動しない</strong>。水面に浮かぶ木の葉は波が通過しても上下に揺れるだけで波と一緒には進まない。波が運ぶのは媒質ではなく振動の状態とエネルギーである。</p>
 
 <aside class="an an-bb"><b>野球で言えば</b>
@@ -141,6 +146,11 @@
 <h2 id="s3">重ね合わせ・定常波・反射</h2>
 <p>2つの波が出会うと媒質の変位はそれぞれの波が単独で伝わるときの変位の和になる。これを<strong>重ね合わせの原理</strong>と呼び重なってできた波を<strong>合成波</strong>と呼ぶ。2つの波は重なり合った後も互いに影響を受けずにそのまま進む。これを<strong>波の独立性</strong>と呼ぶ。山と山が重なると変位は大きくなり山と谷が重なると打ち消し合う。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/06_waves-ripple-1914.jpg" width="1200" height="664" loading="lazy" alt="2か所の波源から広がる水面波が重なる様子">
+<figcaption>1914年に出版された水面波の研究書に収められた写真である。2か所の波源から同心円の波が広がって重なっている。波源の間には山と山が重なって強め合う所と山と谷が重なって打ち消し合う所が放射状の縞として並び、重ね合わせの原理を目で確かめられる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:A_study_of_the_propagation,_refraction,_reflection,_interference_and_diffraction_of_ripple_waves_(1914)_(14596074950).jpg">Internet Archive Book Images</a>／No restrictions／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-rw"><b>現実世界</b>
 <p>ノイズキャンセリングのイヤホンはマイクで拾った騒音と変位が逆の音を出して重ね合わせ騒音を打ち消す。重ね合わせの原理をそのまま使う製品である。</p>
 </aside>
@@ -179,6 +189,11 @@
 </figure>
 
 <p><strong class="hit">隣り合う節と節の間隔は \( \dfrac{\lambda}{2} \) で節と隣の腹の間隔は \( \dfrac{\lambda}{4} \) である</strong>。この2つの値が弦と気柱の計算の基礎になる。定常波に対して媒質を伝わる通常の波を進行波と呼ぶ。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_waves-slinky-standing.jpg" width="1200" height="860" loading="lazy" alt="両端を手で持ったつる巻きばねに生じた定常波">
+<figcaption>両端を手で持ったつる巻きばねを周期的に揺らした写真である。中央付近にほとんど動かない点があり、その両側でばねが大きく振れている。動かない点が節で、大きく振れる部分の中央が腹にあたる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Standing_wave_on_a_slinky.jpg">Nic McPhee from Morris, MN, USA</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 3</div>
 <p>振幅 0.10 m で波長 0.80 m の2つの波が逆向きに進んで重なり定常波ができた。(1) 隣り合う節の間隔を求めよ。(2) 腹の振幅を求めよ。</p>
@@ -235,6 +250,11 @@
 <tr><td>音色</td><td>波形</td><td>同じ高さでも楽器ごとに波形が異なる</td></tr>
 </tbody></table></div>
 <p>人が聞き取れる音の振動数は約 20 Hz から約 20000 Hz である。上限の値は年齢と個人によって異なる。これより高い振動数の音を超音波と呼び医療の検査や魚群探知機に使われる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_waves-ultrasound.jpg" width="1200" height="748" loading="lazy" alt="超音波検査装置の画面に映った胎児の断面">
+<figcaption>妊娠20週の胎児を超音波で検査している装置の画面である。人の耳には聞こえない振動数の音波を体内へ送り、組織の境界ではね返った波から胎児の断面を画像にしている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Obstetric_ultrasound_scan_monitor_showing_20-week_human_fetus_profile_in_Navi_Mumbai_2015.jpg">Goleisureintl</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h3>うなり</h3>
 <p>振動数がわずかに異なる2つの音を同時に鳴らすと音が周期的に大きくなったり小さくなったりして聞こえる。これを<strong>うなり</strong>と呼ぶ。1秒あたりのうなりの回数は2つの振動数の差である。</p>
@@ -307,6 +327,11 @@
 
 <p>弦を伝わる波の速さは弦を張る力が大きいほど大きく弦が太く重いほど小さい。ギターのペグで弦を強く張ると速さ \( v \) が大きくなり同じ長さでも振動数が上がる。指で弦を押さえて振動する部分の長さ \( L \) を短くしても振動数が上がる。</p>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/06_waves-guitar-headstock.jpg" width="900" height="1200" loading="lazy" alt="エレキギターの頭部に並んだペグ"><img src="../img/06_waves-piano-string.jpg" width="1200" height="900" loading="lazy" alt="金属線を巻き付けたピアノの低音用の弦"></div>
+<figcaption>左はエレキギターの頭部で、ペグで弦を張る力を調整すると振動数が変わる。右はピアノの低音用の弦で、芯の線に金属線が密に巻き付けてある。巻き線で弦を重くすると波の速さが小さくなり、弦を長くしなくても低い音を出せる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Headstock_of_Hondo_Stratocaster_copy_electric_guitar.jpg">Elmschrat</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Piano_string_detail.jpg">Frost Nova from Australia</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 5</div>
 <p>長さ 0.50 m の弦の基本振動の振動数が 200 Hz だった。(1) 弦を伝わる波の速さを求めよ。(2) この弦の2倍振動の振動数と波長を求めよ。</p>
 <details open><summary>解き方</summary><div>(1) 基本振動の波長は \( 2L=1.0\ \mathrm{m} \) なので \( v=f\lambda=200\times1.0=200\ \mathrm{m/s} \) である。<br>(2) 2倍振動では \( L=\lambda \) で波長は 0.50 m である。<br>振動数は \( \dfrac{200}{0.50}=400\ \mathrm{Hz} \) で基本振動の2倍である。</div></details></div>
@@ -314,8 +339,18 @@
 <h3>共振と共鳴</h3>
 <p>物体には固有振動数がある。外から周期的な力を加えるとき力の振動数が物体の固有振動数に一致すると振幅が大きくなる。これを<strong>共振</strong>と呼び音の場合は特に<strong>共鳴</strong>と呼ぶ。同じ固有振動数をもつ2つのおんさを並べて一方を鳴らすともう一方も鳴り始めるのは共鳴の例である。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/06_waves-tuning-fork.jpg" width="900" height="893" loading="lazy" alt="木の共鳴箱に取り付けたおんさ">
+<figcaption>木の共鳴箱に取り付けたおんさである。箱は片側が開いた管になっている。おんさの振動に箱の中の気柱が共鳴するので、おんさだけを鳴らすより大きな音が出る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Tuning_fork_on_resonator.jpg">Brian0918 at English Wikipedia</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s6">気柱の共鳴</h2>
 <p>管の中の空気を<strong>気柱</strong>と呼ぶ。気柱の中でも音波が管の端で反射して定常波ができる。一端が閉じた管を<strong>閉管</strong>・両端が開いた管を<strong>開管</strong>と呼ぶ。<strong class="hit">閉じた端では空気が動けないので変位の節になり開いた端では変位の腹になる</strong>。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_waves-rubens-tube.jpg" width="1200" height="379" loading="lazy" alt="炎の高さが等間隔に変わるルーベンス管">
+<figcaption>ルーベンス管と呼ばれる実験装置である。燃料のガスを満たした管の一端から発振器の音を送り、管の上面に並んだ小さな穴でガスを燃やしている。管の中の気柱に定常波ができると炎の高さが等間隔に変わり、隣り合う炎の高い所の間隔は半波長にあたる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Flame-tube-resonance.jpg">MikeRun</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 258" role="img" aria-label="閉管と開管の気柱の固有振動">
@@ -385,7 +420,17 @@
 
 <h2 id="s7">現実世界の波と音</h2>
 <p>楽器の調律ではうなりを使う。基準のおんさと弦を同時に鳴らし弦の張り具合を変えてうなりの回数が0になる点に合わせる。うなりが1秒に1回なら振動数の差は 1 Hz である。人の耳では判別しにくい 1 Hz の差でも音の強弱の周期として聞き分けられる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_waves-piano-tuning.jpg" width="1200" height="900" loading="lazy" alt="工具でピアノを調律している調律師">
+<figcaption>アップライトピアノを調律している場面である。調律師は工具で弦を留めるピンを回し、弦を張る力を変えて振動数を合わせる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Piano_tuning.jpg">Goran Andjelic</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>パイプオルガンは長さの異なる多数の管を並べた楽器である。開管と閉管の両方を使い閉管は同じ長さの開管より1オクターブ低い基本振動を出す。例題6の 170 Hz と 340 Hz の関係がこれである。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_waves-organ.jpg" width="1200" height="900" loading="lazy" alt="長さの異なる多数の管が並ぶパイプオルガンの内部">
+<figcaption>パイプオルガンの内部である。手前の金属の管は長いものから短いものへ順に並ぶ。管の長さが気柱の固有振動の波長を定めるので、短い管ほど高い音を出す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Organ_interior_(organ_pipes).jpg">Bartłomiej Bulicz</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 波の基本式</div>

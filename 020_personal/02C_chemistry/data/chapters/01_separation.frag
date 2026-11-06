@@ -30,6 +30,11 @@
 </figure>
 
 <p>共通テストでは物質名だけを示して純物質か混合物かを選ばせる問いが出る。誤りやすいのは名称に「〜酸」や「〜水」がつく物質である。塩酸は塩化水素という気体を水に溶かした水溶液で混合物である。アンモニア水も同様に混合物である。一方でドライアイスは二酸化炭素の固体で純物質である。氷と水が混ざった状態も成分は水だけなので純物質である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_separation-granite.jpg" width="1200" height="900" loading="lazy" alt="白・黒・淡い桃色の粒が混じった花こう岩の表面">
+<figcaption>花こう岩の表面である。白・黒・淡い桃色の粒はそれぞれ種類の異なる鉱物で、1つの岩石が複数の物質の粒の集まりであることが目で見て分かる。表の混合物の欄に花こう岩を挙げたのはこのためである。左下の目盛りは3インチである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Lilesville_Granite_with_Scale.jpg">Scarlett016</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-vs">
 <div><h5>純物質</h5><ul><li>水 ・ 氷 ・ 塩化ナトリウム</li><li>酸素 ・ 窒素 ・ 鉄 ・ 水銀</li><li>ドライアイス ・ エタノール ・ ダイヤモンド</li><li>融点と沸点が一定</li></ul></div>
 <div><h5>混合物</h5><ul><li>空気 ・ 海水 ・ 石油 ・ 牛乳</li><li>塩酸 ・ アンモニア水 ・ 食塩水</li><li>青銅などの合金 ・ 花こう岩</li><li>融点と沸点が成分の割合で変わる</li></ul></div>
@@ -50,7 +55,17 @@
 </tbody></table></div>
 <p><strong>ろ過</strong>はろ紙を使って液体と液体に溶けない固体を分ける操作である。ろ紙の穴は水分子や溶けているイオンより大きく砂粒より小さい。そのため砂はろ紙の上に残り水溶液はろ紙を通過する。ろ紙を通過した液体を<strong>ろ液</strong>と呼ぶ。溶けている塩化ナトリウムはろ過では分けられない。</p>
 <p>ろ過の操作には共通テストで問われる決まりが4つある。ろ紙は水でぬらしてろうとに密着させる。液はガラス棒に伝わらせて注ぐ。ろうとの脚の先のとがった側をビーカーの内壁につける。注ぐ液面の高さはろ紙の上端より下に保つ。ガラス棒を使うのは液の飛び散りを防ぐためであり脚の先を内壁につけるのはろ液を壁に沿わせて速く静かに流すためである。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_separation-filtration.jpg" width="675" height="1200" loading="lazy" alt="ガラス棒に伝わらせて液をろうとに注ぐろ過の操作">
+<figcaption>ろ紙を敷いたろうとに、ガラス棒に伝わらせて液を注いでいる様子である。ろ紙を通過した液がろ液として下のフラスコにたまる。この写真は溶液を氷で冷やしてからろ過する操作で、右の容器の氷はそのためのものである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Cold_Filtration_(with_stirring_rod).jpg">Suman6395</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p><strong>蒸留</strong>は液体を加熱して沸騰させ生じた蒸気を冷やして再び液体にする操作である。沸点の低い成分が先に気体になるので沸点の差で分離できる。海水を蒸留すると水だけが蒸気になり塩類はフラスコに残る。得られた液体を<strong>留出液</strong>と呼ぶ。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_separation-distillation.jpg" width="1200" height="900" loading="lazy" alt="加熱器・枝付きフラスコ・斜めの冷却器を組んだ実験室の蒸留装置">
+<figcaption>実験室に組み立てた蒸留装置である。左の加熱器でフラスコの液を沸騰させ、生じた蒸気が上の枝から斜めの冷却器へ進む。冷却器の外管には水を流して蒸気を冷やし、液体に戻った留出液を先端から受ける。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Distillation_2-a.jpg">Distillation_2.jpg: Arlen derivative</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 400" role="img" aria-label="蒸留装置の各部と操作の注意点">
@@ -119,11 +134,21 @@
 <h2 id="s3">分留と再結晶</h2>
 <p>沸点の異なる液体どうしの混合物を蒸留し沸点の差で複数の成分に分ける操作を<strong>分留</strong>と呼ぶ。原油は沸点の異なる数百種類の炭化水素の混合物である。製油所の常圧蒸留装置は原油を約350 ℃に加熱して塔へ送る。塔の上ほど温度が低く沸点の低い成分ほど上の段で液体に戻る。こうして石油ガス・ナフサ・灯油・軽油・残油に分けられる。液体空気を分留すると沸点 −196 ℃の窒素と沸点 −183 ℃の酸素が得られる。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/01_separation-fractional.jpg" width="800" height="1200" loading="lazy" alt="高校の化学実験室に組み立てた分留の装置">
+<figcaption>学校の実験室に組み立てた分留の装置である。右下の加熱器にのせたフラスコから蒸気が上り、その上に立つ縦長の管の中で凝縮と蒸発を繰り返しながら沸点の低い成分ほど上へ進む。上部で横へ出た蒸気は左の冷却器で液体に戻される。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Fraktionierte_Destillation_-_Laboratory_Fractional_distillation_apparatus.jpg">Chemie-Verbände Baden-Württemberg</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-biz"><b>会計で言えば</b>
 <p class="an-h">分留は連産品である。ガソリンだけを作ることはできない</p>
 <p>1つの原油から灯油や重油も同時に生じ製品の構成比は原油の組成で特定される。</p>
 <p class="an-x">構成比を変えるのは分留ではなく後工程の分解や改質という化学反応である。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_separation-air-sep.jpg" width="1200" height="778" loading="lazy" alt="空気分離の工場の外観">
+<figcaption>米国ウェストバージニア州にある空気分離の工場である。空気を冷却して液体にし、沸点 −196 ℃の窒素と −183 ℃の酸素の差を使って分留する。実験室の分留と同じ原理を工場の規模で使っている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Linde_(previously_AGA)_air_separation_plant_in_Washington,_West_Virginia..JPG">Snoopywv</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <p><strong>再結晶</strong>は温度による溶解度の変化を使う精製法である。<strong>溶解度</strong>は一定量の溶媒に溶ける溶質の最大の質量で水100 g に溶ける g 数で表す。硝酸カリウムの溶解度は20 ℃で約32 g・60 ℃で約110 g と温度で大きく変わる。塩化ナトリウムの溶解度は20 ℃で約36 g・60 ℃で約37 g とわずかしか変わらない。</p>
 
@@ -157,6 +182,11 @@
 </figure>
 
 <p>少量の塩化ナトリウムを含む硝酸カリウムを精製する手順は次のとおりである。高温の水に全体を溶かしてから冷やす。<strong class="hit">硝酸カリウムは溶解度が大きく下がり溶けきれなくなった分が結晶になる。塩化ナトリウムは量が少なく溶解度もほとんど変わらないので溶液に残る</strong>。析出した結晶をろ過で取り出せば純度の高い硝酸カリウムが得られる。計算の型は1つである。この計算は各溶質の溶解度が互いに影響しないとみなした近似であり、2種類の塩が共存すると互いの溶解度は変わる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_separation-kno3.jpg" width="1200" height="799" loading="lazy" alt="ガラス皿の中に針状に伸びた硝酸カリウムの結晶">
+<figcaption>水溶液から水を蒸発させて得た硝酸カリウムの結晶である。細長い針状の結晶が皿全体に伸びている。冷却による再結晶でも、溶けきれなくなった硝酸カリウムはこのような固体の結晶として析出し、ろ過で取り出せる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Potassium_nitrate_crystals.jpg">Adam Rędzikowski</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="fx">析出量 ＝ 高温で溶けていた質量 − 低温での溶解度<small>水の質量が100 g でないときは水の質量に比例させて溶解度を換算する。水200 g なら溶解度を2倍にする。</small></div>
 
 <aside class="an an-bb"><b>野球で言えば</b>
@@ -168,6 +198,11 @@
 <p><strong>抽出</strong>は目的の物質をよく溶かす溶媒を使って混合物から取り出す操作である。茶葉に湯を注いでうま味や香りの成分を取り出す操作も抽出である。実験室では<strong>分液ろうと</strong>を使う。ヨウ素はわずかに水に溶けるがヘキサンにはよく溶ける。ヨウ素を含む水溶液にヘキサンを加えて振り混ぜるとヨウ素はヘキサンへ移る。ヘキサンは水と混じり合わず水より密度が小さいので上の層になり紫色を示す。</p>
 <p>分液ろうとの操作では2点が問われる。振り混ぜた後はコックを開いて内部の気体を抜く。下の層は下のコックから流し出し上の層は上の口から注ぎ出す。上の層をコックから出すと管に残った下の層の液が混入する。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/01_separation-sepfunnel.jpg" width="865" height="1200" loading="lazy" alt="2層に分かれた液体を入れて台に固定した分液ろうと">
+<figcaption>互いに混じり合わない2種類の液体を入れて静置した分液ろうとである。下の細い部分に境界面があり、液体が上下2層に分かれている。下の層は下のコックから流し出し、上の層は上の口から注ぎ出す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Scheitrechter.JPG">Markdegeus</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">抽出は相性のよい相手のもとへ移る関係である</p>
 <p>ヨウ素 ／ 水とは相性が弱くヘキサンとは強い。振り混ぜる ／ 出会いの機会を増やす操作。</p>
@@ -175,7 +210,17 @@
 </aside>
 
 <p><strong>昇華法</strong>は固体が液体を経ずに直接気体になる<strong>昇華</strong>を使う方法である。昇華しやすい物質の代表はヨウ素とナフタレンである。ヨウ素と砂の混合物をビーカーに入れて穏やかに加熱する。上に冷水を入れた丸底フラスコをのせるとヨウ素の蒸気がフラスコの底で冷やされて固体の結晶として付着する。砂は昇華しないのでビーカーに残る。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/01_separation-iodine-sublimation.jpg" width="794" height="1200" loading="lazy" alt="氷を入れたフラスコをのせたビーカーの中で紫色の蒸気が生じている様子"><img src="../img/01_separation-iodine-crystals.jpg" width="1200" height="795" loading="lazy" alt="ビーカーの中に生じた黒紫色の針状のヨウ素の結晶"></div>
+<figcaption>左は本文と同じ配置の昇華法の実験で、ヨウ素を入れたビーカーを加熱し上に氷を入れたフラスコをのせている。ビーカーの中に紫色のヨウ素の蒸気が満ちている。右は冷やされたヨウ素の蒸気が再び固体になった結晶で、黒紫色の針状の結晶が生じている。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Iodine_sublimation-_sublimation_in_process.jpg">Kate7234</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:Iodine_sublimation-resublimated_Iodine.jpg">Kate7234</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <p><strong>クロマトグラフィー</strong>はろ紙やシリカゲルなどへの吸着の強さの差を使う方法である。ろ紙を使うものをペーパークロマトグラフィーと呼ぶ。ろ紙の下端近くに鉛筆で原点の線を引き試料をつける。ろ紙の下端を展開液に浸すと液が毛細管現象でろ紙を上っていく。ろ紙に強く吸着される成分ほど移動が遅く吸着の弱い成分ほど遠くまで運ばれる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_separation-chromatography.jpg" width="1200" height="900" loading="lazy" alt="黒いインクの点からろ紙を上って赤と緑の色素が分かれた様子">
+<figcaption>黒い水性ペンのインクでつけた点から展開液がろ紙を上り、赤と緑の色素が異なる位置に分かれた。1色に見えたインクが複数の色素の混合物であり、色素ごとに吸着の強さが異なることが分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:BlackInkChromatography.jpg">Oscar</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 280" role="img" aria-label="ペーパークロマトグラフィーで色素が分かれる様子">
@@ -233,6 +278,11 @@
 
 <h2 id="s6">現実世界の分離 石油の分留と11Nのシリコン</h2>
 <p>分離の技術が最も大きな規模で使われているのが製油所である。原油は常圧蒸留装置で沸点の範囲ごとに分けられる。上の段から順に石油ガス・ナフサ・灯油・軽油が取り出され塔の底には残油が残る。ナフサはガソリンとプラスチックの原料になる。序章で見た年間4億トンを超えるプラスチックの大部分はこの塔のナフサから始まる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_separation-refinery.jpg" width="1200" height="723" loading="lazy" alt="大型の車両で運ばれる横倒しの蒸留塔">
+<figcaption>メキシコのトゥーラ製油所へ運ばれる途中の蒸留塔である。横倒しにして多数の車輪をもつ車両で運んでおり、手前の人や自動車と比べると塔の直径と長さが分かる。原油の分留はこの規模の塔の中で行われる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Distillation_towers_tulap4.jpg">Carlos Valenzuela</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 330" role="img" aria-label="原油の常圧蒸留塔と取り出される留分">

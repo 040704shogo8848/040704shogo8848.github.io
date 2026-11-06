@@ -8,7 +8,17 @@
 <p>磁石には N 極と S 極がある。同じ極どうしは反発し異なる極どうしは引き合う。この力を<strong>磁気力</strong>と呼ぶ。磁気力がはたらく空間を<strong>磁場</strong>または磁界と呼ぶ。磁場の向きはその点に置いた方位磁針の N 極が指す向きと定める。磁場の向きを順につないだ線を<strong>磁力線</strong>と呼び磁石の外では N 極から出て S 極へ入る。磁力線が密な所ほど磁場は強い。</p>
 <p>1820年にデンマークのハンス・クリスティアン・エルステッドは導線に電流を流すと近くの方位磁針の向きが変わることを示した。<strong class="hit">電流は周囲に磁場をつくる</strong>。電気と磁気が結びついた最初の発見である。</p>
 <p>まっすぐな導線を流れる電流は導線を中心とする同心円状の磁場をつくる。磁場の向きは右ねじの法則で定まる。<strong>右ねじが進む向きに電流を流すと右ねじを回転させる向きが磁場の向きである</strong>。右手の親指を電流の向きに向けると残りの4本の指が巻く向きが磁場の向きである。磁場は電流が大きいほど強く導線から離れるほど弱い。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_em-wire-compass.jpg" width="1200" height="1106" loading="lazy" alt="電流が流れる導線のまわりに並べた方位磁針">
+<figcaption>まっすぐな導線のまわりに方位磁針を並べ、導線に電流を流した写真である。磁針は導線を囲む円の接線の向きを指している。電流がつくる磁場が導線を中心とする同心円状になることが、磁針の向きの並びで分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Straight-wire-magnetic-field-compass-needles.jpg">MikeRun</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>導線を円筒状に巻いたものを<strong>コイル</strong>またはソレノイドと呼ぶ。コイルに電流を流すと内部に強くそろった磁場ができ外側の磁力線は棒磁石と同じ形になる。右手の4本の指を電流の向きに巻くと親指が指す向きがコイル内部の磁場の向きであり N 極の側である。コイルの中に鉄心を入れると磁場が強くなる。これが<strong>電磁石</strong>である。電磁石は電流を切ると磁場が消え電流の大きさで磁場の強さを変えられる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_em-lifting-magnet.jpg" width="508" height="898" loading="lazy" alt="鉄くずをつり上げる産業用の電磁石">
+<figcaption>1914年ごろの産業用の電磁石が鉄くずをつり上げている写真である。上部から電流を送る電線が入っている。電流を切ると磁場が消えるので、つり上げた鉄くずを任意の場所で放せる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Industrial_lifting_magnet.jpg">Cyril Methodius Jansky</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="直線電流のまわりの同心円状の磁場とコイルがつくる磁場">
@@ -55,6 +65,11 @@
 <p>磁場の中に導線を置いて電流を流すと導線は力を受ける。電流は磁場をつくって磁石に力を及ぼす。その反作用として電流も磁石の磁場から力を受ける。力の向きは電流の向きと磁場の向きの両方に垂直である。左手の中指を電流・人差し指を磁場・親指を力の向きに対応させる<strong>フレミングの左手の法則</strong>で向きを定める。電流が大きいほど磁場が強いほど力は大きい。電流と磁場が平行なとき力は0である。</p>
 <p>この力を連続した回転に変える装置が<strong>モーター</strong>である。磁石の間に置いたコイルに電流を流すとコイルの左右の辺が逆向きの力を受けてコイルが回転する。半回転ごとに整流子とブラシで電流の向きを切り替えると同じ向きに回転し続ける。<strong class="hit">モーターは電気エネルギーを運動エネルギーに変換する装置である</strong>。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/08_em-commutator.jpg" width="1200" height="799" loading="lazy" alt="直流モーターの整流子とそれに押し当てたブラシ">
+<figcaption>出力 293 kW の直流モーターの整流子とブラシである。細い銅色の板を円筒状に並べた部分が整流子で、上から押し当てた複数のブラシを通して回転するコイルに電流が流れる。回転に合わせて接触する板が替わり、コイルの電流の向きが切り替わる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Commutator_and_brushes_DC_motor.jpg">Christian Kral</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-rw"><b>現実世界</b>
 <p class="an-h">世界の電力の4割強はモーターで消費される</p>
 <p>国際エネルギー機関の2011年の報告はモーター駆動の機器が世界の電力消費の43〜46%を占めると推計した。</p>
@@ -74,6 +89,11 @@
 
 <h3>発電機</h3>
 <p>磁石の間でコイルを回転させるとコイルを貫く磁場が周期的に増減し誘導電流の向きも周期的に反転する。これが<strong>発電機</strong>である。<strong>発電機はモーターと同じ構造で変換の向きが逆である</strong>。モーターは電気から回転を生み発電機は回転から電気を生む。火力発電所も水力発電所も原子力発電所も最後は発電機のコイルを回転させて電気を得る。違いはタービンを回転させるエネルギー源だけである。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_em-hydro-rotor.jpg" width="1200" height="799" loading="lazy" alt="保守のため取り出された水力発電所の発電機の回転子">
+<figcaption>コー＝トロワ＝ポン揚水発電所の発電電動機の回転子で、保守のため取り出されている。直径は約 6 m である。揚水発電所では同じ機械を、水をくみ上げる電動機としても発電機としても使う。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Coo-Trois-Ponts,_rotor.jpg">Olivier Cleynen</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>投資で言えば</b>
 <p class="an-h">電磁誘導は業績の水準ではなく予想との差に反応する株価である</p>
@@ -96,6 +116,11 @@
 
 <h3>東日本の 50 Hz と西日本の 60 Hz</h3>
 <p>日本の商用電源の周波数は東日本が 50 Hz で西日本が 60 Hz である。境界はおおむね静岡県の富士川と新潟県の糸魚川を結ぶ線である。1895年に東京電燈はドイツの AEG から 50 Hz の発電機を購入した。大阪電燈はその1〜2年後にアメリカの GE から 60 Hz の発電機を購入した。両社の地域でそれぞれの周波数の設備が広がりその後も統一されなかった。異なる周波数の電力網の間で電力を送るには周波数変換所で交流を一度直流に変えてから別の周波数の交流に戻す。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_em-sakuma.jpg" width="1200" height="675" loading="lazy" alt="山あいに建つ佐久間周波数変換所の全景">
+<figcaption>J-POWER の佐久間周波数変換所である。50 Hz と 60 Hz の電力網の間で電力を送るため、交流を一度直流に変えてから別の周波数の交流に戻す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:J-POWER_SAKUMA_frequency_converter_station.jpg">Jihara19</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 260" role="img" aria-label="50ヘルツと60ヘルツの交流電圧の時間変化">
@@ -168,6 +193,11 @@
 <p>発電所から家庭までの送電線には抵抗がある。送電線の抵抗を \(r\)・送電線を流れる電流を \(I\) とすると送電線で熱として失われる電力は第7章のジュール熱の式から \(rI^2\) である。送る電力 \(P\) を一定にして送電の電圧 \(V\) を上げると \(I = P/V\) が小さくなる。</p>
 \[ P_{\text{損失}} = rI^2 = r\left(\frac{P}{V}\right)^2 \]
 <p><strong class="hit">損失は電圧の2乗に反比例する</strong>。電圧を10倍にすると損失は100分の1になる。日本の発電所では発電機の電圧を変圧器で数十万 V に上げ基幹の送電線では最高 500 kV で送電する。変電所で段階的に電圧を下げ電柱の変圧器で 6600 V を家庭用の 100 V と 200 V に下げる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_em-pole-transformer.jpg" width="1200" height="800" loading="lazy" alt="電柱に取り付けられた円筒形の柱上変圧器">
+<figcaption>電柱に取り付けた柱上変圧器である。円筒形の容器の中に鉄心と2つのコイルがあり、配電線の高い電圧を家庭で使う電圧に下げる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Utility_pole_with_transformer_and_power_lines.jpg">Candeadly</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 200" role="img" aria-label="発電所から家庭までの送電と電圧">
@@ -259,6 +289,11 @@
 
 <p>電子レンジは周波数 2.45 GHz の電波で食品中の水分子を振動させて加熱する。波長は \(c/f\) から約 12 cm である。携帯電話や無線LANも同じ電波の仲間であり周波数帯の割り当てで区別する。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/08_em-xray-hand.jpg" width="471" height="738" loading="lazy" alt="レントゲンが撮影したケリカーの左手のX線写真">
+<figcaption>1896年1月にヴィルヘルム・レントゲンがヴュルツブルクでの講演会で撮影した、アルベルト・フォン・ケリカーの左手のX線写真である。X線は皮膚や筋肉を透過しやすく骨や金属の指輪を透過しにくいので、骨の形が影として写る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:X-ray_by_Wilhelm_R%C3%B6ntgen_of_Albert_von_K%C3%B6lliker%27s_hand_-_18960123-02.jpg">Wilhelm Röntgen</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 5</div>
 <p>周波数 80 MHz の FM 放送の電波の波長を求めよ。</p>
 <details open><summary>解き方</summary><div>手順1 \(\lambda = \dfrac{c}{f} = \dfrac{3.0\times10^{8}}{8.0\times10^{7}}\)<br>
@@ -278,6 +313,11 @@
 <tr><td>地熱</td><td>地下の熱 → 蒸気の運動 → 電気</td><td>天候に左右されない ／ 適地が限られる</td></tr>
 </tbody></table></div>
 <p>熱を経由する発電では第5章の熱力学第二法則により熱のすべてを仕事に変えることはできない。火力発電の熱効率は方式によって約40%から60%前後である。残りの熱は海水や大気に捨てられる。<strong class="hit">熱を経由しない水力発電は位置エネルギーの約80%を電気にできる</strong>。太陽光発電は発電機を使わない唯一の主要な方式である。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/08_em-kurobe-dam.jpg" width="1200" height="900" loading="lazy" alt="黒部ダムから勢いよく放流される水"><img src="../img/08_em-wind-farm.jpg" width="1200" height="873" loading="lazy" alt="海上に一列に並ぶミデルグルント洋上風力発電所の風車"></div>
+<figcaption>左は黒部ダムからの放水である。ダムは水を高い位置にため、重力による位置エネルギーを水の運動エネルギーに変える。右はエーレスンド海峡にあるミデルグルント洋上風力発電所で、出力は40 MW である。風車は空気の運動エネルギーで回転し、どちらの方式も最後は発電機で電気に変換する。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Kurobe_dam_with_onlookers.jpg">elminium</a>／CC BY 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:Middelgrunden_wind_farm_2009-07-01_edit_filtered.jpg">Kim Hansen</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 6</div>
 <p>高さ 100 m から毎秒 10 m<sup>3</sup> の水を落下させて発電する。水の位置エネルギーの80%が電気になるとき発電の出力は何 kW か。水 1 m<sup>3</sup> の質量を 1000 kg・重力加速度を 9.8 m/s<sup>2</sup> とする。</p>
@@ -301,6 +341,11 @@
 <tr><td>中性子線</td><td>中性子</td><td>間接に生じる</td><td>大きい ／ 水やコンクリート</td></tr>
 </tbody></table></div>
 <p>放射線は物質中の原子から電子をはじき出してイオンをつくる。この作用を<strong>電離作用</strong>と呼ぶ。電離作用が強い放射線ほど短い距離でエネルギーを失うので透過力は小さい。<strong class="hit">電離作用と透過力は逆の順に並ぶ</strong>。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_em-cloud-chamber.jpg" width="1200" height="675" loading="lazy" alt="霧箱の中でα線がつくる太く短い飛跡">
+<figcaption>霧箱に人工の放射性核種アメリシウム241を入れた写真である。アメリシウム241が出すα線は通り道の気体を電離し、そこに生じた霧の筋が飛跡として見える。飛跡が太く短いのは、α線の電離作用が大きく透過力が小さいからである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Artificial_nuclide_americium-241_emitting_alpha_particles_inserted_into_a_cloud_chamber_for_visualisation.jpg">Nuledo</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 220" role="img" aria-label="α線は紙でβ線はアルミニウム板でγ線は鉛で止まる">
@@ -343,6 +388,11 @@
 \[ E = \Delta m\,c^2 \]
 <p>\(c^2 = 9.0\times10^{16}\ \mathrm{m^2/s^2}\) と大きいので質量のわずかな減少が大きなエネルギーになる。ウラン235の 1 g が全部核分裂すると石炭約3トンを燃やしたときと同程度の熱が出る。原子力発電はこの熱で水を沸騰させて蒸気でタービンを回転させる。熱から先の仕組みは火力発電と同じである。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/08_em-fuel-pellets.jpg" width="1200" height="675" loading="lazy" alt="展示ケースに入った円柱形の核燃料ペレット">
+<figcaption>ドイツの旧グライフスヴァルト原子力発電所の情報センターに展示された核燃料ペレットである。二酸化ウランを焼き固めた直径約 1 cm の円柱で、これを金属の管に詰めて燃料棒にする。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Nuclear_fuel_pellets_at_the_Greifswald_Nuclear_Power_Plant_information_center.jpg">Siarhei Besarab</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">半減期は打率ではなく選手の在籍年数の中央値である</p>
 <p>どの1人が次に抜けるかは予測できないが半数が抜けるまでの期間は一定である。個々の原子核の崩壊も予測できず集団の半減期だけが定まる。</p>
@@ -358,6 +408,11 @@
 <h2 id="s8">現実世界の周波数の壁</h2>
 <p>2011年3月の東日本大震災では東日本の発電所が停止し電力が不足した。西日本には余力があったが 60 Hz の電力を 50 Hz の電力網へ送るには周波数変換所を通す必要があった。当時の変換能力は限られていて首都圏では計画停電が実施された。</p>
 <p>その後に変換設備の増強が進んだ。2021年3月に飛騨信濃周波数変換設備が運用を始め東京と中部の間の変換能力は120万 kW から210万 kW に拡大した。さらに300万 kW への増強が進められている。電力広域的運営推進機関の2025年10月の報告は、工事の遅れにより完了予定を当初の2027年度末から2028年12月としている。第3節の 50 Hz と 60 Hz の境界は明治時代の発電機の購入の結果であり現在も電力網の設計を制約している。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_em-hida.jpg" width="1200" height="675" loading="lazy" alt="山中に建つ飛騨変換所と送電線の鉄塔">
+<figcaption>岐阜県高山市にある中部電力の飛騨変換所である。長野県の新信濃変電所とは直流の送電線で結ばれ、両者で本文の飛騨信濃周波数変換設備を構成する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:ChubuElectricPower_HIDA_frequency_converter_station.jpg">Jihara19</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s9">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 電流がつくる磁場</div>

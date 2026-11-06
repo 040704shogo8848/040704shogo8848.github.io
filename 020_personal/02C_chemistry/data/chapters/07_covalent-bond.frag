@@ -506,6 +506,10 @@
 <tr><td>5</td><td>SnH<sub>4</sub> −52</td><td>SbH<sub>3</sub> −17</td><td>H<sub>2</sub>Te −2.2</td><td>HI −35.4</td></tr>
 </tbody></table></div>
 <p>沸点は 1013 hPa での値で単位は ℃ である。水素結合をつくらない分子どうしの比較では分子量が大きいほど沸点が高い。分子量が同程度なら極性分子のほうが無極性分子より高い。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/07_covalent-bond-snowflake.jpg" width="1200" height="900" loading="lazy" alt="6本の枝をもつ雪の結晶">
+<figcaption>雪の結晶を拡大した写真である。直径は4〜5 mmで6本の枝が等しい角度で伸びる。氷の中では水分子が水素結合で六角形の網目をつくり、その配置が結晶全体の六角形の形に現れる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Snowflake_macro_photography_1.jpg">Alexey Kljatov</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-lv"><b>男女で言えば</b>
 <p class="an-h">沸騰は教室の解散である。知人関係は解けても交際関係は残る</p>
@@ -514,6 +518,10 @@
 
 <h3>分子結晶</h3>
 <p>分子が分子間力で規則正しく並んだ固体を<strong>分子結晶</strong>と呼ぶ。分子間力は弱いので融点が低く軟らかい。一部は固体から直接気体になる<strong>昇華</strong>を起こす。ドライアイスは二酸化炭素の分子結晶で 1013 hPa では −78.5 ℃ で昇華する。ヨウ素とナフタレンも昇華しやすい分子結晶である。分子結晶は固体でも液体でも電荷を運ぶ粒子をもたないので電気を通さない。</p>
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/07_covalent-bond-naphthalene.jpg" width="1200" height="580" loading="lazy" alt="冷えたガラスの面に昇華して生じたナフタレンの結晶"><img src="../img/07_covalent-bond-iodine.jpg" width="1024" height="1024" loading="lazy" alt="気体から直接生じたヨウ素の結晶"></div>
+<figcaption>左は昇華したナフタレンの気体が冷えたガラスの面で直接固体に戻り、白い針状の結晶になった様子である。右はヨウ素の気体がガラス容器の内側で冷えて直接生じた結晶である。どちらも分子間力の弱い分子結晶であり、液体を経ずに固体と気体の間で状態が変わる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Crystal-like_sublimated_naphthalene.jpg">Ppraaeww</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Iodine_crystals_grown_from_the_gas_phase_of_iodine.jpg">Paul from Enschede, The Netherlands</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s6">共有結合の結晶と高分子化合物</h2>
 <h3>共有結合の結晶</h3>
@@ -714,7 +722,15 @@
 </figure>
 
 <p>ダイヤモンドでは各炭素原子が4個の炭素原子と共有結合し正四面体の網目を立体的に広げる。価電子4個が全て結合に使われ動ける電子がないので電気を通さない。天然の物質で最も硬く熱伝導性が高い。黒鉛では各炭素原子が3個の炭素原子と結合して正六角形の平面の層をつくる。<strong class="hit">残る価電子1個が層の中を動けるので黒鉛は共有結合の結晶でありながら電気を通す</strong>。層と層は分子間力で弱く重なっているだけなので薄くはがれやすい。鉛筆の芯や電極に使われる。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/07_covalent-bond-diamond-blade.jpg" width="1200" height="1171" loading="lazy" alt="切断用の刃の表面に埋め込まれたダイヤモンドの粒">
+<figcaption>ダイヤモンドの刃を拡大した写真である。灰色の刃の表面に埋め込まれた黄色みのある粒がダイヤモンドの結晶である。全方向に共有結合が広がった最も硬い天然の物質なので、硬い材料を切断する刃に使われる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Diamond_blade_very_macro.jpg">Hustvedt</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>ケイ素はダイヤモンドと同じ構造をとり半導体の材料になる。二酸化ケイ素では各ケイ素原子が4個の酸素原子と結合し各酸素原子が2個のケイ素原子と結合する。石英や水晶がこれにあたりガラスの主成分でもある。</p>
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/07_covalent-bond-silicon-lump.jpg" width="1046" height="727" loading="lazy" alt="金属のような光沢をもつケイ素の塊"><img src="../img/07_covalent-bond-quartz.jpg" width="1200" height="900" loading="lazy" alt="物差しと並べた石英の結晶"></div>
+<figcaption>左は精製したケイ素の単体の塊で、割れた面が金属のような光沢をもつ。右は二酸化ケイ素 SiO<sub>2</sub> の結晶である石英で、物差しの目盛りから幅は2 cm余りである。どちらも原子が共有結合だけで立体的につながった共有結合の結晶である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:SiliconCroda.jpg">Enricoros</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Quartz_-_SiO2_(25505570244).jpg">Jan Helebrant</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>スタートアップで言えば</b>
 <p class="an-h">分子結晶は業務提携で共有結合の結晶は1つの法人である</p>
@@ -739,6 +755,10 @@
 </div>
 <div class="fx">n CH<sub>2</sub>=CH<sub>2</sub> → [ CH<sub>2</sub>−CH<sub>2</sub> ]<sub>n</sub><small>二重結合の2本目が開き隣の単量体と単結合でつながる。n は数千以上の大きな数である。</small></div>
 <p>付加重合と縮合重合の区別は二重結合をもつ単量体かどうかで判別できる。付加重合の単量体には C=C の二重結合がある。縮合重合では水がとれる組み合わせの官能基を単量体がもつ。反応の詳細と官能基の名称は科目「化学」で扱う。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/07_covalent-bond-nylon-rope.jpg" width="1200" height="900" loading="lazy" alt="容器から糸として引き出されるナイロン">
+<figcaption>実験室でナイロンを合成している場面である。容器の中で生じたナイロンを、細い糸として引き出している。単量体が多数つながった長い分子であることが、糸の形で目に見える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Nylon_Fadenziehen.jpg">Friedrich Fröbel</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>資本主義で言えば</b>
 <p class="an-h">付加重合は全資産を引き継ぐ合併で縮合重合は統合のたびに水を切り出すカーブアウトである</p>
@@ -751,6 +771,10 @@
 <p>デュポンの研究所でウォーレス・カロザースは1935年2月28日にナイロン66を初めて合成した。アジピン酸とヘキサメチレンジアミンを縮合重合させ1か所つながるごとに水を1分子とり除く反応である。ナイロンの靴下は1939年に一部の地域で販売され1940年5月15日に全米の店頭に並んだ。デュポンは石炭と水と空気からつくる繊維として宣伝し絹に依存していた靴下の市場を合成繊維の市場に置き換えた。</p>
 <p>ポリエチレンテレフタラートは1941年に英国のウィンフィールドとディクソンが特許を取得した。日本では1977年にしょうゆの容器として PET ボトルが使われ始めた。1982年に清涼飲料への使用が認められ1993年に PET ボトルリサイクル推進協議会が設立された。ボトルの中身の水も容器の PET も共有結合でできた分子であり両者の差は分子の大きさにある。</p>
 </aside>
+<figure class="tb-fig tb-photo">
+<img src="../img/07_covalent-bond-pet-bales.jpg" width="1200" height="900" loading="lazy" alt="圧縮して固めた使用済みのPETボトル">
+<figcaption>米国カリフォルニア州サンノゼのリサイクル施設で、つぶした PET ボトルを圧縮して固めたものである。1本ずつのボトルはテレフタル酸とエチレングリコールが縮合重合でつながった高分子でできている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bales_of_PET_bottles_closeup.jpg">Grendelkhan</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 電子対の数</div>

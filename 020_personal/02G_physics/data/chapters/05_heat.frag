@@ -9,8 +9,18 @@
 <p><strong class="hit">温度は粒子の熱運動の激しさを表す量である</strong>。温度が高いほど粒子の熱運動は激しい。高温の物体と低温の物体を接触させると激しく運動する粒子が衝突を通じてエネルギーを渡す。やがて両者の温度が等しくなり変化が止む。この状態を<strong>熱平衡</strong>と呼ぶ。温度差によって移動するエネルギーを<strong>熱</strong>と呼び移動した熱の量を<strong>熱量</strong>と呼ぶ。熱量の単位は仕事と同じ \( \mathrm{J} \) である。</p>
 <p>温度と熱は異なる量である。温度は物体の状態を表す量で熱は移動するエネルギーの量である。「物体が熱をもつ」とは言わず物体がもつエネルギーは内部エネルギーと呼ぶ。内部エネルギーは第5節で扱う。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/05_temp-thermometer.jpg" width="1142" height="446" loading="lazy" alt="ケースに入ったガラス製の体温計2本">
+<figcaption>ガリンスタンという合金の液体を使ったガラス製の体温計である。温度計が示すのは、測る物体と熱平衡に達した温度計自身の温度である。体温計をしばらく体に当てておくのは、中の液体の温度が体温と等しくなるまで待つためである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Termometri_al_galinstan.jpg">A7N8X</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h3>絶対温度</h3>
 <p>日常で使うセルシウス温度 \( t \) は1気圧で水が凍る温度を 0 ℃ で沸騰する温度を 100 ℃ とする目盛りである。温度を下げていくと熱運動は穏やかになり約 −273 ℃ で熱運動が最も穏やかな状態に達する。これより低い温度は存在しない。この温度を<strong>絶対零度</strong>と呼ぶ。量子力学では、絶対零度でも粒子は零点振動と呼ばれる運動を残す。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_temp-liquid-nitrogen.jpg" width="1200" height="901" loading="lazy" alt="白い霧に包まれた金属容器の中で沸騰する液体窒素">
+<figcaption>室温の金属容器の中で沸騰する液体窒素である。液体窒素の沸点は1気圧で約 −196 ℃ で、絶対温度では約 77 K である。容器の周りの白い霧は、冷やされた空気中の水蒸気が細かい水滴や氷の粒になったものである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Liquid_nitrogen_dsc04496.jpg">David Monniaux</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>絶対零度を原点とし目盛りの間隔をセルシウス温度と同じにした温度を<strong>絶対温度</strong> \( T \) と呼ぶ。単位は<strong>ケルビン</strong> \( \mathrm{K} \) である。</p>
 \[ T=t+273 \]
 <p>より正確には \( T=t+273.15 \) であるが共通テストでは 273 を使う。目盛りの間隔が同じなので温度差は 1 ℃ と 1 K が等しい。</p>
@@ -108,6 +118,11 @@
 
 <p>容器や温度計の熱容量が与えられた場合は容器も受け取る側に加える。容器の熱容量を \( C \) とすると受け取る熱量は \( (m_\text{水}c_\text{水}+C)\Delta T \) である。この方法で未知の金属の比熱を測る実験を熱量計の実験と呼ぶ。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/05_heat-calorimeter.jpg" width="800" height="1200" loading="lazy" alt="温度計とかき混ぜ棒と端子がふたに付いたアルミニウム製の熱量計">
+<figcaption>アルミニウム製の熱量計である。ふたには温度計とかき混ぜ棒、電熱線に電流を流すための赤と黒の端子が通っている。容器とかき混ぜ棒も水と一緒に温まるので、その熱容量を受け取る側に加えて計算する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Aluminium_Calorimeter.jpg">Maciej J. Mrowinski</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-biz"><b>会計で言えば</b>
 <p class="an-h">熱量の保存は仕訳である。借方と貸方は必ず一致する</p>
 <p>高温側の熱の減少と低温側の熱の増加は1件の取引の両面である。外部との出入りがなければ合計は0である。</p>
@@ -116,6 +131,11 @@
 <h2 id="s4">物質の三態と潜熱</h2>
 <p>物質は温度と圧力に応じて固体・液体・気体の3つの状態をとる。これを<strong>物質の三態</strong>と呼ぶ。固体では粒子が決まった位置の周りで振動し液体では粒子が互いに位置を変えながら引き合い気体では粒子が自由に飛び回る。固体が液体になる変化を融解・液体が気体になる変化を蒸発と呼び液体の内部からも気体が生じる現象を沸騰と呼ぶ。</p>
 <p>氷を一定の割合で加熱すると温度は上がり続けるのではなく 0 ℃ と 100 ℃ で一定になる区間がある。この区間で加えた熱は温度を上げるのではなく粒子どうしの結びつきを断ち切る仕事に使われる。状態変化のために使われる熱を<strong>潜熱</strong>と呼ぶ。1 g の固体を融解させる熱量を<strong>融解熱</strong>・1 g の液体を蒸発させる熱量を<strong>蒸発熱</strong>と呼ぶ。水の融解熱は約 334 J/g で蒸発熱は 100 ℃ で約 2257 J/g である。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/05_phase-melting.jpg" width="800" height="473" loading="lazy" alt="机の上でとけている氷"><img src="../img/05_phase-kettle.jpg" width="933" height="1200" loading="lazy" alt="ガラスの電気ケトルの中で沸騰する水"></div>
+<figcaption>左は机の上でとけている氷で、右は電気ケトルの中で沸騰する水である。どちらも状態変化の途中で、受け取った熱は温度を上げるのではなく粒子どうしの結びつきを断ち切ることに使われる。1気圧のもとでは、左のとけている氷は 0 ℃、右の沸騰している水は 100 ℃ に保たれる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Melting_-_Flickr_-_Trinity.jpg">Rebecca Partington</a>／CC BY-SA 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:Boilingkettle.jpg">Plorpy2</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 260" role="img" aria-label="氷100 gを一定の割合で加熱したときの温度変化">
@@ -176,6 +196,11 @@
 <h2 id="s5">内部エネルギーと熱力学第1法則</h2>
 <p>物体をつくる粒子は熱運動による運動エネルギーと粒子間の力による位置エネルギーをもつ。物体全体についてこれらを合計したものを<strong>内部エネルギー</strong> \( U \) と呼ぶ。温度が高いほど熱運動の運動エネルギーが大きいので内部エネルギーは大きい。潜熱を受け取って融解するときは温度が一定でも粒子間の位置エネルギーが増え内部エネルギーは増える。</p>
 <p>内部エネルギーを変える手段は2つある。熱を与える方法と仕事をする方法である。1840年代にジュールはおもりの落下で水中の羽根車を回転させて水の温度を上げる実験を行った。仕事だけで水の温度が上がり一定の仕事が一定の熱量に相当することを示した。熱量の単位にカロリーを使っていた時代には 1 cal が約 4.19 J に相当する値として扱われた。これを熱の仕事当量と呼ぶ。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_joule-apparatus.jpg" width="632" height="956" loading="lazy" alt="羽根車と銅の容器からなるジュールの実験装置">
+<figcaption>ロンドンの科学博物館に展示された、1845年のジュールの熱の仕事当量の実験装置である。下の羽根車を銅の容器の水に沈め、軸に巻いた糸をおもりの落下で引いて回転させる。羽根車が水をかき混ぜる仕事だけで水の温度が上がり、仕事と熱が同じエネルギーであることが示された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Joule%27s_heat_apparatus.JPG">Gaius Cornelius</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>物体が外から受け取った熱を \( Q \)・外からされた仕事を \( W \) とすると内部エネルギーの変化 \( \Delta U \) は次の式で表す。</p>
 \[ \Delta U=Q+W \]
 <p>これを<strong>熱力学第1法則</strong>と呼ぶ。熱と仕事を含めたエネルギー保存則である。<strong class="hit">符号は物体に入る向きを正とする</strong>。熱を放出したら \( Q\lt0 \) で物体が外へ仕事をしたら \( W\lt0 \) である。</p>
@@ -218,6 +243,11 @@
 <p>摩擦で運動エネルギーはすべて熱に変わる。しかし逆向きに熱を受け取ってそのすべてを仕事に変え続ける装置はつくれない。<strong class="hit">熱は自然には低温の物体から高温の物体へ移らない</strong>。これを熱力学第2法則と呼び不可逆変化の向きを定める法則である。学習指導要領では熱力学第2法則と熱機関の熱効率は物理で扱う内容であり物理基礎では熱現象の不可逆性に触れる。この節の残りは物理の先取りである。</p>
 <h3>熱機関と熱効率</h3>
 <p>熱を受け取って仕事をくり返し行う装置を<strong>熱機関</strong>と呼ぶ。ガソリンエンジン・蒸気タービン・ジェットエンジンが例である。熱機関は高温の熱源から熱量 \( Q_1 \) を受け取り外へ仕事 \( W \) をして残りの熱量 \( Q_2 \) を低温の熱源へ放出する。1サイクルで元の状態に戻るので内部エネルギーの変化は0で \( W=Q_1-Q_2 \) である。受け取った熱量のうち仕事に変わった割合を<strong>熱効率</strong> \( e \) と呼ぶ。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/05_engine-steam-loco.jpg" width="1200" height="797" loading="lazy" alt="煙を上げて鉄橋を渡る蒸気機関車"><img src="../img/05_engine-jet-cutaway.jpg" width="1200" height="704" loading="lazy" alt="内部の羽根の列が見えるジェットエンジンの断面模型"></div>
+<figcaption>左はニュージーランドで鉄橋を渡る蒸気機関車で、右はジェットエンジンの断面模型である。どちらも燃料の燃焼で得た熱の一部を仕事に変え、残りの熱を排気とともに周囲へ放出する熱機関である。右の断面では、空気を圧縮する多数の羽根の列が見える。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:JA1271_crossing_the_Otaki_River.jpg">Karora</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Jet_engine,_cutaway_(27441073466).jpg">Andrew Basterfield</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 \[ e=\frac{W}{Q_1}=\frac{Q_1-Q_2}{Q_1} \]
 <p>熱力学第2法則により \( Q_2 \) を0にすることはできない。したがって熱効率は必ず1未満である。</p>
 
@@ -256,6 +286,11 @@
 <h2 id="s7">エネルギーの変換と保存</h2>
 <p>エネルギーには力学的エネルギー・熱・電気エネルギー・光のエネルギー・化学エネルギー・核エネルギーなどの形態がある。形態は互いに変換でき変換の前後で総量は変わらない。これを<strong>エネルギー保存則</strong>と呼ぶ。第4章の力学的エネルギー保存則はこのうち力学的エネルギーだけを扱った特別な場合である。</p>
 <p>火力発電所は燃料の化学エネルギーを熱に変え熱で水蒸気をつくりタービンを回転させて電気エネルギーを得る。熱機関を含むので熱効率は1未満である。ガスタービンの排熱で蒸気タービンも駆動するコンバインドサイクル発電では燃料の低位発熱量を基準とした発電効率が約 60% に達する設備もある。エネルギーの総量は保存されるが変換のたびに一部が利用しにくい低温の熱になる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_real-combined-cycle.jpg" width="1200" height="900" loading="lazy" alt="配管と鉄骨の向こうに煙突が並ぶ発電所">
+<figcaption>トルコのゲブゼにある天然ガスのコンバインドサイクル発電所である。ガスタービンの排熱で水蒸気をつくり、蒸気タービンも回して発電する。本文の約60%という発電効率は、この方式の設備の値である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:A_view_from_a_natural_gas_combined_cycle_power_plant.jpg">Harald the Bard</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>東京電力は2016年1月の発表で川崎火力発電所2号系列第2軸の発電効率を約61%とした。燃焼温度 1600 ℃ 級のガスタービンを使う設備で同社の計画発表はこの値を低位発熱量基準とする。同社は別の発表で低位発熱量基準の59%が高位発熱量基準では53%になると注記している。</p>
 </aside>

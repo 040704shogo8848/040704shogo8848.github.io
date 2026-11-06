@@ -48,6 +48,11 @@
 <figcaption>Mg が電子2個を O に渡す。Mg は酸化されて Mg²⁺ になり O は還元されて O²⁻ になる。渡す側と受け取る側は必ず同じ反応の中に1組で存在する。</figcaption>
 </figure>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/14_redox-mg-burning.jpg" width="1200" height="799" loading="lazy" alt="強い白い光を出して燃えるマグネシウムリボン">
+<figcaption>空気中で燃えるマグネシウムリボンを短い露光で撮影した写真である。強い白い光を出して燃え、燃えた部分の周りには白い粉末の酸化マグネシウム MgO が残る。Mg が O に電子を渡して Mg<sup>2+</sup> と O<sup>2−</sup> からなる化合物になる反応が、目に見える形で進んでいる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Magnesium_ribbon_burning.jpg">Capt. John Yossarian</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">酸化だけの反応は受け取り手のいない贈り物と同じで成立しない</p>
 <p>渡す側が酸化され受け取る側が還元される。渡した電子の数と受け取った数は必ず一致し Mg と O は電子2個の受け渡しである。</p>
@@ -135,6 +140,11 @@
 
 <h2 id="s3">酸化剤と還元剤</h2>
 <p>相手の物質を酸化する物質を<strong>酸化剤</strong>と呼ぶ。相手を酸化するとは相手から電子を奪うことである。<strong class="hit">したがって酸化剤自身は電子を受け取って還元され酸化数が減る</strong>。相手を還元する物質を<strong>還元剤</strong>と呼び還元剤自身は電子を渡して酸化され酸化数が増える。名称と自身の変化が逆になる点で誤りやすい。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/14_redox-kmno4.jpg" width="500" height="667" loading="lazy" alt="黒紫色の過マンガン酸カリウムの結晶"><img src="../img/14_redox-k2cr2o7.jpg" width="500" height="667" loading="lazy" alt="橙赤色の二クロム酸カリウムの結晶"></div>
+<figcaption>左は過マンガン酸カリウム KMnO<sub>4</sub> の結晶で、黒紫色の光沢をもつ。右は二クロム酸カリウム K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub> の結晶で橙赤色である。どちらも前節の計算で求めた ＋7 の Mn と ＋6 の Cr を含み、相手から電子を受け取る代表的な酸化剤である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Potassium_permanganate_crystals.jpg">W. Oelen</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Potassium_dichromate_crystals.jpg">W. Oelen</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>酸化剤や還元剤が電子をやり取りする変化を電子 e<sup>−</sup> を含む式で書いたものを<strong>半反応式</strong>と呼ぶ。次の表は共通テストに出る代表例である。生成物は暗記する。係数は次節の手順で毎回作れる。</p>
 <div class="tb-tw"><table>
 <thead><tr><th>酸化剤</th><th>半反応式</th><th>変化の目印</th></tr></thead>
@@ -167,6 +177,11 @@
 <li>SO<sub>2</sub> は多くの相手に対して還元剤として働く。強い還元剤である H<sub>2</sub>S を相手にすると酸化剤として働く。高校で扱う代表例はこの反応である。2H<sub>2</sub>S ＋ SO<sub>2</sub> → 3S ＋ 2H<sub>2</sub>O で溶液が白濁する</li>
 </ul>
 <p>ハロゲンの単体は酸化剤で酸化力は F<sub>2</sub> ＞ Cl<sub>2</sub> ＞ Br<sub>2</sub> ＞ I<sub>2</sub> の順である。酸化力の強いハロゲンは弱いハロゲンの陰イオンから電子を奪う。Cl<sub>2</sub> ＋ 2KI → 2KCl ＋ I<sub>2</sub> は進むが I<sub>2</sub> ＋ 2KCl の向きには進まない。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/14_redox-halogens.jpg" width="800" height="350" loading="lazy" alt="塩素・臭素・ヨウ素を封入した3つのガラス球">
+<figcaption>ガラス球に封入したハロゲンの単体で、左から塩素・臭素・ヨウ素である。塩素は黄緑色の気体で、臭素は赤褐色の液体と蒸気で、ヨウ素は黒紫色の固体として球の内側に付着している。酸化力はこの並びの左ほど強い。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Halogens.jpg">W. Oelen</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">H<sub>2</sub>O<sub>2</sub> と SO<sub>2</sub> は酸化還元の大谷翔平である</p>
@@ -233,6 +248,11 @@
 <h3>過マンガン酸カリウム滴定の終点</h3>
 <p>ビュレットに KMnO<sub>4</sub> 水溶液を入れ硫酸酸性にしたシュウ酸水溶液に滴下する。還元剤が残っている間は滴下した MnO<sub>4</sub><sup>−</sup> がすぐに Mn<sup>2+</sup> に変わり赤紫色が消える。還元剤がなくなった後の1滴は反応せずに残る。<strong class="hit">溶液が無色から薄い赤紫色に変わり振り混ぜても消えなくなった点が終点である</strong>。KMnO<sub>4</sub> 自身の色が目印になるので指示薬を加えない。シュウ酸との反応は室温では遅いので約60〜70 ℃に温めて滴定する。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/14_redox-fe-kmno4.jpg" width="440" height="660" loading="lazy" alt="ビュレットから過マンガン酸カリウム水溶液を滴下し三角フラスコの液が薄い赤紫色になった様子">
+<figcaption>Fe<sup>2+</sup> を含む水溶液を KMnO<sub>4</sub> 水溶液で滴定している写真である。ビュレットの中の液は濃い赤紫色で、三角フラスコの液は薄い赤紫色になっている。還元剤がなくなると滴下した MnO<sub>4</sub><sup>−</sup> の色が残り、指示薬を加えなくても終点が分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Valoraci%C3%B3n_Fe2%2B_con_KMnO4.jpg">Esteban Moya Morales</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 280" role="img" aria-label="過マンガン酸カリウム滴定の器具と電子の収支">
   <!-- buret -->
@@ -268,6 +288,11 @@
 <h2 id="s6">現実世界の還元 製鉄と水素</h2>
 <p>酸化還元反応の産業で規模が最大のものは製鉄である。鉄鉱石の主成分は酸化鉄(Ⅲ) Fe<sub>2</sub>O<sub>3</sub> で Fe の酸化数は ＋3 である。これを 0 の単体に戻す還元が製鉄である。高炉では原料の上からコークスを入れ下から熱風を吹き込む。コークスの C が燃えて生じた CO<sub>2</sub> は高温の C と反応して一酸化炭素 CO になる。この CO が還元剤である。</p>
 <div class="fx">Fe<sub>2</sub>O<sub>3</sub> ＋ 3CO → 2Fe ＋ 3CO<sub>2</sub><small>Fe は ＋3 → 0 で還元され C は ＋2 → ＋4 で酸化される。Fe 2個が受け取る e⁻ 6個と C 3個が渡す e⁻ 6個が等しい</small></div>
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/14_redox-hematite.jpg" width="1200" height="914" loading="lazy" alt="赤褐色の鉄鉱石の塊"><img src="../img/14_redox-coke.jpg" width="1200" height="799" loading="lazy" alt="赤熱した冶金用コークスの塊"></div>
+<figcaption>左は米国ミネソタ州の先カンブリア時代の地層から得た赤鉄鉱を多く含む鉄鉱石で、最も幅の広い部分は約7.6 cm である。赤褐色は Fe<sup>3+</sup> を含む酸化鉄の色である。右は赤熱した冶金用のコークスである。コークスの C から生じた CO が高炉の中で酸化鉄を還元する。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Hematite-rich_iron_ore_(Precambrian;_Pioneer_Mine,_Ely,_Minnesota,_USA)_1.jpg">James St. John</a>／CC BY 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:%D0%9C%D0%B5%D1%82%D0%B0%D0%BB%D0%BB%D1%83%D1%80%D0%B3%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9_%D0%BA%D0%BE%D0%BA%D1%81.jpg">Korotinae</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>この反応は還元剤の C を CO<sub>2</sub> として排出する。還元剤を水素に置き換えると生成物は水になる。</p>
 <div class="fx">Fe<sub>2</sub>O<sub>3</sub> ＋ 3H<sub>2</sub> → 2Fe ＋ 3H<sub>2</sub>O<small>H は 0 → ＋1 で酸化される。e⁻ 6個の収支は CO の場合と同じである</small></div>
 
@@ -299,6 +324,11 @@
   <text x="540" y="250" font-size="12.5" text-anchor="middle" fill="var(--sub)">H が 0 → ＋1</text>
 </svg>
 <figcaption>どちらも Fe₂O₃ 1 mol に対して e⁻ 6 mol を渡す還元である。異なるのは還元剤の酸化生成物で左は CO₂ ・ 右は H₂O である。</figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/14_redox-blast-furnace.jpg" width="1200" height="799" loading="lazy" alt="夜の製鉄所の高炉と周囲の設備">
+<figcaption>製鉄会社 voestalpine のドナヴィッツ製鉄所にある第1高炉を夜に撮影した写真である。中央の鉄骨の構造物が高炉で、その上部から鉄鉱石とコークスを入れる。炉の中では本文の Fe<sub>2</sub>O<sub>3</sub> ＋ 3CO の反応が進む。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:DSC03739_Blast_Furnace_1_at_Night,_voestalpine_Donawitz,_2026-02.jpg">Aciarium</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <aside class="an an-rw"><b>現実世界</b>

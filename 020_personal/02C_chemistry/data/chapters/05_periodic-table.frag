@@ -8,6 +8,16 @@
 <p>原子の電子は原子核の周りのいくつかの層に分かれて存在する。この層を<strong>電子殻</strong>と呼ぶ。内側から順に K殻・L殻・M殻・N殻… と名付ける。内側から数えて n 番目の電子殻に入る電子の最大数は 2n<sup>2</sup> 個である。</p>
 <div class="fx">最大収容数 ＝ 2n<sup>2</sup> → K殻 n＝1 で 2個 ・ L殻 n＝2 で 8個 ・ M殻 n＝3 で 18個 ・ N殻 n＝4 で 32個</div>
 <p>内側の電子殻ほど原子核に近く電子は強く引きつけられてエネルギーが低い。<strong class="hit">電子はエネルギーの低い内側の電子殻から順に入る</strong>。K殻が2個で満ちると次は L殻に入り L殻が8個で満ちると M殻に入る。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_periodic-table-h-tube.jpg" width="675" height="1200" loading="lazy" alt="桃色に光る水素の放電管">
+<figcaption>低い圧力の水素を封入した放電管に高い電圧をかけたものである。管全体が桃色に光る。この光を色ごとに分けると、決まった色の細い線だけが現れる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hydrogen_dischrge_tube.jpg">Mohit Jhanjhotia</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_periodic-table-h-spectrum.jpg" width="1200" height="123" loading="lazy" alt="黒い背景に赤・青緑・青紫の細い輝線が並んだ水素の可視光のスペクトル">
+<figcaption>水素が出す可視光を色ごとに分けて撮影したスペクトルである。光は連続した帯にならず、赤・青緑・青紫の決まった位置の細い線だけが現れる。電子のエネルギーの状態がとびとびの値に限られるので、状態の差にあたる決まった色の光だけが出る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Visible_spectrum_of_hydrogen.jpg">Jan Homann</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>原子番号19のカリウムと20のカルシウムでは規則が1つ加わる。M殻の最大収容数は18個だが M殻に8個入った段階で次の電子は N殻に入る。カリウムの電子配置は K2 L8 M9 ではなく K2 L8 M8 N1 である。M殻の残りの10個は原子番号21以降の遷移元素で入る。電子殻の内部にはエネルギーの異なる副殻があり、4s の軌道が 3d の軌道より先に満たされるためである。副殻と軌道の考え方は大学の化学で扱う。</p>
 
 <figure class="tb-fig">
@@ -43,6 +53,11 @@
 <h2 id="s2">原子番号1〜20の電子配置と価電子</h2>
 <p>電子が入っている電子殻のうち最も外側のものを<strong>最外殻</strong>と呼び最外殻の電子を<strong>最外殻電子</strong>と呼ぶ。原子どうしが結合したりイオンになったりするときに主に関わるのは最外殻電子である。結合やイオンの生成に関わる電子を<strong>価電子</strong>と呼ぶ。</p>
 <p>貴ガスは例外である。ヘリウムの最外殻電子は2個でネオンとアルゴンは8個である。これらの電子配置は安定で他の原子と結合しにくい。<strong class="hit">そのため貴ガスの価電子の数は0とする</strong>。典型元素で最外殻電子の数と価電子の数が一致しないのは貴ガスだけである。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_periodic-table-noble-gases.jpg" width="1200" height="679" loading="lazy" alt="ヘリウム・ネオン・アルゴン・クリプトン・キセノンの放電管が光る様子">
+<figcaption>左からヘリウム・ネオン・アルゴン・クリプトン・キセノンを封入した放電管に電圧をかけて光らせたものである。どの管の気体も単原子分子のまま存在し、他の原子と結合していない。光の色は元素ごとに異なる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Edelgase_in_Entladungsroehren.jpg">Alchemist-hp www.pse-mendelejew.de</a>／CC BY-SA 2.0 de／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-tw"><table>
 <thead><tr><th>周期</th><th>元素と電子配置 K L M N の順</th><th>価電子</th></tr></thead>
 <tbody>
@@ -137,6 +152,11 @@
 </tbody></table></div>
 <p>アルカリ土類金属の範囲は教科書の改訂で変わった。以前は Be と Mg を除いた2族元素を指したが2022年度以降の教科書は IUPAC の命名法に合わせて2族元素の全てを指す。遷移元素も以前は3〜11族とする教科書があったが現在は3〜12族とする。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/05_periodic-table-potassium-water.jpg" width="740" height="920" loading="lazy" alt="水の入ったビーカーの中で淡い紫色の炎を上げて反応するカリウム">
+<figcaption>カリウムを水に入れた様子である。カリウムは水と激しく反応して水素を発生し、その水素が淡い紫色の炎を上げて燃える。水に加えた指示薬が赤紫色に変わっているのは、強い塩基の水酸化カリウムが生じたためである。表のアルカリ金属の性質のとおりである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Potassium_%26_water_39.jpg">Ozone aurora / Philip Evans</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">周期表は選手名鑑を守備位置で縦にそろえた表である</p>
 <p>族 ／ 守備位置。周期 ／ 球団。巨人と阪神の遊撃手が似るように同族元素は価電子の数が等しく性質が似る。</p>
@@ -202,6 +222,7 @@
 <figcaption>17族のフッ素と塩素が突出して大きい。貴ガスと Be と Mg と窒素は電子を受け取っても安定にならず値は0以下である。同じ2族でも Ca はわずかに正の値をとる。塩素の値はフッ素より大きい。</figcaption>
 </figure>
 
+
 <p>2つの指標を組み合わせると第6章の食塩の生成が説明できる。ナトリウムはイオン化エネルギーが 496 kJ/mol と小さく陽イオンになりやすい。塩素は電子親和力が 349 kJ/mol と大きく陰イオンになりやすい。ただし 496 と 349 を比べると電子1個を移すだけでは収支が合わない。この差を補う仕組みは第6章で扱う。</p>
 
 <aside class="an an-lv"><b>恋愛で言えば</b>
@@ -245,6 +266,16 @@
 
 <h2 id="s6">メンデレーエフの空白予言</h2>
 <p>周期表の原型は1869年にロシアのメンデレーエフが発表した。当時知られていた約60種類の元素を原子量の順に並べ性質の似た元素が同じ列にそろうように配列した。メンデレーエフは性質の並びを優先し当てはまる元素がない場所を<strong>空白</strong>として残した。そして空白に入るべき未知の元素の性質を周囲の元素から予言した。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_periodic-table-mendeleev.jpg" width="700" height="396" loading="lazy" alt="書斎の机で書き物をするメンデレーエフ">
+<figcaption>書斎の机に向かう1904年のメンデレーエフである。周期表を発表してから35年後の姿で、元の白黒写真に色を付けた画像である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Dmitri_Mendeleev_in_1904.jpg">https://pixel17.com</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_periodic-table-1869-table.jpg" width="1200" height="513" loading="lazy" alt="メンデレーエフの教科書に載った周期表">
+<figcaption>メンデレーエフの教科書 化学の原理 1869〜1871年 に載った周期表である。元素の欄には原子量が記され、? の付いた44・68・72の欄が未発見の元素のために残された空欄である。72の欄にのちにゲルマニウムが入った。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Dmitry_Mendeleyev_Osnovy_Khimii_1869-1871_first_periodic_table.jpg">Dmitry Ivanovich Mendeleyev, 1834-1907</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>ケイ素の下の空白に入る元素をメンデレーエフはエカケイ素と呼んだ。1886年にドイツのヴィンクラーが鉱石から新元素を発見しゲルマニウムと名付けた。その性質は予言とよく一致した。</p>
 <div class="tb-tw"><table>
 <thead><tr><th>性質</th><th>エカケイ素の予言</th><th>ゲルマニウムの実測</th></tr></thead>
@@ -254,6 +285,11 @@
 <tr><td>周期表の位置</td><td>ケイ素の下 スズの上</td><td>14族 第4周期</td></tr>
 </tbody></table></div>
 <p>同じ方法でエカアルミニウムはガリウムとして1875年に発見されエカホウ素はスカンジウムとして1879年に発見された。予言の的中が周期表を単なる一覧表から元素の性質を推定する道具に変えた。現在の周期表は原子量ではなく原子番号の順に並べる。原子量の順では一部の元素の並びが性質と合わないが原子番号の順では矛盾がなくなる。原子番号が陽子の数であり陽子の数が電子の数と電子配置を特定するからである。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/05_periodic-table-germanium.jpg" width="1056" height="1056" loading="lazy" alt="金属光沢のある多結晶ゲルマニウムの塊"><img src="../img/05_periodic-table-gallium.jpg" width="1024" height="768" loading="lazy" alt="銀色に光るガリウムの結晶"></div>
+<figcaption>左は多結晶のゲルマニウムで、右は純度99.999%のガリウムの結晶である。どちらもメンデレーエフが空白として残し性質を予言した元素で、発見された後に予言どおりの位置に収まった。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Polycrystalline-germanium.jpg">Jurii</a>／CC BY 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Gallium_crystals.jpg">en:user:foobar</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>スタートアップで言えば</b>
 <p class="an-h">メンデレーエフの予言はポジショニングマップの空白区画である</p>
@@ -285,6 +321,12 @@
 <p>ケイ素の結晶にごく少量の別の元素を混ぜる操作を<strong>ドーピング</strong>と呼ぶ。15族のリンを混ぜるとリンの価電子5個のうち4個が結合に使われ1個が余る。余った電子が結晶の中を動いて電気を運ぶ。負の電荷が電気を運ぶので n型半導体と呼ぶ。13族のホウ素を混ぜるとホウ素の価電子は3個しかなく結合が1か所で電子1個分不足する。この不足を<strong>正孔</strong>と呼び隣の電子が正孔へ移ることで正孔が動き電気を運ぶ。正の電荷のように振る舞うので p型半導体と呼ぶ。</p>
 <p>混ぜる量は少ない。軽いドーピングではケイ素原子約1億個に対して不純物原子1個の程度で多い場合でも約1万個に1個の程度である。p型と n型を接合すると電流を一方向にだけ流すダイオードや電流を制御するトランジスタができる。太陽電池も p型と n型の接合を使う。周期表で14族の左右隣にある13族と15族を選ぶという判断が半導体産業の出発点である。</p>
 </aside>
+
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_periodic-table-solar-cell.jpg" width="1200" height="580" loading="lazy" alt="青い表面と白い裏面を並べたケイ素の太陽電池">
+<figcaption>ケイ素の結晶で作った太陽電池の表と裏である。表面に並ぶ線は電流を取り出す電極である。内部では p型と n型の層が接合しており、光が当たると電流が生じる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Silicon_solar_cell_(PERC)_front_and_back.jpg">WhistlingBird</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>投資で言えば</b>
 <p class="an-h">ドーピングはレバレッジである。投入量に対する効果の比が極端に大きい</p>

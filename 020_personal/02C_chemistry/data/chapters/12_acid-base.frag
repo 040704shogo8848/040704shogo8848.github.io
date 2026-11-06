@@ -6,6 +6,11 @@
 
 <h2 id="s1">酸と塩基の2つの定義</h2>
 <p>酸は酸味をもち青色リトマス紙を赤くする。塩基は赤色リトマス紙を青くし酸の性質を打ち消す。中学校ではこの性質で酸とアルカリを区別した。水に溶ける塩基をアルカリと呼ぶ。高校ではこの性質がどの粒子から生じるかを定義に組み込む。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_acid-base-litmus.jpg" width="900" height="1200" loading="lazy" alt="酸の水溶液に浸した赤色と青色のリトマス紙">
+<figcaption>赤色と青色のリトマス紙の下半分を酸の水溶液に浸した写真である。青色の紙は浸した部分だけが赤色に変わり、赤色の紙は赤いままである。酸は青色リトマス紙を赤くするという中学校以来の判定がこの色の境目で確認できる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Blue_and_Red_litmus_papers_in_acid_solution.jpg">Kanesskong</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>スウェーデンのアレニウスは1884年の博士論文で電解質が水中でイオンに分かれるという考えを示し1903年にノーベル化学賞を受けた。この考えに基づく<strong>アレニウスの定義</strong>では次のように分ける。</p>
 <div class="tb-vs">
 <div><h5>アレニウスの酸</h5><ul>
@@ -92,6 +97,7 @@
 <tr><td>弱塩基</td><td>アンモニア NH<sub>3</sub> ／ 水酸化銅(Ⅱ) Cu(OH)<sub>2</sub> ／ 水酸化マグネシウム Mg(OH)<sub>2</sub></td><td>1 ／ 2 ／ 2</td></tr>
 </tbody></table></div>
 <p>強塩基は1族の水酸化物と2族のうちカルシウムより下の元素の水酸化物である。水酸化マグネシウムは2族だが水に溶けにくく弱塩基に分類する。</p>
+
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="強酸は全部電離し弱酸は一部だけが電離する">
@@ -193,6 +199,11 @@
 <figcaption>pH は等間隔の目盛だが [H<sup>+</sup>] は1目盛ごとに10倍異なる。胃液の pH 1 と純水の pH 7 では [H<sup>+</sup>] が100万倍異なる。身近な物質の値は濃度や製品で変わるため目安である。</figcaption>
 </figure>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/12_acid-base-universal-indicator.jpg" width="1200" height="900" loading="lazy" alt="pH試験紙にミニトマトの汁と海水と次亜塩素酸ナトリウム水溶液を付けた紙片と色見本">
+<figcaption>pH 試験紙で3種類の液体を調べた写真である。ミニトマトの汁を付けた紙片は黄色のままで、次亜塩素酸ナトリウム NaClO 水溶液を付けた紙片は青緑色に変わった。中央の色見本は pH 5.6 から 8.0 までを色の段階で示し、紙片の色を見本と照合して pH を読み取る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Universal_indicator_paper_for_the_measurement_of_acidity_or_alkalinity_(pH_indicator).jpg">Albarubescens</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-biz"><b>資本主義で言えば</b>
 <p class="an-h">pH は時価総額を桁で呼ぶのと同じ目盛である</p>
 <p>10億円と1,000億円は桁が2つ異なり規模は100倍である。pH 3 と pH 5 も [H<sup>+</sup>] は100倍異なる。</p>
@@ -255,7 +266,22 @@
 <tr><td>リトマス</td><td>中性付近</td><td>赤</td><td>青</td></tr>
 </tbody></table></div>
 <p>フェノールフタレインの変色域は日本の化学基礎の教科書で約8.0〜9.8と示されることが多い。試薬メーカーの資料では8.2〜9.8や8.2〜10.0とするものもある。中和滴定の指示薬の選択では変色域が塩基性側にあるか酸性側にあるかの区別で判断でき端の細かな値は判断を左右しない。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_acid-base-phenolphthalein.jpg" width="1200" height="1074" loading="lazy" alt="pH 9 の水溶液中で赤紫色を示すフェノールフタレイン">
+<figcaption>pH 9 の塩基性の水溶液に加えたフェノールフタレインである。変色域の約8.0〜9.8に入ると無色から赤紫色に変わる。酸性や中性の水溶液では無色のままである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Phenolphthalein-at-pH-9.jpg">Ben Mills</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_acid-base-methyl-orange.jpg" width="1200" height="378" loading="lazy" alt="pH 2 から 5 の水溶液に加えたメチルオレンジの色の並び">
+<figcaption>メチルオレンジを加えた水溶液で、左から pH 2・3・4・5 である。pH 3 までは赤色で、pH 4 では橙色になり pH 5 では黄色になる。色が変わる区間が酸性側にあることがこの4つの色で確認できる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Methyl-orange-colour-range.jpg">Ben Mills</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>指示薬の色だけでは溶液の正確な pH は判別できない。正確に測るには pH メーターや pH 試験紙を使う。第13章では中和点の pH に合わせて指示薬を選ぶ方法を扱う。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_acid-base-ph-meter.jpg" width="800" height="1200" loading="lazy" alt="スタンドに電極を保持した卓上型の pH メーター">
+<figcaption>大学の実習施設にある卓上型の pH メーターである。スタンドに保持した棒状の電極を水溶液に浸し、本体の表示部に pH の値が数値で表示される。指示薬の色の判定とは異なり pH を数値で読み取れる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:PH-Meter_METTLER_TOLEDO_FiveEasy.jpg">OER CampLev</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">変色域はストライクゾーンの境目である</p>
@@ -272,6 +298,11 @@
 <p>日本の硫酸の生産量は経済産業省の生産動態統計で2008年に約723万トンを記録し2024年は約622万トンであった。公正取引委員会の平成14年度の資料では日本の硫酸の7割強が銅や亜鉛を製錬するときの副産物とされている。硫化物の鉱石を焼くと SO<sub>2</sub> が生じこれを大気に出さずに回収して接触法で硫酸に変える。SO<sub>2</sub> を回収しない場合に生じる環境問題が酸性雨である。</p>
 </aside>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/12_acid-base-liebig.jpg" width="938" height="1200" loading="lazy" alt="ユストゥス・フォン・リービッヒの肖像写真">
+<figcaption>ユストゥス・フォン・リービッヒの肖像である。1803年に生まれ1873年に没した。本文の硫酸の消費量についての指摘は、1843年の著作で述べたものである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Justus_von_Liebig_NIH.jpg">作者不明</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="tb-tl">
 <li><b>1831年</b><strong>接触法の特許</strong> イギリスのフィリップスが SO<sub>2</sub> を触媒で SO<sub>3</sub> にする方法の特許を取得した</li>
 <li><b>1843年</b><strong>リービッヒの指摘</strong> 硫酸の消費量で国の商業の繁栄を判定できると述べた</li>
@@ -284,6 +315,11 @@
 
 <h3>酸性雨</h3>
 <p>汚染のない大気でも雨は弱い酸性を示す。大気中の二酸化炭素が雨に溶けて炭酸を生じ十分に溶けた場合の pH が約5.6になるためである。そこで pH 5.6 以下の雨を酸性雨と呼ぶ目安が使われる。工場や自動車から出る硫黄酸化物や窒素酸化物が雨に取り込まれ硫酸や硝酸に変わると pH はさらに下がる。硫酸と硝酸はどちらも強酸であり少量でも pH を大きく下げる。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/12_acid-base-acid-rain-forest.jpg" width="1200" height="900" loading="lazy" alt="チェコのイゼラ山地で枯れて立ったままの針葉樹"><img src="../img/12_acid-base-gargoyle.jpg" width="1200" height="799" loading="lazy" alt="表面が溶けて凹凸になった石の彫刻"></div>
+<figcaption>左はチェコのイゼラ山地で酸性雨の影響を受けた森林である。枝の失われた針葉樹の幹が立ち並び、根元では若い木が育っている。右は酸性雨で表面が損なわれた石の彫刻である。石の表面が粗く、細部の形が判別しにくくなっている。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Acid_rain_woods1.JPG">Lovecz</a>／パブリックドメイン 右：<a href="https://commons.wikimedia.org/wiki/File:-_Acid_rain_damaged_gargoyle_-.jpg">Nino Barbieri</a>／CC BY 2.5／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>スタートアップで言えば</b>
 <p class="an-h">製錬所の硫酸は排ガスを商品に変えた副産物事業である</p>

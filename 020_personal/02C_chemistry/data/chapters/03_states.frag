@@ -7,6 +7,11 @@
 <h2 id="s1">拡散と熱運動</h2>
 <p>赤褐色の臭素の気体を入れた容器と空気だけの容器をつなぐ。かき混ぜなくても時間がたつと臭素の色は両方の容器に広がり全体が均一な色になる。このように物質が自然に散らばって広がる現象を<strong>拡散</strong>と呼ぶ。香水の香りが部屋に広がるのも拡散である。</p>
 <p>拡散が起こるのは物質をつくる粒子が絶えず動いているからである。この粒子の運動を<strong>熱運動</strong>と呼ぶ。<strong class="hit">熱運動は温度が高いほど激しくなる</strong>。冷たい水より熱い水のほうがインクが速く広がるのはこのためである。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_states-ink-temp.jpg" width="1200" height="813" loading="lazy" alt="20℃と50℃の水にインクを落とし18秒ごとに撮影した10枚の写真">
+<figcaption>20℃の水と50℃の水にインクを1滴ずつ落とし、18秒ごとに撮影した写真である。50℃の水では1分12秒後にインクが全体に広がり均一な色になったが、20℃の水ではまだ筋が残っている。温度が高いほど熱運動が激しく、拡散が速く進むことが分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Temperature-dependent-diffusion.jpg">MikeRun</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>熱運動の証拠は顕微鏡でも確認できる。1827年に植物学者ブラウンは水に浮かぶ花粉由来の微粒子が不規則に動き続ける様子を観察した。これを<strong>ブラウン運動</strong>と呼ぶ。微粒子そのものが自ら動くのではない。周囲の水分子が四方から不規則に衝突し微粒子を押し動かす。目に見えない分子の熱運動が目に見える粒子の動きとして現れた例である。</p>
 <p>同じ温度の気体でも分子1個1個の速さは同じではない。速い分子も遅い分子もあり速さには分布がある。温度が上がると分布全体が速い側へ移る。<strong>温度は粒子1個の速さではなく集団の熱運動の激しさを平均して表した量である</strong>。常温の空気の分子は秒速数百メートルの速さで飛び回り衝突を繰り返している。</p>
 
@@ -127,6 +132,11 @@
 <figcaption>固体は粒子が定位置で振動し液体は密に集まったまま位置を入れ替える。気体は粒子が離れて飛び回る。赤系の矢印は熱を受け取って粒子の結びつきが弱まる向きで青系の矢印は熱を放出して結びつきが強まる向きである。</figcaption>
 </figure>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/03_states-dry-ice.jpg" width="609" height="523" loading="lazy" alt="黒い台の上で白い煙を出すドライアイスの粒">
+<figcaption>ドライアイスの粒が空気中で昇華している様子である。二酸化炭素の固体は液体を経ずに気体になるので、台の上がぬれずに粒だけが小さくなる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Dry_Ice_Pellets_Subliming.jpg">Richard Wheeler at en.wikipedia</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="tb-tw"><table>
 <thead><tr><th>名称</th><th>変化</th><th>熱の出入り</th><th>身近な例</th></tr></thead>
 <tbody>
@@ -138,6 +148,11 @@
 <tr><td>凝華</td><td>気体 → 固体</td><td>放出する</td><td>冬の朝に霜が付く</td></tr>
 </tbody></table></div>
 <p>名称を暗記する際は熱の向きを一緒に押さえる。<strong class="hit">粒子が離れる向きの変化は熱を受け取り粒子が集まる向きの変化は熱を放出する</strong>。粒子を引き離すには引力に逆らう仕事が要るからである。汗が蒸発すると体温が下がるのは蒸発の際に皮膚から熱を受け取るためである。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/03_states-frost.jpg" width="1200" height="802" loading="lazy" alt="湖に浮かぶ救命浮き輪の表面に白く付いた霜"><img src="../img/03_states-condensation.jpg" width="1200" height="799" loading="lazy" alt="冷えたビールジョッキの外側に付いた水滴"></div>
+<figcaption>左は湖の救命浮き輪に付いた霜で、空気中の水蒸気が冷えた表面で直接固体になった凝華である。右は冷えたジョッキの外側に付いた水滴で、空気中の水蒸気が液体になった凝縮である。どちらも熱を放出する向きの変化である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Frost-covered_lifebuoy,_Lake_Siskiyou.jpg">Radomianin</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:DFC_0867_Chilled_mug_of_Chang_beer_catching_the_light_condensation_beading_on_the_glass.jpg">PattayaPatrol</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">固体は守備陣で液体はベンチ前で気体は帰りの観客である</p>
@@ -223,6 +238,11 @@
 </ul></div>
 </div>
 <p>沸点は外から加わる圧力で変わる。圧力が低い高山では水は100℃より低い温度で沸騰する。圧力鍋の内部では圧力が高く水は100℃を超える温度まで沸騰しない。沸点と圧力の定量的な関係は蒸気圧として化学で扱う。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_states-pressure-cooker.jpg" width="1200" height="799" loading="lazy" alt="ふたを外して置いた家庭用の圧力鍋">
+<figcaption>家庭用の圧力鍋である。厚いふたを本体に密着させて閉じ、内部の水蒸気を逃がさないことで鍋の中の圧力を高める。圧力が高いと水の沸点が100℃より高くなり、より高い温度で調理できる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Pressure_cooker_-_Hawkins,_Contura_Model_-_3_litres_-_2.jpg">Cantons-de-l'Est</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>融点と沸点は粒子どうしの引力の強さを測る指標になる。<strong class="hit">引力が強い物質ほど結びつきを解くのに高い温度を要し融点と沸点が高い</strong>。</p>
 <div class="tb-tw"><table>
 <thead><tr><th>物質</th><th>融点</th><th>沸点</th><th>粒子間の結びつき</th></tr></thead>
@@ -302,11 +322,31 @@
 <li><b>1775年</b> ワットとボールトンが共同事業を始めた。蒸気機関は工場の動力となり産業革命を支えた</li>
 </ul>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/03_states-newcomen.jpg" width="427" height="640" loading="lazy" alt="英国エルセカーに保存されたニューコメンの機関の内部">
+<figcaption>英国サウスヨークシャーのエルセカーに保存されたニューコメンの機関の内部である。本文の大気圧機関と同じ形式の装置で、水蒸気の凝縮で生じた圧力差を使って鉱山の水をくみ上げた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Elsecar_Newcomen_engine.jpg">Chris Allen</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_states-watt.jpg" width="803" height="1200" loading="lazy" alt="博物館に展示されたボールトン・ワット社の蒸気機関">
+<figcaption>オーストラリアのパワーハウス博物館に展示されたボールトン・ワット社の蒸気機関である。1785年に製造され、1887年まで使われた。建物の数階分の高さがあり、蒸気機関が工場の動力として大型の設備であったことが分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Boulton_%26_Watt_steam_engine,_Sydney_Powerhouse_Museum,_2014_(15243331353).jpg">David Maciulaitis from Auckland, New</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-rw"><b>現実世界</b>
 <p>ニューコメンの機関は凝縮で気体の分子数を減らし壁に衝突する分子を減らして圧力を下げる装置である。ピストンを動かしたのは水蒸気の力ではなく外側の大気圧である。この機関はシリンダーそのものを毎回水で冷やしたので次の行程ではシリンダーを加熱し直す熱が無駄になった。ワットの分離凝縮器は凝縮だけを別の容器に移しこの無駄をなくした。状態変化の熱がどこで出入りするかを設計で分けたことが燃料費を下げ蒸気機関を工場に普及させた。</p>
 <p>天然ガスの主成分であるメタンの沸点は−162℃である。天然ガスを約−162℃まで冷却して凝縮させたものが液化天然ガス LNG である。液化すると体積は気体の約600分の1になる。日本は世界有数の LNG 輸入国でありタンカーで運んだ LNG を受入基地で蒸発させて都市ガスや火力発電の燃料にする。気体のままでは船で運べない量を凝縮によって運べる量に変えている。</p>
 <p>フリーズドライは昇華を利用した乾燥法である。食品を凍らせた後に容器内の圧力を数 hPa 程度まで下げる。この条件では氷は融解せずに直接昇華して水蒸気になる。液体の水を経ないので食品の組織や風味が保たれやすい。インスタントコーヒー・宇宙食・ワクチンなどの医薬品の製造に使われている。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/03_states-lng-carrier.jpg" width="1200" height="900" loading="lazy" alt="球形のタンクを5基積んだLNG運搬船"><img src="../img/03_states-lng-terminal.jpg" width="1200" height="799" loading="lazy" alt="横浜の根岸LNG基地の円筒形のタンク群"></div>
+<figcaption>左は浦賀水道を航行するLNG運搬船で、甲板上の球形のタンクに約−162℃の液化天然ガスを入れて運ぶ。右は横浜市の根岸LNG基地で、円筒形のタンクに受け入れたLNGを蒸発させて都市ガスや発電の燃料にする。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Shahamah_LNG_carrier.jpg">青空白帆</a>／CC BY 2.1 jp 右：<a href="https://commons.wikimedia.org/wiki/File:Negishi_LNG_Terminal_01.jpg">Σ64</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_states-freeze-dried.jpg" width="1200" height="799" loading="lazy" alt="袋に密封されたNASAのフリーズドライ食品">
+<figcaption>NASAが開発したフリーズドライ食品である。凍らせた食品から氷を昇華させて水分を除いたもので、袋の中の食品は元の形と色を保っている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Freeze-Dried_Foods_(497590main_jsc2008e038829_Freeze-Driedhi_full).jpg">NASA</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 状態変化の名称</div>

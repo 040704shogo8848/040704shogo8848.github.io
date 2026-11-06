@@ -8,6 +8,11 @@
 <p>物質を作っている基本的な成分を<strong>元素</strong>と呼ぶ。現在118種類の元素が知られており1つ1つに元素記号が割り当てられている。水素は H・酸素は O・炭素は C である。原子の構造は第4章で周期表は第5章で扱う。</p>
 <p>純物質のうち1種類の元素だけからできているものを<strong>単体</strong>と呼ぶ。水素 H<sub>2</sub>・酸素 O<sub>2</sub>・鉄 Fe・ダイヤモンド C が単体である。2種類以上の元素からできているものを<strong>化合物</strong>と呼ぶ。水 H<sub>2</sub>O・二酸化炭素 CO<sub>2</sub>・塩化ナトリウム NaCl が化合物である。<strong class="hit">化合物は化学変化で2種類以上の物質に分解できる。単体はそれ以上別の物質に分解できない</strong>。水に電流を流すと水素と酸素に分解するので水は化合物である。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/02_elements-hofmann.jpg" width="900" height="1200" loading="lazy" alt="ドイツ博物館に展示されたホフマンの水の電気分解装置">
+<figcaption>ドイツ博物館に展示されたホフマンの水の電気分解装置である。下部の電極に電流を流すと、水が分解して左右の目盛り付きの管に水素と酸素がそれぞれたまる。水が化学変化で2種類の単体に分かれることを示す装置で、水が化合物である根拠になる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hofmann%27scher_Wasserzersetzungsapparat_-_Deutsches_Museum_Verkehrszentrum.jpg">Mattes</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 280" role="img" aria-label="物質の分類の樹形図">
   <g stroke="var(--line)" stroke-width="2" fill="none">
@@ -66,6 +71,11 @@
 </tbody></table></div>
 <p>最後の例は判別の決め手になる考え方を示す。単体のカルシウムは銀白色の金属で水と反応して水素を発生する。そのような金属が骨の中に存在するはずがない。<strong>単体に置き換えて文が成り立つかを確かめる</strong>のが最も確実な判別法である。牛乳に含まれるカルシウム・ひじきに含まれる鉄・食塩に含まれるナトリウムもすべて元素の意味である。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/02_elements-calcium.jpg" width="849" height="574" loading="lazy" alt="フラスコの液体の中で泡を出す金属カルシウムの小片">
+<figcaption>フラスコの液体に入れた金属カルシウムの小片である。灰色の金属の表面から細かい泡が出て、白い濁りが上へ広がっている。本文のとおり単体のカルシウムはこのように反応する金属であり、骨や牛乳に含まれるカルシウムがこの金属でないことは明らかである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Calcium_metal1.jpg">GOKLuLe</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">元素はチームではなく選手の所属である</p>
 <p>ジャイアンツが優勝した ／ 実在のチームで単体の用法。侍ジャパンにジャイアンツの選手が3人 ／ 所属で元素の用法。水の中に気体の O<sub>2</sub> は存在しない。</p>
@@ -81,7 +91,22 @@
 <tr><td>酸素 O</td><td>酸素 O<sub>2</sub> ／ オゾン O<sub>3</sub></td><td>O<sub>2</sub> は無色無臭。O<sub>3</sub> は淡青色で特異な臭いをもち強い酸化作用を示す</td></tr>
 <tr><td>リン P</td><td>黄リン ／ 赤リン</td><td>黄リンは P<sub>4</sub> 分子からなり猛毒で空気中で自然発火するので水中に保存する。赤リンは毒性が低くマッチ箱の側薬に使われる</td></tr>
 </tbody></table></div>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_elements-sulfur-crystals.jpg" width="1200" height="905" loading="lazy" alt="フラスコの中に析出した黄色の針状の硫黄の結晶">
+<figcaption>トルエンに溶かした硫黄を冷やして析出させた黄色の結晶である。硫黄の単体は析出の条件によって結晶の形が異なり、表の斜方硫黄・単斜硫黄のような同素体を生じる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sulfur_crystals_1.JPG">Maxim Bilovitskiy</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_elements-phosphorus.jpg" width="1200" height="433" loading="lazy" alt="白リン・赤リン・紫リンの試料を並べた写真">
+<figcaption>リンの同素体を並べた写真である。左端はろうのような白リンで、切り口が黄色い。中央の2つは赤リンで、右端は紫リンである。同じリンの単体でも色と外観が大きく異なる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:PhosphComby.jpg">BXXXD・Tomihahndorf・Maksim・Materialscientist</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>炭素の同素体は原子の並び方の違いが性質の違いに直結する例である。<strong class="hit">ダイヤモンドでは各炭素原子が4個の炭素原子と結合し立体的な網目を作る。黒鉛では各炭素原子が3個の炭素原子と結合して平面の層を作り層どうしは弱い力で重なっている</strong>。ダイヤモンドは全方向に結合が伸びているので非常に硬い。黒鉛は層がずれやすいのでやわらかく鉛筆の芯に使われる。黒鉛では各炭素原子に結合に使われない価電子が1個ずつ残り層に沿って動けるので電気を通す。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_elements-graphite-diamond.jpg" width="1200" height="701" loading="lazy" alt="黒鉛の塊とダイヤモンドの八面体の結晶">
+<figcaption>左は黒鉛の塊で、右はダイヤモンドの結晶である。どちらも炭素だけからなる単体だが、黒鉛は黒く金属のような光沢をもち、ダイヤモンドは無色透明で八面体の形をとる。原子の並び方の違いが色や透明さの違いとして目に見える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Graphite-and-diamond-with-scale.jpg">Robert M. Lavinsky</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 290" role="img" aria-label="ダイヤモンドと黒鉛とフラーレンの原子の並び方">
@@ -193,7 +218,17 @@
 <figcaption>色は画面での近似である。NaCl でも NaOH でも Na を含めば黄色を示す。語呂は Li 赤・Na 黄・K 紫・Cu 緑・Ca 橙・Sr 紅・Ba 緑の順に対応する。</figcaption>
 </figure>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/02_elements-flames.jpg" width="1200" height="900" loading="lazy" alt="金属の化合物を溶かした燃料の炎が9色に並んだ様子">
+<figcaption>金属の塩化物などをメタノールに溶かして燃やした炎である。左から塩化リチウム・塩化ストロンチウム・塩化カルシウム・塩化ナトリウム・塩化バリウム・ホウ酸トリメチル・塩化銅・塩化セシウム・塩化カリウムの順に並ぶ。リチウムとストロンチウムの赤・ナトリウムの黄・銅の青緑・カリウムの淡い紫が、図の色と対応する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Coloured_flames_of_methanol_solutions_of_metal_salts_and_compounds.jpg">Hegelrast</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>炎の色が元素ごとに異なる理由は原子の電子にある。炎の熱で電子が外側のエネルギーの高い状態へ移り元の状態に戻るときに差の分のエネルギーを光として放出する。<strong class="hit">エネルギーの差は元素ごとに一定なので放出される光の波長も元素ごとに一定である</strong>。ナトリウムの黄色は波長約589 nm の光である。トンネルの照明に使われてきた橙黄色のナトリウムランプも同じ光を出す。電子のエネルギーの状態は第4章と第5章で扱う電子殻と関係する。どの状態の間を電子が移るかの詳細は、量子力学の範囲になる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_elements-sodium-lamp.jpg" width="1200" height="900" loading="lazy" alt="低圧ナトリウムランプに照らされた駐車場の2台の車">
+<figcaption>低圧ナトリウムランプに照らされた駐車場の2台の車である。左の車は実際には赤色で、右の車は黒色だが、この光の下ではどちらも黒く見える。ナトリウムランプの光はナトリウムに特有の橙黄色の光に偏っており、赤い色を照らし出す光を含まないからである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Red_and_black_cars_under_low_pressure_sodium_lamps.jpg">Darkest tree</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>炎色反応を示すのは主にアルカリ金属とアルカリ土類金属と銅である。マグネシウムとベリリウムは2族だが炎色反応を示さない。選択肢がマグネシウムに炎色反応があるとしていればその選択肢は誤りである。</p>
 
 <h2 id="s5">沈殿と色の変化による検出</h2>
@@ -207,6 +242,11 @@
 <tr><td>ナトリウム Na など</td><td>炎の中に入れる</td><td>元素に特有の炎の色</td><td>反応ではなく光の放出</td></tr>
 </tbody></table></div>
 <div class="fx">Ag<sup>+</sup> ＋ Cl<sup>−</sup> → AgCl　　Ca(OH)<sub>2</sub> ＋ CO<sub>2</sub> → CaCO<sub>3</sub> ＋ H<sub>2</sub>O<small>左は塩化物イオンの検出で右は二酸化炭素の検出である。石灰水は水酸化カルシウムの水溶液である。</small></div>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_elements-agcl.jpg" width="900" height="1200" loading="lazy" alt="試験管の底にたまった白色の塩化銀の沈殿">
+<figcaption>試験管の底にたまった塩化銀 AgCl の白色の沈殿である。塩化物イオンを含む水溶液に硝酸銀水溶液を加えるとこの沈殿が生じ、水溶液に塩素の元素が含まれていたことが分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:AgCl-neerslag.jpg">Dr.T</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>炭素と水素の検出は同じ1回の実験で行える。有機化合物に酸化銅(Ⅱ)を混ぜて試験管で加熱すると試料が完全燃焼して二酸化炭素と水が生じる。気体を石灰水に通して白く濁れば炭素を含む。試験管の口付近に付いた液体を硫酸銅(Ⅱ)無水物につけて青くなれば水素を含む。<strong>検出されるのは生じた物質ではなく試料に含まれていた元素である</strong>。二酸化炭素が検出されたことから試料に炭素の元素が含まれていたと結論する。</p>
 
 <figure class="tb-fig">
@@ -241,6 +281,11 @@
 <figcaption>酸化銅(Ⅱ)は試料に酸素を与えて完全燃焼させるために加える。加熱をやめる前に石灰水からガラス管を抜く。抜かずに火を消すと試験管の内部の圧力が下がり石灰水が逆流する。</figcaption>
 </figure>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/02_elements-cuso4-anhydrous.jpg" width="1200" height="1168" loading="lazy" alt="瓶に入った白色の粉末の硫酸銅(Ⅱ)無水物"><img src="../img/02_elements-cuso4-hydrate.jpg" width="1200" height="501" loading="lazy" alt="青色の硫酸銅(Ⅱ)五水和物の結晶"></div>
+<figcaption>左は硫酸銅(Ⅱ)無水物の白色の粉末で、右は飽和水溶液から育てた硫酸銅(Ⅱ)五水和物の青色の結晶である。無水物が水と結びつくと白色から青色に変わるので、試料の燃焼で生じた液体が水であることを確かめられる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Copper_sulfate_anhydrous.jpg">W. Oelen</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Blue_vitriol_monocrystal.jpg">Tatewaki</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-lv"><b>男女で言えば</b>
 <p class="an-h">沈殿は2つの会場が合流した瞬間に成立する1組である</p>
 <p>Ag<sup>+</sup> と Cl<sup>−</sup> ／ 水分子との関係より互いの結びつきが強く固体になる。Na<sup>+</sup> と NO<sub>3</sub><sup>−</sup> ／ 出会っても結びつかず水に溶けたまま残る。</p>
@@ -248,6 +293,11 @@
 
 <h2 id="s6">現実世界の同素体と炎色反応 グラフェンと花火</h2>
 <p>炭素の同素体は20世紀後半から21世紀にかけて新しい種類が次々に見つかった。1985年にクロトー・カール・スモーリーらがサッカーボール形の C<sub>60</sub> 分子フラーレンを発見し1996年にノーベル化学賞を受けた。1991年には飯島澄男が筒状のカーボンナノチューブを報告した。2004年にはガイムとノボセロフが粘着テープで黒鉛をはがして厚さが原子1個分の層<strong>グラフェン</strong>を取り出し2010年にノーベル物理学賞を受けた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_elements-graphene.png" width="779" height="332" loading="lazy" alt="走査型トンネル顕微鏡で観察した1層と2層のグラフェンの表面">
+<figcaption>グラフェンの表面を走査型トンネル顕微鏡で観察した像である。左は1層、右は2層のグラフェンで、右の像では炭素原子の規則正しい並びが網目の模様として見える。白い線の長さは1 nm である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Graphene_STM.png">Kendal W. Clark et al.</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="tb-tl">
 <li><b>1985年</b><strong>フラーレン C<sub>60</sub> の発見</strong>。1996年にノーベル化学賞</li>
@@ -260,6 +310,11 @@
 <p>黒鉛は電池の産業に欠かせない。現在のリチウムイオン電池の多くは負極に黒鉛を使う。充電すると黒鉛の層と層の間にリチウムが入り込み放電すると出ていく。層状の構造と電気を通す性質という黒鉛の2つの特徴がそのまま負極の機能になっている。ダイヤモンドは非常に硬いため切削工具や研磨材に使われ工業用ダイヤモンドの多くは人工的に合成される。</p>
 <p>花火の色は炎色反応である。赤はストロンチウムの化合物・緑はバリウムの化合物・黄はナトリウムの化合物・青は銅の化合物で出す。炎色反応の表がそのまま花火の配合表になっている。青は温度が高すぎると色が薄れるので最も出しにくい色とされる。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_elements-fireworks.jpg" width="1200" height="800" loading="lazy" alt="夜に回転しながら緑と赤の炎を出す花火">
+<figcaption>回転しながら燃える花火である。中央の赤い炎と周囲を回る緑の炎は、配合した金属の化合物の炎色反応による。本文のとおり赤はストロンチウム、緑はバリウムの化合物で出すのが代表的である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Different_colors_fireworks.jpg">Peter van der Sluijs</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>スタートアップで言えば</b>
 <p class="an-h">グラフェンはノーベル賞と量産の間にある死の谷である</p>

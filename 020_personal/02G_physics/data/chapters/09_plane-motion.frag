@@ -31,6 +31,11 @@
 \[ \vec{v}_{AB} = \vec{v}_B - \vec{v}_A \]
 <p>第1章では一直線上の相対速度を数の引き算で求めた。平面ではベクトルの引き算になる。<strong class="hit">観測者の速度を逆向きにして相手の速度に足すと相対速度になる</strong>。観測者が動くと周囲の物体は観測者の速度と逆向きに動いて見えるからである。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/09_plane-refueling.jpg" width="798" height="1200" loading="lazy" alt="空中給油機から給油を受けるF-16戦闘機">
+<figcaption>空中給油機 KC-135R から給油を受ける F-16 戦闘機である。2機は地面に対して高速で飛んでいるが、同じ速度で並んで飛ぶので互いの相対速度は0に近い。そのため給油管を相手の機体につないだまま飛行を続けられる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:F-16_refuelling,_Exercise_Green_Flag_East_-_081201-F-3071N-235.jpg">U.S. Air Force photo/Master Sgt. John Nimmo Sr.</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 260" role="img" aria-label="東向き20メートル毎秒の車Aから見た北向き15メートル毎秒の車Bの相対速度">
   <defs>
@@ -75,6 +80,11 @@
 <p>投げ出した点を原点とし水平方向に \(x\) 軸・鉛直下向きに \(y\) 軸をとる。時刻 \(t\) の速度と位置は次のとおりである。</p>
 \[ v_x = v_0,\quad v_y = gt,\qquad x = v_0t,\quad y = \frac{1}{2}gt^2 \]
 <p>2つの式から \(t\) を消すと軌道の式 \(y = \dfrac{g}{2v_0^{\,2}}x^2\) が得られる。<strong class="hit">軌道は放物線であり落下にかかる時間は初速度に関係なく高さだけで定まる</strong>。同じ高さから水平に投げた球と静かに放した球は同時に地面に着く。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/09_plane-water-trajectory.jpg" width="900" height="1200" loading="lazy" alt="噴水の水が描く放物線に近い形">
+<figcaption>スペインのアランフエス王宮の庭園にある噴水である。噴き出した水の各部分は空気抵抗を無視すれば重力だけを受けて運動するので、水の筋は放物線に近い形を描く。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:ParabolicWaterTrajectory.jpg">GuidoB</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 350" role="img" aria-label="水平投射の0.5秒ごとの位置と自由落下と等速運動の比較">
@@ -136,6 +146,11 @@
 </tbody></table></div>
 <p>\(\sin2\theta\) の最大値は \(\theta = 45^\circ\) のときの1である。<strong>初速度の大きさが同じなら45°で投げると水平到達距離が最大になる</strong>。また \(\sin2\theta = \sin(180^\circ - 2\theta)\) なので \(\theta\) と \(90^\circ - \theta\) の2つの角度は同じ距離に届く。30°と60°はその例である。距離は同じでも60°のほうが高く上がり滞空時間が長い。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/09_plane-volcanic-bombs.jpg" width="1200" height="796" loading="lazy" alt="噴火で飛び出した高温の岩塊が描く多数の放物線">
+<figcaption>エクアドルのトゥングラワ火山の2010年5月31日の噴火を、露光時間30秒で撮影した写真である。火口から飛び出した高温の岩塊が光の筋を残し、それぞれが放物線を描いている。飛び出した角度と速さが岩塊ごとに異なるので、着地点までの距離も異なる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Parabolic_Trajectories_of_Volcanic_Bombs_at_Tungurahua_volcano_in_Ecuador_-_2010-05-31.jpg">Benjamin Bernard</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 340" role="img" aria-label="初速度14メートル毎秒で30度45度60度に投げた軌道">
   <g stroke="var(--line)" stroke-width="1">
@@ -180,6 +195,11 @@
 <p>ドアを開けるとき蝶番から遠い所を押すほど小さな力で開く。蝶番に向けて押してもドアは回転しない。剛体を回転させるはたらきは力の大きさと回転軸から作用線までの距離の両方で定まる。この量を<strong>力のモーメント</strong>と呼ぶ。</p>
 \[ M = Fl \]
 <p>\(l\) は回転軸から作用線へ下ろした垂線の長さで<strong>うでの長さ</strong>と呼ぶ。単位は \(\mathrm{N\cdot m}\) である。反時計回りに回転させるモーメントを正・時計回りを負とする約束が多い。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/09_plane-torque-wrench.jpg" width="1200" height="598" loading="lazy" alt="柄の長いトルクレンチ">
+<figcaption>ボルトを決められた力のモーメントで締めるためのトルクレンチである。柄が長いので回転軸から遠い所に手で力を加えることができ、うでの長さを大きくとれる。同じ力でも大きな力のモーメントが得られる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Click-torque-wrench.jpg">Heron2</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>軸から作用点までの距離を \(r\)・その線分と力のなす角を \(\theta\) とすると うでの長さは \(l = r\sin\theta\) である。</p>
 \[ M = Fr\sin\theta \]
 <p>力を線分に平行な成分 \(F\cos\theta\) と垂直な成分 \(F\sin\theta\) に分けても同じ結果になる。平行な成分は軸を通るので回転に寄与せず垂直な成分だけが距離 \(r\) で回転させる。<strong class="hit">力のモーメントは力の大きさとうでの長さの積であり作用点までの距離との積ではない</strong>。</p>
@@ -245,6 +265,11 @@
 </div>
 <p>第2章の質点のつり合いは1つ目の条件だけだった。大きさのある物体では力の和が0でも回転し始める場合がある。次節の偶力がその例である。<strong class="hit">力の和が0のときモーメントの和はどの点のまわりで計算しても同じ値になる</strong>。そこで回転のつり合いの式は計算が最も簡単になる点のまわりで立てる。未知の力の作用点をモーメントの中心に選ぶとその力のうでの長さが0になり式から消える。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/09_plane-steelyard.jpg" width="1200" height="471" loading="lazy" alt="一端に重いおもりが付いたスウェーデンの竿ばかり">
+<figcaption>スウェーデンで使われた竿ばかりで、最大 10 kg まで量れる。棒の右端には重いおもりが固定されていて、荷は中ほどのかぎに下げる。持ち手の位置をずらして棒が水平に静止する点を探し、持ち手のまわりの力のモーメントのつり合いから荷の重さを読み取る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Scandinavian_steelyard_balance_Nyhammar_Grangaerde_Sweden_max_10_kilos_62_cm_wide.jpg">R. Henrik Nilsson</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h3>解き方の手順</h3>
 <p>手順1 剛体にはたらく力をすべて作用点の位置に描く。重力は重心に描く。手順2 力を成分に分けて並進のつり合いの式を立てる。手順3 未知の力が多く集まる点を選んでモーメントのつり合いの式を立てる。手順4 連立して解く。両端以外にも支点がある棒では、2つの条件だけでは支点の力が1通りに定まらない場合がある。</p>
 
@@ -301,6 +326,11 @@
 \[ x_G = \frac{m_1x_1 + m_2x_2}{m_1 + m_2} \]
 <p><strong class="hit">重心は位置を質量で重み付けした平均である</strong>。重心は重い側に近づき2つの質量の比の逆比に線分を内分する。3個以上の物体や \(y\) 座標についても同じ形の式が成り立つ。一様な棒の重心は中点で一様な長方形の板の重心は対角線の交点である。形を部分に分けて各部分の重心に質量を集めれば複雑な形の重心も同じ式で求まる。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/09_plane-balancing-eagle.jpg" width="900" height="1200" loading="lazy" alt="くちばしの先だけで支えられて静止する鳥のおもちゃ">
+<figcaption>くちばしの先だけで支えられて静止する鳥のおもちゃである。翼の先端を重くして、重心がくちばしの先の位置にくるようにしてある。重心で支えると剛体はどの向きにも回転しない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Balancing_Eagle.jpg">U3211603</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 8</div>
 <p>長さ 1.2 m で質量 2.0 kg の一様な棒の左端に 1.0 kg の小球を付けた。重心は左端から何 m の位置か。</p>
 <details open><summary>解き方</summary><div>手順1 棒の質量は中点 0.60 m に集める。小球は 0 m にある。<br>
@@ -321,10 +351,20 @@
 <h2 id="s8">現実世界の投射と剛体</h2>
 <p>真空中なら45°で打った打球が最も遠くへ飛ぶ。実際の打球には空気抵抗と回転による揚力がはたらく。大リーグの公式データ Statcast は打球速度と打球角度の組み合わせで長打になりやすい打球を barrel と定義する。打球速度 98 マイル毎時のとき barrel となる打球角度は26°から30°である。45°より低い角度で最適になる点は空気抵抗のない放物線の模型の限界を示す。</p>
 <p>建設現場のタワークレーンは剛体のつり合いの応用である。荷をつるすジブの反対側に重いカウンターウエイトを置きマストのまわりのモーメントをつり合わせる。荷を遠くへ運ぶほどうでの長さが増えるので運べる質量は小さくなる。クレーンの定格荷重は作業半径ごとに表で定められている。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/09_plane-tower-crane2.jpg" width="1200" height="850" loading="lazy" alt="ジブとカウンタージブを備えたタワークレーンの上部">
+<figcaption>タワークレーンの上部である。荷をつるす長いジブの反対側に短いカウンタージブがあり、その上にカウンターウエイトが載っている。マストのまわりで両側の力のモーメントがつり合うように配置されている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Liebherr_tower_crane_at_reconstruction_of_the_GES-2_in_Moscow.jpg">Dmitry Ivanov.</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p class="an-h">ガリレオは投射の軌道が放物線になることを論証した</p>
 <p>1638年の著書『新科学対話』で水平方向の等速運動と鉛直方向の等加速度運動の合成が放物線になると論じた。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/09_plane-discorsi.jpg" width="1200" height="1200" loading="lazy" alt="ガリレオの新科学対話の扉">
+<figcaption>1638年に出版されたガリレオの『新科学対話』の扉である。扉には力学と物体の運動を扱うことと、出版地のライデンが記されている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Galileo_Galilei,_Discorsi_e_Dimostrazioni_Matematiche_Intorno_a_Due_Nuove_Scienze,_1638_(1400x1400).png">作者名の記載なし</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s9">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 水平投射</div>

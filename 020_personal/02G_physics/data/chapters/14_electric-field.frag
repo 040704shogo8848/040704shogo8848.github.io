@@ -9,6 +9,10 @@
 <p>距離 \(r\) 離れた2つの点電荷 \(q_1\) と \(q_2\) の間に働く力の大きさは次のとおりである。これを<strong>クーロンの法則</strong>と呼ぶ。</p>
 \[ F=k\frac{q_1q_2}{r^2}\qquad k=\frac{1}{4\pi\varepsilon_0}\fallingdotseq 9.0\times 10^{9}\ \mathrm{N\cdot m^2/C^2} \]
 <p>\(\varepsilon_0\fallingdotseq 8.85\times 10^{-12}\ \mathrm{F/m}\) を真空の誘電率と呼ぶ。力の向きは2つの電荷を結ぶ直線の方向である。<strong class="hit">力が距離の2乗に反比例するのは点から出る作用が半径 \(r\) の球面全体に広がり球の表面積 \(4\pi r^2\) で薄まるから</strong>と考えると納得しやすい。万有引力も同じ形である。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/14_electric-field-coulomb.jpg" width="900" height="1200" loading="lazy" alt="ガラスの円筒と細い管からなるクーロンのねじれ秤">
+<figcaption>フランスのディジョンの展示に出品されたクーロンのねじれ秤である。上の細い管から吊るした糸の先に、円筒の中で水平に回る棒がある。帯電した球どうしが反発して棒が回ると糸がねじれ、そのねじれの角度から力の大きさを求める。クーロンはこの種の装置で力が距離の2乗に反比例することを示した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Exposition_Hautes_Tensions_-_Balance_de_Coulomb.JPG">Christophe.Finot</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>3つ以上の電荷がある場合は 1組ずつ求めたクーロン力をベクトルとして合成する。これを重ね合わせの原理と呼ぶ。</p>
 <div class="ex"><div class="ex-h">例題 1</div>
 <p>真空中で \(+1.0\ \mathrm{\mu C}\) の点電荷2個を 0.30 m 離して置く。互いに及ぼす力の大きさと向きを求めよ。</p>
@@ -44,6 +48,10 @@
 <p>重力の場で物体を持ち上げると位置エネルギーが増える。電場でも同じで電場に逆らって電荷を運ぶと静電気力による位置エネルギーが増える。<strong>電位</strong>は +1 C あたりの静電気力による位置エネルギーである。単位はボルト V で \(1\ \mathrm{V}=1\ \mathrm{J/C}\) である。2点の電位の差を<strong>電位差</strong>または電圧と呼ぶ。</p>
 \[ U=qV\qquad W_{\mathrm{A\to B}}=q(V_{\mathrm{A}}-V_{\mathrm{B}}) \]
 <p>2つ目の式は電荷 \(q\) が A から B へ移る間に静電気力がする仕事である。<strong class="hit">仕事は経路によらず両端の電位差だけで決まる</strong>。静電気力が重力と同じ保存力だからである。電位の基準はどこに置いてもよい。実用上は地面を 0 V としこれを接地またはアースと呼ぶ。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/14_electric-field-vandegraaff.jpg" width="754" height="577" loading="lazy" alt="バンデグラフ起電機の球に触れて髪の毛が逆立った講師">
+<figcaption>バンデグラフ起電機の金属球に手を触れた講師である。体は金属球とつながって全体が高い電位になり、髪の毛の1本ずつが同じ符号の電荷をもつ。同符号の電荷が反発し合うので、髪の毛は頭から離れる向きに広がっている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Muller_Van_de_Graaff_generator_demonstration.jpg">Drbaker171 at English Wikipedia</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>一様な電場と点電荷の電位</h3>
 <p>強さ \(E\) の一様な電場の中を電場の向きに距離 \(d\) 進むと電位は \(Ed\) 下がる。+1 C を運ぶ力 \(E\) と距離 \(d\) の積が仕事だからである。</p>
 \[ V=Ed \]
@@ -90,6 +98,10 @@
 <li>電荷は導体の表面だけに分布する</li>
 </ul>
 <p>中が空洞の導体では外部の電場が空洞の中に入らない。これを<strong>静電遮蔽</strong>と呼ぶ。電子機器を金属のケースで囲むのは外部の電場の影響を防ぐためである。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/14_electric-field-carlightning.jpg" width="1200" height="900" loading="lazy" alt="高電圧の放電が自動車の屋根に落ちる実験">
+<figcaption>高電圧の実験施設で自動車に放電を当てた写真である。放電の電流は金属の車体の表面を流れて地面へ抜ける。車体は中が空洞の導体として働くので、内部には外の電場がほとんど入らない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Lightning_to_a_car.jpg">Sunzi safari</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">金属の箱はドーム球場である</p>
 <p>外でどれだけ風が吹いてもドームの中の風は 0 である。導体の壁は外の電場を表面の電荷で打ち消し内部の電場を 0 にする。</p>
@@ -100,6 +112,10 @@
 <p>導体の電子は導体の中を端まで実際に移り住む。誘電体の電子は自分の分子に留まったまま向きを変えるだけである。</p>
 </aside>
 <p>箔検電器はこの性質を使って帯電を調べる器具である。負に帯電した棒を金属板に近づけると静電誘導で電子が箔へ移動し 2枚の箔が同符号に帯電して開く。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/14_electric-field-electroscope.jpg" width="512" height="666" loading="lazy" alt="ガラス瓶の中に2枚の金箔を吊るした箔検電器">
+<figcaption>1900年ごろの手作りの箔検電器である。上の金属板から下りた棒の先に2枚の金箔が吊るされ、帯電すると箔が開く。瓶の内側の両脇に貼った金属箔は接地されており、電荷が多すぎるときに金箔が触れて放電し破れないようにする安全策である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gold_leaf_electroscope_homemade.jpg">Harry Edwin Hadley</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s5">コンデンサーの電気容量と接続</h2>
 <p>2枚の導体板を向かい合わせて電荷を蓄える装置を<strong>コンデンサー</strong>またはキャパシターと呼ぶ。極板に電圧 \(V\) をかけると一方に \(+Q\) で他方に \(-Q\) が蓄えられ \(Q\) は \(V\) に比例する。比例定数 \(C\) を<strong>電気容量</strong>と呼び単位はファラド F である。</p>
@@ -108,6 +124,10 @@
 <p>面積 \(S\) の極板を間隔 \(d\) で平行に置く。極板の電荷 \(Q\) から出る電気力線は \(\dfrac{Q}{\varepsilon_0}\) 本で極板間の面積 \(S\) を一様に通る。1 m² あたりの本数が電場の強さなので \(E=\dfrac{Q}{\varepsilon_0S}\) である。極板間の電位差は \(V=Ed=\dfrac{Qd}{\varepsilon_0S}\) である。\(Q=CV\) と比べると次の式が得られる。</p>
 \[ C=\varepsilon_0\frac{S}{d} \]
 <p><strong class="hit">容量は極板の面積に比例し間隔に反比例する</strong>。電圧や電荷の量にはよらない。極板間を比誘電率 \(\varepsilon_r\) の誘電体で満たすと誘電分極で内部の電場が \(\dfrac{1}{\varepsilon_r}\) に弱まり同じ電荷での電位差も \(\dfrac{1}{\varepsilon_r}\) になる。したがって容量は \(\varepsilon_r\) 倍になる。\(\varepsilon=\varepsilon_r\varepsilon_0\) を誘電率と呼ぶと \(C=\varepsilon\dfrac{S}{d}\) である。平行板の式は極板の端で電場が広がる効果を無視した近似であり、間隔が面積に比べて小さいほど正確になる。誘電体が極板間の一部だけを占める場合は、並列や直列の合成として容量を計算する。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/14_electric-field-varcap.jpg" width="655" height="899" loading="lazy" alt="多数の金属板が向かい合って重なる空気可変コンデンサー">
+<figcaption>空気を誘電体とする可変コンデンサーである。軸に付いた多数の金属板が、固定された金属板のすき間に入り込む構造になっている。軸を回転させると向かい合う面積 S が変わり、容量 C ＝ ε₀S/d に従って容量が変わる。ラジオで受信する周波数を選ぶ共振回路に使われてきた部品である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Air_variable_capacitor.jpg">Solaris2006</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="平行板コンデンサーの一様な電場と誘電体の分極">
@@ -137,6 +157,10 @@
 <p>並列接続では各コンデンサーの電圧が等しく電荷の合計が全体の電荷になる。直列接続では各コンデンサーの電荷が等しく電圧の合計が全体の電圧になる。直列の各極板の電荷が等しいのは中間の極板どうしをつなぐ導線の部分が外から孤立していて電気量の和が 0 に保たれるからである。</p>
 \[ \text{並列}\ C=C_1+C_2\qquad \text{直列}\ \frac{1}{C}=\frac{1}{C_1}+\frac{1}{C_2} \]
 <p>抵抗の合成と式の形が逆になる。並列は極板の面積を足すことにあたり直列は間隔を足すことにあたると考えると式の形が説明できる。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/14_electric-field-capbank.jpg" width="1200" height="900" loading="lazy" alt="変電所の地上に並べた電力用コンデンサーの設備">
+<figcaption>変電所に設置された中電圧の電力用コンデンサーの設備で、容量を切り替えて制御できる。多数のコンデンサーの単位を架台に並べてつなぎ、必要な容量を得ている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Substation_capacitor_bank.jpg">Rsparks3</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="ex"><div class="ex-h">例題 5</div>
 <p>2.0 μF と 3.0 μF のコンデンサーを直列につなぎ 10 V の電池に接続する。合成容量と各コンデンサーの電荷と電圧を求めよ。</p>
 <details open><summary>解き方</summary><div>\(\dfrac{1}{C}=\dfrac{1}{2.0}+\dfrac{1}{3.0}=\dfrac{5}{6.0}\) で \(C=1.2\ \mathrm{\mu F}\) である。<br>電荷は共通で \(Q=1.2\times 10=12\ \mathrm{\mu C}\) である。<br>電圧は \(\dfrac{12}{2.0}=6.0\ \mathrm{V}\) と \(\dfrac{12}{3.0}=4.0\ \mathrm{V}\) である。<br>答え合成容量 1.2 μF ／ 電荷はどちらも 12 μC ／ 電圧は 6.0 V と 4.0 V である。容量が小さい方に大きな電圧がかかる。</div></details></div>
@@ -165,6 +189,10 @@
 </figure>
 
 <p><strong class="hit">電池がした仕事は \(QV\) であるが蓄えられるのはその半分の \(\dfrac{1}{2}QV\) である</strong>。電池は電荷 \(Q\) を常に一定の電圧 \(V\) で送り出すからである。差の \(\dfrac{1}{2}QV\) は導線の抵抗でジュール熱になる。抵抗の大きさによらず半分が熱になる。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/14_electric-field-electrolytic.jpg" width="1158" height="674" loading="lazy" alt="大きさと形の異なるアルミ電解コンデンサーとタンタル電解コンデンサー">
+<figcaption>大きさや形の異なるアルミ電解コンデンサーとタンタル電解コンデンサーである。電解コンデンサーは極板の表面にできる極めて薄い酸化膜を誘電体とする。間隔 d が極めて小さいので、小さい体積で大きな容量が得られる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Electrolytic_capacitors-P1090328.JPG">Elcap</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-biz"><b>会計で言えば</b>
 <p class="an-h">充電は支出 QV に対し資産計上が半分の取引である</p>
 <p>電池からの支出 QV のうち貸借対照表に残るのは ½QV で残りはジュール熱として費用になる。</p>
@@ -196,6 +224,10 @@
 
 <h2 id="s8">現実世界のタッチパネル</h2>
 <p>スマートフォンの画面の多くは静電容量方式のタッチパネルである。画面の下に透明な電極が格子状に並び電極どうしの間にコンデンサーが形成されている。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/14_electric-field-touchscreen.jpg" width="1200" height="797" loading="lazy" alt="携帯電話の画面に見える菱形の透明電極の模様">
+<figcaption>携帯電話の静電容量方式のタッチパネルの写真である。画面全体に菱形の模様が見え、これが透明な導電膜でつくった電極の配線である。縦と横の電極が交差する点ごとに容量を測り、指が近づいた位置を求める。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Capacitive_touchscreen.jpg">Medvedev</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>指は水分を多く含む導体である。指が画面に近づくと電極の電場の一部が指へ向かい電極間の容量が変化する。回路はこの変化を格子の各点で測り触れた位置を算出する。手袋をした指や乾いたペン先で反応しないのは容量を変えるほどの導体が近づかないからである。</p>
 </aside>

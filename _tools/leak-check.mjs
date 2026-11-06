@@ -29,6 +29,7 @@ const DICT_PATHS = [
 const DICT = DICT_PATHS.find((p) => existsSync(p));
 
 const SKIP_DIRS = new Set(['.git', 'node_modules', 'dist']);
+const BINARY_EXT = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.ico', '.pdf', '.woff', '.woff2', '.ttf', '.otf', '.mp3', '.mp4', '.m4a', '.wav', '.zip', '.gz', '.zst']);
 const TEXT_EXT = new Set(['.html', '.md', '.json', '.js', '.mjs', '.css', '.txt', '.sh', '.yml', '.yaml']);
 
 // ─── built-in rules ──────────────────────────────────────────────────────────
@@ -183,6 +184,9 @@ for (const abs of targets) {
   let st;
   try { st = await stat(abs); } catch { continue; }
   if (!st.isFile()) continue;
+  // pre-push passes every tracked file, images included. Decoding a JPEG as
+  // UTF-8 turns random bytes into "tbd" and the like, so skip known binaries.
+  if (BINARY_EXT.has(path.extname(abs).toLowerCase())) continue;
 
   const file = path.relative(ROOT, abs).split(path.sep).join('/');
   const lines = (await readFile(abs, 'utf8')).split('\n');

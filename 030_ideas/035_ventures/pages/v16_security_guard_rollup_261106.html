@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>案16 警備会社のロールアップ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  h4{font-size:14px;margin:18px 0 6px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .note{border-left:4px solid var(--warn);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk,.note{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px 22px;margin:16px 0}
+.grid2 figure,.fig{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 12px 8px}
+svg.chart{width:100%;height:auto;display:block;font-family:-apple-system,"Hiragino Sans",sans-serif}
+.fig{margin:16px 0}
+figcaption{font-size:12px;color:var(--sub);margin-top:4px}
+.legend{font-size:13px;margin:10px 0 0}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin:0 5px 0 0}
+details.data{margin:8px 0 18px;font-size:13px}
+details.data summary{cursor:pointer;color:var(--accent)}
+details.data table{font-size:12px;width:auto;min-width:220px}
+details.data .cols{display:flex;flex-wrap:wrap;gap:0 24px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+
+.verdict{font-weight:700;text-align:center;width:52px}
+.unv{color:var(--warn);font-size:12px}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../031_frontier_trading/index.html">frontier trading</a><a href="../../032_evacsim/index.html">evacsim</a><a href="../../033_minhaya_llm/index.html">minhaya llm</a><a href="../../034_foundation/index.html">foundation</a><a href="../index.html">ventures</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/02B_reading/index.html">reading</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a><a href="../../../020_personal/02C_chemistry/index.html">chemistry</a><a href="../../../020_personal/02D_probability/index.html">probability</a><a href="../../../020_personal/02E_calculus/index.html">calculus</a><a href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a><a href="../../../020_personal/02G_physics/index.html">physics</a><a href="../../../020_personal/02H_heidegger/index.html">heidegger</a><a href="../../../020_personal/02I_quiz/index.html">quiz</a><a href="../../../020_personal/02J_geography/index.html">geography</a><a href="../../../020_personal/02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../034_foundation/index.html">foundation</a>
+    <a class="snav-a" href="../index.html">ventures</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../../020_personal/02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../../020_personal/02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../../020_personal/02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../../020_personal/02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../../020_personal/02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../../020_personal/02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../../../020_personal/02J_geography/index.html">geography</a>
+    <a class="snav-a" href="../../../020_personal/02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+<div class="crumb"><a href="../index.html">ventures</a> / 案16</div>
+
+<header class="top">
+  <div>
+    <h1>案16 警備会社のロールアップ</h1>
+    <div class="meta">資金源の型 C 借入で買収する／市場の桁 兆／作成日 2026-11-06</div>
+    <div style="margin-top:8px">
+      <span class="tag">人手不足</span><span class="tag">機械警備</span><span class="tag">事業承継</span><span class="tag">遠隔監視</span>
+    </div>
+  </div>
+</header>
+
+<div class="kpi">
+  <div class="card"><div class="k">警備業者の売上高 回答分</div><div class="v">3.51<small> 兆円 2025年</small></div></div>
+  <div class="card"><div class="k">警備業者数</div><div class="v">10,949<small> 業者</small></div></div>
+  <div class="card"><div class="k">警備員数</div><div class="v">596,985<small> 人</small></div></div>
+  <div class="card"><div class="k">70歳以上の警備員</div><div class="v">21.6<small> %</small></div></div>
+</div>
+
+<h2><span class="num">1</span>一言で<span class="en">What</span></h2>
+<p>後継者がいない地方の警備会社を、融資を使って1社ずつ株式取得で買収する。買収した会社の常駐警備と巡回警備の一部を、機械警備と遠隔監視に置き換えて人件費率を下げる。施設の管理会社と建設会社に、警備員と機器を組み合わせた警備を法人営業で販売する。</p>
+
+<h2><span class="num">2</span>市場規模<span class="en">Market size</span></h2>
+<h3>国内</h3>
+<p>全国警備業協会が2025年末に実施した調査では、回答した5,210業者の売上高の総額は3兆5,057億円である<sup>1</sup>。警備業法第4条の認定を受けた業者は2025年12月末に10,949業者で、回答はその約48%に当たる<sup>1</sup>。</p>
+<div class="box">
+<p><strong>推計</strong> 全体の売上高 ＝ 回答分 ＋ 未回答の業者数 × 回答業者の平均売上 × 規模係数</p>
+<p>回答業者の平均売上は3兆5,057億円 ÷ 5,210 ≒ 6.7億円である。未回答の5,739業者は小規模が多いと考え、規模係数を0.25と仮定する。3兆5,057億円 ＋ 5,739 × 6.7億円 × 0.25 ≒ 4.5兆円となる。規模係数は本ページの仮定値である。</p>
+</div>
+<p>業者の規模は小さい。警備員100人未満の業者が9,885業者で全体の90.3%を占め、営業所が1か所だけの業者は9,219業者で84.2%である<sup>1</sup>。業務の区分では、交通誘導を行う業者が8,241業者で75.3%を占める。施設警備は6,690業者で61.1%、機械警備は512業者で4.7%である<sup>1</sup>。</p>
+<h3>世界</h3>
+<p>警備サービスの世界市場を約2,590億ドルとする報告がある<sup>8</sup>。推計は調査会社により大きく異なる。最大手の一つであるスウェーデンのSecuritasは2024年の売上高が1,619億スウェーデンクローナである<sup>9</sup>。米国のAllied Universalは売上高約200億ドルとする推計があり<sup>7</sup>、2022〜2024年に24件の買収を行ったとされる<sup>10</sup>。海外の大手は買収で規模を拡大してきた。</p>
+
+<h2><span class="num">3</span>なぜ今か<span class="en">Why now</span></h2>
+<table>
+<tr><th>年</th><th>変化</th><th>数値</th></tr>
+<tr><td>2021〜2025年</td><td>警備員数は横ばい</td><td>589,938人から596,985人へ1.2%増に留まる<sup>1</sup></td></tr>
+<tr><td>2025年末</td><td>警備員の高齢化</td><td>70歳以上が129,012人で21.6%、60歳以上の合計は47.3%<sup>1</sup></td></tr>
+<tr><td>2025年末</td><td>在職1年未満の警備員</td><td>109,450人で18.3%。入れ替わりが大きい<sup>1</sup></td></tr>
+<tr><td>2021〜2025年</td><td>機械警備業者の集約</td><td>機械警備業者は512業者で前年比30業者減。対象施設は352万5,422か所で前年比2.9%増。1業者当たりの対象施設は5,713から6,886へ21%増<sup>1</sup></td></tr>
+<tr><td>2021〜2025年</td><td>機械警備の省人化</td><td>専用巡回車1台当たりの対象施設は252から319へ27%増<sup>1</sup></td></tr>
+<tr><td>2024年</td><td>警備業法施行規則等の改正</td><td>認定証を廃止し標識の掲示に変更した。基地局所在地の公安委員会の承認を受ければ、専任の機械警備業務管理者を置かなくてよい場合を定めた<sup>3</sup></td></tr>
+</table>
+<p>警備員の総数は増えず、高齢層の比率が上がっている。一方で機械警備は業者数が減り、1業者当たりの対象施設が増えている。人が行う警備から機器で行う警備への置き換えと、機械警備業者の集約が同時に進んでいる。後継者がいない小規模業者の譲渡先が必要になる時期と重なる。</p>
+
+<h2><span class="num">4</span>競合と首位の条件<span class="en">Competition</span></h2>
+<table>
+<tr><th>事業者</th><th class="num">売上高</th><th>備考</th></tr>
+<tr><td>セコム</td><td class="num">1兆2,569億円</td><td>2026年3月期の連結<sup>4</sup>。セキュリティサービスは6,606億円とする第三者の集計があるが、本ページでは決算短信で確認できなかった<sup>5</sup></td></tr>
+<tr><td>ALSOK 綜合警備保障</td><td class="num">5,970億円</td><td>2026年3月期の連結、前期比8.2%増<sup>6</sup>。警備以外の事業を含む</td></tr>
+<tr><td>その他</td><td class="num">−</td><td>10,949業者のうち警備員1,000人以上は57業者<sup>1</sup></td></tr>
+</table>
+<p>連結売上を2025年の回答分3兆5,057億円と比べると、ALSOKは約17.0%に当たる。セコムのセキュリティサービスを6,606億円とすれば約18.8%で、上位2社で約36%となる。ただし両社の連結には警備以外の事業も含まれるため、比率は目安である。</p>
+<h3>警備業法の認定と承継</h3>
+<p>現行の警備業法には、合併・分割・相続による認定の承継を定めた条文はない<sup>2</sup>。第12条は廃止や死亡の届出を定めるだけである<sup>2</sup>。附則は本ページでは確認できなかった。このため買収は株式取得で行う。法人が同じであれば認定は続き、役員の変更は第11条の変更届出で扱う<sup>2</sup>。新たな役員が第3条の欠格事由に該当しないことが条件である。事業譲渡や合併で会社を統合すると、受け皿の法人が認定をもたない場合は新たに認定を受けなければならない。</p>
+<p>機械警備は、基地局ごとに資格者証をもつ機械警備業務管理者を置き、基地局の所在する都道府県の公安委員会に届け出る<sup>2</sup>。第43条は、事故の情報を受けた後に警備員が速やかに現場へ向かえる即応体制を求める<sup>2</sup>。機械警備業務管理者の資格者証をもつ警備員は全国で8,076人である<sup>1</sup>。</p>
+<h3>上位2社との関係</h3>
+<p>地方の警備会社には、上位2社の機械警備の駆け付けや常駐業務を受託している会社がある。買収した会社の売上のうち上位2社からの受託がどれだけあるかは、買収前の調査で確認する。受託の比率が高い会社を買収すると、上位2社と競合する機械警備に移った時点で受託を失う可能性がある。</p>
+<div class="callout">
+<p><strong>首位の条件</strong> 国内の警備市場3.5〜4.5兆円で首位になるには、セコムとALSOKの警備売上を上回る必要があり、10年では届かない。首位を狙えるのは地域と業務を限った市場である。条件は3つある。①1つの地方ブロックで施設警備と交通誘導の会社を集中して買収し、警備員の配置を会社間で融通できる密度を確保すること。②自社の基地局を1か所もち、買収した会社の常駐ポストを順に機械警備と遠隔監視に切り替えること。③管理会社と建設会社に、人員と機器を一括で提案できる規模に達すること。</p>
+</div>
+
+<h2><span class="num">5</span>4,000万円での最初の1年<span class="en">Year one</span></h2>
+<p>サーチファンド型で始める。創業者が自ら買収対象を検索し、買収後は社長として経営する。投資家の資金は入れず、自己資金と融資で1社目を買収する。</p>
+<table>
+<tr><th>用途</th><th class="num">金額</th><th>検証すること</th></tr>
+<tr><td>検索期間の生活費と活動費 6か月</td><td class="num">500万円</td><td>地銀と税理士の紹介で、条件に合う案件を何件得られるか</td></tr>
+<tr><td>財務・労務・法務の調査、仲介手数料</td><td class="num">800万円</td><td>未払残業代、社会保険の加入状況、行政処分の履歴</td></tr>
+<tr><td>1社目の株式取得の自己資金</td><td class="num">2,300万円</td><td>EBITDA3,000〜4,000万円の会社を約1.6億円で取得できるか</td></tr>
+<tr><td>遠隔監視カメラとセンサーの試験導入</td><td class="num">400万円</td><td>常駐ポストのうち機器に置き換えられる比率と、顧客の受け入れ</td></tr>
+<tr><th>合計</th><th class="num">4,000万円</th><th></th></tr>
+</table>
+<table>
+<tr><th>月</th><th>計画</th></tr>
+<tr><td>1〜3月目</td><td>対象地域を1つの地方ブロックに絞る。売上高3〜5億円・警備員150〜250人・後継者不在・顧客が10社以上に分散、の条件を満たす会社を30社集める</td></tr>
+<tr><td>4〜6月目</td><td>3社と面談し1社と基本合意する。調査で労務、行政処分歴、上位2社からの受託比率を確認する</td></tr>
+<tr><td>7月目</td><td>株式を取得する。資金は自己資金2,300万円、日本政策金融公庫の事業承継向け融資7,200万円<sup>11</sup>、地銀の融資約4,500万円、売主への分割払い約2,000万円とする。役員変更を公安委員会に届け出る</td></tr>
+<tr><td>8〜12月目</td><td>旧経営者を顧問として残し、警備員と顧客の離反を防ぐ。施設警備の顧客3〜5社で遠隔監視を試験導入する。2社目の候補として、同じ地域で基地局をもつ機械警備業者を含めて3社まで絞る</td></tr>
+</table>
+<p>1年目の判定基準は2つある。警備員の離職率が買収前を上回らないこと。施設警備の常駐ポストの1割以上を、顧客の合意を得て機器との組み合わせに切り替えること。</p>
+
+<h2><span class="num">6</span>資金の組み方<span class="en">Financing</span></h2>
+<table>
+<tr><th>段階</th><th>資金</th><th>金融機関</th><th>条件</th></tr>
+<tr><td>1社目 1年目</td><td>事業承継融資、買収融資、売主の分割払い</td><td>日本政策金融公庫 国民生活事業、地銀</td><td>公庫の限度は別枠7,200万円<sup>11</sup>。地銀は対象会社の営業キャッシュフローを返済原資とする。警備会社は車両以外の担保が少ない</td></tr>
+<tr><td>2〜5社目 2〜4年目</td><td>持株会社による買収融資、資本性劣後ローン</td><td>地銀、商工中金、日本政策金融公庫 中小企業事業</td><td>資本性ローンの限度は15億円、期限一括返済で最長20年<sup>12</sup></td></tr>
+<tr><td>機器 毎年</td><td>カメラ、センサー、巡回車のリース</td><td>リース会社</td><td>機器はリースで調達し、買収資金と分ける。月額の警備料金で回収する</td></tr>
+<tr><td>6社目以降 5年目以降</td><td>シンジケートローン</td><td>メガバンク、地銀の協調融資</td><td>連結EBITDAの3〜4倍を上限に借りる</td></tr>
+</table>
+
+<h2><span class="num">7</span>10年の損益見通し<span class="en">10-year plan</span></h2>
+<h3>楽観</h3>
+<div class="tbl-scroll"><table>
+<tr><th>年目</th><th class="num">1</th><th class="num">2</th><th class="num">3</th><th class="num">5</th><th class="num">7</th><th class="num">10</th></tr>
+<tr><td>グループ会社数</td><td class="num">1</td><td class="num">3</td><td class="num">6</td><td class="num">16</td><td class="num">32</td><td class="num">60</td></tr>
+<tr><td>売上高 億円</td><td class="num">4</td><td class="num">12</td><td class="num">28</td><td class="num">90</td><td class="num">220</td><td class="num">500</td></tr>
+<tr><td>営業利益 億円</td><td class="num">0.2</td><td class="num">0.7</td><td class="num">1.8</td><td class="num">6.3</td><td class="num">17</td><td class="num">40</td></tr>
+<tr><td>累計投資 億円</td><td class="num">1.6</td><td class="num">5</td><td class="num">12</td><td class="num">40</td><td class="num">100</td><td class="num">230</td></tr>
+<tr><td>借入残高 億円</td><td class="num">1.5</td><td class="num">4.5</td><td class="num">10</td><td class="num">30</td><td class="num">70</td><td class="num">150</td></tr>
+</table></div>
+<h3>保守</h3>
+<div class="tbl-scroll"><table>
+<tr><th>年目</th><th class="num">1</th><th class="num">2</th><th class="num">3</th><th class="num">5</th><th class="num">7</th><th class="num">10</th></tr>
+<tr><td>グループ会社数</td><td class="num">1</td><td class="num">2</td><td class="num">3</td><td class="num">6</td><td class="num">10</td><td class="num">18</td></tr>
+<tr><td>売上高 億円</td><td class="num">4</td><td class="num">7</td><td class="num">11</td><td class="num">25</td><td class="num">45</td><td class="num">80</td></tr>
+<tr><td>営業利益 億円</td><td class="num">0.12</td><td class="num">0.25</td><td class="num">0.45</td><td class="num">1.2</td><td class="num">2.5</td><td class="num">4.8</td></tr>
+<tr><td>累計投資 億円</td><td class="num">1.6</td><td class="num">2.8</td><td class="num">4.5</td><td class="num">10</td><td class="num">18</td><td class="num">32</td></tr>
+<tr><td>借入残高 億円</td><td class="num">1.5</td><td class="num">2.5</td><td class="num">3.8</td><td class="num">8</td><td class="num">13</td><td class="num">22</td></tr>
+</table></div>
+<div class="note">
+<p><strong>前提</strong></p>
+<ul>
+<li>1社当たりの売上高は1年目4億円。楽観では後の買収ほど規模が大きくなり、10年目の平均は約8億円とする</li>
+<li>取得価格は売上高の約0.4倍。EBITDA率9%の会社をEBITDAの約4.5倍で取得する仮定である。警備業の成約倍率は本ページでは確認できなかった</li>
+<li>営業利益率は楽観で5%から8%に上がる。常駐ポストの機器への置き換えで人件費率が下がることを前提とする。保守では3%から6%に留まる</li>
+<li>借入は取得価格の約90%で開始し、営業キャッシュフローで返済する。金利は年2.5〜3.5%と仮定する</li>
+<li>カメラ・センサー・巡回車はリースで調達し、累計投資には含めない</li>
+</ul>
+</div>
+<p>楽観でも10年目の売上高は500億円で、1,000億円の目安に届かない。届かせるには10年で約120社の買収が必要になり、年平均12社の統合を要する。保守では18社、売上高80億円に留まる。</p>
+
+<h2><span class="num">8</span>日本一への道筋<span class="en">Path to No.1</span></h2>
+<p>楽観の売上高500億円は、回答分の市場3兆5,057億円の約1.4%である。ALSOKの連結売上5,970億円の約8%に当たり、国内の警備市場で10年以内に首位になる道筋は示せない。</p>
+<p>首位を取りうるのは地方ブロック単位の市場である。推計4.5兆円のうち、九州・沖縄の人口比を約11%とすると約4,900億円で、1,000億円以上の条件を満たす。楽観の買収をすべてこの地域に集中すると、10年目の500億円は推計の約10%に当たる。上位2社の地域別の警備売上は公表されておらず、10%で首位になるかは確認できない。地域の人口比で市場を按分する方法も本ページの仮定である。</p>
+<p>停止する位置は3つある。1つ目は1社目で警備員の離職が増え、配置を維持できず顧客を失う場合である。2つ目は機器への置き換えが顧客に受け入れられず、利益率が上がらない場合である。この場合は人件費の上昇分を価格に転嫁できるかだけで利益が決まる。3つ目は基地局と即応体制の投資が必要な規模に、5年目までに達しない場合である。</p>
+
+<h2><span class="num">9</span>グローバル展開<span class="en">Global</span></h2>
+<p>警備会社そのものの海外展開は想定しない。警備業は各国の許可制度の下にあり、日本の認定は海外で使えない。海外の大手はSecuritasやAllied Universalのように買収で規模を拡大しており<sup>9</sup><sup>10</sup>、後発の日本の中小グループが海外で買い手として競える見込みは低い。</p>
+<table>
+<tr><th>順</th><th>国</th><th>理由</th></tr>
+<tr><td>1</td><td>タイ、ベトナム</td><td>日系の工場と商業施設が多く、日本の顧客に随伴して遠隔監視を提供できる。外資規制の有無は本ページでは確認できなかった</td></tr>
+<tr><td>2</td><td>台湾、韓国</td><td>高齢化と人手不足が日本と同じ方向に進んでおり、省人化した警備の手法を輸出できる</td></tr>
+</table>
+<p>グローバルなインフラになる見込みは低い。</p>
+
+<h2><span class="num">10</span>群戦略<span class="en">Group</span></h2>
+<ul>
+<li>防犯カメラ・センサー・入退室管理の施工会社。機械警備に置き換える工事を内製する</li>
+<li>ビルメンテナンス会社。清掃・設備管理と警備を一括で管理会社に販売する</li>
+<li>遠隔監視と画像解析のソフトウェア会社。グループ外の中小警備会社にも販売する</li>
+<li>警備員の教育と検定講習を行う機関。採用と検定合格者の育成を自社で行う</li>
+<li>交通誘導の自動化機器を扱う会社。建設会社の工事現場で人員と機器を組み合わせる</li>
+</ul>
+
+<h2><span class="num">11</span>評価<span class="en">Scorecard</span></h2>
+<table>
+<tr><th>#</th><th>基準</th><th class="verdict">判定</th><th>根拠</th></tr>
+<tr><td>1</td><td>50年、魂を燃やし続けられるか</td><td class="verdict"></td><td>創業者が判定</td></tr>
+<tr><td>2</td><td>10年以内に、国内市場規模1,000億円以上の市場でシェア1位になれるか</td><td class="verdict">△</td><td>九州・沖縄の推計約4,900億円に買収を集中すれば楽観で10%に届くが、上位2社の地域別売上が非公表で首位かは判定できない</td></tr>
+<tr><td>3</td><td>4,000万円で始められ、融資で伸ばせるか</td><td class="verdict">○</td><td>公庫の承継融資と地銀融資で約1.6億円の1社目を取得できる。ただし担保が少なく、基地局の投資は別に要る</td></tr>
+<tr><td>4</td><td>グローバルなインフラになり得るか</td><td class="verdict">×</td><td>警備は各国の許可制度の下にある国内産業で、海外は大手の買収で寡占が進んでいる</td></tr>
+<tr><td>5</td><td>営業力が最初の売上に直接結びつくか</td><td class="verdict">○</td><td>管理会社と建設会社への提案が受注数に直結する。交通誘導は価格で決まる案件が多い</td></tr>
+<tr><td>6</td><td>同じビジョンを共有する仲間を誘える事業か</td><td class="verdict"></td><td>創業者が判定</td></tr>
+<tr><td>7</td><td>本業が早く現金を生み、返済と出資の原資になるか</td><td class="verdict">○</td><td>月額契約が多く設備投資が小さいため現金化は早い。利益率は5%前後で、大半は返済に充てられる</td></tr>
+<tr><td>8</td><td>投資先を束ねる群の中核になれるか</td><td class="verdict">○</td><td>施工・ビルメンテナンス・ソフトウェアの各事業が、グループの顧客施設を共通の需要にできる</td></tr>
+<tr><td>9</td><td>成長の資金源がA・B・Cのどれに当たるか</td><td class="verdict">C</td><td>買収対象の営業キャッシュフローを返済原資にした借入で買収する</td></tr>
+</table>
+
+<h2><span class="num">12</span>致命的なリスク<span class="en">Risks</span></h2>
+<div class="risk"><p><strong>1. 警備員の離職と高齢化</strong> 60歳以上が47.3%を占め、在職1年未満が18.3%である<sup>1</sup>。買収後に離職が増えると配置を維持できない。対策は賃金体系を変える前に説明の期間を設け、機器への置き換えで夜間と高齢者の負担を減らすことである。高齢層の引退そのものは潰せない。</p></div>
+<div class="risk"><p><strong>2. 認定と行政処分の引き継ぎ</strong> 株式取得では、過去の法令違反も法人に残る。2025年の警備業法等の違反は1,708件で、営業停止は12件、認定の取消しは1件である<sup>1</sup>。対策は買収前に公安委員会の処分歴と教育の記録を確認することである。合併で統合すると新たな認定が必要になるため、統合の方法は株式の保有に限られる。</p></div>
+<div class="risk"><p><strong>3. 上位2社からの受託の喪失</strong> 地方の警備会社が上位2社から受託している場合、機械警備で競合した時点で取引を失う可能性がある。対策は受託比率の低い会社を優先して買収することである。比率が確認できない場合は潰せない。</p></div>
+<div class="risk"><p><strong>4. 機器への置き換えが進まない</strong> 顧客が人の配置を求める場合や、検定合格警備員の配置が求められる現場では置き換えられない。置き換えが進まなければ、利益率は人件費と価格の差だけで決まる。対策は施設警備の夜間ポストから置き換えを始め、効果を数値で示すことである。</p></div>
+<div class="risk"><p><strong>5. 最低賃金と金利の上昇</strong> 売上の大半が人件費であり、最低賃金が上がると利益率が下がる。借入残高は楽観の10年目で150億円で、金利が1ポイント上がると利払いは年1.5億円増える。価格転嫁と固定金利の比率で一部を抑えられるが、両方が同時に上がる局面は潰せない。</p></div>
+
+<h2><span class="num">13</span>残っている問い<span class="en">Open questions</span></h2>
+<ul>
+<li>警備を人から機器に置き換えた後、現場に人がいることの価値は顧客にとって何として残るのか。</li>
+<li>70歳以上の警備員が働き続けられる職場を維持することと、省人化で利益率を上げることは両立するのか。</li>
+<li>地域の安全を民間の警備会社がどこまで担い、どこから公共が担うべきなのか。</li>
+</ul>
+
+<h2><span class="num">14</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+<li>警察庁生活安全局生活安全企画課「令和7年における警備業の概況」ALSOK IRサイト掲載 https://www.alsok.co.jp/ir/link/pdf/r7keibigyougaikyou.pdf</li>
+<li>e-Gov法令検索 警備業法 昭和47年法律第117号 https://laws.e-gov.go.jp/law/347AC0000000117</li>
+<li>兵庫県警察 警備業法施行規則等の改正について 2024-06-27 https://www.police.pref.hyogo.lg.jp/news/kyoninka/data/kaisei_20240627.pdf</li>
+<li>セコム 2026年3月期 決算短信 https://www2.jpx.co.jp/disc/97350/081220260508520212_tse-acedjpsm-97350-20260508520212-ixbrl.htm</li>
+<li>the-shashi セコム セグメント情報 https://the-shashi.com/tse/9735/financials/segment/</li>
+<li>綜合警備保障 2026年3月期 決算短信 https://www2.jpx.co.jp/disc/23310/081220260509521044_tse-acedjpsm-23310-20260512323310-ixbrl.htm</li>
+<li>Arcadian AI「The Physical Security Industry in 2025」 https://www.arcadian.ai/blogs/news/the-physical-security-industry-in-2025-markets-trends-amp-key-players</li>
+<li>GlobeNewswire「Security Services Market Report 2024」2024-08-26 https://www.globenewswire.com/news-release/2024/08/26/2935415/28124/en/Security-Services-Market-Report-2024-Competitive-Analysis-for-ADT-Allied-Universal-Brink-s-Prosegur-and-Securitas.html</li>
+<li>Stock Analysis Securitas AB 売上高 https://stockanalysis.com/quote/lon/0IAH/revenue</li>
+<li>Mordor Intelligence「Physical Security Services Market」 https://www.mordorintelligence.com/industry-reports/physical-security-services-market</li>
+<li>財務省北陸財務局 掲載 日本政策金融公庫 金沢支店資料 事業承継・集約・活性化支援資金 2025-05 https://lfb.mof.go.jp/hokuriku/content/013/2025052309.pdf</li>
+<li>日本政策金融公庫 挑戦支援資本強化特例制度 資本性ローン https://www.jfc.go.jp/n/finance/search/57_t.html</li>
+</ol>
+
+</div>
+</body>
+</html>

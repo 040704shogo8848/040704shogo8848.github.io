@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>案21 動物病院のロールアップ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  h4{font-size:14px;margin:18px 0 6px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .note{border-left:4px solid var(--warn);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk,.note{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px 22px;margin:16px 0}
+.grid2 figure,.fig{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 12px 8px}
+svg.chart{width:100%;height:auto;display:block;font-family:-apple-system,"Hiragino Sans",sans-serif}
+.fig{margin:16px 0}
+figcaption{font-size:12px;color:var(--sub);margin-top:4px}
+.legend{font-size:13px;margin:10px 0 0}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin:0 5px 0 0}
+details.data{margin:8px 0 18px;font-size:13px}
+details.data summary{cursor:pointer;color:var(--accent)}
+details.data table{font-size:12px;width:auto;min-width:220px}
+details.data .cols{display:flex;flex-wrap:wrap;gap:0 24px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+
+.verdict{font-weight:700;text-align:center;width:52px}
+.unv{color:var(--warn);font-size:12px}
+</style>
+
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../031_frontier_trading/index.html">frontier trading</a><a href="../../032_evacsim/index.html">evacsim</a><a href="../../033_minhaya_llm/index.html">minhaya llm</a><a href="../../034_foundation/index.html">foundation</a><a href="../index.html">ventures</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/02B_reading/index.html">reading</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a><a href="../../../020_personal/02C_chemistry/index.html">chemistry</a><a href="../../../020_personal/02D_probability/index.html">probability</a><a href="../../../020_personal/02E_calculus/index.html">calculus</a><a href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a><a href="../../../020_personal/02G_physics/index.html">physics</a><a href="../../../020_personal/02H_heidegger/index.html">heidegger</a><a href="../../../020_personal/02I_quiz/index.html">quiz</a><a href="../../../020_personal/02J_geography/index.html">geography</a><a href="../../../020_personal/02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../034_foundation/index.html">foundation</a>
+    <a class="snav-a" href="../index.html">ventures</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../../020_personal/02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../../020_personal/02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../../020_personal/02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../../020_personal/02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../../020_personal/02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../../020_personal/02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../../../020_personal/02J_geography/index.html">geography</a>
+    <a class="snav-a" href="../../../020_personal/02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+<div class="crumb"><a href="../index.html">ventures</a> / 案21</div>
+
+<header class="top">
+  <div>
+    <h1>案21 動物病院のロールアップ</h1>
+    <div class="meta">資金源の型 C 借入で買収する／市場の桁 千億／作成日 2026-11-06</div>
+    <div style="margin-top:8px">
+      <span class="tag">獣医療法</span><span class="tag">事業承継</span><span class="tag">二次診療</span><span class="tag">米国の先例</span>
+    </div>
+  </div>
+</header>
+
+<div class="kpi">
+  <div class="card"><div class="k">小動物等の診療施設 2025年末</div><div class="v">13,046<small> 施設</small></div></div>
+  <div class="card"><div class="k">うち獣医師1人の施設</div><div class="v">8,067<small> 施設</small></div></div>
+  <div class="card"><div class="k">犬猫の飼育頭数 2025年</div><div class="v">1,567<small> 万頭</small></div></div>
+  <div class="card"><div class="k">国内の診療市場</div><div class="v">約6,000<small> 億円 推計</small></div></div>
+</div>
+
+<h2><span class="num">1</span>一言で<span class="en">What</span></h2>
+<p>院長が1人で診療する動物病院を、融資を使って1院ずつ買収する。買収した病院の検査・購買・採用・予約を共通化し、地域の中核病院に二次診療を集める。株式会社が動物病院を所有できるため、歯科や介護と異なり、利益を連結で計上できる。</p>
+
+<h2><span class="num">2</span>市場規模<span class="en">Market size</span></h2>
+<h3>国内</h3>
+<p>2025年12月末の飼育動物診療施設は17,200施設で、うち小動物とその他を診療する施設は13,046施設である<sup>1</sup>。13,046施設のうち8,067施設は就業する獣医師が1人である<sup>1</sup>。犬の飼育頭数は682万頭、猫は884.7万頭である<sup>2</sup>。</p>
+<p>動物病院の診療市場の規模を示す統計は確認できなかった。ペット関連の総市場は2024年度に1.9兆円と推計されている<sup>2</sup>。</p>
+<div class="box">
+<p><strong>推計</strong> 診療市場 ＝ 犬の頭数 × 犬1頭の年間診療費 ＋ 猫の頭数 × 猫1頭の年間診療費</p>
+<p>682万頭 × 5万円 ＋ 884.7万頭 × 3万円 ≒ 3,410億円 ＋ 2,654億円 ≒ 6,064億円</p>
+<p>1頭の年間診療費は本ページの仮定値である。保険加入の犬では7歳の平均が100,687円である<sup>4</sup>。保険に入らない犬猫と受診しない犬猫を含めるため、平均をこれより低く置いた。施設数で割ると1施設当たり約4,650万円である。</p>
+</div>
+<h3>世界</h3>
+<p>米国では2017年にMarsが動物病院チェーンのVCAを負債を含め約91億ドルで買収した。VCAは北米に約800の動物病院と60の検査所をもっていた<sup>7</sup>。世界市場の規模は一次資料で確認できなかった。</p>
+
+<h2><span class="num">3</span>なぜ今か<span class="en">Why now</span></h2>
+<table>
+<tr><th>年</th><th>変化</th><th>数値</th></tr>
+<tr><td>2015年</td><td>米国で統合主体5社が占める診療所の比率</td><td>10%未満<sup>8</sup></td></tr>
+<tr><td>2017年</td><td>MarsがVCAを買収した</td><td>約91億ドル、約800病院<sup>7</sup></td></tr>
+<tr><td>2023〜2025年</td><td>米国の統合の進み方</td><td>統合主体5社で診療所の約4分の1。専門・救急病院の約75%と一次診療の約25%を統合主体が所有し、売上では約50%に当たるとの推計がある<sup>8 9</sup></td></tr>
+<tr><td>2024年6月</td><td>国内の動物病院グループが上場した</td><td>WOLVES HAND。2024年6月期の売上高49.9億円<sup>5</sup></td></tr>
+<tr><td>2025年12月</td><td>国内の小動物等の診療施設</td><td>13,046施設のうち獣医師1人が8,067施設、61.8%<sup>1</sup></td></tr>
+<tr><td>2026年7月</td><td>WOLVES HANDが動物病院運営会社を子会社化した</td><td>国内でも買収による拡大が始まっている<sup>6</sup></td></tr>
+</table>
+<p>国内の診療施設の6割は獣医師1人の個人病院で、院長の引退が病院の廃止に直結する。米国で統合が10年で進んだ条件は、国内でも院長の高齢化と二次診療の需要として現れている。院長の年齢構成は本ページでは確認できなかった。</p>
+
+<h2><span class="num">4</span>競合と首位の条件<span class="en">Competition</span></h2>
+<table>
+<tr><th>種類</th><th>事業者</th><th>規模と動き</th></tr>
+<tr><td>上場の病院グループ</td><td>WOLVES HAND</td><td>2026年6月期の売上高52億円<sup>2</sup>。2024年3月時点でサテライト病院26拠点とセンター病院11拠点<sup>5</sup>。2026年6月期第3四半期累計は前年同期比13.6%増で、M&amp;Aで加わった子会社が寄与した<sup>5</sup></td></tr>
+<tr><td>上場の二次診療</td><td>日本動物高度医療センター</td><td>2026年3月期の売上高45億円<sup>2</sup>。一次診療の病院から紹介を受ける高度医療の病院</td></tr>
+<tr><td>非上場のグループ</td><td>地域の複数院グループ</td><td>売上を一覧にした資料は確認できなかった</td></tr>
+<tr><td>海外の統合主体</td><td>Mars、NVAなど</td><td>国内の動物病院の買収は確認できなかった</td></tr>
+</table>
+<p>上場2社の売上はともに推計市場の1%に届かない。国内の首位は確定しておらず、売上100億円台で首位になりうる段階である。</p>
+<div class="callout">
+<p><strong>首位の条件</strong> 1つ目は、獣医師の採用と定着である。小動物の診療に従事する獣医師は2022年に16,541人で<sup>2</sup>、病院を買っても獣医師が辞めれば売上が失われる。2つ目は、1つの都市圏に一次診療の病院を集め、二次診療の中核病院へ紹介を集めることである。3つ目は、院長の引退に合わせて承継を提案できる経路を、獣医師会・薬品卸・税理士との関係で確保することである。</p>
+</div>
+
+<h2><span class="num">5</span>4,000万円での最初の1年<span class="en">Year one</span></h2>
+<table>
+<tr><th>用途</th><th class="num">金額</th><th>検証すること</th></tr>
+<tr><td>財務・労務の調査、仲介手数料</td><td class="num">500万円</td><td>院長の個人の収入と病院の利益を分けて算定できるか</td></tr>
+<tr><td>1院目の取得の自己資金</td><td class="num">1,500万円</td><td>売上1億円・EBITDA約1,500万円の病院を約6,000万円で取得できるか</td></tr>
+<tr><td>検査機器と予約システムの更新</td><td class="num">800万円</td><td>1日の診療件数と客単価の変化</td></tr>
+<tr><td>獣医師と動物看護師の採用</td><td class="num">700万円</td><td>院長の退任後も診療を続ける獣医師を確保できるか</td></tr>
+<tr><td>運転資金</td><td class="num">500万円</td><td></td></tr>
+<tr><th>合計</th><th class="num">4,000万円</th><th></th></tr>
+</table>
+<table>
+<tr><th>月</th><th>計画</th></tr>
+<tr><td>1〜3月目</td><td>1つの都市圏に絞り、獣医師2〜3人・売上0.8〜1.5億円・院長60歳以上の病院を30院まで一覧にする</td></tr>
+<tr><td>4〜6月目</td><td>5院の院長と面談し、1院と基本合意する。院長には2年間の勤務継続を条件として提示する</td></tr>
+<tr><td>7月目</td><td>取得する。資金は自己資金1,500万円と日本政策金融公庫の承継向け融資4,500万円とする<sup>10</sup></td></tr>
+<tr><td>8〜12月目</td><td>検査と購買を共通化する。同じ都市圏で2院目の候補を3院まで絞る</td></tr>
+</table>
+<p>1年目の判定基準は、獣医師の離職がなく、取得前と比べて営業利益率が2ポイント以上上がることである。</p>
+
+<h2><span class="num">6</span>資金の組み方<span class="en">Financing</span></h2>
+<table>
+<tr><th>段階</th><th>資金</th><th>金融機関</th><th>条件</th></tr>
+<tr><td>1〜3院目 1〜2年目</td><td>事業承継融資</td><td>日本政策金融公庫 国民生活事業、信用金庫</td><td>公庫の限度は別枠7,200万円<sup>10</sup></td></tr>
+<tr><td>4〜20院目 2〜5年目</td><td>買収融資、資本性劣後ローン</td><td>地銀、日本政策金融公庫 中小企業事業</td><td>資本性ローンの限度は15億円、期限一括返済で最長20年<sup>11</sup></td></tr>
+<tr><td>検査機器と画像診断装置</td><td>リース</td><td>リース会社</td><td>CTとMRIは二次診療の中核病院に集め、リースで調達する</td></tr>
+<tr><td>21院目以降 5年目以降</td><td>シンジケートローン</td><td>メガバンク、地銀の協調融資</td><td>連結EBITDAの3〜4倍を上限に借りる</td></tr>
+</table>
+
+<h2><span class="num">7</span>10年の損益見通し<span class="en">10-year plan</span></h2>
+<h3>楽観</h3>
+<div class="tbl-scroll"><table>
+<tr><th>年目</th><th class="num">1</th><th class="num">2</th><th class="num">3</th><th class="num">5</th><th class="num">7</th><th class="num">10</th></tr>
+<tr><td>病院数</td><td class="num">2</td><td class="num">6</td><td class="num">15</td><td class="num">45</td><td class="num">110</td><td class="num">280</td></tr>
+<tr><td>売上高 億円</td><td class="num">2</td><td class="num">6.5</td><td class="num">17</td><td class="num">55</td><td class="num">140</td><td class="num">380</td></tr>
+<tr><td>営業利益 億円</td><td class="num">0.1</td><td class="num">0.5</td><td class="num">1.7</td><td class="num">6</td><td class="num">17</td><td class="num">50</td></tr>
+<tr><td>累計投資 億円</td><td class="num">1.6</td><td class="num">5</td><td class="num">12</td><td class="num">38</td><td class="num">95</td><td class="num">250</td></tr>
+<tr><td>借入残高 億円</td><td class="num">1.4</td><td class="num">4.3</td><td class="num">10</td><td class="num">30</td><td class="num">70</td><td class="num">170</td></tr>
+</table></div>
+<h3>保守</h3>
+<div class="tbl-scroll"><table>
+<tr><th>年目</th><th class="num">1</th><th class="num">2</th><th class="num">3</th><th class="num">5</th><th class="num">7</th><th class="num">10</th></tr>
+<tr><td>病院数</td><td class="num">1</td><td class="num">3</td><td class="num">6</td><td class="num">14</td><td class="num">28</td><td class="num">60</td></tr>
+<tr><td>売上高 億円</td><td class="num">1</td><td class="num">3</td><td class="num">6.3</td><td class="num">15</td><td class="num">31</td><td class="num">70</td></tr>
+<tr><td>営業利益 億円</td><td class="num">0.03</td><td class="num">0.15</td><td class="num">0.4</td><td class="num">1.2</td><td class="num">2.8</td><td class="num">7</td></tr>
+<tr><td>累計投資 億円</td><td class="num">0.8</td><td class="num">2.2</td><td class="num">4.5</td><td class="num">11</td><td class="num">22</td><td class="num">46</td></tr>
+<tr><td>借入残高 億円</td><td class="num">0.7</td><td class="num">2</td><td class="num">4</td><td class="num">9</td><td class="num">17</td><td class="num">34</td></tr>
+</table></div>
+<div class="note">
+<p><strong>前提</strong></p>
+<ul>
+<li>1院当たりの売上高は1年目1億円。楽観では二次診療の中核病院を加え、10年目の平均は約1.36億円とする</li>
+<li>取得価格はEBITDAの4〜5倍、売上高の約0.6倍とする。国内の取引事例の倍率は一次資料で確認できず、本ページの仮定である</li>
+<li>営業利益率は楽観で5%から13%に上がる。検査・購買の共通化と二次診療の紹介による。保守では3%から10%に留まる</li>
+<li>借入は取得価格の約85%で開始し、金利は年2.0〜3.0%と仮定する</li>
+<li>画像診断装置はリースで調達し、累計投資に含めない</li>
+</ul>
+</div>
+<p>楽観の10年目は売上高380億円で、1,000億円の目安に届かない。推計市場6,064億円のうち約6.3%である。保守では60院、売上高70億円に留まる。</p>
+
+<h2><span class="num">8</span>日本一への道筋<span class="en">Path to No.1</span></h2>
+<p>推計市場は6,064億円で、1,000億円以上の条件を満たす。現在の上場首位は売上高52億円である<sup>2</sup>。この会社が直近の伸び率13.6%<sup>5</sup>で10年伸び続けると、52億円 × 1.136の10乗 ≒ 186億円になる。</p>
+<table>
+<tr><th>計画</th><th>7年目</th><th>10年目</th><th>首位との比較</th></tr>
+<tr><td>楽観</td><td>140億円</td><td>380億円</td><td>7年目に、上場首位が13.6%で伸びた場合の約127億円を上回る</td></tr>
+<tr><td>保守</td><td>31億円</td><td>70億円</td><td>10年目でも上場首位の現在の売上に近い水準で、首位に届かない</td></tr>
+</table>
+<p>楽観では7年目に首位に届く。条件は年平均28院の買収を獣医師の離職なしで進めることである。非上場のグループの売上は確認できず、首位の判定は上場2社との比較に留まる。</p>
+<p>停止する位置は2つある。1つ目は獣医師の採用である。110院に必要な獣医師は1院2.5人として約275人で、小動物の診療に従事する獣医師の約1.7%に当たる<sup>2</sup>。2つ目は、上場の病院グループと海外の統合主体が同じ病院を買い、取得価格が上がる場合である。</p>
+
+<h2><span class="num">9</span>グローバル展開<span class="en">Global</span></h2>
+<p>米国では統合主体が専門・救急病院の約75%を所有している<sup>9</sup>。米国と欧州に後から参入する余地は小さい。</p>
+<table>
+<tr><th>順</th><th>国</th><th>理由</th></tr>
+<tr><td>1</td><td>台湾、韓国</td><td>犬猫の飼育が都市部に集中し、個人病院が中心とみられる。統合の進み方は確認できなかった</td></tr>
+<tr><td>2</td><td>タイ、シンガポール</td><td>日本と同じ犬種と医療機器の需要がある。二次診療の手法を提供する</td></tr>
+</table>
+<p>動物医療は各国の獣医師の資格制度の下にあり、グローバルなインフラになる見込みは低い。</p>
+
+<h2><span class="num">10</span>群戦略<span class="en">Group</span></h2>
+<ul>
+<li>二次診療と画像診断のセンター。グループ外の一次診療の病院からも紹介を受ける</li>
+<li>臨床検査所。グループの検査を内製し、外部の病院にも提供する</li>
+<li>動物用医薬品とフードの卸</li>
+<li>獣医師と動物看護師の採用・研修会社</li>
+<li>ペット保険の代理店と予約・電子カルテのソフトウェア会社</li>
+</ul>
+
+<h2><span class="num">11</span>評価<span class="en">Scorecard</span></h2>
+<table>
+<tr><th>#</th><th>基準</th><th class="verdict">判定</th><th>根拠</th></tr>
+<tr><td>1</td><td>50年、魂を燃やし続けられるか</td><td class="verdict"></td><td>創業者が判定</td></tr>
+<tr><td>2</td><td>10年以内に、国内市場規模1,000億円以上の市場でシェア1位になれるか</td><td class="verdict">○</td><td>推計市場6,064億円の首位は売上52億円で、楽観では7年目に140億円となり首位に届く。保守では届かない</td></tr>
+<tr><td>3</td><td>4,000万円で始められ、融資で伸ばせるか</td><td class="verdict">◎</td><td>1院目は約6,000万円で、公庫の承継融資と自己資金で取得できる。株式会社が所有できるため連結の利益を返済に使える</td></tr>
+<tr><td>4</td><td>グローバルなインフラになり得るか</td><td class="verdict">×</td><td>米国と欧州は統合が進み、獣医療は国ごとの資格制度の下にある</td></tr>
+<tr><td>5</td><td>営業力が最初の売上に直接結びつくか</td><td class="verdict">△</td><td>営業は院長への承継の提案に結びつくが、病院の売上は獣医師の診療と飼い主の来院で決まる</td></tr>
+<tr><td>6</td><td>同じビジョンを共有する仲間を誘える事業か</td><td class="verdict"></td><td>創業者が判定</td></tr>
+<tr><td>7</td><td>本業が早く現金を生み、返済と出資の原資になるか</td><td class="verdict">○</td><td>診療は自由診療の現金収入で、取得した時点で営業キャッシュフローがある</td></tr>
+<tr><td>8</td><td>投資先を束ねる群の中核になれるか</td><td class="verdict">○</td><td>二次診療・検査・薬品・採用の各事業がグループの病院を共通の需要にできる</td></tr>
+<tr><td>9</td><td>成長の資金源がA・B・Cのどれに当たるか</td><td class="verdict">C</td><td>取得した病院のキャッシュフローを返済原資にした借入で買収する</td></tr>
+</table>
+
+<h2><span class="num">12</span>致命的なリスク<span class="en">Risks</span></h2>
+<div class="risk"><p><strong>1. 院長と獣医師の離職</strong> 個人病院の売上は院長の評判に依存する。院長が退くと飼い主が離れる。対策は院長の勤務継続を2年間の条件とし、後任の獣医師を取得前に確保することである。</p></div>
+<div class="risk"><p><strong>2. 獣医師の不足</strong> 小動物の診療に従事する獣医師は約1.65万人である<sup>2</sup>。採用できる人数が病院数の上限になる。対策は研修制度を設け、新卒の獣医師を毎年採用することである。獣医師の総数は大学の定員で決まり、会社の側で増やすことはできない。</p></div>
+<div class="risk"><p><strong>3. 取得価格の上昇</strong> 上場の病院グループがM&amp;Aで拡大している<sup>5 6</sup>。米国の統合主体が国内に参入すれば、取得価格は上がる。対策は1つの都市圏に集中し、紹介と二次診療の便益を院長に示すことである。価格競争そのものは潰せない。</p></div>
+<div class="risk"><p><strong>4. 飼育頭数の減少</strong> 犬の飼育頭数が減れば診療の需要も減る。2025年の犬は682万頭、猫は884.7万頭である<sup>2</sup>。対策は高齢の犬猫の慢性疾患と二次診療に重点を置き、1頭当たりの診療を増やすことである。</p></div>
+
+<h2><span class="num">13</span>残っている問い<span class="en">Open questions</span></h2>
+<ul>
+<li>米国で統合が進んだ後に診療費が上がったとの批判がある。統合は飼い主にとって良い医療を意味するのか。</li>
+<li>個人で開業することを目標にする獣医師にとって、グループで働く理由は何か。</li>
+<li>犬猫の数が減る国で、動物病院を束ねる会社は何を成長の根拠にするのか。</li>
+</ul>
+
+<h2><span class="num">14</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+<li>農林水産省 飼育動物診療施設の開設届出状況 令和7年12月31日現在 2026-03-06公表 https://www.maff.go.jp/j/tokei/kouhyou/animal/attach/pdf/index-14.pdf</li>
+<li>Compalyze 動物病院業界 犬猫飼育頭数 ペットフード協会2025年調査、小動物診療の獣医師数 農林水産省2022年、上場2社の売上 https://compalyze.co.jp/industry/MED-07</li>
+<li>一般社団法人ペットフード協会 全国犬猫飼育実態調査 https://petfood.or.jp/data/</li>
+<li>オリコン アニコム家庭どうぶつ白書2024 犬の年間診療費 2025-03-25 https://life.oricon.co.jp/news/2375829/</li>
+<li>WOLVES HAND 決算短信・決算補足資料 https://www2.jpx.co.jp/disc/194A0/140120260513529010.pdf</li>
+<li>Compalyze 関連ニュース WOLVES HANDによる動物病院運営会社の子会社化 2026-07 https://compalyze.co.jp/industry/MED-07</li>
+<li>Petfood Industry「Mars buys pet hospital operator VCA for US$9.1 billion」2017-01 https://www.petfoodindustry.com/pet-food-market/article/15463366/mars-buys-pet-hospital-operator-vca-for-us91-billion</li>
+<li>Orbital「US veterinary universe, mapped」 https://www.withorbital.com/data/how-many-veterinarians-in-the-us/</li>
+<li>Frontiers in Veterinary Science 2025 統合主体による動物病院の所有比率 https://www.frontiersin.org/articles/10.3389/fvets.2025.1558745/full</li>
+<li>財務省北陸財務局 掲載 日本政策金融公庫 金沢支店資料 事業承継・集約・活性化支援資金 2025-05 https://lfb.mof.go.jp/hokuriku/content/013/2025052309.pdf</li>
+<li>日本政策金融公庫 挑戦支援資本強化特例制度 資本性ローン https://www.jfc.go.jp/n/finance/search/57_t.html</li>
+</ol>
+</div>
+</body>
+</html>

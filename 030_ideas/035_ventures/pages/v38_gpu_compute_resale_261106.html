@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>案38 法人向けGPU計算資源の再販</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  h4{font-size:14px;margin:18px 0 6px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .note{border-left:4px solid var(--warn);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk,.note{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px 22px;margin:16px 0}
+.grid2 figure,.fig{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 12px 8px}
+svg.chart{width:100%;height:auto;display:block;font-family:-apple-system,"Hiragino Sans",sans-serif}
+.fig{margin:16px 0}
+figcaption{font-size:12px;color:var(--sub);margin-top:4px}
+.legend{font-size:13px;margin:10px 0 0}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin:0 5px 0 0}
+details.data{margin:8px 0 18px;font-size:13px}
+details.data summary{cursor:pointer;color:var(--accent)}
+details.data table{font-size:12px;width:auto;min-width:220px}
+details.data .cols{display:flex;flex-wrap:wrap;gap:0 24px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+
+.verdict{font-weight:700;text-align:center;width:52px}
+.unv{color:var(--warn);font-size:12px}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../031_frontier_trading/index.html">frontier trading</a><a href="../../032_evacsim/index.html">evacsim</a><a href="../../033_minhaya_llm/index.html">minhaya llm</a><a href="../../034_foundation/index.html">foundation</a><a href="../index.html">ventures</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/02B_reading/index.html">reading</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a><a href="../../../020_personal/02C_chemistry/index.html">chemistry</a><a href="../../../020_personal/02D_probability/index.html">probability</a><a href="../../../020_personal/02E_calculus/index.html">calculus</a><a href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a><a href="../../../020_personal/02G_physics/index.html">physics</a><a href="../../../020_personal/02H_heidegger/index.html">heidegger</a><a href="../../../020_personal/02I_quiz/index.html">quiz</a><a href="../../../020_personal/02J_geography/index.html">geography</a><a href="../../../020_personal/02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../034_foundation/index.html">foundation</a>
+    <a class="snav-a" href="../index.html">ventures</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../../020_personal/02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../../020_personal/02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../../020_personal/02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../../020_personal/02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../../020_personal/02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../../020_personal/02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../../../020_personal/02J_geography/index.html">geography</a>
+    <a class="snav-a" href="../../../020_personal/02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+<div class="crumb"><a href="../index.html">ventures</a> / 案38</div>
+<header class="top">
+  <div>
+    <h1>案38 法人向けGPU計算資源の再販</h1>
+    <div class="meta">案番号 38 ／ 資金源の型 A 現金が先に入る ／ 市場の桁 千億から兆 ／ 作成日 2026-11-06</div>
+    <div style="margin-top:8px">
+      <span class="tag">GPU</span><span class="tag">再販</span><span class="tag">国内GPUクラウド</span><span class="tag">資金源A</span>
+    </div>
+  </div>
+</header>
+
+<div class="kpi">
+  <div class="card"><div class="k">さくら H100 1GPU 時間単価</div><div class="v">1,008<small> 円 税込</small></div></div>
+  <div class="card"><div class="k">同 8GPU専有 1GPU換算</div><div class="v">約374<small> 円 税込</small></div></div>
+  <div class="card"><div class="k">国内GPUクラウド 推計</div><div class="v">800〜1,300<small> 億円 2026年度</small></div></div>
+  <div class="card"><div class="k">10年目売上 楽観 / 保守</div><div class="v">400 / 20<small> 億円</small></div></div>
+</div>
+
+<div class="callout">
+<p><strong>結論を先に置く。</strong>GPUを自社で保有せず、国内のGPUクラウド事業者の計算資源を大企業に再販する。設備投資が不要で、4,000万円で始められる。10年目の売上は楽観で400億円、保守で20億円である。再販の売上は事業者の売上と重複するため、GPUクラウド市場のシェア1位にはならない。この事業は、<a href="v02_regional_gpu_dc_261106.html">案02 地方分散型のGPUデータセンター</a>の前段階として顧客と契約を集める手段である。</p>
+</div>
+
+<h2><span class="num">1</span>一言で<span class="en">What</span></h2>
+<p>国内の複数のGPUクラウド事業者と販売代理の契約を結び、大企業と研究機関に計算資源を再販する。顧客には、GPUの種類と事業者の比較・契約・請求・初期設定を一括で提供する。顧客からは年額の前払いで受け取り、事業者には月額で支払う。</p>
+<p>案02は自社でGPUと建屋を保有し、リースとプロジェクトファイナンスで伸ばす資金源Bの事業である。本案は資産を持たず、販売の手数料と価格差で利益を得る資金源Aの事業である。</p>
+
+<h2><span class="num">2</span>市場規模<span class="en">Market size</span></h2>
+<h3>国内</h3>
+<p>国内のGPUクラウド市場は、案02で2026年度に約800〜1,300億円と推計した<sup>10</sup>。さくらインターネットのGPU基盤サービス売上が2026年4〜9月に約101億円であることから算出した値である<sup>6</sup>。</p>
+<p>本案の対象は、このうち販売代理と再販を経由する部分である。その比率を示す統計は確認できなかった。</p>
+<div class="box">
+<p><strong>推計</strong> 再販経由の市場 ＝ 国内GPUクラウド市場 × 再販経由の比率</p>
+<p>2026年度 ＝ 800〜1,300億円 × 20% ＝ 160〜260億円</p>
+<p>10年後 ＝ 1,000億円 × 1.2の9乗 × 20% ≒ 1,030億円</p>
+<p>20%の比率と年20%の伸びは本ページの仮定で、出典はない。10年後の起点は推計の中央値に近い1,000億円とした。</p>
+</div>
+<h3>世界</h3>
+<p>海外のH200のオンデマンド価格は、事業者により1GPU時間当たり4.45〜10.60ドルと約2.4倍の差がある<sup>11</sup>。価格の差が大きいことは、比較と調達を代行する事業の余地を示す。世界の再販市場の規模は確認できなかった。</p>
+
+<h2><span class="num">3</span>なぜ今か<span class="en">Why now</span></h2>
+<div class="tbl-scroll"><table>
+<tr><th>年月</th><th>変化</th><th>出典</th></tr>
+<tr><td>2024年4月</td><td>さくらインターネットのGPU整備計画が経済安全保障推進法の供給確保計画に認定された</td><td><sup>9</sup></td></tr>
+<tr><td>2025年6月〜2026年10月</td><td>AWSがH100の料金を約44%下げた後、2026年8〜10月に海外の主要事業者が値上げした</td><td><sup>7</sup></td></tr>
+<tr><td>2026年3月期</td><td>さくらインターネットは大型案件の終了で、GPU売上の予想を158億円から85億円に下げた</td><td><sup>8</sup></td></tr>
+<tr><td>2026年8月</td><td>GPUサーバー販売のジーデップ・アドバンスが、ソフトバンクのGPUクラウドの販売パートナー契約を結んだ。GB200 NVL72のクラスタを国内のデータセンターで提供する</td><td><sup>3</sup></td></tr>
+<tr><td>2026年11月</td><td>国内事業者の多くが料金を公表していない。さくらの高火力PHYは個別見積で、GMOのGPUクラウドも料金の掲載がない</td><td><sup>2</sup><sup>4</sup></td></tr>
+</table></div>
+<p>国内の計算資源は増えたが、料金は個別見積が多く、大企業が事業者を比較する手段は少ない。事業者の側でも、大型案件の終了で売上が半減する例があり<sup>8</sup>、販売の経路を増やす動機がある。GPUサーバーの販売会社が再販に参入したことは<sup>3</sup>、この経路が事業者に受け入れられていることを示す。</p>
+
+<h2><span class="num">4</span>競合と首位の条件<span class="en">Competition</span></h2>
+<div class="tbl-scroll"><table>
+<tr><th>事業者</th><th>提供と価格</th><th>出典</th></tr>
+<tr><td>さくらインターネット</td><td>高火力DOKのH100は1GPU 1,008円/時、8GPU専有のβ版は2,988円/時でいずれも税込。高火力PHYのH100・H200・B200は8GPU単位で個別見積</td><td><sup>1</sup><sup>2</sup></td></tr>
+<tr><td>ソフトバンク</td><td>GB200 NVL72のクラスタを国内で提供し、販売パートナーを通じても販売する</td><td><sup>3</sup></td></tr>
+<tr><td>GMOインターネットグループ</td><td>HGX B300とH200をマネージドHPCとベアメタルで提供。料金は非公表</td><td><sup>4</sup></td></tr>
+<tr><td>ハイレゾ</td><td>石川県の自社データセンターから提供。A4000は1時間50円から。H200とB200は料金を掲載していない</td><td><sup>5</sup></td></tr>
+<tr><td>ジーデップ・アドバンス</td><td>GPUサーバーの販売とシステム構築に加え、ソフトバンクのGPUクラウドを再販する</td><td><sup>3</sup></td></tr>
+</table></div>
+<p>同じさくらのH100でも、1GPUの時間単価1,008円と8GPU専有の1GPU換算約374円では約2.7倍の差がある<sup>1</sup>。どの契約形態を選ぶかで、顧客の費用は大きく変わる。</p>
+<div class="callout">
+<p><strong>首位の条件</strong> 再販の事業で首位になる条件は3つある。①事業者の数。国内の主要な事業者すべてと販売代理の契約を持ち、顧客の要件に合う資源を中立に提案すること。②契約の束ね。複数の顧客の需要をまとめ、8GPU専有や長期予約の単価で仕入れること。③与信。事業者への支払いと顧客からの入金の時期を合わせ、大口の契約でも運転資金を確保すること。</p>
+</div>
+
+<h2><span class="num">5</span>4,000万円での最初の1年<span class="en">Year one</span></h2>
+<div class="tbl-scroll"><table>
+<tr><th>用途</th><th class="num">金額</th><th>検証すること</th></tr>
+<tr><td>人件費 創業者とインフラ技術者1名</td><td class="num">2,000万円</td><td>1件の導入に要する技術者の工数</td></tr>
+<tr><td>事業者への保証金と前払い</td><td class="num">1,000万円</td><td>販売代理の契約で求められる与信の条件</td></tr>
+<tr><td>検証用のGPU時間</td><td class="num">300万円</td><td>事業者ごとの性能と障害対応の比較</td></tr>
+<tr><td>営業と展示会</td><td class="num">300万円</td><td>大企業の情報システム部門と研究所の受注率</td></tr>
+<tr><td>予備</td><td class="num">400万円</td><td>入金と支払いの時期の差に充てる</td></tr>
+<tr><th>合計</th><th class="num">4,000万円</th><th></th></tr>
+</table></div>
+<div class="tbl-scroll"><table>
+<tr><th>月</th><th>計画</th></tr>
+<tr><td>1〜3月目</td><td>国内のGPUクラウド事業者4社に販売代理を申し込む。各社の契約形態と単価を一覧にする</td></tr>
+<tr><td>4〜6月目</td><td>大企業と大学の計20組織に計算需要を聴取する。最初の3社と月額契約を結ぶ</td></tr>
+<tr><td>7〜9月目</td><td>3社以上の需要をまとめ、8GPU専有の契約で仕入れる。顧客への単価との差を測る</td></tr>
+<tr><td>10〜12月目</td><td>年額前払いの予約契約を3件得る。地銀に運転資金の当座貸越を申し込む</td></tr>
+</table></div>
+<p>1年目の判定基準は3つである。粗利率10%以上を保てるか。年額前払いの契約を得られるか。事業者が販売代理の価格で8GPU専有の単価を提示するか。1年目の売上は約0.5億円を見込む。</p>
+
+<h2><span class="num">6</span>資金の組み方<span class="en">Financing</span></h2>
+<div class="tbl-scroll"><table>
+<tr><th>段階</th><th>資金</th><th>金融機関</th><th>条件</th></tr>
+<tr><td>1年目</td><td>創業融資</td><td>日本政策金融公庫 国民生活事業</td><td>人件費と保証金の資金として借りる。金額は審査次第で未確認</td></tr>
+<tr><td>2〜4年目</td><td>当座貸越、売掛債権を担保とする融資</td><td>地銀</td><td>大企業の顧客との契約書を返済の根拠にする</td></tr>
+<tr><td>5年目以降</td><td>コミットメントライン</td><td>メガバンク</td><td>事業者への長期予約の前払いに使う</td></tr>
+<tr><td>案02へ移行する段階</td><td>GPUのリース、プロジェクトファイナンス</td><td>リース会社、日本政策投資銀行</td><td>再販で集めた顧客の利用契約を担保にする</td></tr>
+</table></div>
+<p>原則は、顧客の契約期間を超える予約を事業者と結ばないことである。顧客と事業者の契約期間と支払いの時期を一致させれば、借入は売上の約1か月分に収まる。</p>
+
+<h2><span class="num">7</span>10年の損益見通し<span class="en">10-year plan</span></h2>
+<h3>楽観</h3>
+<div class="tbl-scroll"><table>
+<tr><th>億円</th><th class="num">1年目</th><th class="num">2年目</th><th class="num">3年目</th><th class="num">5年目</th><th class="num">7年目</th><th class="num">10年目</th></tr>
+<tr><td>売上</td><td class="num">0.5</td><td class="num">2</td><td class="num">6</td><td class="num">30</td><td class="num">100</td><td class="num">400</td></tr>
+<tr><td>営業利益</td><td class="num">-0.2</td><td class="num">-0.05</td><td class="num">0.1</td><td class="num">0.9</td><td class="num">3.5</td><td class="num">16</td></tr>
+<tr><td>累計投資</td><td class="num">0.1</td><td class="num">0.3</td><td class="num">0.6</td><td class="num">2</td><td class="num">5</td><td class="num">12</td></tr>
+<tr><td>借入残高</td><td class="num">0.1</td><td class="num">0.3</td><td class="num">0.8</td><td class="num">4</td><td class="num">12</td><td class="num">40</td></tr>
+</table></div>
+<h3>保守</h3>
+<div class="tbl-scroll"><table>
+<tr><th>億円</th><th class="num">1年目</th><th class="num">2年目</th><th class="num">3年目</th><th class="num">5年目</th><th class="num">7年目</th><th class="num">10年目</th></tr>
+<tr><td>売上</td><td class="num">0.3</td><td class="num">0.8</td><td class="num">1.5</td><td class="num">4</td><td class="num">9</td><td class="num">20</td></tr>
+<tr><td>営業利益</td><td class="num">-0.25</td><td class="num">-0.15</td><td class="num">-0.05</td><td class="num">0.08</td><td class="num">0.25</td><td class="num">0.6</td></tr>
+<tr><td>累計投資</td><td class="num">0.05</td><td class="num">0.15</td><td class="num">0.3</td><td class="num">0.8</td><td class="num">1.5</td><td class="num">3</td></tr>
+<tr><td>借入残高</td><td class="num">0.05</td><td class="num">0.1</td><td class="num">0.2</td><td class="num">0.5</td><td class="num">1.2</td><td class="num">2.5</td></tr>
+</table></div>
+<div class="note">
+<p><strong>前提</strong></p>
+<ul>
+<li>売上は顧客への請求の総額で計上する。楽観の10年目400億円は、1GPU時間400円で年間約1億GPU時間にあたる。稼働率60%なら約1万9,000基分である</li>
+<li>粗利率は楽観で10〜12%、保守で8〜10%と仮定する。営業利益率は楽観で4%、保守で3%まで上がる</li>
+<li>累計投資は顧客の管理画面と請求の仕組みの開発費で、GPUは保有しない</li>
+<li>借入残高は運転資金で、楽観では売上の約1か月分とする</li>
+<li>単価は年3%下がり、数量の増加で補うと仮定する。金利は年2〜3%で、営業利益には含めない</li>
+</ul>
+</div>
+
+<h2><span class="num">8</span>日本一への道筋<span class="en">Path to No.1</span></h2>
+<p>再販の売上は、計算資源を提供する事業者の売上と重複する。国内GPUクラウド市場のシェアは事業者の売上で測られるため、再販の事業はその首位にならない。</p>
+<p>再販経由の市場に限ると、第2章の推計で10年後に約1,030億円である。楽観の10年目400億円はその約39%で、再販の領域では首位になり得る。ただし、この市場の規模は20%の比率と年20%の伸びの2つの仮定に依存する。比率が10%なら市場は約516億円で、1,000億円以上の条件を満たさない。</p>
+<p>停止する位置は2つある。1つ目は、事業者が料金を公表し、直販で大企業を獲得する場合である。比較の価値が下がり、粗利率は5%を下回る。2つ目は、再販の売上が案02の顧客基盤として使われず、価格差だけの事業にとどまる場合である。</p>
+
+<h2><span class="num">9</span>グローバル展開<span class="en">Global</span></h2>
+<div class="tbl-scroll"><table>
+<tr><th>順</th><th>方向</th><th>理由</th></tr>
+<tr><td>1</td><td>日本企業の東南アジア拠点</td><td>国内の顧客の海外拠点に、現地のGPUクラウドを同じ契約で提供する</td></tr>
+<tr><td>2</td><td>海外のGPUクラウドを国内の顧客へ</td><td>H200の価格差は事業者間で約2.4倍ある<sup>11</sup>。データを国外に出せる用途に限り、安い資源を調達する</td></tr>
+</table></div>
+<p>再販は国境を越えて行えるが、計算資源そのものは他社のものである。グローバルなインフラになるのは、案02に移行して自社の資源を持つ段階である。</p>
+
+<h2><span class="num">10</span>群戦略<span class="en">Group</span></h2>
+<ul>
+<li>AIスタートアップ。出資の一部をGPU時間で提供し、再販の数量を増やす</li>
+<li>学習と推論の運用ツールの開発会社。再販の顧客に組み合わせて販売する</li>
+<li>旧世代GPUの買取と再販の事業者</li>
+<li>地方のデータセンターと受電設備を持つ施設の保有者。案02への移行で使う</li>
+</ul>
+
+<h2><span class="num">11</span>評価<span class="en">Scorecard</span></h2>
+<div class="tbl-scroll"><table>
+<tr><th>#</th><th>基準</th><th class="verdict">判定</th><th>根拠</th></tr>
+<tr><td>1</td><td>50年、魂を燃やし続けられるか</td><td class="verdict"></td><td>創業者が判定</td></tr>
+<tr><td>2</td><td>10年以内に、国内市場規模1,000億円以上の市場でシェア1位になれるか</td><td class="verdict">×</td><td>再販の売上は事業者の売上と重複し、GPUクラウド市場の首位にはならない。再販経由の市場は仮定次第で1,000億円に届かない</td></tr>
+<tr><td>3</td><td>4,000万円で始められ、融資で伸ばせるか</td><td class="verdict">◎</td><td>GPUを保有せず設備投資が不要で、借入は売上の約1か月分の運転資金にとどまる</td></tr>
+<tr><td>4</td><td>グローバルなインフラになり得るか</td><td class="verdict">△</td><td>海外の資源も再販できるが、計算資源は他社のもので、自社の基盤にはならない</td></tr>
+<tr><td>5</td><td>営業力が最初の売上に直接結びつくか</td><td class="verdict">◎</td><td>商品は事業者が用意しており、大企業と研究機関への法人営業がそのまま最初の契約になる</td></tr>
+<tr><td>6</td><td>同じビジョンを共有する仲間を誘える事業か</td><td class="verdict"></td><td>創業者が判定</td></tr>
+<tr><td>7</td><td>本業が早く現金を生み、返済と出資の原資になるか</td><td class="verdict">○</td><td>年額前払いで現金が先に入るが、営業利益率は4%以下である</td></tr>
+<tr><td>8</td><td>投資先を束ねる群の中核になれるか</td><td class="verdict">○</td><td>AIスタートアップに計算資源を供給する立場で、出資先を束ねられる</td></tr>
+<tr><td>9</td><td>成長の資金源がA・B・Cのどれに当たるか</td><td class="verdict">A</td><td>顧客の前払いが事業者への支払いより先に入る</td></tr>
+</table></div>
+
+<h2><span class="num">12</span>致命的なリスク<span class="en">Risks</span></h2>
+<div class="risk"><p><strong>1. 事業者の直販</strong> 事業者が大企業に直接販売すると、再販の価値は価格の差だけになる。対策は、複数の事業者を比較する中立の立場と、導入と運用の技術支援を付けることである。事業者が料金を公表し価格が透明になる流れは潰せない。</p></div>
+<div class="risk"><p><strong>2. 契約期間の不一致</strong> 顧客が契約を終えても、事業者との予約は残る。さくらは大型案件の終了でGPU売上の予想を半分近くに下げた<sup>8</sup>。対策は、顧客の契約期間を超える予約を結ばないことである。</p></div>
+<div class="risk"><p><strong>3. 単価の変動</strong> AWSは2025年6月にH100の料金を約44%下げ、2026年後半には海外の事業者が値上げした<sup>7</sup>。対策は、顧客との契約を固定単価にせず、仕入れ単価に連動させることである。</p></div>
+<div class="risk"><p><strong>4. 供給の逼迫</strong> 需要が集中する時期は、事業者が大口の直販顧客に資源を割り当てる。再販の顧客は後回しになる。対策は4社以上の事業者と契約し、前世代のGPUも扱うことである。</p></div>
+
+<h2><span class="num">13</span>残っている問い<span class="en">Open questions</span></h2>
+<ul>
+<li>計算資源が電気と同じように規格化された時、仲介する事業者に残る価値は何か。</li>
+<li>国内の計算資源を選ぶ理由はデータの保管場所なのか、価格なのか、支援の手厚さなのか。</li>
+<li>再販で集めた顧客は、自社のGPUに移る時に同じ契約を続けるのか。</li>
+</ul>
+
+<h2><span class="num">14</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+<li>さくらインターネット 高火力DOK 料金 2026-11 取得 https://ai.sakura.ad.jp/gpu/koukaryoku-dok/</li>
+<li>さくらインターネット 高火力PHY 2026-11 取得 https://ai.sakura.ad.jp/gpu/koukaryoku-phy/</li>
+<li>ジーデップ・アドバンス ソフトバンク「AI データセンター GPU サーバー」の販売パートナー契約締結のお知らせ 2026-08-05 https://www2.infomart.co.jp/web/jp/images/upload/3794/140120260805509396_23719598.pdf</li>
+<li>GMOインターネットグループ GMO GPUクラウド 2026-11 取得 https://gpucloud.gmo/</li>
+<li>ハイレゾ GPUSOROBAN 2026-11 取得 https://soroban.highreso.jp/</li>
+<li>ビジネス+IT さくらインターネット 2027年3月期 中間決算 2026-10-28 https://www.sbbit.jp/article/cont1/187867</li>
+<li>IntuitionLabs H100 Rental Prices: Cloud Comparison 2026-10-11 更新 https://intuitionlabs.ai/articles/h100-rental-prices-cloud-comparison</li>
+<li>gamebiz さくらインターネット 26年3月期の営業利益を大幅下方修正 https://gamebiz.jp/news/409799</li>
+<li>さくらインターネット 適時開示 経済安全保障推進法に基づく供給確保計画の認定 2024-04-19 https://www2.jpx.co.jp/disc/37780/140120240419573067.pdf</li>
+<li>案02 地方分散型のGPUデータセンター 本サイト v02_regional_gpu_dc_261106.html</li>
+<li>GMI Cloud H200 GPU provider pricing https://www.gmicloud.ai/ja/blog/h200-gpu-provider-pricing</li>
+</ol>
+
+</div>
+</body>
+</html>

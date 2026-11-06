@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>案28 IT受託開発・保守会社のロールアップ</title>
+<style>
+  :root{
+    --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --accent:#2563EB; --line:#E5E2DA;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309; --chip:#EEF2FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 28px 80px}
+  header.top{display:flex;align-items:center;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+  .tag{display:inline-block;background:var(--chip);color:var(--accent);font-size:12px;
+    padding:2px 9px;border-radius:11px;margin-right:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:700;margin-right:8px}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  h3{font-size:16px;margin:26px 0 8px;color:#111}
+  h4{font-size:14px;margin:18px 0 6px;color:#111}
+  p{margin:10px 0}
+  .lead{color:var(--sub);font-size:14px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:20px;font-weight:700;margin-top:3px}
+  .kpi .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+  .callout{border-left:4px solid var(--accent);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .risk{border-left:4px solid var(--bad);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  .note{border-left:4px solid var(--warn);background:#fff;padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+  strong.hit{background:#FEF9C3;padding:0 3px}
+  .src{font-size:13px;color:var(--sub)}
+  sup{color:var(--accent);font-weight:600;font-size:11px}
+  ol.sources{font-size:13px;padding-left:22px}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  .fn{color:var(--sub);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+  @media print{
+    body{background:#fff}
+    header.top{position:static}
+    .wrap{max-width:100%}
+    h2{page-break-after:avoid}
+    table,.box,.callout,.risk,.note{page-break-inside:avoid}
+  }
+  @media(max-width:640px){
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    header.top{flex-wrap:wrap}
+  }
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px 22px;margin:16px 0}
+.grid2 figure,.fig{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 12px 8px}
+svg.chart{width:100%;height:auto;display:block;font-family:-apple-system,"Hiragino Sans",sans-serif}
+.fig{margin:16px 0}
+figcaption{font-size:12px;color:var(--sub);margin-top:4px}
+.legend{font-size:13px;margin:10px 0 0}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin:0 5px 0 0}
+details.data{margin:8px 0 18px;font-size:13px}
+details.data summary{cursor:pointer;color:var(--accent)}
+details.data table{font-size:12px;width:auto;min-width:220px}
+details.data .cols{display:flex;flex-wrap:wrap;gap:0 24px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+
+.verdict{font-weight:700;text-align:center;width:52px}
+.unv{color:var(--warn);font-size:12px}
+</style>
+</head>
+
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../../010_research/011_company/index.html">company</a><a href="../../../010_research/012_politics/index.html">politics</a><a href="../../../010_research/013_geo/index.html">geo</a><a href="../../../010_research/014_industry/index.html">industry</a><a href="../../../010_research/015_net/index.html">net</a><a href="../../../010_research/016_finance/index.html">finance</a><a href="../../../010_research/017_science/index.html">science</a><a href="../../../010_research/018_computing/index.html">computing</a><a href="../../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../031_frontier_trading/index.html">frontier trading</a><a href="../../032_evacsim/index.html">evacsim</a><a href="../../033_minhaya_llm/index.html">minhaya llm</a><a href="../../034_foundation/index.html">foundation</a><a href="../index.html">ventures</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/02B_reading/index.html">reading</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a><a href="../../../020_personal/02C_chemistry/index.html">chemistry</a><a href="../../../020_personal/02D_probability/index.html">probability</a><a href="../../../020_personal/02E_calculus/index.html">calculus</a><a href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a><a href="../../../020_personal/02G_physics/index.html">physics</a><a href="../../../020_personal/02H_heidegger/index.html">heidegger</a><a href="../../../020_personal/02I_quiz/index.html">quiz</a><a href="../../../020_personal/02J_geography/index.html">geography</a><a href="../../../020_personal/02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../034_foundation/index.html">foundation</a>
+    <a class="snav-a" href="../index.html">ventures</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../../020_personal/02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../../020_personal/02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../../020_personal/02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../../020_personal/02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../../020_personal/02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../../020_personal/02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../../../020_personal/02J_geography/index.html">geography</a>
+    <a class="snav-a" href="../../../020_personal/02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+<div class="crumb"><a href="../index.html">ventures</a> / 案28</div>
+
+<header class="top">
+  <div>
+    <h1>案28 ITの受託開発・保守会社のロールアップ</h1>
+    <div class="meta">資金源の型 C 借入で買収する／市場の桁 兆／作成日 2026-11-06</div>
+    <div style="margin-top:8px">
+      <span class="tag">2025年の崖</span><span class="tag">事業承継</span><span class="tag">保守契約</span><span class="tag">生成AIによる開発</span>
+    </div>
+  </div>
+</header>
+
+<div class="kpi">
+  <div class="card"><div class="k">情報サービス業の売上高</div><div class="v">17.92<small> 兆円 2024年</small></div></div>
+  <div class="card"><div class="k">うち受注ソフトウェア</div><div class="v">11.04<small> 兆円 2024年</small></div></div>
+  <div class="card"><div class="k">ソフトウェア業の倒産</div><div class="v">220<small> 件 2024年度</small></div></div>
+  <div class="card"><div class="k">情報通信業の後継者不在率</div><div class="v">77.06<small> % 2025年</small></div></div>
+</div>
+
+<h2><span class="num">1</span>一言で<span class="en">What</span></h2>
+<p>後継者がいない従業員30〜100名規模の受託開発・保守会社を、融資を使って1社ずつ買収する。買収した会社のエンジニアに生成AIを使う開発手順を導入し、1人当たりの売上と利益率を上げる。大企業と中堅企業には、既存システムの保守と更新を複数年の契約で販売する。</p>
+
+<h2><span class="num">2</span>市場規模<span class="en">Market size</span></h2>
+<h3>国内</h3>
+<p>情報サービス業の売上高は2024年に17.92兆円である。2015年の10.80兆円から9年で約1.66倍になった。経済産業省の特定サービス産業動態統計の長期データによる<sup>1</sup>。2015年と2020年に調査対象が追加されており、伸びの一部は対象の追加による<sup>1</sup>。</p>
+<p>内訳では、受注ソフトウェアが11.04兆円、システム等管理運営受託が2.24兆円である<sup>1</sup>。本案の対象はこの2つの合計13.28兆円のうち、中小の事業者が受注する部分である。</p>
+<p>IDC Japanは別の定義で、国内ITサービス市場を2024年に7兆205億円、2029年に9兆6,625億円と予測する。年平均成長率は6.6%である<sup>2</sup>。</p>
+<div class="box">
+<p><strong>推計</strong> 対象市場 ＝ 13.28兆円 × 中小の事業者が受注する比率</p>
+<p>中小の事業者の比率を30%と仮定すると、13.28兆円 × 0.3 ≒ 4.0兆円となる。30%は本ページの仮定値で、統計では確認できなかった。</p>
+</div>
+<h3>世界</h3>
+<p>Gartnerは、世界のITサービス支出を2025年に1兆7,157億ドル、2026年に1兆8,702億ドルと予測する。2026年の伸び率は9.0%である<sup>3</sup>。</p>
+
+<h2><span class="num">3</span>なぜ今か<span class="en">Why now</span></h2>
+<table>
+<tr><th>年</th><th>変化</th><th>数値</th></tr>
+<tr><td>2018年9月</td><td>経済産業省がDXレポートで既存システムの更新の遅れを指摘した</td><td>2025年以降に最大で年12兆円の経済損失が生じうるとした<sup>4</sup></td></tr>
+<tr><td>2019年4月</td><td>IT人材の需給の試算</td><td>2030年に最大約79万人が不足すると試算した<sup>5</sup></td></tr>
+<tr><td>2024年度</td><td>ソフトウェア業の倒産</td><td>220件<sup>6</sup></td></tr>
+<tr><td>2025年</td><td>後継者不在率</td><td>全産業62.60%に対し、情報通信業は77.06%<sup>7</sup></td></tr>
+<tr><td>2025年度 2月末まで</td><td>ソフトウェア業の倒産</td><td>195件で過去10年の最多の水準。負債1億円未満が84.6%を占める<sup>6</sup></td></tr>
+<tr><td>2026年1月</td><td>情報サービス業で正社員が不足していると答えた企業</td><td>69.2%<sup>6</sup></td></tr>
+</table>
+<p>システムの更新需要は続く一方で、小規模な開発会社は採用ができず人件費が上がっている。情報通信業の後継者不在率は全産業より14ポイント以上高い<sup>7</sup>。倒産の大半は負債1億円未満の小規模事業者であり<sup>6</sup>、廃業や倒産の前に譲渡先が求められる。生成AIで開発の工数が減ると、人月単価の契約で売上を立てる会社は売上が減る。工数の削減を利益率の向上に転換できる買い手が、2026年から2030年に有利になる。</p>
+
+<h2><span class="num">4</span>競合と首位の条件<span class="en">Competition</span></h2>
+<table>
+<tr><th>種類</th><th>事業者</th><th>動き</th></tr>
+<tr><td>上場企業による連続買収</td><td>SHIFT</td><td>2022年3月に買収と統合を行う子会社を設立した。2025年8月期の連結売上高は1,298億円、営業利益率は12.0%である<sup>8</sup>。2026年1月に業務パッケージと保守運用の会社を約205億円で取得する契約を締結した<sup>9</sup></td></tr>
+<tr><td>大手SIer、メーカー系</td><td>上場の大手各社</td><td>国内の受託開発の上位を占める。各社の国内受託開発の売上は本ページでは確認していない</td></tr>
+<tr><td>投資ファンド</td><td>国内の中小向けファンド</td><td>IT企業の事業承継案件の取得例はある。件数は確認できなかった</td></tr>
+</table>
+<p>SHIFTは2019年12月から2021年7月に8社を子会社にした。2023年6月には3社を同時に取得している<sup>8</sup>。取得価額は1社10〜20億円の案件が多い<sup>8</sup>。のれんの残高は2024年8月期に92.6億円で、2024年と2025年の8月期には減損損失を計上した<sup>8</sup>。</p>
+<div class="callout">
+<p><strong>首位の条件</strong> 情報サービス業17.92兆円の中で売上高1位になるには兆円単位の売上が必要で、10年では届かない。中小向けの連続買収の分野でも、SHIFTが既に年1,298億円の売上をもつ<sup>8</sup>。本案が首位を狙えるのは、特定の業種の基幹システムの保守のように範囲を限った分野である。条件は3つである。①同じ業種のシステムを保守する会社を集中して買収し、技術者を相互に配置できること。②買収後1年以内に生成AIを使う開発と保守の手順を統一し、1人当たりの売上を上げること。③人月単価ではなく、保守範囲と年額を定めた契約に切り替えること。</p>
+</div>
+
+<h2><span class="num">5</span>4,000万円での最初の1年<span class="en">Year one</span></h2>
+<p>創業者が自ら買収対象を検索し、買収後は社長として経営する。投資家の資金は入れず、自己資金と融資で1社目を買収する。</p>
+<table>
+<tr><th>用途</th><th class="num">金額</th><th>検証すること</th></tr>
+<tr><td>検索期間の生活費と活動費 6か月</td><td class="num">500万円</td><td>地銀と税理士からの紹介で、条件に合う案件を何件得られるか</td></tr>
+<tr><td>財務・労務・技術の買収前の調査、仲介手数料</td><td class="num">800万円</td><td>未払残業代、偽装請負の有無、上位顧客への依存度</td></tr>
+<tr><td>1社目の株式取得の自己資金</td><td class="num">2,400万円</td><td>営業利益3,000万円の会社を約1.65億円で取得できるか</td></tr>
+<tr><td>生成AIの開発環境と教育</td><td class="num">300万円</td><td>1人当たりの月間処理量の改善幅</td></tr>
+<tr><th>合計</th><th class="num">4,000万円</th><th></th></tr>
+</table>
+<table>
+<tr><th>月</th><th>計画</th></tr>
+<tr><td>1〜3月目</td><td>対象を売上高2〜5億円・従業員30〜100名・後継者不在・上位1社への依存が売上の40%以下の会社に絞る。30社を集める</td></tr>
+<tr><td>4〜6月目</td><td>3社と面談し1社と基本合意する。保守契約の残存期間と主要技術者の在籍意向を確認する</td></tr>
+<tr><td>7月目</td><td>株式を取得する。資金は自己資金2,400万円、日本政策金融公庫の事業承継向け融資7,200万円<sup>10</sup>、地銀の融資約5,000万円、売主への分割払い約1,900万円とする</td></tr>
+<tr><td>8〜12月目</td><td>旧経営者を顧問として残し、顧客と技術者の離反を防ぐ。生成AIを使う開発手順を1チームで試行する。創業者が大企業と中堅企業に保守と更新を営業し、新規の年額契約を2件獲得する</td></tr>
+</table>
+<p>1年目の判定基準は、主要技術者の離職がなく、1人当たりの売上が買収前から10%以上上がることである。</p>
+
+<h2><span class="num">6</span>資金の組み方<span class="en">Financing</span></h2>
+<table>
+<tr><th>段階</th><th>資金</th><th>金融機関</th><th>条件</th></tr>
+<tr><td>1社目 1年目</td><td>事業承継融資、買収融資、売主の分割払い</td><td>日本政策金融公庫 国民生活事業、地銀</td><td>公庫の限度は別枠7,200万円<sup>10</sup>。担保となる設備が少ないため、地銀の融資額は運送業や製造業より小さい</td></tr>
+<tr><td>2〜5社目 2〜4年目</td><td>持株会社による買収融資、資本性劣後ローン</td><td>地銀、商工中金、日本政策金融公庫 中小企業事業</td><td>資本性ローンの限度は15億円、期限一括返済で最長20年<sup>11</sup></td></tr>
+<tr><td>6社目以降 5年目以降</td><td>シンジケートローン</td><td>メガバンク、地銀の協調融資</td><td>連結EBITDAの3倍を上限に借りる。保守契約の残高を返済原資の根拠として示す</td></tr>
+</table>
+<p>受託開発会社の資産は技術者と顧客契約で、担保になる不動産や設備が少ない。借入の倍率は運送会社の買収より低く置く。</p>
+
+<h2><span class="num">7</span>10年の損益見通し<span class="en">10-year plan</span></h2>
+<h3>楽観</h3>
+<div class="tbl-scroll"><table>
+<tr><th>年目</th><th class="num">1</th><th class="num">2</th><th class="num">3</th><th class="num">5</th><th class="num">7</th><th class="num">10</th></tr>
+<tr><td>グループ会社数</td><td class="num">1</td><td class="num">3</td><td class="num">7</td><td class="num">20</td><td class="num">45</td><td class="num">90</td></tr>
+<tr><td>売上高 億円</td><td class="num">3</td><td class="num">10</td><td class="num">25</td><td class="num">110</td><td class="num">330</td><td class="num">1,000</td></tr>
+<tr><td>営業利益 億円</td><td class="num">0.24</td><td class="num">0.9</td><td class="num">2.5</td><td class="num">12</td><td class="num">36</td><td class="num">110</td></tr>
+<tr><td>累計投資 億円</td><td class="num">1.65</td><td class="num">5.5</td><td class="num">14</td><td class="num">60</td><td class="num">180</td><td class="num">550</td></tr>
+<tr><td>借入残高 億円</td><td class="num">1.3</td><td class="num">4.5</td><td class="num">11</td><td class="num">45</td><td class="num">130</td><td class="num">380</td></tr>
+</table></div>
+<h3>保守</h3>
+<div class="tbl-scroll"><table>
+<tr><th>年目</th><th class="num">1</th><th class="num">2</th><th class="num">3</th><th class="num">5</th><th class="num">7</th><th class="num">10</th></tr>
+<tr><td>グループ会社数</td><td class="num">1</td><td class="num">2</td><td class="num">3</td><td class="num">7</td><td class="num">12</td><td class="num">22</td></tr>
+<tr><td>売上高 億円</td><td class="num">3</td><td class="num">5</td><td class="num">8</td><td class="num">22</td><td class="num">42</td><td class="num">80</td></tr>
+<tr><td>営業利益 億円</td><td class="num">0.2</td><td class="num">0.35</td><td class="num">0.6</td><td class="num">1.8</td><td class="num">3.6</td><td class="num">7</td></tr>
+<tr><td>累計投資 億円</td><td class="num">1.65</td><td class="num">2.8</td><td class="num">4.5</td><td class="num">12</td><td class="num">23</td><td class="num">44</td></tr>
+<tr><td>借入残高 億円</td><td class="num">1.3</td><td class="num">2.2</td><td class="num">3.5</td><td class="num">9</td><td class="num">17</td><td class="num">30</td></tr>
+</table></div>
+<div class="note">
+<p><strong>前提</strong></p>
+<ul>
+<li>1社目の売上高は3億円。楽観では後の買収ほど規模が大きくなり、10年目の1社平均は約11億円とする</li>
+<li>取得価格は売上高の約0.55倍。営業利益率10%の会社でEBITDAの約5倍に当たる。SHIFTの取得例は1社10〜20億円で<sup>8</sup>、本案はこれより小さい会社を対象とする</li>
+<li>営業利益率は楽観で8%から11%に上がる。生成AIによる工数の削減を、価格の引き下げではなく利益率の向上に充てる前提である。保守では7%から9%に留まる</li>
+<li>借入は取得価格の約80%で開始し、営業キャッシュフローで返済する。金利は年2.5〜3.5%と仮定する</li>
+<li>累計投資は株式の取得額の累計で、開発環境の費用は営業費用に含める</li>
+</ul>
+</div>
+<p>楽観の10年目は売上高1,000億円で目安に届く。ただし10年で90社の買収と統合を要し、年平均9社である。保守では22社、売上高80億円に留まる。</p>
+
+<h2><span class="num">8</span>日本一への道筋<span class="en">Path to No.1</span></h2>
+<p>楽観の売上高1,000億円は、情報サービス業17.92兆円の約0.56%である<sup>1</sup>。第2章の推計4.0兆円に対しても2.5%である。SHIFTの2025年8月期の売上高1,298億円にも届かない<sup>8</sup>。国内の情報サービス業でシェア1位には10年で届かない。</p>
+<p>首位を取りうるのは、特定の業種の基幹システムの保守である。たとえば地方の医療機関、健康保険組合、中堅製造業などである。各分野の市場規模と上位事業者の売上は確認できず、1,000億円以上の条件を満たす分野があるかは判定できない。</p>
+<p>停止する位置は3つある。1つ目は1社目の統合で主要技術者が離職し、保守契約が解約される場合である。2つ目は生成AIで顧客が開発を内製し、受託の需要そのものが減る場合である。3つ目は5年目前後で、SHIFTや投資ファンドとの取得競争により取得価格が上がる場合である。</p>
+
+<h2><span class="num">9</span>グローバル展開<span class="en">Global</span></h2>
+<p>国内の顧客に日本語で提供する事業であり、海外の顧客への販売は想定しない。海外は開発の拠点として使う。</p>
+<table>
+<tr><th>順</th><th>国</th><th>理由</th></tr>
+<tr><td>1</td><td>ベトナム</td><td>日本向けのオフショア開発会社が多く、買収または提携で開発要員を確保できる</td></tr>
+<tr><td>2</td><td>フィリピン、インド</td><td>英語圏の開発要員を確保し、日系企業の海外拠点のシステム保守を受託する</td></tr>
+</table>
+<p>グローバルなインフラになる見込みは低い。</p>
+
+<h2><span class="num">10</span>群戦略<span class="en">Group</span></h2>
+<ul>
+<li>ベトナムのオフショア開発会社。グループの開発要員の確保と原価の引き下げに使う</li>
+<li>情報セキュリティの診断会社。保守顧客に脆弱性診断と監視を追加で販売する</li>
+<li>中小企業向けの業務SaaS。買収した会社の保守顧客を最初の販売先にする</li>
+<li>生成AIの開発支援ツールの会社。グループの技術者が最初の利用者になる</li>
+<li>出資先のIT企業の技術面の買収前の調査を、グループの技術者が行う</li>
+</ul>
+
+<h2><span class="num">11</span>評価<span class="en">Scorecard</span></h2>
+<table>
+<tr><th>#</th><th>基準</th><th class="verdict">判定</th><th>根拠</th></tr>
+<tr><td>1</td><td>50年、魂を燃やし続けられるか</td><td class="verdict"></td><td>創業者が判定</td></tr>
+<tr><td>2</td><td>10年以内に、国内市場規模1,000億円以上の市場でシェア1位になれるか</td><td class="verdict">×</td><td>楽観の10年目1,000億円でも情報サービス業の0.56%で、連続買収の先行者SHIFTの現在の売上1,298億円にも届かない</td></tr>
+<tr><td>3</td><td>4,000万円で始められ、融資で伸ばせるか</td><td class="verdict">○</td><td>公庫の承継融資7,200万円と地銀融資で約1.65億円の1社目を取得できる。担保が少なく借入の倍率は低い</td></tr>
+<tr><td>4</td><td>グローバルなインフラになり得るか</td><td class="verdict">×</td><td>日本語で国内顧客に提供する事業で、海外は開発拠点に限られる</td></tr>
+<tr><td>5</td><td>営業力が最初の売上に直接結びつくか</td><td class="verdict">◎</td><td>買収した会社の技術者を使い、大企業への保守と更新の提案をそのまま受注に結びつけられる</td></tr>
+<tr><td>6</td><td>同じビジョンを共有する仲間を誘える事業か</td><td class="verdict"></td><td>創業者が判定</td></tr>
+<tr><td>7</td><td>本業が早く現金を生み、返済と出資の原資になるか</td><td class="verdict">○</td><td>買収した時点で保守契約の現金収入がある。利益率は8〜11%で、初期の大半は返済に充てられる</td></tr>
+<tr><td>8</td><td>投資先を束ねる群の中核になれるか</td><td class="verdict">○</td><td>技術者が出資先の技術を評価でき、保守顧客が出資先のSaaSの販売先になる</td></tr>
+<tr><td>9</td><td>成長の資金源がA・B・Cのどれに当たるか</td><td class="verdict">C</td><td>買収対象のキャッシュフローを返済原資にした借入で買収する</td></tr>
+</table>
+
+<h2><span class="num">12</span>致命的なリスク<span class="en">Risks</span></h2>
+<div class="risk"><p><strong>1. 生成AIによる受託需要の減少</strong> 生成AIで顧客が開発を内製すると、受託の工数そのものが減る。人月単価の契約は売上が工数に比例するため、工数の削減がそのまま減収になる。対策は保守範囲と年額を定めた契約に切り替え、工数の削減を利益に変えることである。顧客が保守まで内製する場合は潰せない。</p></div>
+<div class="risk"><p><strong>2. 主要技術者の離職</strong> 会社の価値は技術者と顧客の関係にある。買収後に技術者が辞めると、保守契約も解約される。対策は買収前に主要技術者と面談し、在籍の条件を株式の取得契約に含めることである。技術者の転職市場の賃金上昇は潰せない。</p></div>
+<div class="risk"><p><strong>3. 多重下請けと契約形態の問題</strong> 小規模な開発会社には、請負の契約で実際は客先で指揮を受ける例がある。偽装請負と判断されると是正と取引停止が起きる。対策は買収前の調査で契約と就業実態を照合し、該当する取引を取得価格から除くことである。</p></div>
+<div class="risk"><p><strong>4. 取得価格の上昇</strong> SHIFTは2026年1月に約205億円の取得を決めた<sup>9</sup>。上場企業と投資ファンドが買い手として増えると、小規模な会社の価格も上がる。対策は地銀と税理士の紹介による相対の案件に絞ることである。価格競争そのものは潰せない。</p></div>
+<div class="risk"><p><strong>5. のれんの減損</strong> SHIFTも2024年と2025年の8月期に減損損失を計上した<sup>8</sup>。買収した会社の利益が下がると、のれんの減損で純資産が減り、追加の融資が得られない。対策は1社ずつ統合を終えてから次を買うことである。</p></div>
+
+<h2><span class="num">13</span>残っている問い<span class="en">Open questions</span></h2>
+<ul>
+<li>生成AIが普及した後も、システムの保守を外部の会社に頼む企業は残るのか。</li>
+<li>技術者にとって、承継された会社で働き続ける理由は何か。</li>
+<li>工数が減った分を顧客に還元すべきか、利益として残すべきか。</li>
+</ul>
+
+<h2><span class="num">14</span>出典<span class="en">Sources</span></h2>
+<ol class="sources">
+<li>THE SHASHI「情報サービス業界の市場規模の推移 1988〜2024年」経済産業省 特定サービス産業動態統計調査 長期データに基づく https://the-shashi.com/market/information-services/</li>
+<li>IT Leaders「2024年の国内ITサービス市場は前年比7.4%増 IDC」2025-03-14 https://it.impress.co.jp/articles/-/27590</li>
+<li>Gartner「Gartner Forecasts Worldwide IT Spending to Grow 13.5% in 2026, Totaling $6.31 Trillion」2026-04-22 https://gartner.com/en/newsroom/press-releases/2026-04-22-gartner-forecasts-worldwide-it-spending-to-grow-13-point-5-percent-in-2026-totaling-6-point-31-trillion-dollars</li>
+<li>経済産業省「DXレポート ITシステム2025年の崖の克服とDXの本格的な展開」2018-09-07 https://www.meti.go.jp/shingikai/mono_info_service/digital_transformation/20180907_report.html</li>
+<li>経済産業省「IT人材需給に関する調査 調査報告書」2019-04 https://www.meti.go.jp/policy/it_policy/jinzai/houkokusyo.pdf</li>
+<li>帝国データバンク「ソフトウェア業の倒産動向 2025年度 2月末時点」2026-03-09 財経新聞掲載 https://www.zaikei.co.jp/releases/3335940/</li>
+<li>東京商工リサーチ「後継者不在 年々上昇し62.60%に」2025-11-10 https://www.tsr-net.co.jp/data/detail/1201982_1527.html</li>
+<li>THE SHASHI SHIFT 連続買収の記録と財務推移 https://the-shashi.com/tse/3697/decisions/serial-acquisition-2022/</li>
+<li>日本M&Aセンター M&Aニュース SHIFT ニッセイコムの株式取得 2026-01-14 https://www.nihon-ma.co.jp/news/20260114_3697-104/</li>
+<li>財務省北陸財務局 掲載 日本政策金融公庫 金沢支店資料 事業承継・集約・活性化支援資金 2025-05 https://lfb.mof.go.jp/hokuriku/content/013/2025052309.pdf</li>
+<li>日本政策金融公庫 挑戦支援資本強化特例制度 資本性ローン https://www.jfc.go.jp/n/finance/search/57_t.html</li>
+</ol>
+
+</div>
+</body>
+</html>

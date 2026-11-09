@@ -101,7 +101,7 @@
 <p>波が障害物の裏側やすき間の先へ回り込む現象を<strong>回折</strong>と呼ぶ。すき間の幅が波長と同じ程度か波長より小さいとき回折は顕著になる。音の波長は数 cm から数 m で建物の角やドアのすき間と同じ程度なので音は物陰にも届く。光の波長は約 380 nm から 770 nm で日常の物体よりはるかに小さいので光の回折は日常では目立たない。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/13_wave-optics-breakwater.jpg" width="1200" height="900" loading="lazy" alt="防波堤のすき間を通った波が円弧状に広がる海岸">
-<figcaption>イスラエルのアシュケロンの海岸で、沖の防波堤のすき間を通った波である。すき間を抜けた波は直進するだけでなく、円弧の形に広がって防波堤の裏側にも届いている。すき間の幅が波長と同じ程度であるため回折が目に見える大きさで現れる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:BreakWaterDiffraction_Ashkelon1.jpg">Dmitris1</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>イスラエルのアシュケロンの海岸で、沖の防波堤のすき間を通った波である。すき間を抜けた波は直進するだけでなく、円弧の形に広がって防波堤の裏側にも届いている。この回り込みが本文の回折である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:BreakWaterDiffraction_Ashkelon1.jpg">Dmitris1</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <div class="ex"><div class="ex-h">例題 3</div>

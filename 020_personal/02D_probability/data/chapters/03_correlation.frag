@@ -10,7 +10,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/03_correlation-galton-pearson.jpg" width="844" height="1000" loading="lazy" alt="晩年のゴルトンとピアソン">
-<figcaption>87歳のゴルトンと、その伝記を書いたピアソンである。ゴルトンは親子の身長のように対になった2つの量を調べ、関係の強さを1つの係数で表そうとした。散布図と相関係数はこの研究から生まれた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Karl_Pearson;_Sir_Francis_Galton.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>87歳のゴルトンと、その伝記を書いたピアソンである。ゴルトンは親子の身長のように対になった2つの量を調べ、関係の強さを1つの係数で表そうとした。相関係数はこの研究から生まれた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Karl_Pearson;_Sir_Francis_Galton.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="相関係数が異なる3つの散布図">

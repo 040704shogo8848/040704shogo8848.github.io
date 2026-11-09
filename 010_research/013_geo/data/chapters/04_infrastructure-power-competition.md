@@ -68,7 +68,7 @@ AIデータセンターに効くのは後者である。情報機器が許容で
 
 <figure class="tb-fig tb-photo">
 <div class="tb-ph2"><img src="../img/ch04_caracas.jpg" width="1000" height="750" loading="lazy" alt="アビラ山を背にしたカラカスの市街"><img src="../img/ch04_puerto-la-cruz-refinery.jpg" width="1000" height="558" loading="lazy" alt="プエルト・ラ・クルスの製油所"></div>
-<figcaption>左はアビラ山を背にしたカラカスの市街、右はベネズエラの主要な製油所の一つであるプエルト・ラ・クルス製油所である。中国からの融資は、原油の販売代金をエスクロー口座に入れて返済に充てる設計で組まれた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Caracas_skyline_and_Avila_mountain_from_my_penthouse.JPG">Flauta</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Refiner%C3%ADa_Puerto_La_Cruz,_Edo._Anzoategui.jpg">Daniel Zambrano</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>左はアビラ山を背にしたカラカスの市街、右はベネズエラの主要な製油所の一つであるプエルト・ラ・クルス製油所である。2015年9月に中国国家開発銀行が組成した融資は、原油の販売代金をエスクロー口座に入れて返済に充てる設計だった。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Caracas_skyline_and_Avila_mountain_from_my_penthouse.JPG">Flauta</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Refiner%C3%ADa_Puerto_La_Cruz,_Edo._Anzoategui.jpg">Daniel Zambrano</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 

@@ -188,7 +188,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/13_neutralization-titration-lab.jpg" width="1200" height="898" loading="lazy" alt="滴定実験中の実験台。メスフラスコ、洗瓶、安全ピペッターを付けたホールピペット">
-<figcaption>滴定の実験中の実験台である。中央の奥に 200 mL のメスフラスコがあり、手前には赤い安全ピペッターを付けた 20 mL のホールピペットが置かれている。左の青い蓋の容器は純水を入れた洗瓶である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Laborato%C5%99_titrace.jpg">Milda 444</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>滴定の実験中の実験台である。中央の奥に 200 mL のメスフラスコがあり、手前には赤い安全ピペッターを付けた 20 mL のホールピペットが置かれている。左の青い蓋の容器は洗瓶である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Laborato%C5%99_titrace.jpg">Milda 444</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <figure class="tb-fig tb-photo">

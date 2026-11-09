@@ -325,17 +325,17 @@
 </aside>
 
 <h2 id="s5">現実世界の統計 ナイチンゲールの図</h2>
-<p>フローレンス・ナイチンゲールは看護師として知られるが統計の図で政策を動かした人物でもある。クリミア戦争の野戦病院で兵士の死亡記録を集めた。1858年に英国陸軍の衛生に関する報告書を私家版で印刷し月ごとの死因を扇形の面積で示す図を載せた。円を12か月に分け防ぐことのできた感染症による死亡・負傷による死亡・その他の死亡を色で分けた。</p>
+<p>フローレンス・ナイチンゲールは看護師として知られるが統計の図で政策を動かした人物でもある。クリミア戦争ではスクタリの陸軍病院で看護にあたった。帰国後に陸軍の死亡記録を分析した。1858年に英国陸軍の衛生に関する報告書を私家版で印刷し月ごとの死因を扇形の面積で示す図を載せた。円を12か月に分け防ぐことのできた感染症による死亡・負傷による死亡・その他の死亡を色で分けた。</p>
 
 <figure class="tb-fig tb-photo">
 <img src="../img/00_intro-nightingale-rose.jpg" width="1000" height="547" loading="lazy" alt="ナイチンゲールの死因の図の原本">
-<figcaption>ナイチンゲールの報告書に収められた死因の図の原本である。青い扇形は防ぐことのできた感染症、赤は負傷、黒はその他の原因による死亡を表す。1854年4月から1855年3月の円では、青い扇形の面積が赤と黒の面積を大きく上回る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Nightingale-mortality.jpg">Florence Nightingale</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>ナイチンゲールの報告書に収められた死因の図である。青い扇形は防ぐことのできた感染症、赤は負傷、黒はその他の原因による死亡を表す。1854年4月から1855年3月の円では、青い扇形の面積が赤と黒の面積を大きく上回る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Nightingale-mortality.jpg">Florence Nightingale</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 <p>図が示したのは死亡の大半が戦闘ではなく病院の衛生状態に起因する病気だったことである。数字の表だけでは伝わりにくい事実を1枚の図で示した。データを集めて要約し図で伝える手順は記述統計そのものである。第1章で学ぶヒストグラムも同じ目的の図である。</p>
 
 <figure class="tb-fig tb-photo">
 <img src="../img/00_intro-scutari-ward.jpg" width="1000" height="697" loading="lazy" alt="スクタリの病院の病室を描いた石版画">
-<figcaption>クリミア戦争中のスクタリの病院の病室を描いた石版画である。ナイチンゲールが着任した後の様子を描いている。本文の死亡記録はこうした野戦病院で集められた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:One_of_the_wards_of_the_hospital_at_Scutari_LCCN2002713027.jpg">Popular Graphic Arts</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>クリミア戦争中のスクタリの病院の病室を描いた石版画である。ナイチンゲールが着任した後の様子を描いている。本文の死亡記録はこうした軍の病院で集められた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:One_of_the_wards_of_the_hospital_at_Scutari_LCCN2002713027.jpg">Popular Graphic Arts</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p class="an-h">ナイチンゲールの図は面積で量を表す</p>

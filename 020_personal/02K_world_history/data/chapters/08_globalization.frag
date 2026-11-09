@@ -155,7 +155,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/08_glob-shenzhen.jpg" width="1000" height="248" loading="lazy" alt="香港側から見た深圳の高層ビル群">
-<figcaption>香港の側から境界の川越しに見た深圳の高層ビル群。手前の香港側には養魚池と緑地が広がる。深圳は1980年に経済特区となり、香港に隣接する立地を生かして外国企業を誘致した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Skyline_of_Shenzhen_from_Hong_Kong.jpg">Sparktour</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>香港の側から見た深圳の高層ビル群。手前の香港側には池と緑地が広がる。深圳は1980年に経済特区となり、香港に隣接する立地を生かして外国企業を誘致した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Skyline_of_Shenzhen_from_Hong_Kong.jpg">Sparktour</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <div class="tb-bars"><h5>国内総生産 名目 単位 10億ドル（出典4）</h5>
@@ -314,7 +314,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/08_glob-euro.jpg" width="1000" height="665" loading="lazy" alt="ユーロの紙幣7種と硬貨を封入したアクリルの記念品">
-<figcaption>2002年の現金の流通開始に合わせて作られた記念品で、ユーロの紙幣7種とオランダのユーロ硬貨8種をアクリルに封入している。アムステルダム国立美術館の所蔵品である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Drieluik_van_perspex_met_Euro-geld,_NG-2002-72-B.jpg">Rijksmuseum</a>／CC0／Wikimedia Commons</span></figcaption>
+<figcaption>ユーロの現金の流通が始まった2002年に作られたアクリルの3面の板で、ユーロの紙幣7種とオランダのユーロ硬貨8種を封入している。アムステルダム国立美術館の所蔵品である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Drieluik_van_perspex_met_Euro-geld,_NG-2002-72-B.jpg">Rijksmuseum</a>／CC0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <figure class="tb-fig">

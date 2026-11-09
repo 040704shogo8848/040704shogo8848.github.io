@@ -115,7 +115,7 @@
 
 <figure class="tb-fig tb-photo">
 <div class="tb-ph3"><img src="../img/05_disaster-kanto1923.jpg" width="1000" height="604" loading="lazy" alt="関東地震の後の本所方面の焼け跡"><img src="../img/05_disaster-rikuzentakata.jpg" width="1000" height="664" loading="lazy" alt="津波の後に陸前高田市の沖を漂う流出物"><img src="../img/05_disaster-noto.jpg" width="1000" height="666" loading="lazy" alt="能登半島地震で電柱が傾いた輪島市の街路"></div>
-<figcaption>左は1923年の関東地震の後の東京の本所方面で、大火で市街地が焼け落ちている。中央は2011年3月15日に上空から見た岩手県陸前高田市の沖で、津波が運び出した木材と船が海面を覆う。右は2024年の能登半島地震から1か月半後の石川県輪島市の街路で、電柱が傾いたままである。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:1923_Great_Kant%C5%8D_earthquake_destructions.jpg">作者不明</a>／パブリックドメイン 中央：<a href="https://commons.wikimedia.org/wiki/File:US_Navy_110315-N-IC111-592_-_Tsunami_damage_of_Rikuzentakata.jpg">U.S. Navy, Alexander Tidd</a>／パブリックドメイン 右：<a href="https://commons.wikimedia.org/wiki/File:R6_noto_earthquake_wajima_street_2024-02-17_1.jpg">Hurohukidaikon</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>左は1923年の関東地震の後の東京の本所方面で、大火で市街地が焼け落ちている。中央は2011年3月15日に上空から見た岩手県陸前高田市で、津波が運んだ木材と船が水面を覆う。右は2024年の能登半島地震から1か月半後の石川県輪島市の街路で、電柱が傾いたままである。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:1923_Great_Kant%C5%8D_earthquake_destructions.jpg">作者不明</a>／パブリックドメイン 中央：<a href="https://commons.wikimedia.org/wiki/File:US_Navy_110315-N-IC111-592_-_Tsunami_damage_of_Rikuzentakata.jpg">U.S. Navy, Alexander Tidd</a>／パブリックドメイン 右：<a href="https://commons.wikimedia.org/wiki/File:R6_noto_earthquake_wajima_street_2024-02-17_1.jpg">Hurohukidaikon</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 

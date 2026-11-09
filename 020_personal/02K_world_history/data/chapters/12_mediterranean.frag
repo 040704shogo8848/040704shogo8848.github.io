@@ -123,7 +123,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/12_med-parthenon.jpg" width="1000" height="750" loading="lazy" alt="アクロポリスに立つパルテノン神殿">
-<figcaption>アテネのアクロポリスに立つパルテノン神殿。前5世紀の民主政の最盛期に建てられた大理石の神殿で、デロス同盟の資金がその建設に充てられたとされる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Parthenon_from_west.jpg">User:Mountain</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>アテネのアクロポリスに立つパルテノン神殿。前5世紀の民主政の最盛期に建てられた大理石の神殿で、デロス同盟の資金がその建設費の一部に充てられた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Parthenon_from_west.jpg">User:Mountain</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 
 <div class="ex"><div class="ex-h">例題 2</div>

@@ -219,7 +219,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/01_separation-chromatography.jpg" width="1200" height="900" loading="lazy" alt="黒いインクの点からろ紙を上って赤と緑の色素が分かれた様子">
-<figcaption>黒い水性ペンのインクでつけた点から展開液がろ紙を上り、赤と緑の色素が異なる位置に分かれた。1色に見えたインクが複数の色素の混合物であり、色素ごとに吸着の強さが異なることが分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:BlackInkChromatography.jpg">Oscar</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>黒いインクでつけた点から水が紙を上り、赤と緑の色素が異なる位置に分かれた。1色に見えたインクが複数の色素の混合物であり、色素ごとに吸着の強さが異なることが分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:BlackInkChromatography.jpg">Oscar</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <figure class="tb-fig">

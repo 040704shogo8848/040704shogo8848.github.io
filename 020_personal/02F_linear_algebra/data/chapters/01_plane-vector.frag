@@ -273,7 +273,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/01_force-tugboats.jpg" width="1000" height="662" loading="lazy" alt="強襲揚陸艦を押すタグボート">
-<figcaption>米海軍の強襲揚陸艦ナッソーをノーフォークの港から押し出すタグボート。複数のタグボートがそれぞれ異なる向きから力を加え、船体にはたらく力はその和になる。物体に複数の力がはたらく時の合力をベクトルの加法で求める例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:US_Navy_051107-N-6639M-006_Tugboats_prepare_to_push_the_amphibious_assault_ship_USS_Nassau_(LHA_4)_out_of_the_Naval_Station_Norfolk_Harbor_as_they_depart.jpg">U.S. Navy</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>米海軍の強襲揚陸艦ナッソーをノーフォークの港から押し出すタグボート。複数のタグボートが異なる向きから船体を押すと、船体にはたらく力はそれぞれの力の和になる。物体に複数の力がはたらく時の合力をベクトルの加法で求める例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:US_Navy_051107-N-6639M-006_Tugboats_prepare_to_push_the_amphibious_assault_ship_USS_Nassau_(LHA_4)_out_of_the_Naval_Station_Norfolk_Harbor_as_they_depart.jpg">U.S. Navy</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 
 <aside class="an an-rw"><b>現実世界</b>
@@ -282,7 +282,7 @@
 
 <figure class="tb-fig tb-photo">
 <div class="tb-ph2"><img src="../img/01_airspeed-e6b-front.jpg" width="589" height="1000" loading="lazy" alt="アルミ製のE6B"><img src="../img/01_airspeed-e6b-wind.jpg" width="990" height="1000" loading="lazy" alt="学生用E6Bの表と裏"></div>
-<figcaption>左はアルミ製の E6B の計算尺の面、右は学生用 E6B の表と裏である。右の写真の黒い面が風の計算に使う面で、方位目盛りと格子の上に風のベクトルを書き込む。対気速度との和から対地速度と修正角を読み取る道具であり、本文の対地速度＝対気速度＋風速を図の上で計算する。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:E6b-front.jpg">作者名の記載なし</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:StudentE6BFlightComputer.jpg">Cosmicship</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>左は ASA 社製の E6B の計算尺の面、右は学生用 E6B の表と裏である。右の写真の黒い面が風の計算に使う面で、方位目盛りと格子の上に風のベクトルを書き込む。対気速度との和から対地速度と修正角を読み取る道具であり、本文の対地速度＝対気速度＋風速を図の上で計算する。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:E6b-front.jpg">作者名の記載なし</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:StudentE6BFlightComputer.jpg">Cosmicship</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <h2 id="s7">確認問題</h2>

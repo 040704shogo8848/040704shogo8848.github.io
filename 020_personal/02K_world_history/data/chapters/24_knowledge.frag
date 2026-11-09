@@ -8,7 +8,7 @@
 <p>1938年末にドイツのハーンとシュトラスマンがウランの<strong>核分裂</strong>を発見した。核分裂とは重い原子核が2つに分かれ、大量のエネルギーを放出する現象である。第二次世界大戦中の1942年にアメリカはイギリス・カナダと協力して原子爆弾の開発計画（マンハッタン計画）を始めた。ナチス・ドイツが先に開発することを恐れたためである。1945年7月に最初の核実験が行われ、8月6日に広島、8月9日に長崎へ原子爆弾が投下された。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/24_knowledge-hahn.jpg" width="1000" height="659" loading="lazy" alt="ハーンらの核分裂の実験装置">
-<figcaption>ミュンヘンのドイツ博物館に展示された、ハーンとシュトラスマンが1938年12月に核分裂を発見した実験の装置。机の上に放射線の測定器と電源、試料を扱う器具が並ぶ。机1台に収まる規模の実験から、核の時代が始まった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Versuchsaufbau_Hahn_Deutsches_Museum-2.jpg">Luidger（加工 Hic et nunc）</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>ミュンヘンのドイツ博物館に展示された、ハーンとシュトラスマンが1938年12月に核分裂を発見した実験の装置。机の上に真空管を用いた測定器と、試料を扱う器具や実験の記録が並ぶ。机1台に収まる規模の実験から、核の時代が始まった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Versuchsaufbau_Hahn_Deutsches_Museum-2.jpg">Luidger（加工 Hic et nunc）</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 <figure class="tb-fig tb-photo">
 <img src="../img/24_knowledge-trinity.jpg" width="1000" height="674" loading="lazy" alt="トリニティ実験の火球">
@@ -83,7 +83,7 @@
 <p>1957年10月4日にソ連は世界初の人工衛星<strong>スプートニク1号</strong>を打ち上げた。打ち上げに使われたR-7ロケットは、同じ年に実験に成功した大陸間弾道ミサイル（ICBM）である。<strong class="hit">衛星を軌道に投入できるロケットは、核弾頭をアメリカ本土に届けるミサイルでもあった</strong>。アメリカはソ連に技術で後れをとったと受け止め、これをスプートニク・ショックと呼ぶ。アメリカは1958年に航空宇宙局（NASA）を設立し、理数系の教育にも予算を投じた。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/24_knowledge-sputnik.jpg" width="1000" height="666" loading="lazy" alt="国立航空宇宙博物館のスプートニク1号">
-<figcaption>ワシントンの国立航空宇宙博物館に展示されたスプートニク1号。直径60cm足らずの金属の球に4本のアンテナが付いた単純な構造である。この小さな衛星の打ち上げが、アメリカに技術の後れを強く意識させた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sputnik_1_at_the_National_Air_and_Space_Museum,_Dec_2017.jpg">Mys 721tx</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>ワシントンの国立航空宇宙博物館に展示されたスプートニク1号の複製。直径58cmの金属の球に4本のアンテナが付いた単純な構造である。この小さな衛星の打ち上げが、アメリカに技術の後れを強く意識させた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sputnik_1_at_the_National_Air_and_Space_Museum,_Dec_2017.jpg">Mys 721tx</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 <p>1961年4月にソ連のガガーリンが初めて有人の宇宙飛行に成功した。アメリカのケネディ大統領は同年に1960年代のうちに人間を月に送る目標を掲げ、1969年7月に<strong>アポロ11号</strong>が月面に着陸した。宇宙開発は軍事力と国家の威信を示す競争であった。一方で1967年には<strong>宇宙条約</strong>が発効し、天体を含む宇宙空間をどの国も領有できないこと・大量破壊兵器を地球を回る軌道に置かないことが定められた。デタントの時期の1975年には米ソの宇宙船がドッキングするアポロ・ソユーズ計画が行われた。</p>
 <figure class="tb-fig tb-photo">
@@ -208,7 +208,7 @@
 <p>生命そのものを操作する技術も生まれた。1953年にワトソンとクリックがDNAの<strong>二重らせん構造</strong>を発表した。この発見にはフランクリンのX線の解析の成果が使われており、その貢献の評価は後に見直された。1973年には別の生物の遺伝子を組み込む<strong>遺伝子組換え</strong>の技術が開発された。危険を懸念した科学者たちは1975年にアメリカのアシロマで会議を開き、実験の安全基準を自ら定めた。<strong class="hit">科学者が研究の危険を自ら議論して規制を設けた先例である</strong>。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/24_knowledge-dnamodel.jpg" width="750" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="ワトソンとクリックのDNAの模型">
-<figcaption>ロンドンの科学博物館に展示された、ワトソンとクリックが1953年に組み立てたDNAの模型。金属の板と棒で、2本の鎖がらせん状に巻き付く構造を表している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:DNA_Model_Crick-Watson.jpg">User:Alkivar</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>ロンドンの科学博物館に展示された、ワトソンとクリックが1953年に組み立てたDNAの模型を、当時の金属の板の一部を用いて再構成したもの。金属の板と棒で、2本の鎖がらせん状に巻き付く構造を表している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:DNA_Model_Crick-Watson.jpg">User:Alkivar</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 
 <ul class="tb-tl">
@@ -225,7 +225,7 @@
 <p><strong>生命倫理</strong>とは、医療と生命科学の技術を人間にどこまで用いてよいかを考える学問である。出発点は戦時中の人体実験への反省である。患者が説明を受けて自ら同意する<strong>インフォームド・コンセント</strong>の原則は、ニュルンベルク綱領とヘルシンキ宣言を経て医療の基本となった。日本では1997年に臓器移植法が成立し、脳死を人の死とするかどうかが国会で議論された。iPS細胞は受精卵を壊さずに多様な細胞を作製できるため、受精卵を使うES細胞の倫理的な問題を避ける技術として注目された。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/24_knowledge-dolly.jpg" width="1000" height="667" loading="lazy" alt="スコットランド国立博物館のクローン羊ドリー">
-<figcaption>エディンバラのスコットランド国立博物館に展示されたクローン羊ドリーの剥製。哺乳類の体細胞から作られた最初のクローンであり、クローン人間の是非をめぐる議論のきっかけとなった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Dolly_the_Sheep_National_Museum_of_Scotland.jpg">Sgerbic</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>エディンバラのスコットランド国立博物館に展示されたクローン羊ドリーの剥製。成体の体細胞から作製された最初の哺乳類のクローンであり、クローン人間の是非をめぐる議論のきっかけとなった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Dolly_the_Sheep_National_Museum_of_Scotland.jpg">Sgerbic</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 <p>2012年に発表されたゲノム編集の技術は、遺伝子を狙った位置で書き換えることを容易にし、2020年のノーベル化学賞の対象となった。2018年には中国の研究者が受精卵の遺伝子を編集した双子の出産を公表し、国際的な批判を受けた。ヒトゲノム計画は予算の一部を倫理的・法的・社会的な課題の研究に充てた。<strong class="hit">技術の是非は自然科学だけでは決められず、哲学・法学・社会学の知識を合わせて判断する</strong>。学習指導要領が科学技術と人文科学・社会科学の連携を求めるのはこのためである（出典1）。</p>
 

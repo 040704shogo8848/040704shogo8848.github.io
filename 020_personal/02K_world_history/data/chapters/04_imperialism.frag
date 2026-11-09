@@ -195,7 +195,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/04_imp-china-cake.jpg" width="693" height="1000" loading="lazy" alt="中国と書いたケーキを列強の君主が切り分ける風刺画" style="max-height:620px;object-fit:contain">
-<figcaption>1898年1月16日のフランスの新聞『ル・プティ・ジュルナル』の挿絵「中国 王たちと皇帝たちのケーキ」。「CHINE」と書いたケーキを、イギリス・ドイツ・ロシア・フランス・日本を表す人物が切り分けようとし、背後で清の官僚が両手を上げている。列強による租借地と勢力範囲の設定を風刺した図像である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:China,_the_cake_of_kings_and_emperors,_Le_Petit_Journal_1898.jpg">Henri Meyer</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>1898年1月16日のフランスの新聞『ル・プティ・ジュルナル』の挿絵「中国 王たちと皇帝たちのケーキ」。「CHINE」と書いたケーキを、イギリス・ドイツ・ロシア・フランス・日本を表す人物が囲み、背後で清の官僚が両手を上げている。列強による租借地と勢力範囲の設定を風刺した図像である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:China,_the_cake_of_kings_and_emperors,_Le_Petit_Journal_1898.jpg">Henri Meyer</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 <p>出遅れたアメリカは1899年に国務長官ジョン・ヘイの名で<strong>門戸開放宣言</strong>を出した（出典5）。門戸開放とは、中国の市場をすべての国に等しく開くよう求める主張である。</p>
 

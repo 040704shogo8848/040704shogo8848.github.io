@@ -203,7 +203,7 @@
 <p>4代目のモンケの時代には、弟の<strong>フレグ</strong>が西アジアへ遠征し、1258年にバグダードを攻め落としてアッバース朝を滅ぼした（出典18）。弟のクビライは南宋の攻略を進めた。モンケが1259年に死去すると、クビライと弟のアリクブケが帝位を争った（出典18）。クビライは1264年にアリクブケを降伏させたが、オゴデイ家のハイドゥはクビライに従わなかった（出典18）。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/14_song-mongol-baghdad.jpg" width="1000" height="750" loading="lazy" alt="バグダードを包囲するモンゴル軍の写本挿絵">
-<figcaption>1258年のモンゴル軍によるバグダードの包囲を描いた写本挿絵。ラシード・アッディーン『集史』の写本で、15世紀前半にヘラートで制作されたものであり、事件の約170年後に描かれた。城壁の前には投石機と騎兵が並んでいる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bagdad1258.jpg">Sayf al-vâhidî et al.</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>1258年のモンゴル軍によるバグダードの包囲を描いた写本挿絵。フランス国立図書館が所蔵するラシード・アッディーン『集史』の写本の挿絵で、1430〜1434年ごろの作であり、事件の約170年後に描かれた。城壁の前には投石機と騎兵が並んでいる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bagdad1258.jpg">Sayf al-vâhidî et al.</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 <p>13世紀後半のモンゴル帝国は、クビライの元を宗主とし、4つの政権が分立する形になった。南ロシアの草原のジョチ・ウルス（キプチャク・ハン国）・中央アジアのチャガタイ・ウルス（チャガタイ・ハン国）・イランのフレグ・ウルス（イル・ハン国）と、東アジアの元である。1294年までに帝国は4つの政権に分かれ、1304年には西方の3政権が元の宗主権を認めた（出典20）。ウルスはモンゴル語で人々の集団や国を指す語である。</p>
 
@@ -392,7 +392,7 @@
 <p>2021年、中国福建省の「泉州 宋元中国の世界海洋商業・貿易センター」がユネスコの世界遺産に登録された（出典34）。泉州は宋と元の時代に海の道の出発点として栄え、マルコ・ポーロは東洋のアレクサンドリアと記し、イブン・バットゥータは世界最大の港と記した（出典34）。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/14_song-mongol-quanzhou.jpg" width="666" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="泉州開元寺の鎮国塔">
-<figcaption>泉州の開元寺の東塔（鎮国塔）。木造の塔が宋の時代に火災で失われた後に石造で建て直され、1250年に完成した5層の塔である。海の道の出発点として栄えた泉州の繁栄を示す建造物の1つである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Zhenguo_Pagoda_of_Kaiyuan_Temple_(Quanzhou)_20170727.jpg">Tyg728</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>泉州の開元寺の東塔（鎮国塔）。唐の時代に木造で建てられた塔が宋の時代に失われ、れんが造りを経て1238〜1250年に石造で建て直された5層の塔である。海の道の出発点として栄えた泉州の繁栄を示す建造物の1つである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Zhenguo_Pagoda_of_Kaiyuan_Temple_(Quanzhou)_20170727.jpg">Tyg728</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p class="an-h">新安沈船の銅銭約28トンは、中世日本の貨幣が輸入品であったことを示す</p>

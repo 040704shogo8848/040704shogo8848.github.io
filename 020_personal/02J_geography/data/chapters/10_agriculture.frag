@@ -11,7 +11,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/10_agriculture-greenhouses.jpg" width="1000" height="750" loading="lazy" alt="オランダのマースダイク周辺に広がるガラス温室群">
-<figcaption>オランダ南西部のマースダイク周辺である。手前の畑の奥に、ガラスの温室が地平線まで隙間なく並ぶ。温室は季節の制約を小さくし、大都市の近くで野菜や花を集約的に栽培する園芸農業を支える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Maasdijk,_kassen_foto1_2014-03-09_11.07.jpg">Michielverbeek</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>オランダ西部のウェストラント地域にあるマースダイク周辺である。手前の畑の奥に、ガラスの温室が地平線まで隙間なく並ぶ。温室は季節の制約を小さくし、大都市の近くで野菜や花を集約的に栽培する園芸農業を支える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Maasdijk,_kassen_foto1_2014-03-09_11.07.jpg">Michielverbeek</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <div class="tb-vs">

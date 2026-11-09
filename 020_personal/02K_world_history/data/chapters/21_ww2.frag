@@ -129,7 +129,7 @@
 <p>学習指導要領は、自由主義経済の危機によって資本主義諸国で国家の経済への関与が積極的に進み、それが大戦を経て福祉国家体制の成立の契機となった点に注目するよう求めている（出典1）。ケインズは1936年の『雇用・利子および貨幣の一般理論』で、不況時には政府の支出で需要を補うべきだと論じた。<strong class="hit">ニューディールと高橋財政は、ケインズの理論が公刊される前に実施された需要の下支えであった</strong>。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/21_ww2-norris.jpg" width="1000" height="780" loading="lazy" alt="建設中のノリス・ダムの発電機の据え付け">
-<figcaption>テネシー川流域開発公社（TVA）のノリス・ダムで発電機を据え付ける作業員（1935年）。TVAはニューディールの公共事業の代表であり、ダムの建設が雇用と電力を生んだ。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Norris_Dam_(1935)_-_Generator_installation_(9136786738).jpg">TVA Web Team</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+<figcaption>テネシー川流域開発公社（TVA）のノリス・ダムで発電機を据え付ける作業員（1935年）。ノリス・ダムはニューディールの下で設立されたTVAの最初の大規模な事業であり、発電と洪水の防止を目的とする。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Norris_Dam_(1935)_-_Generator_installation_(9136786738).jpg">TVA Web Team</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <aside class="an an-bb"><b>野球で言えば</b>

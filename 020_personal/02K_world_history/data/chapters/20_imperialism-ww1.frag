@@ -42,7 +42,7 @@
 <p>新しい工業は巨額の設備投資を要した。資本は大企業と銀行に集まり、同じ業種の企業が価格や生産量を協定する<strong>カルテル</strong>や、企業を統合する<strong>トラスト</strong>が生まれた。1873年からの長期の不況の中で、ドイツとアメリカは保護関税で自国の産業を守った。イギリスは自由貿易を維持し、海運・金融と海外投資の収入で国際収支を支えた。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/20_imperialism-ww1-basf.jpg" width="1000" height="562" loading="lazy" alt="1881年のBASFのルートヴィヒスハーフェン工場を描いた絵">
-<figcaption>ドイツの化学企業BASFのルートヴィヒスハーフェン工場を描いた絵（1881年）。ライン川の岸に多数の煙突と工場の建物が並ぶ。化学工業は第二次産業革命の中心の1つであり、ドイツが工業生産の割合を高めた分野である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:BASF_Werk_Ludwigshafen_1881.JPG">Robert Stieler</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>ドイツの化学企業BASFのルートヴィヒスハーフェン工場を描いた絵（1881年）。ライン川の岸に多数の煙突と工場の建物が並ぶ。化学工業は鉄鋼・電機と並んで、第二次産業革命の中心となった重化学工業の1つである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:BASF_Werk_Ludwigshafen_1881.JPG">Robert Stieler</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 
 
@@ -71,7 +71,7 @@
 <p class="tb-src">シベリア鉄道の年代は出典26、パナマ運河の年代は出典27による。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/20_imperialism-ww1-panama.jpg" width="971" height="1000" loading="lazy" alt="建設中のパナマ運河のクレブラ・カット">
-<figcaption>建設中のパナマ運河のクレブラ・カット（1907年の写真）。山を切り開いた底に線路が敷かれ、掘った土砂を貨車で運び出している。運河は1914年に開通し、アメリカがカリブ海と太平洋を結ぶ交通路を握った。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Panama_Canal_under_construction,_1907.jpg">H.C. White Co.</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>建設中のパナマ運河のクレブラ・カット（1907年の写真）。山を切り開いた底に線路が敷かれ、掘った土砂を貨車で運び出している。運河は1914年に開通した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Panama_Canal_under_construction,_1907.jpg">H.C. White Co.</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 
 <p>ドイツのバグダード鉄道はイスタンブルの対岸からコンヤを経てバグダードとバスラに至る計画で、ドイツの銀行が敷設権を得た（出典8）。ペルシア湾に近づく路線はインドへの交通路を脅かすとして、イギリスの警戒を招いた（出典8）。こうして3B政策と3C政策は西アジアで交差した。これが教科書で定着した説明である。一方で、3C政策は1917年に日本で生まれた呼称であり、カイロとカルカッタを結ぶ政策は実在しなかったとする研究がある。1914年に英独がバグダード鉄道の終点をバスラとすることで合意した点から、両政策の対立を強調する説明を見直す見方もある（出典8・38）。</p>
@@ -107,7 +107,7 @@
 <p>ガージャール朝のイランでは、1890年にイギリス人にタバコの専売権を与えると、1891年からウラマー（イスラームの学者）と商人が<strong>タバコ・ボイコット運動</strong>を起こし、利権を撤回させた（出典5）。1905年には商人がバザールを閉じて抗議し、1906年夏には約1万2,000人がイギリス公使館の敷地にこもった（出典5）。国王は1906年8月に立憲制を認め、10月に議会が開かれ、12月30日に基本法が制定された（出典5）。これが<strong>イラン立憲革命</strong>である。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/20_imperialism-ww1-majlis.jpg" width="561" height="981" loading="lazy" style="max-height:620px;object-fit:contain" alt="イランの第1議会の議員の肖像を集めた印刷物">
-<figcaption>イランの第1議会（1906年10月〜1908年6月）の議員の肖像を集めた印刷物。ターバンを巻いた人物と帽子をかぶった人物が並び、異なる階層の人々が議員となったことが分かる。中央は初代議長である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:First_Majlis_MPs.jpg">作者不明（BehnamFarid 投稿）</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>イランの第1議会（1906年10月〜1908年6月）の議員の肖像を集めた印刷物。ターバンを巻いた人物と帽子をかぶった人物が並んでいる。中央は初代議長である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:First_Majlis_MPs.jpg">作者不明（BehnamFarid 投稿）</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 <p>しかし1907年の英露協商がイランを勢力圏に分けた。1908年には国王が議会を砲撃し、立憲派はタブリーズなどで抵抗して1909年に国王を退位させた（出典5）。1911年に議会がアメリカ人シャスターを財務総監に任じると、ロシアは解任を求める最後通牒を出し、12月にロシア軍の圧力の下で議会は閉鎖された（出典5）。</p>
 
@@ -254,7 +254,7 @@
 <p>イギリスはオスマン帝国と戦うため、立場の異なる相手と別々に約束を結んだ。メッカの太守フセイン（フサイン）との書簡では、オスマン帝国への反乱と引き換えにアラブの独立を支持すると約束した（1915年7月〜1916年3月、出典9）。これにもとづき、1916年6月にアラブの反乱が始まった（出典10）。一方でイギリスはフランスとロシアと<strong>サイクス・ピコ協定</strong>を結び、戦後のオスマン帝国の分割を取り決めた（1916年5月に両国政府が承認、出典9）。さらに1917年11月2日の<strong>バルフォア宣言</strong>で、パレスチナにユダヤ人の民族的郷土（ナショナル・ホーム）を建てることへの支持を表明した（出典9）。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/20_imperialism-ww1-sykespicot.jpg" width="1000" height="971" loading="lazy" alt="サイクスとピコが署名したサイクス・ピコ協定の地図">
-<figcaption>サイクスとピコが1916年5月8日に署名した協定の地図。青の地域はフランス、赤の地域はイギリスが直接に支配する範囲である。AとBはそれぞれフランスとイギリスの勢力圏を示す。黄色のパレスチナは国際管理の地域とされた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:MPK1-426_Sykes_Picot_Agreement_Map_signed_8_May_1916.jpg">Royal Geographical Society, Mark Sykes, François Georges-Picot</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>サイクスとピコが1916年5月8日に署名した協定の地図。青の地域はフランス、赤の地域はイギリスが直接または間接の統治を行える範囲である。AとBはそれぞれフランスとイギリスの勢力圏を示す。黄色のパレスチナは国際管理の地域とされた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:MPK1-426_Sykes_Picot_Agreement_Map_signed_8_May_1916.jpg">Royal Geographical Society, Mark Sykes, François Georges-Picot</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 <figure class="tb-fig tb-photo">
 <img src="../img/20_imperialism-ww1-balfour.jpg" width="759" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="バルフォア宣言の書簡">

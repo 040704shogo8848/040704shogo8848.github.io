@@ -230,7 +230,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/02_exponential-passbook.jpg" width="750" height="1000" loading="lazy" alt="郵便貯金の通帳">
-<figcaption>郵便貯金の通帳である。預けた金額と利息が記帳される。複利では毎年の利息が元金に加わり、次の年の利息の計算の基になる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Post_Office_Savings_Bank_passbook.jpg">Wainuiomartian</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>郵便貯金の通帳である。預け入れと引き出しの金額が記帳される。複利では毎年の利息が元金に加わり、次の年の利息の計算の基になる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Post_Office_Savings_Bank_passbook.jpg">Wainuiomartian</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <figure class="tb-fig">

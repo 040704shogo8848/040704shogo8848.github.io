@@ -261,7 +261,7 @@
 <p>11世紀ごろから、北西ヨーロッパでは<strong>三圃制</strong>が広がった。耕地を3つに分け、秋に小麦やライ麦をまく秋耕地・春に大麦や燕麦や豆をまく春耕地・休ませる休耕地を年ごとに入れ替える農法である。2つに分けて半分を休ませる二圃制に比べると、毎年耕作できる面積が2分の1から3分の2に増える（本書による算出値）。豆は土地の窒素を補う（出典25）。重い鉄の犂を牛や馬に引かせる重量有輪犂も普及した。10世紀から14世紀の温暖な気候も生産の増加を支えた（出典25）。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/13_islam-europe-octobre.jpg" width="600" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="ベリー公の時祷書の10月の場面">
-<figcaption>15世紀の写本『ベリー公のいとも豪華なる時祷書』の10月の場面であり、本文の時期より後に描かれた。手前では農民が種をまき、馬に引かせた馬鍬で種に土をかぶせている。背後の城と手前の耕地の組合せは、領主の居所と農民の耕作の場が隣り合う様子を示す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Les_Tr%C3%A8s_Riches_Heures_du_duc_de_Berry_octobre.jpg">Limbourg brothers / Barthélemy d&#x27;Eyck</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>15世紀の写本『ベリー公のいとも豪華なる時祷書』の10月の場面であり、本文の時期より後に描かれた。手前では農民が種をまき、馬に引かせた馬鍬で種に土をかぶせている。背後の城はパリのルーヴル宮であり、城と手前の耕地の組合せは、支配者の居所と農民の耕作の場が近接する様子を示す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Les_Tr%C3%A8s_Riches_Heures_du_duc_de_Berry_octobre.jpg">Limbourg brothers / Barthélemy d&#x27;Eyck</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 
 <figure class="tb-fig">

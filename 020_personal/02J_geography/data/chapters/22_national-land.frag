@@ -25,7 +25,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/22_national-land-mizushima.jpg" width="1000" height="997" loading="lazy" alt="水島臨海工業地帯の空中写真">
-<figcaption>岡山県倉敷市の水島臨海工業地帯の空中写真（2007年）。海に面した埋立地に、製鉄所と石油化学の工場が並ぶ。水島は1963年に新産業都市に指定された岡山県南地区の中心となる工業地域である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Mizushima_industrial_complex_area_Aerial_photograph.2007.jpg">国土地理院</a>／Attribution／Wikimedia Commons</span></figcaption>
+<figcaption>岡山県倉敷市の水島臨海工業地帯の空中写真（2007年）。海に面した埋立地に、製鉄所と石油化学の工場が並ぶ。水島は1964年に新産業都市に指定された岡山県南地区の中心となる工業地域である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Mizushima_industrial_complex_area_Aerial_photograph.2007.jpg">国土地理院</a>／Attribution／Wikimedia Commons</span></figcaption>
 </figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 591" role="img" aria-label="全国総合開発計画の拠点開発方式で指定された新産業都市と工業整備特別地域の分布">

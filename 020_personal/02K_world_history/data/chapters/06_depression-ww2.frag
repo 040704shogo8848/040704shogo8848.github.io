@@ -9,14 +9,14 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/06_dep-nyse.jpg" width="701" height="1000" loading="lazy" alt="株価暴落の後にニューヨーク証券取引所の前に集まった群衆" style="max-height:620px;object-fit:contain">
-<figcaption>1929年の株価暴落の後、ニューヨーク証券取引所の前のウォール街に集まった群衆。通りは人で埋まり、車が進めなくなっている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Crowd_outside_nyse.jpg">US-gov</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>1929年の株価暴落の後、ニューヨーク証券取引所の前のウォール街に集まった群衆。通りは人で埋まり、その中に多くの車が並んでいる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Crowd_outside_nyse.jpg">US-gov</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 <p>恐慌がアメリカ一国にとどまらなかった理由は2つある。第一に、ドイツの賠償支払いはアメリカの資本に依存し、アメリカ資本の引き揚げがドイツとオーストリアの金融危機を招いた。第二に、多くの国が<strong>金本位制</strong>を採用していた。金本位制とは、通貨の価値を一定量の金と結び付け、金の流出入に合わせて通貨量を調整する制度である。金が流出した国は通貨量を減らして引き締めざるをえず、不況が国境を越えて伝わった。</p>
 <p>アメリカの失業率は1929年の平均約3%から1933年には24.9%に達したとする推計がある（レバーゴットの推計、出典3）。1929年の3.3%から1933年の25.2%へ上昇したとする資料もある（出典25）。公的な救済事業の就労者を失業者に数えない推計では最高値は1932年の22.5%となる（ダービーの推計、出典3）。ドイツでは1932年に失業者が600万人を超えた（出典12）。72か国の月間輸入総額は1929年1月の約30億ドルから1933年2月の約9億ドルへ縮小した（キンドルバーガーによる集計、出典4）。</p>
 
 <figure class="tb-fig tb-photo">
 <img src="../img/06_dep-migrant-mother.jpg" width="779" height="1000" loading="lazy" alt="子どもを抱いて遠くを見つめる母親" style="max-height:620px;object-fit:contain">
-<figcaption>ドロシア・ラングが1936年にカリフォルニアで撮影した「移民の母」。農場を渡り歩く季節労働者のフローレンス・トンプソンと、その子どもたちである。恐慌期の農村の窮乏を記録した写真で、ラングは連邦政府の機関の依頼で撮影した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Migrant_Mother_(LOC_fsa.8b29516).jpg">Lange, Dorothea(w), photographer.</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>ドロシア・ラングが1936年にカリフォルニア州ニポモの豆摘み労働者のキャンプで撮影した「移民の母」。写っているのはフローレンス・トンプソンと、その子どもたちである。恐慌期の農村の窮乏を記録した写真で、ラングは連邦政府の再定住局の写真家として撮影した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Migrant_Mother_(LOC_fsa.8b29516).jpg">Lange, Dorothea(w), photographer.</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 
 
@@ -269,7 +269,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/06_dep-genbaku-dome.jpg" width="1000" height="693" loading="lazy" alt="川の対岸から見た原爆ドーム">
-<figcaption>広島の原爆ドーム。1945年8月6日の原子爆弾の爆心地に最も近い場所で、倒壊を免れた建物である。2004年8月6日の朝、平和記念式典に向かう市民が手前の川沿いを歩いている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:A-Bomb_Dome.jpg">Dan Smith</a>／CC BY-SA 2.5／Wikimedia Commons</span></figcaption>
+<figcaption>広島の原爆ドーム。1945年8月6日の原子爆弾の爆心地に最も近い場所で、倒壊を免れた建物である。2004年8月6日、平和記念式典に向かう市民が手前の川沿いを歩いている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:A-Bomb_Dome.jpg">Dan Smith</a>／CC BY-SA 2.5／Wikimedia Commons</span></figcaption>
 </figure>
 
 <h3>大戦の複合的な性格と開戦責任の議論</h3>

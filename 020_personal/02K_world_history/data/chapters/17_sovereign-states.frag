@@ -10,7 +10,7 @@
 <p>15世紀半ばにグーテンベルクが金属活字による<strong>活版印刷術</strong>を実用化した（出典3）。写本に比べて書物の価格が下がり、同じ内容の本が大量に出回るようになった。16世紀にはルネサンスはアルプス以北へ広がり、ネーデルラントのエラスムスは『愚神礼賛』で聖職者の堕落を風刺した。<strong class="hit">印刷術が知識の流通の速度を変えたことが、次節の宗教改革を短期間で広げる条件となった</strong>。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/17_sovereign-states-gutenberg.jpg" width="1000" height="816" loading="lazy" alt="アメリカ議会図書館に展示されたグーテンベルク聖書">
-<figcaption>アメリカ議会図書館に展示されたグーテンベルク聖書（1944年の写真）。金属活字で印刷された最初期の本であり、開かれたページには2段組みの本文が整然と並ぶ。写本と同じ体裁の本を、同じ内容で何冊も作成できるようになった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gutenberg_Bible,_Library_of_Congress,_1944.jpg">Library of Congress</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>アメリカ議会図書館に展示されたグーテンベルク聖書（1944年の写真）。ヨーロッパで金属活字を用いて印刷された最初の本格的な書物であり、開かれたページには2段組みの本文が整然と並ぶ。活版印刷によって、同じ内容の本を何冊も作成できるようになった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gutenberg_Bible,_Library_of_Congress,_1944.jpg">Library of Congress</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 <aside class="an an-biz"><b>スタートアップで言えば</b>
 <p class="an-h">活版印刷はルターにとって配信の基盤である</p>
@@ -61,12 +61,12 @@
 <p><strong class="hit">カトリック国のフランスが新教徒の側で参戦した事実は、戦争の主な対立軸が宗派から国家の利害へ移ったことを示す</strong>。フランスはスペインとオーストリアの両ハプスブルク家に挟まれる状態を解くことを優先した。戦場となったドイツの被害は大きく、戦争全体の死者は450万〜800万人と推計される（出典9）。帝国のドイツ語圏の人口は1600年の1,800万〜2,000万人から1650年の1,100万〜1,300万人へ約4割減ったとする推計がある（出典9）。この減少には死亡のほか移住と出生の減少も含まれる。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/17_sovereign-states-callot.jpg" width="1000" height="436" loading="lazy" alt="カロの版画 戦争の惨禍の絞首刑の場面">
-<figcaption>ジャック・カロの連作版画『戦争の惨禍』（1633年）の絞首刑の場面。木の枝に多数の人がつるされ、周りを兵士の隊列が囲む。三十年戦争の時代に、兵士の略奪とその処罰が住民の生活を脅かしていたことを伝える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hanging_from_The_Miseries_and_Misfortunes_of_War_by_Jacques_Callot.jpg">Jacques Callot</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>ジャック・カロの連作版画『戦争の惨禍』（1633年）の絞首刑の場面。木の枝に多数の人がつるされ、周りを兵士の隊列が囲む。三十年戦争の時代に兵士の略奪が住民の生活を脅かし、略奪した兵士が処刑されたことを伝える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hanging_from_The_Miseries_and_Misfortunes_of_War_by_Jacques_Callot.jpg">Jacques Callot</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 <p>1648年の<strong>ウェストファリア条約</strong>は、ヨーロッパの多数の国が参加した国際会議で結ばれた講和である。主な内容は次のとおりである（出典9・出典10・出典27・出典34）。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/17_sovereign-states-munster.jpg" width="1000" height="764" loading="lazy" alt="ミュンスター条約の批准の場面を描いた絵">
-<figcaption>テル・ボルフが描いた1648年のミュンスターの講和の宣誓の場面の模写。スペインとオランダの代表が机を囲み、右手を挙げて条約を守ることを誓っている。オランダの独立が国際的に認められた瞬間を、会場にいた画家が記録した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:The_Ratification_of_the_Treaty_of_Munster,_Gerard_Ter_Borch_(1648).jpg">After Gerard ter Borch</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>テル・ボルフが描いた1648年のミュンスターの講和の宣誓の場面の模写。机を囲むオランダの代表は手を挙げ、スペインの代表は聖書に右手を置いて条約を守ることを誓っている。テル・ボルフは当時ミュンスターに滞在しており、原画の左端に自身の姿も描き込んだ。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:The_Ratification_of_the_Treaty_of_Munster,_Gerard_Ter_Borch_(1648).jpg">After Gerard ter Borch</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 <div class="tb-tw"><table>
 <thead><tr><th>項目</th><th>内容</th><th>意味</th></tr></thead>
@@ -188,7 +188,7 @@
 <p>絶対王政の代表はフランスである。<strong>ルイ14世</strong>（在位1643〜1715年）は「太陽王」と呼ばれ、1661年からは宰相を置かずに自ら政治を行った。財務総監のコルベールは輸出産業の育成と東インド会社の再建を進めた。ルイ14世はヴェルサイユ宮殿に貴族を集め、対外戦争を繰り返した。1685年にはナントの王令を廃止したため、多数のユグノーの商工業者がオランダ・イギリス・プロイセンへ移住した。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/17_sovereign-states-louis14.jpg" width="688" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="リゴーが描いたルイ14世の肖像">
-<figcaption>イアサント・リゴーが描いたルイ14世の肖像（1701年）。百合の紋章を散らした戴冠式の衣と剣・王冠を身に着けた姿であり、国王の権威を見る者に示す肖像である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Rigaud_Louis_XIV_1701.jpg">Hyacinthe Rigaud</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>イアサント・リゴーが描いたルイ14世の肖像（1701年）。百合の紋章を散らした戴冠式の衣をまとって剣を帯び、傍らの台に王冠を置いた姿であり、国王の権威を見る者に示す肖像である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Rigaud_Louis_XIV_1701.jpg">Hyacinthe Rigaud</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 <p>スペインのフェリペ2世（在位1556〜1598年）は1571年のレパントの海戦でオスマン帝国の艦隊を破り、1580年にはポルトガルの王位を兼ねた。アメリカ大陸の銀が財政を支えたが、戦費の負担で国家は何度も支払いを停止した。18世紀のプロイセンのフリードリヒ2世は「君主は国家第一の僕」と述べ、啓蒙思想に基づく改革を上から進めた。このような君主を<strong>啓蒙専制君主</strong>と呼ぶ。</p>
 <p>絶対王政という用語には議論がある。従来は、国王が貴族や議会を抑えて権力を一手に集めたと説明された。これに対して、国王は貴族・都市・ギルドなどの<strong>社団</strong>の特権を認め、それらを通じて支配したにすぎないとする見方がある（出典12・出典33）。<strong class="hit">国王の権力が絶対であったのは理念の上であり、実際の支配は社団との交渉に依存していた</strong>とする説明である。</p>
@@ -338,7 +338,7 @@
 <p>啓蒙思想はサロンやコーヒーハウスでの議論と印刷物で広がった。日本では1774年に杉田玄白らがオランダ語の解剖書を翻訳して『解体新書』を刊行した（出典23）。<strong class="hit">出島を通じたオランダとの交易が、ヨーロッパの科学を日本へ伝える経路となった</strong>。この学問を蘭学と呼ぶ。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/17_sovereign-states-kaitai.jpg" width="1000" height="666" loading="lazy" alt="解体新書の人体の図">
-<figcaption>『解体新書』（1774年）の人体の正面と背面の図。オランダ語の解剖書の図を写し、各部の名称を漢字で書き入れている。出島を通じて入ったヨーロッパの医学書が、日本の学者によって翻訳された成果である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kaitai_shinsho_01.jpg">作者不明</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>『解体新書』（1774年）の人体の正面と背面の図。オランダ語の解剖書の図を写し、体の各部に記号を書き入れている。出島を通じて入ったヨーロッパの医学書が、日本の学者によって翻訳された成果である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kaitai_shinsho_01.jpg">作者不明</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 <div class="ex"><div class="ex-h">例題 4</div>
 <p>次の資料はある思想家の著作の要約である。「人々が共通の権力をもたずに生活している間は、戦争と呼ばれる状態にある。それは各人の各人に対する戦争である」。この思想家と、資料から導かれる国家の性格を答えよ。</p>

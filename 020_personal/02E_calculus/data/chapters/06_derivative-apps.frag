@@ -388,12 +388,12 @@
 <h2 id="s8">現実世界の極値 費用関数</h2>
 <p>ミクロ経済学の教科書では企業の総費用を生産量 \( q \) の3次関数で表す例が多い。\( C(q)=q^{3}-6q^{2}+15q+10 \) のような形である。限界費用 \( C'(q)=3q^{2}-12q+15 \) は2次関数で \( q=2 \) で最小になる。平均可変費用 \( (q^{3}-6q^{2}+15q)/q=q^{2}-6q+15 \) は \( q=3 \) で最小になる。限界費用曲線が平均可変費用曲線の最小点を通る性質はこの章の微分の計算で確かめられる。\( q=3 \) で \( C'(3)=27-36+15=6 \) となり平均可変費用の最小値 \( 9-18+15=6 \) と一致する。</p>
 <aside class="an an-rw"><b>現実世界</b>
-<p>極値を接線が水平になる点として求める方法はフェルマーが1630年代に考案した。ライプニッツの1684年の論文の題名「極大と極小のための新しい方法」もこの問題を中心に据えている。</p>
+<p>極大と極小を求める方法はフェルマーが1630年代に考案した。ライプニッツの1684年の論文の題名「極大と極小のための新しい方法」もこの問題を中心に据えている。</p>
 </aside>
 
 <figure class="tb-fig tb-photo">
 <div class="tb-ph2"><img src="../img/06_derivative-apps-fermat.jpg" width="747" height="1000" loading="lazy" alt="フェルマーの肖像版画"><img src="../img/06_derivative-apps-fermat-statue.jpg" width="750" height="1000" loading="lazy" alt="トゥールーズのフェルマー像"></div>
-<figcaption>左はフェルマーの肖像版画、右はトゥールーズの旧理学部の建物にあるフェルマーの大理石像である。フェルマーは1630年代に、接線が水平になる点として極値を求める方法を考案した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Pierre_de_Fermat_par_Fran%C3%A7ois_de_Poilly.png">François de Poilly</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Fermat_Loubens.jpg">Klaus Barner</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>左はフェルマーの肖像版画、右はトゥールーズの旧理学部の建物にあるフェルマーの大理石像である。フェルマーは1630年代に、極大と極小を求める方法を考案した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Pierre_de_Fermat_par_Fran%C3%A7ois_de_Poilly.png">François de Poilly</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Fermat_Loubens.jpg">Klaus Barner</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <h2 id="s9">確認問題</h2>

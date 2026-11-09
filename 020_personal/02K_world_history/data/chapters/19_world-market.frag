@@ -311,7 +311,7 @@
 <p>太平天国を鎮圧した漢人官僚は、西洋の軍事技術の力を戦場で知った。1860年代から1890年代前半まで、曾国藩・李鴻章・左宗棠らが兵器工場・造船所・鉱山・海運会社を設けた運動を<strong>洋務運動</strong>と呼ぶ（出典25）。基本の考え方は、中国の伝統的な制度と文化を本体とし、西洋の技術を道具として用いる<strong>中体西用</strong>である（出典25）。企業の多くは官僚が監督し商人が出資する官督商弁の形をとった（出典25）。開平炭鉱の開設年は1877年とする資料（出典26）と1878年とする資料（出典25）がある。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/19_world-market-foochow.jpg" width="1000" height="731" loading="lazy" alt="福州の船政局の造船所">
-<figcaption>福州の船政局（造船所）をジョン・トムソンが撮影した写真。山に囲まれた川沿いに、工場の屋根と煙突、洋風の建物が並ぶ。洋務運動で設けられた造船所の1つであり、西洋の技術で軍艦を建造した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:FOOCHOW_ARSENAL.jpg">John Thomson</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>福州の船政局（造船所）をジョン・トムソンが撮影した写真。山に囲まれた敷地に、工場の屋根と煙突、洋風の建物が並ぶ。洋務運動で設けられた造船所の1つであり、フランスの技術者を招いて汽船と砲艦を建造した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:FOOCHOW_ARSENAL.jpg">John Thomson</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 <p>洋務運動の評価は分かれる。制度を変えずに技術だけを取り入れた表面的な近代化とみる見方がある（出典26）。他方で、西洋の知識を広め、その後の近代化の出発点になった適応的な改革とみる見方もある（出典25・26）。運動の限界は清仏戦争と日清戦争で示された。その後の変法運動は第20章で扱う。</p>
 

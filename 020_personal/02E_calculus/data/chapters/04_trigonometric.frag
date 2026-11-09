@@ -456,7 +456,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/04_trigonometric-ferris-wheel.jpg" width="800" height="592" loading="lazy" alt="1893年のシカゴ万国博覧会の観覧車">
-<figcaption>1893年のシカゴ万国博覧会に建てられた最初の観覧車である。一定の速さで回る観覧車では、ゴンドラの高さが時間の三角関数で表される。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ferris-wheel.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>1893年のシカゴ万国博覧会に建てられた、ジョージ・フェリスの設計による観覧車である。一定の速さで回る観覧車では、ゴンドラの高さが時間の三角関数で表される。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ferris-wheel.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 
 <figure class="tb-fig tb-photo">

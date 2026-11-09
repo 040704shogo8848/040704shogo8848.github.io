@@ -156,7 +156,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/04_atom-tritium.jpg" width="1200" height="799" loading="lazy" alt="暗い所で緑色に光る三重水素入りのキーホルダー">
-<figcaption>三重水素を封入したガラス管を付けたキーホルダーを、暗い所で長時間露光して撮影したものである。三重水素の原子核が出す放射線によって管が光り続ける。化学的性質は普通の水素とよく似ていても、原子核の安定性が異なることを示す例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Tritium-Glowring_-_320s.jpg">Cgommel</a>／CC BY-SA 2.0 de／Wikimedia Commons</span></figcaption>
+<figcaption>三重水素を封入したガラス管を付けたキーホルダーを、暗い所で長時間露光して撮影したものである。三重水素の原子核が出すβ線が管の内側の蛍光体に当たり、管が光り続ける。化学的性質は普通の水素とよく似ていても、原子核の安定性が異なることを示す例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Tritium-Glowring_-_320s.jpg">Cgommel</a>／CC BY-SA 2.0 de／Wikimedia Commons</span></figcaption>
 </figure>
 
 <p>同位体どうしは電子の数と配置が同じである。<strong class="hit">化学反応を担うのは電子なので同位体どうしの化学的性質はよく似ている</strong>。異なるのは質量と原子核の安定性である。天然の元素の多くは複数の同位体の混合物であり存在比は地球上で一定に近い。塩素は <sup>35</sup>Cl が約75.8%で <sup>37</sup>Cl が約24.2%である。この存在比から原子量を計算する方法は第9章で扱う。</p>

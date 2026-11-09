@@ -313,7 +313,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/09_environment-shrimp.jpg" width="640" height="624" loading="lazy" alt="宇宙から見たフォンセカ湾のえびの養殖池">
-<figcaption>宇宙から見た中央アメリカのフォンセカ湾である。湾の南東の端に見える角張った区画が、えびの養殖池である。湾の沿岸ではマングローブ林と水産資源が急速に失われているとされる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Fonseca_gulf.jpg">NASA</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>宇宙から見た中央アメリカのフォンセカ湾である。湾の南東の端に見える角張った区画が、えびの養殖池である。湾の沿岸ではマングローブ林と水産資源が急速に失われている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Fonseca_gulf.jpg">NASA</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 
 

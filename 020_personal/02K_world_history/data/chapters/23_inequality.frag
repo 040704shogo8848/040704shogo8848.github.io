@@ -9,7 +9,7 @@
 <p>格差の背景は植民地支配の時代にさかのぼる。宗主国は植民地に特定の農産物や鉱産物を大量に生産させた。少数の一次産品の生産と輸出に依存する経済を<strong>モノカルチャー経済</strong>と呼ぶ。ガーナのカカオ・ザンビアの銅・ブラジルのコーヒーがその例である。モノカルチャー経済の国は、輸出品の国際価格が下がると外貨の収入が直ちに減る。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/23_inequality-cocoa.jpg" width="1000" height="746" loading="lazy" alt="ガーナのカカオ豆の乾燥">
-<figcaption>ガーナ中部州の村で天日に干されるカカオ豆（2014年）。木枠の台の上に豆を広げて乾燥させた後、輸出される。カカオは独立後のガーナの主要な輸出品であり、国際価格の変動が国の外貨の収入を左右した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Cocoa_beans_drying_Mpenkro_2014_B002a.jpg">Francesco Veronesi (on Flickr)</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+<figcaption>ガーナ中部州の村で天日に干されるカカオ豆（2014年）。木枠の台の上に豆を広げて乾燥させている。カカオは独立後のガーナの主要な輸出品であり、国際価格の変動が国の外貨の収入を左右した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Cocoa_beans_drying_Mpenkro_2014_B002a.jpg">Francesco Veronesi (on Flickr)</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
 </figure>
 <p>途上国の不利を理論で示したのが、国連ラテンアメリカ経済委員会のプレビッシュとイギリスの経済学者シンガーである。両者は1949年から1950年にかけて、一次産品の価格は工業製品に比べて長期的に下がる傾向があると主張した（出典2）。輸出品1単位で輸入できる量を示す指標を<strong>交易条件</strong>と呼ぶ。輸出物価指数を輸入物価指数で割り、100を掛けて求める。<strong class="hit">交易条件が悪化すると、同じ量の一次産品を輸出しても買える工業製品は減る</strong>。この主張はプレビッシュ・シンガー命題と呼ばれる。</p>
 
@@ -123,7 +123,7 @@
 <p>最初の大きな試みは、1951年にイランのモサッデグ首相がイギリス系の石油会社を国有化したことである。この政権は1953年のクーデタで倒れ、国有化は形の上では維持されたが、採掘と販売は国際石油資本の合弁に委ねられた。産油国は個別の交渉の限界を経験し、共同で交渉する道を選んだ。1960年9月14日にバグダードでイラン・イラク・クウェート・サウジアラビア・ベネズエラの5か国が<strong>石油輸出国機構</strong>（OPEC）を結成した（出典12）。1960年8月に国際石油資本が中東の原油の公示価格を引き下げたことへの対抗が直接の契機である（出典37）。引き下げの日付と幅は資料によって異なり、本書では確定できず。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/23_inequality-abadan.jpg" width="1000" height="692" loading="lazy" alt="アバダーンでモサッデグを支持する労働者たち">
-<figcaption>イランの石油の拠点アバダーンで、モサッデグ首相への支持を示す労働者の集会（1952年1月の雑誌の写真）。群衆が旗と肖像を掲げている。石油の国有化は、労働者を含む広い支持を受けた政策であった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Workers_in_Abadan_expressing_their_support_for_Dr._Mosaddegh.jpg">Staff of the magazine</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>イランの石油の拠点アバダーンで、モサッデグ首相への支持を示す労働者の集会（1952年1月の雑誌の写真）。群衆が旗と肖像を掲げている。アバダーンにはイギリス系の石油会社が建設した世界有数の製油所があり、1951年の国有化の対象となった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Workers_in_Abadan_expressing_their_support_for_Dr._Mosaddegh.jpg">Staff of the magazine</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 <p>国連でも資源の主権が認められた。1962年12月14日の国連総会決議1803は<strong>天然資源に対する恒久主権</strong>を宣言した（出典13）。1968年にはアラブの産油国がアラブ石油輸出国機構（OAPEC）を結成した。1970年代初めには、アルジェリアとリビアとイラクが外国の石油会社の資産を国有化し、チリのアジェンデ政権は1971年に銅山を国有化した。</p>
 <figure class="tb-fig tb-photo">
@@ -213,7 +213,7 @@
 <p>ラテンアメリカの多くの国は、1930年代の世界恐慌の後から、工業製品の輸入を国内生産に置き換える<strong>輸入代替工業化</strong>を進めた。プレビッシュの議論はこの政策の理論的な根拠となった。国内の市場を関税で保護して工業を育てる方法である。ブラジルは1968年から1973年に高い成長を記録した。一方で、東アジアのNIEsは外国の資本と技術を導入して欧米の市場に輸出する<strong>輸出指向型の工業化</strong>へ転じた（第8章）。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/23_inequality-ulsan.jpg" width="1000" height="562" loading="lazy" alt="蔚山の現代重工業の造船所">
-<figcaption>韓国の蔚山にある現代重工業の造船所（2023年）。大型の門形クレーンが並び、海に面した広い敷地で船が建造される。造船は韓国の輸出指向型の工業化を代表する産業である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hyundai_Heavy_Industries_Ulsan_Shipyard_from_Jujeon_Beacon_Mound_-_2023-07-24.jpg">Wvdp</a>／CC0／Wikimedia Commons</span></figcaption>
+<figcaption>韓国の蔚山にある現代重工業の造船所（2023年）。大型の門形クレーンが並び、海に面した広い敷地で船が建造される。韓国の造船業は1970年代の重化学工業化の中で育成され、この造船所は1972年に建設が始まった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hyundai_Heavy_Industries_Ulsan_Shipyard_from_Jujeon_Beacon_Mound_-_2023-07-24.jpg">Wvdp</a>／CC0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <div class="tb-vs">
@@ -392,7 +392,7 @@
 <p>世界の極度の貧困率は1990年の43.4%から2022年の10.9%へ下がった（出典26）。東アジア・太平洋は67.0%から2.4%へ下がった（出典26）。一方でサハラ以南のアフリカは61.5%から45.6%への低下にとどまり、人口が増えたため貧困層の人数は3億2,062万人から5億6,072万人へ増えた（出典26）。<strong class="hit">世界の貧困は、東アジアの問題からアフリカの問題へと重心が移った</strong>。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/23_inequality-kibera.jpg" width="1000" height="599" loading="lazy" alt="ナイロビのキベラ地区">
-<figcaption>ケニアの首都ナイロビのキベラ地区。トタン屋根の小屋が密集し、舗装のない道に人々が行き交う。上下水道や舗装などの基盤が整わないまま、多くの人々が暮らす住宅地である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kibera_slum_Nairobi_Kenya_01.jpg">Ninaras</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>ケニアの首都ナイロビのキベラ地区。トタン屋根の小屋が密集し、舗装のない道に人々が行き交う。上下水道などの基盤が整わないまま、多くの人々が暮らす住宅地である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kibera_slum_Nairobi_Kenya_01.jpg">Ninaras</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <aside class="an an-biz"><b>経済で言えば</b>
@@ -421,7 +421,7 @@
 <p>2006年には、少額融資で貧困層の自立を支えたグラミン銀行とその創設者ユヌスがノーベル平和賞を受けた（出典31）。一方で、先進国のODAは近年減少している。DACの加盟国の2025年のODAの暫定値は1,743億ドルで、国民総所得の0.26%にあたり、前年から実質で23.1%減った（出典27）。援助の効果については、大規模な援助が貧困からの脱出に必要だとする見方と、援助は受け取る国の統治を弱め効果が乏しいとする見方がある。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/23_inequality-grameen.jpg" width="1000" height="750" loading="lazy" alt="バングラデシュのグラミン銀行の支店">
-<figcaption>バングラデシュ南西部のモングラにあるグラミン銀行の支店。看板にはベンガル文字で銀行の名称と支店の番号が書かれている。農村の各地に置かれた支店が、少額の融資を貧困層に届ける窓口となった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Grameen_Bank_Mongla_Bangladesh_-_panoramio.jpg">Hiroki Ogawa</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>バングラデシュ南西部のクルナ県ダコープ郡にあるグラミン銀行の支店。看板にはベンガル文字で銀行の名称と、ラウドブ支店という支店名と番号が書かれている。農村の各地に置かれた支店が、少額の融資を貧困層に届ける窓口となった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Grameen_Bank_Mongla_Bangladesh_-_panoramio.jpg">Hiroki Ogawa</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <ol class="tb-tl">

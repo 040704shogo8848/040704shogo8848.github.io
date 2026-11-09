@@ -44,7 +44,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/01_data-pearson-desk.jpg" width="1000" height="694" loading="lazy" alt="机に向かうカール・ピアソン">
-<figcaption>1910年、ユニバーシティ・カレッジ・ロンドンで机に向かうカール・ピアソンである。ヒストグラムという名称は、ピアソンが1890年代の講義で用いたのが始まりとされる。第3章で扱う相関係数の形を整えた人物でもある。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Karl_Pearson,_Biometrician,_at_his_desk,_1910_Wellcome_M0011713.jpg">Wellcome Collection</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>1910年、ユニバーシティ・カレッジ・ロンドンで机に向かうカール・ピアソンである。ヒストグラムという名称は、ピアソンが1891年の講義で用いたのが始まりである。第3章で扱う相関係数の形を整えた人物でもある。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Karl_Pearson,_Biometrician,_at_his_desk,_1910_Wellcome_M0011713.jpg">Wellcome Collection</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="通学時間20人のヒストグラムと3つの代表値">

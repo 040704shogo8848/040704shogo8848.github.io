@@ -83,7 +83,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/18_south-asia-rubber.jpg" width="750" height="1000" loading="lazy" alt="樹皮を切りつけたゴムの木">
-<figcaption>マレーシアのパンダンの村で、樹皮を斜めに切りつけたゴムの木。切り口から出る白い樹液（ラテックス）を集めて天然ゴムを作る。マレー半島では植民地期にゴムの農園が開かれた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Latex_collection_in_Kampung_Bukit_Jagung,_Pendang_20250918_143241.jpg">Wiki Farazi</a>／CC0／Wikimedia Commons</span></figcaption>
+<figcaption>マレーシアのケダ州ペンダンの村で、樹皮を斜めに切りつけたゴムの木。切り口から出る白い樹液（ラテックス）を集めて天然ゴムを作る。マレー半島では植民地期にゴムの農園が開かれた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Latex_collection_in_Kampung_Bukit_Jagung,_Pendang_20250918_143241.jpg">Wiki Farazi</a>／CC0／Wikimedia Commons</span></figcaption>
 </figure>
 <p>農園と鉱山の労働力として、中国南部からは中国系の人々が、南インドからはタミル系の人々が移り住んだ。移住先の国籍を得た中国系の人々を<strong>華人</strong>、中国籍のまま住む人々を<strong>華僑</strong>と呼ぶ。シンガポールの住民（国民と永住者）は中国系74.3%・マレー系13.5%・インド系9.0%である（2020年、出典20）。マレーシアではマレー系と先住民を<strong>ブミプトラ</strong>と総称する。国民の民族構成はブミプトラ69.4％・中国系23.2％・インド系6.7％・その他0.7％である（2020年、出典27）。独立後のマレーシアは経済力を持つ華人とブミプトラとの格差を縮めるため、ブミプトラを教育と雇用で優遇する政策をとった。</p>
 

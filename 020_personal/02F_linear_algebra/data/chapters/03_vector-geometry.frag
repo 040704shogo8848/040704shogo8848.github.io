@@ -279,7 +279,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/03_ships-arpa.jpg" width="1000" height="750" loading="lazy" alt="ARPAレーダーを備えた船橋">
-<figcaption>ばら積み貨物船の船橋。中央の円形の画面が自動衝突予防援助装置 ARPA を備えたレーダーである。ARPA は他船の位置の変化から針路と速度を求め、2隻が最も接近する距離と時刻を表示する。本文の2点間の距離の最小値を求める計算を装置が自動で行う。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bridge_of_a_bulk_carrier_with_ARPA_radar_system.jpg">作者名の記載なし</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>ばら積み貨物船の船橋。円形の表示がある画面が、自動衝突予防援助装置 ARPA を備えたレーダーである。ARPA は他船の位置の変化から針路と速度を求め、2隻が最も接近する距離と時刻を表示する。本文の2点間の距離の最小値を求める計算を装置が自動で行う。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bridge_of_a_bulk_carrier_with_ARPA_radar_system.jpg">作者名の記載なし</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 
 <aside class="an an-lv"><b>恋愛で言えば</b>

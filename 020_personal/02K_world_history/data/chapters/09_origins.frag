@@ -240,7 +240,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/09_ori-hammurabi.jpg" width="607" height="1000" loading="lazy" alt="ルーヴル美術館のハンムラビ法典碑" style="max-height:620px;object-fit:contain">
-<figcaption>ルーヴル美術館が所蔵するハンムラビ法典の石碑。上部には王が神から王権を授かる場面の浮き彫りがあり、その下に条文が楔形文字で刻まれている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:P1050763_Louvre_code_Hammurabi_face_rwk.JPG">Mbzt</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>ルーヴル美術館が所蔵するハンムラビ法典の石碑。上部には王が太陽神シャマシュの前に立つ場面の浮き彫りがあり、その下に条文が楔形文字で刻まれている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:P1050763_Louvre_code_Hammurabi_face_rwk.JPG">Mbzt</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 <div class="ex"><div class="ex-h">例題 4</div>
 <p>次の資料はハンムラビ法典の条文を要約したものである。資料から読み取れることとして最も適当なものを考えよ。<br>資料　第196条 もし人が自由人の目をつぶしたならば、その者の目をつぶす。第198条 もし人が半自由民の目をつぶしたならば、1マナを支払う。第199条 もし人が他人の奴隷の目をつぶしたならば、その奴隷の値の半分を支払う（出典32）。</p>
@@ -322,7 +322,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/09_ori-yangshao.jpg" width="1000" height="666" loading="lazy" alt="黒い格子模様を描いた仰韶文化の彩陶の鉢">
-<figcaption>河南省の鄭州市博物館が所蔵する仰韶文化の彩陶の鉢。赤い地に黒い顔料で格子の模様を描いている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Yangshao_Painted_Pottery_Bowl.jpg">Gary Todd</a>／CC0／Wikimedia Commons</span></figcaption>
+<figcaption>河南省の鄭州市博物館が所蔵する仰韶文化の彩陶の鉢。赤い器の外側に白い帯を巡らせ、その上に黒い顔料で格子の模様を描いている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Yangshao_Painted_Pottery_Bowl.jpg">Gary Todd</a>／CC0／Wikimedia Commons</span></figcaption>
 </figure>
 <p>長江流域は温暖で湿潤であり、稲作が中心である。杭州湾の南岸にある浙江省の<strong>河姆渡遺跡</strong>は前5500〜前3300年頃の文化で、稲作と高床式の住居の跡が見つかった（出典22）。同じ地域の<strong>良渚文化</strong>は前3300〜前2300年頃に栄えた（出典23）。良渚の都市は面積約290haの城壁をもち、北西の山麓には洪水対策や灌漑のための水利施設とされるダムと堤防の遺構がある（出典23・出典38）。精巧な玉器も知られる。良渚古城遺跡は2019年に世界遺産に登録された（出典23）。</p>
 

@@ -71,7 +71,7 @@
 <p>国際連盟規約は戦争を全面的には禁止しなかった。第12条は、紛争を仲裁や理事会の審査に付し、判断が出てから3か月は戦争に訴えないことを加盟国に義務づけた（出典2）。手続を踏めば戦争は違法にならない余地が残った。第16条はこの手続に反して戦争に訴えた国を全加盟国に対する戦争行為をした国とみなし、通商と金融の関係の断絶を義務づけた（出典2）。軍事的な措置は理事会が各国に「勧告」するにとどまった。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/22_peace-palaiswilson.jpg" width="1000" height="692" loading="lazy" alt="ジュネーヴのパレ・ウィルソン">
-<figcaption>ジュネーヴのレマン湖畔にあるパレ・ウィルソン。国際連盟の最初の本部が置かれた建物であり、連盟の創設を唱えたウィルソン大統領の名を外壁に掲げる。現在は国連人権高等弁務官事務所が入り、屋上には国連の旗が掲げられている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:UN-Palais-WoodrowWilson_Geneva_15112020.jpg">RomanDeckert</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>ジュネーヴのレマン湖畔にあるパレ・ウィルソン。国際連盟の最初の常設の本部が置かれた建物であり、連盟の創設を唱えたウィルソン大統領の名を外壁に掲げる。現在は国連人権高等弁務官事務所が入り、屋上には国連の旗が掲げられている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:UN-Palais-WoodrowWilson_Geneva_15112020.jpg">RomanDeckert</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 <p>イタリアのエチオピア侵攻はこの仕組みの限界を示した。制裁に賛成した国は50か国とする資料（出典32）と51か国とする資料（出典5）がある。石油は制裁の対象から外された（出典5・32）。連盟に加わっていないアメリカからの物資の調達も止められなかった。エチオピアの併合後の1936年7月に制裁は撤廃された（出典5）。</p>
 <figure class="tb-fig tb-photo">
@@ -171,7 +171,7 @@
 <p>朝鮮戦争の国連軍は、ソ連が安保理を欠席していたために成立した例外である（第7章）。ソ連は1950年8月に安保理へ復帰した（出典8）。西側諸国は安保理の停止に備えて総会の権限を使う道を開いた。1950年11月3日に総会は<strong>平和のための結集決議</strong>を賛成52・反対5・棄権2で採択した（出典8）。常任理事国の不一致で安保理が責任を果たせない時は、総会が緊急特別会期を開いて集団的措置を勧告できるとする決議である。最初に適用されたのはソ連に対してではなかった。1956年のスエズ戦争で英仏が拒否権を行使すると、総会が緊急特別会期を開き、11月7日に第1次国連緊急軍（UNEF）の設置を決めた（出典8）。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/22_peace-unef.jpg" width="677" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="シナイ半島の国連緊急軍のユーゴスラヴィア兵">
-<figcaption>シナイ半島に派遣された第1次国連緊急軍のユーゴスラヴィアの兵士（1957年1月）。ヘルメットに国連の文字を付けている。武装した部隊が停戦の監視にあたる形の平和維持活動は、この部隊から始まった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:UNEF_Yugoslav_soldiers_15-01-1957.jpg">Government Press Office</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>シナイ半島に派遣された第1次国連緊急軍のユーゴスラヴィアの兵士（1957年1月）。ヘルメットに国連の記章を付けている。武装した部隊が停戦の監視にあたる形の平和維持活動は、この部隊から始まった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:UNEF_Yugoslav_soldiers_15-01-1957.jpg">Government Press Office</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 
 <h3>平和維持活動という発明</h3>

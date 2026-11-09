@@ -112,7 +112,7 @@
 
 <figure class="tb-fig tb-photo">
 <div class="tb-ph2"><img src="../img/02_ind-rocket.jpg" width="750" height="1000" loading="lazy" alt="科学博物館に展示されたロケット号" style="object-position:50% 18%"><img src="../img/02_ind-lm-railway.jpg" width="1000" height="815" loading="lazy" alt="切り通しを走る蒸気機関車を描いた1831年の版画"></div>
-<figcaption>左はロンドンの科学博物館に展示されているスティーヴンソンのロケット号である。右は1831年に出版されたリヴァプール・マンチェスター鉄道の彩色版画である。切り通しの線路を蒸気機関車が走り、沿線に見物の人々が集まっている。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Stephenson%27s_Rocket_in_the_Science_Museum_(London)_01.jpg">Jonathan Cardy</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Coloured_View_on_the_Liverpool_and_Manchester_Railway,_1831.jpg">S.G. Hughes, H. Pyall（T. Bury の原画）</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>左はロンドンの科学博物館に展示されているスティーヴンソンのロケット号である。右は1831年に出版されたリヴァプール・マンチェスター鉄道の彩色版画である。石造りの建物が並ぶ線路の上に蒸気機関車が描かれ、線路の脇に多くの人々が集まっている。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Stephenson%27s_Rocket_in_the_Science_Museum_(London)_01.jpg">Jonathan Cardy</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Coloured_View_on_the_Liverpool_and_Manchester_Railway,_1831.jpg">S.G. Hughes, H. Pyall（T. Bury の原画）</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 
 <h3>自由貿易と世界市場の形成</h3>

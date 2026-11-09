@@ -117,7 +117,7 @@ thesis: 都市や地域の現在の姿は自然条件ではなく、初期の投
 
 <figure class="tb-fig tb-photo">
 <img src="../img/ch01_roppongi-hills.jpg" width="600" height="1000" loading="lazy" alt="東京タワーから見た六本木ヒルズ森タワー" style="max-height:640px;width:auto;margin:0 auto">
-<figcaption>東京タワーから見た六本木ヒルズ森タワー。この街区のエネルギーセンターはガスタービンと蒸気タービンを備え、開業直後の2003年5月から都市ガスによる熱電併給を続けている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Roppongi_Hills_Mori_Tower_from_Tokyo_Tower_Day_cropped.jpg">Chris 73</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>東京タワーから見た六本木ヒルズ森タワー。この街区のエネルギーセンターは、開業直後の2003年5月から都市ガスによる熱電併給を続けている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Roppongi_Hills_Mori_Tower_from_Tokyo_Tower_Day_cropped.jpg">Chris 73</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 

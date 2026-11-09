@@ -140,7 +140,7 @@ EU域内の生産構成は既にこの方向に動いている。2024年のEU粗
 
 <figure class="tb-fig tb-photo">
 <img src="../img/ch03_misawa.jpg" width="1000" height="750" loading="lazy" alt="三沢基地の円形アンテナ">
-<figcaption>三沢基地の姉沼通信所にあった円形アンテナAN/FLR-9。巨大な円形の形から「象の檻」と呼ばれた。無線信号の到来方向を探知するための設備である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Misawa_AN_FLR-9.jpg">Naritama (NARITA Masahiro)</a>／CC BY 2.1 jp／Wikimedia Commons</span></figcaption>
+<figcaption>三沢基地の姉沼通信所にあった円形アンテナAN/FLR-9。「象の檻」と呼ばれた。無線信号の到来方向を探知するための設備である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Misawa_AN_FLR-9.jpg">Naritama (NARITA Masahiro)</a>／CC BY 2.1 jp／Wikimedia Commons</span></figcaption>
 </figure>
 
 国内の秘密指定の統計は、この運用の輪郭を外から測る数少ない手掛かりになる。2026年6月の国会報告によれば、2025年末時点の特定秘密は854件で、指定権限を持つ20機関のうち13機関が指定している。内訳は防衛省493件、内閣官房132件、警察庁64件、外務省46件である。2024年末は788件で、2025年中に66件が加わり、解除と満了はなかった。適性評価は2025年中に26機関が64,939件を実施し、うち5件について漏えいのおそれがないとは認められなかった。前年の35,839件から増えたのは、2015年に一斉実施された評価の5年ごとの更新期が来たためと同報告は説明している。[出典](https://www.cas.go.jp/jp/tokuteihimitsu/pdf/r08_0626_houkoku.pdf)。件数は文書の束の単位であって情報量ではない。

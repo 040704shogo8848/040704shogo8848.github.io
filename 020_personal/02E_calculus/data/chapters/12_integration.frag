@@ -79,7 +79,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/12_integration-amsler.jpg" width="666" height="1000" loading="lazy" alt="アムスラーの積分器">
-<figcaption>アムスラーの積分器である。図形の輪郭を針でなぞると、目盛り車の回転から面積などの積分の値が得られる。計算機が普及する前に積分を機械で求めた道具である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:CHM_Artifacts_Amsler_Integrator_Model_4282_(3126342999).jpg">Marcin Wichary</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+<figcaption>アムスラーの積分器である。図形の輪郭をなぞると、複数の目盛り車の回転から面積と1次・2次のモーメントが得られる。積分の値を機械で求める道具である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:CHM_Artifacts_Amsler_Integrator_Model_4282_(3126342999).jpg">Marcin Wichary</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <h2 id="s2">置換積分法</h2>

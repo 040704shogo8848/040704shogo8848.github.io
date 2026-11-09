@@ -8,7 +8,7 @@
 <p>元末の紅巾の乱の中から台頭した朱元璋（洪武帝）が、1368年に南京を都として<strong>明</strong>を建てた（出典2）。洪武帝は農村の統治を立て直すため、1381年に戸籍と租税台帳を兼ねる賦役黄冊を作成させた（出典4）。これにもとづき、約110戸を1里に編成して徴税と治安を担わせる仕組みを<strong>里甲制</strong>と呼ぶ（出典4）。兵士を出す家を軍戸として固定する<strong>衛所制</strong>も整えた（出典2）。</p>
 <figure class="tb-fig tb-photo">
 <img src="../img/15_maritime-hongwu.jpg" width="614" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="洪武帝の坐像">
-<figcaption>明を建てた朱元璋（洪武帝）の肖像画。竜の文様の衣を着て玉座に座る皇帝の正装の姿である。洪武帝は賦役黄冊と里甲制で農村を把握し、海禁で民間の対外交易を禁じた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:A_Seated_Portrait_of_Ming_Emperor_Taizu.jpg">作者不明</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+<figcaption>明を建てた朱元璋（洪武帝）の肖像画。竜の文様を付けた衣を着て、玉座に座る姿で描かれている。洪武帝は賦役黄冊と里甲制で農村を把握し、海禁で民間の対外交易を禁じた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:A_Seated_Portrait_of_Ming_Emperor_Taizu.jpg">作者不明</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
 </figure>
 <p>対外関係では、洪武帝は1371年に民間人の海外渡航を禁じた（出典3）。民間人の海外渡航と海外交易を禁じる政策を<strong>海禁</strong>と呼ぶ。直接の目的は沿岸を襲う倭寇の取り締まりであり、倭寇と沿岸住民の結び付きを断つ狙いがあった（出典3）。</p>
 <p>海禁と組で運用されたのが朝貢である。<strong>朝貢</strong>とは、周辺国の君主が中国皇帝に使節と貢ぎ物を送り、皇帝がそれ以上の価値の品を返礼として与える儀礼である。皇帝が周辺国の君主に王の称号を与えて君臣関係を結ぶことを<strong>冊封</strong>と呼ぶ。<strong class="hit">明は民間の交易を禁じ、海外との交易を朝貢に限った</strong>。</p>

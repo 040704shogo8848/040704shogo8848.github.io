@@ -274,7 +274,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/01_asia-imari.jpg" width="705" height="1000" loading="lazy" alt="ヨーロッパの銀の蓋を付けた伊万里焼の水差し" style="max-height:620px;object-fit:contain">
-<figcaption>輸出向けに作られた伊万里焼の水差し。17世紀の作で、ヨーロッパで1671年の年記のある銀の蓋が付けられた。日本の磁器がオランダ東インド会社を通じてヨーロッパへ渡ったことを示す実物である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ewer_for_export_with_cloud_design,_Imari_ware,_Kakiemon_type,_Edo_period,_1600s_AD,_porcelain,_overglaze_enamel,_European_silver_lid_dated_1671_-_Tokyo_National_Museum_-_Ueno_Park,_Tokyo,_Japan_-_DSC08947.jpg">Daderot</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>輸出向けに作られた伊万里焼の水差し。17世紀の作で、ヨーロッパで1671年の年記のある銀の蓋が付けられた。日本の磁器がヨーロッパへ渡ったことを示す実物である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ewer_for_export_with_cloud_design,_Imari_ware,_Kakiemon_type,_Edo_period,_1600s_AD,_porcelain,_overglaze_enamel,_European_silver_lid_dated_1671_-_Tokyo_National_Museum_-_Ueno_Park,_Tokyo,_Japan_-_DSC08947.jpg">Daderot</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 
 <aside class="an an-lv"><b>恋愛で言えば</b>
@@ -334,7 +334,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/01_asia-plassey.jpg" width="1000" height="779" loading="lazy" alt="プラッシーの戦いの後に会見するクライヴとミール・ジャアファル">
-<figcaption>フランシス・ヘイマンの油彩画「プラッシーの戦いの後のクライヴとミール・ジャアファル」。赤い軍服の人物がクライヴで、ベンガルの有力者ミール・ジャアファルを迎えている。東インド会社が商業から領土の支配へ進んだ転換点を、イギリスの画家が描いたものである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Robert_Clive_and_Mir_Jafar_after_the_Battle_of_Plassey,_1757_by_Francis_Hayman.jpg">Francis Hayman</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>フランシス・ヘイマンの油彩画「プラッシーの戦いの後のクライヴとミール・ジャアファル」。中央で手を差し伸べる赤い軍服の人物がクライヴで、ベンガルの有力者ミール・ジャアファルを迎えている。東インド会社が商業から領土の支配へ進んだ転換点を、イギリスの画家が描いたものである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Robert_Clive_and_Mir_Jafar_after_the_Battle_of_Plassey,_1757_by_Francis_Hayman.jpg">Francis Hayman</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 
 <div class="ex"><div class="ex-h">例題 5</div>

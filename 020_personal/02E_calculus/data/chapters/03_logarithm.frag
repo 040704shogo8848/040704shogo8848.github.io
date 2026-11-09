@@ -330,11 +330,11 @@
 </aside>
 
 <h2 id="s7">現実世界 対数表と地震の規模</h2>
-<p>対数はスコットランドのジョン・ネイピアが1614年に発表した。掛け算を足し算に置き換えて天文学の計算を短くするためである。続いてイングランドのヘンリー・ブリッグズが10を底とする常用対数の表を作った。1617年に1から1000までの表を刊行し1624年の『対数算術』で1から20000と90000から100000までの値を小数14桁で示した。計算機が普及するまでの約350年間は対数表と計算尺が科学技術の計算を支えた。</p>
+<p>対数はスコットランドのジョン・ネイピアが1614年に発表した。掛け算と割り算を足し算と引き算に置き換えて計算の手間を減らすためである。続いてイングランドのヘンリー・ブリッグズが10を底とする常用対数の表を作った。1617年に1から1000までの表を刊行し1624年の『対数算術』で1から20000と90000から100000までの値を小数14桁で示した。計算機が普及するまでの約350年間は対数表と計算尺が科学技術の計算を支えた。</p>
 
 <figure class="tb-fig tb-photo">
 <div class="tb-ph2"><img src="../img/03_logarithm-napier.jpg" width="673" height="1000" loading="lazy" alt="ジョン・ネイピアの肖像版画"><img src="../img/03_logarithm-mirifici.jpg" width="720" height="1000" loading="lazy" alt="『驚くべき対数の規則の記述』の扉"></div>
-<figcaption>左はジョン・ネイピアの肖像版画、右は1614年に刊行した『驚くべき対数の規則の記述』の扉である。ネイピアは掛け算を足し算に置き換え、天文学の計算を短くするために対数を考案した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:John_Napier._Stipple_engraving._Wellcome_V0004221.jpg">Wellcome Collection</a>／CC BY 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Mirifici_Logarithmorum_canonis_Descriptio.jpg">John Napier</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>左はジョン・ネイピアの肖像版画、右は1614年に刊行した『驚くべき対数の規則の記述』の扉である。ネイピアは掛け算と割り算を足し算と引き算に置き換え、計算の手間を減らすために対数を考案した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:John_Napier._Stipple_engraving._Wellcome_V0004221.jpg">Wellcome Collection</a>／CC BY 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Mirifici_Logarithmorum_canonis_Descriptio.jpg">John Napier</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 <p>対数表による掛け算の手順は次のとおりである。2つの数の常用対数を表から求めて足す。和を表で逆に引くと積が得られる。7桁の数どうしの掛け算が表を3回引く作業と足し算1回に置き換わる。計算尺は目盛を常用対数の長さで刻んだ定規で2本の定規の長さを足すことで掛け算を行う。どちらも積の対数は対数の和という性質だけを使っている。</p>
 

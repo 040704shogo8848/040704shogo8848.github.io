@@ -212,7 +212,7 @@
 
 <figure class="tb-fig tb-photo">
 <div class="tb-ph2"><img src="../img/05_combination-zhu-shijie.jpg" width="643" height="1000" loading="lazy" alt="朱世傑の書物の二項係数の三角形"><img src="../img/05_combination-pascal-triangle.jpg" width="525" height="710" loading="lazy" alt="パスカルの算術三角形のラテン語版"></div>
-<figcaption>左は1303年に朱世傑の『四元玉鑑』に載った二項係数の三角形で、中国では賈憲や楊輝の名で呼ばれた。右はパスカルの算術三角形の論文のラテン語版で、知られている唯一の部とされる。どちらも段ごとに二項係数が並ぶ。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Yanghui_triangle.gif">朱世傑『四元玉鑑』</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:FR-631136102_Em_0011_f_106_Triangulus_Arithmeticus_Definitiones.png">Clermont Auvergne Métropole</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>左は1303年に朱世傑の『四元玉鑑』に載った二項係数の三角形で、中国では賈憲や楊輝の名で呼ばれた。右はパスカルの算術三角形の論文のラテン語版で、知られている唯一の部である。どちらも段ごとに二項係数が並ぶ。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Yanghui_triangle.gif">朱世傑『四元玉鑑』</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:FR-631136102_Em_0011_f_106_Triangulus_Arithmeticus_Definitiones.png">Clermont Auvergne Métropole</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <figure class="tb-fig">

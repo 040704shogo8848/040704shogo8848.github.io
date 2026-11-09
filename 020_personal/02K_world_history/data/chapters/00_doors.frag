@@ -266,7 +266,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/00_doors-dejima.jpg" width="1000" height="378" loading="lazy" alt="長崎港と出島を描いた屏風">
-<figcaption>川原慶賀が1836年頃に描いた長崎港の屏風。手前の扇形の人工島が出島で、湾内にはオランダの帆船が停泊している。四つの口のうち、長崎の窓口を同時代の画家が描いた資料である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:View_of_Dejima_in_Nagasaki_Bay_Folding_Screen_by_Kawahara_Keiga_c1836.jpg">Kawahara Keiga</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>川原慶賀が1836年頃に描いた長崎港の屏風。手前の扇形の人工島が出島で、湾内には帆船が停泊している。四つの口のうち、長崎の窓口を同時代の画家が描いた資料である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:View_of_Dejima_in_Nagasaki_Bay_Folding_Screen_by_Kawahara_Keiga_c1836.jpg">Kawahara Keiga</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <figure class="tb-fig">

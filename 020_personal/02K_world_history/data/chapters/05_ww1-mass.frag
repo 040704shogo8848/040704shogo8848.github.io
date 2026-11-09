@@ -200,7 +200,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/05_ww1-washington.jpg" width="1000" height="802" loading="lazy" alt="ワシントン会議の日本全権とアメリカの閣僚">
-<figcaption>ワシントン会議に出席した日本全権の加藤友三郎海軍大臣と徳川家達。アメリカのデンビー海軍長官と、会議の議長を務めたヒューズ国務長官とともに写っている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Japanese_Delegates_to_Arms_Conference_-_Denby,_Admiral_Kato,_Prince_Tokugawa,and_Hughes.jpg">Harris &amp; Ewing Collection</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>ワシントン会議に出席した日本全権の加藤友三郎海軍大臣と徳川家達。アメリカのデンビー海軍長官と、アメリカの代表団を率いたヒューズ国務長官とともに写っている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Japanese_Delegates_to_Arms_Conference_-_Denby,_Admiral_Kato,_Prince_Tokugawa,and_Hughes.jpg">Harris &amp; Ewing Collection</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 
 <aside class="an an-lv"><b>恋愛で言えば</b>

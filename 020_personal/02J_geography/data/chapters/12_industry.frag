@@ -61,7 +61,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/12_industry-buko.jpg" width="1000" height="750" loading="lazy" alt="石灰石の採掘で階段状に削られた武甲山">
-<figcaption>埼玉県秩父市の武甲山を北北西から見た姿。北斜面は石灰石の採掘で階段状に削られ、白い岩肌が露出している。採掘した石灰石はベルトコンベアで山麓の工場へ運ばれ、セメントに加工される。原料の産地に工場を置く原料指向の例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bukosan01.JPG">Mass Ave 975</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>埼玉県秩父市の武甲山を北北西から見た姿。北斜面は石灰石の採掘で階段状に削られ、白い岩肌が露出している。採掘した石灰石はセメントの原料になる。原料の産地に工場を置く原料指向の例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bukosan01.JPG">Mass Ave 975</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <aside class="an an-biz"><b>スタートアップで言えば</b>

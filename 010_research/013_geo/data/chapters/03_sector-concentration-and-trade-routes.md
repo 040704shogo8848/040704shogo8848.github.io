@@ -16,7 +16,7 @@ thesis: 単一産業への依存も単一航路への依存も同じ脆弱性で
 
 <figure class="tb-fig tb-photo">
 <img src="../img/ch03_korea-exchange.jpg" width="1000" height="750" loading="lazy" alt="釜山の韓国取引所の本社ビル">
-<figcaption>釜山にある韓国取引所（KRX）の本社ビル。韓国株の指数に連動する ETF では、サムスン電子と SK hynix の2社だけで組入の43.59パーセントを占め、指数の約半分が DRAM と NAND の価格に連動している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Korea_exchange.JPG">hyolee2</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+<figcaption>釜山市東区にある韓国取引所（KRX）のビル。韓国株の指数に連動する ETF では、サムスン電子と SK hynix の2社だけで組入の43.59パーセントを占め、指数の約半分が DRAM と NAND の価格に連動している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Korea_exchange.JPG">hyolee2</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 
@@ -98,7 +98,7 @@ thesis: 単一産業への依存も単一航路への依存も同じ脆弱性で
 
 <figure class="tb-fig tb-photo">
 <img src="../img/ch03_maersk-pasir-panjang.jpg" width="1000" height="750" loading="lazy" alt="パシルパンジャン・ターミナルに着岸したマースクのコンテナ船">
-<figcaption>シンガポールのパシルパンジャン・コンテナターミナルに着岸したマースクのコンテナ船。2024年は喜望峰迂回によるスケジュールの乱れで船の到着が集中し、遅延した船の待ち時間は2日から3日に延びた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Maersk_Huacho_container_ship_at_Pasir_Panjang_Container_Terminal.jpg">Wzhkevin</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>シンガポールのパシルパンジャン・コンテナターミナルに着岸したマースクのコンテナ船。2024年は喜望峰迂回によるスケジュールの乱れで船の到着が集中し、遅延した船の待ち時間は2日から3日だった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Maersk_Huacho_container_ship_at_Pasir_Panjang_Container_Terminal.jpg">Wzhkevin</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 

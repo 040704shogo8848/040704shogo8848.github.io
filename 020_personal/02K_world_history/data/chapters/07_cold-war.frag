@@ -366,7 +366,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/07_cw-shinkansen.jpg" width="1000" height="750" loading="lazy" alt="鉄道博物館に展示された0系新幹線">
-<figcaption>埼玉県の鉄道博物館に展示されている0系新幹線。1964年の東海道新幹線の開業時に走った形式で、展示室は開業当時の駅の様子を再現している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Shinkansen_0_type-21_2_at_the_Railway_Museum.jpg">掬茶</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>埼玉県の鉄道博物館に展示されている0系新幹線。1964年の東海道新幹線の開業時に走った形式で、展示室は開業当時の雰囲気を再現している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Shinkansen_0_type-21_2_at_the_Railway_Museum.jpg">掬茶</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 <figure class="tb-fig">

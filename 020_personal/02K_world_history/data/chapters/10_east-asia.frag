@@ -116,14 +116,14 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/10_ea-kultegin.jpg" width="750" height="1000" loading="lazy" alt="モンゴルのオルホン川流域に立つキュル・テギン碑" style="max-height:620px;object-fit:contain">
-<figcaption>モンゴルのオルホン川流域に立つ、突厥の王族キュル・テギンの碑。突厥文字と漢文が刻まれ、遊牧国家が自らの文字で残した記録として知られる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kultegin_monument_Mongolia.JPG">Betta27</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>モンゴルのオルホン川流域に立つ、突厥の王族キュル・テギンの碑。突厥文字と漢文が刻まれ、突厥文字で記した部分は古代トルコ語の現存する最古の記録の1つである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kultegin_monument_Mongolia.JPG">Betta27</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 <p>744年に突厥にかわって<strong>ウイグル</strong>がモンゴル高原を支配した。ウイグルは755年に始まった安史の乱で唐に援軍を送り、757年に長安と洛陽の奪回に加わった（出典6）。その後、ウイグルは馬を唐に送り、唐は代価として大量の絹を支払った。これを<strong>絹馬交易</strong>と呼ぶ。ウイグルは8世紀後半にマニ教を受け入れた。840年にキルギスの攻撃を受けて国家は崩壊し、一部はタリム盆地へ移った（出典6）。</p>
 <p>オアシス都市を経由する東西の交易路を<strong>オアシスの道</strong>と呼び、草原を通る道を<strong>草原の道</strong>と呼ぶ。サマルカンドを本拠とするイラン系の<strong>ソグド人</strong>は交易を担い、突厥やウイグルの宮廷で使節や書記も務めた。</p>
 
 <figure class="tb-fig tb-photo">
 <img src="../img/10_ea-afrasiab.jpg" width="1000" height="666" loading="lazy" alt="白い鳥の列と人物を描いたアフラシアブの壁画">
-<figcaption>サマルカンドのアフラシアブ遺跡の貴族の邸宅で見つかった壁画の一部。サマルカンドの王ヴァルフマンが描かせたもので、各地から訪れた使節の行列が描かれている。ソグド人の都市が東西交易の結節点であったことを示す資料である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Afrasiab_-_details_from_The_Ambassadors%27_Painting_3_-_great_procession.JPG">anonymous</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>サマルカンドのアフラシアブ遺跡の貴族の邸宅で見つかった壁画の一部。サマルカンドの王ヴァルフマンが描かせた壁画であり、この部分には鵞鳥の列とラクダに乗る人物を含む行列が描かれている。同じ広間の西の壁には各地から訪れた使節が描かれ、ソグド人の都市が東西交易の結節点であったことを示す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Afrasiab_-_details_from_The_Ambassadors%27_Painting_3_-_great_procession.JPG">anonymous</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="遊牧国家と農耕王朝の関係">
@@ -208,7 +208,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/10_ea-longmen.jpg" width="1000" height="666" loading="lazy" alt="竜門石窟の奉先寺洞の大仏と諸像">
-<figcaption>洛陽の南の竜門石窟にある奉先寺洞の大仏（盧舎那仏）と左右の諸像。唐の高宗の時代に造られた。竜門石窟の造営は北魏に始まり、唐の時代まで続いた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ancient_Buddhist_Grottoes_at_Longmen-_Fengxian_Temple_Grand_Buddha_Niche_with_Colossal_Statue_of_Vairocana_Buddha.jpg">Gary Todd</a>／CC0／Wikimedia Commons</span></figcaption>
+<figcaption>洛陽の南の竜門石窟にある奉先寺洞の大仏（盧舎那仏）と左右の諸像。唐の高宗の時代に造られた。竜門石窟の造営は北魏に始まり、唐の時代に最も盛んになった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ancient_Buddhist_Grottoes_at_Longmen-_Fengxian_Temple_Grand_Buddha_Niche_with_Colossal_Statue_of_Vairocana_Buddha.jpg">Gary Todd</a>／CC0／Wikimedia Commons</span></figcaption>
 </figure>
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">府兵制から募兵制への転換は育成型の球団が年俸で補強する球団に変わる転換である</p>
@@ -314,7 +314,7 @@
 
 <figure class="tb-fig tb-photo">
 <div class="tb-ph2"><img src="../img/10_ea-sancai.jpg" width="666" height="1000" loading="lazy" alt="ラクダに乗る胡人をかたどった唐三彩" style="object-position:50% 18%"><img src="../img/10_ea-nestorian.jpg" width="600" height="450" loading="lazy" alt="大秦景教流行中国碑の碑額"></div>
-<figcaption>左は上海博物館が所蔵する唐三彩で、ラクダに乗る胡人をかたどっている。右は西安碑林博物館の大秦景教流行中国碑の上部で、781年に長安に建てられた景教の碑である。いずれも唐の都に西方の人々と宗教が集まったことを示す。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Tang_Sancai_Camel_%26_Rider.jpg">Gary Lee Todd, Ph.D.</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:Beilin_xian_1.jpg">User: (WT-shared) Moonriver at wts</a>／Public domain／Wikimedia Commons</span></figcaption>
+<figcaption>左は上海博物館が所蔵する唐三彩で、とがった帽子をかぶり、ひげをたくわえた人物がラクダに乗る姿をかたどっている。右は西安碑林博物館の大秦景教流行中国碑の上部で、781年に建てられた景教の碑である。異国風の騎手の像と景教の碑は、唐の都に西方の人々と宗教が集まったことを示す。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Tang_Sancai_Camel_%26_Rider.jpg">Gary Lee Todd, Ph.D.</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:Beilin_xian_1.jpg">User: (WT-shared) Moonriver at wts</a>／Public domain／Wikimedia Commons</span></figcaption>
 </figure>
 <div class="ex"><div class="ex-h">例題 6</div>
 <p>次の資料は『隋書』に記された607年の倭の国書の冒頭である。「日出づる処の天子、書を日没する処の天子に致す。恙無きや」。この資料から読み取れる倭の対外姿勢として最も適当なものを述べよ。</p>
@@ -327,7 +327,7 @@
 
 <figure class="tb-fig tb-photo">
 <img src="../img/10_ea-goose-pagoda.jpg" width="750" height="1000" loading="lazy" alt="西安の大雁塔" style="max-height:620px;object-fit:contain">
-<figcaption>西安の大雁塔。シルクロードの世界遺産の構成資産の1つで、唐の時代に建てられたれんが造りの塔である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Giant_Wild_Goose_Pagoda,_Xi%27an.jpg">John Hill</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+<figcaption>西安の大雁塔。シルクロードの世界遺産の構成資産の1つで、唐の時代の652年に創建されたれんが造りの塔である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Giant_Wild_Goose_Pagoda,_Xi%27an.jpg">John Hill</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
 </figure>
 
 

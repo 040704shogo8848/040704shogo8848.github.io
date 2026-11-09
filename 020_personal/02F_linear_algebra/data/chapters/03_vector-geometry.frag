@@ -116,6 +116,11 @@
 <p>点 \( A(\vec{a}) \) を通り \( \vec{0} \) でないベクトル \( \vec{d} \) に平行な直線を考える。点 \( P(\vec{p}) \) がこの直線上にあるのは \( \overrightarrow{AP} \) が \( \vec{d} \) の実数倍になる時である。</p>
 \[ \vec{p}=\vec{a}+t\vec{d}\qquad(t\ \text{は実数}) \]
 <p>これを直線の<strong>ベクトル方程式</strong>と呼ぶ。\( \vec{d} \) を<strong>方向ベクトル</strong>と呼び \( t \) を<strong>媒介変数</strong>と呼ぶ。\( t \) を動かすと点Pが直線上を動く。\( A(x_1,y_1) \) ・ \( \vec{d}=(l,m) \) として成分で書くと次の媒介変数表示になる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_ships-chart.jpg" width="1000" height="750" loading="lazy" alt="海図と推測航法の道具">
+<figcaption>沿岸航海の講習で使う海図と推測航法の道具。出発点から針路の向きに直線を引き、速さと経過時間から船の位置を推定する。出発点を位置ベクトル、針路を方向ベクトルとみれば、本節の直線のベクトル方程式と同じ形になる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:CYA_Coastal_Navigation_With_Dead_Reckoning_2.jpg">J. S. Bond</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 \[ x=x_1+lt,\qquad y=y_1+mt \]
 <p>2式から \( t \) を消去すると \( m(x-x_1)-l(y-y_1)=0 \) となり数学Ⅱで学んだ直線の方程式に戻る。</p>
 <p>2点 \( A(\vec{a}) \) と \( B(\vec{b}) \) を通る直線は方向ベクトルを \( \vec{b}-\vec{a} \) にとって \( \vec{p}=(1-t)\vec{a}+t\vec{b} \) と書ける。\( 0\le t\le1 \) に制限すると線分ABになる。これは前節の係数の和が1という条件と同じものである。</p>
@@ -258,9 +263,24 @@
 
 <h2 id="s6">現実世界 2隻の船は衝突するか</h2>
 <p>学習指導要領解説は直線のベクトル方程式を日常の問題に使う例として2隻の帆船の衝突を挙げている。帆船Aは位置 \( \vec{a} \) から速度 \( \vec{v_a} \) で進み帆船Bは位置 \( \vec{b} \) から速度 \( \vec{v_b} \) で進む。\( s \) 秒後のAの位置は \( \vec{a}+s\vec{v_a} \) で \( t \) 秒後のBの位置は \( \vec{b}+t\vec{v_b} \) である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_ships-tallships.jpg" width="750" height="1000" loading="lazy" alt="港に停泊した2隻の帆船">
+<figcaption>オランダのハルリンゲンに停泊した帆船。手前の緑の船体がアレクサンダー・フォン・フンボルト2世号である。学習指導要領解説の例は、このような帆船2隻の航路を直線のベクトル方程式で表して衝突を調べる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Tall_Ship_races_Harlingen_2014_-_Alexander_von_Humboldt_II_and_Sorlandet_in_the_back_Stad_Amsterdam.jpg">Uberprutser</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>2本の航路の交点Cは \( \vec{a}+s\vec{v_a}=\vec{b}+t\vec{v_b} \) を解いて求まる。ただし交点があるだけでは衝突しない。<strong class="hit">衝突する条件は同じ時刻に交点に着くことで \( s=t \) である</strong>。</p>
 <p>数値で確かめる。単位を km と時間とし \( \vec{a}=(0,0) \) ・ \( \vec{v_a}=(3,4) \) ・ \( \vec{b}=(10,0) \) ・ \( \vec{v_b}=(-2,4) \) とする。時刻 \( t \) の2隻の位置は \( (3t,4t) \) と \( (10-2t,4t) \) である。y成分は常に等しく x成分は \( 3t=10-2t \) の時に等しくなる。\( t=2 \) で2隻は点 \( (6,8) \) に同時に着き衝突する。Bの速度が \( (-2,5) \) なら航路の交点は存在するが同じ時刻には着かない。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_ships-stockholm.jpg" width="1000" height="719" loading="lazy" alt="衝突で損傷したストックホルム号の船首">
+<figcaption>アンドレア・ドーリア号と衝突したストックホルム号の船首。2隻の航路が交わり、同じ時刻に同じ点に達すると衝突が起きる。本文の「同じ時刻に交点に着く」という条件が成り立った実例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:MS_Stockholm_bow_damage_after_collision_with_SS_Andrea_Doria.jpg">John Rooney</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>解説はもう1つの見方も示している。時刻 \( k \) に衝突するなら \( \overrightarrow{AB}=k(\vec{v_a}-\vec{v_b}) \) が成り立つ。点Bから \( \vec{v_b}-\vec{v_a} \) の向きに引いた半直線の上に点Aがあるかを調べる方法である。2点間の距離 \( |(\vec{b}+t\vec{v_b})-(\vec{a}+t\vec{v_a})| \) の最小値を求めれば船の大きさを考えた衝突の判定にもなる。これは第2章の例題6と同じ最小値の計算である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_ships-arpa.jpg" width="1000" height="750" loading="lazy" alt="ARPAレーダーを備えた船橋">
+<figcaption>ばら積み貨物船の船橋。中央の円形の画面が自動衝突予防援助装置 ARPA を備えたレーダーである。ARPA は他船の位置の変化から針路と速度を求め、2隻が最も接近する距離と時刻を表示する。本文の2点間の距離の最小値を求める計算を装置が自動で行う。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bridge_of_a_bulk_carrier_with_ARPA_radar_system.jpg">作者名の記載なし</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">道が交わるだけでは会えない。同じ時刻に交点にいて初めて会える</p>

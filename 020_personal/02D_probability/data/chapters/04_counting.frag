@@ -57,6 +57,11 @@
 <figcaption>左は \(A\cup B\) の補集合である。右は \(A\) の外側を青で \(B\) の外側を橙で塗った図で2色が重なるのは両方の円の外側だけである。左右の網掛けが一致することが \(\overline{A\cup B}=\overline{A}\cap\overline{B}\) を示す。</figcaption>
 </figure>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/04_counting-de-morgan.jpg" width="464" height="659" loading="lazy" alt="オーガスタス・ド・モルガン">
+<figcaption>19世紀イギリスの数学者オーガスタス・ド・モルガンである。補集合と共通部分と和集合の関係を示す法則の名称になっている。本文の2つの等式は、集合の図を描くと成り立つことが確かめられる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Augustus_De_Morgan.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s2">集合の要素の個数</h2>
 <p>有限集合 \(A\) の要素の個数を \(n(A)\) で表す。2つの集合の和集合の要素の個数は次の式で求める。</p>
 \[ n(A\cup B)=n(A)+n(B)-n(A\cap B) \]
@@ -108,6 +113,11 @@
 <p class="an-h">共通部分を引く操作は連結決算の内部取引の消去である</p>
 <p>親会社と子会社の売上を単純に足すとグループ内の取引が2回計上される。\(-n(A\cap B)\) はその重複を1回分消す操作に対応する。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_counting-venn-window.jpg" width="380" height="736" loading="lazy" alt="ジョン・ヴェンを記念するステンドグラス">
+<figcaption>ケンブリッジ大学ゴンヴィル・アンド・キーズ・カレッジの食堂にある、ジョン・ヴェンを記念するステンドグラスである。3つの円が重なる図はヴェンが考案したベン図で、本文の集合の図と同じ形をしている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Venn-stainedglass-gonville-caius.jpg">Schutz</a>／CC BY-SA 2.5／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s3">和の法則と積の法則・樹形図</h2>
 <p>場合の数を求める基本の原則は2つである。</p>
@@ -289,6 +299,11 @@
 
 <h2 id="s7">現実世界の場合の数 パスワードの強さ</h2>
 <p>パスワードの強さは重複順列の総数で測れる。数字4桁の暗証番号は \(10^4=10{,}000\) 通りである。英大文字と英小文字と数字の62種類から8文字を選ぶと \(62^8\) 通りで約 \(2.18\times10^{14}\) 通りになる。ただし人が選ぶ文字列は辞書に載った語に偏るので、実際の強さは総数より小さい。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/04_counting-padlock.jpg" width="750" height="1000" loading="lazy" alt="4桁の数字を合わせる錠"><img src="../img/04_counting-keyboard.jpg" width="1000" height="750" loading="lazy" alt="パソコンのキーボード"></div>
+<figcaption>左は4桁の数字を合わせる錠、右はパソコンのキーボードである。錠の番号は各桁に0から9の10通りがあるので10の4乗で1万通りになる。英大文字と英小文字と数字の62種類から8文字を選ぶパスワードは、62の8乗通りある。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:4-digit_combination_padlock.jpg">Jerry Daykin</a>／CC BY 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:Swedishkeyboard.JPG">Twowells</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p class="an-h">文字の種類を増やすより桁数を増やすほうが総数は大きく増える</p>
 <p>総数 \(n^r\) は指数 \(r\) が1増えるごとに \(n\) 倍になる。62種類で8文字から9文字にすると総数は62倍になる。</p>

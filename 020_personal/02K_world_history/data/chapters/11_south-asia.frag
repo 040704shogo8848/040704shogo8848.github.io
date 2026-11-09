@@ -7,6 +7,11 @@
 <h2 id="s1">アーリヤ人の進出とヴァルナ制</h2>
 <p>インダス文明が衰退したのち、中央アジア方面からインド・ヨーロッパ語系の言語を話す人々がインド西北部のパンジャーブ地方に入った。この人々を<strong>アーリヤ人</strong>と呼ぶ。進出の時期は前1500年頃とされる（出典2）。かつては武力による侵入として説明されたが、現在は長い期間にわたる移住と混交として説明されることが多い（出典2）。</p>
 <p>アーリヤ人は自然神を賛美する歌を伝えた。最古のものが『リグ・ヴェーダ』で、その言語は前1500〜前1200年頃のものとされる（出典2）。神々への賛歌と祭式の規定をまとめた聖典群を<strong>ヴェーダ</strong>と呼ぶ。ヴェーダにもとづき、祭官が執り行う祭式を中心とする宗教を<strong>バラモン教</strong>と呼ぶ。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_sa-rigveda.jpg" width="1000" height="960" loading="lazy" alt="デーヴァナーガリー文字で書かれた『リグ・ヴェーダ』の写本">
+<figcaption>19世紀初めに紙に書き写された『リグ・ヴェーダ』の写本。デーヴァナーガリー文字で書かれ、赤い記号でヴェーダ語の声調を示している。ヴェーダは長く口頭で伝えられ、文字に書かれたのはずっと後のことである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Rigveda_MS2097.jpg">Unknown author</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>前1000年頃からアーリヤ人はガンジス川流域へ移った。鉄器の使用が広がり、森林を開いて稲作を営む農村が増えた。この過程で先住の人々との間に身分の上下が定められた。その身分の枠組みが<strong>ヴァルナ制</strong>である。ヴァルナ制とは、人々を祭官のバラモン・王侯と武人のクシャトリヤ・農民や牧畜民や商人のヴァイシャ・隷属民のシュードラの4つに区分する身分観念である。ヴァルナはサンスクリット語で色を意味する。</p>
 <p>実際の社会では、生まれと職業で結び付いた<strong>ジャーティ</strong>と呼ばれる多数の集団が形成された。ジャーティは同じ集団の中で結婚し、食事をともにする範囲も定めていた。のちにジャーティはヴァルナの4区分に位置付けられた。両者を組み合わせた身分制度を、16世紀にポルトガル人が血統を意味するカスタの語で呼んだ。これが<strong>カースト制度</strong>の語源である。4区分の外に置かれ、差別を受けた人々もいた。</p>
 
@@ -108,6 +113,11 @@
 <p>前4世紀後半、マケドニアのアレクサンドロス大王がインド西北部に進出した。大王の軍が退いたのち、チャンドラグプタがマガダ国のナンダ朝を倒して<strong>マウリヤ朝</strong>を開いた。都はガンジス川中流の<strong>パータリプトラ</strong>である。成立の年は前317年頃とする説明と前322年頃とする説明がある（出典26）。マウリヤ朝はインド亜大陸の大部分を初めて1つの王朝の下にまとめた。</p>
 <p>第3代の<strong>アショーカ王</strong>は前268年頃から前232年頃まで在位した（出典4）。即位8年目にあたる前260年頃、王は東海岸の<strong>カリンガ</strong>を征服した（出典4）。王自身の碑文はこの戦争の犠牲を記す。15万人が連れ去られて10万人が殺され、その何倍もの人が亡くなったという（出典4）。この数は王が自ら記した数であり、ほかの資料で確かめる手段は確認できず、推計の比較はできない。</p>
 <p>アショーカ王は戦争の悲惨さを悔い、仏教に帰依したとされる。王は<strong>ダルマ</strong>（法）による統治を掲げた。ダルマとは、生き物を殺さないこと・年長者を敬うこと・異なる宗教を互いに尊重することなど、身分や宗教を越えて守るべき倫理である。王はその内容を岩や石柱に刻ませて領内に示した。これを<strong>アショーカ王の碑文</strong>（磨崖碑と石柱碑）と呼ぶ。仏典の編集会議である第3回仏典結集を支援し、子のマヒンダをスリランカに派遣して仏教を伝えたとスリランカの伝承は記す（出典4）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_sa-vaishali-pillar.jpg" width="1000" height="750" loading="lazy" alt="ヴァイシャーリーに立つアショーカ王時代の石柱">
+<figcaption>インドのビハール州ヴァイシャーリーに残るアショーカ王時代の石柱。磨いた砂岩の一本柱の頂に獅子の像を載せている。王は帝国の各地に石柱を立て、岩や石柱にダルマを説く碑文を刻ませた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ashoka_pillar_at_Vaishali,_Bihar,_India.jpg">Bpilgrim</a>／CC BY-SA 2.5／Wikimedia Commons</span></figcaption>
+</figure>
 <p>ダルマの政策の評価は分かれる。宗教的な回心にもとづく理想主義の政治とみる見方がある。一方で、言語も宗教も多様な領域を1つの倫理で結び付ける統治の手段とみる見方もある。両方の性格を認める研究もある。</p>
 
 <figure class="tb-fig">
@@ -145,8 +155,18 @@
 <h2 id="s4">クシャーナ朝と海の交易</h2>
 <p>マウリヤ朝はアショーカ王の死後に衰え、将軍プシャミトラがシュンガ朝を開いて滅んだ。滅亡の年は前180年頃とする説明（出典26）と前185年頃とする説明（出典27）がある。その後、西北インドには中央アジアから諸勢力が入った。1世紀には<strong>クシャーナ朝</strong>が成立した。大月氏の一派が建てたとされ、高校教科書はイラン系とするが、起源をトカラ系とする説もある（出典28）。クシャーナ朝は2世紀の<strong>カニシカ王</strong>の時に最盛期を迎えた。カニシカ王の在位は127年頃から150年頃とされる（出典6）。都はプルシャプラ（現在のペシャワール）である（出典6）。</p>
 <p>クシャーナ朝の領域は中央アジアのバクトリアから北インドに及び、東西と南北の陸の道が交わる位置にあった。カニシカ王の貨幣にはインド・ギリシア・イランの神々が刻まれた（出典6）。多様な宗教をもつ商人と住民を統治した王朝の性格を示す資料である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_sa-kanishka-coin.jpg" width="1000" height="508" loading="lazy" alt="ブッダの立像を刻んだカニシカ王の貨幣">
+<figcaption>カニシカ王の貨幣。表に王の立像、裏にブッダの立像を刻み、ギリシア文字で「BODDO」（ブッダ）と記している。インドの宗教の像をギリシア文字と組み合わせた点に、クシャーナ朝の文化の混合が表れている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Coin_of_Kanishka_depicting_Gautam_Buddha.jpg">Whitehead</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>この時期に<strong>大乗仏教</strong>が成立した。大乗仏教とは、出家者だけでなく広く人々の救済を目指し、菩薩の信仰を重んじる仏教である。2世紀頃のナーガールジュナ（竜樹）がその理論を整えた。これに対し、出家者が戒律を守って修行し自らの悟りを目指す仏教を<strong>上座部仏教</strong>と呼ぶ。大乗仏教の側が用いた小乗という呼称には批判が込められている。大乗仏教は中央アジアを経て中国・朝鮮・日本に伝わった。上座部仏教はスリランカから東南アジアの大陸部に広まった。</p>
 <p>西北インドのガンダーラ地方では、ギリシア系の彫刻の技法を用いた仏像が作られた。これを<strong>ガンダーラ美術</strong>と呼ぶ。それまでブッダの姿は法輪や足跡などで象徴されていた。仏像の成立にはガンダーラとマトゥラーの2つの地域が関わったとされる（出典6）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_sa-gandhara-buddha.jpg" width="633" height="1000" loading="lazy" alt="東京国立博物館のガンダーラの仏立像" style="max-height:620px;object-fit:contain">
+<figcaption>東京国立博物館が所蔵するガンダーラの仏立像。パキスタンのペシャワール近郊で出土した、クシャーナ朝の2〜3世紀頃の片岩の像である。衣の深い襞や顔立ちに、ギリシア系の彫刻の技法が見られる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Standing_Buddha,_near_Peshawar,_Pakistan,_Kushan_dynasty,_100s-200s_AD,_schist_-_Tokyo_National_Museum_-_Tokyo,_Japan_-_DSC08671.jpg">Daderot</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>南インドとデカン高原では海の交易が栄えた。デカン高原の<strong>サータヴァーハナ朝</strong>は前2世紀後半から3世紀前半まで続いたとする見方が多いが、成立の年には大きな幅がある（出典8）。1世紀の中頃にギリシア語で書かれた航海案内書『<strong>エリュトゥラー海案内記</strong>』は、インド西岸の港で胡椒や綿布が輸出され、地中海方面から金銀の貨幣やぶどう酒が持ち込まれたと記す（出典7）。夏と冬で風向きが入れ替わる<strong>季節風</strong>を利用すると、紅海からインドへ外洋を直接横断できた。</p>
 
 <div class="ex"><div class="ex-h">例題 4</div>
@@ -163,6 +183,11 @@
 <p>グプタ朝の時代には<strong>ヒンドゥー教</strong>が社会に定着した。ヒンドゥー教とは、バラモン教を基盤に各地の民間信仰を取り込んで成立した多神教で、シヴァ神やヴィシュヌ神を信仰する。特定の開祖や1冊の聖典をもたない。王はバラモンを保護し、公用語の地位を得たサンスクリット語で文学と学問が発達した。宮廷詩人カーリダーサは戯曲『シャクンタラー』を著した（出典9）。叙事詩の『マハーバーラタ』と『ラーマーヤナ』もこの頃までに現在の形に整えられた。</p>
 <p>各ヴァルナの義務と生活の規範を定めた法典を<strong>マヌ法典</strong>と呼ぶ。成立は前200年頃から後200年頃の間とする見方が多く、2〜3世紀とする研究もある（出典10）。マヌ法典はヴァルナ制を社会の規範として示し、ヒンドゥー教徒の生活を長く規定した。</p>
 <p>グプタ朝の王はヒンドゥー教を重んじたが、仏教も保護した。5世紀にクマーラグプタ1世がナーランダー僧院を建てたとされる（出典9）。ナーランダー僧院は仏教の学問の中心となった。アジャンター石窟の壁画にはグプタ様式と呼ばれるインド独自の美術が見られる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_sa-ajanta.jpg" width="854" height="1000" loading="lazy" alt="アジャンター石窟第1窟の蓮華手菩薩の壁画" style="max-height:620px;object-fit:contain">
+<figcaption>アジャンター石窟第1窟の壁画「蓮華手菩薩」。岩の壁に顔料で描かれ、高さは約1.2mである。グプタ様式と呼ばれるインド独自の美術の例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bodhisattva_Padmapani,_cave_1,_Ajanta,_India.jpg">Unknown author</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="南アジアの宗教の系統と伝播">
@@ -221,9 +246,19 @@
 
 <h2 id="s6">東南アジアの港市国家とインド化</h2>
 <p>東南アジアは季節風が吹く海域にあり、インドと中国を結ぶ海の道の中間にあたる。ベトナム北部では青銅器の<strong>ドンソン文化</strong>が栄え、銅鼓と呼ばれる青銅の太鼓が各地に広まった。開始の時期は前4世紀頃とする説明（出典30）と前1000年頃にさかのぼるとする説明（出典29）がある。紀元前後から海の交易が盛んになると、港を中心とする<strong>港市国家</strong>が成長した。港市国家とは、港に集まる商人と物産から得る利益を基盤とし、周辺の産地と海の道を結ぶ国家である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_sa-dongson.jpg" width="1000" height="666" loading="lazy" alt="上面に同心円の文様をもつドンソン文化の銅鼓">
+<figcaption>ドンソン文化の銅鼓。ベトナム北部か中国南部で前2〜前1世紀頃に作られたとされる青銅の太鼓で、上面に同心円状の文様がある。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Dong_Son_Drum,_Bronze,_Vietnam_or_China,_2nd%E2%80%931st_c_BC,_temp_Prague_Kinsky,_NG_Vu_517,_142199.jpg">Zde</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>1世紀にメコン川のデルタに成立した<strong>扶南</strong>は、初期の代表的な港市国家である（出典13）。中国の史書は、外来の人物が現地の女王と結婚して国を開いたという建国伝説を記す。この人物をインドのバラモンのカウンディニヤとみる説があるが、異論もある（出典13）。扶南の外港とされる<strong>オケオ</strong>の遺跡からは、2世紀中頃のローマ皇帝アントニヌス・ピウスの時代の金のメダルのほか、ペルシアやインドの品が出土した（出典13）。扶南はクメール人の<strong>真臘</strong>に併合された。併合の時期は6世紀とする説明（出典13）と7世紀前半とする説明（出典31）がある。</p>
 <p>ベトナム中部では192年にチャム人が<strong>チャンパー</strong>を建てた（出典14）。中国の史書は林邑、のちに占城と記す。4世紀以降にシヴァ神の信仰が広まり、ミーソンに聖地が築かれた（出典14）。ベトナム北部は前111年に漢の支配下に入り、長く中国王朝の統治を受けた。このためベトナム北部は中国文化の影響が強く、第10章の東アジア文化圏に属する。</p>
 <p>7世紀にはスマトラ島南部のパレンバンを中心に<strong>シュリーヴィジャヤ</strong>が成立した。682年の日付をもつ碑文がその成立を記す（出典15）。シュリーヴィジャヤはマラッカ海峡を通る船を管理し、交易の利益で栄えた。唐の僧<strong>義浄</strong>は671年に海路でインドへ向かう途中、シュリーヴィジャヤに半年滞在した（出典15）。義浄はこの地で仏教の学問が盛んであると記録し、『南海寄帰内法伝』を著した（出典16）。ジャワ島中部では8世紀後半から9世紀前半に<strong>シャイレンドラ朝</strong>が大乗仏教の石造建築<strong>ボロブドゥール</strong>を造った。建造は780年頃から830年代までと推定される（出典17）。同じ頃にはヒンドゥー教のプランバナン寺院群も造られ、2つの宗教が並存した（出典17）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_sa-borobudur.jpg" width="700" height="470" loading="lazy" alt="上空から見たボロブドゥール">
+<figcaption>オランダ領東インドの時代に上空から撮影したジャワ島中部のボロブドゥール。基壇を何層も重ねた巨大な仏教建築で、シャイレンドラ朝のもとで建造された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:COLLECTIE_TROPENMUSEUM_Luchtfoto_van_de_Borobudur_TMnr_10015637.jpg">KNILM</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 720" role="img" aria-label="東南アジアの港市国家とアンコール朝のおおよその範囲">
@@ -254,7 +289,17 @@
 </figure>
 
 <p>大陸部では9世紀にクメール人の<strong>アンコール朝</strong>が成立した。802年にジャヤヴァルマン2世が即位を宣言したことが成立の画期とされる（出典18）。12世紀前半のスールヤヴァルマン2世（在位1113〜1150年）はヴィシュヌ神をまつる<strong>アンコール・ワット</strong>を造営した（出典18）。12世紀末のジャヤヴァルマン7世（在位1181〜1218年または1219年）は大乗仏教を重んじ、都城アンコール・トムと中心寺院バイヨンを築いた（出典18）。13世紀にはスリランカから上座部仏教が伝わって広まり、1431年にアユタヤ朝の攻撃を受けてアンコールは放棄された（出典18）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_sa-angkor.jpg" width="900" height="627" loading="lazy" alt="西側の参道から見たアンコール・ワット">
+<figcaption>西側の参道から見たアンコール・ワット。中央の高い塔の周りに4基の塔を配している。12世紀前半にスールヤヴァルマン2世が造営した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Angkor_Wat_W-Seite.jpg">Manfred Werner</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>エーヤワディー川の流域では、1044年に即位したアノーヤター王がビルマ人の<strong>パガン朝</strong>を発展させた（出典19）。王は上座部仏教を受け入れ、パガンはその中心地となった（出典19）。チャオプラヤ川の河口に近い平野では、モン人のドヴァーラヴァティーが仏教を受け入れていた。大陸部に上座部仏教が広まったのはスリランカとの結び付きによる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_sa-bagan.jpg" width="1000" height="561" loading="lazy" alt="パガンの平原に並ぶれんが造りの寺院">
+<figcaption>ミャンマーのパガンの平原に並ぶれんが造りの仏教寺院。奥に見えるのはティーローミンロー寺院である。上座部仏教の中心地となったパガンには、多数の寺院と仏塔が残る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bagan,_Myanmar,_Htilominlo_Temple_and_other_Buddhist_stupas_in_Bagan_plain.jpg">Vyacheslav Argenberg</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <ol class="tb-tl">
 <li><b>前4世紀頃</b><strong>ドンソン文化</strong>。ベトナム北部で銅鼓を用いる青銅器文化が栄えた。開始をさらに古くみる説明もある</li>
@@ -311,6 +356,11 @@
 <aside class="an an-rw"><b>現実世界</b>
 <p class="an-h">アショーカ王の獅子柱頭は現在のインドの国章である</p>
 <p>サールナートで出土したアショーカ王の石柱の頭部にある獅子像が、1950年1月26日の共和国成立とともにインドの国章として採用された（出典23）。カンボジアの国旗にはアンコール・ワットが描かれている。現在の図案は1948年に定められ、1993年に再び採用された（出典24）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_sa-lion-capital.jpg" width="750" height="1000" loading="lazy" alt="サールナート博物館のアショーカ王の獅子柱頭" style="max-height:620px;object-fit:contain">
+<figcaption>サールナート博物館に展示されているアショーカ王の獅子柱頭。背中合わせの4頭の獅子が、法輪を刻んだ台座の上に座っている。現在のインドの国章は、この獅子柱頭をもとにしている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Lion_capital_of_Ashoka,_Sarnath.jpg">lisa bat</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 </aside>
 <p>植民地支配を受けた国々は、独立後に国民を統合する象徴として、それより前の時代の繁栄を国家の起源に掲げた。</p>
 <p>マラッカ海峡は現在もインド洋と南シナ海を結ぶ海上輸送の要所である。海峡を管理して栄えたシュリーヴィジャヤの構造は、のちのマラッカ王国（第15章）や現在のシンガポールにも共通する。</p>

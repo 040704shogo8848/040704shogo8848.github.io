@@ -340,7 +340,17 @@
 <p class="an-h">天気予報の平年並は30年分の値を並べた11番目から20番目である</p>
 <p>気象庁は1991年から2020年の30年の値を小さい順に並べ10年ずつ低い・平年並・高いに分ける。四分位数と同じく順位で区切る尺度である。</p>
 </aside>
+<figure class="tb-fig tb-photo">
+<div class="tb-ph3"><img src="../img/02_dispersion-screen-exterior.jpg" width="755" height="1000" loading="lazy" alt="百葉箱の外観"><img src="../img/02_dispersion-screen-interior.jpg" width="1000" height="754" loading="lazy" alt="百葉箱の内部"><img src="../img/02_dispersion-chichijima.jpg" width="1000" height="750" loading="lazy" alt="気象庁父島気象観測所"></div>
+<figcaption>左は気温を測る百葉箱の外観、中央はその内部、右は気象庁の父島気象観測所である。百葉箱の内部には乾球温度計と湿球温度計が並ぶ。観測所ごとに30年分の値を小さい順に並べて区切ると、平年並の範囲が定まる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Stevenson_screen_exterior.JPG">作者不詳</a>／Public domain 中央：<a href="https://commons.wikimedia.org/wiki/File:Stevenson_screen_interior.JPG">CambridgeBayWeather</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Japan_meteorological_agency_Chichijima_weather_observatory.jpg">ブルーノ・プラス</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>標準偏差は品質管理でも中心的な尺度である。工場で製品の寸法を管理するとき平均値が目標に一致していても標準偏差が大きければ規格を外れる製品が増える。平均値を合わせる調整と標準偏差を小さくする改善は別の作業である。前者は変量の変換の \( b \) にあたり後者は散らばりそのものを変える。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_dispersion-micrometer.jpg" width="1000" height="750" loading="lazy" alt="釉薬の厚さを測るマイクロメーター">
+<figcaption>焼き物に塗った釉薬の厚さをマイクロメーターで測り、許容範囲に収まるかを確かめている。製品ごとの測定値を集めて平均値と標準偏差を求めると、規格を外れる製品の多さを見積もれる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Micrometer_measuring_glaze_thickness.jpg">Encik Tekateki</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 四分位数</div>

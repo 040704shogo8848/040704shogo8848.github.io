@@ -395,6 +395,11 @@ a＝0 または \(-1<r<1\) のとき収束する。<br>
 <details open><summary>解き方</summary><div>(1) \(\frac{2}{n}=h\) とおくと n → ∞ で h → +0 ・ \(n=\frac{2}{h}\)<br>\(\left\{(1+h)^{\frac{1}{h}}\right\}^2\to e^2\)<br>答え \(e^2\)<br>(2) \(-\frac{1}{n}=h\) とおくと h → −0 ・ \(n=-\frac{1}{h}\)<br>\(\left\{(1+h)^{\frac{1}{h}}\right\}^{-1}\to e^{-1}\)<br>答え \(\frac{1}{e}\)</div></details></div>
 <p><strong>典型的な誤り</strong>は「\(1+\frac{1}{n}\to 1\) なので \(1^n=1\)」とすることである。底が 1 に近づき指数が ∞ に発散する \(1^\infty\) 型も不定形である。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/09_limit-introductio.jpg" width="756" height="1000" loading="lazy" alt="『無限解析入門』第1巻の扉">
+<figcaption>オイラーが1748年に刊行した『無限解析入門』第1巻の扉である。指数関数と対数関数を極限と無限級数で扱った本で、e の値もこの本に示されている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Introductio_in_analysin_infinitorum._T._1_-_Leonhard_Euler,_1748_(title_page).jpg">Unknown authorUnknown author (illustrator not named)</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s7">関数の連続性と中間値の定理</h2>
 <p>関数 \(f(x)\) が x＝a で<strong>連続</strong>であるとは次の3条件がそろうことである。</p>
 <div class="tb-key"><b>連続の条件</b>
@@ -468,6 +473,16 @@ a＝0 または \(-1<r<1\) のとき収束する。<br>
 <aside class="an an-rw"><b>現実世界</b>
 <p>この問題を1683年に研究したのはヤコブ・ベルヌーイで極限が 2 と 3 の間にあることを示した。文字 e を使ったのはオイラーで1731年のゴールドバッハ宛の書簡に記録がある。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/09_limit-jacob-bernoulli.jpg" width="648" height="1000" loading="lazy" alt="ヤコブ・ベルヌーイの肖像版画"><img src="../img/09_limit-euler.jpg" width="773" height="1000" loading="lazy" alt="オイラーの肖像画"></div>
+<figcaption>左はヤコブ・ベルヌーイ、右はオイラーの肖像である。ベルヌーイは1683年に連続複利の問題を調べて極限が2と3の間にあることを示した。オイラーは1731年の書簡で文字 e を用いた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Portret_van_Jacob_Bernoulli,_RP-P-1908-3093.jpg">Rijksmuseum</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:Leonhard_Euler_-_Jakob_Emanuel_Handmann_(Kunstmuseum_Basel).jpg">Jakob Emanuel Handmann</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/09_limit-euler-banknote.jpg" width="1000" height="486" loading="lazy" alt="オイラーの肖像の10フラン紙幣">
+<figcaption>オイラーの肖像を描いたスイスの10フラン紙幣である。オイラーはスイスのバーゼルの出身で、極限と無限級数を用いた解析学を大きく発展させた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Euler-10_Swiss_Franc_banknote_(front).jpg">User:Pascal.Tesson</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s9">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 分数式の極限</div>

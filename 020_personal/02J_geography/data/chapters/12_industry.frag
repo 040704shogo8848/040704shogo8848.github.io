@@ -6,6 +6,11 @@
 
 <h2 id="s1">工業立地論 費用の最小地点を求める</h2>
 <p>工場が建てられる場所を<strong>工業立地</strong>と呼ぶ。企業は原料の調達から製品の販売までにかかる費用が最も低くなる場所を選ぶ。この考え方を体系化したのがドイツの経済学者アルフレート・ウェーバーである。ウェーバーは1909年に『工業立地論』を著し、輸送費・労働費・集積の3つの要因で立地を説明した（出典13）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_industry-weber.jpg" width="694" height="1000" loading="lazy" alt="アルフレート・ウェーバーの肖像写真">
+<figcaption>アルフレート・ウェーバー（1910年）。前年の1909年に『工業立地論』を著し、輸送費・労働費・集積の3要因で工場の立地を説明した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Alfred_Weber,_1910.png">Robert Herbst</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>第1の要因は輸送費である。ウェーバーは原料を2種類に分けた。水や空気のようにどこでも得られる原料を<strong>普遍原料</strong>と呼び、鉄鉱石や石灰石のように特定の場所でしか採れない原料を<strong>局地原料</strong>と呼ぶ。製品の重量に対する局地原料の重量の比を<strong>原料指数</strong>と呼ぶ。<strong class="hit">原料指数が1より大きい工業は原料産地に立地し、1より小さい工業は市場に立地する</strong>。重いものを運ぶ距離を短くするほど輸送費が下がるからである。</p>
 <p>第2の要因は労働費である。輸送費が多少増えても賃金の低い地域に移れば総費用が下がる業種がある。衣服の縫製や電子部品の組立のように多くの人手を要する業種である。第3の要因は集積である。同業や関連する工場が1か所に集まると部品の調達や技術者の確保が容易になり費用が下がる。これを<strong>集積の利益</strong>と呼ぶ。</p>
 
@@ -54,6 +59,11 @@
 <tr><td>集積指向</td><td>自動車・電子機器</td><td>数万点の部品を近くの関連工場から調達する</td></tr>
 </tbody></table></div>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/12_industry-buko.jpg" width="1000" height="750" loading="lazy" alt="石灰石の採掘で階段状に削られた武甲山">
+<figcaption>埼玉県秩父市の武甲山を北北西から見た姿。北斜面は石灰石の採掘で階段状に削られ、白い岩肌が露出している。採掘した石灰石はベルトコンベアで山麓の工場へ運ばれ、セメントに加工される。原料の産地に工場を置く原料指向の例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bukosan01.JPG">Mass Ave 975</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-biz"><b>スタートアップで言えば</b>
 <p class="an-h">集積の利益はシリコンバレーに本社を置く理由と同じである</p>
 <p>家賃は高いが技術者と投資家と取引先が徒歩圏にいる。調達と採用の費用の低下が家賃の高さを上回る。</p>
@@ -74,6 +84,11 @@
 <li><b>1980年代以降</b> 円高と貿易摩擦を背景に日本企業がアジアと北米へ生産を移す</li>
 <li><b>2010年</b> 中国の製造業付加価値がアメリカ合衆国を上回り、中国が世界最大の工業国となる（出典6）。2021年の製造業付加価値の世界シェアは30.0%である（本書による算出値、出典6）</li>
 </ul>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_industry-ford.jpg" width="1000" height="722" loading="lazy" alt="1913年のフォードの工場の組立ライン">
+<figcaption>1913年のフォードの工場の組立ライン。作業者が台に沿って並び、部品の組付けを分担している。この方式で自動車の大量生産が始まり、加工組立型工業が成長した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ford_assembly_line_-_1913.jpg">作者不明</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <p>世界の工業分布の変化は製造業付加価値の国別シェアで比べられる。<strong>付加価値</strong>とは生産額から原材料費などの中間投入を差し引いた額であり、その国の工場が新たに生み出した価値を示す。</p>
 
@@ -152,6 +167,11 @@
 <figcaption>鉄鋼業の立地は原料の重さの比率と原料の調達先が変わるたびに移動した。日本は鉄鉱石と原料炭を輸入に頼るので、高炉をもつ製鉄所は臨海部に立地する。資源の輸入先は第11章で扱う。地域の例と移動の理由の分類は高校地理で一般的な説明に従った。出典で確認できず。</figcaption>
 </figure>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/12_industry-kimitsu.jpg" width="1000" height="745" loading="lazy" alt="海に面した君津の製鉄所の空中写真">
+<figcaption>千葉県君津市の製鉄所の空中写真（2009年）。東京湾に面した敷地に製鉄の設備が並び、海側には大型船が着く岸壁がある。原料の鉄鉱石と原料炭を輸入に頼る日本の製鉄所が、臨海部に立地する例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kimitsu_iron_and_steel_works_Aerial_photograph.2009.jpg">国土地理院</a>／Attribution／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>現在の粗鋼生産は中国に集中している。2025年の世界の粗鋼生産は18億4,940万トンであった（2025年、出典3）。中国はその52.0%を占める（本書による算出値、出典4）。インドは前年比10.4%増で2位であり、日本は4位である。</p>
 <div class="tb-bars"><h5>粗鋼生産の上位10か国 2025年 単位 百万トン（出典4）</h5>
 <div class="tb-bar"><span>中国</span><u class="w"><i style="width:100%"></i></u><b>960.8</b></div>
@@ -169,6 +189,11 @@
 
 <h3>自動車工業 集積と市場の近く</h3>
 <p><strong>自動車工業</strong>は1台に数万点の部品を使う加工組立型工業である。完成車の組立工場の周囲に部品工場が集まり、部品を必要な時に必要な量だけ届ける。愛知県豊田市周辺のように1つの企業の工場と取引先が地域の産業の中心となる都市を<strong>企業城下町</strong>と呼ぶ。完成車は大きく輸送費が高いうえに輸入国の関税の対象になるので、大きな市場の中か近くで組み立てる傾向も強い。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_industry-toyota.jpg" width="1000" height="750" loading="lazy" alt="トヨタ自動車元町工場の正門">
+<figcaption>トヨタ自動車の元町工場の正門。工場は愛知県豊田市にある。豊田市は1つの企業の工場と取引先が地域の産業の中心となる企業城下町の代表例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Toyota-Motomachi-Plant-1.jpg">Evelyn-rose</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 345" role="img" aria-label="自動車生産台数の多い国 2025年">
@@ -215,10 +240,25 @@
 
 <h2 id="s4">繊維工業・電子工業・半導体</h2>
 <p><strong>繊維工業</strong>は糸を作る紡績・布を作る織布・衣服を作る縫製に分かれる。縫製は機械化が難しく人手を多く要するので典型的な労働力指向の工業である。日本でも明治期から第二次世界大戦前までは繊維工業が工業の中心であった。現在は中国とバングラデシュとベトナムが衣類の主要な輸出国である。国別に数えるとバングラデシュは2024年に中国に次ぐ世界2位の衣類輸出国であった（2024年、WTOの統計に基づく報道値、出典20）。EUを1つにまとめて数える統計ではEU・中国に次ぐ3位である（2024年、WTOの統計に基づく報道値、出典22）。衣類は同国の財の輸出額の約8割を占める（2025年7月〜2026年6月の会計年度、出典20）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_industry-garment.jpg" width="1000" height="750" loading="lazy" alt="ミシンが並ぶバングラデシュの縫製工場">
+<figcaption>バングラデシュの縫製工場。多数のミシンが並び、作業者が1台ずつミシンを使って衣服を縫う。機械化が難しく人手を多く要する労働力指向の工業の現場である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Working_conditions_of_Garment_workers_in_Bangladesh.jpg">Fahad Faisal</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>低賃金を求める立地には労働環境の問題が伴う。2013年4月にバングラデシュのダッカ近郊で縫製工場の入るビル「ラナ・プラザ」が崩壊し、1,134人が死亡した（2013年、出典21）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_industry-ranaplaza.jpg" width="800" height="534" loading="lazy" alt="崩壊したラナ・プラザでの救助作業">
+<figcaption>2013年4月に崩壊したラナ・プラザでの救助作業。崩れた床板の間で救助隊が捜索を続けている。縫製工場が入る建物の崩壊は、低賃金を求める立地に伴う労働環境の問題を示した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:2013_savar_building_collapse02.jpg">Sharat Chowdhury</a>／CC BY 2.5／Wikimedia Commons</span></figcaption>
+</figure>
 
 <p><strong>電子工業</strong>は家電・パソコン・スマートフォンなどの電気機械を作る工業である。部品が小さく軽いので航空機で輸送でき、輸送費の制約が小さい。そのため組立工程は賃金の低い国へ、設計と基幹部品の生産は技術者の多い国へと工程ごとに異なる国に分かれる。</p>
 <p><strong>半導体</strong>は電子機器の頭脳にあたる集積回路である。製造には清浄な大量の水と電力と高度な技術者を要する。設計だけを行う企業と製造を受託する企業の分業が進んでいる。製造を受託する企業を<strong>ファウンドリ</strong>と呼ぶ。最大手の台湾積体電路製造（TSMC）は1987年に設立され、本社は台湾の新竹科学工業園区にある（出典16）。この園区は1980年に台湾当局がシリコンバレーを手本に大学の近くに設けた（出典17）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_industry-tsmc.jpg" width="1000" height="669" loading="lazy" alt="新竹科学工業園区にあるTSMCの工場棟">
+<figcaption>台湾の新竹科学工業園区にあるTSMCの工場棟（Fab 5）。TSMCは本社もこの園区に置く。園区は大学の近くに設けられ、半導体の企業が集まる地域になった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:TSMC_Fab5.JPG">Peellden</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="tb-vs">
 <div><h5>電子機器の組立</h5><ul>
@@ -234,6 +274,11 @@
 </div>
 
 <p>日本では半導体工場の新設が続く。TSMCの子会社JASMは2021年に設立され、熊本県菊陽町の工場で2024年12月から量産を行っている（出典18）。北海道千歳市ではラピダスが2025年4月に試作ラインを稼働させ、2027年後半の量産開始を計画している（出典19）。熊本県は水道水源の約8割を地下水に頼る（出典24）。県は半導体関連企業の集積によって地下水の採取量が増えると見込んでいる（出典24）。熊本は用水と集積の両方の条件を満たす場所である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_industry-jasm.jpg" width="1000" height="698" loading="lazy" alt="熊本県菊陽町のJASMの工場">
+<figcaption>熊本県菊陽町のJASMの工場。2024年12月から量産を行っている。地下水が豊富な熊本は、用水指向と集積指向の両方の条件を満たす場所である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:JASM_Kumamoto.JPG">hyolee2</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 4</div>
 <p>半導体工場が九州の熊本県に新設された理由として立地の型を2つ挙げて説明せよ。</p>
@@ -367,9 +412,19 @@
 <p>出典12による。製造品出荷額等は2023年経済構造実態調査、年間商品販売額は令和3年経済センサス‐活動調査の値である。<strong class="hit">東京都は製造品出荷額等で16位だが商品販売額では2位の大阪府の3倍を超える</strong>。商品販売額の大部分は卸売業の販売額であり（2020年の全国で74.5%、出典23）、大企業の本社と商社が東京に集中するからである。神奈川県は工業では3位だが商品販売額は東京都の10分の1に満たない。隣接する東京都の卸売業が取引を担う関係を示す。</p>
 <p>小売業の立地は交通手段で変わる。自動車が普及すると駅前の商店街より、広い駐車場を持つ郊外の大型商業施設に客が移った。地方都市の中心市街地の空き店舗の増加はこの変化の結果である。インターネット通販と物流は第13章で扱う。</p>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/12_industry-shutter.jpg" width="1000" height="698" loading="lazy" alt="店舗のシャッターが閉じた大阪の商店街"><img src="../img/12_industry-mall.jpg" width="1000" height="746" loading="lazy" alt="海沿いに建つ泉南市の大型商業施設の空撮"></div>
+<figcaption>左は大阪の商店街で、閉じたシャッターが通路の両側に続く。右は大阪府泉南市の大型商業施設の空撮で、横長の建物の前に駐車場が広がる。自動車が普及すると客は駐車場をもつ大型店へ移り、中心市街地に空き店舗が増えた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Shutter_gai.jpg">Japanexperterna.se</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:AEON_MALL_Rinku-Sennan_Aerial_2020.JPG">Sanjo</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h3>サービス業とICT産業</h3>
 <p>金融・広告・情報通信・研究開発のように企業を顧客とするサービス業は、取引先と人材が集まる大都市に集中する。<strong>ICT産業</strong>（情報通信技術産業）はソフトウェアの開発や情報処理を行う産業である。成果物を通信回線で送れるので輸送費が小さく、国境を越えた分業が進む。</p>
 <p>アメリカ合衆国のサンフランシスコ湾岸南部の<strong>シリコンバレー</strong>は、大学と研究機関とベンチャーキャピタルが集まるICT産業の代表的な集積地である。インドのベンガルール（バンガロール）は欧米企業からソフトウェア開発を受託する拠点として成長した。英語を話す技術者が多いこと・賃金が欧米より低いこと・アメリカ合衆国と昼夜が逆になる時差で24時間の開発体制を組めることが理由とされるが、出典で確認できず。インドの南アジア地誌としての扱いは第18章で行う。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_industry-siliconvalley.jpg" width="1000" height="704" loading="lazy" alt="上空から見たシリコンバレー">
+<figcaption>サンノゼ市北部の上空から南を見たシリコンバレー（2014年）。平地に低層の事業所の建物が広く並ぶ。ICT産業の企業が集まる代表的な集積地である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Silicon_Valley,_facing_southward_towards_Downtown_San_Jose,_2014.jpg">Coolcaesar</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-bars"><h5>ICTサービスの輸出額 2023年 単位 億ドル（出典9）</h5>
 <div class="tb-bar"><span>アイルランド</span><u class="w"><i style="width:100%"></i></u><b>2,469</b></div>
 <div class="tb-bar"><span>インド</span><u class="w"><i style="width:65.8%"></i></u><b>1,626</b></div>

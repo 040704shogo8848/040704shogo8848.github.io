@@ -151,6 +151,11 @@
 <p>立体を \( x \) 軸に垂直な平面で切った断面の面積が \( S(x) \) のとき \( a\leqq x\leqq b \) の部分の体積は次のとおりである。</p>
 \[ V=\int_a^b S(x)\,dx \]
 <p>理由は面積と同じである。厚さ \( \Delta x \) の薄い板の体積は約 \( S(x)\Delta x \) で板を足し合わせて \( \Delta x\to 0 \) とすれば定積分になる。<strong class="hit">断面積さえ \( x \) の式で書ければ形がどんな立体でも体積が求まる</strong>。同じ位置で切った断面積が常に等しい2つの立体は体積も等しいというカヴァリエリの原理はこの式から直ちに導かれる。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/13_integration-apps-cavalieri.jpg" width="586" height="1000" loading="lazy" alt="カヴァリエリの肖像"><img src="../img/13_integration-apps-geometria.jpg" width="741" height="1000" loading="lazy" alt="『不可分者の幾何学』1653年版の扉"></div>
+<figcaption>左はカヴァリエリの肖像、右は『不可分者の幾何学』の1653年版の扉である。カヴァリエリは1635年の初版で、立体を薄い断面の集まりとみる不可分者の方法を示した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Bonaventura_Cavalieri.jpg">作者不詳</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Cavalieri_-_Geometria_indivisibilibus_continuorum_nova_quadam_ratione_promota,_1653_-_1250292.jpg">Cavalieri, Bonaventura</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>錐の体積が \( \frac{1}{3}Sh \) になる理由もこの式で説明できる。底面積 \( S \) で高さ \( h \) の錐を頂点から距離 \( x \) の平面で切ると断面は底面と相似で相似比は \( \frac{x}{h} \) である。面積比は相似比の2乗なので \( S(x)=S\frac{x^2}{h^2} \) である。</p>
 \[ V=\int_0^h S\frac{x^2}{h^2}\,dx=\frac{S}{h^2}\cdot\frac{h^3}{3}=\frac{1}{3}Sh \]
 
@@ -208,6 +213,11 @@
 <details open><summary>解き方</summary><div>手順1 交点は \( x=0,\ 1 \) で \( 0\leqq x\leqq 1 \) では \( x\geqq x^2 \) である。<br>手順2 断面は外側の半径 \( x \) で内側の半径 \( x^2 \) の円環で断面積は \( \pi(x^2-x^4) \) である。<br>手順3 \( V=\pi\int_0^1(x^2-x^4)\,dx=\pi\left(\frac{1}{3}-\frac{1}{5}\right)=\frac{2\pi}{15} \) である。</div></details></div>
 
 <p>典型的な誤りは例題7を \( \pi\int_0^1(x-x^2)^2\,dx \) と計算することである。これは高さ \( x-x^2 \) の円板を回転させた体積で円環ではない。値は \( \frac{\pi}{30} \) で正しい値の4分の1である。断面積は外側の円から内側の円を引く。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/13_integration-apps-cicero.jpg" width="800" height="580" loading="lazy" alt="アルキメデスの墓を見つけるキケロの絵画">
+<figcaption>ローマのキケロがシチリアでアルキメデスの墓を見つけた場面を描いた、ヴァランシエンヌの絵画である。墓には球と外接する円柱が刻まれていたと伝えられる。球の体積は外接する円柱の体積の3分の2である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Valenciennes,_Pierre-Henri_de_-_Cicero_Discovering_the_Tomb_of_Archimedes.jpg">Pierre-Henri de Valenciennes</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s5">曲線の長さ</h2>
 <p>曲線を短い線分に分けて折れ線で近似する。媒介変数 \( t \) が \( \Delta t \) 変わる間に \( x \) と \( y \) が \( \Delta x \) と \( \Delta y \) 変わるとき線分の長さは三平方の定理より \( \sqrt{(\Delta x)^2+(\Delta y)^2}=\sqrt{\left(\frac{\Delta x}{\Delta t}\right)^2+\left(\frac{\Delta y}{\Delta t}\right)^2}\,\Delta t \) である。和の極限をとると次の公式になる。</p>
@@ -337,6 +347,16 @@
 <p>ケプラーは1615年に出版した『ワイン樽の新しい立体幾何学』で樽を薄い円板の積み重ねとみて体積を求めた。ワイン商が樽に棒を差し込んだ長さだけで代金を決める方法に疑問をもったことが執筆の動機とされる。90を超える回転体の体積を扱い積分法の先駆とされる。</p>
 </aside>
 <p>例題11の年代測定はリビーが1940年代の後半にシカゴ大学で開発した放射性炭素年代測定法である。リビーはこの業績で1960年にノーベル化学賞を受けた。半減期の値には1962年に合意された慣用値5568年や改訂値5730年もあり、年代測定の実務では較正曲線で年代を補正する。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/13_integration-apps-kepler.jpg" width="513" height="625" loading="lazy" alt="ケプラーの肖像版画"><img src="../img/13_integration-apps-barrels.jpg" width="1000" height="597" loading="lazy" alt="ワイナリーの樽の貯蔵室"></div>
+<figcaption>左はケプラーの肖像版画、右はフランス・ボルドー地方のワイナリーの樽の貯蔵室である。ケプラーは1615年の著書で、樽を薄い円板の積み重ねとみて体積を求めた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Johannes_Kepler1.jpg">作者不詳</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Wine_Cellar_at_Chateau_Kirwan.jpg">Jon</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/13_integration-apps-libby.jpg" width="900" height="750" loading="lazy" alt="実験室のウィラード・リビー">
+<figcaption>実験室のウィラード・リビーである。リビーは放射性炭素年代測定法を開発し、1960年にノーベル化学賞を受けた。試料に残る炭素14の割合から、指数関数の式で年代を求める。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Willard_Libby_in_Lab.jpg">作者不詳</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s9">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 区分求積法</div>

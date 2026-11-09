@@ -14,6 +14,12 @@ thesis: 単一産業への依存も単一航路への依存も同じ脆弱性で
 
 韓国は3層が揃って半導体に紐づいた例である。第1層について、MSCI Korea に連動する iShares MSCI South Korea ETF の組入は、2026年8月3日時点で Samsung Electronics が22.17パーセント、SK hynix が21.42パーセントで、2社合計43.59パーセントである。上位10銘柄の合計は61.20パーセントを占める [出典](https://stockanalysis.com/etf/ewy/holdings/)。ここに SK hynix 株式を主要資産とする持株会社の SK Square 3.43パーセントと、Samsung Electro-Mechanics 2.61パーセントを加えると49.63パーセントとなる。指数の約半分が DRAM と NAND という2種類の汎用部品の価格に連動している。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/ch03_korea-exchange.jpg" width="1000" height="750" loading="lazy" alt="釜山の韓国取引所の本社ビル">
+<figcaption>釜山にある韓国取引所（KRX）の本社ビル。韓国株の指数に連動する ETF では、サムスン電子と SK hynix の2社だけで組入の43.59パーセントを占め、指数の約半分が DRAM と NAND の価格に連動している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Korea_exchange.JPG">hyolee2</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 このウェイトを浮動株調整前の生の時価総額比率と混同してはならない。時価総額の実額では Samsung Electronics が1.068兆ドル [出典](https://companiesmarketcap.com/samsung/marketcap/)、SK hynix が7,107.4億ドル [出典](https://companiesmarketcap.com/sk-hynix/marketcap/) で、2社合計1.7787兆ドルである。いずれも2026年8月時点の値である。分母となる韓国取引所の日次時価総額統計には到達できておらず、参照できた KOSPI の時価総額は2026年1月時点の4,135兆ウォン、2.815兆ドルにとどまる [出典](https://en.wikipedia.org/wiki/KOSPI)。1月時点の分母に8月時点の分子を当てれば63パーセントという数字が出るが、この計算は分子と分母の時点が異なるため上限側に振れた粗い値であり、実際の比率ではない。集中度を測るときに時点をそろえないと、集中を過大評価する方向へ誤差が出る。
 
 第2層と第3層も同じ製品に紐づいている。2026年7月の韓国の輸出総額は988.9億ドルで前年同月比62.8パーセント増、うち半導体が410.1億ドルで前年同月比178.8パーセント増である。半導体は輸出総額の41.5パーセントを占める [出典](https://tradingeconomics.com/south-korea/exports)。2019年時点の集積回路の輸出比率は15.35パーセントだった [出典](https://en.wikipedia.org/wiki/Economy_of_South_Korea)。7年で比率が2.7倍になっている。経常収支では2026年6月の黒字が497.3億ドル、2026年上半期の累計が1,910.1億ドルで、2025年上半期の478.7億ドルの4.0倍である [出典](https://tradingeconomics.com/south-korea/current-account)。
@@ -44,6 +50,12 @@ thesis: 単一産業への依存も単一航路への依存も同じ脆弱性で
 
 減少がどこに集中したかを見ると、単一経路への依存が数字で出る。タイからの入国は2,146,674人から1,022,743人へ52.4パーセント減で、人数の減少は1,123,931人である。総数の減少1,130,373人に対してタイ1国が99.4パーセントを占める。ラオスは60.7パーセント減、ベトナムは8.8パーセント減で、陸続きの3国の減少合計は1,445,393人となり、総数の減少幅を上回る [出典](https://asset.cambodia.gov.kh/tourism/2026/02/CAM122025.pdf)。増えた市場は中国のみが大型で、848,952人から1,201,681人へ41.5パーセント増、人数では352,729人の増加である。ただし中国からの入国のうち業務目的が739,709人で61.6パーセントを占め、全体の業務比率27.9パーセントを33.7ポイント上回る。増加分をレジャー需要の回復として読むことはできない。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/ch03_poipet-border.jpg" width="1000" height="750" loading="lazy" alt="ポイペトのカンボジア側国境の門">
+<figcaption>タイとの国境の町ポイペトにあるカンボジア側の門。2025年はタイからの入国が前年の半分以下に減り、その減少人数は総入国者の減少の99.4パーセントを占めた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Border_crossing_cambodia.jpg">Darcy M</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 一時要因か構造転換かの判定は、その後の期間を見て行う。2025年12月単月の入国者数は396,911人で前年同月比43.2パーセント減、2026年第1四半期は1,014,147人で前年同期比44.8パーセント減である [出典](https://asset.cambodia.gov.kh/tourism/2026/05/CAM32026.pdf)。減少は年をまたいで続いている。季節要因では説明できない。
 
 同時に、単価上昇の側には未解決の部分が残る。平均滞在日数は7.1日から6.2日へ0.9日短くなり、ホテル稼働率は77.8パーセントから59.1パーセントへ18.7ポイント下がった。滞在が短くなり客室稼働も落ちた中で1人あたり収入が28.3パーセント増えたという組み合わせは、宿泊以外の支出項目か推計方法の影響を示唆する。観光統計報告書は国際観光収入の推計方法を記載しておらず、この差の内訳は公表資料からは特定できなかった。観光セクターのGDPシェアも9.4パーセントから9.8パーセントへ0.4ポイントの上昇にとどまる。世界銀行の名目GDPは2025年で51.27十億USDであり、観光収入3,878百万USDを割ると7.6パーセントとなって9.8パーセントと一致しない [出典](https://api.worldbank.org/v2/country/KHM/indicator/NY.GDP.MKTP.CD?format=json)。観光省のシェアは国内観光や間接効果を含む別定義である可能性が高いが、報告書に定義の記載はなく確認できていない。
@@ -55,6 +67,12 @@ thesis: 単一産業への依存も単一航路への依存も同じ脆弱性で
 産業の集中と航路の集中は、同じ構造をしている。どちらも平時には効率であり、反転すると全体に波及する。違いは波及の経路が価格として観測しやすい点にある。
 
 まず、どれだけ細いかを数量で押さえる。2024年の原油および石油液体の通過量は、マラッカ海峡が1日あたり22.5百万バレル、ホルムズ海峡が1日あたり20.7百万バレルである。以下、デンマーク海峡が4.9百万バレル、スエズ運河と SUMED パイプラインの合計が4.8百万バレル、バブエルマンデブ海峡が4.1百万バレル、トルコ海峡が3.6百万バレル、パナマ運河が2.0百万バレルと続く [出典](https://www.eia.gov/international/content/analysis/special_topics/World_Oil_Transit_Chokepoints)。ホルムズ海峡は海上輸送された石油の約4分の1に相当する。マラッカ海峡は2025年上期に1日あたり23.2百万バレルで、海上石油輸送の29パーセントに当たる。2024年通年の22.5百万バレルとの差は集計期間の違いによるもので、矛盾ではない。コンテナ側の集中点はスエズ運河で、世界の海上荷動き量の約10パーセント、世界のコンテナ荷動きの22パーセントを扱う [出典](https://unctad.org/system/files/official-document/rmt2024ch2_en.pdf)。
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/ch03_hormuz-modis.jpg" width="1000" height="779" loading="lazy" alt="MODISが撮影したホルムズ海峡"><img src="../img/ch03_bab-el-mandeb.jpg" width="857" height="1000" loading="lazy" alt="ASTERが撮影したバブエルマンデブ海峡"></div>
+<figcaption>左は MODIS が2020年12月に撮影したホルムズ海峡で、最も狭い所の幅は約34kmである。右は ASTER が撮影したバブエルマンデブ海峡で、紅海とアデン湾をつないでいる。2024年の石油の通過量は、ホルムズ海峡が1日20.7百万バレル、バブエルマンデブ海峡が1日4.1百万バレルだった。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Strait_of_Hormuz_(MODIS_2020-12-04).jpg">NASA GSFC MODIS Land Rapid Response Team</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Bab-el-Mandeb_Strait,_Africa-Arabia_(ASTER).jpg">NASA/METI/AIST/Japan Space Systems, U.S./Japan ASTER Science Team</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 次に、価格が動く仕組みを見る。ここで重要なのは、閉塞しなくても価格は動くという点である。==企業の損益を動かしているのは通航停止そのものではなく、迂回に伴う距離とスケジュールの変化である==。2024年の海上荷動きは数量で2.2パーセント増にとどまった一方、トンマイルは5.9パーセント増となり、平均航海距離は2018年の4,831マイルから2024年の5,245マイルへ伸びた [出典](https://unctad.org/system/files/official-document/rmt2025overview_en.pdf)。数量が伸びていないのに船腹需要が伸びる。この乖離が運賃上昇の起点になる。
 
@@ -68,9 +86,21 @@ thesis: 単一産業への依存も単一航路への依存も同じ脆弱性で
 
 制約の性質を区別する必要がある。パナマ運河は2023年11月7日に1日24隻へ削減され、2024年8月に35枠へ戻った。制限前の水準は1日34から36隻である [出典](https://www.eia.gov/todayinenergy/detail.php?id=62408)。2025会計年度には通航13,404隻、収入57.05億ドルとなり、2024会計年度の11,240隻、49.86億ドルから通航隻数で19.3パーセント回復した。運河庁の会計年度実績は他の数値でも裏が取れる。2025会計年度の純利益は41.3億ドルで前年度比6.95億ドル増、通航の内訳はネオパナマックス3,342隻とパナマックス10,062隻、トン数は4億8,910万CP/SUABトンで15.6パーセント増である。国庫への納付は29.65億ドルにのぼった[出典](https://gcaptain.com/panama-canal-posts-5-7-bn-in-fy2025-revenue-transits-jump-19/)。==降水量が戻れば数量も収入も戻るという、制約の性質がそのまま回復の形に出ている== [出典](https://pancanal.com/en/panama-canal-maintains-operational-and-financial-strength/)。パナマ運河の制約は降水量で決まり、自然条件の回復で解消しうる。紅海の制約は安全保障で決まり、2年近く続いている。同じチョークポイントでも、回復までの時間の読み方が異なる。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/ch03_agua-clara-locks.jpg" width="1000" height="666" loading="lazy" alt="パナマ運河アグア・クララ閘門を通る船">
+<figcaption>パナマ運河のアグア・クララ閘門を通るタンカー（2019年9月）。閘門の運用には湖の水を使うため、通航枠は降水量に左右される。2023年11月に1日24隻へ削減された枠は、2024年8月に35枠へ戻った。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Agua_Clara_Locks_09_2019_0752.jpg">Mariordo</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 4つ目の経路が港湾である。==港湾が詰まるのは荷動き総量が増えたときではなく、到着が束になったときである==。2024年の海上荷動きは数量で2.2パーセント増にすぎない。それでもコンテナ船の平均待ち時間は2024年12月に先進国で6.4時間、途上国で10.9時間となり、2023年12月の5.2時間、10.2時間から伸びた [出典](https://unctad.org/system/files/official-document/rmt2025ch4_en.pdf)。コンテナ船の中央値の在港時間も2024年末に0.8日へ上昇し、それまでの低下傾向が反転した。500ムーブ未満の小口寄港では、コンテナ1個あたりの荷役時間が2024年に4分20秒を超えた。
 
 条件を特定できる事例がシンガポールである。シンガポール海事港湾庁は2024年5月30日の発表で、待ち時間の延伸の原因を喜望峰迂回によるスケジュール混乱と船舶の到着集中だと説明した。遅延した船の待ち時間は2から3日である。2024年1月から4月のコンテナ取扱量は13.36百万TEUで前年同期比8.8パーセント増となり、同庁はケッペル・ターミナルの旧バースとヤードを再稼働させて週間処理能力を77万TEUから82万TEUへ引き上げた [出典](https://www.mpa.gov.sg/media-centre/details/in-response-to-media-queries-on--vessels--extended-waiting-times-for-berths-in-the-port-of-singapore)。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/ch03_maersk-pasir-panjang.jpg" width="1000" height="750" loading="lazy" alt="パシルパンジャン・ターミナルに着岸したマースクのコンテナ船">
+<figcaption>シンガポールのパシルパンジャン・コンテナターミナルに着岸したマースクのコンテナ船。2024年は喜望峰迂回によるスケジュールの乱れで船の到着が集中し、遅延した船の待ち時間は2日から3日に延びた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Maersk_Huacho_container_ship_at_Pasir_Panjang_Container_Terminal.jpg">Wzhkevin</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 ここから、港湾がボトルネックになる条件は3つに整理できる。第1に、到着間隔の分散が広がること。定時性が崩れると同じ総量でもピーク需要がバース数を超える。第2に、1寄港あたりの取扱本数が増えること。積み替え比率の高い港では迂回によって揚げ地変更が起き、1隻あたりの作業量が伸びる。第3に、空コンテナの偏在。定刻外到着は空コンテナの再配置を招き、ヤード面積を圧迫する。バースと荷役機械の物理的上限に達する前に、スケジュール分散とヤード占有率の側が先に効く。
 

@@ -18,7 +18,17 @@
 <tr><td>山地と平野の境</td><td>谷の出口</td><td>山の産物と平野の産物を交換する<strong>谷口集落</strong>が成立する</td></tr>
 <tr><td>川の渡し場</td><td>両岸の渡河地点</td><td>橋がない時代に旅人が川を待つ<strong>渡津集落</strong>が成立する</td></tr>
 </tbody></table></div>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_settlements-mizuya.jpg" width="1000" height="756" loading="lazy" alt="石垣の上に建てた輪中の農家の水屋">
+<figcaption>岐阜県海津市の木曽三川公園センターに展示された輪中の農家の水屋。母屋より高く積んだ石垣の上に建て、洪水に備えた。堤防で囲んだ輪中の内側でも、建物の高さを上げて浸水に対処した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Mizuya_01.jpg">アセルス</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>社会条件としては防御・交通・開発の主体が挙げられる。周囲に堀をめぐらせた<strong>環濠集落</strong>は奈良盆地などに見られ、外敵や争いから集落を守るための形である。街道の宿駅や港も村落の位置を決める。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_settlements-hieda.jpg" width="1000" height="750" loading="lazy" alt="稗田環濠集落の周囲を囲む堀">
+<figcaption>奈良県大和郡山市の稗田環濠集落の堀。水をたたえた堀が集落の周囲を囲み、外敵や争いから集落を守った。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:%E7%A8%97%E7%94%B0%E7%92%B0%E6%BF%A0_Circular_moat,_Hieda_2010.5.06_-_panoramio.jpg">Nankou Oronain</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h3>形態 集村と散村</h3>
 <p>家屋が1か所に集まる村落を<strong>集村</strong>と呼ぶ。家屋が1戸ずつ離れて耕地の中に点在する村落を<strong>散村</strong>と呼ぶ。集村は共同作業・防御・水の共同利用に有利である。散村は家屋のすぐ周りに自分の耕地を配置できるので耕作の移動距離が短い。</p>
@@ -101,6 +111,11 @@
 <figcaption>集村の4つの形態と散村の模式図である。黒い四角は家屋、灰色の線は耕地の境界、白い線は道路を示す。街村の家屋は商家が多いことを色で区別した。散村の緑の点は家屋を囲む屋敷林である。</figcaption></figure>
 <p>富山県の<strong>砺波平野</strong>は日本で最大の散村である。約220平方キロメートルに7,000戸程度が散在するとされる（出典13）。庄川がたびたび氾濫したため住民は周囲より少し高い場所に家を建てた。その周囲に水田を開き耕地を家の近くに集めた結果として散村が形成されたと説明される（出典13）。家屋を囲む屋敷林は<strong>カイニョ</strong>と呼ばれ、冬の季節風を防ぎ燃料や建築材を供給した（出典13）。出雲平野・大井川扇状地・胆沢扇状地・十勝平野にも散村が見られる（出典13）。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/15_settlements-tonami.jpg" width="720" height="540" loading="lazy" alt="水田の中に家屋が点在する砺波平野の空中写真">
+<figcaption>富山県砺波市の散村の空中写真。水田の中に家屋が1戸ずつ離れて点在し、黒く見える屋敷林のカイニョがそれぞれの家屋を囲む。家屋のすぐ周りに自分の耕地を配置した散村の形態が分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Aerial_photograph_of_Dispersed_settlement_in_Tonami_plain.jpg">Tawashi2006</a>／Attribution／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <h3>開発の時代と村落</h3>
 <p>計画的に開発された村落は、整然とした区画をもつことが多い。区画の形から開発の時代を判定できる。</p>
@@ -112,6 +127,11 @@
 <li><b>1862年</b>アメリカのホームステッド法。入植者に160エーカーを与え散村が広がった（出典15）</li>
 <li><b>1875年</b>北海道の札幌郡琴似に最初の屯田兵が入植した。屯田兵は開拓と北方の防備を兼ねた（出典14）</li>
 </ol>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_settlements-kotoni.jpg" width="640" height="480" loading="lazy" alt="琴似に残る屯田兵の兵屋">
+<figcaption>札幌市西区の琴似屯田兵村の兵屋跡。1875年にこの地へ最初の屯田兵が入植し、開拓と北方の防備を兼ねた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:KotoniTondenHeisonHeiokuAto2004-9-23.jpg">Kinori</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>三富新田は道路沿いに家屋が並び、背後に耕地と平地林が細長く続く<strong>路村</strong>の典型である。台地の上は水が得にくく稲作ができないため、畑作と落葉を肥料に使う平地林の組合せで新田が経営された。</p>
 
 <figure class="tb-fig">
@@ -160,6 +180,11 @@
 
 <h3>都市の発達</h3>
 <p>都市は農業の余剰生産物を基盤として成立した。余剰があれば食料を生産しない人々が政治・宗教・交易に専念できるからである。ヨーロッパの中世には周囲を城壁で囲んだ<strong>城郭都市</strong>が多く生まれた。日本の近世には城下町・門前町・宿場町・港町・寺内町が成立した。産業革命以降は工場の立地に伴って工業都市が急速に成長した。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_settlements-nordlingen.jpg" width="837" height="627" loading="lazy" alt="円形の城壁に囲まれたネルトリンゲンの旧市街の空中写真">
+<figcaption>ドイツ南部のネルトリンゲンの旧市街の空中写真。円形の旧市街を中世に築かれた城壁が囲み、その外側に新しい市街地と農地が広がる。ヨーロッパの中世に生まれた城郭都市の形が、市街地の平面にそのまま残っている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:N%C3%B6rdlingen_Altstadt_Aerial.jpg">Bayerische Vermessungsverwaltung – www.g</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>都市の機能</h3>
 <p>都市がもつ中心的な役割を<strong>都市機能</strong>と呼ぶ。都市は機能によって分類できる。</p>
 <div class="tb-tw"><table>
@@ -175,6 +200,11 @@
 <tr><td>住宅都市・観光都市</td><td>多摩ニュータウン ／ ニース ／ ラスベガス</td></tr>
 </tbody></table></div>
 <p>首都を計画的に新設した例が政治都市に多い。ブラジルは1960年に首都をリオデジャネイロから内陸のブラジリアへ移した。内陸部の開発を促すことが目的であった（出典32）。オーストラリアでは1927年に連邦議会がメルボルンからキャンベラへ移った（出典33）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_settlements-brasilia.jpg" width="1000" height="666" loading="lazy" alt="上空から見たブラジリアの中心部">
+<figcaption>ブラジリアの中心部を上空から見た姿。広い緑地をはさんで幅の広い大通りが直線で延び、その両側に高層の建物が並ぶ。1960年に首都となった計画都市で、内陸部の開発を促す目的で建設された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Brasilia_aerea_eixo_monumental.jpg">Governo do Brasil</a>／CC BY 3.0 br／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>街路の形態</h3>
 <div class="tb-tw"><table>
 <thead><tr><th>型</th><th>特徴</th><th>例</th></tr></thead>
@@ -192,6 +222,11 @@
 <h2 id="s3">都市の内部構造</h2>
 <p>大都市の内部では土地の使われ方が場所ごとに分かれる。この現象を<strong>都市内部の地域分化</strong>と呼ぶ。中心部には官公庁・企業の本社・銀行が集まる<strong>中心業務地区</strong>（CBD）が形成される。CBDは交通の便が最もよく地価が最も高い。高い地価を負担できる業務機能だけが中心部に残り、住宅は外側へ押し出される。</p>
 <p>CBDの外側には交通の結節点に<strong>副都心</strong>が形成される。東京の新宿・渋谷・池袋が例である。CBDに隣接する古い市街地を<strong>インナーシティ</strong>と呼ぶ。その外側には住宅地が広がる<strong>郊外</strong>がある。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/15_settlements-marunouchi.jpg" width="1000" height="562" loading="lazy" alt="東京駅の丸の内側に並ぶオフィスビル"><img src="../img/15_settlements-shinjuku.jpg" width="1000" height="750" loading="lazy" alt="西新宿の超高層ビル群"></div>
+<figcaption>左は東京駅の丸の内側で、駅前の広場の奥に高層のオフィスビルが並ぶ。右は西新宿の超高層ビル群である。丸の内は企業の本社が集まるCBDの例、新宿は交通の結節点に形成された副都心の例である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Tokyo_Station_Marunouchi_exit_seen_from_the_JP_Tower_20191130.jpg">掬茶</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Nishi-Shinjuku-Skyline.jpg">Flickr user: t-ohashi https://www.flickr</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>昼夜間人口比率</h3>
 <p>常住人口100人あたりの昼間人口を<strong>昼夜間人口比率</strong>と呼ぶ。昼間人口は常住人口から通勤・通学で流出する人を引き、流入する人を加えた人口である（出典6）。CBDでは100を大きく上回り、郊外の住宅都市では100を下回る。</p>
 <div class="tb-bars"><h5>昼夜間人口比率 2020年 出典4</h5>
@@ -408,6 +443,11 @@
 <p>都心の周辺の古い市街地では、若い世代と中所得層が郊外へ転出し高齢者・低所得層・移民が残る。住宅の老朽化・税収の減少・治安の悪化が重なる現象を<strong>インナーシティ問題</strong>と呼ぶ。この地区が再開発されて地価と家賃が上がり、高所得層が流入して元の住民が転出を迫られる現象を<strong>ジェントリフィケーション</strong>と呼ぶ。この語は社会学者のグラスが1964年にロンドンの労働者地区の変化を指して用いた（出典28）。</p>
 <h3>発展途上国の都市問題</h3>
 <p>発展途上国では農村の人口増加と貧困が人を押し出し、都市の雇用への期待が人を引きつける。都市の人口増加が雇用と住宅の供給を上回る状態を<strong>過剰都市化</strong>と呼ぶ。住宅を得られない人々は、上下水道などの基盤が不十分な<strong>スラム</strong>に住む。他人や公共の土地を不法に占拠して住む場合を<strong>スクオッター</strong>と呼ぶ。正規の雇用に就けない人々は露天商や日雇いなどの<strong>インフォーマルセクター</strong>で生計を立てる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_settlements-rocinha.jpg" width="1000" height="663" loading="lazy" alt="山の斜面に住宅が密集するロシーニャ">
+<figcaption>リオデジャネイロのファヴェーラ（スラム）の1つであるロシーニャ。山の斜面に住宅が隙間なく建ち並び、奥には南部の市街地の高層住宅が見える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Rocinha_favela_December_2010.jpg">matteo0702</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-kpi">
 <div><b>11.2<small>億人</small></b><i>世界のスラム人口</i><em>2022年 出典11</em></div>
 <div><b>24.8<small>%</small></b><i>都市人口に占めるスラム人口</i><em>2022年 出典11</em></div>
@@ -487,6 +527,11 @@
 <li><b>1971年</b>東京都の多摩ニュータウンで最初の入居が始まった。稲城市・多摩市・八王子市・町田市にまたがる（出典30）</li>
 </ol>
 <p>イギリスのニュータウンは職場と住宅をともに備える職住近接を目指した。日本のニュータウンは大都市へ通勤する人のための住宅都市としての性格が強い。日本のニュータウンでは同じ時期に同じ世代が一斉に入居したため、子の世代が転出すると住民の高齢化と住宅の老朽化が同時に進んだ。これを<strong>オールドタウン化</strong>と呼ぶ。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_settlements-tama.jpg" width="1000" height="666" loading="lazy" alt="丘陵の上に団地が並ぶ多摩ニュータウン">
+<figcaption>京王相模原線の車窓から見た多摩ニュータウンの長峰地区。丘陵の上に集合住宅の団地が並ぶ。日本のニュータウンは大都市へ通勤する人のための住宅都市としての性格が強い。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:%E4%BA%AC%E7%8E%8B%E7%9B%B8%E6%A8%A1%E5%8E%9F%E7%B7%9A%E3%81%AE%E8%BB%8A%E7%AA%93%E3%81%8B%E3%82%89%E8%A6%8B%E3%81%9F%E5%A4%9A%E6%91%A9%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%BF%E3%82%A6%E3%83%B3%E9%95%B7%E5%B3%B0%E5%9C%B0%E5%8C%BA%EF%BC%882021%E5%B9%B43%E6%9C%8829%E6%97%A5%E6%92%AE%E5%BD%B1%EF%BC%89.jpg">いろは団地</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>再開発の方式</h3>
 <div class="tb-vs">
 <div><h5>一掃型（クリアランス型）</h5><ul>
@@ -501,7 +546,17 @@
 </ul></div>
 </div>
 <p>ロンドンでは衰退した港湾地区の<strong>ドックランズ</strong>で、1981年に設立されたロンドン・ドックランズ開発公社が再開発を進めた（出典26）。カナリーワーフは金融街として整備された（出典26）。パリでは歴史的な市街地の景観を保全し、西側の市域外に業務地区のラ・デファンスを建設した（出典27）。旧市街の保全と業務機能の集積を場所で分けた例である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_settlements-canary.jpg" width="1000" height="562" loading="lazy" alt="テムズ川沿いから見たカナリーワーフの夜景">
+<figcaption>テムズ川沿いのライムハウスから見たカナリーワーフの夜景。衰退した港湾地区のドックランズが再開発され、高層のオフィスビルが集まる金融街になった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Canary_Wharf_from_Limehouse_London_June_2016_HDR.jpg">King of Hearts</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>日本では人口減少の下で市街地の拡散を抑える<strong>コンパクトシティ</strong>が政策課題となった。富山市は旧JR富山港線を路面電車に転換した富山ライトレールを2006年に開業させた（出典31）。2020年には富山駅の南北の路面電車が接続された（出典31）。公共交通の沿線に居住と都市機能を集める政策の代表例である。国土計画との関係は第22章で扱う。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/15_settlements-portram.jpg" width="1000" height="666" loading="lazy" alt="富山ライトレールの路面電車">
+<figcaption>富山ライトレールの車両「ポートラム」。旧JR富山港線を路面電車に転換して2006年に開業した。公共交通の沿線に居住と都市機能を集める政策の代表例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:PORTRAM-0604.jpg">MaedaAkihiko</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 6</div>
 <p>ニュータウンの建設から50年後に住民の高齢化と小学校の統廃合が同時に進んだ。原因を入居の仕組みから説明せよ。</p>

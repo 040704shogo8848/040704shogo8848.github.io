@@ -102,6 +102,11 @@
 <p>\( y=|f(x)| \) のグラフは \( y=f(x) \) のグラフのうち \( x \) 軸より下にある部分を \( x \) 軸で折り返したものである。絶対値の定義により \( f(x)\geqq 0 \) の範囲では \( |f(x)|=f(x) \) で \( f(x)<0 \) の範囲では \( |f(x)|=-f(x) \) だからである。後者は \( x \) 軸に関する対称移動にあたる。</p>
 <p>たとえば \( y=|x^2-2x| \) は \( 0<x<2 \) で \( y=-(x^2-2x) \) になり頂点 (1, 1) の上に凸の弧になる。それ以外の範囲では \( y=x^2-2x \) のままである。方程式 \( |x^2-2x|=k \) の実数解の個数はこのグラフと直線 \( y=k \) の共有点の個数で数える。\( 0<k<1 \) なら4個 ・ \( k=1 \) なら3個 ・ \( k>1 \) なら2個である。<strong class="hit">場合分けを式で行う代わりにグラフの交点を数えると解の個数が一目で求まる</strong>。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/01_functions-fountain.jpg" width="750" height="1000" loading="lazy" alt="放物線を描く噴水の水">
+<figcaption>スペイン・アランフエスの王宮庭園の噴水である。斜めに噴き出した水は放物線に近い曲線を描く。放物線の頂点の位置は、水を噴き出す向きと速さで定まる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:ParabolicWaterTrajectory.jpg">GuidoB</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s3">平方完成と頂点</h2>
 <p>\( y=ax^2+bx+c \ (a\neq 0) \) の形の関数を2次関数と呼ぶ。グラフは<strong>放物線</strong>である。\( a>0 \) なら下に凸で \( a<0 \) なら上に凸である。放物線の対称軸を<strong>軸</strong>と呼び軸と放物線の交点を<strong>頂点</strong>と呼ぶ。</p>
 <p>頂点を求めるには式を \( a(x-p)^2+q \) の形に変形する。この変形を<strong>平方完成</strong>と呼ぶ。この形になればグラフは \( y=ax^2 \) を平行移動したものだと分かり頂点は \( (p, q) \) である。</p>
@@ -132,6 +137,11 @@
 <p>空気抵抗を無視すると打球の高さは時間の2次関数である。頂点の \( y \) 座標が最高到達点で \( x \) 座標がその時刻にあたる。</p>
 <p class="an-x">実際の打球は空気抵抗を受けるので放物線より手前に着地する。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_functions-ball-strobe.jpg" width="1000" height="643" loading="lazy" alt="弾むボールのストロボ写真">
+<figcaption>弾むボールを毎秒25回のストロボで撮影した写真である。床で跳ね返ってから次に床に当たるまでの軌道は、頂点を通る縦の直線に関して対称な放物線に近い。弾むたびに頂点の高さは低くなる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bouncing_ball_strobe_edit.jpg">MichaelMaggs, Richard Bartz</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s4">最大と最小</h2>
 <p>定義域がすべての実数なら2次関数の最大最小は頂点で定まる。\( a>0 \) のとき頂点で最小値をとり最大値はない。\( a<0 \) のとき頂点で最大値をとり最小値はない。</p>
@@ -398,6 +408,11 @@
 <aside class="an an-rw"><b>現実世界</b>
 <p>投げた物体が放物線を描くことを示したのはガリレオ・ガリレイである。1638年の『新科学対話』で水平方向は等速で鉛直方向は等加速度で動くと考え軌道が放物線になると論じた。物理で学ぶ放物運動の出発点である。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/01_functions-galileo.jpg" width="845" height="1000" loading="lazy" alt="ガリレオの肖像画"><img src="../img/01_functions-discorsi.jpg" width="1000" height="1000" loading="lazy" alt="『新科学対話』の扉"></div>
+<figcaption>左はガリレオの肖像画、右は1638年にライデンで刊行された『新科学対話』の扉である。ガリレオはこの本で、投げた物体の軌道が放物線になると論じた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Justus_Sustermans_-_Portrait_of_Galileo_Galilei_(Uffizi).jpg">Justus Sustermans</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Galileo_Galilei,_Discorsi_e_Dimostrazioni_Matematiche_Intorno_a_Due_Nuove_Scienze,_1638_(1400x1400).png">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 平行移動</div>

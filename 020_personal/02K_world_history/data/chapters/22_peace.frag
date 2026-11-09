@@ -69,7 +69,15 @@
 </ul>
 
 <p>国際連盟規約は戦争を全面的には禁止しなかった。第12条は、紛争を仲裁や理事会の審査に付し、判断が出てから3か月は戦争に訴えないことを加盟国に義務づけた（出典2）。手続を踏めば戦争は違法にならない余地が残った。第16条はこの手続に反して戦争に訴えた国を全加盟国に対する戦争行為をした国とみなし、通商と金融の関係の断絶を義務づけた（出典2）。軍事的な措置は理事会が各国に「勧告」するにとどまった。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/22_peace-palaiswilson.jpg" width="1000" height="692" loading="lazy" alt="ジュネーヴのパレ・ウィルソン">
+<figcaption>ジュネーヴのレマン湖畔にあるパレ・ウィルソン。国際連盟の最初の本部が置かれた建物であり、連盟の創設を唱えたウィルソン大統領の名を外壁に掲げる。現在は国連人権高等弁務官事務所が入り、屋上には国連の旗が掲げられている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:UN-Palais-WoodrowWilson_Geneva_15112020.jpg">RomanDeckert</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>イタリアのエチオピア侵攻はこの仕組みの限界を示した。制裁に賛成した国は50か国とする資料（出典32）と51か国とする資料（出典5）がある。石油は制裁の対象から外された（出典5・32）。連盟に加わっていないアメリカからの物資の調達も止められなかった。エチオピアの併合後の1936年7月に制裁は撤廃された（出典5）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/22_peace-selassie.jpg" width="1000" height="727" loading="lazy" alt="国際連盟で演説するハイレ・セラシエ">
+<figcaption>1936年に国際連盟の総会でイタリアの侵略を訴えるエチオピア皇帝ハイレ・セラシエ。演壇に立つ皇帝の訴えにもかかわらず、制裁は同じ年に撤廃された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Emperor_Haile_Selassie_League_of_Nations_speech.png">Bettmann Archive</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>国際連合憲章はこの経験を踏まえて設計された。比較の項目を第6章の3項目から広げると次のようになる。</p>
 
 <div class="tb-tw"><table>
@@ -94,6 +102,10 @@
 
 <h2 id="s2">冷戦と安全保障理事会の停止</h2>
 <p>憲章の集団安全保障は、5つの常任理事国が一致することを前提にしていた。実質事項の決議には常任理事国の同意投票を含む9か国の賛成が要る（第27条3項、出典3）。常任理事国が1か国でも反対すれば決議は成立しない。これを<strong>拒否権</strong>と呼ぶ。冷戦が始まると米ソの対立がそのまま安保理に持ち込まれた。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/22_peace-securitycouncil.jpg" width="1000" height="800" loading="lazy" alt="ニューヨークの国連本部の安全保障理事会の議場">
+<figcaption>ニューヨークの国連本部にある安全保障理事会の議場。中央の馬蹄形の机に理事国の代表の席が並び、その周りを随員と傍聴の席が囲む。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:United_Nations_Headquarters_-_Security_Council_chamber,_angled_view.jpg">Jdforrester</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="安全保障理事会の拒否権の行使数 ソ連とロシア・アメリカ 年代別">
@@ -157,6 +169,10 @@
 
 <h3>平和のための結集決議と総会</h3>
 <p>朝鮮戦争の国連軍は、ソ連が安保理を欠席していたために成立した例外である（第7章）。ソ連は1950年8月に安保理へ復帰した（出典8）。西側諸国は安保理の停止に備えて総会の権限を使う道を開いた。1950年11月3日に総会は<strong>平和のための結集決議</strong>を賛成52・反対5・棄権2で採択した（出典8）。常任理事国の不一致で安保理が責任を果たせない時は、総会が緊急特別会期を開いて集団的措置を勧告できるとする決議である。最初に適用されたのはソ連に対してではなかった。1956年のスエズ戦争で英仏が拒否権を行使すると、総会が緊急特別会期を開き、11月7日に第1次国連緊急軍（UNEF）の設置を決めた（出典8）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/22_peace-unef.jpg" width="677" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="シナイ半島の国連緊急軍のユーゴスラヴィア兵">
+<figcaption>シナイ半島に派遣された第1次国連緊急軍のユーゴスラヴィアの兵士（1957年1月）。ヘルメットに国連の文字を付けている。武装した部隊が停戦の監視にあたる形の平和維持活動は、この部隊から始まった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:UNEF_Yugoslav_soldiers_15-01-1957.jpg">Government Press Office</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h3>平和維持活動という発明</h3>
 <p>国連の<strong>平和維持活動</strong>（PKO）とは、紛争の当事者の間に国連が要員を派遣し、停戦の監視や兵力の引き離しで紛争の再発を防ぐ活動である。憲章に規定はない。憲章第6章の平和的解決と憲章第7章の強制措置の中間にあたるため「6章半」の活動と呼ばれることがある。最初の活動は1948年の国連休戦監視機構（UNTSO）であり、武装した部隊が当事者の間に入る形はUNEFで始まった（出典12）。PKOは3つの原則で運用される。当事者の同意・公平性・自衛と任務の防衛以外での武力の不行使である（出典9）。強制ではなく同意にもとづくため、大国が反対しにくく、冷戦下でも設置できた。</p>
@@ -293,6 +309,10 @@
 </ul>
 
 <p>この時期の紛争管理には2つの型がある。第1は米ソの<strong>二国間の軍備管理</strong>である。第1次戦略兵器制限交渉（SALT I）のように、対立を前提として兵器の数に上限を設けた。第2は<strong>多国間の対話の枠組み</strong>である。1975年の全欧安全保障協力会議（CSCE）はアメリカ・カナダと東西のヨーロッパ諸国の35か国が参加し、ヘルシンキ宣言に署名した（出典18）。宣言は国境の不可侵と武力の不行使に加えて、人権の尊重を原則として掲げた。条約ではなく法的な拘束力はなかった（出典18）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/22_peace-helsinki.jpg" width="1000" height="658" loading="lazy" alt="ヘルシンキ宣言に署名する各国首脳">
+<figcaption>1975年にヘルシンキのフィンランディア・ホールで、全欧安全保障協力会議の最終文書に署名する各国の首脳。弧を描く長い机に国名の札が並び、文書が順に回されている。東西の35か国が1つの文書に署名した場面である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Photograph_of_President_Gerald_R._Ford_Signing_the_Final_Act_of_the_Conference_on_Security_and_Cooperation_in_Europe_as_It_is_Passed_Among_European_Leaders_for_Signature_in_Finlandia_Hall_in_Helsinki,_Finland_-_NARA_-_7462052.jpg">作者不明</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>東側諸国は国境の不可侵が戦後の国境を確定させる点を重視した。しかし人権の条項は東欧とソ連の市民が自国政府を批判する根拠になった。チェコスロヴァキアの憲章77やソ連のヘルシンキ・グループはこの宣言を活動の拠り所とした（出典18）。CSCEは1995年に常設の機構となり、欧州安全保障協力機構（OSCE）に改められた（出典18）。</p>
 
 <aside class="an an-biz"><b>経済で言えば</b>
@@ -329,6 +349,10 @@
 </tbody></table></div>
 
 <p>拡大は失敗も生んだ。ソマリアの第2次国連ソマリア活動（UNOSOM II）は武装勢力との戦闘に巻き込まれた（出典12）。1994年のルワンダと1995年のボスニアのスレブレニツァでは、国連の部隊が現地にいながら虐殺を防げなかった。犠牲者数の推計は第8章で扱った。同意・公平・武力の不行使という3原則は、当事者の一方が住民を攻撃する状況で住民を守れないという問題が明らかになった。</p>
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/22_peace-unosom.jpg" width="1000" height="666" loading="lazy" alt="モガディシュの国連ソマリア活動の施設"><img src="../img/22_peace-srebrenica.jpg" width="1000" height="593" loading="lazy" alt="スレブレニツァの虐殺の犠牲者の墓地"></div>
+<figcaption>左はモガディシュの国連ソマリア活動（UNOSOM）の施設であり、有刺鉄線で囲まれている。右はボスニアのスレブレニツァ近郊のポトチャリにある虐殺の犠牲者の墓地である。ソマリアでは国連の活動が武装勢力との戦闘に巻き込まれ、スレブレニツァでは国連の部隊が現地にいながら虐殺を防げなかった。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:UNOSOM_compound_in_Mogadishu,_Somalia.jpg">Ctsnow</a>／CC BY 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:Srebrenica_massacre_memorial_gravestones_2009_1.jpg">Michael Büker</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <ul class="tb-tl">
 <li><b>1992年</b><strong>『平和への課題』</strong>。紛争の予防から平和構築までの4段階を示す</li>
@@ -398,10 +422,18 @@
 
 <h3>個人の責任を問う司法</h3>
 <p>冷戦後は戦争犯罪の責任を国家ではなく個人に問う制度が整えられた。安保理は1993年に旧ユーゴスラヴィア国際刑事裁判所を、1994年にルワンダ国際刑事裁判所を設けた。いずれも特定の紛争に限った法廷である。1998年7月17日にはローマ規程が採択され、2002年7月1日に常設の<strong>国際刑事裁判所</strong>（ICC）がハーグに発足した（出典21）。日本は2007年10月1日に締約国となり、2020年時点で最大の分担金の拠出国であった（出典21）。締約国は2025年1月時点で125か国であり、アメリカ・中国・ロシアは締約国ではない（出典21）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/22_peace-icc.jpg" width="1000" height="750" loading="lazy" alt="ハーグの国際刑事裁判所の建物">
+<figcaption>ハーグの国際刑事裁判所の建物（2019年）。個人の戦争犯罪や人道に対する罪を裁く常設の裁判所である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:International_Criminal_Court_building_(2019)_in_The_Hague_01.jpg">OSeveno</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>処罰と和解のどちらを優先するかについては見方が分かれる。1996年に活動を始めた南アフリカの真実和解委員会は、アパルトヘイト期の政治的な動機による人権侵害について、全てを開示した者に恩赦を与える方式をとった（出典31）。委員長はツツ大主教である。被害者の一部からは加害者に有利だとする批判が出た（出典31）。処罰を重視する立場は、責任者を裁かなければ将来の残虐行為を防げないとする。和解を重視する立場は、加害者と被害者が同じ社会で暮らし続ける以上、真実の公開と社会の再建を優先すべきだとする。</p>
 
 <h3>多様な行動主体と条約</h3>
 <p>指導要領の内容の取扱いは、平和で民主的な世界を目指す多様な行動主体に注目するよう求めている（出典1）。代表例が非政府組織の連合が主導した条約である。地雷禁止国際キャンペーン（ICBL）の運動を受けて、対人地雷禁止条約が1997年12月3日にオタワで署名された（出典22）。ICBLは同年にノーベル平和賞を受けた（出典22）。日本は署名の日に署名し、1998年9月30日に締結した（出典23）。核兵器禁止条約は2017年7月7日に122か国の賛成で採択され、2021年1月22日に発効した（出典25）。条約の採択に貢献した核兵器廃絶国際キャンペーン（ICAN）は2017年のノーベル平和賞を受けた。日本はアメリカの核抑止に依存する安全保障の立場から核兵器禁止条約に参加していない（出典25）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/22_peace-landmine.jpg" width="1000" height="666" loading="lazy" alt="PMN対人地雷">
+<figcaption>ソ連製のPMN対人地雷（ミンスクの博物館の展示）。手のひらほどの大きさの円筒形であり、上面を踏むと作動する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:PMN_anti-personnel_landmine_(DOSAAF_Museum_in_Minsk).jpg">Homoatrox</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>こうした条約にも限界がある。核兵器禁止条約には核兵器国が参加していない。対人地雷禁止条約からは、ロシアの脅威を理由にエストニア・ラトビア・リトアニア・フィンランド・ポーランドが2025年に脱退を通告し、2025年12月から2026年2月にかけて脱退が発効した（出典22）。</p>
 
 <aside class="an an-lv"><b>男女で言えば</b>

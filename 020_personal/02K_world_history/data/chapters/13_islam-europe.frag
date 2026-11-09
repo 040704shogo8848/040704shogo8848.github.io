@@ -7,6 +7,10 @@
 <h2 id="s1">イスラーム世界の分裂と再編</h2>
 <p>アッバース朝は8世紀後半に最盛期を迎えたが、9世紀以後は地方の総督や軍人が自立した。756年にイベリア半島ではウマイヤ家の一族が<strong>後ウマイヤ朝</strong>を建てていた。909年にはチュニジアでシーア派の一派イスマーイール派の<strong>ファーティマ朝</strong>が成立し、君主はカリフを名乗った（出典2）。後ウマイヤ朝の君主も929年にカリフを名乗り、10世紀には3人のカリフが並び立った。カリフとはムハンマドの後継者としてイスラーム共同体を率いる者を指す。</p>
 <p>ファーティマ朝は969年にエジプトを征服し、新しい都カイロを建設した（出典2）。紅海を経由するインド洋交易の利益がカイロに集まり、エジプトはバグダードに並ぶ経済の中心となった。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-azhar.jpg" width="992" height="1000" loading="lazy" alt="カイロのアズハル・モスクの尖塔とドーム">
+<figcaption>カイロのアズハル・モスク。ファーティマ朝が970年に創建したモスクであり、併設の学院はイスラームの学問の中心となった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Cairo_-_Islamic_district_-_Al_Azhar_Mosque_and_University.JPG">Daniel Mayer</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>バグダードでは、イラン系でシーア派の<strong>ブワイフ朝</strong>が945年に入城し、カリフの実権を奪った（出典29）。入城を946年1月とする資料もある（出典31）。ブワイフ朝は軍人に給与の代わりに土地の徴税権を与えた。この制度を<strong>イクター制</strong>と呼ぶ。</p>
 <p>中央アジアではトルコ系の遊牧民がイスラームに改宗し、奴隷身分の軍人として各王朝に仕えた。このような軍人を<strong>マムルーク</strong>と呼ぶ。トルコ系の<strong>セルジューク朝</strong>は1040年にダンダーナカーンの戦いでガズナ朝を破った（出典3）。指導者トゥグリル・ベクは1055年にバグダードに入ってブワイフ朝を退け、スルタンを名乗った（出典3）。<strong>スルタン</strong>とはカリフから政治と軍事の権限を委ねられた世俗の君主の称号である。<strong class="hit">カリフは宗教上の権威として残り、実際の統治はスルタンが行う分業が成立した</strong>。</p>
 <p>セルジューク朝はスンナ派を保護し、宰相ニザーム・アルムルクは各地にニザーミーヤ学院を建ててウラマー（イスラーム法学者）を養成した（出典24）。1071年にはマンジケルトの戦いでビザンツ帝国を破り、アナトリアへのトルコ系の人々の移住が始まった（出典3）。1092年にスルタンのマリク・シャーが死去すると国家は分裂した（出典3）。</p>
@@ -66,10 +70,26 @@
 <h3>南アジア</h3>
 <p>アフガニスタンのガズナを拠点とするトルコ系の<strong>ガズナ朝</strong>（977〜1186年）は、サーマーン朝に仕えたトルコ系軍人が建てた王朝である（出典30）。マフムード（在位998〜1030年）は北インドへ17回侵入して財宝を略奪したが、支配はパンジャーブ西部にとどまった（出典5）。続くゴール朝のムハンマドは1192年の第2次タラーインの戦いでラージプート諸侯の連合軍を破った（出典5）。</p>
 <p>1206年にゴール朝の奴隷軍人アイバクがデリーで自立した。この王朝を<strong>奴隷王朝</strong>と呼び、ここから1526年までデリーを都とした5つのイスラーム王朝を<strong>デリー・スルタン朝</strong>と総称する（出典5）。5王朝は奴隷王朝・ハルジー朝・トゥグルク朝・サイイド朝・ロディー朝の順である（出典5）。支配層はムスリムであったが、住民の多くはヒンドゥー教徒のままであった。都市の職人や下層の人々の間では、スーフィーの活動を通じて改宗が進んだとする説明がある。これに対してイートンらは、改宗をカーストの差別から逃れるための行動とみる説明を批判し、農地の開発とともに長い時間をかけて進んだとみる（出典33）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-qutb.jpg" width="246" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="デリーのクトゥブ・ミナール">
+<figcaption>デリーのクトゥブ・ミナール。奴隷王朝を開いたアイバクが建設を始め、後継者のイルトゥトゥミシュが上の階を加えた塔である。デリーにイスラーム王朝の支配が始まったことを示す建造物である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Qutb_Minar_2011.jpg">Sfu</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>西アフリカと東アフリカ</h3>
 <p>西アフリカのニジェール川流域では、サハラ砂漠の南の金と北の岩塩が交換された。<strong>ガーナ王国</strong>はこの交易の中継で栄えた。1068年ごろのアル・バクリーの記述によると、都にはムスリム商人の町があり12のモスクがあった（出典6）。ガーナは1076年ごろムラービト朝に征服されたと長く説明されてきた。しかし1982年にコンラッドとフィッシャーはこの征服を後世の伝承とみなし、現在は征服の有無について見方が分かれる（出典6）。</p>
 <p>13世紀には<strong>マリ王国</strong>が台頭した。伝承では建国者スンジャータがキリナの戦いでソソ王国を破ったとされる。戦いの年を1235年とするのは20世紀の研究者が便宜的に定めた年である（出典6）。<strong>マンサ・ムーサ</strong>は1324年にメッカ巡礼を行い、途中のカイロで大量の金を使った（出典7）。マムルーク朝の官僚ウマリーの記録によると、カイロの金1ミスカールの価値は25ディルハムから22ディルハム弱に下がり、少なくとも12年間回復しなかった（出典7）。この変動は通常の価格の幅に収まるとする研究者もいる（出典7）。<strong>トンブクトゥ</strong>は交易とイスラームの学問の中心となった。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-mansamusa.jpg" width="876" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="カタルーニャ地図に描かれたマンサ・ムーサ">
+<figcaption>1375年ごろに作成されたカタルーニャ地図の一部。玉座のマンサ・ムーサが金を手にした姿で描かれている。ヨーロッパの地図にマリの王が金とともに描かれたことは、巡礼で示された富が地中海の向こうにも知られていたことを示す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Catalan_Atlas_BNF_Sheet_6_Mansa_Musa_(cropped).jpg">attributed to Abraham Cresques</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-djinguereber.jpg" width="603" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="トンブクトゥのジンガレイベル・モスク">
+<figcaption>トンブクトゥのジンガレイベル・モスク。土の壁で築かれた建物であり、トンブクトゥに古くからあった学問の中心の1つである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Djinguereber_Mosque,_Timbuktu,_Mali.jpg">Dr. Ondřej Havelka (cestovatel)</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>東アフリカの沿岸では、モガディシュ・マリンディ・キルワなどの港市がインド洋交易で栄えた。季節によって向きが変わる季節風を利用して、アラビア半島やインドとの間を船が往来した。現地のバントゥー系の言語にアラビア語の語彙が加わり、<strong>スワヒリ語</strong>が形成された。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-kilwa.jpg" width="750" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="キルワ・キシワニの大モスクの内部">
+<figcaption>タンザニアのキルワ・キシワニに残る大モスクの内部。石造りの円柱とアーチが並ぶ礼拝の空間は、インド洋交易で栄えた港市にムスリムの共同体があったことを示す。遺跡は世界遺産に登録されている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Great_Mosque_Kilwa_Kisiwani.jpg">Halidtz</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">イスラームの伝播は、トレードではなく交流戦の積み重ねで広がった</p>
 <p>西アフリカと東南アジアでは征服ではなく、商人が毎年同じ港に通う取引の中で王と住民が改宗した。</p>
@@ -122,8 +142,16 @@
 <h2 id="s3">ビザンツ帝国</h2>
 <p>ローマ帝国の東半分は、395年の東西分裂の後も<strong>ビザンツ帝国</strong>（東ローマ帝国）として1453年まで続いた。都はコンスタンティノープルである。皇帝は教会にも強い権限をもち、この関係を<strong>皇帝教皇主義</strong>と呼ぶことがある。</p>
 <p>6世紀のユスティニアヌス帝（在位527〜565年）は、地中海の旧ローマ領の再征服を進めた。ローマ法を集大成した『ローマ法大全』を編纂させ、首都にハギア・ソフィア聖堂を再建させた（出典26）。7世紀以後はササン朝とイスラーム勢力に東方の領土を奪われ、帝国の領域は小アジアとバルカン半島が中心となった。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-justinian.jpg" width="1000" height="708" loading="lazy" alt="サン・ヴィターレ聖堂のユスティニアヌス帝のモザイク">
+<figcaption>イタリアのラヴェンナにあるサン・ヴィターレ聖堂のモザイク（547年ごろ）。冠と光輪をもつ人物がユスティニアヌス帝であり、盾をもつ兵士と十字架をもつ聖職者がその両側に並ぶ。皇帝が軍と教会の双方を従える構図は、本文の皇帝教皇主義の説明に対応する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Justinian_mosaic,_San_Vitale,_consecrated_547,_Ravenna,_Italy.jpg">Steven Zucker</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>領土の縮小に対応して、帝国は地方を軍管区（テマ）に分け、軍の司令官に行政も担わせた。この制度を<strong>テマ制</strong>と呼ぶ。成立の時期には2つの見方がある。オストロゴルスキーは7世紀前半のヘラクレイオス帝の時代に創設されたとした。現在の多くの研究者は、640年代から660年代のコンスタンス2世の時代以後に段階的に形成されたとみる（出典12）。</p>
 <p>726年にレオン3世は<strong>聖像禁止令</strong>を出した。聖像の崇拝を必要とするローマ教会はこれに反発し、東西の教会の対立が深まった。1054年に教皇の使節とコンスタンティノープル総主教が互いを破門し、両教会は東の<strong>ギリシア正教会</strong>と西の<strong>ローマ・カトリック教会</strong>に分かれた。ギリシア正教とキリル文字はスラヴ人に広がった。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-hagiasophia.jpg" width="1000" height="750" loading="lazy" alt="ハギア・ソフィアの内部">
+<figcaption>イスタンブルのハギア・ソフィアの内部。ユスティニアヌス帝が再建させた聖堂であり、大ドームと半ドームが柱の少ない広い空間を覆う。床の緑の絨毯とアラビア文字の円形の額は、この建物が現在はモスクとして用いられていることを示す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hagia_Sophia_central_nave.jpg">Arnoldius</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="ex"><div class="ex-h">例題 3</div>
 <p>次の出来事を古い順に並べよ。ア 東西の教会が互いを破門する　イ レオン3世が聖像禁止令を出す　ウ ユスティニアヌス帝が『ローマ法大全』を編纂させる</p>
 <details open><summary>解き方</summary><div>手順1 ユスティニアヌス帝は6世紀の皇帝である。ウが最も古い。<br>手順2 聖像禁止令は726年である。イがウの次である。<br>手順3 聖像をめぐる対立が続いた結果として1054年の相互破門に至った。アが最も新しい。<br>答え ウ → イ → ア</div></details></div>
@@ -132,6 +160,10 @@
 <p>西ローマ帝国の旧領ではゲルマン人の諸国家が成立した。その中で長く存続したのが<strong>フランク王国</strong>である。481年に即位したメロヴィング家のクローヴィスはフランク人を統一した（出典13）。クローヴィスは多くのゲルマン人が信じたアリウス派ではなく、ローマ教会の正統派（アタナシウス派）に改宗した。この選択によって、旧ローマ領の住民とローマ教会の支持を得た。改宗の年は伝統的に496年とされるが、498〜506年ごろとする説や508年とする説もある（出典13）。</p>
 <p>8世紀に入ると、ウマイヤ朝の軍がイベリア半島から北上した。宮宰カール・マルテルは732年にトゥール・ポワティエ間の戦いでこれを退けた。その子ピピンは751年に王位に就いて<strong>カロリング朝</strong>を開き、ローマ教皇の承認を得た。ピピンは756年にランゴバルド王国から奪ったラヴェンナ地方を教皇に寄進した。これが教皇領の始まりである。</p>
 <p>ピピンの子<strong>カール大帝</strong>（シャルルマーニュ）はランゴバルド王国を滅ぼし、ザクセン人を征服し、西ヨーロッパの大部分を統一した。800年のクリスマスに教皇レオ3世はカールにローマ皇帝の冠を与えた。<strong class="hit">ローマ帝国の伝統・キリスト教・ゲルマン人の3つの要素が結び付き、ビザンツ帝国から自立した西ヨーロッパ世界が成立した</strong>。カールは地方に伯を置き、巡察使を派遣して監督させた。宮廷ではアルクインらがラテン語の学問を復興させた（カロリング・ルネサンス）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-aachen.jpg" width="1000" height="674" loading="lazy" alt="アーヘン大聖堂の宮廷礼拝堂の内部">
+<figcaption>アーヘン大聖堂の中心にある宮廷礼拝堂の内部。カール大帝が8世紀末から9世紀初めに建てさせた八角形の礼拝堂であり、大理石の円柱と半円のアーチが中心の空間を囲む。奥のステンドグラスの空間は、1355年から1414年に増築されたゴシック様式の内陣である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:General_view_-_Palatine_Chapel_-_Aachen_-_Germany_2017.jpg">José Luiz</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>カールの死後、843年の<strong>ヴェルダン条約</strong>と870年のメルセン条約で王国は分割された（出典27）。この分割が後のフランス・ドイツ・イタリアの領域の原型となった。東フランクでは936年に即位したオットー1世が962年に教皇から帝冠を受けた。これが<strong>神聖ローマ帝国</strong>の始まりとされる。西フランクでは987年にユーグ・カペーがカペー朝を開いた。</p>
 
 <figure class="tb-fig">
@@ -227,6 +259,10 @@
 <h3>荘園と農奴</h3>
 <p>封建的主従関係を経済の面で支えたのが<strong>荘園</strong>である。荘園は領主の直営地と農民の保有地から成った。農民の多くは<strong>農奴</strong>と呼ばれる身分であった。農奴は移動の自由と職業選択の自由をもたず、領主直営地を耕す<strong>賦役</strong>と、保有地の生産物を納める<strong>貢納</strong>を負った。結婚税・死亡税や教会への十分の一税も負ったが、家族と家と農具の所有は認められた。領主は国王の役人の立ち入りや課税を拒む<strong>不輸不入権</strong>（インムニテート）をもち、荘園の農民を自ら裁いた。</p>
 <p>11世紀ごろから、北西ヨーロッパでは<strong>三圃制</strong>が広がった。耕地を3つに分け、秋に小麦やライ麦をまく秋耕地・春に大麦や燕麦や豆をまく春耕地・休ませる休耕地を年ごとに入れ替える農法である。2つに分けて半分を休ませる二圃制に比べると、毎年耕作できる面積が2分の1から3分の2に増える（本書による算出値）。豆は土地の窒素を補う（出典25）。重い鉄の犂を牛や馬に引かせる重量有輪犂も普及した。10世紀から14世紀の温暖な気候も生産の増加を支えた（出典25）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-octobre.jpg" width="600" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="ベリー公の時祷書の10月の場面">
+<figcaption>15世紀の写本『ベリー公のいとも豪華なる時祷書』の10月の場面であり、本文の時期より後に描かれた。手前では農民が種をまき、馬に引かせた馬鍬で種に土をかぶせている。背後の城と手前の耕地の組合せは、領主の居所と農民の耕作の場が隣り合う様子を示す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Les_Tr%C3%A8s_Riches_Heures_du_duc_de_Berry_octobre.jpg">Limbourg brothers / Barthélemy d&#x27;Eyck</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 215" role="img" aria-label="三圃制で3つの耕地の用途を年ごとに入れ替える">
@@ -287,6 +323,10 @@
 <h2 id="s6">教皇権の伸張と十字軍</h2>
 <p>封建社会の中で、ローマ・カトリック教会は西ヨーロッパ全体に及ぶ組織をもった。頂点の<strong>ローマ教皇</strong>の下に大司教・司教・司祭が置かれ、教会も広大な荘園をもつ領主であった。10世紀には国王や諸侯による聖職者の任命や聖職の売買が広がり、910年創設のクリュニー修道院を中心に教会の刷新運動が起きた。</p>
 <p>教皇<strong>グレゴリウス7世</strong>は聖職者の任命権（叙任権）を教会に取り戻そうとし、神聖ローマ皇帝ハインリヒ4世と対立した。これを<strong>叙任権闘争</strong>と呼ぶ。教皇に破門された皇帝は、ドイツの諸侯の離反を恐れ、1077年に北イタリアのカノッサで教皇に許しを求めた。これを<strong>カノッサの屈辱</strong>と呼ぶ。闘争は1122年のヴォルムス協約で妥協が成立した（出典28）。13世紀初めの教皇<strong>インノケンティウス3世</strong>（在位1198〜1216年）の時代に教皇権は最盛期を迎えた。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-canossa.jpg" width="726" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="マティルデ伝の挿絵 ひざまずくハインリヒ4世">
+<figcaption>1115年ごろに作成されたドニゾ『マティルデ伝』の挿絵。ハインリヒ4世がクリュニー修道院長フーゴーに仲介を頼み、トスカナ女伯マティルデの前にひざまずく場面である。絵の下には「王は修道院長に頼み、マティルデに嘆願する」という意味のラテン語が書かれている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Mathilde_und_Hugo_von_Cluny_als_F%C3%BCrsprecher_Heinrichs_IV..jpg">Donizo</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>1071年にセルジューク朝はマンジケルトの戦いでビザンツ帝国を破り、アナトリアに進出した（出典3）。ビザンツ皇帝は教皇に救援を求めた。教皇<strong>ウルバヌス2世</strong>は1095年のクレルモン宗教会議で、聖地イェルサレムの奪回を呼びかけた（出典18）。これが<strong>十字軍</strong>の始まりである。</p>
 
 <figure class="tb-fig">
@@ -322,6 +362,10 @@
 </figure>
 
 <p>第1回十字軍は1099年にイェルサレムを占領し、住民の多くを殺害した（出典18）。沿岸にはイェルサレム王国などの<strong>十字軍国家</strong>が建てられた。1187年にアイユーブ朝のサラーフ・アッディーンはヒッティーンの戦いで十字軍を破り、イェルサレムを奪回した（出典18）。第4回十字軍はヴェネツィア商人の意向もあってコンスタンティノープルを攻略し、1204年にラテン帝国を建てた（出典18）。1291年にマムルーク朝がアッコンを攻略し、十字軍国家は失われた（出典4）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-krak.jpg" width="1000" height="566" loading="lazy" alt="シリアのクラック・デ・シュヴァリエ">
+<figcaption>シリアのクラック・デ・シュヴァリエ。1142年にトリポリ伯から聖ヨハネ騎士団に与えられた城であり、二重の城壁が丘の上を囲む。1271年にマムルーク朝のバイバルスが攻略した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Krak_des_Chevaliers_01.jpg">Bernard Gagnon</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>十字軍の回数は、伝統的に第1回から第7回または第8回まで数える。ただしイベリア半島のレコンキスタやバルト海沿岸の北方十字軍、南フランスのアルビジョワ十字軍も十字軍に含める研究者がいる（出典18）。参加の動機についても、宗教的な熱意を重視する見方と、土地や富の獲得を重視する見方がある。両方の動機が混在したとする研究者もいる（出典18）。</p>
 <div class="tb-tl">
 <li><b>910年</b><strong>クリュニー修道院の創設</strong> 教会の刷新運動の中心となる</li>
@@ -390,6 +434,10 @@
 <p>都市は封建領主から特許状を得て<strong>自治権</strong>を獲得した。北イタリアの都市は周辺の農村も支配して事実上の独立国家となり、1167年にはロンバルディア同盟を結んで神聖ローマ皇帝に対抗した。ドイツでは皇帝直属の<strong>帝国都市</strong>（自由都市）が生まれた。11世紀以後、都市に1年と1日住んだ農奴は自由になり、元の領主は連れ戻せないとする原則が広がった（出典23）。この原則は後に「都市の空気は自由にする」という言葉で表現された。</p>
 <p>都市の内部では、商人が<strong>商人ギルド</strong>を、手工業の親方が職種ごとに<strong>同職ギルド</strong>（ツンフト）を結成した。ギルドは品質・価格・生産量を定め、自由な競争を制限した。</p>
 <p>14世紀にはヨーロッパは危機の時代を迎えた。1346年から1353年に<strong>黒死病</strong>（ペスト）が流行した（出典20）。最初の大流行を1347年から1352年とする資料もある（出典32）。ヨーロッパの死亡率の推計は研究者によって異なる。ベネディクトウは60％、デイリーダーは45〜50％、ゴットフリードは約31％と推計した（出典20）。労働力の不足で農民の地位が向上し、領主が支配を強めようとすると、1358年のジャックリーの乱や1381年のワット・タイラーの乱が起きた。荘園に基づく支配は動揺した。主権国家の形成は第17章で扱う。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/13_islam-europe-tournai.jpg" width="801" height="482" loading="lazy" alt="トゥルネーで黒死病の死者を埋葬する人々">
+<figcaption>1353年ごろにトゥルネーで作成された写本の挿絵。黒死病で亡くなった人々の棺を住民が運び、次々に墓穴へ埋葬している。画面の大部分を棺が占める様子は、本文の死亡率の推計が示す被害の大きさに対応する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Doutielt3.jpg">Pierart dou Tielt (fl. 1340-1360)</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="ex"><div class="ex-h">例題 7</div>
 <p>次の記述の正誤を本文の数値で判断せよ。「ウルラニスの推計の1300年ごろから1350年ごろの人口の減少率は、ゴットフリードによる黒死病の死亡率の推計より小さい」。</p>
 <details open><summary>解き方</summary><div>手順1 ウルラニスの推計の減少率を計算する。78.7百万人から70.7百万人への減少は8.0百万人で、約10％である（本書による算出値）。<br>手順2 ゴットフリードの推計は約31％である（出典20）。<br>手順3 2つを比べる。約10％は約31％より小さい。<br>答え 正しい。ただし2つの推計は対象の範囲と方法が異なる。</div></details></div>

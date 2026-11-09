@@ -210,6 +210,11 @@
 <p>\({}_{n}\mathrm{C}_{r}a^{n-r}b^r\) を<strong>一般項</strong>と呼び係数 \({}_{n}\mathrm{C}_{r}\) を<strong>二項係数</strong>と呼ぶ。</p>
 <p>二項係数を段ごとに並べたものを<strong>パスカルの三角形</strong>と呼ぶ。両端は 1 で内側の数は左上と右上の数の和である。これは第2節の \({}_{n}\mathrm{C}_{r}={}_{n-1}\mathrm{C}_{r-1}+{}_{n-1}\mathrm{C}_{r}\) を図にしたものである。最短経路の図の交差点の数を斜めに読んでも同じ数が並ぶ。</p>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/05_combination-zhu-shijie.jpg" width="643" height="1000" loading="lazy" alt="朱世傑の書物の二項係数の三角形"><img src="../img/05_combination-pascal-triangle.jpg" width="525" height="710" loading="lazy" alt="パスカルの算術三角形のラテン語版"></div>
+<figcaption>左は1303年に朱世傑の『四元玉鑑』に載った二項係数の三角形で、中国では賈憲や楊輝の名で呼ばれた。右はパスカルの算術三角形の論文のラテン語版で、知られている唯一の部とされる。どちらも段ごとに二項係数が並ぶ。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Yanghui_triangle.gif">朱世傑『四元玉鑑』</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:FR-631136102_Em_0011_f_106_Triangulus_Arithmeticus_Definitiones.png">Clermont Auvergne Métropole</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 280" role="img" aria-label="0段から6段までのパスカルの三角形">
   <g font-size="12" fill="var(--sub)">
@@ -246,6 +251,11 @@
 
 <h2 id="s7">現実世界の組合せ 数字選択式宝くじ</h2>
 <p>ロト6は 1 から 43 までの数字から異なる6個を選ぶ数字選択式宝くじである。選んだ6個が抽選の本数字6個とすべて一致すると1等になる。選び方の総数は組合せで求まる。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/05_combination-lottery-booth.jpg" width="750" height="1000" loading="lazy" alt="上野の宝くじ売り場"><img src="../img/05_combination-takarakuji.jpg" width="1000" height="750" loading="lazy" alt="上野の宝くじ売り場の窓口"></div>
+<figcaption>どちらも東京・上野の宝くじ売り場である。左の看板にロト6の文字が見える。1口で1等に当たる確率は、43個から6個を選ぶ組合せの総数の逆数で約610万分の1である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Lottery_booth_at_Ueno.jpg">Rintojiang</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Takarakuji_2014_(15832099406).jpg">tjabeljan</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 \[ {}_{43}\mathrm{C}_{6}=\frac{43\cdot42\cdot41\cdot40\cdot39\cdot38}{6!}=6{,}096{,}454 \]
 <p>1口で1等に当たる確率はこの逆数で約610万分の1である。ロト6を販売する銀行の案内ページもこの値を1等の当せん確率として示している。</p>
 <p>2等は申込数字のうち5個が本数字と一致し残りの1個がボーナス数字と一致する場合である。一致する5個の選び方は本数字6個から5個を選ぶ \({}_{6}\mathrm{C}_{5}=6\) 通りで残りの1個はボーナス数字の1通りに限られる。2等の組合せは6通りで確率は \(\dfrac{6}{6{,}096{,}454}\) である。抽選の数字が出た順番は当せんに関係しないので順列ではなく組合せで数える。順列で数えると \({}_{43}\mathrm{P}_{6}\) で組合せの \(6!=720\) 倍になる。</p>

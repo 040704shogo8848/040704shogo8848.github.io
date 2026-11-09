@@ -264,11 +264,26 @@
 \[ \text{対地速度}=\text{対気速度}+\text{風速} \]
 <p>例として機首を真北に向けて対気速度 400 km/h で飛ぶ機体を考える。西から東へ 30 km/h の風が吹くと東を x 軸・北を y 軸として対地速度は \( (0,400)+(30,0)=(30,400) \) である。大きさは \( \sqrt{30^2+400^2}=\sqrt{160900}\approx 401.1 \) km/h で機体は北から東へ流される。</p>
 <p>真北へ進むには対気速度のx成分を \( -30 \) にして風を打ち消す。対気速度の大きさが400なので y成分は \( \sqrt{400^2-30^2}\approx 398.9 \) となる。機首は北から西へ約4.3°向き対地速度は約 398.9 km/h になる。これは速度を北向きと東向きの1次独立な2方向に分解して成分ごとに考えた計算である。この計算は風が一定で、機体が上昇や下降をしない場合の近似である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_airspeed-crosswind.jpg" width="1000" height="522" loading="lazy" alt="横風の中で着陸するBN-2アイランダー">
+<figcaption>1995年にドイツのハルレ飛行場で、30ノットの横風を受けながら着陸する BN-2 アイランダー。機首は滑走路の方向から風上へ向いている。対気速度に風速を加えた対地速度が滑走路の方向に一致するように、機首の向きを調整している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:BN-2_Islander_Crosswind_landing_F369-10A-V.jpg">Uli Elch</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>学習指導要領解説は物理で扱うベクトルと数学Cのベクトルの関係にも触れている。物理では速度や運動量の合成と分解を中心に学び数学Cでは演算の法則と図形の性質を中心に学ぶ。航空機の例は物理の題材を数学の分解の定理で整理したものである。物体に複数の力がはたらく時の合力も同じ加法で求める。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_force-tugboats.jpg" width="1000" height="662" loading="lazy" alt="強襲揚陸艦を押すタグボート">
+<figcaption>米海軍の強襲揚陸艦ナッソーをノーフォークの港から押し出すタグボート。複数のタグボートがそれぞれ異なる向きから力を加え、船体にはたらく力はその和になる。物体に複数の力がはたらく時の合力をベクトルの加法で求める例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:US_Navy_051107-N-6639M-006_Tugboats_prepare_to_push_the_amphibious_assault_ship_USS_Nassau_(LHA_4)_out_of_the_Naval_Station_Norfolk_Harbor_as_they_depart.jpg">U.S. Navy</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-rw"><b>現実世界</b>
 <p>操縦士が使う飛行計算盤 E6B は風の三角形をこのベクトルの和として図で解く道具である。横風成分と向かい風成分への分解も同じ計算である。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/01_airspeed-e6b-front.jpg" width="589" height="1000" loading="lazy" alt="アルミ製のE6B"><img src="../img/01_airspeed-e6b-wind.jpg" width="990" height="1000" loading="lazy" alt="学生用E6Bの表と裏"></div>
+<figcaption>左はアルミ製の E6B の計算尺の面、右は学生用 E6B の表と裏である。右の写真の黒い面が風の計算に使う面で、方位目盛りと格子の上に風のベクトルを書き込む。対気速度との和から対地速度と修正角を読み取る道具であり、本文の対地速度＝対気速度＋風速を図の上で計算する。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:E6b-front.jpg">作者名の記載なし</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:StudentE6BFlightComputer.jpg">Cosmicship</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s7">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 正六角形のベクトル</div>

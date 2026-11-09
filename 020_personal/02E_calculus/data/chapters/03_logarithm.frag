@@ -331,10 +331,30 @@
 
 <h2 id="s7">現実世界 対数表と地震の規模</h2>
 <p>対数はスコットランドのジョン・ネイピアが1614年に発表した。掛け算を足し算に置き換えて天文学の計算を短くするためである。続いてイングランドのヘンリー・ブリッグズが10を底とする常用対数の表を作った。1617年に1から1000までの表を刊行し1624年の『対数算術』で1から20000と90000から100000までの値を小数14桁で示した。計算機が普及するまでの約350年間は対数表と計算尺が科学技術の計算を支えた。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/03_logarithm-napier.jpg" width="673" height="1000" loading="lazy" alt="ジョン・ネイピアの肖像版画"><img src="../img/03_logarithm-mirifici.jpg" width="720" height="1000" loading="lazy" alt="『驚くべき対数の規則の記述』の扉"></div>
+<figcaption>左はジョン・ネイピアの肖像版画、右は1614年に刊行した『驚くべき対数の規則の記述』の扉である。ネイピアは掛け算を足し算に置き換え、天文学の計算を短くするために対数を考案した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:John_Napier._Stipple_engraving._Wellcome_V0004221.jpg">Wellcome Collection</a>／CC BY 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Mirifici_Logarithmorum_canonis_Descriptio.jpg">John Napier</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>対数表による掛け算の手順は次のとおりである。2つの数の常用対数を表から求めて足す。和を表で逆に引くと積が得られる。7桁の数どうしの掛け算が表を3回引く作業と足し算1回に置き換わる。計算尺は目盛を常用対数の長さで刻んだ定規で2本の定規の長さを足すことで掛け算を行う。どちらも積の対数は対数の和という性質だけを使っている。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_logarithm-table.jpg" width="677" height="889" loading="lazy" alt="ネイピアの対数表の1ページ">
+<figcaption>『驚くべき対数の規則の記述』の表の1ページである。34度の角について1分ごとの値が並ぶ。7桁の数を引くだけで掛け算を足し算に直せる表として、天文学の計算に使われた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:A_page_from_Mirifici_logarithmorum_canonis_descriptio.jpg">John Napier</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>地震のエネルギーの常用対数はマグニチュードの1次式で表される。マグニチュードが1大きいとエネルギーは約32倍で2大きいと1000倍である。\( 10^{1.5}\fallingdotseq 31.6 \) と \( 10^3=1000 \) が根拠である。マグニチュードには複数の定義があり、この対応は近似である。地震調査研究推進本部は1大きいと約30倍と説明している。水素イオン濃度の pH も常用対数である。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_logarithm-slide-rule.jpg" width="1000" height="600" loading="lazy" alt="計算尺">
+<figcaption>計算尺である。目盛は常用対数の長さで刻まれており、2本の定規の長さを足すことで掛け算を行う。計算機が普及するまで科学技術の計算に使われた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:2023_Suwak_logarytmiczny_(1).jpg">Jacek Halicki</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_logarithm-seismogram.jpg" width="1000" height="750" loading="lazy" alt="地震計が記録する波形">
+<figcaption>アメリカ・マサチューセッツ州のウェストン観測所で、地震計が波形を記録している様子である。地震の規模を表すマグニチュードはエネルギーの常用対数の1次式で表され、1大きいとエネルギーは約32倍になる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Seismogram_at_Weston_Observatory.JPG">Z22</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 対数の計算</div>

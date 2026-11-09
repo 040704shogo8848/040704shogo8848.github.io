@@ -12,6 +12,11 @@ thesis: 同じ産業政策の目的でも、予算を配るか株式を持つか
 
 予算は1年かけて6段階を進む。6月の骨太方針、8月上旬の概算要求基準の閣議了解、8月末の概算要求提出、9月から12月の財務省主計局による査定、12月下旬の政府案閣議決定、翌年1月からの国会審議と成立である。令和8年度予算では、概算要求基準の閣議了解が2025年8月8日、政府案の閣議決定が2025年12月26日、成立が2026年4月7日だった [出典](https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2026/index.html)。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/ch02_mof.jpg" width="1000" height="651" loading="lazy" alt="財務省の庁舎">
+<figcaption>霞が関の財務省の庁舎。9月から12月の査定は、財務省主計局が各省の概算要求に対して行う。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ministry_of_Finance_Building_(Japan).jpg">Kakidai</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 金額が動く場所は、この6段階に均等に分布していない。
 
 第1に、天井は8月の閣議了解で決まる。令和8年度の閣議了解は、年金や医療等について前年度当初予算額に自然増4,000億円を加算した範囲内での要求とし、その他の経費については前年度当初予算相当額の範囲内で要求したうえで、その額に100分の20を乗じた額の範囲内でのみ要望を認めた [出典](https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2026/sy250808a.pdf)。==各省が積み上げた希望額が出発点になるのではなく、閣議了解の枠が要求できる額を先に規定する==。
@@ -54,6 +59,11 @@ thesis: 同じ産業政策の目的でも、予算を配るか株式を持つか
 
 61年後、逆方向の動きが1社に起きた。枠組みは原子力損害賠償・廃炉等支援機構法、平成23年法律第94号である。同法第41条第1項は、機構が原子力事業者に対して行う資金援助の類型として資金の交付、株式の引受け、資金の貸付け、社債の取得、債務保証を挙げる。第45条は、機構が国債の交付を必要とする場合に、当該原子力事業者と共同して特別事業計画を作成し主務大臣の認定を受けなければならないと定める [出典](https://laws.e-gov.go.jp/api/1/lawdata/423AC0000000094)。2012年5月9日に認定された総合特別事業計画は、機構が東京電力発行の株式を払込金額総額1兆円で引き受けること、議決権付種類株式によって総議決権の2分の1超を取得すること、これを一時的公的管理と呼ぶこと、転換権付無議決権種類株式によって潜在的には総議決権の3分の2超を確保することを定めた [出典](https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/nintei20120509.pdf)。払込は2012年7月31日に行われた [出典](https://www.ndf.go.jp/press/at2012/20120731.html)。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/ch02_tepco.jpg" width="562" height="1000" loading="lazy" alt="東京電力の本社">
+<figcaption>東京都千代田区にある東京電力の本社。2012年に機構が払込総額1兆円で同社の株式を引き受け、総議決権の2分の1超を取得した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:TEPCO_HQ.jpg">Akonnchiroll</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
+
 ここで手段の性質が予算配分と分かれる。第1に、原資が歳出ではない。2012年度予算に4兆円の政府保証枠が計上され、機構はこの枠を活用して金融機関から資金を調達し株式引受けに充当した [出典](https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/nintei20120509.pdf)。==政府の信用を使った借入であり、税金の直接投入ではない==。第2に、株主は国そのものではない。機構は機構法に基づく認可法人で、設立は2011年9月12日、資本金140億円のうち政府出資は70億円、原子力事業者等12社の出資が70億円である [出典](https://www.ndf.go.jp/soshiki/kikou_gaiyou.html)。第3に、関係が終わらない。2026年1月26日に認定された第五次総合特別事業計画は、機構が引き続き東電経営への継続的関与を必要と判断し、2分の1超の議決権保有と役職員の派遣を現行のとおり継続すると記載する。同計画は、計画に沿った経営改革が進展していないと判断する場合には普通株式への転換の可能性を含めて議決権行使の在り方を検討するとも書いている [出典](https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/20260126.pdf)。実際の引受時の議決権比率は50.11%だった。2012年7月31日に機構が優先株式を引き受けて1兆円を投じ、議決権ベースで50.11%を持つ筆頭株主になった[出典](https://ja.wikipedia.org/wiki/%E5%8E%9F%E5%AD%90%E5%8A%9B%E6%90%8D%E5%AE%B3%E8%B3%A0%E5%84%9F%E3%83%BB%E5%BB%83%E7%82%89%E7%AD%89%E6%94%AF%E6%8F%B4%E6%A9%9F%E6%A7%8B)。==機構と主務大臣の文書が2分の1超という表現を採ったのは、比率そのものではなく支配の閾値を超えることが要件だったためである==。現在の持株比率は50.09%で、経営改革の進捗に応じて議決権を増減させる設計が続いている。
 
 補助金であれば事業終了とともに関係が切れる。所有による介入は、経営改革の進捗という主観的な判断を条件に無期限で続きうる。企業側から見た拘束の重さが違う。
@@ -73,6 +83,11 @@ thesis: 同じ産業政策の目的でも、予算を配るか株式を持つか
 | 電力 | 政府の保有義務を定める法律なし。東京電力については機構法第41条の資金援助としての株式引受け | 機構が2分の1超の議決権を保有継続 | https://laws.e-gov.go.jp/api/1/lawdata/423AC0000000094 、 https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/20260126.pdf |
 
 第三の軸は時間の向きと出口条件である。JRとNTTでは、国が持っていた株式を市場へ売り出す方向に動いた。電力では1951年に国家管理から民間へ戻したのち、2012年に1社だけが逆方向へ動いた。しかもその逆方向の動きには特定の債務の回収が紐づいている。第五次総合特別事業計画は、除染費用に相当する4兆円を機構保有株式の企業価値向上による売却益で支弁することを基本とし、その実現に向けた道筋は見えていないと記載する [出典](https://ndf.s2.kuroco-edge.jp/files/user/gyomu/tokujikei/20260126.pdf)。JRとNTTの民営化には、株式売却で特定の債務を回収するという条件が個社ごとに紐づいてはいない。
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/ch02_e5.jpg" width="1000" height="666" loading="lazy" alt="東北新幹線のE5系"><img src="../img/ch02_ntt.jpg" width="1000" height="750" loading="lazy" alt="NTTコミュニケーションズの本社"></div>
+<figcaption>左は東北新幹線を走るJR東日本のE5系、右は東京都千代田区のNTTコミュニケーションズの本社である。JRとNTTでは、国が持っていた株式を市場へ売り出す方向に動いた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Series-E5-U2_Hayabusa-30.jpg">MaedaAkihiko</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:NTT_Communications_(headquarters).jpg">Lombroso</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 なお、1951年に作られた発送配電一貫の体制は現存しない。現行の電気事業法第22条は、一般送配電事業者は小売電気事業または発電事業を営んではならないと定める [出典](https://laws.e-gov.go.jp/api/1/lawdata/339AC0000000170)。所有による介入の形が変わっただけでなく、規制による事業範囲の切り分けが重ねられている。
 
@@ -119,6 +134,11 @@ thesis: 同じ産業政策の目的でも、予算を配るか株式を持つか
 第1は市場画定である。KrogerによるAlbertsonsの買収は、2024年12月10日にオレゴン連邦地裁のAdrienne Nelson判事が差止めを認めて止まった。判事はスーパーマーケットが他の食料品小売と別の市場であると認定し、両社の直接競合が除去されると判断した [出典](https://www.cnn.com/2024/12/10/business/kroger-albertsons-merger-ruling)。市場を広く取れば集中度は下がるため、画定の勝敗がそのまま結論になる。取引金額は246億USDと250億USDの2つの数字が流通している。CNNの見出しは250億USDだが本文の記述に基づく整理では246億USDであり、報道見出しは丸めた値と判断して本章は246億USDを採る。
 
 第2は問題解消措置の実効性である。同じKrogerの事案では579店舗をC&S Wholesale Grocersへ売却する案が提示されたが、規模が競争を維持するには不十分でC&Sを不利な立場に置くと判断された [出典](https://katten.com/kroger/albertsons-ruling-provides-lessons-for-merger-remedy-divestitures)。IlluminaによるGRAIL買収では、欧州委員会が2022年9月6日にEU合併規則8条3項に基づき禁止決定を出した。理由はIlluminaが次世代シーケンサー技術への競合他社のアクセスを遮断する能力と誘因を持つという垂直型の投入物閉鎖であり、提示された行動的措置は回避が容易で監視が困難、かつ技術サポートの質の劣化のような閉鎖戦略を網羅していないとされた [出典](https://www.nortonrosefulbright.com/en/knowledge/publications/ae6fa8a2/the-european-commission-prohibits-and-plans-to-unwind-illuminas-acquisition-of-grail)。
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/ch02_berlaymont.jpg" width="1000" height="675" loading="lazy" alt="欧州委員会の本部ベルレモン"><img src="../img/ch02_illumina.jpg" width="1000" height="750" loading="lazy" alt="IlluminaのNextSeq 500"></div>
+<figcaption>左はブリュッセルにある欧州委員会の本部ベルレモン、右はIlluminaの卓上型の遺伝子配列解析装置NextSeq 500である。欧州委員会は2022年9月6日に、IlluminaによるGRAILの買収を禁止する決定を出した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Berlaymont_building_2022.jpg">Euro Pictures</a>／CC BY 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:Illumina_NextSeq_500.jpg">Konrad Förstner</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 第3は抗弁の失敗である。JetBlueによるSpiritの38億USDの買収は、2024年1月16日にマサチューセッツ連邦地裁のWilliam Young判事がクレイトン法7条違反のおそれを認めて差し止めた。判事はSpiritが意味のある競争圧力であると認定し、Spiritの財務悪化を根拠とする破綻会社の抗弁を退けた。両社は2024年3月に取引を断念した [出典](https://uk.practicallaw.thomsonreuters.com/w-041-9929?transitionType=Default&contextData=%28sc.Default%29)。
 

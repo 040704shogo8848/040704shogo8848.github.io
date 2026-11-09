@@ -6,8 +6,18 @@
 
 <h2 id="s1">世界恐慌と各国の対応</h2>
 <p><strong>世界恐慌</strong>とは、1929年10月24日のニューヨーク株式市場の株価暴落を発端として、1930年代前半に世界各地へ広がった深刻な不況である。1920年代のアメリカ合衆国は自動車や家庭電化製品の大量生産で好況を続けたが、農産物の過剰生産と信用取引による株式投機が進んでいた。株価の暴落は銀行の破綻と信用の収縮を招き、生産と雇用が急減した。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_dep-nyse.jpg" width="701" height="1000" loading="lazy" alt="株価暴落の後にニューヨーク証券取引所の前に集まった群衆" style="max-height:620px;object-fit:contain">
+<figcaption>1929年の株価暴落の後、ニューヨーク証券取引所の前のウォール街に集まった群衆。通りは人で埋まり、車が進めなくなっている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Crowd_outside_nyse.jpg">US-gov</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>恐慌がアメリカ一国にとどまらなかった理由は2つある。第一に、ドイツの賠償支払いはアメリカの資本に依存し、アメリカ資本の引き揚げがドイツとオーストリアの金融危機を招いた。第二に、多くの国が<strong>金本位制</strong>を採用していた。金本位制とは、通貨の価値を一定量の金と結び付け、金の流出入に合わせて通貨量を調整する制度である。金が流出した国は通貨量を減らして引き締めざるをえず、不況が国境を越えて伝わった。</p>
 <p>アメリカの失業率は1929年の平均約3%から1933年には24.9%に達したとする推計がある（レバーゴットの推計、出典3）。1929年の3.3%から1933年の25.2%へ上昇したとする資料もある（出典25）。公的な救済事業の就労者を失業者に数えない推計では最高値は1932年の22.5%となる（ダービーの推計、出典3）。ドイツでは1932年に失業者が600万人を超えた（出典12）。72か国の月間輸入総額は1929年1月の約30億ドルから1933年2月の約9億ドルへ縮小した（キンドルバーガーによる集計、出典4）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_dep-migrant-mother.jpg" width="779" height="1000" loading="lazy" alt="子どもを抱いて遠くを見つめる母親" style="max-height:620px;object-fit:contain">
+<figcaption>ドロシア・ラングが1936年にカリフォルニアで撮影した「移民の母」。農場を渡り歩く季節労働者のフローレンス・トンプソンと、その子どもたちである。恐慌期の農村の窮乏を記録した写真で、ラングは連邦政府の機関の依頼で撮影した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Migrant_Mother_(LOC_fsa.8b29516).jpg">Lange, Dorothea(w), photographer.</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 
 <figure class="tb-fig">
@@ -67,8 +77,18 @@
 
 <h2 id="s2">ファシズムの伸張と国際協調の動揺</h2>
 <p><strong>ファシズム</strong>とは、議会制民主主義と自由主義を否定し、一党独裁と指導者への服従・排外的な民族主義・暴力による反対派の抑圧を特徴とする政治体制と運動である。イタリアでは1922年にムッソリーニがローマ進軍によって政権を得た。ドイツではヴェルサイユ条約への不満と恐慌による失業を背景に、ヒトラーの率いるナチ党が支持を広げた。1932年7月の選挙でナチ党は得票率37.3%で第1党となり（出典12）、1933年1月にヒトラーが首相に任命された。同年3月の全権委任法で議会は立法権を失い、ナチ党の一党独裁が成立した。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_dep-march-rome.jpg" width="1000" height="708" loading="lazy" alt="ヴィットーリオ・エマヌエーレ2世記念堂の前を行進するファシスト党員">
+<figcaption>1922年のローマ進軍で、ローマのヴィットーリオ・エマヌエーレ2世記念堂の前に入ったファシスト党の隊列。この進軍の後、ムッソリーニは国王から首相に任命された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Benito_Mussolini_marching_into_Rome.jpg">Attributed to &quot;Wide World Photos&quot;.</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>ナチ党政権はユダヤ人の公職追放などの迫害を進め、1935年のニュルンベルク法でユダヤ人の市民権を奪った。対外的には1933年に国際連盟を脱退し、1935年に再軍備を宣言し、1936年にラインラントに軍を進駐させた。イタリアは1935年にエチオピアに侵攻した。国際連盟は経済制裁を決めたが石油を対象とせず、侵攻を止められなかった。</p>
 <p>1938年、ドイツはオーストリアを併合し、続いてチェコスロヴァキアのズデーテン地方の割譲を要求した。英仏はミュンヘン会談で要求を認めた。戦争の回避を優先して譲歩するこの政策を<strong>宥和政策</strong>と呼ぶ。宥和政策の評価は分かれる。ドイツの膨張を勢いづけたとする見方がある一方で、軍備が整わない英仏が時間を稼ぐためにとった現実的な選択であったとする見方もある。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_dep-munich.jpg" width="1000" height="750" loading="lazy" alt="ミュンヘン会談に集まった英仏独伊の首脳">
+<figcaption>1938年9月29日のミュンヘン会談に集まった首脳。イギリスのチェンバレン・フランスのダラディエ・ドイツのヒトラー・イタリアのムッソリーニが並ぶ。チェコスロヴァキアの代表は会談に招かれなかった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Munich_Agreement_Bundesarchiv_Bild_183-R69173.jpg">Unknown author</a>／CC BY-SA 3.0 de／Wikimedia Commons</span></figcaption>
+</figure>
 
 <ul class="tb-tl">
 <li><b>1929年10月</b>ニューヨーク株価暴落。世界恐慌が始まる</li>
@@ -92,6 +112,11 @@
 <h2 id="s3">満洲事変から日中戦争へ</h2>
 <p>1931年9月18日、関東軍は奉天（現在の瀋陽）郊外の柳条湖で南満洲鉄道の線路を爆破し、これを中国軍の行為として軍事行動を始めた。これが<strong>満洲事変</strong>である（出典5）。政府は不拡大方針をとったが関東軍は東三省の主要部を占領し、1932年3月に清朝最後の皇帝溥儀を執政とする満洲国の建国が宣言された（出典5）。</p>
 <p>中国の提訴を受けた国際連盟はリットン調査団を派遣した。1932年10月に公表された報告書は日本の軍事行動を自衛とは認めず、満洲国も承認しなかった。一方で満洲における日本の権益には一定の配慮を示した（出典5）。1933年2月の連盟総会が報告書に基づく勧告を採択すると、日本は3月27日に脱退を通告した（出典5）。同年5月の塘沽停戦協定で満洲事変の軍事行動は一応終わった（出典5）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_dep-lytton.jpg" width="835" height="597" loading="lazy" alt="1932年に訪日したリットン調査団の委員">
+<figcaption>1932年に日本を訪れたリットン調査団の委員たち。団長のリットンのほか、ドイツのシュネー・アメリカのマッコイ・フランスのクローデル・イタリアのアルドロヴァンディが写る。調査団は日本・中国・満洲を回って報告書をまとめた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Lytton_Commission_in_Japan.jpg">Unknown author</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>1937年7月7日、北京郊外の盧溝橋で日中両軍が衝突し、戦闘は華北から上海へ広がった。宣戦布告のないまま全面的な戦争となったこの戦争を<strong>日中戦争</strong>と呼ぶ。中国では国民党と共産党が第2次国共合作を結んで抗日民族統一戦線を形成した。日本軍は1937年12月に首都南京を占領し、国民政府は重慶に移って抗戦を続けた。日本は1938年に国家総動員法を制定し、議会の承認なしに労働力と物資を統制できる体制を整えた。</p>
 
 <h3>南京事件の犠牲者数</h3>
@@ -125,6 +150,11 @@
 <h2 id="s4">第二次世界大戦と太平洋戦争</h2>
 <p>1939年8月の独ソ不可侵条約で東の安全を確保したドイツは、9月1日にポーランドに侵攻した。英仏がドイツに宣戦し、<strong>第二次世界大戦</strong>が始まった。ソ連もポーランド東部に侵攻し、バルト3国を併合した。ドイツは1940年に西ヨーロッパに攻勢をかけ、6月にフランスを降伏させた。イギリスはチャーチル首相のもとで抗戦を続けた。1941年6月、ドイツは不可侵条約を破ってソ連に侵攻し、独ソ戦が始まった。</p>
 <p>日本は1940年9月に北部仏印（フランス領インドシナ北部）に進駐し、日独伊三国同盟を結んだ。1941年4月には北方の安全を確保するため日ソ中立条約を結んだ。7月の南部仏印進駐に対し、アメリカは8月に石油の対日輸出を全面的に禁止した。日米交渉では、11月26日にアメリカが中国と仏印からの撤兵などを求める提案（ハル・ノート）を示した。日本はこれを最後通告と受け止め、12月8日にマレー半島に上陸し、ハワイの真珠湾を攻撃した。こうして<strong>太平洋戦争</strong>が始まった。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_dep-uss-shaw.jpg" width="1000" height="799" loading="lazy" alt="真珠湾で爆発する駆逐艦ショー">
+<figcaption>1941年12月7日（日本時間8日）、真珠湾攻撃で爆発するアメリカの駆逐艦ショー。手前には戦艦ネヴァダの艦尾が見える。アメリカ海軍の写真班が撮影した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:USS_SHAW_exploding_Pearl_Harbor_Nara_80-G-16871_2.jpg">Unknown navy photographer</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="日中戦争の長期化から太平洋戦争の開戦までの日本の行動と米英の対応">
@@ -167,6 +197,11 @@
 <h3>戦局の推移と大戦下の社会</h3>
 <p>日本は開戦後半年で東南アジアと太平洋の島々を占領し、「大東亜共栄圏」の建設を掲げた。占領地では資源の獲得と労働力の動員が優先され、各地で抗日運動が起こった。朝鮮と台湾では日本式の姓名への変更（創氏改名）などの皇民化政策が進められ、戦争末期には徴兵制も施行された。1942年6月のミッドウェー海戦で日本海軍が空母4隻を失ってから戦局は転換し、1943年2月にはスターリングラードでドイツ軍が降伏した。</p>
 <p>ドイツは占領地のユダヤ人を強制収容所に送り、組織的に殺害した。この<strong>ホロコースト</strong>による犠牲者は約600万人とされる（出典13）。ロマ（少なくとも25万人）やソ連軍捕虜（約330万人）なども殺害された（出典13）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_dep-auschwitz.jpg" width="1000" height="750" loading="lazy" alt="アウシュヴィッツ第1収容所の門">
+<figcaption>ポーランドのオシフィエンチムに残るアウシュヴィッツ第1収容所の門。門の上には「働けば自由になる」という意味のドイツ語の標語が掲げられている。現在は博物館として保存されている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Arbeit_macht_frei_sign,_main_gate_of_the_Auschwitz_I_concentration_camp,_Poland_-_20051127.jpg">Tulio Bertorini (tbertor1)</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 480" role="img" aria-label="1942年夏の日本の最大勢力範囲">
@@ -232,6 +267,11 @@
 <tr><td>長崎</td><td>1945年12月末までに73,884人（1950年7月の長崎市原爆資料保存委員会の報告による推計、出典11）</td></tr>
 </tbody></table></div>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/06_dep-genbaku-dome.jpg" width="1000" height="693" loading="lazy" alt="川の対岸から見た原爆ドーム">
+<figcaption>広島の原爆ドーム。1945年8月6日の原子爆弾の爆心地に最も近い場所で、倒壊を免れた建物である。2004年8月6日の朝、平和記念式典に向かう市民が手前の川沿いを歩いている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:A-Bomb_Dome.jpg">Dan Smith</a>／CC BY-SA 2.5／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h3>大戦の複合的な性格と開戦責任の議論</h3>
 <p>第二次世界大戦は単一の性格では説明できない。<strong class="hit">ファシズム諸国と民主主義諸国の戦争・植民地の再分割をめぐる帝国主義国どうしの戦争・占領された諸民族の解放戦争という複数の面が重なっていた</strong>。連合国の内部でも、ソ連と米英は戦後の東欧の処理をめぐって対立を深めた。1941年8月の大西洋憲章が領土不拡大と民族自決を掲げたことは、アジアとアフリカの独立運動の根拠ともなった。</p>
 <p>日本の開戦責任と戦争の性格をめぐっては立場が分かれる。</p>
@@ -255,6 +295,11 @@
 <tr><td>制裁</td><td>経済制裁が中心</td><td>経済制裁に加えて軍事的措置も可能</td></tr>
 </tbody></table></div>
 <p>経済面では、1944年7月にアメリカのブレトンウッズに連合国44か国が集まり、国際通貨基金（IMF）と国際復興開発銀行（IBRD）の設立を決めた（出典17）。ドルを金1オンス35ドルで金と交換できるようにし、各国通貨をドルとの固定相場で結んだ（出典17）。1947年には関税と貿易に関する一般協定（GATT）が結ばれた。これらを<strong>ブレトンウッズ体制</strong>と呼ぶ。<strong class="hit">恐慌期のブロック経済と通貨の切り下げ競争が大戦の一因となった反省から、通貨の安定と自由貿易を国際機関で支える仕組みが設けられた</strong>。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_dep-bretton-woods.jpg" width="706" height="572" loading="lazy" alt="各国の旗の前で演説するモーゲンソー">
+<figcaption>1944年のブレトンウッズ会議の開会で演説するアメリカの財務長官モーゲンソー。背後には参加した連合国の旗が並ぶ。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Morgenthau_Bretton_Woods_opening_1944.jpg">作者名の記載なし</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">安全保障理事会の拒否権は5球団だけが持つ議決権である</p>
@@ -311,6 +356,11 @@
 
 <h2 id="s6">占領と戦後改革・日本の独立の回復</h2>
 <p>日本はアメリカ軍を中心とする連合国軍に占領された。連合国軍最高司令官総司令部（GHQ）は日本政府を通じて政策を実施する<strong>間接統治</strong>をとった。マッカーサー最高司令官は1945年10月に女性の解放・労働組合の結成の奨励・教育の自由主義化・圧政的諸制度の撤廃・経済の民主化を求める五大改革を指示した。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_dep-macarthur.jpg" width="790" height="1000" loading="lazy" alt="並んで立つマッカーサーと昭和天皇" style="max-height:620px;object-fit:contain">
+<figcaption>1945年9月27日、東京のアメリカ大使館で初めて会見したマッカーサーと昭和天皇。軍服で腰に手を当てるマッカーサーと、礼装の天皇が並ぶこの写真は、当時の新聞に掲載された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Emperor_Hirohito_and_General_MacArthur.jpg">Gaetano Faillace</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-tw"><table>
 <thead><tr><th>改革</th><th>内容</th><th>ねらい</th></tr></thead>
 <tbody>

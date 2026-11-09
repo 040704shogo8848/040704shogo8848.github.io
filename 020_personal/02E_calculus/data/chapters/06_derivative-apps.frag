@@ -182,6 +182,11 @@
 <p>上昇中の株価が一時的に横ばいになり再び上がる形が \( y=x^{3} \) の \( x=0 \) である。接線が水平でも前後で上昇が続けば極値ではない。</p>
 </aside>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/06_derivative-apps-tabula.jpg" width="731" height="1000" loading="lazy" alt="ライプニッツの1684年の論文の付図">
+<figcaption>ライプニッツの1684年の論文『極大と極小のための新しい方法』の付図である。曲線とその接線が描かれている。接線の傾きが0になる点で極大と極小を調べる考え方が、この論文の中心にある。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Leibniz,_Gottfried_Wilhelm_von_%E2%80%93_Nova_methodus_pro_maximis_et_minimis_-_Acta_Eruditorum_-_Tabula_XII_-_Graphs,_1684.jpg">G. W. Leibniz</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s4">3次関数のグラフ</h2>
 <p>\( x^{3} \) の係数が正の3次関数 \( f(x)=ax^{3}+bx^{2}+cx+d \) (\( a&gt;0 \)) の導関数は2次関数 \( f'(x)=3ax^{2}+2bx+c \) である。\( f'(x)=0 \) の判別式を \( D \) とするとグラフの型は3つに分かれる。</p>
 <div class="tb-tw"><table>
@@ -245,6 +250,11 @@
 
 <h3>箱の容積の最大化</h3>
 <p>学習指導要領解説は正方形の厚紙から箱を作る問題を微分の活用の例に挙げている。一辺 12 cm の正方形の厚紙の四隅から一辺 \( x \) cm の正方形を切り取って折り曲げふたのない箱を作る。容積 \( V \) を最大にする \( x \) を求める。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_derivative-apps-box.jpg" width="1000" height="790" loading="lazy" alt="ふたを開いた段ボール箱">
+<figcaption>ふたを開いた段ボール箱である。本文の例題では、正方形の厚紙の四隅から正方形を切り取り折り曲げてふたのない箱を作成する。切り取る大きさで容積が変わり、その最大値を微分で求める。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Box.agr.jpg">ArnoldReinhold</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 8</div>
 <p>上の箱の容積 \( V \) の最大値とそのときの \( x \) を求めよ。</p>
@@ -380,6 +390,11 @@
 <aside class="an an-rw"><b>現実世界</b>
 <p>極値を接線が水平になる点として求める方法はフェルマーが1630年代に考案した。ライプニッツの1684年の論文の題名「極大と極小のための新しい方法」もこの問題を中心に据えている。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/06_derivative-apps-fermat.jpg" width="747" height="1000" loading="lazy" alt="フェルマーの肖像版画"><img src="../img/06_derivative-apps-fermat-statue.jpg" width="750" height="1000" loading="lazy" alt="トゥールーズのフェルマー像"></div>
+<figcaption>左はフェルマーの肖像版画、右はトゥールーズの旧理学部の建物にあるフェルマーの大理石像である。フェルマーは1630年代に、接線が水平になる点として極値を求める方法を考案した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Pierre_de_Fermat_par_Fran%C3%A7ois_de_Poilly.png">François de Poilly</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Fermat_Loubens.jpg">Klaus Barner</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s9">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 接線</div>

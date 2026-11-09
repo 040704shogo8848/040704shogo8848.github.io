@@ -8,6 +8,12 @@
 <p>ある地域の人々が共有する衣食住・言語・宗教・祭り・生業の様式をまとめて<strong>生活文化</strong>と呼ぶ。生活文化の違いを説明する鍵が<strong>地理的環境</strong>である。地理的環境は気候・地形・植生・土壌などの<strong>自然環境</strong>だけを指すのではない。歴史的背景・宗教・産業・交通などの<strong>社会環境</strong>も含む。学習指導要領も地理的環境に社会環境が含まれる点に留意するよう求めている（出典1）。</p>
 <p>生活文化と地理的環境の関係は一方向ではない。人々は環境から影響を受けて生活様式を作り、同時に環境に働きかけて環境を変える。山の斜面に棚田を築くことや乾燥地に灌漑水路を引くことは、人が環境を作り変えた例である。さらに交通と貿易が発達すると、遠い地域の食材や衣服が入り、生活文化そのものが変容する。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/03_life-culture-terraces.jpg" width="1000" height="666" loading="lazy" alt="フィリピンのバタッドの棚田と集落">
+<figcaption>フィリピンのルソン島北部、バナウエのバタッド地区の棚田である。急な谷の斜面を階段状に削って水田に造り変え、斜面の中ほどに集落が置かれている。人が環境に働きかけて土地の形そのものを変えた例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Banaue_Philippines_Batad-Rice-Terraces-02.jpg">CEphoto, Uwe Aranas</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="地理的環境と生活文化の関係">
   <defs><marker id="j03ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--sub)"/></marker></defs>
@@ -94,8 +100,20 @@
 <p>衣服は第一に気温と日射への対応である。<strong>乾燥帯</strong>の西アジアや北アフリカでは、強い日射と砂から肌を守るため、ゆったりした長袖の長衣で全身を覆う。体と布の間に空気の層ができ、汗の蒸発で熱を逃がす。高温でも肌を出さない理由は日射の遮断にある。<strong>冷帯</strong>と<strong>寒帯</strong>では動物の毛皮を重ねた防寒具が発達した。アンデス山脈の高地では、昼夜の気温差に対応するためリャマやアルパカの毛で織ったポンチョを着脱する。衣服は宗教の影響も受ける。イスラームの女性が髪や体を覆う布はその例で、第3節で扱う。</p>
 <h3>食事</h3>
 <p>毎日の食事の中心になる食物を<strong>主食</strong>と呼ぶ。主食は作物が育つ気候で決まってきた。高温多雨のモンスーンアジアでは水田に適した米が主食である。稲作には降水が足りない西アジアやヨーロッパでは、小麦を粉にしてパンやナンにする。中南米ではトウモロコシを粉にしたトルティーヤが食べられてきた。アンデスの高地ではジャガイモ、熱帯の湿潤な地域ではキャッサバやヤムイモなどのいも類が主食となる。作物の栽培が難しい乾燥地や寒冷地では、家畜の乳と肉が食事の中心になる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_life-culture-cassava.jpg" width="753" height="1000" loading="lazy" alt="掘り上げたキャッサバの根">
+<figcaption>掘り上げたキャッサバである。太く長い根にでんぷんを蓄え、熱帯の湿潤な地域で主食となる。皮をむいて煮たり、粉にして加工したりして食べる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Uprooted_cassava_01.jpg">Geossegawa</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h3>住居</h3>
 <p>住居の材料は手近に得られる資源で決まる。森林の多い日本や北ヨーロッパでは木造の家が多い。樹木の乏しい乾燥地では、土を固めて天日で乾かした<strong>日干しれんが</strong>で壁を造る。厚い土の壁は昼の熱を室内に伝えにくい。イエメンのシバームには日干しれんがで造られた5階建て以上の住宅が並び、1982年に世界遺産に登録された（出典7・28）。階数の上限は11階とする資料（出典7）と9階とする資料（出典28）がある。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_life-culture-shibam.jpg" width="1000" height="660" loading="lazy" alt="イエメンのシバームに並ぶ日干しれんがの高層住宅">
+<figcaption>イエメンのハドラマウト地方の谷にあるシバームである。日干しれんがで造られた高層の住宅が密集して並び、背後には乾燥した台地の崖が続く。樹木の乏しい乾燥地で、土を材料に多層の住居を築いた例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Shibam_Wadi_Hadhramaut_Yemen.jpg">Jialiang Gao</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 416" role="img" aria-label="気候と伝統的な住居の代表例の位置">
@@ -128,6 +146,12 @@
 </figure>
 
 <p>地形と地盤も住居の形を変える。ヤクーツクは連続した永久凍土の上に築かれた最大の都市であり、多くの家がコンクリートの杭の上に建つ（出典8）。床下に空気を通さないと暖房の熱が凍土を融かし、地盤が沈んで建物が傾くからである（出典26）。モンゴルの遊牧民が使う<strong>ゲル</strong>は木の骨組みにフェルトをかぶせた組立式の住居で、家畜と一緒に移動する生活に適している。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/03_life-culture-thai-stilt.jpg" width="1000" height="750" loading="lazy" alt="タイのトラート県にある高床の木造家屋"><img src="../img/03_life-culture-ger.jpg" width="1000" height="664" loading="lazy" alt="モンゴルの草原に建つゲル"></div>
+<figcaption>左はタイ東部のトラート県にある伝統的な高床の木造家屋で、柱の上に床を上げて下に風を通す。右はモンゴルのマンダルゴビ近くの草原に建つゲルで、骨組みを覆う布の外側をひもで締めている。左は浸水と湿気に、右は移動する生活に対応した形である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Thai_Traditional_House_On_Stilts_Trat_Thailand.jpg">Khaosaming</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Mongolian_Ger.jpg">Mark Fischer</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="tb-tw"><table>
 <thead><tr><th>住居</th><th>主な地域</th><th>自然環境の条件</th><th>形の理由</th></tr></thead>
 <tbody>
@@ -183,7 +207,19 @@
 
 <h3>戒律と生活習慣</h3>
 <p><strong>イスラーム</strong>では1日5回、メッカのカーバ神殿の方角を向いて礼拝する（出典12）。<strong>ラマダーン</strong>はイスラーム暦の第9月で、この月の間は夜明けから日没まで飲食を断つ（出典13）。イスラーム暦は月の満ち欠けに基づくため1年が太陽暦より10〜11日短く、ラマダーンの時期は毎年早まって季節を一巡する。イスラームの教えで許されたものを<strong>ハラール</strong>と呼ぶ。豚肉と酒は禁じられ、ほかの肉も定められた方法で処理したものに限られる（出典14）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_life-culture-kaaba.jpg" width="1000" height="668" loading="lazy" alt="巡礼者に囲まれたメッカのカーバ神殿">
+<figcaption>2018年の大巡礼の時期に撮影したメッカのカーバ神殿である。黒い布で覆われた立方体の建物を、巡礼者がその周りを回る儀礼のために取り囲んでいる。世界のムスリムが1日5回の礼拝で向く方角の中心がこの建物である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:The_Kaaba_during_Hajj.jpg">Adli Wahid</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p><strong>ヒンドゥー教</strong>では牛を神聖な動物とし、牛肉を食べない人が多い。インドの多くの州が牛の屠殺を法律で制限している（出典15）。不殺生の考えから菜食を守る人も多い。<strong>仏教</strong>が広まったタイやミャンマーでは、僧侶が早朝に托鉢を行い、人々が食事を供える。<strong>キリスト教</strong>では日曜日に教会で礼拝を行い、クリスマスや復活祭が年中行事の中心となる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_life-culture-varanasi.jpg" width="1000" height="663" loading="lazy" alt="ガンジス川に面したヴァラナシのガート">
+<figcaption>インドのヴァラナシでガンジス川に面したガートである。ガートは川岸に設けた石段で、水際で人々が沐浴している。ヒンドゥー教の信仰が川の利用と都市の景観を形づくっている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bathing_ghats,_Ganges,_Varanasi,_October_2000_(23121567501).jpg">Dialog Center Images</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="tb-tw"><table>
 <thead><tr><th>宗教</th><th>成立地域</th><th>食に関わる規範</th><th>生活の例</th></tr></thead>
 <tbody>
@@ -240,6 +276,12 @@
 <tr><td>インド</td><td>連邦の公用語はヒンディー語で英語も公用に使う。憲法の第8付則に22言語</td><td>多数の言語集団からなり共通語として英語が残った</td></tr>
 </tbody></table></div>
 <p>スイスで主に用いる言語の割合は、ドイツ語62.3％・フランス語22.6％・イタリア語8.0％・ロマンシュ語0.5％である（2020年、出典18）。フランス語は出典18の表では22.6％、同じ出典の本文では22.8％と記載が異なる。主な言語を複数答えた人がいるため、合計は100％を超える。インドでヒンディー語を第一言語とする人は2011年の国勢調査で43.6％である（出典19）。過半数に届かないため、英語が州をまたぐ共通語として使われる。シンガポールの4公用語は出典20による。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_life-culture-singapore-sign.jpg" width="1000" height="750" loading="lazy" alt="4つの言語で書かれたシンガポールの危険表示">
+<figcaption>シンガポールの危険を知らせる表示である。上から英語・中国語・タミル語・マレー語の順に同じ内容が書かれ、4つの公用語がそのまま表示に表れている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Quadrilingual_danger_sign_-_Singapore_(gabbe).jpg">Gabbe</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h3>産業と生活</h3>
 <p>人々が生計を立てる仕事を<strong>生業</strong>と呼ぶ。生業も自然環境と強く結びつく。乾燥した草原では、水と草を求めて家畜とともに移動する<strong>遊牧</strong>が営まれてきた。砂漠の中で地下水や湧水が得られる場所を<strong>オアシス</strong>と呼び、ナツメヤシや小麦を育てる農業が行われる。熱帯の森林では森を焼いた灰を肥料にする<strong>焼畑農業</strong>が続いてきた。これらの生業は食事や住居の形も決める。遊牧民が移動式のゲルに住み乳製品を多く食べるのはその結果である。</p>
 <p>生業は社会環境の変化によっても変わる。都市での雇用や学校教育が広がると、遊牧民の中にも都市の周辺に定住する人が増える。生活文化は自然環境だけでなく、経済の変化とともに変容する。農業と工業の系統的な内容は第10章と第12章で扱う。</p>

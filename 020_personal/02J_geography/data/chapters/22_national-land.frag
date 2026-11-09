@@ -16,7 +16,17 @@
 <tr><td>21世紀の国土のグランドデザイン（五全総）</td><td>1998年3月</td><td>地球時代・人口減少と高齢化・高度情報化</td><td>参加と連携</td><td>一極一軸型から多軸型国土構造への転換を掲げた。投資総額は示さなかった</td></tr>
 </tbody></table></div>
 <p class="tb-src">閣議決定の年月・背景・開発方式は出典2による。主な施策と結果の欄は本書による整理である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/22_national-land-shinkansen0.jpg" width="1000" height="750" loading="lazy" alt="東広島駅に停車する0系新幹線">
+<figcaption>東広島駅に停車する0系新幹線。1964年に開業した東海道新幹線の初代の車両である。新全総は新幹線の路線を全国に広げる構想を掲げた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Shinkansen_Series0_R67_JNRcolor.jpg">ナダテ at Japanese Wikipedia</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>一全総の<strong>拠点開発構想</strong>は、工業の開発拠点を地方に配置して交通通信施設で結び、周辺へ開発を広げる方式である（出典2）。この方式に基づき新産業都市15地区と工業整備特別地域6地区が指定された（出典3・出典4）。工業整備特別地域は太平洋ベルトの中にあり、すでに工業が集まる地域を伸ばす役割をもった。新産業都市は地方圏に広く置かれた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/22_national-land-mizushima.jpg" width="1000" height="997" loading="lazy" alt="水島臨海工業地帯の空中写真">
+<figcaption>岡山県倉敷市の水島臨海工業地帯の空中写真（2007年）。海に面した埋立地に、製鉄所と石油化学の工場が並ぶ。水島は1963年に新産業都市に指定された岡山県南地区の中心となる工業地域である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Mizushima_industrial_complex_area_Aerial_photograph.2007.jpg">国土地理院</a>／Attribution／Wikimedia Commons</span></figcaption>
+</figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 591" role="img" aria-label="全国総合開発計画の拠点開発方式で指定された新産業都市と工業整備特別地域の分布">
 <g>
@@ -93,6 +103,11 @@
 <figcaption>1962年の全国総合開発計画に基づき指定された新産業都市15地区と工業整備特別地域6地区の位置である（出典3・出典4）。点は各地区の中心都市付近に置いた。有明は不知火・有明・大牟田地区を示す。図の範囲はおおよそ北緯30.6度から45.7度、東経129度から146度である。沖縄県などの南西諸島・尖閣諸島・小笠原諸島は図の範囲外である。北方領土は国後島の一部だけが範囲に入り、択捉島・色丹島・歯舞群島は範囲外である。</figcaption>
 </figure>
 <p>新全総の<strong>大規模プロジェクト構想</strong>は、新幹線や高速道路のネットワークを整備し、大規模プロジェクトを推進して国土利用の偏りを是正する方式である（出典2）。投資規模は1966〜1985年の累積政府固定投資で約130〜170兆円とされた（1965年価格・出典2）。1973年の石油危機で重化学工業の拡大を前提とする計画は見直しを迫られた。苫小牧東部の大規模工業基地は1971年の基本計画で開発想定規模を12,650ha（うち工業用地6,670ha）とした（出典26）。石油危機と円高による産業構造の変化で大規模な基幹資源型工業は立地せず、2017年度末までに分譲した産業用地は累計1,089.2haである（出典26・出典27）。むつ小川原開発も計画の実施の直後に2度の石油危機の影響を受けた（出典28）。現在は国家石油備蓄基地や原子燃料サイクル施設などが立地し、分譲面積は約1,203haで計画面積の約4割である（2026年3月末、出典29）。三全総は開発中心から居住環境中心へ方針を転換した。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/22_national-land-tomatoh.jpg" width="1000" height="732" loading="lazy" alt="苫小牧東部開発地域の空撮"><img src="../img/22_national-land-mutsu.jpg" width="1000" height="562" loading="lazy" alt="むつ小川原国家石油備蓄基地の空中写真"></div>
+<figcaption>左は苫小牧東部開発地域の空撮で、苫小牧東港の周りに区画された広い土地が広がる。右はむつ小川原の国家石油備蓄基地の空中写真で、円形の石油タンクが並ぶ。どちらも新全総の大規模工業基地として構想され、計画の一部だけが実現した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Tomatoh_development_area_aerial_shot.jpg">ブルーノ・プラス</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Mutsu-Ogawara_National_Petroleum_Stockpiling_Base_Aerial_photograph.jpg">国土地理院</a>／Attribution／Wikimedia Commons</span></figcaption>
+</figure>
 <p>四全総は1980年代に進んだ<strong>東京一極集中</strong>への対応を課題とした。背景には人口と諸機能の東京一極集中・地方圏の雇用問題・本格的な国際化の進展があった（出典2）。五全総は投資総額を示さず、地域の選択と責任に基づく地域づくりを重視した（出典2）。国が投資額を掲げて開発を主導する計画は、ここで区切りを迎えた。</p>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 320" role="img" aria-label="国土計画の変遷と計画の重点の移行">
@@ -160,12 +175,22 @@
 </tbody></table></div>
 <p class="tb-src">閣議決定日は出典5、各計画の考え方は出典6と出典8、広域地方計画のブロック数は出典8による。</p>
 <p>第二次計画の<strong>コンパクト＋ネットワーク</strong>とは、生活に必要な機能を中心部に集めて拠点を形成し、拠点どうしを交通と情報通信で結ぶ国土構造である（出典8）。人口が減ると、広く散らばった住宅地に道路・上下水道・バス路線を維持する費用が住民1人あたりで増える。拠点に機能を集めれば、少ない人口でも医療や商業を成り立たせられる。都市の内部でこれを進める例は第6章で扱った。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/22_national-land-lrt.jpg" width="1000" height="666" loading="lazy" alt="宇都宮駅東口に停車する宇都宮ライトレールの車両">
+<figcaption>宇都宮駅東口停留場に停車する宇都宮ライトレールの車両。2023年に開業した路面電車で、拠点どうしを公共交通で結ぶコンパクト＋ネットワークの考え方に沿う例である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Utsunomiya_Light_Rail_HU300Series_HU301Formation_at_Utsunomiya_Station_East.jpg">シンプルですけど機能的なベッド</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>第三次計画は「新時代に地域力をつなぐ国土」を国土の将来像とし、国土構造の基本構想を<strong>シームレスな拠点連結型国土</strong>とした（出典5・出典6）。主な内容は次の3点である。</p>
 <ul>
 <li>リニア中央新幹線・新東名・新名神などで三大都市圏を結ぶ<strong>日本中央回廊</strong>の形成（出典6）</li>
 <li>日本海側と太平洋側の二面活用などで広域圏の連結を強める全国的な回廊ネットワーク（出典6）</li>
 <li>生活圏人口10万人程度以上を1つの目安とし、市町村の境界にとらわれない<strong>地域生活圏</strong>の形成（出典6）</li>
 </ul>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/22_national-land-maglev.jpg" width="1000" height="666" loading="lazy" alt="山梨リニア実験線のL0系">
+<figcaption>山梨県の中央新幹線の実験線を走るL0系の超電導リニア。リニア中央新幹線は、三大都市圏を結ぶ日本中央回廊を構成する路線の1つである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:SC_Maglev_Test_Ride_(18464832625).jpg">Maryland GovPics</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>計画期間は2050年さらにその先を見据えつつ、今後おおむね10年間である（2023年・出典6）。背景には人口減少による地方の危機・巨大災害リスクの切迫・気候危機・東アジア情勢などの安全保障上の課題がある（出典6）。全総の時代と比べると、計画の問いは「どこに何を新しく建設するか」から「人口が減っても地域の機能をどう維持し連結するか」へ移った。</p>
 
 <div class="ex"><div class="ex-h">例題 2</div>
@@ -230,6 +255,11 @@
 </figure>
 <p><strong>将来推計人口</strong>は、出生・死亡・国際人口移動の仮定を置いて将来の人口を算出した値である。国立社会保障・人口問題研究所の2023年推計の中位推計では、総人口は2056年に1億人を下回り、2070年に8,700万人となる（出典11）。同じ推計で65歳以上人口の割合は2020年の28.6％から2070年に38.7％へ上昇する（出典11）。なお2025年の国勢調査の人口は、この推計の2025年の値1億2326万人を約29万人下回った（本書による算出値・出典10・出典11）。</p>
 <p><strong>東京一極集中</strong>とは、人口・企業の本社・行政機能・情報などが東京圏に集中する状態である。東京圏は東京都・神奈川県・埼玉県・千葉県の1都3県を指す。東京圏の人口は3,697万5千人で、全国の約3割を占める（2025年・出典10）。本書の算出では30.1％であり、2020年の29.3％から上昇した（出典9・出典10）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/22_national-land-tokyo.jpg" width="1000" height="666" loading="lazy" alt="東京スカイツリーから見た東京の市街地">
+<figcaption>東京スカイツリーから見た東京の市街地。高層ビルと住宅が地平線まで途切れずに続く。東京圏には全国の人口の約3割が住む。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Tokyo_skyline_seen_from_Tokyo_Skytree.jpg">Ruthsic</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 320" role="img" aria-label="東京圏の転入超過数の推移 2015年から2025年">
 <line x1="70" y1="270.0" x2="700" y2="270.0" stroke="var(--line)"/>
@@ -346,6 +376,11 @@
 <tr><td>2025年6月</td><td>第1次国土強靱化実施中期計画を決定。5年間でおおむね20兆円強程度、2026年度から5年間（出典18）</td></tr>
 </tbody></table></div>
 <p>国土計画と防災が結び付く理由は2つある。1つは巨大地震の切迫である。南海トラフ地震の今後30年以内の発生確率は、2025年の一部改訂で「60〜90％程度以上」と「20〜50％」の2つの値が併記された（2025年1月1日時点・出典19）。改訂前の値は「80％程度」であった（出典19）。いずれも最も高い区分のⅢランクに入る。首都直下地震について内閣府は、M7程度の地震が30年以内に70％程度の確率で起きるとする前提で被害を想定した。2025年12月公表の想定では死者は最大約1万8千人である（出典20・出典24）。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/22_national-land-tower.jpg" width="1000" height="667" loading="lazy" alt="鈴川港公園の津波避難タワー"><img src="../img/22_national-land-taro.jpg" width="1000" height="747" loading="lazy" alt="田老の高い防潮堤"></div>
+<figcaption>左は鈴川港公園の津波避難タワーで、津波の時に高い所へ避難するための鉄骨の塔である。右は岩手県の田老の防潮堤で、1958年までに完成した高い堤防の上から市街地を見下ろす。巨大地震と津波への備えは、国土強靱化の中心となる課題である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:%E9%88%B4%E5%B7%9D%E6%B8%AF%E5%85%AC%E5%9C%92%E6%B4%A5%E6%B3%A2%E9%81%BF%E9%9B%A3%E3%82%BF%E3%83%AF%E3%83%BC20261010-IMG_7045.jpg">くろふね</a>／CC BY 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:High_Seawalls_in_Tar%C5%8D,_Iwate_-2.JPG">Kihkyef</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 591" role="img" aria-label="第三次国土形成計画の日本中央回廊と巨大災害の想定地域と半導体工場の立地">
 <g>
@@ -448,6 +483,11 @@
 <p>第三次国土形成計画は、GX・DX・経済安全保障を踏まえた成長産業の全国的な分散立地を重点テーマに挙げた（出典6）。近年の例が半導体工場である。</p>
 <aside class="an an-rw"><b>現実世界</b>
 <p>台湾積体電路製造（TSMC）の子会社JASMは熊本県菊陽町に工場を建設し、2024年12月に量産を開始した（出典21）。経済産業省は2022年6月に5G促進法に基づいてこの工場の整備計画を認定し、最大4,760億円の助成を決めた（出典25）。北海道千歳市ではRapidusの工場で2025年4月に試作ラインの稼働が始まった（出典22）。一全総の拠点開発と同じく、工場1つで地域全体の人口と雇用が増えるかどうかは、今後の統計で確かめる課題である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/22_national-land-rapidus.jpg" width="1000" height="750" loading="lazy" alt="新千歳空港から見たラピダスの工場の建設現場">
+<figcaption>新千歳空港から見た千歳市のラピダスの工場の建設現場。多数のクレーンが並ぶ。この工場では2025年4月に試作ラインの稼働が始まった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Rapidus_factory_under_construction.jpg">どういたしまして</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 </aside>
 
 <h2 id="s8">確認問題</h2>

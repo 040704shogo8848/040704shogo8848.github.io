@@ -444,10 +444,25 @@
 
 <h2 id="s8">現実世界の三角関数 交流電力</h2>
 <p>家庭のコンセントの電圧は時間 \( t \) の正弦関数 \( V=V_{0}\sin (2\pi ft) \) で表される。\( f \) は1秒あたりの振動の回数で周波数と呼ぶ。周期は \( 1/f \) 秒である。日本では東日本が 50 Hz で西日本が 60 Hz と2つの周波数が併存する。境界は静岡県の富士川と新潟県の糸魚川の付近とされる。明治期に東京は欧州製の発電機を入れ大阪は米国製の発電機を入れたことが起源と説明される。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_trigonometric-oscilloscope.jpg" width="1000" height="807" loading="lazy" alt="オシロスコープに映した正弦波">
+<figcaption>アナログのオシロスコープに映した周波数10 kHzの正弦波である。横軸が時間、縦軸が電圧で、同じ波形が一定の周期で繰り返される。家庭の電圧は周波数50 Hzまたは60 Hzの正弦波である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sine_wave_10_kHz_displayed_on_analog_oscilloscope.jpg">Pittigrilli</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>2つの周波数の系統はそのままでは接続できない。周波数変換所で一度直流に変えてから相手の周波数の交流に直して電力を融通する。周期 \( \frac{1}{50} \) 秒の波と \( \frac{1}{60} \) 秒の波は位相をそろえられないからである。</p>
 </aside>
 <p>回転運動と波動は周期をもつので三角関数で表される。学習指導要領解説は観覧車がある高さ以上にある時間を求める活動を例に挙げている。半径 \( r \) の観覧車が一定の速さで回るとき高さは \( h=h_{0}-r \cos \omega t \) の形の式になる。\( h\geqq k \) を解く問題は第7節の不等式と同じ手順で解ける。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_trigonometric-ferris-wheel.jpg" width="800" height="592" loading="lazy" alt="1893年のシカゴ万国博覧会の観覧車">
+<figcaption>1893年のシカゴ万国博覧会に建てられた最初の観覧車である。一定の速さで回る観覧車では、ゴンドラの高さが時間の三角関数で表される。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ferris-wheel.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/04_trigonometric-sakuma.jpg" width="1000" height="562" loading="lazy" alt="佐久間周波数変換所"><img src="../img/04_trigonometric-shinshinano.jpg" width="1000" height="500" loading="lazy" alt="新信濃の周波数変換設備"></div>
+<figcaption>左は静岡県の佐久間周波数変換所、右は長野県の新信濃の周波数変換設備である。50 Hzと60 Hzの系統の間で電力を融通するため、交流を一度直流に変えてから相手の周波数の交流に直す。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:J-POWER_SAKUMA_frequency_converter_station.jpg">Jihara19</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Shin-Shinano_Frequency_Converter.jpg">アラツク</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s9">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 弧度法</div>

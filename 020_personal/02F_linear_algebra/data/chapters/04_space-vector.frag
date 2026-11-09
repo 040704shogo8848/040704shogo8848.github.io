@@ -242,11 +242,26 @@
 <figcaption>面の法線 n と光源への向き l のなす角が60°なら明るさは正面から照らした場合の半分になる。単位ベクトルどうしの内積は cos θ に等しい。</figcaption>
 </figure>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/04_lambert-photometria.jpg" width="575" height="1000" loading="lazy" alt="ランベルト『測光法』の扉">
+<figcaption>ランベルトが1760年に出版した『測光法』の扉。光の明るさを測定する方法をまとめた本である。面の明るさが光の入射角の cos に比例するという余弦則は、ランベルトの名称で呼ばれる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Title_page_of_Johann_Lambert%27s_Photometria.JPG">Dufbug Deropa</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>GPSの測位は球面の交わりの問題である。受信機は各衛星からの信号の到達時間に光速をかけて衛星までの距離を求める。衛星の位置を中心とし距離を半径とする球面を考えると受信機はすべての球面の上にある。2つの球面の交わりは円で3つ目の球面との交わりは2点に絞られる。受信機の時計の誤差も未知数として解くので実際には4機以上の衛星を使う。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/04_gps-satellite.jpg" width="1000" height="666" loading="lazy" alt="組立施設のGPS III衛星"><img src="../img/04_gps-receiver.jpg" width="792" height="1000" loading="lazy" alt="手持ちのGPS受信機"></div>
+<figcaption>左はロッキード・マーティンの施設で組み立てられた GPS III 衛星の1号機、右は手持ちの GPS 受信機である。受信機は4機以上の衛星までの距離を求め、衛星を中心とする球面の交点として自分の位置を計算する。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:GPS_III.jpg">Lockheed Martin</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Magellan_Triton_2000_handheld_GPS_receiver_01.jpg">Siarhei Besarab</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-rw"><b>現実世界</b>
 <p>ゲームの描画用の半導体は1秒間に膨大な数の内積を計算する。各画素で行う計算の中心は \( n_1l_1+n_2l_2+n_3l_3 \) という3成分の積の和である。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_cg-gpu.jpg" width="978" height="938" loading="lazy" alt="GeForce 6600 GT の半導体">
+<figcaption>NVIDIA の描画用半導体 GeForce 6600 GT。中央の四角い部分に計算回路がある。画素ごとの明るさを求める内積の計算を、多数の回路で同時に行う。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:6600GT_GPU.jpg">Berkut</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s7">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 2点間の距離</div>

@@ -8,6 +8,12 @@
 <p>農業が成り立つかどうかを決める条件を<strong>農業の立地条件</strong>と呼ぶ。立地条件は自然条件と社会条件に分かれる。</p>
 <p><strong>自然条件</strong>は気温・降水量・地形・土壌である。作物ごとに栽培できる気温の範囲があり、高緯度側の限界を<strong>栽培限界</strong>（寒冷限界）と呼ぶ。山地では標高が上がるほど気温が下がるため高距限界が生じる。降水が少ない地域には乾燥限界があり、灌漑なしでは畑作も難しい。稲は夏に高温で雨の多い気候を好む。小麦は稲より冷涼でやや乾燥した気候に適する。とうもろこしは夏の高温を必要とする。</p>
 <p><strong>社会条件</strong>は市場までの距離と輸送手段・資本と技術・労働力・農業政策・食文化である。技術は自然条件の制約を緩める。灌漑は乾燥限界を広げ、品種改良は栽培限界を高緯度へ押し上げる。温室や冷蔵輸送は季節と距離の制約を小さくする。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_agriculture-greenhouses.jpg" width="1000" height="750" loading="lazy" alt="オランダのマースダイク周辺に広がるガラス温室群">
+<figcaption>オランダ南西部のマースダイク周辺である。手前の畑の奥に、ガラスの温室が地平線まで隙間なく並ぶ。温室は季節の制約を小さくし、大都市の近くで野菜や花を集約的に栽培する園芸農業を支える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Maasdijk,_kassen_foto1_2014-03-09_11.07.jpg">Michielverbeek</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="tb-vs">
 <div><h5>集約的農業</h5><ul>
 <li>狭い土地に多くの労働力や資本を投入する</li>
@@ -80,6 +86,18 @@
 <tr><td>プランテーション農業</td><td>熱帯・亜熱帯の沿岸部</td><td>植民地時代に欧米の資本が単一の商品作物を大規模に栽培させた。輸出港に近い場所に多い</td></tr>
 </tbody></table></div>
 <p>ホイットルセーの原論文ではオアシスの農業は稲作以外の集約的自給農業と同類として扱われている（出典14）。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/10_agriculture-olive.jpg" width="1000" height="750" loading="lazy" alt="スペインのアンダルシア地方のオリーブ畑"><img src="../img/10_agriculture-combine.jpg" width="1000" height="783" loading="lazy" alt="米国カンザス州の小麦畑で働くコンバイン"></div>
+<figcaption>左はスペインのアンダルシア地方のオリーブ畑で、乾燥した土の上にオリーブの木が等間隔に並ぶ。右は米国カンザス州の小麦畑で収穫するコンバインの古い写真である。左は夏に乾燥する地中海式農業、右は広い平原で機械を使う企業的穀物農業の景観である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Olive_groves_in_Andalucia.jpg">Wildmountainscene</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:A_Kansas_wheat_field,_Harvester_Combine_in_action_LCCN2012646392.jpg">Library of Congress</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph3"><img src="../img/10_agriculture-paddy.jpg" width="1000" height="736" loading="lazy" alt="ベトナムのハノイ北方で田植えをする農家"><img src="../img/10_agriculture-swidden.jpg" width="1000" height="664" loading="lazy" alt="焼き払った斜面から煙が上がる焼畑"><img src="../img/10_agriculture-qanat.jpg" width="1000" height="577" loading="lazy" alt="イランの平原に並ぶカナートの縦穴"></div>
+<figcaption>左はベトナムのハノイ北方の田植えで、水を張った水田に苗を1株ずつ手で植える。中央は森林を伐採して焼いた斜面で、切り株の間から煙が上がる焼畑である。右はイラン東部の平原を上空から見たカナートで、地下水路を掘り保守するための縦穴が一列に並ぶ。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Rizi%C3%A8re_au_Vietnam-02.JPG">Wayne77</a>／CC BY-SA 3.0 中央：<a href="https://commons.wikimedia.org/wiki/File:More_slash-_and_burn-_deforestation-_this_time_with_smokin%27_gun_evidence_(14601822591).jpg">shankar s.</a>／CC BY 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:Puits_de_creusement_et_de_maintenance_d%27un_qanat_en_Iran.jpg">Payam Azadi.</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 320" role="img" aria-label="農業地域の位置付け 自給か販売かと集約度">
@@ -207,6 +225,12 @@
 
 <h2 id="s4">企業的農業とアグリビジネス</h2>
 <p>新大陸の企業的農業は19世紀以降にヨーロッパからの移民が広い平原を開拓して成立した。アメリカ合衆国では気候と土壌に合った作物を地域ごとに大規模に栽培する<strong>適地適作</strong>が進んだ。乾燥した大平原では地下水をくみ上げて回転するスプリンクラーで散水する<strong>センターピボット</strong>方式の灌漑が広がり、円形の畑が並ぶ。肉牛は放牧の後に<strong>フィードロット</strong>と呼ばれる肥育場に集められ、とうもろこしなどの濃厚飼料で短期間に太らされる。アメリカ合衆国の農業地域の詳細は第21章で扱う。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/10_agriculture-pivot.jpg" width="1000" height="1000" loading="lazy" alt="衛星から見たカンザス州ガーデンシティ周辺の円形の畑"><img src="../img/10_agriculture-feedlot.jpg" width="1000" height="671" loading="lazy" alt="上空から見た肉牛のフィードロット"></div>
+<figcaption>左はランドサット7号が撮影した米国カンザス州ガーデンシティ周辺で、センターピボット方式の円形の畑が一面に並ぶ。右は上空から見た大規模なフィードロットで、柵で区切った区画に多数の肉牛が集められている。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Garden_City_Kansas_irrigation-Landsat7.jpg">作者名の記載なし</a>／パブリックドメイン 右：<a href="https://commons.wikimedia.org/wiki/File:AERIAL_OF_CATTLE_ON_HUGE_FEEDLOT._(FROM_THE_DOCUMERICA-1_EXHIBITION._FOR_OTHER_IMAGES_IN_THIS_ASSIGNMENT,_SEE_FICHE..._-_NARA_-_553047.jpg">Gene Daniels</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>農業に関連する種子・肥料・農薬・農業機械の供給から、穀物の集荷・貯蔵・輸送・加工・販売までを担う産業を<strong>アグリビジネス</strong>と呼ぶ。このうち穀物の国際的な集荷と貿易を担う巨大企業を<strong>穀物メジャー</strong>と呼ぶ。ADM・ブンゲ・カーギル・ルイ・ドレフュスの4社は頭文字から ABCD と呼ばれ、世界の農産物取引で大きな比重を占める（出典17）。これらの企業は産地の集荷施設から輸出港の穀物エレベーターと船舶までを一体で保有し、輸出国の供給を輸入国の需要へ結び付ける。</p>
 
 <aside class="an an-biz"><b>経済で言えば</b>
@@ -226,6 +250,12 @@
 
 <h3>プランテーション農業とモノカルチャー経済</h3>
 <p><strong>プランテーション農業</strong>は熱帯や亜熱帯で輸出向けの単一の商品作物を大規模に栽培する農業である。植民地時代に欧米の資本が現地や移入の労働力を使って始めた。独立後は国有化されたり小規模な農家の栽培に移ったりした例も多い。特定の一次産品の輸出に経済が依存する状態を<strong>モノカルチャー経済</strong>と呼ぶ。国際価格や天候の変動がそのまま国の輸出収入を左右する。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/10_agriculture-tea.jpg" width="1000" height="500" loading="lazy" alt="ケニアのケリチョ高原に広がる茶畑"><img src="../img/10_agriculture-cocoa.jpg" width="1000" height="666" loading="lazy" alt="コートジボワールのスブレで収穫したカカオの実"></div>
+<figcaption>左はケニアのケリチョ高原の茶畑で、刈りそろえた茶の木が丘を覆う。右はコートジボワール西部のスブレで収穫したカカオの実である。どちらも熱帯で輸出向けに栽培され、ケニアとコートジボワールは表の上位国である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Tea_carpet_plantation_of_Kericho_highlands,_in_Kenya.jpg">Carter.Maina</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Cocoa_pods_in_Soubr%C3%A9.jpg">Milequem Diarassouba</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 250" role="img" aria-label="熱帯の主な商品作物と生産上位国">
 <clipPath id="j10bc"><rect x="0" y="0" width="720" height="187.8"/></clipPath>
@@ -306,6 +336,12 @@
 <tr><td>ペルー</td><td>3,545</td><td>3,494</td><td>51</td><td>1.4％</td></tr>
 </tbody></table></div>
 <p>表は2023年の海面の値で内水面を含まない（出典2、割合は本書による算出値）。中国とインドネシアは海藻類と魚介類の養殖が多い。ノルウェーはフィヨルドの湾内でさけの養殖を行う。ペルーは湧昇流の海で漁獲するアンチョビが中心で、その多くは魚粉に加工されて飼料として輸出される。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_agriculture-salmon.jpg" width="1000" height="602" loading="lazy" alt="ノルウェーのフィヨルドに浮かぶさけの養殖いけす">
+<figcaption>ノルウェー北部のセンヤ島のトシュケフィヨルドに浮かぶ、さけの養殖のいけすである。湾内は波が穏やかなので、円形のいけすを海面に並べて育てることができる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Fish_farming_in_Torskefjorden,_Senja,_Troms,_Norway,_2014_August.jpg">Ximonic (Simo Räsänen)</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <h3>日本の漁業の変化</h3>
 <ul class="tb-tl">

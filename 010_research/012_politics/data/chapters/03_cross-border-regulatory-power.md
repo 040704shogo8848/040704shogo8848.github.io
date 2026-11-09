@@ -14,6 +14,11 @@ thesis: 市場規模を持つ国は自国法で域外企業の設計と立地を
 
 第1は再輸出である。米国原産の品目はEARの対象であり続ける。BISは、EARの対象となる米国原産品目は所在地がどこであってもEARの対象であり続ける、と明示している。[出典](https://www.bis.gov/learn-support/reexports-and-exports-from-abroad)。物が国外に出ても管轄は消えない。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/ch03_commerce.jpg" width="1000" height="631" loading="lazy" alt="米国商務省の本庁舎">
+<figcaption>ワシントンにある米国商務省の本庁舎、ハーバート・C・フーバー・ビル。輸出管理規則EARを運用する産業安全保障局BISは、商務省の部局である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:United_States_Department_of_Commerce_-_Herbert_C._Hoover_Building_-_Washington_D.C..jpg">Tony Webster</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 第2はde minimis規則である。外国で製造された品目に含まれる米国原産の規制対象内容の価値比率が閾値を超えると、その外国製品の全体がEARの対象になる。原則の閾値は25%で、これはCountry Group E:1およびE:2向けには使えない。全世界向けに使える閾値は10%である。[出典](https://www.law.cornell.edu/cfr/text/15/734.4)。先端ノード集積回路向けの半導体製造装置のように、閾値が0%に設定された類型もある。この場合は米国内容が非ゼロでありさえすれば管轄が生じる。2025年9月の規則では、米国原産集積回路を含む一部の半導体製造装置について、武器禁輸仕向地またはマカオ向けとなる場合にde minimis水準を置かない扱いが導入された。[出典](https://www.wilmerhale.com/en/insights/client-alerts/20241206-bis-issues-sweeping-additional-restrictions-on-semiconductors-and-advanced-computing-entity-list-designations)
 
 第3が外国直接製品規則FDPである。これは米国内容を1ドルも含まない外国製品にも及ぶ点で、de minimisと構造が違う。発動には2つの要件が同時に必要になる。ひとつはproduct scopeで、その外国製品が米国原産の技術、ソフトウェア、または生産設備の直接製品であることを要する。もうひとつはdestination scopeまたはend-user scopeで、仕向地が武器禁輸国等であるか、あるいは特定のリスト掲載者が取引に関与することを要する。半導体製造装置FDP規則は仕向地要件として米国武器禁輸仕向地とマカオを置く。==エンティティリストFDP規則は仕向地ではなく相手方を要件とし==、Footnote 5指定者が製造または購入する物に組み込まれると輸出者が知り得た場合に及ぶ。[出典](https://www.wilmerhale.com/en/insights/client-alerts/20241206-bis-issues-sweeping-additional-restrictions-on-semiconductors-and-advanced-computing-entity-list-designations)
@@ -88,6 +93,11 @@ thesis: 市場規模を持つ国は自国法で域外企業の設計と立地を
 
 排出原単位の差から始める。JRCの推計では、EUの高炉一貫製鉄ルートの炭素集約度はスコープ1と上流とスコープ2の合計で1.81トンCO2/トン粗鋼である。中国は1.84、インドと南アフリカは3.8超である。電炉ルートは大半の国で0.6トンCO2/トン粗鋼を下回る。基準年は2018年である。[出典](https://publications.jrc.ec.europa.eu/repository/bitstream/JRC129297/JRC129297_01.pdf)。EU域内の高炉と電炉の差は約1.2トンCO2/トン粗鋼となる。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/ch03_eaf.jpg" width="640" height="427" loading="lazy" alt="シェフィールドの電炉製鋼所"><img src="../img/ch03_blast-furnace.jpg" width="1000" height="666" loading="lazy" alt="JFEスチールの第5高炉"></div>
+<figcaption>左はイギリスのシェフィールドにある電炉製鋼所、右はJFEスチールの第5高炉である。電炉は鉄スクラップを電気で溶かし、高炉は鉄鉱石をコークスで還元する。この工程の違いが、粗鋼1トンあたりの排出量の差になる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Electric_arc_furnaces_-_geograph.org.uk_-_517378.jpg">Alan Murray-Rust</a>／CC BY-SA 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:JFE_5th_Blast_Furnace_-_01.jpg">Kabacchi</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 これに2026年8月7日のEUA価格82.42ユーロ/tCO2を掛けると、炭素コスト差は約99ユーロ/トン粗鋼になる。北欧HRC指数は2026年5月28日時点で680.73ユーロ/トンである。[出典](https://eurometal.net/europe-steel-hrc-prices-steady-as-weak-demand-high-stocks-undermine-summer-rebound-hopes/)。99ユーロはこの14.5%にあたる。
 
 ただしこの14.5%は今日効いている数字ではない。無償割当の残存率を掛けた実効差は、2026年で約2.5ユーロ/トンすなわちHRC価格の0.36%、2030年で約48ユーロ/トンすなわち7.0%、2034年で約99ユーロ/トンすなわち14.5%と推移する。採算の逆転が起きるのは、課金係数が10%から48.5%へ跳ねる2029年から2030年の局面である。
@@ -128,6 +138,11 @@ EU域内の生産構成は既にこの方向に動いている。2024年のEU粗
 
 日本の位置は4段階で動いてきた。第1段階は施設と資金の提供である。The Interceptがスノーデン文書にもとづき2017年4月24日に報じたところでは、三沢の運用センターは2009年3月時点で16の対象衛星上の8,000超の信号を監視しており、日本はキャンプ・ハンセンの施設に5億ドル超を負担した。[出典](https://theintercept.com/2017/04/24/japans-secret-deals-with-the-nsa-that-expand-global-surveillance/)。日本政府はこの内容を認めていない。第2段階は保護協定の網の拡大である。第3段階は国内法制で、特定秘密保護法は2014年12月10日に施行され、重要経済安保情報保護活用法は2024年5月10日成立、2025年5月16日施行となった。[出典](https://www.cao.go.jp/keizai_anzen_hosho/hogokatsuyou/hogokatsuyou.html)。サイバー対処能力強化法は2025年5月16日に成立し、5月23日に公布された。通信情報の利用に関する規定の施行は公布から2年6か月以内とされている。[出典](https://www.nli-research.co.jp/report/detail/id=82440?site=nli)。第4段階は運用の常態化である。2023年12月19日、日米韓の防衛相は北朝鮮が発射したミサイルを3か国がリアルタイムで探知し評価するメカニズムを確立したと発表した。[出典](https://www.mod.go.jp/j/approach/anpo/2023/1219b_usa_kor-j.html)
 
+<figure class="tb-fig tb-photo">
+<img src="../img/ch03_misawa.jpg" width="1000" height="750" loading="lazy" alt="三沢基地の円形アンテナ">
+<figcaption>三沢基地の姉沼通信所にあった円形アンテナAN/FLR-9。巨大な円形の形から「象の檻」と呼ばれた。無線信号の到来方向を探知するための設備である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Misawa_AN_FLR-9.jpg">Naritama (NARITA Masahiro)</a>／CC BY 2.1 jp／Wikimedia Commons</span></figcaption>
+</figure>
+
 国内の秘密指定の統計は、この運用の輪郭を外から測る数少ない手掛かりになる。2026年6月の国会報告によれば、2025年末時点の特定秘密は854件で、指定権限を持つ20機関のうち13機関が指定している。内訳は防衛省493件、内閣官房132件、警察庁64件、外務省46件である。2024年末は788件で、2025年中に66件が加わり、解除と満了はなかった。適性評価は2025年中に26機関が64,939件を実施し、うち5件について漏えいのおそれがないとは認められなかった。前年の35,839件から増えたのは、2015年に一斉実施された評価の5年ごとの更新期が来たためと同報告は説明している。[出典](https://www.cas.go.jp/jp/tokuteihimitsu/pdf/r08_0626_houkoku.pdf)。件数は文書の束の単位であって情報量ではない。
 
 変わっていない点が2つある。ひとつはFive Eyesへの正式加入がないことである。2020年8月に当時の防衛相がSix Eyesと呼ばれる水準まで近づけると述べたが、制度化には至っていない。CSISが2020年12月8日に掲載した対論では、反対側の論拠として、UKUSAの枠組みが生の情報と最終成果物を継続的かつ即時に要求を待たずに共有する運用を前提としており、数十年単位の文化的な同調を要すると指摘されている。[出典](https://www.csis.org/analysis/resolved-japan-ready-become-formal-member-five-eyes)。もうひとつは非対称である。WikiLeaksが2015年7月31日に公開したTarget Tokyoは、日本国内の35件を米国の傍受対象リストとして示した。対象には内閣府の交換台、官房長官秘書官の回線、日銀総裁を含む複数の回線、三菱の天然ガス部門、三井の石油部門が含まれる。公開された報告のうち1件には米豪加英ニュージーランドの5か国向けの配布指定が付いていた。[出典](https://wikileaks.org/nsa-japan/)。第二当事国どうしを対象としない建前は、第三国には及ばない。制度面にも非対称がある。特定秘密保護法第4条第4項ただし書は指定の有効期間を通じて60年を超えられないと定めつつ7つの例外を置き、その第6号は外国の政府または国際機関から60年を超えて指定を行うことを条件に提供された情報である。[出典](https://www.cas.go.jp/jp/tokuteihimitsu/pdf/r08_0626_houkoku.pdf)。外国から供給された情報は、日本国内の公開制度の期限の外に置かれる。
@@ -137,6 +152,11 @@ EU域内の生産構成は既にこの方向に動いている。2024年のEU粗
 同じ政権のもとで、ある政策は数か月で数字を動かし、別の政策は制度が変わっても数字が動かない。境界線は、決定に必要な手続の数で引ける。
 
 速く動くのは、大統領や大臣の単独の権限で発動でき、既存の徴収経路に乗る政策である。関税がその典型で、根拠法を差し替えても水準を維持できる。IEEPA関税が2026年2月20日の判決で無効になった後も、2026年6月1日署名の布告は通商拡大法232条により鉄鋼とアルミの派生製品に25%を課し、6月8日から2027年12月31日まで適用するとした。[出典](https://www.federalregister.gov/documents/full_text/text/2026/06/04/2026-11314.txt)。2026年7月20日署名の布告はカナダの自動車関連品に1930年関税法338条を使い50%の追加関税を課し、8月19日午前0時1分から適用するとした。[出典](https://www.federalregister.gov/documents/full_text/text/2026/07/23/2026-14997.txt)。関税収入はIEEPA消滅後の2026年3月に単月221.5億ドル、4月に221.2億ドルで、2024年10月の73.0億ドルの3.0倍を維持している。[出典](https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_9)。変わったのは徴収の法的な器であって、負担の構造ではない。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/ch03_steel-coils.jpg" width="1000" height="750" loading="lazy" alt="鋼板のコイルの積み込み">
+<figcaption>鋼板を巻いたコイルを貨車に積み込む作業。2026年6月の布告は、通商拡大法232条により鉄鋼とアルミの派生製品に25%の関税を課した。関税は既存の徴収経路に乗るため、政権の判断で速く動く。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Loading_coils_(276335133).jpg">LHOON from Mechelen, Belgium</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 規則の整備は動くが、資金の向きまでは動かさない。暗号資産の制度整備は一方向に緩んだ。2025年3月11日公表の大統領令が戦略ビットコイン準備と米国デジタル資産備蓄を設置した。[出典](https://www.federalregister.gov/documents/2025/03/11/2025-03992/establishment-of-the-strategic-bitcoin-reserve-and-united-states-digital-asset-stockpile)。2026年に入ると、GENIUS法にもとづく発行体規制の具体化が各当局で並行し、NCUAが5月18日、FDICが6月5日、FinCENが6月22日、OCCが6月24日に規則案を公告した。[出典](https://www.federalregister.gov/documents/2026/06/24/2026-12692/permitted-payment-stablecoin-issuer-anti-money-launderingcountering-the-financing-of-terrorism-and)。CFTCは2026年6月3日の政策声明でビットコイン現物価格を参照する無期限契約の上場を認めた。[出典](https://www.federalregister.gov/documents/2026/06/03/2026-11020/policy-statement-concerning-the-listing-of-perpetual-contracts)。それでも価格は逆に動いた。ビットコインは2026年8月7日時点で64,264ドルで、最高値をつけた2025年10月6日の126,080ドルから49.0%低い。イーサリアムは1,899.07ドルで、2025年8月24日の4,946.05ドルから61.6%低い。[出典](https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,tether,usd-coin)。増えたのは器のほうで、USDTの時価総額は12か月前の1,641億ドルから1,834億ドルへ11.8%増え、USDCの718億ドルと合わせて2,552億ドルになった。上場企業のバランスシート経由の保有は1,284,191 BTCで、流通量の6.12%にあたる。[出典](https://api.coingecko.com/api/v3/companies/public_treasury/bitcoin)。制度整備が動かしたのは資金の入り口の形であって価格ではない。
 

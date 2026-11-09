@@ -296,8 +296,18 @@
 <h3>変数が時刻でない場合</h3>
 <p>導関数は \( x \) 以外の変数でも同じように定義される。半径 \( r \) の円の面積 \( S=\pi r^{2} \) を \( r \) で微分すると \( \frac{dS}{dr}=2\pi r \) となり円周の長さに等しい。半径が少し増えると面積は円周に沿った細い帯の分だけ増えるからである。図3の正方形の帯と同じ構造である。</p>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/05_derivative-speedometer.jpg" width="1000" height="666" loading="lazy" alt="オートバイの速度計"><img src="../img/05_derivative-specs.jpg" width="1000" height="748" loading="lazy" alt="区間平均速度の取り締まりカメラ"></div>
+<figcaption>左はオートバイの速度計、右は英国の高速道路で区間平均速度の取り締まりに使うカメラである。速度計が示すのはその瞬間の速度で、位置の時間微分にあたる。区間のカメラは2地点の通過時刻から平均変化率を求める。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Victoria_Pionier_-_Tachometer_Veigel_(2007-06-10_Sp).JPG">Lothar Spurzem</a>／CC BY-SA 2.0 de 右：<a href="https://commons.wikimedia.org/wiki/File:SPECS_speed_cameras_M1_south_J11_-_J10_roadworks.jpg">DeFacto</a>／CC BY-SA 2.5／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s8">現実世界の微分 ライプニッツの論文</h2>
 <p>微分法を最初に印刷して公表したのはライプニッツで1684年10月にライプツィヒの学術誌 Acta Eruditorum に論文 Nova Methodus pro Maximis et Minimis を載せた。この論文は和・積・商とべきの微分の規則を含んでいた。ニュートンは流率法と呼ぶ方法をこれより前に考案していたが公表は遅れた。2人のどちらが先かを巡る争いは18世紀の英国と大陸の数学界を分断した。現在の \( \frac{dy}{dx} \) の記法はライプニッツに由来しニュートンの記法は物理学で時間微分を表す \( \dot{x} \) として残っている。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/05_derivative-leibniz.jpg" width="826" height="1000" loading="lazy" alt="ライプニッツの肖像画"><img src="../img/05_derivative-nova-methodus.jpg" width="676" height="1000" loading="lazy" alt="論文『極大と極小のための新しい方法』の最初のページ"></div>
+<figcaption>左はライプニッツの肖像画、右は1684年10月の『アクタ・エルディトールム』に載った論文『極大と極小のための新しい方法』の最初のページである。微分法を印刷物で公表した最初の例である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Gottfried_Wilhelm_Leibniz_c1700.jpg">Johann Friedrich Wentzel</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Leibniz-Acta-1684-NovaMethodus.jpg">G. W. Leibniz</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>自動車の速度計は時刻ごとの速度を表示する。速度は位置の時間微分であり平均速度とは異なる。英国などで使われる区間平均速度の取り締まりは2地点の通過時刻から平均変化率を求めて判定する方式である。</p>
 </aside>

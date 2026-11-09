@@ -18,6 +18,11 @@
 
 <h2 id="s2">行列の積とその定義の理由</h2>
 <p>行列の積は成分ごとの掛け算ではない。A が m×n 行列で B が n×p 行列のとき積 AB は m×p 行列であり (i, j) 成分は次の式で定める。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_cayley.jpg" width="606" height="1000" loading="lazy" alt="ケイリーの肖像写真">
+<figcaption>イギリスの数学者ケイリー。1858年の論文「行列の理論に関する覚書」で、行列そのものを計算の対象とする理論を整えた。行列の積の定義もこの論文で示された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Portrait_of_Arthur_Cayley_(1821-1895),_Mathematician_and_Astronomer_(2550745041).jpg">Smithsonian Institution</a>／No restrictions／Wikimedia Commons</span></figcaption>
+</figure>
 \[ (AB)_{ij}=a_{i1}b_{1j}+a_{i2}b_{2j}+\cdots+a_{in}b_{nj} \]
 <p><strong class="hit">A の第 i 行と B の第 j 列を成分ごとに掛けて足す</strong>。これは第2章の内積の計算と同じ形である。A の列の数と B の行の数が等しくなければ積は定義できない。</p>
 
@@ -146,6 +151,11 @@
 
 <h2 id="s6">掃き出し法</h2>
 <p>逆行列の公式は 2×2 なら簡単であるが未知数が増えると計算量が急に増える。実際に連立一次方程式を解く標準の方法は<strong>掃き出し法</strong>である。<strong>ガウスの消去法</strong>とも呼ぶ。中学で学んだ加減法を行列の上で機械的に実行する手順である。コンピュータで大きな連立方程式を解く時は、誤差を抑える工夫を加えた LU 分解や反復法を使う。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_fangcheng-sangi.jpg" width="1000" height="458" loading="lazy" alt="格子の上に並べた算木">
+<figcaption>格子を描いた盤の上に並べた日本式の算木。第8節の『九章算術』の「方程」では、算木で連立方程式の係数を表の形に並べて消去を行った。表の行を操作して文字を消去する手順は、本節の掃き出し法と同じである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sangi-Japanese_style_counting_rods.jpg">Jccsvq</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>係数行列の右に定数項の列を付け加えた行列を<strong>拡大係数行列</strong>と呼ぶ。この行列に次の3種類の操作を行う。これを<strong>行基本変形</strong>と呼ぶ。</p>
 <div class="tb-tw"><table>
 <thead><tr><th>操作</th><th>方程式で言うと</th><th>解が変わらない理由</th></tr></thead>
@@ -237,9 +247,19 @@
 
 <h2 id="s8">現実世界の行列 方程から産業連関表まで</h2>
 <p>連立一次方程式を数の表で解く方法は古い。中国の数学書『九章算術』の第8章「方程」には係数を算木で表の形に並べて消去する手順が書かれている。成立時期は紀元前2世紀から紀元後1世紀ごろとされる。ヨーロッパではガウスが1810年の小惑星パラスの軌道の論文で最小二乗法の方程式をこの消去法で解く記法を示した。行列そのものを計算の対象とする理論は1858年のケイリーの論文「行列の理論に関する覚書」で整えられた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_pallas-asteroids.jpg" width="1000" height="470" loading="lazy" alt="4つの大型小惑星">
+<figcaption>大型の小惑星4つの観測画像を並べたもの。Pallas と表示された天体がパラスである。ガウスは1810年の論文で、パラスの軌道を求める最小二乗法の方程式を消去法で解いた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:The_Four_Largest_Asteroids.jpg">NASA/JPL-Caltech, ESO ほか</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>経済学者レオンチェフは産業どうしの取引を行列で表す投入産出分析を作り1973年のノーベル経済学賞を受けた。各産業の生産額を x・最終需要を d・投入係数行列を A とすると \(\boldsymbol{x}=A\boldsymbol{x}+\boldsymbol{d}\) である。生産額は \(\boldsymbol{x}=(E-A)^{-1}\boldsymbol{d}\) で求まる。日本の総務省などが作成する産業連関表はこの計算の基礎資料である。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_leontief.jpg" width="693" height="924" loading="lazy" alt="レオンチェフの肖像写真">
+<figcaption>1973年にノーベル経済学賞を受けたレオンチェフ。産業どうしの取引を行列で表す投入産出分析を作った。逆行列で生産額を求める本文の計算は、この分析の中心にある。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Wassily_Leontief_1973.jpg">Keystone</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s9">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 積の計算</div>

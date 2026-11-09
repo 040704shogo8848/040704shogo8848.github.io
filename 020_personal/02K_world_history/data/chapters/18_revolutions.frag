@@ -72,7 +72,15 @@
 <p>イギリスの綿工業の発明と蒸気機関の改良は歴史総合 第2章で扱った。ここでは大西洋経済との結び付きと、世界の力関係の変化を整理する。</p>
 <h3>大西洋経済と工業化</h3>
 <p>イギリスの綿工業の原料の綿花は、西インド諸島とアメリカ南部の奴隷制の農園から運ばれた。工業化の原料を奴隷労働が供給する分業が成立した。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/18_revolutions-cottongin.jpg" width="1000" height="658" loading="lazy" alt="綿繰り機">
+<figcaption>綿の繊維と種を分ける綿繰り機（イーライ・ホイットニー博物館の展示）。ハンドルで円筒を回し、歯で繊維だけを引き出す仕組みである。この機械で綿花の処理の能率が上がり、アメリカ南部の農園で綿花の栽培が広がった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Cotton_gin_EWM_2007.jpg">Tom Murphy VII</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>奴隷貿易と奴隷制の利益が産業革命の資本になったかについては説が分かれる。ウィリアムズは『資本主義と奴隷制』（1944年）で、奴隷貿易と砂糖の利益がイギリスの工業化の資金になり、工業化が進むと奴隷制は経済的な理由で廃止されたと論じた（出典7）。これに対して、奴隷貿易の利益は投資全体の一部にすぎなかったとする批判がある。ドレシャーは奴隷制が利益を生んでいた時期に廃止されたことを示し、廃止を道徳と宗教の運動で説明した（出典7）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/18_revolutions-wedgwood.jpg" width="612" height="665" loading="lazy" style="max-height:620px;object-fit:contain" alt="ウェッジウッドの奴隷制反対のメダル">
+<figcaption>ウェッジウッドの工房が1786年ごろに作成した奴隷貿易の廃止を訴えるメダル。鎖につながれてひざまずく男性の周りに「私は人間ではないのか、兄弟ではないのか」という文が刻まれている。廃止の運動が道徳に訴える図柄を広めたことを示す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Am_I_not_a_Man_and_a_Brother,_medallion_modelled_by_William_H._Hackwood,_Wedgwood,_Etruria,_England,_c._1786,_tinted_stoneware_-_Brooklyn_Museum_-_DSC09289_(cropped).JPG">Daderot</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>工業生産の地域間の逆転</h3>
 <p>産業革命の結果を最も明瞭に示すのが世界の工業生産に占める各地域の割合である。経済史家バイロクの推計では、1750年の世界の工業生産に占める割合は中国32.8％・インド24.5％・イギリス1.9％であった（出典4・出典5）。1880年にはイギリスが22.9％に上がり、中国は12.5％、インドは2.8％に下がった（出典4・出典6）。この推計は18世紀のアジアの生産を過大に見積もっているとする批判もある（出典6）。</p>
 
@@ -109,6 +117,10 @@
 <h3>工業化の波及と社会の変化</h3>
 <p>工業化は1830年代以降にベルギー・フランス・ドイツ・アメリカ合衆国北東部へ広がった。後発国では国家が鉄道の建設や関税で工業を保護した。ドイツでは1834年にプロイセンを中心とする<strong>ドイツ関税同盟</strong>が発足し、加盟国の間の関税を撤廃した（出典23）。</p>
 <p>工場制の広がりで、資本を所有する<strong>資本家</strong>と賃金を得て働く<strong>労働者</strong>の2つの階級が生まれた。都市では長時間労働・児童労働・不衛生な住環境が問題になった。イギリスでは1811〜17年に機械を打ち壊すラダイト運動が起きた（出典28）。1833年の工場法は繊維工場の児童の労働時間を制限し、工場監督官を置いた（出典21）。こうした状況を批判して、生産手段の共有で平等な社会を目指す<strong>社会主義</strong>の思想が生まれた。オーウェンは協同組合と工場の改革を試みた。マルクスとエンゲルスは1848年に『共産党宣言』を発表した（出典21）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/18_revolutions-manifesto.jpg" width="638" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="共産党宣言の初版の表紙">
+<figcaption>1848年2月にロンドンで刊行された『共産党宣言』の初版の表紙。ドイツ語の小冊子であり、ロンドンの労働者教育協会の印刷所で印刷されたことが表紙の下に記されている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Communist-manifesto.png">Friedrich Engels, Karl Marx</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>スタートアップで言えば</b>
 <p class="an-h">後発国の工業化は先行企業の製品を国家が補助して追うファストフォロワー戦略である</p>
@@ -181,9 +193,21 @@
 <h2 id="s4">ハイチ革命</h2>
 <p>イスパニョーラ島の西部のフランス領<strong>サン=ドマング</strong>は、砂糖とコーヒーの生産でフランスの植民地の中で最大の富を生んだ。1789年頃の人口は白人約4万人・自由有色人約2万8,000人に対し、奴隷は約45万2,000人とする推計（出典9）と約50万人以上とする推計（出典8）がある。少数の白人が多数の奴隷を支配する構造であった。</p>
 <p>フランス革命が始まると自由有色人が白人と同じ権利を求め、1791年8月には北部の奴隷が大規模に蜂起した（出典8）。フランスから派遣されたソントナは1793年8月に北部の奴隷の解放を宣言し、1794年2月には国民公会がフランスの全植民地の奴隷制を廃止した（出典8・出典16）。奴隷出身の<strong>トゥサン・ルーヴェルチュール</strong>はフランス側についてイギリス軍などを退け、1801年に自らを終身総督とする憲法を公布した（出典8）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/18_revolutions-toussaint.jpg" width="710" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="トゥサン・ルーヴェルチュールを描いた版画">
+<figcaption>トゥサン・ルーヴェルチュールを描いたイギリスの版画（ジョン・ケイ作、1802年）。羽根飾りの帽子と軍服を身に着け、剣で前方の部隊を指揮する姿である。奴隷出身の指揮官の名が、同じ時期のイギリスでも知られていたことが分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Toussaint_Louverture_(BM_1935,0522.13.290).jpg">John Kay</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>ナポレオンは植民地の支配の回復を図り、1802年に義弟ルクレールの遠征軍を送った。トゥサンは捕らえられてフランスに送られ、1803年にジュー要塞で死去した（出典8）。同じ1802年にフランスはグアドループなどの植民地で奴隷制を復活させた（出典16）。これを知ったデサリーヌらは再び蜂起し、黄熱病で弱った遠征軍を1803年11月のヴェルティエールの戦いで破った。1804年1月1日、デサリーヌは独立を宣言した（出典8）。<strong>ハイチ</strong>は奴隷とされた人々が自らの力で独立した最初の国家である。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/18_revolutions-haitidecl.jpg" width="799" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="ハイチ独立宣言の印刷物">
+<figcaption>1804年のハイチ独立宣言の印刷物（イギリス国立公文書館の所蔵）。上部に「自由か死か」と「先住民軍」の文字が掲げられている。独立を宣言した軍は、フランス人ではない島の住民の軍であることを名称で示した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Deklarasyon_Endepandans_Ayiti.jpg">作者不明</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>ハイチ革命の影響</h3>
 <p>サン=ドマングを失ったナポレオンは西半球の植民地経営への関心を失い、1803年にルイジアナをアメリカ合衆国に売却した（出典8・出典24）。一方で、アメリカ南部やキューバ・ブラジルの奴隷所有者は蜂起を恐れて監視を強めた。合衆国がハイチを承認したのは南部の州が離脱した後の1862年である（出典9）。フランスは1825年に、旧植民者への賠償金1億5,000万フランの支払いを条件にハイチの独立を承認した（出典8・出典19）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/18_revolutions-citadelle.jpg" width="1000" height="666" loading="lazy" alt="ハイチのラフェリエール城塞">
+<figcaption>ハイチ北部の山の上に築かれたラフェリエール城塞。独立後のハイチがフランスの再侵攻に備えて建設した要塞である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Citadelle_Laferri%C3%A8re_Aerial_View.jpg">SPC Gibran Torres, United States Army</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-rw"><b>現実世界</b>
 <p class="an-h">世界の砂糖とコーヒーの大産地は、ハイチ革命の後に移った</p>
@@ -198,6 +222,10 @@
 <p>スペイン領アメリカの社会は出生と血統で区分されていた。本国生まれの白人<strong>ペニンスラール</strong>は植民地の高い官職を独占した。植民地生まれの白人<strong>クリオーリョ</strong>は大農園や鉱山を所有したが官職からは遠ざけられた。その下に白人と先住民の混血のメスティーソ、先住民、アフリカ系の奴隷がいた。独立運動を主導したのはクリオーリョである。</p>
 <p>独立の直接の契機は1808年のナポレオン軍のスペイン占領である。正統な国王の不在を理由に、植民地の各都市では1810年からクリオーリョが自治の評議会を設けた（出典10）。メキシコでは1810年9月に聖職者イダルゴが先住民とメスティーソを率いて蜂起したが鎮圧された。独立は1821年に保守派のクリオーリョの主導で実現した（出典10）。</p>
 <p>南アメリカでは2つの方向から独立戦争が進んだ。北からはベネズエラ出身の<strong>ボリバル</strong>が1819年に大コロンビアを成立させ、1821年にベネズエラを解放した。南からはアルゼンチン出身の<strong>サン=マルティン</strong>がアンデス山脈を越え、1818年にチリ、1821年にペルーの独立を宣言した（出典10）。1824年のアヤクーチョの戦いでスペイン軍の主力が敗れ、1826年までに大陸のスペインの拠点は失われた（出典10）。ブラジルでは、ナポレオン軍を避けて移ったポルトガルの宮廷の王子ペドロが、1822年に皇帝ペドロ1世として独立を宣言した（出典11）。ブラジルは君主政のまま独立した。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/18_revolutions-bolivar.jpg" width="759" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="ジル・デ・カストロが描いたボリバル">
+<figcaption>ペルーの画家ジル・デ・カストロが描いたシモン・ボリバルの肖像。金の刺繍の軍服と勲章を身に着けた姿であり、独立戦争の指導者を同時代の画家が描いたものである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Gil_de_Castro_-_Sim%C3%B3n_Bol%C3%ADvar_-_Google_Art_Project.jpg">José Gil de Castro</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 745" role="img" aria-label="ラテンアメリカ諸国の独立の年代"><clipPath id="k18bc"><rect x="0" y="0" width="720" height="745.1"/></clipPath>
@@ -293,6 +321,10 @@
 <li><b>1846年</b><strong>穀物法の廃止</strong>。1849年の航海法の廃止とともに自由貿易体制が確立した</li>
 </ol>
 <p>1832年の改正で選挙権を得たのは産業資本家などの市民層であり、労働者の多くは除かれた。そこで労働者は1838年に<strong>人民憲章</strong>を掲げ、成年男性の普通選挙を求めた（出典13）。請願は3回とも議会で否決されたが、6か条のうち毎年の選挙を除く5か条は、20世紀前半までに順に実現したとされる（出典13）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/18_revolutions-chartist.jpg" width="1000" height="711" loading="lazy" alt="ケニントン・コモンのチャーティストの大集会の写真">
+<figcaption>1848年にロンドンのケニントン・コモンで開かれたチャーティストの大集会の写真（ウィリアム・キルバーン撮影）。広場に大群衆が集まり、奥には工場の煙突が見える。この年に3回目の請願が議会に提出された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:William_Edward_Kilburn_-_View_of_the_Great_Chartist_Meeting_on_Kennington_Common_-_Google_Art_Project.jpg">William Edward Kilburn</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>大陸ヨーロッパの革命</h3>
 <p>大陸では改革の要求が革命の形をとった。1830年のフランスの<strong>七月革命</strong>で復古王政が倒れ、立憲君主政の七月王政が成立した。この影響でベルギーがオランダから独立し、ポーランドの蜂起はロシアに鎮圧された。1848年の革命では、自由主義・民主主義・ナショナリズム・社会主義の要求が同時に掲げられた。</p>
 <p>イギリスで革命が起きなかった理由については説が分かれる。議会が改革の要求を立法で取り込めたことを重く見る見方と、チャーティスト運動を政府と軍が抑えた点を重く見る見方がある。</p>
@@ -363,6 +395,14 @@
 </figure>
 
 <p><strong>南北戦争</strong>は奴隷制をめぐる対立であると同時に、連邦と州のどちらが主権をもつかをめぐる戦争であった。リンカンは当初は連邦の維持を最優先とし、1863年の奴隷解放宣言で戦争の目的に奴隷の解放を加えた。イギリスとフランスによる南部の承認を防ぐ外交上の意図もあったとされる。戦争の死者は従来約62万人とされてきた。国勢調査の記録を用いたハッカーの2011年の研究は約75万人（65万〜85万人）と推計している（出典26）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/18_revolutions-emancipation.jpg" width="639" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="奴隷解放宣言の原本の1ページ目">
+<figcaption>1863年1月1日の奴隷解放宣言の原本の1ページ目（アメリカ国立公文書館）。手書きの文書の冒頭に、合衆国大統領による布告であることが記されている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Emancipation_Proclamation,_01-01-1863_(Page_1_of_5)_(3695343876).jpg">The U.S. National Archives</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+<figure class="tb-fig tb-photo">
+<img src="../img/18_revolutions-gettysburg.jpg" width="1000" height="829" loading="lazy" alt="ゲティスバーグの戦場の写真">
+<figcaption>ゲティスバーグの戦いの直後に撮影された戦場の写真（ティモシー・オサリヴァン撮影、1863年）。草原に兵士の遺体が並んでいる。南北戦争は戦場の写真が多く残された初期の戦争の1つである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Timothy_H._O%27Sullivan_-_A_Harvest_of_Death,_Gettysburg,_Pennsylvania_-_Google_Art_Project.jpg">Timothy H. O&#x27;Sullivan</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>北部の勝利で、アメリカ合衆国は州の連合から統一された国民国家へと性格を変えた。1862年のホームステッド法で西部の土地が入植者に与えられ、合衆国は19世紀末に世界最大の工業国になる（第20章）。一方で解放された黒人の多くは土地を得られず小作人になった。</p>
 <h3>奴隷制の廃止を比較する</h3>
 
@@ -412,6 +452,10 @@
 </figure>
 
 <p>図から2つの傾向を読み取る。第1に、奴隷貿易の禁止が奴隷制の廃止より先に行われた地域が多い。第2に、奴隷労働に依存する輸出作物の比重が大きい地域ほど廃止が遅い。綿花の合衆国は1865年、砂糖のキューバは1886年、コーヒーのブラジルは1888年である（出典16）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/18_revolutions-leiaurea.jpg" width="754" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="ブラジルの黄金法の原本">
+<figcaption>1888年にブラジルで奴隷制を廃止した黄金法の原本（ブラジル国立公文書館）。中央の大きな文字は「ブラジルの奴隷制は廃止されたと宣言する」という意味である。上の図に示した地域の中で、最も遅い廃止である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Lei_%C3%81urea_arquivo_nacional.jpg">Arquivo Nacional do Brasil</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>同じ時期の日本と比べる。南北戦争の終結（1865年）の3年後に明治維新（1868年）が始まった。どちらも分権的な体制から中央集権の国民国家への転換であった。合衆国は1848年にアメリカ＝メキシコ戦争でカリフォルニアを獲得し、太平洋岸に達した（出典20）。太平洋航路の寄港地の確保は、1853年のペリーの日本への派遣の背景の1つになった（歴史総合 第2章）。</p>
 
 <div class="ex"><div class="ex-h">例題 7</div>

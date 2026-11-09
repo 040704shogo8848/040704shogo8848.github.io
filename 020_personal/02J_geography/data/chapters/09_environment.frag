@@ -22,6 +22,12 @@
 <p>太陽からの光は大気を通過して地表を暖める。暖まった地表は赤外線を宇宙へ放出する。大気中の二酸化炭素・メタン・一酸化二窒素・水蒸気などはこの赤外線の一部を吸って地表へ向けて再び放出する。この働きを<strong>温室効果</strong>と呼び、温室効果をもつ気体を<strong>温室効果ガス</strong>と呼ぶ。温室効果は本来は地表を生物の住める温度に保つ働きである。<strong class="hit">問題は人間活動によって温室効果ガスの濃度が上がり温室効果が強まっている点にある</strong>。</p>
 <p>ハワイのマウナロア観測所は1958年から大気中の二酸化炭素濃度を測定している。年平均の濃度は1960年に316.91 ppm であり2025年には427.35 ppm に達した（2025年、出典1）。ppm は体積で100万分の1を表す単位である。65年間の上昇は約110 ppm である。10年ごとの上昇幅は1960年代の約9 ppm から2010年代の約24 ppm へ拡大した（本書による算出値、出典1）。</p>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/09_environment-maunaloa.jpg" width="666" height="295" loading="lazy" alt="上空から見たマウナロア観測所"><img src="../img/09_environment-keeling-flask.jpg" width="666" height="1000" loading="lazy" alt="マウナロア観測所でフラスコに大気を採取するキーリング"></div>
+<figcaption>左は上空から見たマウナロア観測所で、マウナロア山の山頂から約3 km北の標高約3,400 mの溶岩の斜面に建つ。右は1982年2月に同じ観測所で、二酸化炭素濃度を測るための大気をフラスコに採取するチャールズ・キーリングである。周囲から離れた高所で採取するので、都市の排出の影響を受けにくい。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Mauna_Loa_Observatory_from_air.jpg">National Oceanic and Atmospheric Administration</a>／パブリックドメイン 右：<a href="https://commons.wikimedia.org/wiki/File:Pl23_corp2701_-_NOAA_Photo_Library_-_Keeling_Flask_at_Mauna_Loa_Observatory.jpg">Commander John Bortniak</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="マウナロアの二酸化炭素濃度の年平均値の推移">
   <g stroke="var(--line)" stroke-width="1">
@@ -124,6 +130,18 @@
 <h3>温暖化の影響</h3>
 <p>気温の上昇は海水の熱膨張と氷河や氷床の融解を通じて海面を上昇させる。ツバルやモルディブのようにサンゴ礁の島からなり標高の低い国は国土の水没と高潮の被害が懸念される。北極海では海氷が縮小し、永久凍土の融解は建物や道路の基礎を不安定にする。干ばつと豪雨の増加という降水の偏りも指摘されている。<strong class="hit">排出が多い国と被害を受けやすい国が一致しない点</strong>が国際交渉を難しくする理由である。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/09_environment-arctic.png" width="1000" height="562" loading="lazy" alt="2023年9月の北極海の海氷の最小面積を示す衛星画像">
+<figcaption>人工衛星の観測から作成した2023年9月19日の北極海の海氷である。白い部分がこの年の最小の海氷の範囲で、面積は423万 km²であった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Arctic_Sea_Ice_Minimum_2023_(SVS5162_-_sea_ice_min_2023).png">NASA Scientific Visualization Studio</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
+
+<figure class="tb-fig tb-photo">
+<img src="../img/09_environment-male.jpg" width="1000" height="666" loading="lazy" alt="海に囲まれたモルディブの首都マレ">
+<figcaption>モルディブの首都マレである。サンゴ礁の上の小さな島の全体を建物が覆い、島の縁まで市街地が広がる。陸地の標高が低いので、海面の上昇と高潮の影響を直接受ける。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Male-total.jpg">Shahee Ilyas</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <div class="ex"><div class="ex-h">例題 2</div>
 <p>表をもとに「インドの人口は日本の何倍程度か」を推定せよ。</p>
 <details open><summary>解き方</summary><div>手順1 人口は排出量を1人当たり排出量で割れば推定できる。<br>手順2 インドは 2,763÷1.8 で約15億人である。<br>手順3 日本は 935÷7.8 で約1.2億人である。<br>答え 約13倍である（本書による算出値）。</div></details></div>
@@ -134,6 +152,12 @@
 
 <h3>京都議定書からパリ協定へ</h3>
 <p><strong>京都議定書</strong>は1997年12月に京都で開かれたCOP3で採択され2005年2月に発効した（出典9）。2008〜2012年の第一約束期間に先進国全体で1990年比5％以上を削減する目標を定め、日本は6％・EUは8％・アメリカ合衆国は7％の削減を割り当てられた（出典30）。途上国には数値目標がなかった。アメリカ合衆国は議定書を締結しなかった（出典9）。日本の総排出量は5か年平均で基準年比1.4％増えた。森林などによる取り込み分と京都メカニズムのクレジットを加えると基準年比8.4％の減少となり、目標を達成した（出典31）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/09_environment-kyoto-icc.jpg" width="1000" height="750" loading="lazy" alt="国立京都国際会館の本館">
+<figcaption>京都市の国立京都国際会館の本館である。1997年のCOP3はこの会館で開かれ、京都議定書が採択された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kyoto_International_Conference_Center_-_exterior.JPG">Daderot</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p><strong>パリ協定</strong>は2015年にパリで開かれたCOP21で採択され2016年11月に発効した（出典10）。世界の平均気温の上昇を産業革命前と比べて2℃より十分低く保ち1.5℃に抑える努力を追求することを目標とする（出典10）。協定に参加する全ての国が削減目標をもって取り組む。2023年から5年ごとに世界全体の進捗を確認する仕組みを設けた（出典10）。</p>
 <div class="tb-vs">
 <div><h5>京都議定書 1997年採択</h5><ul>
@@ -167,6 +191,12 @@
 <h2 id="s4">オゾン層の破壊と酸性雨</h2>
 <p>成層圏には<strong>オゾン層</strong>と呼ばれるオゾンの濃度が高い層がある。オゾン層は太陽からの有害な紫外線を吸い取り地表の生物を守る。冷蔵庫やエアコンの冷媒・スプレー・半導体の洗浄に使われた<strong>フロン</strong>は分解されにくく成層圏まで上昇する。成層圏で紫外線を受けて塩素を放出し、その塩素がオゾンを分解する。</p>
 <p>南極上空では毎年8月後半にオゾンの量が大きく減る範囲が現れ、9〜10月に最も拡大する（出典43）。これを<strong>オゾンホール</strong>と呼ぶ。南極で目立つ理由は冬の極端な低温で極成層圏雲ができ、その雲の表面で塩素がオゾンを分解しやすい形に変わるためである。春に太陽光が戻ると分解が一気に進む。オゾン層が薄くなると地表に届く紫外線が増え皮膚がんや白内障の増加が懸念される。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/09_environment-ozone.jpg" width="716" height="716" loading="lazy" alt="2006年9月24日の南極上空のオゾン量の分布">
+<figcaption>2006年9月24日の南極上空のオゾン量を人工衛星の観測から色で示した図である。紫と青がオゾンの少ない範囲で、南極大陸の全体を覆うほど広がっている。9〜10月にオゾンホールが最も拡大することが、この日付の分布に表れている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Antarcitc_ozone_layer_2006_09_24.jpg">作者名の記載なし</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>国際的な対策は1985年の<strong>ウィーン条約</strong>で枠組みを定め、1987年の<strong>モントリオール議定書</strong>で規制物質と削減の日程を定めた（出典37）。2016年のキガリ改正では代替フロンのHFCも規制対象に加えた（出典38）。HFCはオゾン層を破壊しないが温室効果が強いためである。</p>
 <div class="tb-tw"><table>
 <thead><tr><th>項目</th><th>値</th><th>時点と出典</th></tr></thead>
@@ -233,6 +263,12 @@
 </tbody></table></div>
 <p>代表例はサハラ砂漠の南縁に帯状に広がる<strong>サヘル</strong>である。サヘルは雨季と乾季がある半乾燥地域で年による降水量の変動が大きい。<strong class="hit">人口増加によって家畜と耕地が増えた時期に干ばつが重なると植生が回復できず砂漠化が進む</strong>。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/09_environment-sahel.jpg" width="800" height="532" loading="lazy" alt="ナイジェリアのヨベ州で草地に迫る砂丘">
+<figcaption>ナイジェリア北東部のヨベ州のサヘルである。ヤシの木が生える草地のすぐ奥まで砂丘が迫っている。植生が失われると砂が動き、耕地や牧草地が砂に覆われる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Oasis_amid_the_Sahel_in_Yobe_State_Nigeria.jpg">Zanna. Ali</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 340" role="img" aria-label="サヘルの位置">
 <clipPath id="j09bc"><rect x="0" y="0" width="720" height="310.2"/></clipPath>
@@ -275,6 +311,12 @@
 <p>FAOは直近10年で自然に再生した森林の減少がアフリカと南アメリカで最も大きいとしている。ヨーロッパはこの森林が増えた唯一の地域である（出典22）。</p>
 <p>熱帯林が減る原因は地域ごとに異なる。南アメリカのアマゾン川流域では牧場と大豆畑への転換が中心である。東南アジアのインドネシアやマレーシアでは油やしのプランテーションへの転換が進んだ。アフリカでは人口増加による焼畑の拡大と燃料用の薪の採取が大きい。焼畑は本来、長い休閑期間をおいて森林を回復させる持続的な農法である。休閑期間が短くなると森林が回復しないまま次の伐採が行われる。沿岸部ではマングローブ林が日本などへ輸出するえびの養殖池に転換された。<strong class="hit">熱帯林の減少の原因となる需要は牛肉・大豆・パーム油・えびを輸入する国にもある</strong>。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/09_environment-shrimp.jpg" width="640" height="624" loading="lazy" alt="宇宙から見たフォンセカ湾のえびの養殖池">
+<figcaption>宇宙から見た中央アメリカのフォンセカ湾である。湾の南東の端に見える角張った区画が、えびの養殖池である。湾の沿岸ではマングローブ林と水産資源が急速に失われているとされる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Fonseca_gulf.jpg">NASA</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">森林の純減は得失点差である</p>
 <p>失点にあたる森林減少が年10.9、得点にあたる森林の増加が年6.78で得失点差は−4.12である（2015〜2025年、出典21）。失点が減っても得点が減れば差は縮まらない。</p>
@@ -299,6 +341,12 @@
 </tbody></table></div>
 <p>ラムサール条約は水鳥の生息地として湿地を守る条約である。渡り鳥は繁殖地と越冬地の間で複数の国の湿地を中継地として使う。一国だけが湿地を守っても経路の途中の湿地が失われれば渡りが成り立たない。<strong class="hit">対象が国境を越えて移動するため国際条約が必要になる</strong>。ワシントン条約は取引を規制する種を附属書に掲げ、絶滅のおそれが最も高い附属書Ⅰの種は商業目的の国際取引を原則として禁じる（出典40）。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/09_environment-kushiro.jpg" width="1000" height="666" loading="lazy" alt="冬の釧路湿原を流れる釧路川">
+<figcaption>冬の北海道の釧路湿原を流れる釧路川である。低く平らな湿地の中を川が蛇行し、岸には枯れた木が立つ。釧路湿原は日本のラムサール条約湿地の1つである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kushiro-Shitsugen_Kushiro-river.jpg">MaedaAkihiko</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">渡り鳥の湿地は遠距離恋愛の乗換駅である</p>
 <p>出発地と目的地が健在でも途中の駅が1つ廃止されれば会えなくなる。ラムサール条約は経路上の駅を各国が分担して残す約束である。</p>
@@ -306,6 +354,12 @@
 
 <h3>海洋汚染</h3>
 <p><strong>海洋汚染</strong>とは人間の活動によって海に有害な物質が持ち込まれ海の生物や人間の健康に悪影響を与えることをいう。原因はタンカーの事故などによる油の流出・工場や家庭の排水・陸上から流れ込むプラスチックごみである。プラスチックは分解されにくく、紫外線と波で砕かれて5 mm 以下のマイクロプラスチックになる。魚や海鳥が飲み込み食物連鎖を通じて広がることが懸念される。沿岸部の192か国から海へ流出したプラスチックごみは2010年に480万〜1,270万トンと推計されている（出典33）。この推計は廃棄物の管理が不十分な国ほど流出が多いとした（出典33）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/09_environment-plastic.jpg" width="1000" height="486" loading="lazy" alt="ガーナのアクラの海岸を覆うプラスチックごみ">
+<figcaption>ガーナの首都アクラの海岸である。ペットボトルなどのプラスチックごみが砂浜を覆っている。廃棄物の管理が十分でない地域から、陸上のごみが海へ流れ込む。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Plastic_Pollution_in_Ghana.jpg">Muntaka Chasant</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 240" role="img" aria-label="地球環境問題に関する主な国際的な取組の年表">

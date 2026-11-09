@@ -66,6 +66,12 @@ thesis: 産業競争力の議論は需要側と技術側に偏りがちだが、
 
 ここから自動化投資への経路が出てくる。省人化投資と賃上げは、企業の資金配分としては短期的に競合しうる。だがマクロで観測される限り、両者は代替していない。人手不足という同一の原因が、投資と賃上げの両方を同時に押し上げている。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/ch02_bmw-leipzig-robots.jpg" width="1000" height="667" loading="lazy" alt="産業用ロボットによる車体のスポット溶接">
+<figcaption>ドイツの BMW ライプツィヒ工場で、KUKA の産業用ロボットが3シリーズの車体をスポット溶接している。省人化投資と賃上げは企業の資金配分では競合しうるが、日本のマクロの観測では人手不足が両方を同時に押し上げている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:BMW_Leipzig_MEDIA_050719_Download_Karosseriebau_max.jpg">BMW Werk Leipzig</a>／CC BY-SA 2.0 de／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 不足感の水準を数字で見ると、日銀短観の2026年6月調査で全規模・全産業の雇用人員判断DIはマイナス37%ポイント、先行きはマイナス40%ポイントとされる [出典](https://www.bk.mufg.jp/report/ecoinf2026/report_jp_20260701.pdf)。この値は日本銀行の公表資料そのものではなく民間銀行の集計を経由しており、一次資料での確認は取れていない。この不足感のもとで、内閣府は歴史的な高水準の人手不足感に対応する省力化・デジタル投資へのニーズが設備投資を支えていると整理しており、同じ報告で2025年の春季労使交渉が前年を上回る賃上げ率となり、人件費の価格転嫁が人件費比率の高いサービスで進んだとしている [出典](https://www5.cao.go.jp/keizai3/2025/0729wp-keizai/setsumei00.pdf)。投資と賃上げが同じ年に同じ方向へ動いている。
 
 ただし非対称がある。同じ内閣府の分析は、医療・福祉や建設など公共部門・官公需の影響を受けやすい産業では、人手不足感が高くても賃金上昇率が低いと指摘している [出典](https://www5.cao.go.jp/keizai3/2025/0729wp-keizai/setsumei00.pdf)。価格を自分で決められない産業では、不足が賃金に変換されない。
@@ -80,6 +86,12 @@ thesis: 産業競争力の議論は需要側と技術側に偏りがちだが、
 
 アルミニウムの供給網は、採掘、精錬、製錬の3工程からなり、工程ごとに上位国が入れ替わる。採掘は鉱石の埋蔵地に縛られる。精錬は熱と薬品と廃棄物処分に縛られる。製錬は電力価格に縛られる。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/ch02_qal-alumina.jpg" width="1000" height="750" loading="lazy" alt="グラッドストンのアルミナ精錬所">
+<figcaption>オーストラリア・クイーンズランド州グラッドストンのアルミナ精錬所（QAL）。ボーキサイトからアルミナを取り出す精錬工程の設備で、配管や建屋が赤く染まっている。精錬は熱と薬品と廃棄物処分に縛られるため、鉱石の採掘地と同じ国に立地するとは限らない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Qld_Alumina_Refinery_QAL_2008.jpg">Vicki Nunn</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 | 工程 | 1位 | 2位 | 3位 | 出典 |
 | --- | --- | --- | --- | --- |
 | ボーキサイト採掘 | ギニア 1億3,000万トン | 豪州 1億トン | 中国 9,300万トン | [Wikipedia](https://en.wikipedia.org/wiki/List_of_countries_by_bauxite_production) |
@@ -93,6 +105,12 @@ thesis: 産業競争力の議論は需要側と技術側に偏りがちだが、
 
 ==したがって産地の収益は単価ではなく数量で決まる==。ギニアのボーキサイト輸出量は2025年上半期に前年同期比31%増えた [出典](https://www.worldbank.org/en/country/guinea/overview)。そして採取産業は2022年時点で輸出の92%、GDPの20%、国家歳入の17%超を占める一方、雇用は6.4%にとどまり、労働力の52%は農業に残っている [出典](https://eiti.org/countries/guinea)[出典](https://www.worldbank.org/en/country/guinea/overview)。資源が経済の他の部分に接続していない。加工を国内に取り込む政策は、単価と雇用の両方を同時に取りに行く手段として位置づけられる。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/ch02_cbg-bauxite-train.jpg" width="1000" height="637" loading="lazy" alt="サンガレディからカムサールへ向かうCBGのボーキサイト列車">
+<figcaption>ギニアのサンガレディ鉱山からカムサール港へボーキサイトを運ぶ CBG の貨物列車。2025年上半期のボーキサイト輸出量は前年同期比31%増えたが、採取産業の雇用は全体の6.4%にとどまる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Transport_de_bauxite_par_train_de_la_CBG_Sangar%C3%A9di-Kamsar.jpg">Aboubacarkhoraa</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 品目の分散も進みつつある。Simandouのブロック3と4だけで高品位鉄鉱石の鉱量が約15億トンあり、フル生産能力は年6,000万トンに設定されている [出典](https://www.riotinto.com/en/operations/africa/simandou)。ただし鉄鉱石も一次産品であり、価格は2026年7月時点で98.2ドル/乾燥トンと2025年平均を下回っている [出典](https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Pink-Sheet-August-2026.pdf)。品目は分散するが、一次産品への依存という構造は変わらない。
 
 なお、アルミナのスポット価格指数とボーキサイトのFOB価格は一次資料に当たれていない。国際アルミニウム協会の統計ページは数値をJavaScript経由で配信しており、静的には取得できなかった [出典](https://international-aluminium.org/statistics/alumina-production/)。単価水準の議論はここでは行わない。
@@ -102,6 +120,12 @@ thesis: 産業競争力の議論は需要側と技術側に偏りがちだが、
 加工が産地に来ない理由の中核は電力である。ここで比率と量を分けて見る必要がある。
 
 ギニアの系統電力は水力が主である。2021年の発電量に占める水力の比率は87.39%、石油と天然ガスと石炭の合計は11.87%だった [出典](https://api.worldbank.org/v2/country/GIN/indicator/EG.ELC.HYRO.ZS?format=json)[出典](https://api.worldbank.org/v2/country/GIN/indicator/EG.ELC.FOSL.ZS?format=json)。ただしこの比率は年によって振れる。水力比率は2003年に46.35%、2014年に60.28%、2020年に60.94%であり、2021年の87.39%は2020年に対して26.45ポイント高い [出典](https://api.worldbank.org/v2/country/GIN/indicator/EG.ELC.HYRO.ZS?format=json)。この段差は大型水力の追加で説明できる。出力550MWのSouapiti水力発電所が2021年に完成し、China International Water & Electricが建設、中国輸出入銀行が融資した。事業費は約20億ドルとされる [出典](https://en.wikipedia.org/wiki/Souapiti_Dam)。
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/ch02_souapiti-dam.jpg" width="1000" height="750" loading="lazy" alt="スアピティ水力発電所のダム"><img src="../img/ch02_kaleta-dam.jpg" width="1000" height="750" loading="lazy" alt="建設中のカレタ・ダム"></div>
+<figcaption>左は2021年に完成した出力550MWのスアピティ水力発電所のダム、右は建設中のカレタ・ダムである。ギニアの発電量に占める水力の比率は、2021年に87.39%まで上がった。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Vue_du_Barrage_de_Souapiti_1.jpg">Aboubacarkhoraa</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Kaleta-Staudamm.jpg">Flucco</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 水力比率が高いことは、電力が足りていることを意味しない。電化率は2015年の34.9%から2024年の53.8%へ18.9ポイント上がったが、人口の46.2%は依然として電気にアクセスできない [出典](https://api.worldbank.org/v2/country/GIN/indicator/EG.ELC.ACCS.ZS?format=json)。比率が高いのは、分母である総発電量が小さいことの裏返しでもある。水力ポテンシャルは約6,000MW、年間19,300GWh規模と見積もられており、開発済みはその一部にとどまる [出典](https://en.wikipedia.org/wiki/Energy_in_Guinea)。
 
@@ -122,6 +146,12 @@ thesis: 産業競争力の議論は需要側と技術側に偏りがちだが、
 医薬品でも同じ非対称が出る。インドは数量ベースで世界の後発医薬品輸出の約20%を占め、UNICEF調達のワクチンでは55%から60%を供給する [出典](https://www.ibef.org/industry/pharmaceutical-india)。生産量では世界3位だが金額では14位であり、この順位差が単価の低さを示す [出典](https://www.orfonline.org/expert-speak/india-s-rise-as-global-pharmacy-masks-deep-dependence-on-china)。一方で上流は逆向きである。原薬・バルク医薬品の輸入額はFY2019-20の約2,417.2億ルピーからFY2023-24の3,772.2億ルピーへ増え、中国比率は70%から74%で推移している。抗生物質の輸入では87%が中国由来である [出典](https://www.orfonline.org/expert-speak/india-s-rise-as-global-pharmacy-masks-deep-dependence-on-china)。政府はFY2023-24とFY2024-25の両年で中国比率70%以上の原薬リストを公表し、PLI制度で重要原薬41品目を指定した。2025年12月までに48件承認、38件稼働、ペニシリンとクラブラン酸は国産化と輸出開始に至っている [出典](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2237414&reg=3&lang=1)。完成品の世界最大供給者であることと、原薬の中国依存者であることが同居している。
 
 人材の側も、単純な優位ではなくなりつつある。nasscomの2026年版レビューでは、FY2026のIT業界売上は3,150億ドルで前年比6.1%増、人員は約595万人で純増13.5万人、2.3%増である [出典](https://nasscom.in/knowledge-center/publications/technology-sector-india-strategic-review-2026)。売上6.1%増に対し人員2.3%増という差は、人数を売る構造が崩れつつあることを示す。単価側の証言もある。HCLTechのC Vijayakumar CEOは、かつて1億ドルだった案件が現在は8,000万ドル程度になり、契約総額は横ばいでも必要工数は25%から30%増えていると述べ、同社はAIによる単価下落のFY2027ガイダンスへの影響を3%から5%と見込む [出典](https://www.forbesindia.com/article/news/deep-dive/indian-it-braces-for-ai-deflation-as-pricing-pressure-reshapes-growth/2993823/1)。FY2026のドル建て売上はTCSが0.5%減、Wiproが0.32%減である [出典](https://www.forbesindia.com/article/news/deep-dive/indian-it-braces-for-ai-deflation-as-pricing-pressure-reshapes-growth/2993823/1)。TCSはFY2026に人員を2%、約1.22万人削減した [出典](https://finance.yahoo.com/news/indian-tech-company-tcs-cut-103558769.html)。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/ch02_infosys-hq.jpg" width="1000" height="750" loading="lazy" alt="エレクトロニック・シティのインフォシス本社">
+<figcaption>ベンガルールのエレクトロニック・シティにあるインフォシス本社。インドの IT 業界は FY2026 に売上が6.1%増えた一方、人員は2.3%増にとどまった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:InfosysHQFrontView.jpg">Sundar</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 一方で立地としての価格優位を強める力も働く。2025年9月19日の米大統領布告により新規H-1B申請に10万ドルの一時手数料が課された。nasscomはインド系上位企業のH-1B発給が2015年の14,792件から2024年の10,162件へ減っており影響は限定的だとしている [出典](https://www.business-standard.com/immigration/nasscom-h1b-visa-fee-impact-marginal-indian-it-firms-125092200289_1.html)。この手数料はオンサイト比率を下げ、業務をインド国内側へ移す方向に働く。受け入れ国側の移民政策が、送り出し国側の産業構造を動かしている。第1節で見た調整弁が、逆向きにも働く例である。
 

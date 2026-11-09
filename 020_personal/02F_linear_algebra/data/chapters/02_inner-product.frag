@@ -276,8 +276,28 @@
 
 <h2 id="s7">現実世界 仕事と回帰と検索</h2>
 <p>内積は物理の<strong>仕事</strong>の定義そのものである。物体に力 \( \vec{F} \) を加えて変位 \( \vec{s} \) だけ動かした時の仕事は \( W=\vec{F}\cdot\vec{s}=|\vec{F}||\vec{s}|\cos\theta \) である。進行方向に垂直な力は仕事をしない。荷物を持って水平に歩いても重力は仕事をしないのはこのためである。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_work-finowkanal.jpg" width="800" height="651" loading="lazy" alt="馬が曳く運河の船">
+<figcaption>ドイツのフィノウ運河で、岸の曳舟道を歩く馬が綱で船を曳く様子。綱は船の進む向きに対して斜めに張られる。船を進める仕事に寄与するのは、力のうち進行方向の成分だけである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Finowkanal-treidel.jpg">作者名の記載なし</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_work-ropenotch.jpg" width="480" height="640" loading="lazy" alt="曳き綱で削れた橋の石材">
+<figcaption>イギリスのリーズ・リヴァプール運河の橋の石材に残る溝。馬が船を曳いていた時代に、曳き綱が橋の角にこすれて削った跡である。綱が進行方向と異なる向きに張られていたことが、溝の位置から分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Canal_bridge_with_notches_made_by_tow_ropes_-_geograph.org.uk_-_637431.jpg">Bryan Pready</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>統計では2つの変数の偏差を並べたベクトル \( \vec{x}=(x_1-\bar{x},\dots,x_n-\bar{x}) \) と \( \vec{y}=(y_1-\bar{y},\dots,y_n-\bar{y}) \) を考える。相関係数は \( r=\dfrac{\vec{x}\cdot\vec{y}}{|\vec{x}||\vec{y}|} \) でありなす角の cos と同じ式である。\( -1\le r\le1 \) となるのは \( -1\le\cos\theta\le1 \) だからである。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_corr-galton-pearson.jpg" width="844" height="1000" loading="lazy" alt="ゴルトンとピアソン">
+<figcaption>帽子をかぶった87歳のゴルトンと、その伝記を書いたピアソン。2人は相関と回帰の研究を進め、相関係数の式はピアソンの名称で呼ばれる。本文の偏差ベクトルどうしの cos は、この相関係数と同じ式である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Karl_Pearson;_Sir_Francis_Galton.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>回帰直線 \( y=\beta x \) を原点を通る場合で考える。最小二乗法は残差 \( \vec{y}-\beta\vec{x} \) の大きさを最小にする \( \beta \) を選ぶ。例題6と同じ計算で \( \hat{\beta}=\dfrac{\vec{x}\cdot\vec{y}}{|\vec{x}|^2} \) となる。これは \( \vec{y} \) の \( \vec{x} \) 上への正射影の係数である。説明変数が2つ以上の場合は第6章の行列で同じ計算を行う。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_lsq-gauss-theoria.jpg" width="734" height="1000" loading="lazy" alt="ガウス『天体運動論』の扉">
+<figcaption>ガウスが1809年に出版した『天体運動論』の扉。ガウスはこの本で、観測値から天体の軌道を定める方法として最小二乗法を示した。残差の大きさを最小にする本文の計算は、この方法の原型である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gauss,_Carl_Friedrich_%E2%80%93_Theoria_motus_corporum_coelestium_in_sectionibus_conicis_solem_ambientium,_1809_%E2%80%93_BEIC_12217180.jpg">Carl Friedrich Gauss</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>序章で触れた Transformer の注意機構も内積を使う。文中の各語を表すベクトルどうしの内積を計算し値の大きい組を強く関連するとみなす。論文ではこの内積をベクトルの次元の平方根で割ってから使う。成分の数が増えると内積の値が大きくなりすぎるのを抑えるためである。</p>
 
 <aside class="an an-rw"><b>現実世界</b>

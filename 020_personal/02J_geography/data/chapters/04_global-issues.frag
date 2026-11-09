@@ -7,6 +7,12 @@
 <h2 id="s1">地球的課題とは何か</h2>
 <p>一国の努力だけでは解決できず、複数の国や地域にまたがって現れる問題を<strong>地球的課題</strong>と呼ぶ。学習指導要領は代表として地球環境問題・資源エネルギー問題・人口食料問題・居住都市問題の4つを挙げる（出典1）。4つの課題には2つの性質がある。1つは各地で共通する傾向性であり、もう1つは地域によって現れ方が異なる地域性である。</p>
 <p>共通する傾向性の例は都市への人口集中である。都市に住む人の割合は1950年の20％から2025年の45％へ上昇した（国連の都市定義による。出典7）。この上昇は先進国と発展途上国の両方で起きた。一方で地域性の例はスラムである。都市住民のうちスラムや非正規の居住地に住む人の割合はサハラ以南アフリカで半分を超える（出典6）。同じ都市化でも、住宅や上下水道の整備が人口の増加に追いつく地域と追いつかない地域で結果が異なる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_global-issues-kibera.jpg" width="1000" height="728" loading="lazy" alt="上空から見たナイロビのキベラ地区">
+<figcaption>ケニアの首都ナイロビのキベラ地区の西部を上空から見た写真である。小さな住宅が隙間なく密集し、道路や空き地がほとんど見えない。その奥には緑の多い市街地が広がり、住宅の整備が人口の増加に追いつかない地区との差が分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kibera_aerial_view_western_part.jpg">Kreuzschnabel</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>先進国が北半球の高緯度に多く、発展途上国が低緯度や南半球に多いことから、両者の経済格差を<strong>南北問題</strong>と呼ぶ。発展途上国の中で、資源をもつ国や工業化に成功した国とそうでない国の格差が広がった。この格差を<strong>南南問題</strong>と呼ぶ。地球的課題の多くはこの格差と結び付いている。温室効果ガスを多く排出してきたのは先進国である。干ばつや海面上昇の被害を強く受けるのは対策の資金が乏しい発展途上国である。</p>
 
 <div class="tb-tw"><table>
@@ -56,6 +62,12 @@
 
 <p>排出量の推移を見ると、先進国と新興国で向きが逆である。1990年から2022年にかけて、中国とインドの排出量は4倍前後に増えた。アメリカ・日本・EUは横ばいか減少である（出典4）。新興国では工業化と人口増加でエネルギー需要が伸びた。先進国では省エネルギーの進展と産業構造の変化が起きた。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/04_global-issues-coal.jpg" width="1000" height="747" loading="lazy" alt="タイのメーモ石炭火力発電所の煙突群">
+<figcaption>タイ北部のメーモ発電所である。褐炭を燃料とする石炭火力発電所で、多数の煙突が並ぶ。新興国の工業化に伴う電力需要の増加は、このような化石燃料による発電で賄われてきた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Mae_Mo_Coal_power_station.jpg">ร้อยตรี โชคดี</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <div class="tb-tw"><table>
 <thead><tr><th>国・地域</th><th>1990年</th><th>2022年</th><th>変化率</th></tr></thead>
 <tbody>
@@ -68,6 +80,12 @@
 <p>表の単位は億トン（CO2換算）である。燃料の燃焼による二酸化炭素・メタン・一酸化二窒素を合計したエネルギー起源の温室効果ガス排出量を示す（出典4）。</p>
 
 <p>資源エネルギー問題とは、化石燃料や鉱産資源の分布が一部の地域にかたよるために生じる供給の不安定・価格の変動・利用できない人々の存在などの問題である。電気を利用できる人の割合は世界人口の92％に達した（2026年の国連報告、出典5）。裏返すと残りの約8％は電気を利用できない（本書による算出値）。エネルギーの不足は貧困の原因であり、同時に化石燃料の大量消費は温暖化の原因である。この2つを同時に解決する手段として再生可能エネルギーが位置づけられる。再生可能エネルギーによる発電設備の1人あたり容量は2015年の2.2倍になった（2024年、出典5）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_global-issues-solar.jpg" width="720" height="480" loading="lazy" alt="衛星から見たトパーズ太陽光発電所">
+<figcaption>人工衛星から見た米国カリフォルニア州のトパーズ太陽光発電所である。約900万枚の太陽電池モジュールが平原の一部を覆い、黒い区画として写っている。面積は約25.6 km²に及ぶ。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Topaz_Solar_Farm,_California_Valley.jpg">NASA Earth Observatory, Jesse Allen</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <p>温暖化の責任の分担をめぐっては立場が分かれる。先進国は現在の排出量が多い新興国にも削減を求める。新興国と発展途上国は、過去に長く排出してきた先進国が先に大きく削減すべきだと主張する。1992年の地球サミットはこの対立を「共通だが差異ある責任」という原則で整理した（出典15）。</p>
 
@@ -132,6 +150,12 @@
 <p>居住都市問題は、都市の人口増加に住宅・上下水道・交通の整備が追いつかないことから生じる。発展途上国の大都市では、農村から仕事を求めて移り住んだ人々が空き地や河川敷に住宅を建て、<strong>スラム</strong>を形成する。スラムとは、安全な水・衛生設備・十分な広さ・居住権のいずれかを欠く住宅が集まる地区である。スラムや非正規の居住地に住む人を、2026年の国連報告の目標11の詳細版は11.3億人と推計する（基準年の記載なし、出典6）。同じ年の報告の本文は2024年の値を11.6億人とし、都市住民の24.8％、約4人に1人にあたるとする（出典5・出典20）。都市住民に占める割合はわずかに下がったが、都市人口そのものが増えたため人数は2015年以降も増え続けた（出典6）。</p>
 <p>人口1,000万人以上の都市を<strong>メガシティ</strong>と呼ぶ。メガシティは1975年の8から2025年の33に増え、うち19がアジアにある（出典7）。2025年の人口上位はジャカルタ・ダッカ・東京の順である（出典7）。アジア以外で上位10位に入るのはカイロだけである。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/04_global-issues-dhaka.jpg" width="750" height="1000" loading="lazy" alt="ダッカの市街地の渋滞">
+<figcaption>バングラデシュの首都ダッカの市街地の渋滞である。乗用車と三輪タクシーが車線を埋め、沿道には商店と銀行の看板が並ぶ。人口の増加に道路の整備が追いつかないことが、都市の交通に表れている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Traffic_jam_at_Dhaka.jpg">Aashaa</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <div class="ex"><div class="ex-h">例題 3</div>
 <p>地域別の栄養不足人口の図から、アジアとアフリカのどちらが飢餓の深刻な地域といえるか。人数と割合の2つの指標を使って説明せよ。</p>
 <details open><summary>解き方</summary><div>手順1 人数を比べる。アジアは3.23億人、アフリカは3.07億人で、アジアがわずかに多い。<br>手順2 割合を比べる。アジアは6.7％、アフリカは20％超で、アフリカが3倍以上高い。<br>手順3 人数の差は人口規模の差から生じる。アジアの人口はアフリカより大きいため、割合が低くても人数は多くなる。<br>答え 人数ではアジアが多いが、住民のうち飢餓に直面する人の比率はアフリカがはるかに高い。地域の深刻さを比べるには割合が適する。支援の総量を見積もるには人数が適する。</div></details></div>
@@ -173,6 +197,12 @@
 
 <p>課題の関連は解決策にも影響する。ある課題の解決策が別の課題を悪化させる関係を<strong>トレードオフ</strong>と呼ぶ。トウモロコシやサトウキビから作るバイオエタノールは化石燃料の代わりになり、温暖化対策になる。一方で原料作物が食料と競合すると穀物価格が上がり、食料を買えない人が増えるおそれがある。逆に、1つの対策が複数の課題を同時に改善する関係もある。都市への公共交通の整備は渋滞・大気汚染・温室効果ガスの3つを同時に減らす。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/04_global-issues-ethanol.jpg" width="1000" height="704" loading="lazy" alt="ブラジルのサトウキビを原料とするエタノール蒸留工場">
+<figcaption>ブラジルのサンパウロ州ピラシカバにある製糖とエタノールの工場の蒸留設備である。サトウキビを原料にエタノールを製造する。燃料用の需要が増えるほど、原料の作物が食料の生産と土地を競合する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Costa_Pinto_ethanol_distillery_plant_Piracicaba_10_2008.jpg">Mariordo Mario Roberto Duran Ortiz</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <div class="tb-tw"><table>
 <thead><tr><th>背景</th><th>出来事</th><th>結果</th></tr></thead>
 <tbody>
@@ -191,8 +221,19 @@
 <p>「バイオエタノールの利用拡大は地球的課題の解決にとって望ましい」という意見に対し、課題の関連性の観点から反論を1つ示せ。</p>
 <details open><summary>解き方</summary><div>手順1 バイオエタノールが改善する課題を特定する。化石燃料の代わりになるので地球環境問題と資源エネルギー問題を改善する。<br>手順2 原料と土地が何と競合するかを確認する。原料はトウモロコシやサトウキビで、食料や飼料と同じ作物である。<br>手順3 競合の結果を人口食料問題に結び付ける。原料需要が増えると穀物価格が上がり、所得の低い人々が食料を買いにくくなる。<br>答え 食料と原料が競合して穀物価格が上がり、人口食料問題を悪化させるおそれがある。</div></details></div>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/04_global-issues-rondonia.jpg" width="1000" height="782" loading="lazy" alt="衛星から見たブラジルのロンドニア州の森林伐採">
+<figcaption>2007年8月12日に人工衛星から見たブラジルのロンドニア州である。濃い緑が残る森林で、薄茶色や明るい緑が伐採した裸地・農地・牧草地である。道路に沿って細い伐採地が枝分かれする魚の骨の形は、アマゾンで森林が失われていく典型的な形である。煙は火入れによるものである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Fires_and_Deforestation_on_the_Amazon_Frontier,_Rondonia,_Brazil_-_August_12,_2007.jpg">Jesse Allen and Robert Simmon</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s5">持続可能な開発とSDGs</h2>
 <p>将来の世代の必要を満たす能力を損なわずに、現在の世代の必要を満たす開発を<strong>持続可能な開発</strong>と呼ぶ。この定義は1987年の国連の委員会の報告書「我ら共有の未来」で示された（委員長の名からブルントラント報告とも呼ぶ。出典14）。環境の保全と経済の発展を対立するものとせず、両立させる考え方である。学習指導要領も、課題の解決には産業などの経済活動との調和が重要であるとする（出典1）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_global-issues-stockholm.jpg" width="1000" height="627" loading="lazy" alt="1972年の国連人間環境会議の参加者が自転車で走る様子">
+<figcaption>1972年の国連人間環境会議の際、ストックホルムの街を自転車で走る会議の参加者である。中央は会議を率いたモーリス・ストロングである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:UN-environment-in-Stockholm-1972.jpg">AnonymousUnknown author / Pressens Bild</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <div class="tb-tl">
 <li><b>1972年</b><strong>国連人間環境会議</strong> ストックホルムで開かれた環境問題に関する最初の大規模な国際会議。会議を受けて国連環境計画が設立された（出典16）</li>
@@ -227,6 +268,12 @@
 <h2 id="s6">国際協力の主体 ODA・国際機関・NGO</h2>
 <p>先進国の政府が発展途上国の経済開発と福祉の向上を主な目的として行う資金や技術の提供を<strong>政府開発援助</strong>（ODA）と呼ぶ。OECD（経済協力開発機構）の開発援助委員会（DAC）がODAの基準を定める。条件は3つである。政府や政府機関が提供すること・発展途上国の開発と福祉が主な目的であること・贈与または返済の条件が緩やかな貸付であることである（出典12）。国連は1970年に先進国のODAを国民総生産比0.7％とする目標を定めた（出典12）。</p>
 <p>ODAは提供の経路で2つに分かれる。相手国へ直接提供する<strong>二国間援助</strong>と、国際機関への拠出を通じた<strong>多国間援助</strong>である。日本の二国間援助は、返済を求めない無償資金協力・専門家の派遣や研修による技術協力・低金利で長期の貸付である円借款からなる。日本のODAの実施機関は<strong>国際協力機構</strong>（JICA）である。1974年に国際協力事業団として設立され、2003年に独立行政法人国際協力機構となった（出典13）。1965年に始まった青年海外協力隊も現在はJICAが派遣する（出典13）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_global-issues-tsubasa.jpg" width="1000" height="750" loading="lazy" alt="カンボジアのメコン川に架かるつばさ橋">
+<figcaption>カンボジアのネアックルン橋で、つばさ橋とも呼ばれる。日本の無償資金協力でメコン川に架けられ、2015年4月に開通した。それまで首都プノンペンとホーチミン市を結ぶ道路はこの地点でフェリーに頼っていた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Neak_Loeung_Bridge_(Tsubasa_Bridge).jpg">Kiensvay</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 250" role="img" aria-label="DAC加盟国のODA実績上位5か国の横棒グラフ">
@@ -294,6 +341,12 @@
 
 <h2 id="s7">地域から見た課題の重なり</h2>
 <p>課題の地域性を最も明確に示す地域がサハラ以南アフリカである。サハラ砂漠より南のアフリカを指し、アフリカの北部の国々とは区別して統計が集計される。この地域では都市住民の半分以上がスラムなどに住む（出典6）。栄養不足人口の割合はアフリカ全体で20％を超える（2024年、出典3）。人口の増加も続き、2050年までにダルエスサラームとアディスアベバが人口1,000万人を超えると予測される（出典7）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_global-issues-addis.jpg" width="1000" height="750" loading="lazy" alt="エチオピアの首都アディスアベバの市街地">
+<figcaption>エチオピアの首都アディスアベバの市街地である。中心部に高層の建物が並び、建設用のクレーンも見える。2050年までに人口1,000万人を超えると予測される都市の1つである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Addis_Ababa_skyline.jpg">Simfan34</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 440" role="img" aria-label="サハラ以南アフリカを塗り分けたアフリカの地図">

@@ -19,6 +19,12 @@
 </tbody></table></div>
 <p>赤道半径と極半径の差は約21 kmで、半径の約0.3%にすぎない。地球儀や世界地図の上では球として扱ってよい大きさである。一方で人工衛星の軌道計算や測量では、この差を無視すると位置に誤差が生じる。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/00_position-bluemarble.jpg" width="1000" height="1000" loading="lazy" alt="アポロ17号から撮影した地球の全景">
+<figcaption>1972年12月7日にアポロ17号の乗員が月へ向かう途中、約29,400 km離れた位置から撮影した地球である。アフリカ大陸・アラビア半島・南極大陸が写っている。赤道半径と極半径の差は半径の約0.3%なので、この距離から見た地球の輪郭は円と区別できない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:The_Blue_Marble_(remastered).jpg">NASA/Apollo 17 crew</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 290" role="img" aria-label="地球楕円体と緯度の定義">
   <text x="20" y="24" font-size="13" fill="var(--muted)">地球楕円体（つぶれを誇張して描いた）</text>
@@ -66,6 +72,11 @@
 <p>同じ経線上にある北緯35度の地点と北緯45度の地点の距離はおよそ何kmか。地球の全周を4万 kmとして求めよ。</p>
 <details open><summary>解き方</summary><div>手順1 子午線の全周4万 kmは360度に対応する。<br>手順2 緯度1度あたりの長さは 40,000 ÷ 360 で約111 kmである。<br>手順3 緯度差は10度なので、111 × 10 で約1,110 kmである。<br>答え 約1,100 km。GRS80で計算した北緯35度付近の緯度1度の長さは約110.9 kmで（本書による算出値）、概算との差は1%未満である。</div></details></div>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/00_position-maupertuis.jpg" width="727" height="1000" loading="lazy" alt="地球儀に手を置くモーペルテュイの肖像画"><img src="../img/00_position-metre.jpg" width="1000" height="750" loading="lazy" alt="パリの壁に設置された大理石のメートル原器"></div>
+<figcaption>左はラップランドの測量隊を率いたモーペルテュイの肖像画で、地球儀に手を置く姿で描かれている。右はパリのヴォージラール通りの壁に残る18世紀の公衆用のメートル原器である。市民は手持ちの物差しを両端の止め具の間に当て、長さが正しいかを確かめた。地球の大きさの測量から生まれた単位が、こうして日常の物差しに移された。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Pierre-Louis_Moreau_de_Maupertuis_(Levrac-Tourni%C3%A8res).jpg">Robert Tournières</a>／パブリックドメイン 右：<a href="https://commons.wikimedia.org/wiki/File:M%C3%A8tre_%C3%A9talon_(36,_rue_de_Vaugirard,_Paris).jpg">Airair</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s2">緯度と経度</h2>
 <p>地球上の位置は2つの角度で表す。<strong>緯度</strong>は赤道を0度として南北にそれぞれ90度まで測った角度であり、北半球を北緯・南半球を南緯と呼ぶ。<strong>経度</strong>はイギリスのグリニッジ天文台を通る<strong>本初子午線</strong>を0度として東西にそれぞれ180度まで測った角度であり、東を東経・西を西経と呼ぶ。同じ緯度を結んだ線が<strong>緯線</strong>で、北極と南極を結ぶ線が<strong>経線</strong>（子午線）である。</p>
 <p>緯線と経線には性質の差がある。経線はどれも北極と南極を結ぶ同じ長さの半円である。緯線は赤道が最も長く、高緯度ほど短くなり、極では点になる。そのため経度1度あたりの東西の長さは高緯度ほど短い。</p>
@@ -75,6 +86,12 @@
 <div class="tb-bar"><span>北緯60度</span><u class="w"><i style="width:50%"></i></u><b>55.8</b></div>
 </div>
 <p>北緯60度では経度1度の長さが赤道の約半分になる。北緯60度の緯線の長さが赤道の半分だからである。緯度1度あたりの南北の長さは、どの緯度でも約111 kmでほとんど変わらない。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/00_position-greenwich.jpg" width="664" height="1000" loading="lazy" alt="グリニッジ天文台の壁と地面を通る本初子午線の赤い線"><img src="../img/00_position-akashi.jpg" width="1000" height="750" loading="lazy" alt="明石市にある日本標準時子午線通過地の石の標柱"></div>
+<figcaption>左はグリニッジ天文台の本初子午線である。建物の壁に赤い線が引かれ、標示板には線の東側と西側に東経と西経の文字がある。右は兵庫県明石市天文町に立つ日本標準時子午線通過地の標柱である。東経135度の線の上に置かれ、日本の時刻の基準がこの経線にあることを示す。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:The_Prime_Meridian_line_at_the_Greenwich_Royal_Observatory_-_geograph.org.uk_-_8156662.jpg">Chris Gorringe</a>／CC BY-SA 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:135th_meridian_east_monument_in_Akashi_tenmoncho2.jpg">藤谷良秀(Fujitani Yoshihide)</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <h3>本初子午線と日本標準時子午線</h3>
 <p>赤道は自転軸に垂直な面として自然に定まる。これに対して経度0度の線は人間が取り決めて定めたものである。その経緯を表で示す。</p>
@@ -243,6 +260,12 @@
 </figure>
 
 <p>国土が東西に長い国は複数の等時帯を設けることが多い。ただし等時帯の数は国土の幅だけでなく政治的な判断でも決まる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/00_position-gateclock.jpg" width="598" height="1000" loading="lazy" alt="グリニッジ天文台の門の24時間制の時計">
+<figcaption>グリニッジ天文台の門の横にあるシェパード・ゲート時計である。文字盤は24時間制で、一周で1日を表す。この時計はグリニッジ平均時を示し、英国の夏時間の期間も針を進めない。時計の下には英国の長さの標準となるヤード・フィートの目盛りが並ぶ。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Shepherd_Gate_24-Hour_Clock.jpg">Andres Rueda</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="tb-tw"><table>
 <thead><tr><th>国</th><th>等時帯の数</th><th>内容と出典</th></tr></thead>
 <tbody>
@@ -304,6 +327,12 @@
 </tbody></table></div>
 <p>地球上で最も時刻が遅いのはUTC−12で、赤道付近にある無人の米国領ハウランド島とベーカー島が該当する（出典10）。最も進んだUTC+14との差は26時間になる（本書による算出値）。同じ瞬間に地球上には最大で3つの日付が存在しうる。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/00_position-kiritimati.jpg" width="1000" height="794" loading="lazy" alt="国際宇宙ステーションから見たキリティマティ島">
+<figcaption>国際宇宙ステーションの乗員が撮影したキリバスのキリティマティ島（クリスマス島）である。ライン諸島に属する環礁の島で、内側に浅い礁湖と多数の塩湖が見える。ライン諸島はUTC+14の時刻を使い、世界で最初に新しい日を迎える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kiritimati-EO.jpg">NASA</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <div class="ex"><div class="ex-h">例題 5</div>
 <p>サモア（UTC+13）のアピアが1月2日10時のとき、アメリカ領サモア（UTC−11）のパゴパゴは何月何日何時か。</p>
 <details open><summary>解き方</summary><div>手順1 時差を求める。13 −（−11）= 24時間で、アピアのほうが24時間進んでいる。<br>手順2 アピアの時刻から24時間を引く。1月2日10時 − 24時間 = 1月1日10時である。<br>答え 1月1日10時。時刻は同じで日付だけが1日異なる。</div></details></div>
@@ -323,6 +352,12 @@
 <h3>メルカトル図法</h3>
 <p><strong>メルカトル図法</strong>は1569年にメルカトルが考案した円筒図法である（出典13）。経線を等間隔の平行な直線とし、緯線も平行な直線とする。正角を保つため、高緯度ほど緯線の間隔を広げてある。この図法の上では等角航路が直線になるため、航海図として使われてきた。</p>
 <p>代償として高緯度ほど面積が拡大される。緯度60度では長さが赤道付近の2倍・面積が4倍で表され、緯度80度では面積が約33倍になる（本書による算出値）。グリーンランドの面積は約216.6万 km²である（出典14）。オーストラリアの面積は約768.8万 km²で（出典17）、グリーンランドの約3.5倍ある（本書による算出値）。それでもメルカトル図法ではグリーンランドのほうが大きく描かれる。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/00_position-mercator.jpg" width="1000" height="635" loading="lazy" alt="メルカトルが1569年に刊行した世界図"><img src="../img/00_position-greenland.jpg" width="1000" height="661" loading="lazy" alt="上空から見たグリーンランド南部の氷床"></div>
+<figcaption>左はメルカトルが1569年に刊行した世界図で、18枚の図葉をつなぎ合わせたものである。北へ行くほど緯線の間隔が広がり、北部の陸地が大きく描かれている。右は上空から斜めに見たグリーンランドの氷床と海岸である。実際の面積はオーストラリアの約3割である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Mercator_1569_world_map_composite.jpg">Gerardus Mercator</a>／パブリックドメイン 右：<a href="https://commons.wikimedia.org/wiki/File:Greenland_ice_sheet_USGS.jpg">作者名の記載なし</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 470" role="img" aria-label="メルカトル図法の世界図と東京からロンドンへの2つの航路">

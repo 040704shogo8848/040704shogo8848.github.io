@@ -188,6 +188,11 @@
 <p>第4節の積の公式で \(z_1=z_2=\cos\theta+i\sin\theta\) とすると偏角が \(2\theta\) になる。もう1回掛けると \(3\theta\) になる。これを繰り返すと次の定理を得る。</p>
 \[ (\cos\theta+i\sin\theta)^n=\cos n\theta+i\sin n\theta \]
 <p>これを<strong>ド・モアブルの定理</strong>と呼ぶ。自然数 \(n\) について数学的帰納法で示せる。\(n\) のときに成り立つと仮定して両辺に \(\cos\theta+i\sin\theta\) を掛けると積の公式から \(n+1\) のときも成り立つ。\(n=0\) と負の整数でも成り立つ。\(\dfrac{1}{\cos\theta+i\sin\theta}=\cos(-\theta)+i\sin(-\theta)\) だからである。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_demoivre.jpg" width="842" height="1000" loading="lazy" alt="ド・モアブルの肖像">
+<figcaption>ジョゼフ・ハイモアが描いたド・モアブルの肖像。ド・モアブルはフランスで生まれ、ロンドンで研究した数学者である。本節の定理はその名称で呼ばれる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Abraham_de_Moivre_by_Joseph_Highmore.jpg">Joseph Highmore</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>絶対値が1でない場合は \(\{r(\cos\theta+i\sin\theta)\}^n=r^n(\cos n\theta+i\sin n\theta)\) となる。<strong class="hit">n 乗は長さを n 乗し角を n 倍する操作である</strong>。</p>
 
 <div class="ex"><div class="ex-h">例題 7</div>
@@ -302,9 +307,19 @@
 
 <h2 id="s8">現実世界の複素数平面 交流回路</h2>
 <p>複素数を平面上の点として描く考え方はノルウェー出身の測量技師ヴェッセルの論文と1806年のアルガンの著作に現れる。ヴェッセルの論文は1797年にデンマーク王立科学アカデミーで発表され1799年に同アカデミーの紀要に掲載された。ガウスもこの表示を用いて普及させた。ド・モアブルは17世紀末から18世紀前半に活動したフランス出身の数学者でロンドンで研究した。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/05_argand-essai.jpg" width="1000" height="783" loading="lazy" alt="アルガンの1806年の著書の扉"><img src="../img/05_gauss.jpg" width="784" height="1000" loading="lazy" alt="ガウスの肖像"></div>
+<figcaption>左はアルガンが1806年にパリで出版した著作の扉、右はガウスの肖像である。アルガンの著作は虚数を幾何学の作図で表す方法を論じ、複素数を平面上の点として描いた。ガウスはこの表示を用いて普及させた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Quantites_Imaginaires_Argand_1806.png">Université de Bordeaux</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Carl_Friedrich_Gauss_1840_by_Jensen.jpg">Christian Albrecht Jensen</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>家庭のコンセントの電圧は一定の周期で向きを変える交流である。電気工学では電圧と電流を複素数平面上の回転する矢印で表す。コイルやコンデンサーは電流の位相を \(90^\circ\) ずらす。この操作は \(i\) を掛ける回転として計算できる。電気工学では電流の記号 i と区別して虚数単位を j と書く。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_ac-oscilloscope.jpg" width="1000" height="807" loading="lazy" alt="オシロスコープに表示した正弦波">
+<figcaption>アナログのオシロスコープに表示した周波数10 kHz の正弦波。交流の電圧は時間に対してこの形で変化する。正弦波は複素数平面上で一定の速さで回る矢印の縦の成分であり、電気工学ではこの矢印で電圧と電流を計算する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sine_wave_10_kHz_displayed_on_analog_oscilloscope.jpg">Pittigrilli</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s9">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 絶対値</div>

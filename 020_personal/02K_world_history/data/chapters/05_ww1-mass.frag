@@ -9,6 +9,11 @@
 <p>1914年6月28日、ボスニアの州都サライェヴォでオーストリアの帝位継承者夫妻がセルビア人の青年に暗殺された。この<strong>サライェヴォ事件</strong>を受けてオーストリアがセルビアに宣戦し、同盟関係にしたがって主要国が次々に参戦した（出典3）。協商国側を連合国と呼び、ドイツ側を同盟国と呼ぶ。</p>
 <p>西部戦線ではスイス国境から北海まで塹壕が続き、戦争は長期化した。機関銃・毒ガス・戦車・航空機・潜水艦が使われ、1916年のヴェルダンの戦いとソンムの戦いでは双方に膨大な死傷者が生じた。</p>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/05_ww1-trench.jpg" width="1000" height="763" loading="lazy" alt="ソンムの戦いの塹壕で警戒するイギリス兵"><img src="../img/05_ww1-tank.jpg" width="1000" height="708" loading="lazy" alt="ソンムの戦場に置かれたイギリスのマーク1戦車"></div>
+<figcaption>左は1916年7月のソンムの戦いで、イギリス兵が占領したドイツ軍の塹壕である。1人が銃を構えて見張り、ほかの兵士は塹壕の底で休んでいる。右は同年9月25日にソンムの戦場で撮影されたイギリスのマーク1戦車で、塹壕を越えるために開発された兵器である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Cheshire_Regiment_trench_Somme_1916.jpg">John Warwick Brooke</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:British_Mark_I_male_tank_Somme_25_September_1916.jpg">Ernest Brooks</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <ol class="tb-tl">
 <li><b>1914年6月</b><strong>サライェヴォ事件</strong>。8月までに主要国が参戦した</li>
 <li><b>1914年8月</b><strong>日本が日英同盟を理由にドイツに宣戦</strong></li>
@@ -21,6 +26,11 @@
 <p>年表の年代は出典4・出典8・出典38による。</p>
 
 <p>この戦争の特徴を表す語が<strong>総力戦</strong>である。総力戦とは、軍隊だけでなく国民の生活と経済の全体を戦争の遂行に動員する戦争を指す。各国の政府は工業生産・物資の配給・労働力の配置を管理した。男性が戦場に動員されたため、女性が軍需工場や交通機関で働いた。イギリスはインドから、フランスはアフリカの植民地から兵士と労働者を動員した。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_ww1-munitions.jpg" width="1000" height="750" loading="lazy" alt="大小の砲弾の横に立つ2人の女性労働者">
+<figcaption>1917年頃、イギリスのチルウェルの国営砲弾充塡工場で、製造した大小の砲弾の横に立つ2人の女性労働者。男性が戦場に動員された後、女性が軍需工場の労働を担った。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Women_with_shells_at_Chilwell_1917_IWM_Q_30017.jpg">Horace Nicholls</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="総力戦の背景と結果">
@@ -105,12 +115,22 @@
 <p>卸売物価と消費者物価は大戦景気の間に平均で2倍強に上がったとされ（出典6）、賃金の上昇は追いつかなかった。1918年8月2日に寺内正毅内閣がシベリア出兵を宣言すると米の投機と売り惜しみが広がり、東京などの米価は1月の1石15円から8月9日には50円を超えた（出典7）。</p>
 <p>富山県の女性たちが米の県外移出の停止を求めた行動をきっかけに、騒動は1道3府37県の369か所に広がった（出典7）。これを<strong>米騒動</strong>と呼ぶ。寺内内閣は総辞職し、9月29日に立憲政友会総裁の<strong>原敬</strong>が内閣を組織した（出典7）。陸軍・海軍・外務の3大臣以外を政党員が占める本格的な政党内閣である。爵位をもたない原は「平民宰相」と呼ばれた。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/05_ww1-suzuki-shoten.jpg" width="1000" height="741" loading="lazy" alt="焼失した神戸の鈴木商店の跡">
+<figcaption>焼失した神戸の鈴木商店の跡。鈴木商店は大戦景気で急成長した商社で、1918年の米騒動では米を買い占めたとみなされて焼き打ちを受けた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Suzuki_Shoten_burnt_out.jpg">published by 国書刊行会</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 2</div>
 <p>図2の統計から、日本の貿易収支が輸出超過であった期間と、その期間が終わった理由を考えよ。</p>
 <details open><summary>解き方</summary><div>手順1 年ごとに輸出と輸入の棒を比べる。1915年から1918年までは輸出の棒が高い。<br>手順2 1919年は輸入の棒が輸出を上回る。大戦が終わってヨーロッパ製品がアジア市場に戻ったためである。<br>答え 輸出超過は1915年から1918年まで。大戦の終結で特需が失われ、1919年に輸入超過に戻った。</div></details></div>
 
 <h2 id="s3">ロシア革命とアメリカの台頭</h2>
 <p>総力戦の負担に最初に耐えられなくなった大国はロシアである。1917年3月8日（旧暦2月）に首都ペトログラードで労働者と兵士が蜂起し、皇帝ニコライ2世が退位した（出典8）。これを<strong>二月革命</strong>と呼ぶ。戦争を続ける臨時政府と、労働者と兵士の代表者会議である<strong>ソヴィエト</strong>が並び立った。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_ww1-petrograd.jpg" width="1000" height="650" loading="lazy" alt="発砲を受けて逃げ惑うペトログラードの群衆">
+<figcaption>1917年7月4日の午後2時、ペトログラードのネフスキー大通り。臨時政府の軍が機関銃で発砲した直後で、デモの群衆が逃げ惑い、路上に伏せている。二月革命と十月革命の間の臨時政府の不安定さを示す写真である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:19170704_Riot_on_Nevsky_prosp_Petrograd.jpg">Viktor Bulla</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>レーニンが率いるボリシェヴィキは1917年11月7日（旧暦10月25日）に臨時政府を倒した（出典8）。これを<strong>十月革命</strong>と呼ぶ。新政権は「平和に関する布告」で無併合・無賠償・民族自決による即時講和を呼びかけ、「土地に関する布告」で地主の土地を没収した。1918年3月にはドイツとブレスト＝リトフスク条約を結んで戦争から離脱した。</p>
 <p>1919年には各国の共産党を指導する<strong>コミンテルン</strong>がつくられた。内戦期の戦時共産主義の後、1921年には穀物の自由な販売を認める新経済政策（NEP）に転換した。1922年12月30日、ロシア・ウクライナ・ベラルーシ・ザカフカースの4共和国が<strong>ソヴィエト社会主義共和国連邦</strong>（ソ連）を結成した（出典9）。社会主義国家の登場は資本主義国の政府に労働運動への警戒を強めさせ、植民地の民族運動には新しい選択肢を示した。</p>
 
@@ -128,6 +148,11 @@
 
 <h2 id="s4">ヴェルサイユ体制とワシントン体制</h2>
 <p>1919年6月28日、パリ講和会議の結果としてドイツと<strong>ヴェルサイユ条約</strong>が結ばれた（出典3）。ドイツはすべての植民地とアルザス・ロレーヌを失い、軍備を制限された。さらに巨額の賠償金を課された。敗戦国ごとに結ばれた条約によるヨーロッパの国際秩序を<strong>ヴェルサイユ体制</strong>と呼ぶ。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_ww1-orpen.jpg" width="833" height="1000" loading="lazy" alt="ヴェルサイユ宮殿の鏡の間での講和条約の調印" style="max-height:620px;object-fit:contain">
+<figcaption>ウィリアム・オーペンが描いた1919年6月28日のヴェルサイユ条約の調印。ヴェルサイユ宮殿の鏡の間で、連合国の首脳が並ぶ机の前でドイツの代表が署名している。1871年にドイツ皇帝の即位が宣言されたのと同じ部屋である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Orpen,_William_(Sir)_(RA)_-_The_Signing_of_Peace_in_the_Hall_of_Mirrors,_Versailles,_28th_June_1919_-_Google_Art_Project.jpg">William Orpen</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>民族自決の原則は東ヨーロッパに適用され、ポーランド・チェコスロヴァキア・セルブ＝クロアート＝スロヴェーン王国（のちのユーゴスラヴィア）・フィンランド・バルト3国などが独立した。一方で旧ドイツ植民地とオスマン帝国のアラブ地域は、国際連盟の委任を受けた国が統治する<strong>委任統治</strong>領とされた。日本は赤道以北の旧ドイツ領南洋諸島の委任統治国となった（出典13）。</p>
 
 <figure class="tb-fig">
@@ -172,6 +197,11 @@
 <tr><td>海軍軍備制限条約</td><td>1922年2月</td><td>アメリカ・イギリス・日本・フランス・イタリア</td><td>主力艦の保有比率を米英5・日3・仏伊1.67とし、10年間は主力艦を新造しない（出典14）</td></tr>
 </tbody></table></div>
 <p>会議の期間中に日本は中国と<strong>山東懸案解決条約</strong>を結び、膠州湾の旧ドイツ租借地を返還した（出典16）。全権の幣原喜重郎はのちに外相として協調外交を進めた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_ww1-washington.jpg" width="1000" height="802" loading="lazy" alt="ワシントン会議の日本全権とアメリカの閣僚">
+<figcaption>ワシントン会議に出席した日本全権の加藤友三郎海軍大臣と徳川家達。アメリカのデンビー海軍長官と、会議の議長を務めたヒューズ国務長官とともに写っている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Japanese_Delegates_to_Arms_Conference_-_Denby,_Admiral_Kato,_Prince_Tokugawa,and_Hughes.jpg">Harris &amp; Ewing Collection</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">四か国条約は2人の交際を4人のグループに切り替えた</p>
@@ -253,10 +283,20 @@
 
 <h3>三・一独立運動</h3>
 <p>韓国併合以後の朝鮮では、朝鮮総督府が憲兵警察による<strong>武断政治</strong>を行った。1919年3月1日に宗教指導者らが独立宣言を発表し、京城で学生と市民が「独立万歳」を叫んでデモ行進をした。運動は朝鮮全土に広がった。これを<strong>三・一独立運動</strong>と呼ぶ。参加者は総督府の記録で106万人とされる（出典17）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_ww1-seoul1919.jpg" width="1000" height="700" loading="lazy" alt="1919年3月のソウルの群衆">
+<figcaption>1919年3月、ソウル（当時の京城）に集まった群衆。白い服の人々が広場を埋めている。写真は独立運動の側の情報機関が海外向けに刊行した冊子に掲載された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:L%E2%80%99Ind%C3%A9pendance_de_la_Cor%C3%A9e_et_la_Paix-02.jpg">Bureau d&#x27;information coréen</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>死者の数は資料によって大きく異なる。総督府の統計表では4月11日までの死者が357人で、公式記録として553人とする数値もある（出典17）。朴殷植の『韓国独立運動之血史』は伝聞にもとづき死者7,509人とする（出典17）。運動の後、日本は統治を<strong>文化政治</strong>に改めて憲兵警察制度を廃止した。上海では大韓民国臨時政府が樹立された。</p>
 
 <h3>五・四運動</h3>
 <p>パリ講和会議が山東のドイツ権益について日本の主張を認めると、1919年5月4日に北京の学生が天安門前で抗議した（出典18）。運動はストライキと日本製品の不買運動として全国に広がり、中国政府は6月28日にヴェルサイユ条約への調印を拒否した（出典18）。これを<strong>五・四運動</strong>と呼ぶ。前段には陳独秀の『新青年』による新文化運動があった。1919年に孫文が中国国民党を結成し、1921年には中国共産党が結成された。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_ww1-may4.jpg" width="1000" height="602" loading="lazy" alt="天安門前に集まった五・四運動の学生たち">
+<figcaption>1919年5月4日の天安門前。北京の13の大学の学生約3,000人が集まり、山東のドイツ権益を日本に譲るヴェルサイユ条約の規定に抗議した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Chinese_protestors_march_against_the_Treaty_of_Versailles_(May_4,_1919).jpg">Unknown author</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h3>インドと西アジア</h3>
 <p>インドは戦後の自治を約束されて大戦に協力したが、1919年のローラット法は令状なしの逮捕を認めた。4月13日にアムリットサールの抗議集会にイギリス軍が発砲した。死者はイギリス側の調査委員会の集計で379人、インド国民会議派の推計で約1,000人である（出典19）。<strong>ガンディー</strong>は非暴力・不服従を掲げて非協力運動を指導した。西アジアではムスタファ・ケマルが連合国の占領に抵抗し、1923年にトルコ共和国を建てた。</p>
@@ -318,6 +358,11 @@
 <p>物価の上昇で生活が苦しくなると労働争議と小作争議が増えた。友愛会は1921年に日本労働総同盟と改称し、1922年には日本農民組合が結成された。同じ年に被差別部落の人々が<strong>全国水平社</strong>を結成し、自らの力による差別からの解放を宣言した。</p>
 <p>女性の運動では、平塚らいてう・市川房枝・奥むめおらが1920年に<strong>新婦人協会</strong>の発会式を開いた（出典23）。その運動により1922年に治安警察法第5条が改正され、女性の政治集会への参加が認められた（出典23）。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/05_ww1-shinfujin.jpg" width="830" height="631" loading="lazy" alt="新婦人協会の会員の集合写真">
+<figcaption>新婦人協会の会員たち。協会の運動によって1922年に治安警察法第5条が改正され、女性が政治集会に参加できるようになった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Shin-Fujin-Kyokai-1.jpg">Unknown author</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 6</div>
 <p>1925年に成立した2つの法律の関係を、当時の政府の意図から説明せよ。</p>
 <details open><summary>解き方</summary><div>手順1 2つの法律は普通選挙法と治安維持法である。<br>手順2 普通選挙法で有権者は約4倍になり、労働者や小作人も投票できるようになった。<br>手順3 政府は新しい有権者が社会主義の政党を支持することを警戒した。<br>答え 選挙権を広げて民意を議会政治に取り込む一方で、体制の変革をめざす運動を取り締まった。参加の拡大と統制を同時に進めた。</div></details></div>
@@ -337,6 +382,11 @@
 
 <h3>大量生産と大量消費</h3>
 <p>大量消費社会が最初に成立したのは1920年代のアメリカである。フォード社は1913年に移動式の組立ラインを導入し、T型フォードの価格は1909年の825ドルから1925年の260ドルに下がった（出典31）。生産台数は1927年までに約1,500万台に達した（出典31）。自動車・家庭電化製品・映画が中間層に広がった。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/05_ww1-ford.jpg" width="1000" height="722" loading="lazy" alt="フォードの工場の組立ライン">
+<figcaption>1913年のフォードの工場の組立ライン。作業員が流れ作業の台に並び、それぞれが決まった工程だけを担う。この方式でT型フォードの価格が下がり、自動車は大衆の消費財になった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ford_assembly_line_-_1913.jpg">Unknown author</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>日本の都市でも、郊外の住宅地と都心を結ぶ私鉄が延び、ターミナル駅に百貨店がつくられた。バスの車掌やタイピストとして働く女性は<strong>職業婦人</strong>と呼ばれた。</p>
 
 

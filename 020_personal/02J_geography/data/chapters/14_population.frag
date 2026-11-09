@@ -7,6 +7,11 @@
 <h2 id="s1">人口分布と人口密度</h2>
 <p>人が日常的に住んでいる地域を<strong>エクメーネ</strong>と呼び、人が常住しない地域を<strong>アネクメーネ</strong>と呼ぶ。アネクメーネは寒さ・乾燥・高度のいずれかが限界を超えた地域である。それぞれ寒冷限界・乾燥限界・高距限界と呼ぶ。南極大陸・サハラ砂漠の内陸部・ヒマラヤ山脈の高所がその例である。</p>
 <p>人口は地表に均等に分布しない。人口が集中するのは次の条件を備えた地域である。第1に温暖で降水があり農業ができること。第2に河川の沖積平野のように水と平地を得やすいこと。第3に港や工業地域があり雇用があることである。モンスーンアジアの稲作地域は第1と第2の条件を満たし、古くから多くの人口を養ってきた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/14_population-nightlights.jpg" width="1000" height="500" loading="lazy" alt="人工衛星から見た夜の地球の明かり">
+<figcaption>2012年に人工衛星が撮影した夜の地球の合成画像。明かりが集まる場所は人口と都市が集中する地域である。ヨーロッパ・インド・東アジアが明るく、サハラ砂漠・シベリア・アマゾン川の流域はほとんど暗い。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:City_Lights_2012_-_Flat_map.jpg">NASA Earth Observatory</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>単位面積あたりの人口を<strong>人口密度</strong>と呼ぶ。人口を面積で割って求め、通常は1平方キロメートルあたりの人数で示す。世界全体の人口密度は61.6人である（2022年、出典6）。</p>
 
 <figure class="tb-fig">
@@ -50,6 +55,11 @@
 </tbody></table></div>
 <p>人口は世界銀行の統計（出典3）、人口密度も世界銀行の統計（出典6）による。7位はブラジル・10位はエチオピア・11位はメキシコである。13位以下のエジプト・フィリピン・コンゴ民主共和国・ベトナムも1億人を超える（出典3）。表に挙げたアジアの6か国（インド・中国・インドネシア・パキスタン・バングラデシュ・日本）だけで世界人口の45.4％を占める（本書による算出値）。インドと中国の2か国では35.1％である（本書による算出値）。</p>
 <p>同じ人口大国でも人口密度は大きく異なる。バングラデシュはガンジス川とブラマプトラ川の三角州に稲作地域が広がり、1,301人に達する。ロシアは国土の大半が寒冷なタイガとツンドラで9人にとどまる。アメリカ合衆国も西部に乾燥地域と山地を抱えるため37人である。<strong class="hit">人口密度は「人口の多さ」ではなく「人が住める土地の割合と農業の生産力」を反映する</strong>。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/14_population-dhaka.jpg" width="1000" height="667" loading="lazy" alt="湖の両岸まで建物が密集するダッカの上空写真"><img src="../img/14_population-taiga.jpg" width="1000" height="750" loading="lazy" alt="集落の見えないマガダン州の山地の上空写真"></div>
+<figcaption>左はバングラデシュの首都ダッカの上空写真で、湖の両岸まで建物が密集する。撮影者の説明では、この都市の人口密度は1平方キロメートルあたり3万8,000人である。右はロシア極東のマガダン州の上空で、雪をかぶった山地に集落は見えない。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:A_Piece_of_Heaven_in_a_high_densely_populated_city_Dhaka,_Bangladesh.jpg">Nayeemibnmatiur</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Nad_Sibirju_01.jpg">Matt Mordfin</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-biz"><b>投資で言えば</b>
 <p class="an-h">人口密度は国全体の平均坪単価である</p>
@@ -220,6 +230,11 @@
 </div>
 <p>日本の出生数は第1次ベビーブームの1949年に269万6,638人で最多であった（出典10）。2024年の出生数はその4分の1程度である。合計特殊出生率は2005年に1.26まで下がり、2015年に1.45まで戻った後、2024年は1.15である（出典10）。国連は合計特殊出生率が1.4未満の状態を超低出生と呼ぶ。中国・イタリア・韓国・スペインなど全ての国と地域の約5分の1がこの状態にある（2024年、出典2）。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/14_population-school.jpg" width="1000" height="666" loading="lazy" alt="閉校した日形小学校の記念碑">
+<figcaption>岩手県一関市の日形小学校の閉校記念碑。この小学校は2015年3月に閉校した。出生数が減ると児童も減り、地域の学校の統廃合が進む。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ichinoseki_city_Hikata_elementary_school_Closing_monument_202406.jpg">とらもん192</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="少子高齢化の背景と結果">
 <defs><marker id="j14ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--sub)"/></marker></defs>
@@ -269,6 +284,11 @@
 <tr><td>日本</td><td>促進</td><td>育児休業制度の拡充・保育所の整備・児童手当の拡充</td><td>合計特殊出生率は1.15（2024年、出典10）で低下が続く</td></tr>
 </tbody></table></div>
 <p>中国の一人っ子政策には例外があった。農村では第1子が女子の場合に第2子を認める地域があった。人口1,000万人未満の少数民族も例外とされた（出典17）。男子を望む家庭が多かったため、出生時の男女比は女子100に対し男子117に達した（出典17）。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/14_population-onechild.jpg" width="1000" height="750" loading="lazy" alt="計画生育の実行を求める中国の標語"><img src="../img/14_population-girls.jpg" width="819" height="580" loading="lazy" alt="女児への差別と遺棄を禁じる中国の標語"></div>
+<figcaption>左は中国の村の路地の入口に掲げられた標語で、国の富強と家庭の幸福のために計画生育を実行するよう求める。右は道路沿いの壁の標語で、女児への差別・虐待・遺棄を禁じている。男子を望む家庭が多く、出生時の男女比が男子に大きく偏ったことが背景にある。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:One_child_policy.jpg">Venus</a>／CC BY 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:PRC_family_planning_don%27t_abandon_girls.jpg">David Cowhig</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>出生を促す政策の効果は限られる。国連は、人口がすでにピークを越えた国では出産年齢の女性の割合が急速に下がるため、出生を促す政策が人口規模に与える影響は時間とともに小さくなると指摘する（出典2）。<strong class="hit">出生率を上げる政策は、効果が人口規模に現れるまで20年以上かかる</strong>。このため少子化が進んだ国では、移民の受け入れと高齢者や女性の就業の拡大を組み合わせる。</p>
 
 <aside class="an an-biz"><b>経済で言えば</b>
@@ -319,6 +339,11 @@
 </figure>
 
 <p>流れには3つの型がある。第1は所得の低い隣接地域から高い地域への移動で、ラテンアメリカから北アメリカへの流れが最大である。第2は産油国への出稼ぎで、南アジアからペルシア湾岸の産油国へ建設業やサービス業の労働者が移る。第3は旧植民地から旧宗主国への移動で、北アフリカからフランス、南アジアからイギリスへの流れがその例である。言語と制度が共通しているため移りやすい。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/14_population-border.jpg" width="1000" height="647" loading="lazy" alt="ティフアナとサンディエゴの間の国境の壁">
+<figcaption>メキシコのティフアナとアメリカ合衆国のサンディエゴの間の国境の壁。壁に並ぶ十字架は越境を試みて亡くなった移民を表し、奥には監視塔が立つ。ラテンアメリカから北アメリカへの流れは国際移民の最大の流れである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Border_Wall_at_Tijuana_and_San_Diego_Border.jpg">Tomascastelazo</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>迫害や紛争を逃れて国外へ移った人を<strong>難民</strong>と呼ぶ。国内にとどまって避難した人は<strong>国内避難民</strong>と呼び区別する。2024年半ばの難民は約3,800万人で、国連難民高等弁務官事務所（UNHCR）の対象が3,200万人、パレスチナ難民を扱う国連の別機関の対象が600万人である（出典13）。</p>
 <div class="tb-bars"><h5>難民の主な出身国 単位 万人 ・ 2024年末 ・ UNHCR 対象の難民（出典14）</h5>
 <div class="tb-bar"><span>シリア</span><u class="w"><i style="width:100%"></i></u><b>595</b></div>
@@ -330,8 +355,18 @@
 </div>
 <p>難民の受け入れ国は出身国の隣国に集中する。2024年末の受け入れはイランが349万人で最も多く、トルコ294万人・ドイツ275万人・ウガンダ176万人・パキスタン156万人が続く（出典14）。イランとパキスタンはアフガニスタンの隣国で、トルコはシリアの隣国である。<strong class="hit">難民は徒歩や陸路で国境を越えるため、受け入れの負担は紛争地の周辺の国に集まる</strong>。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/14_population-zaatari.jpg" width="1000" height="665" loading="lazy" alt="上空から見たヨルダンのザアタリ難民キャンプ">
+<figcaption>2013年7月にヘリコプターから撮影したヨルダンの砂漠。地平線の付近に白く広がる区画が、シリアからの難民が住むザアタリ難民キャンプである。難民は陸路で国境を越えるため、紛争地の隣国に受け入れの負担が集まる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Aerial_View_of_the_Za%27atri_Refugee_Camp.jpg">U.S. Department of State</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h3>国内移動</h3>
 <p>国内移動の主な流れは農村から都市への移動である。発展途上国では農村の人口増加と都市の雇用が結び付き、首都への集中が進む。この過程は第15章で扱う。日本では高度経済成長期に地方圏から三大都市圏への大規模な移動が起きた。現在も東京圏への転入超過が続く。2024年の東京圏の転入超過は13万5,843人で、内訳は東京都7万9,285人・神奈川県2万6,963人・埼玉県2万1,736人・千葉県7,859人である（出典12）。東京圏は3年連続で東京圏以外の全ての道府県に対して転入超過である（出典12）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/14_population-shinjuku.jpg" width="1000" height="666" loading="lazy" alt="新宿駅南東口付近を行き交う人々">
+<figcaption>新宿駅の南東口付近を行き交う人々。東京圏には若い世代の転入が続き、2024年の転入超過は13万5,843人であった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Crowds_near_Shinjuku_Station_Southeast_Exit_2011-04-02_panoramio.jpg">Tomi Mäkitalo</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>日本への国際移動も増えている。2024年末の在留外国人は376万8,977人で、前年末から10.5％増えた（出入国在留管理庁、出典15）。国籍別では中国87万3,286人・ベトナム63万4,361人・韓国40万9,238人・フィリピン34万1,518人・ネパール23万3,043人の順である（出典15）。</p>
 
 <aside class="an an-bb"><b>野球で言えば</b>

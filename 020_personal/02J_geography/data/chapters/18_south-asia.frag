@@ -7,7 +7,17 @@
 <h2 id="s1">東南アジアの自然と地域の枠組み</h2>
 <p>東南アジアは大陸部と島嶼部に分かれる。<strong>大陸部</strong>はインドシナ半島とマレー半島からなる。ミャンマー・タイ・ラオス・カンボジア・ベトナムが含まれる。<strong>島嶼部</strong>はインドネシア・フィリピン・シンガポール・ブルネイ・東ティモールとマレーシアの一部からなる。マレーシアは半島部とボルネオ島北部にまたがる。</p>
 <p>大陸部には北から南へ流れる大河がある。エーヤワディー川・チャオプラヤ川・メコン川である。これらの河口には広い<strong>三角州（デルタ）</strong>が形成され、世界有数の稲作地帯になる。チャオプラヤ川の三角州ではかつて雨季の増水に合わせて茎を伸ばす<strong>浮稲</strong>が栽培された。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/18_south-asia-mekong.jpg" width="1000" height="562" loading="lazy" alt="衛星から見たメコン川の三角州の水田">
+<figcaption>2023年3月26日に衛星が撮影したメコン川の三角州。カントーの西に広がる灌漑された水田が、水路と道路で細かく区切られている。大河の三角州は世界有数の稲作地帯である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Rice_fields,_Mekong_Delta_ESA25022055.jpg">European Space Agency</a>／Attribution／Wikimedia Commons</span></figcaption>
+</figure>
 <p>島嶼部は新期造山帯に属する。インドネシアはアルプス・ヒマラヤ造山帯と環太平洋造山帯が会合する位置にあり、火山と地震が多い。フィリピンも環太平洋造山帯に属する。火山灰が風化した土壌は肥沃で、ジャワ島は人口密度が高い。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/18_south-asia-merapi.jpg" width="1000" height="562" loading="lazy" alt="水田の奥にそびえるメラピ山">
+<figcaption>インドネシアのジャワ島の水田と、奥にそびえるメラピ山。今も活動する火山で、周囲の農地を肥沃にしている。火山灰が風化した土壌がジャワ島の高い人口密度を支える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gunung_Merapi_-_Sawah_-_Perumahan.jpg">Petra Farohmawati</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>気候は赤道付近の熱帯雨林気候（Af）と、その南北に広がる熱帯モンスーン気候（Am）・サバナ気候（Aw）が中心である。夏は海洋から湿った南西の風が吹き雨季になる。冬は大陸から乾いた北東の風が吹き乾季になる。季節によって風向きが入れ替わる風を<strong>モンスーン（季節風）</strong>と呼ぶ。この雨季と乾季の交代が稲作の暦を決める。</p>
 
 <div class="tb-tw"><table>
@@ -70,6 +80,11 @@
 </figure>
 
 <p>宗主国は本国の工業が求める原料を得るために<strong>プランテーション</strong>を開いた。プランテーションとは、熱帯・亜熱帯で輸出向けの作物を単一栽培する大農園である。マレー半島では天然ゴムの農園と錫の鉱山が開かれた。ジャワ島ではオランダが強制栽培制度でコーヒーやさとうきびを栽培させた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/18_south-asia-rubber.jpg" width="750" height="1000" loading="lazy" alt="樹皮を切りつけたゴムの木">
+<figcaption>マレーシアのパンダンの村で、樹皮を斜めに切りつけたゴムの木。切り口から出る白い樹液（ラテックス）を集めて天然ゴムを作る。マレー半島では植民地期にゴムの農園が開かれた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Latex_collection_in_Kampung_Bukit_Jagung,_Pendang_20250918_143241.jpg">Wiki Farazi</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>農園と鉱山の労働力として、中国南部からは中国系の人々が、南インドからはタミル系の人々が移り住んだ。移住先の国籍を得た中国系の人々を<strong>華人</strong>、中国籍のまま住む人々を<strong>華僑</strong>と呼ぶ。シンガポールの住民（国民と永住者）は中国系74.3%・マレー系13.5%・インド系9.0%である（2020年、出典20）。マレーシアではマレー系と先住民を<strong>ブミプトラ</strong>と総称する。国民の民族構成はブミプトラ69.4％・中国系23.2％・インド系6.7％・その他0.7％である（2020年、出典27）。独立後のマレーシアは経済力を持つ華人とブミプトラとの格差を縮めるため、ブミプトラを教育と雇用で優遇する政策をとった。</p>
 
 <figure class="tb-fig">
@@ -146,6 +161,11 @@
 
 <h3>商品作物</h3>
 <p><strong>油やし</strong>は果実からパーム油をとる作物である。パーム油は食用油・菓子・洗剤の原料になる。マレーシアではゴム農園からの転換が進み、インドネシアのスマトラ島とカリマンタン島でも農園が拡大した。農園の拡大は熱帯林の減少の主な原因の1つとして国際的に問題視されている。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/18_south-asia-oilpalm.jpg" width="1000" height="750" loading="lazy" alt="油やし農園のために切り開かれたボルネオ島の森林の空撮">
+<figcaption>マレーシアのボルネオ島サバ州で、油やし農園のために新しく切り開かれた土地の空撮。濃い緑の熱帯林の中に、伐採された茶色の区画が広がる。農園の拡大は熱帯林の減少の主な原因の1つである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Oil_Palm_clearing_aerial_Borneo.JPG">T. R. Shankar Raman</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-bars"><h5>パーム油の生産量 単位 百万トン ・ 2023年 ・ 出典4</h5>
 <div class="tb-bar"><span>インドネシア</span><u class="c"><i style="width:100%"></i></u><b>47.1</b></div>
 <div class="tb-bar"><span>マレーシア</span><u class="c"><i style="width:39%"></i></u><b>18.6</b></div>
@@ -295,7 +315,17 @@
 </figure>
 
 <p>農業地域の配置は降水量で説明できる。年降水量が少ないパンジャーブ地方では、灌漑を整備して<strong>小麦</strong>を栽培する。1960年代後半からは多収量品種の導入による緑の革命が進み、インドは食料の輸入国から自給へ向かった。2023年のインドの小麦生産量は1億1,055万トンで、中国の1億3,659万トンに次いで世界第2位である（出典6）。降水量が多いガンジス川の三角州では<strong>米</strong>と<strong>ジュート</strong>を栽培する。ジュートは麻袋の原料になる繊維作物である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/18_south-asia-jute.jpg" width="1000" height="750" loading="lazy" alt="水辺に積まれたジュートの茎">
+<figcaption>バングラデシュの村の水辺に積まれたジュートの茎。繊維を取り出すために茎を水に浸す作業が行われる。ジュートは麻袋の原料になる繊維作物で、降水量の多いガンジス川の三角州で栽培される。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Jute_retting_in_an_Bangladeshi_village_01.jpg">Afifa Afrin</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p><strong>茶</strong>は高温多雨で水はけのよい傾斜地を好む。アッサム地方・ダージリン・スリランカの高地が産地である。インドとスリランカの茶園はイギリスの植民地期に開かれた。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/18_south-asia-darjeeling.jpg" width="1000" height="753" loading="lazy" alt="霧のかかるダージリンの茶園"><img src="../img/18_south-asia-srilanka-tea.jpg" width="1000" height="666" loading="lazy" alt="ヌワラエリヤ付近の茶園"></div>
+<figcaption>左はインドのダージリンのナムリン茶園で、霧のかかる斜面に茶の木が並ぶ。右はスリランカのヌワラエリヤ付近の茶園である。どちらも水はけのよい高地の傾斜地で、イギリスの植民地期に茶園が開かれた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:PXL_20240323_065728783_Cloud_and_Tea_Garden_at_Namring_Tea_Garden_Darjeeling_West_Bengal_734226_04.jpg">Sourabh.biswas003</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Tea_plantations_near_Nuwara_Eliya,_Sri_Lanka_-_panoramio.jpg">Alexey Komarov</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-tw"><table>
 <thead><tr><th>国</th><th>生産量 千トン（2024年）</th><th>輸出量 千トン（2024年）</th><th>輸出量÷生産量</th></tr></thead>
 <tbody>
@@ -324,6 +354,11 @@
 <div class="tb-bar"><span>ジャイナ教</span><u class="m"><i style="width:0.5%"></i></u><b>0.4</b></div>
 </div>
 <p>2011年の後の国勢調査は延期された。次回の国勢調査は2027年3月1日を基準日として実施され、カーストも調査項目に含める予定である（出典18）。シク教徒はパンジャーブ地方に集中し、キリスト教徒は南部のケーララ州や北東部に多い。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/18_south-asia-golden.jpg" width="1000" height="666" loading="lazy" alt="アムリトサルの黄金寺院">
+<figcaption>インドのアムリトサルにあるシク教の寺院、黄金寺院（ハリマンディル・サーヒブ）。池の中に金色の本堂が建つ。シク教徒はこの寺院のあるパンジャーブ地方に集中する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Golden_Temple,_Amritsar_01.jpg">Bernard Gagnon</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 594" role="img" aria-label="南アジア各国で信者が最も多い宗教">
@@ -370,6 +405,11 @@
 
 <h3>情報通信技術産業と工業</h3>
 <p>インドは1991年に国際収支の危機を受けて<strong>経済自由化</strong>を始めた（出典25）。外国資本の規制を緩め、輸入の自由化を進めた。この後に急成長したのが<strong>情報通信技術（ICT）産業</strong>である。ソフトウェア開発と、企業の業務を外部から請け負うビジネス・プロセス・アウトソーシング（BPO）が中心である。南部のベンガルールとハイデラバードに企業が集積した。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/18_south-asia-infosys.jpg" width="1000" height="750" loading="lazy" alt="エレクトロニック・シティにあるインフォシスの本社">
+<figcaption>ベンガルールのエレクトロニック・シティにあるインフォシスの本社。南部のベンガルールとハイデラバードにはICT企業が集積した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:InfosysHQFrontView.jpg">No machine-readable author provided. Sun</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 250" role="img" aria-label="インドの情報通信技術産業が成長した理由">

@@ -102,6 +102,12 @@
 </tbody></table></div>
 <p>表の値は2020年の国勢調査による（出典2）。東京都の昼間人口は夜間人口を約270万人上回る（本書による算出値）。この差は主に埼玉県・千葉県・神奈川県からの通勤・通学者である。3県の昼夜間人口比率が全国の下位3位を占めるのはこのためである。政令指定都市で最も高いのは大阪市の132.5で、最も低いのは川崎市の83.6である（2020年、出典2）。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/06_local-survey-marunouchi.jpg" width="1000" height="772" loading="lazy" alt="東京駅と丸の内のオフィス街を上空から見た写真">
+<figcaption>東京駅を手前にして丸の内地区を上空から見た写真である。駅舎の奥に大型のオフィスビルが並び、明るい色の建物は東京中央郵便局である。この地区を含む千代田区は昼夜間人口比率が全国の市区町村で最も高く、通勤者を集める中心地の典型である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Aerial_view_of_Marunouchi_district_near_Tokyo_Station.jpg">作者不明</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 489" role="img" aria-label="東京圏の主な市区の昼夜間人口比率">
 <clipPath id="j06ac"><rect x="0" y="0" width="720" height="488.6"/></clipPath>
@@ -155,6 +161,12 @@
 <tr><td>集落と旧街道</td><td>駅を中心とする市街地</td><td>鉄道の開通と駅前の商業集積</td></tr>
 </tbody></table></div>
 <p>地図記号も時代とともに追加と削除が行われてきた。国土地理院によると、図式は明治以降20回以上変更されている（出典11）。現行の2万5千分の1地形図は平成25年図式による（出典11）。新しく設けられた記号には図書館と博物館（2002年）・風車と老人ホーム（2006年）・自然災害伝承碑（2019年）がある（出典12）。一方、平成25年図式の植生記号の表に桑畑は無く、工場は記号が定められていない施設として注記で示す（出典18）。解説記事は2013年に両記号が削除されたとする（出典13）。国土地理院時報の報告によると、桑畑の植生記号は直前の平成21年図式にはあって平成25年図式には無い（2014年、出典21）。ただし工場の記号は、2012年の国土地理院の資料で電子国土基本図では既に廃止されたものとして扱われている（出典19）。<strong class="hit">旧版の図の桑畑の記号は、その地域で養蚕が営まれていた手がかりである</strong>。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_local-survey-mulberry.jpg" width="686" height="1000" loading="lazy" alt="1918年の日本で桑の葉を摘む人々">
+<figcaption>1918年に日本で撮影された、蚕に与える桑の葉を摘む人々である。生糸の生産が盛んだった時期には台地に桑畑が広がり、旧版の地形図に桑畑の記号として残っている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gathering_Mulberry_Leaves_for_Silkworms.jpg">Cheney Silk Company</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 320" role="img" aria-label="新旧地形図の比較の模式図">
@@ -223,6 +235,12 @@
 </ul></div>
 </div>
 <p>集めたデータは図表と主題図にまとめる。主題図の選び方は第2章で扱った規則に従う。<strong class="hit">人数や店舗数のような絶対値は図形表現図かドットマップで示し、割合や密度のような相対値は階級区分図で示す</strong>。絶対値を階級区分図で塗ると、面積の大きい市町村が目立ち実態と異なる印象を与える。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_local-survey-akiya.jpg" width="1000" height="750" loading="lazy" alt="竹林に囲まれた山口県光市の空き家">
+<figcaption>山口県光市の空き家である。竹が周囲に生い茂り、屋根には落ち葉が積もっている。野外調査では、このような建物の位置と状態をルートマップに記入して空き家の分布を確かめる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Akiya_in_Hikari_2026.jpg">Kuroshio no Neko</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>分析では<strong>相関</strong>と<strong>因果</strong>を区別する。相関とは2つの数値が一緒に増減する関係である。因果とは一方が他方の原因となる関係である。例えば高齢化率の高い地区で空き家率も高い場合、高齢化が空き家の原因とは限らない。駅から遠いという第3の条件が両方を高めている可能性がある。仮説を確かめるには、条件をそろえた地区どうしを比べるか、聞き取りで経緯を確認する。</p>
 <p>GISを使うと、施設からの距離で範囲を描く<strong>バッファ分析</strong>ができる。例えば商店や病院から半径500mの範囲を描き、その外に住む人口を地域メッシュ統計から合算すれば、徒歩圏に店や病院がない人口を求められる。富山市はこの方法を用いて、都心と公共交通沿線の居住推進地区の外に住む人の状況を示している。500m圏内に商業店舗がない居住者は34.4%で、病院・診療所がない居住者は40.2%である（2020年、出典14）。</p>
 
@@ -284,6 +302,12 @@
 
 <p>もう1つの課題が<strong>中心市街地の空洞化</strong>である。中心市街地の空洞化とは、商業・住宅・公共施設が郊外へ移り、駅前などの中心部で空き店舗と空き地が増える現象である。原因と結果は次の図のように連鎖する。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/06_local-survey-aeon.jpg" width="1000" height="562" loading="lazy" alt="水田に囲まれたイオンモール高崎の空中写真">
+<figcaption>国土地理院の空中写真で見た群馬県高崎市のイオンモール高崎である。大型の店舗を広い駐車場が囲み、周囲には水田と住宅が広がる。車での来店を前提とした郊外の大型店は、駅前の商店街から買い物客が移る原因の1つになる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:CKT20111-C11-15_AEON_Mall_Takasaki.jpg">国土地理院（加工：Qurren）</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="中心市街地の空洞化と公共交通の衰退の連鎖">
   <defs><marker id="j06ah4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker>
@@ -327,6 +351,12 @@
 
 <h3>富山市 公共交通を軸とするコンパクトシティ</h3>
 <p><strong>コンパクトシティ</strong>とは、住宅と都市機能を公共交通の沿線や中心部に集め、市街地の広がりを抑えた都市構造である。富山市は鉄軌道などの公共交通を活性化し、その沿線に居住・商業・業務・文化などの機能を集める「お団子と串の都市構造」を掲げる。串が公共交通で、お団子が駅や停留場の周辺の徒歩圏である。施策は公共交通の活性化・公共交通沿線地区への居住促進・中心市街地の活性化の3本柱である（出典14）。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/06_local-survey-portram.jpg" width="1000" height="716" loading="lazy" alt="富山港線の専用軌道を走る富山ライトレールの車両"><img src="../img/06_local-survey-centram.jpg" width="1000" height="750" loading="lazy" alt="富山市の市内電車の環状線を走るセントラム"></div>
+<figcaption>左は旧JR富山港線の線路を引き継いだ富山ライトレールの車両で、専用軌道を走る。右は富山地方鉄道の市内電車のセントラムで、市街地の道路上を走る。2つの路線が都市構造の串にあたる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Toyama_Light_Rail_TLR0600.JPG">Toshinori baba</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Toyama_Chiho_Railway_Centram_9002_03.jpg">Hisagi</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <ul class="tb-tl">
 <li><b>2006年4月</b> 富山ライトレールが開業した（出典20）</li>
 <li><b>2009年12月</b> 市内電車を環状線化した（出典20）</li>
@@ -337,7 +367,19 @@
 
 <h3>上勝町 地域資源を商品にする中山間地域</h3>
 <p>徳島県上勝町は徳島市の中心部から車で約1時間の山間の町である。人口は1,370人で、高齢化率は52.28%である（2024年5月1日現在、出典17）。総面積109.63平方キロメートルの88.3%を山林が占める（出典17）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_local-survey-kamikatsu-tanada.jpg" width="750" height="1000" loading="lazy" alt="上勝町の山あいに広がる棚田と集落">
+<figcaption>徳島県上勝町の山あいの集落と棚田である。急な山の斜面を森林が覆い、谷の底と斜面のわずかな平地に家と水田が並ぶ。町の面積の大部分を山林が占める条件が写真に表れている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:%E6%A3%9A%E7%94%B0_-_Tanada_-_Tokushima_Kamikatsu,_may_2011_(5767092654).jpg">Yuki Shimazu from Tokyo, Japan</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>町の主要作物はみかんであったが、1981年2月の零下13度の異常寒波でみかんの木が全滅した。農協の営農指導員であった横石知二氏が代わりの作物を模索し、1986年に料理に添える葉や花を出荷する<strong>彩（いろどり）事業</strong>が始まった。当初の年商は100万円程度であったが、現在は330種類以上の商材を供給し年商は2億6千万円にのぼるとされる。この値の年度は確認できず（出典17）。高齢者がパソコンを使って働く仕組みが特徴とされる（出典17）。町は2003年に「ゼロ・ウェイスト宣言」を議会で可決し、ごみの分別を2016年に45分別へ拡大した（出典17）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/06_local-survey-zerowaste.jpg" width="828" height="616" loading="lazy" alt="上勝町ゼロ・ウェイストセンター">
+<figcaption>上勝町ゼロ・ウェイストセンターである。ごみを細かく分別して資源として回収する町の取組の拠点で、外壁には形の異なる多数の窓がはめ込まれている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kamikatsucho-zero-waste-center.jpeg">作者名の記載なし</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="tb-tw"><table>
 <thead><tr><th>項目</th><th>富山市</th><th>上勝町</th></tr></thead>
 <tbody>

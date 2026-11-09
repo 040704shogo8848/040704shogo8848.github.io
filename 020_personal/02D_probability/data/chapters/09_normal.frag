@@ -6,6 +6,11 @@
 
 <h2 id="s1">連続型確率変数と確率密度関数</h2>
 <p>第1章のヒストグラムで階級の幅を細かくしていく場面を考える。縦軸を「相対度数÷階級の幅」にとると各柱の面積がその階級の相対度数になり全部の面積の合計は1になる。データの個数を増やしながら幅を0に近づけると柱の上端は1本の曲線に近づく。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/09_normal-galton-box.jpg" width="666" height="1000" loading="lazy" alt="ゴルトンボードの実物"><img src="../img/09_normal-galton-1889.jpg" width="744" height="577" loading="lazy" alt="ゴルトンの著書の装置の図"></div>
+<figcaption>左はゴルトンボードの実物、右はゴルトンが1889年の著書に載せた装置の図である。玉は釘に当たるたびにどちらかの側へ進み、下の仕切りに積もった玉は中央が高い山の形になる。ヒストグラムの階級の幅を細かくすると、その形は正規分布の曲線に近づく。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Galton_box.jpg">Rodrigo.Argenton</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Quincunx_(Galton_Box)_-_Galton_1889_diagram.png">Francis Galton</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>連続した値をとる確率変数を<strong>連続型確率変数</strong>と呼ぶ。連続型確率変数 X に対して次の性質をもつ関数 f(x) を X の<strong>確率密度関数</strong>と呼ぶ。曲線 y＝f(x) を X の<strong>分布曲線</strong>と呼ぶ。</p>
 <ul>
 <li>常に \(f(x)\ge 0\) である</li>
@@ -330,9 +335,19 @@
 
 <h2 id="s7">現実世界の正規分布</h2>
 <p>二項分布を正規分布で近似する公式は18世紀にド・モアブルが硬貨投げの計算から得た。1738年の『偶然の理論』第2版に収められた。19世紀にはガウスが天体観測の誤差の分析に正規分布を用いた。このためガウス分布とも呼ばれる。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/09_normal-de-moivre.jpg" width="842" height="1000" loading="lazy" alt="ド・モアブルの肖像画"><img src="../img/09_normal-doctrine.jpg" width="788" height="1000" loading="lazy" alt="『偶然の理論』第3版の扉"></div>
+<figcaption>左はド・モアブルの肖像画、右は『偶然の理論』の第3版の扉で1756年の刊行である。二項分布を正規分布で近似する公式は1738年の第2版に収められた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Abraham_de_Moivre_by_Joseph_Highmore.jpg">Joseph Highmore</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Abraham_de_Moivre_-_Doctrine_of_Chance_-_1756.jpg">Abraham de Moivre</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>工場の品質管理では製品の寸法の平均から上下に3σの位置に管理限界線を引く方式が広く使われる。正規分布なら管理限界を超える製品は約0.3%なので超えた場合は工程の異常を疑う。一方で株価の日次変化率は正規分布より裾が厚い。正規分布を仮定すると大きな下落の確率を過小に見積もる。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/09_normal-gauss.jpg" width="784" height="1000" loading="lazy" alt="ガウスの肖像画"><img src="../img/09_normal-gauss-stamp.jpg" width="720" height="840" loading="lazy" alt="ガウスの記念切手"></div>
+<figcaption>左はガウスの肖像画、右は没後100年の1955年に西ドイツで発行された記念切手である。ガウスが天体観測の誤差の分析に正規分布を用いたため、正規分布はガウス分布とも呼ばれる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Carl_Friedrich_Gauss_1840_by_Jensen.jpg">Christian Albrecht Jensen</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:DBP_1955_204_Carl_Friedrich_Gau%C3%9F.jpg">NobbiP</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 確率密度関数</div>

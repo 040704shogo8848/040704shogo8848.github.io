@@ -313,6 +313,15 @@ function page(meta, body, headings, nav) {
   .tb-fig figcaption::before{content:"図 " counter(fig) " ";font-weight:600;color:var(--ink)}
   .tb-fig svg text{font-family:-apple-system,"Hiragino Sans",sans-serif}
 
+  /* photos (added 2026-11-06; chapters of 012/013 carry photo figures in their Markdown) */
+  .tb-photo img{display:block;width:100%;height:auto;background:#EEE}
+  .tb-photo > img{max-height:640px;object-fit:contain;background:#F3F2EE}
+  .tb-ph2,.tb-ph3{display:grid;gap:2px;background:var(--line)}
+  .tb-ph2{grid-template-columns:1fr 1fr} .tb-ph3{grid-template-columns:1fr 1fr 1fr}
+  .tb-ph2 img,.tb-ph3 img{aspect-ratio:4/3;object-fit:cover}
+  .tb-credit{display:block;margin-top:4px;font-size:11px;color:#8a8a8a}
+  .tb-credit a{color:#8a8a8a}
+
   /* ── key numbers ─────────────────────────────────────────────────────────── */
   .tb-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
     margin:22px 0}

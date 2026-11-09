@@ -48,6 +48,11 @@ thesis: 政治家の顔ぶれは有権者が選ぶ前に、議席配分方式と
 
 衆議院の定数は465人で、内訳は小選挙区選出289人と比例代表選出176人である。参議院の定数は248人である[出典](https://www.soumu.go.jp/senkyo/senkyo_s/naruhodo/naruhodo03.html)。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/ch01_diet.jpg" width="1000" height="666" loading="lazy" alt="夜の国会議事堂">
+<figcaption>夜の国会議事堂。衆議院の定数465人は、小選挙区選出289人と比例代表選出176人で構成される。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:National_Diet_Building_-_Tokyo,_Japan_-_DSC06736.JPG">Daderot</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
+
 小選挙区では289の選挙区それぞれで得票数が最多の候補者1人だけが当選する。比例代表は全国を11ブロックに分け、ブロックごとに政党の得票数をドント式で議席に変換する。ドント式は各党の得票数を1、2、3と順に割り、商の大きい順に議席を配る方法である。政党はあらかじめ順位を付けた名簿を出す拘束名簿式で、小選挙区と比例代表への重複立候補が認められる。名簿で同じ順位に並べられた重複候補は、小選挙区での惜敗率が高い順に復活当選する[出典](https://senkyo.watch/explanation/shu)。
 
 この制度の名前にある並立という語が要点である。小選挙区の結果と比例代表の議席は互いに相殺されない。ドイツが採る併用制では比例の得票率が議席全体の比率を規定するが、日本は2つの配分を独立に計算して足し合わせる。したがって小選挙区側の勝者総取りが全体の比例性を崩す。
@@ -60,6 +65,7 @@ thesis: 政治家の顔ぶれは有権者が選ぶ前に、議席配分方式と
 
 立候補に必要な現金の額は条文で決まっている。
 
+
 | 選挙の種類 | 供託金 | 出典URL |
 | --- | --- | --- |
 | 衆議院小選挙区 | 300万円 | https://faq.city.kobe.lg.jp/faq/show/4026?site_domain=default |
@@ -68,6 +74,12 @@ thesis: 政治家の顔ぶれは有権者が選ぶ前に、議席配分方式と
 | 都道府県議会議員 | 60万円 | https://www.nichibenren.or.jp/library/pdf/document/opinion/2022/221116_2.pdf |
 | 市区議会議員 | 30万円 | https://www.nichibenren.or.jp/library/pdf/document/opinion/2022/221116_2.pdf |
 | 町村議会議員 | 15万円 | https://faq.city.kobe.lg.jp/faq/show/4026?site_domain=default |
+
+<figure class="tb-fig tb-photo">
+<img src="../img/ch01_poster-board.jpg" width="1000" height="750" loading="lazy" alt="衆院選の候補者ポスター掲示場">
+<figcaption>2009年の第45回衆院選で、福島県南相馬市に設けられた福島1区の候補者ポスター掲示場。投票日は8月30日と掲示されている。立候補を届け出た候補者が、番号の枠に1枚ずつポスターを貼る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:General_Election_Poster_Board_in_Minamisoma_20090816.jpg">Kuha455405</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 日本弁護士連合会の意見書は、小選挙区と比例代表に重複立候補する場合、比例分は300万円に減額され合計600万円になると説明している[出典](https://www.nichibenren.or.jp/library/pdf/document/opinion/2022/221116_2.pdf)。供託金は法務局に現金または同額の国債証書で納める必要があり、分割も後払いもできない。
 
@@ -94,6 +106,11 @@ thesis: 政治家の顔ぶれは有権者が選ぶ前に、議席配分方式と
 アダムズ方式の初適用が2022年のいわゆる10増10減である。改正公職選挙法は2022年11月18日に成立し、12月28日に施行された。対象は25都道府県140選挙区で、選挙区間の最大格差は改定前の2.096倍から1.999倍に縮小した[出典](https://www.komei.or.jp/komeinews/p265584/)。
 
 司法は制度を動かした時期と動かさなくなった時期に分かれる。動かした時期は2011年からである。2011年3月23日の最高裁大法廷判決は、2009年衆院選の最大格差2.304倍について、主因を各都道府県にまず1議席を配る一人別枠方式にあるとして違憲状態と判断した。2013年大法廷判決は2012年衆院選を、2015年大法廷判決は2014年衆院選を、いずれも2倍以上の較差を理由に違憲状態とした。この連続した判断が2016年のアダムズ方式導入と定数削減につながっている[出典](https://www.nichibenren.or.jp/document/statement/year/2023/230127.html)。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/ch01_grand-bench.jpg" width="1000" height="750" loading="lazy" alt="最高裁判所の大法廷">
+<figcaption>最高裁判所の大法廷。2011年3月23日の大法廷判決は、2009年衆院選の最大格差2.304倍を違憲状態と判断した。2018年以降の大法廷判決は合憲の判断が続いている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:The_Grand_Bench_of_the_Japanese_Supreme_Court.jpg">Tetsu2266</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 動かさなくなった時期は2018年以降である。2018年大法廷判決は最大格差1.979倍の2017年衆院選を合憲とした。2023年1月25日の大法廷判決は最大格差2.079倍の2021年衆院選を合憲とし、多数意見14に対し反対意見1だった[出典](https://www.nichibenren.or.jp/document/statement/year/2023/230127.html)。2021年衆院選では2倍を超えた選挙区が29あり、2017年衆院選の0から増えていたが、区割り自体は同一である[出典](https://www.nikkei.com/article/DGXZQOUE192QL0Z10C23A1000000/)。2025年9月26日には最大格差2.06倍の2024年衆院選を合憲とする判断が出た。この判決は大法廷に回付されず第二小法廷で言い渡された[出典](https://www.jiji.com/jc/article?k=2025092600721&g=soc)。2026年2月8日の衆院選は最大格差2.10倍で、人口最多は北海道3区の46万2088人、最少は鳥取1区の22万3368人だった。2つの弁護士グループが全国14の高裁と支部に提訴し[出典](https://www.jiji.com/jc/article?k=2026020901424&g=soc)、高裁段階の16件の判決は2026年6月17日に出そろい、すべて合憲だった[出典](https://www.nikkei.com/article/DGXZQOUD171YR0X10C26A6000000/)。
 
@@ -125,6 +142,11 @@ thesis: 政治家の顔ぶれは有権者が選ぶ前に、議席配分方式と
 
 2025年11月4日にニューヨーク市長選、ニュージャージー州知事選、バージニア州知事選が同日実施された。ニューヨーク市は市選挙資金委員会が運営する公費マッチング制度を持ち、市内居住者の小口寄付を寄付者1人あたり最大2,000ドルまでの公費に変換する。公費を受け取る参加候補には800万ドルの支出上限がかかる一方、候補者とは独立に支出する団体に上限はない[出典](https://www.nyccfb.info/program/)。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/ch01_nyc-cityhall.jpg" width="1000" height="666" loading="lazy" alt="ニューヨーク市庁舎"><img src="../img/ch01_mamdani.jpg" width="666" height="1000" loading="lazy" alt="マムダニ"></div>
+<figcaption>左はニューヨーク市庁舎、右は州議会議員だった時期のマムダニである。マムダニは2025年11月の市長選の本選で1,114,184票、50.78%を得た。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:New_York_City_Hall_-_September_2025.jpg">Nielsoncaetanosalmeron</a>／CC BY 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:New_York_State_Assemblymember_Zohran_Mamdani.jpg">Karamccurdy</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 この制度の効き方は民主党予備選の数字に出た。2025年6月23日時点で、34歳のZohran Mamdaniは民間からの調達1,708,494ドル、公的マッチング7,050,417ドル、合計8,758,911ドルを手にしていた。Andrew Cuomoは調達4,009,058ドル、公的マッチング4,255,530ドル、合計8,264,588ドルである[出典](https://en.wikipedia.org/wiki/2025_New_York_City_Democratic_mayoral_primary)。手元資金に占める公費の比率はMamdaniが80.5%、Cuomoが51.5%になる。候補者ベースの総額はほぼ同額で、差は出どころの構成に現れた。ここで注意すべきは、Mamdaniが小口寄付だけで大口資金に勝ったという説明が数字と合わないことである。==民間調達は手元資金の19.5%にすぎず、残りを埋めたのは寄付集めの巧拙ではなく変換制度である==。
 
 候補者の外側は逆の構図だった。Cuomo支援のFix the Cityは2025年6月20日時点で1,600万ドル超を支出し、内訳はCuomo支援が1,050万ドル、Mamdani攻撃が590万ドルである。同団体の調達額は2,400万ドル超で、最大の拠出者はMichael Bloombergの830万ドルだった。2025年の市予備選全体の外部支出3,580万ドルのうち、同団体が半分近くを占めた[出典](https://www.cityandstateny.com/politics/2025/06/pro-cuomo-pac-responsible-nearly-half-all-outside-spending-across-all-nyc-primary-elections-year/406209/)。この外部資金は勝敗には結びついていない。
@@ -138,6 +160,11 @@ thesis: 政治家の顔ぶれは有権者が選ぶ前に、議席配分方式と
 ## 投票率と議席数の非線形性から選挙を先行指標として読む
 
 制度が候補者を絞り込んだあと、最後に残る変数が投票率である。ここには単純な比例関係がない。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/ch01_polling-station.jpg" width="1000" height="614" loading="lazy" alt="熊谷市民ホールの投票所">
+<figcaption>埼玉県熊谷市の市民ホールに設けられた投票所。2024年10月27日の衆院選の投票日に撮影された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Polling_station,_Kumagaya_City_Civic_Hall_-_Oct_27,_2024.jpg">Nori Norisa</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 東京都議会議員選挙は定数127で、4年ごとに単独日程で実施される。1965年の議会解散に伴う選挙以降、統一地方選挙の日程から外れているため、国政選挙の直前に単独で置かれることが多い。この位置が都議選を国政の先行指標として読む慣行を生んだ。
 

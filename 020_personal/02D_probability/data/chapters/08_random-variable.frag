@@ -188,6 +188,11 @@
 <p class="an-x">現実の株価どうしは独立ではないので分散は半分まで下がらない。</p>
 </aside>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/08_random-two-dice.jpg" width="1000" height="625" loading="lazy" alt="5と4の目が出た2個のさいころ">
+<figcaption>2個のさいころを投げて5と4の目が出たところである。2個の目をそれぞれ確率変数 X と Y とすると、和 X＋Y の期待値は X と Y の期待値の和で7になる。2個のさいころの目は互いに影響しないので X と Y は独立である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:A_throw_of_two_dice_as_in_the_game_of_hazard_IMG_1705s.jpg">JonRichfield</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s6">二項分布</h2>
 <p>1回の試行で事象 A が起こる確率を p とする。この試行を n 回くり返す反復試行で A が起こる回数を X とする。第6章の反復試行の確率から X の確率分布は次の式で表される。ここで \(q=1-p\) である。</p>
 \[ P(X=r)={}_n\mathrm{C}_r\,p^r q^{\,n-r}\qquad (r=0,1,2,\ldots,n) \]
@@ -280,11 +285,21 @@
 <p class="an-x">実際の打席は相手投手や球場で確率が変わるので独立で同じ確率という仮定は近似である。</p>
 </aside>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/08_random-coin.jpg" width="750" height="1000" loading="lazy" alt="投げ上げた硬貨">
+<figcaption>投げ上げた硬貨である。表か裏かの2通りをとる1回の試行はベルヌーイ試行と呼ばれる。同じ硬貨を n 回投げたときの表の回数は二項分布に従う。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Coin_tossing.JPG">Филип Романски</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s7">現実世界の確率変数</h2>
 <p>二項分布の考え方は品質管理と保険と臨床試験の計算の出発点である。不良品率 p の工程から n 個を検査したときの不良品の個数は B(n, p) で表される。不良品率2%の工程から50個を抜き取ると不良品の個数 X は B(50, 0.02) に従い期待値は1個である。1個も含まれない確率は 0.98<sup>50</sup>≒0.364 で2個以上含まれる確率は約0.264 である。期待値が1個でも3回に1回以上は不良品を1個も検出できない。抜き取る個数を決めるときはこの確率を計算して検査の見逃しを評価する。保険会社は1件あたりの支払額を確率変数とみて期待値に経費を加えて保険料を定める。加入者が多いほど1人あたりの支払額の平均の散らばりが小さくなる。この性質は第10章の大数の法則で扱う。</p>
 <aside class="an an-rw"><b>現実世界</b>
 <p>反復試行の成功回数を体系的に扱った最初の書物の1つはヤコブ・ベルヌーイの『推測術』である。ベルヌーイの没後の1713年に刊行され試行回数を増やすと相対度数が確率に近づく定理を含む。1回の試行で成功か失敗の2通りをとる試行は現在でもベルヌーイ試行と呼ばれる。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/08_random-jakob-bernoulli.jpg" width="855" height="1000" loading="lazy" alt="ヤコブ・ベルヌーイの肖像"><img src="../img/08_random-ars-conjectandi.jpg" width="1000" height="979" loading="lazy" alt="『推測術』の扉"></div>
+<figcaption>左はヤコブ・ベルヌーイの肖像、右は没後の1713年にバーゼルで刊行された『推測術』の扉である。この本は試行の回数を増やすと相対度数が確率に近づく定理を含む。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Jakob_Bernoulli.jpg">Niklaus Bernoulli</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Arsconj.gif">Jakob Bernoulli</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ Σ の計算</div>

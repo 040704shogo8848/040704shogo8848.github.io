@@ -162,6 +162,11 @@
 
 <p>典型的な誤りは区間を分けずに \( \int _{0}^{2}(x^{2}-1)\,dx=\frac{8}{3}-2=\frac{2}{3} \) を面積と答えることである。定積分は符号つきの面積で \( x \) 軸の下の部分を差し引いた値である。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/07_integral-planimeter.jpg" width="1000" height="666" loading="lazy" alt="ドイツ製の極プラニメーター">
+<figcaption>ドイツ製の極プラニメーターである。地図上の図形の輪郭をなぞると、目盛りの読みから面積が求まる。曲線で囲まれた面積を測る道具で、地図の作成に使われた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Compensating_Polar_Planimeter_(30880918835).jpg">Central Intelligence Agency from Washington, D.C.</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s5">2曲線の間の面積</h2>
 <p>区間 \( a\leqq x\leqq b \) で \( f(x)\geqq g(x) \) のとき2曲線 \( y=f(x) \)・\( y=g(x) \) と2直線 \( x=a \)・\( x=b \) で囲まれた部分の面積は次の式で求まる。</p>
 \[ S=\int_a^b\{f(x)-g(x)\}\,dx \]
@@ -242,6 +247,11 @@
 
 <h2 id="s7">現実世界の積分 アルキメデスの求積</h2>
 <p>放物線と弦で囲まれた弓形の面積を最初に求めたのは紀元前3世紀のアルキメデスである。著作『放物線の求積』で弓形の面積は弦の両端と弦に平行な接線の接点を頂点とする三角形の面積の \( \frac{4}{3} \) 倍であると証明した。証明には取り尽くし法を使い面積が \( \frac{4}{3} \) 倍より大きいと仮定しても小さいと仮定しても矛盾が生じることを示した。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/07_integral-archimedes.jpg" width="750" height="1000" loading="lazy" alt="フェッティが描いたアルキメデス"><img src="../img/07_integral-palimpsest.jpg" width="665" height="448" loading="lazy" alt="アルキメデスの写本の1ページ"></div>
+<figcaption>左はドメニコ・フェッティが1620年に描いたアルキメデス、右はアルキメデスの著作の写本の1ページである。右は『浮体について』のページで、文字の上に別の文書が書かれたパリンプセストとして伝わった。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Domenico-Fetti_Archimedes_1620.jpg">Domenico Fetti</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Archimedes_Palimpsest.jpg">Matthew Kon</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>例題6の図形で確かめる。弦の傾きは1なので傾き1の接線の接点は \( y'=2x=1 \) から \( C(\frac{1}{2}, \frac{1}{4}) \) である。弦の両端 \( (-1, 1) \) と (2, 4) と \( C \) の3点を頂点とする三角形の面積は \( \frac{27}{8} \) である。弓形の面積 \( \frac{9}{2} \) との比は \( \frac{9}{2}\div \frac{27}{8}=\frac{4}{3} \) となりアルキメデスの結果と一致する。</p>
 
 <figure class="tb-fig">
@@ -286,6 +296,11 @@
 <aside class="an an-rw"><b>現実世界</b>
 <p>学習指導要領解説は放物線とみなせる曲線と直線で囲まれた左右対称の窓の面積を求める問題を活用の例に挙げている。建築の窓やアーチの面積は \( \frac{1}{6} \) 公式で即座に求まる。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/07_integral-parabolic-window.jpg" width="750" height="1000" loading="lazy" alt="放物線アーチの窓">
+<figcaption>スペイン・テラサにあるマシア・フレイシャの、放物線アーチの窓である。上辺が放物線で下辺が直線の図形の面積は、本文の 1/6 公式で求められる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:058_Masia_Freixa_(Terrassa),_finestra_d%27arc_parab%C3%B2lic_del_segon_pis.jpg">Enric</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 定積分の計算</div>

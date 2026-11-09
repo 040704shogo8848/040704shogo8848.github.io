@@ -41,6 +41,11 @@
 
 <h3>アジア・アフリカ会議と非同盟</h3>
 <p>独立した国々は米ソのどちらの陣営にも属さない立場を模索した。1954年に中国の周恩来とインドのネルーが会談し、領土と主権の尊重・相互不侵略・内政不干渉・平等互恵・平和共存の<strong>平和五原則</strong>を確認した。翌1955年4月にはインドネシアのバンドンで<strong>アジア・アフリカ会議</strong>が開かれ、29か国が参加した（出典9）。会議は基本的人権の尊重・主権と領土保全の尊重・人種と国家の平等・内政不干渉・紛争の平和的解決などを含む<strong>平和十原則</strong>を採択した（出典10）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/07_cw-bandung.jpg" width="640" height="453" loading="lazy" alt="アジア・アフリカ会議の会場に並ぶ各国の代表">
+<figcaption>1955年4月、インドネシアのバンドンで開かれたアジア・アフリカ会議の各国の代表。軍服・洋装・民族衣装の人々が並び、独立したばかりの国々の多様さが分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Asian%E2%80%93African_Conference_at_Bandung_April_1955.jpg">Unknown author</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>日本もこの会議に参加した。代表は経済審議庁長官の高碕達之助である（出典10）。西側陣営に属する日本は、冷戦の対立をめぐる議論から距離を置き、アジア諸国との経済関係の回復を重視した。高碕と周恩来の会談は戦後の日中間の接触の始まりとなった。</p>
 <p>1961年9月にはユーゴスラビアのベオグラードで第1回<strong>非同盟諸国首脳会議</strong>が開かれ、25か国が参加した（出典11・21）。主導したのはユーゴスラビアのティトー・インドのネルー・エジプトのナセル・インドネシアのスカルノ・ガーナのエンクルマである。米ソの陣営に対してこれらの国々をまとめて<strong>第三世界</strong>と呼ぶ。第三世界は冷戦の外にいたのではない。米ソの双方から援助を引き出しながら国家建設を進めた。指導要領が「アジア・アフリカ諸国が国際関係の変化に主体的に対応して国家建設を進めた」と述べるのはこの点である。</p>
 
@@ -58,6 +63,11 @@
 
 <h3>朝鮮戦争</h3>
 <p>朝鮮半島は日本の敗戦後に北緯38度線を境として北をソ連が、南をアメリカが占領した。1948年に南に大韓民国、北に朝鮮民主主義人民共和国が成立した。1950年6月25日に北朝鮮軍が38度線を越えて南下し、<strong>朝鮮戦争</strong>が始まった（出典5）。国連の安全保障理事会はソ連が欠席するなかで北朝鮮の武力攻撃を平和の破壊と認め（出典23）、アメリカ軍を主力とする国連軍が派遣された。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/07_cw-inchon.jpg" width="798" height="1000" loading="lazy" alt="はしごで岸壁を登るアメリカ海兵隊" style="max-height:620px;object-fit:contain">
+<figcaption>1950年9月15日の仁川上陸作戦で、木のはしごを掛けて岸壁を登るアメリカ海兵隊。国連軍はこの上陸で北朝鮮軍の背後を突き、戦局を逆転させた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Lopez_scaling_seawall.jpg">Unknown Marine</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 480" role="img" aria-label="朝鮮戦争の経過と休戦ライン">
@@ -138,6 +148,11 @@
 <h3>ベトナム戦争</h3>
 <p>インドシナ戦争はフランスが1954年のディエンビエンフーの戦いに敗れて終わった。同年のジュネーヴ協定で北緯17度線を暫定的な軍事境界線とし、統一選挙を行うことが定められた。アメリカは協定に加わらず、南にベトナム共和国を支援して選挙は実施されなかった。1960年に南ベトナム解放民族戦線が結成されて内戦が拡大した。</p>
 <p>アメリカは1964年のトンキン湾事件を口実に介入を深め、1965年に北ベトナムへの爆撃（北爆）を本格化して地上部隊を大規模に派遣した。これを<strong>ベトナム戦争</strong>と呼ぶ。1968年のテト攻勢で戦争の長期化が明らかになり、アメリカ国内で反戦運動が広がった。1973年のパリ和平協定でアメリカ軍は撤退し、1975年にサイゴンが陥落して翌1976年に南北が統一された。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/07_cw-rolling-thunder.jpg" width="1000" height="750" loading="lazy" alt="編隊で爆弾を投下するF-105戦闘爆撃機">
+<figcaption>北ベトナムへの爆撃で、編隊を組んで爆弾を投下するアメリカ空軍のF-105戦闘爆撃機。1965年に本格化した北爆はこうした航空機によって行われた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:F-105s_bombing_during_Operation_Rolling_Thunder.jpg">US Air Force</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>犠牲者数の推計は大きく分かれる。ベトナム政府が1995年に公表した数値は北ベトナム軍と解放戦線の死者110万人・南北の民間人の死者200万人である（出典6）。アメリカの研究者ルーウィーの1978年の推計は1965年から1974年の死者を約135万人とする（出典6）。アメリカ軍の死者はアメリカ国立公文書館の記録で58,220人である（出典6）。韓国も派兵し、韓国軍の公式統計で戦死者は5,099人である（出典6）。</p>
 <p>日本は戦闘には加わらなかったが、アメリカの施政下にあった沖縄の基地は爆撃機の拠点と後方支援の基地として使われた（出典22）。日本本土でもアメリカ軍への物資の供給による需要が生じた。一方で1965年にはベトナムに平和を！市民連合（ベ平連）が結成され、市民の反戦運動が広がった。</p>
 
@@ -152,6 +167,11 @@
 
 <h2 id="s3">核兵器の拡大と管理</h2>
 <p>アメリカは1945年に原子爆弾を開発し、ソ連は1949年に原爆の実験に成功した。両国は1950年代に水素爆弾を開発し、核兵器の数を競って増やした。これを<strong>軍備拡張競争</strong>（軍拡競争）と呼ぶ。1954年にはアメリカのビキニ環礁での水爆実験で日本の漁船第五福竜丸が被ばくし、翌1955年に広島で第1回原水爆禁止世界大会が開かれた。核兵器の脅威は日本の市民運動の出発点の1つになった。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/07_cw-ivy-mike.jpg" width="1000" height="747" loading="lazy" alt="太平洋の環礁で行われた最初の水爆実験のきのこ雲"><img src="../img/07_cw-fukuryu-maru.jpg" width="750" height="1000" loading="lazy" alt="展示館に保存されている第五福竜丸の船首" style="object-position:50% 18%"></div>
+<figcaption>左は1952年にアメリカがエニウェトク環礁で行った最初の水爆実験「マイク」のきのこ雲で、威力は1,040万トンのTNT火薬に相当した。右は東京都の展示館に保存されている第五福竜丸の船首で、1954年のビキニ環礁の水爆実験で乗組員が被ばくした。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:IvyMike2.jpg">National Nuclear Security Administration</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Daigo_Fukury%C5%AB_Maru_01.JPG">carpkazu</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 320" role="img" aria-label="アメリカとソ連の核弾頭の保有数の推移">
@@ -188,6 +208,11 @@
 
 <h3>キューバ危機から核管理へ</h3>
 <p>1959年のキューバ革命でカストロ政権が成立し、アメリカと対立してソ連に接近した。1962年10月にソ連がキューバに中距離ミサイルの基地を建設していることが判明した。アメリカのケネディ大統領は海上封鎖でソ連の船の接近を阻み、米ソは核戦争の寸前まで緊張した。これを<strong>キューバ危機</strong>と呼ぶ（出典19）。最終的にソ連はミサイルを撤去し、アメリカはキューバに侵攻しないことを約束した。アメリカがトルコに配備したミサイルを撤去することも非公表の形で合意された（出典19）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/07_cw-cuba-missiles.jpg" width="1000" height="966" loading="lazy" alt="キューバのミサイル基地を写した偵察写真">
+<figcaption>1962年11月1日にアメリカの偵察機が撮影した、キューバのサン・クリストバルの中距離ミサイル基地の第2発射場。かつての発射位置やミサイル用のテント、燃料の運搬車の位置が書き込まれている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Cuban_missiles.jpg">作者名の記載なし</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>危機の後、米ソは偶発的な核戦争を避ける仕組みを整えた。1963年に首脳間の直通回線（ホットライン）が設けられた。同じ1963年8月にはアメリカ・イギリス・ソ連が<strong>部分的核実験禁止条約</strong>（PTBT）に署名した（出典20）。大気圏内・宇宙空間・水中での核実験を禁止し、地下での実験は禁止の対象外とした。フランスと中国は参加しなかった（出典20）。中国は1964年に初の核実験を行った。</p>
 <p>1968年には<strong>核拡散防止条約</strong>（NPT）が調印され、1970年に発効した（出典13）。1967年1月1日より前に核兵器などの核爆発装置を製造して爆発させたアメリカ・ソ連・イギリス・フランス・中国の5か国を核兵器国と定め、それ以外の国が核兵器を新たにもつことを禁止した（出典27）。締約国は国連軍縮部の集計で191か国である（2026年10月閲覧、出典13）。日本は1970年2月に署名し、1976年6月に批准書を寄託した（出典24）。</p>
 
@@ -226,6 +251,11 @@
 <li><b>1972年5月</b><strong>沖縄返還</strong>が実現した。ただしアメリカ軍の基地は返還後も残った（出典22）</li>
 <li><b>1972年9月</b>田中角栄内閣が<strong>日中共同声明</strong>で中華人民共和国と国交を正常化した</li>
 </ol>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/07_cw-anpo.jpg" width="880" height="380" loading="lazy" alt="国会議事堂の前で横転し焼けた車両">
+<figcaption>1960年の安保闘争で、国会議事堂の前に横転して焼けた車両。条約の改定に反対する人々が国会を取り巻き、警察と衝突した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:1960_Protests_against_the_United_States-Japan_Security_Treaty_04.jpg">Unknown author</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>日韓基本条約の第2条は、1910年の韓国併合条約などが「もはや無効」であると確認した。この文言の解釈は日韓で異なる。韓国は締結の当初から無効であったと解釈し、日本は締結時には有効であり後に効力を失ったと解釈する（出典12）。東南アジアの国々とは1950年代に賠償協定を結び、賠償の支払いは日本企業の製品と役務の提供で行われた。賠償がのちの日本企業の東南アジア進出の契機になったとする見方がある。</p>
 
 <div class="ex"><div class="ex-h">例題 4</div>
@@ -237,6 +267,11 @@
 
 <h3>西ヨーロッパの統合</h3>
 <p>1950年にフランス外相シューマンが石炭と鉄鋼の共同管理を提案した（シューマン宣言）。1951年にフランス・西ドイツ・イタリア・オランダ・ベルギー・ルクセンブルクの6か国が条約に署名し、1952年に<strong>ヨーロッパ石炭鉄鋼共同体</strong>（ECSC）が発足した（出典14）。石炭と鉄鋼は兵器生産に欠かせない資源であり、仏独が共同で管理すれば両国の戦争が起きにくくなる。これが石炭と鉄鋼から統合を始めた理由である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/07_cw-ecsc.jpg" width="1000" height="811" loading="lazy" alt="ECSC最高機関の初会合で話し合うモネとエッツェル">
+<figcaption>1952年、ECSC（ヨーロッパ石炭鉄鋼共同体）の最高機関の初会合で話し合う議長ジャン・モネと副議長フランツ・エッツェル。フランス人のモネと西ドイツ人のエッツェルが並ぶ姿は、仏独が石炭と鉄鋼を共同で管理する体制を示す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Franz_Etzel_and_Jean_Monnet_(1952).jpg">Unknown author</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>1957年に6か国はローマ条約に署名し、1958年に<strong>ヨーロッパ経済共同体</strong>（EEC）とヨーロッパ原子力共同体が発足した（出典14）。1967年には3つの共同体の執行機関が統合されて<strong>ヨーロッパ共同体</strong>（EC）となり、1968年に域内の関税を撤廃して域外に共通関税を課す関税同盟が完成した（出典15）。EEC に加わらなかったイギリスは1960年に<strong>ヨーロッパ自由貿易連合</strong>（EFTA）を結成したが、のちに EC への加盟に転じ1973年にアイルランド・デンマークとともに加盟した。</p>
 
 <figure class="tb-fig">
@@ -328,6 +363,11 @@
 <h3>成長の要因</h3>
 <p>成長の要因は国際環境と国内の条件に分けて整理できる。国際環境では、冷戦のもとでアメリカが日本を西側の工業国として育てる方針をとり、市場と技術を提供した。1949年に定められた1ドル＝360円の固定相場は、日本の生産性が上がるにつれて輸出に有利な水準となった。中東から安価な石油を大量に輸入でき、エネルギー源は石炭から石油へ転換した（エネルギー革命）。国内では、高い貯蓄率を背景に企業が設備投資を拡大し、農村から都市へ若い労働力が移動した。太平洋岸に製鉄所と石油化学のコンビナートが建設され、鉄鋼・造船・自動車・電気機械などの重化学工業が成長した。</p>
 <p>開放経済への移行も進んだ。1964年に日本は国際収支を理由に為替を制限できない IMF 8条国に移行し、経済協力開発機構（OECD）に加盟した。同じ年に東海道新幹線が開業し、東京オリンピックが開かれた（出典18）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/07_cw-shinkansen.jpg" width="1000" height="750" loading="lazy" alt="鉄道博物館に展示された0系新幹線">
+<figcaption>埼玉県の鉄道博物館に展示されている0系新幹線。1964年の東海道新幹線の開業時に走った形式で、展示室は開業当時の駅の様子を再現している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Shinkansen_0_type-21_2_at_the_Railway_Museum.jpg">掬茶</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="高度経済成長の背景と結果">

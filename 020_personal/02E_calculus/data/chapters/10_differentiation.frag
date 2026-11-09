@@ -294,6 +294,11 @@
 <details open><summary>解き方</summary><div>\(\frac{dx}{dt}=1-\cos\;t\) ・ \(\frac{dy}{dt}=\sin\;t\)<br>\(\frac{dy}{dx}=\frac{\sin\;t}{1-\cos\;t}\)（\(\cos\;t\neq 1\)）<br>\(t=\frac{\pi}{2}\) で \(\frac{1}{1-0}=1\)<br>答え \(\frac{\sin\;t}{1-\cos\;t}\) ・ 値は 1</div></details></div>
 <p><strong>典型的な誤り</strong>は陰関数の微分で \(y^2\) を 2y として \(\frac{dy}{dx}\) を掛け忘れることである。y は x の関数なので合成関数の微分が必要である。媒介変数表示では分母と分子を逆にする誤りが多い。求めるのは y の変化÷x の変化である。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/10_differentiation-cycloid.jpg" width="869" height="1000" loading="lazy" alt="シゴー・ド・ラフォンのサイクロイドの溝">
+<figcaption>18世紀フランスの物理学者シゴー・ド・ラフォンのサイクロイドの溝である。溝はサイクロイドの形に曲がっている。本文の媒介変数表示 x＝t−sin t・y＝1−cos t で表される曲線である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Cycloide_Sigaud.jpg">JC Maxwell</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s7">高次導関数</h2>
 <p>導関数 \(f'(x)\) をさらに微分したものを<strong>第2次導関数</strong>と呼び \(f''(x)\) ・ \(y''\) ・ \(\frac{d^2y}{dx^2}\) と書く。同様に n 回微分したものを第 n 次導関数と呼び \(f^{(n)}(x)\) と書く。第2次導関数は傾きの変化の速さを表す。第11章ではこれでグラフの凹凸を調べる。</p>
 <div class="tb-tw"><table>
@@ -325,6 +330,21 @@
 <aside class="an an-rw"><b>現実世界</b>
 <p>微分を dx ・ dy で表す記法はライプニッツが1684年の論文で発表した。ニュートンは時間による変化を点で表す記法を使った。分数のように約分できる形の記法が合成関数と逆関数の微分の計算を簡単にした。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_differentiation-fuel-prices.jpg" width="666" height="1000" loading="lazy" alt="ガソリンスタンドの価格表示">
+<figcaption>2012年のオーストリアの高速道路のガソリンスタンドの価格表示である。価格が1％変化したとき需要量が何％変化するかを表す量が価格弾力性で、対数の微分で書ける。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:05_OMV_gas_station_prices_in_Austria_-_gas_prices_in_Europe_2012.jpg">Marek Ślusarczyk</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_differentiation-fluxions.jpg" width="700" height="1000" loading="lazy" alt="『流率法と無限級数』の扉">
+<figcaption>ニュートンの『流率法と無限級数』の1736年の英語版の扉である。ニュートンが生前に公表しなかった流率法の著作で、没後に刊行された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:The_method_of_fluxions_and_infinite_series_cover.jpg">Isaac Newton</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_differentiation-fluxions-page.jpg" width="1000" height="364" loading="lazy" alt="『流率法と無限級数』の本文のページ">
+<figcaption>『流率法と無限級数』の本文のページである。ニュートンは変化する量を流量と呼び、その変化の速さを文字の上の点で表した。微分を dx と dy で表すライプニッツの記法と対照的である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:The_method_of_fluxions_and_infinite_series_p.20.gif">Issac Newton</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s9">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 積の微分</div>

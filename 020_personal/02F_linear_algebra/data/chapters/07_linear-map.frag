@@ -264,9 +264,19 @@
 
 <h2 id="s8">現実世界の線形変換 画面の中の図形</h2>
 <p>行列式の考え方は行列より古い。日本の関孝和は1683年の著作で連立方程式から文字を消去する計算の中で行列式に当たる式を扱った。ドイツのライプニッツも1693年の書簡で同じ考えを示している。行列式は行列という名称が生まれる前から連立方程式の解の公式の一部として扱われた。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph3"><img src="../img/07_seki-portrait.jpg" width="902" height="728" loading="lazy" alt="関孝和の肖像画"><img src="../img/07_seki-hatsubi.jpg" width="1000" height="750" loading="lazy" alt="発微算法の複製"><img src="../img/07_leibniz.jpg" width="810" height="1000" loading="lazy" alt="ライプニッツの肖像"></div>
+<figcaption>左は日本学士院が所蔵する関孝和の肖像画、中央は関孝和が1674年に刊行した『発微算法』の複製、右はフランケが描いたライプニッツの肖像である。行列式に当たる式を扱った関孝和の1683年の著作は、『発微算法』とは別の本である。ライプニッツは1693年の書簡で同じ考えを示した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Seki.jpeg">AMorozov</a>／Public domain 中央：<a href="https://commons.wikimedia.org/wiki/File:Hatsubi_Sanpou.jpg">Momotarou2012</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Christoph_Bernhard_Francke_-_Bildnis_des_Philosophen_Leibniz_(ca._1695).jpg">Christoph Bernhard Francke</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>その解の公式を<strong>クラメルの公式</strong>と呼ぶ。スイスのクラメルが1750年に発表した。2元の場合は \(ax+by=p\) と \(cx+dy=q\) の解が次の形になる。</p>
 \[ x=\frac{\begin{vmatrix} p & b \\ q & d \end{vmatrix}}{\begin{vmatrix} a & b \\ c & d \end{vmatrix}},\qquad y=\frac{\begin{vmatrix} a & p \\ c & q \end{vmatrix}}{\begin{vmatrix} a & b \\ c & d \end{vmatrix}} \]
 <p>分母が係数行列の行列式なので行列式が0なら公式は使えない。第6節の結論と一致する。未知数が多いと計算量が急に増えるので実際の計算には第6章の掃き出し法を使う。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/07_cramer-portrait.jpg" width="884" height="846" loading="lazy" alt="クラメルの肖像"><img src="../img/07_cramer-1750.jpg" width="669" height="880" loading="lazy" alt="クラメル『代数曲線の解析入門』の扉"></div>
+<figcaption>左はクラメルの肖像、右はクラメルが1750年にジュネーヴで出版した『代数曲線の解析入門』の扉である。クラメルの公式はこの本で発表された。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Gabriel_Cramer.jpg">作者不詳</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Cramer_-_Introduction_a_l%27analyse_des_lignes_courbes_algebriques,_1750_-_1262149.jpg">Gabriel Cramer</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>コンピュータの画面で図形を回したり拡大したりする処理は行列の積で計算する。平行移動は 2×2 行列では表せないので座標に1を付け加えた3成分の列ベクトルと 3×3 行列を使う。こうすると平行移動も含めて変換の合成が行列の積1回で済む。</p>
 </aside>

@@ -6,6 +6,11 @@
 
 <h2 id="s1">変量とデータ</h2>
 <p>調査や実験で得た数値や記録の集まりを<strong>データ</strong>と呼ぶ。データを構成する1人1人や1個1個の記録の項目を<strong>変量</strong>と呼ぶ。20人の通学時間を調べれば通学時間が変量である。データに含まれる値の個数を<strong>データの大きさ</strong>と呼びふつう \( n \) で表す。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/01_data-hollerith-machine.jpg" width="1000" height="902" loading="lazy" alt="ホレリスの集計機の複製"><img src="../img/01_data-punched-card.jpg" width="1000" height="448" loading="lazy" alt="ホレリスの穿孔カード"></div>
+<figcaption>左はホレリスの国勢調査用集計機の複製、右はこの集計機で使った穿孔カードである。カードの穴の位置が1人分の記録を表す。機械はカードの穴を電気で検出し、項目ごとの件数を文字盤に数えた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Hollerith_census_machine_at_CHM_by_Tomwsulcer.jpg">Tomwsulcer</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:Hollerith_Punched_Card.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>変量を \( x \) とし \( n \) 個の値を \( x_1,x_2,\ldots,x_n \) と書く。添え字は何番目の値かを示す番号であり値の大小とは関係ない。</p>
 <p>変量には2種類ある。身長や得点のように数値で測る変量を<strong>量的変量</strong>と呼ぶ。血液型や好きな球団のようにいくつかの分類のどれに入るかを記録する変量を<strong>質的変量</strong>と呼ぶ。平均値は量的変量にだけ計算できる。質的変量を番号で記録しても番号の平均には意味がない。</p>
 <div class="ex"><div class="ex-h">例題 1</div>
@@ -16,6 +21,11 @@
 <p>ある高校の生徒20人に通学時間を聞き小さい順に並べると次のようになった。単位は分である。</p>
 <div class="fx">8 12 15 18 20 22 24 25 27 28 30 32 33 35 38 40 45 50 55 78<small>このデータを本章と第2章で繰り返し使う。合計は635である。</small></div>
 <p>値を1つずつ眺めても全体の形は判別しにくい。そこで値の範囲をいくつかの区間に分けて各区間に入る個数を数える。この区間を<strong>階級</strong>と呼び区間の幅を<strong>階級の幅</strong>と呼ぶ。各階級に入る値の個数を<strong>度数</strong>と呼ぶ。階級の中央の値を<strong>階級値</strong>と呼ぶ。階級ごとに度数を並べた表が<strong>度数分布表</strong>である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_data-census-1890.jpg" width="622" height="480" loading="lazy" alt="1890年の国勢調査の集計作業の図">
+<figcaption>1890年のアメリカの国勢調査で電気式の集計機を使う様子を描いた図である。カードを1枚ずつ機械にかけて、項目ごとの度数を数えた。度数分布表の度数を数える作業を機械で行ったものである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:1890_Census_Hollerith_Electrical_Counting_Machines_Sci_Amer.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-tw"><table>
 <thead><tr><th>階級 分</th><th>階級値</th><th>度数</th><th>相対度数</th><th>累積度数</th><th>累積相対度数</th></tr></thead>
 <tbody>
@@ -31,6 +41,11 @@
 </tbody></table></div>
 <p>表の階級はすべて「以上・未満」で区切る。20分ちょうどの生徒は20〜30の階級に入り10〜20には入らない。<strong class="hit">境界の値がどちらの階級に入るかは度数を数える前に必ず確かめる</strong>。境界の値の扱いを読み違えると度数が1つずれる。</p>
 <p>度数分布表を柱状のグラフにしたものが<strong>ヒストグラム</strong>である。横軸に階級をとり各階級の上に度数に比例する高さの長方形を隙間なく並べる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_data-pearson-desk.jpg" width="1000" height="694" loading="lazy" alt="机に向かうカール・ピアソン">
+<figcaption>1910年、ユニバーシティ・カレッジ・ロンドンで机に向かうカール・ピアソンである。ヒストグラムという名称は、ピアソンが1890年代の講義で用いたのが始まりとされる。第3章で扱う相関係数の形を整えた人物でもある。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Karl_Pearson,_Biometrician,_at_his_desk,_1910_Wellcome_M0011713.jpg">Wellcome Collection</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="通学時間20人のヒストグラムと3つの代表値">
 <line x1="70" y1="250" x2="630" y2="250" stroke="var(--ink)"/>

@@ -16,6 +16,12 @@
 </tbody></table></div>
 <p>主権が及ばない空間も3つある。どの国の領海にも排他的経済水域にも含まれない<strong>公海</strong>・宇宙空間・南極大陸である。公海ではどの国の船も航行と漁業を原則として自由に行える。南極については1959年に<strong>南極条約</strong>が署名され、1961年に発効した。条約の第4条は、有効期間中の新たな領有権の主張と既存の主張の拡大を認めていない（出典4）。アルゼンチン・オーストラリア・チリ・フランス・ニュージーランド・ノルウェー・英国の7か国が領有権を主張しているが、その主張は凍結された状態にある（出典4）。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/01_territory-mcmurdo.jpg" width="1000" height="750" loading="lazy" alt="航空機から見た南極のマクマード基地">
+<figcaption>航空機から見た南極大陸のマクマード基地である。雪と氷に覆われた土地の手前に、黒い岩の丘と基地の建物が見える。南極では各国が観測基地を置いて活動するが、南極条約により新たな領有権の主張は認められていない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:McMurdo,_seen_from_an_LC-130.jpg">Alan Light</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <div class="ex"><div class="ex-h">例題 1</div>
 <p>次の記述の正誤を判定せよ。「ある国の排他的経済水域の上空を外国の旅客機が通過するには、その国の許可が要る。」</p>
 <details open><summary>解き方</summary><div>手順1 領空の範囲を確認する。領空は領土と領海の上空である。<br>手順2 排他的経済水域は領海の外側にあるので、その上空は領空ではない。<br>手順3 領空でない空では外国の航空機の上空飛行は自由である。<br>答え 誤り。</div></details></div>
@@ -99,6 +105,12 @@
 <p>この表から2つの数値が導かれる。南北の緯度差は約25度で、距離に直すと約2,800kmである。東西の経度差は約31度で、時差に直すと約2時間にあたる（いずれも本書による算出値）。それでも日本の標準時は1つである。第0章で扱ったとおり、日本は東経135度の時刻を全国で用いる。</p>
 <p>東端・南端・北端の3つが東京都と北海道の離島であることに注目する。<strong class="hit">日本の端の島はどれも本州から遠く離れ、その周りに広い排他的経済水域を生む</strong>。沖ノ鳥島と南鳥島は小さな島であるが、日本の海域の外縁を決める。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/01_territory-yonaguni.jpg" width="1000" height="750" loading="lazy" alt="与那国島の日本最西端之地の碑">
+<figcaption>沖縄県与那国島に立つ「日本最西端之地」の碑である。与那国島は東経122度55分にあり、ここから東端の南鳥島までの経度差は約31度になる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:The-westernmost-monument-yomaguni.jpg">Tokyo-Good</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 662" role="img" aria-label="日本の領域と東西南北端・竹島・尖閣諸島の位置">
 <clipPath id="j01ac"><rect x="0" y="0" width="720" height="662"/></clipPath>
@@ -141,6 +153,12 @@
 <p>国土地理院は2023年2月28日に、日本の島の数を14,125と公表した（出典39）。電子国土基本図に描かれた周囲長0.1km以上の陸地のうち、自然に形成されたものなどを数えた結果である。これまで広く用いられた6,852島（海上保安庁、1987年公表）との差は、主に測量技術の進歩による地図表現の詳細化による（出典39）。</p>
 <p>沖ノ鳥島は満潮時に海面上に出る部分がわずかな島である。日本は護岸を整備して侵食を防ぎ、国連海洋法条約上の島としてEEZを設定している。これに対し中国などは第121条3項の岩にあたると主張している。島か岩かの判断で、最大で国土を上回る広さの海域の扱いが変わる。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/01_territory-okinotori.jpg" width="1000" height="750" loading="lazy" alt="沖ノ鳥島の鋼製の消波ブロックとコンクリートの護岸">
+<figcaption>沖ノ鳥島の護岸である。手前のコンクリートの面の向こうに、波の力を弱める消波ブロックが並ぶ。島の侵食を防ぐためのこの施設が、島として排他的経済水域を設定する前提を支えている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Okinotorishima_breakwaters_and_concrete_walls.jpg">国土交通省関東地方整備局京浜河川事務所</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">沖ノ鳥島はファウルポールである</p>
 <p>ポール自体は細いが、立つ位置でフェアゾーンの広さが決まる。島の陸地はわずかでも、その位置から半径200海里の海域が決まる。</p>
@@ -155,6 +173,12 @@
 
 <h3>北方領土</h3>
 <p><strong>北方領土</strong>は北海道の根室半島の北東にある択捉島・国後島・色丹島・歯舞群島の4島である。歯舞群島の貝殻島は根室市の納沙布岬から3.7kmの距離にある（出典8）。択捉島は日本最大の離島であり、国後島は2番目に大きい離島である（出典8）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_territory-kuril.png" width="1000" height="562" loading="lazy" alt="国際宇宙ステーションから見た北方領土と北海道東端">
+<figcaption>2015年10月17日に国際宇宙ステーションから撮影した北海道の北東端と北方領土である。北海道の東端から北東へ、歯舞群島・色丹島・国後島・択捉島が連なり、その先にウルップ島がある。1855年の日魯通好条約は択捉島とウルップ島の間に国境を定めた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Southern-Kuril-Islands-ISS-Space.png">NASA, International Space Station</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="tb-tw"><table>
 <thead><tr><th>年</th><th>出来事</th><th>意味</th></tr></thead>
 <tbody>
@@ -170,11 +194,29 @@
 
 <h3>竹島</h3>
 <p><strong>竹島</strong>は島根県の隠岐諸島の北西の日本海にある島々である。日本政府は1905年1月の閣議決定で竹島を隠岐島司の所管と定めて「竹島」と命名し、島根県知事が同年2月22日に告示した（出典10・出典33・出典34）。その後は官有地台帳への登録やあしか猟の許可などで主権を行使した。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_territory-takeshima-sealion.jpg" width="640" height="426" loading="lazy" alt="1934年に竹島で撮影されたニホンアシカ">
+<figcaption>1934年6月に竹島で撮影されたニホンアシカである。本文のあしか猟の対象となった動物で、島根県隠岐郡の竹島の岩の上に2頭が見える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sea_lion_in_Takeshima,_Japan_(June_1934).jpg">作者不明</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>1952年、韓国はいわゆる「李承晩ライン」を一方的に設定し、竹島をその内側に取り込んだ。政府見解では韓国は竹島を不法占拠している（出典9・出典10）。日本は1954年・1962年・2012年の3回、国際司法裁判所に紛争を付託することを韓国に提案したが、韓国はいずれも拒否した（出典11）。国際司法裁判所は当事国双方の同意がなければ審理を始められない（出典38）。</p>
 
 <h3>尖閣諸島</h3>
 <p><strong>尖閣諸島</strong>は沖縄県の石垣島の北方にある魚釣島・北小島・南小島・久場島・大正島などの島々である。日本政府は1885年以降に現地調査を重ね、他国の支配が及ぶ痕跡がないことを確認したうえで、1895年1月14日の閣議決定で日本の領土に編入した（出典12・出典29・出典30）。編入の後は日本人が移住して鰹節工場を営み、一時は200名以上が暮らしていた（出典12）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_territory-senkaku-uotsuri.jpg" width="831" height="405" loading="lazy" alt="上空から見た魚釣島">
+<figcaption>上空から見た尖閣諸島の魚釣島である。周囲は崖と岩の海岸で、島の大部分が植物に覆われている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Senkaku-uotsuri.jpg">作者名の記載なし</a>／Attribution／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>第二次世界大戦後は沖縄の一部として米国の施政下に置かれ、1972年の沖縄返還協定で施政権が日本に返還された。1968年秋に国連アジア極東経済委員会（ECAFE）の協力で東シナ海の海底調査が行われ、1969年に公表された報告書で石油が埋蔵されている可能性が指摘された。その後の1971年に中国と台湾が初めて公式に領有権を主張した（出典12・出典13・出典31）。日本政府は、編入から約75年の間、中国が異議を唱えなかったことを指摘している（出典12）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_territory-senkaku-bonito.jpg" width="1000" height="638" loading="lazy" alt="1910年ごろの魚釣島の鰹節工場と働く人々">
+<figcaption>1910年ごろの魚釣島の鰹節工場と、そこで働く人々である。編入の後に日本人が移住して工場を営んだという本文の記述を示す写真で、建物の前に多数の人が並んでいる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Senkaku_bonito.jpg">作者不明</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <div class="tb-tw"><table>
 <thead><tr><th></th><th>背景</th><th>出来事</th><th>現在の状態</th></tr></thead>
@@ -192,6 +234,12 @@
 
 <h2 id="s5">国境の種類</h2>
 <p>国家の領域どうしの境界が<strong>国境</strong>である。国境は何を目印に引かれたかで2つに分かれる。山脈・河川・湖沼・海洋などの自然の地形に沿う<strong>自然的国境</strong>と、緯線や経線、人工の目印に沿う<strong>人為的国境</strong>である。人為的国境のうち、緯線や経線に沿って直線で引いたものを<strong>数理的国境</strong>と呼ぶ。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_territory-pyrenees.jpg" width="1000" height="750" loading="lazy" alt="霧の中のポルタレ峠の国境の建物">
+<figcaption>ピレネー山脈のポルタレ峠にあるスペインとフランスの国境の建物である。山脈の稜線を越える峠に国境が置かれ、道路はここで隣の国へ通じる。山脈は往来を妨げるので、国境の位置が安定しやすい。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Spain-France_Border_Portalet.jpg">作者名の記載なし</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="tb-tw"><table>
 <thead><tr><th>種類</th><th>目印</th><th>例</th><th>特徴</th></tr></thead>
 <tbody>
@@ -328,6 +376,12 @@
 
 <h3>航空網と人の結び付き</h3>
 <p>国家間の結び付きは物だけでなく人の移動にも表れる。国際線の航空網は大きな空港に路線を集め、そこで乗り継がせる形をとる。この拠点空港を<strong>ハブ空港</strong>と呼ぶ。日本では成田国際空港と東京国際空港（羽田）が首都圏の国際線の拠点である。航空網と海運・観光の統計は第13章で扱う。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_territory-narita.jpg" width="858" height="1000" loading="lazy" alt="成田国際空港の空中写真">
+<figcaption>国土地理院が2022年に撮影した成田国際空港の空中写真である。平行に並ぶ2本の滑走路の間にターミナルと駐機場が配置されている。周囲には畑と林が広がり、首都圏の国際線の拠点が都心から離れた台地の上に置かれていることが分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Narita_International_Airport_Aerial_photograph_2022.jpg">国土地理院</a>／Attribution／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <div class="ex"><div class="ex-h">例題 6</div>
 <p>上の差し引きの表を用いて、日本が最も大きな輸入超過になっている相手と、その理由として最も適当なものを答えよ。</p>

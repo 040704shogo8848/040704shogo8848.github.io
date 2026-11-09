@@ -75,10 +75,25 @@
 <p>1870年代のアフリカでヨーロッパ諸国が支配していたのは、大陸の約10%にとどまった（出典2）。1880年代に入ると、ベルギー国王レオポルド2世のコンゴ進出をきっかけに列強の競争が始まった。</p>
 <p>ドイツの宰相ビスマルクは1884〜85年に<strong>ベルリン会議</strong>を開いた（出典2）。ベルリン会議とは、アフリカの領有の原則を列強が取り決めた国際会議である（出典21）。沿岸を占領した国が後背地の領有を主張するには、その地域を実際に支配していること（<strong>実効支配</strong>）を他国に通告することが条件とされた。この原則が列強の内陸への進出を加速させた。会議はレオポルド2世の国際コンゴ協会がコンゴ盆地で占領した地域の領有を認め、1885年8月にこの地域は国王の私有地である<strong>コンゴ自由国</strong>となった（出典3・21）。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/04_imp-berlin-conference.jpg" width="1000" height="768" loading="lazy" alt="アフリカの地図の前で議論するベルリン会議の代表たち">
+<figcaption>1884年のベルリン会議を描いた同時代の版画。壁に掛けたアフリカの地図の前で、各国の代表が机を囲んでいる。会議に参加したのは列強の代表であり、アフリカの人々の代表は加わっていない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kongokonferenz.jpg">Adalbert von Roessler</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h3>縦断政策と横断政策の衝突</h3>
 <p>イギリスはカイロとケープタウンを結ぶ<strong>縦断政策</strong>を進めた。フランスはサハラ砂漠から西アフリカを押さえ、東のジブチへつなぐ<strong>横断政策</strong>を進めた。両国の進路は1898年に当時のスーダン（現在の南スーダン）のファショダで交差し、軍が対峙した。これが<strong>ファショダ事件</strong>である。フランスが譲歩して衝突は回避された（出典2）。両国はその後ドイツを警戒して接近し、1904年の英仏協商でエジプトとモロッコの勢力圏を認め合った。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_imp-rhodes.jpg" width="759" height="1000" loading="lazy" alt="アフリカ大陸をまたいで立つセシル・ローズの風刺画" style="max-height:620px;object-fit:contain">
+<figcaption>1892年12月10日の雑誌『パンチ』に載った風刺画「ロードスの巨像」。ケープタウンからカイロまで、アフリカ大陸をまたいで立つセシル・ローズを描く。ローズが両都市を結ぶ電信線と鉄道の計画を発表した後の作品であり、イギリスの縦断政策を表している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Rhodes_Colossus_Punch_1892.jpg">Edward Linley Sambourne</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>南アフリカではイギリスが金とダイヤモンドの産地をめぐり、オランダ系移民の子孫の国と戦った（1899〜1902年の<strong>南アフリカ戦争</strong>）。</p>
 <p>抵抗に成功した例もある。エチオピアは1896年のアドワの戦いでイタリア軍を破り、独立を守った（出典2）。<strong class="hit">1914年の時点でアフリカで独立を保っていたのはエチオピアとリベリアの2国だけである</strong>（出典2）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_imp-adwa.jpg" width="1000" height="720" loading="lazy" alt="アドワの戦いを描いたエチオピアの絵画">
+<figcaption>アドワの戦いをエチオピアの伝統的な画法で描いた絵で、戦いの後に描かれたものである。皇帝メネリク2世と皇后タイトゥの率いるエチオピア軍が、イタリア軍の大砲の列と戦っている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ethiopian_painting,_Battle_of_Adwa,_1896.jpg">Unknown artist</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <figure class="tb-fig">
 <svg viewBox="0 0 720 514" role="img" aria-label="1914年のアフリカの植民地の分布">
@@ -149,6 +164,11 @@
 <h2 id="s3">アジア・太平洋の植民地化と中国分割</h2>
 <p>南アジアでは、イギリスが1858年にインドを東インド会社から政府の直轄に移し、1877年にヴィクトリア女王がインド皇帝を兼ねる<strong>インド帝国</strong>を成立させた。インドは綿花・茶・アヘンの供給地であり、イギリス製の綿布の市場でもあった。</p>
 <p>東南アジアでは、タイを除く全域が19世紀末までに植民地となった。タイは東のフランス領と西のイギリス領の間の緩衝地帯となり、国王ラーマ5世（チュラロンコン）の近代化政策もあって独立を保った。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_imp-chulalongkorn.jpg" width="720" height="1000" loading="lazy" alt="軍服を着たラーマ5世の写真" style="max-height:620px;object-fit:contain">
+<figcaption>軍服を着たタイ国王ラーマ5世（チュラロンコン）の写真。近代化政策を進めた国王のもとで、タイは英仏の緩衝地帯として独立を保った。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:King_Chulalongkorn_of_Siam_(PP-69-5-032).jpg">Unknown author</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-tw"><table>
 <thead><tr><th>地域</th><th>支配国</th><th>成立の主な年</th><th>主な産物</th></tr></thead>
 <tbody>
@@ -172,6 +192,11 @@
 <tr><td>フランス</td><td>広州湾（1898年占領・1899年条約）</td><td>広東・広西・雲南</td></tr>
 <tr><td>日本</td><td>なし（福建の不割譲を清に約束させる）</td><td>福建</td></tr>
 </tbody></table></div>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_imp-china-cake.jpg" width="693" height="1000" loading="lazy" alt="中国と書いたケーキを列強の君主が切り分ける風刺画" style="max-height:620px;object-fit:contain">
+<figcaption>1898年1月16日のフランスの新聞『ル・プティ・ジュルナル』の挿絵「中国 王たちと皇帝たちのケーキ」。「CHINE」と書いたケーキを、イギリス・ドイツ・ロシア・フランス・日本を表す人物が切り分けようとし、背後で清の官僚が両手を上げている。列強による租借地と勢力範囲の設定を風刺した図像である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:China,_the_cake_of_kings_and_emperors,_Le_Petit_Journal_1898.jpg">Henri Meyer</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>出遅れたアメリカは1899年に国務長官ジョン・ヘイの名で<strong>門戸開放宣言</strong>を出した（出典5）。門戸開放とは、中国の市場をすべての国に等しく開くよう求める主張である。</p>
 
 <aside class="an an-bb"><b>野球で言えば</b>
@@ -180,6 +205,11 @@
 </aside>
 
 <p>列強の進出とキリスト教の布教に反発した宗教結社の義和団が「扶清滅洋」を掲げて蜂起し、1900年に北京の公使館地区を包囲した。清朝も列強に宣戦したが、日本とロシアを主力とする8か国の連合軍が北京を占領した。これが<strong>義和団戦争</strong>である。1901年の<strong>北京議定書</strong>で、清は4億5,000万両の賠償金を39年かけて支払うこと、公使館地区に外国軍の駐留を認めることを受け入れた（出典6）。ロシアは戦後も中国東北地方に軍を残し、日本との対立を深めた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_imp-eight-nations.jpg" width="1000" height="613" loading="lazy" alt="8か国連合軍の各国の兵士が1列に並んだ写真">
+<figcaption>1900年に天津で撮影された連合軍の兵士。イギリス・アメリカ・オーストラリア・インド・ドイツ・フランス・オーストリア＝ハンガリー・イタリア・日本の兵士が、この順に1列に並んでいる。ロシアの兵士は写っていない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Troops_of_the_Eight_nations_alliance_1900.jpg">Franz Scholz とされる</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 3</div>
 <p>次の資料文が示す国を答えよ。「わが国は清国のいかなる地域についても特定の国が貿易を独占することに反対し、すべての国の通商の機会を等しくすることを求める。」</p>
@@ -199,6 +229,11 @@
 <tr><td>賠償金</td><td>2億両を支払う</td><td>遼東半島の返還の代償3,000万両を加える</td></tr>
 <tr><td>通商</td><td>沙市・重慶・蘇州・杭州を開く</td><td>列強も最恵国待遇で同じ権利を得る</td></tr>
 </tbody></table></div>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_imp-shimonoseki.jpg" width="1000" height="651" loading="lazy" alt="下関条約の文書の署名の頁">
+<figcaption>下関条約の文書の末尾の頁。明治28年4月17日の日付の後に、日本の全権の伊藤博文と陸奥宗光の署名と印がある。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Japan_China_Peace_Treaty_17_April_1895.jpg">World Imaging</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>調印の6日後の4月23日、ロシア・ドイツ・フランスの3国は遼東半島を清に返すよう日本に勧告した（出典8）。これを<strong>三国干渉</strong>と呼ぶ。日本は3国と戦う力がなく勧告を受け入れた。国内では「臥薪嘗胆」が唱えられ、ロシアへの対抗を目標に軍備の拡張が進んだ。その3年後、ロシアは返還された遼東半島の旅順と大連を租借した。</p>
 <p>賠償金と返還の代償金は英貨で支払われ、日本円で約3億6,407万円とされる（出典8）。当時の国家予算は約8,000万円であった（出典8）。賠償金は軍備の拡張・官営八幡製鉄所の建設・1897年の金本位制の確立の準備などに使われた（出典8）。台湾では住民の武力抵抗が続き、日本は台湾総督府を置いて鎮圧と統治を進めた。</p>
 
@@ -221,6 +256,11 @@
 
 <p>1904年2月に<strong>日露戦争</strong>が始まった（出典9）。日本軍は1905年1月に旅順を陥落させ、3月の奉天会戦で勝ち、5月の日本海海戦でロシアのバルチック艦隊を破った（出典9）。日本は兵力と戦費が限界に近づき、ロシアでは1905年に革命運動が起きた。アメリカ大統領セオドア・ローズヴェルトの仲介で、1905年9月5日に<strong>ポーツマス条約</strong>が結ばれた（出典9）。</p>
 <p>条約でロシアは、韓国に対する日本の指導・監督の権利を認めた。旅順・大連の租借権と長春以南の鉄道の権利を日本に譲り、北緯50度以南の樺太（サハリン）を割譲した。賠償金はなかった。講和に反発した民衆が東京で日比谷焼打ち事件を起こした。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_imp-portsmouth.jpg" width="1000" height="789" loading="lazy" alt="長い机を挟んで向き合うポーツマス講和会議の日露の全権団">
+<figcaption>1905年にアメリカのポーツマスで開かれた日露の講和会議。長い机を挟んで、日本とロシアの全権団が向き合っている。仲介したのはアメリカ大統領セオドア・ローズヴェルトである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Portsmouth_Peace_Conference_LCCN2014681351.jpg">Bain News Service, publisher</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>犠牲は大きかった。ある集計では日本側の死者は8万8,429人（うち病死2万7,192人）、ロシア側の死者は8万1,210人とされる（出典9）。日本の戦費は約18億2,629万円であり、ロンドン・ニューヨークなどで1904〜07年に計1億3,000万ポンドの外債を発行した。うち戦費の調達にあたるのは最初の4回の8,200万ポンドである（出典9）。</p>
 
 <aside class="an an-biz"><b>投資で言えば</b>
@@ -347,6 +387,11 @@
 <h3>辛亥革命</h3>
 <p>義和団戦争の後に清朝が進めた政治の改革を<strong>光緒新政</strong>と呼ぶ。1905年に官僚の採用試験である科挙を廃止し、1908年には憲法大綱を発表して立憲制への移行を約束した。明治維新が手本とされ、多くの留学生が日本に渡った（出典12）。</p>
 <p>清朝を倒して共和国を建てようとする革命派も育った。孫文は1894年に興中会を結成し、1905年には東京で革命諸団体を結集して<strong>中国同盟会</strong>を結成した（出典12）。綱領の中心は民族の独立・民権の伸長・民生の安定を説く<strong>三民主義</strong>である。同盟会の会員の多くは日本への留学生であった（出典12）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_imp-sun-yatsen.jpg" width="527" height="720" loading="lazy" alt="孫文の肖像写真" style="max-height:620px;object-fit:contain">
+<figcaption>1911年12月25日に海外から帰国した孫文を、上海の写真館が撮影した写真。孫文は翌年1月に中華民国の臨時大総統に就任した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sun_Yat_Sen_portrait_2.jpg">上海同生照相馆 (K.T. Thompson)</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>1911年5月に清朝が外国からの借款を前提に幹線鉄道の国有化を発表すると、四川などで反対運動が起き、10月10日に武昌で軍隊が蜂起した（出典12）。これが<strong>辛亥革命</strong>の始まりである。各省が次々に清からの独立を宣言し、1912年1月1日に南京で孫文が臨時大総統に就任して<strong>中華民国</strong>の成立を宣言した（出典12）。清朝の実力者の袁世凱は2月12日に宣統帝を退位させ、3月10日に臨時大総統に就任した（出典12）。こうして2,000年余り続いた皇帝の政治が終わった。</p>
 
 <div class="ex"><div class="ex-h">例題 5</div>
@@ -367,6 +412,11 @@
 
 <h3>開発・保全の例 足尾銅山鉱毒事件</h3>
 <p>栃木県の足尾銅山の銅は日本の主要な輸出品であった。一方で鉱山の排水と煙は渡良瀬川流域の農地と山林に被害を与えた。1890年と1896年の洪水で鉱毒が流域の農地に広がった（出典18）。衆議院議員の田中正造は1891年から議会で鉱毒問題を追及し、1901年12月10日には明治天皇への直訴を試みた（出典18）。遊水池の計画により谷中村は1906年に廃村とされた（出典18）。<strong>産業の開発と住民の生活や環境の保全が衝突した日本の公害の原点</strong>とされる事件である。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/04_imp-ashio.jpg" width="900" height="632" loading="lazy" alt="山あいに製錬所の建物が並ぶ足尾銅山"><img src="../img/04_imp-tanaka.jpg" width="784" height="1000" loading="lazy" alt="和服姿の田中正造" style="object-position:50% 18%"></div>
+<figcaption>左は1895年頃の足尾銅山で、山あいに鉱山の建物が並び、煙突から煙が出ている。周囲の山の斜面は木が少ない。右は1901年の田中正造で、この年に明治天皇への直訴を試みた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Ashio_Copper_Mine_circa_1895.JPG">Unknown author</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Tanaka_Sh%C5%8Dz%C5%8D_in_1901.jpg">Unknown author</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 
 <figure class="tb-fig">

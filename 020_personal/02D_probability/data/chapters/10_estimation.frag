@@ -19,6 +19,11 @@
 </ul></div>
 </div>
 <p>標本調査で母集団の性質を正しく推測するには標本が母集団の縮図でなければならない。そのために母集団のどの要素も等しい確率で選ばれるように抽出する。この方法を<strong>無作為抽出</strong>と呼び無作為抽出で得た標本を<strong>無作為標本</strong>と呼ぶ。無作為抽出には乱数さい・乱数表・コンピュータで発生させた乱数を使う。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/10_estimation-d20.jpg" width="750" height="1000" loading="lazy" alt="正二十面体のさいころ"><img src="../img/10_estimation-random-digits.jpg" width="598" height="871" loading="lazy" alt="乱数表『100万個の乱数』の扉"></div>
+<figcaption>左は正二十面体のさいころ、右はランド研究所の乱数表『100万個の乱数』の1955年版の扉である。乱数さいは同じ正二十面体の各面に0から9を2回ずつ記したもので、投げた目を並べて乱数を得る。どちらも無作為抽出に使われてきた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:A_bright_green_twenty-sided_die_(d20).jpg">CoffeePaladin</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:Title_page_of_1955_edition_of_A_Million_Random_Digits_with_100,000_Normal_Deviates.jpg">The RAND Corporation</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>1個取り出すたびに元に戻してから次を取り出す抽出を<strong>復元抽出</strong>と呼ぶ。戻さずに続ける抽出を<strong>非復元抽出</strong>と呼ぶ。復元抽出では各回の結果が独立である。非復元抽出でも母集団の大きさが標本の大きさに比べて十分大きければ取り出すたびの変化は無視できるので復元抽出と同じように扱う。</p>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 260" role="img" aria-label="母集団から標本を無作為抽出し標本から母集団を推定する流れ">
@@ -278,6 +283,11 @@
 <aside class="an an-rw"><b>現実世界</b>
 <p>リテラリー・ダイジェスト誌は約1000万人に投票用紙を郵送し200万通以上を回収した。結果は共和党のランドンが得票率約57%で勝つという予測であった。実際はルーズベルトが60.8%を得て圧勝した。宛先を電話帳や自動車の登録名簿などから選んだため標本が母集団の縮図になっていなかったことが原因とされる。回答を返すかどうかを受け取った人が選んだことによる偏りも原因に挙げられる。約5万人の標本を使ったギャラップはルーズベルトの勝利を当てた。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/10_estimation-fdr-button.jpg" width="1000" height="868" loading="lazy" alt="1936年のルーズベルトの選挙バッジ"><img src="../img/10_estimation-gallup.jpg" width="763" height="1000" loading="lazy" alt="ジョージ・ギャラップ"></div>
+<figcaption>左は1936年の大統領選挙のルーズベルトの選挙バッジ、右は世論調査を行ったジョージ・ギャラップの1961年の写真である。ギャラップは約5万人の標本でルーズベルトの勝利を予測した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Franklin_D_Roosevelt_FDR_campaign_button_for_1936.jpg">作者不詳</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:George_Gallup_1961_(01).jpg">Norman James</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 調査の方法</div>

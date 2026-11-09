@@ -77,6 +77,11 @@
 
 <p>典型的な誤りは3つである。\( \int\frac{1}{x}\,dx \) の絶対値を落とす誤りと \( \int e^{2x}\,dx=e^{2x} \) として \( \frac{1}{2} \) を付け忘れる誤りと \( \int\sin x\,dx=\cos x \) とする符号の誤りである。結果を微分して元に戻るか確かめれば3つとも防げる。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/12_integration-amsler.jpg" width="666" height="1000" loading="lazy" alt="アムスラーの積分器">
+<figcaption>アムスラーの積分器である。図形の輪郭を針でなぞると、目盛り車の回転から面積などの積分の値が得られる。計算機が普及する前に積分を機械で求めた道具である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:CHM_Artifacts_Amsler_Integrator_Model_4282_(3126342999).jpg">Marcin Wichary</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s2">置換積分法</h2>
 <p>合成関数の微分法 \( \{F(g(x))\}'=f(g(x))\,g'(x) \) を逆に読むと次の公式になる。ここで \( F'=f \) である。</p>
 \[ \int f(g(x))\,g'(x)\,dx=\int f(u)\,du\qquad(u=g(x)) \]
@@ -314,6 +319,16 @@
 <aside class="an an-rw"><b>現実世界</b>
 <p>積分記号 ∫ はライプニッツが1675年に私的な草稿で使い始め1686年に論文で公表した。和を意味するラテン語の頭文字 s を縦に伸ばした長い s の字形が由来である。積分を細かい部分の和とみる考え方が記号に残っている。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/12_integration-manuscript.jpg" width="812" height="875" loading="lazy" alt="ライプニッツの手稿"><img src="../img/12_integration-leibniz.jpg" width="676" height="1000" loading="lazy" alt="ライプニッツの肖像版画"></div>
+<figcaption>左はライプニッツの手稿で、積分記号と微分の記号が書き込まれている。右はライプニッツの肖像版画である。積分記号 ∫ は和を意味するラテン語の頭文字 s を縦に伸ばした形である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Leibniz_Manuscript_of_integral_and_differential_notation.png">G. W. Leibniz（撮影 Stephen Wolfram）</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Portret_van_Gottfried_Wilhelm_Leibniz,_RP-P-1914-3355.jpg">Rijksmuseum</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_integration-long-s.jpg" width="646" height="1000" loading="lazy" alt="長い s を含む1813年の読本の文字表">
+<figcaption>1813年にアメリカで刊行された子ども向けの読本の文字表である。小文字の列に長い s の字形 ſ が含まれる。積分記号 ∫ はこの字形を縦に伸ばしたものである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Children%27s_primer_from_1813_containing_long_ess.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s9">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 基本公式</div>

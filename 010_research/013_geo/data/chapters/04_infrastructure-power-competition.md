@@ -18,6 +18,12 @@ AIデータセンターに効くのは後者である。情報機器が許容で
 
 実例がある。2024年7月10日、230kV送電線の避雷器故障を起点に82秒間で6回の系統事故が連鎖し、データセンター負荷だけで約1,500MWが同時に脱落した[出典](https://www.publicpower.org/periodical/article/nerc-incident-review-examines-risks-challenges-tied-integration-large-loads)。NERC はこの規模の同時脱落を系統が歴史的に経験していないと記録している。NERC は2025年9月に大規模負荷に関する Level 2 の警告を出し、2026年5月4日に Level 3 のアラートを公表する予定とされた。同じ報道は、1,000MW以上が一斉に脱落する事象が2022年以降に複数回、主に2024年と2025年に起きたとしている[出典](https://www.utilitydive.com/news/data-center-load-disruptions-nerc-alert-recommendations/818036/)。つまりAI時代の電力の質は、供給側の波形と負荷側の耐える能力の組み合わせでしか定義できない。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/ch04_surge-arresters.jpg" width="1000" height="750" loading="lazy" alt="高圧変電所の避雷器と変流器"><img src="../img/ch04_ashburn-datacenters.jpg" width="1000" height="638" loading="lazy" alt="アッシュバーン近郊に集まるデータセンター群の空撮"></div>
+<figcaption>左はフランスの高圧変電所に並ぶ避雷器と変流器、右は米国バージニア州アッシュバーン近郊に集まるデータセンター群の空撮である。2024年7月10日の事故では、送電線の避雷器1つの故障を起点に、データセンター負荷だけで約1,500MWが同時に系統から外れた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Pont-l%27Abb%C3%A9_high-voltage_substation_02_-_Surge_protection.jpg">PtiBzh</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:Data_centers_in_Ashburn.jpg">Theodore Christopher</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 停電そのものの構造も、米国と中国で層が違う。米国では末端の配電網が気象で物理的に壊れる。2024年の需要家1件あたり平均停電時間は11時間で、直近10年平均のほぼ2倍だった。11時間のうち80%はハリケーン Beryl、Helene、Milton を含む大規模事象に由来し、大規模事象由来は約9時間、それ以外は約2時間である。2014年から2023年の大規模事象由来は年平均約4時間だったので、増分はほぼ気象由来と分かる。平均停電回数は年1.5回である[出典](https://www.eia.gov/todayinenergy/detail.php?id=66744)。中国では中央が需給を見て負荷を切る。2021年後半には半数を超える省が電力を配給制にした。原因は物理故障ではなく価格構造で、石炭価格が市場で決まる一方で発電事業者の受取価格が規制されていたため、石炭火力に発電を続ける経済的誘因が消えた[出典](https://www.oxfordenergy.org/wpcms/wp-content/uploads/2021/11/Chinas-power-crisis.pdf)。平時の配電信頼度は上がっており、2024年の全国供給信頼率は99.924%で年間6.7時間相当、2020年比で都市部の平均停電時間は28%、農村部は44%減ったとされる[出典](https://english.www.gov.cn/news/202506/06/content_WS6842875fc6d0868f4e8f31be.html)。ただし米国の11時間と中国の6.7時間相当を並べて優劣を言うことはできない。米国の指標は大規模事象を含む値と除いた値を分けて公表するのに対し、中国の供給信頼率は算入範囲が同一とは限らず、計画的な負荷制限が故障統計と混ざりうるためである。
 
 ==増設速度の差は、発電容量よりも送電線と手続きと機器で決まる==。整理すると次のとおりである。
@@ -60,6 +66,12 @@ AIデータセンターに効くのは後者である。情報機器が許容で
 
 2005年以降の中国からベネズエラへの融資は約600億ドルに達し、中南米最大の借り手になった[出典](https://www.cfr.org/backgrounders/china-influence-latin-america-argentina-brazil-venezuela-security-energy-bri)。2007年から2017年に限れば、この額は中国の中南米向け融資総額の40%超を占める[出典](https://www.atlanticcouncil.org/blogs/new-atlanticist/chinas-support-for-the-maduro-regime-enduring-or-fleeting/)。資金と施工の両方を中国側が握った。鉄道では中国中鉄が2009年に現地鉄道会社の40%を取得して参画し、衛星地上局2か所は中国長城工業が建設し、2012年には CITIC が鉄・金・ボーキサイト・トリウムの契約を結び、2016年には ZTE が食料配給の追跡用IDを構築した[出典](https://en.wikipedia.org/wiki/China%E2%80%93Venezuela_relations)。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/ch04_caracas.jpg" width="1000" height="750" loading="lazy" alt="アビラ山を背にしたカラカスの市街"><img src="../img/ch04_puerto-la-cruz-refinery.jpg" width="1000" height="558" loading="lazy" alt="プエルト・ラ・クルスの製油所"></div>
+<figcaption>左はアビラ山を背にしたカラカスの市街、右はベネズエラの主要な製油所の一つであるプエルト・ラ・クルス製油所である。中国からの融資は、原油の販売代金をエスクロー口座に入れて返済に充てる設計で組まれた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Caracas_skyline_and_Avila_mountain_from_my_penthouse.JPG">Flauta</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Refiner%C3%ADa_Puerto_La_Cruz,_Edo._Anzoategui.jpg">Daniel Zambrano</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 同じ市場に他国の建設会社が入らない理由は、リスクを取る度胸の差ではない。リスクを移す手段が制度として存在しないためである。日本貿易保険 NEXI の国カテゴリー表で、ベネズエラは A から H までの区分のうち最下位の H に置かれている。同じ表でブラジルは E、コロンビアは E、ペルーは D、チリは C である。適用日は2026年7月6日である[出典](https://www.nexi.go.jp/cover/categorytable)。H は保険料率が最も高い区分であり、引受停止の対象にもなりうる。貿易保険が付かなければ JBIC の融資も組成できず、案件が成立しない。結果は受注統計に出る。2025年度の日本企業の海外建設受注は2兆9,350億円で、うち中南米は62億円、構成比0.2%、前年度比84.6%減であり、地域別で最小である[出典](https://www.ocaji.or.jp/overseas_contract/)。
 
 物価も契約技術の範囲を超えている。ベネズエラの消費者物価上昇率は2024年に48%、2025年に475%、2026年予測で628.8%とされる。ただしこの数値は二次資料経由であり、IMF の国別ページは取得できていないため一次統計での裏取りができていない[出典](https://en.wikipedia.org/wiki/Economy_of_Venezuela)。年率で数百%の環境では、通常の物価スライド条項で実質単価を維持できない。外貨建てに切り替えても送金規制と決済銀行の確保という別の問題が残る。
@@ -87,6 +99,12 @@ AIデータセンターに効くのは後者である。情報機器が許容で
 回収の成否を個別に見ると、地政学的な回収と財務的な回収がずれることも分かる。ベネズエラの場合、財務面では元本の大半を原油の現物で回収し終えている。2025年末時点の未回収残高について、出典によって100億ドル超と約200億ドルの2つの推計があり、2倍の開きがある。どちらか一方を採る根拠を本章では持てないため、100億ドルから200億ドルの幅として扱う[出典](https://asiatimes.com/2026/01/beijing-moves-to-cut-losses-in-venezuela-after-maduros-capture/)[出典](https://www.atlanticcouncil.org/blogs/new-atlanticist/chinas-support-for-the-maduro-regime-enduring-or-fleeting/)。いずれの値でも、600億ドルの元本の3分の2以上は原油の引き渡しで回収済みという評価になる。回収の代償として、返済相当分の原油を日量約61万バレル引き取る義務が生じていた。この現物が市場価格より有利な条件だったかどうかは、割引幅を示す一次資料を確認できていない。他方、従属国確保という地政学的な回収は2026年に毀損した。政権が米国と情報協力を進める側に移り、軍事装備の供給先や寄港地としての価値が不確実になったためである。2026年1月時点で北京は損失の最小化に軸足を移し、資産の西側企業への売却や提携を検討しているとされる[出典](https://asiatimes.com/2026/01/beijing-moves-to-cut-losses-in-venezuela-after-maduros-capture/)。
 
 最後に、広く流通する2つの理解を訂正しておく。ひとつは、債務の罠でインフラ資産が差し押さえられているという理解である。実際には資産そのものを担保に取ることは稀で、執行されるのは口座からの現金掃き出しである。よく引かれるハンバントタ港も代物弁済ではない。第1期は中国輸出入銀行が推計費用の85%にあたる3億670万ドルを金利6.3%で、第2期は2012年に7億5,700万ドルを金利2%で融資し、2016年時点で港の累積損失は467億ルピー、約6億9,600万ドルに達していた。2017年に招商局港口が11億2,000万ドルを投じて新設のハンバントタ国際港湾グループの株式85%と99年のリースを取得した取引であり、スリランカ側はその対価を別の外貨債務の返済に充てた。ただしこの整理は二次資料に基づくもので、契約書での確認は取れていない[出典](https://en.wikipedia.org/wiki/Port_of_Hambantota)。もうひとつは、中国が途上国の債務を帳消しにしているという理解である。確認できた処理手段はエスクロー口座からの現金回収、高金利の救済融資による借換え、罰則金利の引き上げ、満期延長の4つである。実際の再編条件もこの範囲に収まっている。ザンビアは2024年2月に中国およびインドと合意し、63億ドルの二国間債務の満期を2043年まで、平均で12年超延ばした。中国輸出入銀行との合意では、認定された40億ドルの公的債権についてIMFプログラム期間中のクーポンを1パーセントへ引き下げている[出典](https://rhg.com/research/chinas-external-debt-renegotiations-after-zambia/)。スリランカも2024年6月26日に中国輸出入銀行と公的債権者委員会の双方と約100億ドルの再編で合意したが、こちらも満期延長と据置きで、正味現在価値を一定に保つ算式が使われた。==どちらの合意にも元本削減は入っていない。貸し手は現在価値の維持を条件に、時間だけを譲っている==。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/ch04_hambantota-docks.jpg" width="960" height="720" loading="lazy" alt="ハンバントタ港に着岸した2隻の自動車運搬船">
+<figcaption>スリランカのハンバントタ港に着岸した2隻の自動車運搬船。本文の整理では、2017年に招商局港口が11億2,000万ドルで運営会社の株式85%と99年のリースを取得した取引であり、債務の代物弁済ではない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hambantota_Port_Docks_two_ships.jpg">Deneth17</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 ## この章の要点
 

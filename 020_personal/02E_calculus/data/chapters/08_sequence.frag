@@ -218,6 +218,11 @@
 
 <p><strong>典型的な誤り</strong>は \(\sum_{k=1}^{n}5\) を 5 とする誤りである。5 を n 回足すので \(5n\) になる。もう1つは上端が \(n-1\) の和に \(\frac{1}{2}n(n+1)\) をそのまま使う誤りである。n を \(n-1\) に置き換えて \(\frac{1}{2}(n-1)n\) とする。</p>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/08_sequence-cannonballs.jpg" width="1000" height="999" loading="lazy" alt="セントルイス兵器廠に積まれた砲弾"><img src="../img/08_sequence-cannonballs-morro.jpg" width="1000" height="664" loading="lazy" alt="サン・フェリペ・デル・モロ城の砲弾の山"></div>
+<figcaption>左は南北戦争後のセントルイス兵器廠に積まれた砲弾、右はプエルトリコのサン・フェリペ・デル・モロ城の砲弾の山である。正方形の層を積むと上から1個・4個・9個と並ぶので、総数は自然数の2乗の和になる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Cannonballs_stacked_in_the_St._Louis_Arsenal_yard_after_the_Civil_War.jpg">Emil Boehl</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:San_Juan,_castillo_del_Morro_31.jpg">LBM1948</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s4">階差数列と和から一般項を求める方法</h2>
 <p>数列 \(\{a_n\}\) の隣り合う項の差 \(b_n=a_{n+1}-a_n\) を並べた数列を<strong>階差数列</strong>と呼ぶ。一般項が直接分からなくても階差に規則があれば一般項を求められる。</p>
 <figure class="tb-fig">
@@ -382,6 +387,11 @@
 
 <h2 id="s6">数学的帰納法</h2>
 <p>自然数 n についての命題 \(P(n)\) がすべての自然数で成り立つことを示す方法の1つが<strong>数学的帰納法</strong>である。次の2つを示す。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_sequence-domino.jpg" width="903" height="481" loading="lazy" alt="順に倒れるドミノ">
+<figcaption>並べたドミノが端から順に倒れていく様子である。最初の1枚が倒れることと、ある1枚が倒れれば次の1枚も倒れることが示されれば、すべてが倒れる。数学的帰納法のⅠとⅡはこの2つにあたる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Domino_Cascade.JPG">aussiegall</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-vs">
 <div><h5>Ⅰ 出発点</h5><ul><li>n＝1 のとき \(P(1)\) が成り立つことを示す</li></ul></div>
 <div><h5>Ⅱ 引き継ぎ</h5><ul><li>n＝k のとき成り立つと仮定する</li><li>その仮定を使って n＝k＋1 のときも成り立つことを示す</li></ul></div>
@@ -403,6 +413,11 @@
 
 <h2 id="s7">現実世界の数列 複利と積立</h2>
 <p>金融の計算は等比数列とその和で書ける。元本 P を年利 r の複利で n 年預けると残高は \(P(1+r)^n\) である。これは公比 \(1+r\) の等比数列の項である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_sequence-passbook.jpg" width="672" height="1000" loading="lazy" alt="1920年の貯蓄口座の通帳">
+<figcaption>1920年のアメリカの銀行の貯蓄口座の通帳である。毎年の積立額に複利の利息がつくと、残高は等比数列の和で表される。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:1920_-_Savings_Passbook_-_Allentown_Natonal_Bank_-_Allentown_PA.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>毎年末に A 円ずつ積み立てる場合を考える。1年目末の A 円は残り \(n-1\) 年の利息がついて \(A(1+r)^{n-1}\) になる。最後の A 円は利息がつかない。n 年目末の合計は公比 \(1+r\) の等比数列の和である。</p>
 \[ A+A(1+r)+\dots+A(1+r)^{n-1}=\frac{A\{(1+r)^n-1\}}{r} \]
 <div class="ex"><div class="ex-h">例題 14</div>

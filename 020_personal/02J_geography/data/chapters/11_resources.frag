@@ -40,6 +40,12 @@
 <tr><td>ロシア</td><td>427.2</td><td>4.6%</td><td>13.4%</td></tr>
 </tbody></table></div>
 <p>表はいずれも2024年の値である（出典2）。輸出のシェアは熱量で計算されている。インドネシアとオーストラリアの2か国で輸出の過半を占める。両国は人口に比べて産出量が多く、輸入国の多いアジアの市場に海路で近い。オーストラリアの石炭は日本・中国・韓国へ、インドネシアの石炭は中国とインドへ多く向かう（2024年、出典2）。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/11_resources-hunter-coal.jpg" width="857" height="1000" loading="lazy" alt="航空機から見たハンターヴァレー上流の露天掘りの炭鉱"><img src="../img/11_resources-newcastle-port.jpg" width="1000" height="648" loading="lazy" alt="ニューカッスル港に入るばら積み船"></div>
+<figcaption>左は航空機から見たオーストラリア南東部のハンターヴァレー上流で、灰色に削られた区画が露天掘りの炭鉱である。右は同じ地方の河口にあるニューカッスル港に入るばら積み船である。この港は世界有数の石炭の輸出港で、扱う貨物の重量の90%を石炭が占める。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Upper_Hunter_Open_Cut_Mines_250_(745578283).jpg">Tim J Keegan</a>／CC BY-SA 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:CSIRO_ScienceImage_8217_A_bulk_carrier_entering_Port_Hunter_Newcastle_New_South_Wales.jpg">Nick Pitsas, CSIRO</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 352" role="img" aria-label="石炭の主な生産国と輸出国 2024年">
 <clipPath id="j11ac"><rect x="0" y="0" width="720" height="306.9"/></clipPath>
@@ -114,7 +120,19 @@
 <tr><td>7</td><td>中国 4,264</td><td>4.4%</td><td>オーストラリア 150.1</td><td>3.6%</td></tr>
 </tbody></table></div>
 <p>表はいずれも2024年の値である（出典2）。アメリカ合衆国が石油と天然ガスの両方で1位なのは<strong>シェール革命</strong>による。シェールは泥が固まった細かい岩石で、油とガスを含むがすき間が小さく、従来は採算が合わなかった。水平に掘る技術と、水圧で岩石に割れ目をつくる技術の組合せで2010年代に生産が急増した。アメリカ合衆国の石油生産は2014年の日量1,180万バレルから2024年の日量2,014万バレルへ増えた（出典2）。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/11_resources-pumpjack.jpg" width="1000" height="750" loading="lazy" alt="ロサンゼルスのイングルウッド油田のポンプ"><img src="../img/11_resources-shale.jpg" width="1000" height="750" loading="lazy" alt="マーセラス頁岩層を水平に掘る掘削やぐら"></div>
+<figcaption>左は米国ロサンゼルスのイングルウッド油田で、丘の上に原油をくみ上げるポンプが並ぶ。右はペンシルベニア州でマーセラス頁岩層を水平に掘って天然ガスを採る掘削やぐらである。右のような水平掘りの技術が、シェール革命を可能にした。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Pumpjacks_Inglewood_Oil_Field_seen_from_Baldwin_Hills_Scenic_Overlook.jpg">Jengod</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Marcellus_Shale_Gas_Drilling_Tower_1.jpg">Ruhrfisch</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>天然ガスは気体のままではかさが大きく、海を越えて運ぶのが難しい。そこでマイナス160℃前後まで冷やして液体にした<strong>液化天然ガス（LNG）</strong>として専用の船で運ぶ。陸続きの地域ではパイプラインで送る。2024年のLNG輸出はアメリカ合衆国21.2%・カタール19.6%・オーストラリア19.6%の順で、3か国で6割を占めた（2024年、出典2）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_resources-lng.jpg" width="1000" height="750" loading="lazy" alt="浦賀水道を航行するLNG船">
+<figcaption>東京湾の入口の浦賀水道を航行するLNG船である。甲板に並ぶ球形のタンクに、冷やして液体にした天然ガスを積む。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Shahamah_LNG_carrier.jpg">青空白帆</a>／CC BY 2.1 jp／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">LNG の長期契約は結婚に近い</p>
 <p>液化基地と専用船という共同の家を先に建て、そのあと十数年の取引が続く。相手を毎回変えられる原油の取引とは関係の結び方が異なる。</p>
@@ -187,7 +205,19 @@
 <tr><td>コバルト</td><td>アフリカ中南部の銅の産地</td><td>銅とともに産出することが多い</td><td>コンゴ民主共和国 74.8%・インドネシア 11.6%</td></tr>
 </tbody></table></div>
 <p>生産上位のシェアは出典3〜5・出典8の生産量から本書が算出した値である。鉄鉱石の世界の生産量は2024年に26億トンで、オーストラリアは9億8,200万トンを産出した（出典3）。ボーキサイトはアルミニウムの原料である。アルミニウムの精錬には大量の電力を使うので、ボーキサイトの産地と精錬の場所は分かれやすい。日本は鉄鉱石の輸入先がオーストラリア58.7%・ブラジル27.7%で、2か国で8割を超える（2021年度、財務省の通関統計を集計した出典18）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_resources-whaleback.jpg" width="720" height="480" loading="lazy" alt="衛星から見たマウントホエールバック鉄鉱山とニューマンの町">
+<figcaption>2020年7月16日に人工衛星から見た西オーストラリア州のマウントホエールバック鉄鉱山である。中央の階段状に掘り下げた巨大な穴が露天掘りの鉱山で、右に鉱山の町ニューマンがある。鉱床は1957年に発見された。安定陸塊の古い地層の鉄鉱石を地表から直接掘り出している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Whaleback_iron_mine_2020.jpg">NASA Earth Observatory image by Lauren Dauphin</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>銅では、鉱山で掘る国と精錬する国が大きく異なる。2024年の銅鉱の生産はチリが1位であった。一方で精錬された銅の生産は中国が1,240万トンで世界の44.9%を占めた（2024年、出典4から本書が算出）。日本は銅鉱を産出しないが、輸入した鉱石から157万トンの銅を精錬した（2024年、出典4）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_resources-chuquicamata.jpg" width="1000" height="750" loading="lazy" alt="上空から見たチュキカマタ銅山">
+<figcaption>チリ北部のチュキカマタ銅山を上空から見た写真である。世界最大級の露天掘りの銅山で、すり鉢状の穴の壁を階段状に削って鉱石を運び出す。新期造山帯のアンデス山脈に沿って、このような大規模な銅山が並ぶ。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Chuquicamata_copper_mine_chile.jpg">Owen Cliffe</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>埋蔵量や産出量が少ない金属や、取り出すのが技術的に難しい金属をまとめて<strong>レアメタル</strong>と呼ぶ。電気自動車の電池に使うリチウムとコバルト、強力な磁石に使うレアアース（希土類）が代表例である。リチウムは世界の用途の88%が電池であると推計されている（出典7。対象の年は出典に明記されていない）。</p>
 <div class="tb-bars"><h5>レアメタルの生産の上位国 2024年 単位 % ・ 出典6〜8から本書が算出</h5>
 <div class="tb-bar"><span>レアアース 中国</span><u class="w"><i style="width:95%"></i></u><b>71.1</b></div>
@@ -197,6 +227,12 @@
 <div class="tb-bar"><span>リチウム 中国</span><u class="c"><i style="width:25%"></i></u><b>18.6</b></div>
 </div>
 <p>リチウムの産地は2つの型に分かれる。オーストラリアなどは硬い岩石の鉱石から取り出す。チリやアルゼンチンは乾燥地域の塩湖の地下にたまった塩水から取り出す（出典7）。チリ北部のアタカマ砂漠周辺は降水が少なく、塩水を天日で濃縮できる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_resources-lithium.jpg" width="720" height="800" loading="lazy" alt="アタカマ塩原のリチウムの蒸発池">
+<figcaption>2018年に人工衛星から見たチリのアタカマ塩原である。茶色の塩原の中に、青や緑に見える四角い蒸発池が並ぶ。地下からくみ上げた塩水を池に入れ、乾燥して晴れの多い気候で水を蒸発させてリチウムを濃縮する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Salar_de_Atacama_Lithium_salt_ponds_2018.jpg">NASA Earth Observatory</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 372" role="img" aria-label="鉄鉱石・銅・ボーキサイト・レアメタルの主な産出国">
 <clipPath id="j11ec"><rect x="0" y="0" width="720" height="306.9"/></clipPath>
@@ -360,6 +396,12 @@
 <tr><td>太陽光</td><td>日射が強く晴天が多い低緯度の乾燥地域。設置する土地の広さ</td><td>中国・アメリカ合衆国の南西部・オーストラリア</td></tr>
 </tbody></table></div>
 <p>太陽光と風力は天候で出力が変わる。そのため割合が高まるほど、出力を調整しやすい天然ガス火力や揚水発電・蓄電池などと組み合わせる必要がある。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/11_resources-itaipu.jpg" width="937" height="1000" loading="lazy" alt="上空から見たパラナ川のイタイプダム"><img src="../img/11_resources-hellisheidi.jpg" width="1000" height="666" loading="lazy" alt="アイスランドのヘトリスヘイジ地熱発電所の配管"></div>
+<figcaption>左は2013年1月に上空から見たパラナ川のイタイプダムで、長い堤体が川をせき止めて広い貯水池をつくっている。右はアイスランドのヘトリスヘイジ地熱発電所の設備で、地下から取り出した蒸気の配管から湯気が上がる。どちらも各国の地形と地質の条件を生かした発電である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Itaipu_Dam,_aerial_photograph.jpg">acediscovery</a>／CC BY 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Hellisheidi_Geothermal_Power_Station.jpg">Kevstan</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">電源構成は投手陣の編成である</p>
 <p>長いイニングを一定に投げる先発が原子力と石炭、需要の増減に合わせて出る中継ぎが天然ガス火力に当たる。日によって調子が変わる太陽光と風力を増やすほど、中継ぎの層の厚さが必要になる。</p>
@@ -415,6 +457,12 @@
 <figcaption>日本の燃料の輸入元。原油はペルシア湾からホルムズ海峡とマラッカ海峡を通って運ばれる。LNGと石炭の輸入元は太平洋沿岸に分散する。航路はおおよそである。マレーシアとブルネイの合計は出典2から本書が算出した。正距円筒図法。</figcaption>
 </figure>
 <p>原油を運ぶタンカーの多くはペルシア湾の出口の<strong>ホルムズ海峡</strong>と、マレー半島とスマトラ島の間の<strong>マラッカ海峡</strong>を通る。このように輸送が集中する狭い海峡を<strong>チョークポイント</strong>と呼ぶ。チョークポイントで紛争や事故が起きると、日本への原油の供給全体に影響が及ぶ。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_resources-hormuz.jpg" width="1000" height="1000" loading="lazy" alt="スペースシャトルから見たホルムズ海峡">
+<figcaption>スペースシャトルから見たホルムズ海峡で、オマーン・アラブ首長国連邦・イランの陸地に挟まれている。海面には船が進んだ跡が何本も見える。ペルシア湾から外洋へ出る船は、すべてこの狭い海峡を通る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:STS004-37-716_-_Strait_of_Hormuz.jpg">NASA</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>政府は2030年度の電源構成の目標として、再エネ36〜38%・原子力20〜22%・水素とアンモニア1%・火力41%を示している（出典12）。2024年の実績は火力の合計が63.1%であった（2024年、出典2から本書が算出）。目標との差は大きく、再エネの拡大と原子力の再稼働が論点となる。</p>
 <div class="ex"><div class="ex-h">例題 7</div>
 <p>表をもとに「日本のエネルギーの中東依存度は燃料によって異なる」ことを説明する文を書け。</p>

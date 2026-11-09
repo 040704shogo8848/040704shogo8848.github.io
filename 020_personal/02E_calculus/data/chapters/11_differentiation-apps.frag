@@ -123,6 +123,11 @@
 
 <p>典型的な誤りは条件の確認を省くことである。\( f(x)=|x| \) は \( [-1,\,1] \) で \( f(-1)=f(1) \) であるが \( f'(c)=0 \) となる \( c \) は存在しない。\( x=0 \) で微分可能でないのでロルの定理の条件を満たさないからである。また定理は \( c \) の存在だけを保証し \( c \) が1つとは限らない。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/11_differentiation-apps-speedometer.jpg" width="1000" height="750" loading="lazy" alt="自動車の速度計">
+<figcaption>自動車の速度計である。10 kmを6分で走れば平均の速さは時速100 kmである。平均値の定理から、速度計は途中のどこかで必ず時速100 kmを指す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Peugeot_205_speedometer_and_counter_of_kilometers.JPG">ABX</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s3">増減と極値と最大最小</h2>
 <p>第2節の結果から \( f'(x)>0 \) の区間で増加し \( f'(x)<0 \) の区間で減少する。増加から減少に変わる点の値を<strong>極大値</strong>と呼び減少から増加に変わる点の値を<strong>極小値</strong>と呼ぶ。2つをまとめて極値と呼ぶ。</p>
 <p>\( f(x) \) が \( x=a \) で微分可能で極値をとるなら \( f'(a)=0 \) である。<strong class="hit">逆は成り立たない</strong>。\( f(x)=x^3 \) は \( f'(0)=0 \) であるが前後で増加が続き極値をとらない。反対に \( f(x)=|x| \) は \( x=0 \) で微分可能でないのに極小値0をとる。極値の候補は \( f'(x)=0 \) の点と微分可能でない点の2種類である。</p>
@@ -326,6 +331,11 @@
 <p>手を離した瞬間の速度ベクトルが例題11の \( \overrightarrow{v} \) で向きは接線である。</p>
 </aside>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/11_differentiation-apps-hammer2.jpg" width="1000" height="666" loading="lazy" alt="スコットランド式のハンマー投げ"><img src="../img/11_differentiation-apps-hammer-etaples.jpg" width="1000" height="721" loading="lazy" alt="エタープルの競技会のハンマー投げ"></div>
+<figcaption>左はアメリカ・オースティンの祭りでのスコットランド式ハンマー投げ、右は第一次世界大戦中にフランスのエタープルで行われた競技会のハンマー投げである。手を離したハンマーは、その瞬間の速度ベクトルの向きである円の接線の向きへ飛ぶ。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Hammer_Throw_Austin_Celtic_Festival_Texas_2023.jpg">Larry D. Moore</a>／CC BY 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Winning_hammer_throw_at_the_New_Zealand_General_Base_Depot_Sports,_Etaples_(21474171176).jpg">National Library NZ</a>／No restrictions／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s7">近似式</h2>
 <p>微分係数の定義 \( f'(a)=\lim_{h\to 0}\frac{f(a+h)-f(a)}{h} \) は \( h \) が十分小さいとき差分の比が \( f'(a) \) に近いことを意味する。分母を払うと<strong>1次の近似式</strong>が得られる。</p>
 \[ f(a+h)\fallingdotseq f(a)+f'(a)h \]
@@ -354,6 +364,11 @@
 
 <h2 id="s8">現実世界の微分法 債券価格の近似</h2>
 <p>債券の価格 \( P \) は利回り \( y \) の関数である。利回りが \( \Delta y \) だけ変わったときの価格の変化を1次の近似式で表すと \( \Delta P\fallingdotseq P'(y)\Delta y \) である。金融の実務では \( D=-\frac{P'(y)}{P} \) を<strong>修正デュレーション</strong>と呼び \( \frac{\Delta P}{P}\fallingdotseq -D\,\Delta y \) の形で使う。修正デュレーションが7の債券は利回りが0.5%上がると価格が約3.5%下がる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_differentiation-apps-bond.jpg" width="690" height="1000" loading="lazy" alt="金札引換無記名公債の証書の見本">
+<figcaption>1883年の条例で発行された金札引換無記名公債の証書の見本で、大蔵省が1884年に太政官へ送ったものである。債券の価格は利回りの関数で、利回りの変化に対する価格の変化は導関数で近似できる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sample_of_Unregistered_Bond_Certificates_Exchangeable_to_Gold_Bank_Notes_(100_Yen).jpg">作者不詳</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>債券価格は利回りの関数として下に凸である。そのため接線で近似した値は実際の価格より低くなる。この差を補う量はコンベクシティと呼ばれ第2次導関数 \( P''(y) \) を使う。凹凸の判定がそのまま金利リスクの計算になる。</p>
 </aside>

@@ -8,6 +8,10 @@
 <p>14世紀のイタリアで、古代ギリシア・ローマの文化を手本に人間の能力と個性を重んじる文化運動が起きた。これを<strong>ルネサンス</strong>（再生の意）と呼ぶ。中心になったのはフィレンツェ・ヴェネツィア・ミラノなどの都市である。これらの都市は地中海の東方貿易と毛織物業で富を蓄えた。フィレンツェのメディチ家のような大商人や銀行家が芸術家と学者を保護した。富の集中と保護者の存在が、イタリアで先に運動が始まった理由である。</p>
 <p>古典の研究を通じて人間の生き方を探究する学問を<strong>人文主義</strong>（ヒューマニズム）と呼ぶ。15世紀にはビザンツ帝国の学者がイタリアへ移り、ギリシア語の古典の研究が進んだ。マキァヴェリは『君主論』で、政治を宗教や道徳から切り離して論じた。美術ではレオナルド・ダ・ヴィンチやミケランジェロが活躍した。</p>
 <p>15世紀半ばにグーテンベルクが金属活字による<strong>活版印刷術</strong>を実用化した（出典3）。写本に比べて書物の価格が下がり、同じ内容の本が大量に出回るようになった。16世紀にはルネサンスはアルプス以北へ広がり、ネーデルラントのエラスムスは『愚神礼賛』で聖職者の堕落を風刺した。<strong class="hit">印刷術が知識の流通の速度を変えたことが、次節の宗教改革を短期間で広げる条件となった</strong>。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/17_sovereign-states-gutenberg.jpg" width="1000" height="816" loading="lazy" alt="アメリカ議会図書館に展示されたグーテンベルク聖書">
+<figcaption>アメリカ議会図書館に展示されたグーテンベルク聖書（1944年の写真）。金属活字で印刷された最初期の本であり、開かれたページには2段組みの本文が整然と並ぶ。写本と同じ体裁の本を、同じ内容で何冊も作成できるようになった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gutenberg_Bible,_Library_of_Congress,_1944.jpg">Library of Congress</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-biz"><b>スタートアップで言えば</b>
 <p class="an-h">活版印刷はルターにとって配信の基盤である</p>
 <p>ルターの文書は印刷所を通じて数週間でドイツ各地へ届いた。内容と同時に配信手段があったことが、過去の改革者と異なる点である。</p>
@@ -17,6 +21,10 @@
 <h2 id="s2">宗教改革 カトリック教会の分裂</h2>
 <p>16世紀初め、ローマ教皇はサン・ピエトロ大聖堂の改築の資金を集めるために贖宥状（免罪符）の販売を認めた。1517年、ドイツのヴィッテンベルク大学の神学教授<strong>ルター</strong>は「95か条の論題」を発表し、贖宥状の効力を批判した（出典4）。ルターは、人は善行や教会の儀式ではなく信仰によってのみ救われると説いた。信仰の根拠は聖書だけであるとし、聖書をドイツ語に翻訳した。教会の改革を求めて新しい教会を立てた運動を<strong>宗教改革</strong>と呼び、その立場の人々をプロテスタントと呼ぶ。</p>
 <p>ルターが支持を集めた理由は信仰の内容だけではない。神聖ローマ帝国の諸侯は、教会の土地と教会へ流れる税を自らの手に取り戻す機会と考えた。1521年に皇帝カール5世はルターを帝国から追放したが、ザクセン選帝侯がルターを保護した。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/17_sovereign-states-luther.jpg" width="631" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="クラーナハが描いたルターの肖像">
+<figcaption>ルーカス・クラーナハ（父）が描いたルターの肖像（1528年）。クラーナハはヴィッテンベルクの宮廷画家であり、ルターの肖像を数多く描いた。同じ構図の肖像が工房で繰り返し制作され、改革者の顔が各地に知られた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Lucas_Cranach_d.%C3%84._-_Martin_Luther,_1528_(Veste_Coburg).jpg">Lucas Cranach the Elder</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>1555年の<strong>アウクスブルクの和議</strong>で、諸侯はカトリックとルター派のどちらを採るかを選べるようになった（出典5）。住民は領主の宗派に従うとされた。<strong class="hit">信仰の選択権は個人ではなく諸侯に与えられた</strong>。カルヴァン派はこの和議の対象外であった。</p>
 <p>ジュネーヴでは<strong>カルヴァン</strong>が改革を進めた。カルヴァンは、救われる者は神によってあらかじめ定められているとする<strong>予定説</strong>を説いた。職業に励むことは神の栄光を示す行いとされ、利子を取る商業も認められた。カルヴァン派は商工業者の多い地域に広がり、フランスではユグノー・イングランドではピューリタンと呼ばれた。社会学者ヴェーバーはこの倫理が資本主義の精神を生んだと論じた（出典25）。一方で、資本主義的な経営はカトリックのイタリア都市でも先に発達していたとして、この因果関係を疑問視する見方もある。</p>
 <p>イングランドでは国王ヘンリ8世が離婚問題で教皇と対立し、1534年の<strong>国王至上法</strong>（首長法）で国王を教会の首長とする<strong>イギリス国教会</strong>を立てた。この改革は教義よりも国王と教皇の権限の争いから始まった点に特色がある。</p>
@@ -51,7 +59,15 @@
 <li><b>1648年</b><strong>ウェストファリア条約</strong> ミュンスターとオスナブリュックで講和が結ばれる</li>
 </div>
 <p><strong class="hit">カトリック国のフランスが新教徒の側で参戦した事実は、戦争の主な対立軸が宗派から国家の利害へ移ったことを示す</strong>。フランスはスペインとオーストリアの両ハプスブルク家に挟まれる状態を解くことを優先した。戦場となったドイツの被害は大きく、戦争全体の死者は450万〜800万人と推計される（出典9）。帝国のドイツ語圏の人口は1600年の1,800万〜2,000万人から1650年の1,100万〜1,300万人へ約4割減ったとする推計がある（出典9）。この減少には死亡のほか移住と出生の減少も含まれる。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/17_sovereign-states-callot.jpg" width="1000" height="436" loading="lazy" alt="カロの版画 戦争の惨禍の絞首刑の場面">
+<figcaption>ジャック・カロの連作版画『戦争の惨禍』（1633年）の絞首刑の場面。木の枝に多数の人がつるされ、周りを兵士の隊列が囲む。三十年戦争の時代に、兵士の略奪とその処罰が住民の生活を脅かしていたことを伝える。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hanging_from_The_Miseries_and_Misfortunes_of_War_by_Jacques_Callot.jpg">Jacques Callot</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>1648年の<strong>ウェストファリア条約</strong>は、ヨーロッパの多数の国が参加した国際会議で結ばれた講和である。主な内容は次のとおりである（出典9・出典10・出典27・出典34）。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/17_sovereign-states-munster.jpg" width="1000" height="764" loading="lazy" alt="ミュンスター条約の批准の場面を描いた絵">
+<figcaption>テル・ボルフが描いた1648年のミュンスターの講和の宣誓の場面の模写。スペインとオランダの代表が机を囲み、右手を挙げて条約を守ることを誓っている。オランダの独立が国際的に認められた瞬間を、会場にいた画家が記録した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:The_Ratification_of_the_Treaty_of_Munster,_Gerard_Ter_Borch_(1648).jpg">After Gerard ter Borch</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-tw"><table>
 <thead><tr><th>項目</th><th>内容</th><th>意味</th></tr></thead>
 <tbody>
@@ -170,12 +186,20 @@
 <figcaption>絶対王政の構造の整理。官僚制と常備軍の費用が財政への需要を生み、重商主義の政策につながった。下段の社団は、国王の支配が中間団体の特権を通じて行われたとする見方を示す。</figcaption>
 </figure>
 <p>絶対王政の代表はフランスである。<strong>ルイ14世</strong>（在位1643〜1715年）は「太陽王」と呼ばれ、1661年からは宰相を置かずに自ら政治を行った。財務総監のコルベールは輸出産業の育成と東インド会社の再建を進めた。ルイ14世はヴェルサイユ宮殿に貴族を集め、対外戦争を繰り返した。1685年にはナントの王令を廃止したため、多数のユグノーの商工業者がオランダ・イギリス・プロイセンへ移住した。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/17_sovereign-states-louis14.jpg" width="688" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="リゴーが描いたルイ14世の肖像">
+<figcaption>イアサント・リゴーが描いたルイ14世の肖像（1701年）。百合の紋章を散らした戴冠式の衣と剣・王冠を身に着けた姿であり、国王の権威を見る者に示す肖像である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Rigaud_Louis_XIV_1701.jpg">Hyacinthe Rigaud</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>スペインのフェリペ2世（在位1556〜1598年）は1571年のレパントの海戦でオスマン帝国の艦隊を破り、1580年にはポルトガルの王位を兼ねた。アメリカ大陸の銀が財政を支えたが、戦費の負担で国家は何度も支払いを停止した。18世紀のプロイセンのフリードリヒ2世は「君主は国家第一の僕」と述べ、啓蒙思想に基づく改革を上から進めた。このような君主を<strong>啓蒙専制君主</strong>と呼ぶ。</p>
 <p>絶対王政という用語には議論がある。従来は、国王が貴族や議会を抑えて権力を一手に集めたと説明された。これに対して、国王は貴族・都市・ギルドなどの<strong>社団</strong>の特権を認め、それらを通じて支配したにすぎないとする見方がある（出典12・出典33）。<strong class="hit">国王の権力が絶対であったのは理念の上であり、実際の支配は社団との交渉に依存していた</strong>とする説明である。</p>
 
 <h2 id="s5">オランダとイギリスの覇権 重商主義</h2>
 <p>絶対王政の国家は、軍隊と官僚の費用を賄うために国の富を増やす経済政策をとった。これを<strong>重商主義</strong>と呼ぶ。初期の重商主義は金銀そのものを国内に蓄えることを重視した。これを重金主義と呼び、アメリカ大陸の銀を得たスペインが代表である。その後、輸出を増やし輸入を抑えて金銀を得る<strong>貿易差額主義</strong>が主流になり、コルベールは輸入品に高い関税を課した。重商主義の前提には、世界の富の総量は一定であり、一国の利益は他国の損失であるという考え方があった。</p>
 <p>17世紀前半に海上の交易で優位に立ったのは<strong>オランダ</strong>である。1602年に複数の会社を統合して<strong>オランダ東インド会社</strong>が設立された（出典13）。設立時の資本金は約640万ギルダーであり、市民は誰でも出資でき、株式は市場で売買された（出典13）。1619年にジャワ島にバタヴィアを建設し、香辛料の交易を支配した。首都アムステルダムは中継貿易と金融の中心となった。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/17_sovereign-states-batavia.jpg" width="1000" height="711" loading="lazy" alt="ベークマンが描いたバタヴィアの城">
+<figcaption>アンドリース・ベークマンが描いたバタヴィアの城。オランダ東インド会社のアジアの拠点であり、手前のヤシの木の下には市場が開かれ、多くの人々が集まっている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Andries_Beeckman_-_The_Castle_of_Batavia.jpg">Andries Beeckman</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>日本との関係では、オランダは1609年に平戸に商館を開き、1641年に長崎の出島へ移された（出典13）。それ以後200年以上、出島はヨーロッパの国が日本と交易できる唯一の場所となった。布教を行わなかったことが、幕府がオランダに交易を認めた理由の1つである。江戸幕府の対外関係の全体は第16章で扱った。</p>
 <aside class="an an-biz"><b>スタートアップで言えば</b>
 <p class="an-h">オランダ東インド会社は株式を市場で売れる会社の先駆けである</p>
@@ -210,6 +234,10 @@
 
 <h2 id="s6">大西洋三角貿易と奴隷貿易</h2>
 <p>17〜18世紀の大西洋では、ヨーロッパ・西アフリカ・アメリカ大陸の3地域を結ぶ交易が発達した。これを<strong>大西洋三角貿易</strong>と呼ぶ。ヨーロッパの船は武器・綿織物・酒・ガラス玉を積んで西アフリカへ向かい、それらと引き換えに奴隷とされた人々を買い取った。船はアフリカの人々をアメリカ大陸とカリブ海の島々へ運び、その地の<strong>プランテーション</strong>（大農園）で生産された砂糖・タバコ・綿花を積んでヨーロッパへ戻った。アフリカからアメリカへの航海を中間航路と呼ぶ。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/17_sovereign-states-slaveship.jpg" width="750" height="795" loading="lazy" style="max-height:620px;object-fit:contain" alt="奴隷船ブルックス号の船倉の図の一部">
+<figcaption>リヴァプールの奴隷船ブルックス号の船倉の図の一部（1789年の木版画）。奴隷とされた人々が身動きできない間隔で床に並べられている。奴隷貿易の廃止を求める人々がこの図を配布し、中間航路の実態を示す資料とした。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Description_of_a_slave_slip_by_anonymous_wood_engraving_1789.jpg">unknown (anonymous)</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 600" role="img" aria-label="大西洋三角貿易の経路と商品">
 <clipPath id="k17bc"><rect x="0" y="0" width="720" height="568.5"/></clipPath>
@@ -282,6 +310,10 @@
 
 <h2 id="s7">科学革命と啓蒙思想</h2>
 <p>16〜17世紀のヨーロッパでは、観察と実験と数学によって自然を説明する方法が確立した。これを<strong>科学革命</strong>と呼ぶ。1543年にコペルニクスは地球が太陽の周りを回る<strong>地動説</strong>を唱えた。ケプラーは惑星の楕円軌道を示し、ガリレイは望遠鏡の観測で地動説を支持したが、1633年に宗教裁判で地動説の放棄を命じられた。1687年に<strong>ニュートン</strong>は『プリンキピア』で万有引力の法則を示し、天体の運動と地上の物体の運動を同じ法則で説明した。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/17_sovereign-states-principia.jpg" width="762" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="ニュートンのプリンキピア初版の扉">
+<figcaption>ニュートン『プリンキピア』初版（1687年）の扉。ニュートン自身が国王ジェームズ2世に献呈した本である。扉の中段には王立協会の会長ペピスによる出版の許可が記され、王立協会が出版を支えたことが分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Newton%27s_Philosophiae_Naturalis_Principia_Mathematica_1687_(presentation_copy_to_James_II).jpg">Joseph Streater</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <p>学問の方法では、ベーコンが個別の事実から法則を導く<strong>帰納法</strong>を重んじ、デカルトが疑い得ない原理から結論を導く<strong>演繹法</strong>を重んじた。1660年にイギリスで王立協会が設立された。協会は1662年と1663年に国王の勅許状を得て法人となった（出典37）。1663年の勅許状は、実験によって自然の事物の学問と有用な技芸を進めることを会員の研究の目的に掲げた（出典37）。この勅許状は航海術や測量を目的として名指ししていない。</p>
 <p>自然を理性で説明する方法を社会と政治に広げた思想を<strong>啓蒙思想</strong>と呼ぶ。啓蒙思想の中心にあるのが、国家は人々の合意（契約）によって成り立つとする<strong>社会契約説</strong>である。社会契約説は王権神授説と対立した。主な思想家と著作は次のとおりである。</p>
 <div class="tb-tw"><table>
@@ -295,11 +327,19 @@
 <tr><td>アダム・スミス</td><td>『国富論』1776年</td><td>富の源は労働であり、自由な競争が富を増やすとして重商主義を批判する</td></tr>
 </tbody></table></div>
 <p><strong class="hit">ホッブズは社会契約から強い主権を導き、ロックは社会契約から抵抗権を導いた</strong>。同じ社会契約説でも結論が逆になる点は、資料文の読み取りで頻出である。ロックの思想は名誉革命を正当化し、後のアメリカ独立宣言に影響した。スミスの重商主義批判は、前節で見た「一国の利益は他国の損失」とする前提を否定するものであった。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/17_sovereign-states-leviathan.jpg" width="627" height="1000" loading="lazy" style="max-height:620px;object-fit:contain" alt="ホッブズのリヴァイアサンの扉絵">
+<figcaption>ホッブズ『リヴァイアサン』（1651年）の扉絵（アブラハム・ボス作）。王冠をかぶり剣と杖をもつ巨人の体は、多数の小さな人間の姿で構成されている。人々が権利を譲渡して1つの主権者が成立するという本書の議論を、1枚の絵で表している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Leviathan_frontispiece_cropped_British_Library.jpg">Abraham Bosse</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-lv"><b>男女で言えば</b>
 <p class="an-h">ロックの社会契約は解消できる合意である</p>
 <p>関係は双方の合意で始まり、一方が約束を破り続ければ解消できる。ホッブズの契約は一度結べば解消できない。</p>
 </aside>
 <p>啓蒙思想はサロンやコーヒーハウスでの議論と印刷物で広がった。日本では1774年に杉田玄白らがオランダ語の解剖書を翻訳して『解体新書』を刊行した（出典23）。<strong class="hit">出島を通じたオランダとの交易が、ヨーロッパの科学を日本へ伝える経路となった</strong>。この学問を蘭学と呼ぶ。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/17_sovereign-states-kaitai.jpg" width="1000" height="666" loading="lazy" alt="解体新書の人体の図">
+<figcaption>『解体新書』（1774年）の人体の正面と背面の図。オランダ語の解剖書の図を写し、各部の名称を漢字で書き入れている。出島を通じて入ったヨーロッパの医学書が、日本の学者によって翻訳された成果である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kaitai_shinsho_01.jpg">作者不明</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="ex"><div class="ex-h">例題 4</div>
 <p>次の資料はある思想家の著作の要約である。「人々が共通の権力をもたずに生活している間は、戦争と呼ばれる状態にある。それは各人の各人に対する戦争である」。この思想家と、資料から導かれる国家の性格を答えよ。</p>
 <details open><summary>解き方</summary><div>手順1 自然状態を各人の各人に対する戦争とする記述は、ホッブズの『リヴァイアサン』の特徴である。<br>手順2 ロックは自然状態を比較的平和なものと考えたので区別する。<br>手順3 ホッブズは、人々が安全を得るために自然権を譲渡し、強い主権者に従うと論じた。<br>答え ホッブズである。人々の安全を守るために強い権力をもつ主権国家が導かれる。</div></details></div>

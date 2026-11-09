@@ -128,6 +128,11 @@
 <p>前者は \(P_A(B)\) で後者は \(P_B(A)\) である。返信が遅い人の多くは単に忙しい人であり その割合が元の割合にあたる。</p>
 </aside>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/07_conditional-antigen-test.jpg" width="1000" height="666" loading="lazy" alt="家庭用の抗原検査キット"><img src="../img/07_conditional-antigen-lines.jpg" width="1000" height="418" loading="lazy" alt="線が2本現れた抗原検査キット"></div>
+<figcaption>左は家庭で使う新型コロナウイルスの抗原検査キット、右は線が2本現れた検査キットである。2本目の線が現れると陽性と判定する。陽性の人が実際に感染している確率は有病率によって異なり、本文の原因の確率で計算できる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Positive_COVID-19_rapid_antigen_test.jpg">Marián Hubinský</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:SIEMENS_Healthineers_CLINITEST_Rapid_COVID-19_Antigen_Test_positive.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s4">期待値の定義</h2>
 <p>ある試行の結果に応じて値 \(x_1,x_2,\dots,x_n\) のどれか1つが定まり それぞれの値をとる確率が \(p_1,p_2,\dots,p_n\) であるとする。ただし \(p_1+p_2+\cdots+p_n=1\) である。このとき次の値を<strong>期待値</strong>と呼ぶ。</p>
 \[ E=x_1p_1+x_2p_2+\cdots+x_np_n \]
@@ -174,6 +179,11 @@
 <p class="an-h">貸倒引当金は期待値で見積もる</p>
 <p>売掛金の総額に過去の貸倒実績率を掛けて計上する。どの取引先が倒産するかは分からなくても損失の平均は見込める。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/07_conditional-dice.jpg" width="1000" height="597" loading="lazy" alt="並べたさいころ">
+<figcaption>並べた赤いさいころである。さいころ1個を投げたときの目の期待値は、1から6をそれぞれ6分の1倍して足した3.5である。期待値は1回の試行では出ない値になることがある。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Dice_(15045425522).jpg">Steve Hodgson from Edinburgh, Scotland</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s5">期待値を判断に使う</h2>
 <p>学習指導要領解説は期待値を意思決定に活用する力を数学Aの目標に挙げている。2つ以上の選択肢があり結果が確率的に定まるとき それぞれの期待値を比べて選択の根拠にする。</p>
@@ -224,6 +234,11 @@
 
 <h2 id="s6">現実世界の期待値 宝くじの還元率</h2>
 <p>宝くじの当せん金の総額は当せん金付証票法第5条で発売総額の5割を超えてはならないと定められている。購入者全体に戻る割合が5割以下なので 1枚300円の宝くじの賞金の期待値は150円以下である。総務省が2021年10月の地方財政審議会に示した資料では 2020年度の売上総額8,160億円のうち当せん金は3,839億円で 47.0% であった。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/07_conditional-takarakuji-counter.jpg" width="1000" height="666" loading="lazy" alt="宝くじ売り場の店頭">
+<figcaption>宝くじ売り場の店頭である。当せん金の総額は法律で発売総額の5割以下に定められている。1枚300円の宝くじの賞金の期待値は150円以下で、参加費の半分に満たない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Public_Takarakuji_sales_counter_in_2009.jpg">duncan_su</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p class="an-h">宝くじの購入は期待値が参加費の半分以下の選択である</p>
 <p>それでも買う人がいるのは 賞金の最大額や娯楽の価値など期待値に含まれない要素を評価しているからである。経済学には金額の期待値の代わりに効用の期待値で判断する考え方がある。</p>

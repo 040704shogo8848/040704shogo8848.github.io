@@ -262,6 +262,11 @@
 
 <h2 id="s5">現実世界 ニュートンとライプニッツ</h2>
 <p>微分積分は17世紀後半に2人の数学者がそれぞれ独立に体系化した。イングランドのアイザック・ニュートンとドイツのゴットフリート・ライプニッツである。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/00_intro-newton.jpg" width="712" height="1000" loading="lazy" alt="ニュートンの肖像画"><img src="../img/00_intro-leibniz.jpg" width="810" height="1000" loading="lazy" alt="ライプニッツの肖像画"></div>
+<figcaption>左はニュートン、右はライプニッツの肖像画である。2人は17世紀後半にそれぞれ独立に微分積分を体系化した。今日使う記号の多くはライプニッツに由来する。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:GodfreyKneller-IsaacNewton-1689.jpg">Godfrey Kneller</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Christoph_Bernhard_Francke_-_Bildnis_des_Philosophen_Leibniz_(ca._1695).jpg">Christoph Bernhard Francke</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <ol class="tb-tl">
 <li><b>1665〜1666年</b><strong>ニュートンが流率法を考案</strong>。ペストの流行でケンブリッジ大学が閉鎖された時期に郷里で研究した。量の変化の速さを流率と呼んだ。</li>
 <li><b>1675年</b><strong>ライプニッツが積分記号を使用</strong>。手稿で和を表す長いSの字 \( \int \) を使った。</li>
@@ -269,7 +274,17 @@
 <li><b>1687年</b><strong>ニュートンが『プリンキピア』を刊行</strong>。運動の法則と万有引力を示した。記述の多くは幾何学の形をとる。</li>
 <li><b>1712年</b><strong>王立協会の委員会が先取権をニュートンに認める</strong>。ライプニッツが盗用したとする論争の中で出された報告で1713年に『書簡集』として刊行された。</li>
 </ol>
+<figure class="tb-fig tb-photo">
+<img src="../img/00_intro-woolsthorpe.jpg" width="1000" height="768" loading="lazy" alt="ニュートンの生家ウールスソープ・マナー">
+<figcaption>イングランドのウールスソープにあるニュートンの生家である。ペストの流行でケンブリッジ大学が閉鎖された1665年から1666年に、ニュートンはこの郷里で流率法を考案した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Woolsthorpe_Manor_-_west_facade.jpg">DeFacto</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>現在の数学史ではどちらも独立に発見したとされる。今日使う記号の多くはライプニッツに由来する。導関数の \( \frac{dy}{dx} \) と積分の \( \int f(x)\,dx \) である。ニュートンは時間についての変化の速さを \( \dot{x} \) のように文字の上の点で表した。この記法は物理学の一部で今も使われる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/00_intro-principia.jpg" width="849" height="1000" loading="lazy" alt="『プリンキピア』初版の扉">
+<figcaption>1687年に刊行された『プリンキピア』初版の扉である。運動の法則と万有引力を示した本で、記述の多くは幾何学の形をとる。ニュートンは流率法を考案していたが、この本では微分積分の記号をほとんど用いていない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Newton_-_Principia_(1687),_title,_p._5,_color.jpg">Isaac Newton</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <aside class="an an-rw"><b>現実世界</b>
 <p>イギリスはニュートンの点の記法を長く使い続けた。大陸ヨーロッパはライプニッツの記法で解析学を発展させた。19世紀の初めにケンブリッジ大学の学生たちがライプニッツの記法の導入を求める運動を起こした。記号の選び方が研究の進み方に影響した例である。</p>

@@ -228,6 +228,11 @@
 <h2 id="s6">現実世界 複利と倍増</h2>
 <p>元金 \( P \) を年利 \( r \) の複利で預けると \( n \) 年後の元利合計は \( P(1+r)^n \) である。毎年の利息が元金に加わり翌年はその合計に利息がつく。単利では利息は元金にだけつき \( P(1+rn) \) である。単利は \( n \) の1次関数で複利は \( n \) の指数関数である。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/02_exponential-passbook.jpg" width="750" height="1000" loading="lazy" alt="郵便貯金の通帳">
+<figcaption>郵便貯金の通帳である。預けた金額と利息が記帳される。複利では毎年の利息が元金に加わり、次の年の利息の計算の基になる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Post_Office_Savings_Bank_passbook.jpg">Wainuiomartian</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 350" role="img" aria-label="年7%の複利と単利の比較">
   <line x1="193.3" y1="36" x2="193.3" y2="316" stroke="var(--line)" stroke-width="1"/>
@@ -294,6 +299,16 @@
 <aside class="an an-rw"><b>現実世界</b>
 <p>集積回路の素子数が一定期間で倍になる経験則がムーアの法則である。ムーアは1965年に1年ごとと述べ1975年に2年ごとへ改めた。18か月で倍とする説明も広く見られるが、これはムーア本人の値ではなくインテルのデビッド・ハウスが述べた値とされる。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_exponential-moore-noyce.jpg" width="995" height="1000" loading="lazy" alt="ゴードン・ムーアとロバート・ノイス">
+<figcaption>1970年のゴードン・ムーアとロバート・ノイスで、2人はインテルの創業者である。ムーアは集積回路の素子数が一定期間で倍になる経験則を1965年に示した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Intel_CEOs_Gordon_Moore_and_Robert_Noyce_in_1970.jpg">Intel Free Press</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/02_exponential-4004.jpg" width="1000" height="744" loading="lazy" alt="インテル4004の回路配置図"><img src="../img/02_exponential-wafer.jpg" width="1000" height="1000" loading="lazy" alt="直径12インチのシリコンウエハー"></div>
+<figcaption>左は1971年のインテル4004の開発段階の回路配置図、右は直径12インチのシリコンウエハーである。ウエハー1枚から多数のチップを切り出す。素子数が一定期間ごとに2倍になると、その増え方は指数関数で表される。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Chip_layout_from_the_development_phase_of_the_Intel_4004_from_1971,_the_first_microprocessor_of_the_world_(cropped_and_edited_image).jpg">Wolfgang Stief, Pittigrilli</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:12-inch_silicon_wafer.jpg">Peellden</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s7">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 指数の計算</div>

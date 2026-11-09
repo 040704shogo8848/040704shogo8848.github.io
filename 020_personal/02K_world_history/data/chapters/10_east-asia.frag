@@ -7,6 +7,11 @@
 <h2 id="s1">殷・周と春秋戦国</h2>
 <p>黄河中流域で確認できる最古の王朝は<strong>殷</strong>（商）である。殷の王は神意を占って政治を行う神権政治を行った。占いの結果は亀の甲羅や牛の骨に刻まれた。これが<strong>甲骨文字</strong>であり漢字の祖先にあたる。後期の都の遺跡である殷墟（河南省安陽市）から出土した甲骨は前1250年ごろ以降のものである（出典2）。殷の始まりの年は伝承と研究で異なる。漢代の劉歆の計算では前1766年とされ、中国の国家事業である夏商周断代工程は前1600年ごろとする（出典2）。</p>
 <p>前11世紀に渭水流域の<strong>周</strong>が殷を倒した。年代は断代工程の前1046年が広く使われるが、研究者の示す年は前1122年から前1027年まで幅がある（出典3）。周の王は一族や功臣に土地を与えて諸侯とし、諸侯は軍役と貢納で王に仕えた。この統治の方法を<strong>封建</strong>と呼び、その基盤となる一族の秩序を宗法と呼ぶ。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_ea-ding.jpg" width="1000" height="666" loading="lazy" alt="3本の脚をもつ西周の青銅の鼎">
+<figcaption>山西博物院が所蔵する西周の青銅の鼎。3本の脚と2つの取っ手をもつ煮炊きの器の形で、祖先の祭祀に用いられた。周の王と諸侯は、こうした青銅器を宗法にもとづく祭祀の道具とした。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Western_Zhou_Bronze_Ding_of_Fu_Ding.jpg">Gary Todd</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-biz"><b>経済で言えば</b>
 <p class="an-h">周の封建は創業家が親族に子会社を任せる企業グループである</p>
 <p>結束の根拠は契約ではなく血縁である。世代が下って血縁が薄れると、子会社は本社の指示に従わなくなる。</p>
@@ -28,6 +33,11 @@
 
 <h2 id="s2">秦と漢 皇帝支配の確立</h2>
 <p>戦国の七雄のうち西方の秦は、前4世紀の商鞅の改革で法家の政策を取り入れて強国となった。前221年に秦王の政が六国を滅ぼして中国を統一し、王より上の称号として<strong>皇帝</strong>を名乗った。これが始皇帝である。始皇帝は全国を郡と県に分け、中央から官僚を派遣して治めた。この制度を<strong>郡県制</strong>と呼ぶ。あわせて文字・度量衡・貨幣を統一した。北方では匈奴に備えて長城を修築した。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/10_ea-terracotta.jpg" width="666" height="1000" loading="lazy" alt="整列する秦の兵馬俑" style="object-position:50% 18%"><img src="../img/10_ea-banliang.jpg" width="1000" height="499" loading="lazy" alt="秦の半両銭の表と裏"></div>
+<figcaption>左は始皇帝陵の近くで発掘された兵馬俑の1号坑で、等身大の陶製の兵士が隊列を組んで並ぶ。右は秦の半両銭で、円形の中央に四角い穴をあけ、「半両」の2字を記している。この形の銅銭は、秦の貨幣の統一の後も長く中国の銭の基本の形となった。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Qin_Terracotta_Army,_Pit_1_04.jpg">Gary Lee Todd, Ph.D.</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:027_S-83_Qin_Ban_Liang,_221-208,_30mm.jpg">Gary Lee Todd, Ph.D.</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>急激な統一と重い労役は反発を招いた。前209年に陳勝・呉広の乱が起き、秦は前206年に滅んだ。項羽との争いに勝った劉邦が前202年に皇帝となり<strong>漢</strong>（前漢）を建てた。漢は都の周辺を郡県制とし、遠方には一族を王として封じた。この併用の制度を<strong>郡国制</strong>と呼ぶ。前154年の呉楚七国の乱を鎮圧した後、諸王の権限は削られ、実質は郡県制に近づいた。</p>
 <p>第7代の<strong>武帝</strong>（在位 前141〜前87年）の時代に前漢は最大の版図となった。北では匈奴を攻撃して河西回廊を奪い、敦煌などの郡を置いた。東では前108年に衛氏朝鮮を滅ぼして楽浪郡など4郡を置き、南では南越を滅ぼしてベトナム北部まで郡を置いた。遠征の費用をまかなうため、武帝は塩と鉄を国家の専売とした。物価の調整策として均輸と平準も行った。官吏の登用では地方長官が人物を推薦する郷挙里選を用い、儒学の教養が重視された。</p>
 <aside class="an an-biz"><b>経済で言えば</b>
@@ -103,8 +113,18 @@
 <p>最初の大きな遊牧国家は<strong>匈奴</strong>である。前209年に即位した<strong>冒頓単于</strong>はモンゴル高原を統一し、前200年に白登山で漢の劉邦を包囲した（出典4）。漢は皇族の女性を嫁がせ、絹や酒や食料を毎年贈る和親の条約を結んだ。武帝は前127年から前119年にかけて衛青と霍去病を派遣して匈奴を攻撃した（出典4）。匈奴はその後に内紛で東西に分かれ、48年には南北に分裂した。南匈奴は後漢に服属して長城の内側に移住した（出典4・出典22）。</p>
 <p>2世紀には鮮卑がモンゴル高原で勢力を広げ、5世紀には柔然が強大となった。4世紀以後は遊牧系の諸集団が華北に国を建てた（第4節）。</p>
 <p>552年に柔然から独立した<strong>突厥</strong>はモンゴル高原から中央アジアに及ぶ大国をつくった。582年に東西に分裂した。583年とする説明や、正式な分裂を603年とする説明もある（出典5・出典17）。東突厥は630年に唐に敗れていったん滅んだが、682年に再興した（出典5）。突厥は独自の<strong>突厥文字</strong>をもち、モンゴル高原のオルホン川流域に碑文を残した。これはトルコ系の言語で書かれた最古級の記録である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_ea-kultegin.jpg" width="750" height="1000" loading="lazy" alt="モンゴルのオルホン川流域に立つキュル・テギン碑" style="max-height:620px;object-fit:contain">
+<figcaption>モンゴルのオルホン川流域に立つ、突厥の王族キュル・テギンの碑。突厥文字と漢文が刻まれ、遊牧国家が自らの文字で残した記録として知られる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kultegin_monument_Mongolia.JPG">Betta27</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>744年に突厥にかわって<strong>ウイグル</strong>がモンゴル高原を支配した。ウイグルは755年に始まった安史の乱で唐に援軍を送り、757年に長安と洛陽の奪回に加わった（出典6）。その後、ウイグルは馬を唐に送り、唐は代価として大量の絹を支払った。これを<strong>絹馬交易</strong>と呼ぶ。ウイグルは8世紀後半にマニ教を受け入れた。840年にキルギスの攻撃を受けて国家は崩壊し、一部はタリム盆地へ移った（出典6）。</p>
 <p>オアシス都市を経由する東西の交易路を<strong>オアシスの道</strong>と呼び、草原を通る道を<strong>草原の道</strong>と呼ぶ。サマルカンドを本拠とするイラン系の<strong>ソグド人</strong>は交易を担い、突厥やウイグルの宮廷で使節や書記も務めた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_ea-afrasiab.jpg" width="1000" height="666" loading="lazy" alt="白い鳥の列と人物を描いたアフラシアブの壁画">
+<figcaption>サマルカンドのアフラシアブ遺跡の貴族の邸宅で見つかった壁画の一部。サマルカンドの王ヴァルフマンが描かせたもので、各地から訪れた使節の行列が描かれている。ソグド人の都市が東西交易の結節点であったことを示す資料である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Afrasiab_-_details_from_The_Ambassadors%27_Painting_3_-_great_procession.JPG">anonymous</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="遊牧国家と農耕王朝の関係">
   <defs><marker id="k10m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker></defs>
@@ -137,6 +157,11 @@
 <p>江南では東晋の後に宋・斉・梁・陳の4王朝が交代した。これを南朝と呼ぶ。華北から移住した人々によって江南の開発が進み、長江デルタの経済の比重が高まった。南朝では貴族が担う六朝文化が栄えた。</p>
 <p>官吏の登用では220年に魏が<strong>九品中正</strong>（九品官人法）を始めた。地方の中正官が人物を9等級に評価して推薦する制度である。実際には有力な家の出身者が高い等級を独占した。「上品に寒門なく、下品に勢族なし」という言葉はこの状態を示す。こうして官職を代々独占する<strong>門閥貴族</strong>が形成された。</p>
 <p>この時代には仏教が広まった。仏教は1世紀ごろに西域から伝わり、4世紀以後に仏図澄や鳩摩羅什が布教と経典の翻訳を行った。北魏では雲崗と竜門に石窟寺院が造られた。北魏の寇謙之は教団としての道教を整えた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_ea-yungang.jpg" width="773" height="1000" loading="lazy" alt="岩壁を彫った雲崗石窟の仏像" style="max-height:620px;object-fit:contain">
+<figcaption>山西省大同の近くにある雲崗石窟の仏像。砂岩の崖を掘って造られた石窟の1つで、北魏の時代に開かれた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Datong_Yungang_Grottoes_Buddha_statue.jpg">BabelStone</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-bars"><h5>戸籍に登録された人口 単位 万人（出典10）</h5>
 <div class="tb-bar"><span>前漢 2年</span><u class="w"><i style="width:100%"></i></u><b>5,959</b></div>
 <div class="tb-bar"><span>後漢 157年</span><u class="w"><i style="width:95%"></i></u><b>5,649</b></div>
@@ -180,6 +205,11 @@
 <figcaption>上段は7世紀の唐の仕組みである。均田制による土地の給付を前提に、租調庸と府兵制が成り立った。下段は8世紀の崩壊の過程である。土地の不足と農民の逃亡で給付が続かなくなり、兵は給料で雇う募兵に移った。780年の両税法は均田制を前提としない課税への転換である（出典7）。</figcaption>
 </figure>
 <p>7世紀末に高宗の皇后であった武則天が690年に即位し、国号を周とした。8世紀前半の玄宗の治世は開元の治と呼ばれ、唐の文化の最盛期である。しかし人口が増えると給付する土地が足りなくなり、重い負担を逃れて戸籍を離れる農民（逃戸）が増えた。有力者は荘園と呼ばれる大土地を所有し、逃戸を小作人として使った。府兵制は維持できなくなり、給料で兵を雇う募兵制に移った。辺境の防衛は募兵を率いる<strong>節度使</strong>に任された。751年には中央アジアのタラス河畔でアッバース朝の軍に敗れた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_ea-longmen.jpg" width="1000" height="666" loading="lazy" alt="竜門石窟の奉先寺洞の大仏と諸像">
+<figcaption>洛陽の南の竜門石窟にある奉先寺洞の大仏（盧舎那仏）と左右の諸像。唐の高宗の時代に造られた。竜門石窟の造営は北魏に始まり、唐の時代まで続いた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Ancient_Buddhist_Grottoes_at_Longmen-_Fengxian_Temple_Grand_Buddha_Niche_with_Colossal_Statue_of_Vairocana_Buddha.jpg">Gary Todd</a>／CC0／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-bb"><b>野球で言えば</b>
 <p class="an-h">府兵制から募兵制への転換は育成型の球団が年俸で補強する球団に変わる転換である</p>
 <p>地元の農民を兵に育てる仕組みが続かず、給料で兵を集めた。兵を雇う節度使に軍事力と財源が集中した。</p>
@@ -272,10 +302,20 @@
 </figure>
 <p>朝鮮半島では、4世紀に高句麗が楽浪郡を滅ぼし、高句麗・百済・新羅の三国が並び立った。新羅は唐と結んで百済と高句麗を滅ぼした後、唐の勢力を排除して676年に半島の大部分を統一した。新羅は唐の冊封を受けて律令を取り入れた。一方で骨品制と呼ばれる身分制度で官職を独占する貴族の支配が続いた。都の金城（慶州）には仏国寺が建てられた。中国東北部では698年に大祚栄が渤海を建てた。渤海は唐の冊封を受け、唐の制度にならって上京竜泉府などの都を整えた。チベット高原では7世紀に吐蕃が統一国家をつくり、唐から皇族女性の降嫁を受けた。吐蕃は安史の乱の後の763年に長安を一時占領した。雲南では南詔が台頭した。</p>
 <p>日本列島の倭も中国王朝と関係を結んだ。『後漢書』東夷伝は57年に倭の奴国が朝貢し、光武帝が印綬を与えたと記す。福岡市の志賀島で1784年に発見された金印がこの印綬にあたるとされる（出典15）。3世紀には邪馬台国の卑弥呼が魏に使いを送り親魏倭王の称号を受けた。5世紀には倭の五王が南朝の宋に朝貢して冊封を受けた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_ea-na-seal.jpg" width="1000" height="498" loading="lazy" alt="漢委奴国王の金印の印面">
+<figcaption>志賀島で発見された金印の印面の写真と、文字を判別できるように左右を反転した像を並べたものである。「漢委奴國王」の5字が刻まれている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:King_of_Na_gold_seal_faces.jpg">PHGCOM</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>7世紀に入ると倭は中国王朝の冊封を受けない方針をとった。『隋書』によると600年に最初の遣隋使が送られたが、この使節は『日本書紀』に記載がない（出典14）。607年の小野妹子が持参した国書は「日出づる処の天子、書を日没する処の天子に致す。恙無きや」で始まり、煬帝は無礼であるとして不快を示した（出典14）。煬帝の怒りの理由については、倭の君主が天子と名乗ったことにあるとする見方が有力である。「日出処」「日没処」は東と西を示す仏教の語とする説明がある（出典14）。</p>
 <p>630年から遣唐使が派遣された（出典13）。回数は20回とする説が広く用いられるが、12回や16回など数え方で異なる（出典13）。894年に菅原道真が派遣の再検討を建議した。この年に正式に停止されたとする理解が長く通説であったが、停止の記事の証拠能力を否定する研究が1990年に出され、現在はこの年に停止が決まったとはみなさない研究者が多い（出典13）。遣唐使によって律令・仏教・漢字の文化がもたらされた。663年の白村江の戦いで唐と新羅に敗れた後、倭は国内の体制を整え、701年に<strong>大宝律令</strong>を定めた。国号を日本とし、君主の称号を天皇としたのもこの時期である。日本は唐の均田制にならい、班田収授法を実施した（出典7）。</p>
 
 <p>唐の都長安にはソグド人の商人や新羅と日本の留学生が住み、仏教のほか祆教（ゾロアスター教）・景教（ネストリウス派キリスト教）・マニ教の寺院もあった。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/10_ea-sancai.jpg" width="666" height="1000" loading="lazy" alt="ラクダに乗る胡人をかたどった唐三彩" style="object-position:50% 18%"><img src="../img/10_ea-nestorian.jpg" width="600" height="450" loading="lazy" alt="大秦景教流行中国碑の碑額"></div>
+<figcaption>左は上海博物館が所蔵する唐三彩で、ラクダに乗る胡人をかたどっている。右は西安碑林博物館の大秦景教流行中国碑の上部で、781年に長安に建てられた景教の碑である。いずれも唐の都に西方の人々と宗教が集まったことを示す。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Tang_Sancai_Camel_%26_Rider.jpg">Gary Lee Todd, Ph.D.</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:Beilin_xian_1.jpg">User: (WT-shared) Moonriver at wts</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="ex"><div class="ex-h">例題 6</div>
 <p>次の資料は『隋書』に記された607年の倭の国書の冒頭である。「日出づる処の天子、書を日没する処の天子に致す。恙無きや」。この資料から読み取れる倭の対外姿勢として最も適当なものを述べよ。</p>
 <details open><summary>解き方</summary><div>手順1 資料の中の称号を確認する。倭の君主も隋の皇帝も同じ天子の語で呼ばれている。<br>手順2 冊封を受ける国の君主は王を名乗り、皇帝の臣下として振る舞う。5世紀の倭の五王はこの立場であった。<br>答え 倭の君主は隋の皇帝と同じ天子の称号を用いており、冊封を受けて臣下となる関係を避けようとする姿勢が読み取れる。</div></details></div>
@@ -284,6 +324,11 @@
 
 <h2 id="s7">現実世界 シルクロードの世界遺産</h2>
 <p>2014年、中国・カザフスタン・キルギスの3か国が共同で申請した「シルクロード 長安-天山回廊の交易路網」が世界遺産に登録された（出典16）。構成資産は33件で、中国の中部から中央アジアのジェティス地方まで約5,000キロメートルに及ぶ（出典16・出典24）。漢の未央宮・唐の大明宮・大雁塔・敦煌の玉門関・トゥルファンの高昌故城・キルギスのスイアブの都市遺跡が含まれる（出典16）。国境をまたぐ交易路を1件の遺産として扱った点が特徴である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/10_ea-goose-pagoda.jpg" width="750" height="1000" loading="lazy" alt="西安の大雁塔" style="max-height:620px;object-fit:contain">
+<figcaption>西安の大雁塔。シルクロードの世界遺産の構成資産の1つで、唐の時代に建てられたれんが造りの塔である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Giant_Wild_Goose_Pagoda,_Xi%27an.jpg">John Hill</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 
 <h2 id="s8">確認問題</h2>

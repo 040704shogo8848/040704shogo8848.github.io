@@ -310,6 +310,11 @@
 </figure>
 <p>この推論には第6章で学ぶ独立な試行の確率と第7章で学ぶ期待値の考え方がすでに含まれている。Aの取り分を賭け金の \( \tfrac{3}{4} \) とするのはAが受け取る金額の期待値に等しい。</p>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/00_intro-pascal.jpg" width="841" height="1000" loading="lazy" alt="パスカルの肖像画"><img src="../img/00_intro-fermat.jpg" width="857" height="1000" loading="lazy" alt="フェルマーの肖像版画"></div>
+<figcaption>左はパスカル、右はフェルマーの肖像である。2人は1654年の往復書簡で、中断した勝負の賭け金の分け方を論じた。本文の分配問題はこの書簡の問題を簡単にしたものである。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Portrait_de_Blaise_Pascal_(MARQ_999.3.1).jpg">作者不詳</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Pierre_de_Fermat_(F._Poilly).jpg">François de Poilly</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 3</div>
 <p>先に3勝した方が勝つ勝負でAが1勝・Bが2勝の時点で中断した。各回の勝敗の確率はともに \( \tfrac12 \) とする。賭け金 64 枚をどう分けるのが公平か。</p>
 <details open><summary>解き方</summary><div>手順1 Aは残り2勝でBは残り1勝である。Aが優勝するのは続く2回にAが連勝する場合だけである。<br>手順2 その確率は \( \tfrac12\times\tfrac12=\tfrac14 \) でBの優勝確率は \( 1-\tfrac14=\tfrac34 \) である。<br>手順3 64枚を1対3に分ける。<br>答え Aが16枚・Bが48枚</div></details></div>
@@ -321,7 +326,17 @@
 
 <h2 id="s5">現実世界の統計 ナイチンゲールの図</h2>
 <p>フローレンス・ナイチンゲールは看護師として知られるが統計の図で政策を動かした人物でもある。クリミア戦争の野戦病院で兵士の死亡記録を集めた。1858年に英国陸軍の衛生に関する報告書を私家版で印刷し月ごとの死因を扇形の面積で示す図を載せた。円を12か月に分け防ぐことのできた感染症による死亡・負傷による死亡・その他の死亡を色で分けた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/00_intro-nightingale-rose.jpg" width="1000" height="547" loading="lazy" alt="ナイチンゲールの死因の図の原本">
+<figcaption>ナイチンゲールの報告書に収められた死因の図の原本である。青い扇形は防ぐことのできた感染症、赤は負傷、黒はその他の原因による死亡を表す。1854年4月から1855年3月の円では、青い扇形の面積が赤と黒の面積を大きく上回る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Nightingale-mortality.jpg">Florence Nightingale</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>図が示したのは死亡の大半が戦闘ではなく病院の衛生状態に起因する病気だったことである。数字の表だけでは伝わりにくい事実を1枚の図で示した。データを集めて要約し図で伝える手順は記述統計そのものである。第1章で学ぶヒストグラムも同じ目的の図である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/00_intro-scutari-ward.jpg" width="1000" height="697" loading="lazy" alt="スクタリの病院の病室を描いた石版画">
+<figcaption>クリミア戦争中のスクタリの病院の病室を描いた石版画である。ナイチンゲールが着任した後の様子を描いている。本文の死亡記録はこうした野戦病院で集められた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:One_of_the_wards_of_the_hospital_at_Scutari_LCCN2002713027.jpg">Popular Graphic Arts</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p class="an-h">ナイチンゲールの図は面積で量を表す</p>
 <p>扇形の中心角はどの月も等しく半径を変えて面積を死者数に比例させた。半径を量に比例させると面積が2乗で大きく見えるからである。</p>

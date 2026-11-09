@@ -7,6 +7,11 @@
 <h2 id="s1">散布図と相関</h2>
 <p>2つの変量 \( x \) と \( y \) の値の組 \( (x_1,y_1),(x_2,y_2),\ldots,(x_n,y_n) \) を座標平面上の点として表した図を<strong>散布図</strong>と呼ぶ。1つの点が1人や1日にあたる。</p>
 <p>散布図で点が右上がりの帯状に並ぶとき \( x \) が大きいほど \( y \) も大きい傾向がある。この関係を<strong>正の相関</strong>と呼ぶ。右下がりに並ぶときは \( x \) が大きいほど \( y \) が小さい傾向があり<strong>負の相関</strong>と呼ぶ。どちらの傾向も見られないときは<strong>相関がない</strong>という。点が直線に近く並ぶほど相関が強い。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_correlation-galton-pearson.jpg" width="844" height="1000" loading="lazy" alt="晩年のゴルトンとピアソン">
+<figcaption>87歳のゴルトンと、その伝記を書いたピアソンである。ゴルトンは親子の身長のように対になった2つの量を調べ、関係の強さを1つの係数で表そうとした。散布図と相関係数はこの研究から生まれた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Karl_Pearson;_Sir_Francis_Galton.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 270" role="img" aria-label="相関係数が異なる3つの散布図">
 <rect x="30" y="40" width="190" height="180" fill="none" stroke="var(--line)"/>
@@ -215,6 +220,11 @@
 <tr><td>偶然</td><td>多数の変量の組を調べると偶然に高い相関の組が見つかる</td><td>無関係な2つの年次統計が数年間だけ同じ方向に動く</td></tr>
 </tbody></table></div>
 <p>第3の変量によって生じる見せかけの相関を<strong>擬似相関</strong>と呼ぶ。因果を確かめるには第3の変量をそろえた比較や原因と考える変量を意図的に変える実験が必要である。フィッシャーが確立した実験計画法はこの考え方に立つ。<strong class="hit">相関係数は関係の有無を調べる出発点であり結論ではない</strong>。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/03_correlation-chocolate.jpg" width="746" height="1000" loading="lazy" alt="板チョコレート"><img src="../img/03_correlation-nobel-medal.jpg" width="1000" height="741" loading="lazy" alt="ノーベル平和賞のメダル"></div>
+<figcaption>左は板チョコレート、右はノーベル平和賞のメダルである。国別のチョコレート消費量とノーベル賞受賞者数には強い正の相関が報告された。国の豊かさのような第3の変量の影響が考えられ、相関だけでは因果を示せない。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Green_and_Black%27s_dark_chocolate_bar_1.jpg">Mx. Granger</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:NOBEL_PEACE_PRIZE._THE_MEDAL_LCCN2016865220.jpg">Harris &amp; Ewing</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="ex"><div class="ex-h">例題 4</div>
 <p>小学生の調査で靴のサイズが大きい児童ほど漢字テストの得点が高い傾向があった。靴のサイズが大きくなると漢字の力が伸びると結論してよいか。</p>
 <details open><summary>解き方</summary><div>手順1 2つの変量の両方に影響する変量を考える。<br>手順2 学年が上がるほど足は大きくなり習った漢字も増える。学年が第3の変量である。<br>手順3 同じ学年の中で比べて相関が残るかを調べなければ因果は判断できない。<br>答え 結論してはならない。学年による擬似相関である</div></details></div>
@@ -316,6 +326,11 @@
 
 <h2 id="s7">現実世界の相関 ゴルトンからノーベル賞とチョコレートまで</h2>
 <p>相関の考え方はイギリスのフランシス・ゴルトンが1888年の論文で示した。ゴルトンは親子の身長や人体の各部の長さの関係を調べて2つの量の関係の強さを1つの係数で表した。現在の相関係数の形はその後カール・ピアソンが標準偏差を用いて整えた。そのため相関係数はピアソンの積率相関係数とも呼ばれる。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/03_correlation-galton.jpg" width="670" height="1000" loading="lazy" alt="フランシス・ゴルトン"><img src="../img/03_correlation-pearson.jpg" width="794" height="680" loading="lazy" alt="カール・ピアソン"></div>
+<figcaption>左はゴルトン、右はピアソンである。ゴルトンが1888年の論文で示した相関の考え方を、ピアソンが標準偏差を用いた相関係数の形に整えた。相関係数がピアソンの積率相関係数と呼ばれるのはこのためである。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Sir_Francis_Galton,_1890s.jpg">Eveleen Myers (née Tennant)</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Karl_Pearson,_1910_(cropped).jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p class="an-h">国別のチョコレート消費量とノーベル賞受賞者数の相関係数は0.791である</p>
 <p>2012年に医学誌に載った報告である。国の豊かさのような第3の変量の影響が考えられ因果の根拠にはならない例として引用される。</p>

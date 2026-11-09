@@ -8,6 +8,11 @@
 <p>アメリカ合衆国とカナダを合わせて<strong>アングロアメリカ</strong>と呼ぶ。イギリス系の移民が社会の基盤をつくり、英語が主に使われる地域という意味である。メキシコ以南のラテンアメリカと対比した呼び方である。</p>
 <p>地形は東から西へ3つに分かれる。東部の<strong>アパラチア山脈</strong>は古期造山帯で、なだらかな山地に石炭が埋蔵される。中央部はミシシッピ川の流域に広がる中央平原と、その西のグレートプレーンズである。北部のカナダ楯状地は安定陸塊で、氷河に削られた湖が多い。五大湖もその作用で形成された。西部の<strong>ロッキー山脈</strong>は新期造山帯で、高く険しい山地が南北に続く。</p>
 <p>気候の境界として重要なのが<strong>西経100度の経線</strong>である。この経線の付近は、メキシコ湾から北へ流れ込む湿った空気が届く西の限界にあたる（出典18）。東側は湿潤な気候、西側は半乾燥の気候となる。年降水量はおおむね500mm前後を境に変わる（20インチは約508mm、出典30）。西側では雨水に頼る畑作が難しく、放牧や灌漑農業が中心となる。この線は次節の農業地域の配置を決める基準線である。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/21_americas-oceania-100th.jpg" width="600" height="482" loading="lazy" alt="コザドの西経100度の看板">
+<figcaption>ネブラスカ州コザドの国道30号に掲げられた西経100度の看板（2004年）。撮影者の説明では、実際の経線は約0.5km西を通る。この経線の付近が、メキシコ湾から湿った空気が届く西の限界にあたる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sign_at_the_100th_meridian_on_U.S._Highway_30_in_Cozad,_Nebraska.jpg">Matthew Trump</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-tw"><table>
 <thead><tr><th>地域</th><th>地形区分</th><th>主な特色</th></tr></thead>
 <tbody>
@@ -18,6 +23,11 @@
 <tr><td>カナダ楯状地</td><td>安定陸塊</td><td>氷河地形と湖。鉄鉱石・ニッケル・針葉樹林</td></tr>
 </tbody></table></div>
 <p>開拓は東海岸から西へ進んだ。1785年の土地条例から政府が西部の土地を測量して格子状に区画し、1862年のホームステッド法では5年間耕作した入植者に土地を与える制度を設けた（出典31、出典32）。土地を約9.7km四方のタウンシップと、それを36等分した約1.6km四方のセクションに分ける方式を<strong>タウンシップ制</strong>と呼ぶ（出典31）。現在も中西部の空中写真では道路と農地が東西南北の碁盤目状に並び、農家は区画の中に1戸ずつ離れて建つ散村の形態をとる。先住民は土地を失い、保留地へ移住させられた。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/21_americas-oceania-minnesota.jpg" width="1000" height="1000" loading="lazy" alt="衛星から見たミネソタ州北西部の碁盤目状の農地">
+<figcaption>2009年9月に衛星が撮影したミネソタ州北西部の農地。四角い区画の畑が東西南北の碁盤目状に並び、収穫を終えた畑は茶色に見える。政府の測量による格子状の区画が、現在の土地利用にそのまま残っている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Precision_Farming_in_Minnesota_-_Natural_Colour.jpg">NASA Earth Observatory</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 1</div>
 <p>アメリカ合衆国中西部の空中写真に、道路が東西と南北に直交し、農家が1戸ずつ離れて点在する景観が写っている。この景観の成立を説明する文として最も適当なものはどれか。ア 河川の自然堤防の上に家屋が列状に並んだ。イ 政府による土地の測量と格子状の区画に沿って入植が行われた。</p>
@@ -59,6 +69,11 @@
 <h3>企業的農業とアグリビジネス</h3>
 <p>アメリカ合衆国の農業は、広い農地で大型の機械と化学肥料を使い、少ない労働力で大量に生産する<strong>企業的農業</strong>である。半乾燥のグレートプレーンズでは、地下水をくみ上げて回転するアームで散水する<strong>センターピボット</strong>方式の灌漑が広がり、空中写真では円形の農地が並ぶ。水源のオガララ帯水層では地下水位の低下が課題である。肉牛は放牧の後に<strong>フィードロット</strong>と呼ばれる肥育場に集め、穀物の飼料で短期間に太らせて出荷する。</p>
 <p>種子・肥料・農業機械の供給から、穀物の集荷・輸送・加工・販売までを担う産業を<strong>アグリビジネス</strong>と呼ぶ。中でも穀物の国際的な流通を担う大企業は<strong>穀物メジャー</strong>と呼ばれ、ミシシッピ川の河港やメキシコ湾の輸出港に倉庫と積出し施設をもつ。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/21_americas-oceania-elevator.jpg" width="1000" height="750" loading="lazy" alt="ミシシッピ川沿いの穀物倉庫とはしけ">
+<figcaption>セントルイスのミシシッピ川沿いにあるADMの穀物倉庫（エレベーター）と、川を進むはしけの列。穀物メジャーは河港の倉庫で穀物を集め、川を使ってメキシコ湾の輸出港へ運ぶ。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Mississippi_River_Barge_and_ADM_Grain_Elevator.jpg">Jay Dugger</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <div class="tb-bars"><h5>大豆の生産量 単位 百万トン ・ 2025/26年度の速報値 ・ 出典3</h5>
 <div class="tb-bar"><span>ブラジル</span><u class="w"><i style="width:100%"></i></u><b>180.5</b></div>
 <div class="tb-bar"><span>アメリカ合衆国</span><u class="c"><i style="width:64%"></i></u><b>116.0</b></div>
@@ -109,6 +124,11 @@
 <h2 id="s3">工業地域の移動と多民族社会</h2>
 <p>アメリカ合衆国の工業は、19世紀から20世紀半ばまで北東部と五大湖の周辺に集中した。アパラチア山脈の石炭とスペリオル湖の西のメサビ鉄山の鉄鉱石を五大湖の水運で結び、ピッツバーグで鉄鋼業が、デトロイトで自動車工業が発達した。北緯37度より北のこの地域を<strong>スノーベルト</strong>と呼ぶ。</p>
 <p>1970年代以降、工業の中心は北緯37度より南の<strong>サンベルト</strong>へ移った。サンベルトの範囲を北緯36度30分以南とする定義もある（出典36）。理由は次の4点である。第1に、温暖な気候と広く安い土地がある。第2に、賃金が低く労働組合の組織率も低い。第3に、州政府が税の優遇で企業を誘致した。第4に、メキシコ湾岸の石油と、連邦政府の航空宇宙・軍事の予算がある。一方で北東部の古い工業地域では、日本などとの競争に敗れた鉄鋼業と自動車工業の工場が閉鎖され、失業と人口の流出が進んだ。この地域は<strong>ラストベルト</strong>（さびついた地帯）と呼ばれる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/21_americas-oceania-packard.jpg" width="1000" height="750" loading="lazy" alt="デトロイトに残るパッカード自動車工場の廃墟">
+<figcaption>デトロイトに残るパッカード自動車工場の廃墟。高級車を製造した工場は閉鎖後、窓が割れたまま残された。北東部の古い工業地域では、工場の閉鎖と人口の流出が進んだ。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Dilapidated_Packard_Plant,_Detroit,_Michigan_(21721082866).jpg">Ken Lund</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 398.1" role="img" aria-label="アメリカ合衆国の主な工業都市とサンベルト">
 <clipPath id="j21bc"><rect x="0" y="0" width="720" height="398.1"/></clipPath>
@@ -167,6 +187,11 @@
 <p class="tb-sub">ヒスパニックは人種ではなく出自の区分であり、人種の項目とは別に集計される。そのため人種の項目にヒスパニックを加えると100％を超える。</p>
 <p>分布には地域差がある。ヒスパニックはメキシコと接する南西部の州に多く、フロリダ州にはキューバ系が多い。アフリカ系は綿花の大農園があった南部に多く、アジア系は太平洋岸の都市に多い。</p>
 <p>カナダは英語とフランス語を公用語とし、フランス系住民の多いケベック州は独自の言語と文化を守る政策をとる。1999年には先住民のイヌイットが多く住む地域にヌナブト準州が設けられた（出典24）。カナダの多文化主義の経緯は第16章で扱う。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/21_americas-oceania-iqaluit.jpg" width="1000" height="562" loading="lazy" alt="雪に覆われたイカルイトの空撮">
+<figcaption>雪と氷に覆われたヌナブト準州の州都イカルイトの空撮。1999年に、イヌイットが多く住む地域にヌナブト準州が設けられた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Aerial_view_of_Iqaluit,_Nunavut_(Quintin_Soloviev).jpg">Quintin Soloviev</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>アメリカ合衆国とカナダとメキシコは、1994年に発効した北米自由貿易協定（NAFTA）で結び付いた。2020年7月にはこれを改定した<strong>米国・メキシコ・カナダ協定（USMCA）</strong>が発効した（出典20）。2024年のアメリカ合衆国の貿易総額ではメキシコが15.8％で1位、カナダが14.3％で2位である（財の貿易、出典6）。</p>
 
 <div class="ex"><div class="ex-h">例題 3</div>
@@ -219,6 +244,11 @@
 </figure>
 <p>西部には新期造山帯の<strong>アンデス山脈</strong>が南北に連なり、銅・銀・すずなどの金属資源が分布する。東部には安定陸塊のブラジル高原とギアナ高地があり、鉄鉱石が産出する。赤道付近のアマゾン川の流域には熱帯雨林（セルバ）が広がる。ブラジル高原の中西部にはサバナの<strong>セラード</strong>が、アルゼンチンのラプラタ川の流域には温帯草原の<strong>パンパ</strong>が広がる。ペルーとチリの沿岸には寒流のペルー海流の影響でアタカマ砂漠などの海岸砂漠が分布する。</p>
 <p>低緯度のアンデス山脈では標高によって気候が変わる。赤道の近くでも高地は年中涼しく、先住民の時代から人口が集まった。ボリビアの事実上の首都ラパスは標高3,600m前後にある（出典26）。標高の高い所ではじゃがいもを栽培し、リャマやアルパカを飼育する。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/21_americas-oceania-lapaz.jpg" width="750" height="1000" loading="lazy" alt="ロープウェーから見たラパスの市街地">
+<figcaption>ラパスとエルアルトを結ぶロープウェーから見たラパスの市街地。谷の斜面の上まで住宅が建ち並ぶ。ラパスは標高3,600m前後にあり、赤道に近いが年中涼しい。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Telef%C3%A9rico_La_Paz_-_El_Alto.jpg">Hay Kranen</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 <h3>民族構成</h3>
 <p>ラテンアメリカの民族構成は、先住民・ヨーロッパ系・アフリカ系の3つの組合せで国ごとに異なる。先住民とヨーロッパ系の混血の人々を<strong>メスチーソ</strong>、アフリカ系とヨーロッパ系の混血の人々を<strong>ムラート</strong>と呼ぶ。</p>
 <div class="tb-tw"><table>
@@ -288,6 +318,11 @@
 </tbody></table></div>
 <p class="tb-sub">鉄鉱石は使用可能な鉱石の量、銅とリチウムは金属の含有量で示す。リチウムの世界計はアメリカ合衆国を含まない。</p>
 <p>ブラジルでは、ブラジル高原のイタビラ鉄山と、アマゾン川の流域のカラジャス鉄山で鉄鉱石を産出する。農業では、かつての中心であったコーヒーに加えて、セラードの開発で大豆の生産が急増した。酸性のやせた土壌に石灰を投入して改良し、大型機械による企業的農業が広がった。ブラジルは1960年に首都を沿岸のリオデジャネイロから内陸のブラジリアへ移し、内陸の開発を進めていた（出典27）。日本はこの開発に協力し、1979年から2001年まで日伯セラード農業開発協力事業を実施した（出典19）。開発の一方で、セラードとアマゾンの森林の減少が課題となった。森林の減少は第9章で扱う。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/21_americas-oceania-carajas.jpg" width="1000" height="666" loading="lazy" alt="衛星から見たカラジャス鉄山"><img src="../img/21_americas-oceania-cerrado.jpg" width="1000" height="561" loading="lazy" alt="衛星から見たバイーア州西部のセラードの大豆畑"></div>
+<figcaption>左は2017年6月に衛星が撮影したカラジャス鉄山で、森林の中に露天掘りの採掘場が広がる。右はバイーア州西部のセラードを衛星から見た画像で、台地の上に畑の区画が並び、円形の農地はセンターピボットの灌漑である。説明文によれば、この地域の作付けの約9割が大豆である。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Carajas_Mine,_Brazil_(ASTER).jpg">NASA/METI/AIST/Japan Space Systems</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Central_Brazil_savannas_soybean_producing_areas_CBERS4_MUX_image.jpg">Coordenação-Geral de Observação da Terra</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>ベネズエラの原油の確認埋蔵量は3,032億バレルで、石油輸出国機構（OPEC）の統計では世界最大である（2024年末、出典17）。</p>
 <h3>工業化と経済統合</h3>
 <p>20世紀半ばから、ブラジルやメキシコなどは輸入していた工業製品を国内で生産する<strong>輸入代替型の工業化</strong>を進めた。1980年代に対外債務の返済が困難になる累積債務問題が生じた後は、輸出指向型の工業化へ転換した。ブラジルは航空機を製造し、さとうきびから得たエタノールを自動車の燃料として使う。</p>
@@ -330,6 +365,11 @@
 <figcaption>オーストラリアとニュージーランドの主な資源と農業地域。網掛けは大鑽井盆地のおおよその範囲である。国境はNatural Earthによる。</figcaption>
 </figure>
 <p>農牧業は降水量に応じて内陸から沿岸へ帯状に配置される。年降水量が少ない内陸では牛と羊の放牧、その外側のマリー・ダーリング盆地などでは小麦の栽培と羊の飼育を組み合わせた農業、湿潤な沿岸では酪農が中心である。鉱業では北西部のピルバラ地区で鉄鉱石を、東部のボウエン盆地などで石炭を産出する。露天掘りで採掘し、鉄道で港へ運ぶ。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/21_americas-oceania-hedland.jpg" width="1000" height="750" loading="lazy" alt="ポートヘッドランドに到着する鉄鉱石の貨物列車"><img src="../img/21_americas-oceania-orecarrier.jpg" width="1000" height="657" loading="lazy" alt="鉄鉱石を積んでポートヘッドランドを出港するばら積み船"></div>
+<figcaption>左は西オーストラリア州のポートヘッドランドに到着する鉄鉱石の貨物列車である。右は鉄鉱石を積んでポートヘッドランドを出港するばら積み船である。ピルバラ地区で露天掘りした鉄鉱石は、鉄道で港へ運ばれて船で輸出される。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Port_Hedland,_Western_Australia.jpg">Nachoman-au</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Alpha_Millennium_departs_Port_Hedland,_2012_(1).JPG">Bahnfrend</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 <p>オーストラリアの住民はイギリス系の移民が中心で、先住民の<strong>アボリジニ</strong>は入植によって土地を失った。20世紀の前半には白人以外の移民を制限する白豪主義の政策をとったが、1970年代に廃止して多文化主義へ転換した。その経緯は第16章で扱う。</p>
 <h3>貿易相手の変化</h3>
 <p>オーストラリアの輸出先は、宗主国のイギリスからアジアへ移った。日本は1966/67年度にイギリスを上回って最大の輸出先となり、2009/10年度に中国が日本を上回った（出典12、出典13）。2007年に中国が日本を上回ったのは輸出と輸入を合わせた貿易総額であり、輸出先では2008/09年度まで日本が最大であった（出典34、出典35）。日本の鉄鋼業と中国の工業化が鉄鉱石と石炭の需要を生んだ。1973年にイギリスがヨーロッパ共同体（EC）に加盟したことも、アジアとの結び付きを強める契機となった。</p>
@@ -375,6 +415,11 @@
 <tr><td>ポリネシア</td><td>多くの島々</td><td>サモア・トンガ・ツバル・ハワイ・ニュージーランド</td><td>ハワイ・ニュージーランド・イースター島を結ぶ三角形の内側</td></tr>
 </tbody></table></div>
 <p>島嶼国の多くは、陸地の面積が小さく資源と産業が限られる。一方で島の周りに広い排他的経済水域をもち、まぐろなどの漁業の入漁料が重要な収入となる。さんご礁の島（環礁）は標高が低く、海面の上昇による浸水と地下水の塩水化が課題である。ツバルとオーストラリアは2023年11月にファレピリ連合条約に署名した。2024年8月に発効し、気候変動の影響を受けるツバルの国民に年間280人まで移住の経路を設けた（出典16）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/21_americas-oceania-funafuti.jpg" width="1000" height="666" loading="lazy" alt="上空から見たツバルのフナフティ環礁">
+<figcaption>上空から見たツバルのフナフティ環礁。細長いサンゴ礁の島の上に建物が並び、周囲の海面との高さの差が小さい。海面が上昇すると浸水と地下水の塩水化が起こりやすい。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Tuvalu_Funafuti_Atoll.JPG">Gabriella Jacobi</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="ex"><div class="ex-h">例題 6</div>
 <p>オーストラリアの輸出先の年表と統計から判断できる内容として最も適当なものはどれか。ア 2025年の中国への輸出は日本への輸出の3倍を上回る。イ 日本が最大の輸出先であった期間は20年に満たない。</p>

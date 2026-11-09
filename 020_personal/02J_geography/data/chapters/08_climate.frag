@@ -99,6 +99,12 @@
 
 <p>上昇気流の地域では空気が冷えて水蒸気が凝結し、雨が多くなる。下降気流の地域では雲ができにくく乾燥する。<strong class="hit">熱帯収束帯の下に熱帯雨林が、亜熱帯高圧帯の下に砂漠が帯状に並ぶのはこのためである</strong>。サハラ砂漠・アラビア半島・オーストラリア内陸の砂漠は、いずれも緯度20〜30度付近にある。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/08_climate-itcz.jpg" width="1000" height="450" loading="lazy" alt="赤道付近に東西に連なる雲の帯を写した衛星画像">
+<figcaption>人工衛星から見た太平洋東部と南北アメリカである。赤道のやや北に、東西に細長く連なる雲の帯が見える。これが熱帯収束帯で、上昇気流によって積乱雲が帯状に発達している。その南北の亜熱帯の海上には雲の少ない領域が広がる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:IntertropicalConvergenceZone-EO.jpg">作者名の記載なし</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <h3>気圧帯の季節移動とモンスーン</h3>
 <p>太陽が真上から照らす緯度は、北半球の夏至には北回帰線（北緯約23.4度）、冬至には南回帰線まで移動する。気圧帯もこれに合わせて夏の半球側へ移動する。この移動が雨季と乾季を生む。</p>
 <div class="tb-tw"><table>
@@ -166,7 +172,19 @@
 </figure>
 
 <p>寒流は沿岸の大気の下層を冷やす。下層が冷たく上層が暖かい状態では上昇気流が起こりにくく、雨が降りにくい。<strong class="hit">低緯度の大陸西岸で寒流に沿って海岸砂漠ができるのはこのためである</strong>。南米のペルー海流沿いにアタカマ砂漠、アフリカのベンゲラ海流沿いにナミブ砂漠がある。冷えた空気から霧が発生しやすく、リマでは雨はほとんど降らないが曇りの日が多い。第1節の表のダーウィンとリマは同じ南緯12度付近にある。それでもリマの年平均気温は7.9℃低く、年降水量は2.1mmにとどまる（1991〜2020年、出典2。差は本書による算出値）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_climate-namib.jpg" width="1000" height="666" loading="lazy" alt="大西洋に面したナミブ砂漠の砂丘">
+<figcaption>ナミブ砂漠が大西洋に接する海岸である。赤みを帯びた砂丘が波打ち際まで迫り、海の目の前でも植生がない。沖を流れる寒流のベンゲラ海流が下層の大気を冷やし、雨が降りにくくなっている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Namib_desert_meets_Atlantic_ocean.jpg">Red Dune Safaris</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>反対に暖流は沿岸を温暖にする。北大西洋海流とその上を吹く偏西風のため、西ヨーロッパは高緯度のわりに冬が温暖である。ナントの1月の平均気温は6.2℃で、北緯47.9度のウランバートルの−21.4℃より27.6℃高い（1991〜2020年、出典2。差は本書による算出値）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_climate-gulfstream.jpg" width="1000" height="772" loading="lazy" alt="衛星で観測したメキシコ湾流の温度分布">
+<figcaption>2001年5月2日に人工衛星のMODISが観測した北大西洋の温度分布で、赤と橙が温かく、緑と青が冷たい。米国東岸の沖を北東へ向かう赤い帯がメキシコ湾流である。暖かい海水が大きく蛇行しながら高緯度へ熱を運ぶ様子が分かる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Modis_brighttemp_glfstr_lrg.jpg">NASA</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <h3>湧昇とエルニーニョ現象</h3>
 <p>沿岸に沿って吹く風が表層の海水を沖へ運ぶと、下から冷たい海水が上がってくる。これを<strong>湧昇</strong>と呼ぶ。湧昇した海水は冷たく栄養塩に富み、良い漁場になる（出典8）。ペルー沖は南東貿易風による湧昇の海域である（出典17）。</p>
@@ -554,6 +572,12 @@
 
 <h2 id="s5">土壌と植生</h2>
 <p>ある地域に生育する植物の集まりを<strong>植生</strong>と呼ぶ。植物・動物・微生物とそれを取り巻く気候や土壌をひとまとまりとして捉えたものを<strong>生態系</strong>と呼ぶ。気候帯ごとに植生と土壌がそろって変わるので、植生は気候区分の手がかりになる。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph3"><img src="../img/08_climate-amazon.jpg" width="777" height="1000" loading="lazy" alt="衛星から見たアマゾンの熱帯雨林と雲"><img src="../img/08_climate-serengeti.jpg" width="1000" height="575" loading="lazy" alt="アカシアが点在するセレンゲティの草原"><img src="../img/08_climate-taiga.jpg" width="1000" height="666" loading="lazy" alt="シベリアのサヤン山脈の針葉樹林"></div>
+<figcaption>左は人工衛星から見たアマゾンの熱帯雨林で、濃い緑の森林の上に午後の小さな積雲が一面に並ぶ。中央はタンザニアのセレンゲティ国立公園で、背の高い草原にアカシアが点在するサバナである。右はシベリアのサヤン山脈の暗い針葉樹林で、タイガにあたる。気候帯が変わると植生の形がそろって変わる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Afternoon_Clouds_over_the_Amazon_Rainforest.jpg">NASA, Jeff Schmaltz</a>／パブリックドメイン 中央：<a href="https://commons.wikimedia.org/wiki/File:Serengeti-Landscape-2012.JPG">Bjørn Christian Tørrissen</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Ergaki,_Taiga_in_Siberia,_Dark_coniferous_forest,_Sayan_Mountains,_Russia.jpg">Vyacheslav Argenberg</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>岩石の風化物に落葉などの有機物が加わってできた地表の層が<strong>土壌</strong>である。気候と植生の影響を強く受け、気候帯に沿って帯状に分布する土壌を<strong>成帯土壌</strong>と呼ぶ。母岩や地形の影響を強く受けて局地的に分布する土壌を<strong>間帯土壌</strong>と呼ぶ。</p>
 <div class="tb-tw"><table>
 <thead><tr><th>気候</th><th>植生</th><th>成帯土壌</th><th>土壌の性質と理由</th></tr></thead>
@@ -569,6 +593,12 @@
 <tr><td>ET</td><td>ツンドラ コケ類と地衣類</td><td>ツンドラ土</td><td>夏の短い期間だけ地表が融け、下には永久凍土がある</td></tr>
 </tbody></table></div>
 <p>ラトソルに相当する土壌は国際的な分類でフェラルソルと呼ばれる。陸地面積の6%弱を占め、ブラジル・コンゴ川流域・マダガスカルなどに多い（出典12。時点の記載なし）。<strong class="hit">熱帯雨林は植物の量が多いのに土壌はやせている</strong>。養分の大部分は土壌ではなく植物の体に蓄えられているからである。森林を伐採して畑にすると、数年で地力が失われる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_climate-laterite.jpg" width="1000" height="750" loading="lazy" alt="グアムの山地に露出した赤色の土壌">
+<figcaption>熱帯の島グアムの山地で、植物がはがれて赤色の土壌が露出した斜面である。高温多雨の地域では風化が進み、鉄の酸化物が残って土が赤くなる。植生を失った斜面は侵食を受けやすい。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Red_lateritic_soil_in_the_mountains_of_Guam_(line378776781).jpg">David Burdick / NOAA</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
 <p>チェルノーゼムの名称は、ロシアの土壌学者ドクチャーエフが1883年にロシアの長草ステップの土壌に名付けたものである（出典11）。北米のプレーリー、アルゼンチンのパンパにも同じ性質の黒色の土壌が分布し、小麦やとうもろこしの大産地になっている（出典11）。</p>
 <p>間帯土壌の代表は3つである。<strong>テラロッサ</strong>は石灰岩が風化した赤色の土壌で、地中海沿岸に分布する。<strong>テラローシャ</strong>は玄武岩などが風化した赤紫色の土壌で、ブラジル高原南部のコーヒー栽培を支える。<strong>レグール</strong>は玄武岩が風化した黒色の土壌で、インドのデカン高原の綿花栽培を支える。</p>
 
@@ -612,6 +642,12 @@
 </tbody></table></div>
 <p>乾燥地域の内陸湖は流出する川がなく、蒸発で塩分が濃くなって塩湖になる。カスピ海と死海が代表である。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/08_climate-mashu.jpg" width="1000" height="669" loading="lazy" alt="北海道の摩周湖">
+<figcaption>北海道の摩周湖である。火山の噴火後の陥没地に水がたまったカルデラ湖で、湖を急な崖が囲んでいる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hokkaido,_Japan,_Lake_Mash%C5%AB,_2008.jpg">Miya.m</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+
 <h3>地下水</h3>
 <p>地層の中で水を通しやすい層を<strong>帯水層</strong>、通しにくい粘土などの層を<strong>不透水層</strong>と呼ぶ。地表に近い不透水層の上にたまり、地表と通じている地下水を<strong>自由地下水</strong>と呼ぶ。上下を不透水層にはさまれ、圧力を受けている地下水を<strong>被圧地下水</strong>と呼ぶ。被圧地下水まで掘った井戸を掘り抜き井戸と呼び、水は圧力によって井戸の中を上昇し、地表より高く噴き出す場合もある。</p>
 
@@ -649,6 +685,12 @@
 </figure>
 
 <p>オーストラリアの<strong>グレートアーテジアン盆地</strong>（大鑽井盆地）は被圧地下水の盆地で、面積は170万km<sup>2</sup>を超える（出典14）。盆地の縁の涵養域に降った雨が帯水層にしみ込み、乾燥した内陸で掘り抜き井戸などから得られる。地下水は牧畜・農業・鉱業と多くの町の水道に使われている（出典14）。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_climate-artesian.jpg" width="1000" height="669" loading="lazy" alt="サーゴミンダの掘り抜き井戸から湧き出る熱水">
+<figcaption>オーストラリアのクイーンズランド州サーゴミンダで、グレートアーテジアン盆地の帯水層まで掘った井戸から温かい地下水が噴き出している。乾燥した赤い大地の中で、遠くの涵養域に降った雨が圧力を受けて地表に湧き出る。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:ThargomindahHydro.jpg">user:kdliss</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 
 <aside class="an an-lv"><b>恋愛で言えば</b>
 <p class="an-h">被圧地下水は遠距離恋愛である</p>

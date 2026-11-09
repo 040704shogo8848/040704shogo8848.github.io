@@ -113,6 +113,11 @@
 
 <h2 id="s4">マルコフ連鎖の定常状態</h2>
 <p>ある集団の状態が一定の確率で毎期移り変わる仕組みを<strong>マルコフ連鎖</strong>と呼ぶ。次の期の状態の確率は今の期の状態だけで決まるとする。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_markov.jpg" width="769" height="1000" loading="lazy" alt="マルコフの肖像写真">
+<figcaption>ロシアの数学者マルコフ。1906年に、次の状態が今の状態だけで決まる確率過程の研究を発表した。この過程が後にマルコフ連鎖と呼ばれる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:AAMarkov.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 <p>例として2つのブランド A と B の利用者の割合を考える。毎月 A の利用者の 90% は A に残り 10% は B に移る。B の利用者の 30% は A に移り 70% は B に残る。n か月後の割合を \(\boldsymbol{x}_n=(a_n, b_n)\) とすると次の式で更新される。</p>
 \[ \boldsymbol{x}_{n+1}=P\boldsymbol{x}_n,\qquad P=\begin{pmatrix} 0.9 & 0.3 \\ 0.1 & 0.7 \end{pmatrix} \]
 <p>P を<strong>推移行列</strong>と呼ぶ。各列は移る前の状態ごとの行き先の確率で列の和は1である。\(\boldsymbol{x}_n=P^n\boldsymbol{x}_0\) なので長期の様子は P の n 乗で決まり第3節の対角化が使える。</p>
@@ -153,6 +158,11 @@
 <p>Googleの創業者ブリンとペイジは1998年の論文で検索結果の順位付けに使う PageRank を示した。考え方は「多くの重要なページからリンクされるページは重要である」である。この定義は自分自身を含む循環した定義に見えるが固有ベクトルとして書くと1つに定まる。</p>
 <p>ネット上をランダムに移動する閲覧者を考える。閲覧者は今のページにあるリンクの中から1つを等しい確率で選んで移る。これは第4節のマルコフ連鎖であり PageRank は<strong>この連鎖の定常分布</strong>である。すなわちリンク行列の固有値1の固有ベクトルである。</p>
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/08_pagerank-founders.jpg" width="1000" height="696" loading="lazy" alt="ペイジとブリン"><img src="../img/08_pagerank-server.jpg" width="750" height="1000" loading="lazy" alt="Googleの最初の本番用サーバー"></div>
+<figcaption>左は2003年のペイジとブリン、右はコンピュータ歴史博物館に展示された Google の最初の本番用サーバーの架台である。架台には基板が多数積まれている。数十億ページの PageRank は、多数の計算機で行列とベクトルの積を繰り返して求める。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Google_page_brin.jpg">Ehud Kenan</a>／CC BY 2.0 右：<a href="https://commons.wikimedia.org/wiki/File:Google%27s_First_Production_Server_(1999)_rack_-_Computer_History_Museum_(2007-11-10_23.05.17_by_Carlo_Nardone).jpg">Carlo Nardone</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <figure class="tb-fig">
 <svg viewBox="0 0 720 300" role="img" aria-label="3ページのリンク構造と PageRank">
   <defs><marker id="ah08e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--sub)"/></marker></defs>
@@ -190,6 +200,11 @@
 <p>多数の変数をもつデータを少数の指標に要約する方法が<strong>主成分分析</strong>である。2科目の試験の点数を例にとる。各科目の分散と2科目の共分散を並べた行列を分散共分散行列と呼ぶ。この行列は対称行列なので第3節から直交する固有ベクトルをもつ。</p>
 <p><strong class="hit">最大の固有値の固有ベクトルの方向がデータのばらつきが最大になる方向である</strong>。この方向を第1主成分と呼ぶ。固有値はその方向のばらつきの大きさであり全固有値の和に対する比を寄与率と呼ぶ。</p>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/08_pearson.jpg" width="1000" height="727" loading="lazy" alt="ピアソンの肖像写真">
+<figcaption>イギリスの統計学者ピアソン。1901年の論文でデータに最もよく当てはまる直線と平面を求める方法を示し、この論文が主成分分析の起源とされる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Karl_Pearson,_1910.jpg">作者不詳</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 <div class="ex"><div class="ex-h">例題 6</div>
 <p>2科目の点数の分散共分散行列が \(\begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}\) であった。第1主成分の方向と寄与率を求めよ。</p>
 <details open><summary>解き方</summary><div>例題1から固有値は3と1で固有値3の固有ベクトルは (1, 1) である。<br>第1主成分は2科目を同じ重みで足す方向で合計点に当たる。<br>寄与率は \(\dfrac{3}{3+1}=0.75\) である。<br>合計点の1つの指標でばらつき全体の75%を説明できる。</div></details></div>
@@ -214,6 +229,11 @@
 <aside class="an an-rw"><b>現実世界</b>
 <p>量子力学では原子のエネルギーの値がある演算子の固有値として求まる。水素原子が特定の波長の光だけを出す理由はエネルギーが固有値の飛び飛びの値に限られるからである。橋や建物の設計でも構造の固有振動数を固有値問題として計算し地震の揺れと共振しないように設計する。</p>
 </aside>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/08_eigen-shaketable.jpg" width="1000" height="486" loading="lazy" alt="振動台の上の2つの建物模型">
+<figcaption>振動台の上に並べた2つの建物の模型。一方は台に固定し、もう一方は免震装置の上に載せている。構造の固有振動数が地震の揺れの周期に近いと共振が起きるため、設計では固有値問題を解いて固有振動数を求める。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Kinematically_equivalent_building_models_on_a_shake-table.jpg">Shustov</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 固有値</div>

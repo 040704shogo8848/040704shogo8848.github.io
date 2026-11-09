@@ -23,6 +23,11 @@
 <p>無罪を仮定し有罪の証拠が十分なときだけ覆す。証拠不十分の無罪判決は潔白の証明ではない。</p>
 </aside>
 
+<figure class="tb-fig tb-photo">
+<img src="../img/11_testing-fisher-window.jpg" width="404" height="848" loading="lazy" alt="フィッシャーを記念するステンドグラス">
+<figcaption>ケンブリッジ大学ゴンヴィル・アンド・キーズ・カレッジの食堂にある、フィッシャーを記念するステンドグラスである。7行7列に色を並べた図はラテン方格と呼ばれ、フィッシャーが実験計画法で用いた配置である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Fisher-stainedglass-gonville-caius.jpg">Schutz</a>／CC BY-SA 2.5／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="s2">有意水準と棄却域</h2>
 <p>帰無仮説のもとで観測結果がどれほど起こりにくければ帰無仮説を否定するかの基準を前もって決める。この基準の確率を<strong>有意水準</strong>と呼ぶ。5% または 1% を使うことが多い。</p>
 <p>帰無仮説のもとで検定統計量がその範囲に入る確率が有意水準に等しくなるように定めた極端な値の範囲を<strong>棄却域</strong>と呼ぶ。観測した値が棄却域に入れば帰無仮説を<strong>棄却する</strong>と言い対立仮説を採る。このとき結果は有意水準5%で<strong>有意である</strong>とも言う。棄却域に入らなければ帰無仮説を棄却しない。</p>
@@ -203,10 +208,20 @@
 
 <h2 id="s7">現実世界の仮説検定</h2>
 <p>有意水準を使う現在の検定の形は20世紀前半にフィッシャーやネイマンとピアソンによって整えられた。</p>
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/11_testing-fisher.jpg" width="612" height="728" loading="lazy" alt="1952年のフィッシャー"><img src="../img/11_testing-neyman.jpg" width="532" height="800" loading="lazy" alt="1969年のネイマン"></div>
+<figcaption>左は1952年のフィッシャー、右は1969年のネイマンである。有意水準を使う現在の検定の形は、2人とエゴン・ピアソンによって20世紀前半に整えられた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Ronald_Aylmer_Fisher_1952.jpg">Barry Eagel</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Jerzy_Neyman2.jpg">Konrad Jacobs</a>／CC BY-SA 2.0 de／Wikimedia Commons</span></figcaption>
+</figure>
 <aside class="an an-rw"><b>現実世界</b>
 <p>フィッシャーは1935年の著書『実験計画法』で紅茶の実験を紹介した。ミルクを先に入れたかを区別できると主張する人に4杯ずつ計8杯を無作為な順に出す。区別できないという帰無仮説のもとで全問正解する確率は \( 1/{}_8\mathrm{C}_4=1/70 \) で約1.4%である。全問正解なら有意水準5%で帰無仮説を棄却できる。</p>
 </aside>
 <p>医薬品の承認のための臨床試験やウェブサービスの A/B テストや工場の抜き取り検査はこの章と同じ手順で行われる。</p>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/11_testing-tea.jpg" width="1000" height="750" loading="lazy" alt="紅茶のポットとカップと牛乳入れ">
+<figcaption>紅茶のポットとカップと牛乳入れである。フィッシャーの実験では、牛乳を先に入れた4杯と紅茶を先に入れた4杯を無作為な順に出した。でたらめに選んで全問正解する確率は70分の1である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Nice_Cup_of_Tea.jpg">Vanderdecken</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <h2 id="s8">確認問題</h2>
 <div class="qz"><div class="qz-h">問1 ・ 仮説の立て方</div>

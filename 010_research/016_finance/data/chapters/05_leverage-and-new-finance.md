@@ -18,7 +18,17 @@ thesis: 巨大買収も新種の金融商品も、共通しているのは将来
 
 東芝の非上場化は、この層が開示から読み取れる例である。2023年8月7日の意見表明では、資金は普通株式による出資5,200億円、優先株式2,000億円、メザニンローン2,355億円、シニアローン1兆2,000億円の合計2兆1,555億円で組まれた[出典](https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/news/20230807_5.pdf)。借入の合計は1兆4,355億円で、調達総額の67%にあたる。 各層の出し手も報道で追える。シニアローン約1.2兆円のうち三井住友銀行が4割相当の5,000億円超、みずほ銀行が4,000億円超、三井住友信託銀行が2割相当の2,000億円超、三菱UFJ銀行とあおぞら銀行の合計で2,000億円超とされる。出資側にはロームが3,000億円、オリックスが2,000億円、日本特殊陶業が500億円を拠出するなど国内20社超が並んだ[出典](https://www.nikkei.com/article/DGKKZO66883430W2A211C2MM8000/)。==銀行団も出資者も国内勢で固められている点が、この案件の性格を規定している==。海外ファンドが入らない代わりに、事業会社が取引関係の維持を動機として出資に参加する構図になった。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/c05_toshiba.jpg" width="750" height="1000" loading="lazy" alt="浜松町ビルディング">
+<figcaption>東京都港区芝浦の浜松町ビルディング。東芝は2025年に本社を川崎市へ移すまで、この建物に本社を置いていた。2023年の非上場化では、出資にメザニンローンとシニアローンを重ねて資金を集めた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hamamatsucho_Building,_at_Shibaura,_Minato,_Tokyo_(2019-01-01).jpg">Lombroso</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 豊田自動織機の非公開化はメザニンを挟まない構成である。開示された出資は、トヨタ自動車の優先株式8,000億円、トヨタ不動産の普通株式2,000億円、豊田章男氏の普通株式10億円の合計1兆10億円である[出典](https://www.toyota-shokki.co.jp/news/item/20260114_document03.pdf)。銀行融資は融資証明書ベースで3兆6,425億円、内訳は三菱UFJ銀行1兆4,570億円、三井住友銀行1兆4,570億円、みずほ銀行7,285億円と報じられている[出典](https://www.bloomberg.com/jp/news/articles/2026-03-06/TBGV0RT96OSJ00)。この内訳はブルームバーグが訂正公開買付届出書をもとに報じたもので、一次資料である届出書そのものは確認できていない。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/c05_toyotaind.jpg" width="1000" height="375" loading="lazy" alt="豊田自動織機の本社">
+<figcaption>愛知県刈谷市にある豊田自動織機の本社。同社の非公開化はメザニンを挟まず、トヨタ自動車の優先株式8,000億円などの出資と借入で構成された。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Headquarters_of_Toyota_Industries.JPG">アラツク</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 貸し手が3行に限られている点は、公開買付者側の開示とも整合する。開示は資金調達先をトヨタ不動産からの借入と3メガバンクからの借入に限って列挙しており、地方銀行や信託銀行を含む広いシンジケート団の形跡はない[出典](https://www.toyota-shokki.co.jp/news/item/20260306_document02.pdf)。規模の感覚として、国内の大手銀行が抱えるLBOローン残高は2023年9月末で約6.6兆円、うち3メガバンクが約80%を占める[出典](https://www.fsa.go.jp/news/r6/ginkou/20240725/240725.pdf)。1件で3兆6,425億円という融資枠は、この残高の55%に相当する。
 
@@ -67,6 +77,11 @@ thesis: 巨大買収も新種の金融商品も、共通しているのは将来
 実際に返済を加速させたのは本業ではなかった。2025年度の営業キャッシュ・フローは3,283億円で前年度比578億円の増加にとどまる一方、投資キャッシュ・フローがキオクシア株などの売却でプラス7,364億円に転じ、フリー・キャッシュ・フローは1兆647億円になった[出典](https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/finance/pdf/tpr2025q4.pdf)。==増分の大半は資産売却であり、本業の増加分ではない==。
 
 このキオクシア持分の扱いは、レバレッジ取引を読むうえで重要な教訓を含む。公開買付け時点で東芝はキオクシアホールディングス発行済株式の39.59%を保有していたが、経営に関与せず、株主間契約上は情報を受領する権利も持たなかった[出典](https://www.global.toshiba/content/dam/toshiba/jp/ir/corporate/news/20230807_5.pdf)。この情報遮断のため特別委員会はキオクシアの価値を独自に検証できず、買付価格の妥当性評価における最大の不確実要因になった。同社は2024年12月18日に東京証券取引所プライム市場へ上場し[出典](https://ssl4.eir-parts.net/doc/285A/yuho_pdf/S100W440/00.pdf)、東芝の保有割合は2025年3月31日の30.50%から2026年3月31日の17.59%へ下がった[出典](https://www.kioxia-holdings.com/ja-jp/ir/stock/outline.html)。買収時には価格算定を歪める不確実要因だった資産が、上場後は債務圧縮の主原資に転じた。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/c05_kioxia.jpg" width="1000" height="666" loading="lazy" alt="キオクシアの北上工場">
+<figcaption>岩手県北上市にあるキオクシアの北上工場。公開買付けの時点で、東芝はキオクシアホールディングスの発行済株式の39.59%を保有していた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:KIOXIA_Iwate_Kitakami_Site.jpg">掬茶</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 本業の改善そのものは限定的である。2025年度の売上高は3兆7,091億円で前年度比5.6%増、営業損益は3,008億円で前年度比1,023億円の増加、売上高営業利益率は8.1%である。EBITDA4,818億円に対して当初のシニアローン1兆2,000億円は倍率で2.5倍にあたり、メザニンと優先株式を含めればさらに上がる。金利水準が開示されていないため利払い後の返済余力は算定できない。最終利益1兆9,673億円という数字は再建の証拠には使えない。営業損益との差の大半は、営業外のキオクシア関連損益2兆2,770億円である。
 
@@ -162,11 +177,21 @@ CFTCは訴訟と並行して規則で線を引きにいっている。2026年6�
 
 残高の置き方で競争条件が分かれる。2025年3月末時点で、アイフル連結の営業貸付金は8,145億79百万円、うち消費者向無担保は6,665億28百万円である。親会社単体の個人向け無担保は5,979億76百万円、信用保証の支払承諾見返は個人向け1,950億24百万円と事業者向け695億52百万円である[出典](https://irbank.net/E03721/notes/ManagementAnalysisOfFinancialPositionOperatingResultsAndCashFlowsTextBlock?f=S100VZ1M)。アコム（MUFG連結子会社）の同期末の営業貸付金は9,360億15百万円、信用保証残高は1兆3,645億25百万円である[出典](https://equity.jiji.com/storage/tdnet/140120250512541256.pdf)。SMFGのデータブックでは、SMBCコンシューマーファイナンスの保証残高は2025年3月末で1兆3,305億円、不良債権残高は1,068億円である。コンシューマーファイナンス残高（三井住友カードとSMBCCFの単純合算）は2兆2,226億円で、うち海外は1,407億円である[出典](https://www.smfg.co.jp/investor/financial/latest_statement/2025_3/2025_fy_databook.pdf)。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/c05_acomaiful.jpg" width="1000" height="666" loading="lazy" alt="アコムとアイフルの店舗">
+<figcaption>兵庫県姫路市で隣り合うアコムとアイフルの店舗。看板には自動契約コーナーの表示もある。本文はアコムを銀行系、アイフルを独立系として比べる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Acom_and_Aiful_shops.JPG">Corpse Reviver</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 銀行系の強みは、親銀行のカードローンを保証する事業が大きい点にある。アコムは三菱UFJ銀行や地方銀行などの個人向け無担保ローンの保証を受託し、SMBCCFも三井住友銀行向けを含む保証を抱える。借り手から見ると銀行名のローンであり総量規制の外側にありうる。貸し手から見ると与信と貸倒は保証会社側に残る。独立系のアイフルも保証残高を伸ばしているが、銀行系2社の保証残高（各1.3兆円超）には届かない。逆に、アイフルは自前の無担保ローンと提携保証の両方で、親銀行の顧客基盤に依存しない代わりに、広告と成約率で口座を取る。2025年3月期の親会社個人向け無担保の新規成約件数は32万5千件、成約率は33.2%である[出典](https://irbank.net/E03721/notes/ManagementAnalysisOfFinancialPositionOperatingResultsAndCashFlowsTextBlock?f=S100VZ1M)。==競争の主戦場は金利表ではなく、残高を「自社ローン」に載せるか「銀行ローン＋自社保証」に載せるかの選択である==。後者は規制線の外側の需要を、信用リスクだけ貸金業者の帳簿に移す。
 
 ### マイクロファイナンスの連帯保証モデルとの比較
 
 グラミン銀行型のマイクロファイナンスは、物的担保の代わりに少人数グループの相互監視を使う。グラミン財団のガイドラインは、おおむね5人の自選グループと複数グループからなるセンター、週次集会、貯蓄、相互の規律を核とする[出典](https://grameenfoundation.org/documents/GrameenGuidelines.pdf)。世界銀行の研究は、共同責任がピア監視と社会的担保を生む一方、共謀による連鎖延滞もありうると整理する[出典](https://documents1.worldbank.org/curated/en/300451468200647730/pdf/wps6204.pdf)。ただしグラミン銀行自身の公式説明は、5人グループへの所属は必要でも、グループが債務を連帯保証する義務はなく、返済責任は個人にあり、法的文書も担保も取らないと述べる[出典](https://www.grameen-info.org/grameen-bank-at-a-glance/)。形式上の連帯保証と、事実上のピア圧力は分けて読む必要がある。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/c05_grameen.jpg" width="632" height="1000" loading="lazy" alt="グラミン銀行の本店ビル">
+<figcaption>バングラデシュの首都ダッカのミルプールにあるグラミン銀行の本店ビル。グラミン銀行型のマイクロファイナンスは、物的担保の代わりに少人数グループの相互監視を使う。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Grameen.JPG">Mamun2a</a>／CC BY-SA 2.5／Wikimedia Commons</span></figcaption>
+</figure>
 
 日本の消費者向無担保は、個人責任・指定信用情報機関・年収証明・総量規制・利息制限法という、正式な情報と法規制で代替する。グループの相互保証は原則として介在せず、延滞時の損失は貸金業者（または保証会社）の引当と償却に落ちる。マイクロファイナンスが「近所の人目」で情報の非対称を縮めるのに対し、日本の貸金業は「信用情報と収入証明」で縮める。どちらも無担保で貸すための装置だが、損失の負担者は前者が共同体の評判コスト、後者が業者のバランスシートである。
 

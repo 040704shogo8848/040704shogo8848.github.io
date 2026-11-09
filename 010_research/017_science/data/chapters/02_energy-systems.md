@@ -26,11 +26,21 @@ P_loss = R × P² / (V × cosθ)²
 
 では電圧を上げ続けないのはなぜか。ここで物理と費用が交差する。電圧を上げると絶縁の要求が上がり、碍子の連結数、鉄塔の高さ、導体間の離隔距離が増える。導体表面の電界強度が空気の絶縁破壊強度を超えるとコロナ放電が起き、それ自体が損失になるため多導体化が要る。損失削減で得られる額と設備費の増加額が釣り合う電圧が選ばれる。物理は方向を決めるが、水準を決めるのは費用である。この構図はこの章で繰り返し現れる。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/02_energy-500kv-line.jpg" width="1000" height="667" loading="lazy" alt="8本の導体を束ねた500kV送電線"><img src="../img/02_energy-corona.jpg" width="1000" height="665" loading="lazy" alt="送電線のコロナリングに生じたコロナ放電"></div>
+<figcaption>左は栃木県矢板市を通る500kVの南いわき幹線で、8本の導体をスペーサで1組に束ねた多導体になっている。この送電線は1,000kVでの運用に対応する設計である。右は500kV送電線のコロナリングに生じたコロナ放電で、夜間に90秒の露光で撮影した。紫色の光点が放電の位置にあたる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Minami-Iwaki_Trunk_Line_02.jpg">Σ64</a>／CC BY 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Corona_discharge_1.JPG">Nitromethane</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 日本全体の送配電損失率は2024年で4.93%であり、2015年の3.83%から1.10ポイント上がっている [出典](https://api.worldbank.org/v2/country/JP/indicator/EG.ELC.LOSS.ZS?format=json)。この数値は送電段階だけでなく配電段階と計量できない分を含む。損失の多くは電圧の低い配電段階で生じる。
 
 損失の式と並ぶもう一つの制約が、交流の同期条件である。交流系統を並列に運転するには周波数と位相が一致していなければならない。日本は東側が50Hz、西側が60Hzで、境界はおおむね静岡県の富士川と新潟県の糸魚川を結ぶ線にある。分割の起点は1893年の東京電燈によるAEG製発電機の採用と、大阪電燈によるGE製発電機の採用にさかのぼる [出典](https://ja.wikipedia.org/wiki/商用電源周波数)。50Hzと60Hzでは位相差が毎秒10回転する計算になり、同期は原理的に取れない。遮断器を投入すれば短絡に近い事故電流が流れる。
 
 したがって東西の融通には、交流を直流に整流してから別の周波数の交流に戻す周波数変換設備が要る。佐久間が30万kW、新信濃が60万kW、東清水が30万kW、飛騨信濃が90万kWで、東京中部間の合計は210万kWとされる。飛騨信濃の運転開始は2021年3月31日で、これにより合計は120万kWから210万kWに増えた [出典](https://ja.wikipedia.org/wiki/周波数変換所)。300万kWへの増強計画があるとされるが、電力広域的運営推進機関の一次資料は確認できていない。増強の中身は広域機関の整備計画で追える。佐久間に30万kW、東清水に60万kWの周波数変換設備を新設し、275kVと500kVの送電線の新設・増強と500kV変圧器の増設を伴う。完了は2027年度が予定である。費用負担は、210万kWまでの90万kW分が一般負担、300万kWへの分が政策的支援という切り分けになっている[出典](https://www.occto.or.jp/assets/kouikikeitou/seibikeikaku/tokyochubu/files/FC_20210804.pdf)。==増強分の費用を誰が持つかが途中で変わっている点が、この設備の性格を示している==。系統利用者の受益で説明できる範囲を超えた部分は、政策の側が引き受けている。周波数統一については、2011年の政府試算として設備交換に約10兆円、工期に40年以上という数字が流通しているが、試算の出所である政府文書そのものは確認できていない [出典](https://ja.wikipedia.org/wiki/商用電源周波数)。報道ベースでは、経済産業省が2012年3月6日に、東西で異なる周波数を統一した場合の電力会社の設備交換費用を約10兆円と試算したと報じられている[出典](https://www.nikkei.com/article/DGXNASFS06025_W2A300C1EE2001/)。40年以上という工期は、50Hz地域をすべて60Hzへ変更する場合の発電設備の改修期間として同じ文脈で示された数字である。試算書そのものは公開の形で取得できていない。
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/02_energy-sakuma-fc.jpg" width="1000" height="562" loading="lazy" alt="J-POWER の佐久間周波数変換所"><img src="../img/02_energy-higashishimizu-fc.jpg" width="1000" height="667" loading="lazy" alt="東清水変電所の全景"></div>
+<figcaption>左は J-POWER の佐久間周波数変換所をドローンで撮影したもの、右は2022年10月に撮影した東清水変電所の全景である。どちらも交流を直流に整流してから別の周波数の交流に戻す周波数変換設備を持つ。変換容量は佐久間が30万kW、東清水が30万kWである。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:J-POWER_SAKUMA_frequency_converter_station.jpg">Jihara19</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Higashi-Shimizu_Freq_Converter_221015_aa.jpg">AKKIE787</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 ここで区別すべき点が二つある。第一に、変換設備を増やしても周波数は統一されない。増強は融通量の上限を上げるだけで、東は50Hz、西は60Hzのまま運用が続く。==第二に、直流連系がすべて周波数変換ではない==。南福光連系所は60Hz同士を直流で背中合わせに接続する設備であり、周波数の変換は行わない。
 
@@ -52,11 +62,21 @@ P_loss = R × P² / (V × cosθ)²
 
 軽水炉の熱効率と溶融塩炉の見積もりは同一の情報源による [出典](https://world-nuclear.org/information-library/nuclear-fuel-cycle/nuclear-power-reactors/nuclear-power-reactors)。ただし前者は実績値、後者は設計上の見積もりであり、同じ確度の数字として並べてはならない。実装の差は大きい。世界の運転可能炉441基、404.3GWeのうち加圧水型が316基306.2GWe、沸騰水型が60基61.0GWeを占め、高速炉は2基1.4GWeにとどまる。商用規模で運転中の溶融塩炉は存在しない。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/02_energy-monju.jpg" width="1000" height="750" loading="lazy" alt="福井県敦賀市の高速増殖炉もんじゅ"><img src="../img/02_energy-msre.jpg" width="1000" height="741" loading="lazy" alt="溶融塩炉実験炉 MSRE を上から見た様子"></div>
+<figcaption>左は福井県敦賀市の高速増殖炉もんじゅで、ナトリウムを冷却材に使う高速炉である。2016年に廃炉が決まった。右は米国オークリッジ国立研究所の溶融塩炉実験炉（MSRE）を上から見たもので、1965年に臨界に達し1969年まで運転された。燃料はフッ化物の溶融塩で、黒鉛を減速材に使った。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Monju.JPG">Nife</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:MoltenSaltReactor.jpg">Oak Ridge National Laboratory</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 用語の注意を二つ挙げる。==高速炉の高速は中性子のエネルギーを指し、温度ではない==。高速炉の冷却材温度は溶融塩炉より低い。また溶融塩炉がすべて高速炉というわけでもなく、基本設計は黒鉛減速を伴う熱外中性子領域である。
 
 高い温度は効率を生むが、同時に副産物を残す。ここで費用の議論が始まる。国際的な標準的試算では、バックエンド費用は発電コストの数%にとどまる。OECD/NEAは、フランスの実績発電コストを会計検査院が約60USD/MWhと見積もったのに対し、核燃料サイクル費用全体を13%未満、バックエンドを約6.5%と算定している。参照ケースでは直接処分のバックエンドが1.3USD2010/MWh、1回再処理では2.8USD2010/MWhとなる。日本の公的試算も出ている。資源エネルギー庁の発電コスト検証ワーキンググループは2021年、設備利用率70%・稼働40年の前提で原子力を11.7円/kWh以上と試算し、その内訳として核燃料サイクル費用を1.5円/kWh、追加的安全対策費を0.6円/kWhと算定した[出典](https://www.enecho.meti.go.jp/committee/council/basic_policy_subcommittee/mitoshi/cost_wg/2021/data/08_05.pdf)。==核燃料サイクル費用は総額の約13%にあたり、OECD/NEAが国際標準として示す13%未満という水準と整合する==。本章が別途置いた1.5から2.0円/kWhという換算のうち、下限側は公的試算と一致した [出典](https://www.oecd-nea.org/upload/docs/application/pdf/2019-12/7061-ebenfc.pdf)。
 
 日本は水準が違う。2025年度分の再処理等拠出金単価は事業者別に613から625円/g-Uで、うち再処理等に係る単価は全事業者共通で531円/g-Uである [出典](https://www.nuro.or.jp/pdf/20260622_2.pdf)。燃焼度と熱効率から発電量あたりに換算すると1.5から2.0円/kWhの範囲になる。この換算は素材ノートの計算であり、公的機関が公表した値ではない。またこの額に最終処分費と廃炉費は含まれていない。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_energy-rokkasho.jpg" width="1000" height="562" loading="lazy" alt="青森県六ヶ所村の再処理工場">
+<figcaption>青森県六ヶ所村の再処理工場。日本は使用済燃料の再処理を選び、その費用を使用済燃料再処理・廃炉推進機構への拠出金として先に徴収している。2025年度分の拠出金単価のうち、再処理等に係る単価は全事業者共通で531円/g-Uである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Rokkasho_2.JPG">Nife</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 割合として答えを出すには分母が要る。日本の原子力発電コストの公的試算値は、資源エネルギー庁と経済産業省のサーバーがHTTP 403を返したため取得できていない。したがって日本について何割かを確定した数字で示すことはできない。言えるのは、直接処分を選ぶ国ではバックエンドが発電コストの数%であること、再処理を行うとバックエンドの絶対額はNEAの試算で約2倍になること、日本の拠出金だけで1.5から2.0円/kWhに達していることの三点である。
 
@@ -69,6 +89,11 @@ P_loss = R × P² / (V × cosθ)²
 この制御は単一のループでは行われない。速い順に層を分け、速い層は各発電機側で分散処理し、遅い層は中央給電指令所が集中処理する。制御工学の言葉に置けば、速い層が比例動作、次の層が積分動作、その先が経済性を含めた再配分にあたる。系統全体が一つの大きなフィードバック系として組まれている。
 
 最速の層は制御ではない。同期発電機の回転体が持つ慣性であり、需給がずれた瞬間に回転エネルギーが自動的に出入りして周波数の変化速度を抑える。==これは物理的な性質であって指令ではなく、市場商品にもなっていない==。次がガバナフリーで、調速機による自端制御にあたる。その次が負荷周波数制御で、電気学会の用語解説は主に数分から20分周期程度の変動成分を吸収すると定義している [出典](https://www.iee.jp/pes/termb_030/)。さらに長い周期は経済負荷配分制御が事前に配分する。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_energy-watt-governor.jpg" width="750" height="1000" loading="lazy" alt="ボールトン・ワットの蒸気機関に付く遠心調速機">
+<figcaption>ロンドンの科学博物館に展示されたボールトン・ワットの蒸気機関に付く、1788年のワット型遠心調速機。回転が速くなると2つの球が遠心力で外へ開き、連結した弁が蒸気の量を絞って回転数を抑える。本文のガバナフリーも、発電機側の調速機による自端制御である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Boulton_and_Watt_centrifugal_governor-MJ.jpg">Dr. Mirko Junge</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 日本の標準周波数は50Hzまたは60Hzと送配電等業務指針第57条第2号に定められ、同指針第268条は、標準周波数から0.1Hz以内、0.2Hz以内、0.3Hz以内、0.3Hz超のそれぞれに維持された時間の比率を毎年8月末までに広域機関へ報告するよう定めている [出典](https://www.occto.or.jp/assets/article/files/shishin2503.pdf)。制御目標がこの区分で管理されていることが読み取れる。エリア別の実績値そのものは確認できていない。
 
@@ -98,6 +123,11 @@ P_loss = R × P² / (V × cosθ)²
 
 マンハッタン管区の公式報告書は、選定の考慮事項として爆撃機の航続距離、目視爆撃の望ましさ、目標地域の予想天候、各任務に第一目標1つと予備目標2つを置くこと、戦争終結を早める軍事的効果、敵の士気への効果の6点を挙げている。当日の運用でも気象偵察の役割が記録に残る。8月5日21時20分に第509混成部隊の観測機が広島上空を飛んで翌日の天候良好をテニアンへ報告し、当日は気象観測機ストレートフラッシュが午前7時ごろ広島上空へ入って観測を行い、その報告により投下が最終決定された[出典](https://ja.wikipedia.org/wiki/%E5%BA%83%E5%B3%B6%E5%B8%82%E3%81%B8%E3%81%AE%E5%8E%9F%E5%AD%90%E7%88%86%E5%BC%BE%E6%8A%95%E4%B8%8B)。==目視爆撃を要件に置いた設計が、当日の天候報告に決定権を渡す構造になっていた==。照準点そのものを特定した一次資料には到達していない [出典](https://www.atomicarchive.com/resources/documents/med/med_chp5.html)。当日の運用はこの設計に従った。8月9日は第一目標が小倉で、前日の八幡空襲による煙と厚い雲が照準点を覆い、3回の爆撃進入でも爆撃手が視認できず、第二目標の長崎に転じた [出典](https://ahf.nuclearmuseum.org/ahf/history/bombings-hiroshima-and-nagasaki-1945/)。長崎の爆発は高度1,650フィート、威力21キロトンで、実際の爆発点は意図した照準点から北西へ約1.5マイル離れていた [出典](https://www.osti.gov/opennet/manhattan-project-history/Events/1945/nagasaki.htm)。広島は高度1,900フィート、推定威力15キロトンである [出典](https://www.osti.gov/opennet/manhattan-project-history/Events/1945/hiroshima.htm)。広島の照準点が相生橋であったこと、および当日の気象偵察機の報告内容は、今回参照した資料からは裏付けが取れていない。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/02_energy-nagasaki-cloud.jpg" width="1000" height="773" loading="lazy" alt="香焼から撮影された長崎の原子雲">
+<figcaption>1945年8月9日の長崎の原子雲。長崎の香焼にあった川南工業の造船所で、事務所の屋上から松田弘道が撮影した。この日の第一目標は小倉で、照準点を視認できなかったため第二目標の長崎に転じた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Atomic_cloud_over_Nagasaki_from_Koyagi-jima.jpeg">松田弘道</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 天候で決まったという説明は、この二段階を混同すると誤りになる。候補都市は事前に確定していた。天候が決めたのは、確定済みの候補のうちどれを撃つかと、照準点をどこに取れるかである。設計判断と当日の実行を分けて読むという作法は、電力インフラでも同じである。連系容量の上限は平時に決まり、逼迫時に選べるのはその上限の内側だけである。2011年の東日本大震災の時点で東京中部間の変換容量は100万kW台にとどまり、西日本の供給余力を東日本に振り向けられなかったことが計画停電の一因になったと説明されているが、この因果関係を示す政府の一次資料は確認できていない。
 
 ## 被害の測定と社会的な合意形成
@@ -105,6 +135,11 @@ P_loss = R × P² / (V × cosθ)²
 被害を数字にできる範囲と、できない範囲を区別する。この区別を飛ばすことが、合意形成が壊れる典型的な原因である。
 
 被曝の健康影響は、広島と長崎の被爆者を追跡した寿命調査によって定量化されている。対象は約12万人で、うち被爆者は約9万4千人、2020年12月時点で初期集団の21%が生存し平均年齢は83歳である [出典](https://pmc.ncbi.nlm.nih.gov/articles/PMC12558143/)。固形がんについては、1958年から2009年までの発生率解析で、対象10万5,444人、固形がん2万2,538例、追跡310万人年という規模の推定が出ている。30歳被曝、到達年齢70歳の条件で、1Gyあたりの超過相対リスクは女性0.64、95%信頼区間0.52から0.77、男性0.20、95%信頼区間0.12から0.28である [出典](https://pmc.ncbi.nlm.nih.gov/articles/PMC12558146/)。男女平均では発生率で1Gyあたり0.47、死亡率で0.42となる。線量反応の形は性別で異なり、女性は直線モデルが最もよく当てはまり、男性は上に凸の直線二次モデルが最良で、この性差は有意水準P = 0.020で統計的に有意である。被曝時年齢が10歳上がるごとに超過相対リスクは22%低下する。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/02_energy-rerf.jpg" width="1000" height="478" loading="lazy" alt="広島の放射線影響研究所">
+<figcaption>広島の放射線影響研究所。寿命調査を行う日米共同の研究機関で、対象は1950年の国勢調査で広島と長崎に住んでいたことが確認された人から選んだ約12万人である。内訳は被爆者が約9万4千人、非被爆者が約2万7千人である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Radiation_Effects_Research_Foundation_Hiroshima.jpg">Taisyo</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 白血病は挙動が異なる。超過は被曝の約2年後に現れ、6年から8年後に頂点を迎えたのち急速に減少した。骨髄線量0.005Gy以上の4万9,204人で1950年から2000年までに観察された白血病死は204例、うち放射線に帰属するのは94例で、白血病死の46%にあたる [出典](https://www.rerf.or.jp/en/programs/roadmap_e/health_effects-en/late-en/leukemia/)。
 

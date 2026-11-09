@@ -16,6 +16,11 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 
 出発点は政策金利である。日本銀行は2026年6月16日の金融政策決定会合で、無担保コールレート翌日物の誘導目標を0.75%程度から1.00%程度へ引き上げた。決定は賛成7反対1である。[出典](https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260616a.pdf)。その後の7月31日の会合では1.0%程度での据え置きを賛成8反対1で決めており、高田委員は1.25%程度への引き上げを提案して否決された。[出典](https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260731a.pdf)。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/c03_boj.jpg" width="1000" height="750" loading="lazy" alt="日本銀行本店の本館">
+<figcaption>日本銀行本店の本館を南側から見た写真。日本銀行は2026年6月16日の金融政策決定会合で、無担保コールレート翌日物の誘導目標を1.00%程度へ引き上げた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bank_of_Japan_Head_Office_-_Main_building_from_south.jpg">Hohoho</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 政策金利が動くと国債利回りも動く。ただし動き方は年限で違う。2026年8月6日時点の日本国債の利回りを、政策金利1.00%からの上乗せ幅とあわせて並べる。
 
 | 年限 | 利回り | 政策金利1.00%からの上乗せ幅 | 前の年限からの年あたり傾き |
@@ -62,6 +67,11 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 
 制度差を見るには比較対象がいる。==ギリシャはユーロの利用者であり発行者ではない==。EU機能条約第123条は、欧州中央銀行および加盟国中央銀行が政府に信用供与を行うこと、および政府から債務証書を直接購入することを禁じている。[出典](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:12016E123)。支払手段を自国の判断で作れない。その帰結が2012年の民間債務再編である。2012年2月21日にユーログループが確認した共通理解は名目53.5%の削減を定め、2月24日にギリシャは額面約2,060億ユーロの債券を対象に交換の申込を開始した。ギリシャ議会は2月23日に集団行動条項を遡及的に導入する法律を可決し、S&Pは2月27日に長期格付を選択的デフォルトへ引き下げた。[出典](https://ec.europa.eu/economy_finance/publications/occasional_paper/2012/pdf/ocp94_en.pdf)。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/c03_ecb.jpg" width="1000" height="525" loading="lazy" alt="欧州中央銀行の本店">
+<figcaption>フランクフルトにある欧州中央銀行の本店。EU機能条約第123条は、欧州中央銀行と加盟国中央銀行が政府に信用供与を行うことを禁じている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Seat_of_the_European_Central_Bank_and_Frankfurt_Skyline_at_dawn_20150422_1.jpg">DXR</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 債務残高の比率では説明が付かない。日本の債務残高対GDP比は2024年に214.5%であり、イタリアの134.7%を上回る。[出典](https://www.mof.go.jp/policy/budget/fiscal_condition/related_data/202604_01.pdf)。それでも日本は不履行に至っていない。==決定的な差は比率ではなく通貨の発行主体である==。
 
 保有構造にも差がある。2026年3月末速報で日本の国債残高は1,013兆7,559億円、うち日本銀行が485兆4,280億円で47.9%、海外が82兆129億円で8.1%である。[出典](https://www.mof.go.jp/jgbs/reference/appendix/holdings01.pdf)。ギリシャ危機前の非居住者保有比率については、素材ノートの調査で一次資料からの数値を取得できていない。したがって保有構造の差を定量で比較することはこの章ではできない。
@@ -75,6 +85,11 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 信用リスクの寄与については、素材ノートが日本国債のCDSスプレッドの一次資料を取得できていない。したがって信用リスクが利回りに寄与していないと断定はできない。
 
 量的緩和の縮小が誰に効くかも押さえておく。米国では中央銀行自身の負債側に先に効いた。連邦準備制度は2022年6月1日から2025年10月31日までに保有証券を2.2兆ドル減らし、この間に先に減ったのはオーバーナイト・リバースレポである。[出典](https://www.federalreserve.gov/monetarypolicy/May-2026-Federal-Reserve-Balance-Sheet-Developments.htm)。日本では市中の引き取り手に効いている。日銀の国債保有残高は2024年6月末577兆円から2026年3月末528兆円へ49兆円減り、同じ期間に預金取扱機関が36兆円、海外投資家が27兆円、年金が20兆円を引き取った。保険は5兆円減らしている。[出典](https://www.boj.or.jp/research/wps_rev/rev_2026/rev26j11.htm)。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/c03_fed.jpg" width="1000" height="554" loading="lazy" alt="マリナー・S・エクルズ連邦準備制度理事会ビル">
+<figcaption>ワシントンD.C.のマリナー・S・エクルズ連邦準備制度理事会ビル。1937年に完成した。連邦準備制度は2022年6月1日から2025年10月31日までに、保有証券を2.2兆ドル減らした。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Marriner_S._Eccles_Federal_Reserve_Board_Building.jpg">AgnosticPreachersKid</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 ただし金利水準への寄与は限定的である。日本銀行の推計では、減額開始以降の長期金利上昇幅に対するストック効果の減少の寄与は10bp程度、フロー効果を合わせても25bp程度にとどまる。[同出典](https://www.boj.or.jp/research/wps_rev/rev_2026/rev26j11.htm)。
 
@@ -137,6 +152,11 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 
 金については、World Gold Council 自身の回帰モデルが説明できない部分を残している。2025年の金の年間リターンは67%だった。同モデルは月次リターンを経済拡大、リスクと不確実性、機会費用、モメンタムの4系統に分解するが、2025年通年で明示変数が説明できたのはリターンの約60%にとどまり、約40%が残差として残った。説明できた部分では地政学リスクとオプション市場の活動が最大で、次にドル安、その次に利回り低下が続く。[出典](https://www.gold.org/goldhub/research/gold-market-commentary-december-2025)。残差40%が上位2要因の差より大きいため、単一の最大要因を断定できない。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/c03_gold.jpg" width="1000" height="426" loading="lazy" alt="フランス銀行で展示された金の延べ棒">
+<figcaption>フランス銀行で展示された金の延べ棒。PAMP SA の刻印と、純度を示す999.9の表示がある。2025年の金の年間リターンは67%だった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gold_bar_of_Banque_de_France.jpg">Ibex73</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 中央銀行の金購入をドル離脱の指標として読む見方も、数字と合わない。2025年の中銀ネット購入は863.3トンで、2024年の1,092.4トンから21%減った。2025年の買い手上位はポーランド102トン、カザフスタン57トン、ブラジル43トン、アゼルバイジャン38トン、トルコ27トン、中国27トン、チェコ20トンである。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025/central-banks)。首位のポーランドと7位のチェコはEUかつNATOの加盟国である。数量を最も増やした買い手はETFの801トンと地金コインの1,374トンであり、中銀ではない。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025)。
 
 外貨準備に占めるドル比率も急落していない。IMF COFER の米ドル比率は、旧手法の割当準備ベースで2024年Q4に57.80%、新手法で2025年Q4に56.77%である。[出典](https://data.imf.org/en/news/4225global)、[出典](https://data.imf.org/en/news/imf%20data%20brief%20march%2027)。中銀の金購入が続く局面でも、ドル準備のシェアは6割弱で推移している。
@@ -145,7 +165,17 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 
 銅は供給側の事象がいつ価格に効くかという時間差の例である。Freeport-McMoRan は2025年9月の泥流事故を受け、PT Freeport Indonesia の2025年生産を銅約10億ポンドと見込み、2026年も段階的再稼働の期間として同程度の水準になるとした。2027年から2029年の3年平均では年間約16億ポンドへの回復を見込む。[出典](https://investors.fcx.com/investors/news-releases/news-release-details/2025/Freeport-Provides-Update-on-Restart-Plans-for-Grasberg-Minerals-District/default.aspx)。事故前の2026年見通しは17億ポンドだった。[出典](https://www.fastmarkets.com/insights/grasberg-mine-force-majeure-2026-output/)。差は約7億ポンドである。銅の前年比47.5%高という水準は、この減産をほぼ全期間にわたって織り込んだ後の価格である。これから効くのではなく、効いた後を見ている。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/c03_grasberg.jpg" width="1000" height="333" loading="lazy" alt="グラスバーグ鉱山">
+<figcaption>インドネシアのパプアにあるグラスバーグ鉱山を高所から見た眺め。金と銅を産出し、PT Freeport Indonesia が操業する。2025年9月の泥流事故は、この鉱山の地下にあるグラスバーグ・ブロックケーブで起きた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Grasberg_pano_(3200491589).jpg">Richard Jones</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 チュキカマタは性格が違う。露天掘りから地下ブロックケーブへの移行に伴う設計能力は年間32万トンの銅であり、これは事故による一時的な喪失ではなく、鉱石品位の低下を前提に据え直した恒常水準である。[出典](https://www.mining-technology.com/projects/chuquicamata-copper/)。恒常水準の切り下げは市場が数年かけて織り込むため、価格に効く日付を特定できない。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/c03_chuqui.jpg" width="1000" height="498" loading="lazy" alt="チュキカマタ銅山">
+<figcaption>チリ北部カラマ近郊のチュキカマタ銅山。標高2,850mにある国営の露天掘り鉱山である。露天掘りから地下ブロックケーブへ移行した後の設計能力は、年間32万トンの銅とされる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Mina_de_Chuquicamata,_Calama,_Chile,_2016-02-01,_DD_110-112_PAN.JPG">Diego Delso</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 土地は金属と違い、市場価格が連続して観測できない。同じものが二つとないため、課税や補償のたびに個別評価が要る。日本ではこの評価コストを下げる仕組みとして公的な価格が複数並立している。
 

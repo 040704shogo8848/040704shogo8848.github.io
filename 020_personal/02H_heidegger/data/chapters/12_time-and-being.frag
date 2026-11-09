@@ -2,6 +2,11 @@
 <p class="sz-sec">1962年1月31日 ／ フライブルク大学</p>
     
 
+
+<figure class="tb-fig tb-photo">
+<img src="../img/12_time-and-being-freiburg.jpg" width="666" height="1000" loading="lazy" alt="フライブルク大学のコレーギエンゲボイデIの入口">
+<figcaption>フライブルク大学のコレーギエンゲボイデI（講義棟）の入口。講演『時間と存在』は1962年1月31日にフライブルク大学で行われた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Freiburg_im_Breisgau,_Universit%C3%A4t,_Kollegiengeb%C3%A4ude_I_--_2025_--_8065.jpg">Dietmar Rabich</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
     <h2 id="s1">存在も時間も「ある」とは言えない</h2>
     <p>存在は存在者ではないので「存在がある」とは言えない。時間も時間的なものではないので「時間がある」とは言えない。そこでハイデガーは独語の「それが与える」<span class="de">Es gibt</span>という表現を用いた。Es gibtは日常語で「〜がある」を意味する。</p>
     <div class="orig">

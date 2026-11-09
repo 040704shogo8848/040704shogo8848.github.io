@@ -54,6 +54,11 @@
       <figcaption>左は釘を打っている最中であり、注意は仕事に向かいハンマー自体は目立たない。右は作業を止めて同じハンマーを眺める場面であり、ハンマーは性質の担い手として現れる。</figcaption>
     </figure>
 
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_equipment-hammer.jpg" width="1000" height="750" loading="lazy" alt="板の上に置かれたハンマーと釘">
+<figcaption>釘抜きの付いたハンマーと釘。このように置かれて眺められる時、ハンマーは形や材質をもつ事物として現れる。§15 によれば、釘を打つために手にとって使う時のほうが、ハンマーへの関わりはいっそう根源的になる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Hammer_and_nails.jpg">Santeri Viinamäki</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
     <h2 id="s2">§16 道具が使えなくなる時、世界が示される</h2>
     <p>普段は目立たない道具の連関は、道具が使えなくなった時に明示的になる。ハイデガーは3つの様態を区別した。</p>
 
@@ -111,6 +116,11 @@
       <figcaption>§17 の方向指示器を図にしたものである。方向指示器は物を指し示すだけの印ではなく、歩行者や運転者が配慮の向きを定めるために用いる道具である。</figcaption>
     </figure>
 
+
+<figure class="tb-fig tb-photo">
+<img src="../img/04_equipment-winker-museum.jpg" width="925" height="1000" loading="lazy" alt="腕木式の方向指示器">
+<figcaption>ミュンヘンのドイツ博物館交通センターに展示された腕木式の方向指示器。使わない時は腕木が本体に収まり、曲がる時に腕木が車体から横に出て進む方向を示す。§17 の例は、車に付いた向きを変えられる赤い矢印である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Deutsches_Museum,_Verkehrszentrum,_Armwinker_als_Richtungsanzeiger,_1.jpeg">Renardo la vulpo</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
     <h2 id="s4">§18 適所性と有意義性</h2>
     <p>道具がその連関の中で何のためにあるかが定まっていることを<span class="term">適所性<span class="de">Bewandtnis</span></span>と呼ぶ。§18 の例は次の連鎖である。</p>
     <ol class="plain">
@@ -157,6 +167,11 @@
 
     <h2 id="s5">§19–21 デカルト批判</h2>
     <p>デカルトは世界を<span class="term">延長するもの<span class="de">res extensa</span></span>として規定した。物の存在を延長という一つの性質に還元し、硬さのような性質も延長から説明した。使いやすさのような価値は、後から付け加える述語として扱われる。ハイデガーによれば、この還元は事物的存在性だけを存在の基準にした結果である。この結果として世界の現象は飛び越えられた。</p>
+<figure class="tb-fig tb-photo">
+<img src="../img/04_equipment-descartes.jpg" width="736" height="1000" loading="lazy" alt="デカルトの肖像画">
+<figcaption>デカルトの肖像画。§19–21 でハイデガーは、世界を延長するものとして規定したデカルトの存在論を批判した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Frans_Hals,_Portrait_of_Ren%C3%A9_Descartes.jpg">Frans Hals</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
     <figure class="tb-fig">
       <svg viewBox="0 0 720 260" role="img" aria-label="事物に価値を足す誤った順序と道具から事物が派生する本文の順序">
         <defs>

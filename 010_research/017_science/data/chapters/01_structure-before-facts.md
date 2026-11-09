@@ -65,6 +65,11 @@ thesis: 科学の強さは事実を集めきることではなく、先に構造
 
 一般化が起きたのはその後である。1844年にグラスマンが拡大論で線形独立と次元と内積を扱い、1848年にシルベスターが matrix という語を導入し、1856年にケイリーが行列の積と逆行列を定めた。そして1888年にペアノが、ベクトル空間と線形写像の現代的な定義を与えた[出典](https://en.wikipedia.org/wiki/Vector_space)。計算技法の最古の記録から、公理的な定義まで1800年以上かかっている。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph3"><img src="../img/01_structure-nine-chapters.jpg" width="451" height="679" style="aspect-ratio:2/3" loading="lazy" alt="李潢の注釈書『九章算術細草圖說』巻一の頁"><img src="../img/01_structure-grassmann1844.jpg" width="542" height="892" style="aspect-ratio:2/3" loading="lazy" alt="グラスマン『Die lineale Ausdehnungslehre』1844年初版の扉"><img src="../img/01_structure-peano1888.jpg" width="659" height="1000" style="aspect-ratio:2/3" loading="lazy" alt="ペアノ『Calcolo geometrico』1888年の扉"></div>
+<figcaption>左は李潢が著した注釈書『九章算術細草圖說』の巻一で、第1章の方田にある田の面積を求める問題が並ぶ。消去法を扱う方程は第8章にあたる。中央はグラスマンの『Die lineale Ausdehnungslehre』1844年初版の扉、右はペアノの『Calcolo geometrico』1888年の扉である。ペアノはこの本の第9章で、ベクトル空間と線形写像の公理的な定義を与えた。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:%E4%B9%9D%E7%AB%A0%E7%AE%97%E8%A1%93%E7%B4%B0%E8%8D%89%E5%9C%96%E8%AA%AA.jpg">中國書店海王邨公司</a>／Public domain 中央：<a href="https://commons.wikimedia.org/wiki/File:Die_Lineale_Ausdehnungslehre_1844.png">Hermann Grassmann</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Peano,_Giuseppe_%E2%80%93_Calcolo_geometrico_secondo_l%27Ausdehnungslehre_di_H._Grassmann,_1888_%E2%80%93_BEIC_6564146.jpg">Giuseppe Peano</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 一般化で何が変わったのかを、3点に分けて述べる。
 
 第1に、対象が入れ替わる。それまでの主役は「この方程式の答え」だった。一般化のあとの主役は「係数の並びが持つ性質」になる。同じ行列を、方程式の係数と見ることも、データの表と見ることも、写像の表現と見ることもできる。
@@ -119,6 +124,11 @@ thesis: 科学の強さは事実を集めきることではなく、先に構造
 
 第3段階がメンデレーエフの操作である。==彼は表の穴を並べ方の失敗ではなく未発見元素の席と読み==、隣接する元素の原子量と性質から内挿し、族から決まる原子価に合わせて酸化物や塩化物の化学式まで先に確定させた[出典](https://en.wikipedia.org/wiki/History_of_the_periodic_table)。1871年に発表された予言は、サンスクリット語で1を意味する接頭辞エカを使い、エカホウ素、エカアルミニウム、エカケイ素、エカマンガンと名付けられた[出典](https://en.wikipedia.org/wiki/Mendeleev%27s_predicted_elements)。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/01_structure-mendeleev1869.jpg" width="619" height="784" loading="lazy" alt="メンデレーエフが1869年に示した周期表の初版">
+<figcaption>メンデレーエフが1869年に示した周期表の初版。原子量の数値が並ぶ中に、?=68 や ?=70 のような疑問符付きの空席がある。Al=27.4 の隣の ?=68 は後のガリウム、Si=28 の隣の ?=70 は後のゲルマニウムの席にあたる。Te=128? が I=127 より前に置かれており、原子量の大小に反する順序を採った判断もこの表で確かめられる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Mendeleev%27s_periodic_table_(1869_year).jpg">Dmitri Mendeleev</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 的中の程度は数値で確認できる。
 
 | 予言名 | 対応元素 | 予測値 | 実測値 |
@@ -132,17 +142,37 @@ thesis: 科学の強さは事実を集めきることではなく、先に構造
 
 エカケイ素の予測原子量も、72が原典側の数字である。メンデレーエフはエカケイ素に原子量72、密度5.5g/cm³を与えた。1886年に発見されたゲルマニウムの実測原子量は72.63であり[出典](https://abacus.bates.edu/acad/depts/biobook/Eka-Si.pdf)、72.64という記述は測定側の値を後年の精度で書いたものである。==予測値と実測値を取り違えると、的中の精度を過大に見積もることになる==。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/01_structure-gallium.jpg" width="1000" height="750" loading="lazy" alt="純度99.999%のガリウムの結晶"><img src="../img/01_structure-germanium.jpg" width="924" height="924" loading="lazy" alt="高純度の多結晶ゲルマニウムの塊"></div>
+<figcaption>左は純度99.999%のガリウムの結晶、右は高純度の多結晶ゲルマニウムの塊で、質量は12gである。いずれもメンデレーエフが空席として予言した元素で、ガリウムは1875年、ゲルマニウムは1886年に発見された。実測の密度はガリウムが5.91g/cm3、ゲルマニウムが5.35g/cm3である。予言値の6.0g/cm3と5.5g/cm3に近い。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Gallium_crystals.jpg">en:user:foobar</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Ultrapure_chunk_of_polycrystalline_germanium,_12_grams.jpg">Hi-Res Images of Chemical Elements</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 ここで的中だけを数えると評価を誤る。メンデレーエフは水素より軽い不活性元素を2種想定し、軽いほうを全空間に浸透する気体、重いほうをコロニウムと呼んだ。いずれも存在しない[出典](https://en.wikipedia.org/wiki/Dmitri_Mendeleev)。的中3件を分子に置き、外れた予言を分母から外すと、当時の予測精度を過大に見積もることになる。
 
 同じ型の予測は分野を越えて反復している。
 
 素粒子物理の多重項が最も近い。ゲルマンとネエマンのエイトフォールドウェイは、アップとダウンとストレンジの3種類のクォークを入れ替えるフレーバーSU3対称性で粒子を分類した。バリオン十重項に空席が1つ残り、ゲルマンは1962年、ストレンジネス-3、電荷-1、質量およそ1680 MeV/c2の粒子を予言した。1964年にブルックヘブン国立研究所でオメガマイナス粒子が確認された[出典](https://en.wikipedia.org/wiki/Eightfold_way_(physics))。==表の周期性を対称群の既約表現に置き換えただけで、手続きは周期表と同型である==。 同じ型の予測は素粒子物理でも働いた。質量獲得機構に対応する粒子は理論が先に席を用意し、測定が後から埋めている。ATLASは二光子崩壊とレプトン4体崩壊の測定を合わせて125.11GeV、不確かさ0.11GeVという値を得た。0.09%の精度にあたる[出典](https://atlas.cern/Updates/Press-Statement/atlas-sets-record-precision-higgs-bosons-mass)。CMSは125.38±0.14GeVである[出典](https://cms.cern/news/cms-precisely-measures-mass-higgs-boson)。==枠が先に空席を指定し、測定が後から埋めるという順序は、周期表から150年後も変わっていない==。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/01_structure-cms.jpg" width="1000" height="666" loading="lazy" alt="CERN の LHC にある CMS 検出器の内部">
+<figcaption>CERN の大型ハドロン衝突型加速器（LHC）に設置された CMS 検出器の内部。番号のラベルを付けた検出器のモジュールが層状に並び、多数のケーブルが接続されている。CMS はこの装置で、理論が先に席を用意した粒子の質量を125.38±0.14GeVと測定した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:CERN_LHC_CMS_02.jpg">SimonWaldherr</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 保存則の欠損からの予測も同じ族に属する。1930年にパウリは、ベータ崩壊で放出される電子のエネルギーが離散値ではなく連続分布になる事実を、エネルギーと運動量と角運動量を持ち去る未検出粒子で説明した。実験的な確認は1956年のコーワンとライネスらによる原子炉実験である[出典](https://en.wikipedia.org/wiki/Neutrino)。予言から検出まで26年かかっている。1964年に提案された質量獲得機構に対応する粒子の発見発表は2012年7月4日であり、48年かかっている[出典](https://home.cern/science/physics/higgs-boson)。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_structure-cowan-reines.jpg" width="880" height="900" loading="lazy" alt="クライド・コーワンとフレデリック・ライネス">
+<figcaption>クライド・コーワンとフレデリック・ライネス。2人はロスアラモスから来て、1956年にサバンナリバー・サイトの原子炉でニュートリノの存在を示す実験を行った。背後の装置にはロスアラモス科学研究所の NEUTRINO の表示がある。パウリの予言から26年後の検出である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Clyde_Cowan_and_Frederick_Reines.jpg">Savannah River Site</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 計算科学では、内挿の担い手が人間から機械に移った。DeepMind の GNoME は2023年11月29日に Nature で公表され、220万件の新規結晶構造を予測し、うち38万件を合成候補となる安定構造とした。既知の安定物質は計算由来が約4万8000件、実験由来が約2万件だったところを、合計42万1000件へ拡張した。外部研究者によって736件の構造が実験的に作製されている[出典](https://deepmind.google/discover/blog/millions-of-new-materials-discovered-with-deep-learning/)。組成空間の格子に空席を見つけ、性質を先に計算するという構造は、エカケイ素の推定と変わらない。
 
 化学と物理の外にも同型の例がある。魚類から四足動物への移行形は、地層の年代から出現時期を絞り込めるという推論に基づいて探索された。デシュラーとシュービンとジェンキンスの調査隊は約3億7500万年前のデボン紀後期の地層を狙い、2004年にエルズミーア島でティクターリクを発見し、2006年4月6日に Nature で報告した[出典](https://en.wikipedia.org/wiki/Tiktaalik)。空席の座標が表の行と列ではなく、地層の年代と地理である点だけが違う。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_structure-tiktaalik.jpg" width="1000" height="454" loading="lazy" alt="ティクターリクの化石の複製">
+<figcaption>シカゴのフィールド自然史博物館に展示されたティクターリクの化石の複製。頭骨と胴の骨格が残る。魚の鱗と四足動物に近い平たい肋骨を併せ持ち、発見の前から存在が予想されていた移行形である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Tiktaalik_roseae_(fish_to_amphibian_transitional_fossil)_(Fram_Formation,_Upper_Devonian;_Ellesmere_Island,_Arctic_Canada)_1_(49755118288).jpg">James St. John</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 ## 歴史の順序と学習の順序がずれる理由
 
@@ -169,6 +199,11 @@ thesis: 科学の強さは事実を集めきることではなく、先に構造
 構造を先に置く思考の最後の要素は、その構造がどこで効かなくなるかを知ることである。枠を信じきると、枠の外を見落とす。
 
 周期表では3か所で崩れる。第1に、原子量順という規則が最初から完全ではなかった。メンデレーエフはテルルとヨウ素で原子量の大小に反する順序を採り、当時の測定が誤っていると考えた。順序は正しかったが理由づけは誤っていた[出典](https://en.wikipedia.org/wiki/Dmitri_Mendeleev)。並びの根拠が確定したのは1913年から1914年で、モーズリーが特性X線の振動数の平方根が原子番号にほぼ比例することを示し、基準が原子量から原子番号へ移った。モーズリーはさらに原子番号43、61、72、75に空席があることを示した[出典](https://en.wikipedia.org/wiki/Henry_Moseley)。原子量による予言は経験則からの内挿であり、原子番号による予言は連番の欠番検出である。規則性の水準が違う。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_structure-moseley.jpg" width="704" height="1000" loading="lazy" alt="研究室でガラス球を手にするヘンリー・モーズリー">
+<figcaption>研究室でガラス球を手にするヘンリー・モーズリー。Nature 誌に掲載された肖像である。モーズリーは特性X線の振動数の平方根と原子番号の比例関係を示し、周期表の並びの基準を原子量から原子番号へ移した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Portrait_of_Henry_G.J._Moseley,_1887-1915,_in_lab_holding_a_glass_globe,_from_Nature_magazine.jpg">Nature magazine</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 第2に、外挿は無限には効かない。超重元素では相対論効果とスピン軌道相互作用によって軌道の単純な近似が崩れ、アウフバウ原理から期待される位置から外れる元素が生じると予測されている。シーボーグの拡張周期表は相対論効果を考慮していなかった[出典](https://en.wikipedia.org/wiki/Extended_periodic_table)。中性子側の魔法数は2、8、20、28、50、82に続く次の閉殻として184が予測されているが、陽子側は1960年代後半にメルドナーが114を提案して以降、114から126の範囲で見解が分かれ合意はない[出典](https://en.wikipedia.org/wiki/Island_of_stability)。
 

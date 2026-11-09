@@ -174,6 +174,11 @@ rerank は、候補集合が十分な再現率を持っている前提で、上�
 
 まず現象から。西洋チェスと象棋の初期配置から駒を1つだけ除去または置換した144枚の画像で、Gemini-2.5 Pro、Sonnet-3.7、GPT-4.1、o3、o4-mini の5モデルの駒数カウント平均正答率は 26.25% である [出典](https://arxiv.org/html/2505.23941v1)。正解31に対して標準の32を答え続ける。これはランダムな作話ではない。背景を除去すると7領域全体の平均正答率が 21.09ポイント上昇する [出典](https://arxiv.org/abs/2505.23941)。文脈的な視覚手がかりが記憶された答えを引き出しているという解釈になる。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/01_ai-stack-chess.jpg" width="1000" height="650" loading="lazy" alt="初期配置に並べた西洋チェスの駒"><img src="../img/01_ai-stack-xiangqi.jpg" width="1000" height="666" loading="lazy" alt="象棋の盤と駒"></div>
+<figcaption>左は初期配置に並べた西洋チェスの駒を白の側から見たもので、両陣営で計32個が並ぶ。右は象棋の盤と駒である。本文の実験は、両者の初期配置から駒を1つだけ除去または置換した144枚の画像を使った。5モデルは正解31に対して標準の32を答え続け、駒数カウントの平均正答率は26.25%だった。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Chess_board_opening_staunton.jpg">Staxringold</a>／CC BY-SA 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Chinese_Chess_Board.JPG">CYWongX</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 崩れる箇所は複数の層に分散している。第1に入力解像度とパッチ分割で、LLaVA-1.5系の視覚エンコーダは336ピクセル四方に縮小する [出典](https://ar5iv.labs.arxiv.org/html/2310.03744)。第2に視覚トークンの圧縮で、BLIP-2 の Q-Former は 257×1024 の凍結画像特徴を 32×768 に要約する [出典](https://ar5iv.labs.arxiv.org/html/2301.12597)。64マスの盤面を32トークンに落とせば、マスと駒の対応は原理的に保持できない。第3に対照学習が生む表現の性質で、ARO benchmark は視覚言語モデルが属性の結びつけと関係の理解に失敗し語順にほとんど反応しないことを示した [出典](https://arxiv.org/abs/2210.01936)。第4に視覚エンコーダ由来の盲点で、MMVP は9つの視覚パターンのうち7つがいかなる大規模CLIPモデルでも解決されないと報告している [出典](https://arxiv.org/html/2401.06209v2)。第5に結合の問題で、同色同形の対象が並ぶ連言探索では対象5個で正答率が約90%、それ以上で低下する [出典](https://arxiv.org/html/2411.00238v2)。
 
 ==重要なのは、情報が符号化されていないとは限らない点である==。線形プローブでは視覚エンコーダに十分な視覚情報が含まれると報告されている [出典](https://arxiv.org/abs/2407.06581)。推論時に注意の鋭さを調整するだけで空間推論ベンチマークが最大50ポイント改善したという分析もある [出典](https://arxiv.org/abs/2503.01773)。崩れる場所は符号化と読み出しの両方にある。
@@ -256,6 +261,11 @@ Meta が提示するコーディング・エージェント系の数値は次の
 
 計算資源と研究者数は、モデル順位とは別の軸である。Epoch AI の AI Chip Users 推計（中央値、H100 換算、as_of 2025年末）では、OpenAI 174.3万、Google DeepMind 158.3万、Anthropic 119.0万、Meta Superintelligence Labs 99.6万、SpaceXAI 61.5万である[出典](https://epoch.ai/latest/introducing-the-ai-chip-users-explorer)[出典](https://epoch.ai/gradient-updates/frontier-labs-dont-use-most-ai-compute)。これは所有ではなく利用の推計であり、90%信用区間は DeepMind と Meta で特に広い。研究者・技術者の人数は各社が監査可能な開示をしていない。LinkedIn Talent Insights 由来の PeopleInAI 集計（as_of 2026-08、研究キーワードでフィルタ、推定）では OpenAI 4,890、Meta 4,041、Anthropic 2,509、Google DeepMind 1,874 である[出典](https://www.linkedin.com/pulse/inside-ai-lab-hiring-what-numbers-actually-show-peopleinai-htdmc)。Metix の技術プロファイル集計（as_of 2026年前半、推定）では Meta 4,092、DeepMind 2,837、OpenAI 2,628、Anthropic 1,251 と定義が異なり、絶対値は一致しない[出典](https://metix.ai/reports/mapping/frontier-ai-labs-talent-2026)。計算資源の順位とモデル順位は一致しない。Meta の計算利用中央値は5社中4位でも、Muse Spark 1.3 は独立順位で frontier クラスタに入っている。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/01_ai-stack-tsubame-racks.jpg" width="1000" height="750" loading="lazy" alt="スーパーコンピュータ TSUBAME4.0 の計算ノードのラック列"><img src="../img/01_ai-stack-tsubame-node.jpg" width="751" height="1000" loading="lazy" alt="TSUBAME4.0 の計算ノードのラックの内部"></div>
+<figcaption>左は東京工業大学（現 東京科学大学）のスーパーコンピュータ TSUBAME4.0 の計算ノードのラック列、右はラックの内部である。2024年4月に稼働し、240ノードの各ノードが H100 SXM5 を4基ずつ載せて計960基になる。本文の H100 換算で数十万から百数十万基という各社の計算利用は、この規模の数百倍から千倍以上にあたる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:TSUBAME4.0_P5160975.jpg">Fukumoto</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:TSUBAME4.0_P5160965.jpg">Fukumoto</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 | ラボ | 計算利用中央値（H100e、2025年末） | 90% CI（H100e） | 研究者系ヘッドカウント（推定） | 出典 |
 | --- | --- | --- | --- | --- |
 | OpenAI | 1,743,000 | 1,251,000–2,185,000 | 4,890（PeopleInAI, 2026-08）/ 2,628（Metix 技術, 2026年前半） | Epoch / PeopleInAI / Metix |
@@ -278,13 +288,28 @@ Meta が提示するコーディング・エージェント系の数値は次の
 
 JEPA 側の実績は、言語ベンチの首位争いとは別の軸にある。V-JEPA 2 は100万時間超の動画で事前学習した 12億パラメータ規模の自己教師あり動画モデルである。Something-Something v2 で top-1 77.3%、Epic-Kitchens-100 の行動予測で recall-at-5 39.7%、LLM 整列後の動画QAでは PerceptionTest 84.0、TempCompass 76.9（8B 規模）を報告している[出典](https://arxiv.org/abs/2506.09985)。行動条件付きの V-JEPA 2-AC は DROID のロボット動画62時間未満で後段学習し、2つの研究室の Franka アームでゼロショットのピック＆プレース計画を行ったとある。環境固有データの収集もタスク固有の報酬学習もしていない、という点が主張の核である。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/01_ai-stack-franka.jpg" width="1000" height="666" loading="lazy" alt="展示ブースの Franka Emika のロボットアーム">
+<figcaption>展示ブースに置かれた Franka Emika のロボットアームを横から見たもの。先端に2本の指を持つグリッパーが付いている。V-JEPA 2-AC は2つの研究室の Franka のアームで、環境固有のデータを集めずにゼロショットのピック＆プレース計画を行った。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Franka_Emika2.jpg">Ims</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 組織面では、LeCun は2025年11月に Meta からの離脱と Advanced Machine Intelligence（AMI）研究の継続を表明し、2026年3月に AMI Labs としてシード 10.3億米ドル（約8.9億ユーロ）、プレマネー評価額 35億米ドルを発表した（as_of 2026-03-09/10）[出典](https://techcrunch.com/2026/03/09/yann-lecuns-ami-labs-raises-1-03-billion-to-build-world-models/)[出典](https://www.linkedin.com/posts/yann-lecun_unveiling-our-new-startup-advanced-machine-activity-7437016101080883200-0Mr9)。JEPA 路線の研究室は Meta の外に移った。Meta 本体は Muse Spark 系の自己回帰 frontier を製品の主軸に置いている。==JEPA は物理世界の表現と計画で数値を出したが、テキスト生成の frontier 競合を置き換えていない==。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_ai-stack-lecun.jpg" width="920" height="1000" loading="lazy" alt="ヤン・ルカン">
+<figcaption>2025年にエコール・ポリテクニークで開かれた会議 AI, Science and Society でのヤン・ルカン。言語予測器ではなく世界モデルが要るとして、JEPA 系の枠組みを推している。2025年11月に Meta からの離脱を表明し、2026年3月に AMI Labs のシード調達を発表した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Yann_LeCun_-_2025_(cropped).jpg">Ecole polytechnique from Paris</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 ### MCP の浸透と world model の位置づけ
 
 MCP（Model Context Protocol）は、エージェントが外部ツールとデータを呼ぶための接続層である。Anthropic が2024年11月に公開し、2025年12月9日に Linux Foundation 配下の Agentic AI Foundation へ寄贈した時点で、公開の稼働サーバーは1万超、Python と TypeScript の公式 SDK 月次ダウンロードは9,700万超、クライアント側は ChatGPT、Cursor、Gemini、Microsoft Copilot、Visual Studio Code などが名前付きで挙がった（as_of 2025-12-09）[出典](https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation)[出典](https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/)。約7か月後の MCP 2026-07-28 仕様発表では、SDK 月次ダウンロードが4億超（同年比4倍）、Claude のコネクタ一覧に掲載されたサーバーが950超と報告されている（as_of 2026-07-28）[出典](https://claude.com/blog/bringing-mcp-2026-07-28-to-claude)。サーバー総数のレジストリ値は定義によって6,000台規模から2万台超まで割れるため、ヘッドラインは Anthropic / MCP 公式の時系列（1万超→ディレクトリ950超＋SDK 4倍）を採用し、第三者レジストリの上限値は採用しない。浸透の速さは、モデル順位の勝負ではなく、接続の既定がベンダー横断で揃ったことにある。
 
 世界モデルという語は、同じ時期に少なくとも3つの製品線を指している。第1は JEPA 系の潜在予測（上節）。第2は生成型の対話世界で、Google DeepMind の Genie 3 はテキストからフォトリアルな環境を生成し、20〜24 fps でリアルタイム操作できると説明する一般用途の世界モデルである[出典](https://deepmind.google/models/genie/)。第3は空間の順像／逆像で、World Labs の Atlas と計測系の分岐は同日の業界レポートに整理した（[空間 AI の分岐](https://040704shogo8848.github.io/010_research/014_industry/reports/spatial_ai_world_models_260925.html)）。Google Beam は世界モデル製品ではない。Project Starline 由来の実寸3D映像通信で、2026年9月23日時点で米・加・英・仏・独・日の6か国へ出荷し、チャネルパートナー18社、社内8週間試験ではチームのつながり感が50%増、フィードバック理解が33%容易、フォロー会議が21%減と報告している（as_of 2026-09-23、Google 自己報告、single-source）[出典](https://blog.google/innovation-and-ai/technology/research/google-beam-expansion/)。Beam は空間の「場」をハードウェアで再現する通信製品であり、Genie や Atlas のシミュレーション／生成とは層が違う。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/01_ai-stack-starline.jpg" width="1000" height="821" loading="lazy" alt="Google の Project Starline の装置">
+<figcaption>Google の Project Starline の装置。画面の上と左右にカメラのユニットが付いている。レンチキュラー画面に相手側を立体で表示する。カメラは標準的なもの6台で、三角測量のために配置されている。Google Beam は Project Starline を元にした製品である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Google%27s_Project_Starline_%22Magic_Window%22_3D_Videoconferencing_Rig_(53721295018).jpg">Steve Jurvetson</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 整理すると、2026年9月のラボ地図は次のように読める。自己回帰の frontier 競合には Meta が戻り、接続の標準は MCP が押さえ、世界モデルは JEPA・生成シミュレータ・空間再構成／計測・実寸通信に枝分かれしている。層構造の章として重要なのは、これらを1つの性能順位に潰さないことである。
 

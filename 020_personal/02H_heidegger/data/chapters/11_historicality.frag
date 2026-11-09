@@ -141,6 +141,11 @@
 
     <div class="ex"><div class="ex-h">具体例</div><p>実家の引き出しに残る折りたたみ式の携帯電話は、壊れていなくても「昔のもの」に見える。赤外線でアドレスを交換し、絵文字のメールで連絡を取り合った生活の連関が、もはや存在しないからである。本体は今も事物として存在する。歴史的なのは、それが属していた世界の方である。</p></div>
     <p>§76 は学問としての歴史学<span class="de">Historie</span>を現存在の歴史性から基礎づける。ニーチェが『反時代的考察』第2篇で区別した記念碑的・好古的・批判的な歴史の3つの型は、本来的な時間性の3つの脱自に対応づけられる。§77 はディルタイの仕事と、ヨルク伯の書簡における「存在的なもの」と「歴史的なもの」の区別を検討する。</p>
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/11_historicality-dilthey.jpg" width="727" height="1000" loading="lazy" alt="ディルタイの肖像写真"><img src="../img/11_historicality-nietzsche.jpg" width="737" height="1000" loading="lazy" alt="ニーチェの肖像写真"></div>
+<figcaption>左はディルタイ、右は1875年頃のニーチェである。§76 はニーチェが区別した歴史の3つの型を本来的な時間性の3つの脱自に対応づけ、§77 はディルタイの仕事を検討した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Portrait_Dilthey.jpg">R. Dührkoop</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Nietzsche187a.jpg">Friedrich Hermann Hartmann</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 
     <h2 id="s3">§78–81 時間内部性と世界時間</h2>
     <p>最終章は、日常の時計の時間がどのように根源的な時間性から生まれるかを示す。現存在は配慮の中で時間を「計算」に入れる。その時間を<span class="term">世界時間<span class="de">Weltzeit</span></span>と呼ぶ。</p>

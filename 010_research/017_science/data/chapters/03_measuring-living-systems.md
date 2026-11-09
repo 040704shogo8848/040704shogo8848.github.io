@@ -22,6 +22,11 @@ thesis: 生体も組織も測定装置の精度と条件設定に結果が左右
 
 第1の層は、体外で編集して体に戻す ex vivo 型で、すでに承認済みである。患者から造血幹細胞を取り出し、体外で CRISPR/Cas9 により BCL11A を編集し、胎児ヘモグロビンの産生を上げてから患者に戻す設計の Casgevy が該当する。米国での承認は2023年12月8日で、bluebird bioのLyfgeniaと同日に12歳以上の鎌状赤血球症を対象として認められた[出典](https://www.fda.gov/news-events/press-announcements/fda-approves-first-gene-therapies-treat-patients-sickle-cell-disease)。市販後の浸透は緩やかである。Vertexの2025年通期開示によると、同年にCasgevyの投与を受けたのは鎌状赤血球症と輸血依存性βサラセミアを合わせて64人だった[出典](https://www.biospace.com/drug-development/sickle-cell-gene-therapies-casgevy-and-lyfgenia-still-lacking-traction-2-years-in)。卸売価格はCasgevyが220万ドル、Lyfgeniaが310万ドルである。==承認は関門を通ったことを意味するが、投与患者数は別の関門があることを示している==。欧州医薬品庁は2024年2月9日に、輸血依存性βサラセミアと重症鎌状赤血球症を対象として12歳以上に条件付き承認を与えた [出典](https://www.ema.europa.eu/en/medicines/human/EPAR/casgevy)。承認時の有効性データは、βサラセミアで42人中39人が12か月以上にわたり輸血なしでヘモグロビン9g/dL超を維持し、鎌状赤血球症で29人中28人が12か月以上にわたり疼痛発作ゼロを達成したというものである [出典](https://www.ema.europa.eu/en/medicines/human/EPAR/casgevy)。追跡例数を増やした2026年6月公表の解析では、βサラセミアで56人中55人が12か月以上の輸血非依存を達成している [出典](https://pubmed.ncbi.nlm.nih.gov/42252696/)。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/03_measuring-sickle-cell.jpg" width="853" height="640" loading="lazy" alt="鎌状赤血球症の患者の血液塗抹標本"><img src="../img/03_measuring-beta-thal.jpg" width="1000" height="562" loading="lazy" alt="βサラセミアの患者の血液塗抹標本"></div>
+<figcaption>左は鎌状赤血球症の患者の血液塗抹標本で、矢印の先に三日月形の鎌状赤血球が見える。この形はヘモグロビンSの重合によって生じる。右はβサラセミアの患者の血液塗抹標本をギムザ染色したものである。Casgevy はこの2つの疾患を対象に、胎児ヘモグロビンの産生を上げる設計をとる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Sickle-cell_smear_2015-09-10.jpg">Paulo Henrique Orlandi Mourao</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:B-Thal.jpg">Dr Graham Beards</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 第2の層は、体内に直接投与する in vivo 型で、後期臨床の段階にある。脂質ナノ粒子で編集装置を肝臓に送り込む NTLA-2001 は、第1相を72人で完了したのち、トランスサイレチンアミロイドーシス心筋症を対象とする1,200人規模の第3相を2023年12月13日から実施中であり、主要評価項目の完了予定は2027年12月である [出典](https://clinicaltrials.gov/api/v2/studies?query.term=NTLA-2001)。遺伝性血管性浮腫を対象とする NTLA-2002 は80人規模の第3相で、主要評価項目の完了予定が2026年2月10日であり、体内編集としては承認申請に最も近い [出典](https://clinicaltrials.gov/api/v2/studies?query.term=NTLA-2002)。
 
 第3の層は、次世代の編集手法で、初期臨床にとどまる。DNAを切断せず1塩基を化学的に変換する塩基編集では、PCSK9 を標的とする VERVE-102 が85人規模の第1相を2024年4月30日から実施している [出典](https://clinicaltrials.gov/api/v2/studies?query.term=VERVE-102)。挿入や置換を狙うプライム編集では、慢性肉芽腫症を対象とする PM359 の第1/2相が2024年10月17日に開始され、ウィルソン病を対象とする PM577 の第1/2相が2026年8月開始予定である。プライム編集の登録臨床試験は3件のみである [出典](https://clinicaltrials.gov/api/v2/studies?query.term=prime%20editing)。
@@ -35,6 +40,11 @@ thesis: 生体も組織も測定装置の精度と条件設定に結果が左右
 上の話は、専門機関の中で行われる測定である。ここからは、消費者が自分の体に対して行う測定に移る。この20年で変わったのは、臨床検査と同じ用語を出力する装置が個人の手元に来たことである。腕時計とリングは深い睡眠とREMを分単位で表示し、店頭で買える連続血糖測定器は血糖値を5分刻みで表示する。
 
 ==表示される単位は臨床検査と同一だが、測定原理は同一ではない==。睡眠段階の臨床基準は、脳波と眼電図と筋電図を組み合わせた終夜睡眠ポリグラフ検査であり、30秒のエポックごとに判定する。消費者向け機器はこれらの電気信号を測らない。体動と、光電容積脈波から得られる心拍および心拍変動から段階を推定する。連続血糖測定器も、血液ではなく皮下間質液のグルコースを測っている。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_measuring-psg.jpg" width="756" height="882" loading="lazy" alt="終夜睡眠ポリグラフ検査の電極の配線を付けた成人の患者">
+<figcaption>終夜睡眠ポリグラフ検査のために成人の患者に付けた電極の配線。多数の電極のコードが1つの接続箱に集まり、指先にもセンサーが付いている。臨床の基準は、脳波と眼電図と筋電図を組み合わせて30秒ごとに睡眠段階を判定する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Polysomnography_connections.jpg">Z22</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 規制上の位置づけも2024年に動いた。FDAは同年3月にDexcomのSteloを初の一般用連続血糖測定器として認可し、その後アボットのLingoとLibre Rioも続いた。Steloはインスリンを使わない成人であれば糖尿病の有無を問わず使えるが、==低血糖を警告できないため、問題のある低血糖を持つ人向けではないと明記されている==。Lingoは一般的な健康とウェルネスの用途として認可されており、糖尿病のある人向けではない[出典](https://www.fda.gov/news-events/press-announcements/fda-clears-first-over-counter-continuous-glucose-monitor-children)。認可の範囲が「誰に向けたものでないか」で定義されている点が、この種の機器の性格を表している。
 
@@ -60,6 +70,11 @@ thesis: 生体も組織も測定装置の精度と条件設定に結果が左右
 
 最高値と最低値の比は2.65倍である。この差の構造には注意が要る。装着型5機種の範囲は0.4910から0.5814であり、その比は1.18倍にとどまる。アプリ型3機種の範囲は0.2588から0.6863であり、比は2.65倍に達する。腕時計は正確でアプリは不正確という整理は成り立たない。最高値を取ったのはアプリ型の SleepRoutine である。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/03_measuring-watch-sensors.jpg" width="1000" height="388" loading="lazy" alt="Apple Watch の Series 3、Series 5、Series 6 の裏面">
+<figcaption>Apple Watch の Series 3、Series 5、Series 6 の裏面。肌に触れる面にセンサーが並び、世代ごとに配置が異なる。消費者向けの機器は脳波を測らず、体動と心拍と心拍変動から睡眠段階を推定する。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Apple_Watch_back_sensors.jpg">Mliu92</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 集計指標のずれも機種依存である。睡眠効率のバイアスは Galaxy Watch 5 がマイナス0.4ポイント、Google Pixel Watch がプラス12.8ポイントだった。入眠潜時のバイアスは Apple Watch 8 がマイナス0.81分、Google Nest Hub 2 がプラス39.42分である。同じ一晩に対して、入眠潜時の推定が40分以上ずれる機種の組み合わせが存在する。
 
 判定の偏り方にも構造がある。Fitbit 機種を対象にした22本のレビューでは、睡眠段階推定を持たない旧世代の特異度は0.10から0.52、段階推定を持つ新世代でも0.58から0.69にとどまる。感度は新世代で0.95から0.96である [出典](https://pubmed.ncbi.nlm.nih.gov/31778122/)。感度が高く特異度が低いという偏りは、機器が寝ていると判定しすぎることを意味する。旧世代の Fitbit では、総睡眠時間を7分から67分過大に、中途覚醒時間を6分から44分過小に推定していた。
@@ -69,6 +84,11 @@ thesis: 生体も組織も測定装置の精度と条件設定に結果が左右
 なお、各社が表示する睡眠スコアは、参照基準との一致率とは別の合成指標である。4段階マクロF1が0.2588の機種も、0.6863の機種と同じようにスコアを表示する。スコアの高低と参照一致率は別々に評価する必要がある。
 
 連続血糖測定については、精度ではなく分布の側に論点がある。7歳から80歳の健常非糖尿病者153人に Dexcom G6 を最長10日装着した多施設前向き研究では、平均血糖は60歳以下の全年齢層で98から99 mg/dL、60歳超で104 mg/dLだった。70から140 mg/dL の範囲に滞在する時間の中央値は96%であり、四分位範囲は93%から98%である。140 mg/dL を超える時間は中央値2.1%で、1日あたり30分に相当する。70 mg/dL 未満は1.1%で、1日あたり15分である。個人内変動係数は17%、その標準偏差は3%だった [出典](https://pubmed.ncbi.nlm.nih.gov/31127824/)。
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/03_measuring-dexcom-g6.jpg" width="1000" height="753" loading="lazy" alt="皮膚に貼った Dexcom G6"><img src="../img/03_measuring-libre-arm.jpg" width="1000" height="750" loading="lazy" alt="上腕に付けた FreeStyle Libre 3 のセンサー"></div>
+<figcaption>左は皮膚に貼った Dexcom G6 で、約6日間装着した状態である。右は上腕に付けたアボットの FreeStyle Libre 3 のセンサーである。連続血糖測定器は血液ではなく、皮下の間質液のグルコースを測る。健常者153人が Dexcom G6 を装着した研究では、70から140 mg/dL の範囲にいた時間の中央値が96%だった。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:A_dexcom_g6_glucose_monitor_(52075092685).jpg">Geo Swan</a>／CC0 右：<a href="https://commons.wikimedia.org/wiki/File:Abbott_Freestyle_Libre_3_Glukosesensor_in_situ-1145.jpg">Raimond Spekking</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 滞在時間の中央値が96%であるという事実は、改善で動かせる余地が残り4%であることを意味する。測定の精度が十分でも、対象の分布が狭ければ、指標としての情報量は小さくなる。
 
@@ -139,6 +159,11 @@ thesis: 生体も組織も測定装置の精度と条件設定に結果が左右
 移行率だけを見ると、第2相と第3相の差は0.7ポイントしかない。それでも律速段階は第2相にある。理由は通過率ではなく、通過率と投下費用の積にある。第2相は少数例で有効性を初めて検証する段階であり、ここを通した候補が第3相で数百人規模の費用を負担する。承認1件あたりの資本化済み研究開発費は中央値9億8,530万ドル、平均13億3,590万ドルであり、抗腫瘍薬と免疫調節薬に限れば中央値27億7,160万ドルに達する [出典](https://pmc.ncbi.nlm.nih.gov/articles/PMC7054832/)。この額の大半は、失敗した候補品の費用を承認品が負担した結果である。腫瘍領域の通算通過率3.4%と中央値27億7,160万ドルは、同じ現象の裏表にあたる。
 
 化合物の探索が律速でないことは、AI創薬の実績から確認できる。AI由来分子の第1相成功率は80%から90%であり、業界平均を上回る。一方で第2相の成功率は約40%にとどまり、業界平均と同水準である [出典](https://pubmed.ncbi.nlm.nih.gov/38692505/)。分子設計の質を上げると第1相の安全性と薬物動態は改善するが、第2相の有効性は改善しない。第2相で問われているのが分子の性質ではなく、標的そのものが疾患を駆動しているかという生物学的な仮説の当否だからである。なおこの第2相の約40%という数字は、限られた検体数に基づくと著者自身が注記しており、確定値として扱えない [出典](https://pubmed.ncbi.nlm.nih.gov/38692505/)。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/03_measuring-hts-robot.jpg" width="1000" height="562" loading="lazy" alt="ハイスループットスクリーニングでアッセイプレートを運ぶロボットアーム">
+<figcaption>ハイスループットスクリーニングで、ロボットアームがアッセイプレートを運ぶ様子。米国立アレルギー感染症研究所の動画から取った画像である。分子設計の質を上げても、第2相の成功率は約40%で業界平均と同水準にとどまる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Robot_arm_handles_an_assay_plate.jpg">National Institute of Allergy and Infectious Diseases</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 この構造を踏まえると、遺伝子編集が持つ意味が定まる。Casgevy の標的である BCL11A は、胎児ヘモグロビンの発現を抑制するという機能がヒト遺伝学から確立している [出典](https://www.ema.europa.eu/en/medicines/human/EPAR/casgevy)。単一遺伝子疾患を対象とする限り、標的仮説が外れるリスクは低い。逆に言えば、多因子疾患に遺伝子編集を適用しようとした時点で、従来の創薬と同じ第2相の壁に直面する。技術が変わっても、律速段階は仮説の当否のまま残る。
 

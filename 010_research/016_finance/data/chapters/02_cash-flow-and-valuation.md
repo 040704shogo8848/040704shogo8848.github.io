@@ -20,6 +20,11 @@ IAS 7 は投資活動を長期資産の取得と処分と定義している。�
 
 切り分けを最初に定式化したのは Buffett の owner earnings である。1986年の株主宛書簡の付録で、報告利益に減価償却費などの非現金費用を加え、そこから長期的な競争地位と販売数量を完全に維持するために事業が必要とする設備投資の年平均額を差し引いたものと定義されている。同じ箇所で Buffett は、この維持投資額は推測にならざるを得ず、その推測が時に難しいと明記している [Berkshire Hathaway 1986 Chairman's Letter](https://www.berkshirehathaway.com/letters/1986.html)。==定義した本人が、定義した瞬間にその項が計測値ではないと断っている==。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/c02_buffett.jpg" width="1000" height="850" loading="lazy" alt="ウォーレン・バフェット">
+<figcaption>2015年の SelectUSA 投資サミットに登場したウォーレン・バフェット。1986年の株主宛書簡の付録で owner earnings を定義し、維持に必要な設備投資額を差し引くとした。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Warren_Buffett_at_the_2015_SelectUSA_Investment_Summit.jpg">USA International Trade Administration</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 実務で使われる推計は4通りある。
 
 第1に、減価償却費を維持投資の代理変数に置く方法である。使用による価値の減少分だけ再投資すれば能力が保たれるという想定に立つ。IAS 16 は有形固定資産を取得原価で初期測定すると定めている [IAS 16](https://www.ifrs.org/issued-standards/list-of-standards/ias-16-property-plant-and-equipment/)。==償却費は過去の取得価格を期間配分した数字であり、現在の再取得価格ではない==。設備単価が上がる局面では、償却費は必要な更新投資額を下回る。単価が下がる資産では上回る。近似としては使えるが、等号ではない。
@@ -27,6 +32,11 @@ IAS 7 は投資活動を長期資産の取得と処分と定義している。�
 第2に、売上高との対応で分ける方法である。固定資産回転率が一定と仮定し、売上増加分に必要な固定資産増加分を成長投資、残りを維持投資とみなす。この方法は売上が横ばいまたは減少した年に破綻する。能力を積み増している最中に需要が落ちた年、設備投資が全額維持投資に分類されてしまう。
 
 第3に、企業自身の説明に依拠する方法である。セグメント別の設備投資額、新設と更新の内訳、能力増強の目的説明を使う。Amazon は2025年12月期の設備投資が前年同期比で507億ドル増えた主因を人工知能への投資と説明している [Amazon Q4 2025 Results](https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Fourth-Quarter-Results/)。目的が明示された増分は成長投資と読める。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/c02_aws.jpg" width="1000" height="666" loading="lazy" alt="AWS のデータセンター群">
+<figcaption>米国オレゴン州モロー郡にある AWS の us-west-2 リージョンのデータセンター群。完成した3棟の手前で4棟目が建設中である。データセンターについては、電力容量を時系列で並べると能力の増加を外側から確かめられる。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Amazon_AWS_us-west-2_morrow_east_AZ_01.jpg">Tedder</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 第4に、物理量で確かめる方法である。データセンターなら電力容量、小売なら店舗数と面積、製造なら生産能力を時系列で並べる。能力が増えていない年の投資は維持投資とみなす。金額の推計が妥当かを外側から検証する用途に向く。
 
@@ -70,6 +80,11 @@ FCF が投資の量しか語らないなら、質は別の指標で見るしか�
 
 分布の上端を見ておく。キーエンスの2026年3月期は売上高1兆1,692億9,000万円、営業利益5,957億5,900万円、営業利益率51.0パーセントである [キーエンス 業績ハイライト](https://www.keyence.co.jp/investor/financial-info/)。連結従業員数は2026年3月現在で12,784名である [キーエンス 会社概要](https://www.keyence.co.jp/company/about/)。一人当たり売上高は9,150万円、一人当たり営業利益は4,660万円となり、全産業平均の194万円の24倍にあたる。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/c02_keyence.jpg" width="750" height="1000" loading="lazy" alt="キーエンスの本社">
+<figcaption>キーエンスの本社。同社の2026年3月期の営業利益率は51.0%である。生産の大半を外部委託しているため、製造工程の従業員は連結従業員数に入らない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:KEYENCE_CORPORATION_headquarters.jpg">Tokumeigakarinoaoshima</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 ここから限界が見える。一人当たり営業利益は次の恒等式で分解できる。
 
 一人当たり営業利益 ＝ 一人当たり売上高 × 売上高営業利益率
@@ -109,6 +124,11 @@ DCFが成立する条件は2つある。第1に、対象会社の事業計画を
 DCFは客観でマルチプルは主観だという整理は成り立たない。DCFは事業計画、定常成長率、資本コストという複数の主観を積み上げる。マルチプルの主観はピア選定の1点に集約される。検証すべき前提の数はDCFのほうが多い。
 
 過去実績のない企業では、この構図がさらに極端になる。Damodaranの整理では、収益前企業のDCFは仮定の置き場所が5つに移る [Valuing Young, Start-Up and Growth Companies](https://pages.stern.nyu.edu/~adamodar/pdfiles/papers/younggrowth.pdf)。第1に売上で、総市場規模と到達シェアを置くトップダウン推定になる。第2に定常営業利益率で、成熟した同業のマージンを目標値に置く。第3に再投資で、売上増加額を sales-to-capital 比で割って求める。論文の設例では1.95が使われている。第4に整合性検証で、累積投下資本と税引後営業利益からROICを計算し、想定した収益性が資本効率として成立するかを確認する。第5に失敗確率である。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/c02_damodaran.jpg" width="1000" height="562" loading="lazy" alt="アスワス・ダモダラン">
+<figcaption>2023年にシンガポールで企業評価をテーマに講演するアスワス・ダモダラン。収益前企業の DCF では、失敗確率を割引率に押し込まず、2段階で扱うことを推奨している。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Aswath_Damodaran_keynote_at_ICAI_SG_Chapter%27s_Mega_Event_2023.jpg">ICAI Singapore Chapter</a>／CC BY 3.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 第5の扱いを誤る例が多い。失敗確率を割引率に押し込むと、失敗確率が時間とともに低下するという性質を表現できない。Damodaranは2段階での処理を推奨している。期待価値は、継続企業価値に1から失敗確率を引いた値を掛けたものと、清算価値に失敗確率を掛けたものの和である。設例では継続企業価値177.56百万ドル、失敗確率40パーセント、清算価値ゼロとして期待価値106.54百万ドルを得ており、同じ会社をVCアプローチで評価した202.34百万ドルと差が出る。VCアプローチで使われる目標収益率はスタートアップ段階で50パーセントから70パーセント、第1段階で40パーセントから60パーセント、第2段階で35パーセントから50パーセント、ブリッジおよびIPO段階で25パーセントから35パーセントである。この水準は市場リスクの対価ではなく、失敗確率を織り込んだ数値である。CAPMで求めた資本コストとは意味が違う。
 

@@ -10,6 +10,16 @@
 
     <h2 id="s1">なぜ1927年に刊行されたのか</h2>
     <p>当時ハイデガーはマールブルク大学の員外教授であった。正教授への昇任には主著の刊行が求められていた。『存在と時間』はフッサールが編集する『哲学および現象学研究年報』第8巻に掲載され、同時に別刷りでも刊行された。献辞は「尊敬と友情をこめて」フッサールに捧げられている。</p>
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/00_plan-husserl.jpg" width="697" height="1000" loading="lazy" alt="フッサールの肖像写真"><img src="../img/00_plan-marburg.jpg" width="1000" height="666" loading="lazy" alt="マールブルク大学の旧大学と大学教会"></div>
+<figcaption>左はフッサール、右はマールブルク大学の旧大学（アルテ・ウニヴェルジテート）と大学教会である。『存在と時間』はフッサールが編集する『年報』第8巻に掲載され、献辞もフッサールに捧げられた。刊行の当時、ハイデガーはマールブルク大学の員外教授であった。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Edmund_Husserl_1910s.jpg">Unknown (Mondadori Publishers)</a>／Public domain 右：<a href="https://commons.wikimedia.org/wiki/File:Alte_Universit%C3%A4t_und_Universit%C3%A4tskirche_Marburg.jpg">Hydro</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/00_plan-heidegger.jpg" width="855" height="569" loading="lazy" alt="演台で講演するハイデガー">
+<figcaption>フライブルクのツェーリンゲン地区にあるヤーンハレで講演するハイデガー。写真家ヴィリー・プラガーの撮影である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Freiburg,_Z%C3%A4hringen-_Jahnhalle,_Prof._Martin_Heidegger_w%C3%A4hrend_eines_Vortrags_-_LABW_-_Staatsarchiv_Freiburg_W_134_Nr._023740f.jpeg">Willy Pragher</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
     <p>刊行時の表紙には「前半」と記されていた。この表記は1953年の第7版で削除され、ハイデガー自身が「後半は前半を新たに書き直さなければ書けない」と序文で述べている。</p>
 <figure class="tb-fig">
 <svg viewBox="0 0 720 336" role="img" aria-label="2部6編の構成と刊行範囲">

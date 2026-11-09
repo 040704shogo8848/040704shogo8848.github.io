@@ -14,6 +14,11 @@ thesis: 同じ企業でも、板の厚みと株主構成、そして上場手段
 
 板とは、ある時点で市場に出ている指値注文の一覧である。厚みとは各気配値に積まれた数量を指す。ここで注意すべき区別がひとつある。売買代金は約定した後の結果値であり、板の厚みは約定する前の待機注文の量である。売買代金が多い日は値が飛んだ日でもありうるので、両者は同じ方向に動くとは限らない。
 
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/c04_tsebldg.jpg" width="750" height="1000" loading="lazy" alt="東京証券取引所の本館"><img src="../img/c04_marketcenter.jpg" width="1000" height="750" loading="lazy" alt="東京証券取引所のマーケットセンター"></div>
+<figcaption>左は東京・日本橋兜町の東京証券取引所の本館、右は館内のマーケットセンターである。上部の電光表示には銘柄名と株価が流れる。東証は1999年4月に株券売買立会場を閉場しており、板の注文は売買システムの中で突き合わされる。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Tokyo_Stock_Exchange_Main_Building,_at_Nihonbashi-Kabutocho,_Chuo,_Tokyo_(2019-01-02)_01.jpg">Lombroso</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Market_centre_in_Tokyo_stock_exchange.jpg">ehnmark</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 板を作れるのは、価格が動けば売り買いする気のある保有者に限られる。創業者の持分、親会社の持分、政策保有株は、発行済株式数に計上されていても価格が動いても市場に出てこない。だから取引所も指数提供会社も、発行済株式数から機械的に控除した数を使う。浮動株比率という数字は、その銘柄に板を作る余地が制度上どれだけ残っているかを測った指標である。
 
 機関投資家が入れるかどうかは3層で決まる。第1層が取引所の上場維持基準、第2層が指数提供会社の採用基準、第3層が個々の運用会社の内規である。第1層と第2層は公開されており、第3層は原則として公開されていない。
@@ -151,7 +156,17 @@ FTSEはより低い水準で線を引く。FTSE Global Equity Index Seriesは、
 
 観察できる事実として、Nasdaq総合指数は2000年3月10日に5,048.62で頂点をつけ、2002年10月9日に1,114まで下落した。下落率は78%である。消滅した代表例はPets.com、Webvan、Boo.com、WorldCom、NorthPoint Communications、Global Crossingであり、市場シェアを伸ばして生き残った代表例はAmazon、eBay、Cisco Systems、Nvidiaである。出典は三次資料である[出典](https://en.wikipedia.org/wiki/Dot-com_bubble)。
 
+<figure class="tb-fig tb-photo">
+<img src="../img/c04_nasdaq.jpg" width="1000" height="1000" loading="lazy" alt="Nasdaq MarketSite">
+<figcaption>ニューヨークのタイムズスクエアに面した Nasdaq MarketSite。Nasdaq総合指数は2000年3月10日に5,048.62で頂点をつけ、2002年10月9日に1,114まで下落した。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Nasdaq_MarketSite_(51494550508).jpg">ajay_suresh</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 この対比から読み取れる点は3つある。第一に、負債で資産を買った主体が消え、資産は残った。消滅した側の中核はWorldComとGlobal Crossingという通信インフラ保有者であり、債務主導投資の担い手だった。敷設された光ファイバーは物理的に残り、後年に別の主体へ承継された。生死を分けたのは技術の正誤ではなく資産と負債の組み合わせである。第二に、株価下落そのものは倒産要因ではない。Ciscoは株価が80%下落しながら事業として存続した。倒産要因は債務の返済期限であり、株価は返済期限を持たない。第三に、生き残った側には、容量ではなく顧客との関係を供給していた企業が含まれる。AmazonとeBayは自ら通信インフラを保有せず、他者が過剰に敷設した容量を安価に消費する側に立った。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/c04_globalcrossing.jpg" width="800" height="600" loading="lazy" alt="Global Crossing のマンホールの蓋">
+<figcaption>ペルーの歩道にある、GLOBAL CROSSING の名称が鋳込まれたマンホールの蓋。Global Crossing は、本文がドットコム期に消滅した側の中核に挙げた通信インフラ会社である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Global_crossing_manhole_cover.jpg">Steven Damron</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 この3点をAIに写像すると、脆弱性が集中するのはリースまたは容量引取契約を負債として抱えたまま需要が遅行した場合の中間層、すなわちデータセンター保有体とネオクラウド事業者である。オフバランス車両の債務はリース料キャッシュフローで返済される設計であり、引取契約が履行されるかどうかに生死が直結する[出典](https://www.bis.org/publ/qtrpdf/r_qt2603.pdf)。これは推論であり、実証ではない。
 

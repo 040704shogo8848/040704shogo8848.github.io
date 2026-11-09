@@ -59,8 +59,18 @@
     <figcaption>本節で挙げた7人の思想家が『存在と時間』から何を受け継ぎ、何を批判したかを1行ずつ示す。左の色は、影響が哲学の内部に及んだか、人工知能と情報システムの分野に及んだかの区別である。</figcaption>
     </figure>
 
+
+<figure class="tb-fig tb-photo">
+<div class="tb-ph3"><img src="../img/13_reception-arendt.jpg" width="808" height="1000" loading="lazy" alt="アーレントの肖像写真"><img src="../img/13_reception-sartre.jpg" width="1000" height="991" loading="lazy" alt="窓の前に立つサルトル"><img src="../img/13_reception-levinas.jpg" width="697" height="1000" loading="lazy" alt="レヴィナスの肖像写真"></div>
+<figcaption>左は1933年のアーレント、中央は1967年8月にヴェネツィアで撮影されたサルトル、右はレヴィナスである。アーレントは1924年からマールブルクで、レヴィナスは1928年からフライブルクでハイデガーに学んだ。サルトルは『存在と無』で現存在の分析を意識の哲学として読み直した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Hannah_Arendt_1933.jpg">Unknown author</a>／Public domain 中央：<a href="https://commons.wikimedia.org/wiki/File:Jean_Paul_Sartre_1967.jpg">User:T1980</a>／CC BY 3.0 右：<a href="https://commons.wikimedia.org/wiki/File:Emmanuel_Levinas.jpg">Bracha L. Ettinger</a>／CC BY-SA 2.5／Wikimedia Commons</span></figcaption>
+</figure>
     <h2 id="s2">日本での受容</h2>
     <p>日本の哲学者は刊行前後からハイデガーに直接学んだ。田辺元は1922年に渡独し、フライブルクで1923年夏学期の講義に出席した。三木清は1923年からマールブルクで、九鬼周造は1927年から翌年にかけてマールブルクで講義に出席した。和辻哲郎はベルリン滞在中の1927年に本書を読み、『風土』（1935）の序言で、時間性に比して空間性が十分に扱われていないと述べた。ハイデガーの「日本人と問う者との対話」（1953–54年執筆）は、手塚富雄の訪問と九鬼周造の記憶をもとに書かれた。</p>
+<figure class="tb-fig tb-photo">
+<div class="tb-ph2"><img src="../img/13_reception-kuki.jpg" width="664" height="1000" loading="lazy" alt="九鬼周造の肖像写真"><img src="../img/13_reception-miki.jpg" width="751" height="1000" loading="lazy" alt="1929年の三木清"></div>
+<figcaption>左は九鬼周造、右は1929年の三木清である。三木は1923年から、九鬼は1927年から翌年にかけて、マールブルクで講義に出席した。<span class="tb-credit">写真 左：<a href="https://commons.wikimedia.org/wiki/File:Affidavit-kuki-shuzo-portrait-scan.jpg">Kyle Chayka</a>／CC BY-SA 4.0 右：<a href="https://commons.wikimedia.org/wiki/File:Kiyosh-Miki_1929.jpg">Earthbound1960</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
 
     <figure class="tb-fig">
     <svg viewBox="0 0 720 215" role="img" aria-label="日本の哲学者によるハイデガー受容の年表">

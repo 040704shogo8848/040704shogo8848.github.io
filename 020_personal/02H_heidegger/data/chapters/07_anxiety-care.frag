@@ -134,6 +134,11 @@
       <span class="ja">哲学のスキャンダルは、その証明がいまだに果たされていないことにあるのではない。そうした証明がくり返し期待され、試みられていることにある。</span>
       <span class="src">§43a</span>
     </div>
+<figure class="tb-fig tb-photo">
+<img src="../img/07_anxiety-care-kant.jpg" width="766" height="1000" loading="lazy" alt="カントの肖像画">
+<figcaption>ヨハン・ゴットリープ・ベッカーが描いたカントの肖像画。カントは外界の存在を証明できないことを「哲学のスキャンダル」と呼んだ。§43 はこれを反転させ、証明がくり返し期待されることをスキャンダルとした。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Immanuel_Kant_-_Gemaelde_1.jpg">Johann Gottlieb Becker</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
     <p>現存在はつねにすでに世界のもとに存在している。外界の存在を証明しようとする試みは、世界を失った主観をまず想定し、後から世界を取り戻そうとする点で誤った出発点に立っている。</p>
 
     <figure class="tb-fig">

@@ -2,6 +2,19 @@
 // 追加は bin/add-report.sh 経由。
 window.INDUSTRY = [
   {
+    "title": "海運業界の歴史と現在",
+    "date": "2026-11-06",
+    "tags": [
+      "shipping",
+      "logistics",
+      "geopolitics",
+      "m-and-a"
+    ],
+    "summary": "東インド会社からコンテナ化とアライアンスの再編を経て、2026年の紅海とホルムズ海峡までを整理した海運業界の通史。年表とアライアンスの所属の変遷を図で示す。船の種類とTEU、統合とM&Aを扱う。多角化・ファミリー経営・脱炭素・港湾と地政学などの主要テーマ7つと、2026年4月時点の上位10社も示す。写真23点と用語集を含む。元のメモの記述は出典と照合し、修正点を一覧にした。",
+    "source": "Desk research",
+    "file": "reports/shipping_industry_history_261106.html"
+  },
+  {
     "title": "KHネオケムの溶剤はAI半導体のどこで使われるか",
     "date": "2026-11-05",
     "tags": [

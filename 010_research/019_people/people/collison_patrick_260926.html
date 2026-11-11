@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>パトリック・コリソン — Stripe と科学資金の設計</title>
 <style>
+
   :root{
     --bg:#F8F7F3; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#2563EB;
     --line:#E5E2DA; --card:#fff; --chip:#EEF2FF; --grid:#EDEBE5;
@@ -133,6 +134,22 @@
   a{color:var(--accent)}
   sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
 
+
+  .thesis{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px;margin:18px 0}
+  .thesis>h2{margin:0 0 10px;padding:0;border:0;font-size:17px}
+  .th-claims{margin:10px 0 8px;padding-left:22px}
+  .th-claims li{margin:10px 0}
+  .th-reader,.th-fp{margin:8px 0;font-size:14px}
+  .tb-photo{margin:22px 0;padding:0;background:#fff;border:1px solid var(--line,#E5E2DA);border-radius:10px;overflow:hidden}
+  .tb-photo img{display:block;width:100%;height:auto;background:#EEE}
+  .tb-ph2,.tb-ph3{display:grid;gap:2px;background:var(--line,#E5E2DA)}
+  .tb-ph2{grid-template-columns:1fr 1fr} .tb-ph3{grid-template-columns:1fr 1fr 1fr}
+  .tb-ph2 img,.tb-ph3 img{aspect-ratio:4/3;object-fit:cover}
+  .tb-photo figcaption{font-size:12.5px;color:#555;line-height:1.7;padding:11px 16px;border-top:1px solid var(--line,#E5E2DA);background:#FCFBF8}
+  .tb-credit{display:block;margin-top:4px;font-size:11px;color:#8a8a8a}
+  .tb-credit a{color:#8a8a8a}
+
   @media print{ body{background:#fff} h2{page-break-after:avoid} .chart,table{page-break-inside:avoid} }
   @media(max-width:640px){
     .wrap{padding:28px 18px 70px}
@@ -140,7 +157,9 @@
     .bar{grid-template-columns:88px 1fr auto}
     .bar .vl{min-width:60px}
     .tl-d{min-width:0}
+    .tb-ph2,.tb-ph3{grid-template-columns:1fr}
   }
+
 </style>
 </head>
 <body>
@@ -252,266 +271,208 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   <h1>パトリック・コリソン — Stripe と科学資金の設計</h1>
   <div class="en">Patrick Collison　1988.9.9 – ／Stripe, Inc. 共同創業者・CEO</div>
   <div class="tags">
-    <span class="tag">Stripe</span><span class="tag">決済</span><span class="tag">創業</span>
-    <span class="tag">Arc Institute</span><span class="tag">Progress Studies</span><span class="tag">アイルランド</span>
+    <span class="tag">流動性税</span><span class="tag">優先株</span><span class="tag">テンダー</span>
+    <span class="tag">Fast Grants</span><span class="tag">審査速度</span><span class="tag">非上場統治</span>
   </div>
-  <p class="lead">1988年9月9日、アイルランド・リムリック県ドロマイン（Dromineer）生まれ。弟 John と 2007年に Auctomatic、2010年に Stripe を共同創業。Stripe の 2024年 TPV は $1.4T、2025年は $1.9T（会社発表）。CEO として資金調達と人員削減の社内文書を自ら書き、Stripe Press・Arc Institute・Fast Grants など Stripe 外の制度設計にも関与する。</p>
-  <p class="srcnote">作成日 2026年9月26日。数値の基準日は同日。存命人物のため、出典のない私生活・人物評は書かない。年表の満年齢は生年月日1988年9月9日からの年差で算出している。評価額は優先株のポストマネー（Series H・I）とテンダー／二次流通価格を区別して書く。会社レポート（<a href="../../011_company/reports/stripe_research_260727.html">stripe_research_260727.html</a>）と数字が重なる箇所は、人物側では本人の判断と文書に焦点を当て、TPV・ラウンド表は必要最小限を再掲する。</p>
 </header>
+
+<p class="lead">判断は二つである。第一に、Patrick Collison（CEO）が共同で選んだ「非上場のまま従業員流動性を出す」経路を、テンダー示唆評価の上昇として Series H 優先株の回復と読むか。第二に、本人が共同設計した Fast Grants の資金判断を、NIH の典型判断より短いと確定してよいか。</p>
+<p class="srcnote">改稿日 2026年11月11日（初稿 2026年9月26日）。本ページは本人の意思決定2件の検証に限定する。会社の TPV・製品面の詳細は <a href="../../011_company/reports/stripe_research_260727.html">stripe_research_260727.html</a> に置く。年表の満年齢は生年月日1988年9月9日からの年差である。</p>
 
 <h2 id="overview"><span class="num">①</span>概要<span class="en">Overview</span></h2>
 
 <div class="kpi">
-  <div class="card"><div class="k">生年月日</div><div class="v">1988.9.9<small>Dromineer, IE</small></div></div>
-  <div class="card"><div class="k">Stripe 創業</div><div class="v">2010<small>/dev/payments 2009</small></div></div>
-  <div class="card"><div class="k">2025年 TPV</div><div class="v">$1.9T<small>会社発表・+34% YoY</small></div></div>
-  <div class="card"><div class="k">Series I 評価</div><div class="v">$50B<small>2023-03・ピーク比 −47%</small></div></div>
+  <div class="card"><div class="k">IPO／二次の告知</div><div class="v">2023-01<small>兄弟が従業員へ伝達</small></div></div>
+  <div class="card"><div class="k">Series I 優先株</div><div class="v">$50B<small>2023-03・流動性用途</small></div></div>
+  <div class="card"><div class="k">テンダー示唆</div><div class="v">$159B<small>2026-02・二次流通</small></div></div>
+  <div class="card"><div class="k">Fast Grants 初回</div><div class="v">48時間<small>回顧・初回交付</small></div></div>
 </div>
 
 <div class="callout">
-<p><b>先に結論を3つ書く。</b></p>
-<p><b>1つ目。曲線は「16歳の言語実装 → 19歳の1社目売却 → 決済の手続きをAPIの裏側へ移す」である。</b>2005年1月、16歳で BT Young Scientist and Technologist of the Year（Lisp 方言 Croma）。2007年に弟 John・Taggar 兄弟と Auctomatic（YC W07）を創業し、2008年3月に Live Current Media が約 $5M 超で買収（報道。Patrick 19歳・John 17歳）。2009年に /dev/payments、2010年に Stripe。価値提案は手数料の安さではなく、<strong class="hit">マーチャント口座の申込みと審査を自社側に引き受け、開発者から見える面を数行のコードに縮める</strong>ことだった<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup><sup><a href="#s3">3</a></sup><sup><a href="#s4">4</a></sup><sup><a href="#s5">5</a></sup>。</p>
-<p><b>2つ目。評価額のピークと切り下げは、優先株の発行価格で測ると $95B（2021-03）→ $50B（2023-03）である。</b>下落率は約 47%。2023年3月の Series I（調達 $6.5B）は事業運転資金ではなく、失効が迫る RSU の税負担と従業員流動性を主目的とした、と会社・報道が一致する。2024年2月のテンダー $65B、2025年2月のテンダー $91.5B、2026年2月のテンダー $159B は二次流通価格であり、Series H・I の優先株価格とは性質が異なる<sup><a href="#s6">6</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s10">10</a></sup>。</p>
-<p><b>3つ目。Stripe 外では、科学資金の速度と制度を主題にしている。</b>2019年7月に Tyler Cowen と The Atlantic で Progress Studies を提唱。2020年に Fast Grants（COVID 研究へ累計 $50M 超・260件超）。2021年に Silvana Konermann・Patrick Hsu と Arc Institute（初期コミット $650M 超）。Emergent Ventures は Mercatus Center（Cowen）側の助成プログラムであり、Fast Grants がそのインフラを借りた、と本人らが書く。1517 Fund とは別物である<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup><sup><a href="#s13">13</a></sup><sup><a href="#s14">14</a></sup>。</p>
+<p style="margin-top:0"><b>先に結論を置く。</b></p>
+<p><b>1. 本人の選択は「IPOではなく非上場流動性」であり、テンダー上昇は優先株回復ではない。</b>2023年1月に Patrick と John は従業員へ次を伝えた。1年以内に IPO か二次売却かを決める、という内容である（CNBC報道・single-source）。2023年3月の Series I（優先株 $50B・$6.5B 超）について会社公式は用途を従業員流動性と株式報酬の源泉税に限った。「事業運営にこの資本は不要」とも書いた。公式コメントは John 名義である。経路の提示は兄弟共同であり、Patrick は CEO として当該非上場経路を維持した。その後のテンダー示唆は $65B→$91.5B→$159B と上がる。Series I 以降に優先株ポストマネーを $50B 超へ付け直した公開ラウンドは無い<sup><a href="#s46">46</a></sup><sup><a href="#s38">38</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s8">8</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s43">43</a></sup>。</p>
+<p><b>2. Fast Grants が NIH より判断が速い、とは現時点で確定できない。</b>本人共著の回顧は設計目標を判断48時間・着金数日後とする。初回ラウンドの交付は48時間以内、後期は2週間以内と書く。NIH については「成功申請は通常10〜20人・3段階の審査」と手続の厚さを記す。「典型判断200〜600日」という日数対照は回顧原文に無い。NIH 授与通知（例: NINDS で締切後8〜20か月）は判断後の手続きを含む別指標である。したがって NIH 対比の速度優位は判定不能とする<sup><a href="#s12">12</a></sup><sup><a href="#s40">40</a></sup>。</p>
 </div>
 
+<section class="thesis" id="thesis">
+  <h2>主張</h2>
+  <p class="th-reader"><b>読者と判断：</b>Patrick が選んだ非上場流動性経路の結果を、テンダー価格で「優先株が回復した」と読むか。Fast Grants の判断速度を、NIH より短いと確定して扱うか。</p>
+  <ol class="th-claims">
+    <li><b>主張：</b>Patrick Collison（CEO）は、2023年1月に共同で示した「IPO か二次売却か」の選択肢のうち、2023年3月の Series I により非上場のまま従業員流動性（と源泉税）を出す経路を実行した。Series I の優先株ポストマネーは $50B であり、その後テンダー示唆評価が $65B→$91.5B→$159B と上がっても、優先株を $50B 超へ付け直した公開ラウンドは無い。したがって本人の当該決定の結果を、Series H（$95B）優先株の回復と同一視してはならない。 <b>反証条件：</b>Series I 以降に優先株ポストマネーが $50B を超える公開ラウンドが発表された場合。会社が Series I の主用途を事業運営・成長投資だと公式に訂正した場合。または本人が IPO 等で優先株系列を $50B 超へ付け直した場合。 <b>判定：</b>支持（本人の経路選択と優先株／テンダーの系列分離。創業者希薄化率は非開示のため範囲外）</li>
+    <li><b>主張：</b>Patrick Collison が共同設計した Fast Grants の資金判断は、NIH の典型的な資金判断より短い。 <b>反証条件：</b>Fast Grants の中央判断日数（一次分布）が、NIH が一次開示する判断日数（授与通知ではなく decision）と同等以上である場合。 <b>判定：</b>判定不能（回顧原文に NIH 判断日数の定量対照が無い。本人共著が示すのは目標48時間と初回交付48時間以内と後期2週間以内、および NIH の審査人数・段階の記述。中央判断日数の一次分布と NIH 判断日数の一次系列は未開示。授与通知期間との比較は指標がずれる）</li>
+  </ol>
+  <p class="th-fp"><b>分解：</b>物理的制約はカード承認・清算・チャージバックの時間と、銀行規制が求めるリスク資本である。お金の流れのうち公開で追えるのは優先株の発行価格、テンダー示唆評価、助成の累計である。利得の帰属は創業者（本人含む）・従業員・優先株投資家・加盟店・受給研究室に分かれる。法と強制力はカードネットワーク規則と各国の決済ライセンスである。時間は本人が選ぶ IPO／テンダーの間隔と、助成の審査日数である。</p>
+</section>
+
+<figure class="tb-fig tb-photo tb-ph2">
+<img src="../img/collison-patrick-2015.jpg" width="1200" height="799" loading="lazy" alt="2015年のパトリック・コリソン">
+<img src="../img/collison-patrick-2008.jpg" width="853" height="1200" loading="lazy" alt="2008年のパトリック・コリソン" style="max-width:440px;margin:0 auto">
+<figcaption>左は2015年のパトリック・コリソン。右は2008年の同氏（Northern Voice）。本人は Stripe 共同創業者・CEO であり、非上場流動性の経路選択と Fast Grants の共同設計の当事者である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Patrick_Collison.jpg">JD Lasica</a>／CC BY 2.0；<a href="https://commons.wikimedia.org/wiki/File:Patrick_Collison_2008.jpg">randy stewart</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo tb-ph2">
+<img src="../img/collison-patrick-grove-2021.jpg" width="1200" height="799" loading="lazy" alt="2021年 The Grove でのパトリック・コリソン">
+<img src="../img/collison-patrick-grove-panel.jpg" width="1200" height="799" loading="lazy" alt="2021年 The Grove のパネルに座るパトリック・コリソン">
+<figcaption>左は2021年 The Grove のパトリック・コリソン。右は同イベントでミシェル・ザトリン、ベン・カスノチャと並ぶ同氏。Series H（2021-03、優先株 $95B）の前後に位置する本人である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Patrick_Collison_The_Grove_2021.jpg">Village Global</a>／CC BY 2.0；<a href="https://commons.wikimedia.org/wiki/File:Michelle_Zatlyn,_Patrick_Collison,_Ben_Casnocha.jpg">Village Global</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
 <h2 id="timeline"><span class="num">②</span>年表<span class="en">Timeline</span></h2>
-<p>日付が一次情報または複数報道で確定した出来事だけを並べた。各項目は事実、具体、なぜ効いたかの3層である。期のボタンで絞り込める。日付の右は、その時点の満年齢である。</p>
+<p>主張の検証に使う日付を中心に並べた。日付の右は満年齢である。</p>
 
 <div class="tl-tools">
-  <input id="tlq" type="search" placeholder="年表を検索（例: Auctomatic、Series H、Bridge、Fast Grants、人員削減）" aria-label="年表を検索">
+  <input id="tlq" type="search" placeholder="年表を検索（例: Series I、テンダー、Fast Grants、Arc）" aria-label="年表を検索">
   <span class="tl-count" id="tlcount"></span>
 </div>
 <div class="tl-eras" id="tleras"></div>
 <div class="tl" id="tl"></div>
 <div class="tl-empty" id="tlempty">該当する項目がない。</div>
 
-<h2 id="phases"><span class="num">③</span>局面ごとの解剖<span class="en">Phases</span></h2>
+<h2 id="claim1"><span class="num">③</span>主張1の検証 — 本人の非上場流動性経路<span class="en">Founder Choice: Private Liquidity</span></h2>
 
-<h3>I 形成 — ドロマイン・Young Scientist・MIT（1988–2006）</h3>
-<p>生年月日は1988年9月9日。出身はアイルランド・リムリック県ドロマイン。本人サイトは「grew up in Ireland」、Forbes はアイルランド国籍と書く。両親は生物学者と電気工学者でサマーキャンプを経営した、という記述は複数の伝記系二次資料に出るが、一次の公式略歴に金額付きで載るわけではないため、本ページでは家族の事業規模は N/A とする<sup><a href="#s1">1</a></sup><sup><a href="#s15">15</a></sup>。</p>
-<p>2005年1月14日前後、Castletroy College 在学中（transition year、当時16歳）に Esat BT Young Scientist and Technologist of the Year を受賞。プロジェクトは Lisp 方言「Croma」（ウェブ向け・継続を含む）。前年は AI 系プロジェクトで準優勝。Leaving Certificate を2年前倒しで受験し、2006年に MIT へ入学。のちに約2年で中退し起業に集中する<sup><a href="#s2">2</a></sup><sup><a href="#s16">16</a></sup><sup><a href="#s1">1</a></sup>。</p>
+<figure class="tb-fig tb-photo tb-ph2">
+<img src="../img/collison-stripe-hq.jpg" width="1200" height="730" loading="lazy" alt="サウスサンフランシスコの Stripe 本社">
+<img src="../img/collison-john-downing.jpg" width="801" height="1200" loading="lazy" alt="ダウニング街10番地のジョン・コリソン" style="max-width:440px;margin:0 auto">
+<figcaption>左はサウスサンフランシスコの Stripe 本社（2023-07-29 撮影）。本人が CEO を務める非上場会社の本拠であり、Series I（2023-03）と従業員テンダーの発表主体である。右は2023-05-24、ダウニング街10番地で撮影されたジョン・コリソン（共同創業者・President）。Series I 公式コメントは John 名義であり、同日は発表から約2か月後である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Stripe_Headquarters.jpg">Coolcaesar</a>／CC BY-SA 4.0；<a href="https://commons.wikimedia.org/wiki/File:The_Prime_Minister_meets_with_the_Founder_%26_President_of_Stripe_-_52922981984_(cropped).jpg">Simon Walker / UK Prime Minister</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
 
-<h3>II Auctomatic — YC W07 と $5M 超の売却（2007–2008）</h3>
-<p>2007年、Patrick は Kulveer Taggar・Harj Taggar らと Auctomatic を創業し、Y Combinator Winter 2007 バッチに参加した。プロダクトは eBay／Amazon 出品者向けの出品・在庫・売上管理であり、決済会社ではない。弟 John も主要株主に含まれる<sup><a href="#s4">4</a></sup><sup><a href="#s17">17</a></sup>。</p>
-<p>2008年3月、カナダ上場の Live Current Media が買収。Irish Times は売却額を「$5M（€3.2M）超」とし、Patrick 自身は金額を明かさず「millionsaire になった」と述べる。当時 Patrick 19歳、John 17歳。買収後 Patrick はバンクーバーで Live Current の engineering director として勤務し、John は Leaving Cert を終えるためリムリックに残った、と同紙が書く<sup><a href="#s3">3</a></sup>。</p>
-<p>この局面で後の Stripe に残るのは売却金そのものではなく、<strong class="hit">オンラインで金を受け取る側の手続きを利用者として先に踏んだ</strong>ことである。Auctomatic の顧客は出品者であり、カード受領のマーチャント口座開設は彼らの外部工程だった。会社レポート側の整理と同じである<sup><a href="#s5">5</a></sup>。</p>
+<p>2023年1月、CNBC は次を報じた。Patrick と John が従業員に、1年以内に上場か二次売却かを決めると伝えた、と。助言には Goldman Sachs と J.P. Morgan が関与した、とも書く（報道、single-source）<sup><a href="#s46">46</a></sup>。</p>
 
-<h3>III Stripe の点火 — /dev/payments と「数行のコード」（2009–2011）</h3>
-<p>2009年に /dev/payments として構想。デラウェア州の商号規則が先頭のスラッシュを認めなかったため Stripe に改称した、と会社側の説明が残る。2010年に正式創業。Y Combinator の会社ページは Stripe を Summer 2009（S09）バッチに置く（創業年表記の2010とバッチ年がずれる点は、YC の公称を優先する）<sup><a href="#s5">5</a></sup><sup><a href="#s18">18</a></sup>。</p>
-<p>当時、サイトでカード決済を受けるには銀行へのマーチャント口座申込み・審査・ゲートウェイ接続に数週間かかった。Stripe はこれを自社側に吸収し、開発者向けドキュメントでは「数行のコード」で受領できると示した。Paul Graham は、兄弟が相手のノートPCにその場で導入まで済ませる動きを Collison installation と呼んだ<sup><a href="#s5">5</a></sup>。</p>
-<p>2011年、シード約 $2M。参加者は Peter Thiel、Elon Musk、Max Levchin、Sequoia Capital、Andreessen Horowitz、SV Angel など（報道・二次整理。評価額は約 $20M ポストと置くものがある）<sup><a href="#s19">19</a></sup><sup><a href="#s5">5</a></sup>。</p>
+<p>2023年3月15日の Stripe 公式ニュースルームは次を記す。Series I は $6.5B 超、評価 $50B。資金の用途は「current and former employees」への流動性と、「employee withholding tax obligations related to equity awards」。新株発行は流動性で回収する自社株の消却で相殺する、と書く。「Stripe does not need this capital to run its business」と明記する。公式コメントは John（共同創業者・President）名義である。Reuters は内訳を約 $3.5B が税負担、残りが従業員買取りと報じた（single-source の内訳）<sup><a href="#s38">38</a></sup><sup><a href="#s7">7</a></sup>。</p>
 
-<h3>IV 拡大と面展開 — Connect から Tax・Treasury（2012–2021）</h3>
-<p>2012年2月、Series A で約 $18M、評価額約 $100M（Bloomberg。Sequoia 主導とされる）。同年 Connect を出し、マーケットプレイスが配下事業者へ決済を埋め込めるようにした。2014年1月前後に Series C で約 $80M（評価約 $1.75B）、同年末までに評価約 $3.5B まで上がった、と二次整理がある（ラウンド名の付け方は報道間で揺れる）。2014年には Bitcoin 受領も開始した<sup><a href="#s20">20</a></sup><sup><a href="#s19">19</a></sup><sup><a href="#s21">21</a></sup>。</p>
-<p>2016年、Atlas（デラウェア法人設立の支援）を発表。同年11月、Series D で約 $150M、ポストマネー約 $9.2B（TechCrunch。CapitalG・General Catalyst 主導）。2017年に Stripe Press を開始。2018年1月、Bitcoin 決済サポートの終了を発表（効力は同年4月23日。理由はボラティリティ・承認時間・利用減）<sup><a href="#s22">22</a></sup><sup><a href="#s23">23</a></sup><sup><a href="#s24">24</a></sup><sup><a href="#s21">21</a></sup>。</p>
-<p>2019年9月、Series G で $250M、プレマネー評価 $35B（Stripe 公式ニュースルーム。Sequoia、a16z、General Catalyst など）。2021年3月14日、Series H で $600M、評価 $95B（当時の米国未公開企業として最高水準と報じられた）。同ラウンドは欧州・ダブリン投資を名目に含み、Allianz X、Axa、Baillie Gifford、Fidelity、Sequoia、アイルランド NTMA などが参加<sup><a href="#s25">25</a></sup><sup><a href="#s6">6</a></sup>。</p>
-<p>プロダクト面では Radar、Issuing、Terminal、Treasury、Link、Tax（2021年4月に TaxJar を買収。対価は非開示。PitchBook 系は TaxJar 評価約 $179M と置くが single-source）が並ぶ。いずれも決済イベントの前後に張り付く業務である<sup><a href="#s26">26</a></sup><sup><a href="#s5">5</a></sup>。</p>
-
-<h3>V 切り下げと統治 — 人員削減・Series I・テンダー（2022–2026）</h3>
-<p>2022年11月3日、Patrick が社内メールで約 14% の人員削減を発表（Stripe 公式が全文掲載）。「John and I are fully responsible」「We overhired for the world we're in」と書き、インターネット経済の近期待ちを過大に見積もり、営業費用を伸ばしすぎたと列挙する。削減後の規模は「February headcount of almost 7,000」へ戻す、とある。報道は約8,000人規模からの約1,000人超削減と書く（約1,120人＝8,000×14%は逆算。会社は「around 14%」のみ）<sup><a href="#s27">27</a></sup><sup><a href="#s28">28</a></sup>。</p>
-<p>2023年3月15日前後、Series I で $6.5B を調達し評価額 $50B。Reuters はピーク $95B からの半減と書く。会社は事業運営に資金が必要ではないとし、用途は RSU 源泉税と従業員流動性である、と報道が一致する<sup><a href="#s7">7</a></sup><sup><a href="#s5">5</a></sup>。</p>
-<p>2024年2月、従業員向けテンダーで評価 $65B（Reuters）。2024年の年次レターで TPV $1.4T（+38%）、黒字化を宣言（利益の会計定義は非開示。「profitable」「operating earnings」表現）。2024年10月、ステーブルコイン基盤 Bridge の買収を発表（対価 $1.1B は Forbes／CNBC。会社は当初金額非開示。2025年2月クローズ。Stripe 史上最大の買収とされる）<sup><a href="#s8">8</a></sup><sup><a href="#s10">10</a></sup><sup><a href="#s29">29</a></sup><sup><a href="#s30">30</a></sup>。</p>
-<p>2025年2月テンダー $91.5B。2025年 TPV $1.9T（+34%）。2026年2月テンダー $159B（Thrive、Coatue、a16z 中心。会社も自己株買いを併用）<sup><a href="#s9">9</a></sup><sup><a href="#s10">10</a></sup><sup><a href="#s5">5</a></sup>。</p>
-
-<h3>VI Stripe 外 — Progress Studies・Fast Grants・Arc・本人サイト</h3>
-<p>2019年7月30日、Patrick Collison と Tyler Cowen は The Atlantic に「We Need a New Science of Progress」を寄稿し、Progress Studies という分野を提唱した<sup><a href="#s11">11</a></sup>。</p>
-<p>2020年4月、Fast Grants を開始（Collison・Cowen・Patrick Hsu）。Mercatus Center 経由。累計 $50M 超を調達し 260件超を助成。初期は48時間判断を目指した。本人らの回顧は、Emergent Ventures 用に組んだインフラを Fast Grants が転用したと明記する。つまり Emergent Ventures は Cowen／Mercatus の既存プログラムであり、Collison が GP として運用する VC ファンドではない。1517 Fund（若者・中退者向けの別ファンド）とも混同してはならない<sup><a href="#s12">12</a></sup><sup><a href="#s14">14</a></sup>。</p>
-<p>2021年12月15日、Arc Institute を正式発足（共同創業者: Silvana Konermann、Patrick Hsu、Patrick Collison）。Stanford・UCSF・UC Berkeley と提携。創設ドナーのコミットは $650M 超。Patrick・John Collison もドナーに名を連ねる<sup><a href="#s13">13</a></sup><sup><a href="#s31">31</a></sup>。</p>
-<p>本人サイト patrickcollison.com には about、questions（未解決の問いのリスト）、fast（速度・進捗に関するノート）、読書リストなどが公開されている。一次テキストとして年表・思想章で使う<sup><a href="#s1">1</a></sup><sup><a href="#s32">32</a></sup><sup><a href="#s33">33</a></sup>。</p>
-
-<h2 id="numbers"><span class="num">④</span>実績の数字<span class="en">The Numbers</span></h2>
-<p>中心は資金調達ラウンドと TPV である。個人持分・個人純資産の監査済み開示は無い（Forbes はリアルタイム推定を出すが、本ページでは推定と明示する）。</p>
-
-<h3>資金調達と評価額（優先株とテンダーを分離）</h3>
 <div class="tbl-scroll">
 <table>
-<thead><tr><th>ラウンド／種別</th><th class="num">年月</th><th class="num">調達額</th><th class="num">評価額</th><th>備考</th></tr></thead>
+<thead><tr><th>出来事</th><th class="num">年月</th><th class="num">評価額</th><th>価格の種類</th><th>主用途（開示）</th></tr></thead>
 <tbody>
-<tr><td class="name">Seed</td><td class="num">2011-05頃</td><td class="num">約 $2M</td><td class="num">約 $20M（諸説）</td><td>Thiel、Musk、Sequoia、a16z 等<sup><a href="#s19">19</a></sup><sup><a href="#s5">5</a></sup></td></tr>
-<tr><td class="name">Series A</td><td class="num">2012-02</td><td class="num">$18M</td><td class="num">約 $100M</td><td>Bloomberg。Sequoia 主導とされる<sup><a href="#s20">20</a></sup></td></tr>
-<tr><td class="name">Series C</td><td class="num">2014-01</td><td class="num">約 $80M</td><td class="num">約 $1.75B</td><td>Founders Fund 主導との二次整理。同年末に約 $3.5B まで上がった報道あり（諸説・ラウンド境界が曖昧）<sup><a href="#s19">19</a></sup></td></tr>
-<tr><td class="name">Series D</td><td class="num">2016-11</td><td class="num">$150M</td><td class="num">約 $9.2B ポスト</td><td>CapitalG・GC。TechCrunch はプレ $9B／ポスト $9.2B<sup><a href="#s22">22</a></sup></td></tr>
-<tr><td class="name">Series G</td><td class="num">2019-09</td><td class="num">$250M</td><td class="num">$35B プレ</td><td>Stripe 公式<sup><a href="#s25">25</a></sup></td></tr>
-<tr><td class="name">Series H</td><td class="num">2021-03</td><td class="num">$600M</td><td class="num"><strong>$95B</strong></td><td>ピークの優先株価格。公式ニュースルーム<sup><a href="#s6">6</a></sup></td></tr>
-<tr><td class="name">Series I</td><td class="num">2023-03</td><td class="num"><strong>$6.5B</strong></td><td class="num"><strong>$50B</strong></td><td>ピーク比約 −47%。RSU・流動性目的<sup><a href="#s7">7</a></sup></td></tr>
-<tr><td class="name">テンダー</td><td class="num">2024-02</td><td class="num">—</td><td class="num">$65B</td><td>従業員向け二次流通。優先株発行価格ではない<sup><a href="#s8">8</a></sup></td></tr>
-<tr><td class="name">テンダー</td><td class="num">2025-02</td><td class="num">—</td><td class="num">$91.5B</td><td>同上<sup><a href="#s9">9</a></sup><sup><a href="#s5">5</a></sup></td></tr>
-<tr><td class="name">テンダー</td><td class="num">2026-02</td><td class="num">—</td><td class="num">$159B</td><td>同上。会社レポートと突合<sup><a href="#s10">10</a></sup><sup><a href="#s5">5</a></sup></td></tr>
+<tr><td class="name">Series H</td><td class="num">2021-03</td><td class="num">$95B</td><td>優先株ポストマネー</td><td>成長・欧州投資を名目に含む一次調達<sup><a href="#s6">6</a></sup></td></tr>
+<tr><td class="name">Series I</td><td class="num">2023-03</td><td class="num">$50B</td><td>優先株ポストマネー</td><td>流動性＋源泉税。事業運営には不要<sup><a href="#s38">38</a></sup><sup><a href="#s7">7</a></sup></td></tr>
+<tr><td class="name">従業員テンダー</td><td class="num">2024-02</td><td class="num">$65B</td><td>二次流通の示唆</td><td>従業員流動性<sup><a href="#s8">8</a></sup></td></tr>
+<tr><td class="name">従業員テンダー</td><td class="num">2025-02</td><td class="num">$91.5B</td><td>二次流通の示唆</td><td>従業員流動性＋自己株買い<sup><a href="#s9">9</a></sup></td></tr>
+<tr><td class="name">従業員テンダー</td><td class="num">2026-02</td><td class="num">$159B</td><td>二次流通の示唆</td><td>従業員流動性＋自己株買い<sup><a href="#s10">10</a></sup><sup><a href="#s43">43</a></sup></td></tr>
 </tbody>
 </table>
 </div>
-<p class="note">Series H・I は会社が設定した優先株のポストマネー。2024年以降の $65B／$91.5B／$159B はテンダーまたは二次流通の取引価格に基づく示唆評価である。1本の折れ線として比較すると誤る。</p>
 
 <div class="chart">
-  <div class="cap">優先株評価額のピークと切り下げ（Series H → Series I）</div>
-  <div class="sub">単位は B USD。テンダー価格は含めない</div>
+  <div class="cap">優先株とテンダーを分けた評価系列</div>
+  <div class="sub">単位は B USD。優先株は Series H・I のみ。テンダーは二次流通</div>
   <div class="bars" id="chartVal"></div>
 </div>
 
-<h3>TPV と収益性</h3>
+<p>ピーク比の下落率は（$95B − $50B）÷ $50B ではなく、$95B を分母にして約47%である。テンダー $159B（2026-02）は Series H を上回るが、種類が異なる。Series I 以降に優先株のポストマネーを $50B 超へ付け直した公開資料は、本調査の範囲では見当たらない。本人の経路選択の結果として残るのは、優先株系列の切り下げと、テンダー系列の上昇である<sup><a href="#s7">7</a></sup><sup><a href="#s43">43</a></sup>。</p>
+
+<p>判定：主張1は<strong class="hit">支持</strong>。支持の内容は「本人が非上場流動性経路を実行した」ことと、「その後のテンダー上昇を優先株回復と同一視できない」ことまでである。創業者持分の希薄化率は非開示のため範囲外とする。</p>
+
+<h2 id="claim2"><span class="num">④</span>主張2の検証 — Fast Grants と NIH 速度比較<span class="en">Fast Grants vs NIH Speed</span></h2>
+
+<figure class="tb-fig tb-photo">
+<img src="../img/collison-patrick-chm.jpg" width="1121" height="1200" loading="lazy" alt="コンピュータ歴史博物館でのパトリック・コリソン" style="max-width:440px;margin:0 auto">
+<figcaption>コンピュータ歴史博物館で撮影されたパトリック・コリソン（2025-02-11）。本人は Fast Grants の共同設計者の一人である。主張2が測るのは、本人が設計した助成の判断速度を NIH の判断速度より短いと確定できるかどうかである。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Headshot_of_Patrick_Collison,_when_he_was_interviewing_Bill_Gates_at_CHM_(54323381673).jpg">Steve Jurvetson</a>／CC BY 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<p>Fast Grants（2020年開始、Collison・Cowen・Patrick Hsu）は Mercatus Center 経由で運用された。本人共著の回顧（Future）が実際に書く内容は次である。(1) 設計目標は申請30分未満・資金判断48時間以内・資金送付は数日後。(2) 初回ラウンドは48時間以内に交付し、後期ラウンドは追加確認を要するものが多く2週間以内だった。(3) 成功した NIH 申請は通常10〜20人の科学者・プログラム担当が3段階で審査する、と手続の厚さを記す。回顧原文を検索しても「NIH の典型判断が200〜600日」という定量対照は無い。したがって従来ページが置いていた NIH 日数対照は根拠にできない<sup><a href="#s12">12</a></sup>。</p>
+
 <div class="tbl-scroll">
 <table>
-<thead><tr><th>年</th><th class="num">TPV</th><th class="num">YoY</th><th>出所</th></tr></thead>
+<thead><tr><th>指標</th><th class="num">数値</th><th>出典上の位置づけ</th></tr></thead>
 <tbody>
-<tr><td class="name">2022</td><td class="num">約 $0.8T</td><td class="num">—</td><td>2023年 $1.0T が +25% であることから逆算（推定）<sup><a href="#s5">5</a></sup></td></tr>
-<tr><td class="name">2023</td><td class="num">$1.0T</td><td class="num">+25%</td><td>会社発表<sup><a href="#s5">5</a></sup><sup><a href="#s10">10</a></sup></td></tr>
-<tr><td class="name">2024</td><td class="num">$1.4T</td><td class="num">+38%</td><td>年次レター／ニュースルーム<sup><a href="#s10">10</a></sup></td></tr>
-<tr><td class="name">2025</td><td class="num">$1.9T</td><td class="num">+34%</td><td>2025年次レター（2026-02公表）<sup><a href="#s10">10</a></sup></td></tr>
-</tbody>
-</table>
-</div>
-<p>TPV は Stripe を通過した取扱高であり、売上ではない。2024年レターは「Stripe was profitable in 2024」と書くが、<strong class="hit">GAAP 純利益の開示はない</strong>。「operating earnings」を R&amp;D に再投資する、という定性表現にとどまる（single-source の会社文言に依存）<sup><a href="#s10">10</a></sup>。</p>
-
-<div class="chart">
-  <div class="cap">TPV の推移</div>
-  <div class="sub">単位は T USD。2022年は推定</div>
-  <div class="bars" id="chartTpv"></div>
-</div>
-
-<h3>その他の規模指標</h3>
-<div class="tbl-scroll">
-<table>
-<thead><tr><th>項目</th><th class="num">数値</th><th>時点・条件</th></tr></thead>
-<tbody>
-<tr><td class="name">Auctomatic 売却</td><td class="num">$5M 超</td><td>2008-03。Irish Times（報道）<sup><a href="#s3">3</a></sup></td></tr>
-<tr><td class="name">人員削減</td><td class="num">約 14%</td><td>2022-11-03。約8,000→約7,000（報道・社内メール）<sup><a href="#s27">27</a></sup><sup><a href="#s28">28</a></sup></td></tr>
-<tr><td class="name">Bridge 買収</td><td class="num">$1.1B</td><td>2024-10発表・2025-02クローズ。金額は報道（会社は当初非開示）<sup><a href="#s29">29</a></sup><sup><a href="#s30">30</a></sup></td></tr>
-<tr><td class="name">Arc 初期コミット</td><td class="num">$650M 超</td><td>2021-12。BusinessWire／Berkeley News<sup><a href="#s13">13</a></sup><sup><a href="#s31">31</a></sup></td></tr>
-<tr><td class="name">Fast Grants</td><td class="num">$50M 超／260件超</td><td>2020。本人回顧・Nature 報道<sup><a href="#s12">12</a></sup><sup><a href="#s34">34</a></sup></td></tr>
-<tr><td class="name">個人純資産（Forbes）</td><td class="num">約 $17.5B</td><td>2026年時点のリアルタイム推定。監査なし（推定）<sup><a href="#s15">15</a></sup></td></tr>
-<tr><td class="name">兄弟の推定持分</td><td class="num">各約 10%</td><td>Forbes 系。非開示（推定）<sup><a href="#s15">15</a></sup></td></tr>
+<tr><td class="name">Fast Grants 判断目標</td><td class="num">48時間以内</td><td>設計目標。実績分布ではない<sup><a href="#s12">12</a></sup></td></tr>
+<tr><td class="name">Fast Grants 初回交付</td><td class="num">48時間以内</td><td>回顧の本人申告（single-source）<sup><a href="#s12">12</a></sup></td></tr>
+<tr><td class="name">Fast Grants 後期交付</td><td class="num">2週間以内</td><td>回顧の本人申告（single-source）<sup><a href="#s12">12</a></sup></td></tr>
+<tr><td class="name">NIH 審査体制（回顧）</td><td class="num">10〜20人・3段階</td><td>手続の厚さ。判断日数ではない<sup><a href="#s12">12</a></sup></td></tr>
+<tr><td class="name">NIH「200〜600日」</td><td class="num">N/A</td><td>回顧原文に当該定量対照は無い<sup><a href="#s12">12</a></sup></td></tr>
+<tr><td class="name">受給者調査（回顧内）</td><td class="num">64%／32%</td><td>無しでは研究が起きなかった／数か月加速。本人共著・single-source<sup><a href="#s12">12</a></sup></td></tr>
 </tbody>
 </table>
 </div>
 
-<h2 id="failures"><span class="num">⑤</span>失敗の解剖<span class="en">Failures</span></h2>
-<p>金額と時点で切る。能力や人柄の評価は書かない。</p>
-
-<h3>類型1: 優先株評価の切り下げ（$95B → $50B）</h3>
-<p>2021年3月の Series H ポストマネー $95B と、2023年3月の Series I ポストマネー $50B を比較する。差額は $45B、下落率は約 47%。これは二次流通の噂値ではなく、<strong class="hit">会社が受け入れた優先株の発行価格</strong>である。409A の普通株は別系列で、2022年7月に約28%、2023年1月にさらに約11%切り下げ（ピーク比約40%安、含意評価約 $63B）と報じられた<sup><a href="#s7">7</a></sup><sup><a href="#s5">5</a></sup>。</p>
-<p>Series I の調達額 $6.5B は、運転資金不足の救済というより、非上場を続けたまま RSU の税負担と流動性を処理するための資本である。長期非上場のコストが、評価額の半分に近いダウンラウンドとして表面化した、と読める。</p>
-
-<h3>類型2: IPO を延ばしたままの RSU 期限 — 統治問題</h3>
-<p>2010年創業から15年以上、IPO していない。その間に従業員 RSU の権利確定と税イベントが積み上がり、2023年の大型調達の主因になった。John は2019年時点で「no plans to go public right away」と CNBC に述べている<sup><a href="#s35">35</a></sup>。テンダー（2024–2026）は上場の代替流動性だが、板のある市場価格ではない。優先株の清算優先を無視した示唆評価でもある。</p>
-
-<h3>類型3: 2021年の過剰採用 → 2022年11月の14%削減</h3>
-<p>Patrick の社内メールは、2022–23年のインターネット経済見通しを過大に見積もり、採用と営業費用を伸ばしすぎたと自己認定する。削減規模は約14%（約1,000人超。8,000×14%≈1,120は報道ベースの逆算）。Severance は最低14週（2023年2月21日まで給与、とメール）。創業者二人の責任を明示した文書が公式サイトに残る点が、通常のリーク経路と異なる<sup><a href="#s27">27</a></sup><sup><a href="#s28">28</a></sup>。</p>
-
-<h3>類型4: Auctomatic $5M 超売却は「早すぎたか」</h3>
-<p>2008年3月、19歳で約 $5M 超のエグジット。反実仮想として、同じ兄弟が Stripe を2010年に始めて2021年に $95B 評価まで運んだ事実がある。売却額そのものは Stripe の累計価値に対して桁が違う。ただし Auctomatic は決済会社ではなく出品管理ツールであり、<strong class="hit">「同じ会社を持ち続けていれば Stripe になった」ではない</strong>。検証できるのは、(1) 売却で得た資本・信用・YC ネットワーク、(2) 決済の痛みを利用者として先に踏んだ経験、の2点である。売却が「誤り」だったかは、反実仮想の定義なしには測れない。事実として置くのは金額・年齢・その後2年で決済会社を始めたことだけである<sup><a href="#s3">3</a></sup><sup><a href="#s5">5</a></sup>。</p>
-
-<h3>類型5: 欧州での取り切れなさ、暗号資産の往復</h3>
-<p>Adyen（上場）はエンタープライズ・オムニチャネルで Stripe と競合し、2024年ネットレベニュー約 $2.2B に対し利益率では上回るとされる（第三者整理。Stripe の推定ネットレベニュー約 $5.1B／2024）。Stripe の広いプロダクト面は単位利益では必ずしも優位でない、というのが会社レポート側の整理である。欧州シェアの監査済み一次表は非開示のため、本ページでは N/A とし、競合の利益率対比のみを置く<sup><a href="#s5">5</a></sup>。</p>
-<p>暗号資産は往復が文書で追える。2014年に Bitcoin 受領を開始 → 2018年1月に終了発表（4月23日効力）→ 2024年に USDC 等で再参入 → 同年10月に Bridge を $1.1B で買収。一度畳んだ領域に、最大買収で戻っている<sup><a href="#s21">21</a></sup><sup><a href="#s29">29</a></sup><sup><a href="#s30">30</a></sup>。</p>
-
-<div class="risk">
-<p><b>欠落データ。</b>欧州におけるカード取扱シェアの監査済み一次表、Series I における兄弟の希薄化率、TaxJar・Bridge 以外の買収対価の公式開示、GAAP 純利益は、公開資料では揃っていない。</p>
+<div class="note">
+<p style="margin:0"><b>判定不能の理由。</b>主張2を支持するには Fast Grants 側の中央判断日数（一次分布）が必要である。NIH 側の判断日数（decision。授与通知ではない）の一次系列も必要である。NINDS の授与通知（締切後8〜20か月）と NHGRI の約9か月は判断後手続を含む全行程である。48時間目標や初回交付の申告と並べると指標がずれる。累計金額と NIH／NSF 年次予算の比も時点不一致のため、代替可否の一般判定には使わない<sup><a href="#s40">40</a></sup><sup><a href="#s44">44</a></sup><sup><a href="#s39">39</a></sup>。</p>
 </div>
+
+<p>判定：主張2は<strong class="hit">判定不能</strong>。本人共著が示す初回48時間以内・後期2週間以内は記録するが、NIH 判断日数との定量比較を支える一次データが揃っていない。</p>
+
+<h2 id="falsifiers"><span class="num">⑤</span>反証条件と境界<span class="en">Falsifiers and Bounds</span></h2>
+<p>主張の棄却条件と、判定から外した項目をここに集約する。</p>
+
+<h3>主張1の反証と境界</h3>
+<p>棄却条件は三つである。(1) Series I 以降に優先株ポストマネーが $50B を超える公開ラウンドが発表される。(2) 会社が Series I の主用途を事業運営・成長投資だと公式に訂正する。(3) 本人が IPO 等で優先株系列を $50B 超へ付け直す。2023-01の従業員向け伝達は報道（single-source）であり、公式全文の一次開示ではない。2023-03の公式文は流動性＋源泉税であり、事業運営には不要と明記する。テンダー $159B は二次流通の示唆であり、優先株系列の付け直しではない。創業者持分の希薄化率と、テンダー価格への清算優先の織り込みは非開示のため判定外である<sup><a href="#s46">46</a></sup><sup><a href="#s38">38</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s43">43</a></sup>。</p>
+
+<h3>主張2の反証と境界</h3>
+<p>将来の支持／棄却に使う条件は次である。Fast Grants の中央判断日数の一次分布と NIH の判断日数の一次系列が揃う。そのうえで前者が後者と同等以上になる場合に棄却する。現状は両方とも未開示のため判定不能とする。資金送付の「数日後」と NIH 授与通知（8〜20か月）は判断と別指標のため、比較の左右に混ぜない。回顧内の受給者調査（64%／32%）は本人共著・single-source である。NIH 速度比較の代替証拠には使わない。2022年11月の約14%人員削減は主張1・2の反証条件ではない<sup><a href="#s12">12</a></sup><sup><a href="#s40">40</a></sup><sup><a href="#s27">27</a></sup>。</p>
 
 <h2 id="thought"><span class="num">⑥</span>思想と方法<span class="en">Thought and Method</span></h2>
-
-<h3>手続きをAPIの裏側へ移す</h3>
-<p>Stripe の初期価値提案は、手数料率の競争ではなく、マーチャント口座の申込み・審査・接続という外部工程の内生化である。開発者から見える「数行」は、リスク引受が裏側にあることの結果である。Connect 以降の面展開も、同じ取引イベントの前後（不正・請求・税・資金置き場）に課金を載せる動作として読める<sup><a href="#s5">5</a></sup>。</p>
-
-<h3>Progress Studies と科学資金の速度</h3>
-<p>Atlantic 寄稿（2019-07-30）は、進歩そのものが十分に研究されていないとし、Progress Studies を提唱する。Fast Grants はその実装の一つで、申請30分・判断48時間・資金1週間を目標にした。回顧文は、既存の公的助成の遅さが COVID 下で顕在化した、と書く<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup>。</p>
-
-<h3>Emergent Ventures の位置</h3>
-<p>Fast Grants の回顧は「infrastructure assembled for Emergent Ventures」を明示する。Emergent Ventures は Mercatus Center の Tyler Cowen が運営する助成プログラムである。Collison は Progress Studies／Fast Grants／Arc の資金と設計に関与するが、Emergent Ventures のGPではない。1517 Fund は別系統の若者向けファンドであり、混同しない<sup><a href="#s12">12</a></sup><sup><a href="#s14">14</a></sup>。</p>
-
-<h3>本人サイトの方法論</h3>
-<p>patrickcollison.com/questions は未解決の問いを列挙するページ、/fast は速度・進捗に関するノートである。読書リストも公開されている。思想章の一次資料として、講演録より先にこれらのページを置く<sup><a href="#s32">32</a></sup><sup><a href="#s33">33</a></sup><sup><a href="#s1">1</a></sup>。</p>
-
-<h3>Stripe Press</h3>
-<p>2017年開始。インターネット経済・制度・進歩に関する書籍を出す社内出版レーベル。収益中核ではなく、Atlas と同様に流通・思想投資の側に属する<sup><a href="#s23">23</a></sup><sup><a href="#s5">5</a></sup>。</p>
+<p>Progress Studies（2019-07-30、Cowen と共著）は、進歩そのものが十分に研究されていないと書く。Fast Grants はその速度実験、Arc は長期の制度設計である。Emergent Ventures は Mercatus／Cowen 側の助成であり、Fast Grants がそのインフラを借りた。Collison は GP として運用する VC ではない。1517 Fund とは別系統である<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup><sup><a href="#s14">14</a></sup>。</p>
 
 <h2 id="quotes"><span class="num">⑦</span>語録<span class="en">Quotes</span></h2>
-<p>日付と出典が特定できる発言に限った。出典未確定の言い回しは載せない。</p>
+<p>主張の検証に使う発言に限る。</p>
 <div class="q-tabs" id="qtabs"></div>
 <div class="q-list" id="qlist"></div>
 
-<h2 id="open"><span class="num">⑧</span>残っている問い / 出典<span class="en">Open Questions / Sources</span></h2>
+<h2 id="open"><span class="num">⑧</span>誰が得をするか / 残っている問い / 出典<span class="en">Winners / Open Questions / Sources</span></h2>
+
+<h3>誰が得をするか</h3>
+<p>公開数値で確認できる利得は次である。(1) 本人が選んだ Series I／テンダー経路で流動性を得た現・元従業員。(2) テンダーに参加した二次投資家（Thrive、Coatue、a16z 等の報道）。(3) Fast Grants／Arc の受給研究室。創業者持分の希薄化率と、Stripe 利益から科学への直接送金比率は非開示である<sup><a href="#s38">38</a></sup><sup><a href="#s9">9</a></sup><sup><a href="#s12">12</a></sup>。</p>
 
 <h3>残っている問い</h3>
-<p>答えの出ていない問いを挙げた。手がかりは本文の内容から示した。</p>
 <ul>
-<li><strong>2024年の「profitable」は、GAAP の純利益でも黒字だったのか。</strong> 年次レターは黒字化を宣言したが、利益の会計定義は非開示で、「operating earnings」を R&amp;D に再投資するという定性表現にとどまる。純利益で黒字であれば、IPO をせずに非上場を続ける判断の持続性は高まる。</li>
-<li><strong>欧州のカード取扱高で、Stripe は Adyen にどれだけ追いついているか。</strong> Adyen は2024年のネットレベニュー約 $2.2B に対し利益率で上回るとされ、欧州シェアの監査済み一次表は N/A である。シェアが分かれば、Stripe の広いプロダクト面が単位利益の劣位を補えているかを判定できる。</li>
-<li><strong>Collison 兄弟の持分は、長期の非上場によってどれだけ希薄化したか。</strong> 兄弟の持分は Forbes 系の推定で各約10%であり、Series I の $6.5B は RSU の税負担と従業員流動性を主目的とした。希薄化率が分かれば、上場しないことの代価を創業者がどれだけ負担したかを数字で示せる。</li>
+<li>Series I における Collison 兄弟の持分希薄化率は何%か（キャップテーブルの一次開示）。</li>
+<li>テンダー示唆評価は、優先株の清算優先をどう織り込んでいるか。</li>
+<li>Fast Grants の中央判断日数と着金日数の一次分布は公開されるか。</li>
+<li>NIH の資金判断日数（decision）の一次系列は、授与通知期間と分離して取れるか。</li>
 </ul>
 
 <ol class="sources">
 <li id="s1">Patrick Collison, About — https://patrickcollison.com/about</li>
-<li id="s2">RTÉ Archives, Science Talent 2005（Patrick Collison / CROMA、Young Scientist of the Year） — https://www.rte.ie/archives/2025/0526/1515001-patrick-collison-young-scientist/</li>
-<li id="s3">Irish Times, Limerick teens sell software firm in multimillion deal（Auctomatic、$5M超、19歳／17歳、バンクーバー勤務） — https://www.irishtimes.com/news/limerick-teens-sell-software-firm-in-multimillion-deal-1.907089</li>
+<li id="s2">RTÉ Archives, Science Talent 2005（Young Scientist of the Year） — https://www.rte.ie/archives/2025/0526/1515001-patrick-collison-young-scientist/</li>
+<li id="s3">Irish Times, Limerick teens sell software firm in multimillion deal（Auctomatic、$5M超） — https://www.irishtimes.com/news/limerick-teens-sell-software-firm-in-multimillion-deal-1.907089</li>
 <li id="s4">Y Combinator, Auctomatic（W07） — https://www.ycombinator.com/companies/auctomatic</li>
-<li id="s5">本サイト「Stripe 企業リサーチレポート」（創業経緯、ラウンド、TPV、ダウンラウンド、競合） — <a href="../../011_company/reports/stripe_research_260727.html">011_company/reports/stripe_research_260727.html</a></li>
+<li id="s5">本サイト「Stripe 企業リサーチレポート」 — <a href="../../011_company/reports/stripe_research_260727.html">011_company/reports/stripe_research_260727.html</a></li>
 <li id="s6">Stripe Newsroom, Series H $600M at $95B（2021-03-14） — https://stripe.com/newsroom/news/stripe-series-h</li>
 <li id="s7">Reuters, Stripe nearly halves valuation to $50 bln following $6.5 bln raise（2023-03-15） — https://www.reuters.com/technology/fintech-stripe-valued-50-bln-after-65-bln-fundraise-2023-03-15/</li>
 <li id="s8">Reuters, Stripe valued at $65 bln in stock-sale deal for employees（2024-02-28） — https://www.reuters.com/technology/stripe-valuation-jumps-65-bln-employee-share-sale-deal-wsj-2024-02-28/</li>
-<li id="s9">Stripe Newsroom / 報道整理, 2025年2月テンダー $91.5B（会社レポートと突合） — https://stripe.com/newsroom/news/employee-liquidity-feb-2025</li>
-<li id="s10">Stripe Newsroom, annual letter / 2024–2025 updates（TPV $1.4T・$1.9T、黒字化表現、2026テンダー関連） — https://stripe.com/newsroom/news/stripe-2024-update ／ https://stripe.com/newsroom/news/stripe-2025-update</li>
+<li id="s9">Stripe Newsroom, employee liquidity Feb 2025（$91.5B） — https://stripe.com/newsroom/news/employee-liquidity-feb-2025</li>
+<li id="s10">Stripe Newsroom, 2025 update / 2026 tender context（TPV $1.9T） — https://stripe.com/newsroom/news/stripe-2025-update</li>
 <li id="s11">Patrick Collison &amp; Tyler Cowen, We Need a New Science of Progress, The Atlantic（2019-07-30） — https://www.theatlantic.com/science/archive/2019/07/we-need-new-science-progress/594946/</li>
-<li id="s12">Patrick Collison, Tyler Cowen, Patrick Hsu, What We Learned Doing Fast Grants, Future（$50M超、260件超、Emergent Ventures インフラ） — https://future.com/what-we-learned-doing-fast-grants/</li>
-<li id="s13">BusinessWire, The Arc Institute Launches…（2021-12-15、$650M超、共同創業者3名） — https://www.businesswire.com/news/home/20211215005308/en/The-Arc-Institute-Launches-to-Accelerate-Scientific-Breakthroughs-in-Complex-Diseases-in-Collaboration-with-Stanford-University-UCSF-and-UC-Berkeley</li>
-<li id="s14">Mercatus Center, Emergent Ventures（Cowen 主宰の助成。1517 Fund とは別） — https://www.mercatus.org/emergent-ventures</li>
-<li id="s15">Forbes, Patrick Collison profile（純資産推定、国籍、Stripe CEO） — https://www.forbes.com/profile/patrick-collison/</li>
-<li id="s16">Irish Independent, Surely the smartest redhead in Ireland - at 16（Croma、賞金額、Dromineer） — https://www.independent.ie/irish-news/surely-the-smartest-redhead-in-ireland-at-16/26004203.html</li>
-<li id="s17">Y Combinator / 二次整理, Auctomatic 共同創業者構成（Taggar 兄弟） — https://www.ycombinator.com/companies/auctomatic</li>
-<li id="s18">Y Combinator, Stripe 会社ページ（S09） — https://www.ycombinator.com/companies/stripe</li>
-<li id="s19">二次整理（tear sheet／タイムライン）Seed〜Series C の金額・評価 — 例: https://timelines.issarice.com/wiki/Timeline_of_Stripe</li>
-<li id="s20">Bloomberg, Stripe Said to Get Funding Valuing Startup at $100 Million（2012-02-09、$18M） — https://www.bloomberg.com/news/articles/2012-02-09/stripe-said-to-get-funding-valuing-online-payment-startup-at-100-million</li>
-<li id="s21">PYMNTS, Stripe Discontinues Its Bitcoin Payment Option（2018-01、効力2018-04-23） — https://www.pymnts.com/blockchain/bitcoin/2018/stripe-cryptocurrency-payment-method/</li>
-<li id="s22">TechCrunch, Stripe raises another $150M at a $9B valuation（2016-11-25、ポスト $9.2B） — https://techcrunch.com/2016/11/25/payments-provider-stripe-has-raised-another-150-at-a-9b-valuation/</li>
-<li id="s23">Stripe Press（公式） — https://press.stripe.com/</li>
-<li id="s24">Irish Times, Stripe raises $150m… valuation soars to $9bn（2016-11） — https://www.irishtimes.com/business/technology/stripe-raises-150m-in-funding-as-valuation-soars-to-9bn-1.2882083</li>
+<li id="s12">Patrick Collison, Tyler Cowen, Patrick Hsu, What We Learned Doing Fast Grants, Future — https://future.com/what-we-learned-doing-fast-grants/</li>
+<li id="s13">BusinessWire, The Arc Institute Launches…（2021-12-15、$650M超） — https://www.businesswire.com/news/home/20211215005308/en/The-Arc-Institute-Launches-to-Accelerate-Scientific-Breakthroughs-in-Complex-Diseases-in-Collaboration-with-Stanford-University-UCSF-and-UC-Berkeley</li>
+<li id="s14">Mercatus Center, Emergent Ventures — https://www.mercatus.org/emergent-ventures</li>
+<li id="s15">Forbes, Patrick Collison profile — https://www.forbes.com/profile/patrick-collison/</li>
+<li id="s18">Y Combinator, Stripe（S09） — https://www.ycombinator.com/companies/stripe</li>
 <li id="s25">Stripe Newsroom, Series G $250M at $35B pre-money（2019-09-19） — https://stripe.com/newsroom/news/stripe-expands-global-infrastructure-with-new-funding-round</li>
-<li id="s26">TechCrunch, Stripe acquires TaxJar（2021-04-28。対価非開示） — https://techcrunch.com/2021/04/28/stripe-acquires-taxjar-to-help-its-merchants-deal-with-sales-tax/</li>
-<li id="s27">Stripe Newsroom, CEO Patrick Collison's email to Stripe employees（2022-11-03、約14%削減全文） — https://stripe.com/newsroom/news/ceo-patrick-collisons-email-to-stripe-employees</li>
+<li id="s27">Stripe Newsroom, CEO Patrick Collison's email to Stripe employees（2022-11-03） — https://stripe.com/newsroom/news/ceo-patrick-collisons-email-to-stripe-employees</li>
 <li id="s28">CNBC, Stripe lays off 14% of workers（2022-11-03） — https://www.cnbc.com/2022/11/03/stripe-plans-to-lay-off-14percent-of-workers.html</li>
-<li id="s29">Reuters, Stripe to buy crypto startup Bridge（2024-10-21。金額は Forbes 引用 $1.1B） — https://www.reuters.com/markets/deals/fintech-giant-stripe-buy-crypto-startup-bridge-2024-10-21/</li>
-<li id="s30">CNBC, Stripe closes $1.1 billion Bridge deal（2025-02-04） — https://www.cnbc.com/2025/02/04/stripe-closes-1point1-billion-bridge-deal-prepares-for-stablecoin-push-.html</li>
-<li id="s31">UC Berkeley News, UC Berkeley partners with new Arc Institute（2021-12-15、$650M） — https://news.berkeley.edu/2021/12/15/uc-berkeley-partners-with-new-arc-institute-to-tackle-complex-diseases/</li>
-<li id="s32">Patrick Collison, Questions — https://patrickcollison.com/questions</li>
-<li id="s33">Patrick Collison, Fast — https://patrickcollison.com/fast</li>
-<li id="s34">Nature, COVID ‘Fast Grants’ sped up pandemic science（2021-08-03、$50M） — https://www.nature.com/articles/d41586-021-02111-7</li>
-<li id="s35">CNBC, Stripe notches $35 billion valuation（2019-09-19。John「no plans」to IPO right away） — https://www.cnbc.com/2019/09/19/fintech-start-up-stripe-notches-35-billion-valuation-in-funding-round.html</li>
-<li id="s36">Arc Institute, About（創設ドナーに Patrick／John Collison） — https://arcinstitute.org/about</li>
-<li id="s37">Stripe Atlas（公式プロダクトページ） — https://stripe.com/atlas</li>
+<li id="s34">Nature, COVID ‘Fast Grants’ sped up pandemic science（2021-08-03） — https://www.nature.com/articles/d41586-021-02111-7</li>
+<li id="s35">CNBC, Stripe notches $35 billion valuation（2019-09-19、IPOを急がない旨） — https://www.cnbc.com/2019/09/19/fintech-start-up-stripe-notches-35-billion-valuation-in-funding-round.html</li>
+<li id="s36">Arc Institute, About — https://arcinstitute.org/about</li>
+<li id="s38">Stripe Newsroom, Series I and employee liquidity（2023-03-15、$6.5B・$50B・事業運営には不要） — https://stripe.com/newsroom/news/stripe-series-i-employee-liquidity</li>
+<li id="s39">CRS, NIH Funding FY1996–FY2022（FY2021 program level 約 $42.936B） — https://www.everycrsreport.com/files/2021-06-29_R43341_5fe014b5d43526b81361176d74050a9975d47643.pdf</li>
+<li id="s40">NINDS / NIH, The Application Process（授与通知まで典型8〜20か月） — https://www.ninds.nih.gov/funding/preparing-your-application/application-process</li>
+<li id="s41">ProPublica Nonprofit Explorer, Arc Research Institute EIN 87-1920284（FY2024 expenses 約 $82.8M） — https://projects.propublica.org/nonprofits/organizations/871920284</li>
+<li id="s42">NSF FY 2021 Budget Request, Biological Sciences（約 $704.95M） — https://nsf-gov-resources.nsf.gov/about/budget/fy2021/pdf/75_fy2021.pdf</li>
+<li id="s43">Reuters, Stripe valuation jumps to $159 billion in latest employee share sale（2026-02-24） — https://www.reuters.com/business/stripe-valuation-jumps-159-billion-latest-share-sale-2026-02-24/</li>
+<li id="s44">NHGRI / NIH, Grant Review Process（典型約9か月） — https://www.genome.gov/research-funding/apply/Grant-Review-Process</li>
+<li id="s45">Stripe Newsroom, 2024 update（公開日 2025-02-27／対象年 2024／TPV $1.4T・+38%） — https://stripe.com/newsroom/news/stripe-2024-update</li>
+<li id="s46">CNBC, Stripe tells employees it will decide on an IPO within the next year（2023-01-26、Patrick／John が従業員へ伝達と報道） — https://www.cnbc.com/2023/01/26/stripe-tells-employees-it-will-decide-on-an-ipo-within-the-next-year-.html</li>
 </ol>
 
 </div>
 
 <script type="application/json" id="facts">
 [
-  {"claim":"生年月日","value":"1988-09-09","unit":"date","as_of":"2026-09-26","source":"https://www.forbes.com/profile/patrick-collison/","confidence":"reported"},
-  {"claim":"Young Scientist of the Year","value":2005,"unit":"year","as_of":"2005-01","source":"https://www.rte.ie/archives/2025/0526/1515001-patrick-collison-young-scientist/","confidence":"reported"},
-  {"claim":"Auctomatic売却額","value":5,"unit":"M USD超","as_of":"2008-03","source":"https://www.irishtimes.com/news/limerick-teens-sell-software-firm-in-multimillion-deal-1.907089","confidence":"reported"},
-  {"claim":"Series A調達","value":18,"unit":"M USD","as_of":"2012-02","source":"https://www.bloomberg.com/news/articles/2012-02-09/stripe-said-to-get-funding-valuing-online-payment-startup-at-100-million","confidence":"reported"},
-  {"claim":"Series A評価額","value":100,"unit":"M USD","as_of":"2012-02","source":"https://www.bloomberg.com/news/articles/2012-02-09/stripe-said-to-get-funding-valuing-online-payment-startup-at-100-million","confidence":"reported"},
-  {"claim":"Series D調達","value":150,"unit":"M USD","as_of":"2016-11","source":"https://techcrunch.com/2016/11/25/payments-provider-stripe-has-raised-another-150-at-a-9b-valuation/","confidence":"reported"},
-  {"claim":"Series D評価額ポスト","value":9.2,"unit":"B USD","as_of":"2016-11","source":"https://techcrunch.com/2016/11/25/payments-provider-stripe-has-raised-another-150-at-a-9b-valuation/","confidence":"reported"},
-  {"claim":"Series G調達","value":250,"unit":"M USD","as_of":"2019-09","source":"https://stripe.com/newsroom/news/stripe-expands-global-infrastructure-with-new-funding-round","confidence":"reported"},
-  {"claim":"Series G評価額プレ","value":35,"unit":"B USD","as_of":"2019-09","source":"https://stripe.com/newsroom/news/stripe-expands-global-infrastructure-with-new-funding-round","confidence":"reported"},
-  {"claim":"Series H調達","value":600,"unit":"M USD","as_of":"2021-03","source":"https://stripe.com/newsroom/news/stripe-series-h","confidence":"reported"},
-  {"claim":"Series H評価額","value":95,"unit":"B USD","as_of":"2021-03","source":"https://stripe.com/newsroom/news/stripe-series-h","confidence":"reported"},
-  {"claim":"Series I調達","value":6.5,"unit":"B USD","as_of":"2023-03","source":"https://www.reuters.com/technology/fintech-stripe-valued-50-bln-after-65-bln-fundraise-2023-03-15/","confidence":"reported"},
-  {"claim":"Series I評価額","value":50,"unit":"B USD","as_of":"2023-03","source":"https://www.reuters.com/technology/fintech-stripe-valued-50-bln-after-65-bln-fundraise-2023-03-15/","confidence":"reported"},
-  {"claim":"評価額下落率_HtoI","value":47,"unit":"%","as_of":"2023-03","source":"https://www.reuters.com/technology/fintech-stripe-valued-50-bln-after-65-bln-fundraise-2023-03-15/","confidence":"reported"},
-  {"claim":"テンダー評価_2024-02","value":65,"unit":"B USD","as_of":"2024-02","source":"https://www.reuters.com/technology/stripe-valuation-jumps-65-bln-employee-share-sale-deal-wsj-2024-02-28/","confidence":"reported"},
-  {"claim":"テンダー評価_2025-02","value":91.5,"unit":"B USD","as_of":"2025-02","source":"https://stripe.com/newsroom/news/employee-liquidity-feb-2025","confidence":"reported"},
-  {"claim":"テンダー評価_2026-02","value":159,"unit":"B USD","as_of":"2026-02","source":"https://stripe.com/newsroom/news/stripe-2025-update","confidence":"reported"},
-  {"claim":"TPV_2023","value":1.0,"unit":"T USD","as_of":"2023-12","source":"https://stripe.com/newsroom/news/stripe-2024-update","confidence":"reported"},
-  {"claim":"TPV_2024","value":1.4,"unit":"T USD","as_of":"2024-12","source":"https://stripe.com/newsroom/news/stripe-2024-update","confidence":"reported"},
-  {"claim":"TPV_2025","value":1.9,"unit":"T USD","as_of":"2025-12","source":"https://stripe.com/newsroom/news/stripe-2025-update","confidence":"reported"},
-  {"claim":"人員削減比率_2022-11","value":14,"unit":"%","as_of":"2022-11-03","source":"https://stripe.com/newsroom/news/ceo-patrick-collisons-email-to-stripe-employees","confidence":"reported"},
-  {"claim":"Bridge買収額","value":1.1,"unit":"B USD","as_of":"2025-02","source":"https://www.cnbc.com/2025/02/04/stripe-closes-1point1-billion-bridge-deal-prepares-for-stablecoin-push-.html","confidence":"reported"},
-  {"claim":"Arc初期コミット","value":650,"unit":"M USD超","as_of":"2021-12","source":"https://www.businesswire.com/news/home/20211215005308/en/The-Arc-Institute-Launches-to-Accelerate-Scientific-Breakthroughs-in-Complex-Diseases-in-Collaboration-with-Stanford-University-UCSF-and-UC-Berkeley","confidence":"reported"},
-  {"claim":"Fast Grants累計","value":50,"unit":"M USD超","as_of":"2020-12","source":"https://future.com/what-we-learned-doing-fast-grants/","confidence":"reported"},
-  {"claim":"個人純資産_Forbes","value":17.5,"unit":"B USD","as_of":"2026","source":"https://www.forbes.com/profile/patrick-collison/","confidence":"estimated"},
-  {"claim":"TPV_2022_逆算","value":0.8,"unit":"T USD","as_of":"2022-12","source":"https://stripe.com/newsroom/news/stripe-2024-update","confidence":"estimated"},
-  {"claim":"Series C評価_2014末_3.5B","value":3.5,"unit":"B USD","as_of":"2014-12","source":"https://timelines.issarice.com/wiki/Timeline_of_Stripe","confidence":"disputed"}
+  {"claim":"Series_H_valuation","value":95,"unit":"B USD","as_of":"2021-03-14","source":"https://stripe.com/newsroom/news/stripe-series-h","confidence":"reported"},
+  {"claim":"Series_I_valuation","value":50,"unit":"B USD","as_of":"2023-03-15","source":"https://stripe.com/newsroom/news/stripe-series-i-employee-liquidity","confidence":"reported"},
+  {"claim":"Series_I_raise","value":6.5,"unit":"B USD","as_of":"2023-03-15","source":"https://stripe.com/newsroom/news/stripe-series-i-employee-liquidity","confidence":"reported"},
+  {"claim":"Series_I_ops_capital_needed","value":false,"unit":"boolean","as_of":"2023-03-15","source":"https://stripe.com/newsroom/news/stripe-series-i-employee-liquidity","confidence":"reported"},
+  {"claim":"Tender_2024_02","value":65,"unit":"B USD","as_of":"2024-02","source":"https://www.reuters.com/technology/stripe-valuation-jumps-65-bln-employee-share-sale-deal-wsj-2024-02-28/","confidence":"reported"},
+  {"claim":"Tender_2025_02","value":91.5,"unit":"B USD","as_of":"2025-02","source":"https://stripe.com/newsroom/news/employee-liquidity-feb-2025","confidence":"reported"},
+  {"claim":"Tender_2026_02","value":159,"unit":"B USD","as_of":"2026-02","source":"https://www.reuters.com/business/stripe-valuation-jumps-159-billion-latest-share-sale-2026-02-24/","confidence":"reported"},
+  {"claim":"Fast_Grants_cumulative","value":50,"unit":"M USD超","as_of":"2021","source":"https://future.com/what-we-learned-doing-fast-grants/","confidence":"reported"},
+  {"claim":"NIH_FY2021_program","value":42.936,"unit":"B USD","as_of":"FY2021","source":"https://www.everycrsreport.com/files/2021-06-29_R43341_5fe014b5d43526b81361176d74050a9975d47643.pdf","confidence":"reported"},
+  {"claim":"Fast_Grants_to_NIH_ratio","value":0.12,"unit":"%","as_of":"比較計算","source":"self-calc from s12 and s39","confidence":"estimated"},
+  {"claim":"Arc_FY2024_expenses","value":82.8,"unit":"M USD","as_of":"FY2024","source":"https://projects.propublica.org/nonprofits/organizations/871920284","confidence":"reported"},
+  {"claim":"NSF_BIO_FY2021_request","value":704.95,"unit":"M USD","as_of":"FY2021","source":"https://nsf-gov-resources.nsf.gov/about/budget/fy2021/pdf/75_fy2021.pdf","confidence":"reported"},
+  {"claim":"TPV_2024","value":1.4,"unit":"T USD","as_of":"2024","source":"https://stripe.com/newsroom/news/stripe-2024-update","confidence":"reported"},
+  {"claim":"Layoff_2022_11","value":14,"unit":"%","as_of":"2022-11-03","source":"https://stripe.com/newsroom/news/ceo-patrick-collisons-email-to-stripe-employees","confidence":"reported"}
 ]
 </script>
 
@@ -540,206 +501,93 @@ function sup(arr) {
 
 const ERAS = [
   '',
-  'I 形成 1988–2006',
-  'II Auctomatic 2007–2008',
-  'III Stripe点火 2009–2011',
-  'IV 拡大 2012–2021',
-  'V 切り下げ 2022–2026',
-  'VI Stripe外 2017–',
+  'I 形成〜売却',
+  'II Stripe点火',
+  'III 優先株ピーク',
+  'IV 流動性税',
+  'V 科学資金',
 ];
 
 const TL = [
  {d:'1988.9.9',e:1,t:'アイルランド・リムリック県ドロマインに生まれる',
   w:'生年月日は Forbes 等と一致。本人サイトはアイルランド育ちと書く。',
-  y:'以後の満年齢計算の基準日。',
+  y:'満年齢計算の基準日。',
   f:['Dromineer'],s:[15,1]},
- {d:'2004',e:1,t:'Young Scientist で準優勝（AI系プロジェクト）',
-  w:'翌年優勝の直前年。Irish Independent が言及。',
-  y:'競技の反復参加。',s:[16]},
  {d:'2005.1',e:1,t:'BT Young Scientist and Technologist of the Year',
-  w:'Castletroy College。プロジェクトは Lisp 方言 Croma。大統領 Mary McAleese が授与（RTÉ）。',
-  y:'16歳での全国優勝。公開プロフィールの起点。',
-  f:['Croma','16歳'],s:[2,16]},
- {d:'2006',e:1,t:'MIT に入学',
-  w:'Leaving Certificate を前倒し受験したあとの進学。のちに約2年で中退。',
-  y:'学位より起業への経路変更の前提。',s:[1,3]},
- {d:'2007',e:2,t:'Auctomatic を創業（YC W07）',
-  w:'共同創業者に Taggar 兄弟。弟 John も主要株主。eBay／Amazon 出品管理。',
-  y:'決済利用者としての痛みを先に踏む1社目。',
-  f:['W07'],s:[4,17,3]},
- {d:'2008.3',e:2,t:'Live Current Media が Auctomatic を買収（約 $5M 超）',
-  w:'Irish Times。Patrick 19歳、John 17歳。Patrick はバンクーバーで engineering director。',
-  y:'最初のエグジット。金額は Stripe の後段価値に対して桁が違う。',
-  f:['$5M超','19歳'],s:[3]},
- {d:'2008',e:2,t:'バンクーバーで Live Current Media に勤務',
-  w:'Irish Times。engineering director。John は Leaving Cert のためリムリックに残留。',
-  y:'買収後の実務期間。決済2社目までの空白を埋める。',s:[3]},
- {d:'2009',e:3,t:'/dev/payments として決済構想を開始',
-  w:'商号規則でスラッシュが使えず Stripe に改称、と会社説明。',
-  y:'2社目の法人上の前身。',
-  f:['/dev/payments'],s:[5]},
- {d:'2009.夏',e:3,t:'Y Combinator S09（Stripe）',
-  w:'YC 会社ページのバッチ表記。創業年2010との年差は残る。',
-  y:'アクセラレータ経由の初期ネットワーク。',
-  f:['S09'],s:[18]},
- {d:'2010',e:3,t:'Stripe を正式創業',
-  w:'Patrick＝CEO、John＝President。価値提案は「数行のコードで受領」。',
+  w:'Lisp 方言 Croma。16歳。',
+  y:'公開プロフィールの起点。',
+  f:['Croma'],s:[2]},
+ {d:'2007',e:1,t:'Auctomatic を創業（YC W07）',
+  w:'eBay／Amazon 出品管理。決済会社ではない。',
+  y:'決済利用者としての痛みを先に踏む。',
+  f:['W07'],s:[4,3]},
+ {d:'2008.3',e:1,t:'Live Current Media が Auctomatic を買収（約 $5M 超）',
+  w:'Irish Times。Patrick 19歳。',
+  y:'最初のエグジット。',
+  f:['$5M超'],s:[3]},
+ {d:'2010',e:2,t:'Stripe を正式創業',
+  w:'Patrick＝CEO、John＝President。',
   y:'以後の本業。',
   f:['Stripe'],s:[5,18,1]},
- {d:'2010頃',e:3,t:'MIT を中退し Stripe に集中',
-  w:'本人サイトは previously studied at MIT。退学日の一次日付は N/A。',
-  y:'学位より会社への全振り。',s:[1]},
- {d:'2011.5頃',e:3,t:'シード約 $2M',
-  w:'Thiel、Musk、Levchin、Sequoia、a16z、SV Angel 等。評価約 $20M との二次整理あり。',
-  y:'初期の機関投資家セットの確定。',
-  f:['$2M'],s:[19,5]},
- {d:'2012.2',e:4,t:'Series A $18M（評価約 $100M）',
-  w:'Bloomberg。Sequoia が大部分を拠出したとされる。',
-  y:'最初の三桁百万ドル評価。',
-  f:['$100M'],s:[20]},
- {d:'2012.7',e:4,t:'Series B 約 $20M（報道・二次整理）',
-  w:'General Catalyst 主導との整理。Peter Thiel らが参加したとされる。',
-  y:'Series A 直後の積み増し。',
-  f:['$20M'],s:[19]},
- {d:'2012',e:4,t:'Connect を投入',
-  w:'マーケットプレイスが配下事業者へ決済を埋め込める。',
-  y:'直販から間接流通への転換。',
-  f:['Connect'],s:[5]},
- {d:'2014.1',e:4,t:'Series C 約 $80M（評価約 $1.75B）',
-  w:'Founders Fund 主導との二次整理。同年中に評価約 $3.5B まで上がった報道あり（諸説）。',
-  y:'ビリオン・ドル評価帯への到達。',
-  f:['$80M'],s:[19]},
- {d:'2014',e:4,t:'Bitcoin 受領を開始',
-  w:'タイムライン系二次資料。2018年に終了する往復の始点。',
-  y:'暗号資産への最初の製品コミット。',
-  f:['Bitcoin'],s:[21,19]},
- {d:'2014末',e:4,t:'評価額約 $3.5B まで上昇（報道・諸説）',
-  w:'Series C 延長／続報の境界は曖昧。ユーザー指定の「2014年 $80M・$3.5B」はここを指す読みがある。',
-  y:'2014年内の評価ステップの上端。',
-  f:['$3.5B'],s:[19]},
- {d:'2015',e:4,t:'評価約 $5B のラウンド（Visa 連携報道と同時期）',
-  w:'二次整理。Series D 前の評価ステップ。',
-  y:'カードネットワークとの関係強化局面。',
-  f:['$5B'],s:[19,22]},
- {d:'2016',e:4,t:'Stripe Atlas を発表',
-  w:'デラウェア法人設立支援。収益より流通投資。',
-  y:'顧客が生まれる瞬間への介入。',
-  f:['Atlas'],s:[37,5]},
- {d:'2016.11',e:4,t:'Series D $150M（ポスト約 $9.2B）',
-  w:'CapitalG・General Catalyst。TechCrunch／Irish Times。',
-  y:'自力ビリオネア報道の前後。',
-  f:['$9.2B'],s:[22,24]},
- {d:'2017',e:6,t:'Stripe Press を開始',
-  w:'インターネット経済・制度・進歩の書籍レーベル。',
-  y:'Stripe 外思想活動の器。',
-  f:['Press'],s:[23]},
- {d:'2018.1',e:4,t:'Bitcoin 決済サポート終了を発表（効力4/23）',
-  w:'ボラティリティ・承認時間・利用減。Tom Karlo の説明が報道に残る。',
-  y:'暗号資産からの一度目の撤退。',
-  f:['BTC終了'],s:[21]},
- {d:'2018',e:4,t:'Radar・Billing・Issuing など周辺プロダクトを拡充',
-  w:'会社レポートの面展開年表。取引データの上に別課金を載せる段階。',
-  y:'決済単体依存の緩和（ただし収益の主軸はなお TPV）。',
-  f:['Radar'],s:[5]},
- {d:'2019.1頃',e:4,t:'Series F 前後で評価約 $22.5B（報道）',
-  w:'Series G 直前の評価ステップ。CNBC が前回評価として言及。',
-  y:'$35B への跳躍の直前値。',
-  f:['$22.5B'],s:[35]},
- {d:'2019.7.30',e:6,t:'The Atlantic で Progress Studies を提唱',
-  w:'Tyler Cowen との共著寄稿。',
-  y:'科学・進歩のメタ研究への公開コミット。',
+ {d:'2019.7.30',e:5,t:'The Atlantic で Progress Studies を提唱',
+  w:'Tyler Cowen との共著。',
+  y:'科学資金設計の公開コミット。',
   f:['Progress Studies'],s:[11]},
- {d:'2019.9.19',e:4,t:'Series G $250M（プレ $35B）',
-  w:'Stripe 公式。Sequoia、a16z、GC 等。John は IPO を急がないと CNBC。',
-  y:'長期非上場方針の明示局面。',
+ {d:'2019.9.19',e:3,t:'Series G $250M（プレ $35B）',
+  w:'公式。John は IPO を急がないと CNBC。',
+  y:'長期非上場方針の明示。',
   f:['$35B'],s:[25,35]},
- {d:'2020',e:4,t:'Treasury（組込み型銀行機能）を投入',
-  w:'会社レポートのプロダクト年表。',
-  y:'決済後の資金置き場への拡張。',
-  f:['Treasury'],s:[5]},
- {d:'2020.4',e:6,t:'Fast Grants を開始',
-  w:'Collison・Cowen・Hsu。Mercatus 経由。累計 $50M 超・260件超。Emergent Ventures インフラを転用。',
-  y:'COVID 下の科学資金の速度実験。',
+ {d:'2020.4',e:5,t:'Fast Grants を開始',
+  w:'累計 $50M 超・260件超。判断目標48時間。',
+  y:'速度実験の開始。',
   f:['$50M超'],s:[12,34]},
- {d:'2021.3.14',e:4,t:'Series H $600M（評価 $95B）',
-  w:'公式ニュースルーム。欧州・ダブリン投資を名目に含む。NTMA も参加。',
-  y:'優先株価格のピーク。',
+ {d:'2021.3.14',e:3,t:'Series H $600M（評価 $95B）',
+  w:'優先株価格のピーク。公式ニュースルーム。',
+  y:'主張1の上限点。',
   f:['$95B'],s:[6]},
- {d:'2021.4',e:4,t:'TaxJar を買収（対価非開示）',
-  w:'Tax プロダクト強化。PitchBook 系は TaxJar 評価約 $179M（single-source）。',
-  y:'決済後工程（税）の内製。',
-  f:['TaxJar'],s:[26]},
- {d:'2021.12.15',e:6,t:'Arc Institute 正式発足（$650M 超）',
-  w:'共同創業者 Konermann・Hsu・Collison。Stanford／UCSF／Berkeley 提携。',
-  y:'Fast Grants の次の制度設計。',
-  f:['Arc','$650M'],s:[13,31,36]},
- {d:'2022.7',e:5,t:'409A で普通株価を約28%切り下げ（報道）',
-  w:'資金調達ではない社内評価。含意評価約 $74B との報道。',
-  y:'Series I 前の紙上価値の下落。',
-  f:['409A'],s:[5]},
- {d:'2022.11.3',e:5,t:'約14%の人員削減を社内メールで発表',
-  w:'Patrick 執筆。公式サイトに全文。過剰採用と費用伸長を自己認定。約7,000人規模へ。',
-  y:'2021年の採用判断の修正。',
+ {d:'2021.12.15',e:5,t:'Arc Institute 正式発足（$650M 超）',
+  w:'Konermann・Hsu・Collison。',
+  y:'長期の私的科学機関。',
+  f:['Arc'],s:[13,36]},
+ {d:'2022.11.3',e:4,t:'約14%の人員削減を社内メールで発表',
+  w:'Patrick 執筆。公式に全文。',
+  y:'過剰採用の自己認定。',
   f:['14%'],s:[27,28]},
- {d:'2023.1',e:5,t:'409A をさらに約11%切り下げ（報道）',
-  w:'ピーク比約40%安。Shopify・Block・PayPal 比較が背景とされる。',
-  y:'普通株の二段階切り下げの完了局面。',s:[5]},
- {d:'2023.3',e:5,t:'Series I $6.5B（評価 $50B）',
-  w:'ピーク比約 −47%。用途は RSU 税と従業員流動性。Reuters。',
-  y:'優先株価格でのダウンラウンド確定。',
-  f:['$50B','−47%'],s:[7]},
- {d:'2023',e:5,t:'年次レターで TPV $1.0T を公表',
-  w:'前年比 +25%。世界GDPの約1%相当との会社表現。',
-  y:'取扱高が兆ドルに到達した一次開示。',
-  f:['$1.0T'],s:[5,10]},
- {d:'2024.2',e:5,t:'従業員テンダーで評価 $65B',
-  w:'Reuters。投資家資金＋会社の自己株買い。',
-  y:'IPO 代替の流動性供給。',
+ {d:'2023.1',e:4,t:'従業員へ IPO か二次売却かを1年以内に決めると伝達',
+  w:'CNBC 報道。Patrick と John。公式全文は非開示。',
+  y:'本人の経路選択の分岐点。',
+  f:['IPO/二次'],s:[46]},
+ {d:'2023.3.15',e:4,t:'Series I $6.5B（評価 $50B）',
+  w:'流動性＋源泉税。事業運営には不要、と公式。コメントは John 名義。',
+  y:'非上場流動性経路の実行。',
+  f:['$50B'],s:[38,7]},
+ {d:'2024.2',e:4,t:'従業員テンダーで示唆評価 $65B',
+  w:'二次流通。優先株発行価格ではない。',
+  y:'テンダー系列の始点。',
   f:['$65B'],s:[8]},
- {d:'2024',e:5,t:'年次レターで TPV $1.4T・黒字化を宣言',
-  w:'+38% YoY。利益の会計定義は非開示。',
-  y:'取扱高と収益性の同時開示局面。',
-  f:['$1.4T'],s:[10]},
- {d:'2024',e:4,t:'USDC 等で暗号資産決済を再導入（発表）',
-  w:'Bitcoin 終了後の再参入。Bridge 買収の直前局面。',
-  y:'2018年撤退からの製品面の復帰。',
-  f:['USDC'],s:[21,30]},
- {d:'2024.10.21',e:5,t:'Bridge 買収を発表（対価 $1.1B・報道）',
-  w:'ステーブルコイン基盤。Reuters は金額非開示、Forbes／CNBC が $1.1B。',
-  y:'2018年撤退後の暗号資産への最大再コミット。',
-  f:['Bridge','$1.1B'],s:[29,30]},
- {d:'2025.2.4',e:5,t:'Bridge 買収をクローズ',
-  w:'CNBC。Stripe 史上最大の買収とされる。',
-  y:'ステーブルコイン事業の実装開始。',s:[30]},
- {d:'2025.2',e:5,t:'テンダーで評価 $91.5B',
-  w:'Thrive、Coatue、a16z 等。会社レポートと突合。',
-  y:'Series I からの示唆評価の回復局面。',
-  f:['$91.5B'],s:[9,5]},
- {d:'2025',e:5,t:'TPV $1.9T（+34%）を年次レターで発表',
-  w:'2026年2月公表。世界GDP比約1.6%との会社表現。',
-  y:'取扱高の最新一次数値。',
-  f:['$1.9T'],s:[10]},
- {d:'2026.2',e:5,t:'テンダーで評価 $159B',
-  w:'Thrive、Coatue、a16z。会社も自己株買い。優先株発行価格ではない。',
-  y:'示唆評価の史上高。',
-  f:['$159B'],s:[10,5]},
+ {d:'2024',e:3,t:'年次レターで TPV $1.4T（+38%）',
+  w:'会社発表。',
+  y:'本業規模の参照点。',
+  f:['$1.4T'],s:[45]},
+ {d:'2025.2',e:4,t:'テンダーで示唆評価 $91.5B',
+  w:'公式ニュースルーム。',
+  y:'テンダー系列の上昇。',
+  f:['$91.5B'],s:[9]},
+ {d:'2026.2',e:4,t:'テンダーで示唆評価 $159B',
+  w:'Reuters／年次レター文脈。優先株の付け直しではない。',
+  y:'テンダー系列の上端。',
+  f:['$159B'],s:[43,10]},
 ];
 
 const QUOTES = [
- {t:'人員削減',q:'John and I are fully responsible for the decisions leading up to it.（これに至る判断の責任は、John と私にある。）',
-  w:'2022年11月3日・社内メール（Stripe 公式掲載）',s:[27]},
+ {t:'Series I',q:'Stripe does not need this capital to run its business.（Stripe はこの資本を事業運営に必要としていない。）',
+  w:'2023年3月15日・Series I 公式発表',s:[38]},
  {t:'人員削減',q:'We overhired for the world we\'re in.（今いる世界に対して、採用しすぎた。）',
-  w:'2022年11月3日・同上',s:[27]},
+  w:'2022年11月3日・社内メール（公式掲載）',s:[27]},
  {t:'Progress',q:'Progress itself is understudied.（進歩そのものが十分に研究されていない。）',
-  w:'2019年7月30日・The Atlantic（Cowen と共著）',s:[11]},
- {t:'Progress',q:'We suggest inaugurating the discipline of “Progress Studies.”（「Progress Studies」という分野の創設を提案する。）',
-  w:'2019年7月30日・同上',s:[11]},
- {t:'Auctomatic',q:'I can\'t say how much the purchase price was, but I have become a millionaire.（買収額は言えないが、ミリオネアになった。）',
-  w:'2008年・Irish Times 取材',s:[3]},
- {t:'IPO',q:'no plans to go public right away（すぐに上場する計画はない）',
-  w:'2019年9月・John Collison の CNBC 発言（Series G 時）',s:[35]},
- {t:'Fast Grants',q:'Within a few days, we started to distribute millions of dollars of grants.（数日のうちに、数百万ドル単位の助成を配り始めた。）',
-  w:'2021年・What We Learned Doing Fast Grants',s:[12]},
+  w:'2019年7月30日・The Atlantic',s:[11]},
+ {t:'Fast Grants',q:'The first round of grants were given out within 48 hours.（初回ラウンドの助成は48時間以内に出された。）',
+  w:'What We Learned Doing Fast Grants（本人共著・single-source）',s:[12]},
 ];
 
 const activeEras = new Set();
@@ -825,16 +673,12 @@ function bars(id, rows, unit) {
 }
 
 bars('chartVal', [
-  {k:'Series H', v:95, sub:'2021-03'},
-  {k:'Series I', v:50, sub:'2023-03', cls:'neg'},
+  {k:'H 優先株', v:95, sub:'2021-03'},
+  {k:'I 優先株', v:50, sub:'2023-03', cls:'neg'},
+  {k:'Tender', v:65, sub:'2024-02', cls:'s2'},
+  {k:'Tender', v:91.5, sub:'2025-02', cls:'s2'},
+  {k:'Tender', v:159, sub:'2026-02', cls:'s3'},
 ], 'B USD');
-
-bars('chartTpv', [
-  {k:'2022', v:0.8, sub:'推定', est:true},
-  {k:'2023', v:1.0, sub:''},
-  {k:'2024', v:1.4, sub:'', cls:'s2'},
-  {k:'2025', v:1.9, sub:'', cls:'s3'},
-], 'T USD');
 </script>
 </body>
 </html>

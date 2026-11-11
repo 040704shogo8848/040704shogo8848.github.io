@@ -3,23 +3,270 @@ section: finance
 chapter: 3
 slug: rates-and-macro-prices
 title: 割引率はどこから来るか：政策金利・国債・実物資産
-thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市場という共通の起点から派生しており、金利・通貨・実物資産の価格は独立した相場ではなく一つの伝達経路の別々の断面である。
+thesis: 検証対象は金価格の寄与分解と関税予告の寿命に限る。中銀主因は残差非開示のため判定不能。同時安の時間整合と未実施は支持、因果限定は判定不能。
 ---
 
-企業価値の計算では、将来のキャッシュフローを割引率で割る。この割引率は無リスク金利に株式リスクプレミアムを足して作る。無リスク金利には国債利回りを使う。ここで多くの説明が止まる。止まったまま先へ進むと、国債利回りがなぜその水準にあるのかを問わないまま、倍率の議論だけが独り歩きする。
 
-同じことが為替でも起きる。円安が利益を押し上げたという説明は、円安がなぜ起きたかを説明していない。同じことが実物資産でも起きる。地価が上がったという事実は、金利が上がっている事実と並べたときに初めて意味を持つ。
+<section class="thesis" id="thesis">
+  <h2>主張</h2>
+  <p class="th-reader"><b>読者と判断：</b>検証対象は#s6と#s7に限る。金では中銀を主因と断定できるかを残差の非開示の範囲で切り分け、監視対象をETFフローとGRAM明示寄与に絞る。トリプル安では時間的整合と未実施を確定し、因果の単一断定は避ける。</p>
+  <ol class="th-claims">
+    <li><b>主張：</b>2024〜2025年の金価格上昇で、中銀購入は価格の主因ではなく需給の床にとどまり、価格の増分はETF転換と地政学リスクの同時発生で説明される。<b>反証条件：</b>GRAMが中銀購入を明示変数として分離し、その寄与が地政学とモメンタムを上回る場合。または中銀数量が減った年に価格リターンも縮小し、ETFが純減のまま明示寄与の先頭が中銀側に移る場合。<b>判定：</b>判定不能（中銀はモデル外残差20ポイントに含まれるが内訳は非開示。ETFはGRAMの説明変数ではなくモメンタムと同一視できない。判定に必要なデータは、中銀を明示変数としたGRAM寄与系列、または未報告購入比率の縮小後の中銀フローと価格の同時系列である）。</li>
+    <li><b>主張：</b>2026年1月20日の米株・米債・ドル同時変動は、官報掲載前の関税予告と時間的に整合し、1月21日の撤回投稿と同日に反発した。関税そのものは未実施である。<b>反証条件：</b>Federal Registerに当該8か国関税の発効文書があり徴収が始まった場合、または撤回後も株・債・ドルが同方向に複数取引日下落し続ける場合。<b>判定：</b>支持（FRED終値で予告後最初の取引日に同時安、撤回投稿日に株戻りと利回り低下。Federal Registerに発効文書は無く、10%も25%も徴収されていない）。</li>
+    <li><b>主張：</b>1月20日の同時安の原因は関税予告に限定できる。<b>反証条件：</b>同一取引日に関税予告以外の交絡要因が株・債・ドルを同方向へ動かしたことが示される場合。<b>判定：</b>判定不能（単一イベントから交絡を除外できず、Sell Americaという因果ラベルは付けない。判定に必要なデータは、同日の他の政策・需給ショックを除外する高頻度のフロー分解である）。</li>
+  </ol>
+  <p class="th-fp"><b>分解：</b>観測可能なフロー（中銀トン、ETFトン、実質金利bp）／価格モデルが割り当てる寄与（GRAM）／割り当て不能な残差／政策ショックの寿命（予告から撤回までの取引日）／誰のバランスシートか（中銀・ETF・投機ショート）。</p>
+</section>
 
-この章では、政策金利という一つの起点から、国債利回り、株式の倍率、為替、金属と土地の価格までを一本の経路として追う。目的は個々の相場観を持つことではない。ある価格が動いたとき、それがどの区間で起きた変化なのかを切り分けられるようになることである。切り分けができないと、経路の途中で起きた出来事を最終価格の原因だと取り違える。
+本章の検証対象は#s6と#s7に限る。主張ブロックの判定は、金の需給フローとGRAM、および2026年1月の関税予告イベントに対して一次資料で照合した範囲にのみ適用する。#s1から#s5は割引率の伝達経路の背景であり、ヘッドライン数値の一次照合は未完了である。
+
+本章で反証可能な形で検証するのは、金価格の寄与分解と、関税予告の寿命に伴う同時安の2点である。切る順は次のとおりである。観測可能なフロー。モデルが割り当てる寄与。割り当て不能な残差。政策ショックの寿命。
+
+## 金価格：観測フロー・モデル寄与・残差
+
+本節は観測フローとモデル寄与を分け、価格寄与が分離できない残差を残差として残す。WGC回帰が2025年リターンの約60%しか説明できないこと、中銀購入をドル離脱指標としては使えないことは、背景節の実物資産の記述と接続する。基準日は2026年9月25日。
+
+結論から述べる。==中銀を価格の主因とも非主因とも判定できない。数量としては厚いが残差内訳が非開示である。2025年はETF転換と地政学の明示寄与が価格上昇と同時に観測される。1月20日の同時安は関税予告と時間的に整合し撤回と同日に反発し、関税は未実施である。交絡を除外した因果断定は判定不能のままである==。
+
+### 観測可能なフロー
+
+2年合計のドル建て終値リターンはおおよそ110%である。2024年がプラス25.5%、2025年がプラス67.4%である。積上げは1.255×1.674−1＝約110%（素材ノートの計算、非公表）。[出典](https://www.gold.org/goldhub/gold-focus/2025/01/golds-2024-performance-best-14-years)、[出典](https://www.gold.org/goldhub/research/gold-market-commentary-december-2025)。年平均のLBMA Gold Priceは2024年2,386.2ドル／オンス、2025年3,431.5ドル／オンスで、年平均ベースの前年比はプラス44%である。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025)。終値リターンと年平均変化率は対象が違う。
+
+| 観測軸 | 2024年 | 2025年 | 価格側での扱い |
+| --- | --- | --- | --- |
+| 中銀ネット購入（トン） | 1,092.4 | 863.3（前年比21%減） | GRAMではモデル外。数量の床 |
+| ETFおよび類似商品（トン） | マイナス2.9 | プラス801.2 | 需要側の転換。価格側ではモメンタムと重なる |
+| DFII10（年末、%） | 2.24（前年差＋52bp） | 1.93（前年差−31bp） | 機会費用のうち利回り成分 |
+| 終値リターン | プラス25.5% | プラス67.4% | 分解の対象 |
+
+中銀ネット購入の出典はWGC Gold Demand Trendsである。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025/central-banks)。2025年は2010〜2021年の年平均473トンをなお上回る。未報告購入は年間合計の57%を占める（WGC、single-source）。ETFと地金・コイン（2025年1,374.1トン）は同Trendsである。[同出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025)。DFII10はFREDである（2023年12月29日1.72%、各営業日）。[出典](https://fred.stlouisfed.org/series/DFII10)。
+
+<figure class="tb-fig tb-photo tb-ph2">
+<img src="../img/rmp-gold-bars.jpg" width="1200" height="900" loading="lazy" alt="積み上げられた金の延べ棒">
+<img src="../img/rmp-gold-ingots.jpg" width="1200" height="799" loading="lazy" alt="販売用の金インゴット">
+<figcaption>左は積み上げられた金の延べ棒、右は販売用の金インゴットである。2025年はETFがプラス801.2トンへ転換し、地金・コインは1,374.1トンだった。投資フローの厚みは延べ棒とインゴットの現物需要と並ぶ。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gold_bullion_bars.jpg">Stevebidmead</a>／CC0／Wikimedia Commons　／　<a href="https://commons.wikimedia.org/wiki/File:Gold_ingots.jpg">Maksym Kozlenko</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo tb-ph2">
+<img src="../img/rmp-west-point-gold.jpg" width="1200" height="675" loading="lazy" alt="ウェストポイント造幣局に保管された金の延べ棒">
+<img src="../img/rmp-gold-eagles.jpg" width="1200" height="675" loading="lazy" alt="ウェストポイント造幣局で打たれたばかりのアメリカン・ゴールド・イーグル">
+<figcaption>左は米国ウェストポイント造幣局に保管された金の延べ棒、右は同造幣局で打たれたばかりのアメリカン・ゴールド・イーグルである。WGC推計の中央銀行純購入は2024年1,092.4トン、2025年863.3トンであり、公表変化と未報告購入の推計を含む。2025年の地金・コイン1,374.1トンは右のような投資用コイン需要と対応する。価格寄与の百分率はGRAMのモデル外残差に含まれ、内訳は非開示である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:West_Point_gold.jpg">U.S. Mint</a>／パブリックドメイン／Wikimedia Commons　／　<a href="https://commons.wikimedia.org/wiki/File:New_American_Eagles.jpg">U.S. Mint</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+<figure class="tb-fig">
+<svg viewBox="0 0 720 240" role="img" aria-label="中銀トン・ETFトン・終値リターンの同時観測">
+  <text x="16" y="22" font-size="12" fill="var(--muted)">同時観測（因果分解ではない）。単位は枠ごとに異なる</text>
+  <text x="16" y="56" font-size="12" fill="var(--ink)">中銀ネット購入（トン）</text>
+  <rect x="220" y="42" width="218" height="16" rx="2" fill="#9DB8F5"/><text x="450" y="55" font-size="11" fill="var(--sub)">2024: 1,092.4</text>
+  <rect x="220" y="64" width="173" height="16" rx="2" fill="#C5D4F7"/><text x="405" y="77" font-size="11" fill="var(--sub)">2025: 863.3</text>
+  <text x="16" y="118" font-size="12" fill="var(--ink)">ETF純増減（トン）</text>
+  <rect x="220" y="104" width="4" height="16" rx="2" fill="#B45309"/><text x="235" y="117" font-size="11" fill="var(--sub)">2024: −2.9</text>
+  <rect x="220" y="126" width="160" height="16" rx="2" fill="var(--accent)"/><text x="390" y="139" font-size="11" fill="var(--sub)">2025: +801.2</text>
+  <text x="16" y="180" font-size="12" fill="var(--ink)">終値リターン（%）</text>
+  <rect x="220" y="166" width="51" height="16" rx="2" fill="#6892EF"/><text x="280" y="179" font-size="11" fill="var(--sub)">2024: +25.5</text>
+  <rect x="220" y="188" width="135" height="16" rx="2" fill="var(--accent)"/><text x="365" y="201" font-size="11" fill="var(--sub)">2025: +67.4</text>
+  <text x="16" y="228" font-size="11" fill="var(--muted)">出典: WGC Gold Demand Trends / Gold Focus。棒長は各枠内の比較用であり枠横断の尺度ではない。</text>
+</svg>
+<figcaption>中銀数量が減った年に価格リターンとETF純増が拡大している。同時観測であり、寄与率の会計分解ではない。</figcaption>
+</figure>
+
+### 価格モデルが割り当てる寄与
+
+WGCのGold Return Attribution Model（GRAM）は月次リターンを経済拡大・リスクと不確実性・機会費用・モメンタムに回帰する。中銀購入はデータ制約からモデル外の「その他」に入る。[出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。寄与の百分率ポイントは通年リターンへの加算分として読む。要因間の共線性と残差のため、枠の和は通年リターンに一致しない。
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 220" role="img" aria-label="2025年GRAMにおける明示寄与と残差（百分率ポイント）">
+  <text x="16" y="22" font-size="12" fill="var(--muted)">2025年（年初来61%、2025-11-28時点）GRAM寄与（単位: リターンへの百分率ポイント）</text>
+  <g font-size="12" fill="var(--ink)">
+    <text x="16" y="58">地政学（GPR）</text>
+    <rect x="150" y="44" width="160" height="18" rx="3" fill="var(--accent)"/>
+    <text x="320" y="58" font-size="11" fill="var(--sub)">8</text>
+
+    <text x="16" y="98">実質金利等（機会費用・利回り）</text>
+    <rect x="150" y="84" width="40" height="18" rx="3" fill="#9DB8F5"/>
+    <text x="200" y="98" font-size="11" fill="var(--sub)">2</text>
+
+    <text x="16" y="138">モメンタム（ETFフローの価格側代理）</text>
+    <rect x="150" y="124" width="180" height="18" rx="3" fill="#6892EF"/>
+    <text x="340" y="138" font-size="11" fill="var(--sub)">9</text>
+
+    <text x="16" y="178">モデル外残差（中銀購入を含む）</text>
+    <rect x="150" y="164" width="400" height="18" rx="3" fill="#C5D4F7"/>
+    <text x="560" y="178" font-size="11" fill="var(--sub)">20</text>
+  </g>
+  <text x="16" y="210" font-size="11" fill="var(--muted)">棒の長さは寄与ポイントに比例。ドル安8と経済拡大10は本節の床／増分の軸の外のため図から外している。</text>
+</svg>
+<figcaption>明示寄与では地政学とモメンタムが厚く、実質金利等は2ポイントにとどまる。中銀はモデル外20ポイントの内数であり、棒全体を中銀寄与とは判別できない。出典はWGC Gold Outlook 2026 Table 1（2025年11月28日時点）。</figcaption>
+</figure>
+
+2024年は実質金利が52bp上昇しながら金はプラス25.5%だった。機会費用では価格下落方向の局面での上昇である。2025年は31bp低下で、WGCの25bpあたり約1.75%を比例させるとおおよそプラス2%強（estimated）。GRAMの機会費用「その他」（利回り等）は両年とも2ポイントにとどまる。[同出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。為替（ドル安）は2025年に8ポイントあり、本節の床／増分の軸の外で大きい。
+
+地政学はGRAMのGPR寄与として2024年3ポイント、2025年8ポイントである。2025年通年では、明示変数が説明した約60%のうち地政学リスクとオプション市場の活動が最大だった。[出典](https://www.gold.org/goldhub/research/gold-market-commentary-december-2025)。ETFトン数はGRAMの説明変数ではないため、モメンタム9ポイントをETF寄与と同一視はできない。需要側の転換と価格側のモメンタムが同じ年に重なる、という対応関係までとする。
+
+### 割り当て不能な残差
+
+IMF COFERの米ドル比率は旧手法で2024年Q4に57.80%、新手法で2025年Q4に56.77%であり、金購入が続く局面でもドル準備比率は急落していない。[出典](https://data.imf.org/en/news/4225global)、[出典](https://data.imf.org/en/news/imf%20data%20brief%20march%2027)。中銀購入をドル離脱の代理指標としては使えない。
+
+GRAMの2025年（2025年11月28日時点、年初来61%）ではモデル外要因が20ポイントあり、中銀購入はここに含まれるが内訳は非開示である。[同出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。局所感応度（中銀20〜30トンあたり価格1%）を年間800〜1,000トンへ外挿すると数十%になるが、近似の外挿なので本節では採用しない（estimated、不採用）。
+
+==言えるのは次の2点に限る。中銀数量が減った年に価格リターンが拡大したこと。明示寄与の先頭が地政学とモメンタムであること==。残差20ポイントの内訳が非開示のため、中銀が価格の主因ではないとも、主因であるとも判定できない。
+
+過去局面との比較は年平均価格（World Bank Pink Sheet）で揃える。1970→1980は約16.9倍だが制度変更を含む。2008〜2011年の年平均倍率は約1.80、2024〜2025年は年平均約1.44／終値ベース約2.10である。[出典](https://www.worldbank.org/en/research/commodity-markets)。2025年の年平均3,431.5ドルはWGC値で、Pink Sheetの2025年確定値は未確認（single-source）。比較で言えるのは次の2点に限る。2024〜2025年が実質金利低下を主因とする2010年前後型ではないこと。中銀フローがETFより先に厚く続いていた点で構成が異なること。
+
+## 関税予告：政策ショックの寿命とバランスシート
+
+通常の相関では、株式が売られる局面で国債とドルが買われやすい。2026年1月20日はその前提が同日に外れた。本節は関税の実効税率ではなく、予告の寿命で同時安を測る。
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 220" role="img" aria-label="政策ショック時の注文と資金フローの向き">
+  <text x="16" y="22" font-size="12" fill="var(--muted)">1月20日の同時安で観測された注文・資金の向き（因果の単一断定ではない）</text>
+  <rect x="40" y="50" width="140" height="48" rx="4" fill="#C5D4F7"/>
+  <text x="58" y="72" font-size="12" fill="var(--ink)">株式注文</text>
+  <text x="62" y="90" font-size="11" fill="var(--sub)">売り超過</text>
+  <rect x="250" y="50" width="160" height="48" rx="4" fill="#C5D4F7"/>
+  <text x="268" y="72" font-size="12" fill="var(--ink)">国債注文</text>
+  <text x="272" y="90" font-size="11" fill="var(--sub)">売り超過（利回り↑）</text>
+  <rect x="480" y="50" width="180" height="48" rx="4" fill="#C5D4F7"/>
+  <text x="502" y="72" font-size="12" fill="var(--ink)">ドル需要</text>
+  <text x="508" y="90" font-size="11" fill="var(--sub)">減少（指数↓）</text>
+  <path d="M180 74 H240" stroke="var(--accent)" stroke-width="2"/>
+  <path d="M410 74 H470" stroke="var(--accent)" stroke-width="2"/>
+  <text x="40" y="140" font-size="12" fill="var(--sub)">通常のrisk-off: 株↓ → 国債価格↑・ドル↑</text>
+  <text x="40" y="168" font-size="12" fill="var(--ink)">1/20の観測: 株↓・国債価格↓・ドル↓ が同日に重なる</text>
+  <text x="40" y="196" font-size="11" fill="var(--muted)">数値はFRED終値（S&amp;P500 −2.06%、DGS10 +6bp、DTWEXBGS −0.53%）。交絡の除外はしていない。</text>
+</svg>
+<figcaption>関税予告後の最初の取引日に、株式・国債・ドルの3市場で売り方向の注文と資金流出が同時に観測された。建物や取引フロアの写真ではなく、ショック時のフローの向きを示す。</figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo tb-ph2">
+<img src="../img/rmp-treasury-note.jpg" width="813" height="900" loading="lazy" alt="1976年の米国財務省5,000ドル8%財務省証券" style="max-width:440px;margin:0 auto;aspect-ratio:auto;object-fit:contain">
+<img src="../img/rmp-dollar-note.jpg" width="1200" height="516" loading="lazy" alt="シリーズ2013の1ドル連邦準備券の表面">
+<figcaption>左は1976年の米国財務省5,000ドル8%財務省証券、右はシリーズ2013の1ドル連邦準備券である。1月20日は10年債利回りが4.24%から4.30%へ上がり（価格は下落）、貿易加重ドル指数は120.0838から119.4455へ下落した。株・債・ドルが同日に売られる経路の対象資産を示す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:1976_$5000_8%25_Treasury_Note.jpg">JHerbstman</a>／パブリックドメイン／Wikimedia Commons　／　<a href="https://commons.wikimedia.org/wiki/File:Obverse_of_the_Series_2013_$1_Federal_Reserve_Note.jpg">Bureau of Engraving and Printing</a>／パブリックドメイン／Wikimedia Commons</span></figcaption>
+</figure>
+
+### 政策ショックの寿命
+
+1月17日11時19分（東部時間）、大統領はTruth Socialで次を予告した。対象は欧州8か国（デンマーク／ノルウェー／スウェーデン／フランス／ドイツ／英国／オランダ／フィンランド）である。2026年2月1日から米国向け全品目に10%の関税を課し、2026年6月1日に25%へ引き上げる。条件はグリーンランドの「完全かつ全面的な購入」合意までである。[出典](https://trumpstruth.org/statuses/34583)。原文に根拠法（IEEPA、通商拡大法232条、1930年関税法338条など）の明示はない。
+
+米国市場は1月19日がキング牧師記念日で休場であり、予告後の最初の取引日が1月20日である。FREDの終値で並べる。
+
+| 日付（as_of） | S&P500 | 米10年債利回り（DGS10、%） | 米ドル貿易加重指数（DTWEXBGS） | ドル円（DEXJPUS） |
+| --- | --- | --- | --- | --- |
+| 2026-01-16 | 6,940.01 | 4.24 | 120.0838 | 158.02 |
+| 2026-01-20 | 6,796.86 | 4.30 | 119.4455 | 157.89 |
+| 2026-01-21 | 6,875.62 | 4.26 | 119.3431 | 158.16 |
+| 2026-01-23 | 6,915.61 | 4.24 | 118.8976 | 157.57 |
+| 2026-01-27 | 6,978.60 | 4.24 | 117.4523 | 153.03 |
+
+出典はFREDの各系列である。[出典](https://fred.stlouisfed.org/series/SP500)、[出典](https://fred.stlouisfed.org/series/DGS10)、[出典](https://fred.stlouisfed.org/series/DTWEXBGS)、[出典](https://fred.stlouisfed.org/series/DEXJPUS)。1月16日から20日への変化は次のとおりである。S&P500がマイナス2.06%。10年債利回りがプラス6bp（価格は下落）。貿易加重ドルがマイナス0.53%。ドル円が0.13円の円高。変化率は素材ノートの計算であり公表値ではない。
+
+ロイターは同日のS&P500下落率を2.06%と報じ、FREDの終値と一致する。[出典](https://www.reuters.com/business/sp-nasdaq-futures-slide-one-month-lows-greenland-concerns-2026-01-20/)。ドルについてはICEのドル指数が一時0.7%安と報じられており、FREDの貿易加重指数とは系列が違う。[出典](https://www.reuters.com/world/asia-pacific/dollar-week-low-geopolitics-revive-sell-america-trade-2026-01-20/)。ヘッドラインの株下落は2ソースで一致する。
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 250" role="img" aria-label="2026年1月の株・利回り・ドルの日次変化">
+  <text x="16" y="22" font-size="12" fill="var(--muted)">FRED終値の変化（1/16基準）。因果ではなく観測系列</text>
+  <text x="40" y="55" font-size="11" fill="var(--sub)">S&amp;P500</text>
+  <polyline fill="none" stroke="var(--accent)" stroke-width="2" points="80,70 200,120 320,90 440,78 560,65"/>
+  <text x="80" y="66" font-size="10" fill="var(--sub)">6940</text>
+  <text x="190" y="136" font-size="10" fill="var(--sub)">6797</text>
+  <text x="310" y="86" font-size="10" fill="var(--sub)">6876</text>
+  <text x="40" y="160" font-size="11" fill="var(--sub)">DGS10(%)</text>
+  <polyline fill="none" stroke="#B45309" stroke-width="2" points="80,185 200,165 320,175 440,185 560,185"/>
+  <text x="80" y="200" font-size="10" fill="var(--sub)">4.24</text>
+  <text x="190" y="160" font-size="10" fill="var(--sub)">4.30</text>
+  <text x="310" y="172" font-size="10" fill="var(--sub)">4.26</text>
+  <text x="80" y="235" font-size="10" fill="var(--muted)">1/16</text>
+  <text x="200" y="235" font-size="10" fill="var(--muted)">1/20</text>
+  <text x="320" y="235" font-size="10" fill="var(--muted)">1/21</text>
+  <text x="440" y="235" font-size="10" fill="var(--muted)">1/23</text>
+  <text x="560" y="235" font-size="10" fill="var(--muted)">1/27</text>
+</svg>
+<figcaption>1月20日に株下落と利回り上昇が同時に起き、1月21日に株は戻り利回りは低下した。系列の同時変動と時間的整合を示す図であり、関税予告を唯一の原因とはしない。</figcaption>
+</figure>
+
+1月21日、大統領はNATO事務総長との協議を理由に、2月1日に予定していた関税を課さないと投稿した。[出典](https://www.presidency.ucsb.edu/documents/truth-social-posts-january-21-2026)。同日、S&P500は6,875.62へ戻り、10年債利回りも4.26%へ低下した。連邦官報（Federal Register）に、この8か国向け追加関税を実施する大統領布告や執行命令は掲載されていない（2026年9月25日時点の確認）。実施状況は「予告→撤回→未実施」であり、10%も25%も徴収されていない。
+
+法的根拠について取れる事実は2つに限る。第1に、当該予告自体はSNS投稿であり、官報上の発効文書ではない。第2に、2025年以降に実際に徴収された広範な関税の多くはIEEPAを根拠としていたが、連邦最高裁は2026年2月20日のLearning Resources, Inc. v. TrumpでIEEPA関税を退けた。この判決と還付の数字は[012_politics第3章](https://040704shogo8848.github.io/010_research/012_politics/chapters/03_cross-border-regulatory-power.html)に既出であり、ここには繰り返さない。グリーンランド関税は撤回時点で未発効のため、同判決の対象にもなっていない。
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 200" role="img" aria-label="関税予告の寿命と市場の反応">
+  <text x="16" y="22" font-size="12" fill="var(--muted)">予告の寿命（取引日）。税率は官報に載らず、徴収も無い</text>
+  <rect x="40" y="50" width="120" height="36" rx="4" fill="#C5D4F7"/>
+  <text x="55" y="72" font-size="12" fill="var(--ink)">1/17 予告</text>
+  <rect x="200" y="50" width="160" height="36" rx="4" fill="var(--accent)"/>
+  <text x="220" y="72" font-size="12" fill="#fff">1/20 同時安</text>
+  <rect x="400" y="50" width="160" height="36" rx="4" fill="#6892EF"/>
+  <text x="415" y="72" font-size="12" fill="#fff">1/21 撤回・戻り</text>
+  <rect x="600" y="50" width="100" height="36" rx="4" fill="#E5E2DA"/>
+  <text x="612" y="72" font-size="12" fill="var(--sub)">未実施</text>
+  <text x="40" y="120" font-size="12" fill="var(--sub)">休場 1/19 → 最初の取引日が反応日</text>
+  <text x="40" y="150" font-size="12" fill="var(--sub)">通常のrisk-off: 株↓ 国債価格↑ ドル↑　／　1/20: 株↓ 国債価格↓ ドル↓</text>
+  <text x="40" y="180" font-size="12" fill="var(--sub)">円の主戦場は1/23〜1/27（157.57→153.03）。トリプル安当日とは日付がずれる</text>
+</svg>
+<figcaption>同時安の持続時間は、予告後最初の取引日から撤回投稿までの1取引日である。関税が官報に載り徴収が始まっていれば、経路は別の長さを持ちうる。</figcaption>
+</figure>
+
+### 誰のバランスシートが動いたか
+
+崩れた条件は次の3点である。第1に、ショックの震源が米国内の政策予告であること。同盟国への追加関税は、海外リスクへの逃避先としての米国資産という読みと両立しにくい。第2に、国債が安全資産として機能するには、財政と制度の安定が前提になる。関税の再燃はインフレ経路と報復経路の両方を意識させ、利回り上昇と株安が並行した。第3に、ドルの需要は「リスクオフ」ではなく「米資産を持ちたいか」に依存する。米株と米債を同時に減らすフローはドル売りになる。ロイターはこの組み合わせを2025年4月の広範関税発表後に見られた「Sell America」の再来と整理している。本稿ではそれを報道上のラベルとして併記し、因果の確定には使わない。[同出典](https://www.reuters.com/world/asia-pacific/dollar-week-low-geopolitics-revive-sell-america-trade-2026-01-20/)。
+
+円高の主戦場は1月20日ではなく1月23日以降である。1月23日の157.57から1月27日の153.03へ、4.54円動いた。
+
+| 要因 | 観測値（as_of） | 円高方向か | 出典 |
+| --- | --- | --- | --- |
+| 日米10年金利差 | 2026-01-16: 米4.24%−日2.182%=2.058pt。2026-01-20: 米4.30%−日2.330%=1.970pt | 差は0.088pt縮小（円高方向） | FRED DGS10、財務省国債金利情報 |
+| 為替介入 | 2025-12-29〜2026-01-28の介入額は0円 | 実弾介入はなし | 財務省 FEIO |
+| 円先物の非商業ネット | 2026-01-06: プラス8,815枚。01-13: マイナス45,164枚。01-20: マイナス44,829枚。01-27: マイナス33,933枚 | 1月13日以降は大幅ショート。1月27日に向けてショート縮小（円買い方向） | CFTC COT |
+
+日本の10年利回りは財務省の国債金利情報である。[出典](https://www.mof.go.jp/jgbs/reference/interest_rate/data/jgbcm_all.csv)。金利差の縮小幅0.088ptは、1月23日から27日の4.54円を説明するには小さい。介入はゼロである。[出典](https://www.mof.go.jp/english/policy/international_policy/reference/feio/monthly/20260130e.html)。当局によるレートチェックの有無は、財務省・日銀のいずれも公式には認めていない（非開示）。
+
+<figure class="tb-fig tb-photo">
+<img src="../img/rmp-futures-pit.jpg" width="1200" height="783" loading="lazy" alt="商品先物の取引ピットで手信号を交わすトレーダー">
+<figcaption>1992年の商品先物取引ピット。トレーダーが手信号で建玉をやり取りしている。本文のCFTC COTはCME円先物の非商業ネット建玉であり、1月13日以降の大幅ショートと1月27日に向けたショート縮小が円高区間と時間的に重なる。ピット写真は先物建玉が集計される市場の仕組みを示す。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Commodities_futures_trading_(2535018248).jpg">Lars Plougmann</a>／CC BY-SA 2.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 220" role="img" aria-label="CFTC CME円先物の非商業ネット建玉">
+  <text x="16" y="22" font-size="12" fill="var(--muted)">CME円先物・非商業ネット（枚）。プラス＝ネットロング、マイナス＝ネットショート</text>
+  <line x1="80" y1="110" x2="680" y2="110" stroke="var(--line)" stroke-width="1"/>
+  <text x="16" y="114" font-size="10" fill="var(--muted)">0</text>
+  <!-- 01-06: +8815 ~ small up -->
+  <rect x="100" y="95" width="70" height="15" fill="#6892EF"/>
+  <text x="100" y="90" font-size="10" fill="var(--sub)">+8,815</text>
+  <text x="105" y="145" font-size="10" fill="var(--muted)">1/6</text>
+  <!-- 01-13: -45164 -->
+  <rect x="240" y="110" width="70" height="70" fill="var(--accent)"/>
+  <text x="230" y="195" font-size="10" fill="var(--sub)">−45,164</text>
+  <text x="250" y="145" font-size="10" fill="var(--muted)">1/13</text>
+  <!-- 01-20: -44829 -->
+  <rect x="380" y="110" width="70" height="69" fill="var(--accent)"/>
+  <text x="370" y="195" font-size="10" fill="var(--sub)">−44,829</text>
+  <text x="390" y="145" font-size="10" fill="var(--muted)">1/20</text>
+  <!-- 01-27: -33933 -->
+  <rect x="520" y="110" width="70" height="52" fill="#9DB8F5"/>
+  <text x="515" y="178" font-size="10" fill="var(--sub)">−33,933</text>
+  <text x="530" y="145" font-size="10" fill="var(--muted)">1/27</text>
+  <text x="16" y="215" font-size="11" fill="var(--muted)">出典: CFTC COT（CME Futures Only）。棒の長さはネット枚数の絶対値に比例。</text>
+</svg>
+<figcaption>円先物の非商業ネットは1月13日に大幅ショートへ振れ、1月27日に向けてショートが縮小した。円高が加速した1月23日以降は、厚いショートの解消と整合する。建玉の変化そのものを示す。</figcaption>
+</figure>
+
+投機ポジションは動いている。CFTCのCME円先物（非商業）は1月6日時点でネットロング8,815枚だった。1月13日にネットショート45,164枚へ振れ、1月20日も44,829枚のショートを維持した。1月27日には33,933枚までショートが減った。[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf010626.htm)、[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf011326.htm)、[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf012026.htm)、[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf012726.htm)。ネット枚数は建玉の差であり素材ノートの計算である。
+
+1月20日のトリプル安と、1月23日以降の円高は連続した出来事ではあるが、主因の所在が異なる。前者は米資産全体のリスクプレミアム、後者は円のショートポジションと介入観測である。持続性を論じる単位は「1月の円高」ではなく、この2つの区間である。市場構造の側は[016_finance第4章](https://040704shogo8848.github.io/010_research/016_finance/chapters/04_market-structure-and-listing.html)の主題であり、本節では扱わない。
+
+### 誰が得をするか
+
+金では、残差の内訳が開かない限り中銀主因も非主因も確定できない。監視できるのはETFフローとGRAMの明示寄与（地政学・モメンタム）の同時観測である。未報告購入が年間の57%を占める現状では、中銀フローの開示が改善しない限り価格寄与の分離は進まない。
+
+トリプル安では、関税の実施そのものを条件にしたポジションは損失を被る。官報に載る前に撤回されたため、関税収入を得る主体は発生していない。因果を関税予告に限定できないため、予告寿命を条件にした枠も交絡を残したままである。円では、厚いショートを1月下旬に縮小した投機筋が円買い方向のフローを供給した。
+
+## 背景：割引率の伝達経路（未照合）
+
+以下の節は、政策金利から国債・為替・事業会社・実物資産までの伝達を整理した背景である。主張ブロックの判定対象外であり、ヘッドライン数値の一次照合は未完了である。
 
 ## 政策金利からイールドカーブへ：伝達が切れる年限
 
 出発点は政策金利である。日本銀行は2026年6月16日の金融政策決定会合で、無担保コールレート翌日物の誘導目標を0.75%程度から1.00%程度へ引き上げた。決定は賛成7反対1である。[出典](https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260616a.pdf)。その後の7月31日の会合では1.0%程度での据え置きを賛成8反対1で決めており、高田委員は1.25%程度への引き上げを提案して否決された。[出典](https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260731a.pdf)。
-
-<figure class="tb-fig tb-photo">
-<img src="../img/c03_boj.jpg" width="1000" height="750" loading="lazy" alt="日本銀行本店の本館">
-<figcaption>日本銀行本店の本館を南側から見た写真。日本銀行は2026年6月16日の金融政策決定会合で、無担保コールレート翌日物の誘導目標を1.00%程度へ引き上げた。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Bank_of_Japan_Head_Office_-_Main_building_from_south.jpg">Hohoho</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
-</figure>
 
 政策金利が動くと国債利回りも動く。ただし動き方は年限で違う。2026年8月6日時点の日本国債の利回りを、政策金利1.00%からの上乗せ幅とあわせて並べる。
 
@@ -67,11 +314,6 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 
 制度差を見るには比較対象がいる。==ギリシャはユーロの利用者であり発行者ではない==。EU機能条約第123条は、欧州中央銀行および加盟国中央銀行が政府に信用供与を行うこと、および政府から債務証書を直接購入することを禁じている。[出典](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:12016E123)。支払手段を自国の判断で作れない。その帰結が2012年の民間債務再編である。2012年2月21日にユーログループが確認した共通理解は名目53.5%の削減を定め、2月24日にギリシャは額面約2,060億ユーロの債券を対象に交換の申込を開始した。ギリシャ議会は2月23日に集団行動条項を遡及的に導入する法律を可決し、S&Pは2月27日に長期格付を選択的デフォルトへ引き下げた。[出典](https://ec.europa.eu/economy_finance/publications/occasional_paper/2012/pdf/ocp94_en.pdf)。
 
-<figure class="tb-fig tb-photo">
-<img src="../img/c03_ecb.jpg" width="1000" height="525" loading="lazy" alt="欧州中央銀行の本店">
-<figcaption>フランクフルトにある欧州中央銀行の本店。EU機能条約第123条は、欧州中央銀行と加盟国中央銀行が政府に信用供与を行うことを禁じている。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Seat_of_the_European_Central_Bank_and_Frankfurt_Skyline_at_dawn_20150422_1.jpg">DXR</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
-</figure>
-
 債務残高の比率では説明が付かない。日本の債務残高対GDP比は2024年に214.5%であり、イタリアの134.7%を上回る。[出典](https://www.mof.go.jp/policy/budget/fiscal_condition/related_data/202604_01.pdf)。それでも日本は不履行に至っていない。==決定的な差は比率ではなく通貨の発行主体である==。
 
 保有構造にも差がある。2026年3月末速報で日本の国債残高は1,013兆7,559億円、うち日本銀行が485兆4,280億円で47.9%、海外が82兆129億円で8.1%である。[出典](https://www.mof.go.jp/jgbs/reference/appendix/holdings01.pdf)。ギリシャ危機前の非居住者保有比率については、素材ノートの調査で一次資料からの数値を取得できていない。したがって保有構造の差を定量で比較することはこの章ではできない。
@@ -85,11 +327,6 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 信用リスクの寄与については、素材ノートが日本国債のCDSスプレッドの一次資料を取得できていない。したがって信用リスクが利回りに寄与していないと断定はできない。
 
 量的緩和の縮小が誰に効くかも押さえておく。米国では中央銀行自身の負債側に先に効いた。連邦準備制度は2022年6月1日から2025年10月31日までに保有証券を2.2兆ドル減らし、この間に先に減ったのはオーバーナイト・リバースレポである。[出典](https://www.federalreserve.gov/monetarypolicy/May-2026-Federal-Reserve-Balance-Sheet-Developments.htm)。日本では市中の引き取り手に効いている。日銀の国債保有残高は2024年6月末577兆円から2026年3月末528兆円へ49兆円減り、同じ期間に預金取扱機関が36兆円、海外投資家が27兆円、年金が20兆円を引き取った。保険は5兆円減らしている。[出典](https://www.boj.or.jp/research/wps_rev/rev_2026/rev26j11.htm)。
-
-<figure class="tb-fig tb-photo">
-<img src="../img/c03_fed.jpg" width="1000" height="554" loading="lazy" alt="マリナー・S・エクルズ連邦準備制度理事会ビル">
-<figcaption>ワシントンD.C.のマリナー・S・エクルズ連邦準備制度理事会ビル。1937年に完成した。連邦準備制度は2022年6月1日から2025年10月31日までに、保有証券を2.2兆ドル減らした。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Marriner_S._Eccles_Federal_Reserve_Board_Building.jpg">AgnosticPreachersKid</a>／CC BY-SA 3.0／Wikimedia Commons</span></figcaption>
-</figure>
 
 ただし金利水準への寄与は限定的である。日本銀行の推計では、減額開始以降の長期金利上昇幅に対するストック効果の減少の寄与は10bp程度、フロー効果を合わせても25bp程度にとどまる。[同出典](https://www.boj.or.jp/research/wps_rev/rev_2026/rev26j11.htm)。
 
@@ -150,12 +387,7 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 
 2026年8月7日時点で米ドル指数は99.57、前年比1.41%高である。同じ日の金は1オンス4,340.26ドルで前年比27.7%高、銀は1オンス63.33ドルで前年比65.1%高、銅は1ポンド6.58ドルで前年比47.5%高である。[出典](https://tradingeconomics.com/commodity/gold)、[出典](https://tradingeconomics.com/commodity/silver)、[出典](https://tradingeconomics.com/commodity/copper)、[出典](https://tradingeconomics.com/united-states/currency)。ドルが上がりながら3金属がすべて上がっている。この12か月についてはドル安を主因とする説明が成り立たない。
 
-金については、World Gold Council 自身の回帰モデルが説明できない部分を残している。2025年の金の年間リターンは67%だった。同モデルは月次リターンを経済拡大、リスクと不確実性、機会費用、モメンタムの4系統に分解するが、2025年通年で明示変数が説明できたのはリターンの約60%にとどまり、約40%が残差として残った。説明できた部分では地政学リスクとオプション市場の活動が最大で、次にドル安、その次に利回り低下が続く。[出典](https://www.gold.org/goldhub/research/gold-market-commentary-december-2025)。残差40%が上位2要因の差より大きいため、単一の最大要因を断定できない。
-
-<figure class="tb-fig tb-photo">
-<img src="../img/c03_gold.jpg" width="1000" height="426" loading="lazy" alt="フランス銀行で展示された金の延べ棒">
-<figcaption>フランス銀行で展示された金の延べ棒。PAMP SA の刻印と、純度を示す999.9の表示がある。2025年の金の年間リターンは67%だった。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gold_bar_of_Banque_de_France.jpg">Ibex73</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
-</figure>
+金については、World Gold Council 自身の回帰モデルが説明できない部分を残している。2025年の金の年間リターンは67%だった。同モデルは月次リターンを経済拡大、リスクと不確実性、機会費用、モメンタムの4系統に分解するが、2025年通年で明示変数が説明できたのはリターンの約60%にとどまり、約40%が残差として残った。説明できた部分では地政学リスクとオプション市場の活動が最大で、次にドル安、その次に利回り低下が続く。[出典](https://www.gold.org/goldhub/research/gold-market-commentary-december-2025)。残差40%が上位2要因の差より大きいため、単一の最大要因を断定できない。寄与の切り分けは本節の背景にとどめ、検証は#s6の観測フロー・モデル寄与・残差で行う。
 
 中央銀行の金購入をドル離脱の指標として読む見方も、数字と合わない。2025年の中銀ネット購入は863.3トンで、2024年の1,092.4トンから21%減った。2025年の買い手上位はポーランド102トン、カザフスタン57トン、ブラジル43トン、アゼルバイジャン38トン、トルコ27トン、中国27トン、チェコ20トンである。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025/central-banks)。首位のポーランドと7位のチェコはEUかつNATOの加盟国である。数量を最も増やした買い手はETFの801トンと地金コインの1,374トンであり、中銀ではない。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025)。
 
@@ -203,171 +435,19 @@ thesis: 評価に使う割引率も為替も、中央銀行の政策と国債市
 
 なお、路線価と実勢価格の乖離率を地域別に集計した公的統計は、素材ノートの調査では存在を確認できていない。上記の2成分分解は制度の設計から導いた枠組みであり、乖離率の実測ではない。
 
-## 金価格の要因分解：2024〜2025年の上昇を4つに分ける
-
-前節では、2025年の金リターン67%のうちWGC回帰が説明できたのは約60%にとどまり、中銀購入もドル離脱指標としては数字と合わないことを確認した。本節では同じ上昇を中銀購入・実質金利・ETFフロー・地政学の4枠に分け、一次データで水準を並べ、価格寄与は推定であることを明示する。基準日は2026年9月25日。売買の示唆は置かない。
-
-結論から述べる。==2024〜2025年の金価格上昇は、4枠のうち地政学と投資フロー（ETF）が価格モデル上で読み取れ、中銀購入は数量として大きいが価格寄与の分離ができず、実質金利は2024年に逆風・2025年に小幅な追い風にとどまる==。2年合計のドル建て終値リターンはおおよそ110%である。2024年がプラス25.5%、2025年がプラス67.4%で、積上げは1.255×1.674−1＝約110%（素材ノートの計算、非公表）。[出典](https://www.gold.org/goldhub/gold-focus/2025/01/golds-2024-performance-best-14-years)、[出典](https://www.gold.org/goldhub/research/gold-market-commentary-december-2025)。年平均のLBMA Gold Priceは2024年2,386.2ドル／オンス、2025年3,431.5ドル／オンスで、年平均ベースの前年比はプラス44%である。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025)。終値リターンと年平均変化率は対象が違う。
-
-### 要因分解の枠と方法の限界
-
-4枠は需要の観測軸であり、価格リターンの会計分解ではない。WGCのGold Return Attribution Model（GRAM）は月次リターンを経済拡大、リスクと不確実性、機会費用、モメンタムに回帰し、中銀購入はデータ制約からモデル外の「その他」に入る。[出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。したがって本節では、(1) 各枠の一次データの水準、(2) GRAMが枠に近い変数へ割り当てた寄与（推定）、(3) 割り当て不能な残差、の3層を分ける。寄与の百分率ポイントは、通年リターンへの加算分として読む。要因間の共線性と残差のため、4枠の和は通年リターンに一致しない。
-
-| 枠 | 観測する一次データ | 価格寄与の読み方 | 限界 |
-| --- | --- | --- | --- |
-| 中銀購入 | WGC Gold Demand Trends の中銀ネット購入（トン） | GRAMではモデル外。数量の大きさは需要の厚みを示すが、価格への百分率は分離できない | 未報告購入の推計を含む。価格感応度の線形外挿は過大になる |
-| 実質金利 | FRED DFII10（米10年TIPS利回り、%） | GRAMの機会費用のうち利回り成分。WGCの感応度は米10年利回り25bp低下あたり金プラス約1.75%（推定） | 名目利回りと実質利回り、ドルの動きが同時に動く |
-| ETFフロー | 同 Trends の ETF および類似商品の純増減（トン） | 需要側の投資フロー。価格側ではモメンタムと重なる | フローは価格の結果でもあり原因でもある |
-| 地政学 | GRAMの地政学リスク（GPR）寄与 | リスクと不確実性のうちGPR成分 | 指数の定義と推定期間に依存。事象そのものの列挙ではない |
-
-### 各要因の一次データと寄与の推定
-
-中銀ネット購入は2024年1,092.4トン、2025年863.3トンである。2025年は前年比21%減だが、2010〜2021年の年平均473トンをなお上回る。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025/central-banks)。買い手の内訳は前節に書いた。IMF COFERの米ドル比率は旧手法で2024年Q4に57.80%、新手法で2025年Q4に56.77%であり、金購入が続く局面でもドル準備比率は急落していない。[出典](https://data.imf.org/en/news/4225global)、[出典](https://data.imf.org/en/news/imf%20data%20brief%20march%2027)。GRAMの2025年（2025年11月28日時点、年初来61%）ではモデル外要因が20ポイントあり、中銀購入はここに含まれるが内訳は非開示である。[出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。局所感応度（中銀20〜30トンあたり価格1%）を年間800〜1,000トンへ外挿すると数十%になるが、近似の外挿なので本節では採用しない（estimated、不採用）。
-
-実質金利は年によって符号が逆である。FREDのDFII10は2023年12月29日1.72%、2024年12月31日2.24%、2025年12月31日1.93%である（%、各営業日）。[出典](https://fred.stlouisfed.org/series/DFII10)。2024年は実質金利が52bp上昇しながら金はプラス25.5%で、機会費用では逆風のなかの上昇である。2025年は31bp低下で、WGCの25bpあたり約1.75%を比例させるとおおよそプラス2%強（estimated）。GRAMの機会費用「その他」（利回り等）は両年とも2ポイントにとどまる。[出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。為替（ドル安）は2025年に8ポイントあり4枠の外で大きい。前節の「ドル指数上昇と金上昇の併存」とGRAMのドル安寄与が両立しうるのは、期間とドル指標の定義が違うためである。
-
-ETFおよび類似商品は2024年マイナス2.9トン、2025年プラス801.2トンである。[出典](https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-full-year-2025)。地金・コインは2025年1,374.1トン。GRAMのモメンタムは2024年3ポイント、2025年9ポイントである。[出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。ETFトン数はGRAMの説明変数ではないため、9ポイントをETF寄与と同一視はできない。需要側の転換と価格側のモメンタムが同じ年に重なる、という対応関係までとする。
-
-地政学はGRAMのGPR寄与として2024年3ポイント、2025年8ポイントである。[同出典](https://www.gold.org/goldhub/research/gold-outlook-2026)。2025年通年では、明示変数が説明した約60%のうち地政学リスクとオプション市場の活動が最大だった。[出典](https://www.gold.org/goldhub/research/gold-market-commentary-december-2025)。GPRは事象の列挙ではなく指数の変化分である。
-
-<figure class="tb-fig">
-<svg viewBox="0 0 720 220" role="img" aria-label="2025年GRAMにおける4枠に近い寄与（百分率ポイント）">
-  <text x="16" y="22" font-size="12" fill="var(--muted)">2025年（年初来61%、2025-11-28時点）GRAM寄与の対応（単位: リターンへの百分率ポイント）</text>
-  <g font-size="12" fill="var(--ink)">
-    <text x="16" y="58">地政学（GPR）</text>
-    <rect x="150" y="44" width="160" height="18" rx="3" fill="var(--accent)"/>
-    <text x="320" y="58" font-size="11" fill="var(--sub)">8</text>
-
-    <text x="16" y="98">実質金利等（機会費用・利回り）</text>
-    <rect x="150" y="84" width="40" height="18" rx="3" fill="#9DB8F5"/>
-    <text x="200" y="98" font-size="11" fill="var(--sub)">2</text>
-
-    <text x="16" y="138">モメンタム（ETFフローの価格側代理）</text>
-    <rect x="150" y="124" width="180" height="18" rx="3" fill="#6892EF"/>
-    <text x="340" y="138" font-size="11" fill="var(--sub)">9</text>
-
-    <text x="16" y="178">モデル外残差（中銀購入を含む）</text>
-    <rect x="150" y="164" width="400" height="18" rx="3" fill="#C5D4F7"/>
-    <text x="560" y="178" font-size="11" fill="var(--sub)">20</text>
-  </g>
-  <text x="16" y="210" font-size="11" fill="var(--muted)">棒の長さは寄与ポイントに比例。ドル安8と経済拡大10は4枠の外のため図から外している。</text>
-</svg>
-<figcaption>4枠に近いGRAM寄与。中銀はモデル外20ポイントの内数であり、棒全体を中銀寄与とは読めない。出典はWGC Gold Outlook 2026 Table 1（2025年11月28日時点）。</figcaption>
-</figure>
-
-### 過去の上昇局面との比較
-
-比較は年平均価格（World Bank Pink Sheet、ロンドン午後値の年平均）で揃える。日次高値のLBMA系列はライセンス制約で取得できないため、ピーク値の一次確認は本節では行わない。
-
-| 局面 | 始点の年平均（ドル／オンス） | 終点の年平均（ドル／オンス） | 倍率（終点／始点） | 主に観測される需要・マクロ |
-| --- | --- | --- | --- | --- |
-| 1970年代（1970→1980） | 35.94（1970年） | 607.86（1980年） | 約16.9倍 | ドルと金の兌換停止後の名目価格の再設定、高インフレ局面 |
-| 2008〜2011年 | 871.71（2008年） | 1,569.21（2011年） | 約1.80倍 | 金融危機と欧州債務懸念、実質金利低下と投資フロー |
-| 2024〜2025年 | 2,387.70（2024年） | 3,431.5（2025年、WGC年平均） | 約1.44倍（年平均）／終値ベース約2.10倍 | 中銀の高水準購入が続くなか、2025年にETFが急増。実質金利は決定打にならない |
-
-World Bankの金はロンドン午後値の年平均である。[出典](https://www.worldbank.org/en/research/commodity-markets)。2025年の年平均3,431.5ドルはWGC値で、Pink Sheetの2025年確定値は未確認（single-source）。1970→1980の約16.9倍は制度変更を含むため、2024〜2025年と同列の「相場の強さ」比較には使えない。2008〜2011年の年平均倍率約1.80と、2024〜2025年の年平均約1.44／終値ベース約2.10は対象が違う。==比較で言えるのは、2024〜2025年が実質金利低下を主因とする2010年前後型ではないこと、および中銀フローがETFより先に厚く続いていた点で1970年代とも2008年型とも構成が違うこと、の2点に限る==。
-
-### 何が説明できて何が残るか
-
-説明できるのは次である。第1に、GRAM上では2025年の明示寄与の先頭近くに地政学があり、モメンタムが続く。第2に、需要では2025年にETFがマイナスからプラス801トンへ転じた。第3に、実質金利は2024年に逆風、2025年に数ポイントの追い風にとどまる。第4に、中銀購入は数量として厚いがドル準備比率の急落とは対応せず、価格寄与はモデル外残差から切り離せない。残るのはモデル外20ポイントの内訳、日次LBMA高値、GPR原系列のイベント窓、Pink Sheetの2025年年平均である。4枠の和で通年リターンを説明し切ったようには読めない。
-
-## 2026年1月のトリプル安：関税・米債・ドルが同時に売られた経路
-
-前節までの金利差と為替の議論は、通常の相関を前提にしている。株式が売られる局面では国債とドルが買われやすい。2026年1月20日はその前提が同日に崩れた。基準日は2026年9月25日。
-
-結論から述べる。==1月20日の米株・米債・ドル同時安は、対欧州8か国への追加関税（2月1日から10%、6月1日から25%）の予告に対する「Sell America」反応であり、関税そのものは官報に載る前に撤回され、実施されていない==。円高の持続性を決めたのは金利差の小幅縮小ではなく、介入ゼロのもとでの投機ショートの巻き戻しである。
-
-### 2026年1月20日前後の日次
-
-1月17日（土）に関税の予告が出た。米国市場は1月19日がキング牧師記念日で休場であり、予告後の最初の取引日が1月20日である。FREDの終値で並べる。
-
-| 日付（as_of） | S&P500 | 米10年債利回り（DGS10、%） | 米ドル貿易加重指数（DTWEXBGS） | ドル円（DEXJPUS） |
-| --- | --- | --- | --- | --- |
-| 2026-01-16 | 6,940.01 | 4.24 | 120.0838 | 158.02 |
-| 2026-01-20 | 6,796.86 | 4.30 | 119.4455 | 157.89 |
-| 2026-01-21 | 6,875.62 | 4.26 | 119.3431 | 158.16 |
-| 2026-01-23 | 6,915.61 | 4.24 | 118.8976 | 157.57 |
-| 2026-01-27 | 6,978.60 | 4.24 | 117.4523 | 153.03 |
-
-出典はFREDの各系列である。[出典](https://fred.stlouisfed.org/series/SP500)、[出典](https://fred.stlouisfed.org/series/DGS10)、[出典](https://fred.stlouisfed.org/series/DTWEXBGS)、[出典](https://fred.stlouisfed.org/series/DEXJPUS)。1月16日から20日への変化は、S&P500がマイナス2.06%、10年債利回りがプラス6bp（価格は下落）、貿易加重ドルがマイナス0.53%、ドル円が0.13円の円高である。変化率は素材ノートの計算であり公表値ではない。
-
-ロイターは同日のS&P500下落率を2.06%、ダウを1.76%、Nasdaqを2.39%と報じ、FREDのS&P500終値と一致する。[出典](https://www.reuters.com/business/sp-nasdaq-futures-slide-one-month-lows-greenland-concerns-2026-01-20/)。ドルについてはICEのドル指数が一時0.7%安と報じられており、FREDの貿易加重指数（マイナス0.53%）とは系列が違う。[出典](https://www.reuters.com/world/asia-pacific/dollar-week-low-geopolitics-revive-sell-america-trade-2026-01-20/)。ヘッドラインの株下落は2ソースで一致する。ドルの下落幅は系列依存であり、ICE指数と貿易加重を混同しない。
-
-1月21日にはS&P500が6,875.62へ戻し、10年債利回りも4.26%へ低下した。関税予告の撤回と同日である。一方、ドル円の大きな円高は1月20日ではなく1月23日以降に集中している。1月23日の157.57から1月27日の153.03へ、4.54円動いた。トリプル安の当日と、円高の主戦場は日付がずれる。
-
-### 対欧州8か国の追加関税：法的根拠と実施状況
-
-1月17日11時19分（東部時間）、大統領はTruth Socialで次を予告した。デンマーク、ノルウェー、スウェーデン、フランス、ドイツ、英国、オランダ、フィンランドの8か国について、2026年2月1日から米国向け全品目に10%の関税を課し、2026年6月1日に25%へ引き上げる。条件はグリーンランドの「完全かつ全面的な購入」合意までである。[出典](https://trumpstruth.org/statuses/34583)。原文に根拠法（IEEPA、通商拡大法232条、1930年関税法338条など）の明示はない。
-
-1月21日、大統領はNATO事務総長との協議を理由に、2月1日に予定していた関税を課さないと投稿した。[出典](https://www.presidency.ucsb.edu/documents/truth-social-posts-january-21-2026)。連邦官報（Federal Register）に、この8か国向け追加関税を実施する大統領布告や執行命令は掲載されていない（2026年9月25日時点の確認）。したがって実施状況は「予告→撤回→未実施」であり、10%も25%も徴収されていない。
-
-法的根拠について取れる事実は2つに限る。第1に、当該予告自体はSNS投稿であり、官報上の発効文書ではない。第2に、2025年以降に実際に徴収された広範な関税の多くはIEEPAを根拠としていたが、連邦最高裁は2026年2月20日のLearning Resources, Inc. v. TrumpでIEEPA関税を退けた。この判決と還付の数字は[012_politics第3章](https://040704shogo8848.github.io/010_research/012_politics/chapters/03_cross-border-regulatory-power.html)に既出であり、ここには繰り返さない。グリーンランド関税は撤回時点で未発効のため、同判決の対象にもなっていない。==市場が反応したのは官報の税率ではなく、同盟国への関税が再予告されうるという期待そのものだった==。
-
-### 3市場が同時に売られる経路
-
-通常のリスクオフでは、株式が売られ、国債が買われ（利回り低下）、ドルが買われやすい。株式と国債の価格は逆相関、ドルは逃避先として同方向に強くなることが多い。1月20日はこの2つの慣性が同時に外れた。
-
-<figure class="tb-fig">
-<svg viewBox="0 0 720 240" role="img" aria-label="通常の相関と2026年1月20日の同時安">
-  <text x="16" y="22" font-size="12" fill="var(--muted)">通常のrisk-offと2026-01-20のSell America（方向のみ。尺度は揃えていない）</text>
-  <text x="16" y="52" font-size="12" fill="var(--ink)">通常</text>
-  <text x="100" y="52" font-size="12" fill="var(--sub)">株式 ↓</text>
-  <text x="220" y="52" font-size="12" fill="var(--sub)">国債価格 ↑（利回り↓）</text>
-  <text x="420" y="52" font-size="12" fill="var(--sub)">ドル ↑</text>
-  <text x="16" y="92" font-size="12" fill="var(--ink)">2026-01-20</text>
-  <text x="100" y="92" font-size="12" fill="var(--accent)">株式 ↓</text>
-  <text x="220" y="92" font-size="12" fill="var(--accent)">国債価格 ↓（利回り↑）</text>
-  <text x="420" y="92" font-size="12" fill="var(--accent)">ドル ↓</text>
-  <line x1="16" y1="120" x2="700" y2="120" stroke="var(--line)" stroke-width="1"/>
-  <text x="16" y="148" font-size="12" fill="var(--ink)">経路</text>
-  <text x="100" y="148" font-size="11" fill="var(--sub)">関税再燃の予告</text>
-  <text x="280" y="148" font-size="11" fill="var(--sub)">→ 米資産全体のリスクプレミアム上昇</text>
-  <text x="100" y="178" font-size="11" fill="var(--sub)">株式：利益と成長期待の割引</text>
-  <text x="100" y="202" font-size="11" fill="var(--sub)">国債：財政・インフレ・同盟リスクのタームプレミアム</text>
-  <text x="100" y="226" font-size="11" fill="var(--sub)">ドル：逃避先としての地位が疑われ、ドル建て資産ごと売却</text>
-</svg>
-<figcaption>通常のrisk-offでは国債とドルが緩衝材になる。1月20日は緩衝材ごと売られた。数値は上表のFRED終値。</figcaption>
-</figure>
-
-崩れた条件は次の3点である。第1に、ショックの震源が米国内の政策予告であること。同盟国への追加関税は、海外リスクへの逃避先としての米国資産という読みと両立しにくい。第2に、国債が安全資産として機能するには、財政と制度の安定が前提になる。関税の再燃はインフレ経路と報復経路の両方を意識させ、利回り上昇（価格下落）と株安が並走した。第3に、ドルの需要は「リスクオフ」ではなく「米資産を持ちたいか」に依存する。米株と米債を同時に減らすフローはドル売りになる。ロイターはこの組み合わせを2025年4月の広範関税発表後に見られた「Sell America」の再来と整理している。[同出典](https://www.reuters.com/world/asia-pacific/dollar-week-low-geopolitics-revive-sell-america-trade-2026-01-20/)。
-
-重要なのは、同時安の持続時間が短いことである。1月21日の撤回投稿のあと、株式は戻り、10年債利回りはピークから低下した。関税が官報に載り徴収が始まっていれば、経路は別の長さを持ちうる。今回観測できたのは「予告だけで起動し、撤回で減衰する」長さである。
-
-### 円高の持続性を決める要因
-
-本章の「金利差と経常収支」節で述べたとおり、短期のドル円は金利差だけでは決まらない。1月下旬の円高を、金利差・介入・投機ポジションの3要因で分ける。
-
-| 要因 | 観測値（as_of） | 円高方向か | 出典 |
-| --- | --- | --- | --- |
-| 日米10年金利差 | 2026-01-16: 米4.24%−日2.182%=2.058pt。2026-01-20: 米4.30%−日2.330%=1.970pt | 差は0.088pt縮小（円高方向） | FRED DGS10、財務省国債金利情報 |
-| 為替介入 | 2025-12-29〜2026-01-28の介入額は0円 | 実弾介入はなし | 財務省 FEIO |
-| 円先物の非商業ネット | 2026-01-06: プラス8,815枚。01-13: マイナス45,164枚。01-20: マイナス44,829枚。01-27: マイナス33,933枚 | 1月13日以降は大幅ショート。1月27日に向けてショート縮小（円買い方向） | CFTC COT |
-
-日本の10年利回りは財務省の国債金利情報（R8.1.16が2.182%、R8.1.20が2.330%）である。[出典](https://www.mof.go.jp/jgbs/reference/interest_rate/data/jgbcm_all.csv)。金利差の縮小幅0.088ptは、1月20日のドル円0.13円の動きより、1月23日から27日の4.54円の動きを説明するには小さい。金利差だけでは持続性を説明できない。
-
-介入はゼロである。財務省は2025年12月29日から2026年1月28日の外国為替平衡操作の実施額を0円と公表した。[出典](https://www.mof.go.jp/english/policy/international_policy/reference/feio/monthly/20260130e.html)。1月23日以降に観測された円急騰は、実弾介入の結果ではない。当局によるレートチェックの有無は、財務省・日銀のいずれも公式には認めていない（非開示）。
-
-投機ポジションは動いている。CFTCのCME円先物（非商業）は、1月6日時点でネットロング8,815枚だったが、1月13日にネットショート45,164枚へ振れ、1月20日も44,829枚のショートを維持した。1月27日には33,933枚までショートが減った。[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf010626.htm)、[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf011326.htm)、[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf012026.htm)、[出典](https://www.cftc.gov/sites/default/files/files/dea/cotarchives/2026/futures/deacmesf012726.htm)。ネット枚数は建玉の差であり素材ノートの計算である。円高が加速した1月23日以降は、厚いショートの巻き戻しと整合する。
-
-持続性の整理は次になる。金利差の縮小は円高方向だが寄与は小さい。介入はゼロなので、水準を当局が固定したわけではない。残るのは投機ショートの解消と、介入観測そのものが生む期待である。期待は残高としては観測できない。したがって「円高がどこまで続くか」を金利差の延長線だけで読むと、1月下旬の動きを取り違える。
-
-1月20日のトリプル安と、1月23日以降の円高は連続した出来事ではあるが、主因の置き場が違う。前者は米資産全体のリスクプレミアム、後者は円のショートポジションと介入観測である。同じ週のドル安円高を一本の物語に畳むと、日付と要因の対応が消える。持続性を論じる単位は「1月の円高」ではなく、この2つの区間である。
-
-市場構造の側（誰が売れるか、板の厚み）は[016_finance第4章](https://040704shogo8848.github.io/010_research/016_finance/chapters/04_market-structure-and-listing.html)の主題であり、本節では扱わない。
-
 ## この章の要点
 
-- 政策金利から国債利回りへの伝達は年限で切れ方が違う。機械的に効くのは2年まで、5年から10年は政策不確実性に依存して振れ、20年より先はタームプレミアムの領域である。日本の30年と40年の利回り差は2026年8月6日時点で0.7bpであり、カーブは30年で伸びるのをやめる。
+- 政策金利から国債利回りへの伝達は年限で切れ方が異なる。機械的に効果があるのは2年までである。5年から10年は政策不確実性に依存して振れ、20年より先はタームプレミアムの領域である。日本の30年と40年の利回り差は2026年8月6日時点で0.7bpであり、カーブは30年で伸びるのをやめる。
 - 割引率から株式倍率への弾力性はマイナス1を株式リスクプレミアムで割った値になる。株式リスクプレミアム4.23%のもとでは点の弾力性がマイナス23.6%、100bp規模の実際の変化に対する目安がマイナス17.0%である。上げ方向と下げ方向で絶対値が3倍違うため、点推定を対称に使うと両方向で誤る。
-- 自国通貨建て国債では支払手段の不足という制約は外れるが、法制度上の選択、通貨価値の毀損、借換コストの3つが残る。ギリシャと日本の決定的な差は債務残高比率ではなく通貨の発行主体である。
-- 日本の30年国債利回り3.919%は、追加利上げ期待、日銀の買入れ減額、期間プレミアムの復活を織り込んでいる。超長期債の発行は2025年度当初から減っているため、供給増を上昇の理由にはできない。
-- 短期の為替は経常収支ではほぼ説明できない。2025年の経常黒字31兆8,799億円を1日あたりに直すと世界のスポット取引高3兆ドルの0.03%程度である。金利差の説明力は期間によって入れ替わり、効かない局面では期待の変化が残差を埋める。
+- 自国通貨建て国債では支払手段の不足という制約は外れる。残るのは法制度上の選択・通貨価値の毀損・借換コストの3つである。ギリシャと日本の決定的な差は債務残高比率ではなく通貨の発行主体である。
+- 日本の30年国債利回り3.919%は追加利上げ期待を織り込んでいる。日銀の買入れ減額と期間プレミアムの復活も同時に織り込まれている。超長期債の発行は2025年度当初から減っているため、供給増を上昇の理由にはできない。
+- 短期の為替は経常収支では説明力が計測上ゼロに近い。2025年の経常黒字31兆8,799億円を1日あたりに直すと世界のスポット取引高3兆ドルの0.03%程度である。金利差の説明力は期間によって入れ替わり、効果が無い局面では期待の変化が残差を補う。
 - 事業会社の3手段は時間軸が違う。為替予約は決済までの数か月から1年を平準化し、現地調達と現地生産はエクスポージャーの元本を減らし、建値通貨の選択は契約段階で経路を決める。予約は水準の恒久的な固定ではない。
 - 在外子会社の換算差額は損益を通らず純資産に直入される。任天堂の為替換算調整勘定は2026年3月末で純資産の8.0%を占める。円安は自己資本を増やしてROEの分母を膨らませる。
-- 実物資産の価格をドルの強弱という一本軸で束ねられない。2026年8月7日時点でドル指数が前年比1.41%高である一方、金は27.7%高、銀は65.1%高、銅は47.5%高である。金の2025年のリターンはWGCの回帰モデルで約60%しか説明できていない。
-- 2024〜2025年の金価格を中銀・実質金利・ETF・地政学の4枠で分けると、価格モデル上で厚いのは地政学とモメンタム（投資フロー）である。実質金利は2024年に逆風、2025年に数ポイントの追い風にとどまる。中銀購入は数量として厚いが価格寄与はモデル外残差から分離できない。
+- 実物資産の価格をドルの強弱という一本軸で束ねられない。2026年8月7日時点でドル指数が前年比1.41%高である一方、金は27.7%高である。銀は65.1%高、銅は47.5%高である。金の2025年のリターンはWGCの回帰モデルで約60%しか説明できていない。
+- 2024〜2025年の金では、中銀を主因とも非主因とも判定できない（判定不能）。ETF転換と地政学の明示寄与は価格上昇と同時に観測されるが、寄与の会計分解ではない。実質金利等は両年とも2ポイントにとどまる。
 - 金利が上がる局面でも公的地価は上がっている。2026年1月1日時点の地価公示は全国全用途平均で前年比プラス2.8%である。分母の割引率だけでは価格を説明できない。
-- 2026年1月20日の米株・米債・ドル同時安は、対欧州8か国への追加関税予告に対するSell America反応である。関税は官報に載る前に撤回され未実施。円高の主戦場は1月23日以降であり、介入ゼロのもとでの投機ショート縮小と整合する。
+- 2026年1月20日の米株・米債・ドル同時安は関税予告と時間的に整合し、撤回と同日に反発した。関税は官報に載る前に撤回され未実施（観測事実は支持）。交絡を除外した因果断定は判定不能。円高の主戦場は1月23日以降であり、介入ゼロのもとでの投機ショート縮小と整合する。
 
 ## 残っている問い
 
@@ -379,7 +459,7 @@ World Bankの金はロンドン午後値の年平均である。[出典](https:/
 - 太陽電池のセル1枚あたりの銀装填量、および技術別の内訳。World Silver Survey 2026 の本体を取得できていない。
 - 2026年と2027年の精錬銅の需給収支。ICSG の2026年4月23日付プレスリリースの本文を取得できていない。銅の需給ギャップを定量で押さえられない。
 - BRICS加盟国全体の金保有量とそれが世界公的準備に占める比率。流通している数値の出典が二次媒体にとどまり、IMFまたはWGCの原データで裏を取れていない。
-- GRAMのモデル外要因（2025年20ポイント）に占める中銀購入の内訳。WGCは中銀をモデル外と明記するが、寄与の分離値は公表していない。
+- モデル外20ポイントのうち中銀購入が占めるポイント数。中銀を主因とも非主因とも判定していない。未報告購入比率57%が縮小し中銀フローがモデル変数に入れば、寄与の再検証が可能になる。
 - LBMA Gold Priceの日次高値（1980年1月、2011年9月など）。ICE Benchmark Administrationのライセンス制約により取得できず、局面比較を年平均に限定している。
 - World Bank Pink Sheetの2025年金年平均。執筆時点のAnnual Pricesに2025年が未掲載であり、2025年の年平均はWGC値のみである。
 - GPR指数の月次原系列と金リターンのイベント窓。GRAMの集計寄与は取得できたが、指数そのものの一次系列での再推計はしていない。

@@ -64,15 +64,32 @@
   .legend{display:flex;gap:20px;font-size:12px;color:var(--sub);margin:4px 0 0 60px;flex-wrap:wrap}
   .legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:5px}
 
-  ol.src{font-size:13px;color:var(--sub);padding-left:22px}
-  ol.src li{margin:6px 0}
-  ol.src a{color:var(--accent)}
+  ol.src,ol.sources{font-size:13px;color:var(--sub);padding-left:22px}
+  ol.src li,ol.sources li{margin:6px 0}
+  ol.src a,ol.sources a{color:var(--accent)}
   footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);
     font-size:12px;color:var(--muted)}
 .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
 .tbl-scroll>table{margin:0;min-width:min(100%,520px)}
 a.il{color:var(--accent);text-decoration:none}
 a.il:hover{text-decoration:underline}
+  section.thesis{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:18px 0}
+  section.thesis h2{margin:0 0 10px;padding-top:0;border-top:none;font-size:18px}
+  section.thesis .th-reader{margin:8px 0}
+  section.thesis .th-claims{margin:8px 0 8px 1.2em;padding:0}
+  section.thesis .th-claims li{margin:8px 0}
+  section.thesis .th-fp{margin:8px 0 0;color:var(--sub);font-size:14px}
+  .tb-fig{margin:22px 0}
+  .tb-fig>svg{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--line,#E5E2DA);border-radius:10px}
+  .tb-fig>figcaption{font-size:12.5px;color:#555;line-height:1.7;margin-top:8px}
+  .tb-photo{margin:22px 0;padding:0;background:#fff;border:1px solid var(--line,#E5E2DA);border-radius:10px;overflow:hidden}
+  .tb-photo img{display:block;width:100%;height:auto;background:#EEE}
+  .tb-ph2,.tb-ph3{display:grid;gap:2px;background:var(--line,#E5E2DA)}
+  .tb-ph2{grid-template-columns:1fr 1fr} .tb-ph3{grid-template-columns:1fr 1fr 1fr}
+  .tb-ph2 img,.tb-ph3 img{aspect-ratio:4/3;object-fit:cover}
+  .tb-photo figcaption{font-size:12.5px;color:#555;line-height:1.7;padding:11px 16px;border-top:1px solid var(--line,#E5E2DA);background:#FCFBF8}
+  .tb-credit{display:block;margin-top:4px;font-size:11px;color:#8a8a8a}
+  .tb-credit a{color:#8a8a8a}
 </style>
 </head>
 <body>
@@ -182,167 +199,114 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 
 <header class="top">
   <h1>小惑星採掘の経済性</h1>
-  <div class="en">Asteroid Mining Economics — Autonomy-1, PGM Grades, and the Break-Even Mass</div>
+  <div class="en">Asteroid Mining Economics — Expected Return Mass, Autonomy-1, and Why Prices Stay Off Steel</div>
   <div class="tags">
     <span class="tag">宇宙</span><span class="tag">資源</span><span class="tag">PGM</span>
     <span class="tag">小惑星採掘</span><span class="tag">非鉄</span>
   </div>
   <p class="lead">
-    AstroForge の Autonomy-1 は採掘そのものではなく、地上からの指令を切った自律運用の実証である。
-    損益分岐を決めるのは打上げ単価ではなく、地球へ持ち帰れる質量である。
-    現行のサンプルリターンはグラム単位であり、PGM 価格で打上げ費を埋めるには数百キログラム級の回収が要る。
+    純金属の期待収入は価格×帰還質量×成功率で決まり、品位はこの式の収入側に入らない。
+    収入側と原料規模の代理では、成功率の半減が必要帰還質量を2倍にする一方、品位を中央値から90パーセンタイルへ上げても必要原料は約62%減にとどまる。費用関数全体の優劣は品位依存費用が非開示のため判定不能である。
+    Autonomy-1について算術できるのは地上運用費の削減感度であり、成功率改善の一次証拠はまだない。経路が費用削減に限るかも、現時点では判定不能である。
   </p>
-  <p class="srcnote">AstroForge 公式、USGS、Johnson Matthey、各国法令、NASA / JAXA のミッション報告をもとに作成（2026年9月25日時点）</p>
+  <p class="srcnote">AstroForge公式・USGS・Johnson Matthey・各国法令・NASA/JAXAのミッション報告をもとに作成した。基準日は2026年9月25日。再作成は2026年11月11日である。</p>
 </header>
 
 <div class="kpi">
-  <div class="card"><div class="k">Pt 年平均価格（USGS）</div><div class="v">950<small>USD/トロイオンス（2024年）＝約30,540 USD/kg</small></div></div>
-  <div class="card"><div class="k">世界 Pt 鉱山生産</div><div class="v">170<small>トン（2024年推定、USGS）</small></div></div>
-  <div class="card"><div class="k">鉄隕石の PGM 中央値</div><div class="v">40.8<small>ppm（Cannon et al. 2023、推定分布）</small></div></div>
-  <div class="card"><div class="k">ミッション費用 1,000万USD の損益分岐</div><div class="v">327<small>kg の純 Pt を地球へ戻す必要（筆者計算）</small></div></div>
+  <div class="card"><div class="k">Pt年平均価格（USGS）</div><div class="v">950<small>USD/トロイオンス（2024年）＝約30,543 USD/kg</small></div></div>
+  <div class="card"><div class="k">世界Pt鉱山生産</div><div class="v">170<small>トン（2024年推定、USGS）</small></div></div>
+  <div class="card"><div class="k">AstroForge飛行済み主目的</div><div class="v">0/2<small>Brokkr-1・Odinとも主目的未達</small></div></div>
+  <div class="card"><div class="k">期待分岐（s=0.5・費用1,000万USD）</div><div class="v">655<small>kgの純Pt（静的327 kgの2倍・筆者計算）</small></div></div>
 </div>
+
+<section class="thesis" id="thesis">
+  <h2>主張</h2>
+  <p class="th-reader"><b>読者と判断：</b>宇宙資源スタートアップやPGM供給を評価する立場が次を決められる。収入側の感度は帰還質量×成功率で比較し、品位は原料規模の代理として置く。Autonomy-1は費用削減の感度だけを算術し、成功率改善は一次証拠が出るまで保留する。費用関数全体で品位と成功率のどちらが支配するかも保留する。</p>
+  <ol class="th-claims">
+    <li><b>主張：</b>同一の費用・価格仮定下では、成功率を1.0から0.5へ下げたときの必要帰還質量の変化（+100%）が、品位を中央値40.78 ppmから90パーセンタイル107.86 ppmへ上げたときの必要原料質量の変化（約−62%）を上回る。純金属の期待収入 E[R]=価格×帰還質量×成功率 に品位は入らない。この感度比較を費用関数全体へ伸ばし、品位より帰還質量×成功率が経済性を支配すると結論できるかは別問題である。品位依存の選鉱・精錬費用が未知である限り判定できない。 <b>反証条件：</b>開示された費用関数で、品位依存項（選鉱・精錬）の費用弾性の絶対値が、成功率または帰還質量の弾性を上回る場合。または純金属収入の式に品位が直接入る契約形態（品位連動価格など）が一次開示される場合。 <b>判定：</b>判定不能（変化率比較自体はCannon分布と感度表で再現できる。ただし品位別の選鉱費・精錬費・歩留まり、およびそれらと成功率・帰還質量の費用弾性が非開示のため、経済性全体の説明力の優劣は判定できない）</li>
+    <li><b>主張：</b>Autonomy-1（分離後のアップリンク切断）が期待分岐質量 M_be=C/(p×s) を下げる経路のうち、費用Cの削減（公式の地上運用約1/3）は感度として算術できるが、成功率sの改善は飛行前であり一次証拠がない。Odinの公式デブリーフは地上局に加え、太陽電池展開・姿勢・設定問題も挙げ、冗長化と設計改善で成功確率を高めるとしている。したがって「経済寄与は費用削減に限る」とも「成功率を上げる」とも、現時点では結論できない。 <b>反証条件：</b>Solo搭載後のミッションで、主目的達成率が飛行済み2機（0/2）より上昇した一次報告が出る場合。または公式が、Odin型失敗の回避をアップリンク切断のみで説明し、太陽電池・姿勢・設定の設計変更を成功率改善に数えない一次資料を出す場合。 <b>判定：</b>判定不能（費用削減の感度上限は公式比率から出せる。成功率経路は未飛行。Odin公式は複合原因と設計改善による成功率向上を主張するため、「限る」も「改善する」も支持できない）</li>
+  </ol>
+  <p class="th-fp"><b>分解：</b>物理＝デルタV・通信遅延・再突入熱・品位ppm。お金の流れ＝打上げ・地上局・機上精錬・保険・回収。利得の帰属＝地上PGM鉱山・精錬と宇宙スタートアップ投資家。法＝国内法の抽出物私有と国際レジームの空白。時間＝ミッション列の失敗学習と認証に要する年数。</p>
+</section>
 
 <h2><span class="num">01</span>結論<span class="en">Conclusion</span></h2>
 
 <div class="callout">
-<p><strong class="hit">Autonomy-1 は採掘ミッションではない。</strong>
-2026年9月21日の AstroForge 発表によれば、Autonomy-1 は分離後に地上へ1コマンドも送らない運用を実証する。
-Solo は物理ベースの飛行ソフトの上に乗る知能層であり、DeepSpace-2（2026年末予定）では shadow mode、Autonomy-1（2027年初頭予定）で初めて制御権限を握る。
-過去の Brokkr-1 と Odin はいずれも通信障害で主目的を達成していない。<sup>1</sup><sup>2</sup><sup>3</sup></p>
+<p><strong class="hit">採否の式は E[R] ＝ 価格 × 帰還質量 × 成功率 − ミッション費用 である。</strong>
+感度計算として白金を30,543 USD/kg（2024年平均）と置く。ミッション費用を1,000万USDと置くと、成功率1で純Pt約327 kg、成功率0.5で約655 kgが要る。
+これは深宇宙投入・帰還・保険を含まない限定的な感度であり、真のNPV分岐ではない。
+収入側と原料規模の代理では、成功率半減の影響（必要質量+100%）が品位を中央値から90パーセンタイルへ上げる影響（必要原料約−62%）を上回る。費用関数全体での優劣は、品位依存費用が非開示のため判定不能である。
+政府系サンプルリターンはOSIRIS-RExが121.6 g、はやぶさ2が約5 gである。<sup>1</sup><sup>2</sup><sup>3</sup><sup>12</sup></p>
 
-<p><strong class="hit">損益分岐の本体は帰還質量である。</strong>
-SpaceX rideshare の公表単価は 2026年打上げで 7,000 USD/kg（50 kg から課金）だが、これは SSO / LEO への片道である。
-Pt を 950 USD/トロイオンス（2024年平均）とすると、ミッション総費用を 1,000万USD と置いた場合、純 Pt で約 327 kg を地球へ戻さないと打上げ費すら回収できない。
-政府系サンプルリターンは OSIRIS-REx が 121.6 g、はやぶさ2 が約 5.4 g にとどまる。<sup>4</sup><sup>5</sup><sup>6</sup><sup>7</sup></p>
+<p><strong class="hit">Autonomy-1について算術できるのは地上運用費の削減感度である。成功率改善は判定不能である。</strong>
+2026年9月21日のAstroForge発表によれば、分離後に地上へ1コマンドも送らない運用を実証する。
+公式が地上運用をミッション費用の約1/3と置くため、費用がゼロに近づく場合の感度上限は分岐質量の約33%減である。
+一方、Odinの公式デブリーフは地上局不具合に加え太陽電池展開・姿勢・設定問題も挙げる。冗長化と設計改善で成功確率を高めるともしている。
+アップリンク切断が成功率を上げるか、経済寄与が費用削減に限るかは、飛行後の一次報告が出るまで判定不能である。<sup>4</sup><sup>5</sup><sup>6</sup><sup>23</sup></p>
 
-<p><strong class="hit">「金・PGM が鉄並み」は年間需給の桁では起きない。</strong>
-世界の Pt 鉱山生産は 2024年推定で 17万 kg、Pd は 19万 kg である。
-Johnson Matthey の 2025年見通しでは Pt は約 736千トロイオンス（約 22.9 トン）の供給不足である。
-鉄並み価格へ落とすにはこの需給の何桁も上の供給増が要り、その前に南アフリカ・ロシア・ジンバブエの鉱山と地上精錬の価格体系が崩れる。
-ただし所有権の国内法（米国 2015年、ルクセンブルク 2017年、日本 2021年）はすでに抽出物の私有を認めている。<sup>8</sup><sup>9</sup><sup>10</sup><sup>11</sup><sup>12</sup></p>
+<p><strong class="hit">「金・PGMが鉄並み」は年間需給の桁では起きない。</strong>
+世界のPt鉱山生産は2024年推定で17万kgである。
+Johnson Mattheyの2025年見通しではPtは約736千トロイオンス（約22.9トン）の供給不足である。
+不足を補う供給増でも価格を熱延コイル級まで落とすには足りない。
+所有権の国内法は抽出物の私有を認める。対象は米国2015年法・ルクセンブルク2017年法・日本2021年法である。いずれも帰還質量を増やさない。<sup>1</sup><sup>7</sup><sup>8</sup><sup>9</sup><sup>10</sup></p>
 </div>
 
 <div class="note">
 関連する既存ページ:
-<a class="il" href="../chapters/04_critical-materials.html">素材と資源の寡占構造</a>（精錬立地が寡占を決める、という章。地上の PGM 供給を扱う時はここへ接続する）／
+<a class="il" href="../chapters/04_critical-materials.html">素材と資源の寡占構造</a>（精錬立地が寡占を決める、という章。地上のPGM供給を扱う時はここへ接続する）／
 <a class="il" href="../../016_finance/chapters/03_rates-and-macro-prices.html">金利とマクロ価格</a>（金属価格の節）。同じ数字を二重に置かない。
 </div>
 
-<h2><span class="num">02</span>Autonomy-1 と Solo<span class="en">Autonomy-1 and Solo</span></h2>
-
-<p>AstroForge は 2022年創業の小惑星資源スタートアップである。TechCrunch の報道では累計調達は 5,600万USD とされる（single-source）。
-ミッション列は、軌道上精錬実証の Brokkr-1、深宇宙の Odin、小惑星ランデブーの DeepSpace-2、そして自律実証の Autonomy-1 である。<sup>2</sup><sup>3</sup></p>
-
-<h3>Solo の技術的な中身</h3>
-
-<p>公式説明では、Solo は既存の決定論的・物理ベース飛行ソフトを置き換えない「intelligence layer」である。
-Sense → Decide → Act の連鎖で、機体状態を取り込み、オフノミナルを判定し、サブシステムを協調させる。
-地上オペレータが受信できるテレメトリは深宇宙通信の帯域で削られるのに対し、Solo は機上の全データにアクセスできる、というのが AstroForge の主張である。<sup>1</sup><sup>13</sup></p>
-
-<p>TechCrunch によると、スタックは (1) 伝統的制御、(2) 電源や航法などサブシステム向けの学習モデル、(3) 約 2,500 センサを入力とする全体の知能層、の3層である。
-CEO の Matt Gialich は Autonomy-1 に地上受信可能な無線を載せない方針を公言しているが、飛行までに方針が変わる可能性も自ら認めている（single-source）。
-地上局網を自前で持つ場合の概算として、世界に5基の大型アンテナを置く費用を「およそ 2億USD」と述べている（single-source、推定発言）。
-公式ブログでは地上運用（アンテナ時間・テレメトリ解析・指令）がミッション費用の「ほぼ3分の1」を占めるとしている。<sup>1</sup><sup>2</sup></p>
-
-<h3>ミッション列と結果</h3>
-
-<div class="tbl-scroll"><table>
-  <thead><tr><th>ミッション</th><th>時期</th><th>目的</th><th>結果（as of 2026-09-25）</th></tr></thead>
-  <tbody>
-    <tr><td>Brokkr-1</td><td>2023年4月</td><td>軌道上での精錬技術デモ（CubeSat）</td><td>通信問題で精錬デモ未達<sup>3</sup></td></tr>
-    <tr><td>Odin</td><td>2025年2月27日打上げ</td><td>近地球小惑星へのフライバイ観測。公称 100 kg、公式サイトは 300,000 km 飛行を表示</td><td>地上局・通信の問題で制御不能。主目的未達<sup>2</sup><sup>3</sup></td></tr>
-    <tr><td>DeepSpace-2</td><td>2026年第4四半期予定</td><td>惑星重力井戸外での商業ランデブー初。Solo を shadow mode で搭載</td><td>未飛行<sup>1</sup><sup>14</sup></td></tr>
-    <tr><td>Autonomy-1</td><td>2027年初頭予定</td><td>分離後ゼロ指令。NASA Goddard の COMPASS（太陽物理）を搭載。Stoke Space Nova Pathfinder 初号機</td><td>未飛行<sup>1</sup><sup>3</sup></td></tr>
-  </tbody>
-  <caption>公式発表と Space.com / TechCrunch の整理。Autonomy-1 の軌道は地球近傍の自律実証であり、小惑星への採掘・帰還は含まない。</caption>
-</table></div>
-
-<p>要するに、現時点で AstroForge が実証したのは「小惑星へ行くこと」でも「金属を持ち帰ること」でもなく、通信制約下で機体を失った経験から、地上依存を切るモデルへ振り切ったことである。</p>
-
-<h2><span class="num">03</span>何を採るのか<span class="en">What to Mine</span></h2>
-
-<p>AstroForge の公開メッセージは一貫して、金属に富む小惑星の白金族金属（PGM）である。
-NASA の Psyche ミッションは主帯の金属富化小惑星 (16) Psyche を探査中で、到着は 2029年8月頃、金属体積比は近年の推定で 30〜60% の範囲にある。
-ただし Psyche 自体の PGM 品位の実測値は未取得である。商業採掘の品位仮説は、鉄隕石の分析に依存する。<sup>15</sup><sup>16</sup></p>
-
-<h3>M型・鉄隕石の PGM 品位</h3>
-
-<p>Cannon, Gialich, Acain（2023）は鉄隕石の統計サンプリングで総 PGM 品位の分布を出し、中央値（50パーセンタイル）を 40.78 ppm、90パーセンタイルを 107.86 ppm とした。
-上限付近として IIAB Avce の約 230 ppm を示し、Kargel（1994）が Ir から他元素をコンドライト比で外挿して得た「300 ppm 超」は実測と整合しない、と結論している。
-同論文の共著者に AstroForge の Gialich と Acain が名を連ねる点は利害関係として明記する。<sup>17</sup></p>
-
-<div class="tbl-scroll"><table>
-  <thead><tr><th>指標</th><th>値</th><th>時点・注</th></tr></thead>
-  <tbody>
-    <tr><td>鉄隕石 PGM・10パーセンタイル</td><td class="n">14.70 ppm</td><td>Cannon et al. 2023</td></tr>
-    <tr class="em"><td>鉄隕石 PGM・中央値</td><td class="n">40.78 ppm</td><td>同上。以降の計算の基準</td></tr>
-    <tr><td>鉄隕石 PGM・90パーセンタイル</td><td class="n">107.86 ppm</td><td>同上</td></tr>
-    <tr><td>上限付近の実測例</td><td class="n">約 230 ppm</td><td>IIAB Avce（論文の整理）</td></tr>
-    <tr><td>地上鉱床の中央値（比較）</td><td class="n">3.86 ppm</td><td>同論文 Table 2</td></tr>
-    <tr><td>(16) Psyche の金属体積比</td><td class="n">30〜60%</td><td>NASA 公開説明。PGM 品位は N/A</td></tr>
-  </tbody>
-  <caption>ppm は質量百万分率。1 ppm ＝ 1 g/t。中央値 40.78 ppm なら、純 PGM 1 kg を得るのに金属合金約 24.5 トンが要る（1 / 40.78e-6）。</caption>
-</table></div>
-
-<h3>地球帰還までの経路</h3>
-
-<p>経路は少なくとも4段に分かれる。(1) 近地球小惑星への到達、(2) 表面または内部からの採取・選鉱、(3) 機上精錬または高品位濃縮、(4) 地球への再突入・回収。
-政府ミッションは (1) とごく少量の (2)(4) までであり、(3) の商業スケールは未実証である。
-OSIRIS-REx は Bennu（炭素質）から 121.6 g、はやぶさ2 はリュウグウから 5.424±0.217 g を回収した。
-いずれも PGM 富化体ではなく、科学サンプルである。Psyche はランデブーと周回観測であり、サンプルリターンを含まない。<sup>6</sup><sup>7</sup><sup>15</sup></p>
-
-<div class="risk">
-<strong>回収可能量の一次数字は AstroForge が開示していない。</strong>
-公式サイトは「1小惑星で地球を200年供給できる」等のマーケ文言を置くが、対象天体名・推定品位・ミッションあたりの帰還質量は公表されていない（非開示）。
-本稿の損益分岐は、帰還する純 PGM 質量を変数として計算する。
-</div>
-
-<h2><span class="num">04</span>損益分岐の計算<span class="en">Break-Even Math</span></h2>
+<h2><span class="num">02</span>期待値で見る損益分岐<span class="en">Expected Break-Even</span></h2>
 
 <p>使う定数を先に固定する。読者が同じ式で再計算できる形にする。</p>
 
 <div class="tbl-scroll"><table>
   <thead><tr><th>記号</th><th>定義</th><th>採用値</th><th>出典</th></tr></thead>
   <tbody>
-    <tr><td>P_Pt</td><td>白金の年平均価格</td><td class="n">950 USD/トロイオンス（2024）</td><td>USGS MCS 2025<sup>8</sup></td></tr>
+    <tr><td>P_Pt</td><td>白金の年平均価格</td><td class="n">950 USD/トロイオンス（2024）</td><td>USGS MCS 2025<sup>1</sup></td></tr>
     <tr><td>m_oz</td><td>1トロイオンスの質量</td><td class="n">31.1034768 g</td><td>計量定義</td></tr>
     <tr><td>p_Pt</td><td>白金のキロ単価</td><td class="n">950 / 0.0311034768 ＝ 30,543 USD/kg</td><td>筆者換算</td></tr>
-    <tr><td>P_Pd</td><td>パラジウム年平均価格</td><td class="n">980 USD/トロイオンス（2024）</td><td>USGS<sup>8</sup></td></tr>
-    <tr><td>p_Pd</td><td>パラジウムのキロ単価</td><td class="n">31,508 USD/kg</td><td>筆者換算</td></tr>
-    <tr><td>r_2026</td><td>SpaceX rideshare 公表単価</td><td class="n">7,000 USD/kg（2026年打上げ、50 kg 起算）</td><td>NewSpace Market が spacex.com を2026-08に記録<sup>4</sup></td></tr>
-    <tr><td>L_100</td><td>100 kg の SSO rideshare 費用</td><td class="n">350,000 + 50×7,000 ＝ 700,000 USD</td><td>「50 kg で 35万USD、追加は kg 単価」の表記に基づく推定<sup>4</sup></td></tr>
-    <tr><td>g</td><td>鉄隕石 PGM 中央値</td><td class="n">40.78 ppm</td><td>Cannon et al.<sup>17</sup></td></tr>
+    <tr><td>C</td><td>ミッション総費用（作業仮定）</td><td class="n">1,000万USD</td><td>推定。公式総額は非開示<sup>4</sup></td></tr>
+    <tr><td>r_2026</td><td>SpaceX rideshare公表単価</td><td class="n">7,000 USD/kg（2026年打上げ、50 kg起算）</td><td>NewSpace Market記録<sup>11</sup></td></tr>
+    <tr><td>g</td><td>鉄隕石PGM中央値</td><td class="n">40.78 ppm</td><td>Cannon et al. 2023<sup>12</sup></td></tr>
   </tbody>
-  <caption>rideshare 価格は SSO / LEO の片道。深宇宙投入・帰還カプセル・機上精錬の費用はここに含まれない。</caption>
+  <caption>rideshare価格はSSO / LEOの片道である。深宇宙投入・帰還カプセル・機上精錬・保険は含まれない。</caption>
 </table></div>
 
-<p>損益分岐質量の式は次である。</p>
-
-<p style="text-align:center;font-family:ui-monospace,Menlo,monospace;font-size:14px;margin:18px 0">
-M_be (kg) ＝ C_mission (USD) ／ p_metal (USD/kg)
-</p>
+<p>静的分岐質量は M_be ＝ C / p_Pt である。期待値を入れると M_be(s) ＝ C / (p_Pt × s) になる。sはミッション成功率である。</p>
 
 <div class="tbl-scroll"><table>
-  <thead><tr><th>シナリオ</th><th>C_mission</th><th>仮定の中身</th><th>M_be（純 Pt）</th><th>同質量を中央値品位で掘る原料</th></tr></thead>
+  <thead><tr><th>成功率 s</th><th>M_be（純Pt）</th><th>中央値品位での原料質量</th><th>読み方</th></tr></thead>
   <tbody>
-    <tr><td>A. 片道 rideshare のみ</td><td class="n">70万USD</td><td>100 kg・SSO。帰還なし</td><td class="n">22.9 kg</td><td class="n">約 562 トン</td></tr>
-    <tr><td>B. 地上運用を含む低位</td><td class="n">210万USD</td><td>A の3倍（公式「地上運用が約1/3」の逆算）。推定</td><td class="n">68.8 kg</td><td class="n">約 1,690 トン</td></tr>
-    <tr class="em"><td>C. 商業初号機の仮置き</td><td class="n">1,000万USD</td><td>機体・深宇宙投入・運用を丸めた作業仮定。推定</td><td class="n">327 kg</td><td class="n">約 8,020 トン</td></tr>
-    <tr><td>D. 中位</td><td class="n">5,000万USD</td><td>同上。推定</td><td class="n">1,637 kg</td><td class="n">約 40,100 トン</td></tr>
-    <tr><td>E. 高位</td><td class="n">1億USD</td><td>同上。推定</td><td class="n">3,274 kg</td><td class="n">約 80,300 トン</td></tr>
-    <tr><td>参考. OSIRIS-REx</td><td class="n">11.6億USD</td><td>科学ミッション全寿命。帰還 121.6 g（非PGM）</td><td class="n">—</td><td class="n">グラム級。商業比較不可</td></tr>
+    <tr><td class="n">1.0（静的）</td><td class="n">327 kg</td><td class="n">約8,020 トン</td><td>旧稿が置いた下限。失敗を除外</td></tr>
+    <tr class="em"><td class="n">0.5</td><td class="n">655 kg</td><td class="n">約16,000 トン</td><td>2回に1回成功する想定</td></tr>
+    <tr><td class="n">0.2</td><td class="n">1,637 kg</td><td class="n">約40,100 トン</td><td>5回に1回</td></tr>
+    <tr><td class="n">0.1</td><td class="n">3,274 kg</td><td class="n">約80,300 トン</td><td>10回に1回</td></tr>
+    <tr><td class="n">観測（飛行済み）</td><td class="n">—</td><td class="n">—</td><td>主目的達成 0/2。sの点推定は0</td></tr>
   </tbody>
-  <caption>原料質量 ＝ M_be / (40.78 × 10<sup>−6</sup>)。選鉱回収率・精錬歩留まりは 100% と置いている（楽観側）。実際はさらに原料が要る。</caption>
+  <caption>原料質量 ＝ M_be / (40.78 × 10<sup>−6</sup>)。選鉱回収率・精錬歩留まりは100%と置いている（楽観側）。C＝1,000万USD、p＝30,543 USD/kg。327 kg／655 kgは真のNPV分岐ではなく、仮定Cに対する感度である。</caption>
 </table></div>
 
-<figure>
-<svg viewBox="0 0 720 320" role="img" aria-label="ミッション費用に対する純Ptの損益分岐質量">
-  <text x="12" y="22" font-size="13" font-weight="700" fill="#1a1a1a">感度：ミッション総費用と損益分岐質量（純 Pt、30,543 USD/kg）</text>
+<p>品位と成功率の感度を、同じ仮定の下で比率比較する。純金属収入 E[R]=p×M×s に品位は入らない。品位が動かすのは必要原料質量である。</p>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>比較</th><th>操作</th><th>結果の変化率</th><th>対象変数</th></tr></thead>
+  <tbody>
+    <tr class="em"><td>成功率ショック</td><td>s: 1.0 → 0.5</td><td class="n">必要純Pt質量 +100%（327→655 kg）</td><td>帰還質量×成功率（収入側）</td></tr>
+    <tr><td>品位ショック</td><td>g: 40.78 → 107.86 ppm</td><td class="n">必要原料質量 約−62%（8,020→3,033 トン）</td><td>原料・機上処理規模（費用側の代理）</td></tr>
+    <tr><td>地上運用ゼロ（上限）</td><td>Cの約1/3を除去</td><td class="n">必要純Pt質量 約−33%（327→218 kg）</td><td>費用C（公式比率・single-source）</td></tr>
+  </tbody>
+  <caption>収入側と原料規模の代理では、変化率の絶対値は成功率ショックが大きい。品位ショックは原料を減らすが、必要純金属質量 M_be 自体は変えない。品位依存の選鉱・精錬費用が未知のため、費用関数全体での説明力の優劣には伸ばせない。地上運用ゼロは公式比率を上限とした仮想である。<sup>4</sup><sup>12</sup></caption>
+</table></div>
+
+<figure class="tb-fig">
+<svg viewBox="0 0 720 320" role="img" aria-label="成功率に対する純Ptの期待損益分岐質量">
+  <text x="12" y="22" font-size="13" font-weight="700" fill="#1a1a1a">感度：成功率 s と期待分岐質量（C＝1,000万USD、純Pt 30,543 USD/kg）</text>
   <line x1="70" y1="50" x2="70" y2="270" stroke="#E5E2DA"/>
   <line x1="70" y1="270" x2="680" y2="270" stroke="#E5E2DA"/>
-  <text x="20" y="160" font-size="11" fill="#555" transform="rotate(-90 20 160)">M_be (kg)</text>
-  <text x="360" y="308" font-size="11" fill="#555" text-anchor="middle">C_mission（百万USD）</text>
-  <!-- grid -->
+  <text x="20" y="160" font-size="11" fill="#555" transform="rotate(-90 20 160)">M_be(s) (kg)</text>
+  <text x="360" y="308" font-size="11" fill="#555" text-anchor="middle">成功率 s</text>
   <line x1="70" y1="215" x2="680" y2="215" stroke="#EDEBE5"/>
   <line x1="70" y1="160" x2="680" y2="160" stroke="#EDEBE5"/>
   <line x1="70" y1="105" x2="680" y2="105" stroke="#EDEBE5"/>
@@ -350,193 +314,283 @@ M_be (kg) ＝ C_mission (USD) ／ p_metal (USD/kg)
   <text x="62" y="219" font-size="10" fill="#8a8a8a" text-anchor="end">1000</text>
   <text x="62" y="164" font-size="10" fill="#8a8a8a" text-anchor="end">2000</text>
   <text x="62" y="109" font-size="10" fill="#8a8a8a" text-anchor="end">3000</text>
-  <text x="131" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">10</text>
-  <text x="253" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">30</text>
-  <text x="375" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">50</text>
-  <text x="497" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">70</text>
-  <text x="619" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">100</text>
-  <!-- line: M = C*1e6/30543; scale x: 0-100M -> 70-680; y: 0-3500kg -> 270-50 -->
-  <!-- points: 10M->327kg, 30M->982, 50M->1637, 70M->2292, 100M->3274 -->
+  <text x="131" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">0.1</text>
+  <text x="253" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">0.2</text>
+  <text x="375" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">0.5</text>
+  <text x="497" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">0.8</text>
+  <text x="619" y="286" font-size="10" fill="#8a8a8a" text-anchor="middle">1.0</text>
+  <!-- M: 0.1->3274, 0.2->1637, 0.5->655, 0.8->409, 1.0->327; y: 0-3500 -> 270-50 -->
   <polyline fill="none" stroke="#2563EB" stroke-width="2.5"
-    points="131,250 253,208 375,167 497,126 619,64"/>
-  <circle cx="131" cy="250" r="4" fill="#2563EB"/>
-  <circle cx="375" cy="167" r="4" fill="#2563EB"/>
-  <circle cx="619" cy="64" r="4" fill="#2563EB"/>
-  <text x="140" y="242" font-size="11" fill="#1a1a1a">327 kg @ 1,000万</text>
-  <text x="384" y="160" font-size="11" fill="#1a1a1a">1,637 kg @ 5,000万</text>
-  <text x="520" y="58" font-size="11" fill="#1a1a1a">3,274 kg @ 1億</text>
-  <!-- reference: OSIRIS return 0.1216 kg at absurd cost - horizontal near zero -->
+    points="131,64 253,167 375,229 497,244 619,250"/>
+  <circle cx="131" cy="64" r="4" fill="#2563EB"/>
+  <circle cx="375" cy="229" r="4" fill="#2563EB"/>
+  <circle cx="619" cy="250" r="4" fill="#2563EB"/>
+  <text x="140" y="58" font-size="11" fill="#1a1a1a">3,274 kg @ s=0.1</text>
+  <text x="384" y="222" font-size="11" fill="#1a1a1a">655 kg @ s=0.5</text>
+  <text x="520" y="244" font-size="11" fill="#1a1a1a">327 kg @ s=1</text>
   <line x1="70" y1="268" x2="680" y2="268" stroke="#b91c1c" stroke-dasharray="4 3" stroke-width="1.5"/>
-  <text x="680" y="262" font-size="10" fill="#b91c1c" text-anchor="end">OSIRIS-REx 帰還 0.12 kg（参考）</text>
+  <text x="680" y="262" font-size="10" fill="#b91c1c" text-anchor="end">OSIRIS-REx帰還 0.12 kg（参考）</text>
 </svg>
-<figcaption>直線は M_be ＝ C / 30,543。価格が半減すれば傾きは2倍になる。赤の破線は政府サンプルリターンの帰還質量スケールで、商業損益分岐とは桁が違う。</figcaption>
+<figcaption>曲線は M_be(s) ＝ 10,000,000 / (30,543 × s)。価格が2倍になっても、sが半減すれば分岐質量は変わらない。赤の破線は政府サンプルリターンの帰還質量である。</figcaption>
 </figure>
 
-<p>比較のため、Pd だけで埋める場合は p_Pd ＝ 31,508 USD/kg なので、シナリオ C の分岐質量は約 317 kg とほぼ同じである。
-Rh は USGS の 2024年平均が 4,600 USD/トロイオンス（約 147,900 USD/kg）と高いが、世界供給は小さく、ミッションの主産物として置く根拠はない。<sup>8</sup></p>
+<figure class="tb-fig tb-photo tb-ph2">
+<img src="../img/ame-platinum-crystals.jpg" width="1200" height="841" loading="lazy" alt="気相成長で得た純白金の結晶">
+<img src="../img/ame-falcon9-transporter.jpg" width="1200" height="799" loading="lazy" alt="Falcon 9によるTransporter-6打上げ">
+<figcaption>左は気相成長で得た純白金の結晶である。右は2023年1月3日、ケープカナベラルから打ち上げられたFalcon 9 Transporter-6である。rideshare単価はLEO片道の代理であり、深宇宙投入と地球帰還の費用を含まない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Platinum_crystals.jpg">Periodictableru</a>／CC BY 3.0／Wikimedia Commons　／　<a href="https://commons.wikimedia.org/wiki/File:Falcon_9_Transporter-6_Launch_(7805962).jpg">U.S. Space Force / Joshua Conti</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
+<figure class="tb-fig tb-photo tb-ph2">
+<img src="../img/ame-osiris-rex-capsule.jpg" width="1200" height="799" loading="lazy" alt="ユタ砂漠に着地したOSIRIS-REx試料帰還カプセル">
+<img src="../img/ame-bennu.jpg" width="1200" height="1134" loading="lazy" alt="小惑星ベヌーのモザイク画像">
+<figcaption>左は2023年9月24日、ユタ試験訓練場に着地したOSIRIS-RExの試料帰還カプセルである。右は同機が撮影した小惑星ベヌーである。帰還試料は121.6 gであり、商業の静的分岐327 kgとは約2,700倍の差がある。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:OSIRIS-REx_Sample_Return_(NHQ202309240003).jpg">NASA / Keegan Barber</a>／Public domain／Wikimedia Commons　／　<a href="https://commons.wikimedia.org/wiki/File:BennuAsteroid.jpg">NASA/Goddard/University of Arizona</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="note">
-<strong>片道 rideshare と帰還の混同を避ける。</strong>
-シナリオ A の 22.9 kg は「LEO に 100 kg を上げる費用を Pt で払う」計算にすぎない。
-小惑星から地球へ戻すデルタV、再突入熱防護、回収運用は rideshare 価格に含まれない。
-したがって商業採掘の現実的な下限はシナリオ C 以降の桁であると読む。
+<strong>片道rideshareと帰還の混同を避ける。</strong>
+100 kgをSSOへ上げる費用（約70万USD）をPtで補う計算は約22.9 kgになる。これはLEO片道である。
+小惑星から地球へ戻すデルタVと再突入熱防護は含まれない。回収運用と保険も含まれない。
+商業採掘の現実的な下限は、成功率を入れたシナリオ以降の桁である。
 </div>
 
-<h2><span class="num">05</span>先行2社の顛末<span class="en">Why the First Wave Ended</span></h2>
+<div class="risk">
+<strong>回収可能量の一次数字はAstroForgeが開示していない。</strong>
+公式サイトは「1小惑星で地球を200年供給できる」等の文言を置くが、対象天体名・推定品位・ミッションあたりの帰還質量は公表されていない（非開示）。
+ミッション総費用1,000万USDも作業仮定である。成功率と精錬歩留まりも非開示である。
+上表の327 kg／655 kgは、仮定Cに対する感度であり、深宇宙投入・帰還・保険を含む真のNPV分岐ではない。
+</div>
 
-<p>2010年代前半の小惑星採掘ブームを代表した Planetary Resources と Deep Space Industries は、いずれも採掘そのものの失敗ではなく、資金と事業焦点の崩壊で終わった。</p>
+<h2><span class="num">03</span>自律運用が変える費用経路<span class="en">Autonomy Cuts Cost, Not Yet Success</span></h2>
+
+<p>AstroForgeは2022年創業の小惑星資源スタートアップである。TechCrunchの報道では累計調達は5,600万USDとされる（single-source）。
+ミッション列は次の4本である。軌道上精錬実証のBrokkr-1。深宇宙のOdin。小惑星ランデブーのDeepSpace-2。自律実証のAutonomy-1。<sup>5</sup><sup>6</sup></p>
 
 <div class="tbl-scroll"><table>
-  <thead><tr><th>項目</th><th>Planetary Resources</th><th>Deep Space Industries</th></tr></thead>
+  <thead><tr><th>ミッション</th><th>時期</th><th>目的</th><th>結果（as of 2026-09-25）</th></tr></thead>
   <tbody>
-    <tr><td>設立の公的起点</td><td>2012年（現行体制）</td><td>2012年</td></tr>
-    <tr><td>当初の対象</td><td>近地球小惑星の水・PGM</td><td>小惑星の水氷などを小型機で探査・抽出</td></tr>
-    <tr><td>飛行実績</td><td>Arkyd-3R、Arkyd-6A（技術実証）</td><td>Comet 推進系を他社衛星に搭載</td></tr>
-    <tr><td>詰まった主因</td><td><strong>資金</strong>。想定ラウンド不成立、人員削減、資産売却検討</td><td><strong>事業焦点</strong>。採掘より小型衛星推進へピボットした末に買収</td></tr>
-    <tr><td>終了形態</td><td>2018年10月、ConsenSys が資産買収</td><td>2019年1月、Bradford Space が買収。推進事業へ再編</td></tr>
-    <tr><td>法制度の寄与</td><td>米国 2015年法は同社活動期に成立。法が無いことが直接の死因ではない</td><td>同上</td></tr>
+    <tr><td>Brokkr-1</td><td>2023年4月</td><td>軌道上での精錬技術デモ（CubeSat）</td><td>通信問題で精錬デモ未達<sup>6</sup><sup>13</sup></td></tr>
+    <tr><td>Odin</td><td>2025年2月26〜27日打上げ</td><td>近地球小惑星へのフライバイ観測</td><td>主目的未達。公式は地上局不具合に加え、太陽電池展開・姿勢・設定問題を挙げる<sup>5</sup><sup>6</sup><sup>23</sup></td></tr>
+    <tr><td>DeepSpace-2</td><td>2026年第4四半期予定</td><td>惑星重力井戸外での商業ランデブー初。Soloをshadow modeで搭載</td><td>未飛行<sup>4</sup><sup>14</sup></td></tr>
+    <tr><td>Autonomy-1</td><td>2027年初頭予定</td><td>分離後ゼロ指令。NASA GoddardのCOMPASSを搭載。Stoke Space Nova Pathfinder初号機</td><td>未飛行<sup>4</sup><sup>6</sup></td></tr>
   </tbody>
-  <caption>GeekWire および SpaceNews の報道整理。買収額は両件とも非開示。<sup>18</sup><sup>19</sup></caption>
+  <caption>公式発表とSpace.com / TechCrunchの整理。Autonomy-1の軌道は地球近傍の自律実証であり、小惑星への採掘・帰還は含まない。</caption>
 </table></div>
 
-<p>技術の壁は「全く飛べなかった」ではない。両社とも軌道上のハードは持った。
-ただし採掘から収益までの距離が長く、NASA の探査優先が月へ移る中で、長期ビジョンだけでは次のラウンドが埋まらなかった。
-法制度はむしろ整備が進んだ時期であり、死因の第1因子ではない。</p>
+<p>公式説明では、Soloは既存の決定論的・物理ベース飛行ソフトを置き換えないintelligence layerである。
+地上運用（アンテナ時間・テレメトリ解析・指令）がミッション費用の約3分の1を占める、というのがAstroForgeの主張である（single-source）。
+TechCrunchによると、CEOのMatt Gialichは地上局網を自前で持つ場合の概算を述べた。世界に5基の大型アンテナを置く費用を約2億USDとしている（single-source、推定発言）。<sup>4</sup><sup>5</sup></p>
 
-<h2><span class="num">06</span>供給ショックが起きた場合の地上への影響<span class="en">If Space Supply Hits Earth</span></h2>
+<p>自律運用が期待分岐質量 M_be=C/(p×s) を動かす経路は2つある。分子のCを下げるか、分母のsを上げるかである。公開事実でどちらが確認できるかを分ける。</p>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>経路</th><th>仕組み</th><th>公開事実との整合</th><th>感度の上限（仮定C=1,000万USD）</th></tr></thead>
+  <tbody>
+    <tr class="em"><td>費用削減</td><td>アップリンクと地上オペを減らし、地上運用費（公称約1/3）を削る</td><td>Autonomy-1の設計目的と一致する。感度は算術できる</td><td>Cが2/3になれば M_be は327→218 kg（約−33%）</td></tr>
+    <tr><td>成功率改善</td><td>機上判断・冗長化・設計改善でsを上げる</td><td>Odin公式は地上局に加え太陽電池・姿勢・設定を挙げ、設計改善で成功確率を高めると主張。Autonomy-1単体の寄与は未分離</td><td>s改善の一次証拠なし。感度は大きいが経路は判定不能</td></tr>
+  </tbody>
+  <caption>費用削減経路は公式比率から算術できる。成功率経路は未飛行であり、Odinの複合原因記述があるため「費用削減に限る」も「成功率を上げる」も支持できない。<sup>4</sup><sup>5</sup><sup>6</sup><sup>23</sup></caption>
+</table></div>
+
+<figure class="tb-fig tb-photo tb-ph2">
+<img src="../img/ame-goldstone-dsn.jpg" width="1200" height="802" loading="lazy" alt="ゴールドストーン深宇宙通信施設のビーム導波路アンテナ">
+<img src="../img/ame-osiris-rex-tag.jpg" width="1024" height="1024" loading="lazy" alt="OSIRIS-RExがベヌー表面に接触した直後の画像">
+<figcaption>左はゴールドストーン深宇宙通信施設の34 m級ビーム導波路アンテナ群である。地上局の帯域と予約枠が、公式の地上運用費（約1/3）の物理的な対応物である。右はOSIRIS-RExがベヌー表面のNightingale地点に接触した直後の画像である。同機の最終降下から試料採取は自律で完了した事例として、AstroForgeも引用する。ただしそれは降下シーケンスの自律であり、通信捕捉失敗の回避とは別である。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Goldstone_Deep_Space_Communication_Complex_-_GPN-2000-000506.jpg">NASA</a>／Public domain／Wikimedia Commons　／　<a href="https://commons.wikimedia.org/wiki/File:OSIRIS-REx_landing.jpg">NASA/Goddard/University of Arizona</a>／Public domain／Wikimedia Commons</span></figcaption>
+</figure>
+
+<p>したがって、現時点で算術できるのは地上運用費を削る分子Cの経路である。
+成功率sの経路は一次証拠がなく、Odin公式が複合原因と設計改善による成功率向上を主張しているため、「費用削減に限る」とも言えない。
+契約獲得確率の上昇は、費用削減または成功率改善のいずれかが飛行後に開示されてからでないと、独立した経路として置けない。</p>
+
+<h2><span class="num">04</span>品位が動かすのは原料規模である<span class="en">Grade Moves Feedstock Mass</span></h2>
+
+<p>AstroForgeの公開メッセージは、金属に富む小惑星の白金族金属（PGM）である。
+NASAのPsycheミッションは主帯の金属富化小惑星(16) Psycheを探査中で、到着は2029年8月頃、金属体積比は近年の推定で30〜60%の範囲にある。
+ただしPsyche自体のPGM品位の実測値は未取得である。商業採掘の品位仮説は、鉄隕石の分析に依存する。<sup>15</sup><sup>16</sup></p>
+
+<p>Cannon, Gialich, Acain（2023）は鉄隕石の統計サンプリングで総PGM品位の分布を出し、中央値（50パーセンタイル）を40.78 ppm、90パーセンタイルを107.86 ppmとした。
+上限付近としてIIAB Avceの約230 ppmを示し、Kargel（1994）がIrから他元素をコンドライト比で外挿して得た「300 ppm超」は実測と整合しない、と結論している。
+同論文の共著者にAstroForgeのGialichとAcainが名を連ねる点は利害関係として明記する。<sup>12</sup></p>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>指標</th><th>値</th><th>時点・注</th></tr></thead>
+  <tbody>
+    <tr><td>鉄隕石PGM・10パーセンタイル</td><td class="n">14.70 ppm</td><td>Cannon et al. 2023</td></tr>
+    <tr class="em"><td>鉄隕石PGM・中央値</td><td class="n">40.78 ppm</td><td>同上。以降の計算の基準</td></tr>
+    <tr><td>鉄隕石PGM・90パーセンタイル</td><td class="n">107.86 ppm</td><td>同上</td></tr>
+    <tr><td>上限付近の実測例</td><td class="n">約230 ppm</td><td>IIAB Avce（論文の整理）</td></tr>
+    <tr><td>地上鉱床の中央値（比較）</td><td class="n">3.86 ppm</td><td>同論文Table 2</td></tr>
+    <tr><td>(16) Psycheの金属体積比</td><td class="n">30〜60%</td><td>NASA公開説明。PGM品位はN/A</td></tr>
+  </tbody>
+  <caption>ppmは質量百万分率。1 ppm＝1 g/t。中央値40.78 ppmなら、純PGM 1 kgを得るのに金属合金約24.5トンが要る。</caption>
+</table></div>
+
+<figure class="tb-fig tb-photo tb-ph2">
+<img src="../img/ame-sikhote-alin.jpg" width="1200" height="1200" loading="lazy" alt="シホテアリン鉄隕石の個体">
+<img src="../img/ame-ryugu.jpg" width="724" height="1200" loading="lazy" alt="はやぶさ2が撮影した小惑星リュウグウ">
+<figcaption>左はシホテアリン鉄隕石の個体（約3.3 kg）である。商業小惑星PGMの品位仮説は、こうした鉄隕石の分析分布に依存する。右ははやぶさ2の広角光学航法カメラが撮影したリュウグウである。同機の帰還試料は約5 gであり、品位が高くても帰還質量が小さければ商業分岐には届かない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Sikhote-Alin_meteorite,_3.3kg.jpg">Steve Jurvetson</a>／CC BY 2.0／Wikimedia Commons　／　<a href="https://commons.wikimedia.org/wiki/File:Images_of_asteroid_Ryugu_from_the_wide_angle_Optical_Navigation_Cameras_(ONC-W1_and_ONC-W2)_via_Hayabusa2.jpg">JAXAほか</a>／CC BY 4.0／Wikimedia Commons</span></figcaption>
+</figure>
+
+<p>経路は少なくとも4段に分かれる。(1)近地球小惑星への到達。(2)表面または内部からの採取・選鉱。(3)機上精錬または高品位濃縮。(4)地球への再突入・回収。
+政府ミッションは(1)とごく少量の(2)(4)までであり、(3)の商業スケールは未実証である。
+品位が中央値から90パーセンタイルへ上がれば、必要な原料質量は約62%減る。
+収入側・原料規模の代理では、この変化は成功率半減（必要純金属+100%）より小さい。
+ただし選鉱・精錬の品位依存費用と歩留まりが非開示であるため、費用関数全体でどちらが支配するかは判定不能である。判定に必要なデータは、品位別の選鉱費・精錬費・歩留まり、およびそれらと成功率・帰還質量の費用弾性である。</p>
+
+<h2><span class="num">05</span>年間需給の桁と「鉄並み」<span class="en">Annual Supply vs Steel Prices</span></h2>
 
 <p>価格が「鉄並み」になる条件を、年間需給の実数から先に置く。</p>
 
 <div class="tbl-scroll"><table>
   <thead><tr><th>指標</th><th>数量</th><th>時点</th><th>出典</th></tr></thead>
   <tbody>
-    <tr><td>世界 Pt 鉱山生産</td><td class="n">170,000 kg</td><td>2024年推定</td><td>USGS<sup>8</sup></td></tr>
-    <tr><td>世界 Pd 鉱山生産</td><td class="n">190,000 kg</td><td>2024年推定</td><td>USGS<sup>8</sup></td></tr>
-    <tr><td>うち南アフリカ Pt</td><td class="n">120,000 kg</td><td>2024年推定</td><td>USGS<sup>8</sup></td></tr>
-    <tr><td>うちロシア Pd</td><td class="n">75,000 kg</td><td>2024年推定</td><td>USGS<sup>8</sup></td></tr>
-    <tr><td>ジンバブエ Pt＋Pd</td><td class="n">19,000 + 15,000 kg</td><td>2024年推定</td><td>USGS<sup>8</sup></td></tr>
-    <tr><td>JM Pt 総供給（一次＋二次）</td><td class="n">7,095 千トロイオンス ≈ 221 トン</td><td>2024</td><td>JM 2025報告<sup>9</sup></td></tr>
-    <tr><td>JM Pt 総需要</td><td class="n">7,869 千トロイオンス ≈ 245 トン</td><td>2024</td><td>JM<sup>9</sup></td></tr>
-    <tr><td>JM Pt 需給ギャップ（2025見通し）</td><td class="n">不足 736 千トロイオンス ≈ 22.9 トン</td><td>2025見通し</td><td>JM<sup>9</sup></td></tr>
-    <tr><td>鉄鉱石 62% Fe 先物</td><td class="n">約 102 USD/トン ≈ 0.10 USD/kg</td><td>2026年頃の市場表示</td><td>公開相場（single-source）<sup>20</sup></td></tr>
-    <tr><td>熱延コイル（インドネシア FOB）</td><td class="n">523 USD/トン ≈ 0.52 USD/kg</td><td>2026-09-24</td><td>SMM<sup>21</sup></td></tr>
+    <tr><td>世界Pt鉱山生産</td><td class="n">170,000 kg</td><td>2024年推定</td><td>USGS<sup>1</sup></td></tr>
+    <tr><td>世界Pd鉱山生産</td><td class="n">190,000 kg</td><td>2024年推定</td><td>USGS<sup>1</sup></td></tr>
+    <tr><td>うち南アフリカPt</td><td class="n">120,000 kg</td><td>2024年推定</td><td>USGS<sup>1</sup></td></tr>
+    <tr><td>うちロシアPd</td><td class="n">75,000 kg</td><td>2024年推定</td><td>USGS<sup>1</sup></td></tr>
+    <tr><td>ジンバブエPt＋Pd</td><td class="n">19,000 + 15,000 kg</td><td>2024年推定</td><td>USGS<sup>1</sup></td></tr>
+    <tr><td>JM Pt総供給（一次＋二次）</td><td class="n">7,095 千トロイオンス ≈ 221 トン</td><td>2024</td><td>JM 2025報告<sup>7</sup></td></tr>
+    <tr><td>JM Pt総需要</td><td class="n">7,869 千トロイオンス ≈ 245 トン</td><td>2024</td><td>JM<sup>7</sup></td></tr>
+    <tr><td>JM Pt需給ギャップ（2025見通し）</td><td class="n">不足736 千トロイオンス ≈ 22.9 トン</td><td>2025見通し</td><td>JM<sup>7</sup></td></tr>
+    <tr><td>熱延コイル（インドネシアFOB）</td><td class="n">523 USD/トン ≈ 0.52 USD/kg</td><td>2026-09-24</td><td>SMM（single-source）<sup>17</sup></td></tr>
   </tbody>
 </table></div>
 
-<p>Pt キロ単価 30,543 USD を熱延コイル 0.52 USD/kg まで落とすには、約 58,700 倍の価格下落が要る。
-これは年間 23 トンの不足を埋める程度の供給増では起きない。
-不足を消すだけなら、宇宙から（または新規地上鉱山から）純 Pt 換算でおおむね 20〜25 トン/年の追加で足りる。
-価格を半減させるには、在庫・投資需要・自動車触媒需要の弾性も絡むため単一のトン数では決まらないが、少なくとも「年間鉱山生産の 10%（Pt なら約 17 トン）」級の持続的余剰があれば、2024年に観測されたような Dual-digit の価格下落（Pd 年平均は前年比 −27%）を再び起こしうる。<sup>8</sup><sup>9</sup></p>
+<p>Ptキロ単価30,543 USDを熱延コイル0.52 USD/kgまで落とすには、約58,700倍の価格下落が要る。
+これは年間23トンの不足を補う程度の供給増では起きない。
+不足を消すだけなら、純Pt換算でおおむね20〜25トン/年の追加で足りる。
+価格を半減させる条件は単一のトン数では特定できない。在庫・投資需要・自動車触媒需要の弾性も絡む。少なくとも年間鉱山生産の10%（Ptなら約17トン）級の持続的余剰があれば、2024年に観測されたような2桁の価格下落（Pd年平均は前年比−27%）を再び起こしうる。<sup>1</sup><sup>7</sup></p>
 
-<p>その水準でも「鉄並み」には届かない。鉄並みは、PGM が構造材として鉄と代替される世界であり、触媒・電子・化学向けの希少金属市場としては別物である。
+<p>その水準でも「鉄並み」には届かない。鉄並みは、PGMが構造材として鉄と代替される世界であり、触媒・電子・化学向けの希少金属市場としては別物である。
 金属価格のマクロ経路の整理は
 <a class="il" href="../../016_finance/chapters/03_rates-and-macro-prices.html">金利とマクロ価格</a>
 に譲る。</p>
 
-<h3>資源国と精錬メーカー</h3>
-
-<p>南アフリカは世界 Pt 鉱山の約 71%（120/170）、ロシアは世界 Pd 鉱山の約 39%（75/190）を占める（2024年推定）。
-ジンバブエは両金属で合わせて 3.4 万 kg 規模である。
-USGS は 2024年の南アフリカ減産要因として深部採掘コスト、労働争議、電力供給の乱れを挙げ、ロシアでは災害・品位低下・紛争関連・製錬所の計画停止を挙げる。
-すでにコスト曲線の上側で苦しむ鉱山に、宇宙由来の数十トン級余剰が加われば、高コスト坑の閉山と雇用・外貨収入の縮小が先に来る。<sup>8</sup></p>
-
-<p>地上の非鉄精錬・加工（自動車触媒、化学触媒、電子材料）については、金属価格の暴落は原料調達コストを下げる一方、在庫評価損と鉱山側の出荷減で処理量そのものが減る。
-寡占の重心が採掘ではなく加工立地にある、という一般構造は
-<a class="il" href="../chapters/04_critical-materials.html">素材と資源の寡占構造</a>
-と同じである。PGM でも、廃触媒リサイクルの二次供給が JM 統計で一次の数割を占めており、価格下落は二次回収の採算を同時に削る。<sup>9</sup></p>
+<figure class="tb-fig tb-photo tb-ph2">
+<img src="../img/ame-merensky-pgm.jpg" width="716" height="1200" loading="lazy" alt="南アフリカ・メレンスキー岩礁の白金鉱石を含む斑れい岩">
+<img src="../img/ame-ryugu-sample-miraikan.jpg" width="1200" height="900" loading="lazy" alt="日本科学未来館で展示されたリュウグウ試料">
+<figcaption>左は南アフリカのメレンスキー岩礁由来の、白金鉱石を含む斑れい岩標本である。地上のPt供給の中心はブッシュフェルト複合岩体にあり、USGSの2024年推定では世界Pt鉱山生産は17万kgである。右は2021年12月、日本科学未来館で展示されたリュウグウ試料である。はやぶさ2の帰還試料は約5 gであり、政府サンプルリターンの帰還質量はグラム級にとどまる。この桁では年間数十トン級の地球供給にはならない。<span class="tb-credit">写真：<a href="https://commons.wikimedia.org/wiki/File:Gabbro_with_Platinum_Ore_from_Merensky_Reef_in_South_Africa_-_Smithsonian_Rock_Sample_NMNH-113196.jpg">Smithsonian Institution</a>／CC0／Wikimedia Commons　／　<a href="https://commons.wikimedia.org/wiki/File:Ryugu_Sample_displayed_in_Miraikan.jpg">稲妻ノ歯鯨</a>／CC BY-SA 4.0／Wikimedia Commons</span></figcaption>
+</figure>
 
 <div class="risk">
 <strong>「金が鉄並み」も同じ論理である。</strong>
-2026年8月7日時点の金は 1オンス 4,340.26 USD（約 139,500 USD/kg）で、熱延コイル比は約 268,000 倍である。
-年間の金鉱山生産は数百トン規模であり、小惑星由来でこの比を埋める供給は、現在のサンプルリターン技術の延長線上にはない。
-金価格の出典は金融章の Trading Economics 引用に接続する（ここでは再掲のみ）。
+2026年8月7日時点の金は1オンス4,340.26 USD（約139,500 USD/kg）で、熱延コイル比は約268,000倍である。
+年間の金鉱山生産は数百トン規模である。小惑星由来でこの比を補う供給は、現在のサンプルリターン技術の延長線上にはない。
+金価格の出典は金融章のTrading Economics引用に接続する（ここでは再掲のみ）。
 </div>
 
-<h2><span class="num">07</span>法制度<span class="en">Legal Status of Space Resources</span></h2>
+<h2><span class="num">06</span>誰が得をするか<span class="en">Who Captures the Gain</span></h2>
+
+<p>金属が地球へ戻らない段階では、利得の帰属は次のように分かれる。</p>
+
+<div class="tbl-scroll"><table>
+  <thead><tr><th>主体</th><th>得をする条件</th><th>現状（2026-09-25）</th></tr></thead>
+  <tbody>
+    <tr><td>AstroForge投資家</td><td>地上運用費の削減が開示され、追加調達またはEXITが成立する。または成功率改善の一次報告が出る</td><td>Autonomy-1は未飛行。費用削減感度は算術可。成功率改善は判定不能</td></tr>
+    <tr><td>深宇宙通信・地上局事業者</td><td>ミッション数が増え、アンテナ時間が売れる</td><td>AstroForgeは地上依存を減らす方向へ転換</td></tr>
+    <tr><td>地上PGM鉱山（南ア・ロシア・ジンバブエ）</td><td>宇宙供給が年間十トン級に達しない限り、価格ショックを受けない</td><td>宇宙由来の商業供給は0</td></tr>
+    <tr><td>地上精錬・触媒メーカー</td><td>原料価格が下がれば調達コストは下がる。鉱山閉山が続けば処理量は減る</td><td>二次供給（廃触媒）が一次の数割を占める<sup>7</sup></td></tr>
+    <tr><td>先行2社の債権者・買収側</td><td>資産・知財の転用</td><td>Planetary Resourcesは2018年にConsenSysが資産買収。Deep Space Industriesは2019年にBradford Spaceが買収<sup>18</sup><sup>19</sup></td></tr>
+  </tbody>
+</table></div>
+
+<p>2010年代前半の小惑星採掘ブームを代表したPlanetary ResourcesとDeep Space Industriesは、いずれも採掘そのものの失敗ではなく、資金と事業焦点の崩壊で終わった。
+両社とも軌道上のハードは持った。採掘から収益までの距離が長く、長期ビジョンだけでは次のラウンドが埋まらなかった。
+法制度はむしろ整備が進んだ時期であり、死因の第1因子ではない。<sup>18</sup><sup>19</sup></p>
+
+<p>南アフリカは世界Pt鉱山の約71%（120/170）、ロシアは世界Pd鉱山の約39%（75/190）を占める（2024年推定）。
+USGSは2024年の南アフリカ減産要因として深部採掘コスト・労働争議・電力供給の乱れを挙げる。ロシアでは災害・品位低下・紛争関連・製錬所の計画停止を挙げる。
+宇宙由来の数十トン級余剰が加われば、高コスト坑の閉山と外貨収入の縮小が先に来るが、その供給は本稿の分岐質量と成功率の条件を満たした後の話である。<sup>1</sup>
+寡占の重心が採掘ではなく加工立地にある、という一般構造は
+<a class="il" href="../chapters/04_critical-materials.html">素材と資源の寡占構造</a>
+と同じである。</p>
+
+<h2><span class="num">07</span>法は所有を認めるが帰還を代替しない<span class="en">Law Without Mass</span></h2>
 
 <p>外層空間条約（1967年）は天体の国家による領有を禁じるが、抽出した資源の私有については各国が国内法で正面から認め始めている。</p>
 
 <div class="tbl-scroll"><table>
   <thead><tr><th>法</th><th>成立</th><th>コア条文の趣旨</th><th>主権との関係</th></tr></thead>
   <tbody>
-    <tr><td>米国 Commercial Space Launch Competitiveness Act（Title IV）</td><td>2015年</td><td>米国市民が商業回収した小惑星資源・宇宙資源について、所有・輸送・使用・販売の権利を認める（51 U.S.C. §51303）</td><td>領有権の主張は明示的に否認</td></tr>
+    <tr><td>米国Commercial Space Launch Competitiveness Act（Title IV）</td><td>2015年</td><td>米国市民が商業回収した小惑星資源・宇宙資源について、所有・輸送・使用・販売の権利を認める（51 U.S.C. §51303）</td><td>領有権の主張は明示的に否認</td></tr>
     <tr><td>ルクセンブルク「宇宙資源の探査・利用に関する法律」</td><td>2017年7月20日</td><td>「Space resources are capable of being owned.」大臣の書面許可が必要</td><td>許可制で監督。会社形態要件あり</td></tr>
     <tr><td>日本「宇宙資源の探査及び開発に関する事業活動の促進に関する法律」（令和3年法律第83号）</td><td>2021年</td><td>許可に係る事業活動計画に従って採掘等した宇宙資源は、所有の意思をもって占有することで所有権を取得（第5条）</td><td>諸条約の実施を目的に明記。他国の探査・利用の自由を害しない旨</td></tr>
   </tbody>
-  <caption>条文の一次情報は Congress.gov、Legilux、内閣府英訳 PDF。<sup>10</sup><sup>11</sup><sup>12</sup></caption>
+  <caption>条文の一次情報はCongress.gov、Legilux、内閣府英訳PDF。<sup>8</sup><sup>9</sup><sup>10</sup></caption>
 </table></div>
 
 <p>現状の含意は次である。国内法上、抽出物の私有は可能になった。
 しかし国際社会全体で調和した登記・優先権・紛争解決の制度は未完成であり、日本法も附則で「抜本的な見直しを含め検討」と書く。
-先行2社が倒れた主因が法の欠如ではなかったことと合わせると、今のボトルネックは所有権の文言ではなく、帰還質量とミッション費用である。</p>
+先行2社が倒れた主因が法の欠如ではなかったことと合わせると、今のボトルネックは所有権の文言ではなく、帰還質量とミッション成功率である。</p>
 
 <h2><span class="num">08</span>残っている問い<span class="en">Open Questions</span></h2>
 
-<p>答えの出ていない問いを挙げた。手がかりは本文の内容から示した。</p>
+<p>主張の検証で残った論点だけを挙げる。調べれば分かる事実はここに置かない。</p>
 <div class="tbl-scroll"><table>
   <thead><tr><th>#</th><th>問い</th><th>手がかり</th></tr></thead>
   <tbody>
-    <tr><td class="c">1</td><td>商業初号機のミッション総費用は、本稿が仮に置いた1,000万USDの何倍になるか。</td><td>損益分岐質量は費用に比例し、1,000万USDなら純Pt 327 kg、1億USDなら3,274 kgになる。公式は地上運用がミッション費用の約3分の1を占めると述べるが、総額と内訳は開示していない。</td></tr>
-    <tr><td class="c">2</td><td>帰還質量は、グラム単位から数百キログラム単位へどの段階を経て拡大できるか。</td><td>政府系の回収量はOSIRIS-RExが121.6 g、はやぶさ2が約5.4 gである。損益分岐には数百キログラム級の回収が必要であり、再突入機の設計値は公表されていないため、この差をどう縮めるかが事業の成否を決める。</td></tr>
-    <tr><td class="c">3</td><td>AstroForgeが対象とする小惑星のPGM品位は、鉄隕石の中央値40.78 ppmを上回るか。</td><td>本稿の原料質量は中央値で算出しており、90パーセンタイルの107.86 ppmであれば必要な原料は半分以下になる。対象天体名と推定品位は公表されていない。</td></tr>
-    <tr><td class="c">4</td><td>Brokkr-1とOdinの通信障害は、地上からの指令に依存しない自律運用で回避できる種類の問題だったか。</td><td>両機は通信問題で主目的を達成していない。Autonomy-1は分離後に地上から指令を送らない運用を実証するが、故障の詳細な報告書は公表されておらず、自律化が原因に対応しているかは判断できない。</td></tr>
-    <tr><td class="c">5</td><td>宇宙由来のPtが年間10トン流入した場合、価格はどの程度下がるか。</td><td>Ptの2025年の需給不足は約22.9トンと見込まれ、年間鉱山生産の10%級の余剰が続けば2024年のPdのような2桁の下落が起こりうる。価格が下がれば、損益分岐に必要な帰還質量はさらに増える。</td></tr>
+    <tr><td class="c">1</td><td>品位別の選鉱費・精錬費・歩留まり、および成功率・帰還質量との費用弾性はいくらか。</td><td>主張1を判定不能に留めている欠落データ。開示されれば感度比較を費用関数全体へ伸ばせる。</td></tr>
+    <tr><td class="c">2</td><td>Solo搭載後のミッションで、主目的達成率は飛行済み2機（0/2）より上がるか。上がった場合、寄与はアップリンク切断か太陽電池・姿勢・設定の設計変更か。</td><td>主張2を判定不能に留めている欠落。達成率が上がれば成功率経路は支持側へ移る。寄与の分解が無ければAutonomy-1単体の効果はなお分離できない。</td></tr>
+    <tr><td class="c">3</td><td>地上運用比率が公式の約1/3から何ポイント下がるか。</td><td>費用削減経路の実測。本稿の−33%は比率をゼロにした上限である。</td></tr>
+    <tr><td class="c">4</td><td>宇宙由来のPtが年間10トン流入した場合の価格弾性はいくらか。</td><td>2025年の不足見通しは約22.9トンである。弾性の一次推計は公開モデルが限られる。</td></tr>
   </tbody>
 </table></div>
 
 <h2><span class="num">09</span>出典<span class="en">Sources</span></h2>
 
-<ol class="src">
+<ol class="sources">
+  <li><a href="https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf">USGS, Mineral Commodity Summaries 2025, Platinum-Group Metals</a></li>
+  <li><a href="https://science.nasa.gov/blogs/osiris-rex/2024/02/15/nasa-announces-osiris-rex-bulk-sample-mass/">NASA, “NASA Announces OSIRIS-REx Bulk Sample Mass,” 121.6 g, 2024-02-15</a></li>
+  <li><a href="https://curation.isas.jaxa.jp/sample-curation/ryugu/">JAXA 地球外物質研究グループ, はやぶさ2 リュウグウ試料（約5 g）</a></li>
   <li><a href="https://www.astroforge.com/updates-collection/introducing-autonomy-1-the-first-autonomous-space-mission-powered-by-solo">AstroForge, Matt Gialich, “Introducing Autonomy-1: The First Autonomous Space Mission, Powered by Solo,” 2026-09-21</a></li>
   <li><a href="https://techcrunch.com/2026/09/22/astroforge-is-putting-ai-in-command-of-its-next-spacecraft/">TechCrunch, “AstroForge is putting AI in command of its next spacecraft,” 2026-09-22</a></li>
   <li><a href="https://www.space.com/technology/without-a-single-command-from-the-ground-asteroid-mining-company-to-launch-worlds-1st-autonomous-space-mission-in-2027">Space.com, “Asteroid-mining company AstroForge to launch world's 1st totally autonomous spacecraft in 2027”</a></li>
-  <li><a href="https://newspacemarket.com/intelligence/launch-index/">NewSpace Market, “Rideshare &amp; Small Launch Price Index”（SpaceX rideshare 2026: 7,000 USD/kg、as of 2026-08）</a></li>
-  <li><a href="https://www.planetary.org/space-missions/osiris-rex">The Planetary Society, “OSIRIS-REx” mission cost 1.16 billion USD</a></li>
-  <li><a href="https://science.nasa.gov/blogs/osiris-rex/2024/02/15/nasa-announces-osiris-rex-bulk-sample-mass/">NASA, “NASA Announces OSIRIS-REx Bulk Sample Mass,” 121.6 g, 2024-02-15</a></li>
-  <li><a href="https://curation.isas.jaxa.jp/sample-curation/ryugu/">JAXA 地球外物質研究グループ, はやぶさ2 リュウグウ試料（5.424±0.217 g）</a></li>
-  <li><a href="https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf">USGS, Mineral Commodity Summaries 2025, Platinum-Group Metals</a></li>
   <li><a href="https://matthey.com/media/2025/johnson-matthey-publishes-2025-pgm-market-report">Johnson Matthey, “publishes 2025 PGM Market Report,” 2025-05-15（詳細表は同社 PGM Market Report May 2025）</a></li>
   <li><a href="https://www.congress.gov/bill/114th-congress/house-bill/2262/text/enr">U.S. Congress, H.R.2262, U.S. Commercial Space Launch Competitiveness Act, 2015（enrolled）</a></li>
   <li><a href="https://legilux.public.lu/eli/etat/leg/loi/2017/07/20/a674/jo/en">Luxembourg, Law of 20 July 2017 on the exploration and use of space resources</a></li>
   <li><a href="https://www8.cao.go.jp/space/english/resource/documents/act83_2021.pdf">内閣府, Act on the Promotion of Business Activities Related to the Exploration and Development of Space Resources（令和3年法律第83号）英訳</a></li>
-  <li><a href="https://www.astroforge.com/solo">AstroForge, SOLO product page</a></li>
+  <li><a href="https://newspacemarket.com/intelligence/launch-index/">NewSpace Market, “Rideshare &amp; Small Launch Price Index”（SpaceX rideshare 2026: 7,000 USD/kg、as of 2026-08）</a></li>
+  <li><a href="https://www.sciencedirect.com/science/article/pii/S0032063322001945">Cannon, Gialich, Acain, “Precious and structural metals on asteroids,” Planetary and Space Science, 2023</a></li>
+  <li><a href="https://www.astroforge.com/updates-collection/an-update-on-mission-1-mission-2-same-name-new-vehicle-new-standard-for-space-exploration">AstroForge, “An update on Missions 1 and 2”（Brokkr-1精錬デモ未達）</a></li>
   <li><a href="https://www.astroforge.io/missions">AstroForge, Missions（DeepSpace-2 / Odin）</a></li>
   <li><a href="https://science.nasa.gov/mission/psyche/">NASA, Psyche mission overview</a></li>
   <li><a href="https://science.nasa.gov/solar-system/asteroids/16-psyche/">NASA, Asteroid Psyche（金属体積比 30–60%）</a></li>
-  <li><a href="https://www.sciencedirect.com/science/article/pii/S0032063322001945">Cannon, Gialich, Acain, “Precious and structural metals on asteroids,” Planetary and Space Science, 2023</a></li>
+  <li><a href="https://news.metal.com/newscontent/104133845-smm-steel-hrc-prices-remain-stable-with-no-movement-at-all">SMM, HRC Indonesia 523 USD/tonne FOB, 2026-09-24</a></li>
   <li><a href="https://www.geekwire.com/2018/consensys-blockchain-studio-acquires-planetary-resources-asteroid-mining-venture/">GeekWire, “ConsenSys blockchain studio acquires Planetary Resources,” 2018-10-31</a></li>
   <li><a href="https://spacenews.com/deep-space-industries-acquired-by-bradford-space/">SpaceNews, “Deep Space Industries acquired by Bradford Space,” 2019-01-02</a></li>
-  <li><a href="https://www.investing.com/commodities/iron-ore-62-cfr-futures">Investing.com, Iron ore fines 62% Fe CFR futures（表示値の参照）</a></li>
-  <li><a href="https://news.metal.com/newscontent/104133845-smm-steel-hrc-prices-remain-stable-with-no-movement-at-all">SMM, HRC Indonesia 523 USD/tonne FOB, 2026-09-24</a></li>
+  <li><a href="https://www.planetary.org/space-missions/osiris-rex">The Planetary Society, “OSIRIS-REx” mission cost 1.16 billion USD</a></li>
+  <li><a href="https://www.astroforge.com/solo">AstroForge, SOLO product page</a></li>
   <li><a href="https://www.govinfo.gov/content/pkg/USCODE-2015-title51/html/USCODE-2015-title51-subtitleV-chap513.htm">U.S. Code Title 51, Chapter 513 — Space Resource Commercial Exploration and Utilization</a></li>
+  <li><a href="https://www.astroforge.com/updates-collection/odint-mission-debrief">AstroForge, Chapman Snowden, “Odin't: A Complete Debrief of Our Deep Space Mission,” 2025-03-06（地上局・太陽電池展開・姿勢・設定、DeepSpace-2への学習）</a></li>
 </ol>
 
-<footer>小惑星採掘の経済性 ／ 2026年9月25日作成。数値は各出典の公表時点のもので、算出値・推定値にはその旨を明記した。</footer>
+<footer>小惑星採掘の経済性 ／ 2026年9月25日作成、2026年11月11日再作成。数値は各出典の公表時点のもので、算出値・推定値にはその旨を明記した。</footer>
 
 </div>
 
 <script type="application/json" id="facts">
 [
-  {"claim":"Autonomy-1 は分離後に地上から指令を送らない実証","value":"zero uplink commands after separation","unit":"—","as_of":"2026-09-21","source":"https://www.astroforge.com/updates-collection/introducing-autonomy-1-the-first-autonomous-space-mission-powered-by-solo","confidence":"reported"},
-  {"claim":"地上運用が AstroForge ミッション費用に占める割合","value":"nearly one-third","unit":"share of mission cost","as_of":"2026-09-21","source":"https://www.astroforge.com/updates-collection/introducing-autonomy-1-the-first-autonomous-space-mission-powered-by-solo","confidence":"single-source"},
-  {"claim":"AstroForge 累計調達","value":56,"unit":"M USD","as_of":"2026-09-22","source":"https://techcrunch.com/2026/09/22/astroforge-is-putting-ai-in-command-of-its-next-spacecraft/","confidence":"single-source"},
-  {"claim":"SpaceX rideshare 公表単価（2026年打上げ）","value":7000,"unit":"USD/kg","as_of":"2026-08","source":"https://newspacemarket.com/intelligence/launch-index/","confidence":"reported"},
-  {"claim":"USGS 白金年平均価格","value":950,"unit":"USD/troy oz","as_of":"2024","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
-  {"claim":"USGS パラジウム年平均価格","value":980,"unit":"USD/troy oz","as_of":"2024","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
+  {"claim":"Autonomy-1は分離後に地上から指令を送らない実証","value":"zero uplink commands after separation","unit":"—","as_of":"2026-09-21","source":"https://www.astroforge.com/updates-collection/introducing-autonomy-1-the-first-autonomous-space-mission-powered-by-solo","confidence":"reported"},
+  {"claim":"地上運用がAstroForgeミッション費用に占める割合","value":"nearly one-third","unit":"share of mission cost","as_of":"2026-09-21","source":"https://www.astroforge.com/updates-collection/introducing-autonomy-1-the-first-autonomous-space-mission-powered-by-solo","confidence":"single-source"},
+  {"claim":"AstroForge累計調達","value":56,"unit":"M USD","as_of":"2026-09-22","source":"https://techcrunch.com/2026/09/22/astroforge-is-putting-ai-in-command-of-its-next-spacecraft/","confidence":"single-source"},
+  {"claim":"AstroForge飛行済みミッションの主目的達成","value":"0 of 2","unit":"missions","as_of":"2026-09-25","source":"https://www.space.com/technology/without-a-single-command-from-the-ground-asteroid-mining-company-to-launch-worlds-1st-autonomous-space-mission-in-2027","confidence":"reported"},
+  {"claim":"SpaceX rideshare公表単価（2026年打上げ）","value":7000,"unit":"USD/kg","as_of":"2026-08","source":"https://newspacemarket.com/intelligence/launch-index/","confidence":"reported"},
+  {"claim":"USGS白金年平均価格","value":950,"unit":"USD/troy oz","as_of":"2024","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
   {"claim":"白金キロ単価（筆者換算）","value":30543,"unit":"USD/kg","as_of":"2024","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"estimated"},
-  {"claim":"世界 Pt 鉱山生産","value":170000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
-  {"claim":"世界 Pd 鉱山生産","value":190000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
-  {"claim":"南アフリカ Pt 鉱山生産","value":120000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
-  {"claim":"ロシア Pd 鉱山生産","value":75000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
-  {"claim":"JM 2025見通し Pt 供給不足","value":736,"unit":"thousand troy oz","as_of":"2025 forecast","source":"https://matthey.com/media/2025/johnson-matthey-publishes-2025-pgm-market-report","confidence":"reported"},
+  {"claim":"世界Pt鉱山生産","value":170000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
+  {"claim":"世界Pd鉱山生産","value":190000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
+  {"claim":"南アフリカPt鉱山生産","value":120000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
+  {"claim":"ロシアPd鉱山生産","value":75000,"unit":"kg","as_of":"2024e","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"reported"},
+  {"claim":"JM 2025見通しPt供給不足","value":736,"unit":"thousand troy oz","as_of":"2025 forecast","source":"https://matthey.com/media/2025/johnson-matthey-publishes-2025-pgm-market-report","confidence":"reported"},
   {"claim":"鉄隕石総PGM中央値","value":40.78,"unit":"ppm","as_of":"2023","source":"https://www.sciencedirect.com/science/article/pii/S0032063322001945","confidence":"reported"},
-  {"claim":"OSIRIS-REx 帰還試料質量","value":121.6,"unit":"g","as_of":"2024-02-15","source":"https://science.nasa.gov/blogs/osiris-rex/2024/02/15/nasa-announces-osiris-rex-bulk-sample-mass/","confidence":"reported"},
-  {"claim":"OSIRIS-REx 全寿命費用","value":1.16,"unit":"B USD","as_of":"mission lifetime","source":"https://www.planetary.org/space-missions/osiris-rex","confidence":"reported"},
-  {"claim":"はやぶさ2 リュウグウ試料質量","value":5.424,"unit":"g","as_of":"curation","source":"https://curation.isas.jaxa.jp/sample-curation/ryugu/","confidence":"reported"},
-  {"claim":"ミッション費用1000万USD時の純Pt損益分岐質量","value":327,"unit":"kg","as_of":"2026-09-25","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"estimated"},
-  {"claim":"インドネシア熱延コイル FOB","value":523,"unit":"USD/tonne","as_of":"2026-09-24","source":"https://news.metal.com/newscontent/104133845-smm-steel-hrc-prices-remain-stable-with-no-movement-at-all","confidence":"single-source"},
-  {"claim":"Planetary Resources 資産買収","value":"ConsenSys asset purchase","unit":"—","as_of":"2018-10-31","source":"https://www.geekwire.com/2018/consensys-blockchain-studio-acquires-planetary-resources-asteroid-mining-venture/","confidence":"reported"},
-  {"claim":"Deep Space Industries 買収","value":"Bradford Space acquisition","unit":"—","as_of":"2019-01-01","source":"https://spacenews.com/deep-space-industries-acquired-by-bradford-space/","confidence":"reported"}
+  {"claim":"OSIRIS-REx帰還試料質量","value":121.6,"unit":"g","as_of":"2024-02-15","source":"https://science.nasa.gov/blogs/osiris-rex/2024/02/15/nasa-announces-osiris-rex-bulk-sample-mass/","confidence":"reported"},
+  {"claim":"OSIRIS-REx全寿命費用","value":1.16,"unit":"B USD","as_of":"mission lifetime","source":"https://www.planetary.org/space-missions/osiris-rex","confidence":"reported"},
+  {"claim":"はやぶさ2リュウグウ試料質量","value":"約5","unit":"g","as_of":"curation","source":"https://curation.isas.jaxa.jp/sample-curation/ryugu/","confidence":"reported"},
+  {"claim":"ミッション費用1000万USD・s=1の純Pt損益分岐質量","value":327,"unit":"kg","as_of":"2026-11-11","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"estimated"},
+  {"claim":"ミッション費用1000万USD・s=0.5の純Pt期待分岐質量","value":655,"unit":"kg","as_of":"2026-11-11","source":"https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-platinum-group.pdf","confidence":"estimated"},
+  {"claim":"インドネシア熱延コイルFOB","value":523,"unit":"USD/tonne","as_of":"2026-09-24","source":"https://news.metal.com/newscontent/104133845-smm-steel-hrc-prices-remain-stable-with-no-movement-at-all","confidence":"single-source"},
+  {"claim":"Planetary Resources資産買収","value":"ConsenSys asset purchase","unit":"—","as_of":"2018-10-31","source":"https://www.geekwire.com/2018/consensys-blockchain-studio-acquires-planetary-resources-asteroid-mining-venture/","confidence":"reported"},
+  {"claim":"Deep Space Industries買収","value":"Bradford Space acquisition","unit":"—","as_of":"2019-01-01","source":"https://spacenews.com/deep-space-industries-acquired-by-bradford-space/","confidence":"reported"},
+  {"claim":"Odin公式デブリーフが挙げる不具合・仮説","value":"ground stations; solar array deployment; attitude/tumbling; configuration","unit":"—","as_of":"2025-03-06","source":"https://www.astroforge.com/updates-collection/odint-mission-debrief","confidence":"reported"}
 ]
 </script>
 </body>

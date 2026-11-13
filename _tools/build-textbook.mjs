@@ -19,6 +19,7 @@ import { readFile, writeFile, readdir, mkdir, copyFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { linkifyHtml } from './linkify-urls.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const argv = process.argv.slice(2);
@@ -558,7 +559,8 @@ for (const [section, list] of Object.entries(bySection)) {
     // page() emits empty snav markers; build-nav fills them afterwards. Carry the
     // existing nav across so rebuilding a chapter does not strip it, and so
     // --check compares the part this tool actually owns.
-    const next = carrySnav(page(meta, html, headings, nav), cur);
+    // Linkify bare URLs so rebuilds keep clickable sources.
+    const next = linkifyHtml(carrySnav(page(meta, html, headings, nav), cur));
     if (cur === next) continue;
     if (CHECK) { console.error(`  WOULD CHANGE     ${DIR[section]}/chapters/${files[k]}`); stale++; continue; }
     await writeFile(abs, next);

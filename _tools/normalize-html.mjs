@@ -9,6 +9,7 @@
 
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { linkifyHtml } from './linkify-urls.mjs';
 
 const files = process.argv.slice(2);
 if (!files.length) {
@@ -74,6 +75,9 @@ ${src.trim()}
         '</style>'
     );
   }
+
+  // Always linkify bare URLs on the way in (idempotent).
+  src = linkifyHtml(src);
 
   if (src !== orig) {
     await writeFile(f, src);

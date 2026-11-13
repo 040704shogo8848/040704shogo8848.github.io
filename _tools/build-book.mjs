@@ -27,6 +27,7 @@ import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
+import { linkifyHtml } from './linkify-urls.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ARG = process.argv.slice(2).find((a) => !a.startsWith('--'));
@@ -174,6 +175,8 @@ for (const f of files) chs.push(parse(await readFile(path.join(SRC, f), 'utf8'),
 
 let stale = 0;
 async function put(p, s) {
+  // Linkify bare URLs before compare/write so rebuilds keep clickable sources.
+  if (p.endsWith('.html')) s = linkifyHtml(s);
   const cur = existsSync(p) ? await readFile(p, 'utf8') : null;
   // Pages carry a nav that build-nav.mjs fills in afterwards; compare without it.
   const strip = (x) => x && x.replace(/<!-- snav:start -->[\s\S]*?<!-- snav:end -->/, '');

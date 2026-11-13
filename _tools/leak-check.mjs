@@ -107,6 +107,23 @@ const ACCEPTED = [
     hit: 'デューデリジェンス',
     why: '上と同じ見出しの正本（frag）。2026-10-29 レビュー',
   },
+  // 2026-11-13 産業拠点アトラス。工場の所在地・企業プロファイル・AIの取り組みは
+  // いずれも先方の公式サイトと統合報告書が出典の公開情報。掲載は Shogo が判断済み。
+  ...[
+    '010_research/013_geo/japan_industry_atlas.html',
+    '010_research/013_geo/japan_petrochem.html',
+    '010_research/013_geo/japan_lng_hydrogen.html',
+    '010_research/013_geo/data/companies.json',
+    '010_research/013_geo/data/logo_map.json',
+    '010_research/013_geo/data/japan_petrochem.json',
+    '010_research/013_geo/data/japan_petrochem_meta.json',
+    '010_research/013_geo/data/japan_lng_hydrogen.json',
+  ].map(file => ({
+    file,
+    hit: '住友化学',
+    why: '産業拠点アトラスの工場所在地と企業プロファイル。公開情報が出典で、受注関係の記載は無い。'
+      + '全件掲載は 2026-11-13 に Shogo が判断済み',
+  })),
 ];
 
 const accepted = (file, hit) => ACCEPTED.some((a) => a.file === file && a.hit === hit);

@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日本のLNG基地・水素・アンモニア拠点マップ</title>
+<meta name="description" content="日本のLNG受入基地と水素・アンモニア拠点51か所を市区町村単位で地図に表示する。稼働中の受入基地と、国の支援対象や事業化を公表した計画を区分して比較できる。">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root{--bg:#F8F7F3;--ink:#1a1a1a;--sub:#555;--accent:#2563EB;--line:#E5E2DA;--chip:#EEF2FF}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 28px 80px}
+  @media(max-width:680px){.wrap{padding:28px 16px 60px}}
+  header.top{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .lead{color:var(--sub);font-size:14px;margin-top:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  a{color:var(--accent)}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  @media(max-width:680px){.kpi{grid-template-columns:repeat(2,1fr)}}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:22px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
+  #map{height:640px;border:1px solid var(--line);border-radius:10px;background:#EDEBE4}
+  @media(max-width:680px){#map{height:70vh}}
+  .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0 8px}
+  .tools input{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff;font-family:inherit}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+  .chip{border:1px solid var(--line);background:#fff;color:var(--ink);font-size:12.5px;padding:4px 11px;border-radius:14px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+  .chip .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .chip.off{opacity:.35}
+  .chip .n{color:var(--sub);font-variant-numeric:tabular-nums}
+  .count{font-size:12.5px;color:var(--sub);white-space:nowrap}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;white-space:nowrap}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  tbody tr{cursor:pointer}
+  tbody tr:hover{background:#FFFDF5}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+  .tbl-scroll>table{min-width:760px}
+  .gdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .fn{color:var(--sub);font-size:12.5px}
+  .pop b{font-size:14px}
+  .pop .s{color:#555;font-size:12px}
+  .pop .links a{margin-right:12px;white-space:nowrap}
+  .leaflet-tooltip{font-family:inherit}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+li{overflow-wrap:anywhere}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../011_company/index.html">company</a><a href="../012_politics/index.html">politics</a><a href="index.html">geo</a><a href="../014_industry/index.html">industry</a><a href="../015_net/index.html">net</a><a href="../016_finance/index.html">finance</a><a href="../017_science/index.html">science</a><a href="../018_computing/index.html">computing</a><a href="../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a><a href="../../030_ideas/034_foundation/index.html">foundation</a><a href="../../030_ideas/035_ventures/index.html">ventures</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../020_personal/021_profile/index.html">profile</a><a href="../../020_personal/02A_plan/index.html">plan</a><a href="../../020_personal/023_travel/index.html">travel</a><a href="../../020_personal/027_cinema/index.html">cinema</a><a href="../../020_personal/02B_reading/index.html">reading</a><a href="../../020_personal/024_method/index.html">method</a><a href="../../020_personal/026_handbook/index.html">handbook</a><a href="../../020_personal/025_fitness/index.html">fitness</a><a href="../../020_personal/028_english/index.html">english</a><a href="../../020_personal/029_mental_math/index.html">mental math</a><a href="../../020_personal/02C_chemistry/index.html">chemistry</a><a href="../../020_personal/02D_probability/index.html">probability</a><a href="../../020_personal/02E_calculus/index.html">calculus</a><a href="../../020_personal/02F_linear_algebra/index.html">linear algebra</a><a href="../../020_personal/02G_physics/index.html">physics</a><a href="../../020_personal/02H_heidegger/index.html">heidegger</a><a href="../../020_personal/02I_quiz/index.html">quiz</a><a href="../../020_personal/02J_geography/index.html">geography</a><a href="../../020_personal/02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../011_company/index.html">company</a>
+    <a class="snav-a" href="../012_politics/index.html">politics</a>
+    <a class="snav-a" href="index.html">geo</a>
+    <a class="snav-a" href="../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../015_net/index.html">net</a>
+    <a class="snav-a" href="../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../017_science/index.html">science</a>
+    <a class="snav-a" href="../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../030_ideas/034_foundation/index.html">foundation</a>
+    <a class="snav-a" href="../../030_ideas/035_ventures/index.html">ventures</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../020_personal/029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../020_personal/02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../020_personal/02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../020_personal/02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../020_personal/02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../020_personal/02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../020_personal/02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../020_personal/02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../../020_personal/02J_geography/index.html">geography</a>
+    <a class="snav-a" href="../../020_personal/02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+<header class="top">
+  <h1>日本のLNG基地・水素・アンモニア拠点マップ</h1>
+  <div class="meta">確認日 2026-11-13／51拠点・36社・37市区町村</div>
+  <p class="lead">日本のLNG受入基地と水素・アンモニアの受入・製造拠点を所在地の市区町村に表示する。点の色は企業グループを示す。点を選択すると運営企業・設備・出典を表示する。</p>
+</header>
+
+<div class="kpi">
+  <div class="card"><div class="k">拠点数</div><div class="v">51</div></div>
+  <div class="card"><div class="k">企業数</div><div class="v">36</div></div>
+  <div class="card"><div class="k">市区町村数</div><div class="v">37</div></div>
+  <div class="card"><div class="k">都道府県数</div><div class="v">24</div></div>
+</div>
+
+<h2>地図<span class="en">Map</span></h2>
+<div class="chips" id="gchips"></div>
+<div class="chips" id="cchips"></div>
+<div class="tools">
+  <input type="search" id="q" placeholder="検索（企業名・市区町村・設備）" autocomplete="off">
+  <span class="count" id="count"></span>
+</div>
+<div id="map" role="img" aria-label="日本のLNG基地・水素・アンモニア拠点マップ"></div>
+<p class="fn">地図：国土地理院 淡色地図・全国最新写真。右上で航空写真に切り替えられる。拠点を選択して拡大すると、敷地と設備を写真で確認できる。同じ市区町村に複数の拠点がある場合は、拡大すると個別の点に分かれる。</p>
+
+<h2>市区町村別<span class="en">By Municipality</span></h2>
+<p class="fn">拠点数の多い順。行を選択すると地図がその市区町村に移動する。</p>
+<div class="tbl-scroll"><table id="ctbl"><thead><tr><th>市区町村</th><th>都道府県</th><th>拠点数</th><th>企業</th></tr></thead><tbody></tbody></table></div>
+
+<h2>拠点一覧<span class="en">All Sites</span></h2>
+<p class="fn">北から順に並べる。行を選択すると地図がその拠点に移動する。</p>
+<div class="tbl-scroll"><table id="ytbl"><thead><tr><th>企業</th><th>基地・拠点</th><th>所在地</th><th>区分</th><th>設備・用途</th><th>出典</th></tr></thead><tbody></tbody></table></div>
+
+<h2>対象と注記<span class="en">Scope</span></h2>
+<p class="fn">対象は海外から外航LNG船で受け入れるLNG一次受入基地と、水素・アンモニアの受入・製造拠点のうち国の価格差支援・拠点整備支援の対象または事業化を公表した計画である。確認日は2026-11-13である。</p>
+<p class="fn">区分は設備と事業段階で分けた。稼働中のLNG受入を「LNG受入基地」、稼働・実証中の水素製造・荷役を「水素拠点」、稼働・実証中のアンモニア利用を「アンモニア拠点」とした。調査段階や未稼働の受入計画は「計画中」とし、薄い色の小さな点で示す。</p>
+<p class="fn">企業グループは運営主体の資本関係で区分した。東京ガスエンジニアリングソリューションズが出資する新居浜LNGは東京ガスに含めた。関西電力・中国電力・九州電力・東北電力・北海道電力・北陸電力・沖縄電力・四国電力の拠点は電力会社（その他）にまとめた。</p>
+<p class="fn">所在地は各社の公式サイト、日本ガス協会の基地一覧、資源エネルギー庁の公表資料で確認した。緯度経度は国土地理院のジオコーダで変換した。番地まで一致しない場合は町名の代表点を用い、注記に記載した。住所が未公表の計画は市区町村の代表点を用いた。</p>
+<p class="fn">内航船やローリーで受け入れる二次受入・サテライト基地は対象外とした。北海道・東北では釧路・函館・勇払・秋田を除いた。四国・九州では四国ガスの高松・松山・徳島工場と延岡、岡山ガス築港工場などを除いた。西部ガス福北工場はひびきLNG基地への集約後の稼働状況を確認できず、収録していない。鹿島LNG基地の一次受入としての最新状況も確認できず、収録していない。</p>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const ROWS = [{"id":0,"company":"北海道ガス","yard":"石狩LNG基地","pref":"北海道","city":"石狩市","address":"北海道石狩市新港中央4丁目3743","lat":43.202915,"lon":141.299194,"cat":"lng","products":"地上タンク4基（都市ガス製造・発電用燃料・内航・ローリー出荷）","capacity":"84万kL","note":"北海道ガスが運営し北海道電力と共同利用する。タンクのうち北海道電力所有はNo.3・No.4である。桟橋設備は石狩LNG桟橋株式会社（各50%）が保有する。","source":"https://www.hokkaido-gas.co.jp/ir/effort/supply/ishikarilng.html","g":"other","companyFull":"北海道ガス株式会社","owners":[{"name":"北海道ガス株式会社","share":""},{"name":"北海道電力株式会社","share":""}]},{"id":50,"company":"三菱商事","yard":"千歳グリーン水素供給インフラ（調査）","pref":"北海道","city":"千歳市","address":"北海道千歳市","lat":42.821011,"lon":141.651001,"cat":"plan","products":"グリーン水素の供給と道内他地点との連携インフラ","capacity":"","note":"2024年度の水素等供給基盤整備事業で採択された調査事業である。住所の詳細は未公表のため市区町村の代表点を用いた。","source":"https://www.enecho.meti.go.jp/appli/public_offer_result/2024/0531_02.html","g":"mitsubishi","companyFull":"三菱商事株式会社","owners":[{"name":"三菱商事株式会社","share":""},{"name":"高砂熱学工業株式会社","share":""},{"name":"エア・ウォーター株式会社","share":""}]},{"id":41,"company":"北海道電力","yard":"苫小牧アンモニア供給拠点（計画）","pref":"北海道","city":"苫小牧市","address":"北海道苫小牧市（苫小牧港周辺）","lat":42.634071,"lon":141.60553,"cat":"plan","products":"アンモニアの受入・貯蔵・輸送（発電・セメント・化学向け）","capacity":"約28万t/年（調達規模）","note":"価格差支援（2025低炭素水素等第4号）と拠点整備支援（第7号）の認定対象である。住所の詳細は未公表のため市区町村の代表点を用いた。ほか出典: https://www.ihi.co.jp/all_news/2025/resources_energy_environment/1201932_13752.html","source":"https://www.enecho.meti.go.jp/category/saving_and_new/advanced_systems/hydrogen_society/carbon_neutral/","g":"power_other","companyFull":"北海道電力株式会社","owners":[{"name":"北海道電力株式会社","share":""},{"name":"三井物産株式会社","share":""},{"name":"株式会社IHI","share":""},{"name":"苫小牧埠頭株式会社","share":""},{"name":"UBE三菱セメント株式会社","share":""},{"name":"東ソー株式会社","share":""}]},{"id":1,"company":"ENEOSエルエヌジーサービス","yard":"八戸LNGターミナル","pref":"青森県","city":"八戸市","address":"青森県八戸市豊洲7-2","lat":40.538574,"lon":141.510925,"cat":"lng","products":"地上タンク2基（発電用・都市ガス・内航出荷）","capacity":"28万kL","note":"","source":"https://www.eneos.co.jp/business/industrial/lng/taisei.html","g":"eneos","companyFull":"ENEOSエルエヌジーサービス株式会社","owners":[{"name":"ENEOSエルエヌジーサービス株式会社","share":""}]},{"id":2,"company":"仙台市ガス局","yard":"港工場","pref":"宮城県","city":"仙台市","address":"宮城県仙台市宮城野区港4-13-1","lat":38.280022,"lon":141.023865,"cat":"lng","products":"地下タンク1基（都市ガス原料）","capacity":"8万kL","note":"","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"other","companyFull":"仙台市ガス局","owners":[{"name":"仙台市ガス局","share":"100%"}]},{"id":3,"company":"東北電力","yard":"新仙台LNG基地","pref":"宮城県","city":"仙台市","address":"宮城県仙台市宮城野区港5-2-1","lat":38.276768,"lon":141.039291,"cat":"lng","products":"地上タンク2基（新仙台火力向け）","capacity":"32万kL","note":"","source":"https://www.tohoku-epco.co.jp/pastnews/normal/__icsFiles/afieldfile/2016/03/23/b1191420.pdf","g":"power_other","companyFull":"東北電力株式会社","owners":[{"name":"東北電力株式会社","share":"100%"}]},{"id":11,"company":"日本海エル・エヌ・ジー","yard":"新潟基地","pref":"新潟県","city":"聖籠町","address":"新潟県北蒲原郡聖籠町東港一丁目1612番地32","lat":38.003521,"lon":139.245987,"cat":"lng","products":"地上タンク8基（東新潟火力・都市ガス・導管供給）","capacity":"72万kL","note":"東北電力の連結子会社である。議決権比率は東北電力47.55%（2025年3月末）。ほか出典: https://www.nihonkai-lng.co.jp/company/index.html","source":"https://www.nihonkai-lng.co.jp/lng/index.html","g":"power_other","companyFull":"日本海エル・エヌ・ジー株式会社","owners":[{"name":"東北電力株式会社","share":"47.55%"},{"name":"株式会社日本政策投資銀行","share":""},{"name":"新潟県","share":""},{"name":"石油資源開発株式会社","share":""},{"name":"北陸瓦斯株式会社","share":""}]},{"id":4,"company":"石油資源開発","yard":"相馬LNG基地","pref":"福島県","city":"新地町","address":"福島県相馬郡新地町（相馬港4号埠頭）","lat":37.853779,"lon":140.891266,"cat":"lng","products":"地上タンク2基（東北地方向け導管・福島天然ガス発電所隣接）","capacity":"46万kL","note":"座標は町名の代表点。","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"other","companyFull":"石油資源開発株式会社","owners":[{"name":"石油資源開発株式会社","share":""}]},{"id":48,"company":"石油資源開発","yard":"相馬地区アンモニア供給拠点（計画）","pref":"福島県","city":"新地町","address":"福島県相馬郡新地町（相馬港周辺）","lat":37.855279,"lon":140.892766,"cat":"plan","products":"アンモニアの輸入・貯蔵・広域供給","capacity":"","note":"2024年度の水素等供給基盤整備事業で採択された。座標は町名の代表点。ほか出典: https://www.mgc.co.jp/corporate/news/2024/240130.html","source":"https://www.enecho.meti.go.jp/appli/public_offer_result/2024/0531_02.html","g":"other","companyFull":"石油資源開発株式会社","owners":[{"name":"石油資源開発株式会社","share":""},{"name":"三菱ガス化学株式会社","share":""},{"name":"株式会社IHI","share":""},{"name":"三井物産株式会社","share":""},{"name":"株式会社商船三井","share":""}]},{"id":45,"company":"国立研究開発法人新エネルギー・産業技術総合開発機構","yard":"福島水素エネルギー研究フィールド（FH2R）","pref":"福島県","city":"浪江町","address":"福島県双葉郡浪江町大字加倉字柿木平","lat":37.497253,"lon":140.960754,"cat":"hydrogen","products":"再エネ連系の水電解水素製造（約1,200Nm3/h）","capacity":"水電解10MW級","note":"東芝エネルギーシステムズ・東北電力・岩谷産業等が参画する実証拠点である。","source":"https://www.tohoku.meti.go.jp/s_hukko/topics/pdf/260224_2.pdf","g":"other","companyFull":"国立研究開発法人新エネルギー・産業技術総合開発機構","owners":[{"name":"国立研究開発法人新エネルギー・産業技術総合開発機構","share":""},{"name":"東芝エネルギーシステムズ株式会社","share":""},{"name":"東北電力株式会社","share":""},{"name":"岩谷産業株式会社","share":""}]},{"id":12,"company":"JERA","yard":"上越火力発電所LNG設備","pref":"新潟県","city":"上越市","address":"新潟県上越市八千浦2番","lat":37.205299,"lon":138.276474,"cat":"lng","products":"地上タンク3基（上越火力向け）","capacity":"54万kL","note":"座標は町名の代表点。","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"jera","companyFull":"株式会社JERA","owners":[{"name":"株式会社JERA","share":"100%"}]},{"id":13,"company":"INPEX","yard":"直江津LNG基地","pref":"新潟県","city":"上越市","address":"新潟県上越市八千浦12番","lat":37.206799,"lon":138.277974,"cat":"lng","products":"地上タンク2基（導管による関東・甲信越等向け）","capacity":"36万kL","note":"座標は町名の代表点。","source":"https://www.inpex.com/business/japan/consignment.html","g":"other","companyFull":"株式会社INPEX","owners":[{"name":"株式会社INPEX","share":"100%"}]},{"id":14,"company":"北陸電力","yard":"富山新港火力発電所LNG設備","pref":"富山県","city":"射水市","address":"富山県射水市堀江千石1","lat":36.765285,"lon":137.128738,"cat":"lng","products":"地上タンク1基（富山新港火力向け）","capacity":"18万kL","note":"","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"power_other","companyFull":"北陸電力株式会社","owners":[{"name":"北陸電力株式会社","share":"100%"}]},{"id":5,"company":"東京ガス","yard":"日立LNG基地","pref":"茨城県","city":"日立市","address":"茨城県日立市留町字北河原2985-5","lat":36.489838,"lon":140.599854,"cat":"lng","products":"地上タンク2基（首都圏北部・北関東向け）","capacity":"46万kL","note":"","source":"https://www.tokyo-gas.co.jp/about/adress/index.html","g":"tokyo_gas","companyFull":"東京ガス株式会社","owners":[{"name":"東京ガス株式会社","share":"100%"}]},{"id":40,"company":"JERA","yard":"常陸那珂アンモニア・水素サプライチェーン（計画）","pref":"茨城県","city":"ひたちなか市","address":"茨城県ひたちなか市（常陸那珂港周辺）","lat":36.39669,"lon":140.534729,"cat":"plan","products":"アンモニア・水素の受入・貯蔵と北関東広域供給","capacity":"","note":"2024年度の水素等供給基盤整備事業で採択された調査事業である。住所の詳細は未公表のため市区町村の代表点を用いた。","source":"https://www.enecho.meti.go.jp/appli/public_offer_result/2024/0531_02.html","g":"jera","companyFull":"株式会社JERA","owners":[{"name":"株式会社JERA","share":""},{"name":"日本製鉄株式会社","share":""},{"name":"AGC株式会社","share":""},{"name":"鹿島南共同発電株式会社","share":""},{"name":"東京電力エナジーパートナー株式会社","share":""},{"name":"茨城県","share":""}]},{"id":44,"company":"やまなしハイドロジェンカンパニー","yard":"白州グリーン水素製造拠点","pref":"山梨県","city":"北杜市","address":"山梨県北杜市白州町（サントリー天然水南アルプス白州工場隣接地）","lat":35.773617,"lon":138.28743,"cat":"hydrogen","products":"水電解によるグリーン水素の製造・熱源利用","capacity":"1,607t/年","note":"価格差支援（2025低炭素水素等第5号）の認定対象である。座標は町名の代表点。","source":"https://www.suntory.co.jp/news/article/2026/15011.html","g":"other","companyFull":"株式会社やまなしハイドロジェンカンパニー","owners":[{"name":"株式会社やまなしハイドロジェンカンパニー","share":""},{"name":"サントリーホールディングス株式会社","share":""},{"name":"株式会社巴商会","share":""}]},{"id":43,"company":"レゾナック","yard":"川崎事業所低炭素アンモニア","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区扇町","lat":35.502052,"lon":139.72287,"cat":"ammonia","products":"廃プラ由来水素を原料とする低炭素アンモニア製造（2030年稼働予定の拡大）","capacity":"","note":"価格差支援（2025低炭素水素等第2号）の認定対象である。座標は町名の代表点。","source":"https://www.resonac.com/jp/news/2025/10/06/3631.html","g":"other","companyFull":"株式会社レゾナック","owners":[{"name":"株式会社レゾナック","share":""},{"name":"株式会社日本触媒","share":""}]},{"id":10,"company":"JERA","yard":"東扇島LNG基地","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区東扇島3","lat":35.495975,"lon":139.746078,"cat":"lng","products":"地下タンク9基（東扇島・川崎・横浜火力向け）","capacity":"54万kL","note":"","source":"https://www.jera.co.jp/static/files/business/thermal-power/list/pdf/higashiogishima.pdf","g":"jera","companyFull":"株式会社JERA","owners":[{"name":"株式会社JERA","share":"100%"}]},{"id":37,"company":"日本水素エネルギー","yard":"扇島液化水素受入拠点（計画）","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区扇島","lat":35.490036,"lon":139.731003,"cat":"plan","products":"液化水素の海上受入・貯蔵・供給（商用化実証）","capacity":"約3万t/年（計画規模）","note":"JFEスチール東日本製鉄所（京浜地区）扇島の土地約21haを賃借する計画である。2028年度設備完成、2030年度の実証完了と国内供給開始を目指す。三菱商事は同地区でJFEと電力・データセンターの共同検討を公表している。座標は町名の代表点。ほか出典: https://www.mitsubishicorp.com/jp/ja/news/release/2025/20250326001.html","source":"https://www.jfe-holdings.co.jp/release/2024/0725/001011/","g":"other","companyFull":"日本水素エネルギー株式会社","owners":[{"name":"日本水素エネルギー株式会社","share":""},{"name":"JFEスチール株式会社","share":""}]},{"id":38,"company":"ENEOS","yard":"京浜臨海部水素・アンモニア供給拠点（検討）","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区扇島","lat":35.48357,"lon":139.726852,"cat":"plan","products":"水素・アンモニアの受入・供給ネットワーク構築（協業検討）","capacity":"","note":"ENEOS・JERA・JFEが2022年に協業検討を開始した。東京ガス扇島LNG基地（横浜市）とは別案件である。座標は町名の代表点。","source":"https://www.eneos.co.jp/newsrelease/20220421_01_01_1170836.pdf","g":"eneos","companyFull":"ENEOS株式会社","owners":[{"name":"ENEOS株式会社","share":""},{"name":"株式会社JERA","share":""},{"name":"JFEホールディングス株式会社","share":""}]},{"id":9,"company":"東京ガス","yard":"扇島LNG基地","pref":"神奈川県","city":"横浜市","address":"神奈川県横浜市鶴見区扇島4-1","lat":35.478142,"lon":139.710724,"cat":"lng","products":"地下タンク4基（首都圏西部向け都市ガス・隣接発電向け）","capacity":"85万kL","note":"所在地は横浜市鶴見区である。川崎市側の扇島とは別地点である。容量は日本ガス協会資料による。ほか出典: https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","source":"https://www.tokyo-gas.co.jp/about/adress/index.html","g":"tokyo_gas","companyFull":"東京ガス株式会社","owners":[{"name":"東京ガス株式会社","share":"100%"}]},{"id":7,"company":"東京ガス","yard":"袖ケ浦LNG基地","pref":"千葉県","city":"袖ケ浦市","address":"千葉県袖ケ浦市中袖1-1","lat":35.468906,"lon":139.97084,"cat":"lng","products":"地上・地下タンク計32基（都市ガス・東京湾岸火力向け）","capacity":"248万kL","note":"東京ガスとJERAが同一地区で基地を運営する。容量は日本ガス協会資料の合算値である。ほか出典: https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","source":"https://www.tokyo-gas.co.jp/about/adress/index.html","g":"tokyo_gas","companyFull":"東京ガス株式会社","owners":[{"name":"東京ガス株式会社","share":""},{"name":"株式会社JERA","share":""}]},{"id":8,"company":"東京ガス","yard":"根岸LNG基地","pref":"神奈川県","city":"横浜市","address":"神奈川県横浜市磯子区新磯子町34","lat":35.404503,"lon":139.632294,"cat":"lng","products":"地上・地下タンク計11基（都市ガス・南横浜火力向け）","capacity":"96.5万kL","note":"東京ガスとJERAが関連設備を運用する。容量は日本ガス協会資料による。ほか出典: https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","source":"https://www.tokyo-gas.co.jp/about/adress/index.html","g":"tokyo_gas","companyFull":"東京ガス株式会社","owners":[{"name":"東京ガス株式会社","share":""},{"name":"株式会社JERA","share":""}]},{"id":6,"company":"JERA","yard":"富津LNG基地","pref":"千葉県","city":"富津市","address":"千葉県富津市新富25","lat":35.345959,"lon":139.839783,"cat":"lng","products":"地下タンク12基（東京湾岸火力向け）","capacity":"136万kL","note":"","source":"https://www.jera.co.jp/corporate/business/thermal-power/list/futtsu","g":"jera","companyFull":"株式会社JERA","owners":[{"name":"株式会社JERA","share":"100%"}]},{"id":42,"company":"豊田通商","yard":"愛知製鋼知多工場向け低炭素水素供給","pref":"愛知県","city":"東海市","address":"愛知県東海市新宝町（愛知製鋼知多工場）","lat":35.055962,"lon":136.892609,"cat":"hydrogen","products":"再エネ電力による水電解水素の製造・供給（加熱炉利用）","capacity":"約1,600t/年","note":"価格差支援（2025低炭素水素等第1号）の認定対象である。座標は町名の代表点。","source":"https://www.toyota-tsusho.com/press/detail/250930_006696.html","g":"other","companyFull":"豊田通商株式会社","owners":[{"name":"豊田通商株式会社","share":""},{"name":"株式会社ユーラスエナジーホールディングス","share":""},{"name":"岩谷産業株式会社","share":""},{"name":"愛知製鋼株式会社","share":""}]},{"id":15,"company":"清水エル・エヌ・ジー","yard":"清水LNG袖師基地","pref":"静岡県","city":"静岡市","address":"静岡県静岡市清水区袖師町1900番地","lat":35.030071,"lon":138.49498,"cat":"lng","products":"地下タンク3基（静岡ガス向け）","capacity":"33.72万kL","note":"","source":"https://www.shizuokagas.co.jp/information/news/2014/0324.html","g":"other","companyFull":"清水エル・エヌ・ジー株式会社","owners":[{"name":"清水エル・エヌ・ジー株式会社","share":""}]},{"id":21,"company":"JERA","yard":"川越火力発電所LNG設備","pref":"三重県","city":"川越町","address":"三重県三重郡川越町大字亀崎新田字朝明87-1","lat":35.015755,"lon":136.691513,"cat":"lng","products":"地上タンク6基（川越火力向け）","capacity":"84万kL","note":"座標は町名の代表点。","source":"https://www.jera.co.jp/corporate/business/thermal-power/list/kawagoe","g":"jera","companyFull":"株式会社JERA","owners":[{"name":"株式会社JERA","share":"100%"}]},{"id":18,"company":"東邦ガス","yard":"知多緑浜工場","pref":"愛知県","city":"知多市","address":"愛知県知多市北浜町","lat":34.996735,"lon":136.853958,"cat":"lng","products":"地下タンク3基（東邦ガス向け）","capacity":"62万kL","note":"座標は町名の代表点。ほか出典: https://www.tohogas.co.jp/corporate-n/press/__icsFiles/afieldfile/2019/06/27/press_0628.pdf","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"toho_gas","companyFull":"東邦ガス株式会社","owners":[{"name":"東邦ガス株式会社","share":"100%"}]},{"id":19,"company":"東邦ガス","yard":"四日市工場","pref":"三重県","city":"四日市市","address":"三重県四日市市霞1丁目","lat":34.982937,"lon":136.661621,"cat":"lng","products":"地上タンク2基（東邦ガス向け）","capacity":"16万kL","note":"座標は町名の代表点。","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"toho_gas","companyFull":"東邦ガス株式会社","owners":[{"name":"東邦ガス株式会社","share":"100%"}]},{"id":20,"company":"JERA","yard":"四日市LNGセンター","pref":"三重県","city":"四日市市","address":"三重県四日市市霞1丁目","lat":34.984437,"lon":136.663121,"cat":"lng","products":"地上タンク4基（四日市・川越火力向け）","capacity":"32万kL","note":"座標は町名の代表点。JERA公表の貯蔵量は48万kLとする資料もある。本表の容量は日本ガス協会資料に合わせた。ほか出典: https://www.jera.co.jp/static/files/corporate/business/optimization/lng/pdf/lng-yokkaichi-ekika250731.pdf","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"jera","companyFull":"株式会社JERA","owners":[{"name":"株式会社JERA","share":"100%"}]},{"id":16,"company":"JERA","yard":"知多LNG共同基地","pref":"愛知県","city":"知多市","address":"愛知県知多市南浜町23番地","lat":34.973988,"lon":136.835358,"cat":"lng","products":"地上タンク4基（東邦ガス・知多火力向け）","capacity":"30万kL","note":"JERAと東邦ガスの共同所有である。ほか出典: https://www.tohogas.co.jp/corporate-n/press/__icsFiles/afieldfile/2019/06/27/press_0628.pdf","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"jera","companyFull":"株式会社JERA","owners":[{"name":"株式会社JERA","share":""},{"name":"東邦ガス株式会社","share":""}]},{"id":17,"company":"知多エル・エヌ・ジー","yard":"知多LNG基地","pref":"愛知県","city":"知多市","address":"愛知県知多市南浜町23番地","lat":34.975488,"lon":136.836858,"cat":"lng","products":"地上タンク6基・地下タンク1基（中部火力・都市ガス向け）","capacity":"64万kL","note":"出資比率はJERA95%、東邦ガス5%である。","source":"https://www.chita.lng.co.jp/profile/","g":"jera","companyFull":"知多エル・エヌ・ジー株式会社","owners":[{"name":"株式会社JERA","share":"95%"},{"name":"東邦ガス株式会社","share":"5%"}]},{"id":39,"company":"JERA","yard":"碧南火力発電所アンモニア混焼拠点","pref":"愛知県","city":"碧南市","address":"愛知県碧南市港本町","lat":34.868977,"lon":136.971863,"cat":"ammonia","products":"低炭素アンモニアの受入・混焼（4号機熱量20%混焼）と周辺工業炉供給","capacity":"年間約50万t輸送（価格差支援認定案件）","note":"水素社会推進法の価格差支援（2025低炭素水素等第3号）および拠点整備支援（第8号）の認定対象である。座標は町名の代表点。ほか出典: https://www.enecho.meti.go.jp/category/saving_and_new/advanced_systems/hydrogen_society/carbon_neutral/","source":"https://www.jera.co.jp/news/notice/20260218_2363","g":"jera","companyFull":"株式会社JERA","owners":[{"name":"株式会社JERA","share":""},{"name":"株式会社豊田自動織機","share":""},{"name":"AGC株式会社","share":""},{"name":"日本碍子株式会社","share":""},{"name":"株式会社アイシン福井","share":""},{"name":"中部電力ミライズ株式会社","share":""}]},{"id":26,"company":"関西電力","yard":"姫路LNG基地","pref":"兵庫県","city":"姫路市","address":"兵庫県姫路市飾磨区妻鹿常盤町","lat":34.774315,"lon":134.689987,"cat":"lng","products":"地上タンク7基（姫路第一・第二発電所向け）","capacity":"52万kL","note":"座標は町名の代表点。","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"power_other","companyFull":"関西電力株式会社","owners":[{"name":"関西電力株式会社","share":"100%"}]},{"id":25,"company":"大阪ガス","yard":"姫路製造所","pref":"兵庫県","city":"姫路市","address":"兵庫県姫路市白浜町灘浜1","lat":34.766773,"lon":134.699326,"cat":"lng","products":"地上タンク8基（関西圏西部向け都市ガス）","capacity":"74万kL","note":"","source":"https://www.osakagas.co.jp/company/adress/index.html","g":"osaka_gas","companyFull":"大阪ガス株式会社","owners":[{"name":"大阪ガス株式会社","share":"100%"}]},{"id":46,"company":"技術研究組合HySTRA","yard":"Hy touch神戸（液化水素荷役実証）","pref":"兵庫県","city":"神戸市","address":"兵庫県神戸市中央区港島南町（神戸空港島）","lat":34.660847,"lon":135.218292,"cat":"hydrogen","products":"液化水素の海上荷役・貯蔵実証","capacity":"タンク2,500m3（約150t）","note":"座標は町名の代表点。","source":"https://www.city.kobe.lg.jp/a73498/ondanka/3d3.html","g":"other","companyFull":"技術研究組合HySTRA","owners":[{"name":"技術研究組合HySTRA","share":""},{"name":"川崎重工業株式会社","share":""},{"name":"岩谷産業株式会社","share":""}]},{"id":24,"company":"関西電力","yard":"堺LNGセンター","pref":"大阪府","city":"堺市","address":"大阪府堺市西区築港新町3丁1番地10","lat":34.570606,"lon":135.419052,"cat":"lng","products":"地上タンク4基（堺港・南港火力向け）","capacity":"56万kL","note":"旧堺LNG株式会社は2023年に関西電力へ合併された。","source":"https://www.kepco.co.jp/energy_supply/energy/thermal_power/lng/index.html","g":"power_other","companyFull":"関西電力株式会社","owners":[{"name":"関西電力株式会社","share":"100%"}]},{"id":22,"company":"大阪ガス","yard":"泉北製造所第一工場","pref":"大阪府","city":"堺市","address":"大阪府堺市西区築港浜寺町4","lat":34.546833,"lon":135.433502,"cat":"lng","products":"LNG受入・気化（泉北製造所の一部）","capacity":"23万kL","note":"容量は日本ガス協会資料による。大阪ガスは泉北製造所全体の貯蔵容量を166.5万kLと公表する。ほか出典: https://www.osakagas.co.jp/company/adress/index.html","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"osaka_gas","companyFull":"大阪ガス株式会社","owners":[{"name":"大阪ガス株式会社","share":"100%"}]},{"id":23,"company":"大阪ガス","yard":"泉北製造所第二工場","pref":"大阪府","city":"高石市","address":"大阪府高石市高砂3-1","lat":34.540874,"lon":135.406189,"cat":"lng","products":"LNG受入・気化・冷熱利用（泉北製造所の主力）","capacity":"143.5万kL","note":"容量は日本ガス協会資料による。ほか出典: https://www.osakagas.co.jp/company/adress/index.html","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"osaka_gas","companyFull":"大阪ガス株式会社","owners":[{"name":"大阪ガス株式会社","share":"100%"}]},{"id":49,"company":"三井物産","yard":"堺・泉北アンモニア供給拠点（計画）","pref":"大阪府","city":"高石市","address":"大阪府高石市（堺泉北港泉北1区）","lat":34.536591,"lon":135.420883,"cat":"plan","products":"アンモニア受入・払出設備（貯蔵タンク1基想定）","capacity":"約20万t/年","note":"2024年度の水素等供給基盤整備事業で採択された。座標は町名の代表点。","source":"https://www.enecho.meti.go.jp/appli/public_offer_result/2024/0531_02.html","g":"other","companyFull":"三井物産株式会社","owners":[{"name":"三井物産株式会社","share":""},{"name":"三井化学株式会社","share":""},{"name":"株式会社IHI","share":""}]},{"id":28,"company":"水島エルエヌジー","yard":"水島LNG基地","pref":"岡山県","city":"倉敷市","address":"岡山県倉敷市水島海岸通4丁目2番地","lat":34.509693,"lon":133.733444,"cat":"lng","products":"地上タンク2基（水島発電所・都市ガス向け）","capacity":"32万kL","note":"出資比率は中国電力とENEOS Xploraが各50%である（公表値）。","source":"https://www.m-lng.co.jp/facilities/","g":"eneos","companyFull":"水島エルエヌジー株式会社","owners":[{"name":"中国電力株式会社","share":"50%"},{"name":"ENEOS Xplora株式会社","share":"50%"}]},{"id":30,"company":"坂出LNG","yard":"坂出LNG基地","pref":"香川県","city":"坂出市","address":"香川県坂出市番の州緑町1-6","lat":34.354004,"lon":133.832794,"cat":"lng","products":"地上タンク1基（坂出発電所・四国ガス向け）","capacity":"18万kL","note":"出資比率は四国電力70%、コスモ石油20%、四国ガス10%である。ほか出典: https://www.yonden.co.jp/press/re1003/1176052_1250.html","source":"https://www.sakaide-lng.co.jp/company/","g":"power_other","companyFull":"坂出LNG株式会社","owners":[{"name":"四国電力株式会社","share":"70%"},{"name":"コスモ石油株式会社","share":"20%"},{"name":"四国ガス株式会社","share":"10%"}]},{"id":29,"company":"広島ガス","yard":"廿日市工場","pref":"広島県","city":"廿日市市","address":"広島県廿日市市木材港南12番20号","lat":34.340992,"lon":132.335052,"cat":"lng","products":"地上タンク2基（広島ガス向け）","capacity":"17万kL","note":"","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"other","companyFull":"広島ガス株式会社","owners":[{"name":"広島ガス株式会社","share":"100%"}]},{"id":47,"company":"出光興産","yard":"周南アンモニア広域供給拠点（計画）","pref":"山口県","city":"周南市","address":"山口県周南市（徳山下松港・出光徳山事業所大浦地区）","lat":34.055725,"lon":131.806595,"cat":"plan","products":"アンモニア受入・域内パイプライン・燃焼利用","capacity":"100万t超/年（目標）","note":"2024年度の水素等供給基盤整備事業で採択された。住所の詳細は未公表のため市区町村の代表点を用いた。","source":"https://www.enecho.meti.go.jp/appli/public_offer_result/2024/0531_02.html","g":"other","companyFull":"出光興産株式会社","owners":[{"name":"出光興産株式会社","share":""},{"name":"株式会社トクヤマ","share":""},{"name":"東ソー株式会社","share":""},{"name":"日本ゼオン株式会社","share":""}]},{"id":27,"company":"中国電力","yard":"柳井LNG基地","pref":"山口県","city":"柳井市","address":"山口県柳井市柳井字宮本塩浜","lat":33.983452,"lon":132.112854,"cat":"lng","products":"地上タンク6基（柳井発電所・山口合同ガス向け）","capacity":"48万kL","note":"座標は町名の代表点。","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"power_other","companyFull":"中国電力株式会社","owners":[{"name":"中国電力株式会社","share":"100%"}]},{"id":31,"company":"新居浜LNG","yard":"新居浜LNG基地","pref":"愛媛県","city":"新居浜市","address":"愛媛県新居浜市惣開町5-1","lat":33.962395,"lon":133.258652,"cat":"lng","products":"地上タンク1基（住友共同電力・住友化学・ローリー出荷）","capacity":"23万kL","note":"出資比率は東京ガスエンジニアリングソリューションズ50.1%と四国電力30%である。住友化学9.9%、住友共同電力5%、四国ガス5%も出資する。","source":"https://www.yonden.co.jp/press/2021/__icsFiles/afieldfile/2022/03/02/pr002_1.pdf","g":"tokyo_gas","companyFull":"新居浜LNG株式会社","owners":[{"name":"東京ガスエンジニアリングソリューションズ株式会社","share":"50.1%"},{"name":"四国電力株式会社","share":"30%"},{"name":"住友化学株式会社","share":"9.9%"},{"name":"住友共同電力株式会社","share":"5%"},{"name":"四国ガス株式会社","share":"5%"}]},{"id":34,"company":"ひびきエル・エヌ・ジー","yard":"ひびきLNG基地","pref":"福岡県","city":"北九州市","address":"福岡県北九州市若松区向洋町20-1","lat":33.926189,"lon":130.785294,"cat":"lng","products":"地上タンク2基（西部ガス・北部九州広域供給・隣接発電）","capacity":"36万kL","note":"出資比率は西部ガスホールディングス90%、九州電力10%である。","source":"https://www.hibikilng.co.jp/company.html","g":"other","companyFull":"ひびきエル・エヌ・ジー株式会社","owners":[{"name":"西部ガスホールディングス株式会社","share":"90%"},{"name":"九州電力株式会社","share":"10%"}]},{"id":33,"company":"北九州エル・エヌ・ジー","yard":"戸畑基地","pref":"福岡県","city":"北九州市","address":"福岡県北九州市戸畑区大字中原字先の浜46番117","lat":33.918484,"lon":130.826279,"cat":"lng","products":"地上タンク8基（発電・製鉄・都市ガス・内航・ローリー）","capacity":"48万kL","note":"出資比率は九州電力75%、日本製鉄25%である。","source":"https://www.k-lng.co.jp/","g":"power_other","companyFull":"北九州エル・エヌ・ジー株式会社","owners":[{"name":"九州電力株式会社","share":"75%"},{"name":"日本製鉄株式会社","share":"25%"}]},{"id":32,"company":"大分エル・エヌ・ジー","yard":"大分LNG基地","pref":"大分県","city":"大分市","address":"大分県大分市大字青崎4番地1","lat":33.264874,"lon":131.704163,"cat":"lng","products":"地上タンク5基（新大分発電所・大分ガス・ローリー出荷）","capacity":"46万kL","note":"九州電力の連結子会社である。議決権比率98%は九州電力の関係会社開示（2017年3月末時点）による。","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"power_other","companyFull":"大分エル・エヌ・ジー株式会社","owners":[{"name":"九州電力株式会社","share":"98%"}]},{"id":35,"company":"日本ガス","yard":"鹿児島工場","pref":"鹿児島県","city":"鹿児島市","address":"鹿児島県鹿児島市谷山港3丁目3-5","lat":31.493818,"lon":130.525864,"cat":"lng","products":"地上タンク2基（都市ガス・ローリー出荷）","capacity":"8.6万kL","note":"","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"other","companyFull":"日本ガス株式会社","owners":[{"name":"日本ガス株式会社","share":"100%"}]},{"id":36,"company":"沖縄電力","yard":"吉の浦火力発電所LNG設備","pref":"沖縄県","city":"中城村","address":"沖縄県中頭郡中城村泊509-2","lat":26.275333,"lon":127.809303,"cat":"lng","products":"地上タンク2基（吉の浦火力・沖縄ガス向け）","capacity":"28万kL","note":"","source":"https://www.gas.or.jp/gasfacts_j/pdf/0003.pdf","g":"power_other","companyFull":"沖縄電力株式会社","owners":[{"name":"沖縄電力株式会社","share":"100%"}]}];
+const CITIES = [{"pref":"神奈川県","city":"川崎市","n":4,"companies":["レゾナック","JERA","日本水素エネルギー","ENEOS"],"lat":35.49290825,"lon":139.73170075000002},{"pref":"愛知県","city":"知多市","n":3,"companies":["東邦ガス","JERA","知多エル・エヌ・ジー"],"lat":34.98207033333333,"lon":136.842058},{"pref":"宮城県","city":"仙台市","n":2,"companies":["仙台市ガス局","東北電力"],"lat":38.278395,"lon":141.031578},{"pref":"新潟県","city":"上越市","n":2,"companies":["JERA","INPEX"],"lat":37.20604899999999,"lon":138.277224},{"pref":"三重県","city":"四日市市","n":2,"companies":["東邦ガス","JERA"],"lat":34.983687,"lon":136.662371},{"pref":"兵庫県","city":"姫路市","n":2,"companies":["関西電力","大阪ガス"],"lat":34.770544,"lon":134.6946565},{"pref":"大阪府","city":"堺市","n":2,"companies":["関西電力","大阪ガス"],"lat":34.558719499999995,"lon":135.426277},{"pref":"大阪府","city":"高石市","n":2,"companies":["大阪ガス","三井物産"],"lat":34.5387325,"lon":135.41353600000002},{"pref":"福岡県","city":"北九州市","n":2,"companies":["ひびきエル・エヌ・ジー","北九州エル・エヌ・ジー"],"lat":33.9223365,"lon":130.8057865},{"pref":"福島県","city":"新地町","n":2,"companies":["石油資源開発"],"lat":37.854529,"lon":140.892016},{"pref":"神奈川県","city":"横浜市","n":2,"companies":["東京ガス"],"lat":35.4413225,"lon":139.67150900000001},{"pref":"北海道","city":"石狩市","n":1,"companies":["北海道ガス"],"lat":43.202915,"lon":141.299194},{"pref":"北海道","city":"千歳市","n":1,"companies":["三菱商事"],"lat":42.821011,"lon":141.651001},{"pref":"北海道","city":"苫小牧市","n":1,"companies":["北海道電力"],"lat":42.634071,"lon":141.60553},{"pref":"青森県","city":"八戸市","n":1,"companies":["ENEOSエルエヌジーサービス"],"lat":40.538574,"lon":141.510925},{"pref":"新潟県","city":"聖籠町","n":1,"companies":["日本海エル・エヌ・ジー"],"lat":38.003521,"lon":139.245987},{"pref":"福島県","city":"浪江町","n":1,"companies":["国立研究開発法人新エネルギー・産業技術総合開発機構"],"lat":37.497253,"lon":140.960754},{"pref":"富山県","city":"射水市","n":1,"companies":["北陸電力"],"lat":36.765285,"lon":137.128738},{"pref":"茨城県","city":"日立市","n":1,"companies":["東京ガス"],"lat":36.489838,"lon":140.599854},{"pref":"茨城県","city":"ひたちなか市","n":1,"companies":["JERA"],"lat":36.39669,"lon":140.534729},{"pref":"山梨県","city":"北杜市","n":1,"companies":["やまなしハイドロジェンカンパニー"],"lat":35.773617,"lon":138.28743},{"pref":"千葉県","city":"袖ケ浦市","n":1,"companies":["東京ガス"],"lat":35.468906,"lon":139.97084},{"pref":"千葉県","city":"富津市","n":1,"companies":["JERA"],"lat":35.345959,"lon":139.839783},{"pref":"愛知県","city":"東海市","n":1,"companies":["豊田通商"],"lat":35.055962,"lon":136.892609},{"pref":"静岡県","city":"静岡市","n":1,"companies":["清水エル・エヌ・ジー"],"lat":35.030071,"lon":138.49498},{"pref":"三重県","city":"川越町","n":1,"companies":["JERA"],"lat":35.015755,"lon":136.691513},{"pref":"愛知県","city":"碧南市","n":1,"companies":["JERA"],"lat":34.868977,"lon":136.971863},{"pref":"兵庫県","city":"神戸市","n":1,"companies":["技術研究組合HySTRA"],"lat":34.660847,"lon":135.218292},{"pref":"岡山県","city":"倉敷市","n":1,"companies":["水島エルエヌジー"],"lat":34.509693,"lon":133.733444},{"pref":"香川県","city":"坂出市","n":1,"companies":["坂出LNG"],"lat":34.354004,"lon":133.832794},{"pref":"広島県","city":"廿日市市","n":1,"companies":["広島ガス"],"lat":34.340992,"lon":132.335052},{"pref":"山口県","city":"周南市","n":1,"companies":["出光興産"],"lat":34.055725,"lon":131.806595},{"pref":"山口県","city":"柳井市","n":1,"companies":["中国電力"],"lat":33.983452,"lon":132.112854},{"pref":"愛媛県","city":"新居浜市","n":1,"companies":["新居浜LNG"],"lat":33.962395,"lon":133.258652},{"pref":"大分県","city":"大分市","n":1,"companies":["大分エル・エヌ・ジー"],"lat":33.264874,"lon":131.704163},{"pref":"鹿児島県","city":"鹿児島市","n":1,"companies":["日本ガス"],"lat":31.493818,"lon":130.525864},{"pref":"沖縄県","city":"中城村","n":1,"companies":["沖縄電力"],"lat":26.275333,"lon":127.809303}];
+const GROUPS = [{"key":"tokyo_gas","label":"東京ガス","color":"#2a78d6"},{"key":"jera","label":"JERA","color":"#eb6834"},{"key":"osaka_gas","label":"大阪ガス","color":"#1baf7a"},{"key":"toho_gas","label":"東邦ガス","color":"#eda100"},{"key":"eneos","label":"ENEOS","color":"#e87ba4"},{"key":"mitsubishi","label":"三菱商事","color":"#008300"},{"key":"power_other","label":"電力会社（その他）","color":"#6250d6"},{"key":"other","label":"その他の企業","color":"#8a8880"}];
+const CAT = {"lng":"LNG受入基地","hydrogen":"水素拠点","ammonia":"アンモニア拠点","plan":"計画中"};
+const FADED = ["plan"];
+const gColor = Object.fromEntries(GROUPS.map(g => [g.key, g.color]));
+const gLabel = Object.fromEntries(GROUPS.map(g => [g.key, g.label]));
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const onG = new Set(GROUPS.map(g => g.key));
+const onC = new Set(Object.keys(CAT));
+let map = null; const markers = {};
+
+if (window.L) {
+  map = L.map('map', { scrollWheelZoom: true, zoomSnap: 0.5 }).fitBounds(ROWS.map(r => [r.lat, r.lon]), { padding: [24, 24] });
+  const gsiAttr = '<a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>';
+  const pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', { maxZoom: 18, attribution: gsiAttr }).addTo(map);
+  const photo = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', { maxZoom: 18, attribution: gsiAttr });
+  L.control.layers({ '淡色地図': pale, '航空写真': photo }, null, { position: 'topright', collapsed: false }).addTo(map);
+  for (const r of ROWS) {
+    const m = L.circleMarker([r.lat, r.lon], {
+      radius: FADED.includes(r.cat) ? 6 : 8, color: '#fff', weight: 2,
+      fillColor: gColor[r.g], fillOpacity: FADED.includes(r.cat) ? 0.55 : 0.95
+    });
+    m.bindTooltip(esc(r.company) + ' ' + esc(r.yard), { direction: 'top', offset: [0, -6] });
+    m.bindPopup('<div class="pop"><b>' + esc(r.company) + '</b><br>' + esc(r.yard) +
+      '<div class="s">' + esc(r.pref + r.city) + (r.address ? '／' + esc(r.address) : '') + '</div>' +
+      '<div class="s">' + esc(gLabel[r.g]) + '／' + esc(CAT[r.cat] || '') + '</div>' +
+      (r.products ? '<div>' + esc(r.products) + '</div>' : '') +
+      (r.capacity ? '<div class="s">' + esc(r.capacity) + '</div>' : '') +
+      (r.note ? '<div class="s">' + esc(r.note) + '</div>' : '') +
+      (r.owners && r.owners.length > 1 ? '<div class="s">出資: ' + r.owners.map(o => esc(o.name.replace(/株式会社/g, '')) + (o.share ? ' ' + esc(o.share) : '')).join('、') + '</div>' : '') +
+      '<div class="s links">' +
+      (r.source ? '<a href="' + esc(r.source) + '" target="_blank" rel="noopener">出典</a>' : '') +
+      '<a href="https://earth.google.com/web/@' + r.lat + ',' + r.lon + ',0a,1500d,35y,0h,0t,0r" target="_blank" rel="noopener">Google Earthで開く</a>' +
+      '<a href="japan_industry_atlas.html#c=' + encodeURIComponent(r.companyFull) + '">アトラスで企業を見る</a>' +
+      '</div></div>');
+    markers[r.id] = m;
+  }
+} else {
+  document.getElementById('map').innerHTML = '<p style="padding:20px">地図ライブラリを読み込めなかった。下の一覧で所在地を確認できる。</p>';
+}
+
+function chip(label, color, n, on, fn) {
+  const b = document.createElement('button');
+  b.className = 'chip' + (on ? '' : ' off'); b.type = 'button';
+  b.innerHTML = (color ? '<span class="dot" style="background:' + color + '"></span>' : '') + esc(label) + ' <span class="n">' + n + '</span>';
+  b.onclick = () => { fn(); b.classList.toggle('off'); render(); };
+  return b;
+}
+const gc = document.getElementById('gchips');
+for (const g of GROUPS) {
+  const n = ROWS.filter(r => r.g === g.key).length; if (!n) continue;
+  gc.appendChild(chip(g.label, g.color, n, true, () => onG.has(g.key) ? onG.delete(g.key) : onG.add(g.key)));
+}
+const cc = document.getElementById('cchips');
+for (const [k, v] of Object.entries(CAT)) {
+  const n = ROWS.filter(r => r.cat === k).length; if (!n) continue;
+  cc.appendChild(chip(v, null, n, true, () => onC.has(k) ? onC.delete(k) : onC.add(k)));
+}
+const q = document.getElementById('q');
+q.addEventListener('input', render);
+
+function visible(r) {
+  const t = q.value.trim();
+  if (!onG.has(r.g) || !onC.has(r.cat)) return false;
+  if (!t) return true;
+  return [r.company, r.yard, r.pref, r.city, r.products, gLabel[r.g]].join(' ').includes(t);
+}
+function focus(lat, lon, z, id) {
+  if (!map) return;
+  map.flyTo([lat, lon], z);
+  if (id != null && markers[id]) setTimeout(() => markers[id].openPopup(), 600);
+  document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function render() {
+  const vis = ROWS.filter(visible);
+  document.getElementById('count').textContent = vis.length + '／' + ROWS.length + '拠点';
+  if (map) for (const r of ROWS) { const m = markers[r.id]; visible(r) ? m.addTo(map) : m.remove(); }
+  const ids = new Set(vis.map(r => r.id));
+  const yb = document.querySelector('#ytbl tbody');
+  yb.innerHTML = vis.map(r => '<tr data-id="' + r.id + '"><td><span class="gdot" style="background:' + gColor[r.g] + '"></span>' + esc(r.company) +
+    '</td><td>' + esc(r.yard) + '</td><td>' + esc(r.pref + r.city) + '</td><td>' + esc(CAT[r.cat] || '') + '</td><td>' + esc(r.products) +
+    '</td><td>' + (r.source ? '<a href="' + esc(r.source) + '" target="_blank" rel="noopener">link</a>' : '') + '</td></tr>').join('');
+  yb.querySelectorAll('tr').forEach(tr => tr.onclick = e => {
+    if (e.target.tagName === 'A') return;
+    const r = ROWS[ROWS.findIndex(x => x.id == tr.dataset.id)]; focus(r.lat, r.lon, 13, r.id);
+  });
+  const cb = document.querySelector('#ctbl tbody');
+  const cs = CITIES.map(c => ({ ...c, v: vis.filter(r => r.pref === c.pref && r.city === c.city) })).filter(c => c.v.length)
+    .sort((a, b) => b.v.length - a.v.length);
+  cb.innerHTML = cs.map((c, i) => '<tr data-i="' + i + '"><td>' + esc(c.city) + '</td><td>' + esc(c.pref) + '</td><td class="num">' + c.v.length +
+    '</td><td>' + [...new Set(c.v.map(r => '<span class="gdot" style="background:' + gColor[r.g] + '"></span>' + esc(r.company)))].join('、') + '</td></tr>').join('');
+  cb.querySelectorAll('tr').forEach(tr => tr.onclick = () => { const c = cs[tr.dataset.i]; focus(c.lat, c.lon, 11); });
+}
+render();
+</script>
+</body>
+</html>

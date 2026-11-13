@@ -29,7 +29,7 @@ function groupOf(r) {
 
 const rows = data
   .filter(r => typeof r.lat === 'number' && typeof r.lon === 'number')
-  .map((r, i) => ({ ...r, id: i, g: groupOf(r), cityKey: `${r.pref}${r.city}`, company: r.company.replace(/^(株式会社|有限会社)\s*|\s*(株式会社|有限会社)$/g, '') }))
+  .map((r, i) => ({ ...r, id: i, g: groupOf(r), cityKey: `${r.pref}${r.city}`, companyFull: r.company, company: r.company.replace(/^(株式会社|有限会社)\s*|\s*(株式会社|有限会社)$/g, '') }))
   .sort((a, b) => a.lat === b.lat ? 0 : b.lat - a.lat);
 
 // Spread rows that share identical coordinates so every marker stays clickable
@@ -109,6 +109,7 @@ const html = `<!doctype html>
   .fn{color:var(--sub);font-size:12.5px}
   .pop b{font-size:14px}
   .pop .s{color:#555;font-size:12px}
+  .pop .links a{margin-right:12px;white-space:nowrap}
   .leaflet-tooltip{font-family:inherit}
 </style>
 </head>
@@ -136,7 +137,7 @@ const html = `<!doctype html>
   <span class="count" id="count"></span>
 </div>
 <div id="map" role="img" aria-label="${esc(meta.title)}"></div>
-<p class="fn">地図：国土地理院 淡色地図。同じ市区町村に複数の拠点がある場合は、拡大すると個別の点に分かれる。</p>
+<p class="fn">地図：国土地理院 淡色地図・全国最新写真。右上で航空写真に切り替えられる。拠点を選択して拡大すると、敷地と設備を写真で確認できる。同じ市区町村に複数の拠点がある場合は、拡大すると個別の点に分かれる。</p>
 
 <h2>市区町村別<span class="en">By Municipality</span></h2>
 <p class="fn">拠点数の多い順。行を選択すると地図がその市区町村に移動する。</p>
@@ -153,7 +154,7 @@ ${meta.notes.map(n => `<p class="fn">${esc(n)}</p>`).join('\n')}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-const ROWS = ${J(rows.map(r => ({ id: r.id, company: r.company, yard: r.yard, pref: r.pref, city: r.city, address: r.address, lat: r.lat, lon: r.lon, cat: r.category, products: r.products, capacity: r.capacity, note: r.note, source: r.source, g: r.g })))};
+const ROWS = ${J(rows.map(r => ({ id: r.id, company: r.company, yard: r.yard, pref: r.pref, city: r.city, address: r.address, lat: r.lat, lon: r.lon, cat: r.category, products: r.products, capacity: r.capacity, note: r.note, source: r.source, g: r.g, companyFull: r.companyFull, owners: r.owners || null })))};
 const CITIES = ${J(cityList)};
 const GROUPS = ${J(groupDefs)};
 const CAT = ${J(CAT)};
@@ -167,9 +168,10 @@ let map = null; const markers = {};
 
 if (window.L) {
   map = L.map('map', { scrollWheelZoom: true, zoomSnap: 0.5 }).fitBounds(ROWS.map(r => [r.lat, r.lon]), { padding: [24, 24] });
-  L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
-    maxZoom: 18, attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>'
-  }).addTo(map);
+  const gsiAttr = '<a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>';
+  const pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', { maxZoom: 18, attribution: gsiAttr }).addTo(map);
+  const photo = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', { maxZoom: 18, attribution: gsiAttr });
+  L.control.layers({ '淡色地図': pale, '航空写真': photo }, null, { position: 'topright', collapsed: false }).addTo(map);
   for (const r of ROWS) {
     const m = L.circleMarker([r.lat, r.lon], {
       radius: FADED.includes(r.cat) ? 6 : 8, color: '#fff', weight: 2,
@@ -182,7 +184,12 @@ if (window.L) {
       (r.products ? '<div>' + esc(r.products) + '</div>' : '') +
       (r.capacity ? '<div class="s">' + esc(r.capacity) + '</div>' : '') +
       (r.note ? '<div class="s">' + esc(r.note) + '</div>' : '') +
-      (r.source ? '<div class="s"><a href="' + esc(r.source) + '" target="_blank" rel="noopener">出典</a></div>' : '') + '</div>');
+      (r.owners && r.owners.length > 1 ? '<div class="s">出資: ' + r.owners.map(o => esc(o.name.replace(/株式会社/g, '')) + (o.share ? ' ' + esc(o.share) : '')).join('、') + '</div>' : '') +
+      '<div class="s links">' +
+      (r.source ? '<a href="' + esc(r.source) + '" target="_blank" rel="noopener">出典</a>' : '') +
+      '<a href="https://earth.google.com/web/@' + r.lat + ',' + r.lon + ',0a,1500d,35y,0h,0t,0r" target="_blank" rel="noopener">Google Earthで開く</a>' +
+      '<a href="japan_industry_atlas.html#c=' + encodeURIComponent(r.companyFull) + '">アトラスで企業を見る</a>' +
+      '</div></div>');
     markers[r.id] = m;
   }
 } else {

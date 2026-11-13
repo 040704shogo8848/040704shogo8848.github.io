@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日本の半導体工場マップ</title>
+<meta name="description" content="日本の半導体前工程工場と主要な後工程工場58拠点を市区町村単位で地図に表示する。稼働中・建設中・後工程・閉鎖の区分と企業グループで比較できる。">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root{--bg:#F8F7F3;--ink:#1a1a1a;--sub:#555;--accent:#2563EB;--line:#E5E2DA;--chip:#EEF2FF}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 28px 80px}
+  @media(max-width:680px){.wrap{padding:28px 16px 60px}}
+  header.top{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .lead{color:var(--sub);font-size:14px;margin-top:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  a{color:var(--accent)}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  @media(max-width:680px){.kpi{grid-template-columns:repeat(2,1fr)}}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:22px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
+  #map{height:640px;border:1px solid var(--line);border-radius:10px;background:#EDEBE4}
+  @media(max-width:680px){#map{height:70vh}}
+  .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0 8px}
+  .tools input{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff;font-family:inherit}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+  .chip{border:1px solid var(--line);background:#fff;color:var(--ink);font-size:12.5px;padding:4px 11px;border-radius:14px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+  .chip .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .chip.off{opacity:.35}
+  .chip .n{color:var(--sub);font-variant-numeric:tabular-nums}
+  .count{font-size:12.5px;color:var(--sub);white-space:nowrap}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;white-space:nowrap}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  tbody tr{cursor:pointer}
+  tbody tr:hover{background:#FFFDF5}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+  .tbl-scroll>table{min-width:760px}
+  .gdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .fn{color:var(--sub);font-size:12.5px}
+  .pop b{font-size:14px}
+  .pop .s{color:#555;font-size:12px}
+  .pop .links a{margin-right:12px;white-space:nowrap}
+  .leaflet-tooltip{font-family:inherit}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+li{overflow-wrap:anywhere}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../011_company/index.html">company</a><a href="../012_politics/index.html">politics</a><a href="index.html">geo</a><a href="../014_industry/index.html">industry</a><a href="../015_net/index.html">net</a><a href="../016_finance/index.html">finance</a><a href="../017_science/index.html">science</a><a href="../018_computing/index.html">computing</a><a href="../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a><a href="../../030_ideas/034_foundation/index.html">foundation</a><a href="../../030_ideas/035_ventures/index.html">ventures</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../020_personal/021_profile/index.html">profile</a><a href="../../020_personal/02A_plan/index.html">plan</a><a href="../../020_personal/023_travel/index.html">travel</a><a href="../../020_personal/027_cinema/index.html">cinema</a><a href="../../020_personal/02B_reading/index.html">reading</a><a href="../../020_personal/024_method/index.html">method</a><a href="../../020_personal/026_handbook/index.html">handbook</a><a href="../../020_personal/025_fitness/index.html">fitness</a><a href="../../020_personal/028_english/index.html">english</a><a href="../../020_personal/029_mental_math/index.html">mental math</a><a href="../../020_personal/02C_chemistry/index.html">chemistry</a><a href="../../020_personal/02D_probability/index.html">probability</a><a href="../../020_personal/02E_calculus/index.html">calculus</a><a href="../../020_personal/02F_linear_algebra/index.html">linear algebra</a><a href="../../020_personal/02G_physics/index.html">physics</a><a href="../../020_personal/02H_heidegger/index.html">heidegger</a><a href="../../020_personal/02I_quiz/index.html">quiz</a><a href="../../020_personal/02J_geography/index.html">geography</a><a href="../../020_personal/02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../011_company/index.html">company</a>
+    <a class="snav-a" href="../012_politics/index.html">politics</a>
+    <a class="snav-a" href="index.html">geo</a>
+    <a class="snav-a" href="../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../015_net/index.html">net</a>
+    <a class="snav-a" href="../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../017_science/index.html">science</a>
+    <a class="snav-a" href="../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../030_ideas/034_foundation/index.html">foundation</a>
+    <a class="snav-a" href="../../030_ideas/035_ventures/index.html">ventures</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../020_personal/029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../020_personal/02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../020_personal/02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../020_personal/02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../020_personal/02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../020_personal/02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../020_personal/02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../020_personal/02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../../020_personal/02J_geography/index.html">geography</a>
+    <a class="snav-a" href="../../020_personal/02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+<header class="top">
+  <h1>日本の半導体工場マップ</h1>
+  <div class="meta">確認日 2026-11-13／58拠点・27社・51市区町村</div>
+  <p class="lead">日本の半導体デバイス工場を所在地の市区町村に表示する。点の色は企業グループを示す。点を選択すると企業名・主な製品・出典を表示する。</p>
+</header>
+
+<div class="kpi">
+  <div class="card"><div class="k">拠点数</div><div class="v">58</div></div>
+  <div class="card"><div class="k">企業数</div><div class="v">27</div></div>
+  <div class="card"><div class="k">市区町村数</div><div class="v">51</div></div>
+  <div class="card"><div class="k">都道府県数</div><div class="v">29</div></div>
+</div>
+
+<h2>地図<span class="en">Map</span></h2>
+<div class="chips" id="gchips"></div>
+<div class="chips" id="cchips"></div>
+<div class="tools">
+  <input type="search" id="q" placeholder="検索（企業名・市区町村・製品）" autocomplete="off">
+  <span class="count" id="count"></span>
+</div>
+<div id="map" role="img" aria-label="日本の半導体工場マップ"></div>
+<p class="fn">地図：国土地理院 淡色地図・全国最新写真。右上で航空写真に切り替えられる。拠点を選択して拡大すると、敷地と設備を写真で確認できる。同じ市区町村に複数の拠点がある場合は、拡大すると個別の点に分かれる。</p>
+
+<h2>市区町村別<span class="en">By Municipality</span></h2>
+<p class="fn">拠点数の多い順。行を選択すると地図がその市区町村に移動する。</p>
+<div class="tbl-scroll"><table id="ctbl"><thead><tr><th>市区町村</th><th>都道府県</th><th>拠点数</th><th>企業</th></tr></thead><tbody></tbody></table></div>
+
+<h2>拠点一覧<span class="en">All Sites</span></h2>
+<p class="fn">北から順に並べる。行を選択すると地図がその拠点に移動する。</p>
+<div class="tbl-scroll"><table id="ytbl"><thead><tr><th>企業</th><th>工場</th><th>所在地</th><th>区分</th><th>主な製品</th><th>出典</th></tr></thead><tbody></tbody></table></div>
+
+<h2>対象と注記<span class="en">Scope</span></h2>
+<p class="fn">対象は半導体デバイスの前工程工場（ウェハ処理）と主要な後工程工場である。2026年時点で建設中・計画中の工場も含めた。製造装置メーカーと材料メーカーの工場は対象外とした。</p>
+<p class="fn">区分は工程と稼働状態で分けた。ウェハ処理を行う工場を「前工程（稼働中）」とした。建設中または量産前の計画段階を「建設中・計画中」とした。組立・テスト等を「後工程」とした。閉鎖または売却予定を「閉鎖・売却予定」とし、薄い色の小さな点で示す。</p>
+<p class="fn">企業グループは主要メモリ・ロジック・センサー・パワー各社を独立色とし、三菱電機・富士電機・東芝系・USJC・TPSCo・エプソン・エイブリック等は「その他」にまとめた。ロームグループのラピスセミコンダクタと製造子会社はロームに含めた。</p>
+<p class="fn">所在地は各社の拠点一覧、経済産業省の認定資料、官公庁の工場概要で確認した。緯度経度は国土地理院のジオコーダで変換した。番地まで一致しない場合は町名の代表点を使い、注記に記載した。同一座標になる拠点は選択できるように位置をわずかにずらした。</p>
+<p class="fn">インフィニオンの国内製造工場とDB HiTekの国内工場は確認できず、収録していない。オンセミ会津工場の番地も公式資料で確認できず、収録していない。装置・材料メーカーの工場は対象外のため収録していない。</p>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const ROWS = [{"id":22,"company":"Rapidus","yard":"IIM-1","pref":"北海道","city":"千歳市","address":"北海道千歳市美々758-62","lat":42.787975,"lon":141.699905,"cat":"building","products":"先端ロジック（2nm GAA）","capacity":"300mm","note":"パイロットラインは2025年4月から稼働。量産開始は2027年予定である。 設立8社の出資後、政府の情報処理推進機構と民間企業群から追加出資を受けた。","source":"https://www.rapidus.inc/iim/","g":"rapidus","companyFull":"Rapidus株式会社","owners":[{"name":"独立行政法人情報処理推進機構","share":""},{"name":"株式会社アルゴグラフィックス","share":""},{"name":"ウシオ電機株式会社","share":""},{"name":"日本電信電話株式会社","share":""},{"name":"キオクシア株式会社","share":""},{"name":"キヤノン株式会社","share":""},{"name":"京セラ株式会社","share":""},{"name":"ＪＸ金属株式会社","share":""},{"name":"セイコーエプソン株式会社","share":""},{"name":"ソニーグループ株式会社","share":""},{"name":"ソフトバンク株式会社","share":""},{"name":"大日本印刷株式会社","share":""},{"name":"株式会社千葉銀行","share":""},{"name":"株式会社デンソー","share":""},{"name":"トヨタ自動車株式会社","share":""},{"name":"長瀬産業株式会社","share":""},{"name":"株式会社日本政策投資銀行","share":""},{"name":"日本通運株式会社","share":""},{"name":"日本電気株式会社","share":""},{"name":"日本アイ・ビー・エム株式会社","share":""},{"name":"能美防災株式会社","share":""},{"name":"株式会社肥後銀行","share":""},{"name":"富士通株式会社","share":""},{"name":"富士フイルム株式会社","share":""},{"name":"古河電気工業株式会社","share":""},{"name":"株式会社北洋銀行","share":""},{"name":"株式会社北陸銀行","share":""},{"name":"株式会社北海道銀行","share":""},{"name":"北海道電力株式会社","share":""},{"name":"本田技研工業株式会社","share":""},{"name":"株式会社みずほ銀行","share":""},{"name":"株式会社三井住友銀行","share":""},{"name":"株式会社三菱UFJ銀行","share":""}]},{"id":42,"company":"富士電機津軽セミコンダクタ","yard":"津軽工場","pref":"青森県","city":"五所川原市","address":"青森県五所川原市大字漆川字鍋懸156番地","lat":40.816711,"lon":140.462357,"cat":"front","products":"パワー半導体向けウエハ／SiC","capacity":"200mm・SiC 150mm","note":"","source":"https://www.fujielectric.co.jp/fts/companyprofile/","g":"other","companyFull":"富士電機津軽セミコンダクタ株式会社","owners":null},{"id":56,"company":"エイブリック","yard":"秋田事業所","pref":"秋田県","city":"大仙市","address":"秋田県大仙市大曲西根字鳥居58-2","lat":39.45541,"lon":140.450928,"cat":"back","products":"アナログ半導体の組立","capacity":"","note":"座標は町名の代表点。","source":"https://www.ablic.com/jp/semicon/corp/base/","g":"other","companyFull":"エイブリック株式会社","owners":null},{"id":1,"company":"キオクシア岩手","yard":"北上工場","pref":"岩手県","city":"北上市","address":"岩手県北上市北工業団地5番29号","lat":39.340141,"lon":141.131927,"cat":"front","products":"NAND型フラッシュメモリ","capacity":"300mm","note":"第1製造棟は2020年、第2製造棟は2025年9月に稼働を開始した。","source":"https://www.kioxia.com/ja-jp/about/kitakami.html","g":"kioxia","companyFull":"キオクシア岩手株式会社","owners":null},{"id":46,"company":"ジャパンセミコンダクター","yard":"岩手事業所","pref":"岩手県","city":"北上市","address":"岩手県北上市北工業団地6番6号","lat":39.339302,"lon":141.12558,"cat":"front","products":"アナログ／パワー／マイコン／リニアイメージセンサ","capacity":"","note":"東芝デバイス＆ストレージの子会社。","source":"https://www.jsemicon.co.jp/company/about.htm","g":"other","companyFull":"株式会社ジャパンセミコンダクター","owners":null},{"id":52,"company":"東北エプソン","yard":"酒田事業所（半導体）","pref":"山形県","city":"酒田市","address":"山形県酒田市十里塚字村東山166-3","lat":38.880943,"lon":139.814697,"cat":"front","products":"アナログ／パワー／ASIC（ファウンドリ）","capacity":"150mm・200mm","note":"セイコーエプソングループの前工程拠点。公式では6インチ月産2.4万枚、8インチ月産2.5万枚と公表している。","source":"https://www.epson.jp/prod/semicon/information/network.htm","g":"other","companyFull":"東北エプソン株式会社","owners":null},{"id":5,"company":"ソニーセミコンダクタマニュファクチャリング","yard":"山形テクノロジーセンター","pref":"山形県","city":"鶴岡市","address":"山形県鶴岡市宝田1-11-73","lat":38.743965,"lon":139.836975,"cat":"front","products":"モバイル向けCMOSイメージセンサー","capacity":"300mm","note":"","source":"https://www.sony-semicon.com/ja/company/base/","g":"sony","companyFull":"ソニーセミコンダクタマニュファクチャリング株式会社","owners":null},{"id":31,"company":"ラピスセミコンダクタ","yard":"宮城工場","pref":"宮城県","city":"黒川郡大衡村","address":"宮城県黒川郡大衡村沖の平1","lat":38.498566,"lon":140.901321,"cat":"front","products":"LSI／パワーデバイス","capacity":"","note":"座標は町名の代表点。","source":"https://www.rohm.co.jp/company/about/branch","g":"rohm","companyFull":"ラピスセミコンダクタ株式会社","owners":null},{"id":9,"company":"ソニーセミコンダクタマニュファクチャリング","yard":"白石蔵王テクノロジーセンター","pref":"宮城県","city":"白石市","address":"宮城県白石市白鳥三丁目53番地-2","lat":38.03503,"lon":140.644745,"cat":"front","products":"半導体レーザー","capacity":"","note":"","source":"https://www.sony-semicon.com/ja/company/base/","g":"sony","companyFull":"ソニーセミコンダクタマニュファクチャリング株式会社","owners":null},{"id":17,"company":"ルネサス エレクトロニクス","yard":"米沢工場","pref":"山形県","city":"米沢市","address":"山形県米沢市大字花沢字八木橋東3-3274","lat":37.928589,"lon":140.125839,"cat":"back","products":"組立・テスト","capacity":"","note":"後工程工場である。座標は町名の代表点。","source":"https://www.renesas.com/ja/about/profile/global","g":"renesas","companyFull":"ルネサス エレクトロニクス株式会社","owners":null},{"id":54,"company":"JSファンダリ","yard":"新潟工場","pref":"新潟県","city":"小千谷市","address":"新潟県小千谷市千谷甲3000","lat":37.327938,"lon":138.805969,"cat":"front","products":"アナログ／パワー（ファウンドリ）","capacity":"125mm・150mm","note":"旧オン・セミコンダクター新潟の工場を継承した。","source":"https://jpnsf.com/pages/77/","g":"other","companyFull":"株式会社JSファンダリ","owners":null},{"id":51,"company":"タワーパートナーズ セミコンダクター","yard":"新井工場","pref":"新潟県","city":"妙高市","address":"新潟県妙高市栗原四丁目5番1号","lat":37.051224,"lon":138.260696,"cat":"front","products":"アナログ／CIS","capacity":"200mm","note":"タワーセミコンダクターとヌヴォトンテクノロジージャパンの合弁ファウンドリである。","source":"https://www.jp-tpsco.com/company/","g":"other","companyFull":"タワーパートナーズ セミコンダクター株式会社","owners":[{"name":"タワーセミコンダクター","share":"51%"},{"name":"ヌヴォトンテクノロジージャパン株式会社","share":"49%"}]},{"id":49,"company":"タワーパートナーズ セミコンダクター","yard":"魚津工場","pref":"富山県","city":"魚津市","address":"富山県魚津市東山800番地","lat":36.821293,"lon":137.450897,"cat":"front","products":"RF SOI／パワー／センサ／SiPho","capacity":"300mm（65nm）・200mm","note":"本社を置く生産拠点である。 タワーセミコンダクターとヌヴォトンテクノロジージャパンの合弁ファウンドリである。","source":"https://www.jp-tpsco.com/company/","g":"other","companyFull":"タワーパートナーズ セミコンダクター株式会社","owners":[{"name":"タワーセミコンダクター","share":"51%"},{"name":"ヌヴォトンテクノロジージャパン株式会社","share":"49%"}]},{"id":50,"company":"タワーパートナーズ セミコンダクター","yard":"砺波工場","pref":"富山県","city":"砺波市","address":"富山県砺波市東開発271番地","lat":36.649864,"lon":137.001587,"cat":"front","products":"アナログ／パワーディスクリート／NVM／CCD","capacity":"200mm","note":"タワーセミコンダクターとヌヴォトンテクノロジージャパンの合弁ファウンドリである。","source":"https://www.jp-tpsco.com/company/","g":"other","companyFull":"タワーパートナーズ セミコンダクター株式会社","owners":[{"name":"タワーセミコンダクター","share":"51%"},{"name":"ヌヴォトンテクノロジージャパン株式会社","share":"49%"}]},{"id":44,"company":"加賀東芝エレクトロニクス","yard":"加賀工場","pref":"石川県","city":"能美市","address":"石川県能美市岩内町1番地1","lat":36.444443,"lon":136.570145,"cat":"front","products":"ディスクリート／パワー半導体","capacity":"200mm・300mm","note":"300mmシリコンパワー半導体の新棟が2025年に稼働した。","source":"https://www.toshiba-kaga.co.jp/profile/","g":"other","companyFull":"加賀東芝エレクトロニクス株式会社","owners":null},{"id":12,"company":"ルネサス セミコンダクタ マニュファクチュアリング","yard":"那珂工場","pref":"茨城県","city":"ひたちなか市","address":"茨城県ひたちなか市堀口751","lat":36.397152,"lon":140.517197,"cat":"front","products":"マイコン／ロジック／アナログ","capacity":"200mm・300mm","note":"前工程の本社工場である。","source":"https://www.renesas.com/ja/about/profile/global/rsmc","g":"renesas","companyFull":"ルネサス セミコンダクタ マニュファクチュアリング株式会社","owners":null},{"id":13,"company":"ルネサス セミコンダクタ マニュファクチュアリング","yard":"高崎工場","pref":"群馬県","city":"高崎市","address":"群馬県高崎市西横手町111","lat":36.332497,"lon":139.070023,"cat":"front","products":"アナログ／ディスクリート／ミックスドシグナル","capacity":"150mm級","note":"6インチウェハラインについて、今後2〜3年をめどに生産を段階的に終了し工場を閉鎖する方針を2025年7月に発表した。","source":"https://www.renesas.com/ja/about/profile/global/rsmc","g":"renesas","companyFull":"ルネサス セミコンダクタ マニュファクチュアリング株式会社","owners":null},{"id":40,"company":"富士電機","yard":"松本工場","pref":"長野県","city":"松本市","address":"長野県松本市筑摩4丁目18番1号","lat":36.223282,"lon":137.991638,"cat":"front","products":"IGBT／パワーMOSFET／SiCモジュール","capacity":"","note":"","source":"https://www.fujielectric.co.jp/recruit/graduates/business/matsumoto.html","g":"other","companyFull":"富士電機株式会社","owners":null},{"id":53,"company":"セイコーエプソン","yard":"諏訪南事業所","pref":"長野県","city":"諏訪郡富士見町","address":"長野県諏訪郡富士見町富士見1010","lat":35.931244,"lon":138.218124,"cat":"back","products":"WLCSP等の後工程","capacity":"","note":"","source":"https://www.epson.jp/prod/semicon/information/network.htm","g":"other","companyFull":"セイコーエプソン株式会社","owners":null},{"id":55,"company":"エイブリック","yard":"高塚事業所","pref":"千葉県","city":"松戸市","address":"千葉県松戸市高塚新田563","lat":35.753674,"lon":139.934387,"cat":"front","products":"アナログ半導体","capacity":"150mm・月産2万枚超","note":"","source":"https://www.ablic.com/jp/semicon/corp/base/","g":"other","companyFull":"エイブリック株式会社","owners":null},{"id":41,"company":"富士電機","yard":"山梨工場","pref":"山梨県","city":"南アルプス市","address":"山梨県南アルプス市飯野221番地1","lat":35.649593,"lon":138.445786,"cat":"front","products":"車載用IGBTモジュール","capacity":"200mm（8インチ）","note":"","source":"https://www.fujielectric.co.jp/recruit/graduates/business/yamanashi.html","g":"other","companyFull":"富士電機株式会社","owners":null},{"id":16,"company":"ルネサス セミコンダクタ マニュファクチュアリング","yard":"甲府工場","pref":"山梨県","city":"甲斐市","address":"山梨県甲斐市西八幡4617","lat":35.63393,"lon":138.511597,"cat":"front","products":"パワー半導体（IGBT等）","capacity":"300mm","note":"パワー半導体向け300mm工場として再稼働した。","source":"https://www.renesas.com/ja/about/profile/global/rsmc","g":"renesas","companyFull":"ルネサス セミコンダクタ マニュファクチュアリング株式会社","owners":null},{"id":48,"company":"ユナイテッド・セミコンダクター・ジャパン","yard":"三重工場","pref":"三重県","city":"桑名市","address":"三重県桑名市多度町御衣野2000","lat":35.108704,"lon":136.634598,"cat":"front","products":"ロジック半導体（ファウンドリ）","capacity":"300mm・約39,800枚/月","note":"UMCグループ。プロセスは40〜90nm。","source":"https://usjpc.com/ourbusiness/factory.php","g":"other","companyFull":"ユナイテッド・セミコンダクター・ジャパン株式会社","owners":null},{"id":57,"company":"MMIセミコンダクター","yard":"滋賀工場","pref":"滋賀県","city":"野洲市","address":"滋賀県野洲市市三宅686番地2","lat":35.072964,"lon":136.020554,"cat":"front","products":"アナログ半導体","capacity":"","note":"ミネベアミツミグループ。","source":"https://www.minebeamitsumi.com/corp/company/business/directory/1182316_6274.html","g":"other","companyFull":"MMIセミコンダクター株式会社","owners":null},{"id":2,"company":"キオクシア","yard":"朝日テストセンター","pref":"三重県","city":"三重郡朝日町","address":"三重県三重郡朝日町縄生2000","lat":35.043884,"lon":136.669601,"cat":"back","products":"NAND・SSDのテスト","capacity":"","note":"","source":"https://www.kioxia-holdings.com/content/dam/kioxia-hd/shared/sustainability/environment/asset/yokkaichi_environmental-report_jp_2022.pdf","g":"kioxia","companyFull":"キオクシア株式会社","owners":null},{"id":0,"company":"キオクシア","yard":"四日市工場","pref":"三重県","city":"四日市市","address":"三重県四日市市山之一色町800","lat":35.012653,"lon":136.600891,"cat":"front","products":"NAND型フラッシュメモリ／SSD","capacity":"300mm","note":"前工程の製造棟と後工程の組立棟を同一敷地に持つ。","source":"https://www.kioxia.com/ja-jp/about/location.html","g":"kioxia","companyFull":"キオクシア株式会社","owners":null},{"id":24,"company":"ローム","yard":"本社工場","pref":"京都府","city":"京都市","address":"京都府京都市右京区西院溝崎町21","lat":34.993694,"lon":135.728821,"cat":"front","products":"IC／センサ／トランジスタ／SiC／LED","capacity":"","note":"","source":"https://www.rohm.co.jp/company/about/branch","g":"rohm","companyFull":"ローム株式会社","owners":null},{"id":25,"company":"ローム","yard":"滋賀工場","pref":"滋賀県","city":"大津市","address":"滋賀県大津市晴嵐2-8-1","lat":34.982933,"lon":135.89946,"cat":"front","products":"トランジスタ／ダイオード／IGBT","capacity":"","note":"","source":"https://www.rohm.co.jp/company/about/branch","g":"rohm","companyFull":"ローム株式会社","owners":null},{"id":10,"company":"ソニーセミコンダクタマニュファクチャリング","yard":"東浦サテライト","pref":"愛知県","city":"知多郡東浦町","address":"愛知県知多郡東浦町大字緒川字上舟木50番地","lat":34.971394,"lon":136.952667,"cat":"front","products":"有機ELマイクロディスプレイ","capacity":"","note":"株式会社ジャパンディスプレイ内の拠点である。","source":"https://www.sony-semicon.com/ja/company/base/","g":"sony","companyFull":"ソニーセミコンダクタマニュファクチャリング株式会社","owners":null},{"id":43,"company":"東芝デバイス＆ストレージ","yard":"姫路半導体工場","pref":"兵庫県","city":"揖保郡太子町","address":"兵庫県揖保郡太子町鵤300","lat":34.833199,"lon":134.571869,"cat":"front","products":"ディスクリート／パワー半導体","capacity":"","note":"前工程から後工程までを一貫して担う。","source":"https://toshiba.semicon-storage.com/jp/company/about/omc/himeji.html","g":"other","companyFull":"東芝デバイス＆ストレージ株式会社","owners":null},{"id":26,"company":"ローム・デバイス マニュファクチャリング","yard":"浜松工場","pref":"静岡県","city":"浜松市","address":"静岡県浜松市中央区三和町10","lat":34.704651,"lon":137.76709,"cat":"front","products":"IC／LED／GaN","capacity":"","note":"座標は町名の代表点。","source":"https://www.rohm.co.jp/company/about/branch","g":"rohm","companyFull":"ローム・デバイス マニュファクチャリング株式会社","owners":null},{"id":27,"company":"ローム・デバイス マニュファクチャリング","yard":"笠岡工場","pref":"岡山県","city":"笠岡市","address":"岡山県笠岡市富岡55","lat":34.500011,"lon":133.531082,"cat":"front","products":"IC／ダイオード","capacity":"","note":"","source":"https://www.rohm.co.jp/company/about/branch","g":"rohm","companyFull":"ローム・デバイス マニュファクチャリング株式会社","owners":null},{"id":38,"company":"三菱電機","yard":"パワーデバイス製作所 福山","pref":"広島県","city":"福山市","address":"広島県福山市大門町旭1番地","lat":34.499409,"lon":133.45343,"cat":"front","products":"パワーデバイス（ウエハ工程）","capacity":"","note":"","source":"https://www.mitsubishielectric.co.jp/semiconductors/locations/","g":"other","companyFull":"三菱電機株式会社","owners":null},{"id":34,"company":"ローム・アッセンブリ マニュファクチャリング","yard":"笠岡工場（後工程）","pref":"岡山県","city":"笠岡市","address":"岡山県笠岡市富岡100","lat":34.49931,"lon":133.530334,"cat":"back","products":"ダイオード／LED／半導体レーザー","capacity":"","note":"前工程の笠岡工場と近接する。選択できるように座標をわずかにずらした配置である。","source":"https://www.rohm.co.jp/company/about/branch","g":"rohm","companyFull":"ローム・アッセンブリ マニュファクチャリング株式会社","owners":null},{"id":23,"company":"マイクロンメモリ ジャパン","yard":"広島工場","pref":"広島県","city":"東広島市","address":"広島県東広島市吉川工業団地7-10","lat":34.384979,"lon":132.678467,"cat":"front","products":"DRAM","capacity":"300mm","note":"国内唯一の量産拠点。先進メモリ向け新クリーンルームの建設を進めている。","source":"https://www.pref.hiroshima.lg.jp/site/onlyonenoonezigyou/1267752475949.html","g":"micron","companyFull":"マイクロンメモリ ジャパン株式会社","owners":null},{"id":14,"company":"ルネサス セミコンダクタ マニュファクチュアリング","yard":"西条工場","pref":"愛媛県","city":"西条市","address":"愛媛県西条市ひうち8-6","lat":33.943085,"lon":133.187714,"cat":"front","products":"マイコン／アナログ／パワー","capacity":"","note":"","source":"https://www.renesas.com/ja/about/profile/global/rsmc","g":"renesas","companyFull":"ルネサス セミコンダクタ マニュファクチュアリング株式会社","owners":null},{"id":33,"company":"ローム・アッセンブリ マニュファクチャリング","yard":"行橋工場","pref":"福岡県","city":"行橋市","address":"福岡県行橋市大字稲童字畠ヶ田837-1","lat":33.696945,"lon":131.025375,"cat":"back","products":"IC組立","capacity":"","note":"座標は町名の代表点。","source":"https://www.rohm.co.jp/company/about/branch","g":"rohm","companyFull":"ローム・アッセンブリ マニュファクチャリング株式会社","owners":null},{"id":45,"company":"豊前東芝エレクトロニクス","yard":"豊前工場","pref":"福岡県","city":"豊前市","address":"福岡県豊前市大字沓川760","lat":33.613457,"lon":131.139328,"cat":"back","products":"フォトカプラ／小信号デバイス組立","capacity":"","note":"","source":"https://www.toshiba-buzen.co.jp/company/","g":"other","companyFull":"豊前東芝エレクトロニクス株式会社","owners":null},{"id":35,"company":"三菱電機","yard":"パワーデバイス製作所 福岡","pref":"福岡県","city":"福岡市","address":"福岡県福岡市西区今宿東一丁目1番1号","lat":33.577045,"lon":130.275406,"cat":"back","products":"パワーモジュール組立・検査","capacity":"","note":"後工程のマザー工場。敷地内の新工場棟は2026年10月稼働予定である。","source":"https://www.mitsubishielectric.co.jp/semiconductors/locations/","g":"other","companyFull":"三菱電機株式会社","owners":null},{"id":18,"company":"ルネサス エレクトロニクス","yard":"大分工場","pref":"大分県","city":"中津市","address":"大分県中津市伊藤田4200","lat":33.550907,"lon":131.239929,"cat":"back","products":"組立・テスト","capacity":"","note":"後工程工場である。座標は町名の代表点。","source":"https://www.renesas.com/ja/about/profile/global","g":"renesas","companyFull":"ルネサス エレクトロニクス株式会社","owners":null},{"id":7,"company":"ソニーセミコンダクタマニュファクチャリング","yard":"大分テクノロジーセンター 国東サテライト","pref":"大分県","city":"国東市","address":"大分県国東市国東町小原3319-2","lat":33.538425,"lon":131.740295,"cat":"back","products":"実装・ウェーハ検査","capacity":"","note":"","source":"https://www.sony-semicon.com/ja/company/base/","g":"sony","companyFull":"ソニーセミコンダクタマニュファクチャリング株式会社","owners":null},{"id":32,"company":"ローム・アッセンブリ マニュファクチャリング","yard":"広川工場","pref":"福岡県","city":"八女郡広川町","address":"福岡県八女郡広川町大字日吉1164-2","lat":33.256527,"lon":130.546432,"cat":"back","products":"センサ／トランジスタ／ダイオード","capacity":"","note":"","source":"https://www.rohm.co.jp/company/about/branch","g":"rohm","companyFull":"ローム・アッセンブリ マニュファクチャリング株式会社","owners":null},{"id":28,"company":"ローム・デバイス マニュファクチャリング","yard":"筑後工場","pref":"福岡県","city":"筑後市","address":"福岡県筑後市大字上北島883","lat":33.198307,"lon":130.492798,"cat":"front","products":"IC／トランジスタ／ダイオード／SiC","capacity":"","note":"座標は町名の代表点。","source":"https://www.rohm.co.jp/company/about/branch","g":"rohm","companyFull":"ローム・デバイス マニュファクチャリング株式会社","owners":null},{"id":47,"company":"ジャパンセミコンダクター","yard":"大分事業所","pref":"大分県","city":"大分市","address":"大分県大分市大字松岡3500番地","lat":33.184749,"lon":131.674567,"cat":"front","products":"アナログ／パワー／マイコン","capacity":"","note":"東芝デバイス＆ストレージの子会社。ソニー大分テクノロジーセンターと同一住所のため、選択できるように座標をわずかにずらした。","source":"https://www.jsemicon.co.jp/company/about.htm","g":"other","companyFull":"株式会社ジャパンセミコンダクター","owners":null},{"id":6,"company":"ソニーセミコンダクタマニュファクチャリング","yard":"大分テクノロジーセンター","pref":"大分県","city":"大分市","address":"大分県大分市大字松岡3500番地","lat":33.183949,"lon":131.673767,"cat":"front","products":"モバイル向けCMOSイメージセンサー","capacity":"300mm","note":"同一住所に株式会社ジャパンセミコンダクター大分事業所がある。選択できるように座標をわずかにずらした。","source":"https://www.sony-semicon.com/ja/company/base/","g":"sony","companyFull":"ソニーセミコンダクタマニュファクチャリング株式会社","owners":null},{"id":37,"company":"三菱電機","yard":"パワーデバイス製作所 泗水工場","pref":"熊本県","city":"菊池市","address":"熊本県菊池市泗水町住吉1576-1","lat":32.927326,"lon":130.817963,"cat":"front","products":"SiCパワー半導体","capacity":"200mm（8インチ）","note":"2025年10月に竣工し、2026年から試作を開始する計画である。座標は町名の代表点。","source":"https://www.mitsubishielectric.co.jp/semiconductors/locations/","g":"other","companyFull":"三菱電機株式会社","owners":null},{"id":39,"company":"メルコパワーセミコンダクタチップ","yard":"合志工場","pref":"熊本県","city":"合志市","address":"熊本県合志市御代志字北原810番1号","lat":32.897018,"lon":130.753311,"cat":"front","products":"パワーデバイス（ウエハ工程）","capacity":"","note":"三菱電機グループ。近隣の熊本事業所と重ならないよう座標をわずかにずらした。","source":"https://www.mitsubishielectric.co.jp/semiconductors/powerdevices/network/location/","g":"other","companyFull":"メルコパワーセミコンダクタチップ株式会社","owners":null},{"id":36,"company":"三菱電機","yard":"パワーデバイス製作所 熊本","pref":"熊本県","city":"合志市","address":"熊本県合志市御代志997番地","lat":32.896538,"lon":130.754257,"cat":"front","products":"パワーデバイス（ウエハ工程）","capacity":"","note":"","source":"https://www.mitsubishielectric.co.jp/semiconductors/locations/","g":"other","companyFull":"三菱電機株式会社","owners":null},{"id":11,"company":"ソニーセミコンダクタマニュファクチャリング","yard":"合志新工場","pref":"熊本県","city":"合志市","address":"熊本県合志市竹迫1255番地","lat":32.893684,"lon":130.821243,"cat":"building","products":"CMOSイメージセンサー","capacity":"300mm・月産1万枚計画","note":"建設中。経済産業省の安定供給確保計画では2029年5月からの供給開始を見込む。座標は町名の代表点。","source":"https://www.sony-semicon.com/files/62/company/public-notice/assets/sck-avsm_2026102702.pdf","g":"sony","companyFull":"ソニーセミコンダクタマニュファクチャリング株式会社","owners":null},{"id":21,"company":"Japan Advanced Semiconductor Manufacturing","yard":"熊本第2工場","pref":"熊本県","city":"菊池郡菊陽町","address":"熊本県菊池郡菊陽町大字原水（第1工場東側隣接地）","lat":32.881597,"lon":130.835581,"cat":"building","products":"先端ロジック（3nm計画を含む）","capacity":"300mm","note":"建設中。番地は非公表のため、第1工場東側隣接地として町名の代表点を用い、近隣拠点と重ならないようわずかにずらした。量産開始は2028年以降の計画である。 TSMCが過半を出資しソニーとデンソーとトヨタが少数出資する製造子会社である。","source":"https://www.meti.go.jp/policy/mono_info_service/joho/laws/semiconductor/semiconductor_plan.html","g":"jasm","companyFull":"Japan Advanced Semiconductor Manufacturing株式会社","owners":[{"name":"Taiwan Semiconductor Manufacturing Company Limited","share":"約86.5%"},{"name":"ソニーセミコンダクタソリューションズ株式会社","share":"約6.0%"},{"name":"株式会社デンソー","share":"約5.5%"},{"name":"トヨタ自動車株式会社","share":"約2.0%"}]},{"id":20,"company":"Japan Advanced Semiconductor Manufacturing","yard":"熊本第1工場","pref":"熊本県","city":"菊池郡菊陽町","address":"熊本県菊池郡菊陽町大字原水4106番地1","lat":32.880797,"lon":130.834081,"cat":"front","products":"ロジック（22／28nm・40nm等）","capacity":"300mm・月産約5万枚規模","note":"2024年末から量産を開始した。座標は町名の代表点を基に、近隣拠点と重ならないようわずかにずらした。 TSMCが過半を出資しソニーとデンソーとトヨタが少数出資する製造子会社である。","source":"https://www.cas.go.jp/jp/seisaku/kokunai_toushikakudai_forum/dai6/siryou1.pdf","g":"jasm","companyFull":"Japan Advanced Semiconductor Manufacturing株式会社","owners":[{"name":"Taiwan Semiconductor Manufacturing Company Limited","share":"約86.5%"},{"name":"ソニーセミコンダクタソリューションズ株式会社","share":"約6.0%"},{"name":"株式会社デンソー","share":"約5.5%"},{"name":"トヨタ自動車株式会社","share":"約2.0%"}]},{"id":3,"company":"ソニーセミコンダクタマニュファクチャリング","yard":"熊本テクノロジーセンター","pref":"熊本県","city":"菊池郡菊陽町","address":"熊本県菊池郡菊陽町大字原水4000-1","lat":32.879597,"lon":130.832581,"cat":"front","products":"CMOSイメージセンサー／マイクロディスプレイ","capacity":"300mm","note":"本社を置く生産拠点である。","source":"https://www.sony-semicon.com/ja/company/base/","g":"sony","companyFull":"ソニーセミコンダクタマニュファクチャリング株式会社","owners":null},{"id":4,"company":"ソニーセミコンダクタマニュファクチャリング","yard":"長崎テクノロジーセンター","pref":"長崎県","city":"諫早市","address":"長崎県諫早市津久葉町1883-43","lat":32.825245,"lon":130.010254,"cat":"front","products":"モバイル向けCMOSイメージセンサー","capacity":"300mm","note":"","source":"https://www.sony-semicon.com/ja/company/base/","g":"sony","companyFull":"ソニーセミコンダクタマニュファクチャリング株式会社","owners":null},{"id":15,"company":"ルネサス セミコンダクタ マニュファクチュアリング","yard":"川尻工場","pref":"熊本県","city":"熊本市","address":"熊本県熊本市南区八幡1-1-1","lat":32.747837,"lon":130.680496,"cat":"front","products":"マイコン／ロジック","capacity":"","note":"","source":"https://www.renesas.com/ja/about/profile/global/rsmc","g":"renesas","companyFull":"ルネサス セミコンダクタ マニュファクチュアリング株式会社","owners":null},{"id":19,"company":"ルネサス エレクトロニクス","yard":"錦工場","pref":"熊本県","city":"球磨郡錦町","address":"熊本県球磨郡錦町一武2626","lat":32.18568,"lon":130.859955,"cat":"back","products":"組立・テスト","capacity":"","note":"後工程工場である。座標は町名の代表点。","source":"https://www.renesas.com/ja/about/profile/global","g":"renesas","companyFull":"ルネサス エレクトロニクス株式会社","owners":null},{"id":30,"company":"ラピスセミコンダクタ","yard":"宮崎第二工場","pref":"宮崎県","city":"東諸県郡国富町","address":"宮崎県東諸県郡国富町田尻1815","lat":31.985725,"lon":131.297699,"cat":"front","products":"SiCパワー半導体","capacity":"","note":"SiCパワー半導体の主力生産拠点として整備した。","source":"https://www.rohm.co.jp/company/about/branch","g":"rohm","companyFull":"ラピスセミコンダクタ株式会社","owners":null},{"id":29,"company":"ラピスセミコンダクタ","yard":"宮崎工場","pref":"宮崎県","city":"宮崎市","address":"宮崎県宮崎市清武町木原727","lat":31.844402,"lon":131.403473,"cat":"front","products":"IC／センサ／ダイオード／SiC／IGBT","capacity":"","note":"座標は町名の代表点。","source":"https://www.rohm.co.jp/company/about/branch","g":"rohm","companyFull":"ラピスセミコンダクタ株式会社","owners":null},{"id":8,"company":"ソニーセミコンダクタマニュファクチャリング","yard":"鹿児島テクノロジーセンター","pref":"鹿児島県","city":"霧島市","address":"鹿児島県霧島市国分野口北5-1","lat":31.741022,"lon":130.75061,"cat":"front","products":"アナログLSI／IoTモジュール","capacity":"","note":"","source":"https://www.sony-semicon.com/ja/company/base/","g":"sony","companyFull":"ソニーセミコンダクタマニュファクチャリング株式会社","owners":null}];
+const CITIES = [{"pref":"熊本県","city":"合志市","n":3,"companies":["メルコパワーセミコンダクタチップ","三菱電機","ソニーセミコンダクタマニュファクチャリング"],"lat":32.89574666666667,"lon":130.77627033333331},{"pref":"熊本県","city":"菊池郡菊陽町","n":3,"companies":["Japan Advanced Semiconductor Manufacturing","ソニーセミコンダクタマニュファクチャリング"],"lat":32.88066366666666,"lon":130.834081},{"pref":"岩手県","city":"北上市","n":2,"companies":["キオクシア岩手","ジャパンセミコンダクター"],"lat":39.3397215,"lon":141.12875350000002},{"pref":"岡山県","city":"笠岡市","n":2,"companies":["ローム・デバイス マニュファクチャリング","ローム・アッセンブリ マニュファクチャリング"],"lat":34.499660500000005,"lon":133.530708},{"pref":"大分県","city":"大分市","n":2,"companies":["ジャパンセミコンダクター","ソニーセミコンダクタマニュファクチャリング"],"lat":33.184349,"lon":131.674167},{"pref":"北海道","city":"千歳市","n":1,"companies":["Rapidus"],"lat":42.787975,"lon":141.699905},{"pref":"青森県","city":"五所川原市","n":1,"companies":["富士電機津軽セミコンダクタ"],"lat":40.816711,"lon":140.462357},{"pref":"秋田県","city":"大仙市","n":1,"companies":["エイブリック"],"lat":39.45541,"lon":140.450928},{"pref":"山形県","city":"酒田市","n":1,"companies":["東北エプソン"],"lat":38.880943,"lon":139.814697},{"pref":"山形県","city":"鶴岡市","n":1,"companies":["ソニーセミコンダクタマニュファクチャリング"],"lat":38.743965,"lon":139.836975},{"pref":"宮城県","city":"黒川郡大衡村","n":1,"companies":["ラピスセミコンダクタ"],"lat":38.498566,"lon":140.901321},{"pref":"宮城県","city":"白石市","n":1,"companies":["ソニーセミコンダクタマニュファクチャリング"],"lat":38.03503,"lon":140.644745},{"pref":"山形県","city":"米沢市","n":1,"companies":["ルネサス エレクトロニクス"],"lat":37.928589,"lon":140.125839},{"pref":"新潟県","city":"小千谷市","n":1,"companies":["JSファンダリ"],"lat":37.327938,"lon":138.805969},{"pref":"新潟県","city":"妙高市","n":1,"companies":["タワーパートナーズ セミコンダクター"],"lat":37.051224,"lon":138.260696},{"pref":"富山県","city":"魚津市","n":1,"companies":["タワーパートナーズ セミコンダクター"],"lat":36.821293,"lon":137.450897},{"pref":"富山県","city":"砺波市","n":1,"companies":["タワーパートナーズ セミコンダクター"],"lat":36.649864,"lon":137.001587},{"pref":"石川県","city":"能美市","n":1,"companies":["加賀東芝エレクトロニクス"],"lat":36.444443,"lon":136.570145},{"pref":"茨城県","city":"ひたちなか市","n":1,"companies":["ルネサス セミコンダクタ マニュファクチュアリング"],"lat":36.397152,"lon":140.517197},{"pref":"群馬県","city":"高崎市","n":1,"companies":["ルネサス セミコンダクタ マニュファクチュアリング"],"lat":36.332497,"lon":139.070023},{"pref":"長野県","city":"松本市","n":1,"companies":["富士電機"],"lat":36.223282,"lon":137.991638},{"pref":"長野県","city":"諏訪郡富士見町","n":1,"companies":["セイコーエプソン"],"lat":35.931244,"lon":138.218124},{"pref":"千葉県","city":"松戸市","n":1,"companies":["エイブリック"],"lat":35.753674,"lon":139.934387},{"pref":"山梨県","city":"南アルプス市","n":1,"companies":["富士電機"],"lat":35.649593,"lon":138.445786},{"pref":"山梨県","city":"甲斐市","n":1,"companies":["ルネサス セミコンダクタ マニュファクチュアリング"],"lat":35.63393,"lon":138.511597},{"pref":"三重県","city":"桑名市","n":1,"companies":["ユナイテッド・セミコンダクター・ジャパン"],"lat":35.108704,"lon":136.634598},{"pref":"滋賀県","city":"野洲市","n":1,"companies":["MMIセミコンダクター"],"lat":35.072964,"lon":136.020554},{"pref":"三重県","city":"三重郡朝日町","n":1,"companies":["キオクシア"],"lat":35.043884,"lon":136.669601},{"pref":"三重県","city":"四日市市","n":1,"companies":["キオクシア"],"lat":35.012653,"lon":136.600891},{"pref":"京都府","city":"京都市","n":1,"companies":["ローム"],"lat":34.993694,"lon":135.728821},{"pref":"滋賀県","city":"大津市","n":1,"companies":["ローム"],"lat":34.982933,"lon":135.89946},{"pref":"愛知県","city":"知多郡東浦町","n":1,"companies":["ソニーセミコンダクタマニュファクチャリング"],"lat":34.971394,"lon":136.952667},{"pref":"兵庫県","city":"揖保郡太子町","n":1,"companies":["東芝デバイス＆ストレージ"],"lat":34.833199,"lon":134.571869},{"pref":"静岡県","city":"浜松市","n":1,"companies":["ローム・デバイス マニュファクチャリング"],"lat":34.704651,"lon":137.76709},{"pref":"広島県","city":"福山市","n":1,"companies":["三菱電機"],"lat":34.499409,"lon":133.45343},{"pref":"広島県","city":"東広島市","n":1,"companies":["マイクロンメモリ ジャパン"],"lat":34.384979,"lon":132.678467},{"pref":"愛媛県","city":"西条市","n":1,"companies":["ルネサス セミコンダクタ マニュファクチュアリング"],"lat":33.943085,"lon":133.187714},{"pref":"福岡県","city":"行橋市","n":1,"companies":["ローム・アッセンブリ マニュファクチャリング"],"lat":33.696945,"lon":131.025375},{"pref":"福岡県","city":"豊前市","n":1,"companies":["豊前東芝エレクトロニクス"],"lat":33.613457,"lon":131.139328},{"pref":"福岡県","city":"福岡市","n":1,"companies":["三菱電機"],"lat":33.577045,"lon":130.275406},{"pref":"大分県","city":"中津市","n":1,"companies":["ルネサス エレクトロニクス"],"lat":33.550907,"lon":131.239929},{"pref":"大分県","city":"国東市","n":1,"companies":["ソニーセミコンダクタマニュファクチャリング"],"lat":33.538425,"lon":131.740295},{"pref":"福岡県","city":"八女郡広川町","n":1,"companies":["ローム・アッセンブリ マニュファクチャリング"],"lat":33.256527,"lon":130.546432},{"pref":"福岡県","city":"筑後市","n":1,"companies":["ローム・デバイス マニュファクチャリング"],"lat":33.198307,"lon":130.492798},{"pref":"熊本県","city":"菊池市","n":1,"companies":["三菱電機"],"lat":32.927326,"lon":130.817963},{"pref":"長崎県","city":"諫早市","n":1,"companies":["ソニーセミコンダクタマニュファクチャリング"],"lat":32.825245,"lon":130.010254},{"pref":"熊本県","city":"熊本市","n":1,"companies":["ルネサス セミコンダクタ マニュファクチュアリング"],"lat":32.747837,"lon":130.680496},{"pref":"熊本県","city":"球磨郡錦町","n":1,"companies":["ルネサス エレクトロニクス"],"lat":32.18568,"lon":130.859955},{"pref":"宮崎県","city":"東諸県郡国富町","n":1,"companies":["ラピスセミコンダクタ"],"lat":31.985725,"lon":131.297699},{"pref":"宮崎県","city":"宮崎市","n":1,"companies":["ラピスセミコンダクタ"],"lat":31.844402,"lon":131.403473},{"pref":"鹿児島県","city":"霧島市","n":1,"companies":["ソニーセミコンダクタマニュファクチャリング"],"lat":31.741022,"lon":130.75061}];
+const GROUPS = [{"key":"kioxia","label":"キオクシア","color":"#2a78d6"},{"key":"sony","label":"ソニーセミコンダクタ","color":"#eb6834"},{"key":"renesas","label":"ルネサス","color":"#1baf7a"},{"key":"jasm","label":"JASM（TSMC）","color":"#eda100"},{"key":"rapidus","label":"ラピダス","color":"#e87ba4"},{"key":"micron","label":"マイクロン","color":"#008300"},{"key":"rohm","label":"ローム","color":"#6250d6"},{"key":"other","label":"その他の企業","color":"#8a8880"}];
+const CAT = {"front":"前工程（稼働中）","building":"建設中・計画中","back":"後工程","closed":"閉鎖・売却予定"};
+const FADED = ["closed"];
+const gColor = Object.fromEntries(GROUPS.map(g => [g.key, g.color]));
+const gLabel = Object.fromEntries(GROUPS.map(g => [g.key, g.label]));
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const onG = new Set(GROUPS.map(g => g.key));
+const onC = new Set(Object.keys(CAT));
+let map = null; const markers = {};
+
+if (window.L) {
+  map = L.map('map', { scrollWheelZoom: true, zoomSnap: 0.5 }).fitBounds(ROWS.map(r => [r.lat, r.lon]), { padding: [24, 24] });
+  const gsiAttr = '<a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>';
+  const pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', { maxZoom: 18, attribution: gsiAttr }).addTo(map);
+  const photo = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', { maxZoom: 18, attribution: gsiAttr });
+  L.control.layers({ '淡色地図': pale, '航空写真': photo }, null, { position: 'topright', collapsed: false }).addTo(map);
+  for (const r of ROWS) {
+    const m = L.circleMarker([r.lat, r.lon], {
+      radius: FADED.includes(r.cat) ? 6 : 8, color: '#fff', weight: 2,
+      fillColor: gColor[r.g], fillOpacity: FADED.includes(r.cat) ? 0.55 : 0.95
+    });
+    m.bindTooltip(esc(r.company) + ' ' + esc(r.yard), { direction: 'top', offset: [0, -6] });
+    m.bindPopup('<div class="pop"><b>' + esc(r.company) + '</b><br>' + esc(r.yard) +
+      '<div class="s">' + esc(r.pref + r.city) + (r.address ? '／' + esc(r.address) : '') + '</div>' +
+      '<div class="s">' + esc(gLabel[r.g]) + '／' + esc(CAT[r.cat] || '') + '</div>' +
+      (r.products ? '<div>' + esc(r.products) + '</div>' : '') +
+      (r.capacity ? '<div class="s">' + esc(r.capacity) + '</div>' : '') +
+      (r.note ? '<div class="s">' + esc(r.note) + '</div>' : '') +
+      (r.owners && r.owners.length > 1 ? '<div class="s">出資: ' + r.owners.map(o => esc(o.name.replace(/株式会社/g, '')) + (o.share ? ' ' + esc(o.share) : '')).join('、') + '</div>' : '') +
+      '<div class="s links">' +
+      (r.source ? '<a href="' + esc(r.source) + '" target="_blank" rel="noopener">出典</a>' : '') +
+      '<a href="https://earth.google.com/web/@' + r.lat + ',' + r.lon + ',0a,1500d,35y,0h,0t,0r" target="_blank" rel="noopener">Google Earthで開く</a>' +
+      '<a href="japan_industry_atlas.html#c=' + encodeURIComponent(r.companyFull) + '">アトラスで企業を見る</a>' +
+      '</div></div>');
+    markers[r.id] = m;
+  }
+} else {
+  document.getElementById('map').innerHTML = '<p style="padding:20px">地図ライブラリを読み込めなかった。下の一覧で所在地を確認できる。</p>';
+}
+
+function chip(label, color, n, on, fn) {
+  const b = document.createElement('button');
+  b.className = 'chip' + (on ? '' : ' off'); b.type = 'button';
+  b.innerHTML = (color ? '<span class="dot" style="background:' + color + '"></span>' : '') + esc(label) + ' <span class="n">' + n + '</span>';
+  b.onclick = () => { fn(); b.classList.toggle('off'); render(); };
+  return b;
+}
+const gc = document.getElementById('gchips');
+for (const g of GROUPS) {
+  const n = ROWS.filter(r => r.g === g.key).length; if (!n) continue;
+  gc.appendChild(chip(g.label, g.color, n, true, () => onG.has(g.key) ? onG.delete(g.key) : onG.add(g.key)));
+}
+const cc = document.getElementById('cchips');
+for (const [k, v] of Object.entries(CAT)) {
+  const n = ROWS.filter(r => r.cat === k).length; if (!n) continue;
+  cc.appendChild(chip(v, null, n, true, () => onC.has(k) ? onC.delete(k) : onC.add(k)));
+}
+const q = document.getElementById('q');
+q.addEventListener('input', render);
+
+function visible(r) {
+  const t = q.value.trim();
+  if (!onG.has(r.g) || !onC.has(r.cat)) return false;
+  if (!t) return true;
+  return [r.company, r.yard, r.pref, r.city, r.products, gLabel[r.g]].join(' ').includes(t);
+}
+function focus(lat, lon, z, id) {
+  if (!map) return;
+  map.flyTo([lat, lon], z);
+  if (id != null && markers[id]) setTimeout(() => markers[id].openPopup(), 600);
+  document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function render() {
+  const vis = ROWS.filter(visible);
+  document.getElementById('count').textContent = vis.length + '／' + ROWS.length + '拠点';
+  if (map) for (const r of ROWS) { const m = markers[r.id]; visible(r) ? m.addTo(map) : m.remove(); }
+  const ids = new Set(vis.map(r => r.id));
+  const yb = document.querySelector('#ytbl tbody');
+  yb.innerHTML = vis.map(r => '<tr data-id="' + r.id + '"><td><span class="gdot" style="background:' + gColor[r.g] + '"></span>' + esc(r.company) +
+    '</td><td>' + esc(r.yard) + '</td><td>' + esc(r.pref + r.city) + '</td><td>' + esc(CAT[r.cat] || '') + '</td><td>' + esc(r.products) +
+    '</td><td>' + (r.source ? '<a href="' + esc(r.source) + '" target="_blank" rel="noopener">link</a>' : '') + '</td></tr>').join('');
+  yb.querySelectorAll('tr').forEach(tr => tr.onclick = e => {
+    if (e.target.tagName === 'A') return;
+    const r = ROWS[ROWS.findIndex(x => x.id == tr.dataset.id)]; focus(r.lat, r.lon, 13, r.id);
+  });
+  const cb = document.querySelector('#ctbl tbody');
+  const cs = CITIES.map(c => ({ ...c, v: vis.filter(r => r.pref === c.pref && r.city === c.city) })).filter(c => c.v.length)
+    .sort((a, b) => b.v.length - a.v.length);
+  cb.innerHTML = cs.map((c, i) => '<tr data-i="' + i + '"><td>' + esc(c.city) + '</td><td>' + esc(c.pref) + '</td><td class="num">' + c.v.length +
+    '</td><td>' + [...new Set(c.v.map(r => '<span class="gdot" style="background:' + gColor[r.g] + '"></span>' + esc(r.company)))].join('、') + '</td></tr>').join('');
+  cb.querySelectorAll('tr').forEach(tr => tr.onclick = () => { const c = cs[tr.dataset.i]; focus(c.lat, c.lon, 11); });
+}
+render();
+</script>
+</body>
+</html>

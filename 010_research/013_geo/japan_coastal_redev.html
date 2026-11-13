@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日本の臨海部の跡地・再開発マップ</title>
+<meta name="description" content="日本の臨海部における製鉄所・製油所・発電所・造船所などの閉鎖跡地と土地利用転換計画33拠点を市区町村単位で地図に表示する。計画中・工事中・転換済み・未定の区分と土地所有者のグループで比較できる。">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root{--bg:#F8F7F3;--ink:#1a1a1a;--sub:#555;--accent:#2563EB;--line:#E5E2DA;--chip:#EEF2FF}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 28px 80px}
+  @media(max-width:680px){.wrap{padding:28px 16px 60px}}
+  header.top{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  header.top h1{font-size:26px;margin:0 0 4px}
+  header.top .meta{color:var(--sub);font-size:13px}
+  .lead{color:var(--sub);font-size:14px;margin-top:6px}
+  h2{font-size:20px;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .en{display:block;font-size:12px;color:var(--sub);font-weight:400;letter-spacing:.04em}
+  a{color:var(--accent)}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  @media(max-width:680px){.kpi{grid-template-columns:repeat(2,1fr)}}
+  .kpi .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .k{font-size:12px;color:var(--sub)}
+  .kpi .v{font-size:22px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
+  #map{height:640px;border:1px solid var(--line);border-radius:10px;background:#EDEBE4}
+  @media(max-width:680px){#map{height:70vh}}
+  .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0 8px}
+  .tools input{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff;font-family:inherit}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+  .chip{border:1px solid var(--line);background:#fff;color:var(--ink);font-size:12.5px;padding:4px 11px;border-radius:14px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+  .chip .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .chip.off{opacity:.35}
+  .chip .n{color:var(--sub);font-variant-numeric:tabular-nums}
+  .count{font-size:12.5px;color:var(--sub);white-space:nowrap}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:#F0EEE8;font-weight:600;white-space:nowrap}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  tbody tr{cursor:pointer}
+  tbody tr:hover{background:#FFFDF5}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+  .tbl-scroll>table{min-width:760px}
+  .gdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .fn{color:var(--sub);font-size:12.5px}
+  .pop b{font-size:14px}
+  .pop .s{color:#555;font-size:12px}
+  .pop .links a{margin-right:12px;white-space:nowrap}
+  .leaflet-tooltip{font-family:inherit}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+li{overflow-wrap:anywhere}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../011_company/index.html">company</a><a href="../012_politics/index.html">politics</a><a href="index.html">geo</a><a href="../014_industry/index.html">industry</a><a href="../015_net/index.html">net</a><a href="../016_finance/index.html">finance</a><a href="../017_science/index.html">science</a><a href="../018_computing/index.html">computing</a><a href="../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a><a href="../../030_ideas/034_foundation/index.html">foundation</a><a href="../../030_ideas/035_ventures/index.html">ventures</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../020_personal/021_profile/index.html">profile</a><a href="../../020_personal/02A_plan/index.html">plan</a><a href="../../020_personal/023_travel/index.html">travel</a><a href="../../020_personal/027_cinema/index.html">cinema</a><a href="../../020_personal/02B_reading/index.html">reading</a><a href="../../020_personal/024_method/index.html">method</a><a href="../../020_personal/026_handbook/index.html">handbook</a><a href="../../020_personal/025_fitness/index.html">fitness</a><a href="../../020_personal/028_english/index.html">english</a><a href="../../020_personal/029_mental_math/index.html">mental math</a><a href="../../020_personal/02C_chemistry/index.html">chemistry</a><a href="../../020_personal/02D_probability/index.html">probability</a><a href="../../020_personal/02E_calculus/index.html">calculus</a><a href="../../020_personal/02F_linear_algebra/index.html">linear algebra</a><a href="../../020_personal/02G_physics/index.html">physics</a><a href="../../020_personal/02H_heidegger/index.html">heidegger</a><a href="../../020_personal/02I_quiz/index.html">quiz</a><a href="../../020_personal/02J_geography/index.html">geography</a><a href="../../020_personal/02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../011_company/index.html">company</a>
+    <a class="snav-a" href="../012_politics/index.html">politics</a>
+    <a class="snav-a" href="index.html">geo</a>
+    <a class="snav-a" href="../014_industry/index.html">industry</a>
+    <a class="snav-a" href="../015_net/index.html">net</a>
+    <a class="snav-a" href="../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../017_science/index.html">science</a>
+    <a class="snav-a" href="../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../030_ideas/034_foundation/index.html">foundation</a>
+    <a class="snav-a" href="../../030_ideas/035_ventures/index.html">ventures</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../020_personal/029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../020_personal/02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../020_personal/02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../020_personal/02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../020_personal/02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../020_personal/02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../020_personal/02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../020_personal/02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../../020_personal/02J_geography/index.html">geography</a>
+    <a class="snav-a" href="../../020_personal/02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<div class="wrap">
+<header class="top">
+  <h1>日本の臨海部の跡地・再開発マップ</h1>
+  <div class="meta">確認日 2026-11-13／33拠点・14社・23市区町村</div>
+  <p class="lead">臨海部の産業跡地と再開発計画を所在地の市区町村に表示する。点の色は土地所有者のグループを示す。点を選択すると所有者・転換用途・関係企業・出典を表示する。</p>
+</header>
+
+<div class="kpi">
+  <div class="card"><div class="k">拠点数</div><div class="v">33</div></div>
+  <div class="card"><div class="k">企業数</div><div class="v">14</div></div>
+  <div class="card"><div class="k">市区町村数</div><div class="v">23</div></div>
+  <div class="card"><div class="k">都道府県数</div><div class="v">14</div></div>
+</div>
+
+<h2>地図<span class="en">Map</span></h2>
+<div class="chips" id="gchips"></div>
+<div class="chips" id="cchips"></div>
+<div class="tools">
+  <input type="search" id="q" placeholder="検索（企業名・市区町村・用途）" autocomplete="off">
+  <span class="count" id="count"></span>
+</div>
+<div id="map" role="img" aria-label="日本の臨海部の跡地・再開発マップ"></div>
+<p class="fn">地図：国土地理院 淡色地図・全国最新写真。右上で航空写真に切り替えられる。拠点を選択して拡大すると、敷地と設備を写真で確認できる。同じ市区町村に複数の拠点がある場合は、拡大すると個別の点に分かれる。</p>
+
+<h2>市区町村別<span class="en">By Municipality</span></h2>
+<p class="fn">拠点数の多い順。行を選択すると地図がその市区町村に移動する。</p>
+<div class="tbl-scroll"><table id="ctbl"><thead><tr><th>市区町村</th><th>都道府県</th><th>拠点数</th><th>企業</th></tr></thead><tbody></tbody></table></div>
+
+<h2>拠点一覧<span class="en">All Sites</span></h2>
+<p class="fn">北から順に並べる。行を選択すると地図がその拠点に移動する。</p>
+<div class="tbl-scroll"><table id="ytbl"><thead><tr><th>企業</th><th>跡地・計画</th><th>所在地</th><th>区分</th><th>転換後の用途</th><th>出典</th></tr></thead><tbody></tbody></table></div>
+
+<h2>対象と注記<span class="en">Scope</span></h2>
+<p class="fn">対象は臨海部の製鉄所・製油所・発電所・造船所などの閉鎖跡地と、その土地利用転換計画である。サテライト油槽所や内陸の工場跡地は対象外とした。2026年時点で建設中・計画中の案件を含む。</p>
+<p class="fn">区分は転換の進捗で分けた。用途と事業者が公表され着手前のものを「計画中」、解体・造成・建設が進むものを「転換工事中」、供用が始まったものを「転換済み」とした。用途が未定または誘致段階のものは「未定」とし、薄い色の点で示す。</p>
+<p class="fn">企業グループは土地所有者を基準にした。JFEグループと日本製鉄グループは製鉄所跡地、ENEOSと出光興産は製油所・製造所跡地、電力会社は発電所跡地を中心に分類した。自治体が地権者または事業主体の案件は自治体、商社が主導する案件は商社、いずれにも当てはまらない案件はその他とした。</p>
+<p class="fn">所在地は各社の発表、自治体の土地利用方針、官公庁資料で確認した。番地非公表の拠点は町名または代表地点の座標を用い、注記に記載した。緯度経度は国土地理院のジオコーダで変換した値である。広い敷地では構内の一点を示す。</p>
+<p class="fn">確認できず収録していないものがある。コスモ石油四日市の個別閉鎖区画、三井E&amp;S玉野・千葉の造船所跡、IHI相生工場跡は住所と転換計画を同時に確認できなかった。九州電力苅田発電所の廃止後用途、日本製鉄室蘭・釜石の個別遊休区画の最新転用計画も同様である。出資比率が非公表の合弁はshareを空欄とした。</p>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const ROWS = [{"id":17,"company":"ENEOS","yard":"室蘭事業所（旧室蘭製油所・製造所）","pref":"北海道","city":"室蘭市","address":"北海道室蘭市陣屋町一丁目172番地","lat":42.365486,"lon":140.944855,"cat":"done","products":"石油製品の受入・備蓄・出荷／系統用蓄電","capacity":"約101ha","note":"2014年に原油処理を停止し、2019年4月から油槽所機能の事業所へ転換した。座標は陣屋町の代表点である。ほか出典: https://www.eneos-power.co.jp/business/vpp/about-vpp/","source":"https://www.eneos.co.jp/newsrelease/2017/20170927_01_1150234.html","g":"eneos","companyFull":"ENEOS株式会社","owners":[{"name":"ENEOS株式会社","share":""}]},{"id":10,"company":"日本製鉄","yard":"東日本製鉄所鹿島地区第3高炉周辺","pref":"茨城県","city":"鹿嶋市","address":"茨城県鹿嶋市光3番地","lat":35.947533,"lon":140.674026,"cat":"idle","products":"カーボンニュートラル関連設備等（具体用途は未定）","capacity":"","note":"2025年3月に第3高炉を含む鉄源1系列を休止した。茨城県との協議資料では跡地活用が議題となるが、具体的な転換用途は確認日時点で公表が限られる。","source":"https://www.pref.ibaraki.jp/kikaku/chikei/keikaku/nihonseitetu/documents/240229_kaigisiryo.pdf","g":"nsc","companyFull":"日本製鉄株式会社","owners":[{"name":"日本製鉄株式会社","share":""},{"name":"茨城県","share":""}]},{"id":30,"company":"東京都","yard":"豊洲旧ガス工場跡地（豊洲地区）","pref":"東京都","city":"江東区","address":"東京都江東区豊洲6丁目","lat":35.646683,"lon":139.786087,"cat":"done","products":"住宅／業務・商業／文化・公共施設","capacity":"土地区画整理区域約91.1ha","note":"東京ガスのガス工場跡地等を土地区画整理で複合市街地へ転換した。整備は概ね完了し、一部で開発が続く。座標は豊洲六丁目の代表点である。ほか出典: https://www.city.koto.lg.jp/392205/machizukuri/toshi/chiku/hoshin/toyosu.html","source":"https://www.toshiseibi.metro.tokyo.lg.jp/daiichiseibi/chiku/tochikukaku/toyosu","g":"localgov","companyFull":"東京都","owners":[{"name":"東京都","share":""},{"name":"東京ガス株式会社","share":""},{"name":"東京電力パワーグリッド株式会社","share":""},{"name":"江東区","share":""}]},{"id":13,"company":"JFEスチール","yard":"千葉市蘇我臨海部（旧千葉製鉄所跡）","pref":"千葉県","city":"千葉市","address":"千葉県千葉市中央区川崎町1","lat":35.574673,"lon":140.12413,"cat":"done","products":"スポーツ公園／商業・業務／防災公園／エコロジーパーク","capacity":"蘇我特定地区約227ha","note":"製鉄所機能の沖合移転に伴う工場跡地を都市再生事業で転換した。フクダ電子アリーナを核とする複合開発が進み、整備は継続する。座標は川崎町の代表点である。","source":"https://www.city.chiba.jp/toshi/toshi/shigaichi/soga_gaiyo.html","g":"jfe","companyFull":"JFEスチール株式会社","owners":[{"name":"JFEスチール株式会社","share":""},{"name":"千葉市","share":""},{"name":"都市再生機構","share":""}]},{"id":24,"company":"関西電力","yard":"宮津エネルギー研究所跡地","pref":"京都府","city":"宮津市","address":"京都府宮津市小田宿野1001","lat":35.557217,"lon":135.254211,"cat":"idle","products":"産業用地（設備撤去中・分譲検討）","capacity":"約43ha（平地の紹介可能面積約21ha）","note":"設備撤去中の発電関連跡地である。用途指定はなく、企業誘致を進める。","source":"https://sol.kepco.jp/-/media/SolKepco/others/industrial_land/pdf/CI_karyoku.pdf","g":"power","companyFull":"関西電力株式会社","owners":[{"name":"関西電力株式会社","share":""}]},{"id":7,"company":"JFEスチール","yard":"池上町エリア土地利用転換","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区池上町","lat":35.517269,"lon":139.730209,"cat":"idle","products":"交通結節・産業連携機能（検討中）","capacity":"約25ha","note":"土地利用方針で導入機能を検討中とし、具体用途は未定である。座標は町名の代表点である。","source":"https://www.city.kawasaki.jp/590/cmsfiles/contents/0000153/153802/tochiriyouhoushin.pdf","g":"jfe","companyFull":"JFEスチール株式会社","owners":[{"name":"JFEスチール株式会社","share":""},{"name":"川崎市","share":""}]},{"id":4,"company":"JFEスチール","yard":"南渡田地区新産業拠点","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区南渡田町","lat":35.508602,"lon":139.717087,"cat":"building","products":"研究開発／試作・実証／スケールアップ拠点","capacity":"約52ha","note":"京浜地区土地利用転換の先鞭として、南渡田地区拠点整備基本計画に基づき整備中である。北地区北側はヒューリックが事業者となり、2027年度のまちびらきを目指す。座標は町名の代表点である。ほか出典: https://www.city.kawasaki.jp/590/page/0000117648.html","source":"https://www.city.kawasaki.jp/590/cmsfiles/contents/0000153/153802/tochiriyouhoushin.pdf","g":"jfe","companyFull":"JFEスチール株式会社","owners":[{"name":"JFEスチール株式会社","share":""},{"name":"川崎市","share":""},{"name":"ヒューリック株式会社","share":""}]},{"id":5,"company":"JFEスチール","yard":"水江町地区資源循環拠点","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区水江町","lat":35.508049,"lon":139.741089,"cat":"building","products":"廃プラスチックリサイクル等の資源循環","capacity":"約26ha","note":"川崎市の土地利用方針で循環型社会を先導する拠点と位置付ける。スーパーソーティングセンター等の整備が進められている。座標は町名の代表点である。","source":"https://www.city.kawasaki.jp/590/cmsfiles/contents/0000153/153802/tochiriyouhoushin.pdf","g":"jfe","companyFull":"JFEスチール株式会社","owners":[{"name":"JFEスチール株式会社","share":""},{"name":"川崎市","share":""}]},{"id":6,"company":"JFEスチール","yard":"扇町エリア倉庫用地売却","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区扇町","lat":35.502052,"lon":139.72287,"cat":"done","products":"倉庫・物流（川崎港コンテナターミナル連携）","capacity":"約20.8ha","note":"倉庫として賃貸していた扇町エリア約21haの売却を2023年3月に決定し、2024年12月下旬に引渡し予定と発表した。土地利用転換の一環である。座標は町名の代表点である。","source":"https://www.jfe-holdings.co.jp/release/2023/0307/000230/","g":"jfe","companyFull":"JFEスチール株式会社","owners":[{"name":"JFEスチール株式会社","share":""}]},{"id":26,"company":"JERA","yard":"横浜港臨港地区火力発電所構内データセンター計画","pref":"神奈川県","city":"横浜市","address":"神奈川県横浜市鶴見区末広町","lat":35.487312,"lon":139.684433,"cat":"plan","products":"データセンター／低炭素電力供給","capacity":"","note":"横浜市とJERAが2025年10月に覚書を締結し、臨港地区の火力発電所構内でのデータセンター誘致を検討する。閉鎖跡地ではなく構内土地利用の転換検討である。座標は末広町の代表点である。","source":"https://www.jera.co.jp/news/information/20251003_2283","g":"power","companyFull":"株式会社JERA","owners":[{"name":"株式会社JERA","share":""},{"name":"横浜市","share":""}]},{"id":0,"company":"JFEスチール","yard":"東日本製鉄所京浜地区扇島（OHGISHIMA2050）","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区扇島","lat":35.48357,"lon":139.726852,"cat":"plan","products":"水素／港湾物流／高度物流／データセンター／次世代産業","capacity":"扇島南約222ha（京浜地区転換対象約400ha）","note":"2023年9月に高炉等を休止した。川崎市の土地利用方針とJFEのOHGISHIMA2050に基づき2050年頃の概成を目指す。先導エリア約70haでは2028年度の一部土地利用開始を予定する。土地所有者はJFEである。川崎市は基盤整備を担う。三菱商事は電力・データセンター、日本水素エネルギーは液化水素受入、日本GLPは高度物流に関与する。ほか出典: https://www.city.kawasaki.jp/590/page/0000151320.html","source":"https://www.jfe-holdings.co.jp/release/2023/09/230907.html","g":"jfe","companyFull":"JFEスチール株式会社","owners":[{"name":"JFEスチール株式会社","share":""},{"name":"JFEホールディングス株式会社","share":""},{"name":"川崎市","share":""},{"name":"三菱商事株式会社","share":""},{"name":"日本水素エネルギー株式会社","share":""},{"name":"日本GLP株式会社","share":""}]},{"id":1,"company":"JFEスチール","yard":"扇島液化水素受入拠点（日本水素エネルギー）","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区扇島","lat":35.48507,"lon":139.728352,"cat":"building","products":"液化水素の受入・貯蔵・供給（商用化実証）","capacity":"約21ha","note":"JFEスチールと日本水素エネルギーが土地賃貸借の予約契約を締結した。2025年5月に建設工事に着工し、2028年度の設備建設完了、2030年度の国内水素供給開始を目指す。NEDOグリーンイノベーション基金事業である。座標は扇島の代表点である。ほか出典: https://www.city.kawasaki.jp/templates/pubcom/cmsfiles/contents/0000181/181959/kibanseibigaiyou.pdf","source":"https://www.jfe-holdings.co.jp/release/2024/0725/001011/","g":"jfe","companyFull":"JFEスチール株式会社","owners":[{"name":"JFEスチール株式会社","share":""},{"name":"日本水素エネルギー株式会社","share":""}]},{"id":2,"company":"JFEスチール","yard":"扇島電力・データセンター共同事業","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区扇島","lat":35.48657,"lon":139.729852,"cat":"plan","products":"自家発電を活用した電力供給／データセンター","capacity":"隣接敷地約5ha（初期60MW規模）","note":"JFEと三菱商事が2025年3月に共同事業の基本合意書を締結した。JFE保有の出力19万kW自家発電所を活用し、2031年度の初期データセンター稼働を目指す。運営支援にMCデジタル・リアルティが関与する。座標は扇島の代表点である。ほか出典: https://www.mitsubishicorp.com/jp/ja/news/release/2025/20250326001.html","source":"https://www.jfe-holdings.co.jp/release/2026/0406/001901/","g":"jfe","companyFull":"JFEスチール株式会社","owners":[{"name":"JFEホールディングス株式会社","share":""},{"name":"三菱商事株式会社","share":""},{"name":"MCデジタル・リアルティ株式会社","share":""}]},{"id":3,"company":"JFEスチール","yard":"ALFALINK川崎扇島（高度物流ゾーン）","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区扇島","lat":35.48807,"lon":139.73135200000002,"cat":"plan","products":"次世代冷凍冷蔵物流（コールドチェーン）","capacity":"約18ha（延床約37万㎡）","note":"2026年8月にJFEスチールと日本GLPが約18haの売買契約を締結した。2028年3月末までに土地を引き渡し、2030年7月までに一部先行稼働を予定する。川崎市も連携協定に参加する。座標は扇島の代表点である。ほか出典: https://www.glpjp.com/topics/press/1229/","source":"https://www.jfe-holdings.co.jp/release/2026/0825/001986/","g":"jfe","companyFull":"JFEスチール株式会社","owners":[{"name":"JFEスチール株式会社","share":""},{"name":"日本GLP株式会社","share":""},{"name":"川崎市","share":""}]},{"id":8,"company":"JFEスチール","yard":"扇島北地区","pref":"神奈川県","city":"川崎市","address":"神奈川県川崎市川崎区扇島","lat":35.48957,"lon":139.732852,"cat":"idle","products":"扇島南地区の開発進捗に連動した転換（検討中）","capacity":"約57ha","note":"土地利用転換の対象範囲に含まれるが、扇島南地区の開発状況と連動した段階的整備を想定する。座標は扇島の代表点である。","source":"https://www.city.kawasaki.jp/590/cmsfiles/contents/0000153/153802/tochiriyouhoushin.pdf","g":"jfe","companyFull":"JFEスチール株式会社","owners":[{"name":"JFEスチール株式会社","share":""},{"name":"川崎市","share":""}]},{"id":31,"company":"三菱重工業","yard":"みなとみらい21（旧横浜造船所跡）","pref":"神奈川県","city":"横浜市","address":"神奈川県横浜市西区みなとみらい2丁目","lat":35.455154,"lon":139.631836,"cat":"done","products":"業務／商業／住宅／文化・観光","capacity":"中央地区土地区画整理等（造船所跡地約31haを含む）","note":"1983年に三菱重工業横浜造船所が移転し、土地区画整理と埋立で都心機能へ転換した。区画整理は2011年に完了し、街区開発は継続する。ほか出典: https://www.city.yokohama.lg.jp/kurashi/machizukuri-kankyo/toshiseibi/mm21/mm21.files/20250404ja4.pdf","source":"https://www.ur-net.go.jp/news/20241107_timetrip_minatomirai.html","g":"other","companyFull":"三菱重工業株式会社","owners":[{"name":"三菱重工業株式会社","share":""},{"name":"横浜市","share":""},{"name":"都市再生機構","share":""},{"name":"三菱地所株式会社","share":""}]},{"id":29,"company":"横須賀市","yard":"浦賀ドック周辺再整備","pref":"神奈川県","city":"横須賀市","address":"神奈川県横須賀市浦賀4-7-1","lat":35.249287,"lon":139.71553,"cat":"plan","products":"歴史遺産保存／観光・交流／水辺空間","capacity":"市有地約2.8ha＋住友重機械所有地約12.2ha","note":"旧住友重機械浦賀造船所に由来するドック周辺の再整備である。民間提案を踏まえ、2027年度以降の工事着手を想定する。ほか出典: https://www.city.yokosuka.kanagawa.jp/0810/uraga-dock.html","source":"https://www.city.yokosuka.kanagawa.jp/0810/project/documents/yoko20250228.pdf","g":"localgov","companyFull":"横須賀市","owners":[{"name":"横須賀市","share":""},{"name":"住友重機械工業株式会社","share":""}]},{"id":27,"company":"JERAパワー横須賀合同会社","yard":"横須賀火力発電所市民開放エリア","pref":"神奈川県","city":"横須賀市","address":"神奈川県横須賀市久里浜9丁目2番1号","lat":35.214272,"lon":139.714828,"cat":"done","products":"多目的グラウンド／イベント広場／緑の丘広場","capacity":"市民開放エリア約18ha","note":"発電所更新に伴い敷地内に市民開放エリアを整備し、2025年11月からJERA park YOKOSUKAとして供用を開始した。ほか出典: http://jera-yokosuka.co.jp/","source":"https://www.townnews.co.jp/0501/2024/04/19/729286.html","g":"power","companyFull":"JERAパワー横須賀合同会社","owners":[{"name":"JERAパワー横須賀合同会社","share":""},{"name":"株式会社JERA","share":""},{"name":"横須賀市","share":""}]},{"id":15,"company":"ENEOS","yard":"清水製油所跡地（清水駅東口地域づくりエリア）","pref":"静岡県","city":"静岡市","address":"静岡県静岡市清水区袖師1970","lat":35.031418,"lon":138.492584,"cat":"plan","products":"多目的スタジアム／商業・業務／公園／次世代エネルギー連携","capacity":"地域づくりエリア約14.4ha","note":"静岡市が地域づくりエリアの東側約7.9haを購入し、土地区画整理に参画する。中核施設として多目的スタジアムが有力である。隣接してエネルギー供給プラットフォームも検討する。座標は袖師町の代表点である。ほか出典: https://www.city.shizuoka.lg.jp/s6925/s008121.html","source":"https://www.city.shizuoka.lg.jp/documents/56916/kaiken0217-4-2-2.pdf","g":"eneos","companyFull":"ENEOS株式会社","owners":[{"name":"ENEOS株式会社","share":""},{"name":"静岡市","share":""}]},{"id":25,"company":"関西電力","yard":"高砂発電所跡地","pref":"兵庫県","city":"高砂市","address":"兵庫県高砂市荒井町新浜1丁目","lat":34.761971,"lon":134.785965,"cat":"idle","products":"産業用地（活用方法は未定の時期あり）","capacity":"","note":"設備撤去後の更地として産業用地マップに掲載される。詳細な用途は協議による。座標は荒井町新浜の代表点である。","source":"https://sol.kepco.jp/-/media/SolKepco/others/industrial_land/pdf/CI_karyoku.pdf","g":"power","companyFull":"関西電力株式会社","owners":[{"name":"関西電力株式会社","share":""}]},{"id":21,"company":"関西電力","yard":"尼崎発電所跡地（ESR尼崎ディストリビューションセンター）","pref":"兵庫県","city":"尼崎市","address":"兵庫県尼崎市末広町2-16","lat":34.694683,"lon":135.389984,"cat":"done","products":"大型マルチテナント物流施設","capacity":"敷地面積約19.4ha（延床約38.9万㎡）","note":"石油火力発電所閉鎖後にプラズマディスプレイ工場が立地し、その閉鎖後にESRが物流施設を開発した。2020年に竣工した。現在の運営主体はESRである。ほか出典: https://www.esr.com/jp/our-properties/japan/amagasaki-distribution-center/","source":"https://sol.kepco.jp/-/media/SolKepco/others/industrial_land/pdf/CI_karyoku.pdf","g":"power","companyFull":"関西電力株式会社","owners":[{"name":"関西電力株式会社","share":""},{"name":"ESR","share":""}]},{"id":32,"company":"ヨドバシカメラ","yard":"堺浜シーサイドステージ跡地（築港八幡地区）","pref":"大阪府","city":"堺市","address":"大阪府堺市堺区築港八幡町","lat":34.598793,"lon":135.453781,"cat":"plan","products":"物流・産業／海辺の親水・レクリエーション","capacity":"地区計画対象約26.9ha（変更案）","note":"新日本製鐵堺製鉄所跡地に整備された商業アミューズメント施設が閉店し、土地所有者のヨドバシカメラが物流施設立地に向け解体を進める。堺市は地区計画を物流・産業と海辺レクリエーションへ見直す。座標は築港八幡町の代表点である。ほか出典: https://www.city.sakai.lg.jp/","source":"http://www.toshimirai.jp/machidukuri/t21_sakaihama.html","g":"other","companyFull":"ヨドバシカメラ","owners":[{"name":"ヨドバシカメラ","share":""},{"name":"堺市","share":""},{"name":"日本製鉄株式会社","share":""}]},{"id":16,"company":"ENEOS","yard":"大阪事業所（旧大阪製油所）","pref":"大阪府","city":"高石市","address":"大阪府高石市高砂二丁目1番地","lat":34.533245,"lon":135.406433,"cat":"idle","products":"設備解体中（転換後の用途は未公表）","capacity":"約129ha","note":"2020年に精製機能を停止し、2021年に発電設備の廃止を決定した。解体撤去工事は進行するが、跡地の具体的な土地利用計画は確認日時点で公表されていない。","source":"https://www.eneos.co.jp/newsrelease/20190723_02_2011051.pdf","g":"eneos","companyFull":"ENEOS株式会社","owners":[{"name":"ENEOS株式会社","share":""}]},{"id":20,"company":"コスモ石油","yard":"坂出物流基地（旧坂出製油所）","pref":"香川県","city":"坂出市","address":"香川県坂出市番の州緑町1-1","lat":34.350174,"lon":133.832169,"cat":"plan","products":"油槽・物流／SAF・リニューアブルディーゼル製造計画","capacity":"約72ha","note":"2013年に原油精製を停止し、物流基地へ移行した。三井物産と共同でATJ技術によるSAF製造を検討し、2029年以降の製造・供給を目指す。ほか出典: https://www.cosmo-energy.co.jp/ja/information/press/2025/250221-01.html","source":"https://www.cosmo-energy.co.jp/ja/information/press/2025/250221-01.html","g":"other","companyFull":"コスモ石油株式会社","owners":[{"name":"コスモ石油株式会社","share":""},{"name":"三井物産株式会社","share":""}]},{"id":22,"company":"関西電力","yard":"多奈川発電所跡地（多奈川蓄電所を含む）","pref":"大阪府","city":"岬町","address":"大阪府泉南郡岬町多奈川谷川2539番地13","lat":34.317993,"lon":135.128571,"cat":"building","products":"系統用蓄電／企業誘致用地","capacity":"蓄電所約2ha（発電所跡地全体は企業誘致エリア）","note":"発電所廃止後に企業誘致を進める。多奈川蓄電所は関西電力・きんでん・JEXIが出資する合同会社が開発し、2028年2月の商用運転開始を目指す。ほか出典: https://www.kepco.co.jp/corporate/pr/2025/pdf/20250507_1j.pdf","source":"https://www.town.misaki.osaka.jp/material/files/group/7/TM2025siryou2.pdf","g":"power","companyFull":"関西電力株式会社","owners":[{"name":"関西電力株式会社","share":""},{"name":"株式会社きんでん","share":""},{"name":"ジャパン・エクステンシブ・インフラストラクチャー株式会社","share":""}]},{"id":11,"company":"日本製鉄","yard":"関西製鉄所和歌山地区休止高炉周辺","pref":"和歌山県","city":"和歌山市","address":"和歌山県和歌山市湊1850","lat":34.236897,"lon":135.150131,"cat":"idle","products":"製鉄所機能の一部継続／休止設備周辺の用途は未定","capacity":"","note":"設備構造対策により高炉等を休止した。製鉄所としての操業は継続し、休止設備周辺の土地利用転換の具体計画は確認できていない。","source":"https://www.nipponsteel.com/ir/library/settlement/pdf/20240509_600.pdf","g":"nsc","companyFull":"日本製鉄株式会社","owners":[{"name":"日本製鉄株式会社","share":""}]},{"id":9,"company":"日本製鉄","yard":"瀬戸内製鉄所呉地区跡地","pref":"広島県","city":"呉市","address":"広島県呉市昭和町11番1号","lat":34.222351,"lon":132.543396,"cat":"plan","products":"多機能な複合防衛拠点／防衛装備関連の民間製造","capacity":"約140ha","note":"2023年9月に全設備を休止した。2026年8月28日に防衛省との売却契約を締結した。解体撤去完了区画から防衛省が所有権を取得し、民間企業への貸付けは2028年度から段階的に開始する方針である。ほか出典: https://www.city.kure.lg.jp/soshiki/40/nittetunisshin.html","source":"https://www.nipponsteel.com/newsroom/news/2026/__icsFiles/afieldfile/2026/08/28/20260828_100.pdf","g":"nsc","companyFull":"日本製鉄株式会社","owners":[{"name":"日本製鉄株式会社","share":""},{"name":"防衛省","share":""},{"name":"広島県","share":""},{"name":"呉市","share":""}]},{"id":23,"company":"関西電力","yard":"海南発電所跡地","pref":"和歌山県","city":"海南市","address":"和歌山県海南市船尾字中浜260番地96","lat":34.156906,"lon":135.197495,"cat":"idle","products":"産業用地（企業誘致・商談中）","capacity":"","note":"設備撤去後の産業用地として関西電力が紹介する。全エリア商談中とされ、具体用途は未定である。座標は船尾の代表点である。","source":"https://sol.kepco.jp/-/media/SolKepco/others/industrial_land/pdf/CI_karyoku.pdf","g":"power","companyFull":"関西電力株式会社","owners":[{"name":"関西電力株式会社","share":""}]},{"id":14,"company":"ENEOS","yard":"和歌山製造所（旧和歌山製油所）","pref":"和歌山県","city":"有田市","address":"和歌山県有田市初島町浜1000","lat":34.10519,"lon":135.118576,"cat":"building","products":"SAF製造／次世代エネルギー／GX企業誘致","capacity":"約248ha","note":"2023年10月に製油所機能を停止し、未来環境供給基地として転換中である。SAFは2028年度以降の運転開始を目指し、無害化・解体撤去工事も進行する。県・海南市・有田市・経済産業省が検討会に参加する。ほか出典: https://www.city.arida.lg.jp/sangyoshigoto/shokogyo/1005151.html","source":"https://www.pref.wakayama.lg.jp/chiji/press/07/20250408_d/fil/250408_3.pdf","g":"eneos","companyFull":"ENEOS株式会社","owners":[{"name":"ENEOS株式会社","share":""},{"name":"和歌山県","share":""},{"name":"有田市","share":""},{"name":"海南市","share":""},{"name":"経済産業省","share":""}]},{"id":19,"company":"出光興産","yard":"徳山事業所（旧徳山製油所）","pref":"山口県","city":"周南市","address":"山口県周南市新宮町1-1","lat":34.043949,"lon":131.808914,"cat":"done","products":"石油化学原料／バイオマス発電／アンモニア等の検討","capacity":"西地区約65.6haほか","note":"2014年3月末に原油処理機能を停止し、石油化学拠点へ転換した。旧精製設備跡地を活用したバイオマス発電所が2023年に営業運転を開始した。ほか出典: https://www.idemitsu.com/jp/news/2022/221213.html","source":"https://www.idemitsu.com/jp/business/factory/tokuyama/index.html","g":"idemitsu","companyFull":"出光興産株式会社","owners":[{"name":"出光興産株式会社","share":""}]},{"id":28,"company":"中国電力","yard":"旧下関発電所跡地","pref":"山口県","city":"下関市","address":"山口県下関市長府港町13番1号","lat":34.002743,"lon":130.992844,"cat":"done","products":"ステンレス鋼管事業用地","capacity":"約32.6ha","note":"2024年1月に廃止し、土地・建物・設備を丸一鋼管へ譲渡する手続きを進めた。転換後は同社の事業拡大用地となる。","source":"https://www.energia.co.jp/assets/press/2024/p20240424-1a.pdf","g":"power","companyFull":"中国電力株式会社","owners":[{"name":"中国電力株式会社","share":""},{"name":"丸一鋼管株式会社","share":""}]},{"id":18,"company":"西部石油","yard":"山口製油所（GX西部）","pref":"山口県","city":"山陽小野田市","address":"山口県山陽小野田市西沖5番地","lat":33.944775,"lon":131.189865,"cat":"plan","products":"カーボンフリー電力／技術開発・実証／バイオマス・資源循環","capacity":"","note":"出光興産の100％子会社である。2024年3月に精製機能を停止し、2030年代までにGX西部構想へ転換する。油槽・備蓄・太陽光発電は継続する。山陽小野田市と包括連携協定を締結した。ほか出典: https://www.seibuoil.co.jp/news/img/df1dc0948b7aa8b146c6b2e8885106d451dab52f.pdf","source":"https://www.idemitsu.com/jp/news/2023/240122.html","g":"idemitsu","companyFull":"西部石油株式会社","owners":[{"name":"西部石油株式会社","share":""},{"name":"出光興産株式会社","share":"100%"},{"name":"山陽小野田市","share":""}]},{"id":12,"company":"日本製鉄","yard":"八幡東田地区（スペースワールド跡を含む）","pref":"福岡県","city":"北九州市","address":"福岡県北九州市八幡東区東田4丁目1-1","lat":33.874023,"lon":130.810654,"cat":"done","products":"商業／科学館／博物館／環境・産業観光","capacity":"東田地区約137ha規模（関連区域を含む）","note":"官営八幡製鐵所発祥地の工場移転跡地で土地区画整理等が進んだ。2022年4月にスペースワールド跡地へジ アウトレット北九州とスペースLABOが開業した。座標はアウトレット所在地である。ほか出典: https://yahata-higashida.com/about/development.html","source":"https://www.city.kitakyushu.lg.jp/yahatahigashi/file_0003.html","g":"nsc","companyFull":"日本製鉄株式会社","owners":[{"name":"日本製鉄株式会社","share":""},{"name":"北九州市","share":""},{"name":"イオンモール株式会社","share":""}]}];
+const CITIES = [{"pref":"神奈川県","city":"川崎市","n":9,"companies":["JFEスチール"],"lat":35.49653577777778,"lon":139.72894611111113},{"pref":"神奈川県","city":"横浜市","n":2,"companies":["JERA","三菱重工業"],"lat":35.471233,"lon":139.65813450000002},{"pref":"神奈川県","city":"横須賀市","n":2,"companies":["横須賀市","JERAパワー横須賀合同会社"],"lat":35.2317795,"lon":139.715179},{"pref":"北海道","city":"室蘭市","n":1,"companies":["ENEOS"],"lat":42.365486,"lon":140.944855},{"pref":"茨城県","city":"鹿嶋市","n":1,"companies":["日本製鉄"],"lat":35.947533,"lon":140.674026},{"pref":"東京都","city":"江東区","n":1,"companies":["東京都"],"lat":35.646683,"lon":139.786087},{"pref":"千葉県","city":"千葉市","n":1,"companies":["JFEスチール"],"lat":35.574673,"lon":140.12413},{"pref":"京都府","city":"宮津市","n":1,"companies":["関西電力"],"lat":35.557217,"lon":135.254211},{"pref":"静岡県","city":"静岡市","n":1,"companies":["ENEOS"],"lat":35.031418,"lon":138.492584},{"pref":"兵庫県","city":"高砂市","n":1,"companies":["関西電力"],"lat":34.761971,"lon":134.785965},{"pref":"兵庫県","city":"尼崎市","n":1,"companies":["関西電力"],"lat":34.694683,"lon":135.389984},{"pref":"大阪府","city":"堺市","n":1,"companies":["ヨドバシカメラ"],"lat":34.598793,"lon":135.453781},{"pref":"大阪府","city":"高石市","n":1,"companies":["ENEOS"],"lat":34.533245,"lon":135.406433},{"pref":"香川県","city":"坂出市","n":1,"companies":["コスモ石油"],"lat":34.350174,"lon":133.832169},{"pref":"大阪府","city":"岬町","n":1,"companies":["関西電力"],"lat":34.317993,"lon":135.128571},{"pref":"和歌山県","city":"和歌山市","n":1,"companies":["日本製鉄"],"lat":34.236897,"lon":135.150131},{"pref":"広島県","city":"呉市","n":1,"companies":["日本製鉄"],"lat":34.222351,"lon":132.543396},{"pref":"和歌山県","city":"海南市","n":1,"companies":["関西電力"],"lat":34.156906,"lon":135.197495},{"pref":"和歌山県","city":"有田市","n":1,"companies":["ENEOS"],"lat":34.10519,"lon":135.118576},{"pref":"山口県","city":"周南市","n":1,"companies":["出光興産"],"lat":34.043949,"lon":131.808914},{"pref":"山口県","city":"下関市","n":1,"companies":["中国電力"],"lat":34.002743,"lon":130.992844},{"pref":"山口県","city":"山陽小野田市","n":1,"companies":["西部石油"],"lat":33.944775,"lon":131.189865},{"pref":"福岡県","city":"北九州市","n":1,"companies":["日本製鉄"],"lat":33.874023,"lon":130.810654}];
+const GROUPS = [{"key":"jfe","label":"JFEグループ","color":"#2a78d6"},{"key":"nsc","label":"日本製鉄グループ","color":"#eb6834"},{"key":"eneos","label":"ENEOS","color":"#1baf7a"},{"key":"idemitsu","label":"出光興産","color":"#eda100"},{"key":"power","label":"電力会社","color":"#e87ba4"},{"key":"localgov","label":"自治体","color":"#008300"},{"key":"trading","label":"商社","color":"#6250d6"},{"key":"other","label":"その他の企業","color":"#8a8880"}];
+const CAT = {"plan":"計画中","building":"転換工事中","done":"転換済み","idle":"未定"};
+const FADED = ["idle"];
+const gColor = Object.fromEntries(GROUPS.map(g => [g.key, g.color]));
+const gLabel = Object.fromEntries(GROUPS.map(g => [g.key, g.label]));
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const onG = new Set(GROUPS.map(g => g.key));
+const onC = new Set(Object.keys(CAT));
+let map = null; const markers = {};
+
+if (window.L) {
+  map = L.map('map', { scrollWheelZoom: true, zoomSnap: 0.5 }).fitBounds(ROWS.map(r => [r.lat, r.lon]), { padding: [24, 24] });
+  const gsiAttr = '<a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>';
+  const pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', { maxZoom: 18, attribution: gsiAttr }).addTo(map);
+  const photo = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', { maxZoom: 18, attribution: gsiAttr });
+  L.control.layers({ '淡色地図': pale, '航空写真': photo }, null, { position: 'topright', collapsed: false }).addTo(map);
+  for (const r of ROWS) {
+    const m = L.circleMarker([r.lat, r.lon], {
+      radius: FADED.includes(r.cat) ? 6 : 8, color: '#fff', weight: 2,
+      fillColor: gColor[r.g], fillOpacity: FADED.includes(r.cat) ? 0.55 : 0.95
+    });
+    m.bindTooltip(esc(r.company) + ' ' + esc(r.yard), { direction: 'top', offset: [0, -6] });
+    m.bindPopup('<div class="pop"><b>' + esc(r.company) + '</b><br>' + esc(r.yard) +
+      '<div class="s">' + esc(r.pref + r.city) + (r.address ? '／' + esc(r.address) : '') + '</div>' +
+      '<div class="s">' + esc(gLabel[r.g]) + '／' + esc(CAT[r.cat] || '') + '</div>' +
+      (r.products ? '<div>' + esc(r.products) + '</div>' : '') +
+      (r.capacity ? '<div class="s">' + esc(r.capacity) + '</div>' : '') +
+      (r.note ? '<div class="s">' + esc(r.note) + '</div>' : '') +
+      (r.owners && r.owners.length > 1 ? '<div class="s">出資: ' + r.owners.map(o => esc(o.name.replace(/株式会社/g, '')) + (o.share ? ' ' + esc(o.share) : '')).join('、') + '</div>' : '') +
+      '<div class="s links">' +
+      (r.source ? '<a href="' + esc(r.source) + '" target="_blank" rel="noopener">出典</a>' : '') +
+      '<a href="https://earth.google.com/web/@' + r.lat + ',' + r.lon + ',0a,1500d,35y,0h,0t,0r" target="_blank" rel="noopener">Google Earthで開く</a>' +
+      '<a href="japan_industry_atlas.html#c=' + encodeURIComponent(r.companyFull) + '">アトラスで企業を見る</a>' +
+      '</div></div>');
+    markers[r.id] = m;
+  }
+} else {
+  document.getElementById('map').innerHTML = '<p style="padding:20px">地図ライブラリを読み込めなかった。下の一覧で所在地を確認できる。</p>';
+}
+
+function chip(label, color, n, on, fn) {
+  const b = document.createElement('button');
+  b.className = 'chip' + (on ? '' : ' off'); b.type = 'button';
+  b.innerHTML = (color ? '<span class="dot" style="background:' + color + '"></span>' : '') + esc(label) + ' <span class="n">' + n + '</span>';
+  b.onclick = () => { fn(); b.classList.toggle('off'); render(); };
+  return b;
+}
+const gc = document.getElementById('gchips');
+for (const g of GROUPS) {
+  const n = ROWS.filter(r => r.g === g.key).length; if (!n) continue;
+  gc.appendChild(chip(g.label, g.color, n, true, () => onG.has(g.key) ? onG.delete(g.key) : onG.add(g.key)));
+}
+const cc = document.getElementById('cchips');
+for (const [k, v] of Object.entries(CAT)) {
+  const n = ROWS.filter(r => r.cat === k).length; if (!n) continue;
+  cc.appendChild(chip(v, null, n, true, () => onC.has(k) ? onC.delete(k) : onC.add(k)));
+}
+const q = document.getElementById('q');
+q.addEventListener('input', render);
+
+function visible(r) {
+  const t = q.value.trim();
+  if (!onG.has(r.g) || !onC.has(r.cat)) return false;
+  if (!t) return true;
+  return [r.company, r.yard, r.pref, r.city, r.products, gLabel[r.g]].join(' ').includes(t);
+}
+function focus(lat, lon, z, id) {
+  if (!map) return;
+  map.flyTo([lat, lon], z);
+  if (id != null && markers[id]) setTimeout(() => markers[id].openPopup(), 600);
+  document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function render() {
+  const vis = ROWS.filter(visible);
+  document.getElementById('count').textContent = vis.length + '／' + ROWS.length + '拠点';
+  if (map) for (const r of ROWS) { const m = markers[r.id]; visible(r) ? m.addTo(map) : m.remove(); }
+  const ids = new Set(vis.map(r => r.id));
+  const yb = document.querySelector('#ytbl tbody');
+  yb.innerHTML = vis.map(r => '<tr data-id="' + r.id + '"><td><span class="gdot" style="background:' + gColor[r.g] + '"></span>' + esc(r.company) +
+    '</td><td>' + esc(r.yard) + '</td><td>' + esc(r.pref + r.city) + '</td><td>' + esc(CAT[r.cat] || '') + '</td><td>' + esc(r.products) +
+    '</td><td>' + (r.source ? '<a href="' + esc(r.source) + '" target="_blank" rel="noopener">link</a>' : '') + '</td></tr>').join('');
+  yb.querySelectorAll('tr').forEach(tr => tr.onclick = e => {
+    if (e.target.tagName === 'A') return;
+    const r = ROWS[ROWS.findIndex(x => x.id == tr.dataset.id)]; focus(r.lat, r.lon, 13, r.id);
+  });
+  const cb = document.querySelector('#ctbl tbody');
+  const cs = CITIES.map(c => ({ ...c, v: vis.filter(r => r.pref === c.pref && r.city === c.city) })).filter(c => c.v.length)
+    .sort((a, b) => b.v.length - a.v.length);
+  cb.innerHTML = cs.map((c, i) => '<tr data-i="' + i + '"><td>' + esc(c.city) + '</td><td>' + esc(c.pref) + '</td><td class="num">' + c.v.length +
+    '</td><td>' + [...new Set(c.v.map(r => '<span class="gdot" style="background:' + gColor[r.g] + '"></span>' + esc(r.company)))].join('、') + '</td></tr>').join('');
+  cb.querySelectorAll('tr').forEach(tr => tr.onclick = () => { const c = cs[tr.dataset.i]; focus(c.lat, c.lon, 11); });
+}
+render();
+</script>
+</body>
+</html>

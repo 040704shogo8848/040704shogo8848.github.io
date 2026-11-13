@@ -105,6 +105,8 @@ for (const abs of files) {
   }
 
   // 4. skeleton — a fragment renders squashed on a phone
+  // tb-ph2/3 on the <figure> itself puts the figcaption into one grid cell; it must wrap only the <img> row
+  if (/<figure class="[^"]*\btb-ph[23]\b/.test(html)) bad.push('tb-ph2/tb-ph3 が figure に付いている（img だけを <div class="tb-ph2"> で包む）');
   if (!/<!doctype html>/i.test(html)) bad.push('doctype がない');
   if (!/<html\s+lang=/i.test(html)) bad.push('html lang がない');
   if (!/name=["']viewport["']/i.test(html)) bad.push('viewport がない');

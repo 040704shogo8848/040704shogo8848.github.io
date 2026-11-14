@@ -50,6 +50,7 @@ fs.writeFileSync(manifestPath, header + '\nwindow.PEOPLE = ' + JSON.stringify(ar
 const FIELD_JA = {
   investor: '投資家', founder: '創業者', operator: '経営者',
   politician: '政治家', scientist: '研究者', financier: '金融',
+  athlete: 'アスリート',
 };
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 

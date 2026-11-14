@@ -1,0 +1,1633 @@
+/* fitness app UI + storage. Depends on Progress and weight_logic globals. */
+(function () {
+  "use strict";
+
+  var LS_PREFIX = "fit2_";
+  var PHOTO_DB = "fit2_photos";
+  var DOW = ["日", "月", "火", "水", "木", "金", "土"];
+  var KIND_LABEL = {
+    upper: "上半身",
+    lower: "下半身",
+    shoulder_arm: "肩・腕",
+    rest: "休み",
+  };
+  var KIND_KEYS = ["upper", "lower", "shoulder_arm", "rest"];
+  var MEAL_SLOTS = [
+    { id: "breakfast", title: "07:00 朝食" },
+    { id: "snack_am", title: "10:00 補食" },
+    { id: "lunch", title: "12:30 昼食" },
+    { id: "snack", title: "トレーニング後 補食" },
+    { id: "dinner", title: "19:30 夕食" },
+  ];
+  var FOOD = {
+    chicken100: { kcal: 133, p: 21.3 },
+    protein30: { kcal: 116, p: 21.0 },
+    egg1: { kcal: 71, p: 6.1 },
+    natto1: { kcal: 86, p: 7.4 },
+    rice150: { kcal: 234, p: 3.8 },
+  };
+  var DEFAULT_DB_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
+
+  /* exercises.md の文言をそのまま保持 */
+  var EXERCISES = window.EXERCISES;
+
+  function defaultSettings() {
+    return {
+      schedule: {
+        1: "upper",
+        2: "lower",
+        3: "rest",
+        4: "upper",
+        5: "lower",
+        6: "shoulder_arm",
+        0: "rest",
+      },
+      menus: {
+        upper: [
+          { id: "incline_db_press", sets: 3, repMin: 6, repMax: 10 },
+          { id: "chest_fly", sets: 3, repMin: 10, repMax: 15 },
+          { id: "lat_pulldown", sets: 3, repMin: 8, repMax: 12 },
+          { id: "seated_cable_row", sets: 3, repMin: 8, repMax: 12 },
+          { id: "cable_lateral_raise", sets: 3, repMin: 10, repMax: 15 },
+          { id: "oh_cable_extension", sets: 2, repMin: 10, repMax: 15 },
+          { id: "incline_db_curl", sets: 2, repMin: 8, repMax: 12 },
+        ],
+        lower: [
+          { id: "hack_squat", sets: 3, repMin: 6, repMax: 10 },
+          { id: "romanian_deadlift", sets: 3, repMin: 8, repMax: 10 },
+          { id: "leg_extension", sets: 3, repMin: 10, repMax: 15 },
+          { id: "seated_leg_curl", sets: 3, repMin: 10, repMax: 15 },
+          { id: "calf_raise", sets: 3, repMin: 10, repMax: 15 },
+          { id: "cable_crunch", sets: 3, repMin: 10, repMax: 15 },
+        ],
+        shoulder_arm: [
+          { id: "machine_shoulder_press", sets: 3, repMin: 8, repMax: 12 },
+          { id: "cable_lateral_raise", sets: 4, repMin: 10, repMax: 15 },
+          { id: "rear_delt_fly", sets: 3, repMin: 10, repMax: 15 },
+          { id: "oh_cable_extension", sets: 3, repMin: 10, repMax: 15 },
+          { id: "preacher_curl", sets: 3, repMin: 8, repMax: 12 },
+        ],
+      },
+      steps: { compound: 2.5, isolation: 1.25 },
+      stepOverrides: {},
+      dumbbellList: DEFAULT_DB_LIST.slice(),
+      riceBase: 6,
+    };
+  }
+
+  var state = {
+    settings: null,
+    logs: {},
+    meals: {},
+    customExercises: {},
+    backupAt: null,
+    weightData: null,
+    weightError: false,
+    calPastExtra: 0,
+    calFutureExtra: 0,
+    weightRange: 28,
+    draft: {},
+  };
+
+  function lsGet(key, fallback) {
+    try {
+      var raw = localStorage.getItem(LS_PREFIX + key);
+      if (raw == null) return fallback;
+      return JSON.parse(raw);
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function lsSet(key, value) {
+    try {
+      localStorage.setItem(LS_PREFIX + key, JSON.stringify(value));
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  function loadAll() {
+    state.settings = lsGet("settings", null) || defaultSettings();
+    state.logs = lsGet("logs", {}) || {};
+    state.meals = lsGet("meals", {}) || {};
+    state.customExercises = lsGet("customExercises", {}) || {};
+    state.backupAt = lsGet("backupAt", null);
+  }
+
+  function saveSettings() {
+    lsSet("settings", state.settings);
+  }
+  function saveLogs() {
+    lsSet("logs", state.logs);
+  }
+  function saveMeals() {
+    lsSet("meals", state.meals);
+  }
+  function saveCustom() {
+    lsSet("customExercises", state.customExercises);
+  }
+
+  function todayStr() {
+    return formatDate(new Date());
+  }
+
+  function formatDate(d) {
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, "0");
+    var day = String(d.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + day;
+  }
+
+  function parseDate(s) {
+    var p = s.split("-");
+    return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+  }
+
+  function addDays(dateStr, n) {
+    var d = parseDate(dateStr);
+    d.setDate(d.getDate() + n);
+    return formatDate(d);
+  }
+
+  function dow(dateStr) {
+    return parseDate(dateStr).getDay();
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function exerciseOf(id) {
+    return EXERCISES[id] || state.customExercises[id] || null;
+  }
+
+  function exerciseName(id) {
+    var e = exerciseOf(id);
+    return e ? e.name : id;
+  }
+
+  function kindFor(dateStr) {
+    return state.settings.schedule[String(dow(dateStr))] || "rest";
+  }
+
+  function allSessionsByExercise() {
+    var out = {};
+    Object.keys(state.logs).forEach(function (date) {
+      var day = state.logs[date] || {};
+      Object.keys(day).forEach(function (exId) {
+        var sets = day[exId];
+        if (!sets || !sets.length) return;
+        if (!out[exId]) out[exId] = [];
+        out[exId].push({ date: date, sets: sets });
+      });
+    });
+    Object.keys(out).forEach(function (id) {
+      out[id].sort(function (a, b) {
+        return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+      });
+    });
+    return out;
+  }
+
+  function recoveryFor(dateStr) {
+    var all = allSessionsByExercise();
+    function isDeloadWeek(d) {
+      return Progress.recoveryStatus(all, d, function () {
+        return false;
+      }).deload;
+    }
+    return Progress.recoveryStatus(all, dateStr, isDeloadWeek);
+  }
+
+  function menuFor(dateStr) {
+    var kind = kindFor(dateStr);
+    if (kind === "rest") return { kind: kind, items: [], deload: false, recovery: null };
+    var recovery = recoveryFor(dateStr);
+    var items = (state.settings.menus[kind] || []).map(function (it) {
+      var sets = recovery.deload ? Progress.halfSets(it.sets) : it.sets;
+      return {
+        id: it.id,
+        sets: sets,
+        repMin: it.repMin,
+        repMax: it.repMax,
+        baseSets: it.sets,
+      };
+    });
+    return { kind: kind, items: items, deload: recovery.deload, recovery: recovery };
+  }
+
+  function stepFor(exId) {
+    var ex = exerciseOf(exId);
+    if (!ex) return { type: "fixed", kg: 2.5 };
+    if (state.settings.stepOverrides && state.settings.stepOverrides[exId] != null) {
+      return { type: "fixed", kg: Number(state.settings.stepOverrides[exId]) };
+    }
+    if (ex.type === "dumbbell") {
+      return { type: "list", list: state.settings.dumbbellList.slice() };
+    }
+    var kg = ex.type === "isolation" ? state.settings.steps.isolation : state.settings.steps.compound;
+    return { type: "fixed", kg: kg };
+  }
+
+  function historyBefore(exId, dateStr) {
+    var all = allSessionsByExercise();
+    return (all[exId] || []).filter(function (s) {
+      return s.date < dateStr;
+    });
+  }
+
+  function targetFor(exId, dateStr, presc) {
+    return Progress.nextTarget(historyBefore(exId, dateStr), presc, stepFor(exId));
+  }
+
+  function mealState(dateStr) {
+    var m = state.meals[dateStr];
+    if (!m) {
+      return {
+        checks: {},
+        rice: state.settings.riceBase,
+      };
+    }
+    return {
+      checks: m.checks || {},
+      rice: m.rice != null ? m.rice : state.settings.riceBase,
+    };
+  }
+
+  function setMeal(dateStr, patch) {
+    var cur = mealState(dateStr);
+    state.meals[dateStr] = {
+      checks: patch.checks != null ? patch.checks : cur.checks,
+      rice: patch.rice != null ? patch.rice : cur.rice,
+    };
+    saveMeals();
+  }
+
+  function distributeRice(total) {
+    var per = total / 3;
+    var breakfast = Math.round(per * 2) / 2;
+    var lunch = Math.round(per * 2) / 2;
+    var dinner = Math.round((total - breakfast - lunch) * 2) / 2;
+    return { breakfast: breakfast, lunch: lunch, dinner: dinner };
+  }
+
+  function dayNutrition(riceCups) {
+    var split = distributeRice(riceCups);
+    var p =
+      FOOD.egg1.p * 2 +
+      FOOD.natto1.p +
+      FOOD.chicken100.p * 3.3 +
+      FOOD.protein30.p * 2 +
+      FOOD.rice150.p * riceCups;
+    var kcal =
+      FOOD.egg1.kcal * 2 +
+      FOOD.natto1.kcal +
+      FOOD.chicken100.kcal * 3.3 +
+      FOOD.protein30.kcal * 2 +
+      FOOD.rice150.kcal * riceCups;
+    return {
+      p: Math.round(p * 10) / 10,
+      kcal: Math.round(kcal),
+      split: split,
+    };
+  }
+
+  function mealFoodsText(slotId, split) {
+    if (slotId === "breakfast") {
+      return "卵 2個／納豆 1パック／ご飯 " + split.breakfast + "杯";
+    }
+    if (slotId === "snack_am" || slotId === "snack") {
+      return "プロテイン 粉30g";
+    }
+    if (slotId === "lunch") {
+      return "むね肉（電子レンジで加熱）330g（生の重量）／ご飯 " + split.lunch + "杯";
+    }
+    if (slotId === "dinner") {
+      return "ご飯 " + split.dinner + "杯";
+    }
+    return "";
+  }
+
+  function trainStatus(dateStr) {
+    var menu = menuFor(dateStr);
+    if (menu.kind === "rest") return "rest";
+    var day = state.logs[dateStr] || {};
+    var done = 0;
+    menu.items.forEach(function (it) {
+      if (day[it.id] && day[it.id].length > 0) done++;
+    });
+    if (done === 0) return "none";
+    if (done >= menu.items.length) return "done";
+    return "mid";
+  }
+
+  function mealCheckCount(dateStr) {
+    var m = mealState(dateStr);
+    var n = 0;
+    MEAL_SLOTS.forEach(function (s) {
+      if (m.checks[s.id]) n++;
+    });
+    return n;
+  }
+
+  function dailyWeightMap() {
+    if (!state.weightData || !state.weightData.weights) return {};
+    var daily = dailyWeights(state.weightData.weights.map(function (w) {
+      return { date: w.date, kg: Number(w.kg), time: w.time == null ? null : w.time };
+    }));
+    var map = {};
+    daily.forEach(function (d) {
+      map[d.date] = d;
+    });
+    return map;
+  }
+
+  function riceSeries() {
+    var out = [];
+    Object.keys(state.meals).forEach(function (d) {
+      var m = state.meals[d];
+      if (m && m.rice != null) out.push({ date: d, cups: Number(m.rice) });
+    });
+    return out;
+  }
+
+  function needsBackup() {
+    if (!state.backupAt) return true;
+    var days = (Date.now() - Number(state.backupAt)) / 86400000;
+    return days >= 7;
+  }
+
+  /* ---------- IndexedDB photos ---------- */
+  function openPhotoDb() {
+    return new Promise(function (resolve, reject) {
+      var req = indexedDB.open(PHOTO_DB, 1);
+      req.onupgradeneeded = function () {
+        var db = req.result;
+        if (!db.objectStoreNames.contains("photos")) db.createObjectStore("photos");
+      };
+      req.onsuccess = function () {
+        resolve(req.result);
+      };
+      req.onerror = function () {
+        reject(req.error);
+      };
+    });
+  }
+
+  function getPhoto(exId) {
+    return openPhotoDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction("photos", "readonly");
+        var req = tx.objectStore("photos").get(exId);
+        req.onsuccess = function () {
+          resolve(req.result || null);
+        };
+        req.onerror = function () {
+          reject(req.error);
+        };
+      });
+    });
+  }
+
+  function putPhoto(exId, blob) {
+    return openPhotoDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction("photos", "readwrite");
+        tx.objectStore("photos").put(blob, exId);
+        tx.oncomplete = function () {
+          resolve();
+        };
+        tx.onerror = function () {
+          reject(tx.error);
+        };
+      });
+    });
+  }
+
+  function deletePhoto(exId) {
+    return openPhotoDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction("photos", "readwrite");
+        tx.objectStore("photos").delete(exId);
+        tx.oncomplete = function () {
+          resolve();
+        };
+        tx.onerror = function () {
+          reject(tx.error);
+        };
+      });
+    });
+  }
+
+  function resizeToJpeg(file) {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        var w = img.naturalWidth;
+        var h = img.naturalHeight;
+        var max = 1200;
+        var scale = Math.min(1, max / Math.max(w, h));
+        var cw = Math.round(w * scale);
+        var ch = Math.round(h * scale);
+        var canvas = document.createElement("canvas");
+        canvas.width = cw;
+        canvas.height = ch;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, cw, ch);
+        canvas.toBlob(
+          function (blob) {
+            URL.revokeObjectURL(url);
+            if (!blob) reject(new Error("toBlob failed"));
+            else resolve(blob);
+          },
+          "image/jpeg",
+          0.85
+        );
+      };
+      img.onerror = function () {
+        URL.revokeObjectURL(url);
+        reject(new Error("image load failed"));
+      };
+      img.src = url;
+    });
+  }
+
+  /* ---------- routing ---------- */
+  function parseHash() {
+    var h = (location.hash || "#").replace(/^#\/?/, "");
+    if (!h || h === "") return { view: "cal" };
+    if (h === "weight") return { view: "weight" };
+    if (h === "settings") return { view: "settings" };
+    var day = h.match(/^day\/(\d{4}-\d{2}-\d{2})$/);
+    if (day) return { view: "day", date: day[1] };
+    var ex = h.match(/^ex\/(.+)$/);
+    if (ex) return { view: "ex", id: decodeURIComponent(ex[1]) };
+    return { view: "cal" };
+  }
+
+  function go(hash) {
+    location.hash = hash.charAt(0) === "#" ? hash : "#" + hash;
+  }
+
+  function setTabs(view) {
+    document.getElementById("tab-cal").classList.toggle("on", view === "cal" || view === "day" || view === "ex");
+    document.getElementById("tab-weight").classList.toggle("on", view === "weight");
+    document.getElementById("tab-settings").classList.toggle("on", view === "settings");
+  }
+
+  /* ---------- render helpers ---------- */
+  function placeholderSvg(part) {
+    return (
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="' +
+      esc(part) +
+      '">' +
+      '<rect width="400" height="400" fill="#d8d8d8"/>' +
+      '<text x="200" y="205" text-anchor="middle" font-size="28" fill="#666" font-family="system-ui,sans-serif">' +
+      esc(part) +
+      "</text></svg>"
+    );
+  }
+
+  function compareText(prev, cur) {
+    if (!prev || !prev.sets || !prev.sets.length) return "";
+    function fmt(s) {
+      var kg = s.sets[0].kg;
+      var reps = s.sets.map(function (x) {
+        return x.reps;
+      }).join("/");
+      return kg + "kg " + reps;
+    }
+    var prevSum = prev.sets.reduce(function (a, b) {
+      return a + b.reps;
+    }, 0);
+    var curSum = cur.sets.reduce(function (a, b) {
+      return a + b.reps;
+    }, 0);
+    var diff = curSum - prevSum;
+    var sign = diff > 0 ? "+" : "";
+    return "前回 " + fmt(prev) + " → 今回 " + fmt(cur) + "（合計 " + sign + diff + "回）";
+  }
+
+  function renderCal() {
+    var today = todayStr();
+    var start = addDays(today, -(14 + state.calPastExtra));
+    var end = addDays(today, 14 + state.calFutureExtra);
+    var wmap = dailyWeightMap();
+    var html = "<h1>カレンダー</h1>";
+    if (needsBackup()) {
+      html += '<div class="warn-banner">バックアップを書き出してください</div>';
+    }
+    html += '<button type="button" class="cal-more" data-act="more-past">さらに表示</button>';
+    var d = start;
+    while (d <= end) {
+      var kind = kindFor(d);
+      var st = trainStatus(d);
+      var mealN = mealCheckCount(d);
+      var rec = recoveryFor(d);
+      var w = wmap[d];
+      var badge = "";
+      if (st === "done") badge = '<span class="badge done">済</span>';
+      else if (st === "mid") badge = '<span class="badge mid">途中</span>';
+      else if (kind !== "rest") badge = '<span class="badge">未</span>';
+      if (rec.deload) badge += '<span class="badge half">セット半分</span>';
+      html +=
+        '<button type="button" class="cal-row' +
+        (d === today ? " today" : "") +
+        '" data-day="' +
+        d +
+        '">' +
+        '<div><span class="cal-date">' +
+        d.slice(5) +
+        '</span><span class="cal-dow">' +
+        DOW[dow(d)] +
+        "</span></div>" +
+        '<div class="cal-mid"><div class="cal-kind">' +
+        KIND_LABEL[kind] +
+        badge +
+        '</div><div class="cal-meta">食事 ' +
+        mealN +
+        "/5</div></div>" +
+        '<div class="cal-right">' +
+        (w ? w.kg.toFixed(1) + "kg" : "") +
+        "</div></button>";
+      d = addDays(d, 1);
+    }
+    html += '<button type="button" class="cal-more" data-act="more-future">さらに表示</button>';
+    return html;
+  }
+
+  function draftKey(date, exId, setIdx) {
+    return date + "|" + exId + "|" + setIdx;
+  }
+
+  function ensureDraft(date, exId, setIdx, target) {
+    var k = draftKey(date, exId, setIdx);
+    if (!state.draft[k]) {
+      var prevDraft = setIdx > 0 ? state.draft[draftKey(date, exId, setIdx - 1)] : null;
+      state.draft[k] = {
+        kg: target.kg != null ? target.kg : prevDraft && prevDraft.kg != null ? prevDraft.kg : null,
+        reps: target.reps[setIdx] != null ? target.reps[setIdx] : target.reps[0],
+        rir: null,
+      };
+    }
+    return state.draft[k];
+  }
+
+  function renderDay(dateStr) {
+    var today = todayStr();
+    var menu = menuFor(dateStr);
+    var mode = dateStr < today ? "past" : dateStr > today ? "future" : "today";
+    var html =
+      '<a class="back" href="#">戻る</a><h1>' +
+      esc(dateStr) +
+      "（" +
+      DOW[dow(dateStr)] +
+      "）</h1>";
+    html += "<h2>トレーニング</h2>";
+    if (menu.kind === "rest") {
+      html += '<div class="card">休み</div>';
+    } else {
+      html += '<div class="card"><strong>' + KIND_LABEL[menu.kind] + "</strong></div>";
+      if (menu.deload && menu.recovery) {
+        var names = menu.recovery.causes
+          .map(function (id) {
+            return exerciseName(id);
+          })
+          .join("・");
+        html +=
+          '<div class="deload-banner">回復不足: ' +
+          esc(names) +
+          "が2回続けて前回を下回ったため、今週は全種目のセット数を半分にしています</div>";
+      }
+      menu.items.forEach(function (it) {
+        var presc = { sets: it.sets, repMin: it.repMin, repMax: it.repMax };
+        var target = targetFor(it.id, dateStr, presc);
+        var saved = (state.logs[dateStr] && state.logs[dateStr][it.id]) || [];
+        html += '<div class="card" data-ex="' + esc(it.id) + '">';
+        html +=
+          '<a class="ex-name" href="#ex/' +
+          encodeURIComponent(it.id) +
+          '">' +
+          esc(exerciseName(it.id)) +
+          "</a>";
+        if (mode === "future" || mode === "today") {
+          var kgTxt = target.kg == null ? "—" : target.kg + "kg";
+          html +=
+            '<div class="target-line">目標 ' +
+            kgTxt +
+            " × " +
+            target.reps.join("/") +
+            "（" +
+            target.sets +
+            "セット）<br>" +
+            esc(target.reason) +
+            "</div>";
+        }
+        if (mode === "past") {
+          if (!saved.length) {
+            html += '<p class="note">記録なし</p>';
+          } else {
+            html +=
+              "<p>" +
+              saved
+                .map(function (s) {
+                  return s.kg + "kg × " + s.reps;
+                })
+                .join(" ／ ") +
+              "</p>";
+            var hist = historyBefore(it.id, dateStr);
+            var prev = hist.length ? hist[hist.length - 1] : null;
+            var cmp = compareText(prev, { sets: saved });
+            if (cmp) html += '<div class="compare">' + esc(cmp) + "</div>";
+          }
+        } else if (mode === "future") {
+          /* target already shown */
+        } else {
+          for (var i = 0; i < it.sets; i++) {
+            var doneSet = saved[i];
+            if (target.kg == null && i > 0 && saved[i - 1] && saved[i - 1].kg != null) {
+              var pk = draftKey(dateStr, it.id, i - 1);
+              if (!state.draft[pk]) state.draft[pk] = { kg: saved[i - 1].kg, reps: saved[i - 1].reps, rir: null };
+              else if (state.draft[pk].kg == null) state.draft[pk].kg = saved[i - 1].kg;
+            }
+            var dr = ensureDraft(dateStr, it.id, i, target);
+            html += '<div class="set-row"><div class="set-idx">' + (i + 1) + "</div><div>";
+            if (doneSet) {
+              html +=
+                "<p>記録済: " +
+                doneSet.kg +
+                "kg × " +
+                doneSet.reps +
+                (doneSet.rir != null ? "（あと" + doneSet.rir + "回）" : "") +
+                "</p>";
+            } else {
+              var step = stepFor(it.id);
+              var stepKg = step.type === "fixed" ? step.kg : 1;
+              html +=
+                '<div class="field-row"><label>重さ</label>' +
+                '<button type="button" class="step" data-draft="' +
+                esc(draftKey(dateStr, it.id, i)) +
+                '" data-field="kg" data-delta="-' +
+                stepKg +
+                '">−</button>' +
+                '<input type="number" inputmode="decimal" data-draft="' +
+                esc(draftKey(dateStr, it.id, i)) +
+                '" data-field="kg" value="' +
+                (dr.kg == null ? "" : dr.kg) +
+                '" placeholder="kg">' +
+                '<button type="button" class="step" data-draft="' +
+                esc(draftKey(dateStr, it.id, i)) +
+                '" data-field="kg" data-delta="' +
+                stepKg +
+                '">＋</button></div>';
+              html +=
+                '<div class="field-row"><label>回数</label>' +
+                '<button type="button" class="step" data-draft="' +
+                esc(draftKey(dateStr, it.id, i)) +
+                '" data-field="reps" data-delta="-1">−</button>' +
+                '<input type="number" inputmode="numeric" data-draft="' +
+                esc(draftKey(dateStr, it.id, i)) +
+                '" data-field="reps" value="' +
+                (dr.reps == null ? "" : dr.reps) +
+                '">' +
+                '<button type="button" class="step" data and-draft="' +
+                esc(draftKey(dateStr, it.id, i)) +
+                '" data-field="reps" data-delta="1">＋</button></div>';
+              /* fix typo data and-draft -> data-draft - I'll fix below */
+              html +=
+                '<div class="rir-row"><span class="lbl">あと何回できたか</span>';
+              [0, 1, 2, 3].forEach(function (n) {
+                html +=
+                  '<button type="button" class="rir' +
+                  (dr.rir === n ? " on" : "") +
+                  '" data-draft="' +
+                  esc(draftKey(dateStr, it.id, i)) +
+                  '" data-rir="' +
+                  n +
+                  '">' +
+                  n +
+                  "</button>";
+              });
+              html += "</div>";
+              html +=
+                '<button type="button" class="primary" data-complete="' +
+                esc(dateStr) +
+                "|" +
+                esc(it.id) +
+                "|" +
+                i +
+                '">完了</button>';
+            }
+            html += "</div></div>";
+          }
+        }
+        html += "</div>";
+      });
+    }
+
+    /* meal */
+    var meal = mealState(dateStr);
+    var nut = dayNutrition(meal.rice);
+    html += "<h2>食事</h2>";
+    html +=
+      '<div class="totals"><div class="stat"><span class="v">' +
+      nut.p +
+      '</span><span class="l">タンパク質 g</span></div><div class="stat"><span class="v">' +
+      nut.kcal +
+      '</span><span class="l">kcal</span></div></div>';
+    html +=
+      '<div class="card"><div>ご飯の杯数</div><div class="dial">' +
+      '<button type="button" class="step" data-rice="' +
+      esc(dateStr) +
+      '" data-delta="-0.5">−</button>' +
+      '<div class="val">' +
+      meal.rice +
+      '</div><button type="button" class="step" data-rice="' +
+      esc(dateStr) +
+      '" data-delta="0.5">＋</button></div>' +
+      '<p class="note">配分 朝' +
+      nut.split.breakfast +
+      "／昼" +
+      nut.split.lunch +
+      "／晩" +
+      nut.split.dinner +
+      "</p></div>";
+    MEAL_SLOTS.forEach(function (slot) {
+      html +=
+        '<label class="meal-item card"><input type="checkbox" data-meal-check="' +
+        esc(dateStr) +
+        "|" +
+        slot.id +
+        '"' +
+        (meal.checks[slot.id] ? " checked" : "") +
+        '><div class="meal-body"><div class="meal-title">' +
+        esc(slot.title) +
+        '</div><div class="meal-foods">' +
+        esc(mealFoodsText(slot.id, nut.split)) +
+        "</div></div></label>";
+    });
+    return html.replace('data and-draft=', 'data-draft=');
+  }
+
+  function renderEx(exId) {
+    var ex = exerciseOf(exId);
+    if (!ex) return '<a class="back" href="#">戻る</a><p>種目が見つかりません</p>';
+    var all = allSessionsByExercise()[exId] || [];
+    var html =
+      '<a class="back" href="javascript:history.back()">戻る</a><h1>' +
+      esc(ex.name) +
+      "</h1>";
+    html += '<div class="photo-box" id="photo-box">' + placeholderSvg(ex.part) + "</div>";
+    html +=
+      '<div class="photo-actions"><label class="primary" style="display:inline-flex;align-items:center;padding:10px 14px;border-radius:6px;background:var(--accent);color:#fff;">写真を撮る・選ぶ' +
+      '<input class="hidden-file" type="file" accept="image/*" capture="environment" id="photo-input"></label>' +
+      '<button type="button" id="photo-del">写真を削除</button></div>';
+    html +=
+      '<div class="form-block"><h3>構え方</h3><p>' +
+      esc(ex.setup) +
+      "</p><h3>動かし方</h3><p>" +
+      esc(ex.move) +
+      "</p><h3>よくある失敗</h3><p>" +
+      esc(ex.fail) +
+      "</p><h3>効かせるポイント</h3><p>" +
+      esc(ex.tip) +
+      "</p></div>";
+    html += "<h2>推移</h2>";
+    if (all.length < 2) {
+      html += '<p class="note">記録が2回以上になるとグラフを表示します</p>';
+    } else {
+      html += '<div class="chart-wrap" id="ex-chart"></div>';
+    }
+    html += "<h2>過去の記録</h2>";
+    var rev = all.slice().reverse();
+    if (!rev.length) html += '<p class="note">記録なし</p>';
+    rev.forEach(function (s) {
+      html +=
+        '<div class="hist-item"><strong>' +
+        esc(s.date) +
+        "</strong> " +
+        s.sets
+          .map(function (x) {
+            return x.kg + "kg×" + x.reps;
+          })
+          .join(" ／ ") +
+        "</div>";
+    });
+    return { html: html, all: all, exId: exId, ex: ex };
+  }
+
+  function buildExChart(all) {
+    var pts = all.map(function (s) {
+      var maxKg = 0;
+      var maxReps = 0;
+      s.sets.forEach(function (x) {
+        if (x.kg > maxKg) {
+          maxKg = x.kg;
+          maxReps = x.reps;
+        } else if (x.kg === maxKg && x.reps > maxReps) {
+          maxReps = x.reps;
+        }
+      });
+      return { date: s.date, kg: maxKg, reps: maxReps };
+    });
+    var w = 360;
+    var h = 180;
+    var pad = { l: 36, r: 28, t: 16, b: 36 };
+    var minY = Math.min.apply(
+      null,
+      pts.map(function (p) {
+        return p.kg;
+      })
+    );
+    var maxY = Math.max.apply(
+      null,
+      pts.map(function (p) {
+        return p.kg;
+      })
+    );
+    if (minY === maxY) {
+      minY -= 2.5;
+      maxY += 2.5;
+    }
+    function x(i) {
+      return pad.l + (i * (w - pad.l - pad.r)) / Math.max(1, pts.length - 1);
+    }
+    function y(v) {
+      return pad.t + ((maxY - v) * (h - pad.t - pad.b)) / (maxY - minY);
+    }
+    var line = pts
+      .map(function (p, i) {
+        return (i ? "L" : "M") + x(i) + "," + y(p.kg);
+      })
+      .join(" ");
+    var dots = pts
+      .map(function (p, i) {
+        return (
+          '<circle cx="' +
+          x(i) +
+          '" cy="' +
+          y(p.kg) +
+          '" r="3.5" fill="#2f6b3a"/>' +
+          '<text x="' +
+          (x(i) + 6) +
+          '" y="' +
+          (y(p.kg) - 6) +
+          '" font-size="10" fill="#555">' +
+          p.reps +
+          "</text>" +
+          '<text x="' +
+          x(i) +
+          '" y="' +
+          (h - 10) +
+          '" text-anchor="middle" font-size="9" fill="#888">' +
+          p.date.slice(5) +
+          "</text>"
+        );
+      })
+      .join("");
+    return (
+      '<svg viewBox="0 0 ' +
+      w +
+      " " +
+      h +
+      '" width="100%" xmlns="http://www.w3.org/2000/svg">' +
+      '<line x1="' +
+      pad.l +
+      '" y1="' +
+      pad.t +
+      '" x2="' +
+      pad.l +
+      '" y2="' +
+      (h - pad.b) +
+      '" stroke="#ccc"/>' +
+      '<line x1="' +
+      pad.l +
+      '" y1="' +
+      (h - pad.b) +
+      '" x2="' +
+      (w - pad.r) +
+      '" y2="' +
+      (h - pad.b) +
+      '" stroke="#ccc"/>' +
+      '<path d="' +
+      line +
+      '" fill="none" stroke="#2f6b3a" stroke-width="2"/>' +
+      dots +
+      '<text x="4" y="' +
+      (pad.t + 4) +
+      '" font-size="10" fill="#888">' +
+      maxY +
+      '</text><text x="4" y="' +
+      (h - pad.b) +
+      '" font-size="10" fill="#888">' +
+      minY +
+      "</text></svg>"
+    );
+  }
+
+  function renderWeight() {
+    var html = "<h1>体重</h1>";
+    html +=
+      '<p class="note">体重は Claude Code のスレッドに体重計のスクリーンショットを貼ると記録されます。記録後にこのページを再読み込みしてください</p>';
+    if (state.weightError || !state.weightData) {
+      html += '<div class="warn-banner">体重データを読み込めません</div>';
+      return html;
+    }
+    var today = todayStr();
+    var daily = dailyWeights(
+      state.weightData.weights.map(function (w) {
+        return { date: w.date, kg: Number(w.kg), time: w.time == null ? null : w.time };
+      })
+    );
+    var pace = pace28(daily, today);
+    var j = judge(pace.pace);
+    var labels = {
+      decrease: "ご飯を1日1杯減らす",
+      increase: "ご飯を1日1杯増やす",
+      keep: "今の量を維持",
+      insufficient: "判定まであと" + pace.need + "日分",
+    };
+    var a7 = avgWeight7(daily, today);
+    var r7 = avgRice7(riceSeries(), today);
+    var roll = rolling7(daily);
+
+    html += '<div class="card"><strong>判定</strong><div style="font-size:1.2rem;margin-top:6px;">' + labels[j] + "</div>";
+    html +=
+      '<div class="note" style="margin-top:6px;">直近28日のペース: ' +
+      (pace.pace == null ? "—" : (Math.round(pace.pace * 100) / 100) + " kg/月") +
+      "（目標帯 0.5〜1.0）</div>";
+    var markerPct = 50;
+    if (pace.pace != null) {
+      markerPct = Math.max(0, Math.min(100, ((pace.pace - 0) / 1.5) * 100));
+    }
+    html +=
+      '<div class="pace-bar"><div class="pace-zone"></div>' +
+      (pace.pace == null
+        ? ""
+        : '<div class="pace-marker" style="left:' + markerPct + '%"></div>') +
+      "</div></div>";
+    html +=
+      '<div class="totals"><div class="stat"><span class="v">' +
+      (a7 == null ? "—" : (Math.round(a7 * 10) / 10).toFixed(1)) +
+      '</span><span class="l">直近7日 平均体重 kg</span></div><div class="stat"><span class="v">' +
+      (r7.avg == null ? "—" : (Math.round(r7.avg * 10) / 10).toFixed(1)) +
+      '</span><span class="l">直近7日 平均ご飯杯</span></div></div>';
+
+    html +=
+      '<div class="range-tabs">' +
+      [28, 90, "all"]
+        .map(function (r) {
+          var lab = r === "all" ? "全期間" : r + "日";
+          return (
+            '<button type="button" class="' +
+            (state.weightRange === r ? "on" : "") +
+            '" data-range="' +
+            r +
+            '">' +
+            lab +
+            "</button>"
+          );
+        })
+        .join("") +
+      "</div>";
+    html += '<div class="chart-wrap" id="w-chart"></div>';
+
+    html += "<h2>直近14日</h2><table class='list-table'><thead><tr><th>日付</th><th>体重</th><th>時刻</th><th>ご飯</th></tr></thead><tbody>";
+    var riceMap = {};
+    riceSeries().forEach(function (r) {
+      riceMap[r.date] = r.cups;
+    });
+    var rows = [];
+    for (var i = 0; i < 14; i++) {
+      var d = addDays(today, -i);
+      var dw = daily.filter(function (x) {
+        return x.date === d;
+      })[0];
+      rows.push({
+        date: d,
+        kg: dw ? dw.kg : null,
+        time: dw ? dw.time : null,
+        rice: riceMap[d] != null ? riceMap[d] : null,
+      });
+    }
+    rows.forEach(function (r) {
+      html +=
+        "<tr><td>" +
+        r.date +
+        "</td><td>" +
+        (r.kg == null ? "—" : r.kg.toFixed(1)) +
+        "</td><td>" +
+        (r.time || "—") +
+        "</td><td>" +
+        (r.rice == null ? "—" : r.rice) +
+        "</td></tr>";
+    });
+    html += "</tbody></table>";
+    return { html: html, daily: daily, roll: roll };
+  }
+
+  function buildWeightChart(daily, roll) {
+    var today = todayStr();
+    var start;
+    if (state.weightRange === "all") {
+      start = daily.length ? daily[0].date : addDays(today, -27);
+    } else {
+      start = addDays(today, -(Number(state.weightRange) - 1));
+    }
+    var pts = daily.filter(function (d) {
+      return d.date >= start && d.date <= today;
+    });
+    var rpts = roll.filter(function (d) {
+      return d.date >= start && d.date <= today;
+    });
+    if (!pts.length) return '<p class="note">表示できる体重がありません</p>';
+    var w = 360;
+    var h = 200;
+    var pad = { l: 36, r: 12, t: 12, b: 28 };
+    var minY = Math.min.apply(
+      null,
+      pts.map(function (p) {
+        return p.kg;
+      })
+    );
+    var maxY = Math.max.apply(
+      null,
+      pts.map(function (p) {
+        return p.kg;
+      })
+    );
+    if (minY === maxY) {
+      minY -= 1;
+      maxY += 1;
+    }
+    function xOf(date) {
+      var t0 = parseDate(start).getTime();
+      var t1 = parseDate(today).getTime();
+      var t = parseDate(date).getTime();
+      return pad.l + ((t - t0) / Math.max(1, t1 - t0)) * (w - pad.l - pad.r);
+    }
+    function yOf(v) {
+      return pad.t + ((maxY - v) * (h - pad.t - pad.b)) / (maxY - minY);
+    }
+    var dots = pts
+      .map(function (p) {
+        return '<circle cx="' + xOf(p.date) + '" cy="' + yOf(p.kg) + '" r="2.5" fill="#2f6b3a"/>';
+      })
+      .join("");
+    var line = rpts
+      .map(function (p, i) {
+        return (i ? "L" : "M") + xOf(p.date) + "," + yOf(p.avg);
+      })
+      .join(" ");
+    return (
+      '<svg viewBox="0 0 ' +
+      w +
+      " " +
+      h +
+      '" width="100%" xmlns="http://www.w3.org/2000/svg">' +
+      '<path d="' +
+      line +
+      '" fill="none" stroke="#888" stroke-width="1.5"/>' +
+      dots +
+      "</svg>"
+    );
+  }
+
+  function renderSettings() {
+    var s = state.settings;
+    var html = "<h1>設定</h1>";
+    html += '<div class="settings-block"><h2>曜日の割り振り</h2>';
+    for (var i = 0; i < 7; i++) {
+      var day = (i + 1) % 7; /* Mon..Sun as 1..0 */
+      var label = DOW[day];
+      html +=
+        '<div class="row"><label style="width:2em">' +
+        label +
+        '</label><select data-sched="' +
+        day +
+        '">';
+      KIND_KEYS.forEach(function (k) {
+        html +=
+          '<option value="' +
+          k +
+          '"' +
+          (s.schedule[String(day)] === k ? " selected" : "") +
+          ">" +
+          KIND_LABEL[k] +
+          "</option>";
+      });
+      html += "</select></div>";
+    }
+    html += "</div>";
+
+    ["upper", "lower", "shoulder_arm"].forEach(function (kind) {
+      html +=
+        '<div class="settings-block"><h2>メニュー（' +
+        KIND_LABEL[kind] +
+        "）</h2>";
+      (s.menus[kind] || []).forEach(function (it, idx) {
+        html +=
+          '<div class="menu-ex" data-kind="' +
+          kind +
+          '" data-idx="' +
+          idx +
+          '"><div class="row"><strong>' +
+          esc(exerciseName(it.id)) +
+          "</strong></div>" +
+          '<div class="row"><label>セット</label><input type="number" data-menu="' +
+          kind +
+          "|" +
+          idx +
+          '|sets" value="' +
+          it.sets +
+          '">' +
+          '<label>下限</label><input type="number" data-menu="' +
+          kind +
+          "|" +
+          idx +
+          '|repMin" value="' +
+          it.repMin +
+          '">' +
+          '<label>上限</label><input type="number" data-menu="' +
+          kind +
+          "|" +
+          idx +
+          '|repMax" value="' +
+          it.repMax +
+          '"></div>' +
+          '<div class="row"><button type="button" data-menu-up="' +
+          kind +
+          "|" +
+          idx +
+          '">上へ</button>' +
+          '<button type="button" data-menu-down="' +
+          kind +
+          "|" +
+          idx +
+          '">下へ</button>' +
+          '<button type="button" data-menu-del="' +
+          kind +
+          "|" +
+          idx +
+          '">削除</button></div></div>';
+      });
+      html +=
+        '<div class="row"><select data-add-ex="' +
+        kind +
+        '"><option value="">種目を追加</option>';
+      Object.keys(EXERCISES)
+        .concat(Object.keys(state.customExercises))
+        .forEach(function (id) {
+          html += '<option value="' + esc(id) + '">' + esc(exerciseName(id)) + "</option>";
+        });
+      html +=
+        '</select><button type="button" data-add-btn="' +
+        kind +
+        '">追加</button></div>';
+      html +=
+        '<div class="row"><input type="text" placeholder="新しい種目名" data-new-name="' +
+        kind +
+        '"><select data-new-type="' +
+        kind +
+        '"><option value="compound">多関節</option><option value="isolation">単関節</option><option value="dumbbell">ダンベル</option></select>' +
+        '<button type="button" data-new-btn="' +
+        kind +
+        '">新規追加</button></div></div>';
+    });
+
+    html +=
+      '<div class="settings-block"><h2>刻み</h2>' +
+      '<div class="row"><label>多関節</label><input type="number" step="0.25" data-step-type="compound" value="' +
+      s.steps.compound +
+      '"> kg</div>' +
+      '<div class="row"><label>単関節</label><input type="number" step="0.25" data-step-type="isolation" value="' +
+      s.steps.isolation +
+      '"> kg</div>' +
+      '<div class="row"><label>ダンベル一覧</label></div>' +
+      '<input type="text" data-db-list value="' +
+      esc(s.dumbbellList.join(",")) +
+      '">' +
+      "<h3>種目ごとの上書き</h3>";
+    Object.keys(s.stepOverrides || {}).forEach(function (id) {
+      html +=
+        '<div class="row"><span>' +
+        esc(exerciseName(id)) +
+        '</span><input type="number" step="0.25" data-ov="' +
+        esc(id) +
+        '" value="' +
+        s.stepOverrides[id] +
+        '"><button type="button" data-ov-del="' +
+        esc(id) +
+        '">削除</button></div>';
+    });
+    html +=
+      '<div class="row"><select id="ov-ex"><option value="">種目</option>';
+    Object.keys(EXERCISES)
+      .concat(Object.keys(state.customExercises))
+      .forEach(function (id) {
+        html += '<option value="' + esc(id) + '">' + esc(exerciseName(id)) + "</option>";
+      });
+    html +=
+      '</select><input type="number" step="0.25" id="ov-kg" placeholder="kg"><button type="button" id="ov-add">上書き追加</button></div></div>';
+
+    html +=
+      '<div class="settings-block"><h2>ご飯の基準杯数</h2>' +
+      '<div class="dial"><button type="button" class="step" data-rice-base="-0.5">−</button>' +
+      '<div class="val" id="rice-base-val">' +
+      s.riceBase +
+      '</div><button type="button" class="step" data-rice-base="0.5">＋</button></div></div>';
+
+    html +=
+      '<div class="settings-block"><h2>バックアップ</h2>' +
+      '<div class="row"><button type="button" class="primary" id="bak-export">書き出し</button>' +
+      '<label class="primary" style="display:inline-flex;align-items:center;padding:10px 14px;background:var(--accent);color:#fff;border-radius:6px;">読み込み' +
+      '<input class="hidden-file" type="file" accept="application/json,.json" id="bak-import"></label></div>' +
+      '<p class="note">写真はバックアップに含まれません</p></div>';
+    return html;
+  }
+
+  function render() {
+    var route = parseHash();
+    setTabs(route.view);
+    var root = document.getElementById("app");
+    if (route.view === "cal") {
+      root.innerHTML = renderCal();
+    } else if (route.view === "day") {
+      root.innerHTML = renderDay(route.date);
+    } else if (route.view === "ex") {
+      var pack = renderEx(route.id);
+      root.innerHTML = pack.html;
+      getPhoto(pack.exId)
+        .then(function (blob) {
+          if (!blob) return;
+          var box = document.getElementById("photo-box");
+          if (!box) return;
+          var url = URL.createObjectURL(blob);
+          box.innerHTML = '<img alt="" src="' + url + '">';
+        })
+        .catch(function () {});
+      if (pack.all.length >= 2) {
+        var ch = document.getElementById("ex-chart");
+        if (ch) ch.innerHTML = buildExChart(pack.all);
+      }
+      bindExPage(pack.exId);
+    } else if (route.view === "weight") {
+      var wp = renderWeight();
+      if (typeof wp === "string") {
+        root.innerHTML = wp;
+      } else {
+        root.innerHTML = wp.html;
+        var wc = document.getElementById("w-chart");
+        if (wc) wc.innerHTML = buildWeightChart(wp.daily, wp.roll);
+      }
+    } else if (route.view === "settings") {
+      root.innerHTML = renderSettings();
+    }
+  }
+
+  function bindExPage(exId) {
+    var input = document.getElementById("photo-input");
+    if (input) {
+      input.addEventListener("change", function () {
+        var f = input.files && input.files[0];
+        if (!f) return;
+        resizeToJpeg(f)
+          .then(function (blob) {
+            return putPhoto(exId, blob);
+          })
+          .then(function () {
+            render();
+          })
+          .catch(function () {});
+      });
+    }
+    var del = document.getElementById("photo-del");
+    if (del) {
+      del.addEventListener("click", function () {
+        deletePhoto(exId).then(function () {
+          render();
+        });
+      });
+    }
+  }
+
+  function completeSet(dateStr, exId, setIdx) {
+    var k = draftKey(dateStr, exId, setIdx);
+    var dr = state.draft[k];
+    if (!dr || dr.kg === "" || dr.kg == null || dr.reps === "" || dr.reps == null) return;
+    if (!state.logs[dateStr]) state.logs[dateStr] = {};
+    var existing = (state.logs[dateStr][exId] || []).slice();
+    if (existing.length !== setIdx) return;
+    existing.push({
+      kg: Number(dr.kg),
+      reps: Number(dr.reps),
+      rir: dr.rir,
+    });
+    state.logs[dateStr][exId] = existing;
+    saveLogs();
+    delete state.draft[k];
+    render();
+  }
+
+  function exportBackup() {
+    var payload = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      settings: state.settings,
+      logs: state.logs,
+      meals: state.meals,
+      customExercises: state.customExercises,
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "fit2_backup_" + todayStr().replace(/-/g, "") + ".json";
+    a.click();
+    state.backupAt = Date.now();
+    lsSet("backupAt", state.backupAt);
+    render();
+  }
+
+  function importBackup(file) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var data = JSON.parse(String(reader.result));
+        if (data.settings) state.settings = data.settings;
+        if (data.logs) state.logs = data.logs;
+        if (data.meals) state.meals = data.meals;
+        if (data.customExercises) state.customExercises = data.customExercises;
+        saveSettings();
+        saveLogs();
+        saveMeals();
+        saveCustom();
+        render();
+      } catch (e) {
+        /* ignore */
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  document.getElementById("app").addEventListener("click", function (ev) {
+    var t = ev.target;
+    if (!t) return;
+    var dayBtn = t.closest("[data-day]");
+    if (dayBtn) {
+      go("#day/" + dayBtn.getAttribute("data-day"));
+      return;
+    }
+    var act = t.getAttribute("data-act");
+    if (act === "more-past") {
+      state.calPastExtra += 7;
+      render();
+      return;
+    }
+    if (act === "more-future") {
+      state.calFutureExtra += 7;
+      render();
+      return;
+    }
+    if (t.getAttribute("data-delta") != null && t.getAttribute("data-draft")) {
+      var key = t.getAttribute("data-draft");
+      var field = t.getAttribute("data-field");
+      var delta = Number(t.getAttribute("data-delta"));
+      if (!state.draft[key]) state.draft[key] = { kg: null, reps: null, rir: null };
+      var cur = state.draft[key][field];
+      if (cur == null || cur === "") cur = field === "kg" ? 0 : 0;
+      cur = Number(cur) + delta;
+      if (field === "reps") cur = Math.max(0, Math.round(cur));
+      if (field === "kg") cur = Math.round(cur * 100) / 100;
+      state.draft[key][field] = cur;
+      render();
+      return;
+    }
+    if (t.getAttribute("data-rir") != null) {
+      var dk = t.getAttribute("data-draft");
+      var rir = Number(t.getAttribute("data-rir"));
+      if (!state.draft[dk]) state.draft[dk] = { kg: null, reps: null, rir: null };
+      state.draft[dk].rir = state.draft[dk].rir === rir ? null : rir;
+      render();
+      return;
+    }
+    if (t.getAttribute("data-complete")) {
+      var parts = t.getAttribute("data-complete").split("|");
+      completeSet(parts[0], parts[1], Number(parts[2]));
+      return;
+    }
+    if (t.getAttribute("data-rice")) {
+      var date = t.getAttribute("data-rice");
+      var dlt = Number(t.getAttribute("data-delta"));
+      var m = mealState(date);
+      var next = Math.round((m.rice + dlt) * 2) / 2;
+      if (next < 0) next = 0;
+      if (next > 20) next = 20;
+      setMeal(date, { rice: next });
+      render();
+      return;
+    }
+    if (t.getAttribute("data-range") != null) {
+      var r = t.getAttribute("data-range");
+      state.weightRange = r === "all" ? "all" : Number(r);
+      render();
+      return;
+    }
+    if (t.getAttribute("data-rice-base") != null) {
+      var rb = Number(t.getAttribute("data-rice-base"));
+      var v = Math.round((state.settings.riceBase + rb) * 2) / 2;
+      if (v < 0) v = 0;
+      if (v > 20) v = 20;
+      state.settings.riceBase = v;
+      saveSettings();
+      render();
+      return;
+    }
+    if (t.id === "bak-export") {
+      exportBackup();
+      return;
+    }
+    if (t.getAttribute("data-menu-up")) {
+      var u = t.getAttribute("data-menu-up").split("|");
+      var arrU = state.settings.menus[u[0]];
+      var iu = Number(u[1]);
+      if (iu > 0) {
+        var tmp = arrU[iu - 1];
+        arrU[iu - 1] = arrU[iu];
+        arrU[iu] = tmp;
+        saveSettings();
+        render();
+      }
+      return;
+    }
+    if (t.getAttribute("data-menu-down")) {
+      var dn = t.getAttribute("data-menu-down").split("|");
+      var arrD = state.settings.menus[dn[0]];
+      var idn = Number(dn[1]);
+      if (idn < arrD.length - 1) {
+        var tmp2 = arrD[idn + 1];
+        arrD[idn + 1] = arrD[idn];
+        arrD[idn] = tmp2;
+        saveSettings();
+        render();
+      }
+      return;
+    }
+    if (t.getAttribute("data-menu-del")) {
+      var dl = t.getAttribute("data-menu-del").split("|");
+      state.settings.menus[dl[0]].splice(Number(dl[1]), 1);
+      saveSettings();
+      render();
+      return;
+    }
+    if (t.getAttribute("data-add-btn")) {
+      var kind = t.getAttribute("data-add-btn");
+      var sel = document.querySelector('select[data-add-ex="' + kind + '"]');
+      if (sel && sel.value) {
+        state.settings.menus[kind].push({
+          id: sel.value,
+          sets: 3,
+          repMin: 8,
+          repMax: 12,
+        });
+        saveSettings();
+        render();
+      }
+      return;
+    }
+    if (t.getAttribute("data-new-btn")) {
+      var nk = t.getAttribute("data-new-btn");
+      var nameEl = document.querySelector('input[data-new-name="' + nk + '"]');
+      var typeEl = document.querySelector('select[data-new-type="' + nk + '"]');
+      var name = nameEl && nameEl.value.trim();
+      if (!name) return;
+      var id = "custom_" + Date.now();
+      state.customExercises[id] = {
+        name: name,
+        type: typeEl.value,
+        part: "その他",
+        setup: "",
+        move: "",
+        fail: "",
+        tip: "",
+      };
+      state.settings.menus[nk].push({ id: id, sets: 3, repMin: 8, repMax: 12 });
+      saveCustom();
+      saveSettings();
+      render();
+      return;
+    }
+    if (t.id === "ov-add") {
+      var oid = document.getElementById("ov-ex").value;
+      var okg = Number(document.getElementById("ov-kg").value);
+      if (!oid || !isFinite(okg)) return;
+      state.settings.stepOverrides[oid] = okg;
+      saveSettings();
+      render();
+      return;
+    }
+    if (t.getAttribute("data-ov-del")) {
+      delete state.settings.stepOverrides[t.getAttribute("data-ov-del")];
+      saveSettings();
+      render();
+      return;
+    }
+  });
+
+  document.getElementById("app").addEventListener("change", function (ev) {
+    var t = ev.target;
+    if (t.getAttribute("data-meal-check")) {
+      var p = t.getAttribute("data-meal-check").split("|");
+      var m = mealState(p[0]);
+      var checks = Object.assign({}, m.checks);
+      checks[p[1]] = !!t.checked;
+      setMeal(p[0], { checks: checks });
+      return;
+    }
+    if (t.getAttribute("data-draft") && t.getAttribute("data-field")) {
+      var key = t.getAttribute("data-draft");
+      var field = t.getAttribute("data-field");
+      if (!state.draft[key]) state.draft[key] = { kg: null, reps: null, rir: null };
+      var val = t.value === "" ? null : Number(t.value);
+      state.draft[key][field] = val;
+      return;
+    }
+    if (t.getAttribute("data-sched") != null) {
+      state.settings.schedule[String(t.getAttribute("data-sched"))] = t.value;
+      saveSettings();
+      return;
+    }
+    if (t.getAttribute("data-menu")) {
+      var mp = t.getAttribute("data-menu").split("|");
+      var item = state.settings.menus[mp[0]][Number(mp[1])];
+      item[mp[2]] = Number(t.value);
+      saveSettings();
+      return;
+    }
+    if (t.getAttribute("data-step-type")) {
+      state.settings.steps[t.getAttribute("data-step-type")] = Number(t.value);
+      saveSettings();
+      return;
+    }
+    if (t.hasAttribute("data-db-list")) {
+      state.settings.dumbbellList = t.value
+        .split(",")
+        .map(function (x) {
+          return Number(String(x).trim());
+        })
+        .filter(function (n) {
+          return isFinite(n);
+        });
+      saveSettings();
+      return;
+    }
+    if (t.getAttribute("data-ov")) {
+      state.settings.stepOverrides[t.getAttribute("data-ov")] = Number(t.value);
+      saveSettings();
+      return;
+    }
+    if (t.id === "bak-import" && t.files && t.files[0]) {
+      importBackup(t.files[0]);
+    }
+  });
+
+  window.addEventListener("hashchange", render);
+
+  function loadWeight() {
+    return fetch("data/weight.json", { cache: "no-store" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("fail");
+        return r.json();
+      })
+      .then(function (data) {
+        state.weightData = data;
+        state.weightError = false;
+      })
+      .catch(function () {
+        state.weightData = null;
+        state.weightError = true;
+      });
+  }
+
+  loadAll();
+  loadWeight().then(function () {
+    render();
+  });
+
+  /* expose for screenshot seeding */
+  window.__FIT2__ = {
+    state: state,
+    render: render,
+    loadAll: loadAll,
+    saveLogs: saveLogs,
+    saveMeals: saveMeals,
+    saveSettings: saveSettings,
+    lsSet: lsSet,
+    defaultSettings: defaultSettings,
+  };
+})();

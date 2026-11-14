@@ -1,197 +1,334 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
 <title>fitness</title>
 <style>
-:root{
-  --bg:#fafafa; --card:#fff; --line:#e3e3e6; --line2:#f0f0f2;
-  --fg:#1a1a1c; --sub:#6b6b73; --mute:#9a9aa2;
-  --accent:#2f5d8f; --accent-w:#eaf1f8;
-  --ok:#2e7d5b; --ok-w:#e6f2ec;
-  --warn:#a8622a; --warn-w:#f7efe7;
-  --hot:#c0392b;
-  --r:10px;
+:root {
+  --bg: #f7f7f5;
+  --card: #fff;
+  --fg: #1a1a1a;
+  --sub: #5c5c5c;
+  --mute: #8a8a8a;
+  --line: #e2e2de;
+  --accent: #2f6b3a;
+  --accent-soft: #e8f0ea;
+  --warn: #8a5a12;
+  --warn-soft: #f5ecdc;
+  --ok: #2e7d5b;
+  --hot: #a33;
+  --tab-h: 56px;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--fg);
-  font-family:'Poppins',-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
-  font-size:14px;line-height:1.6}
-.wrap{max-width:780px;margin:0 auto;padding:0 14px 40px}
-
-.apphd{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:56px;z-index:60}
-.apphd .in{max-width:780px;margin:0 auto;padding:11px 14px;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-.apphd h1{font-size:14px;font-weight:700;letter-spacing:.02em}
-.apphd .meta{font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums}
-.tabs{display:flex;max-width:780px;margin:0 auto;padding:0 8px;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tabs::-webkit-scrollbar{display:none}
-.tabs button{flex:0 0 auto;background:none;border:none;border-bottom:2px solid transparent;
-  padding:9px 12px;font:inherit;font-size:13px;color:var(--sub);cursor:pointer;white-space:nowrap}
-.tabs button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
-
-section{display:none;padding-top:16px}
-section.on{display:block}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
-.card>h2{font-size:13px;font-weight:700;margin-bottom:10px;letter-spacing:.02em;display:flex;align-items:baseline;gap:8px}
-.card>h2 .r{margin-left:auto;font-weight:400;color:var(--sub);font-size:11px}
-h3{font-size:12px;font-weight:700;margin:16px 0 8px;color:var(--sub);letter-spacing:.04em}
-p.note{font-size:12px;color:var(--sub);line-height:1.75}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.sp{flex:1}
-hr{border:none;border-top:1px solid var(--line2);margin:12px 0}
-
-button.btn{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer}
-button.btn:active{opacity:.75}
-button.btn.gh{background:var(--card);color:var(--accent);border:1px solid var(--accent)}
-button.btn.gr{background:var(--card);color:var(--sub);border:1px solid var(--line)}
-button.btn.sm{padding:5px 10px;font-size:12px}
-button.btn.xs{padding:3px 8px;font-size:11px}
-
-input,select,textarea{font:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);
-  border-radius:7px;background:#fff;color:var(--fg);width:100%;font-family:inherit}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--accent-w);border-color:var(--accent)}
-input[type=number]{font-variant-numeric:tabular-nums}
-label.f{display:block;font-size:11px;color:var(--sub);margin-bottom:3px}
-.fg{flex:1;min-width:0}
-
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:7px 6px;text-align:left;border-bottom:1px solid var(--line2);vertical-align:top}
-th{font-size:11px;color:var(--sub);font-weight:600}
-td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
-
-.tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:20px;background:var(--line2);color:var(--sub);white-space:nowrap}
-.tag.a{background:var(--accent-w);color:var(--accent)}
-.tag.o{background:var(--ok-w);color:var(--ok)}
-.tag.h{background:#fbeae8;color:var(--hot)}
-.empty{color:var(--mute);font-size:12px;padding:16px 0;text-align:center}
-
-/* 種目が使う筋群のタグ。主働は塗り、補助は枠だけ */
-.mtags{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center}
-.mt{font-size:10px;padding:1px 6px;border-radius:20px;border:1px solid var(--line);color:var(--mute);background:#fff;white-space:nowrap}
-.mt.p{background:var(--accent-w);border-color:#c5d8ea;color:var(--accent);font-weight:600}
-
-/* サマリー */
-.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:12px}
-.kpi>div{min-width:0}
-.kpi .kl{font-size:10.5px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.kpi .kv{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.35}
-.kpi .kv.up{color:var(--ok)} .kpi .kv.dn{color:var(--hot)} .kpi .kv.na{color:var(--mute);font-weight:400;font-size:14px}
-.kpi .ks{font-size:10.5px;color:var(--mute);font-variant-numeric:tabular-nums}
-
-/* 判断リスト。深刻度で色を変える */
-ul.ins{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
-ul.ins>li{font-size:12.5px;line-height:1.75;padding:9px 11px 9px 12px;border-radius:8px;border-left:3px solid var(--line)}
-ul.ins>li.bad{background:#fdf5f4;border-left-color:var(--hot)}
-ul.ins>li.warn{background:var(--warn-w);border-left-color:var(--warn)}
-ul.ins>li.ok{background:var(--ok-w);border-left-color:var(--ok)}
-ul.ins>li.info{background:#fbfbfc;border-left-color:var(--line)}
-ul.ins>li b{font-weight:700}
-
-/* メニュー解説 */
-ul.coach{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
-ul.coach>li{font-size:12.5px;line-height:1.8;color:var(--fg);padding-left:13px;position:relative}
-ul.coach>li::before{content:"";position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
-
-/* training */
-.block{border:1px solid var(--line);border-radius:var(--r);background:var(--card);margin-bottom:12px;overflow:hidden}
-.block>.bh{padding:10px 14px;background:#fbfbfc;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.block>.bh .bt{font-size:13px;font-weight:700}
-.block>.bb{padding:2px 14px 12px}
-.ex{padding:12px 0;border-bottom:1px solid var(--line2)}
-.ex:last-child{border-bottom:none}
-.exmain{min-width:0}
-.exh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:3px}
-.exn{font-size:13px;font-weight:700}
-.exd{font-size:11px;color:var(--sub);margin:4px 0 8px;line-height:1.65}
-.sets{display:flex;flex-direction:column;gap:6px}
-.set{display:grid;grid-template-columns:20px 1fr 1fr 34px;gap:6px;align-items:center}
-.set .si{font-size:11px;color:var(--mute);text-align:center}
-.set select,.set input{padding:6px 7px;font-size:13px}
-.set .chk{width:34px;height:32px;border:1px solid var(--line);border-radius:7px;background:#fff;
-  cursor:pointer;color:var(--mute);font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center}
-.set .chk.on{background:var(--ok-w);border-color:var(--ok);color:var(--ok)}
-.prev{font-size:11px;color:var(--mute);margin-top:6px;font-variant-numeric:tabular-nums}
-
-/* rest timer */
-.timer{position:fixed;left:0;right:0;bottom:62px;background:var(--accent);color:#fff;
-  padding:10px 14px;display:none;z-index:9996;align-items:center;gap:12px;justify-content:center}
-.timer.on{display:flex}
-.timer .tv{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;min-width:60px;text-align:center}
-.timer button{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:5px 11px;font:inherit;font-size:12px;cursor:pointer}
-
-/* meals */
-.bar{height:7px;background:var(--line2);border-radius:4px;overflow:hidden;margin-top:4px}
-.bar>i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .25s}
-.bar>i.over{background:var(--warn)}
-.macro{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.macro .ml{font-size:11px;color:var(--sub)}
-.macro .mv{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
-.macro .mg{font-size:10.5px;color:var(--mute);font-variant-numeric:tabular-nums}
-.flist{max-height:250px;overflow-y:auto;border:1px solid var(--line);border-radius:7px;margin-top:8px}
-.fitem{padding:8px 10px;border-bottom:1px solid var(--line2);cursor:pointer;display:flex;gap:8px;align-items:baseline}
-.fitem:last-child{border-bottom:none}
-.fitem:hover{background:var(--accent-w)}
-.fitem .fn{flex:1;font-size:12.5px}
-.fitem .fk{font-size:10.5px;color:var(--sub);font-variant-numeric:tabular-nums;white-space:nowrap}
-.quick{display:flex;flex-wrap:wrap;gap:6px}
-.quick button{font-size:11.5px;padding:5px 10px;border:1px solid var(--line);border-radius:20px;background:#fff;cursor:pointer;font-family:inherit;color:var(--fg)}
-.quick button:hover{border-color:var(--accent);color:var(--accent)}
-
-/* charts */
-.chart{width:100%;height:170px;display:block}
-.chart text{font-size:9px;fill:var(--mute)}
-.lg{display:flex;gap:14px;font-size:11px;color:var(--sub);margin-top:6px;flex-wrap:wrap}
-.lg i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:5px}
-.hbar{display:grid;grid-template-columns:112px 1fr 42px;gap:8px;align-items:center;font-size:12px;margin-bottom:5px}
-.hbar.band{grid-template-columns:112px 1fr 78px}
-.hbar .hl{color:var(--sub);font-size:11.5px}
-.hbar .hl.vshape{color:var(--hot);font-weight:600}
-.hbar .ht{height:14px;background:var(--line2);border-radius:3px;overflow:hidden;position:relative}
-.hbar .ht>i{display:block;height:100%;background:var(--accent);border-radius:3px;position:relative}
-.hbar .ht>i.v{background:var(--hot)}
-.hbar.band .ht::before{content:"";position:absolute;left:var(--mev);right:calc(100% - var(--mrv));top:0;bottom:0;background:var(--ok-w)}
-.hbar .ht>i.u{background:var(--warn)}
-.hbar .ht>i.ok{background:var(--ok)}
-.hbar .ht>i.over{background:var(--hot)}
-.hbar .hn{text-align:right;font-variant-numeric:tabular-nums;color:var(--sub);font-size:11.5px}
-.hbar .hn .note{display:block;font-size:9.5px;line-height:1.3}
-
-/* scale grid */
-.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.sgrid .sf label{font-size:10.5px;color:var(--sub);display:block;margin-bottom:2px}
-.sgrid .sf input{padding:6px 8px;font-size:13px}
-.sgrid .sf input.flag{border-color:var(--hot);background:#fdf5f4}
-.sgrid .sf input.got{border-color:var(--ok);background:var(--ok-w)}
-
-.warnbox{border:1px solid #e6c4bd;background:#fdf5f4;border-radius:8px;padding:9px 11px;margin-top:8px;font-size:12px;color:var(--hot);line-height:1.7}
-.warnbox ul{margin:4px 0 0 16px}
-
-.inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
-.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.chip{font-size:11px;padding:3px 8px;border:1px solid var(--line);border-radius:20px;color:var(--sub);font-variant-numeric:tabular-nums;background:#fff}
-
-/* menu editor */
-.medit{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;overflow:hidden}
-.medit .mh{padding:9px 12px;background:#fbfbfc;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.medit .mrow{padding:9px 12px;border-bottom:1px solid var(--line2);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.medit .mrow:last-child{border-bottom:none}
-.medit .mname{font-size:12.5px;font-weight:600;flex:1;min-width:120px}
-.medit .msp{display:flex;gap:4px;align-items:center}
-.medit .msp input{width:52px;padding:4px 6px;font-size:12px;text-align:center}
-
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9998;display:none;align-items:flex-start;justify-content:center;padding:70px 12px 24px;overflow-y:auto}
-.modal.on{display:flex}
-.mbox{background:#fff;border-radius:12px;max-width:640px;width:100%;padding:16px;max-height:100%;overflow-y:auto}
-.libitem{padding:10px;border:1px solid var(--line);border-radius:8px;margin-bottom:7px;cursor:pointer;display:flex;gap:10px;align-items:center}
-.libitem:hover{border-color:var(--accent);background:var(--accent-w)}
-.libitem .li1{flex:1;min-width:0}
-.libitem .lin{font-size:13px;font-weight:600}
-.libitem .lim{font-size:11px;color:var(--sub);margin-top:2px}
-.filt{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
-.filt button{font-size:11px;padding:4px 9px;border:1px solid var(--line);border-radius:20px;background:#fff;cursor:pointer;font-family:inherit;color:var(--sub)}
-.filt button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", YuGothic, Meiryo, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+}
+body { padding-top: 56px; padding-bottom: calc(var(--tab-h) + 16px + env(safe-area-inset-bottom, 0px)); }
+/* ジム用タブを優先。サイト共通フッターは非表示 */
+.snav-footer { display: none !important; }
+button, input, select { font: inherit; }
+button {
+  cursor: pointer;
+  min-height: 44px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg);
+  padding: 8px 12px;
+}
+button.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+button.ghost { background: transparent; }
+button.step {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+button.rir {
+  min-width: 44px;
+  height: 44px;
+}
+button.rir.on {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+button:disabled { opacity: 0.45; cursor: default; }
+input[type="number"], input[type="text"], select {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #fff;
+  width: 100%;
+}
+.wrap {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 12px 14px 24px;
+}
+h1 {
+  font-size: 1.15rem;
+  margin: 0 0 10px;
+  font-weight: 700;
+}
+h2 {
+  font-size: 1.02rem;
+  margin: 22px 0 10px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--accent);
+}
+h3 { font-size: 0.95rem; margin: 14px 0 8px; }
+.note { color: var(--sub); font-size: 0.88rem; }
+.warn-banner {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border: 1px solid #e3d2b0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+}
+.deload-banner {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  min-height: 44px;
+}
+.cal-more {
+  width: 100%;
+  margin: 6px 0;
+}
+.cal-row {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 0 0 8px;
+}
+.cal-row.today {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.cal-date { font-weight: 700; font-variant-numeric: tabular-nums; }
+.cal-dow { display: block; color: var(--sub); font-size: 0.78rem; font-weight: 500; }
+.cal-mid { min-width: 0; }
+.cal-kind { font-weight: 600; }
+.cal-meta { color: var(--sub); font-size: 0.82rem; margin-top: 2px; }
+.cal-right { text-align: right; font-size: 0.82rem; color: var(--sub); }
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--line);
+  color: var(--sub);
+  margin-left: 4px;
+}
+.badge.half { background: var(--warn-soft); color: var(--warn); }
+.badge.done { background: #e6f2ec; color: var(--ok); }
+.badge.mid { background: #eef2f7; color: #3a5a7a; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  margin: 0 0 10px;
+}
+.ex-name {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+.target-line { color: var(--sub); font-size: 0.88rem; margin: 4px 0 8px; }
+.set-row {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.set-idx { color: var(--mute); font-size: 0.85rem; padding-top: 12px; }
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+}
+.field-row label { min-width: 2.2em; color: var(--sub); font-size: 0.82rem; }
+.field-row input[type="number"] { width: 72px; text-align: center; }
+.rir-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 0 0 8px; }
+.rir-row .lbl { color: var(--sub); font-size: 0.82rem; flex-basis: 100%; }
+.meal-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.meal-item:first-child { border-top: none; }
+.meal-item input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  flex: 0 0 auto;
+}
+.meal-body { min-width: 0; flex: 1; }
+.meal-title { font-weight: 700; }
+.meal-foods { color: var(--sub); font-size: 0.88rem; margin-top: 2px; }
+.totals {
+  display: flex;
+  gap: 8px;
+  background: var(--accent-soft);
+  border-radius: 8px;
+  padding: 12px 8px;
+  margin: 8px 0 12px;
+}
+.totals .stat { flex: 1; text-align: center; }
+.totals .v { display: block; font-size: 1.25rem; font-weight: 700; color: var(--accent); }
+.totals .l { display: block; font-size: 0.72rem; color: var(--sub); }
+.dial {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+.dial .val { font-size: 1.6rem; font-weight: 700; min-width: 3em; text-align: center; }
+.photo-box {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #ececec;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 10px;
+}
+.photo-box img, .photo-box svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+.form-block { margin: 0 0 14px; }
+.form-block p { margin: 0.35em 0; color: var(--fg); }
+.hist-item {
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+.pace-bar {
+  position: relative;
+  height: 18px;
+  background: #eee;
+  border-radius: 9px;
+  overflow: hidden;
+  margin: 8px 0 4px;
+}
+.pace-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 33.33%;
+  width: 16.67%;
+  background: #cfe3d4;
+}
+.pace-marker {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  width: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+  transform: translateX(-50%);
+}
+.chart-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 8px 0 12px; }
+.chart-wrap svg { display: block; max-width: 100%; height: auto; }
+.range-tabs { display: flex; gap: 6px; margin: 0 0 8px; }
+.range-tabs button.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.settings-block { margin: 0 0 18px; }
+.settings-block .row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0 0 8px;
+  flex-wrap: wrap;
+}
+.menu-ex {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  margin: 0 0 8px;
+  background: #fff;
+}
+.menu-ex .row input { width: 64px; }
+.tabs {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: #111;
+  display: flex;
+  z-index: 10000;
+}
+.tabs a {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,.55);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  min-height: var(--tab-h);
+}
+.tabs a.on { color: #fff; }
+.hidden-file { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.compare { color: var(--sub); font-size: 0.86rem; margin-top: 4px; }
+.list-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.list-table th, .list-table td {
+  text-align: left;
+  padding: 7px 4px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.list-table th { color: var(--sub); font-weight: 600; font-size: 0.78rem; }
 </style>
 </head>
 <body>
@@ -294,1827 +431,19 @@ function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');documen
 document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
 <footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
-<script defer src="../../_gloss/core.js"></script><script defer src="../../_gloss/gloss.js" data-src="../../_gloss/pages/020_personal/025_fitness/index.html.js"></script>
 <!-- snav:end -->
 
-<div class="apphd">
-  <div class="in">
-    <h1>fitness</h1>
-    <div class="meta" id="hdMeta"></div>
-  </div>
-  <div class="tabs">
-    <button data-t="sum" class="on">サマリー</button>
-    <button data-t="train">トレーニング</button>
-    <button data-t="menu">メニュー</button>
-    <button data-t="meal">食事</button>
-    <button data-t="scale">体組成</button>
-    <button data-t="sleep">睡眠</button>
-    <button data-t="rec">記録</button>
-    <button data-t="conf">設定</button>
-  </div>
-</div>
-
-<div class="wrap">
-
-<div class="card" id="noStore" style="display:none;border-color:#e0b8b0;background:#fdf4f2">
-  <b style="font-size:13px">この環境では記録を保存できない</b>
-  <p class="note" style="margin-top:6px">
-    ブラウザのローカル保存が無効になっている。プライベートブラウズか、ローカルファイルを直接開いた場合に起きる。
-    画面は動くが再読み込みで消えるので、公開URLから開くか、通常のウィンドウで開き直す。
-  </p>
-</div>
-
-<div class="card" id="expWarn" style="display:none;border-color:#e0b8b0;background:#fdf4f2">
-  <div class="row">
-    <div class="fg">
-      <b style="font-size:13px">記録の書き出しが必要</b>
-      <p class="note" id="expWarnMsg" style="margin-top:4px"></p>
-    </div>
-    <button class="btn sm" id="expWarnBtn">今すぐ書き出す</button>
-  </div>
-</div>
-
-<!-- ══ サマリー ══ -->
-<section id="sum" class="on">
-  <div class="card" id="sumInsightCard">
-    <h2>今週の判断<span class="r" id="sumRange"></span></h2>
-    <div id="sumInsight"></div>
-  </div>
-
-  <div class="card">
-    <h2>増量の進捗<span class="r">体重の7日平均から算出</span></h2>
-    <div id="sumBody"></div>
-  </div>
-
-  <div class="card">
-    <h2>食事<span class="r">直近7日の平均</span></h2>
-    <div id="sumMeal"></div>
-  </div>
-
-  <div class="card">
-    <h2>トレーニング<span class="r">直近7日</span></h2>
-    <div id="sumTrain"></div>
-  </div>
-
-  <div class="card">
-    <h2>睡眠<span class="r">直近7日の平均</span></h2>
-    <div id="sumSleep"></div>
-  </div>
-</section>
-
-<!-- ══ 睡眠 ══ -->
-<section id="sleep">
-  <div class="card">
-    <h2>記録する<span class="r">起きた日で記録する</span></h2>
-    <p class="note" style="margin-bottom:10px">
-      日付は「起きた日」を選ぶ。8月19日のレコードは、8月18日の夜に寝て19日の朝に起きた1回ぶんを指す。
-      日付をまたぐので、就寝時刻が起床時刻より遅い場合は前日の夜として自動で計算する。
-    </p>
-    <div class="row">
-      <div class="fg" style="max-width:150px"><label class="f">日付（起きた日）</label><input type="date" id="slDate"></div>
-      <div class="fg" style="max-width:110px"><label class="f">就寝</label><input type="time" id="slBed"></div>
-      <div class="fg" style="max-width:110px"><label class="f">起床</label><input type="time" id="slWake"></div>
-      <div class="fg" style="max-width:130px"><label class="f">体感</label>
-        <select id="slQ">
-          <option value="">—</option>
-          <option value="3">よく眠れた</option>
-          <option value="2">普通</option>
-          <option value="1">浅い・寝足りない</option>
-        </select>
-      </div>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <button class="btn sm" id="slSave">保存</button>
-      <button class="btn sm gr" id="slClear">クリア</button>
-      <div class="sp"></div>
-      <span class="note" id="slMsg"></span>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>なぜ測るか</h2>
-    <ul class="coach">
-      <li>週7でMRV近くまで積んでいる今、伸びを止める要因はボリュームではなく回復側にある。睡眠は回復の中で唯一、自分で伸ばせる変数。</li>
-      <li>成長ホルモンの大半は深い睡眠中に出る。筋タンパク合成はトレーニング中ではなく寝ている間に進むので、追い込むほど睡眠時間が要る。</li>
-      <li>睡眠不足はテストステロンを下げ、コルチゾールを上げる。増量期にこの組み合わせになると、増えた体重が筋肉ではなく脂肪に寄る。</li>
-      <li>目安は7〜9時間。6.5時間を下回る日が続いたら、その週はセット数を落として回復を優先したほうが結果的に伸びる。</li>
-      <li>就寝時刻のばらつきも効く。合計時間が同じでも、寝る時刻が毎日2時間ずれると体内時計が崩れて深い睡眠の割合が落ちる。</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2>推移<span class="r" id="slTrend"></span></h2>
-    <svg class="chart" id="slChart"></svg>
-    <div class="lg"><span><i style="background:#2f5d8f"></i>睡眠時間</span><span><i style="background:#a8622a"></i>7日平均</span></div>
-  </div>
-
-  <div class="card">
-    <h2>記録一覧</h2>
-    <div id="slHist"></div>
-  </div>
-</section>
-
-<!-- ══ トレーニング ══ -->
-<section id="train">
-  <div class="card">
-    <div class="row">
-      <div class="fg" style="max-width:160px"><label class="f">セッション日</label><input type="date" id="tDate"></div>
-      <div class="fg"><label class="f">メニュー</label><select id="tMenu"></select></div>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <span class="tag" id="tProgress"></span>
-      <span class="tag" id="tVol"></span>
-      <span class="tag" id="tTime"></span>
-      <div class="sp"></div>
-      <button class="btn xs gr" id="tClear">この日を消去</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>この日の狙い<span class="r" id="tTargets"></span></h2>
-    <div id="tCoach"></div>
-  </div>
-
-  <div id="tBlocks"></div>
-
-  <div class="card">
-    <label class="f">メモ（体感・不調・環境）</label>
-    <textarea id="tMemo" rows="2" placeholder="例: 3セット目で肩の前が張った"></textarea>
-  </div>
-</section>
-
-<!-- ══ メニュー ══ -->
-<section id="menu">
-  <div class="card">
-    <h2>メニューを選ぶ</h2>
-    <div class="row">
-      <div class="fg"><select id="eMenu"></select></div>
-      <button class="btn sm gh" id="eDup">複製して編集</button>
-      <button class="btn sm gr" id="eDel">削除</button>
-    </div>
-    <p class="note" id="eDesc" style="margin-top:10px"></p>
-  </div>
-
-  <div class="card">
-    <h2>この組み方の意図</h2>
-    <div id="eCoach"></div>
-  </div>
-
-  <div class="card">
-    <h2>このメニューが叩く部位<span class="r">主働1・補助0.5で換算</span></h2>
-    <div id="eSets"></div>
-  </div>
-
-  <div id="eBlocks"></div>
-
-  <div class="card">
-    <div class="row">
-      <button class="btn sm gh" id="eAddBlock">ブロックを追加</button>
-      <div class="sp"></div>
-      <span class="note" id="eLock"></span>
-    </div>
-  </div>
-</section>
-
-<!-- ══ 食事 ══ -->
-<section id="meal">
-  <div class="card">
-    <div class="row" style="margin-bottom:12px">
-      <div class="fg" style="max-width:160px"><label class="f">日付</label><input type="date" id="mDate"></div>
-    </div>
-    <div class="macro">
-      <div><div class="ml">カロリー</div><div class="mv" id="mKcal">0</div><div class="mg" id="mKcalG"></div><div class="bar"><i id="mKcalB"></i></div></div>
-      <div><div class="ml">P たんぱく</div><div class="mv" id="mP">0</div><div class="mg" id="mPG"></div><div class="bar"><i id="mPB"></i></div></div>
-      <div><div class="ml">F 脂質</div><div class="mv" id="mF">0</div><div class="mg" id="mFG"></div><div class="bar"><i id="mFB"></i></div></div>
-      <div><div class="ml">C 炭水化物</div><div class="mv" id="mC">0</div><div class="mg" id="mCG"></div><div class="bar"><i id="mCB"></i></div></div>
-    </div>
-    <p class="note" id="mAdvice" style="margin-top:12px"></p>
-  </div>
-
-  <div class="card">
-    <h2>よく使う</h2>
-    <div class="quick" id="mQuick"></div>
-  </div>
-
-  <div class="card">
-    <h2>ごはん換算<span class="r">1合＝生米150g・炊飯で約2.2倍</span></h2>
-    <div class="row">
-      <div class="fg" style="max-width:110px"><label class="f">炊いた合数</label><input type="number" step="0.5" id="rGo" value="3"></div>
-      <div class="fg"><label class="f">食べた量</label>
-        <select id="rPortion">
-          <option value="110">茶碗 小盛 110g</option>
-          <option value="150" selected>茶碗 普通盛 150g</option>
-          <option value="200">茶碗 大盛 200g</option>
-          <option value="280">どんぶり 280g</option>
-          <option value="half">炊いた量の半分</option>
-          <option value="third">炊いた量の1/3</option>
-          <option value="all">炊いた量の全部</option>
-        </select>
-      </div>
-      <div class="fg" style="max-width:80px"><label class="f">杯数</label><input type="number" step="0.5" id="rCups" value="1"></div>
-    </div>
-    <p class="note" id="rOut" style="margin-top:10px"></p>
-    <div class="row" style="margin-top:8px"><button class="btn sm" id="rAdd">この量を記録に追加</button></div>
-  </div>
-
-  <div class="card">
-    <h2>食品を探す</h2>
-    <div class="row">
-      <div class="fg"><input type="search" id="mSearch" placeholder="鶏むね / 餃子 / プロテイン …"></div>
-    </div>
-    <div class="filt" id="mCats"></div>
-    <div class="flist" id="mResults"></div>
-  </div>
-
-  <div class="card">
-    <h2>マイ食品を登録<span class="r">パッケージの栄養成分表示をそのまま入れる</span></h2>
-    <div class="row">
-      <div class="fg"><label class="f">名前</label><input id="xN" placeholder="例: セブン サラダチキン ハーブ"></div>
-      <div class="fg" style="max-width:110px"><label class="f">単位</label><input id="xU" placeholder="1個"></div>
-    </div>
-    <div class="row" style="margin-top:8px">
-      <div class="fg"><label class="f">kcal</label><input type="number" step="0.1" id="xK" inputmode="decimal"></div>
-      <div class="fg"><label class="f">P(g)</label><input type="number" step="0.1" id="xP" inputmode="decimal"></div>
-      <div class="fg"><label class="f">F(g)</label><input type="number" step="0.1" id="xF" inputmode="decimal"></div>
-      <div class="fg"><label class="f">C(g)</label><input type="number" step="0.1" id="xC" inputmode="decimal"></div>
-    </div>
-    <div class="row" style="margin-top:8px">
-      <button class="btn sm" id="xSave">マイ食品に登録</button>
-      <button class="btn sm gh" id="xOnce">今日だけ追加</button>
-      <span class="note">kcal を空欄にすると P/F/C から計算する</span>
-    </div>
-    <div id="xList" style="margin-top:10px"></div>
-  </div>
-
-  <div class="card">
-    <h2>この日の記録<span class="r" id="mCount"></span></h2>
-    <div id="mLog"></div>
-  </div>
-</section>
-
-<!-- ══ 体組成 ══ -->
-<section id="scale">
-  <div class="card">
-    <h2>記録に必要なのは2つだけ</h2>
-    <p class="note">
-      増量期の判断に使うのは <b>体重</b> と <b>体脂肪率</b> だけ。除脂肪体重はその2つから自動計算するので、
-      下の「入力」に毎回この2つだけ入れれば十分。皮下脂肪・体内年齢などRENPHOの残り9項目は
-      生体インピーダンスの推定値で、増減しても増量方針を変える材料にはならないため任意入力にしている。
-    </p>
-    <p class="note" style="margin-top:8px">
-      RENPHOアプリ自体にApple Health / Google Fit連携があるが、連携先が受け取れる型は体重・体脂肪率・
-      除脂肪体重・BMIの4つまでで、残り9項目は結局流れない。このアプリへの自動取り込みは今のところ無いので、
-      体重計に乗ったら下の「入力」にその場で2つ打ち込む運用にする。
-    </p>
-  </div>
-
-  <div class="card">
-    <h2>まとめて貼り付け<span class="r">RENPHOの表示順・9項目まで残す場合に</span></h2>
-    <p class="note" style="margin-bottom:8px">
-      13項目まとめて残したい日だけ使う。画面に並んでいる順（体重 → BMI → 除脂肪体重 → 皮下脂肪 → 体水分量 → 骨格筋 → 筋肉量 → 骨量 → 基礎代謝 → 体脂肪 → 内臓脂肪 → タンパク質 → 体内年齢）にスペースか改行区切りで貼る。
-      数値以外の文字が混ざっていても数字だけを拾う。
-    </p>
-    <textarea id="sPaste" rows="3" placeholder="66.00 21.6 57.96 10.7 63.3 56.6 55.00 2.89 1678 12.1 4 20.0 20"></textarea>
-    <div class="row" style="margin-top:8px">
-      <button class="btn sm" id="sParse">読み込む</button>
-      <span class="note" id="sParseMsg"></span>
-    </div>
-    <div id="sWarn"></div>
-  </div>
-
-  <div class="card">
-    <h2>入力</h2>
-    <div class="row" style="margin-bottom:10px">
-      <div class="fg" style="max-width:170px"><label class="f">測定日</label><input type="date" id="sDate"></div>
-    </div>
-    <div class="sgrid" id="sGrid"></div>
-    <div class="row" style="margin-top:12px">
-      <button class="btn sm" id="sSave">保存</button>
-      <button class="btn sm gr" id="sClear">クリア</button>
-      <div class="sp"></div>
-      <span class="note" id="sMsg"></span>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>推移<span class="r" id="bTrend"></span></h2>
-    <svg class="chart" id="bChart"></svg>
-    <div class="lg"><span><i style="background:#2f5d8f"></i>体重</span><span><i style="background:#2e7d5b"></i>除脂肪体重</span><span><i style="background:#a8622a"></i>体脂肪率</span></div>
-  </div>
-
-  <div class="card">
-    <h2>測定履歴</h2>
-    <div id="sHist"></div>
-  </div>
-</section>
-
-<!-- ══ 記録 ══ -->
-<section id="rec">
-  <div class="card">
-    <h2>部位別 週間セット数<span class="r">主働1・補助0.5で換算</span></h2>
-    <div class="row" style="margin-bottom:10px">
-      <div class="fg" style="max-width:150px"><label class="f">集計範囲</label>
-        <select id="vRange"><option value="28">直近4週</option><option value="56">直近8週</option><option value="9999">全期間</option></select>
-      </div>
-    </div>
-    <div id="vSets"></div>
-    <p class="note" style="margin-top:10px">赤い行が逆三角形のシルエットに直接効く筋群。ここが他より低いままなら、メニューの配分を見直す。</p>
-  </div>
-
-  <div class="card">
-    <h2>総挙上量<span class="r">重量種目のみ</span></h2>
-    <svg class="chart" id="vChart"></svg>
-  </div>
-
-  <div class="card">
-    <h2>種目別ベスト</h2>
-    <div id="bBest"></div>
-  </div>
-
-  <div class="card">
-    <h2>セッション履歴</h2>
-    <div id="bHist"></div>
-  </div>
-</section>
-
-<!-- ══ 設定 ══ -->
-<section id="conf">
-  <div class="card">
-    <h2>プレート在庫<span class="r">28mm スタンダード</span></h2>
-    <div class="inv" id="cInv"></div>
-    <hr>
-    <div class="row">
-      <div class="fg"><label class="f">ダンベルシャフト1本 kg</label><input type="number" step="0.1" id="cDb"></div>
-      <div class="fg"><label class="f">バーベルシャフト kg</label><input type="number" step="0.5" id="cBb"></div>
-    </div>
-    <div class="row" style="margin-top:8px">
-      <div class="fg"><label class="f">ダンベル 片側に載る枚数</label><input type="number" min="1" id="cDbMax"></div>
-      <div class="fg"><label class="f">バーベル 片側に載る枚数</label><input type="number" min="1" id="cBbMax"></div>
-    </div>
-    <div class="row" style="margin-top:10px"><span class="note">合計プレート重量 <b id="cTotal"></b></span></div>
-  </div>
-
-  <div class="card">
-    <h2>ジムの設備<span class="r">Anytime Fitness</span></h2>
-    <p class="note" style="margin-bottom:10px">
-      店舗によって置いてある器具と刻みが違う。既定値は一般的な構成を入れてあるので、
-      実際のラックとマシンを見て直す。ここを直すと重量の選択肢が変わる。
-    </p>
-    <div class="row">
-      <div class="fg"><label class="f">固定ダンベル kg（カンマ区切り）</label><input id="gDb"></div>
-    </div>
-    <div class="row" style="margin-top:8px">
-      <div class="fg"><label class="f">マシン 刻み kg</label><input type="number" step="0.5" id="gMs"></div>
-      <div class="fg"><label class="f">マシン 上限 kg</label><input type="number" id="gMm"></div>
-      <div class="fg"><label class="f">ケーブル 刻み kg</label><input type="number" step="0.5" id="gCs"></div>
-      <div class="fg"><label class="f">ケーブル 上限 kg</label><input type="number" id="gCm"></div>
-    </div>
-    <div class="row" style="margin-top:8px">
-      <div class="fg"><label class="f">アシスト 上限 kg</label><input type="number" id="gAm"></div>
-      <div class="fg"><label class="f">バー自重 kg</label><input type="number" step="0.5" id="gBw"></div>
-      <div class="fg"><label class="f">バーベル 刻み kg</label><input type="number" step="0.5" id="gBs"></div>
-      <div class="fg"><label class="f">バーベル 上限 kg</label><input type="number" id="gBm"></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>週間スケジュール<span class="r">曜日ごとに回すメニューを割り当てる</span></h2>
-    <p class="note" style="margin-bottom:10px">
-      週7で回す前提。曜日を選ぶと「トレーニング」タブのメニューが自動で切り替わる（未割当の曜日は手動選択のまま）。
-      その日にすでに記録がある場合は、そのとき使ったメニューを優先する。
-    </p>
-    <div id="cSched"></div>
-  </div>
-
-  <div class="card">
-    <h2>実現可能な重量</h2>
-    <div id="cReal"></div>
-  </div>
-
-  <div class="card">
-    <h2>栄養目標</h2>
-    <div class="row">
-      <div class="fg"><label class="f">基礎代謝 kcal</label><input type="number" id="cBmr" inputmode="numeric"></div>
-      <div class="fg"><label class="f">活動係数</label>
-        <select id="cAct">
-          <option value="1.2">1.2 ほぼ座位</option>
-          <option value="1.375">1.375 軽い活動</option>
-          <option value="1.4">1.4 デスクワーク+週1〜2トレ</option>
-          <option value="1.55">1.55 デスクワーク+週3〜4トレ</option>
-          <option value="1.7">1.7 デスクワーク+週6〜7トレ</option>
-          <option value="1.9">1.9 立ち仕事+週6〜7トレ</option>
-        </select>
-      </div>
-      <div class="fg"><label class="f">方針</label>
-        <select id="cGoal">
-          <option value="300">増量 +300 kcal</option>
-          <option value="150">緩やか増量 +150 kcal</option>
-          <option value="0">維持 ±0</option>
-          <option value="-300">減量 -300 kcal</option>
-        </select>
-      </div>
-    </div>
-    <div class="row" style="margin-top:8px">
-      <div class="fg"><label class="f">体重あたりP g/kg</label><input type="number" step="0.1" id="cPr" inputmode="decimal"></div>
-      <div class="fg"><label class="f">脂質 kcal比 %</label><input type="number" id="cFr" inputmode="numeric"></div>
-    </div>
-    <hr>
-    <div class="row"><span class="note" id="cCalc"></span><div class="sp"></div><button class="btn sm" id="cApply">目標に反映</button></div>
-    <div class="row" style="margin-top:10px">
-      <div class="fg"><label class="f">目標 kcal</label><input type="number" id="cTk" inputmode="numeric"></div>
-      <div class="fg"><label class="f">P g</label><input type="number" id="cTp" inputmode="numeric"></div>
-      <div class="fg"><label class="f">F g</label><input type="number" id="cTf" inputmode="numeric"></div>
-      <div class="fg"><label class="f">C g</label><input type="number" id="cTc" inputmode="numeric"></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>方針</h2>
-    <p class="note">
-      逆三角形のシルエットは三角筋中部の張り出しと広背筋の広がりが幅を決め、ウエストが分母になる。大胸筋は正面の厚みを作るが幅には寄与しない。
-      優先順位は 三角筋中部 → 広背筋 → 食事 → 大胸筋。
-    </p>
-    <table style="margin-top:10px">
-      <tr><th>制約</th><th>対処</th></tr>
-      <tr><td>プレートが28mmスタンダード規格</td><td>追加購入は同規格に限る。50mmオリンピックは使えない</td></tr>
-      <tr><td>5・10・15kgが各2枚のみ</td><td>両手ダンベルは左右対称に4枚必要なため使えず、上限は1本9kg。プレス系は自重の角度調整に置き換え、重量が要る引く動作は片手ダンベルに寄せる</td></tr>
-      <tr><td>ラックにセーフティが無い</td><td>ソロでの高重量バーベルベンチは行わない。スピンロックカラーは毎セット締め直す</td></tr>
-      <tr><td>懸垂・ラットプルが無い</td><td>バーをラック低位置にセットしインバーテッドロウで代替</td></tr>
-      <tr><td>最小増分が2.5kg／ダンベル1本</td><td>軽量種目は重量ではなくレップ数で漸進させる</td></tr>
-      <tr><td>プレートを買い足す場合</td><td>重いプレートより2.5kgを4枚。両手種目の刻みが増える</td></tr>
-    </table>
-    <p class="note" style="margin-top:10px">
-      漸進のルール — 全セットでレップ範囲の上限に達したら次回に重量を1段上げる。上げた直後はレップが下限まで落ちてよい。
-      重量を上げられない種目は上限そのものを2回引き上げる。2セッション連続で下限を割ったら1段戻す。
-    </p>
-  </div>
-
-  <div class="card">
-    <h2>データ</h2>
-    <div class="row">
-      <button class="btn sm gh" id="cExp">書き出し（JSON）</button>
-      <button class="btn sm gh" id="cImpBtn">読み込み</button>
-      <input type="file" id="cImp" accept="application/json" style="display:none">
-      <div class="sp"></div>
-      <button class="btn sm gr" id="cReset">全消去</button>
-    </div>
-    <p class="note" style="margin-top:8px">記録はこの端末のブラウザ内にのみ保存され、サーバーには送られない。キャッシュクリアや保存領域の上限で消えることがあるため、7日以上書き出していないと画面上部に警告が出る。端末を変えるときも書き出して移す。</p>
-  </div>
-</section>
-
-</div>
-
-<div class="timer" id="timer">
-  <span style="font-size:12px;opacity:.85">レスト</span>
-  <span class="tv" id="tvVal">1:30</span>
-  <button id="tvAdd">+30s</button>
-  <button id="tvSkip">終了</button>
-</div>
-
-<div class="modal" id="lib"><div class="mbox">
-  <div class="row" style="margin-bottom:10px"><b style="font-size:14px">種目を選ぶ</b><div class="sp"></div><button class="btn sm gr" id="libClose">閉じる</button></div>
-  <input type="search" id="libSearch" placeholder="種目名で絞る" style="margin-bottom:10px">
-  <div class="filt" id="libPlace"></div>
-  <div class="filt" id="libFilt"></div>
-  <div id="libList"></div>
-</div></div>
-
-<script src="data.js"></script>
-<script>
-"use strict";
-
-/* ─── storage ─────────────────────────────────────────────────────────── */
-const KEY = "fit_v2";
-function defaults(){
-  const menus = {};
-  for(const k in PRESETS){
-    menus[k] = {
-      label: PRESETS[k].label, desc: PRESETS[k].desc, coach: PRESETS[k].coach, preset: true,
-      blocks: PRESETS[k].blocks.map(b => ({
-        name: b.name, rest: b.rest,
-        items: b.items.map(id => { const e = ex(id); return {id:id, sets:e.sets, lo:e.lo, hi:e.hi}; })
-      }))
-    };
-  }
-  return {
-    inventory:{"15":2,"10":2,"5":2,"2.5":6,"1.25":4},
-    dbShaft:1.5, bbShaft:7, dbMax:2, bbMax:4,
-    profile:{bmr:1678, act:1.7, goal:300, pr:2.1, fr:24},
-    target:{kcal:3150, p:139, f:70, c:480},
-    menus: menus, activeMenu:"back_gym", editMenu:"back_gym",
-    sessions:{}, meals:{}, myfoods:[], recent:[], body:[],
-    /* 睡眠は「起きた日」をキーにする。8/19のレコードは 8/18夜に寝て 8/19朝に起きた1回分。
-       就寝日をキーにすると日付をまたぐ入力で必ず混乱するので、この向きで固定する。 */
-    sleep:{},
-    gym: JSON.parse(JSON.stringify(GYM)),
-    backup:{lastExport:null},
-    schedule:["core_gym","back_gym","chest_gym","legs_gym","shoulder_gym","back2_gym","arms_gym"] // index0=日〜6=土
-  };
-}
-const EXMAP = {}; EXERCISES.forEach(e=>EXMAP[e.id]=e);
-function ex(id){ return EXMAP[id] || {id:id, n:id, eq:"bw", sets:3, lo:8, hi:12, pri:[], sec:[], d:""}; }
-
-/* localStorage はプライベートブラウズや file:// の不透明オリジンで例外を投げる。
-   そこで落とすと全操作が壊れるので、握りつぶしてメモリだけで動かし続ける。 */
-let storageOK = true;
-function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ storageOK = false; return null; } }
-function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ storageOK = false; return false; } }
-function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){ storageOK = false; } }
-
-let S;
-function load(){
-  try{
-    const raw = lsGet(KEY);
-    const base = defaults();
-    if(!raw) return base;
-    const o = JSON.parse(raw);
-    const m = Object.assign(base, o);
-    // プリセットが増えたときに既存データへ流し込む
-    for(const k in base.menus) if(!m.menus[k]) m.menus[k] = base.menus[k];
-    /* プリセットの説明文（label/desc/coach）は「こちらが提供するもの」で、
-       画面から編集できるのはブロックの中身だけ。保存済みデータには古い版が残るので、
-       ブロックはユーザーの編集を残したまま説明文だけ最新に差し替える。 */
-    for(const k in base.menus){
-      if(m.menus[k] && m.menus[k].preset && PRESETS[k]){
-        m.menus[k].label = PRESETS[k].label;
-        m.menus[k].desc  = PRESETS[k].desc;
-        m.menus[k].coach = PRESETS[k].coach;
-      }
-    }
-    // 曜日割当が未設定のまま残っている場合は既定の週構成を入れる
-    if(!Array.isArray(m.schedule) || m.schedule.every(x=>!x)) m.schedule = base.schedule.slice();
-    // 後から足したフィールドは、古い保存データに存在しないので補う
-    if(!m.sleep || typeof m.sleep !== "object") m.sleep = {};
-    if(!m.backup || typeof m.backup !== "object") m.backup = {lastExport:null};
-    return m;
-  }catch(e){ return defaults(); }
-}
-function save(){
-  const ok = lsSet(KEY, JSON.stringify(S));
-  if(!ok) warnStorage();
-  checkBackupReminder();
-}
-let warned = false;
-function warnStorage(){
-  if(warned) return;
-  warned = true;
-  const el = document.getElementById("noStore");
-  if(el) el.style.display = "block";
-}
-
-/* ─── バックアップ状態 ────────────────────────────────────────────────────
-   localStorage は端末のキャッシュクリアで丸ごと消える。週7では入力量が
-   多く失うと痛いので、書き出しが7日以上滞ったら書き出しを促す。 */
-function daysSince(dateStr){
-  if(!dateStr) return Infinity;
-  return Math.floor((Date.now() - new Date(dateStr).getTime())/86400000);
-}
-function hasAnyData(){
-  return Object.keys(S.sessions).length>0 || Object.keys(S.meals).length>0 || S.body.length>0;
-}
-function checkBackupReminder(){
-  const el = $("#expWarn"); if(!el) return;
-  const d = daysSince(S.backup && S.backup.lastExport);
-  if(hasAnyData() && d >= 7){
-    el.style.display = "block";
-    $("#expWarnMsg").textContent = (S.backup && S.backup.lastExport)
-      ? "前回の書き出しから "+d+" 日経過。記録はこの端末にしかない。"
-      : "記録を書き出したことがない。この端末にしかない状態が続いている。";
-  }else{
-    el.style.display = "none";
-  }
-}
-function doExport(){
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));
-  a.download = "fitness_"+today().replace(/-/g,"")+".json"; a.click(); URL.revokeObjectURL(a.href);
-  S.backup = S.backup || {}; S.backup.lastExport = today();
-  lsSet(KEY, JSON.stringify(S));
-  checkBackupReminder();
-}
-const $ = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
-const today = () => new Date().toLocaleDateString("sv-SE");
-const r1 = n => Math.round(n*10)/10;
-const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-$("#expWarnBtn").onclick = doExport;
-
-/* ─── プレート計算 ─────────────────────────────────────────────────────── */
-const DENS = [15,10,5,2.5,1.25];
-function achievable(nBars, shaft, cap){
-  const inv = S.inventory, out = new Map();
-  cap = cap || 99;
-  const maxc = DENS.map(d => Math.min(cap, Math.floor((inv[String(d)]||0)/(2*nBars))));
-  const picked = new Array(DENS.length).fill(0);
-  (function dfs(i, sum, used){
-    if(used > cap) return;
-    if(i === DENS.length){
-      const t = r1(shaft + sum*2);
-      if(!out.has(t)) out.set(t, picked.slice());
-      return;
-    }
-    for(let c=0;c<=maxc[i];c++){ picked[i]=c; dfs(i+1, sum+DENS[i]*c, used+c); }
-    picked[i]=0;
-  })(0,0,0);
-  return Array.from(out.entries()).sort((a,b)=>a[0]-b[0]);
-}
-function comboText(counts){
-  if(!counts) return "";
-  const p=[]; counts.forEach((c,i)=>{ if(c>0) p.push(DENS[i]+"×"+c); });
-  return p.length ? p.join(" / ")+" 片側" : "シャフトのみ";
-}
-/* ジム器具は「刻み」で決まるので、在庫計算ではなく等差の列を作る */
-function stepList(from, to, step){
-  const out=[];
-  for(let w=from; w<=to+1e-9; w=r1(w+step)) out.push([r1(w), null]);
-  return out;
-}
-const GYM_EQ = {dbf:1, dbf1:1, mach:1, cbl:1, cbl1:1, assist:1, gbb:1};
-let wcache = {};
-function weightsFor(eq){
-  if(wcache[eq]) return wcache[eq];
-  const g = S.gym || GYM;
-  let l = [];
-  if(eq==="db2") l = achievable(2, S.dbShaft, S.dbMax);
-  else if(eq==="db1") l = achievable(1, S.dbShaft, S.dbMax);
-  else if(eq==="bb") l = achievable(1, S.bbShaft, S.bbMax);
-  else if(eq==="dbf" || eq==="dbf1") l = (g.dbList||[]).map(w=>[w,null]);
-  else if(eq==="mach") l = stepList(g.machStep, g.machMax, g.machStep);
-  else if(eq==="cbl" || eq==="cbl1") l = stepList(g.cblStep, g.cblMax, g.cblStep);
-  else if(eq==="assist") l = stepList(g.cblStep, g.assistMax, g.cblStep);
-  else if(eq==="gbb") l = stepList(g.barWeight, g.gbbMax, g.gbbStep);
-  wcache[eq] = l; return l;
-}
-const EQN = {bw:"自重", db1:"ダンベル1本", db2:"ダンベル2本", bb:"バーベル", time:"秒数",
-  dbf:"固定ダンベル2本", dbf1:"固定ダンベル1本", mach:"マシン", cbl:"ケーブル",
-  cbl1:"ケーブル片手", assist:"アシスト", gbb:"バーベル（ジム）"};
-const LOCN = {home:"自宅", gym:"ジム", both:"どちらでも"};
-function clearWC(){ wcache = {}; }
-function volMult(e){ return e.vm || (e.eq==="db2" ? 2 : 1); }
-const UNIT = e => e.eq==="time" ? "秒" : "回";
-
-/* ─── タブ ────────────────────────────────────────────────────────────── */
-$$(".tabs button").forEach(b=>{
-  b.onclick = ()=>{
-    $$(".tabs button").forEach(x=>x.classList.remove("on"));
-    $$("section").forEach(x=>x.classList.remove("on"));
-    b.classList.add("on"); $("#"+b.dataset.t).classList.add("on");
-    if(b.dataset.t==="sum"){ renderSummary(); }
-    if(b.dataset.t==="sleep"){ renderSleep(); }
-    if(b.dataset.t==="scale"){ renderScale(); }
-    if(b.dataset.t==="rec"){ renderRec(); }
-    if(b.dataset.t==="conf"){ renderConf(); }
-    if(b.dataset.t==="menu"){ renderMenuTab(); }
-    window.scrollTo(0,0);
-  };
-});
-
-/* ─── レストタイマー ───────────────────────────────────────────────────── */
-let th=null, tl=0;
-function startTimer(sec){
-  tl=sec; $("#timer").classList.add("on"); paintTimer();
-  if(th) clearInterval(th);
-  th = setInterval(()=>{ tl--; paintTimer(); if(tl<=0){ clearInterval(th); th=null; setTimeout(stopTimer,2500);} },1000);
-}
-function paintTimer(){
-  const m=Math.floor(Math.max(tl,0)/60), s=Math.max(tl,0)%60;
-  $("#tvVal").textContent = tl<=0 ? "完了" : m+":"+String(s).padStart(2,"0");
-}
-function stopTimer(){ if(th) clearInterval(th); th=null; $("#timer").classList.remove("on"); }
-$("#tvSkip").onclick = stopTimer;
-$("#tvAdd").onclick = ()=>{ tl+=30; paintTimer(); };
-
-/* ─── 部位・解説まわり ─────────────────────────────────────────────────── */
-/* そのメニューで主働になる部位を、セット数の多い順に names で返す */
-function topMuscles(menu, n){
-  const agg = setsByMuscle(menu.blocks);
-  return Object.keys(agg).sort((a,b)=>agg[b]-agg[a]).slice(0, n||4)
-    .map(k=>MUSCLES[k] ? MUSCLES[k][0] : k);
-}
-/* 種目1つが使う筋群。主働は濃く、補助は薄く出す */
-function muscleTags(e){
-  const pri = (e.pri||[]).map(m=>'<span class="mt p">'+(MUSCLES[m]?MUSCLES[m][0]:m)+'</span>');
-  const sec = (e.sec||[]).map(m=>'<span class="mt">'+(MUSCLES[m]?MUSCLES[m][0]:m)+'</span>');
-  if(!pri.length && !sec.length) return "";
-  return '<span class="mtags">'+pri.join("")+sec.join("")+'</span>';
-}
-/* メニューの解説。coach が無いメニュー（カスタム・旧プリセット）は desc にフォールバック */
-function coachHTML(menu){
-  const lines = menu.coach || [];
-  if(!lines.length){
-    return '<p class="note">'+(menu.desc ? esc(menu.desc) : "このメニューには解説がない。複製元のプリセットを見るか、自分で組んだ意図をメモに残しておく。")+'</p>';
-  }
-  return '<ul class="coach">'+lines.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ul>';
-}
-function menuExercises(menu){
-  const list = [];
-  (menu.blocks||[]).forEach(b => b.items.forEach(it => list.push(ex(it.id))));
-  return list;
-}
-/* 部位別セット数。主働1.0 / 補助0.5 */
-function setsByMuscle(blocks){
-  const agg = {};
-  (blocks||[]).forEach(b => b.items.forEach(it=>{
-    const e = ex(it.id), n = it.sets || e.sets || 0;
-    (e.pri||[]).forEach(m => agg[m] = (agg[m]||0) + n);
-    (e.sec||[]).forEach(m => agg[m] = (agg[m]||0) + n*0.5);
-  }));
-  return agg;
-}
-/* 週あたりセット数の目安。個人差が大きい一般値（MEV最低有効量・MAV適応上限の目安・MRV回復できる上限） */
-const VOL_BANDS = {mev:10, mav:16, mrv:22};
-const VOL_MAX = 26;
-function setsBarHTML(agg, opts){
-  opts = opts || {};
-  const keys = Object.keys(MUSCLES).filter(k=>agg[k]);
-  if(!keys.length) return '<div class="empty">まだ集計できるセットがない</div>';
-  keys.sort((a,b)=>agg[b]-agg[a]);
-  if(!opts.bands){
-    const max = agg[keys[0]] || 1;
-    return keys.map(k=>{
-      const v = agg[k], hot = VSHAPE.indexOf(k)>=0;
-      return '<div class="hbar"><span class="hl">'+MUSCLES[k][0]+'</span>'
-        + '<span class="ht"><i class="'+(hot?"v":"")+'" style="width:'+(v/max*100).toFixed(1)+'%"></i></span>'
-        + '<span class="hn">'+r1(v)+'</span></div>';
-    }).join("");
-  }
-  const b = VOL_BANDS;
-  const mevP = (b.mev/VOL_MAX*100).toFixed(1), mrvP = (b.mrv/VOL_MAX*100).toFixed(1);
-  return keys.map(k=>{
-    const v = agg[k], hot = VSHAPE.indexOf(k)>=0;
-    const cls = v < b.mev ? "u" : (v > b.mrv ? "over" : "ok");
-    const note = v < b.mev ? "不足" : (v > b.mrv ? "回復リスク" : "適正");
-    return '<div class="hbar band"><span class="hl'+(hot?" vshape":"")+'">'+MUSCLES[k][0]+'</span>'
-      + '<span class="ht" style="--mev:'+mevP+'%;--mrv:'+mrvP+'%"><i class="'+cls+'" style="width:'+Math.min(100,v/VOL_MAX*100).toFixed(1)+'%"></i></span>'
-      + '<span class="hn">'+r1(v)+' <span class="note">'+note+'</span></span></div>';
-  }).join("")
-  + '<p class="note" style="margin-top:10px">目安 — MEV(最低有効量) '+b.mev+'・MAV(適応上限の目安) '+b.mav+'・MRV(回復できる上限) '+b.mrv+' セット/週。薄い緑の帯がMEV〜MRVの範囲。個人差が大きいので、伸びが止まる／張りが抜けないなら実感で調整する。</p>';
-}
-
-/* ─── トレーニング ─────────────────────────────────────────────────────── */
-function activeMenu(){ return S.menus[S.activeMenu] || S.menus[Object.keys(S.menus)[0]]; }
-/* new Date("YYYY-MM-DD") はUTC解釈でタイムゾーンによりずれるため、年月日から直接ローカルDateを組む */
-function weekdayOf(dateStr){
-  const p = dateStr.split("-").map(Number);
-  return new Date(p[0], p[1]-1, p[2]).getDay();
-}
-/* その日にすでに記録があればそのとき使ったメニューを維持し、無ければ週間スケジュールの割当を提案する */
-function applyScheduleForDate(date){
-  if(S.sessions[date]){ S.activeMenu = S.sessions[date].menu; }
-  else{
-    const key = (S.schedule||[])[weekdayOf(date)];
-    if(key && S.menus[key]) S.activeMenu = key;
-  }
-  if($("#tMenu")) $("#tMenu").value = S.activeMenu;
-}
-function sessionOf(date, create){
-  if(!S.sessions[date] && create) S.sessions[date] = {menu:S.activeMenu, ex:{}, memo:""};
-  return S.sessions[date];
-}
-function prevSession(date, id){
-  const ds = Object.keys(S.sessions).filter(d=>d<date).sort().reverse();
-  for(const d of ds){
-    const s = S.sessions[d];
-    if(s.ex && s.ex[id] && s.ex[id].some(x=>x.done)) return {date:d, sets:s.ex[id]};
-  }
-  return null;
-}
-function suggest(e, it, prev){
-  if(!prev) return null;
-  const done = prev.sets.filter(x=>x.done);
-  if(!done.length) return null;
-  const allTop = done.length >= it.sets && done.every(x=>Number(x.r) >= it.hi);
-  if(e.eq==="bw" || e.eq==="time"){
-    const mr = Math.max.apply(null, done.map(x=>Number(x.r)||0));
-    return allTop ? {txt:"目標達成。"+(it.hi+2)+UNIT(e)+"まで伸ばすか、強度を上げる"}
-                  : {txt:"前回最高 "+mr+UNIT(e)};
-  }
-  const mw = Math.max.apply(null, done.map(x=>Number(x.w)||0));
-  if(!allTop) return {txt:"前回 "+mw+"kg", w:mw};
-  const list = weightsFor(e.eq).map(x=>x[0]);
-  if(e.eq==="assist"){
-    // 補助重量なので小さいほど負荷が高い。次は1段「下げる」
-    const lower = list.filter(w=>w<mw);
-    const nx = lower.length ? lower[lower.length-1] : null;
-    return nx ? {txt:"全セット上限達成。補助を "+nx+"kg に下げる", w:nx}
-              : {txt:"全セット上限達成。補助ゼロに到達。懸垂に移る", w:mw};
-  }
-  const nx = list.find(w=>w>mw);
-  return nx ? {txt:"全セット上限達成。"+nx+"kg に上げる", w:nx} : {txt:"全セット上限達成。上限なのでレップで伸ばす", w:mw};
-}
-
-function renderTrain(){
-  const date = $("#tDate").value, menu = activeMenu();
-  $("#tTargets").textContent = topMuscles(menu, 4).join(" ・ ");
-  $("#tCoach").innerHTML = coachHTML(menu);
-
-  const wrap = $("#tBlocks"); wrap.innerHTML = "";
-  let total=0, done=0, vol=0, estSec=0;
-
-  (menu.blocks||[]).forEach(bl=>{
-    const el = document.createElement("div"); el.className="block";
-    el.innerHTML = '<div class="bh"><span class="bt">'+esc(bl.name)+'</span>'
-      + '<span class="tag">レスト'+bl.rest+'秒</span><span class="sp" style="flex:1"></span>'
-      + '<button class="btn xs gh" data-rest="'+bl.rest+'">タイマー</button></div>';
-    const bb = document.createElement("div"); bb.className="bb";
-
-    bl.items.forEach(it=>{
-      const e = ex(it.id);
-      const existing = S.sessions[date] && S.sessions[date].ex && S.sessions[date].ex[it.id];
-      const prev = prevSession(date, it.id);
-      const sug = suggest(e, it, prev);
-      /* この日がまだ未着手なら、前回値を下書きとして表示するだけ（保存はしない）。
-         保存してしまうと、日付を眺めただけで「0完了セット」の記録がセッション履歴に残る。
-         実際の値はチェックを押した瞬間に確定させる（chk のクリックハンドラ側）。 */
-      let rec = existing || [];
-      if(!existing && sug && sug.w!=null && prev){
-        rec = [];
-        for(let i=0;i<it.sets;i++){
-          const pr = prev.sets[i];
-          rec.push({w:sug.w, r:(pr && pr.done) ? pr.r : "", done:false});
-        }
-      }
-      const d = document.createElement("div"); d.className="ex";
-
-      let rows = '<div class="sets">';
-      for(let i=0;i<it.sets;i++){
-        const r = rec[i] || {w:"",r:"",done:false};
-        total++;
-        if(r.done){ done++; vol += (Number(r.w)||0)*(Number(r.r)||0)*volMult(e); }
-        estSec += 40 + bl.rest;
-        let wf;
-        if(e.eq==="bw"||e.eq==="time"){
-          wf = '<input type="text" value="自重" disabled style="color:var(--mute)">';
-        }else{
-          let o = '<option value="">重量</option>';
-          weightsFor(e.eq).forEach(function(p){
-            o += '<option value="'+p[0]+'"'+(String(r.w)===String(p[0])?" selected":"")+'>'+p[0]+' kg</option>';
-          });
-          wf = '<select data-ex="'+it.id+'" data-i="'+i+'" data-k="w">'+o+'</select>';
-        }
-        rows += '<div class="set"><span class="si">'+(i+1)+'</span>'+wf
-          + '<input type="number" inputmode="numeric" placeholder="'+UNIT(e)+'" value="'+(r.r==null?"":r.r)+'" data-ex="'+it.id+'" data-i="'+i+'" data-k="r">'
-          + '<button class="chk'+(r.done?" on":"")+'" data-ex="'+it.id+'" data-i="'+i+'" data-k="done">'+(r.done?"✓":"")+'</button></div>';
-      }
-      rows += '</div>';
-
-      d.innerHTML =
-        '<div class="exmain"><div class="exh"><span class="exn">'+esc(e.n)+'</span>'
-        + '<span class="tag">'+it.sets+'セット '+it.lo+'-'+it.hi+UNIT(e)+'</span>'
-        + muscleTags(e) + '</div>'
-        + '<div class="exd">'+esc(e.d)+'</div>' + rows
-        + '<div class="prev">'+(sug ? esc(sug.txt) : "初回。フォームが崩れない重量から始める")+'</div></div>';
-      bb.appendChild(d);
-    });
-    el.appendChild(bb); wrap.appendChild(el);
-  });
-
-  $("#tProgress").textContent = done+" / "+total+" セット";
-  $("#tVol").textContent = "総挙上 "+Math.round(vol)+" kg";
-  $("#tTime").textContent = "所要 約"+Math.round(estSec/60)+"分";
-  $("#tMemo").value = (S.sessions[date] && S.sessions[date].memo) || "";
-
-  wrap.querySelectorAll("[data-rest]").forEach(b=> b.onclick = ()=> startTimer(Number(b.dataset.rest)));
-  wrap.querySelectorAll("select[data-ex],input[data-ex]").forEach(el2=>{
-    el2.onchange = ()=> setSet(el2.dataset.ex, +el2.dataset.i, el2.dataset.k, el2.value);
-  });
-  wrap.querySelectorAll("button.chk").forEach(b=>{
-    b.onclick = ()=>{
-      const on = !b.classList.contains("on");
-      const blk = (activeMenu().blocks||[]).find(x=>x.items.some(y=>y.id===b.dataset.ex));
-      const patch = {done:on};
-      if(on){
-        // 前回値の下書きは保存されていないので、確定前に今表示中の値を一緒に書き込む
-        const wEl = wrap.querySelector('[data-ex="'+b.dataset.ex+'"][data-i="'+b.dataset.i+'"][data-k="w"]');
-        const rEl = wrap.querySelector('[data-ex="'+b.dataset.ex+'"][data-i="'+b.dataset.i+'"][data-k="r"]');
-        if(wEl) patch.w = wEl.value;
-        if(rEl) patch.r = rEl.value;
-      }
-      commitSet(b.dataset.ex, +b.dataset.i, patch);
-      renderTrain();
-      if(on && blk) startTimer(blk.rest);
-    };
-  });
-}
-function commitSet(id, i, patch){
-  const date = $("#tDate").value, s = sessionOf(date, true);
-  s.menu = S.activeMenu;
-  if(!s.ex[id]) s.ex[id] = [];
-  while(s.ex[id].length <= i) s.ex[id].push({w:"",r:"",done:false});
-  Object.assign(s.ex[id][i], patch);
-  save();
-  updateHeader();
-}
-function setSet(id, i, k, v){
-  commitSet(id, i, {[k]:v});
-  if(k!=="done") renderTrain();
-}
-$("#tDate").onchange = ()=>{ applyScheduleForDate($("#tDate").value); renderTrain(); };
-$("#tMenu").onchange = ()=>{ S.activeMenu = $("#tMenu").value; save(); renderTrain(); };
-$("#tMemo").oninput = ()=>{ sessionOf($("#tDate").value,true).memo = $("#tMemo").value; save(); };
-$("#tClear").onclick = ()=>{
-  if(!confirm("この日のトレーニング記録を消去する")) return;
-  delete S.sessions[$("#tDate").value]; save(); renderTrain(); updateHeader();
-};
-
-/* ─── メニュー編集 ─────────────────────────────────────────────────────── */
-function editMenu(){ return S.menus[S.editMenu] || activeMenu(); }
-function fillMenuSelects(){
-  const opts = Object.keys(S.menus).map(k=>'<option value="'+k+'">'+esc(S.menus[k].label)+'</option>').join("");
-  $("#tMenu").innerHTML = opts; $("#tMenu").value = S.activeMenu;
-  $("#eMenu").innerHTML = opts; $("#eMenu").value = S.editMenu;
-}
-function renderMenuTab(){
-  fillMenuSelects();
-  const m = editMenu();
-  $("#eDesc").textContent = m.desc || "";
-  $("#eCoach").innerHTML = coachHTML(m);
-  $("#eSets").innerHTML = setsBarHTML(setsByMuscle(m.blocks));
-  $("#eLock").textContent = m.preset ? "プリセットは直接編集できる。元に戻したいときは設定から全消去するか、複製して使う。" : "カスタムメニュー";
-
-  const wrap = $("#eBlocks"); wrap.innerHTML = "";
-  (m.blocks||[]).forEach((bl,bi)=>{
-    const el = document.createElement("div"); el.className="medit";
-    let h = '<div class="mh"><input value="'+esc(bl.name)+'" data-bn="'+bi+'" style="flex:1;min-width:140px;font-weight:600">'
-      + '<span class="msp"><span class="note">レスト</span><input type="number" value="'+bl.rest+'" data-br="'+bi+'"><span class="note">秒</span></span>'
-      + '<button class="btn xs gr" data-bdel="'+bi+'">ブロック削除</button></div>';
-    bl.items.forEach((it,ii)=>{
-      const e = ex(it.id);
-      h += '<div class="mrow"><span class="mname">'+esc(e.n)+'</span>'
-        + '<span class="tag">'+(EQN[e.eq]||e.eq)+'</span>'
-        + '<span class="msp"><span class="note">セット</span><input type="number" min="1" value="'+it.sets+'" data-s="'+bi+'.'+ii+'"></span>'
-        + '<span class="msp"><span class="note">下限</span><input type="number" value="'+it.lo+'" data-lo="'+bi+'.'+ii+'"></span>'
-        + '<span class="msp"><span class="note">上限</span><input type="number" value="'+it.hi+'" data-hi="'+bi+'.'+ii+'"></span>'
-        + '<button class="btn xs gr" data-up="'+bi+'.'+ii+'">↑</button>'
-        + '<button class="btn xs gr" data-dn="'+bi+'.'+ii+'">↓</button>'
-        + '<button class="btn xs gr" data-xdel="'+bi+'.'+ii+'">削除</button></div>';
-    });
-    h += '<div class="mrow"><button class="btn xs gh" data-add="'+bi+'">種目を追加</button></div>';
-    el.innerHTML = h; wrap.appendChild(el);
-  });
-
-  const at = (k)=>{ const p = k.split("."); return [+p[0], +p[1]]; };
-  wrap.querySelectorAll("[data-bn]").forEach(i=> i.onchange = ()=>{ m.blocks[+i.dataset.bn].name = i.value; save(); });
-  wrap.querySelectorAll("[data-br]").forEach(i=> i.onchange = ()=>{ m.blocks[+i.dataset.br].rest = +i.value||60; save(); renderMenuTab(); });
-  wrap.querySelectorAll("[data-bdel]").forEach(b=> b.onclick = ()=>{ m.blocks.splice(+b.dataset.bdel,1); save(); renderMenuTab(); });
-  wrap.querySelectorAll("[data-s]").forEach(i=> i.onchange = ()=>{ const a=at(i.dataset.s); m.blocks[a[0]].items[a[1]].sets = Math.max(1,+i.value||1); save(); renderMenuTab(); });
-  wrap.querySelectorAll("[data-lo]").forEach(i=> i.onchange = ()=>{ const a=at(i.dataset.lo); m.blocks[a[0]].items[a[1]].lo = +i.value||1; save(); });
-  wrap.querySelectorAll("[data-hi]").forEach(i=> i.onchange = ()=>{ const a=at(i.dataset.hi); m.blocks[a[0]].items[a[1]].hi = +i.value||1; save(); });
-  wrap.querySelectorAll("[data-xdel]").forEach(b=> b.onclick = ()=>{ const a=at(b.dataset.xdel); m.blocks[a[0]].items.splice(a[1],1); save(); renderMenuTab(); });
-  wrap.querySelectorAll("[data-up]").forEach(b=> b.onclick = ()=>{ const a=at(b.dataset.up); const L=m.blocks[a[0]].items; if(a[1]>0){ const t=L[a[1]-1]; L[a[1]-1]=L[a[1]]; L[a[1]]=t; save(); renderMenuTab(); } });
-  wrap.querySelectorAll("[data-dn]").forEach(b=> b.onclick = ()=>{ const a=at(b.dataset.dn); const L=m.blocks[a[0]].items; if(a[1]<L.length-1){ const t=L[a[1]+1]; L[a[1]+1]=L[a[1]]; L[a[1]]=t; save(); renderMenuTab(); } });
-  wrap.querySelectorAll("[data-add]").forEach(b=> b.onclick = ()=> openLib(+b.dataset.add));
-}
-$("#eMenu").onchange = ()=>{ S.editMenu = $("#eMenu").value; save(); renderMenuTab(); };
-$("#eAddBlock").onclick = ()=>{
-  editMenu().blocks.push({name:"新しいブロック", rest:90, items:[]}); save(); renderMenuTab();
-};
-$("#eDup").onclick = ()=>{
-  const src = editMenu();
-  const name = prompt("新しいメニュー名", src.label+" のコピー");
-  if(!name) return;
-  const key = "c"+Object.keys(S.menus).length+"_"+Math.abs(name.length*97+name.charCodeAt(0));
-  S.menus[key] = {label:name, desc:"カスタム", preset:false, blocks:JSON.parse(JSON.stringify(src.blocks))};
-  S.editMenu = key; save(); renderMenuTab();
-};
-$("#eDel").onclick = ()=>{
-  if(Object.keys(S.menus).length<=1){ alert("最後の1つは消せない"); return; }
-  if(!confirm(editMenu().label+" を削除する")) return;
-  const k = S.editMenu; delete S.menus[k];
-  const first = Object.keys(S.menus)[0];
-  S.editMenu = first; if(S.activeMenu===k) S.activeMenu = first;
-  save(); renderMenuTab(); renderTrain();
-};
-
-/* 種目ライブラリのモーダル */
-let libTarget = 0, libFilter = "all", libPlace = "all";
-const MUSCLE_GROUPS = [
-  ["all","すべて",null],
-  ["shoulder","肩",["delt_ant","delt_lat","delt_post"]],
-  ["back","背中",["lats","upperback","traps","erector"]],
-  ["chest","胸",["chest"]],
-  ["arm","腕",["biceps","triceps","forearm"]],
-  ["core","体幹",["abs","oblique"]],
-  ["leg","脚",["quads","hams","glutes","calves"]]
-];
-function openLib(bi){
-  libTarget = bi; libFilter = "all"; $("#libSearch").value="";
-  const PLACES = [["all","場所すべて"],["gym","ジム"],["home","自宅"]];
-  $("#libPlace").innerHTML = PLACES.map(g=>'<button data-p="'+g[0]+'"'+(g[0]===libPlace?' class="on"':'')+'>'+g[1]+'</button>').join("");
-  $("#libPlace").querySelectorAll("button").forEach(b=> b.onclick = ()=>{
-    libPlace = b.dataset.p;
-    $("#libPlace").querySelectorAll("button").forEach(x=>x.classList.remove("on"));
-    b.classList.add("on"); renderLib();
-  });
-  $("#libFilt").innerHTML = MUSCLE_GROUPS.map(g=>'<button data-g="'+g[0]+'"'+(g[0]==="all"?' class="on"':'')+'>'+g[1]+'</button>').join("");
-  $("#libFilt").querySelectorAll("button").forEach(b=> b.onclick = ()=>{
-    libFilter = b.dataset.g;
-    $("#libFilt").querySelectorAll("button").forEach(x=>x.classList.remove("on"));
-    b.classList.add("on"); renderLib();
-  });
-  renderLib(); $("#lib").classList.add("on");
-}
-function renderLib(){
-  const q = $("#libSearch").value.trim();
-  const grp = MUSCLE_GROUPS.find(g=>g[0]===libFilter);
-  const list = EXERCISES.filter(e=>{
-    if(q && e.n.indexOf(q) < 0) return false;
-    if(libPlace !== "all" && e.loc !== libPlace && e.loc !== "both") return false;
-    if(grp && grp[2]) return e.pri.some(m=>grp[2].indexOf(m)>=0);
-    return true;
-  });
-  $("#libList").innerHTML = list.length ? list.map(e=>{
-    const eqn = EQN[e.eq]||e.eq;
-    return '<div class="libitem" data-id="'+e.id+'">'
-      + '<div class="li1"><div class="lin">'+esc(e.n)+'</div>'
-      + '<div class="lim">'+eqn+' ・ '+(LOCN[e.loc]||"")+'</div>'
-      + muscleTags(e) + '</div></div>';
-  }).join("") : '<div class="empty">該当なし</div>';
-  $("#libList").querySelectorAll(".libitem").forEach(el=>{
-    el.onclick = ()=>{
-      const e = ex(el.dataset.id);
-      editMenu().blocks[libTarget].items.push({id:e.id, sets:e.sets, lo:e.lo, hi:e.hi});
-      save(); $("#lib").classList.remove("on"); renderMenuTab();
-    };
-  });
-}
-$("#libSearch").oninput = renderLib;
-$("#libClose").onclick = ()=> $("#lib").classList.remove("on");
-$("#lib").onclick = e=>{ if(e.target.id==="lib") $("#lib").classList.remove("on"); };
-
-/* ─── 食事 ────────────────────────────────────────────────────────────── */
-function allFoods(){ return FOODS.concat(S.myfoods||[]); }
-let mCat = "all";
-function renderCats(){
-  const cats = ["all"].concat(allFoods().map(f=>f[6]).filter((v,i,a)=>a.indexOf(v)===i));
-  $("#mCats").innerHTML = cats.map(c=>'<button data-c="'+esc(c)+'"'+(c===mCat?' class="on"':'')+'>'+(c==="all"?"すべて":esc(c))+'</button>').join("");
-  $("#mCats").querySelectorAll("button").forEach(b=> b.onclick = ()=>{ mCat = b.dataset.c; renderCats(); renderFoodList(); });
-}
-function renderFoodList(){
-  const q = $("#mSearch").value.trim().toLowerCase();
-  let list = allFoods();
-  if(mCat!=="all") list = list.filter(f=>f[6]===mCat);
-  if(q) list = list.filter(f=>f[0].toLowerCase().indexOf(q)>=0);
-  const box = $("#mResults");
-  if(!list.length){ box.innerHTML = '<div class="empty">該当なし。マイ食品に登録する</div>'; return; }
-  box.innerHTML = list.map(f=>'<div class="fitem" data-n="'+esc(f[0])+'"><span class="fn">'+esc(f[0])+'</span>'
-    + '<span class="fk">'+f[1]+'kcal P'+f[2]+' F'+f[3]+' C'+f[4]+'</span></div>').join("");
-  box.querySelectorAll(".fitem").forEach(el=> el.onclick = ()=> pickFood(el.dataset.n));
-}
-function pickFood(name){
-  const f = allFoods().find(x=>x[0]===name); if(!f) return;
-  const a = prompt(f[0]+"\n何"+(f[5]||"人前")+"分か", "1");
-  if(a===null) return;
-  const m = parseFloat(a); if(!(m>0)) return;
-  addMeal({name:f[0]+(m!==1?" ×"+m:""), kcal:r1(f[1]*m), p:r1(f[2]*m), f:r1(f[3]*m), c:r1(f[4]*m)});
-  S.recent = [f[0]].concat((S.recent||[]).filter(x=>x!==f[0])).slice(0,10);
-  save(); renderQuick();
-}
-function renderQuick(){
-  const rec = (S.recent||[]).filter(n=>allFoods().some(f=>f[0]===n));
-  const seed = ["エクスプロージョン WPC ミルクチョコレート 30g","納豆 小粒 1パック45g","ごはん 茶碗普通盛 150g","トップバリュ ギョーザ 12個 324g（1袋）","卵 1個50g"];
-  const list = rec.concat(seed.filter(s=>rec.indexOf(s)<0)).slice(0,10);
-  $("#mQuick").innerHTML = list.map(n=>'<button data-n="'+esc(n)+'">'+esc(n.length>22?n.slice(0,21)+"…":n)+'</button>').join("");
-  $("#mQuick").querySelectorAll("button").forEach(b=> b.onclick = ()=> pickFood(b.dataset.n));
-}
-function addMeal(item){
-  const d = $("#mDate").value;
-  if(!S.meals[d]) S.meals[d] = [];
-  S.meals[d].push(item); save(); renderMeal();
-}
-function renderMeal(){
-  const d = $("#mDate").value, log = S.meals[d]||[], t = S.target;
-  const sum = log.reduce((a,x)=>({kcal:a.kcal+ +x.kcal, p:a.p+ +x.p, f:a.f+ +x.f, c:a.c+ +x.c}), {kcal:0,p:0,f:0,c:0});
-  const set = (id,v,g)=>{
-    $("#m"+id).textContent = Math.round(v);
-    $("#m"+id+"G").textContent = "目標 "+g;
-    const b = $("#m"+id+"B"), pct = g>0 ? Math.min(v/g*100,100) : 0;
-    b.style.width = pct+"%"; b.classList.toggle("over", v>g*1.05);
-  };
-  set("Kcal",sum.kcal,t.kcal); set("P",sum.p,t.p); set("F",sum.f,t.f); set("C",sum.c,t.c);
-  $("#mCount").textContent = log.length+" 件";
-
-  const dk = Math.round(t.kcal-sum.kcal), dp = Math.round(t.p-sum.p);
-  const adv = [];
-  if(!log.length) adv.push("まだ記録がない。");
-  else{
-    if(dk>150) adv.push("あと <b>"+dk+" kcal</b>。");
-    else if(dk<-150) adv.push("目標を <b>"+(-dk)+" kcal</b> 超過。");
-    else adv.push("カロリーは目標圏内。");
-    if(dp>20) adv.push("たんぱく質が <b>"+dp+"g</b> 不足。プロテイン1杯で21g、納豆1パックで7.4g補える。");
-    else if(dp>0) adv.push("たんぱく質はあと "+dp+"g。");
-    else adv.push("たんぱく質は充足。");
-  }
-  adv.push("増量期なのでカロリーを削るより先にたんぱく質を満たす。");
-  $("#mAdvice").innerHTML = adv.join(" ");
-
-  const box = $("#mLog");
-  if(!log.length){ box.innerHTML = '<div class="empty">記録なし</div>'; return; }
-  box.innerHTML = '<table><tr><th>食品</th><th class="n">kcal</th><th class="n">P</th><th class="n">F</th><th class="n">C</th><th></th></tr>'
-    + log.map((x,i)=>'<tr><td>'+esc(x.name)+'</td><td class="n">'+Math.round(x.kcal)+'</td><td class="n">'+r1(x.p)+'</td><td class="n">'+r1(x.f)+'</td><td class="n">'+r1(x.c)+'</td>'
-      + '<td class="n"><button class="btn xs gr" data-del="'+i+'">削除</button></td></tr>').join("")
-    + '<tr><td><b>合計</b></td><td class="n"><b>'+Math.round(sum.kcal)+'</b></td><td class="n"><b>'+r1(sum.p)+'</b></td><td class="n"><b>'+r1(sum.f)+'</b></td><td class="n"><b>'+r1(sum.c)+'</b></td><td></td></tr></table>';
-  box.querySelectorAll("[data-del]").forEach(b=> b.onclick = ()=>{ S.meals[d].splice(+b.dataset.del,1); save(); renderMeal(); });
-}
-$("#mDate").onchange = renderMeal;
-$("#mSearch").oninput = renderFoodList;
-
-/* 米の換算 */
-function riceCalc(){
-  const go = parseFloat($("#rGo").value)||0;
-  const raw = go*RICE.goRaw, cooked = raw*RICE.cookRatio;
-  const sel = $("#rPortion").value, cups = parseFloat($("#rCups").value)||0;
-  let grams;
-  if(sel==="all") grams = cooked;
-  else if(sel==="half") grams = cooked/2;
-  else if(sel==="third") grams = cooked/3;
-  else grams = parseFloat(sel)*cups;
-  const k = RICE.per100, f = grams/100;
-  const out = {g:Math.round(grams), kcal:Math.round(k.kcal*f), p:r1(k.p*f), fat:r1(k.f*f), c:r1(k.c*f)};
-  $("#rOut").innerHTML = go+"合 = 生米 "+Math.round(raw)+"g → 炊き上がり 約"+Math.round(cooked)+"g"
-    + "（全量なら "+Math.round(k.kcal*cooked/100)+" kcal・P"+r1(k.p*cooked/100)+"・C"+r1(k.c*cooked/100)+"）<br>"
-    + "<b>食べた分 "+out.g+"g = "+out.kcal+" kcal ・ P"+out.p+" ・ F"+out.fat+" ・ C"+out.c+"</b>";
-  return out;
-}
-["#rGo","#rPortion","#rCups"].forEach(s=>{ $(s).oninput = riceCalc; $(s).onchange = riceCalc; });
-$("#rAdd").onclick = ()=>{
-  const o = riceCalc();
-  if(!o.g) return;
-  addMeal({name:"ごはん "+o.g+"g", kcal:o.kcal, p:o.p, f:o.fat, c:o.c});
-};
-
-/* マイ食品 */
-function renderMyFoods(){
-  const l = S.myfoods||[];
-  $("#xList").innerHTML = l.length
-    ? '<table><tr><th>マイ食品</th><th class="n">kcal</th><th class="n">P</th><th class="n">F</th><th class="n">C</th><th></th></tr>'
-      + l.map((f,i)=>'<tr><td>'+esc(f[0])+'</td><td class="n">'+f[1]+'</td><td class="n">'+f[2]+'</td><td class="n">'+f[3]+'</td><td class="n">'+f[4]+'</td>'
-        + '<td class="n"><button class="btn xs gr" data-mfd="'+i+'">削除</button></td></tr>').join("")+'</table>'
-    : '<p class="note">まだ登録がない。よく食べるものを入れておくと、次から一覧とよく使うに出る。</p>';
-  $("#xList").querySelectorAll("[data-mfd]").forEach(b=> b.onclick = ()=>{
-    S.myfoods.splice(+b.dataset.mfd,1); save(); renderMyFoods(); renderCats(); renderFoodList(); renderQuick();
-  });
-}
-function readManual(){
-  const n = $("#xN").value.trim() || "手入力";
-  const u = $("#xU").value.trim() || "1食";
-  const p = +$("#xP").value||0, f = +$("#xF").value||0, c = +$("#xC").value||0;
-  let k = +$("#xK").value; if(!k) k = Math.round(p*4+f*9+c*4);
-  if(!k && !p && !f && !c) return null;
-  return [n,k,p,f,c,u,"マイ食品"];
-}
-$("#xSave").onclick = ()=>{
-  const r = readManual(); if(!r) return;
-  S.myfoods.push(r); save();
-  ["#xN","#xU","#xK","#xP","#xF","#xC"].forEach(s=>$(s).value="");
-  renderMyFoods(); renderCats(); renderFoodList(); renderQuick();
-};
-$("#xOnce").onclick = ()=>{
-  const r = readManual(); if(!r) return;
-  addMeal({name:r[0], kcal:r[1], p:r[2], f:r[3], c:r[4]});
-  ["#xN","#xU","#xK","#xP","#xF","#xC"].forEach(s=>$(s).value="");
-};
-
-/* ─── 体組成 ──────────────────────────────────────────────────────────── */
-/* nums は表示順の配列。null は値なし扱い */
-function assignFields(nums, fields){
-  const values = {}, warnings = [];
-  fields.forEach((f,i)=>{
-    const v = nums[i];
-    if(v==null || !isFinite(v)){ warnings.push(f[1]+" が見つからなかった"); return; }
-    values[f[0]] = v;
-    if(f[3]!=null && (v<f[3] || v>f[4])){
-      warnings.push(f[1]+" が "+v+" と読めた。想定は "+f[3]+"〜"+f[4]+" なので確認する");
-    }
-  });
-  return { values:values, warnings:warnings };
-}
-/* まとめて貼り付け用。数値以外の文字が混ざっていても数字だけを表示順で拾う */
-function parseNumberList(text, fields){
-  const nums = (String(text).match(/-?\d+(?:\.\d+)?/g) || []).map(Number);
-  return assignFields(nums, fields);
-}
-function renderScaleGrid(){
-  const KEY_FIELDS = {w:1, fat:1}; // 増量方針の判断に実際に使う項目
-  $("#sGrid").innerHTML = SCALE_FIELDS.map(f=>
-    '<div class="sf"><label>'+f[1]+(f[2]?" "+f[2]:"")+(KEY_FIELDS[f[0]]?' <b style="color:var(--accent)">必須</b>':'')+'</label>'
-    + '<input type="number" step="0.01" id="sf_'+f[0]+'" inputmode="decimal"></div>').join("");
-}
-/* 読み取り結果をフォームに流し込み、範囲外を赤くする */
-function applyScaleValues(res){
-  SCALE_FIELDS.forEach(f=>{
-    const el = $("#sf_"+f[0]);
-    el.classList.remove("flag","got");
-    const v = res.values[f[0]];
-    if(v == null) return;
-    el.value = v;
-    const bad = f[3]!=null && (v<f[3] || v>f[4]);
-    el.classList.add(bad ? "flag" : "got");
-  });
-  const box = $("#sWarn");
-  if(res.warnings.length){
-    box.innerHTML = '<div class="warnbox"><b>確認してほしい点</b><ul>'
-      + res.warnings.map(w=>'<li>'+esc(w)+'</li>').join("")+'</ul></div>';
-  }else box.innerHTML = "";
-  const n = Object.keys(res.values).length;
-  $("#sMsg").textContent = n+" 項目を入力した。値を確認して保存する。";
-  return n;
-}
-$("#sParse").onclick = ()=>{
-  const res = parseNumberList($("#sPaste").value, SCALE_FIELDS);
-  if(!Object.keys(res.values).length){ $("#sParseMsg").textContent = "数値が見つからない"; return; }
-  const n = applyScaleValues(res);
-  $("#sParseMsg").textContent = n+" 項目を読み込んだ。下のフォームで確認して保存する。";
-};
-
-$("#sSave").onclick = ()=>{
-  const d = $("#sDate").value;
-  if(!d){ alert("測定日が必要"); return; }
-  const rec = {date:d};
-  SCALE_FIELDS.forEach(f=>{ const v = $("#sf_"+f[0]).value; if(v!=="") rec[f[0]] = +v; });
-  if(rec.w == null){ alert("体重は必須"); return; }
-  if(rec.lbm == null && rec.fat != null) rec.lbm = r1(rec.w*(1-rec.fat/100));
-  S.body = S.body.filter(x=>x.date!==d);
-  S.body.push(rec); S.body.sort((a,b)=>a.date<b.date?-1:1);
-  save(); renderScale(); updateHeader();
-  $("#sMsg").textContent = d+" を保存した";
-};
-$("#sClear").onclick = ()=>{
-  SCALE_FIELDS.forEach(f=>{ const el=$("#sf_"+f[0]); el.value=""; el.classList.remove("flag","got"); });
-  $("#sPaste").value=""; $("#sParseMsg").textContent=""; $("#sWarn").innerHTML=""; $("#sMsg").textContent="";
-};
-function renderScale(){
-  const b = S.body;
-  if(b.length){
-    const pts = b.map(x=>({ts:new Date(x.date).getTime(), d:x.date, w:x.w,
-      lbm: x.lbm!=null ? x.lbm : (x.fat!=null ? r1(x.w*(1-x.fat/100)) : null), fat:x.fat}));
-    const lb = [];
-    lb.push({x:pts[0].ts,t:pts[0].d.slice(5)});
-    if(pts.length>1) lb.push({x:pts[pts.length-1].ts,t:pts[pts.length-1].d.slice(5)});
-    lineChart($("#bChart"), [
-      {color:"#2f5d8f", pts:pts.map(p=>({x:p.ts,y:p.w}))},
-      {color:"#2e7d5b", pts:pts.filter(p=>p.lbm!=null).map(p=>({x:p.ts,y:p.lbm}))},
-      {color:"#a8622a", right:true, pts:pts.filter(p=>p.fat!=null).map(p=>({x:p.ts,y:p.fat}))}
-    ], {labels:lb});
-    const f0=pts[0], l0=pts[pts.length-1];
-    let tr = "体重 "+(l0.w>=f0.w?"+":"")+r1(l0.w-f0.w)+"kg";
-    if(f0.lbm!=null && l0.lbm!=null) tr += " / 除脂肪 "+(l0.lbm>=f0.lbm?"+":"")+r1(l0.lbm-f0.lbm)+"kg";
-    $("#bTrend").textContent = tr;
-  }else{ lineChart($("#bChart"),[]); $("#bTrend").textContent=""; }
-
-  $("#sHist").innerHTML = b.length
-    ? '<div style="overflow-x:auto"><table><tr><th>日付</th>'+SCALE_FIELDS.map(f=>'<th class="n">'+f[1]+'</th>').join("")+'<th></th></tr>'
-      + b.slice().reverse().map(r=>'<tr><td>'+r.date+'</td>'
-        + SCALE_FIELDS.map(f=>'<td class="n">'+(r[f[0]]!=null?r[f[0]]:"—")+'</td>').join("")
-        + '<td class="n"><button class="btn xs gr" data-bd="'+r.date+'">削除</button></td></tr>').join("")+'</table></div>'
-    : '<div class="empty">記録なし</div>';
-  $("#sHist").querySelectorAll("[data-bd]").forEach(x=> x.onclick = ()=>{
-    S.body = S.body.filter(r=>r.date!==x.dataset.bd); save(); renderScale(); updateHeader();
-  });
-}
-
-/* ─── 分析エンジン ─────────────────────────────────────────────────────────
-   サマリータブが使う集計。すべて「データが無ければ null を返す」方針で、
-   呼び出し側が判定不能と表示できるようにする。数字が無いのに断定するのが一番害がある。 */
-
-/* 今日から n 日ぶんの日付キー（新しい順） */
-function recentDates(n){
-  const out = [], base = new Date(today()+"T00:00:00");
-  for(let i=0;i<n;i++){
-    const d = new Date(base.getFullYear(), base.getMonth(), base.getDate()-i);
-    out.push(d.toLocaleDateString("sv-SE"));
-  }
-  return out;
-}
-const dayNum = s => Math.round(new Date(s+"T00:00:00").getTime()/86400000);
-
-/* 最小二乗法で「1週あたりの変化量」を出す。2点未満とばらつきゼロは null */
-function weeklySlope(pts){
-  const p = pts.filter(x=>x.y!=null && isFinite(x.y));
-  if(p.length < 2) return null;
-  const n = p.length;
-  let sx=0, sy=0, sxy=0, sxx=0;
-  p.forEach(v=>{ sx+=v.x; sy+=v.y; sxy+=v.x*v.y; sxx+=v.x*v.x; });
-  const den = n*sxx - sx*sx;
-  if(Math.abs(den) < 1e-9) return null;
-  return ((n*sxy - sx*sy)/den) * 7;
-}
-
-/* 体組成。直近 days 日の記録から週あたりの変化を出す */
-function bodyStats(days){
-  days = days || 28;
-  const cutoff = recentDates(days)[days-1];
-  const rows = S.body.filter(r=>r.date >= cutoff);
-  if(!rows.length) return {n:0};
-  const last = rows[rows.length-1];
-  const lbmOf = r => r.lbm!=null ? r.lbm : (r.fat!=null ? r1(r.w*(1-r.fat/100)) : null);
-  const st = {
-    n: rows.length,
-    last: last,
-    lbm: lbmOf(last),
-    wPerWeek:   weeklySlope(rows.map(r=>({x:dayNum(r.date), y:r.w}))),
-    lbmPerWeek: weeklySlope(rows.map(r=>({x:dayNum(r.date), y:lbmOf(r)}))),
-    fatPerWeek: weeklySlope(rows.map(r=>({x:dayNum(r.date), y:r.fat})))
-  };
-  st.pctPerWeek = (st.wPerWeek!=null && last.w) ? st.wPerWeek/last.w*100 : null;
-  return st;
-}
-
-/* 食事。記録がある日だけを平均する。0件の日を0kcalとして混ぜると平均が壊れる */
-function mealStats(days){
-  const ds = recentDates(days||7);
-  const sums = ds.map(d=>{
-    const log = S.meals[d];
-    if(!log || !log.length) return null;
-    return log.reduce((a,x)=>({kcal:a.kcal+ +x.kcal, p:a.p+ +x.p, f:a.f+ +x.f, c:a.c+ +x.c}), {kcal:0,p:0,f:0,c:0});
-  }).filter(Boolean);
-  if(!sums.length) return {n:0, loggedDays:0, totalDays:ds.length};
-  const avg = k => sums.reduce((a,s)=>a+s[k],0)/sums.length;
-  return {n:sums.length, loggedDays:sums.length, totalDays:ds.length,
-    kcal:avg("kcal"), p:avg("p"), f:avg("f"), c:avg("c")};
-}
-
-/* トレーニング。直近 days 日で実際に完了したセットのみ集計 */
-function trainStats(days){
-  const ds = recentDates(days||7);
-  const agg = {};
-  let sets = 0, vol = 0, sessions = 0;
-  ds.forEach(d=>{
-    const s = S.sessions[d]; if(!s) return;
-    let daySets = 0;
-    for(const id in (s.ex||{})){
-      const e = ex(id), done = s.ex[id].filter(x=>x.done);
-      if(!done.length) continue;
-      daySets += done.length;
-      done.forEach(x=>{ vol += (Number(x.w)||0)*(Number(x.r)||0)*volMult(e); });
-      (e.pri||[]).forEach(m=>agg[m]=(agg[m]||0)+done.length);
-      (e.sec||[]).forEach(m=>agg[m]=(agg[m]||0)+done.length*0.5);
-    }
-    if(daySets>0){ sessions++; sets += daySets; }
-  });
-  const over = Object.keys(agg).filter(m=>agg[m] > VOL_BANDS.mrv);
-  const under = Object.keys(agg).filter(m=>agg[m] > 0 && agg[m] < VOL_BANDS.mev);
-  return {sessions:sessions, sets:sets, vol:vol, byMuscle:agg, overMRV:over, underMEV:under};
-}
-
-/* 睡眠。就寝が起床より遅ければ日付をまたいだものとして +24h する */
-function sleepHours(bed, wake){
-  if(!bed || !wake) return null;
-  const toMin = t => { const p = String(t).split(":"); return (+p[0])*60 + (+p[1]||0); };
-  const b = toMin(bed); let w = toMin(wake);
-  if(!isFinite(b) || !isFinite(w)) return null;
-  if(w <= b) w += 24*60;
-  return Math.round((w-b)/6)/10;   // 0.1時間刻み
-}
-function sleepStats(days){
-  const ds = recentDates(days||7);
-  const hs = ds.map(d=>{
-    const r = S.sleep[d];
-    return r ? sleepHours(r.bed, r.wake) : null;
-  }).filter(v=>v!=null);
-  if(!hs.length) return {n:0, totalDays:ds.length};
-  const avg = hs.reduce((a,b)=>a+b,0)/hs.length;
-  const min = Math.min.apply(null, hs);
-  const short = hs.filter(h=>h < 6.5).length;
-  return {n:hs.length, totalDays:ds.length, avg:avg, min:min, shortNights:short};
-}
-
-/* ─── サマリー ────────────────────────────────────────────────────────── */
-const NA = '<span class="kv na">—</span>';
-function kpi(label, valueHTML, sub){
-  return '<div><div class="kl">'+esc(label)+'</div>'+valueHTML
-    + (sub ? '<div class="ks">'+sub+'</div>' : '')+'</div>';
-}
-const sign = v => (v>=0?"+":"")+r1(v);
-
-function renderSummary(){
-  const b = bodyStats(28), m = mealStats(7), t = trainStats(7), sl = sleepStats(7);
-  const tgt = S.target;
-  $("#sumRange").textContent = "体組成は直近4週／その他は直近7日";
-
-  /* ── 増量の進捗 ── */
-  if(!b.n){
-    $("#sumBody").innerHTML = '<p class="note">体組成の記録がまだない。体重と体脂肪率を2回以上入れると増量ペースを判定できる。</p>';
-  }else{
-    const wk = b.wPerWeek, pct = b.pctPerWeek;
-    let cls = "", note = "記録2回以上で判定";
-    if(b.n >= 2 && wk != null){
-      if(pct > 0.5){ cls="dn"; note="速い。脂肪が乗りやすい"; }
-      else if(pct >= 0.25){ cls="up"; note="適正な増量ペース"; }
-      else if(pct >= 0.1){ cls="up"; note="やや遅いが増えている"; }
-      else if(pct > -0.1){ cls=""; note="停滞している"; }
-      else { cls="dn"; note="減っている"; }
-    }
-    $("#sumBody").innerHTML = '<div class="kpi">'
-      + kpi("体重", '<div class="kv">'+r1(b.last.w)+'<span style="font-size:11px;font-weight:400"> kg</span></div>', b.last.date.slice(5))
-      + kpi("週あたり", wk!=null ? '<div class="kv '+cls+'">'+sign(wk)+'<span style="font-size:11px;font-weight:400"> kg</span></div>' : NA,
-            pct!=null ? sign(pct)+" %/週" : note)
-      + kpi("体脂肪率", b.last.fat!=null ? '<div class="kv">'+r1(b.last.fat)+'<span style="font-size:11px;font-weight:400"> %</span></div>' : NA,
-            b.fatPerWeek!=null ? sign(b.fatPerWeek)+" /週" : "")
-      + kpi("除脂肪体重", b.lbm!=null ? '<div class="kv '+(b.lbmPerWeek>0?"up":(b.lbmPerWeek<0?"dn":""))+'">'+r1(b.lbm)+'<span style="font-size:11px;font-weight:400"> kg</span></div>' : NA,
-            b.lbmPerWeek!=null ? sign(b.lbmPerWeek)+" /週" : "筋肉量の増減")
-      + '</div>'
-      + '<p class="note" style="margin-top:12px">'+esc(note)
-      + '。増量の適正ペースは体重の +0.25〜0.5 %/週。'+(b.last.w?('今の体重なら週 +'+r1(b.last.w*0.0025)+'〜'+r1(b.last.w*0.005)+' kg'):'')+'。'
-      + '体重ではなく除脂肪体重が増えているかで、筋肉が増えたか脂肪が増えたかを判断する。</p>';
-  }
-
-  /* ── 食事 ── */
-  if(!m.n){
-    $("#sumMeal").innerHTML = '<p class="note">直近7日に食事の記録がない。増量が進まない原因の大半はカロリー不足なので、まず数日ぶん記録して実績を出す。</p>';
-  }else{
-    const pc = (v,g)=> g>0 ? Math.round(v/g*100) : 0;
-    const kc = pc(m.kcal,tgt.kcal), pp = pc(m.p,tgt.p);
-    $("#sumMeal").innerHTML = '<div class="kpi">'
-      + kpi("kcal", '<div class="kv '+(kc<90?"dn":(kc>115?"dn":"up"))+'">'+Math.round(m.kcal)+'</div>', "目標 "+tgt.kcal+" / "+kc+"%")
-      + kpi("P たんぱく", '<div class="kv '+(pp<85?"dn":"up")+'">'+Math.round(m.p)+'<span style="font-size:11px;font-weight:400"> g</span></div>', "目標 "+tgt.p+" / "+pp+"%")
-      + kpi("F 脂質", '<div class="kv">'+Math.round(m.f)+'<span style="font-size:11px;font-weight:400"> g</span></div>', "目標 "+tgt.f)
-      + kpi("C 炭水化物", '<div class="kv">'+Math.round(m.c)+'<span style="font-size:11px;font-weight:400"> g</span></div>', "目標 "+tgt.c)
-      + '</div>'
-      + '<p class="note" style="margin-top:12px">記録があるのは7日中 '+m.loggedDays+' 日。'
-      + (m.loggedDays < 4 ? '記録日が少ないので平均の信頼度は低い。' : '')
-      + ' 平均は記録がある日だけで計算している（未記録日を0kcalとして混ぜると実態より低く出るため）。</p>';
-  }
-
-  /* ── トレーニング ── */
-  const NAMEOF = k => MUSCLES[k] ? MUSCLES[k][0] : k;
-  if(!t.sessions){
-    $("#sumTrain").innerHTML = '<p class="note">直近7日に完了したセットがない。セットのチェックを押すと記録として集計される。</p>';
-  }else{
-    $("#sumTrain").innerHTML = '<div class="kpi">'
-      + kpi("実施日数", '<div class="kv">'+t.sessions+'<span style="font-size:11px;font-weight:400"> 日</span></div>', "7日中")
-      + kpi("完了セット", '<div class="kv">'+t.sets+'</div>', "週あたり")
-      + kpi("総挙上量", '<div class="kv">'+Math.round(t.vol).toLocaleString()+'<span style="font-size:11px;font-weight:400"> kg</span></div>', "重量種目のみ")
-      + kpi("MRV超え", '<div class="kv '+(t.overMRV.length?"dn":"up")+'">'+t.overMRV.length+'<span style="font-size:11px;font-weight:400"> 部位</span></div>', "上限"+VOL_BANDS.mrv+"セット/週")
-      + '</div>'
-      + (t.overMRV.length ? '<p class="note" style="margin-top:12px">回復が追わない可能性がある部位 — <b>'
-          + t.overMRV.map(k=>esc(NAMEOF(k))+" "+r1(t.byMuscle[k])).join(" ・ ")+'</b></p>' : '')
-      + '<p class="note" style="margin-top:8px">部位ごとの内訳は「記録」タブで確認する。</p>';
-  }
-
-  /* ── 睡眠 ── */
-  if(!sl.n){
-    $("#sumSleep").innerHTML = '<p class="note">睡眠の記録がまだない。週7でMRV近くまで積んでいる今、伸びを決めるのは追加のセットではなく回復側なので、ここを測る価値が一番大きい。「睡眠」タブから記録する。</p>';
-  }else{
-    const okAvg = sl.avg >= 7;
-    $("#sumSleep").innerHTML = '<div class="kpi">'
-      + kpi("平均睡眠", '<div class="kv '+(okAvg?"up":"dn")+'">'+r1(sl.avg)+'<span style="font-size:11px;font-weight:400"> 時間</span></div>', "目安 7〜9")
-      + kpi("最短", '<div class="kv">'+r1(sl.min)+'<span style="font-size:11px;font-weight:400"> 時間</span></div>', "7日中")
-      + kpi("6.5h未満", '<div class="kv '+(sl.shortNights?"dn":"up")+'">'+sl.shortNights+'<span style="font-size:11px;font-weight:400"> 日</span></div>', "回復不足の夜")
-      + kpi("記録日数", '<div class="kv">'+sl.n+'<span style="font-size:11px;font-weight:400"> 日</span></div>', "7日中")
-      + '</div>';
-  }
-
-  $("#sumInsight").innerHTML = insightsHTML(b, m, t, sl);
-}
-
-/* 数字を「次に何をするか」に翻訳する。重い順に並べて上位だけ出す */
-function insightsHTML(b, m, t, sl){
-  const tgt = S.target, out = [];
-  const push = (sev, order, html)=> out.push({sev:sev, order:order, html:html});
-
-  if(!b.n || b.n < 2){
-    push("info", 90, "体組成の記録が "+(b.n||0)+" 件。<b>2件以上</b>入ると増量ペースを判定できるようになる。週2〜3回、同じ条件（起床直後・排尿後）で測ると精度が上がる。");
-  }else if(b.pctPerWeek != null){
-    const p = b.pctPerWeek;
-    if(p > 0.5){
-      push("bad", 10, "増量が<b>速すぎる（"+sign(p)+" %/週）</b>。この速度は増えたぶんの脂肪比率が上がる。摂取を <b>200〜300 kcal 減らす</b>か、この体重増加が続くか2週間見てから判断する。");
-    }else if(p < 0.1 && p > -0.1){
-      push("warn", 12, "体重が<b>停滞している（"+sign(p)+" %/週）</b>。週7で消費が増えているので、目標 "+tgt.kcal+" kcal でも足りていない可能性がある。<b>+200〜300 kcal</b> 足して2週間様子を見る。");
-    }else if(p <= -0.1){
-      push("bad", 8, "体重が<b>減っている（"+sign(p)+" %/週）</b>。増量方針と逆行している。週7のトレーニング量に対して摂取が不足している。まずカロリーを満たす。");
-    }else{
-      push("ok", 60, "増量ペースは<b>適正（"+sign(p)+" %/週）</b>。この調子を維持する。");
-    }
-    if(b.lbmPerWeek != null && b.wPerWeek != null && b.wPerWeek > 0.05 && b.lbmPerWeek <= 0){
-      push("bad", 9, "体重は増えているのに<b>除脂肪体重が増えていない</b>。増えたぶんが脂肪に寄っている。タンパク質の充足と、増量ペースが速すぎないかを先に確認する。");
-    }
-  }
-
-  if(!m.n){
-    push("warn", 30, "直近7日に<b>食事の記録がない</b>。増量が進まない原因の大半はカロリー不足で、記録が無いと原因の切り分けができない。");
-  }else{
-    const dk = tgt.kcal - m.kcal, dp = tgt.p - m.p;
-    if(dk > 300) push("bad", 11, "カロリーが平均 <b>"+Math.round(dk)+" kcal 不足</b>している（実績 "+Math.round(m.kcal)+" / 目標 "+tgt.kcal+"）。週7で追い込んでも、ここが埋まらないと筋肉は増えない。米を1合足すと約515 kcal・炭水化物122g入る。");
-    else if(dk < -300) push("warn", 40, "カロリーが平均 <b>"+Math.round(-dk)+" kcal 超過</b>している。増量中でも超過が続くと脂肪の比率が上がるので、体脂肪率の推移とあわせて見る。");
-    if(dp > 20) push("warn", 20, "たんぱく質が平均 <b>"+Math.round(dp)+" g 不足</b>（実績 "+Math.round(m.p)+" / 目標 "+tgt.p+"）。プロテイン1杯で21g、納豆1パックで7.4g、鶏むね100gで23g補える。");
-    if(m.loggedDays > 0 && m.loggedDays < 4) push("info", 70, "食事の記録が7日中 <b>"+m.loggedDays+" 日</b>しかない。平均の信頼度が低いので、判断材料にするなら記録日を増やす。");
-  }
-
-  if(!t.sessions){
-    push("warn", 35, "直近7日に<b>完了したセットがない</b>。セット右のチェックを押して初めて記録として集計される。");
-  }else{
-    if(t.overMRV.length){
-      const names = t.overMRV.map(k=>(MUSCLES[k]?MUSCLES[k][0]:k)+" "+r1(t.byMuscle[k])).join(" ・ ");
-      push("bad", 13, "<b>"+names+"</b> が回復上限（"+VOL_BANDS.mrv+"セット/週）を超えている。ここから増やしても伸びず、疲労だけが残る。セットを削るか、次週をディロードにする。");
-    }
-    if(t.sessions <= 3) push("info", 65, "直近7日の実施は <b>"+t.sessions+" 日</b>。週7の設計に対して少ないので、スケジュールが実態に合っていないなら設定タブで曜日割当を変える。");
-  }
-
-  if(!sl.n){
-    push("warn", 25, "<b>睡眠が未記録</b>。MRV近くまで積んだ状態では、伸びを決めるのは追加のセットではなく回復側になる。ここが測れていないと、停滞したときに原因を切り分けられない。");
-  }else{
-    if(sl.avg < 6.5) push("bad", 7, "平均睡眠が <b>"+r1(sl.avg)+" 時間</b>。筋タンパク合成は睡眠中に進むので、この水準が続くと週7の負荷が回復を上回る。<b>セット数を落とすより先に睡眠を伸ばす</b>ほうが効果が大きい。");
-    else if(sl.avg < 7) push("warn", 22, "平均睡眠が <b>"+r1(sl.avg)+" 時間</b>で目安の7時間を下回っている。増量期は睡眠不足がテストステロンを下げるため、増えた体重が脂肪に寄りやすくなる。");
-    else push("ok", 62, "平均睡眠 <b>"+r1(sl.avg)+" 時間</b>。回復に必要な水準を満たしている。");
-    if(sl.shortNights >= 3) push("warn", 24, "6.5時間を下回った夜が <b>"+sl.shortNights+" 日</b>ある。平均が足りていても、短い夜が続くと回復が追いつかない。");
-  }
-
-  if(!out.length) return '<p class="note">判断に使えるデータがまだない。体重・食事・睡眠を数日記録すると、ここに次にやることが出る。</p>';
-  out.sort((a,b2)=>a.order-b2.order);
-  return '<ul class="ins">'+out.slice(0,5).map(o=>'<li class="'+o.sev+'">'+o.html+'</li>').join("")+'</ul>';
-}
-
-/* ─── 睡眠タブ ────────────────────────────────────────────────────────── */
-function renderSleep(){
-  const ds = Object.keys(S.sleep).sort();
-  const pts = ds.map(d=>({d:d, x:new Date(d+"T00:00:00").getTime(), y:sleepHours(S.sleep[d].bed, S.sleep[d].wake)}))
-                .filter(p=>p.y!=null);
-  if(pts.length){
-    // 7日移動平均。日々のばらつきに埋もれる傾向を見るため
-    const ma = pts.map((p,i)=>{
-      const w = pts.slice(Math.max(0,i-6), i+1);
-      return {x:p.x, y:w.reduce((a,v)=>a+v.y,0)/w.length};
-    });
-    const lb = [{x:pts[0].x,t:pts[0].d.slice(5)}];
-    if(pts.length>1) lb.push({x:pts[pts.length-1].x,t:pts[pts.length-1].d.slice(5)});
-    lineChart($("#slChart"), [
-      {color:"#2f5d8f", pts:pts.map(p=>({x:p.x,y:p.y}))},
-      {color:"#a8622a", pts:ma}
-    ], {labels:lb});
-    const avg = pts.reduce((a,p)=>a+p.y,0)/pts.length;
-    $("#slTrend").textContent = "全"+pts.length+"日の平均 "+r1(avg)+" 時間";
-  }else{
-    lineChart($("#slChart"), []); $("#slTrend").textContent = "";
-  }
-
-  const QN = {3:"よく眠れた", 2:"普通", 1:"浅い"};
-  $("#slHist").innerHTML = ds.length
-    ? '<table><tr><th>起きた日</th><th>就寝</th><th>起床</th><th class="n">睡眠</th><th>体感</th><th></th></tr>'
-      + ds.slice().reverse().map(d=>{
-          const r = S.sleep[d], h = sleepHours(r.bed, r.wake);
-          const short = h!=null && h < 6.5;
-          return '<tr><td>'+d+'</td><td>'+esc(r.bed||"—")+'</td><td>'+esc(r.wake||"—")+'</td>'
-            + '<td class="n"'+(short?' style="color:var(--hot);font-weight:700"':'')+'>'+(h!=null?r1(h)+" h":"—")+'</td>'
-            + '<td>'+(QN[r.q]||"—")+'</td>'
-            + '<td class="n"><button class="btn xs gr" data-sld="'+d+'">削除</button></td></tr>';
-        }).join("")+'</table>'
-    : '<div class="empty">記録なし</div>';
-  $("#slHist").querySelectorAll("[data-sld]").forEach(x=> x.onclick = ()=>{
-    delete S.sleep[x.dataset.sld]; save(); renderSleep(); renderSummary();
-  });
-}
-$("#slSave").onclick = ()=>{
-  const d = $("#slDate").value;
-  if(!d){ alert("日付が必要"); return; }
-  const bed = $("#slBed").value, wake = $("#slWake").value;
-  if(!bed || !wake){ alert("就寝と起床の両方が必要"); return; }
-  const rec = {bed:bed, wake:wake};
-  const q = $("#slQ").value; if(q) rec.q = +q;
-  S.sleep[d] = rec; save(); renderSleep(); renderSummary();
-  $("#slMsg").textContent = d+" を保存した（"+r1(sleepHours(bed,wake))+" 時間）";
-};
-$("#slClear").onclick = ()=>{
-  $("#slBed").value=""; $("#slWake").value=""; $("#slQ").value=""; $("#slMsg").textContent="";
-};
-
-/* ─── 記録 ────────────────────────────────────────────────────────────── */
-function lineChart(svg, series, opt){
-  opt = opt||{};
-  const W = svg.clientWidth || 700, H = 170, pl = 34, pr = 34, pt = 12, pb = 20;
-  const all = series.filter(s=>s.pts.length);
-  if(!all.length){ svg.setAttribute("viewBox","0 0 700 170"); svg.innerHTML = '<text x="12" y="86">データがありません</text>'; return; }
-  const xs = all.flatMap(s=>s.pts.map(p=>p.x));
-  const xMin = Math.min.apply(null,xs), xMax = Math.max.apply(null,xs);
-  const X = v => pl + (xMax===xMin ? (W-pl-pr)/2 : (v-xMin)/(xMax-xMin)*(W-pl-pr));
-  let out = "";
-  const sc = {};
-  [["left",all.filter(s=>!s.right)],["right",all.filter(s=>s.right)]].forEach(a=>{
-    if(!a[1].length) return;
-    const ys = a[1].flatMap(s=>s.pts.map(p=>p.y));
-    let lo = Math.min.apply(null,ys), hi = Math.max.apply(null,ys);
-    if(hi===lo){ hi=lo+1; lo=lo-1; }
-    const pad=(hi-lo)*0.18; lo-=pad; hi+=pad;
-    sc[a[0]] = {Y: v => pt + (1-(v-lo)/(hi-lo))*(H-pt-pb)};
-    for(let i=0;i<=2;i++){
-      const v = lo+(hi-lo)*i/2, y = sc[a[0]].Y(v);
-      if(a[0]==="left"){
-        out += '<line x1="'+pl+'" y1="'+y.toFixed(1)+'" x2="'+(W-pr)+'" y2="'+y.toFixed(1)+'" stroke="#f0f0f2"/>';
-        out += '<text x="'+(pl-5)+'" y="'+(y+3).toFixed(1)+'" text-anchor="end">'+v.toFixed(1)+'</text>';
-      }else out += '<text x="'+(W-pr+5)+'" y="'+(y+3).toFixed(1)+'">'+v.toFixed(1)+'</text>';
-    }
-  });
-  all.forEach(s=>{
-    const y = sc[s.right?"right":"left"];
-    out += '<path d="'+s.pts.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+y.Y(p.y).toFixed(1)).join(" ")
-      + '" fill="none" stroke="'+s.color+'" stroke-width="1.8" stroke-linejoin="round"'+(s.right?' stroke-dasharray="3 3"':'')+'/>';
-    s.pts.forEach(p=>{ out += '<circle cx="'+X(p.x).toFixed(1)+'" cy="'+y.Y(p.y).toFixed(1)+'" r="2.5" fill="'+s.color+'"/>'; });
-  });
-  (opt.labels||[]).forEach(l=>{ out += '<text x="'+X(l.x).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle">'+l.t+'</text>'; });
-  svg.setAttribute("viewBox","0 0 "+W+" "+H);
-  svg.innerHTML = out;
-}
-function sessionVol(){
-  return Object.keys(S.sessions).sort().map(d=>{
-    const s = S.sessions[d]; let v = 0;
-    for(const id in (s.ex||{})){
-      const e = ex(id), m = volMult(e);
-      s.ex[id].forEach(x=>{ if(x.done) v += (Number(x.w)||0)*(Number(x.r)||0)*m; });
-    }
-    return {d:d, x:new Date(d).getTime(), y:v};
-  });
-}
-function renderRec(){
-  // 部位別セット数（実施したセットのみ）
-  const days = +$("#vRange").value;
-  const cutoff = new Date(Date.now() - days*86400000).toLocaleDateString("sv-SE");
-  const agg = {};
-  const allDates = Object.keys(S.sessions).sort();
-  let weeks;
-  if(days>=9999){
-    // 全期間は実際に記録がある期間の週数で割る。1固定だとMEV/MAV/MRVの帯と整合しない
-    weeks = allDates.length ? Math.max(1, (Date.now()-new Date(allDates[0]).getTime())/86400000/7) : 1;
-  }else weeks = Math.max(1, days/7);
-  Object.keys(S.sessions).filter(d=>days>=9999 || d>=cutoff).forEach(d=>{
-    const s = S.sessions[d];
-    for(const id in (s.ex||{})){
-      const e = ex(id), n = s.ex[id].filter(x=>x.done).length;
-      if(!n) continue;
-      (e.pri||[]).forEach(m=>agg[m]=(agg[m]||0)+n);
-      (e.sec||[]).forEach(m=>agg[m]=(agg[m]||0)+n*0.5);
-    }
-  });
-  for(const k in agg) agg[k] = agg[k]/weeks;
-  $("#vSets").innerHTML = setsBarHTML(agg, {bands:true});
-
-  const vol = sessionVol().filter(v=>v.y>0);
-  const lb = [];
-  if(vol.length){ lb.push({x:vol[0].x,t:vol[0].d.slice(5)}); if(vol.length>1) lb.push({x:vol[vol.length-1].x,t:vol[vol.length-1].d.slice(5)}); }
-  lineChart($("#vChart"), [{color:"#2f5d8f", pts:vol.map(v=>({x:v.x,y:v.y}))}], {labels:lb});
-
-  const best = {};
-  for(const d in S.sessions){
-    const s = S.sessions[d];
-    for(const id in (s.ex||{})) s.ex[id].forEach(x=>{
-      if(!x.done) return;
-      const w = Number(x.w)||0, r = Number(x.r)||0;
-      if(!best[id]) best[id] = {w:0,r:0,d:d};
-      if(w>best[id].w || (w===best[id].w && r>best[id].r)) best[id] = {w:w,r:r,d:d};
-    });
-  }
-  const ks = Object.keys(best);
-  $("#bBest").innerHTML = ks.length
-    ? '<table><tr><th>種目</th><th class="n">重量</th><th class="n">回数</th><th class="n">日付</th></tr>'
-      + ks.map(k=>'<tr><td>'+esc(ex(k).n)+'</td><td class="n">'+(best[k].w?best[k].w+" kg":"自重")+'</td><td class="n">'+best[k].r+'</td><td class="n">'+best[k].d.slice(5)+'</td></tr>').join("")+'</table>'
-    : '<div class="empty">記録なし</div>';
-
-  const hs = Object.keys(S.sessions).sort().reverse();
-  $("#bHist").innerHTML = hs.length
-    ? '<table><tr><th>日付</th><th>メニュー</th><th class="n">完了セット</th><th class="n">総挙上</th></tr>'
-      + hs.map(d=>{
-          const s = S.sessions[d]; let c=0;
-          for(const id in (s.ex||{})) c += s.ex[id].filter(x=>x.done).length;
-          const v = (sessionVol().find(x=>x.d===d)||{y:0}).y;
-          const mn = (S.menus[s.menu]||{}).label || "—";
-          return '<tr><td>'+d+'</td><td>'+esc(mn)+'</td><td class="n">'+c+'</td><td class="n">'+Math.round(v)+' kg</td></tr>';
-        }).join("")+'</table>'
-    : '<div class="empty">記録なし</div>';
-}
-$("#vRange").onchange = renderRec;
-
-/* ─── 設定 ────────────────────────────────────────────────────────────── */
-const WEEKDAY_JA = ["日","月","火","水","木","金","土"];
-function renderSched(){
-  $("#cSched").innerHTML = WEEKDAY_JA.map((w,i)=>{
-    const key = (S.schedule||[])[i] || "";
-    const opts = '<option value="">（手動選択のまま）</option>'
-      + Object.keys(S.menus).map(k=>'<option value="'+k+'"'+(k===key?" selected":"")+'>'+esc(S.menus[k].label)+'</option>').join("");
-    const m = key && S.menus[key];
-    const targets = m ? '<span class="note">'+esc(topMuscles(m,3).join(" ・ "))+'</span>' : '<span class="note">未割当</span>';
-    return '<div class="row" style="margin-bottom:8px;align-items:center">'
-      + '<span class="tag" style="min-width:26px;text-align:center">'+w+'</span>'
-      + '<div class="fg" style="max-width:220px"><select data-dow="'+i+'">'+opts+'</select></div>'
-      + '<div style="flex:1;min-width:0">'+targets+'</div></div>';
-  }).join("");
-  $("#cSched").querySelectorAll("[data-dow]").forEach(sel=> sel.onchange = ()=>{
-    S.schedule[+sel.dataset.dow] = sel.value; save(); renderSched();
-  });
-}
-function renderConf(){
-  renderSched();
-  $("#cInv").innerHTML = DENS.map(d=>
-    '<div><label class="f">'+d+' kg プレート</label><input type="number" min="0" data-den="'+d+'" value="'+(S.inventory[String(d)]||0)+'"></div>').join("");
-  $("#cInv").querySelectorAll("[data-den]").forEach(el=> el.onchange = ()=>{
-    S.inventory[el.dataset.den] = Math.max(0,+el.value||0); save(); clearWC(); renderConf(); renderTrain();
-  });
-  const bind = (sel,key)=>{ $(sel).value = S[key]; $(sel).onchange = ()=>{ S[key] = +$(sel).value||0; save(); clearWC(); renderConf(); renderTrain(); }; };
-  bind("#cDb","dbShaft"); bind("#cBb","bbShaft"); bind("#cDbMax","dbMax"); bind("#cBbMax","bbMax");
-  $("#cTotal").textContent = r1(DENS.reduce((a,d)=>a+d*(S.inventory[String(d)]||0),0))+" kg";
-
-  // ジム設備のバインド
-  const gnum = (sel,key)=>{ $(sel).value = S.gym[key]; $(sel).onchange = ()=>{ S.gym[key] = +$(sel).value||0; save(); clearWC(); renderConf(); renderTrain(); }; };
-  $("#gDb").value = (S.gym.dbList||[]).join(", ");
-  $("#gDb").onchange = ()=>{
-    const l = $("#gDb").value.split(",").map(x=>parseFloat(x.trim())).filter(x=>x>0).sort((a,b)=>a-b);
-    if(l.length) S.gym.dbList = l;
-    save(); clearWC(); renderConf(); renderTrain();
-  };
-  gnum("#gMs","machStep"); gnum("#gMm","machMax");
-  gnum("#gCs","cblStep");  gnum("#gCm","cblMax");
-  gnum("#gAm","assistMax");
-  gnum("#gBw","barWeight"); gnum("#gBs","gbbStep"); gnum("#gBm","gbbMax");
-
-  const mk = (t,s,l)=>'<h3>'+t+' <span class="tag">'+s+'</span></h3><div class="chips">'
-    + (l.map(p=>'<span class="chip"'+(p[1]?' title="'+comboText(p[1])+'"':'')+'>'+p[0]+'</span>').join("") || '<span class="note">組めない</span>')+'</div>';
-  const d2 = achievable(2,S.dbShaft,S.dbMax), d1 = achievable(1,S.dbShaft,S.dbMax), bb = achievable(1,S.bbShaft,S.bbMax);
-  const dead = DENS.filter(d=>(S.inventory[String(d)]||0)>0 && (S.inventory[String(d)]||0)<4);
-  let diag = "";
-  if(dead.length) diag = '<p class="note" style="margin-top:10px"><b>制約の理由</b> — ダンベル2本を左右対称に組むには同じプレートが4枚必要になる。'
-    + dead.map(d=>d+"kg（"+(S.inventory[String(d)]||0)+"枚）").join("・")
-    + ' は枚数が足りず両手種目では使えないため、上限が1本 <b>'+(d2.length?d2[d2.length-1][0]:0)+'kg</b> で頭打ちになっている。'
-    + '買い足すなら重いプレートより <b>2.5kg を4枚</b> のほうが刻みが増える。</p>';
-  $("#cReal").innerHTML =
-      '<div style="font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.04em">自宅（プレート在庫から計算）</div>'
-    + mk("ダンベル2本（1本あたり kg）","両手種目",d2)
-    + mk("ダンベル1本（kg）","片手ロウ・プルオーバー",d1)
-    + mk("バーベル（kg）","セーフティ無しのため単独での高重量は避ける",bb) + diag
-    + '<p class="note" style="margin-top:8px">各値にカーソルを合わせるとプレートの組み合わせが出る。</p>'
-    + '<hr><div style="font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.04em">ジム（設備の刻みから計算）</div>'
-    + mk("固定ダンベル（kg）","ラックにある番号",weightsFor("dbf"))
-    + mk("マシン（kg）","ラットプルダウン・ロウ・プレス系",weightsFor("mach"))
-    + mk("ケーブル（kg）","サイドレイズ・フェイスプル",weightsFor("cbl"))
-    + mk("アシスト（kg）","数値が小さいほど負荷が高い",weightsFor("assist"))
-    + mk("バーベル（kg）","20kgバー＋2.5kg刻み",weightsFor("gbb"));
-
-  const p = S.profile;
-  $("#cBmr").value=p.bmr; $("#cAct").value=p.act; $("#cGoal").value=p.goal; $("#cPr").value=p.pr; $("#cFr").value=p.fr;
-  const t = S.target;
-  $("#cTk").value=t.kcal; $("#cTp").value=t.p; $("#cTf").value=t.f; $("#cTc").value=t.c;
-  updateCalc();
-}
-function curW(){ return S.body.length ? S.body[S.body.length-1].w : 66; }
-function updateCalc(){
-  const p = S.profile, w = curW();
-  const tdee = Math.round(p.bmr*p.act), kcal = tdee + Number(p.goal);
-  const P = Math.round(w*p.pr), F = Math.round(kcal*(p.fr/100)/9), C = Math.round((kcal-P*4-F*9)/4);
-  $("#cCalc").innerHTML = "維持 <b>"+tdee+"</b> kcal（基礎代謝 "+p.bmr+" × "+p.act+"） → 目標 <b>"+kcal+"</b> kcal ／ P "+P+"g・F "+F+"g・C "+C+"g";
-  return {kcal:kcal,p:P,f:F,c:C};
-}
-document.addEventListener("change", e=>{
-  const pm = {cBmr:"bmr",cAct:"act",cGoal:"goal",cPr:"pr",cFr:"fr"};
-  const tm = {cTk:"kcal",cTp:"p",cTf:"f",cTc:"c"};
-  if(pm[e.target.id]){ S.profile[pm[e.target.id]] = +e.target.value; save(); updateCalc(); }
-  if(tm[e.target.id]){ S.target[tm[e.target.id]] = +e.target.value||0; save(); renderMeal(); }
-});
-$("#cApply").onclick = ()=>{ S.target = updateCalc(); save(); renderConf(); renderMeal(); };
-$("#cExp").onclick = doExport;
-$("#cImpBtn").onclick = ()=> $("#cImp").click();
-$("#cImp").onchange = e=>{
-  const f = e.target.files[0]; if(!f) return;
-  const rd = new FileReader();
-  rd.onload = ()=>{
-    try{
-      const o = JSON.parse(rd.result);
-      if(!confirm("現在のデータを上書きする")) return;
-      S = Object.assign(defaults(), o); save(); clearWC(); boot();
-    }catch(err){ alert("読み込めなかった"); }
-  };
-  rd.readAsText(f);
-};
-$("#cReset").onclick = ()=>{
-  if(!confirm("すべての記録を消去する。元に戻せない")) return;
-  localStorage.removeItem(KEY); S = load(); clearWC(); boot();
-};
-
-/* ─── ヘッダ・起動 ─────────────────────────────────────────────────────── */
-function updateHeader(){
-  const b = S.body.length ? S.body[S.body.length-1] : null;
-  const n = Object.keys(S.sessions).filter(d=>{
-    const s = S.sessions[d];
-    for(const id in (s.ex||{})) if(s.ex[id].some(x=>x.done)) return true;
-    return false;
-  }).length;
-  const p = [];
-  if(b){ p.push(b.w.toFixed(1)+"kg"); if(b.fat!=null) p.push(b.fat.toFixed(1)+"%"); }
-  p.push(n+"セッション");
-  $("#hdMeta").textContent = p.join(" ・ ");
-}
-function boot(){
-  const t = today();
-  ["#tDate","#mDate","#sDate","#slDate"].forEach(s=>{ if(!$(s).value) $(s).value = t; });
-  $("#tDate").value = t; $("#mDate").value = t; $("#sDate").value = t; $("#slDate").value = t;
-  clearWC(); fillMenuSelects(); renderScaleGrid();
-  applyScheduleForDate(t);
-  renderTrain(); renderCats(); renderFoodList(); renderQuick(); renderMyFoods(); renderMeal();
-  riceCalc(); renderConf(); updateHeader(); checkBackupReminder();
-  renderSleep(); renderSummary();
-}
-S = load();
-boot();
-window.addEventListener("resize", ()=>{
-  if($("#scale").classList.contains("on")) renderScale();
-  if($("#rec").classList.contains("on")) renderRec();
-});
-</script>
+<div id="app" class="wrap"></div>
+
+<nav class="tabs" id="tabs">
+  <a href="#" id="tab-cal">カレンダー</a>
+  <a href="#weight" id="tab-weight">体重</a>
+  <a href="#settings" id="tab-settings">設定</a>
+</nav>
+
+<script src="exercises.js"></script>
+<script src="progress.js"></script>
+<script src="weight_logic.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>session — fitness</title>
+<style>
+:root{
+  --bg:#fafafa; --card:#fff; --line:#e3e3e6; --line2:#f0f0f2;
+  --fg:#1a1a1c; --sub:#6b6b73; --mute:#9a9aa2;
+  --accent:#2f5d8f; --accent-w:#eaf1f8;
+  --ok:#2e7d5b; --ok-w:#e6f2ec;
+  --warn:#a8622a; --warn-w:#f7efe7;
+  --hot:#c0392b;
+  --r:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);
+  font-family:'Poppins',-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  font-size:14px;line-height:1.6}
+.wrap{max-width:780px;margin:0 auto;padding:0 14px 120px}
+
+.apphd{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:56px;z-index:60}
+.apphd .in{max-width:780px;margin:0 auto;padding:11px 14px}
+.apphd h1{font-size:14px;font-weight:700;letter-spacing:.02em;line-height:1.45;margin-bottom:8px}
+.apphd .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.apphd .prog{flex:1;min-width:140px}
+.apphd .plab{font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums;margin-bottom:4px}
+.bar{height:7px;background:var(--line2);border-radius:4px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .25s;width:0}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.card>h2{font-size:13px;font-weight:700;margin-bottom:10px;letter-spacing:.02em}
+ul.principles{margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:8px}
+ul.principles>li{font-size:12.5px;line-height:1.75;color:var(--fg)}
+ul.meal{margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:6px}
+ul.meal>li{font-size:12.5px;line-height:1.7;color:var(--fg)}
+p.note{font-size:12px;color:var(--sub);line-height:1.75;margin:12px 0 0}
+
+.block{border:1px solid var(--line);border-radius:var(--r);background:var(--card);margin-bottom:12px;overflow:hidden}
+.block>.bh{padding:10px 14px;background:#fbfbfc;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.block>.bh .bt{font-size:13px;font-weight:700}
+.block>.bh .btm{font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums}
+.block>.bh .bdone{font-size:11px;color:var(--ok);font-weight:600;margin-left:auto}
+.block.now{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-w)}
+.block.now>.bh{background:var(--accent-w)}
+.block.now>.bh .bt{color:var(--accent)}
+.block.done{opacity:.55}
+.block.done>.bh{background:#f5f5f6}
+.block>.bb{padding:2px 14px 12px}
+
+.ex{padding:14px 0;border-bottom:1px solid var(--line2)}
+.ex:last-child{border-bottom:none}
+.exn{font-size:13px;font-weight:700;line-height:1.4}
+.exp{font-size:11px;color:var(--sub);margin:4px 0 8px;line-height:1.65}
+.exmeta{font-size:11px;color:var(--mute);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.exrow{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.sets{display:flex;flex-wrap:wrap;gap:8px;flex:1;min-width:0}
+.setchk{width:40px;height:40px;min-width:36px;min-height:36px;border:1px solid var(--line);border-radius:8px;background:#fff;
+  cursor:pointer;color:var(--mute);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;
+  display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;user-select:none}
+.setchk.on{background:var(--ok-w);border-color:var(--ok);color:var(--ok)}
+.wfield{width:88px;flex:0 0 auto}
+.wfield label{display:block;font-size:10.5px;color:var(--sub);margin-bottom:3px}
+.wfield input{width:100%;font:inherit;font-size:13px;padding:8px 9px;border:1px solid var(--line);
+  border-radius:7px;background:#fff;color:var(--fg);font-variant-numeric:tabular-nums}
+.wfield input:focus{outline:2px solid var(--accent-w);border-color:var(--accent)}
+
+input,select{font:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);
+  border-radius:7px;background:#fff;color:var(--fg);width:100%;font-family:inherit}
+select:focus,input:focus{outline:2px solid var(--accent-w);border-color:var(--accent)}
+label.f{display:block;font-size:11px;color:var(--sub);margin-bottom:3px}
+.selwrap{margin-bottom:4px}
+.selwrap select{max-width:100%}
+
+button.btn{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:10px 14px;font:inherit;font-size:13px;cursor:pointer;min-height:40px}
+button.btn:active{opacity:.75}
+button.btn.gr{background:var(--card);color:var(--sub);border:1px solid var(--line);width:100%}
+
+.timer{position:fixed;left:0;right:0;bottom:62px;background:var(--accent);color:#fff;
+  padding:12px 14px;display:none;z-index:9996;align-items:center;gap:12px;justify-content:center;
+  cursor:pointer;-webkit-tap-highlight-color:transparent}
+.timer.on{display:flex}
+.timer .tv{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;min-width:72px;text-align:center}
+.timer .tl{font-size:12px;opacity:.9}
+.timer .tx{font-size:12px;opacity:.75;margin-left:8px}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+li{overflow-wrap:anywhere}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../010_research/011_company/index.html">company</a><a href="../../010_research/012_politics/index.html">politics</a><a href="../../010_research/013_geo/index.html">geo</a><a href="../../010_research/014_industry/index.html">industry</a><a href="../../010_research/015_net/index.html">net</a><a href="../../010_research/016_finance/index.html">finance</a><a href="../../010_research/017_science/index.html">science</a><a href="../../010_research/018_computing/index.html">computing</a><a href="../../010_research/019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a><a href="../../030_ideas/034_foundation/index.html">foundation</a><a href="../../030_ideas/035_ventures/index.html">ventures</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../021_profile/index.html">profile</a><a href="../02A_plan/index.html">plan</a><a href="../023_travel/index.html">travel</a><a href="../027_cinema/index.html">cinema</a><a href="../02B_reading/index.html">reading</a><a href="../024_method/index.html">method</a><a href="../026_handbook/index.html">handbook</a><a href="index.html">fitness</a><a href="session.html">session</a><a href="../028_english/index.html">english</a><a href="../029_mental_math/index.html">mental math</a><a href="../02C_chemistry/index.html">chemistry</a><a href="../02D_probability/index.html">probability</a><a href="../02E_calculus/index.html">calculus</a><a href="../02F_linear_algebra/index.html">linear algebra</a><a href="../02G_physics/index.html">physics</a><a href="../02H_heidegger/index.html">heidegger</a><a href="../02I_quiz/index.html">quiz</a><a href="../02J_geography/index.html">geography</a><a href="../02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../010_research/011_company/index.html">company</a>
+    <a class="snav-a" href="../../010_research/012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../010_research/013_geo/index.html">geo</a>
+    <a class="snav-a" href="../../010_research/014_industry/index.html">industry</a>
+    <a class="snav-a" href="../../010_research/015_net/index.html">net</a>
+    <a class="snav-a" href="../../010_research/016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../010_research/017_science/index.html">science</a>
+    <a class="snav-a" href="../../010_research/018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../010_research/019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../030_ideas/034_foundation/index.html">foundation</a>
+    <a class="snav-a" href="../../030_ideas/035_ventures/index.html">ventures</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../021_profile/index.html">profile</a>
+    <a class="snav-a" href="../02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../023_travel/index.html">travel</a>
+    <a class="snav-a" href="../027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../024_method/index.html">method</a>
+    <a class="snav-a" href="../026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="index.html">fitness</a>
+    <a class="snav-a" href="session.html">session</a>
+    <a class="snav-a" href="../028_english/index.html">english</a>
+    <a class="snav-a" href="../029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../02J_geography/index.html">geography</a>
+    <a class="snav-a" href="../02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+
+<header class="apphd">
+  <div class="in">
+    <div class="selwrap">
+      <label class="f" for="menuSel">メニュー</label>
+      <select id="menuSel"></select>
+    </div>
+    <h1 id="pageTitle"></h1>
+    <div class="prog">
+      <div class="plab" id="progLab">0 / 0</div>
+      <div class="bar"><i id="progBar"></i></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap" id="app"></div>
+
+<div class="timer" id="timer" role="button" tabindex="0" aria-label="休憩タイマーを閉じる">
+  <span class="tl">休憩</span>
+  <span class="tv" id="timerVal">0:00</span>
+  <span class="tx">タップで閉じる</span>
+</div>
+
+<script>
+const MENUS = [
+  {
+    id: "261114",
+    title: "上半身の肥大 ＋ 全身の連動 ＋ 柔軟（17:00–20:00）",
+    principles: [
+      "順序は、瞬発力 → 重い複合種目 → 単関節種目 → 柔軟。神経系の疲労が少ないうちに出力の高い種目を行う",
+      "今回は久しぶりのため、全種目で限界まであと2〜3回の余力を残して止める（RIR 2–3）。限界までは行わない。翌々日の筋肉痛を抑え、次回の頻度を確保する",
+      "静的ストレッチは最後に行う。運動の前に長く伸ばすと、筋力の出力が下がる"
+    ],
+    meals: [
+      "16:00–16:30 米1杯とタンパク質を食べる",
+      "18:30前後 スポーツドリンクかおにぎり1個で糖質を補給する",
+      "終了後 プロテイン30gと米"
+    ],
+    note: "前回から間隔が空いたため、量を通常の約8割にしている。2回目からはセット数を元に戻す。",
+    blocks: [
+      {
+        id: "A",
+        label: "ブロックA",
+        time: "17:00–17:20",
+        start: "17:00",
+        end: "17:20",
+        theme: "可動域を広げる（動的）",
+        exercises: [
+          { name: "関節の回旋（首・肩・背骨・股関節）", sets: 1, detail: "各関節5回", rest: 0, tip: "他の部位を動かさず、最大の円をゆっくり描く" },
+          { name: "90/90 股関節スイッチ", sets: 2, detail: "8回", rest: 30, tip: "手を床につけずに行えれば合格" },
+          { name: "ワールドグレイテストストレッチ", sets: 1, detail: "左右5回", rest: 0, tip: "肘を床へ下ろしてから、胸を天井へ開く" },
+          { name: "ディープスクワット保持", sets: 2, detail: "45秒", rest: 30, tip: "踵を床につけたまま、背中を伸ばす" },
+          { name: "デッドハング（ぶら下がり）", sets: 2, detail: "30秒", rest: 30, tip: "肩をすくめず、脱力して広背筋を伸ばす" },
+          { name: "ケーブル外旋（肩の回旋筋腱板）", sets: 2, detail: "左右15回", rest: 30, tip: "野球の投球で疲れた肩を整える。肘を脇につけ、軽い重量で行う" },
+          { name: "スキャプラプルアップ", sets: 2, detail: "10回", rest: 30, tip: "肘を曲げず、肩甲骨だけで体を引き上げる" },
+          { name: "ベアクロール（前後）", sets: 2, detail: "10m", rest: 30, tip: "膝を床から2〜3cm浮かせ、背中を水平に保つ" }
+        ]
+      },
+      {
+        id: "B",
+        label: "ブロックB",
+        time: "17:20–17:35",
+        start: "17:20",
+        end: "17:35",
+        theme: "瞬発力",
+        exercises: [
+          { name: "ボックスジャンプ", sets: 3, detail: "3回", rest: 90, tip: "久しぶりなので台は膝の高さまで。着地は静かに。1回ごとに降りて立ち直す" },
+          { name: "ケトルベルスイング", sets: 3, detail: "10回", rest: 90, tip: "腕で上げない。股関節を前へ突き出して振り上げる" }
+        ]
+      },
+      {
+        id: "C",
+        label: "ブロックC",
+        time: "17:35–18:25",
+        start: "17:35",
+        end: "18:25",
+        theme: "広背筋（肥大）",
+        exercises: [
+          { name: "懸垂（できなければアシスト）", sets: 3, detail: "6–10回", rest: 150, tip: "胸をバーへ近づけ、肘をズボンのポケットへ下ろす。アシストは数値が小さいほど負荷が大きい" },
+          { name: "ラットプルダウン（ニュートラルグリップ）", sets: 3, detail: "8–12回", rest: 120, tip: "上で1秒伸ばし切る。体を後ろへ倒さない" },
+          { name: "ワンハンドダンベルロウ", sets: 2, detail: "左右10–12回", rest: 90, tip: "肘を後ろポケットへ引く。下で肩甲骨ごと前へ伸ばす" },
+          { name: "ストレートアームプルダウン", sets: 2, detail: "12–15回", rest: 60, tip: "肘を軽く曲げて固定し、腕を太ももまで下ろす" }
+        ]
+      },
+      {
+        id: "D",
+        label: "ブロックD",
+        time: "18:25–19:10",
+        start: "18:25",
+        end: "19:10",
+        theme: "肩（最優先）",
+        exercises: [
+          { name: "ダンベルショルダープレス（座位）", sets: 3, detail: "6–10回", rest: 120, tip: "肘を体のやや前に置き、耳の高さまで下ろす" },
+          { name: "ケーブルサイドレイズ（片手）", sets: 3, detail: "左右12–15回", rest: 60, tip: "ケーブルを体の後ろに通す。手ではなく肘で外へ持ち上げる" },
+          { name: "ダンベルサイドレイズ", sets: 2, detail: "15–20回", rest: 60, tip: "反動を使わない。上で1秒止める" },
+          { name: "リアデルトフライ（マシン）", sets: 3, detail: "15回", rest: 60, tip: "肩甲骨を寄せない。腕だけを後ろへ開く" }
+        ]
+      },
+      {
+        id: "E",
+        label: "ブロックE",
+        time: "19:10–19:35",
+        start: "19:10",
+        end: "19:35",
+        theme: "全身の連動・体幹",
+        exercises: [
+          { name: "ターキッシュゲットアップ", sets: 3, detail: "左右1回", rest: 60, tip: "8〜12kg。視線は常にダンベルへ向ける。1動作ずつ止めて進める" },
+          { name: "ファーマーズキャリー", sets: 3, detail: "30m", rest: 90, tip: "片手20kg以上。肩を下げ、胸を張って小股で歩く" },
+          { name: "片脚ルーマニアンデッドリフト", sets: 2, detail: "左右8回", rest: 60, tip: "骨盤を床と水平に保つ。ふらつく場合は重量を下げる" },
+          { name: "ハンギングレッグレイズ", sets: 3, detail: "8–12回", rest: 60, tip: "反動を使わない。骨盤を丸めて脚を上げる" }
+        ]
+      },
+      {
+        id: "F",
+        label: "ブロックF",
+        time: "19:35–20:00",
+        start: "19:35",
+        end: "20:00",
+        theme: "柔軟（静的・長く保持する）",
+        exercises: [
+          { name: "オープンブック（胸椎の回旋）", sets: 1, detail: "左右8回", rest: 0, tip: "膝を床につけたまま、胸だけを開く" },
+          { name: "広背筋ストレッチ（ラックに手をかける）", sets: 2, detail: "左右45秒", rest: 0, tip: "お尻を後ろへ引き、脇の下を伸ばす" },
+          { name: "胸のストレッチ（柱に前腕をつける）", sets: 2, detail: "左右45秒", rest: 0, tip: "肘は肩の高さ。体を反対側へひねる" },
+          { name: "カウチストレッチ（腸腰筋）", sets: 2, detail: "左右60秒", rest: 0, tip: "お尻を締めて骨盤を前に押し出す" },
+          { name: "ピジョンストレッチ（臀部）", sets: 2, detail: "左右60秒", rest: 0, tip: "前脚のすねを床と平行に近づける" },
+          { name: "パンケーキ（開脚前屈）", sets: 2, detail: "60秒", rest: 0, tip: "背中を丸めず、骨盤から前へ倒す" },
+          { name: "ディープスクワット保持＋腹式呼吸", sets: 1, detail: "90秒", rest: 0, tip: "鼻から4秒吸い、口から8秒吐く" }
+        ]
+      }
+    ]
+  }
+];
+
+const LS_PREFIX = "fitness_session_";
+let currentId = MENUS[0].id;
+let state = { checks: {}, weights: {} };
+let timerSec = 0;
+let timerIv = null;
+
+function loadState(id) {
+  try {
+    const raw = localStorage.getItem(LS_PREFIX + id);
+    if (!raw) return { checks: {}, weights: {} };
+    const o = JSON.parse(raw);
+    return {
+      checks: o.checks && typeof o.checks === "object" ? o.checks : {},
+      weights: o.weights && typeof o.weights === "object" ? o.weights : {}
+    };
+  } catch (e) {
+    return { checks: {}, weights: {} };
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(LS_PREFIX + currentId, JSON.stringify(state));
+  } catch (e) {}
+}
+
+function menuById(id) {
+  return MENUS.find(m => m.id === id) || MENUS[0];
+}
+
+function parseHM(s) {
+  const [h, m] = s.split(":").map(Number);
+  return h * 60 + m;
+}
+
+function nowMinutes() {
+  const d = new Date();
+  return d.getHours() * 60 + d.getMinutes();
+}
+
+function key(bi, ei, si) {
+  return bi + ":" + ei + ":" + si;
+}
+
+function weightKey(bi, ei) {
+  return bi + ":" + ei;
+}
+
+function totalSets(menu) {
+  let n = 0;
+  menu.blocks.forEach(b => b.exercises.forEach(e => { n += e.sets; }));
+  return n;
+}
+
+function doneSets(menu) {
+  let n = 0;
+  menu.blocks.forEach((b, bi) => {
+    b.exercises.forEach((e, ei) => {
+      for (let si = 0; si < e.sets; si++) {
+        if (state.checks[key(bi, ei, si)]) n++;
+      }
+    });
+  });
+  return n;
+}
+
+function blockDone(menu, bi) {
+  const b = menu.blocks[bi];
+  for (let ei = 0; ei < b.exercises.length; ei++) {
+    for (let si = 0; si < b.exercises[ei].sets; si++) {
+      if (!state.checks[key(bi, ei, si)]) return false;
+    }
+  }
+  return b.exercises.length > 0;
+}
+
+function fmtRest(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return m + ":" + String(s).padStart(2, "0");
+}
+
+function stopTimer() {
+  if (timerIv) { clearInterval(timerIv); timerIv = null; }
+  timerSec = 0;
+  document.getElementById("timer").classList.remove("on");
+}
+
+function startTimer(sec) {
+  if (sec <= 0) return;
+  stopTimer();
+  timerSec = sec;
+  const el = document.getElementById("timer");
+  const val = document.getElementById("timerVal");
+  val.textContent = fmtRest(timerSec);
+  el.classList.add("on");
+  timerIv = setInterval(() => {
+    timerSec--;
+    if (timerSec <= 0) {
+      val.textContent = "0:00";
+      stopTimer();
+      try {
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      } catch (e) {}
+      return;
+    }
+    val.textContent = fmtRest(timerSec);
+  }, 1000);
+}
+
+function updateProgress(menu) {
+  const tot = totalSets(menu);
+  const done = doneSets(menu);
+  document.getElementById("progLab").textContent = done + " / " + tot;
+  document.getElementById("progBar").style.width = (tot ? (done / tot * 100) : 0) + "%";
+}
+
+function updateBlockClasses(menu) {
+  const now = nowMinutes();
+  menu.blocks.forEach((b, bi) => {
+    const el = document.getElementById("block-" + bi);
+    if (!el) return;
+    el.classList.remove("now", "done");
+    const complete = blockDone(menu, bi);
+    const mark = el.querySelector(".bdone");
+    if (complete) {
+      el.classList.add("done");
+      if (mark) mark.textContent = "完了";
+    } else if (mark) {
+      mark.textContent = "";
+    }
+    const s = parseHM(b.start);
+    const e = parseHM(b.end);
+    if (!complete && now >= s && now < e) el.classList.add("now");
+  });
+}
+
+function render() {
+  const menu = menuById(currentId);
+  document.getElementById("pageTitle").textContent = menu.title;
+  const app = document.getElementById("app");
+  let html = "";
+
+  html += '<div class="card"><h2>原則</h2><ul class="principles">';
+  menu.principles.forEach(p => { html += "<li>" + escapeHtml(p) + "</li>"; });
+  html += "</ul></div>";
+
+  html += '<div class="card"><h2>食事</h2><ul class="meal">';
+  menu.meals.forEach(m => { html += "<li>" + escapeHtml(m) + "</li>"; });
+  html += "</ul></div>";
+
+  menu.blocks.forEach((b, bi) => {
+    html += '<div class="block" id="block-' + bi + '">';
+    html += '<div class="bh"><span class="bt">' + escapeHtml(b.label) + " " + escapeHtml(b.theme) + '</span>';
+    html += '<span class="btm">' + escapeHtml(b.time) + '</span>';
+    html += '<span class="bdone"></span></div>';
+    html += '<div class="bb">';
+    b.exercises.forEach((ex, ei) => {
+      const wk = weightKey(bi, ei);
+      const wval = state.weights[wk] != null ? state.weights[wk] : "";
+      html += '<div class="ex" data-bi="' + bi + '" data-ei="' + ei + '">';
+      html += '<div class="exn">' + escapeHtml(ex.name) + "</div>";
+      html += '<div class="exp">' + escapeHtml(ex.tip) + "</div>";
+      html += '<div class="exmeta">' + escapeHtml(ex.detail);
+      if (ex.rest > 0) html += " · 休憩 " + ex.rest + "秒";
+      html += "</div>";
+      html += '<div class="exrow"><div class="sets">';
+      for (let si = 0; si < ex.sets; si++) {
+        const on = state.checks[key(bi, ei, si)] ? " on" : "";
+        html += '<button type="button" class="setchk' + on + '" data-bi="' + bi + '" data-ei="' + ei + '" data-si="' + si + '" aria-pressed="' + (on ? "true" : "false") + '">' + (si + 1) + "</button>";
+      }
+      html += '</div><div class="wfield"><label for="w-' + bi + '-' + ei + '">重量 (kg)</label>';
+      html += '<input type="number" inputmode="decimal" id="w-' + bi + '-' + ei + '" data-bi="' + bi + '" data-ei="' + ei + '" value="' + escapeAttr(wval) + '" placeholder="任意" step="any" min="0"></div></div>';
+      html += "</div>";
+    });
+    html += "</div></div>";
+  });
+
+  html += '<p class="note">' + escapeHtml(menu.note) + "</p>";
+  html += '<div style="margin-top:16px"><button type="button" class="btn gr" id="clearBtn">この日の記録を消去</button></div>';
+
+  app.innerHTML = html;
+  updateProgress(menu);
+  updateBlockClasses(menu);
+
+  app.querySelectorAll(".setchk").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const bi = +btn.dataset.bi;
+      const ei = +btn.dataset.ei;
+      const si = +btn.dataset.si;
+      const k = key(bi, ei, si);
+      const turningOn = !state.checks[k];
+      if (turningOn) {
+        state.checks[k] = true;
+        btn.classList.add("on");
+        btn.setAttribute("aria-pressed", "true");
+        const rest = menu.blocks[bi].exercises[ei].rest;
+        startTimer(rest);
+      } else {
+        delete state.checks[k];
+        btn.classList.remove("on");
+        btn.setAttribute("aria-pressed", "false");
+      }
+      saveState();
+      updateProgress(menu);
+      updateBlockClasses(menu);
+    });
+  });
+
+  app.querySelectorAll(".wfield input").forEach(inp => {
+    inp.addEventListener("change", () => {
+      const bi = +inp.dataset.bi;
+      const ei = +inp.dataset.ei;
+      const wk = weightKey(bi, ei);
+      const v = inp.value.trim();
+      if (v === "") delete state.weights[wk];
+      else state.weights[wk] = v;
+      saveState();
+    });
+  });
+
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    if (!confirm("この日の記録を消去しますか？")) return;
+    state = { checks: {}, weights: {} };
+    saveState();
+    stopTimer();
+    render();
+  });
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function escapeAttr(s) {
+  return escapeHtml(s);
+}
+
+function initSel() {
+  const sel = document.getElementById("menuSel");
+  sel.innerHTML = "";
+  MENUS.forEach(m => {
+    const opt = document.createElement("option");
+    opt.value = m.id;
+    opt.textContent = m.id + " — " + m.title;
+    sel.appendChild(opt);
+  });
+  sel.value = currentId;
+  sel.addEventListener("change", () => {
+    stopTimer();
+    currentId = sel.value;
+    state = loadState(currentId);
+    render();
+  });
+}
+
+document.getElementById("timer").addEventListener("click", stopTimer);
+document.getElementById("timer").addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); stopTimer(); }
+});
+
+currentId = MENUS[0].id;
+state = loadState(currentId);
+initSel();
+render();
+setInterval(() => updateBlockClasses(menuById(currentId)), 30000);
+</script>
+</body>
+</html>

@@ -13,19 +13,75 @@
   };
   var KIND_KEYS = ["upper", "lower", "shoulder_arm", "rest"];
   var MEAL_SLOTS = [
-    { id: "breakfast", title: "07:00 朝食" },
-    { id: "snack_am", title: "10:00 補食" },
-    { id: "lunch", title: "12:30 昼食" },
-    { id: "snack", title: "トレーニング後 補食" },
-    { id: "dinner", title: "19:30 夕食" },
+    {
+      id: "breakfast",
+      time: "07:00",
+      timeHtml: '<time datetime="07:00">07:00</time>',
+      title: "朝食",
+      blurb: "タンパク質を朝から入れる",
+    },
+    {
+      id: "snack_am",
+      time: "10:00",
+      timeHtml: '<time datetime="10:00">10:00</time>',
+      title: "補食",
+      blurb: "朝食と昼食の間を空けない",
+    },
+    {
+      id: "lunch",
+      time: "12:30",
+      timeHtml: '<time datetime="12:30">12:30</time>',
+      title: "昼食",
+      blurb: "むね肉はここでまとめて食べる。電子レンジで加熱するだけにする",
+    },
+    {
+      id: "snack",
+      time: null,
+      timeHtml: '<span class="time-label">トレーニング後</span>',
+      title: "補食",
+      blurb: "トレーニングの後、速やかに",
+    },
+    {
+      id: "dinner",
+      time: "19:30",
+      timeHtml: '<time datetime="19:30">19:30</time>',
+      title: "夕食",
+      blurb: "主食で量を整える",
+    },
   ];
   var FOOD = {
-    chicken100: { kcal: 133, p: 21.3 },
-    protein30: { kcal: 116, p: 21.0 },
-    egg1: { kcal: 71, p: 6.1 },
-    natto1: { kcal: 86, p: 7.4 },
-    rice150: { kcal: 234, p: 3.8 },
+    chicken100: { kcal: 133, p: 21.3, f: 5.9, c: 0.1 },
+    protein30: { kcal: 116, p: 21.0, f: 1.9, c: 4.4 },
+    egg1: { kcal: 71, p: 6.1, f: 5.1, c: 0.2 },
+    natto1: { kcal: 86, p: 7.4, f: 4.5, c: 5.4 },
+    rice150: { kcal: 234, p: 3.8, f: 0.5, c: 55.7 },
   };
+  /* session img/session 対応（seated_cable_row→one_arm_row は使わない） */
+  var SESSION_PHOTO = {
+    lat_pulldown: { file: "img/session/lat_pulldown.jpg", creditKey: "lat_pulldown" },
+    cable_lateral_raise: { file: "img/session/lateral_raise.jpg", creditKey: "lateral_raise" },
+    rear_delt_fly: { file: "img/session/rear_delt.jpg", creditKey: "rear_delt" },
+    machine_shoulder_press: { file: "img/session/shoulder_press.jpg", creditKey: "shoulder_press" },
+  };
+  var YT_QUERY = {
+    incline_db_press: "incline dumbbell press",
+    chest_fly: "chest fly machine",
+    lat_pulldown: "lat pulldown",
+    seated_cable_row: "seated cable row",
+    cable_lateral_raise: "cable lateral raise",
+    oh_cable_extension: "overhead cable tricep extension",
+    incline_db_curl: "incline dumbbell curl",
+    hack_squat: "hack squat",
+    romanian_deadlift: "romanian deadlift",
+    leg_extension: "leg extension",
+    seated_leg_curl: "seated leg curl",
+    calf_raise: "calf raise",
+    cable_crunch: "cable crunch",
+    machine_shoulder_press: "machine shoulder press",
+    rear_delt_fly: "rear delt fly machine",
+    preacher_curl: "preacher curl",
+  };
+  var photoCreditsCache = null;
   var DEFAULT_DB_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
 
   /* exercises.md の文言をそのまま保持 */
@@ -276,41 +332,235 @@
     return { breakfast: breakfast, lunch: lunch, dinner: dinner };
   }
 
+  function scaleFood(base, factor) {
+    return {
+      kcal: base.kcal * factor,
+      p: base.p * factor,
+      f: base.f * factor,
+      c: base.c * factor,
+    };
+  }
+
+  function addNut(a, b) {
+    return {
+      kcal: a.kcal + b.kcal,
+      p: a.p + b.p,
+      f: a.f + b.f,
+      c: a.c + b.c,
+    };
+  }
+
+  function zeroNut() {
+    return { kcal: 0, p: 0, f: 0, c: 0 };
+  }
+
+  function fmt1(n) {
+    return (Math.round(n * 10) / 10).toFixed(1);
+  }
+
+  function fmt0(n) {
+    return String(Math.round(n));
+  }
+
+  function fmtCups(n) {
+    return (Math.round(n * 10) / 10).toString();
+  }
+
   function dayNutrition(riceCups) {
     var split = distributeRice(riceCups);
-    var p =
-      FOOD.egg1.p * 2 +
-      FOOD.natto1.p +
-      FOOD.chicken100.p * 3.3 +
-      FOOD.protein30.p * 2 +
-      FOOD.rice150.p * riceCups;
-    var kcal =
-      FOOD.egg1.kcal * 2 +
-      FOOD.natto1.kcal +
-      FOOD.chicken100.kcal * 3.3 +
-      FOOD.protein30.kcal * 2 +
-      FOOD.rice150.kcal * riceCups;
+    var day = zeroNut();
+    day = addNut(day, scaleFood(FOOD.egg1, 2));
+    day = addNut(day, scaleFood(FOOD.natto1, 1));
+    day = addNut(day, scaleFood(FOOD.chicken100, 3.3));
+    day = addNut(day, scaleFood(FOOD.protein30, 2));
+    day = addNut(day, scaleFood(FOOD.rice150, riceCups));
     return {
-      p: Math.round(p * 10) / 10,
-      kcal: Math.round(kcal),
+      p: Math.round(day.p * 10) / 10,
+      kcal: Math.round(day.kcal),
+      f: Math.round(day.f * 10) / 10,
+      c: Math.round(day.c * 10) / 10,
       split: split,
     };
   }
 
-  function mealFoodsText(slotId, split) {
+  function mealItemsFor(slotId, split) {
     if (slotId === "breakfast") {
-      return "卵 2個／納豆 1パック／ご飯 " + split.breakfast + "杯";
+      return [
+        { img: "img/meal/boiled_egg.jpg", name: "卵", amount: "2個", nut: scaleFood(FOOD.egg1, 2) },
+        { img: null, name: "納豆", amount: "1パック", nut: scaleFood(FOOD.natto1, 1) },
+        {
+          img: "img/meal/rice_bowl.jpg",
+          name: "ご飯",
+          amount: fmtCups(split.breakfast) + "杯（" + fmt0(split.breakfast * 150) + "g）",
+          nut: scaleFood(FOOD.rice150, split.breakfast),
+        },
+      ];
     }
     if (slotId === "snack_am" || slotId === "snack") {
-      return "プロテイン 粉30g";
+      return [
+        {
+          img: "img/meal/protein_shake.jpg",
+          name: "プロテイン",
+          amount: "粉30g（付属スプーンすり切り3杯）",
+          nut: scaleFood(FOOD.protein30, 1),
+        },
+      ];
     }
     if (slotId === "lunch") {
-      return "むね肉（電子レンジで加熱）330g（生の重量）／ご飯 " + split.lunch + "杯";
+      return [
+        {
+          img: "img/meal/raw_chicken_breast.jpg",
+          name: "むね肉（電子レンジで加熱）",
+          amount: "330g（生の重量）",
+          nut: scaleFood(FOOD.chicken100, 3.3),
+          note:
+            "耐熱皿に乗せてふんわりラップをかけ、600Wで約3分加熱し、裏返してさらに約3分。中心まで白くなっていることを確認する",
+        },
+        {
+          img: "img/meal/rice_bowl.jpg",
+          name: "ご飯",
+          amount: fmtCups(split.lunch) + "杯（" + fmt0(split.lunch * 150) + "g）",
+          nut: scaleFood(FOOD.rice150, split.lunch),
+        },
+      ];
     }
     if (slotId === "dinner") {
-      return "ご飯 " + split.dinner + "杯";
+      return [
+        {
+          img: "img/meal/rice_bowl.jpg",
+          name: "ご飯",
+          amount: fmtCups(split.dinner) + "杯（" + fmt0(split.dinner * 150) + "g）",
+          nut: scaleFood(FOOD.rice150, split.dinner),
+        },
+      ];
     }
-    return "";
+    return [];
+  }
+
+  function ytQueryFor(exId) {
+    if (YT_QUERY[exId]) return YT_QUERY[exId];
+    var ex = exerciseOf(exId);
+    return ex && ex.name ? ex.name : exId;
+  }
+
+  function loadPhotoCredits() {
+    if (photoCreditsCache) return Promise.resolve(photoCreditsCache);
+    return Promise.all([
+      fetch("img/session/_credits.json", { cache: "force-cache" })
+        .then(function (r) {
+          return r.ok ? r.json() : { images: {} };
+        })
+        .catch(function () {
+          return { images: {} };
+        }),
+      fetch("img/exercises/_credits.json", { cache: "force-cache" })
+        .then(function (r) {
+          return r.ok ? r.json() : { images: {} };
+        })
+        .catch(function () {
+          return { images: {} };
+        }),
+      fetch("img/meal/_credits.json", { cache: "force-cache" })
+        .then(function (r) {
+          return r.ok ? r.json() : { images: {} };
+        })
+        .catch(function () {
+          return { images: {} };
+        }),
+    ]).then(function (arr) {
+      photoCreditsCache = {
+        session: (arr[0] && arr[0].images) || {},
+        exercises: (arr[1] && arr[1].images) || {},
+        meal: (arr[2] && arr[2].images) || {},
+      };
+      return photoCreditsCache;
+    });
+  }
+
+  function creditLine(file, meta) {
+    if (!meta) return esc(file);
+    return (
+      esc(file) +
+      " — 作者: " +
+      esc(meta.author || "—") +
+      " — ライセンス: " +
+      esc(meta.license || "—") +
+      (meta.source_url
+        ? ' — <a href="' + esc(meta.source_url) + '" target="_blank" rel="noopener">' + esc(meta.source_url) + "</a>"
+        : "")
+    );
+  }
+
+  function resolveDefaultPhoto(exId) {
+    return loadPhotoCredits().then(function (c) {
+      if (SESSION_PHOTO[exId]) {
+        var sk = SESSION_PHOTO[exId].creditKey;
+        return {
+          src: SESSION_PHOTO[exId].file,
+          credit: c.session[sk]
+            ? (c.session[sk].author || "") + " / " + (c.session[sk].license || "")
+            : "",
+        };
+      }
+      if (c.exercises[exId]) {
+        var m = c.exercises[exId];
+        return {
+          src: "img/exercises/" + (m.file || exId + ".jpg"),
+          credit: (m.author || "") + " / " + (m.license || ""),
+        };
+      }
+      return null;
+    });
+  }
+
+  function hydrateExPhotos(root) {
+    if (!root) return;
+    var nodes = root.querySelectorAll("[data-ex-photo]");
+    nodes.forEach(function (el) {
+      var exId = el.getAttribute("data-ex-photo");
+      if (!exId) return;
+      getPhoto(exId)
+        .then(function (blob) {
+          if (blob) {
+            var url = URL.createObjectURL(blob);
+            if (el.classList.contains("photo-box")) {
+              el.innerHTML = '<img alt="" src="' + url + '">';
+            } else {
+              el.innerHTML =
+                '<img class="eximg" alt="" src="' +
+                url +
+                '"><div class="excredit">アップロード写真</div>';
+            }
+            return { uploaded: true };
+          }
+          return resolveDefaultPhoto(exId);
+        })
+        .then(function (def) {
+          if (def && def.uploaded) return;
+          if (!def) {
+            if (el.classList.contains("photo-box")) return;
+            var ex0 = exerciseOf(exId);
+            el.innerHTML =
+              '<div class="eximg-ph">' + esc(ex0 && ex0.part ? ex0.part : "写真なし") + "</div>";
+            return;
+          }
+          if (el.classList.contains("photo-box")) {
+            el.innerHTML = '<img alt="" src="' + esc(def.src) + '">';
+            return;
+          }
+          el.innerHTML =
+            '<img class="eximg" alt="" src="' +
+            esc(def.src) +
+            '" loading="lazy">' +
+            (def.credit ? '<div class="excredit">' + esc(def.credit) + "</div>" : "");
+        })
+        .catch(function () {
+          if (el.classList.contains("photo-box")) return;
+          var ex = exerciseOf(exId);
+          el.innerHTML =
+            '<div class="eximg-ph">' + esc(ex && ex.part ? ex.part : "写真なし") + "</div>";
+        });
+    });
   }
 
   function trainStatus(dateStr) {
@@ -589,11 +839,11 @@
       "（" +
       DOW[dow(dateStr)] +
       "）</h1>";
-    html += "<h2>トレーニング</h2>";
+    html += '<section class="day-train"><h2>トレーニング</h2>';
     if (menu.kind === "rest") {
-      html += '<div class="card">休み</div>';
+      html += '<div class="rest-card">休み</div>';
     } else {
-      html += '<div class="card"><strong>' + KIND_LABEL[menu.kind] + "</strong></div>";
+      html += '<div class="kind-chip">' + esc(KIND_LABEL[menu.kind]) + "</div>";
       if (menu.deload && menu.recovery) {
         var names = menu.recovery.causes
           .map(function (id) {
@@ -609,170 +859,256 @@
         var presc = { sets: it.sets, repMin: it.repMin, repMax: it.repMax };
         var target = targetFor(it.id, dateStr, presc);
         var saved = (state.logs[dateStr] && state.logs[dateStr][it.id]) || [];
-        html += '<div class="card" data-ex="' + esc(it.id) + '">';
+        var kgTxt = target.kg == null ? "—" : target.kg + "kg";
+        html += '<div class="ex" data-ex="' + esc(it.id) + '">';
         html +=
-          '<a class="ex-name" href="#ex/' +
+          '<div class="exn"><a href="#ex/' +
           encodeURIComponent(it.id) +
           '">' +
           esc(exerciseName(it.id)) +
-          "</a>";
-        if (mode === "future" || mode === "today") {
-          var kgTxt = target.kg == null ? "—" : target.kg + "kg";
+          "</a></div>";
+        if (mode !== "past") {
+          html += '<div class="exp">' + esc(target.reason) + "</div>";
+        } else if (saved.length) {
+          var hist0 = historyBefore(it.id, dateStr);
+          var prev0 = hist0.length ? hist0[hist0.length - 1] : null;
+          var cmp0 = compareText(prev0, { sets: saved });
+          if (cmp0) html += '<div class="exp">' + esc(cmp0) + "</div>";
+        }
+        html += '<div data-ex-photo="' + esc(it.id) + '"><div class="eximg-ph">…</div></div>';
+        html +=
+          '<a class="exvid" href="https://www.youtube.com/results?search_query=' +
+          encodeURIComponent(ytQueryFor(it.id)) +
+          '" target="_blank" rel="noopener">動画で見る</a>';
+        if (mode === "past") {
+          if (!saved.length) {
+            html += '<div class="exmeta">記録なし</div>';
+          } else {
+            html +=
+              '<div class="exmeta">' +
+              esc(
+                saved
+                  .map(function (s) {
+                    return s.kg + "kg × " + s.reps;
+                  })
+                  .join(" ／ ")
+              ) +
+              "</div>";
+            html += '<div class="exrow"><div class="sets">';
+            for (var pi = 0; pi < saved.length; pi++) {
+              html +=
+                '<button type="button" class="setchk on" disabled aria-pressed="true">' +
+                (pi + 1) +
+                "</button>";
+            }
+            html += "</div></div>";
+          }
+        } else {
           html +=
-            '<div class="target-line">目標 ' +
+            '<div class="exmeta">目標 ' +
             kgTxt +
             " × " +
             target.reps.join("/") +
             "（" +
             target.sets +
-            "セット）<br>" +
-            esc(target.reason) +
-            "</div>";
-        }
-        if (mode === "past") {
-          if (!saved.length) {
-            html += '<p class="note">記録なし</p>';
-          } else {
-            html +=
-              "<p>" +
-              saved
-                .map(function (s) {
-                  return s.kg + "kg × " + s.reps;
-                })
-                .join(" ／ ") +
-              "</p>";
-            var hist = historyBefore(it.id, dateStr);
-            var prev = hist.length ? hist[hist.length - 1] : null;
-            var cmp = compareText(prev, { sets: saved });
-            if (cmp) html += '<div class="compare">' + esc(cmp) + "</div>";
-          }
-        } else if (mode === "future") {
-          /* target already shown */
-        } else {
-          for (var i = 0; i < it.sets; i++) {
-            var doneSet = saved[i];
-            if (target.kg == null && i > 0 && saved[i - 1] && saved[i - 1].kg != null) {
-              var pk = draftKey(dateStr, it.id, i - 1);
-              if (!state.draft[pk]) state.draft[pk] = { kg: saved[i - 1].kg, reps: saved[i - 1].reps, rir: null };
-              else if (state.draft[pk].kg == null) state.draft[pk].kg = saved[i - 1].kg;
-            }
-            var dr = ensureDraft(dateStr, it.id, i, target);
-            html += '<div class="set-row"><div class="set-idx">' + (i + 1) + "</div><div>";
-            if (doneSet) {
+            "セット）</div>";
+          if (mode === "future") {
+            html += '<div class="exrow"><div class="sets">';
+            for (var fi = 0; fi < target.sets; fi++) {
               html +=
-                "<p>記録済: " +
-                doneSet.kg +
-                "kg × " +
-                doneSet.reps +
-                (doneSet.rir != null ? "（あと" + doneSet.rir + "回）" : "") +
-                "</p>";
-            } else {
-              var step = stepFor(it.id);
-              var stepKg = step.type === "fixed" ? step.kg : 1;
-              html +=
-                '<div class="field-row"><label>重さ</label>' +
-                '<button type="button" class="step" data-draft="' +
-                esc(draftKey(dateStr, it.id, i)) +
-                '" data-field="kg" data-delta="-' +
-                stepKg +
-                '">−</button>' +
-                '<input type="number" inputmode="decimal" data-draft="' +
-                esc(draftKey(dateStr, it.id, i)) +
-                '" data-field="kg" value="' +
-                (dr.kg == null ? "" : dr.kg) +
-                '" placeholder="kg">' +
-                '<button type="button" class="step" data-draft="' +
-                esc(draftKey(dateStr, it.id, i)) +
-                '" data-field="kg" data-delta="' +
-                stepKg +
-                '">＋</button></div>';
-              html +=
-                '<div class="field-row"><label>回数</label>' +
-                '<button type="button" class="step" data-draft="' +
-                esc(draftKey(dateStr, it.id, i)) +
-                '" data-field="reps" data-delta="-1">−</button>' +
-                '<input type="number" inputmode="numeric" data-draft="' +
-                esc(draftKey(dateStr, it.id, i)) +
-                '" data-field="reps" value="' +
-                (dr.reps == null ? "" : dr.reps) +
-                '">' +
-                '<button type="button" class="step" data and-draft="' +
-                esc(draftKey(dateStr, it.id, i)) +
-                '" data-field="reps" data-delta="1">＋</button></div>';
-              /* fix typo data and-draft -> data-draft - I'll fix below */
-              html +=
-                '<div class="rir-row"><span class="lbl">あと何回できたか</span>';
-              [0, 1, 2, 3].forEach(function (n) {
-                html +=
-                  '<button type="button" class="rir' +
-                  (dr.rir === n ? " on" : "") +
-                  '" data-draft="' +
-                  esc(draftKey(dateStr, it.id, i)) +
-                  '" data-rir="' +
-                  n +
-                  '">' +
-                  n +
-                  "</button>";
-              });
-              html += "</div>";
-              html +=
-                '<button type="button" class="primary" data-complete="' +
-                esc(dateStr) +
-                "|" +
-                esc(it.id) +
-                "|" +
-                i +
-                '">完了</button>';
+                '<button type="button" class="setchk" disabled aria-pressed="false">' +
+                (fi + 1) +
+                "</button>";
             }
             html += "</div></div>";
+          } else {
+            for (var i = 0; i < it.sets; i++) {
+              var doneSet = saved[i];
+              if (target.kg == null && i > 0 && saved[i - 1] && saved[i - 1].kg != null) {
+                var pk = draftKey(dateStr, it.id, i - 1);
+                if (!state.draft[pk]) {
+                  state.draft[pk] = { kg: saved[i - 1].kg, reps: saved[i - 1].reps, rir: null };
+                } else if (state.draft[pk].kg == null) {
+                  state.draft[pk].kg = saved[i - 1].kg;
+                }
+              }
+              var dr = ensureDraft(dateStr, it.id, i, target);
+              html += '<div class="set-panel"><div class="set-head">セット ' + (i + 1) + "</div>";
+              if (doneSet) {
+                html +=
+                  '<div class="exrow"><div class="sets"><button type="button" class="setchk on" disabled aria-pressed="true">' +
+                  (i + 1) +
+                  "</button></div>" +
+                  '<div class="exmeta" style="margin:0">記録済: ' +
+                  doneSet.kg +
+                  "kg × " +
+                  doneSet.reps +
+                  (doneSet.rir != null ? "（あと" + doneSet.rir + "回）" : "") +
+                  "</div></div>";
+              } else {
+                var step = stepFor(it.id);
+                var stepKg = step.type === "fixed" ? step.kg : 1;
+                var dk = draftKey(dateStr, it.id, i);
+                html +=
+                  '<div class="field-row"><label>重さ</label>' +
+                  '<button type="button" class="step" data-draft="' +
+                  esc(dk) +
+                  '" data-field="kg" data-delta="-' +
+                  stepKg +
+                  '">−</button>' +
+                  '<input type="number" inputmode="decimal" data-draft="' +
+                  esc(dk) +
+                  '" data-field="kg" value="' +
+                  (dr.kg == null ? "" : dr.kg) +
+                  '" placeholder="kg">' +
+                  '<button type="button" class="step" data-draft="' +
+                  esc(dk) +
+                  '" data-field="kg" data-delta="' +
+                  stepKg +
+                  '">＋</button></div>';
+                html +=
+                  '<div class="field-row"><label>回数</label>' +
+                  '<button type="button" class="step" data-draft="' +
+                  esc(dk) +
+                  '" data-field="reps" data-delta="-1">−</button>' +
+                  '<input type="number" inputmode="numeric" data-draft="' +
+                  esc(dk) +
+                  '" data-field="reps" value="' +
+                  (dr.reps == null ? "" : dr.reps) +
+                  '">' +
+                  '<button type="button" class="step" data-draft="' +
+                  esc(dk) +
+                  '" data-field="reps" data-delta="1">＋</button></div>';
+                html += '<div class="rir-row"><span class="lbl">あと何回できたか</span>';
+                [0, 1, 2, 3].forEach(function (n) {
+                  html +=
+                    '<button type="button" class="rir' +
+                    (dr.rir === n ? " on" : "") +
+                    '" data-draft="' +
+                    esc(dk) +
+                    '" data-rir="' +
+                    n +
+                    '">' +
+                    n +
+                    "</button>";
+                });
+                html += "</div>";
+                html +=
+                  '<button type="button" class="primary" data-complete="' +
+                  esc(dateStr) +
+                  "|" +
+                  esc(it.id) +
+                  "|" +
+                  i +
+                  '">完了</button>';
+              }
+              html += "</div>";
+            }
           }
         }
         html += "</div>";
       });
     }
+    html += "</section>";
 
-    /* meal */
+    /* meal — meal plan layout */
     var meal = mealState(dateStr);
     var nut = dayNutrition(meal.rice);
-    html += "<h2>食事</h2>";
+    html += '<section class="day-meal">';
+    html += "<h2>1日の合計</h2>";
     html +=
-      '<div class="totals"><div class="stat"><span class="v">' +
-      nut.p +
-      '</span><span class="l">タンパク質 g</span></div><div class="stat"><span class="v">' +
-      nut.kcal +
-      '</span><span class="l">kcal</span></div></div>';
+      '<div class="totals">' +
+      '<div class="stat"><span class="stat-value num">' +
+      fmt1(nut.p) +
+      '</span><span class="stat-unit">g</span><span class="stat-label">タンパク質</span></div>' +
+      '<div class="stat"><span class="stat-value num">' +
+      fmt0(nut.kcal) +
+      '</span><span class="stat-unit">kcal</span><span class="stat-label">エネルギー</span></div>' +
+      '<div class="stat"><span class="stat-value num">' +
+      fmt1(nut.f) +
+      '</span><span class="stat-unit">g</span><span class="stat-label">脂質</span></div>' +
+      '<div class="stat"><span class="stat-value num">' +
+      fmt1(nut.c) +
+      '</span><span class="stat-unit">g</span><span class="stat-label">炭水化物</span></div>' +
+      "</div>";
+    html += "<h2>ご飯のダイヤル</h2>";
+    html += '<p style="margin:0 0 4px;font-size:0.92rem;">1日のご飯の杯数</p>';
     html +=
-      '<div class="card"><div>ご飯の杯数</div><div class="dial">' +
+      '<div class="dial">' +
       '<button type="button" class="step" data-rice="' +
       esc(dateStr) +
-      '" data-delta="-0.5">−</button>' +
-      '<div class="val">' +
-      meal.rice +
-      '</div><button type="button" class="step" data-rice="' +
+      '" data-delta="-0.5" aria-label="減らす">−</button>' +
+      '<div><span class="dial-value num">' +
+      fmtCups(meal.rice) +
+      '</span><span class="dial-unit">杯</span></div>' +
+      '<button type="button" class="step" data-rice="' +
       esc(dateStr) +
-      '" data-delta="0.5">＋</button></div>' +
-      '<p class="note">配分 朝' +
-      nut.split.breakfast +
-      "／昼" +
-      nut.split.lunch +
-      "／晩" +
-      nut.split.dinner +
-      "</p></div>";
+      '" data-delta="0.5" aria-label="増やす">+</button></div>';
+    html +=
+      '<p class="rice-split">配分: 朝 ' +
+      fmtCups(nut.split.breakfast) +
+      "杯 / 昼 " +
+      fmtCups(nut.split.lunch) +
+      "杯 / 晩 " +
+      fmtCups(nut.split.dinner) +
+      "杯（1杯=150g）</p>";
+    html += "<h2>時間割</h2><ol class=\"timeline\">";
     MEAL_SLOTS.forEach(function (slot) {
+      var items = mealItemsFor(slot.id, nut.split);
+      var sub = zeroNut();
+      items.forEach(function (item) {
+        if (item.nut) sub = addNut(sub, item.nut);
+      });
+      html += '<li class="slot" data-slot="' + slot.id + '">';
       html +=
-        '<label class="meal-item card"><input type="checkbox" data-meal-check="' +
+        '<div class="slot-time">' +
+        slot.timeHtml +
+        '<span class="blurb">' +
+        esc(slot.blurb) +
+        "</span></div>";
+      html += '<div class="slot-dot"><span></span></div><div class="slot-body">';
+      html +=
+        '<div class="slot-head"><span class="slot-title">' +
+        esc(slot.title) +
+        '</span><span class="slot-subtotal num">小計 ' +
+        fmt1(sub.p) +
+        "g / " +
+        fmt0(sub.kcal) +
+        "kcal</span></div>";
+      html += '<ul class="foods">';
+      items.forEach(function (item) {
+        html += '<li class="food">';
+        if (item.img) {
+          html +=
+            '<img src="' +
+            esc(item.img) +
+            '" alt="' +
+            esc(item.name) +
+            '" width="72" height="72">';
+        }
+        html += '<div class="food-meta"><div class="food-name">' + esc(item.name) + "</div>";
+        html += '<div class="food-amt">' + esc(item.amount) + "</div>";
+        if (item.nut) {
+          html += '<div class="food-p num">タンパク質 ' + fmt1(item.nut.p) + "g</div>";
+        }
+        if (item.note) {
+          html += '<div class="food-note">' + esc(item.note) + "</div>";
+        }
+        html += "</div></li>";
+      });
+      html += "</ul>";
+      html +=
+        '<label class="done-label"><input type="checkbox" data-meal-check="' +
         esc(dateStr) +
         "|" +
         slot.id +
         '"' +
         (meal.checks[slot.id] ? " checked" : "") +
-        '><div class="meal-body"><div class="meal-title">' +
-        esc(slot.title) +
-        '</div><div class="meal-foods">' +
-        esc(mealFoodsText(slot.id, nut.split)) +
-        "</div></div></label>";
+        "> 食べた</label>";
+      html += "</div></li>";
     });
-    return html.replace('data and-draft=', 'data-draft=');
+    html += "</ol></section>";
+    return html;
   }
 
   function renderEx(exId) {
@@ -783,11 +1119,15 @@
       '<a class="back" href="javascript:history.back()">戻る</a><h1>' +
       esc(ex.name) +
       "</h1>";
-    html += '<div class="photo-box" id="photo-box">' + placeholderSvg(ex.part) + "</div>";
+    html += '<div class="photo-box" id="photo-box" data-ex-photo="' + esc(exId) + '">' + placeholderSvg(ex.part) + "</div>";
     html +=
       '<div class="photo-actions"><label class="primary" style="display:inline-flex;align-items:center;padding:10px 14px;border-radius:6px;background:var(--accent);color:#fff;">写真を撮る・選ぶ' +
       '<input class="hidden-file" type="file" accept="image/*" capture="environment" id="photo-input"></label>' +
       '<button type="button" id="photo-del">写真を削除</button></div>';
+    html +=
+      '<a class="exvid" href="https://www.youtube.com/results?search_query=' +
+      encodeURIComponent(ytQueryFor(exId)) +
+      '" target="_blank" rel="noopener">動画で見る</a>';
     html +=
       '<div class="form-block"><h3>構え方</h3><p>' +
       esc(ex.setup) +
@@ -1249,7 +1589,45 @@
       '<label class="primary" style="display:inline-flex;align-items:center;padding:10px 14px;background:var(--accent);color:#fff;border-radius:6px;">読み込み' +
       '<input class="hidden-file" type="file" accept="application/json,.json" id="bak-import"></label></div>' +
       '<p class="note">写真はバックアップに含まれません</p></div>';
+
+    html +=
+      '<div class="settings-block" id="photo-credits-block"><h2>写真の出典</h2>' +
+      '<p class="note">読み込み中</p></div>';
     return html;
+  }
+
+  function fillPhotoCredits() {
+    var box = document.getElementById("photo-credits-block");
+    if (!box) return;
+    loadPhotoCredits().then(function (c) {
+      var html = "<h2>写真の出典</h2><ul class=\"sources\">";
+      Object.keys(c.meal || {}).forEach(function (k) {
+        var m = c.meal[k];
+        html += "<li>" + creditLine(m.file || k + ".jpg", m) + "</li>";
+      });
+      Object.keys(SESSION_PHOTO).forEach(function (exId) {
+        var sp = SESSION_PHOTO[exId];
+        var m = c.session[sp.creditKey];
+        if (!m) return;
+        html +=
+          "<li>" +
+          creditLine(sp.file.replace(/^img\/session\//, ""), m) +
+          "（" +
+          esc(exerciseName(exId)) +
+          "）</li>";
+      });
+      Object.keys(c.exercises || {}).forEach(function (exId) {
+        var m = c.exercises[exId];
+        html +=
+          "<li>" +
+          creditLine(m.file || exId + ".jpg", m) +
+          "（" +
+          esc(exerciseName(exId)) +
+          "）</li>";
+      });
+      html += "</ul>";
+      box.innerHTML = html;
+    });
   }
 
   function render() {
@@ -1260,16 +1638,23 @@
       root.innerHTML = renderCal();
     } else if (route.view === "day") {
       root.innerHTML = renderDay(route.date);
+      hydrateExPhotos(root);
     } else if (route.view === "ex") {
       var pack = renderEx(route.id);
       root.innerHTML = pack.html;
       getPhoto(pack.exId)
         .then(function (blob) {
-          if (!blob) return;
           var box = document.getElementById("photo-box");
           if (!box) return;
-          var url = URL.createObjectURL(blob);
-          box.innerHTML = '<img alt="" src="' + url + '">';
+          if (blob) {
+            var url = URL.createObjectURL(blob);
+            box.innerHTML = '<img alt="" src="' + url + '">';
+            return;
+          }
+          return resolveDefaultPhoto(pack.exId).then(function (def) {
+            if (!def) return;
+            box.innerHTML = '<img alt="" src="' + esc(def.src) + '">';
+          });
         })
         .catch(function () {});
       if (pack.all.length >= 2) {
@@ -1288,6 +1673,7 @@
       }
     } else if (route.view === "settings") {
       root.innerHTML = renderSettings();
+      fillPhotoCredits();
     }
   }
 

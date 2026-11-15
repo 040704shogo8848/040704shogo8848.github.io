@@ -278,6 +278,11 @@
     state.meals = lsGet("meals", {}) || {};
     state.customExercises = lsGet("customExercises", {}) || {};
     state.backupAt = lsGet("backupAt", null);
+    state.draft = lsGet("draft", {}) || {};
+  }
+  // unsaved set inputs survive reloads (until the set is marked done)
+  function saveDraft() {
+    lsSet("draft", state.draft);
   }
 
   function saveSettings() {
@@ -1966,6 +1971,7 @@
     state.logs[dateStr][exId] = existing;
     saveLogs();
     delete state.draft[k];
+    saveDraft();
     render();
   }
 
@@ -2039,6 +2045,7 @@
       if (field === "reps") cur = Math.max(0, Math.round(cur));
       if (field === "kg") cur = Math.round(cur * 100) / 100;
       state.draft[key][field] = cur;
+      saveDraft();
       render();
       return;
     }
@@ -2047,6 +2054,7 @@
       var rir = Number(t.getAttribute("data-rir"));
       if (!state.draft[dk]) state.draft[dk] = { kg: null, reps: null, rir: null };
       state.draft[dk].rir = state.draft[dk].rir === rir ? null : rir;
+      saveDraft();
       render();
       return;
     }
@@ -2189,6 +2197,7 @@
       if (!state.draft[key]) state.draft[key] = { kg: null, reps: null, rir: null };
       var val = t.value === "" ? null : Number(t.value);
       state.draft[key][field] = val;
+      saveDraft();
       return;
     }
     if (t.getAttribute("data-sched") != null) {

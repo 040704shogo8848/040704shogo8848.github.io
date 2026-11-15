@@ -80,6 +80,8 @@
     machine_shoulder_press: "machine shoulder press",
     rear_delt_fly: "rear delt fly machine",
     preacher_curl: "preacher curl",
+    cable_curl: "cable bicep curl",
+    cable_pushdown: "cable tricep pushdown",
   };
   var photoCreditsCache = null;
   var DEFAULT_DB_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
@@ -229,7 +231,9 @@
 
   function kindFor(dateStr) {
     var days = state.planDays || {};
-    if (days[dateStr] && KIND_KEYS.indexOf(days[dateStr]) >= 0) return days[dateStr];
+    var d = days[dateStr];
+    var k = d && typeof d === "object" ? d.kind : d;
+    if (k && KIND_KEYS.indexOf(k) >= 0) return k;
     return state.settings.schedule[String(dow(dateStr))] || "rest";
   }
 
@@ -276,6 +280,15 @@
         baseSets: it.sets,
       };
     });
+    // extra exercises for this date only (data/plan.json: {"kind":"lower","add":[{id,sets,repMin,repMax}]})
+    var plan = (state.planDays || {})[dateStr];
+    if (plan && typeof plan === "object" && Array.isArray(plan.add)) {
+      plan.add.forEach(function (it) {
+        if (!exerciseOf(it.id)) return;
+        var sets = recovery.deload ? Progress.halfSets(it.sets) : it.sets;
+        items.push({ id: it.id, sets: sets, repMin: it.repMin, repMax: it.repMax, baseSets: it.sets });
+      });
+    }
     return { kind: kind, items: items, deload: recovery.deload, recovery: recovery };
   }
 

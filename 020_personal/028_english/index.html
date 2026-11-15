@@ -425,6 +425,359 @@ const KEY = 'gci-en-v1';
 const out = document.getElementById('out');
 const state = JSON.parse(localStorage.getItem(KEY) || '{}');
 let total = 0;
+var _ttsUtt = null, _ttsText = null, _ttsBtn = null, _ttsTimer = 0, _ttsVoice = null;
+var KOKORO_KEY = 'kokoro:am_michael';
+var _kokoroMod = null, _kokoroCtrl = null, _kokoroLoad = null, _kokoroFailed = false;
+var _ttsEngine = 'speech', _ttsStatus = 'idle';
+var _ttsModuleUrl = (function () {
+  try {
+    return new URL('../../_gloss/tts/tts.js?v=20261114d', window.location.href).href;
+  } catch (e) {
+    return '../../_gloss/tts/tts.js?v=20261114d';
+  }
+})();
+
+  // tts-rank:start
+  var TTS_BLACKLIST = {
+    albert: 1, 'bad news': 1, bahh: 1, bells: 1, boing: 1, bubbles: 1, cellos: 1, wobble: 1,
+    'good news': 1, jester: 1, organ: 1, superstar: 1, trinoids: 1, whisper: 1, zarvox: 1,
+    grandma: 1, grandpa: 1, junior: 1, ralph: 1, fred: 1, kathy: 1, rocko: 1, eddy: 1, flo: 1,
+    sandy: 1, shelley: 1, reed: 1
+  };
+  var TTS_PREF = [
+    'Andrew', 'Christopher', 'Guy', 'Davis', 'Brian', 'Eric', 'Roger', 'Steffan', 'Ryan', 'Thomas',
+    'Evan', 'Nathan', 'Tom', 'Aaron', 'Alex', 'Daniel', 'Oliver', 'Arthur', 'Lee',
+    'Google UK English Male',
+    'Rishi', 'Aman', 'Gordon'
+  ];
+  function ttsBaseName(name) {
+    return String(name || '').replace(/\s*\([^)]*\)\s*$/, '').trim();
+  }
+  function ttsBlacklisted(name) {
+    return !!TTS_BLACKLIST[ttsBaseName(name).toLowerCase()];
+  }
+  function ttsQuality(name) {
+    var n = String(name || '').toLowerCase();
+    if (n.indexOf('premium') !== -1) return 4;
+    if (n.indexOf('enhanced') !== -1) return 3;
+    if (n.indexOf('natural') !== -1 || n.indexOf('online') !== -1 || n.indexOf('neural') !== -1) return 2;
+    return 1;
+  }
+  function ttsPrefIndex(name) {
+    var n = String(name || '');
+    for (var i = 0; i < TTS_PREF.length; i++) {
+      if (n.indexOf(TTS_PREF[i]) !== -1) return i;
+    }
+    return 1000;
+  }
+  function ttsLangKey(lang) {
+    return String(lang || '').toLowerCase().replace(/_/g, '-');
+  }
+  function ttsRankVoices(voices) {
+    var out = [];
+    for (var i = 0; i < voices.length; i++) {
+      var v = voices[i];
+      var lang = ttsLangKey(v.lang);
+      if (lang.indexOf('en') !== 0) continue;
+      if (ttsBlacklisted(v.name)) continue;
+      out.push(v);
+    }
+    out.sort(function (a, b) {
+      var pa = ttsPrefIndex(a.name), pb = ttsPrefIndex(b.name);
+      if (pa !== pb) return pa - pb;
+      var qa = ttsQuality(a.name), qb = ttsQuality(b.name);
+      if (qa !== qb) return qb - qa;
+      var la = ttsLangKey(a.lang), lb = ttsLangKey(b.lang);
+      var ta = (la.indexOf('en-us') === 0 || la.indexOf('en-gb') === 0) ? 0 : 1;
+      var tb = (lb.indexOf('en-us') === 0 || lb.indexOf('en-gb') === 0) ? 0 : 1;
+      if (ta !== tb) return ta - tb;
+      return String(a.name).localeCompare(String(b.name));
+    });
+    return out;
+  }
+  function ttsPickFrom(voices) {
+    var ranked = ttsRankVoices(voices);
+    var saved = null;
+    try { saved = localStorage.getItem('gl.voice'); } catch (e) {}
+    if (saved) {
+      for (var i = 0; i < ranked.length; i++) {
+        if (ranked[i].name === saved) return ranked[i];
+      }
+    }
+    return ranked.length ? ranked[0] : null;
+  }
+  // tts-rank:end
+
+function ttsIsMobileOS() {
+  var ua = navigator.userAgent || '';
+  if (/iPhone|iPad|iPod|Android/i.test(ua)) return true;
+  if (navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1) return true;
+  return false;
+}
+function ttsHasWebGPU() { return !!(navigator.gpu); }
+function ttsPreferKokoro() { return ttsHasWebGPU() && !ttsIsMobileOS(); }
+function ttsIsKokoroKey(v) {
+  return v === KOKORO_KEY || v === 'kokoro' || (typeof v === 'string' && v.indexOf('kokoro:') === 0);
+}
+function ttsGetSavedVoice() {
+  try { return localStorage.getItem('gl.voice'); } catch (e) { return null; }
+}
+function ttsGetSavedRate() {
+  var raw = null;
+  try { raw = localStorage.getItem('gl.rate'); } catch (e) {}
+  if (raw == null) {
+    var el = document.getElementById('rate');
+    if (el) raw = el.value;
+  }
+  var n = raw != null ? parseFloat(raw) : 1.0;
+  return Number.isFinite(n) ? n : 1.0;
+}
+function ttsWantsKokoro() {
+  if (_kokoroFailed) return false;
+  var saved = ttsGetSavedVoice();
+  if (saved != null && saved !== '') return ttsIsKokoroKey(saved);
+  return ttsPreferKokoro();
+}
+function ttsKokoroSlow() { return !ttsHasWebGPU() || ttsIsMobileOS(); }
+
+function ttsLoadKokoro() {
+  if (_kokoroCtrl) return Promise.resolve(_kokoroCtrl);
+  if (_kokoroLoad) return _kokoroLoad;
+  _kokoroLoad = import(_ttsModuleUrl).then(function (mod) {
+    _kokoroMod = mod;
+    _kokoroCtrl = mod.createController({
+      onProgress: function (p) {
+        if (_ttsStatus !== 'loading' || !_ttsBtn) return;
+        var pct = typeof p.percent === 'number' ? Math.round(p.percent) : null;
+        if (pct != null) {
+          _ttsBtn.textContent = '音声モデルを読み込み中 ' + pct + '%';
+          _ttsBtn.title = _ttsBtn.textContent;
+        }
+      },
+      onState: function (st) {
+        if (!st || !st.status) return;
+        _ttsStatus = st.status;
+        if (!_ttsBtn) return;
+        if (st.status === 'loading') {
+          var pct = st.progress != null ? Math.round(st.progress) : 0;
+          _ttsBtn.textContent = '音声モデルを読み込み中 ' + pct + '%';
+          _ttsBtn.title = _ttsBtn.textContent;
+        } else if (st.status === 'speaking') {
+          _ttsBtn.textContent = '停止';
+          _ttsBtn.title = '停止';
+        }
+      }
+    });
+    return _kokoroCtrl;
+  }).catch(function (err) {
+    _kokoroLoad = null;
+    throw err;
+  });
+  return _kokoroLoad;
+}
+
+function ttsRefreshVoice() {
+  if (typeof speechSynthesis === 'undefined') { _ttsVoice = null; return null; }
+  _ttsVoice = ttsPickFrom(speechSynthesis.getVoices() || []);
+  return _ttsVoice;
+}
+
+function ttsChunkText(text) {
+  if (!text || text.length <= 200) return [text];
+  var chunks = [], buf = text;
+  while (buf.length > 200) {
+    var cut = -1, i;
+    for (i = Math.min(buf.length - 1, 240); i >= 80; i--) {
+      var ch = buf.charAt(i);
+      if (ch === '.' || ch === '!' || ch === '?' || ch === ';') { cut = i + 1; break; }
+    }
+    if (cut < 0) {
+      for (i = Math.min(buf.length - 1, 240); i >= 80; i--) {
+        if (buf.charAt(i) === ',') { cut = i + 1; break; }
+      }
+    }
+    if (cut < 0) cut = 200;
+    chunks.push(buf.slice(0, cut).replace(/\s+$/, ''));
+    buf = buf.slice(cut).replace(/^\s+/, '');
+  }
+  if (buf) chunks.push(buf);
+  return chunks;
+}
+
+function ttsStopAll() {
+  clearTimeout(_ttsTimer);
+  if (typeof speechSynthesis !== 'undefined') {
+    try { speechSynthesis.cancel(); } catch (e) {}
+  }
+  if (_kokoroCtrl) {
+    try { _kokoroCtrl.stop(); } catch (e) {}
+  }
+  _ttsUtt = null;
+  _ttsText = null;
+  _ttsStatus = 'idle';
+  if (_ttsBtn) {
+    _ttsBtn.textContent = '\u25B6';
+    _ttsBtn.title = '再生';
+    _ttsBtn = null;
+  }
+}
+
+function ttsSaySpeech(text, btn) {
+  if (typeof speechSynthesis === 'undefined') return;
+  clearTimeout(_ttsTimer);
+  var start = function () {
+    if (speechSynthesis.paused) {
+      try { speechSynthesis.resume(); } catch (e) {}
+    }
+    var voice = ttsRefreshVoice();
+    var chunks = ttsChunkText(text);
+    var idx = 0;
+    var rate = ttsGetSavedRate();
+    _ttsText = text;
+    _ttsBtn = btn;
+    _ttsEngine = 'speech';
+    _ttsStatus = 'speaking';
+    btn.textContent = '停止';
+    btn.title = '停止';
+    function done() {
+      _ttsText = null;
+      _ttsUtt = null;
+      _ttsStatus = 'idle';
+      if (_ttsBtn) { _ttsBtn.textContent = '\u25B6'; _ttsBtn.title = '再生'; }
+      _ttsBtn = null;
+    }
+    function next() {
+      if (idx >= chunks.length) { done(); return; }
+      var u = new SpeechSynthesisUtterance(chunks[idx++]);
+      if (voice) { u.voice = voice; u.lang = voice.lang; }
+      else { u.lang = 'en-US'; }
+      u.rate = rate;
+      u.pitch = 0.85;
+      u.onend = next;
+      u.onerror = function () { done(); };
+      _ttsUtt = u;
+      speechSynthesis.speak(u);
+    }
+    next();
+  };
+  if (speechSynthesis.speaking || speechSynthesis.pending) {
+    speechSynthesis.cancel();
+    _ttsTimer = setTimeout(start, 50);
+  } else {
+    start();
+  }
+}
+
+function ttsWarmIfCached() {
+  if (!ttsWantsKokoro() || _kokoroFailed) return;
+  ttsLoadKokoro().then(function (ctrl) {
+    return ctrl.warmIfCached(ttsKokoroSlow());
+  }).catch(function () {});
+}
+
+function ttsSayKokoro(text, btn) {
+  _ttsText = text;
+  _ttsBtn = btn;
+  _ttsEngine = 'kokoro';
+  _ttsStatus = 'loading';
+  btn.textContent = '音声モデルを読み込み中 0%';
+  btn.title = btn.textContent;
+  var rate = ttsGetSavedRate();
+  return ttsLoadKokoro().then(function (ctrl) {
+    return ctrl.speak(text, {
+      voice: 'am_michael',
+      speed: rate,
+      forceWasm: ttsKokoroSlow()
+    });
+  }).then(function () {
+    if (_ttsText === text) {
+      _ttsText = null;
+      _ttsStatus = 'idle';
+      if (_ttsBtn) { _ttsBtn.textContent = '\u25B6'; _ttsBtn.title = '再生'; }
+      _ttsBtn = null;
+    }
+  }).catch(function (err) {
+    _kokoroFailed = true;
+    if (_kokoroCtrl) {
+      try { _kokoroCtrl.markFailed(err); } catch (e) {}
+    }
+    ttsSaySpeech(text, btn);
+  });
+}
+
+window.GlossTTS = {
+  engine: function () {
+    if (_ttsStatus === 'speaking' || _ttsStatus === 'loading') return _ttsEngine;
+    return ttsWantsKokoro() ? 'kokoro' : 'speech';
+  },
+  voices: function () {
+    return ttsRankVoices((typeof speechSynthesis !== 'undefined' && speechSynthesis.getVoices()) || []);
+  },
+  pick: function () {
+    if (ttsWantsKokoro()) return { name: KOKORO_KEY, lang: 'en-US' };
+    return ttsRefreshVoice();
+  },
+  speak: function (text) {
+    if (text == null || text === '') return;
+    ttsStopAll();
+    var btn = _ttsBtn || document.querySelector('.say');
+    if (!btn) btn = { textContent: '', title: '' };
+    if (ttsWantsKokoro()) ttsSayKokoro(text, btn);
+    else ttsSaySpeech(text, btn);
+  },
+  stop: function () { ttsStopAll(); },
+  state: function () {
+    var st = {
+      status: _ttsStatus,
+      engine: window.GlossTTS.engine(),
+      failedSession: _kokoroFailed,
+      progress: null,
+      lastDuration: 0
+    };
+    if (_kokoroCtrl) {
+      var ks = _kokoroCtrl.state();
+      st.progress = ks.progress;
+      st.lastDuration = ks.lastDuration;
+      st.device = ks.device;
+      st.dtype = ks.dtype;
+      st.loaded = ks.loaded;
+      st.cacheSize = ks.cacheSize;
+      st.chunkLog = ks.chunkLog;
+      if (ks.status === 'speaking' || ks.status === 'loading') st.status = ks.status;
+    }
+    return st;
+  },
+  dumpWav: function () { return _kokoroCtrl ? _kokoroCtrl.dumpLastWav() : null; },
+  generatePhonemes: function (phonemes) {
+    return ttsLoadKokoro().then(function (ctrl) {
+      return ctrl.generatePhonemes(phonemes, { forceWasm: ttsKokoroSlow() });
+    });
+  },
+  _loadModule: ttsLoadKokoro
+};
+
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.addEventListener('voiceschanged', function () { ttsRefreshVoice(); });
+  ttsRefreshVoice();
+}
+// Default voice preference for desktop WebGPU when unset.
+// If the model is already cached, warm the worker on page view (no download).
+(function () {
+  var saved = ttsGetSavedVoice();
+  if ((saved == null || saved === '') && ttsPreferKokoro()) {
+    try { localStorage.setItem('gl.voice', KOKORO_KEY); } catch (e) {}
+  }
+  ttsWarmIfCached();
+  var rateEl = document.getElementById('rate');
+  if (rateEl) {
+    var gr = null;
+    try { gr = localStorage.getItem('gl.rate'); } catch (e) {}
+    if (gr != null && Number.isFinite(parseFloat(gr))) rateEl.value = String(parseFloat(gr));
+    rateEl.addEventListener('change', function () {
+      try { localStorage.setItem('gl.rate', rateEl.value); } catch (e) {}
+    });
+  }
+})();
 
 DATA.forEach(function(sec, si){
   const box = document.createElement('section');
@@ -482,17 +835,20 @@ DATA.forEach(function(sec, si){
     box.appendChild(row);
 
     const text = it.en.join(' ');
-    function speak(){
+    function speak(ev){
       try {
-        speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = 'en-US';
-        u.rate = parseFloat(document.getElementById('rate').value);
-        const v = speechSynthesis.getVoices().filter(function(x){ return /en[-_]US/i.test(x.lang); });
-        if (v.length) u.voice = v[0];
-        speechSynthesis.speak(u);
+        var btn = say;
+        var active = _ttsText === text && (_ttsStatus === 'speaking' || _ttsStatus === 'loading' ||
+          (typeof speechSynthesis !== 'undefined' && (speechSynthesis.speaking || speechSynthesis.pending)));
+        if (active) {
+          ttsStopAll();
+          return;
+        }
+        ttsStopAll();
+        if (ttsWantsKokoro()) ttsSayKokoro(text, btn);
+        else ttsSaySpeech(text, btn);
       } catch (e) {}
-    }
+    };
     en.addEventListener('click', speak);
     say.addEventListener('click', speak);
 
@@ -564,7 +920,7 @@ document.getElementById('b-reset').addEventListener('click', function(){
   meter(); filter();
 });
 
-if (typeof speechSynthesis !== 'undefined') speechSynthesis.getVoices();
+if (typeof speechSynthesis !== 'undefined') { speechSynthesis.getVoices(); ttsRefreshVoice(); }
 meter();
 </script>
 </body>

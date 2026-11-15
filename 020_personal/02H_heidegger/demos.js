@@ -24,7 +24,7 @@ function initPlan(){
   const g=$("#planGrid");
   PLAN.forEach((x,i)=>{
     const b=document.createElement("button");b.className="plan-cell "+(x.pub?"pub":"unpub");b.style.cursor="pointer";b.style.textAlign="left";
-    b.innerHTML=`<span class="mono">${x.p}</span>${x.t}`;
+    b.innerHTML=`<span class="mono">${x.p}</span><br>${x.t}`;
     b.addEventListener("click",()=>{$("#planOut").innerHTML=`<b>${x.p}「${x.t}」</b> ／ <span class="mono">${x.s}</span><br>${x.d}`;$$(".plan-cell",g).forEach(c=>c.style.outline="");b.style.outline="2px solid var(--fut)"});
     g.appendChild(b);
   });

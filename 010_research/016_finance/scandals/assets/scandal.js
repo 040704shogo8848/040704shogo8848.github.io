@@ -27,8 +27,17 @@
     fraud: "#8B1E1E",
     money: "#1E3A5F",
     stock: "#2E6B4F",
-    info: "#6A6A6A"
+    info: "#6A6A6A",
+    control: "#5A4A8A",
+    loss: "#8A5A2A",
+    underworld: "#3A3A3A",
+    asset: "#2E6B4F",
+    authority: "#5A4A8A",
+    pressure: "#8B1E1E",
+    cost: "#8A5A2A"
   };
+
+  var FLOW_LABELS = { money: "資金", fraud: "不正な取引", stock: "株式", info: "情報", control: "指示・支配", loss: "損失", underworld: "闇の資金", asset: "資産", authority: "当局の措置", pressure: "圧力", cost: "費用" };
 
   function escapeHtml(s) {
     return String(s)
@@ -620,7 +629,7 @@
   }
 
   /* —— Scheme chart —— */
-  function initSchemeChartLegacy() {
+  /* legacy scheme renderer (removed)
     var data = parseJson("scheme-data");
     var host = document.querySelector(".scheme-chart");
     if (!data || !host || !data.nodes) return;
@@ -928,6 +937,47 @@
     }
     (data.notes || []).forEach(function (note) { var p = document.createElement("p"); p.className = "sc-svg-note"; p.textContent = note; host.appendChild(p); });
   }
+
+  */
+
+  function schemeTextWidth(text) { return String(text || "").split("").reduce(function (s, c) { return s + (/[ -~]/.test(c) ? 7 : 12); }, 0); }
+  function schemeWrap(text, width) { var out = [], line = ""; String(text || "").split("").forEach(function (c) { if (line && schemeTextWidth(line + c) > width) { out.push(line); line = ""; } line += c; }); if (line || !out.length) out.push(line); return out; }
+  function schemeResolve(data) {
+    var nodes = (data.nodes || []).map(function (n) { return Object.assign({}, n); }), ids = {}, labels = {};
+    nodes.forEach(function (n) { ids[String(n.id)] = n; labels[String(n.label)] = n; });
+    (data.flows || []).forEach(function (f) { ["from", "to"].forEach(function (side) { var key = String(f[side] == null ? "" : f[side]), n = ids[key] || labels[key]; if (!n) { n = { id: "implicit-" + side + "-" + key, label: key, sub: "", kind: "company", col: 999999, row: nodes.length }; nodes.push(n); ids[n.id] = n; labels[key] = n; } f[side + "Node"] = n; }); });
+    return nodes;
+  }
+  function schemeLayout(data, displayWidth) {
+    var nodes = schemeResolve(data), flows = data.flows || [], narrow = displayWidth < 720 || (displayWidth - 40) / Math.max(1, nodes.length) < 92;
+    nodes.sort(function (a, b) { return (Number(a.col) || 0) - (Number(b.col) || 0) || (Number(a.row) || 0) - (Number(b.row) || 0); });
+    var laneW = Math.max(118, (displayWidth - 60) / Math.max(1, nodes.length)), maxHeader = 52;
+    nodes.forEach(function (n) { n._labelLines = schemeWrap(n.label || "", Math.max(90, laneW - 20)); n._subLines = n.sub ? schemeWrap(n.sub, Math.max(90, laneW - 20)) : []; n._headerH = Math.max(52, 20 + n._labelLines.length * 15 + (n._subLines.length ? n._subLines.length * 13 + 4 : 0)); maxHeader = Math.max(maxHeader, n._headerH); });
+    var rows = [], y = maxHeader + 28; flows.forEach(function (f) { var distance = Math.abs(nodes.indexOf(f.fromNode) - nodes.indexOf(f.toNode)) * laneW, lines = schemeWrap(f.label || "", f.fromNode === f.toNode ? 170 : Math.max(distance - 8, 150)), h = Math.max(50, 16 + lines.length * 13 + (f.when ? 20 : 8)); rows.push({ y: y, h: h, lines: lines }); y += h; });
+    var width = Math.max(displayWidth - 4, 40 + nodes.length * laneW + 16), pos = {}; nodes.forEach(function (n, i) { pos[n.id] = { x: 40 + i * laneW + laneW / 2, n: n }; });
+    return { nodes: nodes, flows: flows, narrow: narrow, laneW: laneW, headerH: maxHeader, rows: rows, width: width, height: y + 34, pos: pos };
+  }
+  function schemeLegend(data) { var seen = {}, result = []; (data.flows || []).forEach(function (f) { var k = FLOW_KIND[f.kind] ? f.kind : "money"; if (!seen[k]) { seen[k] = true; result.push(k); } }); return result; }
+  function addSchemeLegend(host, data) { var el = document.createElement("div"); el.className = "scheme-legend"; schemeLegend(data).forEach(function (k) { var s = document.createElement("span"); s.innerHTML = '<i style="border-top-color:' + FLOW_KIND[k] + '"></i>' + escapeHtml(FLOW_LABELS[k]); el.appendChild(s); }); host.appendChild(el); }
+
+  function initSchemeChart() {
+    var data = parseJson("scheme-data"), host = document.querySelector(".scheme-chart"); if (!data || !host || !Array.isArray(data.nodes)) return; data = JSON.parse(JSON.stringify(data).replace(/<span><\/span>/g, ""));
+    var layout = schemeLayout(data, host.clientWidth || 720); host.innerHTML = "";
+    if (layout.narrow) {
+      var ol = document.createElement("ol"); ol.className = "scheme-steps";
+      layout.flows.forEach(function (f, i) { var kind = FLOW_KIND[f.kind] ? f.kind : "money", li = document.createElement("li"); li.style.setProperty("--flow-color", FLOW_KIND[kind]); li.innerHTML = '<span class="scheme-step-no">' + (i + 1) + '</span><div class="scheme-step-body"><div class="scheme-step-nodes"><span class="scheme-chip" data-kind="' + escapeHtml(f.fromNode.kind || "company") + '">' + escapeHtml(f.fromNode.label || "") + '</span><span class="scheme-step-arrow">→</span><span class="scheme-chip" data-kind="' + escapeHtml(f.toNode.kind || "company") + '">' + escapeHtml(f.toNode.label || "") + '</span></div><div class="scheme-step-label">' + escapeHtml(f.label || "") + '</div>' + (f.when ? '<div class="scheme-step-when">' + escapeHtml(f.when) + '</div>' : "") + '</div>'; ol.appendChild(li); }); host.appendChild(ol); addSchemeLegend(host, data);
+    } else renderSchemeSvg(host, data, layout);
+    (data.notes || []).forEach(function (note) { var p = document.createElement("p"); p.className = "sc-svg-note"; p.textContent = String(note).replace(/<span><\/span>/g, ""); host.appendChild(p); });
+  }
+  function renderSchemeSvg(host, data, layout) {
+    var ns = "http://www.w3.org/2000/svg", svg = document.createElementNS(ns, "svg"); svg.setAttribute("viewBox", "0 0 " + layout.width + " " + layout.height); svg.setAttribute("width", layout.width); svg.setAttribute("height", layout.height); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "スキーム図解"); svg.classList.add("scheme-svg");
+    var defs = document.createElementNS(ns, "defs"); Object.keys(FLOW_KIND).forEach(function (k) { var m = document.createElementNS(ns, "marker"), p = document.createElementNS(ns, "path"); m.id = "scheme-arr-" + k; m.setAttribute("markerWidth", "8"); m.setAttribute("markerHeight", "8"); m.setAttribute("refX", "6"); m.setAttribute("refY", "3"); m.setAttribute("orient", "auto"); p.setAttribute("d", "M0,0 L6,3 L0,6 Z"); p.setAttribute("fill", FLOW_KIND[k]); m.appendChild(p); defs.appendChild(m); }); svg.appendChild(defs);
+    var lanes = {}; layout.nodes.forEach(function (n) { var p = layout.pos[n.id], sk = n.kind === "fraud" ? SCHEME_KIND.fund : (SCHEME_KIND[n.kind] || SCHEME_KIND.company), g = document.createElementNS(ns, "g"), r = document.createElementNS(ns, "rect"); g.classList.add("scheme-lane"); g.dataset.nodeId = n.id; r.setAttribute("x", p.x - layout.laneW / 2 + 4); r.setAttribute("y", 16); r.setAttribute("width", layout.laneW - 8); r.setAttribute("height", layout.headerH); r.setAttribute("rx", n.kind === "person" ? "18" : "2"); r.setAttribute("fill", sk.fill); r.setAttribute("stroke", sk.stroke); r.setAttribute("stroke-width", "1.5"); g.appendChild(r); var all = n._labelLines.concat(n._subLines), start = 16 + layout.headerH / 2 - (all.length - 1) * 7; all.forEach(function (line, i) { var t = document.createElementNS(ns, "text"); t.setAttribute("x", p.x); t.setAttribute("y", start + i * 14); t.setAttribute("text-anchor", "middle"); t.setAttribute("class", i < n._labelLines.length ? "scheme-lab" : "scheme-lab-s"); t.textContent = line; g.appendChild(t); }); var l = document.createElementNS(ns, "line"); l.setAttribute("x1", p.x); l.setAttribute("x2", p.x); l.setAttribute("y1", layout.headerH + 16); l.setAttribute("y2", layout.height - 30); l.setAttribute("stroke", "#D8D4CC"); l.setAttribute("stroke-dasharray", "3 4"); g.appendChild(l); svg.appendChild(g); lanes[n.id] = g; });
+    layout.flows.forEach(function (f, i) { var a = layout.pos[f.fromNode.id], b = layout.pos[f.toNode.id], row = layout.rows[i], kind = FLOW_KIND[f.kind] ? f.kind : "money", color = FLOW_KIND[kind], y = row.y + 20, g = document.createElementNS(ns, "g"), path = document.createElementNS(ns, "path"); g.classList.add("scheme-flow"); g.dataset.from = f.fromNode.id; g.dataset.to = f.toNode.id; var c = document.createElementNS(ns, "circle"), n = document.createElementNS(ns, "text"); c.setAttribute("cx", "20"); c.setAttribute("cy", y); c.setAttribute("r", "10"); c.setAttribute("fill", color); n.setAttribute("x", "20"); n.setAttribute("y", y + 4); n.setAttribute("text-anchor", "middle"); n.setAttribute("fill", "#fff"); n.setAttribute("font-size", "10"); n.textContent = i + 1; g.appendChild(c); g.appendChild(n); var same = a.x === b.x, x1 = Math.min(a.x, b.x), x2 = Math.max(a.x, b.x); path.setAttribute("fill", "none"); path.setAttribute("stroke", color); path.setAttribute("stroke-width", "1.8"); path.setAttribute("marker-end", "url(#scheme-arr-" + kind + ")"); path.setAttribute("d", same ? "M " + (a.x + 4) + " " + y + " H " + (a.x + 32) + " V " + (y + 18) + " H " + (a.x + 4) : "M " + a.x + " " + y + " H " + (b.x > a.x ? b.x - 2 : b.x + 2)); g.appendChild(path); if (!same) { var dot = document.createElementNS(ns, "circle"); dot.setAttribute("cx", a.x); dot.setAttribute("cy", y); dot.setAttribute("r", "3"); dot.setAttribute("fill", color); g.appendChild(dot); } var lines = schemeWrap(f.label || "", same ? 170 : Math.max(x2 - x1 - 8, 150)), lx = same ? a.x + 48 : Math.max(52, Math.min(layout.width - 52, (x1 + x2) / 2)), ly = same ? y + 14 : y - 7 - (lines.length - 1) * 6; lines.forEach(function (line, j) { var t = document.createElementNS(ns, "text"); t.setAttribute("x", lx); t.setAttribute("y", ly + j * 13); t.setAttribute("text-anchor", same ? "start" : "middle"); t.setAttribute("class", "scheme-flow-lab"); t.setAttribute("fill", color); t.setAttribute("paint-order", "stroke"); t.setAttribute("stroke", "#fff"); t.setAttribute("stroke-width", "4"); t.textContent = line; g.appendChild(t); }); if (f.when) { var wt = document.createElementNS(ns, "text"); wt.setAttribute("x", lx); wt.setAttribute("y", same ? ly + lines.length * 13 + 2 : y + 17); wt.setAttribute("text-anchor", same ? "start" : "middle"); wt.setAttribute("class", "scheme-flow-when"); wt.textContent = f.when; g.appendChild(wt); } svg.appendChild(g); });
+    var wrap = document.createElement("div"); wrap.className = "sc-chart-scroll scheme-scroll"; wrap.appendChild(svg); host.appendChild(wrap); addSchemeLegend(host, data);
+    layout.nodes.forEach(function (node) { var lane = lanes[node.id]; lane.style.cursor = "pointer"; function focus() { svg.querySelectorAll(".scheme-lane, .scheme-flow").forEach(function (el) { var active = el.classList.contains("scheme-flow") ? el.dataset.from === node.id || el.dataset.to === node.id : el.dataset.nodeId === node.id; el.style.opacity = active ? "1" : "0.15"; }); } function clear() { svg.querySelectorAll(".scheme-lane, .scheme-flow").forEach(function (el) { el.style.opacity = "1"; }); } lane.addEventListener("mouseenter", focus); lane.addEventListener("mouseleave", clear); lane.addEventListener("click", function (e) { e.stopPropagation(); focus(); }); }); svg.addEventListener("click", function () { svg.querySelectorAll(".scheme-lane, .scheme-flow").forEach(function (el) { el.style.opacity = "1"; }); });
+  }
+  var schemeResizeTimer; window.addEventListener("resize", function () { clearTimeout(schemeResizeTimer); schemeResizeTimer = setTimeout(initSchemeChart, 200); });
 
   /* —— Winners / losers chart —— */
   function initWlChart() {

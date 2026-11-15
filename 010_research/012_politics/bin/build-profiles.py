@@ -18,6 +18,8 @@ def main():
     profiles = load("data/pm_profiles.json")
     terms = load("data/pm_terms.json")
     credits = load("img/pm/_credits.json")
+    cost_data = load("data/pm_costs.json")
+    costs = cost_data["people"]
     names = [row["name"] for row in pm]
     problems = []
     for name in names:
@@ -25,6 +27,8 @@ def main():
             problems.append(f"profile missing: {name}")
         if name not in terms:
             problems.append(f"term missing: {name}")
+        if name not in costs:
+            problems.append(f"cost missing: {name}")
     for name in profiles:
         if name not in names:
             problems.append(f"profile name mismatch: {name}")
@@ -51,10 +55,12 @@ def main():
             "term": terms[name],
             "image": f"img/pm/pm{index:02d}.jpg",
             "credit": credits[f"pm{index:02d}.jpg"],
+            "cost": costs[name],
         }
     output = ROOT / "data/pm_profiles.js"
     payload = json.dumps(merged, ensure_ascii=False, indent=2)
-    output.write_text("// 自動生成。編集は pm_profiles.json\nwindow.PM_PROFILES = " + payload + ";\n", encoding="utf-8")
+    units = json.dumps(cost_data["units"], ensure_ascii=False, indent=2)
+    output.write_text("// 自動生成。編集は pm_profiles.json\nwindow.PM_PROFILES = " + payload + ";\nwindow.PM_COST_UNITS = " + units + ";\n", encoding="utf-8")
     print(f"wrote {output} ({len(merged)} profiles)")
     return 0
 

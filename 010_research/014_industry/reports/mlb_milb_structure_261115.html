@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MLB とマイナーリーグ</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+  :root{
+    --bg:#F7F7F5; --ink:#1a1a1a; --sub:#555; --muted:#8a8a8a; --accent:#0C2340;
+    --navy:#0C2340; --white:#FFFFFF; --gray:#C4CED3;
+    --line:#D8DEE2; --card:#fff; --chip:#E8EEF4; --grid:#E4E8EC;
+    --good:#15803d; --bad:#b91c1c; --warn:#b45309;
+    --s1:#2a78d6; --s1-light:#86b6ef; --s2:#eb6834; --s3:#1baf7a; --neg:#d03b3b;
+  }
+  *{box-sizing:border-box}
+  html{overflow-x:hidden}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    line-height:1.8;font-size:15px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:940px;margin:0 auto;padding:28px 28px 80px}
+
+  .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
+  .crumb a{color:var(--sub);text-decoration:none}
+  .crumb a:hover{color:var(--accent)}
+
+  /* —— Hero (Yankees home) —— */
+  .hero{width:100%;background:var(--navy);color:var(--white);margin:0;position:relative;overflow:hidden}
+  .hero-stripe{position:relative;
+    background-image:repeating-linear-gradient(90deg,
+      transparent 0,transparent 13px,
+      rgba(255,255,255,.10) 13px,rgba(255,255,255,.10) 14px)}
+  .hero-inner{max-width:940px;margin:0 auto;padding:36px 28px 18px;
+    display:flex;align-items:center;gap:36px;position:relative;z-index:1}
+  .hero-logo-wrap{flex:0 0 auto}
+  .hero-logo{display:block;width:min(160px,28vw);height:auto;
+    filter:brightness(0) invert(1)}
+  .hero-copy{flex:1;min-width:0}
+  .hero-badge{display:inline-block;border:1.5px solid #fff;color:#fff;
+    font-size:12px;font-weight:700;letter-spacing:.18em;padding:4px 12px;margin-bottom:14px;
+    text-transform:uppercase}
+  .hero-name-en{font-size:clamp(36px,7vw,64px);font-weight:800;letter-spacing:.18em;
+    line-height:1.05;margin:0 0 6px;font-family:-apple-system,"Hiragino Sans",sans-serif}
+  .hero-name-ja{font-size:clamp(22px,3.5vw,28px);font-weight:700;margin:0 0 10px;
+    letter-spacing:.06em;color:#fff}
+  .hero-path{margin:0 0 18px;font-size:13.5px;color:var(--gray);letter-spacing:.02em;line-height:1.5}
+  .hero-stats{display:flex;gap:22px;flex-wrap:wrap}
+  .hero-stat{display:flex;flex-direction:column;gap:2px;min-width:72px}
+  .hero-stat .hs-v{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1;letter-spacing:-.02em}
+  .hero-stat .hs-u{font-size:12px;font-weight:600;margin-left:2px}
+  .hero-stat .hs-l{font-size:11px;color:var(--gray);letter-spacing:.06em}
+  .hero-route{max-width:940px;margin:0 auto;padding:8px 28px 22px;position:relative;z-index:1}
+  .hero-route svg{display:block;width:100%;height:44px}
+  .hero-route-label{text-align:center;font-size:10px;letter-spacing:.28em;color:var(--gray);
+    margin-top:2px;font-weight:600}
+
+  header.top .en{font-size:13px;color:var(--sub);letter-spacing:.04em;margin-bottom:10px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{background:var(--chip);color:var(--navy);font-size:11.5px;padding:2px 9px;border-radius:11px;
+    border:1px solid var(--gray)}
+  .lead{color:var(--sub);font-size:14.5px;margin:0 0 6px}
+  .srcnote{color:var(--muted);font-size:12px;margin:0 0 26px}
+
+  h2{font-size:19px;margin:52px 0 6px;padding-top:16px;border-top:none;
+    border-bottom:2px solid var(--navy);padding-bottom:8px}
+  h2 .num{display:inline-flex;align-items:center;justify-content:center;
+    width:1.7em;height:1.7em;border-radius:50%;background:var(--navy);color:#fff;
+    font-weight:700;margin-right:10px;font-size:13px;line-height:1;vertical-align:middle}
+  h2 .en{display:block;font-size:11px;color:var(--sub);font-weight:400;
+    letter-spacing:.16em;text-transform:uppercase;margin-top:4px;margin-left:calc(1.7em + 10px)}
+  h3{font-size:15.5px;margin:28px 0 6px}
+  h4{font-size:14px;margin:20px 0 4px;color:var(--sub)}
+  p{margin:11px 0}
+
+  /* —— Part bands —— */
+  .part-band{width:100vw;margin:40px 0 8px;margin-left:calc(50% - 50vw);
+    background:var(--navy);color:#fff;position:relative;overflow:hidden}
+  .part-band-inner{max-width:940px;margin:0 auto;padding:22px 28px;
+    display:flex;align-items:center;gap:18px;position:relative;z-index:1}
+  .part-num{font-size:42px;font-weight:800;letter-spacing:.04em;line-height:1;color:#fff}
+  .part-ja{font-size:15px;font-weight:700;letter-spacing:.12em}
+  .part-en{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gray);margin-top:2px}
+  .part-wm{position:absolute;right:24px;top:50%;transform:translateY(-50%);
+    width:72px;height:auto;opacity:.08;filter:brightness(0) invert(1);pointer-events:none}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+  .kpi .card{background:var(--card);border:1px solid var(--line);border-radius:0;
+    border-top:4px solid var(--navy);padding:14px}
+  .kpi .k{font-size:11.5px;color:var(--sub)}
+  .kpi .v{font-size:22px;font-weight:800;margin-top:3px;letter-spacing:-.01em;
+    font-variant-numeric:tabular-nums}
+  .kpi .v small{display:block;font-size:11.5px;font-weight:400;color:var(--sub);letter-spacing:0}
+
+  .callout{border-left:5px solid var(--navy);background:var(--white);
+    padding:14px 18px;margin:18px 0;border-radius:0;border-top:1px solid var(--line);
+    border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:0;
+    padding:12px 16px;margin:14px 0;font-size:13px;color:var(--sub)}
+  .risk{border-left:4px solid var(--bad);background:var(--card);
+    padding:12px 16px;margin:16px 0;border-radius:0}
+  blockquote{margin:16px 0;padding:14px 18px;background:var(--card);
+    border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:0;font-size:14px}
+  blockquote .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+  strong.hit{background:#FEF9C3;padding:0 2px}
+
+  .chart{background:var(--card);border:1px solid var(--line);border-radius:0;
+    padding:20px 22px;margin:18px 0}
+  .chart .cap{font-size:13.5px;font-weight:600;margin-bottom:2px}
+  .chart .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+  .chart svg{display:block;width:100%;height:auto;background:#fff}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:none;border-bottom:1px solid var(--gray);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:var(--navy);color:#fff;font-weight:600;font-size:12px;white-space:nowrap;
+    border-bottom:1px solid var(--navy)}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.name{white-space:nowrap;font-weight:600}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;
+    border-radius:0;background:var(--card);border:1px solid var(--line)}
+  .tbl-scroll>table{margin:0;min-width:min(100%,620px)}
+
+  .tl-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+  .tl-tools input{flex:1;min-width:190px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:0;font-size:13.5px;font-family:inherit;background:#fff;color:var(--ink)}
+  .tl-tools input:focus{outline:none;border-color:var(--navy)}
+  .tl-count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tl-eras{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+  .tl-era{border:1px solid var(--line);background:#fff;color:var(--sub);font-size:11.5px;
+    padding:3px 10px;border-radius:0;cursor:pointer;font-family:inherit}
+  .tl-era:hover{border-color:var(--accent);color:var(--accent)}
+  .tl-era.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:6px}
+  .tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bg)}
+  .tl-item.planned::before{background:var(--muted);border:1px dashed var(--gray);box-shadow:none}
+  .tl-item.planned details{border-style:dashed;border-color:var(--gray);opacity:.92}
+  .tl-item.hide{display:none}
+  .tl-item details{background:var(--card);border:1px solid var(--line);border-radius:0}
+  .tl-item summary{padding:10px 14px;cursor:pointer;display:flex;gap:12px;
+    align-items:baseline;flex-wrap:wrap}
+  .tl-item summary:hover{background:#F0F2F4}
+  .tl-item summary::marker{color:var(--muted)}
+  .tl-d{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap;min-width:74px}
+  .tl-age{font-size:11px;color:var(--navy);background:var(--chip);border-radius:0;
+    padding:1px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tl-age.out{color:var(--muted);background:#EEF1F3}
+  .tl-badge{font-size:10.5px;color:var(--warn);background:#FEF3C7;border-radius:0;
+    padding:1px 8px;white-space:nowrap}
+  .tl-t{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .tl-item details[open] .tl-t{color:var(--accent)}
+  .tl-body{padding:2px 16px 14px 16px;font-size:13.5px}
+  .tl-body .w{margin:0 0 8px}
+  .tl-body .y{margin:0;color:var(--sub);border-left:3px solid var(--grid);padding-left:10px}
+  .tl-body .y b{color:var(--ink);font-weight:600}
+  .tl-fig{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+  .tl-fig span{background:#F0F2F4;border:1px solid var(--line);border-radius:0;
+    font-size:11.5px;padding:1px 7px;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .tl-empty{padding:24px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+
+  .mapbox{background:var(--card);border:1px solid var(--line);border-radius:0;
+    padding:16px 18px;margin:18px 0}
+  .mapbox .cap{font-size:13.5px;font-weight:600;margin-bottom:4px}
+  .mapbox .sub{font-size:12px;color:var(--muted);margin-bottom:12px}
+  .mapbox svg{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:0}
+
+  ol.sources{font-size:12.5px;padding-left:24px;color:var(--sub)}
+  ol.sources li{margin:5px 0;word-break:break-all}
+  ol.sources li:target{background:#FEF9C3}
+  a{color:var(--accent)}
+  sup a{color:var(--accent);font-weight:600;font-size:10.5px;text-decoration:none}
+  /* adjacent source numbers: keep digits, separate visually */
+  sup + sup{margin-left:3px}
+  sup + sup::before{content:"\00b7";margin-right:2px;color:var(--muted);font-weight:400;font-size:9px}
+
+  .thesis{background:var(--card);border:1px solid var(--line);border-radius:0;
+    border-top:4px solid var(--navy);padding:16px 18px;margin:18px 0}
+  .thesis>h2{margin:0 0 10px;padding:0;border:0;font-size:17px}
+  .thesis>h2 .num{display:none}
+  .th-claims{margin:10px 0 8px;padding-left:22px}
+  .th-claims li{margin:10px 0}
+  .th-reader,.th-fp{margin:8px 0;font-size:14px}
+
+  .logo-credit{margin:36px 0 0;padding-top:16px;border-top:1px solid var(--line);
+    font-size:11px;color:var(--muted);line-height:1.6}
+
+  @media print{
+    body{background:#fff}
+    h2{page-break-after:avoid}
+    .chart,table{page-break-inside:avoid}
+    .hero,.hero-stripe{background:#fff!important;color:var(--ink)!important;
+      background-image:none!important}
+    .hero-name-ja,.hero-name-en,.hero-path,.hero-badge,.hero-stat .hs-v,.hero-stat .hs-l,
+    .hero-route-label{color:var(--ink)!important}
+    .hero-badge{border-color:var(--navy);color:var(--navy)!important}
+    .hero-badge-priv{border-style:dashed}
+    .hero-logo{filter:none}
+    .hero-route svg line{stroke:var(--navy)!important}
+    .hero-route svg circle{fill:var(--navy)!important}
+    .hero-route svg text{fill:var(--sub)!important}
+    .part-band{background:#fff!important;color:var(--ink)!important;border-top:2px solid var(--navy);border-bottom:2px solid var(--navy)}
+    .part-num,.part-ja{color:var(--navy)!important}
+    .part-en{color:var(--sub)!important}
+    .part-wm{opacity:.12;filter:none}
+  }
+  @media(max-width:640px){
+    .wrap{padding:22px 16px 70px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .tl-d{min-width:0}
+    .hero-inner{flex-direction:column;align-items:flex-start;gap:18px;padding:28px 16px 12px}
+    .hero-logo{width:96px}
+    .hero-name-en{letter-spacing:.12em}
+    .hero-stats{gap:14px}
+    .hero-route{padding:6px 16px 18px}
+    .part-band-inner{padding:18px 16px}
+    .part-num{font-size:32px}
+    .part-wm{width:56px;right:12px}
+    h2 .en{margin-left:0}
+  }
+
+  .hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .hero-badges .hero-badge{margin-bottom:0}
+  .hero-badge-priv{border-style:dashed;letter-spacing:.12em}
+
+  .photo{margin:18px 0}
+  .photo img{display:block;width:100%;height:auto;border:1px solid var(--line);background:#fff}
+  .photo figcaption{font-size:12px;color:var(--sub);margin-top:6px;line-height:1.6}
+  .photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .photo-grid .photo{margin:0}
+  @media(max-width:640px){.photo-grid{grid-template-columns:1fr}}
+
+  .pq{margin:16px 0;padding:12px 16px 12px 18px;border-left:4px solid var(--navy);
+    background:var(--card);border-top:1px solid var(--line);border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);font-size:14px}
+  .pq .who{display:block;margin-top:8px;font-size:12px;color:var(--muted)}
+
+  .private-box{margin:18px 0;padding:18px 20px;background:#F0F1F3;
+    border-left:6px solid #333;border-top:1px solid var(--line);
+    border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .private-box > .priv-banner{font-size:13px;color:#333;font-weight:600;margin:0 0 14px;line-height:1.7}
+  .private-box h3{margin-top:22px}
+  .private-box h3:first-of-type{margin-top:8px}
+
+  .leaflet-map{width:100%;height:400px;border:1px solid var(--line);background:#E8EEF4;z-index:0}
+  .map-note{font-size:11.5px;color:var(--muted);margin:6px 0 0;line-height:1.5}
+  .mapbox .leaflet-map{margin-top:4px}
+
+  .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+  .gallery-grid .photo{margin:0}
+  @media(max-width:800px){.gallery-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.gallery-grid{grid-template-columns:1fr}}
+  .leaflet-container img{max-width:none!important;width:auto;height:auto}
+  .leaflet-container img.leaflet-tile{width:256px;height:256px}
+  .leaflet-attribution-flag{display:none!important}
+  .mapbox .leaflet-container svg{width:auto;height:auto;background:none;border:0;display:block}
+  .mapbox .leaflet-container svg.leaflet-attribution-flag{display:none!important}
+
+  /* —— mlb_milb additions —— */
+  .hero-date{margin:16px 0 0;font-size:12px;color:var(--gray);letter-spacing:.06em}
+  .hero-inner{padding-bottom:30px}
+  .toc{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--navy);padding:14px 18px;margin:8px 0 18px}
+  .toc-h{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.12em;margin-bottom:6px}
+  .toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:2px 18px}
+  .toc li a{display:flex;gap:8px;text-decoration:none;color:var(--ink);font-size:13.5px;padding:3px 0}
+  .toc li a span{color:var(--navy);font-weight:700}
+  .toc li a:hover{color:var(--accent);text-decoration:underline}
+  .th-h{margin:0 0 4px;font-size:16px}
+  p.callout{font-weight:600;font-size:14.5px}
+  .svg-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .svg-scroll svg{min-width:680px}
+  .en-s{display:inline-block;font-size:11px;color:var(--muted);font-weight:400}
+  tr.hl td{background:#FEF9C3}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .two-col h4{margin-top:10px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 8px;font-size:12.5px}
+  .legend .lg::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+  .legend .mlb::before{background:var(--navy)}
+  .legend .milb::before{background:var(--s3)}
+  .legend .jp::before{background:var(--s2)}
+  .vtl{position:relative;padding-left:22px;margin:10px 0 16px}
+  .vtl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .vtl-item{position:relative;display:flex;gap:14px;padding:7px 12px;margin-bottom:5px;background:var(--card);
+    border:1px solid var(--line);border-left:4px solid var(--navy);font-size:13.5px;line-height:1.6}
+  .vtl-item::before{content:"";position:absolute;left:-22px;top:13px;width:10px;height:10px;border-radius:50%;
+    background:var(--navy);box-shadow:0 0 0 3px var(--bg)}
+  .vtl-item.milb{border-left-color:var(--s3)} .vtl-item.milb::before{background:var(--s3)}
+  .vtl-item.jp{border-left-color:var(--s2)} .vtl-item.jp::before{background:var(--s2)}
+  .vtl-d{flex:0 0 96px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--sub)}
+  .vtl-t{flex:1;min-width:0}
+  .part-logo{width:56px;height:auto;filter:brightness(0) invert(1)}
+  .part-band-inner .part-ja{font-size:18px}
+  .leaflet-map-tall{height:480px}
+  .farm-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+  .fc{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--navy);padding:12px 14px;font-size:12.5px}
+  .fc-lv{display:inline-block;background:var(--navy);color:#fff;font-size:11px;font-weight:700;padding:1px 8px;letter-spacing:.06em}
+  .fc-nm{font-weight:700;font-size:14px;margin:6px 0 0;line-height:1.4}
+  .fc-note{font-size:11.5px;color:var(--bad);margin-top:2px}
+  .fc dl{margin:8px 0 0;display:grid;grid-template-columns:auto 1fr;gap:2px 10px}
+  .fc dt{color:var(--muted)}
+  .fc dd{margin:0}
+  .backlink{margin-top:20px;padding:12px 16px;background:var(--chip);border-left:4px solid var(--navy)}
+  .leaflet-tooltip.lbl{font-size:11px;padding:1px 6px;font-weight:600;color:var(--navy)}
+  .farm-arrow{width:0;height:0}
+  .farm-arrow div{width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;
+    border-left:14px solid #0C2340;transform-origin:50% 50%;margin:-7px 0 0 -7px}
+  @media(max-width:800px){.farm-cards{grid-template-columns:1fr 1fr}.toc ol{grid-template-columns:1fr 1fr}}
+  @media(max-width:640px){
+    .farm-cards,.two-col{grid-template-columns:1fr}
+    .toc ol{grid-template-columns:1fr}
+    .vtl-item{flex-direction:column;gap:0}
+    .vtl-d{flex:none}
+    .leaflet-map{height:340px}
+    .hero-stat .hs-v{font-size:22px}
+  }
+
+  table.wide-teams{min-width:1360px;font-size:13px}
+  table.wide-teams td:nth-child(2),table.wide-teams td:nth-child(3),table.wide-teams td:nth-child(11){white-space:nowrap}
+  table.wide-teams td:nth-child(4){min-width:240px}
+  table.wide-aff{min-width:1200px}
+  .inset-cap{margin-top:14px}
+
+
+  img.tlogo{width:24px;height:24px;object-fit:contain;vertical-align:middle;margin-right:7px}
+  img.tlogo-s{width:18px;height:18px;object-fit:contain;vertical-align:-4px;margin-right:5px}
+  img.fc-logo{width:34px;height:34px;object-fit:contain;float:right;margin:-2px 0 0 8px}
+  a.gm{color:var(--navy);text-decoration:underline;text-decoration-color:var(--gray);text-underline-offset:3px}
+  a.gm:hover{text-decoration-color:var(--navy)}
+  .tbl-wide{width:min(1440px,calc(100vw - 32px));position:relative;left:50%;transform:translateX(-50%)}
+  .logo-pin{background:none;border:0}
+  .logo-pin img{width:30px!important;height:30px!important;background:#fff;border-radius:50%;padding:3px;box-sizing:border-box;box-shadow:0 1px 3px rgba(0,0,0,.35)}
+  .popup-logo{width:40px;height:40px;object-fit:contain;display:block;margin-bottom:4px}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" crossorigin="">
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+li{overflow-wrap:anywhere}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a><a href="../../../030_ideas/034_foundation/index.html">foundation</a><a href="../../../030_ideas/035_ventures/index.html">ventures</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/02B_reading/index.html">reading</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/025_fitness/session.html">session</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a><a href="../../../020_personal/02C_chemistry/index.html">chemistry</a><a href="../../../020_personal/02D_probability/index.html">probability</a><a href="../../../020_personal/02E_calculus/index.html">calculus</a><a href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a><a href="../../../020_personal/02G_physics/index.html">physics</a><a href="../../../020_personal/02H_heidegger/index.html">heidegger</a><a href="../../../020_personal/02I_quiz/index.html">quiz</a><a href="../../../020_personal/02J_geography/index.html">geography</a><a href="../../../020_personal/02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../../030_ideas/034_foundation/index.html">foundation</a>
+    <a class="snav-a" href="../../../030_ideas/035_ventures/index.html">ventures</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/session.html">session</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../../020_personal/02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../../020_personal/02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../../020_personal/02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../../020_personal/02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../../020_personal/02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../../020_personal/02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../../../020_personal/02J_geography/index.html">geography</a>
+    <a class="snav-a" href="../../../020_personal/02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<section class="hero" aria-label="MLB とマイナーリーグ">
+  <div class="hero-stripe">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="hero-badges"><div class="hero-badge">MLB / MiLB</div></div>
+        <div class="hero-name-en">MLB &amp; MiLB</div>
+        <h1 class="hero-name-ja">MLB とマイナーリーグ</h1>
+        <p class="hero-path">30球団と120の傘下球団、お金と契約の規則</p>
+        <div class="hero-stats">
+          <div class="hero-stat"><span><span class="hs-v">30</span><span class="hs-u">球団</span></span><span class="hs-l">MLB</span></div>
+          <div class="hero-stat"><span><span class="hs-v">120</span><span class="hs-u">球団</span></span><span class="hs-l">マイナーの傘下球団</span></div>
+          <div class="hero-stat"><span><span class="hs-v">162</span><span class="hs-u">試合</span></span><span class="hs-l">MLBの1球団の試合数</span></div>
+          <div class="hero-stat"><span><span class="hs-v">78</span><span class="hs-u">万ドル</span></span><span class="hs-l">MLB最低年俸（2026年）</span></div>
+        </div>
+        <p class="hero-date">基準日 2026年11月15日</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="wrap">
+<p class="crumb"><a href="../index.html">Industry Research</a> / MLB とマイナーリーグ</p>
+<nav class="toc" aria-label="目次"><div class="toc-h">目次</div><ol>
+<li><a href="#c1"><span>①</span>全体像</a></li>
+<li><a href="#c2"><span>②</span>歴史年表</a></li>
+<li><a href="#c3"><span>③</span>リーグ構造と30球団</a></li>
+<li><a href="#c4"><span>④</span>2026年シーズン</a></li>
+<li><a href="#c5"><span>⑤</span>春季キャンプ</a></li>
+<li><a href="#c6"><span>⑥</span>お金（リーグ）</a></li>
+<li><a href="#c7"><span>⑦</span>お金（選手）</a></li>
+<li><a href="#c8"><span>⑧</span>契約とロースターの規則</a></li>
+<li><a href="#c9"><span>⑨</span>労使協定</a></li>
+<li><a href="#c10"><span>⑩</span>マイナーリーグ</a></li>
+<li><a href="#c11"><span>⑪</span>30球団の傘下表</a></li>
+<li><a href="#c12"><span>⑫</span>ヤンキース</a></li>
+<li><a href="#c13"><span>⑬</span>ヤンキースのファーム</a></li>
+<li><a href="#c14"><span>⑭</span>広池の道筋に当てはめる</a></li>
+<li><a href="#c15"><span>⑮</span>出典</a></li>
+</ol></nav>
+<div class="thesis">
+<h3 class="th-h">結論</h3>
+<ul class="th-claims">
+<li>MLBは30球団で、ア・リーグとナ・リーグに15球団ずつ所属する。各リーグは東・中・西の3地区に分かれる。1球団あたり162試合を戦い、12球団がポストシーズンに進む。<sup><a href="#s58">58</a></sup></li>
+<li>各球団はAAA・AA・ハイA・シングルAの4球団を傘下に持つ（計120球団）。その下にルーキー級のFCL・ACL・DSLがある。2021年にMLBが直接管理する体系へ再編された。<sup><a href="#s96">96</a></sup></li>
+<li>2026年の最低年俸はMLBで78万ドル、マイナーはルーキー級19,800ドルからAAA 35,800ドル（2023年協定）である。両者の差は20倍以上ある。<sup><a href="#s9">9</a></sup><sup><a href="#s35">35</a></sup></li>
+<li>日本の大学生は国際アマチュアの扱いとなり、球団ごとの契約金プールの範囲で契約する。ヤンキースの2026年のプールは544万ドルで30球団の最低額だった。2026年12月1日に労使協定が失効するため、2027年の制度は確定していない。<sup><a href="#s31">31</a></sup><sup><a href="#s90">90</a></sup><sup><a href="#s10">10</a></sup></li>
+</ul>
+</div>
+<h2 id="c1"><span class="num">①</span>全体像<span class="en">Structure</span></h2>
+<p class="callout">MLBの下に5段階のマイナーリーグがあり、上の段ほど試合数が多く選手の年齢が高い。ヤンキースは各段に1球団ずつ傘下球団を持つ。</p>
+<div class="chart"><div class="cap">MLB とマイナーリーグの階層（2026年）</div><div class="sub">年齢は2026年の各階層の中央値。試合数は1球団あたりのレギュラーシーズン。—は資料に値が無い項目。</div><div class="svg-scroll"><svg viewBox="0 0 1000 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MLBとマイナーリーグの階層" font-family="-apple-system,Hiragino Sans,sans-serif">
+<text x="340" y="22" font-size="12" font-weight="700" fill="#555">リーグ</text>
+<text x="610" y="22" font-size="12" font-weight="700" fill="#555">1球団の試合数</text>
+<text x="720" y="22" font-size="12" font-weight="700" fill="#555">年齢の中央値</text>
+<text x="830" y="22" font-size="12" font-weight="700" fill="#555">ヤンキース傘下</text>
+<polygon points="125,40 195,40 211,92 109,92" fill="#0C2340"/>
+<text x="160" y="71" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">MLB</text>
+<line x1="217" y1="66" x2="335" y2="66" stroke="#C4CED3" stroke-dasharray="2 3"/>
+<text x="340" y="70" font-size="12.5" fill="#1a1a1a">ア・リーグ／ナ・リーグ</text>
+<text x="610" y="70" font-size="12.5" fill="#1a1a1a">162試合</text>
+<text x="720" y="70" font-size="12.5" fill="#1a1a1a">—</text>
+<text x="830" y="70" font-size="12.5" font-weight="700" fill="#0C2340">ニューヨーク・ヤンキース</text>
+<line x1="330" y1="95" x2="1000" y2="95" stroke="#E4E8EC"/>
+<polygon points="109,98 211,98 228,150 92,150" fill="#2a4a6e"/>
+<text x="160" y="129" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">AAA</text>
+<line x1="234" y1="124" x2="335" y2="124" stroke="#C4CED3" stroke-dasharray="2 3"/>
+<text x="340" y="128" font-size="12.5" fill="#1a1a1a">International／Pacific Coast</text>
+<text x="610" y="128" font-size="12.5" fill="#1a1a1a">150試合</text>
+<text x="720" y="128" font-size="12.5" fill="#1a1a1a">27.0〜27.5歳</text>
+<text x="830" y="122" font-size="12.5" font-weight="700" fill="#0C2340">RailRiders</text>
+<text x="830" y="140" font-size="11" fill="#555">（2027年から Highlanders）</text>
+<line x1="330" y1="153" x2="1000" y2="153" stroke="#E4E8EC"/>
+<polygon points="92,156 228,156 244,208 76,208" fill="#2a4a6e"/>
+<text x="160" y="187" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">AA</text>
+<line x1="250" y1="182" x2="335" y2="182" stroke="#C4CED3" stroke-dasharray="2 3"/>
+<text x="340" y="186" font-size="12.5" fill="#1a1a1a">Eastern／Southern／Texas</text>
+<text x="610" y="186" font-size="12.5" fill="#1a1a1a">138試合</text>
+<text x="720" y="186" font-size="12.5" fill="#1a1a1a">24.7〜25.0歳</text>
+<text x="830" y="186" font-size="12.5" font-weight="700" fill="#0C2340">Somerset Patriots</text>
+<line x1="330" y1="211" x2="1000" y2="211" stroke="#E4E8EC"/>
+<polygon points="76,214 244,214 261,266 59,266" fill="#2a4a6e"/>
+<text x="160" y="245" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ハイA</text>
+<line x1="267" y1="240" x2="335" y2="240" stroke="#C4CED3" stroke-dasharray="2 3"/>
+<text x="340" y="244" font-size="12.5" fill="#1a1a1a">Midwest／South Atlantic／Northwest</text>
+<text x="610" y="244" font-size="12.5" fill="#1a1a1a">132試合</text>
+<text x="720" y="244" font-size="12.5" fill="#1a1a1a">23.1〜23.2歳</text>
+<text x="830" y="244" font-size="12.5" font-weight="700" fill="#0C2340">Hudson Valley Renegades</text>
+<line x1="330" y1="269" x2="1000" y2="269" stroke="#E4E8EC"/>
+<polygon points="59,272 261,272 277,324 43,324" fill="#2a4a6e"/>
+<text x="160" y="303" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">シングルA</text>
+<line x1="283" y1="298" x2="335" y2="298" stroke="#C4CED3" stroke-dasharray="2 3"/>
+<text x="340" y="302" font-size="12.5" fill="#1a1a1a">California／Carolina／Florida State</text>
+<text x="610" y="302" font-size="12.5" fill="#1a1a1a">132試合</text>
+<text x="720" y="302" font-size="12.5" fill="#1a1a1a">21.7〜22.2歳</text>
+<text x="830" y="302" font-size="12.5" font-weight="700" fill="#0C2340">Tampa Tarpons</text>
+<line x1="330" y1="327" x2="1000" y2="327" stroke="#E4E8EC"/>
+<polygon points="43,330 277,330 294,382 26,382" fill="#5b7590"/>
+<text x="160" y="361" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ルーキー</text>
+<line x1="300" y1="356" x2="335" y2="356" stroke="#C4CED3" stroke-dasharray="2 3"/>
+<text x="340" y="360" font-size="12.5" fill="#1a1a1a">FCL／ACL</text>
+<text x="610" y="360" font-size="12.5" fill="#1a1a1a">約60試合</text>
+<text x="720" y="360" font-size="12.5" fill="#1a1a1a">—</text>
+<text x="830" y="360" font-size="12.5" font-weight="700" fill="#0C2340">FCL Yankees（タンパ）</text>
+<line x1="330" y1="385" x2="1000" y2="385" stroke="#E4E8EC"/>
+<polygon points="26,388 294,388 310,440 10,440" fill="#5b7590"/>
+<text x="160" y="419" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">DSL</text>
+<line x1="316" y1="414" x2="335" y2="414" stroke="#C4CED3" stroke-dasharray="2 3"/>
+<text x="340" y="418" font-size="12.5" fill="#1a1a1a">Dominican Summer League</text>
+<text x="610" y="418" font-size="12.5" fill="#1a1a1a">—</text>
+<text x="720" y="418" font-size="12.5" fill="#1a1a1a">—</text>
+<text x="830" y="418" font-size="12.5" font-weight="700" fill="#0C2340">DSL Yankees（ボカチカ）</text>
+</svg></div></div>
+<p>リーグ名と所属は MiLB、試合数は Baseball America の資料、年齢は Baseball America の2026年4月の集計による。<sup><a href="#s100">100</a></sup><sup><a href="#s101">101</a></sup><sup><a href="#s102">102</a></sup><sup><a href="#s103">103</a></sup>AAA の RailRiders は2027年から Highlanders に名称を変更する。<sup><a href="#s4">4</a></sup></p>
+<h2 id="c2"><span class="num">②</span>歴史年表<span class="en">Timeline</span></h2>
+<p class="callout">MLBは1876年のナ・リーグ創設と1901年のア・リーグ創設を起点とする。マイナーリーグは1901年に統括団体を設立し、2021年にMLBの直轄体系へ移行した。</p>
+<div class="legend"><span class="lg mlb">MLB</span><span class="lg milb">マイナーリーグ</span><span class="lg jp">日本人選手</span></div>
+<div class="vtl">
+<div class="vtl-item mlb"><span class="vtl-d">1869</span><span class="vtl-t">シンシナティ・レッドストッキングスが初のプロ野球団となる<sup><a href="#s40">40</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1876</span><span class="vtl-t">ナショナル・リーグ創設<sup><a href="#s41">41</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1901</span><span class="vtl-t">アメリカン・リーグ創設<sup><a href="#s41">41</a></sup></span></div>
+<div class="vtl-item milb"><span class="vtl-d">1901</span><span class="vtl-t">9月5日、各マイナーリーグが National Association of Professional Baseball Leagues（現 MiLB）を設立<sup><a href="#s92">92</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1903</span><span class="vtl-t">両リーグの優勝球団による第1回ワールドシリーズ<sup><a href="#s41">41</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1919</span><span class="vtl-t">ブラックソックス事件<sup><a href="#s42">42</a></sup></span></div>
+<div class="vtl-item milb"><span class="vtl-d">1920〜30年代</span><span class="vtl-t">ブランチ・リッキーが球団を買収して選手育成網を構築し、ファーム制度が普及する<sup><a href="#s93">93</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1921</span><span class="vtl-t">ケネソー・マウンテン・ランディスが初代コミッショナーに就任<sup><a href="#s42">42</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1947</span><span class="vtl-t">ジャッキー・ロビンソンがMLB初の黒人選手となる<sup><a href="#s43">43</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1958</span><span class="vtl-t">ドジャースとジャイアンツが西海岸へ移転<sup><a href="#s40">40</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1961〜98</span><span class="vtl-t">エンゼルス・アストロズ・パドレスなどが加わり球団数を拡張<sup><a href="#s40">40</a></sup></span></div>
+<div class="vtl-item milb"><span class="vtl-d">1963</span><span class="vtl-t">旧 Class B・C・D などを整理し、AAA・AA・A・ルーキーを中心とする4段階へ再編<sup><a href="#s94">94</a></sup></span></div>
+<div class="vtl-item jp"><span class="vtl-d">1964</span><span class="vtl-t">村上雅則がMLBデビュー<sup><a href="#s52">52</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1969</span><span class="vtl-t">東西2地区制を導入<sup><a href="#s40">40</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1973</span><span class="vtl-t">ア・リーグで指名打者（DH）を採用<sup><a href="#s44">44</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1976</span><span class="vtl-t">フリーエージェント制度が確立<sup><a href="#s45">45</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">1994〜95</span><span class="vtl-t">選手会のストライキで1994年のワールドシリーズが中止。1995年は144試合<sup><a href="#s46">46</a></sup></span></div>
+<div class="vtl-item jp"><span class="vtl-d">1995</span><span class="vtl-t">野茂英雄がドジャースに入団<sup><a href="#s52">52</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">2000年代</span><span class="vtl-t">BALCO 事件などステロイドを中心とする薬物問題が表面化<sup><a href="#s40">40</a></sup></span></div>
+<div class="vtl-item jp"><span class="vtl-d">2001</span><span class="vtl-t">イチローがマリナーズに入団し、新人王とMVPを同時に受賞<sup><a href="#s52">52</a></sup></span></div>
+<div class="vtl-item jp"><span class="vtl-d">2009</span><span class="vtl-t">松井秀喜がワールドシリーズMVP<sup><a href="#s52">52</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">2020</span><span class="vtl-t">COVID-19 の影響で60試合制。ナ・リーグも一時的にDHを採用<sup><a href="#s48">48</a></sup></span></div>
+<div class="vtl-item milb"><span class="vtl-d">2020</span><span class="vtl-t">9月30日、MLB とマイナーを結ぶ協定（PBA）が失効<sup><a href="#s95">95</a></sup></span></div>
+<div class="vtl-item milb"><span class="vtl-d">2021</span><span class="vtl-t">MLB 直轄の PDL へ移行。160球団以上から120球団へ削減し、ライセンスは原則10年<sup><a href="#s96">96</a></sup><sup><a href="#s97">97</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">2022</span><span class="vtl-t">ロックアウトを経て労使協定が成立。ユニバーサルDHとポストシーズン12球団制を導入<sup><a href="#s47">47</a></sup></span></div>
+<div class="vtl-item milb"><span class="vtl-d">2022</span><span class="vtl-t">リーグ名を歴史的名称に戻す。未払い賃金の訴訟で MLB が1億8,500万ドルで和解。マイナー選手が MLBPA に加入<sup><a href="#s100">100</a></sup><sup><a href="#s37">37</a></sup><sup><a href="#s35">35</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">2023</span><span class="vtl-t">ピッチクロック・ベース拡大・守備シフト制限を導入（いずれもマイナーで先行試験）<sup><a href="#s49">49</a></sup><sup><a href="#s104">104</a></sup></span></div>
+<div class="vtl-item milb"><span class="vtl-d">2023</span><span class="vtl-t">初のマイナー労使協定（5年）。最低年俸の引き上げと住宅の提供<sup><a href="#s35">35</a></sup></span></div>
+<div class="vtl-item jp"><span class="vtl-d">2023</span><span class="vtl-t">大谷翔平がドジャースと10年7億ドルで契約<sup><a href="#s53">53</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">2025</span><span class="vtl-t">アスレチックスがウェストサクラメントの Sutter Health Park へ暫定移転<sup><a href="#s50">50</a></sup></span></div>
+<div class="vtl-item mlb"><span class="vtl-d">2026</span><span class="vtl-t">ABS チャレンジ（自動ボール・ストライク判定への異議申立て）を公式戦に導入<sup><a href="#s51">51</a></sup></span></div>
+<div class="vtl-item jp"><span class="vtl-d">2026</span><span class="vtl-t">村上宗隆がホワイトソックスと2年3,400万ドル、今井達也がアストロズと3年5,400万ドルで契約。岡本和真はブルージェイズと4年契約<sup><a href="#s55">55</a></sup><sup><a href="#s56">56</a></sup><sup><a href="#s57">57</a></sup></span></div>
+<div class="vtl-item milb"><span class="vtl-d">2027</span><span class="vtl-t">ヤンキース傘下 AAA が RailRiders から Highlanders へ改名（2026年11月発表）<sup><a href="#s4">4</a></sup></span></div>
+</div>
+<p class="note">ポストシーズンの出場枠は2022年の協定で12球団になった。<sup><a href="#s47">47</a></sup></p>
+<h2 id="c3"><span class="num">③</span>リーグ構造と30球団<span class="en">30 Clubs</span></h2>
+<p class="callout">30球団はア・リーグとナ・リーグに15球団ずつ所属し、各リーグに東・中・西の3地区がある。ワールドシリーズの優勝回数はヤンキースの27回が最多である。<sup><a href="#s58">58</a></sup><sup><a href="#s6">6</a></sup></p>
+<p>ポストシーズンには各リーグの地区優勝3球団とワイルドカード3球団が進む。地区優勝の上位2球団は地区シリーズから出場し、残る4球団が3試合制のワイルドカードシリーズを戦う。<sup><a href="#s58">58</a></sup></p>
+<div class="mapbox"><div class="cap">30球団の本拠地球場</div><div class="sub">紺はア・リーグ、赤はナ・リーグ。円を押すと球団名・球場・開場年を表示する。</div>
+<div id="map-teams" class="leaflet-map" role="img" aria-label="30球団の本拠地球場の地図"></div>
+<p class="map-note">地図: Esri（データは OpenStreetMap ほか）。位置は球場の所在地。</p></div>
+<div class="tbl-scroll tbl-wide"><table class="wide-teams"><thead><tr><th>球団</th><th>地区</th><th>本拠地</th><th>創設年と移転歴</th><th>球場</th><th class="num">開場</th><th class="num">収容人数</th><th class="num">WS優勝</th><th class="num">最後の優勝</th><th>2026年成績</th><th>春季キャンプ地</th></tr></thead><tbody><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/110.svg" alt="" loading="lazy">オリオールズ<br><span class="en-s">Baltimore Orioles</span></td><td>ア東</td><td>ボルチモア</td><td>1901年。ミルウォーキー・ブルワーズ→セントルイス・ブラウンズ→1954年ボルチモア</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Oriole%20Park%20at%20Camden%20Yards%2C%20Baltimore" target="_blank" rel="noopener">Oriole Park</a></td><td class="num">1992</td><td class="num">42,455</td><td class="num">3</td><td class="num">1983</td><td>79勝83敗</td><td>サラソタ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/111.svg" alt="" loading="lazy">レッドソックス<br><span class="en-s">Boston Red Sox</span></td><td>ア東</td><td>ボストン</td><td>1901年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Fenway%20Park%2C%20Boston" target="_blank" rel="noopener">Fenway Park</a></td><td class="num">1912</td><td class="num">37,755</td><td class="num">9</td><td class="num">2018</td><td>87勝75敗</td><td>フォートマイヤーズ</td></tr><tr class="hl"><td class="name"><img class="tlogo" src="../images/mlb/logos/147.svg" alt="" loading="lazy">ヤンキース<br><span class="en-s">New York Yankees</span></td><td>ア東</td><td>ニューヨーク</td><td>1901年。ボルチモア→1903年ニューヨーク</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Yankee%20Stadium%2C%20Bronx" target="_blank" rel="noopener">Yankee Stadium</a></td><td class="num">2009</td><td class="num">46,537</td><td class="num">27</td><td class="num">2009</td><td>93勝68敗</td><td>タンパ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/139.svg" alt="" loading="lazy">レイズ<br><span class="en-s">Tampa Bay Rays</span></td><td>ア東</td><td>セントピーターズバーグ</td><td>1998年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Tropicana%20Field%2C%20St.%20Petersburg" target="_blank" rel="noopener">Tropicana Field</a></td><td class="num">1990</td><td class="num">25,000</td><td class="num">0</td><td class="num">—</td><td>98勝64敗</td><td>ポートシャーロット</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/141.svg" alt="" loading="lazy">ブルージェイズ<br><span class="en-s">Toronto Blue Jays</span></td><td>ア東</td><td>トロント</td><td>1977年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Rogers%20Centre%2C%20Toronto" target="_blank" rel="noopener">Rogers Centre</a></td><td class="num">1989</td><td class="num">39,150</td><td class="num">2</td><td class="num">1993</td><td>79勝83敗</td><td>ダニーデン</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/145.svg" alt="" loading="lazy">ホワイトソックス<br><span class="en-s">Chicago White Sox</span></td><td>ア中</td><td>シカゴ</td><td>1901年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Rate%20Field%2C%20Chicago" target="_blank" rel="noopener">Rate Field</a></td><td class="num">1991</td><td class="num">40,615</td><td class="num">3</td><td class="num">2005</td><td>84勝78敗</td><td>グレンデール</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/114.svg" alt="" loading="lazy">ガーディアンズ<br><span class="en-s">Cleveland Guardians</span></td><td>ア中</td><td>クリーブランド</td><td>1901年。2022年にインディアンスから改名</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Progressive%20Field%2C%20Cleveland" target="_blank" rel="noopener">Progressive Field</a></td><td class="num">1994</td><td class="num">34,820</td><td class="num">2</td><td class="num">1948</td><td>85勝77敗</td><td>グッドイヤー</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/116.svg" alt="" loading="lazy">タイガース<br><span class="en-s">Detroit Tigers</span></td><td>ア中</td><td>デトロイト</td><td>1901年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Comerica%20Park%2C%20Detroit" target="_blank" rel="noopener">Comerica Park</a></td><td class="num">2000</td><td class="num">41,083</td><td class="num">4</td><td class="num">1984</td><td>76勝86敗</td><td>レイクランド</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/118.svg" alt="" loading="lazy">ロイヤルズ<br><span class="en-s">Kansas City Royals</span></td><td>ア中</td><td>カンザスシティ</td><td>1969年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Kauffman%20Stadium%2C%20Kansas%20City" target="_blank" rel="noopener">Kauffman Stadium</a></td><td class="num">1973</td><td class="num">37,903</td><td class="num">2</td><td class="num">2015</td><td>69勝93敗</td><td>サプライズ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/142.svg" alt="" loading="lazy">ツインズ<br><span class="en-s">Minnesota Twins</span></td><td>ア中</td><td>ミネアポリス</td><td>1901年。ワシントン・セネターズ→1961年ミネソタ</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Target%20Field%2C%20Minneapolis" target="_blank" rel="noopener">Target Field</a></td><td class="num">2010</td><td class="num">38,544</td><td class="num">3</td><td class="num">1991</td><td>77勝85敗</td><td>フォートマイヤーズ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/133.svg" alt="" loading="lazy">アスレチックス<br><span class="en-s">Athletics</span></td><td>ア西</td><td>ウェストサクラメント</td><td>1901年。フィラデルフィア→1955年カンザスシティ→1968年オークランド→2025年ウェストサクラメント（暫定）。ラスベガスの新球場は2028年予定</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Sutter%20Health%20Park%2C%20Sacramento" target="_blank" rel="noopener">Sutter Health Park</a></td><td class="num">2000</td><td class="num">13,416</td><td class="num">9</td><td class="num">1989</td><td>64勝98敗</td><td>メサ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/117.svg" alt="" loading="lazy">アストロズ<br><span class="en-s">Houston Astros</span></td><td>ア西</td><td>ヒューストン</td><td>1962年（コルト45s）。2013年にナ・リーグから移籍</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Daikin%20Park%2C%20Houston" target="_blank" rel="noopener">Daikin Park</a></td><td class="num">2000</td><td class="num">41,168</td><td class="num">2</td><td class="num">2022</td><td>81勝81敗</td><td>ウェストパームビーチ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/108.svg" alt="" loading="lazy">エンゼルス<br><span class="en-s">Los Angeles Angels</span></td><td>ア西</td><td>アナハイム</td><td>1961年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Angel%20Stadium%2C%20Anaheim" target="_blank" rel="noopener">Angel Stadium</a></td><td class="num">1966</td><td class="num">45,517</td><td class="num">1</td><td class="num">2002</td><td>62勝100敗</td><td>テンピ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/136.svg" alt="" loading="lazy">マリナーズ<br><span class="en-s">Seattle Mariners</span></td><td>ア西</td><td>シアトル</td><td>1977年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=T-Mobile%20Park%2C%20Seattle" target="_blank" rel="noopener">T-Mobile Park</a></td><td class="num">1999</td><td class="num">47,929</td><td class="num">0</td><td class="num">—</td><td>76勝86敗</td><td>ピオリア</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/140.svg" alt="" loading="lazy">レンジャーズ<br><span class="en-s">Texas Rangers</span></td><td>ア西</td><td>アーリントン</td><td>1961年。ワシントン・セネターズ（2代目）→1972年テキサス</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Globe%20Life%20Field%2C%20Arlington" target="_blank" rel="noopener">Globe Life Field</a></td><td class="num">2020</td><td class="num">40,300</td><td class="num">1</td><td class="num">2023</td><td>80勝82敗</td><td>サプライズ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/144.svg" alt="" loading="lazy">ブレーブス<br><span class="en-s">Atlanta Braves</span></td><td>ナ東</td><td>アトランタ</td><td>1871年。ボストン→1953年ミルウォーキー→1966年アトランタ。現存最古の球団</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Truist%20Park%2C%20Atlanta" target="_blank" rel="noopener">Truist Park</a></td><td class="num">2017</td><td class="num">41,084</td><td class="num">4</td><td class="num">2021</td><td>94勝68敗</td><td>ノースポート</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/146.svg" alt="" loading="lazy">マーリンズ<br><span class="en-s">Miami Marlins</span></td><td>ナ東</td><td>マイアミ</td><td>1993年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=loanDepot%20park%2C%20Miami" target="_blank" rel="noopener">loanDepot park</a></td><td class="num">2012</td><td class="num">36,742</td><td class="num">2</td><td class="num">2003</td><td>80勝82敗</td><td>ジュピター</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/121.svg" alt="" loading="lazy">メッツ<br><span class="en-s">New York Mets</span></td><td>ナ東</td><td>ニューヨーク</td><td>1962年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Citi%20Field%2C%20Flushing" target="_blank" rel="noopener">Citi Field</a></td><td class="num">2009</td><td class="num">41,922</td><td class="num">2</td><td class="num">1986</td><td>74勝88敗</td><td>ポートセントルーシー</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/143.svg" alt="" loading="lazy">フィリーズ<br><span class="en-s">Philadelphia Phillies</span></td><td>ナ東</td><td>フィラデルフィア</td><td>1883年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Citizens%20Bank%20Park%2C%20Philadelphia" target="_blank" rel="noopener">Citizens Bank Park</a></td><td class="num">2004</td><td class="num">42,901</td><td class="num">2</td><td class="num">2008</td><td>88勝74敗</td><td>クリアウォーター</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/120.svg" alt="" loading="lazy">ナショナルズ<br><span class="en-s">Washington Nationals</span></td><td>ナ東</td><td>ワシントン</td><td>1969年。モントリオール・エクスポズ→2005年ワシントン</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Nationals%20Park%2C%20Washington" target="_blank" rel="noopener">Nationals Park</a></td><td class="num">2008</td><td class="num">41,373</td><td class="num">1</td><td class="num">2019</td><td>77勝85敗</td><td>ウェストパームビーチ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/112.svg" alt="" loading="lazy">カブス<br><span class="en-s">Chicago Cubs</span></td><td>ナ中</td><td>シカゴ</td><td>1876年。ナ・リーグ創設時からの球団</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Wrigley%20Field%2C%20Chicago" target="_blank" rel="noopener">Wrigley Field</a></td><td class="num">1914</td><td class="num">41,649</td><td class="num">3</td><td class="num">2016</td><td>89勝73敗</td><td>メサ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/113.svg" alt="" loading="lazy">レッズ<br><span class="en-s">Cincinnati Reds</span></td><td>ナ中</td><td>シンシナティ</td><td>1882年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Great%20American%20Ball%20Park%2C%20Cincinnati" target="_blank" rel="noopener">Great American Ball Park</a></td><td class="num">2003</td><td class="num">43,500</td><td class="num">5</td><td class="num">1990</td><td>75勝87敗</td><td>グッドイヤー</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/158.svg" alt="" loading="lazy">ブルワーズ<br><span class="en-s">Milwaukee Brewers</span></td><td>ナ中</td><td>ミルウォーキー</td><td>1969年。シアトル・パイロッツ→1970年ミルウォーキー。1998年にア・リーグから移籍</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=American%20Family%20Field%2C%20Milwaukee" target="_blank" rel="noopener">American Family Field</a></td><td class="num">2001</td><td class="num">41,900</td><td class="num">1</td><td class="num">2026</td><td>103勝59敗</td><td>フェニックス</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/134.svg" alt="" loading="lazy">パイレーツ<br><span class="en-s">Pittsburgh Pirates</span></td><td>ナ中</td><td>ピッツバーグ</td><td>1882年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=PNC%20Park%2C%20Pittsburgh" target="_blank" rel="noopener">PNC Park</a></td><td class="num">2001</td><td class="num">38,747</td><td class="num">5</td><td class="num">1979</td><td>82勝80敗</td><td>ブラデントン</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/138.svg" alt="" loading="lazy">カージナルス<br><span class="en-s">St. Louis Cardinals</span></td><td>ナ中</td><td>セントルイス</td><td>1882年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Busch%20Stadium%2C%20St.%20Louis" target="_blank" rel="noopener">Busch Stadium</a></td><td class="num">2006</td><td class="num">44,383</td><td class="num">11</td><td class="num">2011</td><td>77勝85敗</td><td>ジュピター</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/109.svg" alt="" loading="lazy">ダイヤモンドバックス<br><span class="en-s">Arizona Diamondbacks</span></td><td>ナ西</td><td>フェニックス</td><td>1998年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Chase%20Field%2C%20Phoenix" target="_blank" rel="noopener">Chase Field</a></td><td class="num">1998</td><td class="num">48,330</td><td class="num">1</td><td class="num">2001</td><td>86勝76敗</td><td>スコッツデール</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/115.svg" alt="" loading="lazy">ロッキーズ<br><span class="en-s">Colorado Rockies</span></td><td>ナ西</td><td>デンバー</td><td>1993年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Coors%20Field%2C%20Denver" target="_blank" rel="noopener">Coors Field</a></td><td class="num">1995</td><td class="num">46,897</td><td class="num">0</td><td class="num">—</td><td>58勝104敗</td><td>スコッツデール</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/119.svg" alt="" loading="lazy">ドジャース<br><span class="en-s">Los Angeles Dodgers</span></td><td>ナ西</td><td>ロサンゼルス</td><td>1883年。ブルックリン→1958年ロサンゼルス</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=UNIQLO%20Field%20at%20Dodger%20Stadium%2C%20Los%20Angeles" target="_blank" rel="noopener">Dodger Stadium</a></td><td class="num">1962</td><td class="num">56,000</td><td class="num">9</td><td class="num">2025</td><td>100勝62敗</td><td>グレンデール</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/135.svg" alt="" loading="lazy">パドレス<br><span class="en-s">San Diego Padres</span></td><td>ナ西</td><td>サンディエゴ</td><td>1969年</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Petco%20Park%2C%20San%20Diego" target="_blank" rel="noopener">Petco Park</a></td><td class="num">2004</td><td class="num">39,860</td><td class="num">0</td><td class="num">—</td><td>91勝71敗</td><td>ピオリア</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/137.svg" alt="" loading="lazy">ジャイアンツ<br><span class="en-s">San Francisco Giants</span></td><td>ナ西</td><td>サンフランシスコ</td><td>1883年。ニューヨーク→1958年サンフランシスコ</td><td><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Oracle%20Park%2C%20San%20Francisco" target="_blank" rel="noopener">Oracle Park</a></td><td class="num">2000</td><td class="num">41,331</td><td class="num">8</td><td class="num">2014</td><td>65勝97敗</td><td>スコッツデール</td></tr></tbody></table></div>
+<p class="srcnote">球場・開場・収容人数は Wikipedia の現役球場一覧、WS 優勝は Wikipedia の優勝球団一覧（アストロズは2017年と2022年の2回に訂正）。成績と地区は MLB の2026年順位表、キャンプ地は MLB の2026年春季キャンプ発表による。<sup><a href="#s5">5</a></sup><sup><a href="#s6">6</a></sup><sup><a href="#s58">58</a></sup><sup><a href="#s60">60</a></sup></p>
+<h2 id="c4"><span class="num">④</span>2026年シーズン<span class="en">2026 Season</span></h2>
+<p class="callout">ブルワーズがレイズを4勝1敗で破り、球団史上初のワールドシリーズ優勝を果たした。ヤンキースは地区シリーズでレイズに3連敗した。<sup><a href="#s1">1</a></sup><sup><a href="#s2">2</a></sup></p>
+<div class="kpi"><div class="card"><div class="k">ワールドシリーズ</div><div class="v">ブルワーズ<small>4勝1敗でレイズに勝利。10月28日の第5戦で決定</small></div></div><div class="card"><div class="k">WS MVP</div><div class="v">W・コントレラス<small>捕手。打率.381、盗塁阻止4</small></div></div><div class="card"><div class="k">最高勝率</div><div class="v">103勝59敗<small>ブルワーズ（ナ中）</small></div></div><div class="card"><div class="k">ヤンキース</div><div class="v">93勝68敗<small>ア東2位。地区シリーズで敗退</small></div></div></div>
+<p>ワールドシリーズ MVP は捕手ウィリアム・コントレラス（William Contreras）で、打率.381と盗塁阻止4を記録した。<sup><a href="#s1">1</a></sup></p>
+<h3>地区優勝6球団</h3>
+<div class="tbl-scroll"><table class=""><thead><tr><th>リーグ</th><th>東地区</th><th>中地区</th><th>西地区</th></tr></thead><tbody><tr><td class="name">ア・リーグ</td><td>レイズ（98勝64敗）</td><td>ガーディアンズ（85勝77敗）</td><td>アストロズ（81勝81敗）</td></tr><tr><td class="name">ナ・リーグ</td><td>ブレーブス（94勝68敗）</td><td>ブルワーズ（103勝59敗）</td><td>ドジャース（100勝62敗）</td></tr></tbody></table></div>
+<p class="srcnote">MLB 2026年順位表。<sup><a href="#s58">58</a></sup></p>
+<h3>主要な個人賞</h3>
+<div class="tbl-scroll"><table class=""><thead><tr><th>賞</th><th>ア・リーグ</th><th>ナ・リーグ</th></tr></thead><tbody><tr><td class="name">MVP</td><td>ヨーダン・アルバレス Yordan Alvarez（アストロズ）</td><td>ピート・クロウ＝アームストロング Pete Crow-Armstrong（カブス）</td></tr><tr><td class="name">サイ・ヤング賞</td><td>キャム・シュリトラー Cam Schlittler（ヤンキース）。満票。防御率1.95</td><td>ジェイコブ・ミジオロウスキー Jacob Misiorowski（ブルワーズ）。満票。防御率1.80</td></tr><tr><td class="name">新人王</td><td>ケビン・マクゴニグル Kevin McGonigle</td><td>サル・スチュワート Sal Stewart</td></tr></tbody></table></div>
+<p>ミジオロウスキーは174回2/3で252奪三振、被打率.157を記録し、防御率1.80はMLB全体の1位だった。シュリトラーの防御率1.95はア・リーグ1位で、ERA+は215である。<sup><a href="#s3">3</a></sup><sup><a href="#s54">54</a></sup><sup><a href="#s59">59</a></sup></p>
+<h3>ヤンキースの敗退</h3>
+<p>ヤンキースは93勝68敗でア・リーグ東地区2位となり、ワイルドカードシリーズでレッドソックスに9－0と9－2で連勝した。地区シリーズではレイズに0－1、0－5、3－4で3連敗した。<sup><a href="#s39">39</a></sup>3試合27イニングで一度もリードを奪えなかった。ワールドシリーズ優勝は2009年が最後で、17年間優勝していない。<sup><a href="#s2">2</a></sup></p>
+<h2 id="c5"><span class="num">⑤</span>春季キャンプ<span class="en">Spring Training</span></h2>
+<p class="callout">春季キャンプはフロリダ州のグレープフルーツ・リーグ15球団と、アリゾナ州のカクタス・リーグ15球団に分かれる。ヤンキースのキャンプ地はタンパで、傘下のシングルAとルーキー級も同じ施設を使う。<sup><a href="#s60">60</a></sup><sup><a href="#s84">84</a></sup></p>
+<div class="mapbox"><div class="cap">春季キャンプ地（2026年）</div><div class="sub">紺はグレープフルーツ・リーグ（フロリダ）、緑はカクタス・リーグ（アリゾナ）。赤い大きな円はヤンキースのタンパ。</div>
+<div id="map-camps" class="leaflet-map" role="img" aria-label="春季キャンプ地の地図"></div>
+<p class="map-note">地図: Esri（データは OpenStreetMap ほか）。位置は都市の中心。</p></div>
+<div class="two-col">
+<div><h4>グレープフルーツ・リーグ（フロリダ）</h4><div class="tbl-scroll"><table class=""><thead><tr><th>都市</th><th>球団</th></tr></thead><tbody><tr><td class="name">サラソタ</td><td>オリオールズ</td></tr><tr><td class="name">フォートマイヤーズ</td><td>レッドソックス／ツインズ</td></tr><tr class="hl"><td class="name">タンパ</td><td>ヤンキース</td></tr><tr><td class="name">ポートシャーロット</td><td>レイズ</td></tr><tr><td class="name">ダニーデン</td><td>ブルージェイズ</td></tr><tr><td class="name">レイクランド</td><td>タイガース</td></tr><tr><td class="name">ウェストパームビーチ</td><td>アストロズ／ナショナルズ</td></tr><tr><td class="name">ノースポート</td><td>ブレーブス</td></tr><tr><td class="name">ジュピター</td><td>マーリンズ／カージナルス</td></tr><tr><td class="name">ポートセントルーシー</td><td>メッツ</td></tr><tr><td class="name">クリアウォーター</td><td>フィリーズ</td></tr><tr><td class="name">ブラデントン</td><td>パイレーツ</td></tr></tbody></table></div></div>
+<div><h4>カクタス・リーグ（アリゾナ）</h4><div class="tbl-scroll"><table class=""><thead><tr><th>都市</th><th>球団</th></tr></thead><tbody><tr><td class="name">グレンデール</td><td>ホワイトソックス／ドジャース</td></tr><tr><td class="name">グッドイヤー</td><td>ガーディアンズ／レッズ</td></tr><tr><td class="name">サプライズ</td><td>ロイヤルズ／レンジャーズ</td></tr><tr><td class="name">メサ</td><td>アスレチックス／カブス</td></tr><tr><td class="name">テンピ</td><td>エンゼルス</td></tr><tr><td class="name">ピオリア</td><td>マリナーズ／パドレス</td></tr><tr><td class="name">フェニックス</td><td>ブルワーズ</td></tr><tr><td class="name">スコッツデール</td><td>ダイヤモンドバックス／ロッキーズ／ジャイアンツ</td></tr></tbody></table></div></div>
+</div>
+<figure class="photo"><img src="../images/mlb/c_tampa_skyline.jpg" alt="タンパの市街" loading="lazy"><figcaption>フロリダ州タンパの市街。ヤンキースの春季キャンプ地であり、傘下の育成施設がある。</figcaption></figure>
+<h2 id="c6"><span class="num">⑥</span>お金（リーグ）<span class="en">League Economics</span></h2>
+<p class="callout">MLB の総収入は2024年に121億ドルで過去最高となった。球団間の格差はサラリーキャップではなく、ぜいたく税と収益分配で調整する。<sup><a href="#s12">12</a></sup><sup><a href="#s17">17</a></sup></p>
+<div class="chart"><div class="cap">MLB 総収入の推移（2015〜2025年）</div><div class="sub">単位は億ドル。2020年は COVID-19 の影響で60試合制。2025年は30球団の売上を集計した推計値。</div><svg viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MLB総収入の推移" font-family="-apple-system,Hiragino Sans,sans-serif">
+<line x1="60" y1="290.0" x2="880" y2="290.0" stroke="#E4E8EC"/>
+<text x="52" y="294.0" text-anchor="end" font-size="11" fill="#8a8a8a">0</text>
+<line x1="60" y1="252.9" x2="880" y2="252.9" stroke="#E4E8EC"/>
+<text x="52" y="256.9" text-anchor="end" font-size="11" fill="#8a8a8a">20</text>
+<line x1="60" y1="215.7" x2="880" y2="215.7" stroke="#E4E8EC"/>
+<text x="52" y="219.7" text-anchor="end" font-size="11" fill="#8a8a8a">40</text>
+<line x1="60" y1="178.6" x2="880" y2="178.6" stroke="#E4E8EC"/>
+<text x="52" y="182.6" text-anchor="end" font-size="11" fill="#8a8a8a">60</text>
+<line x1="60" y1="141.4" x2="880" y2="141.4" stroke="#E4E8EC"/>
+<text x="52" y="145.4" text-anchor="end" font-size="11" fill="#8a8a8a">80</text>
+<line x1="60" y1="104.3" x2="880" y2="104.3" stroke="#E4E8EC"/>
+<text x="52" y="108.3" text-anchor="end" font-size="11" fill="#8a8a8a">100</text>
+<line x1="60" y1="67.1" x2="880" y2="67.1" stroke="#E4E8EC"/>
+<text x="52" y="71.1" text-anchor="end" font-size="11" fill="#8a8a8a">120</text>
+<line x1="60" y1="30.0" x2="880" y2="30.0" stroke="#E4E8EC"/>
+<text x="52" y="34.0" text-anchor="end" font-size="11" fill="#8a8a8a">140</text>
+<text x="52" y="18" text-anchor="end" font-size="11" fill="#8a8a8a">億ドル</text>
+<rect x="74.2" y="113.6" width="46.2" height="176.4" fill="#0C2340"/>
+<text x="97.3" y="107.6" text-anchor="middle" font-size="12" fill="#1a1a1a">95</text>
+<text x="97.3" y="308" text-anchor="middle" font-size="12" fill="#555">2015</text>
+<rect x="148.7" y="111.7" width="46.2" height="178.3" fill="#0C2340"/>
+<text x="171.8" y="105.7" text-anchor="middle" font-size="12" fill="#1a1a1a">96</text>
+<text x="171.8" y="308" text-anchor="middle" font-size="12" fill="#555">2016</text>
+<rect x="223.3" y="104.3" width="46.2" height="185.7" fill="#0C2340"/>
+<text x="246.4" y="98.3" text-anchor="middle" font-size="12" fill="#1a1a1a">100</text>
+<text x="246.4" y="308" text-anchor="middle" font-size="12" fill="#555">2017</text>
+<rect x="297.8" y="98.7" width="46.2" height="191.3" fill="#0C2340"/>
+<text x="320.9" y="92.7" text-anchor="middle" font-size="12" fill="#1a1a1a">103</text>
+<text x="320.9" y="308" text-anchor="middle" font-size="12" fill="#555">2018</text>
+<rect x="372.3" y="96.9" width="46.2" height="193.1" fill="#0C2340"/>
+<text x="395.5" y="90.9" text-anchor="middle" font-size="12" fill="#1a1a1a">104</text>
+<text x="395.5" y="308" text-anchor="middle" font-size="12" fill="#555">2019</text>
+<rect x="446.9" y="221.3" width="46.2" height="68.7" fill="#b91c1c"/>
+<text x="470.0" y="215.3" text-anchor="middle" font-size="12" fill="#1a1a1a">37</text>
+<text x="470.0" y="308" text-anchor="middle" font-size="12" fill="#555">2020</text>
+<rect x="521.4" y="111.7" width="46.2" height="178.3" fill="#0C2340"/>
+<text x="544.5" y="105.7" text-anchor="middle" font-size="12" fill="#1a1a1a">96</text>
+<text x="544.5" y="308" text-anchor="middle" font-size="12" fill="#555">2021</text>
+<rect x="596.0" y="87.6" width="46.2" height="202.4" fill="#0C2340"/>
+<text x="619.1" y="81.6" text-anchor="middle" font-size="12" fill="#1a1a1a">109</text>
+<text x="619.1" y="308" text-anchor="middle" font-size="12" fill="#555">2022</text>
+<rect x="670.5" y="74.6" width="46.2" height="215.4" fill="#0C2340"/>
+<text x="693.6" y="68.6" text-anchor="middle" font-size="12" fill="#1a1a1a">116</text>
+<text x="693.6" y="308" text-anchor="middle" font-size="12" fill="#555">2023</text>
+<rect x="745.1" y="65.3" width="46.2" height="224.7" fill="#0C2340"/>
+<text x="768.2" y="59.3" text-anchor="middle" font-size="12" fill="#1a1a1a">121</text>
+<text x="768.2" y="308" text-anchor="middle" font-size="12" fill="#555">2024</text>
+<rect x="819.6" y="57.9" width="46.2" height="232.1" fill="#0C2340" fill-opacity="0.45"/>
+<text x="842.7" y="51.9" text-anchor="middle" font-size="12" fill="#1a1a1a">約125</text>
+<text x="842.7" y="308" text-anchor="middle" font-size="12" fill="#555">2025</text>
+<line x1="470.0" y1="199.3" x2="470.0" y2="156.7" stroke="#b91c1c" stroke-dasharray="3 3"/>
+<rect x="392.0" y="134.7" width="156" height="22" fill="#fff"/>
+<text x="470.0" y="150.7" text-anchor="middle" font-size="12" fill="#b91c1c">COVID-19で60試合制</text>
+<text x="880" y="332" text-anchor="end" font-size="11" fill="#8a8a8a">2025年は推計（薄色）</text>
+</svg></div>
+<p class="srcnote">NYU Stern の資料、CBS Sports（2024年は Forbes 報道の121億ドル）、Human Soar（2025年の推計）。推計方法により年ごとに差がある。<sup><a href="#s11">11</a></sup><sup><a href="#s12">12</a></sup><sup><a href="#s13">13</a></sup></p>
+<h3>全国放映権（2026〜28年）</h3>
+<div class="tbl-scroll"><table class=""><thead><tr><th>放送事業者</th><th class="num">年額</th><th>区分</th></tr></thead><tbody><tr><td class="name">FOX</td><td class="num">約7億2,900万ドル</td><td>2028年まで継続</td></tr><tr><td class="name">ESPN</td><td class="num">約5億5,000万ドル</td><td>新規</td></tr><tr><td class="name">TBS／Turner</td><td class="num">約4億7,000万ドル</td><td>2028年まで継続</td></tr><tr><td class="name">NBC</td><td class="num">約2億ドル</td><td>新規</td></tr><tr><td class="name">Netflix</td><td class="num">約5,000万ドル</td><td>新規</td></tr><tr><td class="name">Apple TV+</td><td class="num">—</td><td>継続</td></tr></tbody></table></div>
+<p class="srcnote">AP と MLB の2025年11月19日の発表。<sup><a href="#s14">14</a></sup><sup><a href="#s15">15</a></sup></p>
+<h3>地方放送網の経営破綻</h3>
+<p>地方放送網（RSN）の Diamond Sports（Bally Sports）が経営破綻し、球団の地方放映収入と配信の安定性が低下した。MLB Local Media が一部球団の中継の制作と配信を引き受ける体制へ移行している。<sup><a href="#s16">16</a></sup></p>
+<p>リーグ全体の収入は NFL が2025年に約210億ドルで、MLB は約118億〜125億ドル、NBA は約100億ドルの規模である。<sup><a href="#s17">17</a></sup></p>
+<div class="chart"><div class="cap">Forbes 2026年 球団評価額 上位10球団</div><div class="sub">ヤンキースが85億ドルで1位。単位は億ドル。</div><svg viewBox="0 0 900 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Forbes 2026年球団評価額" font-family="-apple-system,Hiragino Sans,sans-serif">
+<text x="160" y="28" text-anchor="end" font-size="13" fill="#1a1a1a">ヤンキース</text>
+<rect x="170" y="15" width="547.8" height="18" fill="#b91c1c"/>
+<text x="725.8" y="28" font-size="12.5" fill="#555">85億ドル</text>
+<text x="160" y="56" text-anchor="end" font-size="13" fill="#1a1a1a">ドジャース</text>
+<rect x="170" y="43" width="502.7" height="18" fill="#0C2340"/>
+<text x="680.7" y="56" font-size="12.5" fill="#555">78億ドル</text>
+<text x="160" y="84" text-anchor="end" font-size="13" fill="#1a1a1a">レッドソックス</text>
+<rect x="170" y="71" width="338.3" height="18" fill="#0C2340"/>
+<text x="516.3" y="84" font-size="12.5" fill="#555">52億5,000万ドル</text>
+<text x="160" y="112" text-anchor="end" font-size="13" fill="#1a1a1a">カブス</text>
+<rect x="170" y="99" width="322.2" height="18" fill="#0C2340"/>
+<text x="500.2" y="112" font-size="12.5" fill="#555">50億ドル</text>
+<text x="160" y="140" text-anchor="end" font-size="13" fill="#1a1a1a">ジャイアンツ</text>
+<rect x="170" y="127" width="261.0" height="18" fill="#0C2340"/>
+<text x="439.0" y="140" font-size="12.5" fill="#555">40億5,000万ドル</text>
+<text x="160" y="168" text-anchor="end" font-size="13" fill="#1a1a1a">メッツ</text>
+<rect x="170" y="155" width="225.6" height="18" fill="#0C2340"/>
+<text x="403.6" y="168" font-size="12.5" fill="#555">35億ドル</text>
+<text x="160" y="196" text-anchor="end" font-size="13" fill="#1a1a1a">フィリーズ</text>
+<rect x="170" y="183" width="219.1" height="18" fill="#0C2340"/>
+<text x="397.1" y="196" font-size="12.5" fill="#555">34億ドル</text>
+<text x="160" y="224" text-anchor="end" font-size="13" fill="#1a1a1a">ブレーブス</text>
+<rect x="170" y="211" width="215.9" height="18" fill="#0C2340"/>
+<text x="393.9" y="224" font-size="12.5" fill="#555">33億5,000万ドル</text>
+<text x="160" y="252" text-anchor="end" font-size="13" fill="#1a1a1a">アストロズ</text>
+<rect x="170" y="239" width="206.2" height="18" fill="#0C2340"/>
+<text x="384.2" y="252" font-size="12.5" fill="#555">32億ドル</text>
+<text x="160" y="280" text-anchor="end" font-size="13" fill="#1a1a1a">パドレス</text>
+<rect x="170" y="267" width="199.8" height="18" fill="#0C2340"/>
+<text x="377.8" y="280" font-size="12.5" fill="#555">31億ドル</text>
+</svg></div>
+<p class="srcnote">Forbes 2026年3月20日。<sup><a href="#s7">7</a></sup></p>
+<div class="chart"><div class="cap">2026年 総年俸 上位10球団と下位5球団</div><div class="sub">単位は100万ドル。点線の下は26〜30位。ヤンキースは3位。</div><svg viewBox="0 0 900 468" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="2026年総年俸" font-family="-apple-system,Hiragino Sans,sans-serif">
+<text x="160" y="28" text-anchor="end" font-size="13" fill="#1a1a1a">1 メッツ</text>
+<rect x="170" y="15" width="556.2" height="18" fill="#0C2340"/>
+<text x="734.2" y="28" font-size="12.5" fill="#555">345.2百万ドル</text>
+<text x="160" y="56" text-anchor="end" font-size="13" fill="#1a1a1a">2 ドジャース</text>
+<rect x="170" y="43" width="546.6" height="18" fill="#0C2340"/>
+<text x="724.6" y="56" font-size="12.5" fill="#555">339.3百万ドル</text>
+<text x="160" y="84" text-anchor="end" font-size="13" fill="#1a1a1a">3 ヤンキース</text>
+<rect x="170" y="71" width="494.1" height="18" fill="#b91c1c"/>
+<text x="672.1" y="84" font-size="12.5" fill="#555">306.7百万ドル</text>
+<text x="160" y="112" text-anchor="end" font-size="13" fill="#1a1a1a">4 フィリーズ</text>
+<rect x="170" y="99" width="470.4" height="18" fill="#0C2340"/>
+<text x="648.4" y="112" font-size="12.5" fill="#555">292.0百万ドル</text>
+<text x="160" y="140" text-anchor="end" font-size="13" fill="#1a1a1a">5 ブルージェイズ</text>
+<rect x="170" y="127" width="443.5" height="18" fill="#0C2340"/>
+<text x="621.5" y="140" font-size="12.5" fill="#555">275.3百万ドル</text>
+<text x="160" y="168" text-anchor="end" font-size="13" fill="#1a1a1a">6 ブレーブス</text>
+<rect x="170" y="155" width="424.5" height="18" fill="#0C2340"/>
+<text x="602.5" y="168" font-size="12.5" fill="#555">263.5百万ドル</text>
+<text x="160" y="196" text-anchor="end" font-size="13" fill="#1a1a1a">7 カブス</text>
+<rect x="170" y="183" width="401.6" height="18" fill="#0C2340"/>
+<text x="579.6" y="196" font-size="12.5" fill="#555">249.3百万ドル</text>
+<text x="160" y="224" text-anchor="end" font-size="13" fill="#1a1a1a">8 アストロズ</text>
+<rect x="170" y="211" width="386.3" height="18" fill="#0C2340"/>
+<text x="564.3" y="224" font-size="12.5" fill="#555">239.8百万ドル</text>
+<text x="160" y="252" text-anchor="end" font-size="13" fill="#1a1a1a">9 パドレス</text>
+<rect x="170" y="239" width="351.7" height="18" fill="#0C2340"/>
+<text x="529.7" y="252" font-size="12.5" fill="#555">218.3百万ドル</text>
+<text x="160" y="280" text-anchor="end" font-size="13" fill="#1a1a1a">10 レッドソックス</text>
+<rect x="170" y="267" width="335.1" height="18" fill="#0C2340"/>
+<text x="513.1" y="280" font-size="12.5" fill="#555">208.0百万ドル</text>
+<line x1="0" y1="294" x2="900" y2="294" stroke="#C4CED3" stroke-dasharray="4 4"/>
+<text x="160" y="326" text-anchor="end" font-size="13" fill="#1a1a1a">26 アスレチックス</text>
+<rect x="170" y="313" width="159.3" height="18" fill="#0C2340"/>
+<text x="337.3" y="326" font-size="12.5" fill="#555">98.9百万ドル</text>
+<text x="160" y="354" text-anchor="end" font-size="13" fill="#1a1a1a">27 レイズ</text>
+<rect x="170" y="341" width="154.0" height="18" fill="#0C2340"/>
+<text x="332.0" y="354" font-size="12.5" fill="#555">95.6百万ドル</text>
+<text x="160" y="382" text-anchor="end" font-size="13" fill="#1a1a1a">28 カージナルス</text>
+<rect x="170" y="369" width="152.7" height="18" fill="#0C2340"/>
+<text x="330.7" y="382" font-size="12.5" fill="#555">94.8百万ドル</text>
+<text x="160" y="410" text-anchor="end" font-size="13" fill="#1a1a1a">29 マーリンズ</text>
+<rect x="170" y="397" width="134.2" height="18" fill="#0C2340"/>
+<text x="312.2" y="410" font-size="12.5" fill="#555">83.3百万ドル</text>
+<text x="160" y="438" text-anchor="end" font-size="13" fill="#1a1a1a">30 ガーディアンズ</text>
+<rect x="170" y="425" width="117.3" height="18" fill="#0C2340"/>
+<text x="295.3" y="438" font-size="12.5" fill="#555">72.8百万ドル</text>
+</svg></div>
+<p>1位のメッツ（3億4,520万ドル）と30位のガーディアンズ（7,280万ドル）の差は約4.7倍である。<sup><a href="#s8">8</a></sup></p>
+<h3>ぜいたく税（競争均衡税）</h3>
+<p>総年俸が基準額を超えた球団は、超過額に応じて税を払う。基準額は2025年に2億4,100万ドル、2026年に2億4,400万ドルである。税率は初年度20%・2年連続30%・3年以上50%で、上位の閾値には追加の税率がかかる。<sup><a href="#s23">23</a></sup></p>
+<div class="chart"><div class="cap">2025年のぜいたく税の支払額</div><div class="sub">9球団の合計は4億263万ドルで過去最高。単位は万ドル。</div><svg viewBox="0 0 900 282" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="2025年ぜいたく税" font-family="-apple-system,Hiragino Sans,sans-serif">
+<text x="160" y="28" text-anchor="end" font-size="13" fill="#1a1a1a">ドジャース</text>
+<rect x="170" y="15" width="545.7" height="18" fill="#0C2340"/>
+<text x="723.7" y="28" font-size="12.5" fill="#555">16,937万ドル</text>
+<text x="160" y="56" text-anchor="end" font-size="13" fill="#1a1a1a">メッツ</text>
+<rect x="170" y="43" width="295.3" height="18" fill="#0C2340"/>
+<text x="473.3" y="56" font-size="12.5" fill="#555">9,164万ドル</text>
+<text x="160" y="84" text-anchor="end" font-size="13" fill="#1a1a1a">ヤンキース</text>
+<rect x="170" y="71" width="199.0" height="18" fill="#b91c1c"/>
+<text x="377.0" y="84" font-size="12.5" fill="#555">6,177万ドル</text>
+<text x="160" y="112" text-anchor="end" font-size="13" fill="#1a1a1a">フィリーズ</text>
+<rect x="170" y="99" width="180.6" height="18" fill="#0C2340"/>
+<text x="358.6" y="112" font-size="12.5" fill="#555">5,606万ドル</text>
+<text x="160" y="140" text-anchor="end" font-size="13" fill="#1a1a1a">ブルージェイズ</text>
+<rect x="170" y="127" width="43.9" height="18" fill="#0C2340"/>
+<text x="221.9" y="140" font-size="12.5" fill="#555">1,361万ドル</text>
+<text x="160" y="168" text-anchor="end" font-size="13" fill="#1a1a1a">パドレス</text>
+<rect x="170" y="155" width="22.5" height="18" fill="#0C2340"/>
+<text x="200.5" y="168" font-size="12.5" fill="#555">699万ドル</text>
+<text x="160" y="196" text-anchor="end" font-size="13" fill="#1a1a1a">レッドソックス</text>
+<rect x="170" y="183" width="4.8" height="18" fill="#0C2340"/>
+<text x="182.8" y="196" font-size="12.5" fill="#555">150万ドル</text>
+<text x="160" y="224" text-anchor="end" font-size="13" fill="#1a1a1a">アストロズ</text>
+<rect x="170" y="211" width="4.8" height="18" fill="#0C2340"/>
+<text x="182.8" y="224" font-size="12.5" fill="#555">150万ドル</text>
+<text x="160" y="252" text-anchor="end" font-size="13" fill="#1a1a1a">レンジャーズ</text>
+<rect x="170" y="239" width="2.0" height="18" fill="#0C2340"/>
+<text x="180.0" y="252" font-size="12.5" fill="#555">19万ドル</text>
+</svg></div>
+<p class="srcnote">Sports Business Journal 2025年12月19日。<sup><a href="#s24">24</a></sup></p>
+<h2 id="c7"><span class="num">⑦</span>お金（選手）<span class="en">Player Pay</span></h2>
+<p class="callout">マイナーの最低年俸は19,800ドルから35,800ドル、MLB の最低年俸は78万ドルで、MLB に上がると最低額が20倍以上になる。円換算は1ドル＝150円で計算する。<sup><a href="#s35">35</a></sup><sup><a href="#s9">9</a></sup></p>
+<div class="chart"><div class="cap">年俸の段階（対数目盛）</div><div class="sub">緑はマイナー（2023年の労使協定の最低年額）、紺は MLB、赤は契約の例。目盛は1目盛で10倍。</div><svg viewBox="0 0 900 396" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="年俸の段階（対数目盛）" font-family="-apple-system,Hiragino Sans,sans-serif">
+<line x1="230.0" y1="30" x2="230.0" y2="382" stroke="#E4E8EC"/>
+<text x="230.0" y="24" text-anchor="middle" font-size="11" fill="#8a8a8a">1万</text>
+<line x1="358.0" y1="30" x2="358.0" y2="382" stroke="#E4E8EC"/>
+<text x="358.0" y="24" text-anchor="middle" font-size="11" fill="#8a8a8a">10万</text>
+<line x1="486.0" y1="30" x2="486.0" y2="382" stroke="#E4E8EC"/>
+<text x="486.0" y="24" text-anchor="middle" font-size="11" fill="#8a8a8a">100万</text>
+<line x1="614.0" y1="30" x2="614.0" y2="382" stroke="#E4E8EC"/>
+<text x="614.0" y="24" text-anchor="middle" font-size="11" fill="#8a8a8a">1,000万</text>
+<line x1="742.0" y1="30" x2="742.0" y2="382" stroke="#E4E8EC"/>
+<text x="742.0" y="24" text-anchor="middle" font-size="11" fill="#8a8a8a">1億</text>
+<line x1="870.0" y1="30" x2="870.0" y2="382" stroke="#E4E8EC"/>
+<text x="870.0" y="24" text-anchor="middle" font-size="11" fill="#8a8a8a">10億ドル</text>
+<text x="220" y="56" text-anchor="end" font-size="12.5" fill="#1a1a1a">ルーキー級 最低年俸</text>
+<rect x="230" y="44" width="38.0" height="16" fill="#1baf7a"/>
+<text x="276.0" y="56" font-size="12" fill="#555">19,800ドル（297万円）</text>
+<text x="220" y="90" text-anchor="end" font-size="12.5" fill="#1a1a1a">シングルA 最低年俸</text>
+<rect x="230" y="78" width="53.5" height="16" fill="#1baf7a"/>
+<text x="291.5" y="90" font-size="12" fill="#555">26,200ドル（393万円）</text>
+<text x="220" y="124" text-anchor="end" font-size="12.5" fill="#1a1a1a">ハイA 最低年俸</text>
+<rect x="230" y="112" width="55.8" height="16" fill="#1baf7a"/>
+<text x="293.8" y="124" font-size="12" fill="#555">27,300ドル（約410万円）</text>
+<text x="220" y="158" text-anchor="end" font-size="12.5" fill="#1a1a1a">AA 最低年俸</text>
+<rect x="230" y="146" width="61.5" height="16" fill="#1baf7a"/>
+<text x="299.5" y="158" font-size="12" fill="#555">30,250ドル（約454万円）</text>
+<text x="220" y="192" text-anchor="end" font-size="12.5" fill="#1a1a1a">AAA 最低年俸</text>
+<rect x="230" y="180" width="70.9" height="16" fill="#1baf7a"/>
+<text x="308.9" y="192" font-size="12" fill="#555">35,800ドル（537万円）</text>
+<text x="220" y="226" text-anchor="end" font-size="12.5" fill="#1a1a1a">MLB 最低年俸（2026年）</text>
+<rect x="230" y="214" width="242.2" height="16" fill="#0C2340"/>
+<text x="480.2" y="226" font-size="12" fill="#555">78万ドル（1億1,700万円）</text>
+<text x="220" y="260" text-anchor="end" font-size="12.5" fill="#1a1a1a">MLB 平均年俸（2026年開幕時）</text>
+<rect x="230" y="248" width="349.1" height="16" fill="#0C2340"/>
+<text x="587.1" y="260" font-size="12" fill="#555">約533万6千ドル（約8億円）</text>
+<text x="220" y="294" text-anchor="end" font-size="12.5" fill="#1a1a1a">大谷 年平均（ぜいたく税の計算上）</text>
+<rect x="230" y="282" width="468.9" height="16" fill="#b91c1c"/>
+<text x="690.9" y="294" text-anchor="end" font-size="12" fill="#fff">約4,608万ドル（約69億円）</text>
+<text x="220" y="328" text-anchor="end" font-size="12.5" fill="#1a1a1a">大谷 契約総額（10年）</text>
+<rect x="230" y="316" width="620.2" height="16" fill="#b91c1c"/>
+<text x="842.2" y="328" text-anchor="end" font-size="12" fill="#fff">7億ドル（1,050億円）</text>
+<text x="220" y="362" text-anchor="end" font-size="12.5" fill="#1a1a1a">ソト 契約総額</text>
+<rect x="230" y="350" width="625.1" height="16" fill="#b91c1c"/>
+<text x="847.1" y="362" text-anchor="end" font-size="12" fill="#fff">7億6,500万ドル（約1,148億円）</text>
+</svg></div>
+<p>マイナーの金額は2023年の初のマイナー労使協定の最低年額である。2026年の AAA は約36,590ドル（Front Office Sports）。MLB の平均年俸は AP の2026年開幕時の集計による。<sup><a href="#s35">35</a></sup><sup><a href="#s21">21</a></sup>大谷翔平（Shohei Ohtani）は7億ドルのうち6億8,000万ドルを2034〜43年に後払いで受け取るため、ぜいたく税の計算上の年平均は約4,608万ドルとなる。<sup><a href="#s26">26</a></sup></p>
+<h3>史上最大の契約 上位10件（総額）</h3>
+<div class="tbl-scroll"><table class=""><thead><tr><th class="num">順位</th><th>選手</th><th class="num">総額</th><th class="num">円換算</th></tr></thead><tbody><tr><td class="num">1</td><td>フアン・ソト <span class="en-s">Juan Soto</span></td><td class="num">7億6,500万ドル</td><td class="num">約1,148億円</td></tr><tr><td class="num">2</td><td>大谷翔平 <span class="en-s">Shohei Ohtani</span></td><td class="num">7億ドル</td><td class="num">1,050億円</td></tr><tr><td class="num">3</td><td>ブラディミール・ゲレーロJr. <span class="en-s">Vladimir Guerrero Jr.</span></td><td class="num">5億ドル</td><td class="num">750億円</td></tr><tr><td class="num">4</td><td>マイク・トラウト <span class="en-s">Mike Trout</span></td><td class="num">4億2,650万ドル</td><td class="num">約640億円</td></tr><tr><td class="num">5</td><td>ムーキー・ベッツ <span class="en-s">Mookie Betts</span></td><td class="num">3億6,500万ドル</td><td class="num">約548億円</td></tr><tr class="hl"><td class="num">6</td><td>アーロン・ジャッジ <span class="en-s">Aaron Judge</span></td><td class="num">3億6,000万ドル</td><td class="num">540億円</td></tr><tr><td class="num">7</td><td>マニー・マチャド <span class="en-s">Manny Machado</span></td><td class="num">3億5,000万ドル</td><td class="num">525億円</td></tr><tr><td class="num">8</td><td>フランシスコ・リンドーア <span class="en-s">Francisco Lindor</span></td><td class="num">3億4,100万ドル</td><td class="num">約512億円</td></tr><tr><td class="num">9</td><td>ブライス・ハーパー <span class="en-s">Bryce Harper</span></td><td class="num">3億3,000万ドル</td><td class="num">495億円</td></tr><tr class="hl"><td class="num">10</td><td>ゲリット・コール <span class="en-s">Gerrit Cole</span></td><td class="num">3億2,400万ドル</td><td class="num">486億円</td></tr></tbody></table></div>
+<p class="srcnote">Baseball-Reference の契約総額ランキングと AP。ジャッジ（9年3億6,000万ドル）とコール（9年3億2,400万ドル）はヤンキースの契約。<sup><a href="#s25">25</a></sup><sup><a href="#s26">26</a></sup><sup><a href="#s76">76</a></sup></p>
+<h3>サービスタイム・年俸調停・FA</h3>
+<p>MLB の登録日数172日で1年のサービスタイムとなる。3年以上6年未満の選手は年俸調停の権利を持ち、6年でフリーエージェント（FA）となる。2年台の上位約22%は Super Two として調停の対象に加わる。<sup><a href="#s22">22</a></sup></p>
+<div class="chart"><div class="cap">サービスタイムと年俸の決まり方</div><div class="sub">MLB の登録日数172日で1年と数える。</div><div class="svg-scroll"><svg viewBox="0 0 1000 116" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="サービスタイムの流れ" font-family="-apple-system,Hiragino Sans,sans-serif">
+<defs><marker id="ah-4912" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0C2340"/></marker></defs>
+<rect x="0.0" y="10" width="230.5" height="96" fill="#fff" stroke="#0C2340" stroke-width="1.5"/>
+<rect x="0.0" y="10" width="230.5" height="26" fill="#0C2340"/>
+<text x="115.2" y="28" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">0〜3年</text>
+<text x="115.2" y="56" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">調停の権利なし</text>
+<text x="115.2" y="75" text-anchor="middle" font-size="10.5" fill="#1a1a1a">最低年俸 78万ドル以上</text>
+<text x="115.2" y="94" text-anchor="middle" font-size="10.5" fill="#1a1a1a"></text>
+<line x1="233.5" y1="58.0" x2="253.5" y2="58.0" stroke="#0C2340" stroke-width="1.6" marker-end="url(#ah-4912)"/>
+<rect x="256.5" y="10" width="230.5" height="96" fill="#fff" stroke="#0C2340" stroke-width="1.5"/>
+<rect x="256.5" y="10" width="230.5" height="26" fill="#0C2340"/>
+<text x="371.8" y="28" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">Super Two</text>
+<text x="371.8" y="56" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">2年台の上位約22%</text>
+<text x="371.8" y="75" text-anchor="middle" font-size="10.5" fill="#1a1a1a">調停の対象に加わる</text>
+<text x="371.8" y="94" text-anchor="middle" font-size="10.5" fill="#1a1a1a"></text>
+<line x1="490.0" y1="58.0" x2="510.0" y2="58.0" stroke="#0C2340" stroke-width="1.6" marker-end="url(#ah-4912)"/>
+<rect x="513.0" y="10" width="230.5" height="96" fill="#fff" stroke="#0C2340" stroke-width="1.5"/>
+<rect x="513.0" y="10" width="230.5" height="26" fill="#0C2340"/>
+<text x="628.2" y="28" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">3〜6年</text>
+<text x="628.2" y="56" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">年俸調停</text>
+<text x="628.2" y="75" text-anchor="middle" font-size="10.5" fill="#1a1a1a">調停の権利を持つ</text>
+<text x="628.2" y="94" text-anchor="middle" font-size="10.5" fill="#1a1a1a"></text>
+<line x1="746.5" y1="58.0" x2="766.5" y2="58.0" stroke="#0C2340" stroke-width="1.6" marker-end="url(#ah-4912)"/>
+<rect x="769.5" y="10" width="230.5" height="96" fill="#fff" stroke="#0C2340" stroke-width="1.5"/>
+<rect x="769.5" y="10" width="230.5" height="26" fill="#0C2340"/>
+<text x="884.8" y="28" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">6年以上</text>
+<text x="884.8" y="56" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">フリーエージェント</text>
+<text x="884.8" y="75" text-anchor="middle" font-size="10.5" fill="#1a1a1a">（FA）</text>
+<text x="884.8" y="94" text-anchor="middle" font-size="10.5" fill="#1a1a1a"></text>
+</svg></div></div>
+<h2 id="c8"><span class="num">⑧</span>契約とロースターの規則<span class="en">Roster Rules</span></h2>
+<p class="callout">MLB の試合に出る26人枠の外側に、選手を保護する40人枠がある。マイナー契約の選手は一定期間内に40人枠へ入らないと、ルール5ドラフトで他球団に指名される可能性がある。<sup><a href="#s27">27</a></sup><sup><a href="#s28">28</a></sup></p>
+<div class="tbl-scroll"><table class=""><thead><tr><th>規則</th><th>内容</th></tr></thead><tbody><tr><td class="name">26人枠</td><td>MLB の試合に出場できる通常のアクティブ枠</td></tr><tr><td class="name">40人枠</td><td>MLB 契約の選手と一部のマイナー選手を含む保護枠</td></tr><tr><td class="name">オプション</td><td>40人枠の選手をマイナーへ送る権利。通常3年分で、1年にマイナーへ送れる回数は原則5回まで</td></tr><tr><td class="name">DFA（事実上の戦力外）</td><td>40人枠から外す手続き。7日以内にトレード・ウェーバー・契約解除のいずれかを処理する</td></tr><tr><td class="name">ルール5ドラフト</td><td>19歳以上で契約した選手は、契約後4回目のルール5ドラフトまでに40人枠へ入れないと他球団に指名される可能性がある。指名した球団は翌シーズンその選手を26人枠に置く</td></tr><tr><td class="name">IL</td><td>負傷者リスト</td></tr><tr><td class="name">ドラフト</td><td>20巡。上位10巡のスロット価値の合計が球団のボーナスプールとなる。指名されなかった選手の契約金の上限は通常12万5千ドル</td></tr><tr><td class="name">国際アマチュア</td><td>球団ごとの契約金プールの範囲で契約する。2026年のプールは544万〜803万4,900ドルで、ヤンキースは544万ドル（最低額）</td></tr></tbody></table></div>
+<p class="srcnote">MLB 用語集（40人枠・ルール5）、MLB Rules、MLB の国際契約発表。<sup><a href="#s27">27</a></sup><sup><a href="#s28">28</a></sup><sup><a href="#s29">29</a></sup><sup><a href="#s31">31</a></sup><sup><a href="#s90">90</a></sup></p>
+<h3>日本の大学生が国際アマチュアとして扱われる理由</h3>
+<p>MLB の規則では、25歳未満で外国のプロ経験が6年未満の選手は国際アマチュアとなる。NPB に所属していない日本の大学生はこの条件に該当する。<sup><a href="#s9">9</a></sup><sup><a href="#s32">32</a></sup>そのため日本の大学生は、国際アマチュアの契約金プールの範囲で契約する。</p>
+<p>ポスティングは NPB 球団に所属する選手の移籍制度であり、MLB 球団が旧所属球団へ譲渡金を払う点が国際アマチュア契約と異なる。<sup><a href="#s32">32</a></sup>日本の社会人野球から直接契約した例には、田澤純一（レッドソックス）と吉川峻平（パナソニックからダイヤモンドバックス）がある。<sup><a href="#s33">33</a></sup><sup><a href="#s34">34</a></sup></p>
+<h2 id="c9"><span class="num">⑨</span>労使協定<span class="en">CBA</span></h2>
+<p class="callout">2022〜26年の労使協定は2026年12月1日に失効し、2026年11月時点で交渉が続いている。MLB はサラリーキャップと下限額の導入を提案し、選手会は反対している。<sup><a href="#s9">9</a></sup><sup><a href="#s19">19</a></sup><sup><a href="#s20">20</a></sup></p>
+<p>現行の協定は2022年3月10日に成立した。主な内容は最低年俸の段階的な引き上げと、調停前の選手向けボーナスプール5,000万ドルである。ユニバーサルDH・ドラフト抽選・サービスタイム操作の対策・オプション回数の制限も導入した。<sup><a href="#s18">18</a></sup><sup><a href="#s9">9</a></sup></p>
+<div class="tbl-scroll"><table class=""><thead><tr><th>年</th><th class="num">2022</th><th class="num">2023</th><th class="num">2024</th><th class="num">2025</th><th class="num">2026</th></tr></thead><tbody><tr><td class="name">MLB 最低年俸</td><td class="num">70万ドル</td><td class="num">72万ドル</td><td class="num">74万ドル</td><td class="num">76万ドル</td><td class="num">78万ドル</td></tr></tbody></table></div>
+<p>AP は2026年6月にロックアウトが予想されると報じた。新協定の内容によっては、国際アマチュアの契約解禁日（2027年1月15日）と2027年の球団別プール額が変わる可能性がある。国際ドラフトの導入も交渉の論点である。<sup><a href="#s19">19</a></sup><sup><a href="#s10">10</a></sup></p>
+<h2 id="c10"><span class="num">⑩</span>マイナーリーグ<span class="en">Minor League Baseball</span></h2>
+<p class="callout">マイナーリーグは2021年に160球団以上から120球団へ再編され、MLB が直接管理する体系となった。選手の待遇は2022年の和解と2023年の初の労使協定で改善した。<sup><a href="#s96">96</a></sup><sup><a href="#s35">35</a></sup><sup><a href="#s37">37</a></sup></p>
+<h3>2021年の再編</h3>
+<p>MLB とマイナーを結んでいた協定（PBA）は2020年9月30日に失効した。従来は MLB が最低160球団を保証していた。2021年から MLB 直轄の Professional Development League（PDL）へ移行し、各 MLB 球団が AAA・AA・ハイA・シングルAを1球団ずつ持つ120球団体制となった。ライセンスの期間は原則10年（2021〜30年）である。<sup><a href="#s95">95</a></sup><sup><a href="#s96">96</a></sup><sup><a href="#s97">97</a></sup></p>
+<p>体系から外れた球団の一部は、MLB パートナーリーグ（American Association・Atlantic League・Frontier League・Pioneer League）や2021年創設の MLB Draft League へ移った。<sup><a href="#s98">98</a></sup><sup><a href="#s99">99</a></sup>2021年に使った地域名のリーグ名（Triple-A East など）は、2022年に歴史的な名称へ戻った。<sup><a href="#s100">100</a></sup></p>
+<h3>階層（2026年）</h3>
+<div class="tbl-scroll"><table class=""><thead><tr><th>階層</th><th>リーグ</th><th class="num">1球団の試合数</th><th class="num">年齢の中央値</th></tr></thead><tbody><tr><td class="name">AAA</td><td>International／Pacific Coast</td><td class="num">150</td><td class="num">27.0〜27.5歳</td></tr><tr><td class="name">AA</td><td>Eastern／Southern／Texas</td><td class="num">138</td><td class="num">24.7〜25.0歳</td></tr><tr><td class="name">ハイA</td><td>Midwest／South Atlantic／Northwest</td><td class="num">132</td><td class="num">23.1〜23.2歳</td></tr><tr><td class="name">シングルA</td><td>California／Carolina／Florida State</td><td class="num">132</td><td class="num">21.7〜22.2歳</td></tr><tr><td class="name">ルーキー</td><td>FCL／ACL／DSL</td><td class="num">FCL・ACL は約60</td><td class="num">—</td></tr></tbody></table></div>
+<p class="srcnote">MiLB、Baseball America、Florida Pro Baseball。<sup><a href="#s100">100</a></sup><sup><a href="#s101">101</a></sup><sup><a href="#s102">102</a></sup><sup><a href="#s103">103</a></sup></p>
+<h3>新ルールの試験導入</h3>
+<p>ピッチクロック・牽制と離塁の制限・18インチのベース・守備シフトの制限はマイナーで先行して試験し、2023年に MLB へ導入した。<sup><a href="#s104">104</a></sup>ABS（自動ボール・ストライク判定）は2019年に独立リーグの Atlantic League、2022年に Florida State League、2023〜25年に AAA などで試験した。2026年の MLB は全面的な自動判定ではなく、選手が球審の判定に異議を申し立てるチャレンジ方式を採用した。<sup><a href="#s51">51</a></sup></p>
+<h3>待遇の変化</h3>
+<p>2022年以前のマイナー選手の年俸は1万ドル前後で、住宅をホストファミリーに頼る選手も多かった。<sup><a href="#s37">37</a></sup><sup><a href="#s38">38</a></sup>2022年に未払い賃金などの訴訟で MLB が1億8,500万ドルで和解し、同年にマイナー選手が MLBPA に加入した。2023年には初のマイナー労使協定（期間5年）が承認された。<sup><a href="#s35">35</a></sup><sup><a href="#s37">37</a></sup></p>
+<div class="tbl-scroll"><table class=""><thead><tr><th>階層</th><th class="num">2023年協定以前</th><th class="num">2023年協定の最低年額</th><th class="num">円換算</th></tr></thead><tbody><tr><td class="name">ルーキー（コンプレックス）</td><td class="num">4,800ドル</td><td class="num">19,800ドル</td><td class="num">297万円</td></tr><tr><td class="name">シングルA</td><td class="num">—</td><td class="num">26,200ドル</td><td class="num">393万円</td></tr><tr><td class="name">ハイA</td><td class="num">—</td><td class="num">27,300ドル</td><td class="num">約410万円</td></tr><tr><td class="name">AA</td><td class="num">13,800ドル</td><td class="num">30,250ドル</td><td class="num">約454万円</td></tr><tr><td class="name">AAA</td><td class="num">17,500ドル</td><td class="num">35,800ドル</td><td class="num">537万円</td></tr></tbody></table></div>
+<p>2026年の AAA の最低年額は約36,590ドルである（Front Office Sports）。春季キャンプとオフシーズンにも別建ての給与があり、対象の選手には住宅・1日2食・移動の保障が提供される。<sup><a href="#s35">35</a></sup><sup><a href="#s36">36</a></sup></p>
+<h3>観客動員と球団の経営</h3>
+<p>2025年の120球団の観客数の合計は約3,036万人である。<sup><a href="#s105">105</a></sup>2021年設立の Diamond Baseball Holdings（DBH）はマイナー球団の買収を続け、2024年には Syracuse Mets と Brooklyn Cyclones の買収を発表した。<sup><a href="#s106">106</a></sup></p>
+<p>特徴のある球団名の例として、Rocket City Trash Pandas・Amarillo Sod Poodles・Richmond Flying Squirrels・Hartford Yard Goats・Jacksonville Jumbo Shrimp がある。<sup><a href="#s100">100</a></sup></p>
+<h2 id="c11"><span class="num">⑪</span>30球団の傘下表<span class="en">Affiliates</span></h2>
+<p class="callout">各 MLB 球団は AAA・AA・ハイA・シングルAに1球団ずつ傘下を持つ。2027年から2球団が名称を変更する。<sup><a href="#s107">107</a></sup><sup><a href="#s4">4</a></sup></p>
+<div class="tbl-scroll tbl-wide"><table class="wide-aff"><thead><tr><th>MLB 球団</th><th>AAA</th><th>AA</th><th>ハイA</th><th>シングルA</th></tr></thead><tbody><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/110.svg" alt="" loading="lazy">オリオールズ</td><td><img class="tlogo-s" src="../images/mlb/logos/568.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Harbor%20Park%2C%20Norfolk" target="_blank" rel="noopener">Norfolk Tides</a>／ノーフォーク</td><td><img class="tlogo-s" src="../images/mlb/logos/418.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Prince%20George%27s%20Stadium%2C%20Bowie" target="_blank" rel="noopener">Chesapeake Baysox</a>／ボウイ</td><td><img class="tlogo-s" src="../images/mlb/logos/493.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Nymeo%20Field%2C%20Frederick" target="_blank" rel="noopener">Frederick Keys</a>／フレデリック</td><td><img class="tlogo-s" src="../images/mlb/logos/548.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Arthur%20W.%20Perdue%20Stadium%2C%20Salisbury" target="_blank" rel="noopener">Delmarva Shorebirds</a>／ソールズベリー</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/111.svg" alt="" loading="lazy">レッドソックス</td><td><img class="tlogo-s" src="../images/mlb/logos/533.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Polar%20Park%2C%20Worcester" target="_blank" rel="noopener">Worcester Red Sox</a>／ウースター</td><td><img class="tlogo-s" src="../images/mlb/logos/546.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Delta%20Dental%20Park%2C%20Portland" target="_blank" rel="noopener">Portland Sea Dogs</a>／ポートランド</td><td><img class="tlogo-s" src="../images/mlb/logos/428.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Fluor%20Field%20at%20the%20West%20End%2C%20Greenville" target="_blank" rel="noopener">Greenville Drive</a>／グリーンビル</td><td><img class="tlogo-s" src="../images/mlb/logos/414.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Carilion%20Clinic%20Field%2C%20Salem" target="_blank" rel="noopener">Salem RidgeYaks</a>／セーラム</td></tr><tr class="hl"><td class="name"><img class="tlogo" src="../images/mlb/logos/147.svg" alt="" loading="lazy">ヤンキース</td><td><img class="tlogo-s" src="../images/mlb/logos/531.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=PNC%20Field%2C%20Moosic" target="_blank" rel="noopener">Scranton/Wilkes-Barre RailRiders</a>（2027年から Highlanders）／ムーシック</td><td><img class="tlogo-s" src="../images/mlb/logos/1956.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=TD%20Bank%20Ballpark%2C%20Bridgewater" target="_blank" rel="noopener">Somerset Patriots</a>／ブリッジウォーター</td><td><img class="tlogo-s" src="../images/mlb/logos/537.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Heritage%20Financial%20Park%2C%20Wappingers%20Falls" target="_blank" rel="noopener">Hudson Valley Renegades</a>／ワッピンガーズフォールズ</td><td><img class="tlogo-s" src="../images/mlb/logos/587.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=George%20M.%20Steinbrenner%20Field%2C%20Tampa" target="_blank" rel="noopener">Tampa Tarpons</a>／タンパ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/139.svg" alt="" loading="lazy">レイズ</td><td><img class="tlogo-s" src="../images/mlb/logos/234.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Durham%20Bulls%20Athletic%20Park%2C%20Durham" target="_blank" rel="noopener">Durham Bulls</a>／ダーラム</td><td><img class="tlogo-s" src="../images/mlb/logos/421.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=DABOS%20Park%2C%20Montgomery" target="_blank" rel="noopener">Montgomery Biscuits</a>／モンゴメリー</td><td><img class="tlogo-s" src="../images/mlb/logos/2498.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Bowling%20Green%20Ballpark%2C%20Bowling%20Green" target="_blank" rel="noopener">Bowling Green Hot Rods</a>／ボウリンググリーン</td><td><img class="tlogo-s" src="../images/mlb/logos/233.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Joseph%20P.%20Riley%2C%20Jr.%20Ballpark%2C%20Charleston" target="_blank" rel="noopener">Charleston RiverDogs</a>／チャールストン</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/141.svg" alt="" loading="lazy">ブルージェイズ</td><td><img class="tlogo-s" src="../images/mlb/logos/422.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Sahlen%20Field%2C%20Buffalo" target="_blank" rel="noopener">Buffalo Bisons</a>／バッファロー</td><td><img class="tlogo-s" src="../images/mlb/logos/463.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Delta%20Dental%20Stadium%2C%20Manchester" target="_blank" rel="noopener">New Hampshire Fisher Cats</a>／マンチェスター</td><td><img class="tlogo-s" src="../images/mlb/logos/435.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Rogers%20Field%20at%20Nat%20Bailey%20Stadium%2C%20Vancouver" target="_blank" rel="noopener">Vancouver Canadians</a>／バンクーバー</td><td><img class="tlogo-s" src="../images/mlb/logos/424.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=TD%20Ballpark%2C%20Dunedin" target="_blank" rel="noopener">Dunedin Blue Jays</a>／ダニーデン</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/145.svg" alt="" loading="lazy">ホワイトソックス</td><td><img class="tlogo-s" src="../images/mlb/logos/494.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Truist%20Field%2C%20Charlotte" target="_blank" rel="noopener">Charlotte Knights</a>／シャーロット</td><td><img class="tlogo-s" src="../images/mlb/logos/247.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Regions%20Field%2C%20Birmingham" target="_blank" rel="noopener">Birmingham Barons</a>／バーミングハム</td><td><img class="tlogo-s" src="../images/mlb/logos/580.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Truist%20Stadium%2C%20Winston-Salem" target="_blank" rel="noopener">Winston-Salem Dash</a>／ウィンストンセーラム</td><td><img class="tlogo-s" src="../images/mlb/logos/487.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Atrium%20Health%20Ballpark%2C%20Kannapolis" target="_blank" rel="noopener">Kannapolis Cannon Ballers</a>／カナポリス</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/114.svg" alt="" loading="lazy">ガーディアンズ</td><td><img class="tlogo-s" src="../images/mlb/logos/445.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Huntington%20Park%2C%20Columbus" target="_blank" rel="noopener">Columbus Clippers</a>／コロンバス</td><td><img class="tlogo-s" src="../images/mlb/logos/402.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=7%2017%20Credit%20Union%20Park%2C%20Akron" target="_blank" rel="noopener">Akron RubberDucks</a>／アクロン</td><td><img class="tlogo-s" src="../images/mlb/logos/437.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Classic%20Auto%20Group%20Park%2C%20Eastlake" target="_blank" rel="noopener">Lake County Captains</a>／イーストレイク</td><td><img class="tlogo-s" src="../images/mlb/logos/481.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=City%20Stadium%2C%20Lynchburg" target="_blank" rel="noopener">Hill City Howlers</a>／リンチバーグ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/116.svg" alt="" loading="lazy">タイガース</td><td><img class="tlogo-s" src="../images/mlb/logos/512.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Fifth%20Third%20Field%2C%20Toledo" target="_blank" rel="noopener">Toledo Mud Hens</a>／トレド</td><td><img class="tlogo-s" src="../images/mlb/logos/106.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=UPMC%20Park%2C%20Erie" target="_blank" rel="noopener">Erie SeaWolves</a>／エリー</td><td><img class="tlogo-s" src="../images/mlb/logos/582.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=LMCU%20Ballpark%2C%20Comstock%20Park" target="_blank" rel="noopener">West Michigan Whitecaps</a>／ウェストミシガン</td><td><img class="tlogo-s" src="../images/mlb/logos/570.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Publix%20Field%20at%20Joker%20Marchant%20Stadium%2C%20Lakeland" target="_blank" rel="noopener">Lakeland Flying Tigers</a>／レイクランド</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/118.svg" alt="" loading="lazy">ロイヤルズ</td><td><img class="tlogo-s" src="../images/mlb/logos/541.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Werner%20Park%2C%20Papillion" target="_blank" rel="noopener">Omaha Storm Chasers</a>／オマハ</td><td><img class="tlogo-s" src="../images/mlb/logos/1350.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Arvest%20Ballpark%2C%20Springdale" target="_blank" rel="noopener">Northwest Arkansas Naturals</a>／スプリングデール</td><td><img class="tlogo-s" src="../images/mlb/logos/565.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Modern%20Woodmen%20Park%2C%20Davenport" target="_blank" rel="noopener">Quad Cities River Bandits</a>／ダベンポート</td><td><img class="tlogo-s" src="../images/mlb/logos/3705.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Segra%20Park%2C%20Columbia" target="_blank" rel="noopener">Columbia Fireflies</a>／コロンビア</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/142.svg" alt="" loading="lazy">ツインズ</td><td><img class="tlogo-s" src="../images/mlb/logos/1960.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=CHS%20Field%2C%20St.%20Paul" target="_blank" rel="noopener">St. Paul Saints</a>／セントポール</td><td><img class="tlogo-s" src="../images/mlb/logos/3898.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Equity%20Bank%20Park%2C%20Wichita" target="_blank" rel="noopener">Wichita Wind Surge</a>／ウィチタ</td><td><img class="tlogo-s" src="../images/mlb/logos/492.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Veterans%20Memorial%20Stadium%2C%20Cedar%20Rapids" target="_blank" rel="noopener">Cedar Rapids Kernels</a>／シーダーラピッズ</td><td><img class="tlogo-s" src="../images/mlb/logos/509.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Lee%20Health%20Sports%20Complex%2C%20Fort%20Myers" target="_blank" rel="noopener">Fort Myers Mighty Mussels</a>／フォートマイヤーズ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/133.svg" alt="" loading="lazy">アスレチックス</td><td><img class="tlogo-s" src="../images/mlb/logos/400.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Las%20Vegas%20Ballpark%2C%20Las%20Vegas" target="_blank" rel="noopener">Las Vegas Aviators</a>／ラスベガス</td><td><img class="tlogo-s" src="../images/mlb/logos/237.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Momentum%20Bank%20Ballpark%2C%20Midland" target="_blank" rel="noopener">Midland RockHounds</a>／ミッドランド</td><td><img class="tlogo-s" src="../images/mlb/logos/499.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Jackson%20Field%2C%20Lansing" target="_blank" rel="noopener">Lansing Lugnuts</a>／ランシング</td><td><img class="tlogo-s" src="../images/mlb/logos/524.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Banner%20Island%20Ballpark%2C%20Stockton" target="_blank" rel="noopener">Stockton Ports</a>／ストックトン</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/117.svg" alt="" loading="lazy">アストロズ</td><td><img class="tlogo-s" src="../images/mlb/logos/5434.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Constellation%20Field%2C%20Sugar%20Land" target="_blank" rel="noopener">Sugar Land Space Cowboys</a>／シュガーランド</td><td><img class="tlogo-s" src="../images/mlb/logos/482.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Whataburger%20Field%2C%20Corpus%20Christi" target="_blank" rel="noopener">Corpus Christi Hooks</a>／コーパスクリスティ</td><td><img class="tlogo-s" src="../images/mlb/logos/573.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=HomeTrust%20Park%2C%20Asheville" target="_blank" rel="noopener">Asheville Tourists</a>／アッシュビル</td><td><img class="tlogo-s" src="../images/mlb/logos/3712.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=SEGRA%20Stadium%2C%20Fayetteville" target="_blank" rel="noopener">Fayetteville Woodpeckers</a>／ファイエットビル</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/108.svg" alt="" loading="lazy">エンゼルス</td><td><img class="tlogo-s" src="../images/mlb/logos/561.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=The%20Ballpark%20at%20America%20First%20Square%2C%20South%20Jordan" target="_blank" rel="noopener">Salt Lake Bees</a>／ソルトレイク</td><td><img class="tlogo-s" src="../images/mlb/logos/559.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Toyota%20Field%2C%20Madison" target="_blank" rel="noopener">Rocket City Trash Pandas</a>／マディソン</td><td><img class="tlogo-s" src="../images/mlb/logos/460.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Gesa%20Stadium%2C%20Pasco" target="_blank" rel="noopener">Tri-City Dust Devils</a>／パスコ</td><td><img class="tlogo-s" src="../images/mlb/logos/526.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Morongo%20Field%2C%20Rancho%20Cucamonga" target="_blank" rel="noopener">Rancho Cucamonga Quakes</a>／ランチョクカモンガ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/136.svg" alt="" loading="lazy">マリナーズ</td><td><img class="tlogo-s" src="../images/mlb/logos/529.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Cheney%20Stadium%2C%20Tacoma" target="_blank" rel="noopener">Tacoma Rainiers</a>／タコマ</td><td><img class="tlogo-s" src="../images/mlb/logos/574.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Dickey-Stephens%20Park%2C%20North%20Little%20Rock" target="_blank" rel="noopener">Arkansas Travelers</a>／リトルロック</td><td><img class="tlogo-s" src="../images/mlb/logos/403.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Everett%20Memorial%20Stadium%2C%20Everett" target="_blank" rel="noopener">Everett AquaSox</a>／エバレット</td><td><img class="tlogo-s" src="../images/mlb/logos/401.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=San%20Manuel%20Stadium%2C%20San%20Bernardino" target="_blank" rel="noopener">Inland Empire 66ers</a>／サンバーナーディーノ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/140.svg" alt="" loading="lazy">レンジャーズ</td><td><img class="tlogo-s" src="../images/mlb/logos/102.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Dell%20Diamond%2C%20Round%20Rock" target="_blank" rel="noopener">Round Rock Express</a>／ラウンドロック</td><td><img class="tlogo-s" src="../images/mlb/logos/540.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Riders%20Field%2C%20Frisco" target="_blank" rel="noopener">Frisco RoughRiders</a>／フリスコ</td><td><img class="tlogo-s" src="../images/mlb/logos/6324.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Fifth%20Third%20Park%2C%20Spartanburg" target="_blank" rel="noopener">Hub City Spartanburgers</a>／スパータンバーグ</td><td><img class="tlogo-s" src="../images/mlb/logos/448.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=L.P.%20Frans%20Stadium%2C%20Hickory" target="_blank" rel="noopener">Hickory Crawdads</a>／ヒッコリー</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/144.svg" alt="" loading="lazy">ブレーブス</td><td><img class="tlogo-s" src="../images/mlb/logos/431.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Gwinnett%20Field%2C%20Lawrenceville" target="_blank" rel="noopener">Gwinnett Stripers</a>／ローレンスビル</td><td><img class="tlogo-s" src="../images/mlb/logos/6325.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Synovus%20Park%2C%20Columbus" target="_blank" rel="noopener">Columbus Clingstones</a>／コロンバス</td><td><img class="tlogo-s" src="../images/mlb/logos/432.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=AdventHealth%20Stadium%2C%20Rome" target="_blank" rel="noopener">Rome Emperors</a>／ローム</td><td><img class="tlogo-s" src="../images/mlb/logos/478.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=SRP%20Park%2C%20North%20Augusta" target="_blank" rel="noopener">Augusta GreenJackets</a>／オーガスタ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/146.svg" alt="" loading="lazy">マーリンズ</td><td><img class="tlogo-s" src="../images/mlb/logos/564.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Vystar%20Ballpark%2C%20Jacksonville" target="_blank" rel="noopener">Jacksonville Jumbo Shrimp</a>／ジャクソンビル</td><td><img class="tlogo-s" src="../images/mlb/logos/4124.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Blue%20Wahoos%20Stadium%2C%20Pensacola" target="_blank" rel="noopener">Pensacola Blue Wahoos</a>／ペンサコーラ</td><td><img class="tlogo-s" src="../images/mlb/logos/554.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=ABC%20Supply%20Stadium%2C%20Beloit" target="_blank" rel="noopener">Beloit Sky Carp</a>／ベロイト</td><td><img class="tlogo-s" src="../images/mlb/logos/479.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Roger%20Dean%20Chevrolet%20Stadium%2C%20Jupiter" target="_blank" rel="noopener">Jupiter Hammerheads</a>／ジュピター</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/121.svg" alt="" loading="lazy">メッツ</td><td><img class="tlogo-s" src="../images/mlb/logos/552.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=NBT%20Bank%20Stadium%2C%20Syracuse" target="_blank" rel="noopener">Syracuse Mets</a>／シラキュース</td><td><img class="tlogo-s" src="../images/mlb/logos/505.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Mirabito%20Stadium%2C%20Binghamton" target="_blank" rel="noopener">Binghamton Rumble Ponies</a>／ビンガムトン</td><td><img class="tlogo-s" src="../images/mlb/logos/453.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Maimonides%20Park%2C%20Brooklyn" target="_blank" rel="noopener">Brooklyn Cyclones</a>／ブルックリン</td><td><img class="tlogo-s" src="../images/mlb/logos/507.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Clover%20Park%2C%20Port%20St.%20Lucie" target="_blank" rel="noopener">St. Lucie Mets</a>／ポートセントルーシー</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/143.svg" alt="" loading="lazy">フィリーズ</td><td><img class="tlogo-s" src="../images/mlb/logos/1410.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Coca-Cola%20Park%2C%20Allentown" target="_blank" rel="noopener">Lehigh Valley IronPigs</a>／アレンタウン</td><td><img class="tlogo-s" src="../images/mlb/logos/522.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=FirstEnergy%20Stadium%2C%20Reading" target="_blank" rel="noopener">Reading Fightin Phils</a>／レディング</td><td><img class="tlogo-s" src="../images/mlb/logos/427.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=ShoreTown%20Ballpark%2C%20Lakewood" target="_blank" rel="noopener">Jersey Shore BlueClaws</a>／レイクウッド</td><td><img class="tlogo-s" src="../images/mlb/logos/566.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=BayCare%20Ballpark%2C%20Clearwater" target="_blank" rel="noopener">Clearwater Threshers</a>／クリアウォーター</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/120.svg" alt="" loading="lazy">ナショナルズ</td><td><img class="tlogo-s" src="../images/mlb/logos/534.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=ESL%20Ballpark%2C%20Rochester" target="_blank" rel="noopener">Rochester Red Wings</a>／ロチェスター</td><td><img class="tlogo-s" src="../images/mlb/logos/547.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=FNB%20Field%2C%20Harrisburg" target="_blank" rel="noopener">Harrisburg Senators</a>／ハリスバーグ</td><td><img class="tlogo-s" src="../images/mlb/logos/426.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Frawley%20Stadium%2C%20Wilmington" target="_blank" rel="noopener">Wilmington Blue Rocks</a>／ウィルミントン</td><td><img class="tlogo-s" src="../images/mlb/logos/436.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Virginia%20Credit%20Union%20Stadium%2C%20Fredericksburg" target="_blank" rel="noopener">Fredericksburg Nationals</a>／フレデリックスバーグ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/112.svg" alt="" loading="lazy">カブス</td><td><img class="tlogo-s" src="../images/mlb/logos/451.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Principal%20Park%2C%20Des%20Moines" target="_blank" rel="noopener">Iowa Cubs</a>／デモイン</td><td><img class="tlogo-s" src="../images/mlb/logos/553.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Covenant%20Health%20Park%2C%20Knoxville" target="_blank" rel="noopener">Knoxville Smokies</a>／ノックスビル</td><td><img class="tlogo-s" src="../images/mlb/logos/550.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Four%20Winds%20Field%2C%20South%20Bend" target="_blank" rel="noopener">South Bend Cubs</a>／サウスベンド</td><td><img class="tlogo-s" src="../images/mlb/logos/521.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Pelicans%20Ballpark%2C%20Myrtle%20Beach" target="_blank" rel="noopener">Myrtle Beach Pelicans</a>／マートルビーチ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/113.svg" alt="" loading="lazy">レッズ</td><td><img class="tlogo-s" src="../images/mlb/logos/416.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Louisville%20Slugger%20Field%2C%20Louisville" target="_blank" rel="noopener">Louisville Bats</a>／ルイビル</td><td><img class="tlogo-s" src="../images/mlb/logos/498.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Erlanger%20Park%2C%20Chattanooga" target="_blank" rel="noopener">Chattanooga Lookouts</a>／チャタヌーガ</td><td><img class="tlogo-s" src="../images/mlb/logos/459.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Day%20Air%20Ballpark%2C%20Dayton" target="_blank" rel="noopener">Dayton Dragons</a>／デイトン</td><td><img class="tlogo-s" src="../images/mlb/logos/450.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Jackie%20Robinson%20Ballpark%2C%20Daytona%20Beach" target="_blank" rel="noopener">Daytona Tortugas</a>／デイトナビーチ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/158.svg" alt="" loading="lazy">ブルワーズ</td><td><img class="tlogo-s" src="../images/mlb/logos/556.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=First%20Horizon%20Park%2C%20Nashville" target="_blank" rel="noopener">Nashville Sounds</a>／ナッシュビル</td><td><img class="tlogo-s" src="../images/mlb/logos/5015.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Keesler%20Federal%20Park%2C%20Biloxi" target="_blank" rel="noopener">Biloxi Shuckers</a>／ビロクシ</td><td><img class="tlogo-s" src="../images/mlb/logos/572.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Neuroscience%20Group%20Field%2C%20Appleton" target="_blank" rel="noopener">Wisconsin Timber Rattlers</a>／アップルトン</td><td><img class="tlogo-s" src="../images/mlb/logos/249.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Wilson%20Ballpark%2C%20Wilson" target="_blank" rel="noopener">Wilson Warbirds</a>／ウィルソン</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/134.svg" alt="" loading="lazy">パイレーツ</td><td><img class="tlogo-s" src="../images/mlb/logos/484.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Victory%20Field%2C%20Indianapolis" target="_blank" rel="noopener">Indianapolis Indians</a>／インディアナポリス</td><td><img class="tlogo-s" src="../images/mlb/logos/452.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Peoples%20Natural%20Gas%20Field%2C%20Altoona" target="_blank" rel="noopener">Altoona Curve</a>／アルトゥーナ</td><td><img class="tlogo-s" src="../images/mlb/logos/477.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=First%20National%20Bank%20Field%2C%20Greensboro" target="_blank" rel="noopener">Greensboro Grasshoppers</a>／グリーンズボロ</td><td><img class="tlogo-s" src="../images/mlb/logos/3390.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=LECOM%20Park%2C%20Bradenton" target="_blank" rel="noopener">Bradenton Marauders</a>／ブレーデントン</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/138.svg" alt="" loading="lazy">カージナルス</td><td><img class="tlogo-s" src="../images/mlb/logos/235.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=AutoZone%20Park%2C%20Memphis" target="_blank" rel="noopener">Memphis Redbirds</a>／メンフィス</td><td><img class="tlogo-s" src="../images/mlb/logos/440.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Route%2066%20Stadium%2C%20Springfield" target="_blank" rel="noopener">Springfield Cardinals</a>（2027年から Ozarks Springbirds）／スプリングフィールド</td><td><img class="tlogo-s" src="../images/mlb/logos/443.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Dozer%20Park%2C%20Peoria" target="_blank" rel="noopener">Peoria Chiefs</a>／ピオリア</td><td><img class="tlogo-s" src="../images/mlb/logos/279.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Roger%20Dean%20Chevrolet%20Stadium%2C%20Jupiter" target="_blank" rel="noopener">Palm Beach Cardinals</a>／ウェストパームビーチ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/109.svg" alt="" loading="lazy">ダイヤモンドバックス</td><td><img class="tlogo-s" src="../images/mlb/logos/2310.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Greater%20Nevada%20Field%2C%20Reno" target="_blank" rel="noopener">Reno Aces</a>／リノ</td><td><img class="tlogo-s" src="../images/mlb/logos/5368.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Hodgetown%2C%20Amarillo" target="_blank" rel="noopener">Amarillo Sod Poodles</a>／アマリロ</td><td><img class="tlogo-s" src="../images/mlb/logos/419.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Hops%20Ballpark%2C%20Hillsboro" target="_blank" rel="noopener">Hillsboro Hops</a>／ヒルズボロ</td><td><img class="tlogo-s" src="../images/mlb/logos/516.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Valley%20Strong%20Ballpark%2C%20Visalia" target="_blank" rel="noopener">Visalia Rawhide</a>／ビサリア</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/115.svg" alt="" loading="lazy">ロッキーズ</td><td><img class="tlogo-s" src="../images/mlb/logos/342.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Isotopes%20Park%2C%20Albuquerque" target="_blank" rel="noopener">Albuquerque Isotopes</a>／アルバカーキ</td><td><img class="tlogo-s" src="../images/mlb/logos/538.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Dunkin%27%20Park%2C%20Hartford" target="_blank" rel="noopener">Hartford Yard Goats</a>／ハートフォード</td><td><img class="tlogo-s" src="../images/mlb/logos/486.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Avista%20Stadium%2C%20Spokane" target="_blank" rel="noopener">Spokane Indians</a>／スポケーン</td><td><img class="tlogo-s" src="../images/mlb/logos/259.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Chukchansi%20Park%2C%20Fresno" target="_blank" rel="noopener">Fresno Grizzlies</a>／フレズノ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/119.svg" alt="" loading="lazy">ドジャース</td><td><img class="tlogo-s" src="../images/mlb/logos/238.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Chickasaw%20Bricktown%20Ballpark%2C%20Oklahoma%20City" target="_blank" rel="noopener">Oklahoma City Comets</a>／オクラホマシティ</td><td><img class="tlogo-s" src="../images/mlb/logos/260.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=ONEOK%20Field%2C%20Tulsa" target="_blank" rel="noopener">Tulsa Drillers</a>／タルサ</td><td><img class="tlogo-s" src="../images/mlb/logos/456.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Dow%20Diamond%2C%20Midland" target="_blank" rel="noopener">Great Lakes Loons</a>／ミッドランド</td><td><img class="tlogo-s" src="../images/mlb/logos/6482.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=ONT%20Field%2C%20Ontario" target="_blank" rel="noopener">Ontario Tower Buzzers</a>／オンタリオ</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/135.svg" alt="" loading="lazy">パドレス</td><td><img class="tlogo-s" src="../images/mlb/logos/4904.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Southwest%20University%20Park%2C%20El%20Paso" target="_blank" rel="noopener">El Paso Chihuahuas</a>／エルパソ</td><td><img class="tlogo-s" src="../images/mlb/logos/510.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Nelson%20Wolff%20Stadium%2C%20San%20Antonio" target="_blank" rel="noopener">San Antonio Missions</a>／サンアントニオ</td><td><img class="tlogo-s" src="../images/mlb/logos/584.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Parkview%20Field%2C%20Fort%20Wayne" target="_blank" rel="noopener">Fort Wayne TinCaps</a>／フォートウェイン</td><td><img class="tlogo-s" src="../images/mlb/logos/103.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=The%20Diamond%2C%20Lake%20Elsinore" target="_blank" rel="noopener">Lake Elsinore Storm</a>／レイクエルシノア</td></tr><tr><td class="name"><img class="tlogo" src="../images/mlb/logos/137.svg" alt="" loading="lazy">ジャイアンツ</td><td><img class="tlogo-s" src="../images/mlb/logos/105.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Sutter%20Health%20Park%2C%20Sacramento" target="_blank" rel="noopener">Sacramento River Cats</a>／サクラメント</td><td><img class="tlogo-s" src="../images/mlb/logos/3410.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=CarMax%20Park%2C%20Richmond" target="_blank" rel="noopener">Richmond Flying Squirrels</a>／リッチモンド</td><td><img class="tlogo-s" src="../images/mlb/logos/461.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=PK%20Park%2C%20Eugene" target="_blank" rel="noopener">Eugene Emeralds</a>／ユージーン</td><td><img class="tlogo-s" src="../images/mlb/logos/476.svg" alt="" loading="lazy"><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Excite%20Ballpark%2C%20San%20Jose" target="_blank" rel="noopener">San Jose Giants</a>／サンノゼ</td></tr></tbody></table></div>
+<p class="note">改名する2球団。ヤンキース傘下 AAA の Scranton/Wilkes-Barre RailRiders（2013〜2026年）は2027年から Scranton/Wilkes-Barre Highlanders となる。ヤンキースが1903〜1912年に使った名称で、プロ野球で最も長い球団名（32文字）である。カージナルス傘下 AA の Springfield Cardinals は2027年から Ozarks Springbirds となる（2026年10月6日発表）。<sup><a href="#s4">4</a></sup><sup><a href="#s107">107</a></sup></p>
+<h3>有望株トップ10（MLB Pipeline 2026年）</h3>
+<div class="tbl-scroll"><table class=""><thead><tr><th class="num">順位</th><th>選手</th><th>所属</th><th>守備</th><th class="num">年齢</th></tr></thead><tbody><tr><td class="num">1</td><td>ヘスス・マデ <span class="en-s">Jesús Made</span></td><td>ブルワーズ</td><td>SS</td><td class="num">19</td></tr><tr><td class="num">2</td><td>フランクリン・アリアス <span class="en-s">Franklin Arias</span></td><td>レッドソックス</td><td>SS</td><td class="num">20</td></tr><tr><td class="num">3</td><td>レオ・デブリース <span class="en-s">Leo De Vries</span></td><td>アスレチックス</td><td>SS/3B</td><td class="num">20</td></tr><tr><td class="num">4</td><td>ジョスエ・デパウラ <span class="en-s">Josue De Paula</span></td><td>ドジャース</td><td>OF</td><td class="num">21</td></tr><tr><td class="num">5</td><td>ケイド・アンダーソン <span class="en-s">Kade Anderson</span></td><td>マリナーズ</td><td>LHP</td><td class="num">22</td></tr><tr><td class="num">6</td><td>イーライ・ウィリッツ <span class="en-s">Eli Willits</span></td><td>ナショナルズ</td><td>SS</td><td class="num">18</td></tr><tr><td class="num">7</td><td>ジョスアル・ゴンザレス <span class="en-s">Josuar Gonzalez</span></td><td>ジャイアンツ</td><td>SS/2B</td><td class="num">19</td></tr><tr><td class="num">8</td><td>セバスチャン・ウォルコット <span class="en-s">Sebastian Walcott</span></td><td>レンジャーズ</td><td>SS/3B</td><td class="num">20</td></tr><tr><td class="num">9</td><td>セス・ヘルナンデス <span class="en-s">Seth Hernandez</span></td><td>パイレーツ</td><td>RHP</td><td class="num">20</td></tr><tr><td class="num">10</td><td>ライニエル・ロドリゲス <span class="en-s">Rainiel Rodriguez</span></td><td>カージナルス</td><td>C/1B</td><td class="num">19</td></tr></tbody></table></div>
+<p class="srcnote">MLB Pipeline 2026年10月2日の更新版。<sup><a href="#s108">108</a></sup><sup><a href="#s109">109</a></sup></p>
+<div class="part-band"><div class="part-band-inner"><img class="part-logo" src="../images/mlb/ny_logo.png" width="330" height="371" alt=""><div><div class="part-ja">ニューヨーク・ヤンキース</div><div class="part-en">New York Yankees</div></div></div></div>
+<h2 id="c12"><span class="num">⑫</span>ヤンキース<span class="en">New York Yankees</span></h2>
+<p class="callout">ヤンキースはワールドシリーズ優勝27回で MLB 最多であり、Forbes の2026年評価額は85億ドルで30球団の1位である。2026年は93勝68敗で、地区シリーズで敗退した。<sup><a href="#s64">64</a></sup><sup><a href="#s7">7</a></sup><sup><a href="#s39">39</a></sup></p>
+<h3>球団史</h3>
+<div class="tbl-scroll"><table class=""><thead><tr><th>年</th><th>出来事</th></tr></thead><tbody><tr><td class="name">1901</td><td>ア・リーグのボルチモア・オリオールズとして発足</td></tr><tr><td class="name">1903</td><td>フランク・ファレルとビル・デベリーが買収し、ニューヨークへ移転。ニューヨーク・ハイランダーズとなる</td></tr><tr><td class="name">1913</td><td>ニューヨーク・ヤンキースへ改称</td></tr><tr><td class="name">1920</td><td>ベーブ・ルースをレッドソックスから獲得。移籍金12万5,000ドルとフェンウェイ・パークを担保とする融資35万ドル</td></tr><tr><td class="name">1923</td><td>旧ヤンキー・スタジアム開場（1974〜75年に改修、2008年閉場）</td></tr><tr><td class="name">1973</td><td>ジョージ・スタインブレナーのグループが CBS から880万ドルで買収。現オーナーは息子のハル・スタインブレナー</td></tr><tr><td class="name">2002</td><td>YES Network 開局。ヤンキースとマイナーの試合を中継する</td></tr><tr><td class="name">2009</td><td>現ヤンキー・スタジアム開場。27回目のワールドシリーズ優勝</td></tr></tbody></table></div>
+<p class="srcnote">MLB のヤンキース球団史、YES Network。<sup><a href="#s62">62</a></sup><sup><a href="#s63">63</a></sup><sup><a href="#s67">67</a></sup><sup><a href="#s68">68</a></sup><sup><a href="#s70">70</a></sup></p>
+<div class="chart"><div class="cap">ワールドシリーズ優勝27回（年代別）</div><div class="sub">紺の円が優勝年（下2桁）。1980年代と2010年代以降は優勝が無い。</div><div class="svg-scroll"><svg viewBox="0 0 900 394" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ヤンキースのワールドシリーズ優勝年" font-family="-apple-system,Hiragino Sans,sans-serif">
+<text x="78" y="31" text-anchor="end" font-size="13" fill="#1a1a1a">1920年代</text>
+<line x1="90" y1="26" x2="840" y2="26" stroke="#E4E8EC"/>
+<circle cx="110" cy="26" r="3" fill="#C4CED3"/>
+<circle cx="182" cy="26" r="3" fill="#C4CED3"/>
+<circle cx="254" cy="26" r="3" fill="#C4CED3"/>
+<circle cx="326" cy="26" r="11" fill="#0C2340"/>
+<text x="326" y="30" text-anchor="middle" font-size="10" fill="#fff">23</text>
+<circle cx="398" cy="26" r="3" fill="#C4CED3"/>
+<circle cx="470" cy="26" r="3" fill="#C4CED3"/>
+<circle cx="542" cy="26" r="3" fill="#C4CED3"/>
+<circle cx="614" cy="26" r="11" fill="#0C2340"/>
+<text x="614" y="30" text-anchor="middle" font-size="10" fill="#fff">27</text>
+<circle cx="686" cy="26" r="11" fill="#0C2340"/>
+<text x="686" y="30" text-anchor="middle" font-size="10" fill="#fff">28</text>
+<circle cx="758" cy="26" r="3" fill="#C4CED3"/>
+<text x="890" y="31" text-anchor="end" font-size="13" font-weight="700" fill="#0C2340">3回</text>
+<text x="78" y="65" text-anchor="end" font-size="13" fill="#1a1a1a">1930年代</text>
+<line x1="90" y1="60" x2="840" y2="60" stroke="#E4E8EC"/>
+<circle cx="110" cy="60" r="3" fill="#C4CED3"/>
+<circle cx="182" cy="60" r="3" fill="#C4CED3"/>
+<circle cx="254" cy="60" r="11" fill="#0C2340"/>
+<text x="254" y="64" text-anchor="middle" font-size="10" fill="#fff">32</text>
+<circle cx="326" cy="60" r="3" fill="#C4CED3"/>
+<circle cx="398" cy="60" r="3" fill="#C4CED3"/>
+<circle cx="470" cy="60" r="3" fill="#C4CED3"/>
+<circle cx="542" cy="60" r="11" fill="#0C2340"/>
+<text x="542" y="64" text-anchor="middle" font-size="10" fill="#fff">36</text>
+<circle cx="614" cy="60" r="11" fill="#0C2340"/>
+<text x="614" y="64" text-anchor="middle" font-size="10" fill="#fff">37</text>
+<circle cx="686" cy="60" r="11" fill="#0C2340"/>
+<text x="686" y="64" text-anchor="middle" font-size="10" fill="#fff">38</text>
+<circle cx="758" cy="60" r="11" fill="#0C2340"/>
+<text x="758" y="64" text-anchor="middle" font-size="10" fill="#fff">39</text>
+<text x="890" y="65" text-anchor="end" font-size="13" font-weight="700" fill="#0C2340">5回</text>
+<text x="78" y="99" text-anchor="end" font-size="13" fill="#1a1a1a">1940年代</text>
+<line x1="90" y1="94" x2="840" y2="94" stroke="#E4E8EC"/>
+<circle cx="110" cy="94" r="3" fill="#C4CED3"/>
+<circle cx="182" cy="94" r="11" fill="#0C2340"/>
+<text x="182" y="98" text-anchor="middle" font-size="10" fill="#fff">41</text>
+<circle cx="254" cy="94" r="3" fill="#C4CED3"/>
+<circle cx="326" cy="94" r="11" fill="#0C2340"/>
+<text x="326" y="98" text-anchor="middle" font-size="10" fill="#fff">43</text>
+<circle cx="398" cy="94" r="3" fill="#C4CED3"/>
+<circle cx="470" cy="94" r="3" fill="#C4CED3"/>
+<circle cx="542" cy="94" r="3" fill="#C4CED3"/>
+<circle cx="614" cy="94" r="11" fill="#0C2340"/>
+<text x="614" y="98" text-anchor="middle" font-size="10" fill="#fff">47</text>
+<circle cx="686" cy="94" r="3" fill="#C4CED3"/>
+<circle cx="758" cy="94" r="11" fill="#0C2340"/>
+<text x="758" y="98" text-anchor="middle" font-size="10" fill="#fff">49</text>
+<text x="890" y="99" text-anchor="end" font-size="13" font-weight="700" fill="#0C2340">4回</text>
+<text x="78" y="133" text-anchor="end" font-size="13" fill="#1a1a1a">1950年代</text>
+<line x1="90" y1="128" x2="840" y2="128" stroke="#E4E8EC"/>
+<circle cx="110" cy="128" r="11" fill="#0C2340"/>
+<text x="110" y="132" text-anchor="middle" font-size="10" fill="#fff">50</text>
+<circle cx="182" cy="128" r="11" fill="#0C2340"/>
+<text x="182" y="132" text-anchor="middle" font-size="10" fill="#fff">51</text>
+<circle cx="254" cy="128" r="11" fill="#0C2340"/>
+<text x="254" y="132" text-anchor="middle" font-size="10" fill="#fff">52</text>
+<circle cx="326" cy="128" r="11" fill="#0C2340"/>
+<text x="326" y="132" text-anchor="middle" font-size="10" fill="#fff">53</text>
+<circle cx="398" cy="128" r="3" fill="#C4CED3"/>
+<circle cx="470" cy="128" r="3" fill="#C4CED3"/>
+<circle cx="542" cy="128" r="11" fill="#0C2340"/>
+<text x="542" y="132" text-anchor="middle" font-size="10" fill="#fff">56</text>
+<circle cx="614" cy="128" r="3" fill="#C4CED3"/>
+<circle cx="686" cy="128" r="11" fill="#0C2340"/>
+<text x="686" y="132" text-anchor="middle" font-size="10" fill="#fff">58</text>
+<circle cx="758" cy="128" r="3" fill="#C4CED3"/>
+<text x="890" y="133" text-anchor="end" font-size="13" font-weight="700" fill="#0C2340">6回</text>
+<text x="78" y="167" text-anchor="end" font-size="13" fill="#1a1a1a">1960年代</text>
+<line x1="90" y1="162" x2="840" y2="162" stroke="#E4E8EC"/>
+<circle cx="110" cy="162" r="3" fill="#C4CED3"/>
+<circle cx="182" cy="162" r="11" fill="#0C2340"/>
+<text x="182" y="166" text-anchor="middle" font-size="10" fill="#fff">61</text>
+<circle cx="254" cy="162" r="11" fill="#0C2340"/>
+<text x="254" y="166" text-anchor="middle" font-size="10" fill="#fff">62</text>
+<circle cx="326" cy="162" r="3" fill="#C4CED3"/>
+<circle cx="398" cy="162" r="3" fill="#C4CED3"/>
+<circle cx="470" cy="162" r="3" fill="#C4CED3"/>
+<circle cx="542" cy="162" r="3" fill="#C4CED3"/>
+<circle cx="614" cy="162" r="3" fill="#C4CED3"/>
+<circle cx="686" cy="162" r="3" fill="#C4CED3"/>
+<circle cx="758" cy="162" r="3" fill="#C4CED3"/>
+<text x="890" y="167" text-anchor="end" font-size="13" font-weight="700" fill="#0C2340">2回</text>
+<text x="78" y="201" text-anchor="end" font-size="13" fill="#1a1a1a">1970年代</text>
+<line x1="90" y1="196" x2="840" y2="196" stroke="#E4E8EC"/>
+<circle cx="110" cy="196" r="3" fill="#C4CED3"/>
+<circle cx="182" cy="196" r="3" fill="#C4CED3"/>
+<circle cx="254" cy="196" r="3" fill="#C4CED3"/>
+<circle cx="326" cy="196" r="3" fill="#C4CED3"/>
+<circle cx="398" cy="196" r="3" fill="#C4CED3"/>
+<circle cx="470" cy="196" r="3" fill="#C4CED3"/>
+<circle cx="542" cy="196" r="3" fill="#C4CED3"/>
+<circle cx="614" cy="196" r="11" fill="#0C2340"/>
+<text x="614" y="200" text-anchor="middle" font-size="10" fill="#fff">77</text>
+<circle cx="686" cy="196" r="11" fill="#0C2340"/>
+<text x="686" y="200" text-anchor="middle" font-size="10" fill="#fff">78</text>
+<circle cx="758" cy="196" r="3" fill="#C4CED3"/>
+<text x="890" y="201" text-anchor="end" font-size="13" font-weight="700" fill="#0C2340">2回</text>
+<text x="78" y="235" text-anchor="end" font-size="13" fill="#1a1a1a">1980年代</text>
+<line x1="90" y1="230" x2="840" y2="230" stroke="#E4E8EC"/>
+<circle cx="110" cy="230" r="3" fill="#C4CED3"/>
+<circle cx="182" cy="230" r="3" fill="#C4CED3"/>
+<circle cx="254" cy="230" r="3" fill="#C4CED3"/>
+<circle cx="326" cy="230" r="3" fill="#C4CED3"/>
+<circle cx="398" cy="230" r="3" fill="#C4CED3"/>
+<circle cx="470" cy="230" r="3" fill="#C4CED3"/>
+<circle cx="542" cy="230" r="3" fill="#C4CED3"/>
+<circle cx="614" cy="230" r="3" fill="#C4CED3"/>
+<circle cx="686" cy="230" r="3" fill="#C4CED3"/>
+<circle cx="758" cy="230" r="3" fill="#C4CED3"/>
+<text x="890" y="235" text-anchor="end" font-size="13" font-weight="700" fill="#8a8a8a">0回</text>
+<text x="78" y="269" text-anchor="end" font-size="13" fill="#1a1a1a">1990年代</text>
+<line x1="90" y1="264" x2="840" y2="264" stroke="#E4E8EC"/>
+<circle cx="110" cy="264" r="3" fill="#C4CED3"/>
+<circle cx="182" cy="264" r="3" fill="#C4CED3"/>
+<circle cx="254" cy="264" r="3" fill="#C4CED3"/>
+<circle cx="326" cy="264" r="3" fill="#C4CED3"/>
+<circle cx="398" cy="264" r="3" fill="#C4CED3"/>
+<circle cx="470" cy="264" r="3" fill="#C4CED3"/>
+<circle cx="542" cy="264" r="11" fill="#0C2340"/>
+<text x="542" y="268" text-anchor="middle" font-size="10" fill="#fff">96</text>
+<circle cx="614" cy="264" r="3" fill="#C4CED3"/>
+<circle cx="686" cy="264" r="11" fill="#0C2340"/>
+<text x="686" y="268" text-anchor="middle" font-size="10" fill="#fff">98</text>
+<circle cx="758" cy="264" r="11" fill="#0C2340"/>
+<text x="758" y="268" text-anchor="middle" font-size="10" fill="#fff">99</text>
+<text x="890" y="269" text-anchor="end" font-size="13" font-weight="700" fill="#0C2340">3回</text>
+<text x="78" y="303" text-anchor="end" font-size="13" fill="#1a1a1a">2000年代</text>
+<line x1="90" y1="298" x2="840" y2="298" stroke="#E4E8EC"/>
+<circle cx="110" cy="298" r="11" fill="#0C2340"/>
+<text x="110" y="302" text-anchor="middle" font-size="10" fill="#fff">00</text>
+<circle cx="182" cy="298" r="3" fill="#C4CED3"/>
+<circle cx="254" cy="298" r="3" fill="#C4CED3"/>
+<circle cx="326" cy="298" r="3" fill="#C4CED3"/>
+<circle cx="398" cy="298" r="3" fill="#C4CED3"/>
+<circle cx="470" cy="298" r="3" fill="#C4CED3"/>
+<circle cx="542" cy="298" r="3" fill="#C4CED3"/>
+<circle cx="614" cy="298" r="3" fill="#C4CED3"/>
+<circle cx="686" cy="298" r="3" fill="#C4CED3"/>
+<circle cx="758" cy="298" r="11" fill="#0C2340"/>
+<text x="758" y="302" text-anchor="middle" font-size="10" fill="#fff">09</text>
+<text x="890" y="303" text-anchor="end" font-size="13" font-weight="700" fill="#0C2340">2回</text>
+<text x="78" y="337" text-anchor="end" font-size="13" fill="#1a1a1a">2010年代</text>
+<line x1="90" y1="332" x2="840" y2="332" stroke="#E4E8EC"/>
+<circle cx="110" cy="332" r="3" fill="#C4CED3"/>
+<circle cx="182" cy="332" r="3" fill="#C4CED3"/>
+<circle cx="254" cy="332" r="3" fill="#C4CED3"/>
+<circle cx="326" cy="332" r="3" fill="#C4CED3"/>
+<circle cx="398" cy="332" r="3" fill="#C4CED3"/>
+<circle cx="470" cy="332" r="3" fill="#C4CED3"/>
+<circle cx="542" cy="332" r="3" fill="#C4CED3"/>
+<circle cx="614" cy="332" r="3" fill="#C4CED3"/>
+<circle cx="686" cy="332" r="3" fill="#C4CED3"/>
+<circle cx="758" cy="332" r="3" fill="#C4CED3"/>
+<text x="890" y="337" text-anchor="end" font-size="13" font-weight="700" fill="#8a8a8a">0回</text>
+<text x="78" y="371" text-anchor="end" font-size="13" fill="#1a1a1a">2020年代</text>
+<line x1="90" y1="366" x2="840" y2="366" stroke="#E4E8EC"/>
+<circle cx="110" cy="366" r="3" fill="#C4CED3"/>
+<circle cx="182" cy="366" r="3" fill="#C4CED3"/>
+<circle cx="254" cy="366" r="3" fill="#C4CED3"/>
+<circle cx="326" cy="366" r="3" fill="#C4CED3"/>
+<circle cx="398" cy="366" r="3" fill="#C4CED3"/>
+<circle cx="470" cy="366" r="3" fill="#C4CED3"/>
+<circle cx="542" cy="366" r="3" fill="#C4CED3"/>
+<circle cx="614" cy="366" r="3" fill="#C4CED3"/>
+<circle cx="686" cy="366" r="3" fill="#C4CED3"/>
+<circle cx="758" cy="366" r="3" fill="#C4CED3"/>
+<text x="890" y="371" text-anchor="end" font-size="13" font-weight="700" fill="#8a8a8a">0回</text>
+</svg></div></div>
+<p class="srcnote">MLB ヤンキース球団史。<sup><a href="#s64">64</a></sup></p>
+<h3>永久欠番</h3>
+<p>ヤンキースの永久欠番は21の番号である（8番は2人で共有）。このほかに MLB 全球団共通の42番（ジャッキー・ロビンソン）がある。<sup><a href="#s66">66</a></sup></p>
+<div class="tbl-scroll"><table class=""><thead><tr><th class="num">番号</th><th>選手・監督</th></tr></thead><tbody><tr><td class="num">1</td><td>ビリー・マーチン</td></tr><tr><td class="num">2</td><td>デレク・ジーター</td></tr><tr><td class="num">3</td><td>ベーブ・ルース</td></tr><tr><td class="num">4</td><td>ルー・ゲーリッグ</td></tr><tr><td class="num">5</td><td>ジョー・ディマジオ</td></tr><tr><td class="num">6</td><td>ジョー・トーリ</td></tr><tr><td class="num">7</td><td>ミッキー・マントル</td></tr><tr><td class="num">8</td><td>ヨギ・ベラ／ビル・ディッキー</td></tr><tr><td class="num">9</td><td>ロジャー・マリス</td></tr><tr><td class="num">10</td><td>フィル・リズート</td></tr><tr><td class="num">15</td><td>サーマン・マンソン</td></tr><tr><td class="num">16</td><td>ホワイティ・フォード</td></tr><tr><td class="num">20</td><td>ホルヘ・ポサダ</td></tr><tr><td class="num">23</td><td>ドン・マッティングリー</td></tr><tr><td class="num">32</td><td>エルストン・ハワード</td></tr><tr><td class="num">37</td><td>ケーシー・ステンゲル</td></tr><tr><td class="num">42</td><td>マリアノ・リベラ（ジャッキー・ロビンソンの全球団欠番と同じ番号）</td></tr><tr><td class="num">44</td><td>レジー・ジャクソン</td></tr><tr><td class="num">46</td><td>アンディ・ペティット</td></tr><tr><td class="num">49</td><td>ロン・ギドリー</td></tr><tr><td class="num">51</td><td>バーニー・ウィリアムス</td></tr></tbody></table></div>
+<h3>球場</h3>
+<figure class="photo"><img src="../images/mlb/c_yankee_stadium.jpg" alt="ヤンキー・スタジアム" loading="lazy"><figcaption>ヤンキー・スタジアム（ブロンクス）。2009年開場。</figcaption></figure>
+<p>現在のヤンキー・スタジアムは2009年に開場した。建設費は資料により約13億6,000万〜15億ドルである。収容人数は球場の公式案内で46,543人である（③の表は Wikipedia の一覧に基づく46,537人）。<sup><a href="#s71">71</a></sup><sup><a href="#s72">72</a></sup><sup><a href="#s5">5</a></sup>Forbes の2026年評価額は85億ドルで、2025年の推定収入は7億1,000万ドルである。<sup><a href="#s69">69</a></sup></p>
+<h3>2026年</h3>
+<p>監督はアーロン・ブーン（Aaron Boone）、GM はブライアン・キャッシュマン（Brian Cashman）である。<sup><a href="#s74">74</a></sup>93勝68敗でア・リーグ東地区2位となり、ワイルドカードシリーズでレッドソックスを破った後、地区シリーズでレイズに3連敗した。<sup><a href="#s73">73</a></sup><sup><a href="#s39">39</a></sup><sup><a href="#s2">2</a></sup></p>
+<p>アーロン・ジャッジ（Aaron Judge）は66試合で18本塁打、41打点にとどまった。肋骨の疲労骨折で3か月以上離脱し、9月19日に右ふくらはぎの肉離れで負傷者リストに入った。ポストシーズンには出場していない。30本塁打に届かなかったのは2020年以来である。<sup><a href="#s2">2</a></sup></p>
+<p>キャム・シュリトラーは満票でア・リーグのサイ・ヤング賞を受賞した。193回2/3で239奪三振、防御率1.95（ア・リーグ1位）、ERA+215を記録した。ヤンキースの投手の防御率としては1978年のロン・ギドリー（1.74）以来の低さである。<sup><a href="#s3">3</a></sup><sup><a href="#s88">88</a></sup>総年俸は推定約3億800万ドル、ぜいたく税の計算上の年俸は約3億3,400万ドルである。<sup><a href="#s76">76</a></sup></p>
+<h3>日本人選手の系譜</h3>
+<div class="tbl-scroll"><table class=""><thead><tr><th>選手</th><th>在籍</th><th>主な記録</th></tr></thead><tbody><tr><td class="name">伊良部秀輝</td><td>1997〜99年</td><td>29勝20敗、防御率4.80</td></tr><tr><td class="name">松井秀喜</td><td>2003〜09年</td><td>2009年ワールドシリーズ MVP</td></tr><tr><td class="name">井川慶</td><td>2007〜08年</td><td>MLB で2勝4敗</td></tr><tr><td class="name">黒田博樹</td><td>2012〜14年</td><td>先発投手として在籍</td></tr><tr><td class="name">イチロー</td><td>2012〜14年</td><td>2012年途中に移籍。在籍中に日米通算4,000本安打</td></tr><tr><td class="name">田中将大</td><td>2014〜20年</td><td>78勝46敗</td></tr><tr><td class="name">前田健太</td><td>2025年8月</td><td>マイナー契約を結ぶ</td></tr></tbody></table></div>
+<p class="srcnote">MLB の記事とヤンキースの2015年メディアガイド。<sup><a href="#s77">77</a></sup><sup><a href="#s78">78</a></sup><sup><a href="#s79">79</a></sup><sup><a href="#s80">80</a></sup></p>
+<h2 id="c13"><span class="num">⑬</span>ヤンキースのファーム<span class="en">Yankees Farm System</span></h2>
+<p class="callout">ヤンキースの傘下はドミニカ共和国のアカデミーからタンパ、ニューヨーク州とニュージャージー州、ペンシルベニア州を経てブロンクスへ上がる。投手育成はデータ分析を用いる pitching lab 型の方式をとる。<sup><a href="#s86">86</a></sup><sup><a href="#s74">74</a></sup></p>
+<div class="mapbox"><div class="cap">ヤンキース傘下の球場と昇格の順路</div><div class="sub">矢印は下位から上位への順路。ボカチカ（DSL）→ タンパ（FCL・シングルA）→ ワッピンガーズフォールズ（ハイA）→ ブリッジウォーター（AA）→ ムーシック（AAA）→ ブロンクス（MLB）。</div>
+<div id="map-farm" class="leaflet-map leaflet-map-tall" role="img" aria-label="ヤンキース傘下球団の地図"></div>
+<div class="sub inset-cap">ニューヨーク周辺の拡大（ハイA・AA・AAA・MLB）</div>
+<div id="map-farm-ne" class="leaflet-map" role="img" aria-label="ニューヨーク周辺の傘下球団の地図"></div>
+<p class="map-note">地図: Esri（データは OpenStreetMap ほか）。位置は球場の所在地。</p></div>
+<div class="farm-cards">
+<div class="fc"><div class="fc-lv">AAA</div><div class="fc-nm"><img class="fc-logo" src="../images/mlb/logos/531.svg" alt="" loading="lazy">Scranton/Wilkes-Barre RailRiders</div><div class="fc-note">2027年から Highlanders</div><dl><dt>所在地</dt><dd>ペンシルベニア州ムーシック</dd><dt>球場</dt><dd><a class="gm" href="https://www.google.com/maps/search/?api=1&query=PNC%20Field%2C%20Moosic" target="_blank" rel="noopener">PNC Field</a></dd><dt>開場</dt><dd>1989年</dd><dt>収容人数</dt><dd>約1万人</dd><dt>提携開始</dt><dd>2007年</dd><dt>愛称の由来</dt><dd>地域の鉄道の歴史</dd><dt>2026年成績</dt><dd>78勝68敗<sup><a href="#s81">81</a></sup><sup><a href="#s85">85</a></sup></dd></dl></div>
+<div class="fc"><div class="fc-lv">AA</div><div class="fc-nm"><img class="fc-logo" src="../images/mlb/logos/1956.svg" alt="" loading="lazy">Somerset Patriots</div><dl><dt>所在地</dt><dd>ニュージャージー州ブリッジウォーター</dd><dt>球場</dt><dd><a class="gm" href="https://www.google.com/maps/search/?api=1&query=TD%20Bank%20Ballpark%2C%20Bridgewater" target="_blank" rel="noopener">TD Bank Ballpark</a></dd><dt>開場</dt><dd>1999年</dd><dt>収容人数</dt><dd>固定席6,100席</dd><dt>提携開始</dt><dd>2021年</dd><dt>愛称の由来</dt><dd>米独立戦争と地元の歴史</dd><dt>2026年成績</dt><dd>74勝64敗<sup><a href="#s82">82</a></sup><sup><a href="#s85">85</a></sup></dd></dl></div>
+<div class="fc"><div class="fc-lv">ハイA</div><div class="fc-nm"><img class="fc-logo" src="../images/mlb/logos/537.svg" alt="" loading="lazy">Hudson Valley Renegades</div><dl><dt>所在地</dt><dd>ニューヨーク州ワッピンガーズフォールズ</dd><dt>球場</dt><dd><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Heritage%20Financial%20Park%2C%20Wappingers%20Falls" target="_blank" rel="noopener">Heritage Financial Park</a></dd><dt>開場</dt><dd>1994年</dd><dt>収容人数</dt><dd>5,400人</dd><dt>提携開始</dt><dd>2021年</dd><dt>愛称の由来</dt><dd>地域の独立的なイメージ</dd><dt>2026年成績</dt><dd>65勝65敗<sup><a href="#s83">83</a></sup><sup><a href="#s85">85</a></sup></dd></dl></div>
+<div class="fc"><div class="fc-lv">シングルA</div><div class="fc-nm"><img class="fc-logo" src="../images/mlb/logos/587.svg" alt="" loading="lazy">Tampa Tarpons</div><dl><dt>所在地</dt><dd>フロリダ州タンパ</dd><dt>球場</dt><dd><a class="gm" href="https://www.google.com/maps/search/?api=1&query=George%20M.%20Steinbrenner%20Field%2C%20Tampa" target="_blank" rel="noopener">George M. Steinbrenner Field</a></dd><dt>開場</dt><dd>1996年</dd><dt>収容人数</dt><dd>約1万人</dd><dt>提携開始</dt><dd>1994年からヤンキース系列</dd><dt>愛称の由来</dt><dd>タンパの旧球団名と銀色の大型魚（ターポン）</dd><dt>2026年成績</dt><dd>78勝51敗<sup><a href="#s84">84</a></sup><sup><a href="#s85">85</a></sup></dd></dl></div>
+<div class="fc"><div class="fc-lv">ルーキー</div><div class="fc-nm">FCL Yankees</div><dl><dt>所在地</dt><dd>フロリダ州タンパ</dd><dt>球場</dt><dd><a class="gm" href="https://www.google.com/maps/search/?api=1&query=Yankees%20Player%20Development%20Complex%2C%20Tampa" target="_blank" rel="noopener">タンパの育成施設</a></dd><dt>開場</dt><dd>—</dd><dt>収容人数</dt><dd>—</dd><dt>提携開始</dt><dd>—</dd><dt>愛称の由来</dt><dd>—</dd><dt>2026年成績</dt><dd>29勝29敗<sup><a href="#s85">85</a></sup></dd></dl></div>
+<div class="fc"><div class="fc-lv">ルーキー</div><div class="fc-nm">DSL Yankees</div><dl><dt>所在地</dt><dd>ドミニカ共和国ボカチカ</dd><dt>球場</dt><dd><a class="gm" href="https://www.google.com/maps/search/?api=1&query=New%20York%20Yankees%20Dominican%20Academy%2C%20Boca%20Chica" target="_blank" rel="noopener">4面のグラウンドを持つアカデミー</a></dd><dt>開場</dt><dd>2005年（アカデミー開設）</dd><dt>収容人数</dt><dd>—</dd><dt>提携開始</dt><dd>—</dd><dt>愛称の由来</dt><dd>—</dd><dt>2026年成績</dt><dd>33勝21敗<sup><a href="#s86">86</a></sup><sup><a href="#s85">85</a></sup></dd></dl></div>
+</div>
+<p class="srcnote">球場は各球団と MLB の案内、成績は The Baseball Cube、愛称の由来は MLB の球場案内による。<sup><a href="#s81">81</a></sup><sup><a href="#s82">82</a></sup><sup><a href="#s83">83</a></sup><sup><a href="#s84">84</a></sup><sup><a href="#s85">85</a></sup><sup><a href="#s86">86</a></sup><sup><a href="#s87">87</a></sup></p>
+<figure class="photo"><img src="../images/mlb/c_steinbrenner_field.jpg" alt="George M. Steinbrenner Field" loading="lazy"><figcaption>George M. Steinbrenner Field（タンパ）。1996年開場。ヤンキースの春季キャンプと傘下のシングルA Tampa Tarpons の本拠地。</figcaption></figure>
+<h3>投手育成</h3>
+<p>ヤンキースは投球データ・球種設計・球速・回転・リリースの分析を組み合わせる pitching lab 型の投手育成をとる。投手部門の責任者はサム・ブライエンド（Sam Briend）で、マット・ブレイク（Matt Blake）が投手育成と球種設計の中心となる。<sup><a href="#s74">74</a></sup>近年の育成出身の投手にはルイス・ヒル／クラーク・シュミット／ウィル・ウォーレン／キャム・シュリトラーの4人がいる。2026年はウォーレンが156回で158奪三振、防御率3.92を記録した。<sup><a href="#s88">88</a></sup></p>
+<h3>有望株 上位5人（MLB Pipeline、2026年11月）</h3>
+<div class="tbl-scroll"><table class=""><thead><tr><th class="num">順位</th><th>選手</th><th>区分</th></tr></thead><tbody><tr><td class="num">1</td><td>ダックス・キルビー</td><td>野手</td></tr><tr><td class="num">2</td><td>エルマー・ロドリゲス</td><td>投手</td></tr><tr><td class="num">3</td><td>カルロス・ラグランジュ</td><td>投手</td></tr><tr><td class="num">4</td><td>ハンター・ディーツ</td><td>投手</td></tr><tr><td class="num">5</td><td>ベン・ヘス</td><td>投手</td></tr></tbody></table></div>
+<p class="srcnote">MLB Pipeline 2026年11月12日更新。<sup><a href="#s89">89</a></sup></p>
+<h3>国際契約（2026年）</h3>
+<p>ヤンキースの2026年の国際アマチュア・ボーナスプールは544万ドルで、30球団の最低額だった。主な契約選手はドミニカ共和国の内野手ジオルマイオニ・ベルトレ（Geormayhoni Beltre、契約金10万ドル）とアブラハン・ピチャルド、ベネズエラの捕手ケネス・メレンデスなどである。<sup><a href="#s90">90</a></sup><sup><a href="#s91">91</a></sup></p>
+<h2 id="c14"><span class="num">⑭</span>広池の道筋に当てはめる<span class="en">Applying the Rules</span></h2>
+<p class="callout">日本の大学生がヤンキースとマイナー契約を結ぶ場合、国際アマチュアの契約金プールの範囲で契約する。その後はタンパから各階層を順に上がる。本章は規則を当てはめた説明であり、昇格の時期は予想しない。<sup><a href="#s9">9</a></sup><sup><a href="#s10">10</a></sup></p>
+<div class="chart"><div class="cap">ヤンキース傘下の順路と最低年俸</div><div class="sub">最低年俸は2023年のマイナー労使協定の年額。MLB は2026年の最低年俸。</div><div class="svg-scroll"><svg viewBox="0 0 1000 124" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ヤンキース傘下の順路" font-family="-apple-system,Hiragino Sans,sans-serif">
+<defs><marker id="ah-7933" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0C2340"/></marker></defs>
+<rect x="0.0" y="10" width="145.0" height="104" fill="#fff" stroke="#5b7590" stroke-width="1.5"/>
+<rect x="0.0" y="10" width="145.0" height="26" fill="#5b7590"/>
+<text x="72.5" y="28" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">契約</text>
+<text x="72.5" y="56" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">国際アマチュア枠</text>
+<text x="72.5" y="75" text-anchor="middle" font-size="10.5" fill="#1a1a1a">解禁日 2027年1月15日</text>
+<text x="72.5" y="94" text-anchor="middle" font-size="10.5" fill="#1a1a1a">新協定により変更あり</text>
+<line x1="148.0" y1="62.0" x2="168.0" y2="62.0" stroke="#0C2340" stroke-width="1.6" marker-end="url(#ah-7933)"/>
+<rect x="171.0" y="10" width="145.0" height="104" fill="#fff" stroke="#1baf7a" stroke-width="1.5"/>
+<rect x="171.0" y="10" width="145.0" height="26" fill="#1baf7a"/>
+<text x="243.5" y="28" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">タンパ</text>
+<text x="243.5" y="56" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">FCL／シングルA</text>
+<text x="243.5" y="75" text-anchor="middle" font-size="10.5" fill="#1a1a1a">19,800ドル／26,200ドル</text>
+<text x="243.5" y="94" text-anchor="middle" font-size="10.5" fill="#1a1a1a">Tampa Tarpons</text>
+<line x1="319.0" y1="62.0" x2="339.0" y2="62.0" stroke="#0C2340" stroke-width="1.6" marker-end="url(#ah-7933)"/>
+<rect x="342.0" y="10" width="145.0" height="104" fill="#fff" stroke="#1baf7a" stroke-width="1.5"/>
+<rect x="342.0" y="10" width="145.0" height="26" fill="#1baf7a"/>
+<text x="414.5" y="28" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">ハドソンバレー</text>
+<text x="414.5" y="56" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">ハイA</text>
+<text x="414.5" y="75" text-anchor="middle" font-size="10.5" fill="#1a1a1a">27,300ドル</text>
+<text x="414.5" y="94" text-anchor="middle" font-size="10.5" fill="#1a1a1a">Hudson Valley Renegades</text>
+<line x1="490.0" y1="62.0" x2="510.0" y2="62.0" stroke="#0C2340" stroke-width="1.6" marker-end="url(#ah-7933)"/>
+<rect x="513.0" y="10" width="145.0" height="104" fill="#fff" stroke="#1baf7a" stroke-width="1.5"/>
+<rect x="513.0" y="10" width="145.0" height="26" fill="#1baf7a"/>
+<text x="585.5" y="28" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">サマセット</text>
+<text x="585.5" y="56" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">AA</text>
+<text x="585.5" y="75" text-anchor="middle" font-size="10.5" fill="#1a1a1a">30,250ドル</text>
+<text x="585.5" y="94" text-anchor="middle" font-size="10.5" fill="#1a1a1a">Somerset Patriots</text>
+<line x1="661.0" y1="62.0" x2="681.0" y2="62.0" stroke="#0C2340" stroke-width="1.6" marker-end="url(#ah-7933)"/>
+<rect x="684.0" y="10" width="145.0" height="104" fill="#fff" stroke="#1baf7a" stroke-width="1.5"/>
+<rect x="684.0" y="10" width="145.0" height="26" fill="#1baf7a"/>
+<text x="756.5" y="28" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">スクラントン</text>
+<text x="756.5" y="56" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">AAA</text>
+<text x="756.5" y="75" text-anchor="middle" font-size="10.5" fill="#1a1a1a">35,800ドル</text>
+<text x="756.5" y="94" text-anchor="middle" font-size="10.5" fill="#1a1a1a">RailRiders（Highlanders）</text>
+<line x1="832.0" y1="62.0" x2="852.0" y2="62.0" stroke="#0C2340" stroke-width="1.6" marker-end="url(#ah-7933)"/>
+<rect x="855.0" y="10" width="145.0" height="104" fill="#fff" stroke="#0C2340" stroke-width="1.5"/>
+<rect x="855.0" y="10" width="145.0" height="26" fill="#0C2340"/>
+<text x="927.5" y="28" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">ブロンクス</text>
+<text x="927.5" y="56" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">MLB</text>
+<text x="927.5" y="75" text-anchor="middle" font-size="10.5" fill="#1a1a1a">78万ドル</text>
+<text x="927.5" y="94" text-anchor="middle" font-size="10.5" fill="#1a1a1a">New York Yankees</text>
+</svg></div></div>
+<h3>40人枠に入る期限の規則</h3>
+<p>19歳以上で契約した選手は、契約後4回目のルール5ドラフトまでに40人枠へ入れないと、他球団に指名される可能性がある。40人枠に入った選手を MLB とマイナーの間で移すにはオプションを使い、オプションは通常3年分である。<sup><a href="#s28">28</a></sup><sup><a href="#s27">27</a></sup></p>
+<p>2026年12月1日に労使協定が失効する。2027年1月15日の国際契約の解禁日と2027年のヤンキースのプール額は、新しい協定の内容次第で変わり得る。<sup><a href="#s9">9</a></sup><sup><a href="#s10">10</a></sup></p>
+<h2 id="c15"><span class="num">⑮</span>出典<span class="en">Sources</span></h2>
+<p class="srcnote">調査メモ（mlb/*.out）と訂正メモ（mlb/corrections.md）に記載された URL を重複を除いて掲載する。確認日は2026年11月15日。</p>
+<ol class="sources">
+<li id="s1"><a href="https://mlb.com/news/william-contreras-wins-2026-world-series-mvp">https://mlb.com/news/william-contreras-wins-2026-world-series-mvp</a></li>
+<li id="s2"><a href="https://www.mlb.com/rays/news/yankees-lose-alds-2026">https://www.mlb.com/rays/news/yankees-lose-alds-2026</a></li>
+<li id="s3"><a href="https://www.mlb.com/news/2026-mlb-cy-young-award-winners">https://www.mlb.com/news/2026-mlb-cy-young-award-winners</a></li>
+<li id="s4"><a href="https://www.mlb.com/news/yankees-triple-a-affiliate-rebrands-as-highlanders">https://www.mlb.com/news/yankees-triple-a-affiliate-rebrands-as-highlanders</a></li>
+<li id="s5"><a href="https://en.wikipedia.org/wiki/List_of_current_Major_League_Baseball_stadiums">https://en.wikipedia.org/wiki/List_of_current_Major_League_Baseball_stadiums</a></li>
+<li id="s6"><a href="https://en.wikipedia.org/wiki/List_of_World_Series_champions">https://en.wikipedia.org/wiki/List_of_World_Series_champions</a></li>
+<li id="s7"><a href="https://www.forbes.com/sites/justinteitelbaum/2026/03/20/baseballs-most-valuable-teams-2026/">https://www.forbes.com/sites/justinteitelbaum/2026/03/20/baseballs-most-valuable-teams-2026/</a></li>
+<li id="s8"><a href="https://www.spotrac.com/mlb/payroll/_/year/2026">https://www.spotrac.com/mlb/payroll/_/year/2026</a></li>
+<li id="s9"><a href="https://registrationz.mlbpa.org/pdf/MLB%20Basic%20Agreement%202022-26.pdf">https://registrationz.mlbpa.org/pdf/MLB%20Basic%20Agreement%202022-26.pdf</a></li>
+<li id="s10"><a href="https://www.baseballamerica.com/stories/10-top-names-to-watch-in-the-2027-mlb-international-signing-class/">https://www.baseballamerica.com/stories/10-top-names-to-watch-in-the-2027-mlb-international-signing-class/</a></li>
+<li id="s11"><a href="https://pages.stern.nyu.edu/~adamodar/pdfiles/country/CFMets.pdf">https://pages.stern.nyu.edu/~adamodar/pdfiles/country/CFMets.pdf</a></li>
+<li id="s12"><a href="https://www.cbssports.com/mlb/news/mlb-reports-record-12-1-billion-in-revenues-for-2024-season/">https://www.cbssports.com/mlb/news/mlb-reports-record-12-1-billion-in-revenues-for-2024-season/</a></li>
+<li id="s13"><a href="https://www.human-soar.com/method/sports/mlb-revenue/">https://www.human-soar.com/method/sports/mlb-revenue/</a></li>
+<li id="s14"><a href="https://apnews.com/article/886525243fc7fcbf8b8c927817fb3a32">https://apnews.com/article/886525243fc7fcbf8b8c927817fb3a32</a></li>
+<li id="s15"><a href="https://www.mlb.com/amp/news/mlb-announces-media-rights-deals-with-espn-nbc-netflix.html">https://www.mlb.com/amp/news/mlb-announces-media-rights-deals-with-espn-nbc-netflix.html</a></li>
+<li id="s16"><a href="https://www.sportsmediawatch.com/2026/09/mlb-local-media-rsn-storm-padres-tv/">https://www.sportsmediawatch.com/2026/09/mlb-local-media-rsn-storm-padres-tv/</a></li>
+<li id="s17"><a href="https://apnews.com/article/3344397c2f24fcd7f81e846a9babf881">https://apnews.com/article/3344397c2f24fcd7f81e846a9babf881</a></li>
+<li id="s18"><a href="https://www.mlb.com/guardians/news/mlbpa-agree-to-cba">https://www.mlb.com/guardians/news/mlbpa-agree-to-cba</a></li>
+<li id="s19"><a href="https://apnews.com/article/f2892f59d219d68249c2133afb86291e">https://apnews.com/article/f2892f59d219d68249c2133afb86291e</a></li>
+<li id="s20"><a href="https://www.mlb.com/news/mlb-proposed-salary-cap-floor-system">https://www.mlb.com/news/mlb-proposed-salary-cap-floor-system</a></li>
+<li id="s21"><a href="https://apnews.com/article/d11458cc331fffa46a30f346b5ca395a">https://apnews.com/article/d11458cc331fffa46a30f346b5ca395a</a></li>
+<li id="s22"><a href="https://www.mlb.com/glossary/transactions/service-time">https://www.mlb.com/glossary/transactions/service-time</a></li>
+<li id="s23"><a href="https://www.mlb.com/glossary/transactions/competitive-balance-tax">https://www.mlb.com/glossary/transactions/competitive-balance-tax</a></li>
+<li id="s24"><a href="https://www.sportsbusinessjournal.com/Articles/2025/12/19/mlb-record-tying-nine-teams-pay-record-4026m-in-luxury-taxes/">https://www.sportsbusinessjournal.com/Articles/2025/12/19/mlb-record-tying-nine-teams-pay-record-4026m-in-luxury-taxes/</a></li>
+<li id="s25"><a href="https://www.baseball-reference.com/leaders/leaders_contract.shtml">https://www.baseball-reference.com/leaders/leaders_contract.shtml</a></li>
+<li id="s26"><a href="https://apnews.com/article/c979a30e05e576011a9c172719eda040">https://apnews.com/article/c979a30e05e576011a9c172719eda040</a></li>
+<li id="s27"><a href="https://www.mlb.com/glossary/transactions/40-man-roster">https://www.mlb.com/glossary/transactions/40-man-roster</a></li>
+<li id="s28"><a href="https://www.mlb.com/glossary/transactions/rule-5-draft">https://www.mlb.com/glossary/transactions/rule-5-draft</a></li>
+<li id="s29"><a href="https://registrationz.mlbpa.org/pdf/MajorLeagueRules.pdf">https://registrationz.mlbpa.org/pdf/MajorLeagueRules.pdf</a></li>
+<li id="s30"><a href="https://www.baseballamerica.com/stories/mlb-seeks-sweeping-draft-overhaul-including-end-of-high-school-eligibility/">https://www.baseballamerica.com/stories/mlb-seeks-sweeping-draft-overhaul-including-end-of-high-school-eligibility/</a></li>
+<li id="s31"><a href="https://www.mlb.com/milb/news/mlb-international-prospects-signing-day-2026">https://www.mlb.com/milb/news/mlb-international-prospects-signing-day-2026</a></li>
+<li id="s32"><a href="https://apnews.com/article/e2d2b1a4c76e32e69d24fe2d2fdc5023">https://apnews.com/article/e2d2b1a4c76e32e69d24fe2d2fdc5023</a></li>
+<li id="s33"><a href="https://pressbox.athletics.com/home%20directory/Publications/MLB%20Media%20Guides/Archives/2019%20Media%20Guides/2019%20Chicago%20Cubs%20Media%20Guide.pdf">https://pressbox.athletics.com/home%20directory/Publications/MLB%20Media%20Guides/Archives/2019%20Media%20Guides/2019%20Chicago%20Cubs%20Media%20Guide.pdf</a></li>
+<li id="s34"><a href="https://img.mlbstatic.com/milb-images/image/upload/milb/wyw2736pc2enanycpqfr.pdf">https://img.mlbstatic.com/milb-images/image/upload/milb/wyw2736pc2enanycpqfr.pdf</a></li>
+<li id="s35"><a href="https://www.mlb.com/news/minor-leagues-new-collective-bargaining-agreement">https://www.mlb.com/news/minor-leagues-new-collective-bargaining-agreement</a></li>
+<li id="s36"><a href="https://www.baseballamerica.com/stories/how-much-money-do-minor-league-baseball-players-make-in-2026/">https://www.baseballamerica.com/stories/how-much-money-do-minor-league-baseball-players-make-in-2026/</a></li>
+<li id="s37"><a href="https://sports.betmgm.com/en/blog/mlb/how-much-money-do-minor-league-baseball-players-make-bm15/">https://sports.betmgm.com/en/blog/mlb/how-much-money-do-minor-league-baseball-players-make-bm15/</a></li>
+<li id="s38"><a href="https://time.com/6108068/mlb-minor-league-baseball-housing/">https://time.com/6108068/mlb-minor-league-baseball-housing/</a></li>
+<li id="s39"><a href="https://www.mlb.com/postseason/history/2026">https://www.mlb.com/postseason/history/2026</a></li>
+<li id="s40"><a href="https://www.mlb.com/history">https://www.mlb.com/history</a></li>
+<li id="s41"><a href="https://www.mlb.com/glossary/miscellaneous/modern-era">https://www.mlb.com/glossary/miscellaneous/modern-era</a></li>
+<li id="s42"><a href="https://www.mlb.com/official-information/about-mlb/commissioners/kenesaw-landis">https://www.mlb.com/official-information/about-mlb/commissioners/kenesaw-landis</a></li>
+<li id="s43"><a href="https://www.mlb.com/official-information/about-mlb/commissioners/albert-chandler">https://www.mlb.com/official-information/about-mlb/commissioners/albert-chandler</a></li>
+<li id="s44"><a href="https://www.mlb.com/glossary/rules/designated-hitter-rule">https://www.mlb.com/glossary/rules/designated-hitter-rule</a></li>
+<li id="s45"><a href="https://baseballhall.org">https://baseballhall.org</a></li>
+<li id="s46"><a href="https://www.mlb.com/news/mlb-1995-year-in-review">https://www.mlb.com/news/mlb-1995-year-in-review</a></li>
+<li id="s47"><a href="https://www.mlb.com/press-release/press-release-2022-season-news-notes">https://www.mlb.com/press-release/press-release-2022-season-news-notes</a></li>
+<li id="s48"><a href="https://www.mlb.com/news/mlb-2020-season-60-games">https://www.mlb.com/news/mlb-2020-season-60-games</a></li>
+<li id="s49"><a href="https://www.mlb.com/news/mlb-new-rules-for-2023-faq">https://www.mlb.com/news/mlb-new-rules-for-2023-faq</a></li>
+<li id="s50"><a href="https://www.mlb.com/press-release/press-release-sutter-health-park-in-west-sacramento-to-host-a-s-for-2025-2027-seasons">https://www.mlb.com/press-release/press-release-sutter-health-park-in-west-sacramento-to-host-a-s-for-2025-2027-seasons</a></li>
+<li id="s51"><a href="https://www.mlb.com/press-release/press-release-mlb-announces-abs-challenge-system-coming-to-the-major-leagues-beginning-in-the-2026-season">https://www.mlb.com/press-release/press-release-mlb-announces-abs-challenge-system-coming-to-the-major-leagues-beginning-in-the-2026-season</a></li>
+<li id="s52"><a href="https://www.mlb.com/news/best-japanese-baseball-players-of-all-time">https://www.mlb.com/news/best-japanese-baseball-players-of-all-time</a></li>
+<li id="s53"><a href="https://www.mlb.com/dodgers/news/shohei-ohtani-contract-with-dodgers">https://www.mlb.com/dodgers/news/shohei-ohtani-contract-with-dodgers</a></li>
+<li id="s54"><a href="https://www.mlb.com/news/2026-mlb-mvp-award-winners">https://www.mlb.com/news/2026-mlb-mvp-award-winners</a></li>
+<li id="s55"><a href="https://www.mlb.com/news/munetaka-murakami-white-sox-contract">https://www.mlb.com/news/munetaka-murakami-white-sox-contract</a></li>
+<li id="s56"><a href="https://www.mlb.com/news/tatsuya-imai-astros-deal">https://www.mlb.com/news/tatsuya-imai-astros-deal</a></li>
+<li id="s57"><a href="https://www.mlb.com/bluejays/news/kazuma-okamoto-blue-jays-deal">https://www.mlb.com/bluejays/news/kazuma-okamoto-blue-jays-deal</a></li>
+<li id="s58"><a href="https://www.mlb.com/standings/2026">https://www.mlb.com/standings/2026</a></li>
+<li id="s59"><a href="https://www.mlb.com/news/2026-mlb-rookie-of-the-year-award-winners">https://www.mlb.com/news/2026-mlb-rookie-of-the-year-award-winners</a></li>
+<li id="s60"><a href="https://www.mlb.com/amp/press-release/press-release-first-workout-dates-and-photo-days-announced-for-2026-spring-training">https://www.mlb.com/amp/press-release/press-release-first-workout-dates-and-photo-days-announced-for-2026-spring-training</a></li>
+<li id="s61"><a href="https://www.mlb.com/awards">https://www.mlb.com/awards</a></li>
+<li id="s62"><a href="https://www.mlb.com/yankees/history/timeline-1900s">https://www.mlb.com/yankees/history/timeline-1900s</a></li>
+<li id="s63"><a href="https://www.mlb.com/yankees/history/timeline-1920s">https://www.mlb.com/yankees/history/timeline-1920s</a></li>
+<li id="s64"><a href="https://www.mlb.com/yankees/history">https://www.mlb.com/yankees/history</a></li>
+<li id="s65"><a href="https://baseballhall.org/hall-of-famers">https://baseballhall.org/hall-of-famers</a></li>
+<li id="s66"><a href="https://www.mlb.com/yankees/history/retired-numbers">https://www.mlb.com/yankees/history/retired-numbers</a></li>
+<li id="s67"><a href="https://www.mlb.com/amp/news/yankees-magazine-golden-era.html">https://www.mlb.com/amp/news/yankees-magazine-golden-era.html</a></li>
+<li id="s68"><a href="https://yesnetwork.com/about-us/">https://yesnetwork.com/about-us/</a></li>
+<li id="s69"><a href="https://tollbit.forbes.com/sites/justinteitelbaum/2026/03/20/baseballs-most-valuable-teams-2026/">https://tollbit.forbes.com/sites/justinteitelbaum/2026/03/20/baseballs-most-valuable-teams-2026/</a></li>
+<li id="s70"><a href="https://www.mlb.com/news/yankee-stadium-was-unveiled-100-years-ago">https://www.mlb.com/news/yankee-stadium-was-unveiled-100-years-ago</a></li>
+<li id="s71"><a href="https://www.mlb.com/news/featured/yankee-stadium-guide-capacity-seating-chart-parking-and-more">https://www.mlb.com/news/featured/yankee-stadium-guide-capacity-seating-chart-parking-and-more</a></li>
+<li id="s72"><a href="https://cdn.ca9.uscourts.gov/datastore/general/2014/01/29/14-15139_Documents.pdf">https://cdn.ca9.uscourts.gov/datastore/general/2014/01/29/14-15139_Documents.pdf</a></li>
+<li id="s73"><a href="https://www.mlb.com/yankees/standings/2026">https://www.mlb.com/yankees/standings/2026</a></li>
+<li id="s74"><a href="https://www.mlb.com/yankees/press-release/yankees-announce-2026-coaching-staff">https://www.mlb.com/yankees/press-release/yankees-announce-2026-coaching-staff</a></li>
+<li id="s75"><a href="https://img.mlbstatic.com/mlb-images/image/upload/mlb/ibgts0plkwj8fwfxjumu.pdf">https://img.mlbstatic.com/mlb-images/image/upload/mlb/ibgts0plkwj8fwfxjumu.pdf</a></li>
+<li id="s76"><a href="https://www.fangraphs.com/roster-resource/payroll/yankees?season=2026">https://www.fangraphs.com/roster-resource/payroll/yankees?season=2026</a></li>
+<li id="s77"><a href="https://www.mlb.com/news/before-the-yankees-were-postseason-bound/c-148923484">https://www.mlb.com/news/before-the-yankees-were-postseason-bound/c-148923484</a></li>
+<li id="s78"><a href="https://www.mlb.com/amp/news/mlb-teams-most-impact-from-japanese-players.html">https://www.mlb.com/amp/news/mlb-teams-most-impact-from-japanese-players.html</a></li>
+<li id="s79"><a href="https://library.sfo2.cdn.digitaloceanspaces.com/publications/baseball/yearbooks/BNEWYMG-2015-new-york-yankees-media-guide.pdf">https://library.sfo2.cdn.digitaloceanspaces.com/publications/baseball/yearbooks/BNEWYMG-2015-new-york-yankees-media-guide.pdf</a></li>
+<li id="s80"><a href="https://www.mlb.com/press-release/yankees-sign-rhp-kenta-maeda-to-minor-league-contract">https://www.mlb.com/press-release/yankees-sign-rhp-kenta-maeda-to-minor-league-contract</a></li>
+<li id="s81"><a href="https://www.mlb.com/yankees/news/featured/visit-pnc-field-home-of-the-scranton-wilkes-barre-railriders">https://www.mlb.com/yankees/news/featured/visit-pnc-field-home-of-the-scranton-wilkes-barre-railriders</a></li>
+<li id="s82"><a href="https://www.milb.com/somerset/ballpark">https://www.milb.com/somerset/ballpark</a></li>
+<li id="s83"><a href="https://www.milb.com/hudson-valley/ballpark">https://www.milb.com/hudson-valley/ballpark</a></li>
+<li id="s84"><a href="https://www.mlb.com/orioles/news/featured/visit-george-m-steinbrenner-field-home-of-the-tampa-tarpons">https://www.mlb.com/orioles/news/featured/visit-george-m-steinbrenner-field-home-of-the-tampa-tarpons</a></li>
+<li id="s85"><a href="https://www.thebaseballcube.com/content/aff_history_year/2026/">https://www.thebaseballcube.com/content/aff_history_year/2026/</a></li>
+<li id="s86"><a href="https://www.mlb.com/es/yankees/community/dominican-republic-baseball-academy">https://www.mlb.com/es/yankees/community/dominican-republic-baseball-academy</a></li>
+<li id="s87"><a href="https://www.mlb.com/yankees/news/featured/visit-td-bank-ballpark-home-of-the-somerset-patriots">https://www.mlb.com/yankees/news/featured/visit-td-bank-ballpark-home-of-the-somerset-patriots</a></li>
+<li id="s88"><a href="https://www.foxsports.com/mlb/new-york-yankees-team-stats?category=pitching&season=2026">https://www.foxsports.com/mlb/new-york-yankees-team-stats?category=pitching&amp;season=2026</a></li>
+<li id="s89"><a href="https://www.mlb.com/milb/prospects/yankees/">https://www.mlb.com/milb/prospects/yankees/</a></li>
+<li id="s90"><a href="https://www.mlb.com/news/new-york-yankees-2026-international-signings">https://www.mlb.com/news/new-york-yankees-2026-international-signings</a></li>
+<li id="s91"><a href="https://www.mlb.com/yankees/news/mlb-international-prospects-signing-day-2026">https://www.mlb.com/yankees/news/mlb-international-prospects-signing-day-2026</a></li>
+<li id="s92"><a href="https://milb.bamcontent.com/documents/2/6/2/276849262/2018_NWL_Media_Guide_and_Record_Book_optimized.pdf">https://milb.bamcontent.com/documents/2/6/2/276849262/2018_NWL_Media_Guide_and_Record_Book_optimized.pdf</a></li>
+<li id="s93"><a href="https://www.mlb.com/news/the-mlb-farm-system-explained">https://www.mlb.com/news/the-mlb-farm-system-explained</a></li>
+<li id="s94"><a href="https://sabr.org/journal/article/a-save-for-minor-league-baseball-the-1963-player-development-plan/">https://sabr.org/journal/article/a-save-for-minor-league-baseball-the-1963-player-development-plan/</a></li>
+<li id="s95"><a href="https://www.milb.com/news/gcs-16889156">https://www.milb.com/news/gcs-16889156</a></li>
+<li id="s96"><a href="https://www.mlb.com/press-release/press-release-mlb-announces-new-modernized-player-development-system-and-the-120">https://www.mlb.com/press-release/press-release-mlb-announces-new-modernized-player-development-system-and-the-120</a></li>
+<li id="s97"><a href="https://www.milb.com/news/railriders-sign-major-league-baseball-s-pdl">https://www.milb.com/news/railriders-sign-major-league-baseball-s-pdl</a></li>
+<li id="s98"><a href="https://www.mlb.com/press-release/american-association-frontier-league-partner-leagues-of-mlb">https://www.mlb.com/press-release/american-association-frontier-league-partner-leagues-of-mlb</a></li>
+<li id="s99"><a href="https://www.mlb.com/news/mlb-draft-league-to-begin-in-2021">https://www.mlb.com/news/mlb-draft-league-to-begin-in-2021</a></li>
+<li id="s100"><a href="https://www.milb.com/news/minor-league-baseball-s-historical-league-names-to-return-in-2022-x1355">https://www.milb.com/news/minor-league-baseball-s-historical-league-names-to-return-in-2022-x1355</a></li>
+<li id="s101"><a href="https://www.numbertamer.com/_files/ugd/f18c0d_4e373252d0e242009bddfacc0fa8bc50.pdf">https://www.numbertamer.com/_files/ugd/f18c0d_4e373252d0e242009bddfacc0fa8bc50.pdf</a></li>
+<li id="s102"><a href="https://www.baseballamerica.com/stories/youngest-mlb-prospects-at-every-level-in-2026/">https://www.baseballamerica.com/stories/youngest-mlb-prospects-at-every-level-in-2026/</a></li>
+<li id="s103"><a href="https://floridaprobaseball.com/news/2026-florida-complex-league-schedule/">https://floridaprobaseball.com/news/2026-florida-complex-league-schedule/</a></li>
+<li id="s104"><a href="https://www.mlb.com/press-release/press-release-mlb-announces-rule-changes-for-2023-season">https://www.mlb.com/press-release/press-release-mlb-announces-rule-changes-for-2023-season</a></li>
+<li id="s105"><a href="https://www.baseballamerica.com/stories/milb-attendance-down-2-9-percent-in-2025-tops-30-million-with-late-season-surge/">https://www.baseballamerica.com/stories/milb-attendance-down-2-9-percent-in-2025-tops-30-million-with-late-season-surge/</a></li>
+<li id="s106"><a href="https://www.milb.com/news/dbh121025">https://www.milb.com/news/dbh121025</a></li>
+<li id="s107"><a href="https://www.mlb.com/milb/about/teams/by-affiliate">https://www.mlb.com/milb/about/teams/by-affiliate</a></li>
+<li id="s108"><a href="https://www.mlb.com/news/updated-top-100-prospects-list-october-2026">https://www.mlb.com/news/updated-top-100-prospects-list-october-2026</a></li>
+<li id="s109"><a href="https://www.mlb.com/milb/prospects/top100/sebastian-walcott-806964?partnerId=it-20261108-15358645-mlb-1-A">https://www.mlb.com/milb/prospects/top100/sebastian-walcott-806964?partnerId=it-20261108-15358645-mlb-1-A</a></li>
+<li id="s110"><a href="https://jobpitch.jp/tazawa-junichi-saitama-musashi-heat-bears/">https://jobpitch.jp/tazawa-junichi-saitama-musashi-heat-bears/</a></li>
+<li id="s111"><a href="https://profile.yoshimoto.co.jp/talent/detail?id=10984">https://profile.yoshimoto.co.jp/talent/detail?id=10984</a></li>
+<li id="s112"><a href="https://www.baseballchannel.jp/npb/300168/2/">https://www.baseballchannel.jp/npb/300168/2/</a></li>
+</ol>
+<p class="logo-credit">地図タイル: OpenStreetMap contributors。円換算は1ドル＝150円。</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" crossorigin=""></script>
+<script>
+var TEAMS=[{"n": "オリオールズ", "en": "Baltimore Orioles", "p": "Oriole Park", "o": "1992", "lg": "AL", "ll": [39.2839, -76.6217], "id": 110, "q": "Oriole Park at Camden Yards, Baltimore"}, {"n": "レッドソックス", "en": "Boston Red Sox", "p": "Fenway Park", "o": "1912", "lg": "AL", "ll": [42.3467, -71.0972], "id": 111, "q": "Fenway Park, Boston"}, {"n": "ヤンキース", "en": "New York Yankees", "p": "Yankee Stadium", "o": "2009", "lg": "AL", "ll": [40.8296, -73.9262], "id": 147, "q": "Yankee Stadium, Bronx"}, {"n": "レイズ", "en": "Tampa Bay Rays", "p": "Tropicana Field", "o": "1990", "lg": "AL", "ll": [27.7682, -82.6534], "id": 139, "q": "Tropicana Field, St. Petersburg"}, {"n": "ブルージェイズ", "en": "Toronto Blue Jays", "p": "Rogers Centre", "o": "1989", "lg": "AL", "ll": [43.6414, -79.3894], "id": 141, "q": "Rogers Centre, Toronto"}, {"n": "ホワイトソックス", "en": "Chicago White Sox", "p": "Rate Field", "o": "1991", "lg": "AL", "ll": [41.8299, -87.6338], "id": 145, "q": "Rate Field, Chicago"}, {"n": "ガーディアンズ", "en": "Cleveland Guardians", "p": "Progressive Field", "o": "1994", "lg": "AL", "ll": [41.4962, -81.6852], "id": 114, "q": "Progressive Field, Cleveland"}, {"n": "タイガース", "en": "Detroit Tigers", "p": "Comerica Park", "o": "2000", "lg": "AL", "ll": [42.339, -83.0485], "id": 116, "q": "Comerica Park, Detroit"}, {"n": "ロイヤルズ", "en": "Kansas City Royals", "p": "Kauffman Stadium", "o": "1973", "lg": "AL", "ll": [39.0517, -94.4803], "id": 118, "q": "Kauffman Stadium, Kansas City"}, {"n": "ツインズ", "en": "Minnesota Twins", "p": "Target Field", "o": "2010", "lg": "AL", "ll": [44.9817, -93.2776], "id": 142, "q": "Target Field, Minneapolis"}, {"n": "アスレチックス", "en": "Athletics", "p": "Sutter Health Park", "o": "2000", "lg": "AL", "ll": [38.5804, -121.5135], "id": 133, "q": "Sutter Health Park, Sacramento"}, {"n": "アストロズ", "en": "Houston Astros", "p": "Daikin Park", "o": "2000", "lg": "AL", "ll": [29.7573, -95.3555], "id": 117, "q": "Daikin Park, Houston"}, {"n": "エンゼルス", "en": "Los Angeles Angels", "p": "Angel Stadium", "o": "1966", "lg": "AL", "ll": [33.8003, -117.8827], "id": 108, "q": "Angel Stadium, Anaheim"}, {"n": "マリナーズ", "en": "Seattle Mariners", "p": "T-Mobile Park", "o": "1999", "lg": "AL", "ll": [47.5914, -122.3325], "id": 136, "q": "T-Mobile Park, Seattle"}, {"n": "レンジャーズ", "en": "Texas Rangers", "p": "Globe Life Field", "o": "2020", "lg": "AL", "ll": [32.7473, -97.0847], "id": 140, "q": "Globe Life Field, Arlington"}, {"n": "ブレーブス", "en": "Atlanta Braves", "p": "Truist Park", "o": "2017", "lg": "NL", "ll": [33.8908, -84.4678], "id": 144, "q": "Truist Park, Atlanta"}, {"n": "マーリンズ", "en": "Miami Marlins", "p": "loanDepot park", "o": "2012", "lg": "NL", "ll": [25.7781, -80.2196], "id": 146, "q": "loanDepot park, Miami"}, {"n": "メッツ", "en": "New York Mets", "p": "Citi Field", "o": "2009", "lg": "NL", "ll": [40.7571, -73.8458], "id": 121, "q": "Citi Field, Flushing"}, {"n": "フィリーズ", "en": "Philadelphia Phillies", "p": "Citizens Bank Park", "o": "2004", "lg": "NL", "ll": [39.9061, -75.1665], "id": 143, "q": "Citizens Bank Park, Philadelphia"}, {"n": "ナショナルズ", "en": "Washington Nationals", "p": "Nationals Park", "o": "2008", "lg": "NL", "ll": [38.873, -77.0074], "id": 120, "q": "Nationals Park, Washington"}, {"n": "カブス", "en": "Chicago Cubs", "p": "Wrigley Field", "o": "1914", "lg": "NL", "ll": [41.9484, -87.6553], "id": 112, "q": "Wrigley Field, Chicago"}, {"n": "レッズ", "en": "Cincinnati Reds", "p": "Great American Ball Park", "o": "2003", "lg": "NL", "ll": [39.0979, -84.5066], "id": 113, "q": "Great American Ball Park, Cincinnati"}, {"n": "ブルワーズ", "en": "Milwaukee Brewers", "p": "American Family Field", "o": "2001", "lg": "NL", "ll": [43.028, -87.9712], "id": 158, "q": "American Family Field, Milwaukee"}, {"n": "パイレーツ", "en": "Pittsburgh Pirates", "p": "PNC Park", "o": "2001", "lg": "NL", "ll": [40.4469, -80.0057], "id": 134, "q": "PNC Park, Pittsburgh"}, {"n": "カージナルス", "en": "St. Louis Cardinals", "p": "Busch Stadium", "o": "2006", "lg": "NL", "ll": [38.6226, -90.1928], "id": 138, "q": "Busch Stadium, St. Louis"}, {"n": "ダイヤモンドバックス", "en": "Arizona Diamondbacks", "p": "Chase Field", "o": "1998", "lg": "NL", "ll": [33.4455, -112.0667], "id": 109, "q": "Chase Field, Phoenix"}, {"n": "ロッキーズ", "en": "Colorado Rockies", "p": "Coors Field", "o": "1995", "lg": "NL", "ll": [39.7559, -104.9942], "id": 115, "q": "Coors Field, Denver"}, {"n": "ドジャース", "en": "Los Angeles Dodgers", "p": "Dodger Stadium", "o": "1962", "lg": "NL", "ll": [34.0739, -118.24], "id": 119, "q": "UNIQLO Field at Dodger Stadium, Los Angeles"}, {"n": "パドレス", "en": "San Diego Padres", "p": "Petco Park", "o": "2004", "lg": "NL", "ll": [32.7076, -117.157], "id": 135, "q": "Petco Park, San Diego"}, {"n": "ジャイアンツ", "en": "San Francisco Giants", "p": "Oracle Park", "o": "2000", "lg": "NL", "ll": [37.7786, -122.3893], "id": 137, "q": "Oracle Park, San Francisco"}];
+var CAMPS=[{"c": "サラソタ", "ll": [27.3364, -82.5307], "lg": "G", "t": "オリオールズ"}, {"c": "フォートマイヤーズ", "ll": [26.6406, -81.8723], "lg": "G", "t": "レッドソックス／ツインズ"}, {"c": "タンパ", "ll": [27.9803, -82.5067], "lg": "G", "t": "ヤンキース"}, {"c": "ポートシャーロット", "ll": [26.9762, -82.0906], "lg": "G", "t": "レイズ"}, {"c": "ダニーデン", "ll": [28.0197, -82.7718], "lg": "G", "t": "ブルージェイズ"}, {"c": "レイクランド", "ll": [28.0395, -81.9498], "lg": "G", "t": "タイガース"}, {"c": "ウェストパームビーチ", "ll": [26.7153, -80.0534], "lg": "G", "t": "アストロズ／ナショナルズ"}, {"c": "ノースポート", "ll": [27.0442, -82.2359], "lg": "G", "t": "ブレーブス"}, {"c": "ジュピター", "ll": [26.9342, -80.0942], "lg": "G", "t": "マーリンズ／カージナルス"}, {"c": "ポートセントルーシー", "ll": [27.273, -80.3582], "lg": "G", "t": "メッツ"}, {"c": "クリアウォーター", "ll": [27.9659, -82.8001], "lg": "G", "t": "フィリーズ"}, {"c": "ブラデントン", "ll": [27.4989, -82.5748], "lg": "G", "t": "パイレーツ"}, {"c": "グレンデール", "ll": [33.5387, -112.186], "lg": "C", "t": "ホワイトソックス／ドジャース"}, {"c": "グッドイヤー", "ll": [33.4353, -112.3577], "lg": "C", "t": "ガーディアンズ／レッズ"}, {"c": "サプライズ", "ll": [33.6292, -112.368], "lg": "C", "t": "ロイヤルズ／レンジャーズ"}, {"c": "メサ", "ll": [33.4152, -111.8315], "lg": "C", "t": "アスレチックス／カブス"}, {"c": "テンピ", "ll": [33.4255, -111.94], "lg": "C", "t": "エンゼルス"}, {"c": "ピオリア", "ll": [33.5806, -112.2374], "lg": "C", "t": "マリナーズ／パドレス"}, {"c": "フェニックス", "ll": [33.4484, -112.074], "lg": "C", "t": "ブルワーズ"}, {"c": "スコッツデール", "ll": [33.4942, -111.9261], "lg": "C", "t": "ダイヤモンドバックス／ロッキーズ／ジャイアンツ"}];
+
+(function () {
+  if (typeof L === 'undefined') return;
+  var osm = function () {
+    return L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> Tiles &copy; Esri'
+    });
+  };
+  var NAVY = '#0C2340', RED = '#b91c1c', GREEN = '#1baf7a';
+  var GM = function (q, t) { return '<a class="gm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q) + '">' + t + '</a>'; };
+  var LOGO = function (id, c) { return L.divIcon({ className: 'logo-pin', iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -14], html: '<img src="../images/mlb/logos/' + id + '.svg" alt="" style="border:2px solid ' + c + '">' }); };
+
+  // Map 1: 30 ballparks
+  var m1 = L.map('map-teams', { scrollWheelZoom: false }).setView([39, -96], 4);
+  osm().addTo(m1);
+  var b1 = [];
+  TEAMS.forEach(function (t) {
+    var c = t.lg === 'AL' ? NAVY : RED;
+    b1.push(t.ll);
+    L.marker(t.ll, { icon: LOGO(t.id, c) })
+      .addTo(m1).bindPopup('<img class="popup-logo" src="../images/mlb/logos/' + t.id + '.svg" alt=""><b>' + t.n + '</b>（' + t.en + '）<br>' + GM(t.q, t.p) + '<br>開場 ' + t.o + '年');
+  });
+
+  // Map 2: spring training cities
+  var m2 = L.map('map-camps', { scrollWheelZoom: false }).setView([30, -97], 4);
+  osm().addTo(m2);
+  var b2 = [];
+  CAMPS.forEach(function (c) {
+    b2.push(c.ll);
+    var isT = c.c === 'タンパ';
+    var col = isT ? RED : (c.lg === 'G' ? NAVY : GREEN);
+    var mk = L.circleMarker(c.ll, { radius: isT ? 12 : 6, color: '#fff', weight: 1.5, fillColor: col, fillOpacity: 0.95 })
+      .addTo(m2).bindPopup('<b>' + c.c + '</b><br>' + c.t);
+    if (isT) mk.bindTooltip('タンパ（ヤンキース）', { permanent: true, direction: 'right', className: 'lbl' });
+  });
+
+  // Map 3: Yankees farm path
+  var farm = [
+    { ll: [18.4500, -69.6100], n: 'DSL Yankees アカデミー（ドミニカ共和国ボカチカ）', id: 0, q: 'New York Yankees Dominican Academy, Boca Chica', s: 'ボカチカ' },
+    { ll: [27.9803, -82.5067], n: 'George M. Steinbrenner Field と育成施設（タンパ）<br>FCL Yankees／Tampa Tarpons', id: 587, q: 'George M. Steinbrenner Field, Tampa', s: 'タンパ' },
+    { ll: [41.5340, -73.9580], n: 'Heritage Financial Park（ワッピンガーズフォールズ）<br>Hudson Valley Renegades', id: 537, q: 'Heritage Financial Park, Wappingers Falls', s: 'ハイA' },
+    { ll: [40.5603, -74.5554], n: 'TD Bank Ballpark（ブリッジウォーター）<br>Somerset Patriots', id: 1956, q: 'TD Bank Ballpark, Bridgewater', s: 'AA' },
+    { ll: [41.3594, -75.6834], n: 'PNC Field（ムーシック）<br>Scranton/Wilkes-Barre RailRiders', id: 531, q: 'PNC Field, Moosic', s: 'AAA' },
+    { ll: [40.8296, -73.9262], n: 'Yankee Stadium（ブロンクス）<br>New York Yankees', id: 147, q: 'Yankee Stadium, Bronx', s: 'MLB' }
+  ];
+  var m3 = L.map('map-farm', { scrollWheelZoom: false }).setView([32, -76], 4);
+  osm().addTo(m3);
+  var b3 = [];
+  farm.forEach(function (f, i) {
+    b3.push(f.ll);
+    var pop3 = f.n + '<br>' + GM(f.q, 'Google マップで開く');
+    var mk3 = (f.id ? L.marker(f.ll, { icon: LOGO(f.id, i === farm.length - 1 ? NAVY : GREEN) }) :
+      L.circleMarker(f.ll, { radius: 8, color: '#fff', weight: 2, fillColor: GREEN, fillOpacity: 1 }))
+      .addTo(m3).bindPopup(pop3);
+    if (i < 2) mk3.bindTooltip(f.s, { permanent: true, direction: 'left', className: 'lbl' });
+  });
+  for (var i = 0; i < farm.length - 1; i++) {
+    var a = farm[i].ll, b = farm[i + 1].ll;
+    L.polyline([a, b], { color: NAVY, weight: 2.5, opacity: 0.85 }).addTo(m3);
+    var mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    var pa = m3.project(L.latLng(a), 0), pb = m3.project(L.latLng(b), 0);
+    var ang = Math.atan2(pb.y - pa.y, pb.x - pa.x) * 180 / Math.PI;
+    L.marker(mid, { interactive: false, icon: L.divIcon({ className: 'farm-arrow', iconSize: [0, 0],
+      html: '<div style="transform:rotate(' + ang.toFixed(1) + 'deg)"></div>' }) }).addTo(m3);
+  }
+
+  var m4 = L.map('map-farm-ne', { scrollWheelZoom: false }).setView([41, -74.5], 8);
+  osm().addTo(m4);
+  var ne = farm.slice(2), b4 = [], dirs = ['right', 'bottom', 'left', 'right'];
+  ne.forEach(function (f, i) {
+    b4.push(f.ll);
+    L.marker(f.ll, { icon: LOGO(f.id, i === ne.length - 1 ? NAVY : GREEN) })
+      .addTo(m4).bindPopup(f.n + '<br>' + GM(f.q, 'Google マップで開く')).bindTooltip(f.s, { permanent: true, direction: dirs[i], className: 'lbl', offset: [dirs[i] === 'left' ? -14 : (dirs[i] === 'right' ? 14 : 0), dirs[i] === 'bottom' ? 14 : 0] });
+  });
+  for (var j = 0; j < ne.length - 1; j++) {
+    var a4 = ne[j].ll, c4 = ne[j + 1].ll;
+    L.polyline([a4, c4], { color: NAVY, weight: 2.5, opacity: 0.85 }).addTo(m4);
+    var q1 = m4.project(L.latLng(a4), 0), q2 = m4.project(L.latLng(c4), 0);
+    var ang4 = Math.atan2(q2.y - q1.y, q2.x - q1.x) * 180 / Math.PI;
+    L.marker([(a4[0] + c4[0]) / 2, (a4[1] + c4[1]) / 2], { interactive: false, icon: L.divIcon({ className: 'farm-arrow', iconSize: [0, 0],
+      html: '<div style="transform:rotate(' + ang4.toFixed(1) + 'deg)"></div>' }) }).addTo(m4);
+  }
+  // last leg of main map: add NE label once
+  L.tooltip({ permanent: true, direction: 'right', className: 'lbl' }).setLatLng([41.0, -74.2]).setContent('ニューヨーク周辺（下の拡大図）').addTo(m3);
+
+  function fit() {
+    m4.invalidateSize(); m4.fitBounds(L.latLngBounds(b4), { padding: [50, 50] });
+    m1.invalidateSize(); m2.invalidateSize(); m3.invalidateSize();
+    m1.fitBounds(L.latLngBounds(b1), { padding: [20, 20] });
+    m2.fitBounds(L.latLngBounds(b2), { padding: [30, 30] });
+    m3.fitBounds(L.latLngBounds(b3), { padding: [40, 40] });
+  }
+  fit();
+  setTimeout(fit, 200);
+  window.addEventListener('load', fit);
+})();
+
+</script>
+</body>
+</html>

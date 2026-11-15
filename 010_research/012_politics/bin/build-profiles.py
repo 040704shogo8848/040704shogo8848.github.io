@@ -16,6 +16,7 @@ def load(name):
 def main():
     pm = load("data/pm.json")
     profiles = load("data/pm_profiles.json")
+    funders = load("data/pm_funders.json")
     terms = load("data/pm_terms.json")
     credits = load("img/pm/_credits.json")
     cost_data = load("data/pm_costs.json")
@@ -29,6 +30,8 @@ def main():
             problems.append(f"term missing: {name}")
         if name not in costs:
             problems.append(f"cost missing: {name}")
+        if name not in funders:
+            problems.append(f"funders missing: {name}")
     for name in profiles:
         if name not in names:
             problems.append(f"profile name mismatch: {name}")
@@ -52,6 +55,7 @@ def main():
         merged[name] = {
             "pm": row,
             "profile": profiles[name],
+            "funders": funders[name],
             "term": terms[name],
             "image": f"img/pm/pm{index:02d}.jpg",
             "credit": credits[f"pm{index:02d}.jpg"],

@@ -723,6 +723,16 @@
     return "mid";
   }
 
+  function trainCount(dateStr) {
+    var menu = menuFor(dateStr);
+    var day = state.logs[dateStr] || {};
+    var done = 0;
+    menu.items.forEach(function (it) {
+      if (day[it.id] && day[it.id].length > 0) done++;
+    });
+    return done + "/" + menu.items.length + "種目";
+  }
+
   function mealCheckCount(dateStr) {
     var m = mealState(dateStr);
     var n = 0;
@@ -930,7 +940,7 @@
       var w = wmap[d];
       var badge = "";
       if (st === "done") badge = '<span class="badge done">済</span>';
-      else if (st === "mid") badge = '<span class="badge mid">途中</span>';
+      else if (st === "mid") badge = '<span class="badge done">実施 ' + trainCount(d) + "</span>";
       else if (kind !== "rest") badge = '<span class="badge">未</span>';
       if (rec.deload) badge += '<span class="badge half">セット半分</span>';
       html +=

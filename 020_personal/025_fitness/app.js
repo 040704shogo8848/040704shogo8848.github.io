@@ -71,7 +71,7 @@
     cable_lateral_raise: "cable lateral raise",
     oh_cable_extension: "overhead cable tricep extension",
     incline_db_curl: "incline dumbbell curl",
-    hack_squat: "hack squat",
+    hack_squat: "leg press form",
     romanian_deadlift: "romanian deadlift",
     leg_extension: "leg extension",
     seated_leg_curl: "seated leg curl",
@@ -869,6 +869,7 @@
           '">' +
           esc(exerciseName(it.id)) +
           "</a></div>";
+        html += musclesHtml(exerciseOf(it.id));
         if (mode !== "past") {
           html += '<div class="exp">' + esc(target.reason) + "</div>";
         } else if (saved.length) {
@@ -1113,6 +1114,14 @@
     return html;
   }
 
+  function musclesHtml(ex) {
+    if (!ex || !ex.muscles) return "";
+    var h = '<div class="exmus"><span class="lbl">主に鍛える筋肉</span> ' + esc(ex.muscles.main.join("、"));
+    if (ex.muscles.sub && ex.muscles.sub.length)
+      h += '<br><span class="lbl">補助で使う筋肉</span> ' + esc(ex.muscles.sub.join("、"));
+    return h + "</div>";
+  }
+
   function renderEx(exId) {
     var ex = exerciseOf(exId);
     if (!ex) return '<a class="back" href="#">戻る</a><p>種目が見つかりません</p>';
@@ -1120,7 +1129,8 @@
     var html =
       '<a class="back" href="javascript:history.back()">戻る</a><h1>' +
       esc(ex.name) +
-      "</h1>";
+      "</h1>" +
+      musclesHtml(ex);
     html += '<div class="photo-box" id="photo-box" data-ex-photo="' + esc(exId) + '">' + placeholderSvg(ex.part) + "</div>";
     html +=
       '<div class="photo-actions"><label class="primary" style="display:inline-flex;align-items:center;padding:10px 14px;border-radius:6px;background:var(--accent);color:#fff;">写真を撮る・選ぶ' +

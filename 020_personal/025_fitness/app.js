@@ -59,7 +59,6 @@
   /* session img/session 対応（seated_cable_row→one_arm_row は使わない） */
   var SESSION_PHOTO = {
     lat_pulldown: { file: "img/session/lat_pulldown.jpg", creditKey: "lat_pulldown" },
-    cable_lateral_raise: { file: "img/session/lateral_raise.jpg", creditKey: "lateral_raise" },
     rear_delt_fly: { file: "img/session/rear_delt.jpg", creditKey: "rear_delt" },
     machine_shoulder_press: { file: "img/session/shoulder_press.jpg", creditKey: "shoulder_press" },
   };
@@ -76,7 +75,7 @@
     leg_extension: "leg extension",
     seated_leg_curl: "seated leg curl",
     calf_raise: "calf raise",
-    cable_crunch: "cable crunch",
+    cable_crunch: "ab crunch machine",
     machine_shoulder_press: "machine shoulder press",
     rear_delt_fly: "rear delt fly machine",
     preacher_curl: "preacher curl",

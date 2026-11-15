@@ -84,6 +84,113 @@
     cable_pushdown: "cable tricep pushdown",
   };
   var photoCreditsCache = null;
+
+  /* Muscle figures (BodyParts3D / Anatomography). arrow = [x%, y%] of the red region */
+  var MUSCLE_READING = {
+    大胸筋: "だいきょうきん",
+    三角筋: "さんかくきん",
+    上腕二頭筋: "じょうわんにとうきん",
+    上腕筋: "じょうわんきん",
+    腕橈骨筋: "わんとうこつきん",
+    上腕三頭筋: "じょうわんさんとうきん",
+    広背筋: "こうはいきん",
+    大円筋: "だいえんきん",
+    僧帽筋: "そうぼうきん",
+    菱形筋: "りょうけいきん",
+    棘下筋: "きょくかきん",
+    脊柱起立筋: "せきちゅうきりつきん",
+    腹直筋: "ふくちょくきん",
+    外腹斜筋: "がいふくしゃきん",
+    大臀筋: "だいでんきん",
+    大内転筋: "だいないてんきん",
+    大腿直筋: "だいたいちょっきん",
+    外側広筋: "がいそくこうきん",
+    内側広筋: "ないそくこうきん",
+    中間広筋: "ちゅうかんこうきん",
+    大腿二頭筋: "だいたいにとうきん",
+    半腱様筋: "はんけんようきん",
+    半膜様筋: "はんまくようきん",
+    腓腹筋: "ひふくきん",
+  };
+  var PART_READING = {
+    鎖骨部: "さこつぶ",
+    胸肋部: "きょうろくぶ",
+    長頭: "ちょうとう",
+    短頭: "たんとう",
+    外側頭: "がいそくとう",
+    内側頭: "ないそくとう",
+  };
+  var MUSCLE_DESC = {
+    "大胸筋（鎖骨部）": "胸の上部。鎖骨の下の厚みを作る",
+    "大胸筋（胸肋部）": "胸の中部から下部。胸の面積の大部分を占める",
+    "三角筋（前部）": "肩の前側。腕を前に上げる",
+    "三角筋（中部）": "肩の横。腕を横に上げる。肩幅の広さを作り、逆三角形の上辺になる",
+    "三角筋（後部）": "肩の後ろ側。腕を後ろに引く。横から見た肩の丸みを作る",
+    "上腕二頭筋（長頭）": "力こぶの外側。力こぶの高さを作る",
+    "上腕二頭筋（短頭）": "力こぶの内側。力こぶの厚みを作る",
+    上腕二頭筋: "力こぶの筋肉。肘を曲げる",
+    上腕筋: "上腕二頭筋の奥にある。肘を曲げる力が最も強く、腕を外側に押し出して太く見せる",
+    腕橈骨筋: "前腕の親指側。肘を曲げる時に働く",
+    "上腕三頭筋（長頭）": "二の腕の内側寄り。腕を頭上に上げた姿勢で最も伸びる。上腕三頭筋の中で最も大きい",
+    "上腕三頭筋（外側頭）": "二の腕の外側。横から見た腕の張りを作る",
+    "上腕三頭筋（内側頭）": "長頭と外側頭の奥。肘を伸ばす動作の全域で働く",
+    上腕三頭筋: "二の腕の筋肉。肘を伸ばす。腕の太さの3分の2を占める",
+    広背筋: "脇の下から腰まで広がる背中の筋肉。腕を下と後ろに引く。逆三角形の横幅を作る",
+    大円筋: "脇の下の後ろ。広背筋と一緒に腕を引く",
+    "僧帽筋（上部）": "首から肩にかけての筋肉。肩をすくめる",
+    "僧帽筋（中部）": "肩甲骨の間。肩甲骨を寄せる",
+    "僧帽筋（下部）": "肩甲骨の下。肩甲骨を下げる",
+    菱形筋: "僧帽筋の奥、肩甲骨の内側。肩甲骨を寄せる",
+    棘下筋: "肩甲骨の上の筋肉。腕を外に回す",
+    脊柱起立筋: "背骨の両側を縦に走る。背中をまっすぐ保つ",
+    腹直筋: "お腹の前の筋肉。上体を丸める。腹筋の割れ目を作る",
+    外腹斜筋: "脇腹の筋肉。上体をひねる、横に倒す",
+    大臀筋: "お尻の筋肉。股関節を伸ばす。体の中で最も大きい筋肉",
+    大内転筋: "太ももの内側。脚を閉じる、股関節を伸ばす",
+    大腿直筋: "太ももの前の中央。膝を伸ばし、股関節も曲げる。レッグエクステンションでよく発達する",
+    外側広筋: "太ももの外側。大腿四頭筋の中で最も大きく、太ももの横幅を作る",
+    内側広筋: "膝の内側の上。しずく型に盛り上がる部分。膝を深く曲げた位置で強く働く",
+    中間広筋: "大腿直筋の奥。外からは見えない",
+    大腿二頭筋: "太ももの裏の外側。膝を曲げる",
+    半腱様筋: "太ももの裏の内側。膝を曲げる",
+    半膜様筋: "半腱様筋の奥。膝を曲げる",
+    "腓腹筋（内側頭）": "ふくらはぎの内側の盛り上がり",
+    "腓腹筋（外側頭）": "ふくらはぎの外側の盛り上がり",
+    ヒラメ筋: "腓腹筋の奥。膝を曲げた状態でかかとを上げる時に主に働く",
+  };
+  /* file is under img/muscles/. w,h = pixel size of the file */
+  var MUSCLE_FIG = {
+    "三角筋（前部）": { file: "deltoid_frontal.png", w: 500, h: 340, arrow: [76.0, 30.0] },
+    "三角筋（中部）": { file: "deltoid_lateral.png", w: 320, h: 320, arrow: [40.0, 61.9] },
+    "三角筋（後部）": { file: "deltoid_back.png", w: 500, h: 340, arrow: [78.0, 32.9] },
+    "上腕二頭筋": { file: "biceps_brachii_frontal.png", w: 500, h: 500, arrow: [82.0, 50.0] },
+    "上腕二頭筋（長頭）": { file: "biceps_brachii_long_head_frontal.png", w: 500, h: 360, arrow: [84.0, 53.9] },
+    "上腕二頭筋（短頭）": { file: "biceps_brachii_short_head_frontal.png", w: 500, h: 360, arrow: [80.0, 51.1] },
+    "上腕筋": { file: "brachialis_frontal.png", w: 500, h: 500, arrow: [80.0, 54.0] },
+    "上腕三頭筋": { file: "triceps_brachii_back.png", w: 500, h: 360, arrow: [82.0, 53.1] },
+    "上腕三頭筋（長頭）": { file: "triceps_brachii_long_head_back.png", w: 500, h: 360, arrow: [80.0, 53.9] },
+    "上腕三頭筋（外側頭）": { file: "triceps_brachii_lateral_head_back.png", w: 500, h: 360, arrow: [85.0, 51.1] },
+    "上腕三頭筋（内側頭）": { file: "triceps_brachii_medial_head_frontal.png", w: 500, h: 360, arrow: [80.0, 63.1] },
+    "広背筋": { file: "latissimus_dorsi_back.png", w: 500, h: 500, arrow: [62.0, 55.0] },
+    "大円筋": { file: "teres_major_back.png", w: 500, h: 340, arrow: [75.0, 47.1] },
+    "僧帽筋（上部）": { file: "trapezius_upper_back.png", w: 500, h: 500, arrow: [54.0, 32.0] },
+    "僧帽筋（中部）": { file: "trapezius_middle_back.png", w: 500, h: 500, arrow: [61.8, 46.0] },
+    "僧帽筋（下部）": { file: "trapezius_lower_back.png", w: 500, h: 500, arrow: [57.0, 62.0] },
+    "菱形筋": { file: "rhomboid_muscles_back.png", w: 500, h: 360, arrow: [56.0, 61.9] },
+    "棘下筋": { file: "infraspinatus_back.png", w: 500, h: 340, arrow: [72.0, 42.1] },
+    "大臀筋": { file: "gluteus_maximus_back.png", w: 380, h: 380, arrow: [61.1, 51.1] },
+    "大内転筋": { file: "adductor_magnus_back.png", w: 380, h: 380, arrow: [57.6, 58.4] },
+    "大腿直筋": { file: "rectus_femoris_frontal.png", w: 380, h: 380, arrow: [70.3, 53.4] },
+    "外側広筋": { file: "vastus_lateralis_lateral.png", w: 380, h: 380, arrow: [46.1, 60.0] },
+    "内側広筋": { file: "vastus_medialis_frontal.png", w: 380, h: 380, arrow: [63.2, 70.0] },
+    "中間広筋": { file: "vastus_intermedius_frontal.png", w: 380, h: 380, arrow: [68.7, 63.4] },
+    "大腿二頭筋": { file: "biceps_femoris_back.png", w: 240, h: 240, arrow: [60.8, 60.8] },
+    "半膜様筋": { file: "semimembranosus_back.png", w: 240, h: 240, arrow: [55.0, 60.0] },
+    "半腱様筋": { file: "semitendinosus.png", w: 320, h: 320, arrow: [58.4, 58.1] },
+    "腓腹筋（内側頭）": { file: "gastrocnemius_back.png", w: 500, h: 500, arrow: [58.0, 35.0] },
+    "腓腹筋（外側頭）": { file: "gastrocnemius_back.png", w: 500, h: 500, arrow: [66.0, 35.0] },
+    "ヒラメ筋": { file: "soleus_back.png", w: 500, h: 500, arrow: [66.0, 45.0] },
+  };
   var DEFAULT_DB_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
 
   /* exercises.md の文言をそのまま保持 */
@@ -289,6 +396,19 @@
         items.push({ id: it.id, sets: sets, repMin: it.repMin, repMax: it.repMax, baseSets: it.sets });
       });
     }
+    // extra exercises for every day of a kind from a start date (data/plan.json: {"addByKind":{"from":"YYYY-MM-DD","lower":[...]}})
+    var abk = state.planAddByKind;
+    if (abk && typeof abk === "object" && abk.from && dateStr >= abk.from && Array.isArray(abk[kind])) {
+      abk[kind].forEach(function (it) {
+        if (!it || !exerciseOf(it.id)) return;
+        var dup = items.some(function (x) {
+          return x.id === it.id;
+        });
+        if (dup) return;
+        var sets = recovery.deload ? Progress.halfSets(it.sets) : it.sets;
+        items.push({ id: it.id, sets: sets, repMin: it.repMin, repMax: it.repMax, baseSets: it.sets });
+      });
+    }
     return { kind: kind, items: items, deload: recovery.deload, recovery: recovery };
   }
 
@@ -482,11 +602,19 @@
         .catch(function () {
           return { images: {} };
         }),
+      fetch("img/muscles/_credits.json", { cache: "force-cache" })
+        .then(function (r) {
+          return r.ok ? r.json() : { images: {} };
+        })
+        .catch(function () {
+          return { images: {} };
+        }),
     ]).then(function (arr) {
       photoCreditsCache = {
         session: (arr[0] && arr[0].images) || {},
         exercises: (arr[1] && arr[1].images) || {},
         meal: (arr[2] && arr[2].images) || {},
+        muscles: (arr[3] && arr[3].images) || {},
       };
       return photoCreditsCache;
     });
@@ -1127,11 +1255,92 @@
     return html;
   }
 
-  function musclesHtml(ex) {
+  function splitMuscle(name) {
+    var m = /^(.+?)（(.+)）$/.exec(name);
+    return m ? { base: m[1], part: m[2] } : { base: name, part: "" };
+  }
+
+  function muscleFigHtml(name) {
+    var fig = MUSCLE_FIG[name];
+    var p = splitMuscle(name);
+    var reads = [MUSCLE_READING[p.base], PART_READING[p.part]].filter(Boolean);
+    var h =
+      '<figure class="mfig"><div class="mlabel">' +
+      (reads.length
+        ? '<div class="mread">' +
+          reads
+            .map(function (r) {
+              return '<span class="mseg">' + esc(r) + "</span>";
+            })
+            .join(" ") +
+          "</div>"
+        : "") +
+      '<div class="mname">' + esc(name) + "</div></div>";
+    if (fig) {
+      var w = fig.w;
+      var hh = fig.h;
+      var x0 = w / 2;
+      var y0 = 0;
+      var x1 = (fig.arrow[0] / 100) * w;
+      var y1 = (fig.arrow[1] / 100) * hh;
+      var dx = x1 - x0;
+      var dy = y1 - y0;
+      var len = Math.sqrt(dx * dx + dy * dy) || 1;
+      var ux = dx / len;
+      var uy = dy / len;
+      var sw = w * 0.012;
+      var ah = w * 0.05;
+      var aw = w * 0.025;
+      var bx = x1 - ux * ah;
+      var by = y1 - uy * ah;
+      var pts =
+        x1.toFixed(1) + "," + y1.toFixed(1) + " " +
+        (bx - uy * aw).toFixed(1) + "," + (by + ux * aw).toFixed(1) + " " +
+        (bx + uy * aw).toFixed(1) + "," + (by - ux * aw).toFixed(1);
+      h +=
+        '<div class="mimg" style="aspect-ratio:' + w + " / " + hh + '">' +
+        '<img alt="" loading="lazy" src="img/muscles/' + esc(fig.file) + '">' +
+        '<svg viewBox="0 0 ' + w + " " + hh + '" aria-hidden="true">' +
+        '<line x1="' + x0.toFixed(1) + '" y1="' + y0 + '" x2="' + bx.toFixed(1) + '" y2="' + by.toFixed(1) +
+        '" stroke="#111" stroke-width="' + sw.toFixed(1) + '" stroke-linecap="round"/>' +
+        '<polygon points="' + pts + '" fill="#111"/></svg></div>';
+    }
+    return h + "</figure>";
+  }
+
+  function muscleDescHtml(names) {
+    return (
+      '<ul class="mdesc">' +
+      names
+        .map(function (n) {
+          var p = splitMuscle(n);
+          var reads = [MUSCLE_READING[p.base], PART_READING[p.part]].filter(Boolean);
+          var nm = reads.length
+            ? '<ruby class="mr">' + esc(n) + "<rt>" + esc(reads.join(" ")) + "</rt></ruby>"
+            : esc(n);
+          return "<li>" + nm + ": " + esc(MUSCLE_DESC[n] || "") + "</li>";
+        })
+        .join("") +
+      "</ul>"
+    );
+  }
+
+  /* detail: true = exercise detail screen (sub figures too), false = exercise card */
+  function musclesHtml(ex, detail) {
     if (!ex || !ex.muscles) return "";
-    var h = '<div class="exmus"><span class="lbl">主に鍛える筋肉</span> ' + esc(ex.muscles.main.join("、"));
-    if (ex.muscles.sub && ex.muscles.sub.length)
-      h += '<br><span class="lbl">補助で使う筋肉</span> ' + esc(ex.muscles.sub.join("、"));
+    var main = ex.muscles.main || [];
+    var sub = ex.muscles.sub || [];
+    var h = '<div class="exmus">';
+    h += '<div class="mgrid">' + main.map(muscleFigHtml).join("") + "</div>";
+    if (sub.length) {
+      if (detail) {
+        h += '<div class="msubh">補助で使う筋肉</div>';
+        h += '<div class="mgrid small">' + sub.map(muscleFigHtml).join("") + "</div>";
+      } else {
+        h += '<div class="msubline">補助: ' + esc(sub.join("、")) + "</div>";
+      }
+    }
+    h += muscleDescHtml(detail ? main.concat(sub) : main);
     return h + "</div>";
   }
 
@@ -1143,7 +1352,7 @@
       '<a class="back" href="javascript:history.back()">戻る</a><h1>' +
       esc(ex.name) +
       "</h1>" +
-      musclesHtml(ex);
+      musclesHtml(ex, true);
     html += '<div class="photo-box" id="photo-box" data-ex-photo="' + esc(exId) + '">' + placeholderSvg(ex.part) + "</div>";
     html +=
       '<div class="photo-actions"><label class="primary" style="display:inline-flex;align-items:center;padding:10px 14px;border-radius:6px;background:var(--accent);color:#fff;">写真を撮る・選ぶ' +
@@ -1651,6 +1860,20 @@
           "）</li>";
       });
       html += "</ul>";
+      var mk = Object.keys(c.muscles || {});
+      if (mk.length) {
+        html += '<h3>筋肉図の出典</h3><ul class="sources">';
+        mk.forEach(function (k) {
+          var m = c.muscles[k];
+          html +=
+            "<li>" +
+            creditLine(m.title || m.file, m) +
+            (m.muscle ? "（" + esc(m.muscle) + "）" : "") +
+            (m.modified ? " — 加工: " + esc(m.modified) : "") +
+            "</li>";
+        });
+        html += "</ul>";
+      }
       box.innerHTML = html;
     });
   }
@@ -2033,9 +2256,11 @@
       })
       .then(function (data) {
         state.planDays = (data && data.days) || {};
+        state.planAddByKind = (data && data.addByKind) || null;
       })
       .catch(function () {
         state.planDays = {};
+        state.planAddByKind = null;
       });
   }
 

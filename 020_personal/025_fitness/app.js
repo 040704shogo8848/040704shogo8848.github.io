@@ -228,6 +228,8 @@
   }
 
   function kindFor(dateStr) {
+    var days = state.planDays || {};
+    if (days[dateStr] && KIND_KEYS.indexOf(days[dateStr]) >= 0) return days[dateStr];
     return state.settings.schedule[String(dow(dateStr))] || "rest";
   }
 
@@ -2000,8 +2002,22 @@
       });
   }
 
+  // per-date menu changes written by Claude (data/plan.json: {"days":{"YYYY-MM-DD":"lower"}})
+  function loadPlan() {
+    return fetch("data/plan.json", { cache: "no-store" })
+      .then(function (r) {
+        return r.ok ? r.json() : {};
+      })
+      .then(function (data) {
+        state.planDays = (data && data.days) || {};
+      })
+      .catch(function () {
+        state.planDays = {};
+      });
+  }
+
   loadAll();
-  loadWeight().then(function () {
+  Promise.all([loadWeight(), loadPlan()]).then(function () {
     render();
   });
 

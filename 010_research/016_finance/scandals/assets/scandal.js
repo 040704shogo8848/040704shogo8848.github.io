@@ -51,7 +51,7 @@
     var el = document.getElementById(id);
     if (!el) return null;
     try {
-      return JSON.parse(el.textContent);
+      return JSON.parse(el.textContent.replace(/<span><\/span>/g, ""));
     } catch (e) {
       return null;
     }
@@ -984,115 +984,37 @@
     var data = parseJson("wl-data");
     var host = document.querySelector(".wl-chart");
     if (!data || !host || !Array.isArray(data)) return;
-
-    var rows = data.filter(function (d) {
-      return (typeof d.gain === "number" && d.gain > 0) || (typeof d.loss === "number" && d.loss > 0);
-    });
-    var notesOnly = data.filter(function (d) {
-      return !(typeof d.gain === "number" && d.gain > 0) && !(typeof d.loss === "number" && d.loss > 0);
-    });
-
-    var maxVal = 1;
-    rows.forEach(function (d) {
-      maxVal = Math.max(maxVal, d.gain || 0, d.loss || 0);
-    });
-
-    var rowH = 36;
-    var midX = 360;
-    var barMax = 220;
-    var width = 720;
-    var height = 40 + rows.length * rowH + 24;
-
-    var wrap = document.createElement("div");
-    wrap.className = "sc-chart-scroll";
-    var svgNS = "http://www.w3.org/2000/svg";
-    var svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("viewBox", "0 0 " + width + " " + height);
-    svg.setAttribute("width", String(width));
-    svg.setAttribute("height", String(height));
-    svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", "誰が得をし誰が損をしたか");
-
-    var title = document.createElementNS(svgNS, "text");
-    title.setAttribute("x", "20");
-    title.setAttribute("y", "20");
-    title.setAttribute("class", "scheme-lab");
-    title.setAttribute("font-weight", "700");
-    title.textContent = "損 ←　　　　　　　　　　　→ 得";
-    svg.appendChild(title);
-
-    var axis = document.createElementNS(svgNS, "line");
-    axis.setAttribute("x1", String(midX));
-    axis.setAttribute("x2", String(midX));
-    axis.setAttribute("y1", "28");
-    axis.setAttribute("y2", String(height - 8));
-    axis.setAttribute("stroke", "#D9D4C8");
-    axis.setAttribute("stroke-width", "1");
-    svg.appendChild(axis);
-
-    rows.forEach(function (d, i) {
-      var y = 40 + i * rowH;
-      var unit = d.unit || "";
-      var name = document.createElementNS(svgNS, "text");
-      name.setAttribute("x", String(midX));
-      name.setAttribute("y", String(y - 4));
-      name.setAttribute("text-anchor", "middle");
-      name.setAttribute("class", "scheme-lab-s");
-      name.textContent = d.who || "";
-      svg.appendChild(name);
-
-      if (d.loss && d.loss > 0) {
-        var lw = (d.loss / maxVal) * barMax;
-        var lr = document.createElementNS(svgNS, "rect");
-        lr.setAttribute("x", String(midX - lw));
-        lr.setAttribute("y", String(y));
-        lr.setAttribute("width", String(lw));
-        lr.setAttribute("height", "18");
-        lr.setAttribute("fill", "#8B1E1E");
-        svg.appendChild(lr);
-        var lt = document.createElementNS(svgNS, "text");
-        lt.setAttribute("x", String(midX - lw - 6));
-        lt.setAttribute("y", String(y + 13));
-        lt.setAttribute("text-anchor", "end");
-        lt.setAttribute("class", "scheme-lab");
-        lt.textContent = String(d.loss) + unit;
-        svg.appendChild(lt);
-      }
-      if (d.gain && d.gain > 0) {
-        var gw = (d.gain / maxVal) * barMax;
-        var gr = document.createElementNS(svgNS, "rect");
-        gr.setAttribute("x", String(midX));
-        gr.setAttribute("y", String(y));
-        gr.setAttribute("width", String(gw));
-        gr.setAttribute("height", "18");
-        gr.setAttribute("fill", "#1E3A5F");
-        svg.appendChild(gr);
-        var gt = document.createElementNS(svgNS, "text");
-        gt.setAttribute("x", String(midX + gw + 6));
-        gt.setAttribute("y", String(y + 13));
-        gt.setAttribute("text-anchor", "start");
-        gt.setAttribute("class", "scheme-lab");
-        gt.textContent = String(d.gain) + unit;
-        svg.appendChild(gt);
-      }
-    });
-
-    wrap.appendChild(svg);
-    host.innerHTML = "";
-    host.appendChild(wrap);
-
-    if (notesOnly.length) {
-      var list = document.createElement("div");
-      list.className = "wl-list";
-      notesOnly.forEach(function (d) {
-        var item = document.createElement("div");
-        item.className = "wl-item";
-        item.innerHTML = '<p class="wl-who">' + escapeHtml(d.who || "") + "</p><p>" +
-          escapeHtml(d.note || "") + "</p>";
-        list.appendChild(item);
-      });
-      host.appendChild(list);
+    // Convert a yen amount to 億円 so rows share one scale; other units are left to the table.
+    function toOku(v, unit) {
+      if (typeof v !== "number" || !(v > 0)) return 0;
+      unit = String(unit || "");
+      if (/ドル|％|%|件|人|名|年|社|機|株/.test(unit) || unit.indexOf("円") < 0) return 0;
+      if (unit.indexOf("兆円") === 0) return v * 10000;
+      if (unit.indexOf("億円") === 0) return v;
+      if (unit.indexOf("万円") === 0) return v / 10000;
+      if (unit === "円") return v / 100000000;
+      return 0;
     }
+    function fmt(v, unit) { return (typeof v === "number" ? v.toLocaleString("ja-JP") : String(v)) + String(unit || ""); }
+    var rows = data.map(function (d) { return { d: d, g: toOku(d.gain, d.unit), l: toOku(d.loss, d.unit) }; })
+      .filter(function (r) { return r.g > 0 || r.l > 0; });
+    host.innerHTML = "";
+    if (!rows.length) { host.style.display = "none"; return; }
+    var max = 0; rows.forEach(function (r) { max = Math.max(max, r.g, r.l); });
+    var box = document.createElement("div"); box.className = "wl-bars";
+    box.innerHTML = '<div class="wl-head"><span></span><span class="wl-h-loss">損をした額</span><span class="wl-h-gain">得をした額</span></div>';
+    rows.forEach(function (r) {
+      var row = document.createElement("div"); row.className = "wl-row";
+      var lw = r.l / max * 100, gw = r.g / max * 100;
+      row.innerHTML = '<span class="wl-name">' + escapeHtml(r.d.who || "") + '</span>' +
+        '<span class="wl-side wl-loss">' + (r.l ? '<i style="width:' + Math.max(lw, 1.5) + '%"></i><b>' + escapeHtml(fmt(r.d.loss, r.d.unit)) + '</b>' : '') + '</span>' +
+        '<span class="wl-side wl-gain">' + (r.g ? '<i style="width:' + Math.max(gw, 1.5) + '%"></i><b>' + escapeHtml(fmt(r.d.gain, r.d.unit)) + '</b>' : '') + '</span>';
+      box.appendChild(row);
+    });
+    host.appendChild(box);
+    var note = document.createElement("p"); note.className = "sc-svg-note";
+    note.textContent = "棒の長さは円建ての金額だけで比較している。金額が確認できない項目と、円以外の単位の項目は下の表に記載する。";
+    host.appendChild(note);
   }
 
   ready(function () {

@@ -713,6 +713,8 @@
   function trainStatus(dateStr) {
     var menu = menuFor(dateStr);
     if (menu.kind === "rest") return "rest";
+    var pd = state.planDays && state.planDays[dateStr];
+    if (pd && typeof pd === "object" && pd.done) return "done";
     var day = state.logs[dateStr] || {};
     var done = 0;
     menu.items.forEach(function (it) {
@@ -2275,6 +2277,18 @@
       .then(function (data) {
         state.planDays = (data && data.days) || {};
         state.planAddByKind = (data && data.addByKind) || null;
+        // sets reported in chat and written by Claude; added only when the phone has none for that exercise
+        var extra = (data && data.logs) || {};
+        var changed = false;
+        Object.keys(extra).forEach(function (d) {
+          Object.keys(extra[d]).forEach(function (exId) {
+            if (!state.logs[d]) state.logs[d] = {};
+            if (state.logs[d][exId] && state.logs[d][exId].length > 0) return;
+            state.logs[d][exId] = extra[d][exId].slice();
+            changed = true;
+          });
+        });
+        if (changed) saveLogs();
       })
       .catch(function () {
         state.planDays = {};

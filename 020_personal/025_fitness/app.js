@@ -83,6 +83,13 @@
     cable_pushdown: "cable tricep pushdown",
   };
   var photoCreditsCache = null;
+  var GH_OWNER = "040704shogo8848";
+  var GH_REPO = "040704shogo8848.github.io";
+  var GH_PATH = "020_personal/025_fitness/data/logs.json";
+  var GH_BRANCH = "main";
+  var syncTimer = null;
+  var syncRunning = false;
+  var syncQueued = false;
 
   /* Muscle figures (BodyParts3D / Anatomography). arrow = [x%, y%] of the red region */
   var MUSCLE_READING = {
@@ -286,15 +293,181 @@
 
   function saveSettings() {
     lsSet("settings", state.settings);
+    scheduleSync();
   }
   function saveLogs() {
     lsSet("logs", state.logs);
+    scheduleSync();
   }
   function saveMeals() {
     lsSet("meals", state.meals);
+    scheduleSync();
   }
   function saveCustom() {
     lsSet("customExercises", state.customExercises);
+    scheduleSync();
+  }
+
+  function syncToken() {
+    try {
+      return localStorage.getItem(LS_PREFIX + "ghToken") || "";
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function syncValue(key) {
+    try {
+      return localStorage.getItem(LS_PREFIX + key) || "";
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function setSyncValue(key, value) {
+    try {
+      if (value == null || value === "") localStorage.removeItem(LS_PREFIX + key);
+      else localStorage.setItem(LS_PREFIX + key, String(value));
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  function syncPayload(updatedAt) {
+    return {
+      version: 1,
+      updatedAt: updatedAt,
+      logs: state.logs,
+      meals: state.meals,
+      settings: state.settings,
+      customExercises: state.customExercises,
+    };
+  }
+
+  function syncComparable(payload) {
+    var copy = JSON.parse(JSON.stringify(payload));
+    delete copy.updatedAt;
+    return JSON.stringify(copy);
+  }
+
+  function utf8Base64(text) {
+    var bytes = new TextEncoder().encode(text);
+    var binary = "";
+    for (var i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  }
+
+  function decodeUtf8Base64(value) {
+    var binary = atob(String(value).replace(/\s/g, ""));
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+
+  function syncStatusText() {
+    var err = syncValue("syncErr");
+    if (err) return "保存に失敗: " + err;
+    var at = syncValue("syncAt");
+    if (at) {
+      var d = new Date(at);
+      if (!isNaN(d.getTime())) {
+        return "最終保存 " + String(d.getMonth() + 1).padStart(2, "0") + "/" + String(d.getDate()).padStart(2, "0") + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+      }
+    }
+    return syncToken() ? "未保存" : "未設定";
+  }
+
+  function updateSyncStatus() {
+    var el = document.getElementById("gh-sync-status");
+    if (el) el.textContent = syncStatusText();
+  }
+
+  function syncHeaders(token) {
+    return { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" };
+  }
+
+  function syncNow() {
+    if (syncRunning) {
+      syncQueued = true;
+      return Promise.resolve();
+    }
+    var token = syncToken();
+    if (!token) return Promise.resolve();
+    syncRunning = true;
+    var url = "https://api.github.com/repos/" + GH_OWNER + "/" + GH_REPO + "/contents/" + GH_PATH;
+    var payload = syncPayload(new Date().toISOString());
+    var content = JSON.stringify(payload, null, 1);
+    function attempt(retry) {
+      return fetch(url + "?ref=" + GH_BRANCH, { headers: syncHeaders(token), cache: "no-store" })
+        .then(function (res) {
+          if (res.status === 404) return { sha: null, old: null };
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.json().then(function (data) {
+            var old = null;
+            try { old = JSON.parse(decodeUtf8Base64(data.content)); } catch (e) { old = null; }
+            return { sha: data.sha, old: old };
+          });
+        })
+        .then(function (remote) {
+          // empty device (new phone or cleared storage): restore from the saved file instead of overwriting it
+          var localEmpty = Object.keys(state.logs || {}).length === 0 && Object.keys(state.meals || {}).length === 0;
+          var remoteHas = remote.old && Object.keys(remote.old.logs || {}).length > 0;
+          if (localEmpty && remoteHas) {
+            state.logs = remote.old.logs || {};
+            state.meals = remote.old.meals || {};
+            if (remote.old.settings) state.settings = remote.old.settings;
+            state.customExercises = remote.old.customExercises || {};
+            lsSet("logs", state.logs);
+            lsSet("meals", state.meals);
+            lsSet("settings", state.settings);
+            lsSet("customExercises", state.customExercises);
+            render();
+            return false;
+          }
+          if (remote.old && syncComparable(remote.old) === syncComparable(payload)) return false;
+          var body = {
+            message: "fitness logs: auto " + todayStr() + " " + String(new Date().getHours()).padStart(2, "0") + ":" + String(new Date().getMinutes()).padStart(2, "0"),
+            content: utf8Base64(content),
+            branch: GH_BRANCH,
+          };
+          if (remote.sha) body.sha = remote.sha;
+          return fetch(url, {
+            method: "PUT",
+            headers: Object.assign({ "Content-Type": "application/json" }, syncHeaders(token)),
+            body: JSON.stringify(body),
+          }).then(function (res) {
+            if ((res.status === 409 || res.status === 422) && !retry) return attempt(true);
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            return true;
+          });
+        });
+    }
+    return attempt(false)
+      .then(function () {
+        setSyncValue("syncAt", new Date().toISOString());
+        setSyncValue("syncErr", "");
+        updateSyncStatus();
+      })
+      .catch(function (err) {
+        setSyncValue("syncErr", err && err.message ? err.message : String(err));
+        updateSyncStatus();
+      })
+      .then(function () {
+        syncRunning = false;
+        if (syncQueued) {
+          syncQueued = false;
+          scheduleSync();
+        }
+      });
+  }
+
+  function scheduleSync() {
+    if (!syncToken()) return;
+    if (syncTimer) clearTimeout(syncTimer);
+    syncTimer = setTimeout(function () {
+      syncTimer = null;
+      syncNow();
+    }, 4000);
   }
 
   function todayStr() {
@@ -1834,6 +2007,11 @@
       '</div><button type="button" class="step" data-rice-base="0.5">＋</button></div></div>';
 
     html +=
+      '<div class="settings-block"><h2>自動保存（GitHub）</h2>' +
+      '<div class="row"><label for="gh-token">トークン</label><input type="password" id="gh-token" autocomplete="off" placeholder="GitHubトークン"><button type="button" id="gh-token-save">保存</button></div>' +
+      '<div class="row"><button type="button" class="primary" id="gh-sync-now">今すぐ保存</button><button type="button" id="gh-token-delete">トークンを削除</button></div>' +
+      '<p class="note">完了したセットと食事を data/logs.json に自動で保存します。トークンはこの端末にだけ保存されます</p>' +
+      '<p class="note" id="gh-sync-status">' + esc(syncStatusText()) + '</p></div>' +
       '<div class="settings-block"><h2>バックアップ</h2>' +
       '<div class="row"><button type="button" class="primary" id="bak-export">書き出し</button>' +
       '<label class="primary" style="display:inline-flex;align-items:center;padding:10px 14px;background:var(--accent);color:#fff;border-radius:6px;">読み込み' +
@@ -2105,6 +2283,23 @@
       exportBackup();
       return;
     }
+    if (t.id === "gh-token-save") {
+      var tokenInput = document.getElementById("gh-token");
+      if (tokenInput && tokenInput.value) setSyncValue("ghToken", tokenInput.value.trim());
+      updateSyncStatus();
+      syncNow();
+      return;
+    }
+    if (t.id === "gh-token-delete") {
+      setSyncValue("ghToken", "");
+      if (syncTimer) { clearTimeout(syncTimer); syncTimer = null; }
+      updateSyncStatus();
+      return;
+    }
+    if (t.id === "gh-sync-now") {
+      syncNow();
+      return;
+    }
     if (t.getAttribute("data-menu-up")) {
       var u = t.getAttribute("data-menu-up").split("|");
       var arrU = state.settings.menus[u[0]];
@@ -2251,6 +2446,13 @@
   });
 
   window.addEventListener("hashchange", render);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden" && syncTimer) {
+      clearTimeout(syncTimer);
+      syncTimer = null;
+      syncNow();
+    }
+  });
 
   function loadWeight() {
     return fetch("data/weight.json", { cache: "no-store" })
@@ -2299,6 +2501,7 @@
   loadAll();
   Promise.all([loadWeight(), loadPlan()]).then(function () {
     render();
+    if (syncToken()) syncNow();
   });
 
   /* expose for screenshot seeding */
@@ -2309,6 +2512,13 @@
     saveLogs: saveLogs,
     saveMeals: saveMeals,
     saveSettings: saveSettings,
+    saveCustom: saveCustom,
+    syncNow: syncNow,
+    scheduleSync: scheduleSync,
+    syncPayload: syncPayload,
+    syncComparable: syncComparable,
+    utf8Base64: utf8Base64,
+    decodeUtf8Base64: decodeUtf8Base64,
     lsSet: lsSet,
     defaultSettings: defaultSettings,
   };

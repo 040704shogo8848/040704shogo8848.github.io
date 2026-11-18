@@ -71,6 +71,11 @@ const PLACEHOLDER = { re: /\b(XX,XXX|XX\.X%|TBD|TODO|FIXME|Lorem ipsum)\b/i, why
 // so an exception stays visible instead of quietly becoming the norm.
 const ACCEPTED = [
   {
+    file: '010_research/018_computing/guides/microsoft365_map.html',
+    hit: 'XX,XXX',
+    why: 'Power BI ダッシュボードの見取り図に置いた意図的なダミー値（2026-11-18）',
+  },
+  {
     file: '010_research/011_company/reports/mitsubishi_corp_research_260727.html',
     hit: '小島信明',
     why: '本人は公開人物（Wikipedia・公開講演あり）。実名掲載は 2026-08-02 に Shogo が判断済み',

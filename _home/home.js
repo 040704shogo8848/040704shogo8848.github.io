@@ -98,7 +98,8 @@
     function frame() {
       var dot = document.getElementById('lifeline-now');
       var x = dot ? dot.offsetLeft : 0;
-      var y = h / 2;
+      // Track center in canvas coordinates; the canvas extends far below so sparks can fall until they fade.
+      var y = -canvas.offsetTop + (canvas.parentNode.clientHeight || 6) / 2;
       ctx.clearRect(0, 0, w, h);
       // Flickering glow around the burning point.
       var r = 16 + Math.random() * 6;

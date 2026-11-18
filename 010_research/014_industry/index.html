@@ -14,14 +14,14 @@
   body{margin:0;background:var(--bg);color:var(--ink);
     font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
     line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1000px;margin:0 auto;padding:40px 28px 80px}
+  .wrap{max-width:none;width:100%;margin:0;padding:40px clamp(18px,3vw,56px) 80px}
 
   .crumb{font-size:12px;color:var(--sub);margin-bottom:18px}
   .crumb a{color:var(--sub);text-decoration:none}
   .crumb a:hover{color:var(--accent)}
 
   h1{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
-  .lead{color:var(--sub);font-size:14px;margin:0 0 26px;max-width:660px}
+  .lead{color:var(--sub);font-size:14px;margin:0 0 26px}
 
   .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
   .search{flex:1;min-width:200px;padding:9px 13px;border:1px solid var(--line);
@@ -47,9 +47,10 @@
   td.c-title a{color:var(--ink);text-decoration:none;font-weight:600}
   td.c-title a:hover{color:var(--accent)}
   td.c-title .ch{display:block;font-size:11.5px;color:var(--sub);font-weight:400;margin-top:1px}
-  td.c-sum{color:var(--sub);font-size:13px;max-width:360px}
+  td.c-sum{color:var(--sub);font-size:13px}
+  td.c-title{min-width:260px}
   td.c-date{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--sub);font-size:13px}
-  td.c-tags{white-space:nowrap}
+  td.c-tags{width:22%;min-width:200px}
   .pill{display:inline-block;background:var(--chip);color:var(--accent);
     font-size:11px;padding:2px 8px;border-radius:10px;margin:0 4px 4px 0}
 
@@ -222,13 +223,12 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
   <h1>Industry Research</h1>
   <p class="lead">特定企業ではなく、業界そのものの構造を整理したもの。プレイヤーの分類、バリューチェーン、力学の1枚マップ。</p>
 
-  <noscript><style>.tools,.facets{display:none}</style></noscript>
+  <noscript><style>.tools{display:none}</style></noscript>
 
   <div class="tools">
     <input type="text" class="search" id="q" placeholder="検索（題名・サマリ・タグ）" autocomplete="off">
     <span class="count" id="count"></span>
   </div>
-  <div class="facets" id="facets"></div>
 
   <div class="tbl-wrap">
     <table>
@@ -405,7 +405,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 <style>
 .tbk{margin-top:38px;padding-top:26px;border-top:1px solid #E5E2DA}
 .tbk h2{font-size:17px;margin:0;letter-spacing:-.01em;color:#1a1a1a}
-.tbk-lead{font-size:13px;color:#666;margin:6px 0 16px;max-width:640px}
+.tbk-lead{font-size:13px;color:#666;margin:6px 0 16px}
 .tbk-list{list-style:none;margin:0;padding:0;counter-reset:tbk}
 .tbk-item{background:#fff;border:1px solid #E5E2DA;border-radius:10px;
   padding:14px 18px;margin-bottom:8px;display:block;text-decoration:none;color:inherit}
@@ -465,7 +465,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')document.que
 .agd-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .agd h2{font-size:17px;margin:0;letter-spacing:-.01em;color:#1a1a1a}
 .agd-n{font-size:12px;color:#8a8a8a;font-variant-numeric:tabular-nums}
-.agd-lead{font-size:13px;color:#666;margin:6px 0 16px;max-width:640px}
+.agd-lead{font-size:13px;color:#666;margin:6px 0 16px}
 .agd-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
 .agd-q{flex:1;min-width:180px;padding:8px 12px;border:1px solid #E5E2DA;border-radius:8px;
   font-size:13.5px;background:#fff;font-family:inherit;color:#1a1a1a}
@@ -513,21 +513,6 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;
 
 let sk = 'date', sd = -1;
 const active = new Set();
-
-const tc = {};
-for (const r of R) for (const t of r.tags || []) tc[t] = (tc[t] || 0) + 1;
-document.getElementById('facets').innerHTML = Object.keys(tc)
-  .sort((a, b) => tc[b] - tc[a] || a.localeCompare(b, 'ja'))
-  .map(t => `<button class="facet" data-t="${esc(t)}">${esc(t)} <span style="opacity:.6">${tc[t]}</span></button>`)
-  .join('');
-
-document.getElementById('facets').addEventListener('click', e => {
-  const b = e.target.closest('.facet');
-  if (!b) return;
-  active.has(b.dataset.t) ? active.delete(b.dataset.t) : active.add(b.dataset.t);
-  b.classList.toggle('on', active.has(b.dataset.t));
-  render();
-});
 
 function render() {
   const q = document.getElementById('q').value.trim().toLowerCase();

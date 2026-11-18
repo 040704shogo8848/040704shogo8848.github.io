@@ -138,7 +138,7 @@ for (const [num, group, items] of sections) {
       // Use the first real sentence. Short <p> blocks are usually tag rows,
       // which read as a run of keywords on the card.
       const firstP = [...doc.querySelectorAll('p')].map((p) => cleanText(p.textContent)).find((t) => t.length >= 30 && t.includes('。') && !/出典照合|この資料は|この記事は/.test(t));
-      const desc = cleanText(meta || firstP || '').slice(0, 60);
+      const desc = cleanText((meta || firstP || '').replace(/<[^>]*>/g, '')).slice(0, 60);
       picks.push({ url: path.relative(root, file).split(path.sep).join('/'), title, section: group, img: path.relative(root, image.abs).split(path.sep).join('/'), desc });
     }
   }

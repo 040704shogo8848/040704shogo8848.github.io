@@ -28,7 +28,7 @@ const DICT_PATHS = [
 ];
 const DICT = DICT_PATHS.find((p) => existsSync(p));
 
-const SKIP_DIRS = new Set(['.git', 'node_modules', 'dist']);
+const SKIP_DIRS = new Set(['.git', 'node_modules', 'dist', '_search']);
 const BINARY_EXT = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.ico', '.pdf', '.woff', '.woff2', '.ttf', '.otf', '.mp3', '.mp4', '.m4a', '.wav', '.zip', '.gz', '.zst']);
 const TEXT_EXT = new Set(['.html', '.md', '.json', '.js', '.mjs', '.css', '.txt', '.sh', '.yml', '.yaml']);
 
@@ -206,6 +206,10 @@ const allowed = [];
 for (const abs of targets) {
   // The scanner's own rule list is full of the strings it looks for.
   if (abs === fileURLToPath(import.meta.url)) continue;
+  // Skip SKIP_DIRS on explicit paths too (pre-push passes `git ls-files`).
+  // _search/ holds copies of tracked pages, each of which is scanned on its own;
+  // build-search.mjs indexes tracked files only, so nothing unscanned lands there.
+  if (path.relative(ROOT, abs).split(path.sep).some((d) => SKIP_DIRS.has(d))) continue;
   // pre-push feeds this `git ls-files`, which still lists a file whose deletion
   // has not been staged yet. A file that is not there cannot leak, so skip it
   // rather than crashing and reporting the gate as failed for the wrong reason.

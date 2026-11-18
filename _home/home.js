@@ -5,12 +5,29 @@
   var today = new Date(jst + 'T00:00:00+09:00');
   var days = Math.max(0, Math.ceil((target - today) / 86400000));
   var counter = document.getElementById('days-left');
+  // Number line from birth (0) to 72. The fill grows with the day counter.
+  var birth = new Date('2004-07-04T00:00:00+09:00');
+  var ratio = Math.min(1, Math.max(0, (today - birth) / (target - birth)));
+  var fill = document.getElementById('lifeline-fill');
+  var dot = document.getElementById('lifeline-now');
+  var pct = document.getElementById('lifeline-pct');
+  var ageEl = document.getElementById('lifeline-age');
+  if (ageEl) {
+    var age = today.getFullYear() - 2004 - ((today.getMonth() < 6 || (today.getMonth() === 6 && today.getDate() < 4)) ? 1 : 0);
+    ageEl.textContent = '今 ' + age + '歳';
+  }
   if (counter) {
     var started = performance.now();
     function tick(time) {
       var progress = Math.min(1, (time - started) / 900);
       var eased = 1 - Math.pow(1 - progress, 3);
       counter.textContent = Math.floor(days * eased).toLocaleString('ja-JP');
+      if (fill) {
+        var share = ratio * eased;
+        fill.style.width = (share * 100) + '%';
+        dot.style.left = (share * 100) + '%';
+        pct.textContent = (share * 100).toFixed(1) + '%';
+      }
       if (progress < 1) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);

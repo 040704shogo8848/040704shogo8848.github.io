@@ -86,6 +86,12 @@ const ACCEPTED = [
       + '受注関係とは無関係の産業地理。2026-08-28 レビュー',
   },
   {
+    file: '010_research/014_industry/reports/ai_datacenter_supply_chain_261118.html',
+    hit: '住友化学',
+    why: 'AIデータセンター鳥瞰図のフォトレジスト主要企業一覧。業界の一般知識で、受注関係の記載は無い。'
+      + '産業拠点アトラスと同じ扱い。2026-11-18',
+  },
+  {
     file: '010_research/013_geo/data/japan_projects.json',
     hit: '住友化学',
     why: '上と同じ内容のデータ側。2026-08-28 レビュー',

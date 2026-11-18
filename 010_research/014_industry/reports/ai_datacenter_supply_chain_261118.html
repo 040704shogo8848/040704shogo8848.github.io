@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AIデータセンター サプライチェーン鳥瞰図</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#E9EDF0; --paper:#F7F9FA; --ink:#17202B; --ink2:#4A5563; --line:#C9D1D8;
+  --p:#B9770E; --c:#1F7F98; --b:#76705F; --s:#6A4C9C; --v:#2D5CA5; --n:#2F7F4C; --m:#8A5636; --o:#17202B;
+  --hot:#B8361F; --up:#B8361F; --down:#2D5CA5;
+  --s0:#F7F9FA; --s1:#EEF2F5; --s2:#E6EBEF; --s3:#DFE3E5; --s4:#DCD8D1; --s5:#D6CCBF;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121820; --paper:#1A222C; --ink:#E6EBF0; --ink2:#9AA6B3; --line:#2E3946;
+    --p:#E0A243; --c:#4FB3CC; --b:#ADA690; --s:#A585D6; --v:#6F98DE; --n:#5DB57E; --m:#C88A62; --o:#E6EBF0;
+    --hot:#F0715A; --up:#F0715A; --down:#6F98DE;
+    --s0:#1A222C; --s1:#18202A; --s2:#161D26; --s3:#151B23; --s4:#1A1916; --s5:#1E1A15;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121820; --paper:#1A222C; --ink:#E6EBF0; --ink2:#9AA6B3; --line:#2E3946;
+  --p:#E0A243; --c:#4FB3CC; --b:#ADA690; --s:#A585D6; --v:#6F98DE; --n:#5DB57E; --m:#C88A62; --o:#E6EBF0;
+  --hot:#F0715A; --up:#F0715A; --down:#6F98DE;
+  --s0:#1A222C; --s1:#18202A; --s2:#161D26; --s3:#151B23; --s4:#1A1916; --s5:#1E1A15;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans JP","Hiragino Sans","Noto Sans JP","Yu Gothic",system-ui,sans-serif;line-height:1.6;font-size:15px}
+header{max-width:1200px;margin:0 auto;padding:32px 20px 8px}
+h1{font-size:clamp(24px,4vw,36px);line-height:1.25;margin:0 0 10px;font-weight:700;letter-spacing:.01em}
+.lede{max-width:46em;color:var(--ink2);margin:0 0 20px}
+h2{font-size:20px;margin:0 0 6px;font-weight:700}
+.sec{max-width:1200px;margin:0 auto;padding:20px}
+.note{color:var(--ink2);font-size:13px}
+/* cost bar */
+.cost{display:flex;height:34px;border-radius:4px;overflow:hidden;margin:10px 0 6px;max-width:100%}
+.cost div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;padding:0 4px}
+/* controls */
+.controls{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.controls .in{max-width:1200px;margin:0 auto;padding:10px 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.controls input{flex:1 1 220px;min-width:0;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;border:0;background:var(--paper);color:var(--ink);padding:8px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+button:focus-visible,input:focus-visible,.tile:focus-visible{outline:2px solid var(--down);outline-offset:2px}
+/* map */
+.mapwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 0 20px}
+.map{position:relative;min-width:1180px;max-width:1500px;margin:0 auto;padding:0 20px}
+.grid{display:grid;grid-template-columns:104px 1.45fr 1fr .95fr 1.4fr 1fr 1.1fr;gap:0}
+.hd{padding:12px 8px 8px;border-bottom:2px solid currentColor;font-weight:700;font-size:14px}
+.hd small{display:block;font-weight:400;color:var(--ink2);font-size:11.5px}
+.rl{position:sticky;left:0;z-index:3;padding:12px 8px;font-size:13px;font-weight:700;border-top:1px solid var(--line)}
+.rl small{display:block;font-weight:400;color:var(--ink2);font-size:11px;line-height:1.4}
+.cell{padding:10px 6px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
+.span{grid-column:2 / -1}
+.t0{background:var(--s0)}.t1{background:var(--s1)}.t2{background:var(--s2)}.t3{background:var(--s3)}.t4{background:var(--s4)}.t5{background:var(--s5)}
+.tile{position:relative;z-index:2;font:inherit;text-align:left;cursor:pointer;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-left:4px solid var(--dc);border-radius:3px;padding:6px 8px 5px;min-width:118px;max-width:200px;flex:1 1 118px;transition:opacity .15s}
+.tile .nm{display:block;font-size:12.5px;font-weight:500;line-height:1.35}
+.tile .mt{display:flex;gap:6px;align-items:center;margin-top:3px;font-size:10.5px;color:var(--ink2)}
+.dots{letter-spacing:1px}
+.dots i{font-style:normal;color:var(--line)}
+.dots i.on{color:var(--hot)}
+.jp{border:1px solid var(--ink2);border-radius:2px;padding:0 3px;font-size:10px;line-height:1.4;color:var(--ink)}
+.tile.hot{border-color:var(--hot);border-left-color:var(--dc)}
+.tile.dim{opacity:.2}
+.tile.sel{outline:2px solid var(--ink);outline-offset:1px}
+.tile.isup{box-shadow:0 0 0 2px var(--up)}
+.tile.isdown{box-shadow:0 0 0 2px var(--down)}
+.wide .tile{max-width:240px;flex:0 1 auto}
+svg.edges{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:visible}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--ink2);padding:8px 20px 0;max-width:1200px;margin:0 auto}
+.legend b{font-weight:500;color:var(--ink)}
+.sw{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:4px}
+/* panel */
+.panel{position:fixed;z-index:40;background:var(--paper);color:var(--ink);border:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.18);overflow-y:auto;display:none}
+.panel.open{display:block}
+@media (min-width:900px){.panel{top:calc(env(safe-area-inset-top,0px) + 70px);right:16px;width:370px;max-height:calc(100% - 100px);border-radius:8px}}
+@media (max-width:899px){.panel{left:0;right:0;bottom:0;max-height:62%;border-radius:12px 12px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}}
+.pi{padding:16px 18px 20px}
+.ph{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.ph h3{margin:0;font-size:18px;line-height:1.35}
+.close{font:inherit;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:6px;padding:2px 10px;cursor:pointer}
+.kv{font-size:12.5px;color:var(--ink2);margin:4px 0 10px}
+.badge{display:inline-block;font-size:12px;padding:1px 8px;border-radius:3px;margin-right:6px}
+.b3{background:var(--hot);color:#fff}.b2{border:1px solid var(--hot);color:var(--hot)}.b1,.b0{border:1px solid var(--line);color:var(--ink2)}
+.pi p{margin:8px 0}
+.lt{border-left:3px solid var(--hot);padding:4px 10px;background:var(--bg);font-size:13px;margin:10px 0}
+.pi h4{font-size:13px;margin:14px 0 6px;color:var(--ink2);font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:12.5px;border:1px solid var(--line);border-radius:3px;padding:2px 7px;background:var(--bg)}
+.chip.j{border-color:var(--ink);font-weight:500}
+.chip.j::before{content:"日 ";font-size:10px;color:var(--ink2)}
+.link{font:inherit;font-size:12.5px;cursor:pointer;border:1px solid var(--line);border-left:3px solid var(--dc);border-radius:3px;padding:2px 8px;background:var(--paper);color:var(--ink)}
+.act{margin-top:14px;font:inherit;font-size:13px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);padding:7px 12px;border-radius:6px;cursor:pointer}
+/* lists */
+.cols{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--dc);border-radius:3px;padding:10px 12px}
+.card h3{font-size:14.5px;margin:0 0 2px}
+.card .ltx{font-size:12.5px;color:var(--hot);margin:0 0 4px}
+.card p{font-size:13px;margin:0;color:var(--ink2)}
+.card button{all:unset;cursor:pointer}
+.jpt{width:100%;border-collapse:collapse;font-size:13px}
+.jpt td{border-top:1px solid var(--line);padding:6px 6px;vertical-align:top}
+.jpt td:first-child{font-weight:500;white-space:nowrap;width:1%}
+.tablewrap{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:4px;margin-top:10px}
+.src a{color:var(--down)}
+.src li{margin:4px 0;font-size:13px}
+footer:not(.snav-footer){max-width:1200px;margin:0 auto;padding:10px 20px 40px;font-size:12px;color:var(--ink2)}
+@media (prefers-reduced-motion:reduce){.tile{transition:none}}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+.tbl-scroll>table{margin:0;min-width:min(100%,520px)}
+</style>
+</head>
+<body>
+<!-- snav:start -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{padding-top:56px!important;padding-bottom:68px!important}
+li{overflow-wrap:anywhere}
+.snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}
+.snav-logo{color:#fff;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.02em;transition:opacity .15s}
+.snav-logo:hover{opacity:.6}
+.snav-inline{display:none;align-items:stretch;gap:2px;height:100%}
+.snav-grp{position:relative;display:flex;align-items:center}
+.snav-top{background:none;border:none;font:inherit;cursor:pointer;color:rgba(255,255,255,.7);font-size:12px;font-weight:500;padding:6px 13px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.snav-top::after{content:"";width:4px;height:4px;border-right:1.2px solid currentColor;border-bottom:1.2px solid currentColor;transform:translateY(-1px) rotate(45deg);opacity:.55}
+.snav-grp:hover .snav-top,.snav-grp:focus-within .snav-top,.snav-grp.open .snav-top{color:#fff;background:rgba(255,255,255,.08)}
+.snav-drop{position:absolute;top:100%;left:0;min-width:196px;background:#161616;border:1px solid #2b2b2b;border-radius:7px;padding:6px;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .14s ease,transform .14s ease,visibility .14s}
+.snav-grp:hover .snav-drop,.snav-grp:focus-within .snav-drop,.snav-grp.open .snav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.snav-drop a{display:block;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:4px;white-space:nowrap;letter-spacing:-.01em;transition:color .12s,background .12s}
+.snav-drop a:hover{color:#fff;background:rgba(255,255,255,.09)}
+.snav-btn{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.snav-btn span{display:block;width:20px;height:1.5px;background:#fff;transition:all .2s ease}
+.snav-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.snav-btn.open span:nth-child(2){opacity:0}
+.snav-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.snav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;cursor:pointer}
+.snav-overlay.open{display:block}
+.snav-panel{position:fixed;top:0;right:0;bottom:0;width:min(260px,80vw);background:#111;z-index:9999;transform:translateX(100%);transition:transform .25s ease;padding:68px 32px 72px;font-family:'Poppins',-apple-system,sans-serif;overflow-y:auto}
+.snav-panel.open{transform:translateX(0)}
+.snav-sec{margin-bottom:28px}
+.snav-sec-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:8px}
+.snav-a{display:block;color:rgba(255,255,255,.8);text-decoration:none;font-size:13px;font-weight:600;padding:5px 0;letter-spacing:-.01em;transition:color .12s}
+.snav-a:hover{color:#fff}
+@media(min-width:900px){.snav-inline{display:flex}.snav-btn{display:none}}
+.snav-footer{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:1px solid #222;display:flex;align-items:center;justify-content:center;padding:0 28px;font-family:'Poppins',-apple-system,sans-serif;z-index:9997}
+.snav-footer-sns{display:flex;gap:20px}
+.snav-footer-sns a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s;display:flex}
+.snav-footer-sns a:hover{color:rgba(255,255,255,.9)}
+.snav-footer-txt{color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.06em}
+.snav-footer:has(.snav-quiz){justify-content:space-between}
+.snav-quiz{color:#111;background:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;transition:opacity .15s}
+.snav-quiz:hover{opacity:.8}
+@media print{.snav-quiz{display:none}}
+</style>
+<div class="snav">
+  <a class="snav-logo" href="../../../index.html">shogo</a>
+  <div class="snav-inline"><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Research</button><div class="snav-drop"><a href="../../011_company/index.html">company</a><a href="../../012_politics/index.html">politics</a><a href="../../013_geo/index.html">geo</a><a href="../index.html">industry</a><a href="../../015_net/index.html">net</a><a href="../../016_finance/index.html">finance</a><a href="../../017_science/index.html">science</a><a href="../../018_computing/index.html">computing</a><a href="../../019_people/index.html">people</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Ideas</button><div class="snav-drop"><a href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a><a href="../../../030_ideas/032_evacsim/index.html">evacsim</a><a href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a><a href="../../../030_ideas/034_foundation/index.html">foundation</a><a href="../../../030_ideas/035_ventures/index.html">ventures</a></div></div><div class="snav-grp"><button type="button" class="snav-top" onclick="snavDrop(this)">Personal</button><div class="snav-drop"><a href="../../../020_personal/021_profile/index.html">profile</a><a href="../../../020_personal/02A_plan/index.html">plan</a><a href="../../../020_personal/023_travel/index.html">travel</a><a href="../../../020_personal/027_cinema/index.html">cinema</a><a href="../../../020_personal/02B_reading/index.html">reading</a><a href="../../../020_personal/024_method/index.html">method</a><a href="../../../020_personal/026_handbook/index.html">handbook</a><a href="../../../020_personal/025_fitness/index.html">fitness</a><a href="../../../020_personal/025_fitness/session.html">session</a><a href="../../../020_personal/028_english/index.html">english</a><a href="../../../020_personal/029_mental_math/index.html">mental math</a><a href="../../../020_personal/02C_chemistry/index.html">chemistry</a><a href="../../../020_personal/02D_probability/index.html">probability</a><a href="../../../020_personal/02E_calculus/index.html">calculus</a><a href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a><a href="../../../020_personal/02G_physics/index.html">physics</a><a href="../../../020_personal/02H_heidegger/index.html">heidegger</a><a href="../../../020_personal/02I_quiz/index.html">quiz</a><a href="../../../020_personal/02J_geography/index.html">geography</a><a href="../../../020_personal/02K_world_history/index.html">world history</a></div></div></div>
+  <button class="snav-btn" id="snavBtn" onclick="snavToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+</div>
+<div class="snav-overlay" id="snavOverlay" onclick="snavToggle()"></div>
+<nav class="snav-panel" id="snavPanel">
+  <a class="snav-a" href="../../../index.html" style="opacity:.5;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1)">home</a>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Research</div>
+    <a class="snav-a" href="../../011_company/index.html">company</a>
+    <a class="snav-a" href="../../012_politics/index.html">politics</a>
+    <a class="snav-a" href="../../013_geo/index.html">geo</a>
+    <a class="snav-a" href="../index.html">industry</a>
+    <a class="snav-a" href="../../015_net/index.html">net</a>
+    <a class="snav-a" href="../../016_finance/index.html">finance</a>
+    <a class="snav-a" href="../../017_science/index.html">science</a>
+    <a class="snav-a" href="../../018_computing/index.html">computing</a>
+    <a class="snav-a" href="../../019_people/index.html">people</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Ideas</div>
+    <a class="snav-a" href="../../../030_ideas/031_frontier_trading/index.html">frontier trading</a>
+    <a class="snav-a" href="../../../030_ideas/032_evacsim/index.html">evacsim</a>
+    <a class="snav-a" href="../../../030_ideas/033_minhaya_llm/index.html">minhaya llm</a>
+    <a class="snav-a" href="../../../030_ideas/034_foundation/index.html">foundation</a>
+    <a class="snav-a" href="../../../030_ideas/035_ventures/index.html">ventures</a>
+  </div>
+  <div class="snav-sec">
+    <div class="snav-sec-label">Personal</div>
+    <a class="snav-a" href="../../../020_personal/021_profile/index.html">profile</a>
+    <a class="snav-a" href="../../../020_personal/02A_plan/index.html">plan</a>
+    <a class="snav-a" href="../../../020_personal/023_travel/index.html">travel</a>
+    <a class="snav-a" href="../../../020_personal/027_cinema/index.html">cinema</a>
+    <a class="snav-a" href="../../../020_personal/02B_reading/index.html">reading</a>
+    <a class="snav-a" href="../../../020_personal/024_method/index.html">method</a>
+    <a class="snav-a" href="../../../020_personal/026_handbook/index.html">handbook</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/index.html">fitness</a>
+    <a class="snav-a" href="../../../020_personal/025_fitness/session.html">session</a>
+    <a class="snav-a" href="../../../020_personal/028_english/index.html">english</a>
+    <a class="snav-a" href="../../../020_personal/029_mental_math/index.html">mental math</a>
+    <a class="snav-a" href="../../../020_personal/02C_chemistry/index.html">chemistry</a>
+    <a class="snav-a" href="../../../020_personal/02D_probability/index.html">probability</a>
+    <a class="snav-a" href="../../../020_personal/02E_calculus/index.html">calculus</a>
+    <a class="snav-a" href="../../../020_personal/02F_linear_algebra/index.html">linear algebra</a>
+    <a class="snav-a" href="../../../020_personal/02G_physics/index.html">physics</a>
+    <a class="snav-a" href="../../../020_personal/02H_heidegger/index.html">heidegger</a>
+    <a class="snav-a" href="../../../020_personal/02I_quiz/index.html">quiz</a>
+    <a class="snav-a" href="../../../020_personal/02J_geography/index.html">geography</a>
+    <a class="snav-a" href="../../../020_personal/02K_world_history/index.html">world history</a>
+  </div>
+</nav>
+<script>function snavToggle(){for(const id of ['snavBtn','snavPanel','snavOverlay'])document.getElementById(id).classList.toggle('open')}
+function snavDrop(b){var g=b.parentNode,was=g.classList.contains('open');document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')});if(!was)g.classList.add('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.snav-grp'))document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.snav-grp').forEach(function(x){x.classList.remove('open')})});</script>
+<footer class="snav-footer"><div class="snav-footer-sns"><a href="https://x.com/shogo_8848" target="_blank" rel="noopener" aria-label="X"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg></a><a href="https://www.facebook.com/profile.php?id=100051572413011" target="_blank" rel="noopener" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><a href="https://www.linkedin.com/in/shogo-kubota-15741a281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></footer>
+<!-- snav:end -->
+<header>
+  <h1>AIデータセンターのサプライチェーン鳥瞰図</h1>
+  <p class="lede">1GW級のAIデータセンターを、鉱物資源から完成した施設まで6つの層に分解した地図です。下の層ほど原料に近く、上に行くほど完成品に近づきます。各項目を押すと、主要企業・逼迫度・何に依存し何に供給しているかが表示され、地図上に線でつながりが描かれます。</p>
+  <h2>お金はどこに流れるか</h2>
+  <p class="note">1GW・機器込み総額（約5〜8兆円）の内訳イメージ。公表推計をもとにした概算で、案件により大きく変わります。</p>
+  <div class="cost" role="img" aria-label="費用内訳の目安：IT機器約7割、電力設備約12%、建屋・土木約8%、冷却約6%、その他約4%">
+    <div style="flex:70;background:var(--s)">IT機器（GPU・サーバー・ネットワーク）約70%</div>
+    <div style="flex:12;background:var(--p)">電力 約12%</div>
+    <div style="flex:8;background:var(--b)">建屋 8%</div>
+    <div style="flex:6;background:var(--c)">冷却</div>
+    <div style="flex:4;background:var(--ink2)"></div>
+  </div>
+  <p class="note">金額の大半はチップに流れますが、完成時期を決めているのは電力設備です。変圧器などは建設費の1割未満なのに、数年の納期で計画全体を止めてしまいます。</p>
+</header>
+
+<div class="controls">
+  <div class="in">
+    <input id="q" type="search" placeholder="企業名・部品名で探す（例：味の素、変圧器、TSMC）" aria-label="企業名・部品名で検索">
+    <div class="seg" role="group" aria-label="表示の絞り込み">
+      <button data-f="all" aria-pressed="true">すべて</button>
+      <button data-f="hot" aria-pressed="false">逼迫度が高い</button>
+      <button data-f="jp" aria-pressed="false">日本企業あり</button>
+    </div>
+  </div>
+</div>
+<div class="legend">
+  <span><b class="dots"><i class="on">●</i><i class="on">●</i><i class="on">●</i></b> 逼迫度（3＝深刻なボトルネック）</span>
+  <span><b class="jp">日</b> 主要プレイヤーに日本企業を含む</span>
+  <span><span class="sw" style="background:var(--up)"></span>選択項目が依存する上流</span>
+  <span><span class="sw" style="background:var(--down)"></span>選択項目の供給先（下流）</span>
+  <span>表は横にスクロールできます</span>
+</div>
+
+<div class="mapwrap" id="mapwrap">
+  <div class="map" id="map">
+    <svg class="edges" id="edges" aria-hidden="true"></svg>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<section class="sec">
+  <h2>深刻なボトルネック</h2>
+  <p class="note">逼迫度3の項目。2026年秋時点の報道・推計に基づきます。</p>
+  <div class="cols" id="hotlist"></div>
+</section>
+
+<section class="sec">
+  <h2>日本企業はどこにいるか</h2>
+  <p class="note">地図に登場する日本企業と、その企業が関わる層。GPU本体ではなく、その下の装置・材料・基板と、電力機器に厚みがあります。</p>
+  <div class="tablewrap"><div class="tbl-scroll"><table class="jpt" id="jptable"></table></div></div>
+</section>
+
+<section class="sec src">
+  <h2>出典と注意</h2>
+  <p class="note">リードタイム・受注残の数値は以下の報道に基づきます。その他の企業一覧・構成は一般的な業界知識による整理で、網羅的ではありません。投資判断には一次情報の確認が必要です。</p>
+  <ul>
+    <li><a href="https://www.ajot.com/news/us-power-companies-scramble-to-secure-equipment-as-surging-data-center-demand-strains-supplies" target="_blank" rel="noopener">Reuters配信（AJOT）：米電力会社の機器確保（昇圧変圧器160週超、高圧遮断器125週）</a></li>
+    <li><a href="https://aiweekly.co/alerts/ft-ai-data-center-boom-blows-out-power-transformer-lead-times-from-months-to-4" target="_blank" rel="noopener">FT報道の要約：大型変圧器の納期4〜5年、価格約79%上昇</a></li>
+    <li><a href="https://www.gigaenergy.com/blog/lead-time-delays-for-data-centers" target="_blank" rel="noopener">Giga Energy：DC向け中圧機器の納期、変圧器価格の推移</a></li>
+    <li><a href="https://www.turbomachinerymag.com/view/steam-turbines-gas-turbine-bottleneck-siemens-energy" target="_blank" rel="noopener">Turbomachinery Magazine：ガスタービン受注残（GE 116GW、Siemens 69GW、三菱重工 35GW）</a></li>
+    <li><a href="https://www.powermag.com/ansaldo-us-gas-turbine-market-equipment-crunch/" target="_blank" rel="noopener">POWER Magazine：タービンメーカー各社の増産と受注状況</a></li>
+    <li><a href="https://oilprice.com/Energy/Energy-General/The-Gas-Turbine-Shortage-Just-Became-AIs-Biggest-Constraint.amp.html" target="_blank" rel="noopener">OilPrice：2031年納入枠の販売、テキサスの接続申請474GW</a></li>
+    <li><a href="https://algeriatech.news/?p=25943" target="_blank" rel="noopener">系統接続待ち4〜5年、遅延中の約7GW</a></li>
+  </ul>
+</section>
+<footer>作成：2026年10月時点の情報で整理。数値は概算です。</footer>
+
+<div class="panel" id="panel" role="dialog" aria-modal="false" aria-labelledby="ptitle"><div class="pi" id="pi"></div></div>
+
+<script>
+const DOMS=[
+ {k:'p',name:'電力',sub:'作る・送る・止めない'},
+ {k:'c',name:'冷却',sub:'電力はすべて熱になる'},
+ {k:'b',name:'建屋・土木',sub:'土地・建設・人'},
+ {k:'s',name:'半導体（チップ）',sub:'GPU・HBM・製造装置'},
+ {k:'v',name:'サーバー・メモリ',sub:'ラックに組み上げる'},
+ {k:'n',name:'ネットワーク',sub:'数十万GPUをつなぐ'}
+];
+const TIERS=[
+ {t:0,name:'データセンター',sub:'完成形と関係者'},
+ {t:1,name:'設備・システム',sub:'DCに直接納入'},
+ {t:2,name:'主要コンポーネント',sub:'設備の中核'},
+ {t:3,name:'部品・製造装置',sub:'それを作る道具'},
+ {t:4,name:'素材・材料',sub:'加工済みの材料'},
+ {t:5,name:'鉱物・資源',sub:'地面から掘る'}
+];
+const DN={p:'電力',c:'冷却',b:'建屋・土木',s:'半導体',v:'サーバー・メモリ',n:'ネットワーク',m:'鉱物・資源',o:'データセンター'};
+const N=[
+// tier 0
+{id:'o_dc',d:'o',t:0,n:'AIデータセンター（1GW級）',b:0,desc:'すべての層が合流する完成形。1GWで原発1基分の電力を常時消費し、敷地は数十〜100ヘクタール、機器込みの総額は約5〜8兆円規模（推計）。',pl:[],jp:[],inn:['p_grid','p_onsite','p_bess','p_backup','p_ups','c_plant','c_liquid','c_air','c_water','b_site','b_gc','b_mep','b_ops','v_rack','n_fabric','n_dci']},
+{id:'o_owner',d:'o',t:0,n:'発注者・利用者',b:0,desc:'計算力を買う側。ハイパースケーラーが最大の買い手で、AI専業クラウド（ネオクラウド）が急拡大している。',pl:['Microsoft','Google','Amazon（AWS）','Meta','Oracle','OpenAI','xAI','CoreWeave','Crusoe','Nebius','ソフトバンク','さくらインターネット'],jp:['ソフトバンク','さくらインターネット'],inn:[]},
+{id:'o_dev',d:'o',t:0,n:'DC開発・運営事業者',b:0,desc:'土地と電力を押さえ、施設を建てて貸す。電力を確保済みの用地そのものが、最も価値のある資産になりつつある。',pl:['Equinix','Digital Realty','QTS（Blackstone）','Vantage','Aligned','AirTrunk','STACK','NTTデータ','KDDI（TELEHOUSE）','IIJ'],jp:['NTTデータ','KDDI（TELEHOUSE）','IIJ'],inn:[]},
+{id:'o_utility',d:'o',t:0,n:'電力会社・系統運用者',b:2,desc:'送電網への接続順を決める門番。大口需要の申請が殺到し、接続ルールの見直しが各地で進む。',pl:['Dominion Energy','PJM','ERCOT','東京電力パワーグリッド','北海道電力','九州電力','電力広域的運営推進機関'],jp:['東京電力パワーグリッド','北海道電力','九州電力','電力広域的運営推進機関'],inn:[]},
+{id:'o_fin',d:'o',t:0,n:'資金の出し手',b:1,desc:'1GWで数兆円の資金を、インフラファンド・政府系ファンド・銀行団のプロジェクトファイナンスが支える。',pl:['Blackstone','Brookfield','BlackRock（GIP）','MGX','三菱UFJ','三井住友','みずほ'],jp:['三菱UFJ','三井住友','みずほ'],inn:[]},
+{id:'o_policy',d:'o',t:0,n:'規制・政策',b:2,desc:'半導体の輸出規制、系統接続ルール、環境・水の許認可が、供給量と立地を左右する。日本ではワット・ビット連携の議論が進む。',pl:['米商務省','米連邦エネルギー規制委員会（FERC）','州政府','経済産業省','総務省'],jp:['経済産業省','総務省'],inn:[]},
+
+// POWER
+{id:'p_grid',d:'p',t:1,n:'系統接続・送電網',b:3,lt:'米主要市場で新規の大口接続は4〜5年待ち',desc:'電力会社の送電線と変電所につなぐ権利。お金で順番を早めにくく、最も根本的な制約になっている。',pl:['各地の電力会社','系統運用者（PJM、ERCOTなど）'],jp:[],inn:['p_tr','p_gis','p_line','b_labor']},
+{id:'p_onsite',d:'p',t:1,n:'敷地内発電所（自家発電）',b:3,lt:'大型ガスタービンは2029〜31年納入枠',desc:'系統を待てない事業者が敷地内に建てる発電設備。ガス火力が中心で、燃料電池やエンジン発電を組み合わせる例も多い。',pl:['xAI','Crusoe','ExxonMobil','Chevron','VoltaGrid'],jp:[],inn:['p_gt','p_aero','p_recip','p_fc','p_smr','p_tr','p_gis','m_gas']},
+{id:'p_bess',d:'p',t:1,n:'大型蓄電システム',b:1,desc:'AI学習の急激な負荷変動を吸収し、系統への影響を抑える。系統接続の条件として求められる例もある。',pl:['Tesla（Megapack）','Fluence','Wärtsilä','CATL','Sungrow'],jp:[],inn:['p_cell','p_pwrsemi']},
+{id:'p_backup',d:'p',t:1,n:'非常用発電機',b:2,lt:'大型機は1〜2年',desc:'停電時に施設を守るディーゼル発電機。1GW級では数百台規模になる。',pl:['Caterpillar','Cummins','Rolls-Royce（mtu）','Rehlko（旧Kohler）','三菱重工'],jp:['三菱重工'],inn:[]},
+{id:'p_ups',d:'p',t:1,n:'UPS・構内配電',b:2,lt:'DC仕様の中圧機器は2〜3年に迫る',desc:'受電した電気を建物内で分配し、瞬停から守る。中圧スイッチギア、UPS、バスウェイ、PDUなど。',pl:['Schneider Electric','Vertiv','Eaton','ABB','Siemens','富士電機','東芝'],jp:['富士電機','東芝'],inn:['p_dtr','p_pwrsemi','p_cell','p_gis']},
+{id:'p_tr',d:'p',t:2,n:'大型変圧器',b:3,lt:'平均128週、最長4〜5年。米国価格は約79%上昇',desc:'数百トンの特注品。特殊鋼・銅巻線・絶縁油でできており、工場の新設にも3〜5年かかる。建設費に占める割合は小さいのに、計画全体を止める。',pl:['日立エナジー','Siemens Energy','GE Vernova（Prolec GE）','HD Hyundai Electric','Hyosung','LS Electric','東芝','三菱電機'],jp:['日立エナジー','東芝','三菱電機'],inn:['p_goes','p_oil','m_cu']},
+{id:'p_gis',d:'p',t:2,n:'開閉装置・遮断器',b:3,lt:'高圧遮断器は125週（2023年は77週）',desc:'電気の流れを入り切りし、事故時に遮断する装置。変圧器以上に供給不足が広がるとの見方もある。',pl:['日立エナジー','Siemens Energy','GE Vernova','三菱電機','東芝','ABB','Schneider Electric'],jp:['日立エナジー','三菱電機','東芝'],inn:['m_cu']},
+{id:'p_line',d:'p',t:2,n:'送電線・電力ケーブル',b:2,desc:'高圧送電線や地中・海底のHVDCケーブル。洋上風力や送電網増強と需要を奪い合う。',pl:['Prysmian','Nexans','NKT','LS Cable','住友電工','古河電工'],jp:['住友電工','古河電工'],inn:['m_cu','m_al']},
+{id:'p_gt',d:'p',t:2,n:'大型ガスタービン',b:3,lt:'GE 116GW・Siemens 69GW・三菱重工 35GWの受注残',desc:'3社でほぼ寡占。GEは2031年納入枠まで販売しており、価格は大きく上昇。需要の持続性を疑うメーカーは増産に慎重。',pl:['GE Vernova','Siemens Energy','三菱重工','Ansaldo Energia'],jp:['三菱重工'],inn:['p_blade']},
+{id:'p_aero',d:'p',t:2,n:'航空転用型・中小型タービン',b:2,desc:'ジェットエンジン由来の小型タービン。大型機より早く手に入るため、つなぎの電源として争奪戦になっている。',pl:['GE Vernova（LMシリーズ）','Siemens Energy（SGT-A）','Mitsubishi Power Aero（FT8）','ProEnergy','Solar Turbines'],jp:['三菱重工'],inn:['p_blade']},
+{id:'p_recip',d:'p',t:2,n:'ガスエンジン発電',b:1,desc:'レシプロエンジンを多数並べる方式。起動が速く、段階的に増設しやすい。',pl:['Wärtsilä','Caterpillar','INNIO（Jenbacher）','三菱重工','川崎重工'],jp:['三菱重工','川崎重工'],inn:[]},
+{id:'p_fc',d:'p',t:2,n:'燃料電池',b:1,desc:'ガスから直接発電。数か月単位で設置でき、系統を待たない電源として採用が増えている。',pl:['Bloom Energy','FuelCell Energy'],jp:[],inn:[]},
+{id:'p_smr',d:'p',t:2,n:'原子力・SMR',b:2,lt:'本格稼働は2030年代',desc:'長期の本命。既存原発の再稼働・増強と、小型モジュール炉の電力購入契約が並行して進む。',pl:['GE Vernova日立（BWRX-300）','NuScale','X-energy','Kairos Power','Oklo','TerraPower','Constellation'],jp:['日立','三菱重工','IHI'],inn:['p_forge','p_fuel']},
+{id:'p_dtr',d:'p',t:2,n:'配電用変圧器',b:2,lt:'2019年比で価格78〜95%上昇',desc:'中圧から低圧へ落とす変圧器。大型ほどではないが、数量が多く不足が続く。',pl:['Eaton','Schneider Electric','日立エナジー','Siemens','富士電機','ダイヘン'],jp:['日立エナジー','富士電機','ダイヘン'],inn:['p_goes','m_cu']},
+{id:'p_psu',d:'p',t:2,n:'ラック電源・800V直流給電',b:1,desc:'ラック1本で100kWを超える時代に向け、高電圧の直流給電へ移行が始まっている。',pl:['Delta Electronics','Lite-On','Flex','Vertiv','NVIDIA（800VDC構想）'],jp:[],inn:['p_pwrsemi','v_passive']},
+{id:'p_blade',d:'p',t:3,n:'タービン高温部品',b:2,desc:'単結晶の超合金ブレードなど。鋳造できる工場が限られ、タービン増産の足かせになる。',pl:['Howmet Aerospace','PCC（Berkshire Hathaway）','三菱重工（内製）'],jp:['三菱重工'],inn:['m_ni']},
+{id:'p_forge',d:'p',t:3,n:'大型鍛造品',b:2,desc:'原子炉圧力容器などの巨大鍛造品。世界でも作れる企業が少ない。',pl:['日本製鋼所','Doosan Enerbility'],jp:['日本製鋼所'],inn:[]},
+{id:'p_pwrsemi',d:'p',t:3,n:'パワー半導体',b:1,desc:'SiC・GaN・IGBTなど、電力変換の要。UPSや800V給電の効率を決める。',pl:['Infineon','onsemi','Wolfspeed','STMicro','ローム','三菱電機','富士電機','東芝'],jp:['ローム','三菱電機','富士電機','東芝'],inn:['m_gage']},
+{id:'p_cell',d:'p',t:3,n:'電池セル',b:1,desc:'UPSと蓄電システムの中身。リチウムイオンが主流で、中国勢が大半を供給する。',pl:['CATL','BYD','LG Energy Solution','Samsung SDI','パナソニック'],jp:['パナソニック'],inn:['m_li','m_ni']},
+{id:'p_goes',d:'p',t:4,n:'方向性電磁鋼板',b:2,desc:'変圧器の鉄心に使う特殊鋼。製造できる企業が少なく、米国内の生産者は1社のみ。',pl:['日本製鉄','JFEスチール','POSCO','宝武鋼鉄','Cleveland-Cliffs'],jp:['日本製鉄','JFEスチール'],inn:[]},
+{id:'p_oil',d:'p',t:4,n:'絶縁油・絶縁紙',b:1,desc:'変圧器内部の絶縁材。植物油系への切り替えも進む。',pl:['Nynas','Cargill','Weidmann'],jp:[],inn:[]},
+{id:'p_fuel',d:'p',t:4,n:'核燃料・ウラン濃縮',b:3,desc:'次世代炉が使う高純度低濃縮ウラン（HALEU）は、ロシア以外の供給がまだ細い。',pl:['Urenco','Orano','Centrus','Rosatom（TENEX）'],jp:[],inn:['m_u']},
+
+// COOLING
+{id:'c_plant',d:'c',t:1,n:'熱源・排熱設備',b:2,desc:'チラーや冷却塔で、施設全体の熱を外へ捨てる。1GWならほぼ1GW分の熱を処理する。',pl:['Trane','Carrier','Johnson Controls（York）','ダイキン','三菱重工サーマルシステムズ','荏原冷熱システム'],jp:['ダイキン','三菱重工サーマルシステムズ','荏原冷熱システム'],inn:['c_comp','c_hx','c_pump','c_ref']},
+{id:'c_liquid',d:'c',t:1,n:'液冷システム',b:2,desc:'最新GPUラックは空冷では冷やしきれず、チップに冷却液を直接流す方式が標準になった。',pl:['Vertiv','Schneider（Motivair）','nVent','CoolIT','Boyd'],jp:[],inn:['c_cdu','c_cp','c_qd','c_fluid','c_imm']},
+{id:'c_air',d:'c',t:1,n:'空調機',b:1,desc:'液冷で取りきれない残りの熱を空気で冷やす。CRAHやファンウォール。',pl:['Vertiv','Stulz','Schneider Electric','三菱電機','ダイキン'],jp:['三菱電機','ダイキン'],inn:['c_comp']},
+{id:'c_water',d:'c',t:1,n:'水供給・水処理',b:2,desc:'冷却塔は大量の水を使う。水の確保と地域の理解が立地の条件になる。',pl:['Ecolab','Veolia','栗田工業','オルガノ'],jp:['栗田工業','オルガノ'],inn:['c_pump']},
+{id:'c_cdu',d:'c',t:2,n:'冷却液分配装置（CDU）',b:2,desc:'ラックへ流す冷却液と施設側の水を熱交換し、流量を制御する装置。',pl:['Vertiv','CoolIT','Motivair','nVent','Delta Electronics','Boyd'],jp:[],inn:['c_hx','c_pump','c_qd']},
+{id:'c_cp',d:'c',t:2,n:'コールドプレート',b:1,desc:'GPUに直接取り付ける銅製の冷却板。台湾の放熱部品メーカーが強い。',pl:['Cooler Master','AVC（奇鋐）','Auras（双鴻）','Boyd'],jp:[],inn:['m_cu']},
+{id:'c_imm',d:'c',t:2,n:'浸漬冷却',b:0,desc:'サーバーごと液体に沈める方式。高密度向けだが、まだ主流ではない。',pl:['GRC','Submer','LiquidStack'],jp:[],inn:['c_fluid']},
+{id:'c_hx',d:'c',t:2,n:'熱交換器',b:1,desc:'CDUや熱源設備の中核。',pl:['Alfa Laval','Kelvion','Danfoss'],jp:[],inn:[]},
+{id:'c_pump',d:'c',t:2,n:'ポンプ・配管・バルブ',b:1,desc:'冷却水を施設中に循環させる。',pl:['Grundfos','Xylem','荏原製作所','Victaulic'],jp:['荏原製作所'],inn:[]},
+{id:'c_qd',d:'c',t:3,n:'クイックカプラ・マニホールド',b:2,desc:'液漏れなく着脱できる継手。1滴の漏れがGPUを壊すため、高品質品に需要が集中する。',pl:['Stäubli','Parker Hannifin','CPC','Danfoss'],jp:[],inn:[]},
+{id:'c_fluid',d:'c',t:3,n:'冷却液',b:1,desc:'プロピレングリコール水溶液が主流。フッ素系はPFAS規制で供給が細った。',pl:['Dow','Shell','ENEOS','Chemours'],jp:['ENEOS'],inn:[]},
+{id:'c_comp',d:'c',t:3,n:'圧縮機・ファン・モーター',b:1,desc:'チラーと空調機の心臓部。モーターには磁石用のレアアースを使う。',pl:['Danfoss','Copeland','ebm-papst','ダイキン','三菱電機'],jp:['ダイキン','三菱電機'],inn:['m_re','m_cu']},
+{id:'c_ref',d:'c',t:4,n:'冷媒',b:1,desc:'チラーの冷媒。地球温暖化係数の規制で低GWP冷媒へ移行中。',pl:['Chemours','Honeywell','ダイキン','AGC'],jp:['ダイキン','AGC'],inn:['m_fluor']},
+
+// BUILDING
+{id:'b_site',d:'b',t:1,n:'用地・許認可・地域合意',b:3,desc:'電力・水・光ファイバーが揃う土地は限られる。騒音・水・景観をめぐる住民の反対で止まる計画も増えている。',pl:['自治体・州政府','地主','日本の主な集積地：印西・北海道・九州'],jp:[],inn:[]},
+{id:'b_gc',d:'b',t:1,n:'設計・ゼネコン',b:2,desc:'数十棟規模のキャンパスを並行して建てる。',pl:['Turner','DPR','Holder','Clayco','Jacobs','大林組','鹿島','清水建設','大成建設','竹中工務店'],jp:['大林組','鹿島','清水建設','大成建設','竹中工務店'],inn:['b_steel','b_concrete','b_prefab','b_fire','b_labor']},
+{id:'b_mep',d:'b',t:1,n:'電気・機械設備工事',b:3,desc:'建設費の大半を占める設備工事。高圧の電気工事士と配管工の不足が深刻。',pl:['Rosendin','MYR Group','Quanta Services','EMCOR','きんでん','関電工','九電工','高砂熱学工業'],jp:['きんでん','関電工','九電工','高砂熱学工業'],inn:['b_labor','b_prefab']},
+{id:'b_ops',d:'b',t:1,n:'運用・監視システム',b:0,desc:'電力・温度・機器状態を監視するDCIMやBMS。',pl:['Schneider Electric','Vertiv','Siemens','Honeywell','Johnson Controls','アズビル'],jp:['アズビル'],inn:[]},
+{id:'b_prefab',d:'b',t:2,n:'プレハブ電源・冷却モジュール',b:1,desc:'電源室や冷却設備を工場で組み上げて運ぶ。現場の人手不足と工期短縮への答え。',pl:['Vertiv','Schneider Electric','Eaton','Compass Datacenters'],jp:[],inn:[]},
+{id:'b_fire',d:'b',t:2,n:'防火・セキュリティ',b:0,desc:'ガス消火設備や入退室管理。',pl:['Johnson Controls','Honeywell','Siemens','ホーチキ','能美防災'],jp:['ホーチキ','能美防災'],inn:[]},
+{id:'b_labor',d:'b',t:2,n:'熟練労働力',b:3,desc:'電気工事士・配管工・溶接工。お金で増やせない資源で、米国では最大級の制約とされる。',pl:['職業訓練・労働組合','移民政策'],jp:[],inn:[]},
+{id:'b_steel',d:'b',t:4,n:'鉄骨・鋼材',b:1,desc:'建屋の骨組み。',pl:['Nucor','日本製鉄','JFEスチール'],jp:['日本製鉄','JFEスチール'],inn:[]},
+{id:'b_concrete',d:'b',t:4,n:'セメント・コンクリート',b:1,desc:'基礎と床。重量物を支える厚い床が必要。',pl:['Holcim','Heidelberg Materials','太平洋セメント'],jp:['太平洋セメント'],inn:[]},
+
+// CHIPS
+{id:'s_acc',d:'s',t:1,n:'AIアクセラレータ（GPU・専用チップ）',b:3,desc:'投資額の最大項目。NVIDIAが主導し、各社の自社チップが追う。供給量を決めているのはチップ設計ではなく、パッケージとHBM。',pl:['NVIDIA','AMD','Google（TPU）','AWS（Trainium）','Meta（MTIA）','Microsoft（Maia）'],jp:[],inn:['s_design','s_pkg']},
+{id:'s_design',d:'s',t:2,n:'チップ設計・カスタムASIC',b:1,desc:'自社チップを作るクラウド各社を、設計受託企業が支える。',pl:['NVIDIA','AMD','Broadcom','Marvell','MediaTek','Alchip','GUC','ソシオネクスト'],jp:['ソシオネクスト'],inn:['s_eda']},
+{id:'s_fab',d:'s',t:2,n:'前工程ファウンドリ',b:3,desc:'最先端ノードはほぼTSMCに集中し、台湾への地理的集中がそのままリスクになる。日本ではRapidusが2nmの量産を目指す。',pl:['TSMC','Samsung','Intel Foundry','Rapidus'],jp:['Rapidus'],inn:['s_litho','s_proc','s_insp','s_mask','s_wafer','s_resist','s_gas']},
+{id:'s_pkg',d:'s',t:2,n:'先端パッケージ（CoWoSなど）',b:3,desc:'GPUとHBMを1つに束ねる工程。ここの生産能力がGPUの出荷量を実質的に決めてきた。',pl:['TSMC（CoWoS）','ASE / SPIL','Amkor','Intel（EMIB・Foveros）'],jp:[],inn:['s_fab','s_hbm','s_sub','s_backeq','s_pkgmat']},
+{id:'s_hbm',d:'s',t:2,n:'高帯域メモリ（HBM）',b:3,desc:'DRAMを縦に積み重ねたメモリ。3社しか作れず、生産枠は先まで埋まっている。',pl:['SK hynix','Samsung','Micron'],jp:[],inn:['s_proc','s_tcb','s_wafer']},
+{id:'s_eda',d:'s',t:3,n:'設計ツール・IP',b:1,desc:'チップ設計に欠かせないソフトと回路資産。米国3社の寡占で、輸出規制の対象にもなる。',pl:['Synopsys','Cadence','Siemens EDA','Arm'],jp:[],inn:[]},
+{id:'s_litho',d:'s',t:3,n:'露光装置',b:3,desc:'最先端のEUV露光機はASMLのみが製造。1台数百億円。',pl:['ASML','ニコン','キヤノン'],jp:['ニコン','キヤノン'],inn:['s_euvparts']},
+{id:'s_proc',d:'s',t:3,n:'成膜・エッチング・洗浄装置',b:2,desc:'回路を積み上げ、削る装置群。日米欧の数社が大半を握る。',pl:['Applied Materials','Lam Research','東京エレクトロン','ASM International','KOKUSAI ELECTRIC','SCREEN','荏原製作所'],jp:['東京エレクトロン','KOKUSAI ELECTRIC','SCREEN','荏原製作所'],inn:[]},
+{id:'s_insp',d:'s',t:3,n:'検査・計測装置',b:1,desc:'微細な欠陥を見つける装置。EUVマスクの検査ではレーザーテックが独自の地位を持つ。',pl:['KLA','レーザーテック','日立ハイテク','Applied Materials'],jp:['レーザーテック','日立ハイテク'],inn:[]},
+{id:'s_mask',d:'s',t:3,n:'フォトマスク・ブランクス',b:1,desc:'回路の原版。EUV用のブランクスは日本勢が強い。',pl:['HOYA','AGC','テクセンド（旧凸版）','大日本印刷','三井化学（ペリクル）'],jp:['HOYA','AGC','テクセンド（旧凸版）','大日本印刷','三井化学（ペリクル）'],inn:[]},
+{id:'s_sub',d:'s',t:3,n:'パッケージ基板',b:2,desc:'巨大なAIチップを載せる多層基板。大型化で歩留まりが難しく、供給が絞られやすい。',pl:['イビデン','新光電気','Unimicron','AT&S','Samsung Electro-Mechanics','Kinsus'],jp:['イビデン','新光電気'],inn:['s_abf','s_glass','m_cu']},
+{id:'s_backeq',d:'s',t:3,n:'後工程装置（研削・切断・接合・検査）',b:2,desc:'ウェハを薄く削り、切り分け、つなぎ、検査する。日本勢の存在感が大きい。',pl:['ディスコ','東京精密','アドバンテスト','Teradyne','BESI','TOWA','Kulicke & Soffa'],jp:['ディスコ','東京精密','アドバンテスト','TOWA'],inn:[]},
+{id:'s_tcb',d:'s',t:3,n:'HBM積層ボンダー',b:2,desc:'DRAMを何層も重ねて接合する装置。HBMの増産ペースを左右する。',pl:['Hanmi Semiconductor','Hanwha','ASMPT','新川（ヤマハ発動機）'],jp:['新川（ヤマハ発動機）'],inn:[]},
+{id:'s_euvparts',d:'s',t:4,n:'EUV中核部品',b:3,desc:'ASMLを支える単一供給の部品。代わりが存在しない。',pl:['Zeiss（光学系）','Trumpf（レーザー）','Cymer'],jp:[],inn:[]},
+{id:'s_wafer',d:'s',t:4,n:'シリコンウェハ',b:1,desc:'チップの土台。日本の2社で世界の過半を供給する。',pl:['信越化学','SUMCO','GlobalWafers','Siltronic','SK siltron'],jp:['信越化学','SUMCO'],inn:['m_si','m_quartz']},
+{id:'s_resist',d:'s',t:4,n:'フォトレジスト',b:1,desc:'露光で回路を写し取る感光材。日本勢が世界の大半を握る。',pl:['JSR','東京応化工業','信越化学','住友化学','富士フイルム'],jp:['JSR','東京応化工業','信越化学','住友化学','富士フイルム'],inn:[]},
+{id:'s_gas',d:'s',t:4,n:'高純度ガス・薬液・スラリー',b:1,desc:'製造工程で大量に使う特殊ガスや超高純度の薬品。',pl:['Linde','Air Liquide','大陽日酸','関東電化工業','レゾナック','ステラケミファ','森田化学工業','Entegris','富士フイルム'],jp:['大陽日酸','関東電化工業','レゾナック','ステラケミファ','森田化学工業','富士フイルム'],inn:['m_he','m_fluor']},
+{id:'s_abf',d:'s',t:4,n:'ABFフィルム',b:2,desc:'パッケージ基板の絶縁層。味の素がほぼ独占しており、代替がきかない。',pl:['味の素'],jp:['味の素'],inn:[]},
+{id:'s_glass',d:'s',t:4,n:'低熱膨張ガラスクロス',b:3,desc:'基板の反りを防ぐ特殊なガラス繊維の布。日東紡への依存が大きく、AI需要で逼迫が報じられている。',pl:['日東紡'],jp:['日東紡'],inn:[]},
+{id:'s_pkgmat',d:'s',t:4,n:'封止材・アンダーフィル・ソルダーレジスト',b:1,desc:'チップを保護し、接合部を固める材料。',pl:['レゾナック','ナミックス','太陽ホールディングス','住友ベークライト'],jp:['レゾナック','ナミックス','太陽ホールディングス','住友ベークライト'],inn:['m_w']},
+
+// SERVER
+{id:'v_rack',d:'v',t:1,n:'AIラック（例：NVL72）',b:2,desc:'GPU72基を1つのラックにまとめた完成品。重さ1トン超、消費電力100kW超で、台湾の受託製造会社が組み上げる。',pl:['Foxconn（鴻海）','Quanta','Wistron / Wiwynn','Dell','HPE','Supermicro','Lenovo'],jp:[],inn:['s_acc','v_cpu','v_dram','v_ssd','v_pcb','v_passive','v_pic','v_conn','p_psu','c_cp','n_nic']},
+{id:'v_cpu',d:'v',t:2,n:'CPU',b:1,desc:'GPUを制御する汎用プロセッサ。Arm系の採用が広がる。',pl:['NVIDIA（Grace）','AMD（EPYC）','Intel（Xeon）','AWS（Graviton）','Google（Axion）'],jp:[],inn:['s_design','s_fab']},
+{id:'v_dram',d:'v',t:2,n:'DRAM（DDR5・LPDDR）',b:2,desc:'通常のメモリ。メーカーがHBMへ生産を振り向けるため、汎用品も品薄・値上がりしやすい。',pl:['Samsung','SK hynix','Micron'],jp:[],inn:['s_proc','s_wafer']},
+{id:'v_ssd',d:'v',t:2,n:'SSD・HDD',b:2,desc:'学習データや推論結果を保存する。大容量SSDの需要が急増している。',pl:['Samsung','SK hynix（Solidigm）','キオクシア','Micron','SanDisk','Seagate','Western Digital','東芝'],jp:['キオクシア','東芝'],inn:['s_proc','s_wafer']},
+{id:'v_pcb',d:'v',t:3,n:'サーバー基板',b:1,desc:'高速信号を通す多層プリント基板。',pl:['Gold Circuit（金像電子）','TTM','Victory Giant（勝宏科技）','WUS（滬電）'],jp:[],inn:['v_ccl','m_cu']},
+{id:'v_ccl',d:'v',t:3,n:'高速向け銅張積層板',b:2,desc:'信号損失の少ない基板材料。AIサーバー向けの高グレード品に需要が集中。',pl:['パナソニック（MEGTRON）','EMC（台光電子）','ITEQ','Doosan','三菱ガス化学'],jp:['パナソニック','三菱ガス化学'],inn:['s_glass','m_cu']},
+{id:'v_passive',d:'v',t:3,n:'受動部品（MLCCなど）',b:1,desc:'1台のAIサーバーに数万個載るコンデンサやインダクタ。日本勢が強い。',pl:['村田製作所','TDK','太陽誘電','Samsung Electro-Mechanics','Yageo'],jp:['村田製作所','TDK','太陽誘電'],inn:['m_w']},
+{id:'v_pic',d:'v',t:3,n:'電源IC・管理チップ',b:1,desc:'GPUへ大電流を正確に供給する電源ICや、サーバー管理用チップ。',pl:['MPS','Infineon','ルネサス','Texas Instruments','Aspeed'],jp:['ルネサス'],inn:['s_fab']},
+{id:'v_conn',d:'v',t:3,n:'コネクタ・銅ケーブル',b:2,desc:'ラック内でGPU同士を結ぶ銅配線は数千本規模。高速コネクタに需要が集中。',pl:['Amphenol','TE Connectivity','Molex','ヒロセ電機','日本航空電子'],jp:['ヒロセ電機','日本航空電子'],inn:['m_cu']},
+
+// NETWORK
+{id:'n_fabric',d:'n',t:1,n:'クラスタ内ネットワーク',b:2,desc:'数十万GPUを1つの計算機のようにつなぐ。性能の差を生む要素で、投資額も大きい。',pl:['NVIDIA','Arista','Cisco','Broadcom'],jp:[],inn:['n_switch','n_nic','n_optic','n_fiber','n_cpo']},
+{id:'n_dci',d:'n',t:1,n:'DC間・長距離・海底通信',b:1,desc:'複数拠点をつなぐ長距離光通信と海底ケーブル。',pl:['Ciena','Nokia','Cisco（Acacia）','NEC','SubCom','ASN'],jp:['NEC'],inn:['n_optic','n_fiber']},
+{id:'n_switch',d:'n',t:2,n:'スイッチ',b:1,desc:'データの交通整理をする機器。',pl:['Arista','NVIDIA','Cisco','Celestica','Accton'],jp:[],inn:['n_asic','v_pcb','v_passive']},
+{id:'n_nic',d:'n',t:2,n:'NIC・DPU',b:1,desc:'サーバーをネットワークにつなぐカード。',pl:['NVIDIA（ConnectX・BlueField）','AMD（Pensando）','Broadcom'],jp:[],inn:['s_fab']},
+{id:'n_optic',d:'n',t:2,n:'光トランシーバー',b:2,desc:'電気信号と光信号を変換するモジュール。GPU1基あたり複数個が必要で、中国系メーカーが急成長。',pl:['InnoLight（中際旭創）','Eoptolink（新易盛）','Coherent','Lumentum','Fabrinet（製造受託）'],jp:[],inn:['n_laser','n_dsp']},
+{id:'n_fiber',d:'n',t:2,n:'光ファイバー・ケーブル・コネクタ',b:2,desc:'AIデータセンターは従来の数倍のファイバーを使う。高密度ケーブルに需要が集中。',pl:['Corning','Prysmian','YOFC','フジクラ','古河電工（OFS）','住友電工','US Conec','Senko（扇港）'],jp:['フジクラ','古河電工（OFS）','住友電工'],inn:['n_preform']},
+{id:'n_asic',d:'n',t:3,n:'スイッチ用チップ',b:1,desc:'スイッチの頭脳。',pl:['Broadcom（Tomahawk）','NVIDIA（Spectrum）','Marvell','Cisco（Silicon One）'],jp:[],inn:['s_design','s_fab']},
+{id:'n_dsp',d:'n',t:3,n:'光通信用DSP',b:1,desc:'光トランシーバーの信号処理チップ。',pl:['Marvell','Broadcom'],jp:[],inn:['s_fab']},
+{id:'n_laser',d:'n',t:3,n:'光源レーザー',b:3,desc:'トランシーバーの心臓部。高速品の生産能力が限られ、不足が続く。',pl:['Lumentum','Coherent','三菱電機','住友電工','Broadcom'],jp:['三菱電機','住友電工'],inn:['n_inp','m_gage']},
+{id:'n_cpo',d:'n',t:3,n:'シリコンフォトニクス・CPO',b:1,desc:'光部品をスイッチのチップと一体化する次世代技術。消費電力を大きく減らす。',pl:['NVIDIA','Broadcom','TSMC（COUPE）'],jp:[],inn:['s_pkg','n_laser']},
+{id:'n_inp',d:'n',t:4,n:'化合物半導体基板（InP）',b:2,desc:'レーザーの土台となるインジウムリン基板。供給元が少ない。',pl:['住友電工','JX金属','AXT'],jp:['住友電工','JX金属'],inn:[]},
+{id:'n_preform',d:'n',t:4,n:'ファイバー母材・高純度ガラス',b:1,desc:'光ファイバーを引き出す元のガラス棒。',pl:['信越化学','Corning','フジクラ','住友電工'],jp:['信越化学','フジクラ','住友電工'],inn:['m_gage']},
+
+// MINERALS
+{id:'m_cu',d:'m',t:5,n:'銅',b:2,desc:'変圧器・ケーブル・冷却板・基板のすべてに使う。1GW級で数万トン規模とされる。',pl:['Codelco','Freeport-McMoRan','BHP','住友金属鉱山','JX金属'],jp:['住友金属鉱山','JX金属'],inn:[]},
+{id:'m_al',d:'m',t:5,n:'アルミニウム',b:1,desc:'送電線・筐体・放熱部品。',pl:['Rio Tinto','Alcoa','中国勢'],jp:[],inn:[]},
+{id:'m_ni',d:'m',t:5,n:'ニッケル',b:1,desc:'タービン用超合金と電池の材料。',pl:['インドネシア勢','Vale','住友金属鉱山'],jp:['住友金属鉱山'],inn:[]},
+{id:'m_li',d:'m',t:5,n:'リチウム',b:1,desc:'UPS・蓄電システムの電池材料。',pl:['Albemarle','SQM','中国勢'],jp:[],inn:[]},
+{id:'m_re',d:'m',t:5,n:'レアアース',b:3,desc:'モーターやファンの磁石に使う。精製の大半を中国が握り、輸出規制の対象になってきた。',pl:['中国勢','Lynas','MP Materials'],jp:[],inn:[]},
+{id:'m_gage',d:'m',t:5,n:'ガリウム・ゲルマニウム',b:3,desc:'化合物半導体・パワー半導体・光ファイバーに使う。中国が輸出を規制している。',pl:['中国勢','Umicore'],jp:[],inn:[]},
+{id:'m_quartz',d:'m',t:5,n:'高純度石英',b:2,desc:'シリコン結晶を育てるるつぼの原料。米ノースカロライナ州の1地域に供給が集中。',pl:['Sibelco','The Quartz Corp'],jp:[],inn:[]},
+{id:'m_si',d:'m',t:5,n:'多結晶シリコン',b:1,desc:'ウェハの原料となる超高純度シリコン。',pl:['Wacker','トクヤマ','Hemlock','OCI'],jp:['トクヤマ'],inn:[]},
+{id:'m_he',d:'m',t:5,n:'ヘリウム・ネオン',b:1,desc:'製造工程と露光機の光源に使う希ガス。産地が偏る。',pl:['米国','カタール','ウクライナ（ネオン）'],jp:[],inn:[]},
+{id:'m_fluor',d:'m',t:5,n:'蛍石（フッ素）',b:1,desc:'エッチングガス・フッ化水素・冷媒の原料。',pl:['中国','メキシコ'],jp:[],inn:[]},
+{id:'m_w',d:'m',t:5,n:'スズ・タンタル・タングステン',b:1,desc:'はんだ・コンデンサ・配線の材料。紛争鉱物の管理対象。',pl:['インドネシア','コンゴ民主共和国','中国'],jp:[],inn:[]},
+{id:'m_gas',d:'m',t:5,n:'天然ガス',b:1,desc:'敷地内発電の燃料。パイプラインへの近さが立地を決める。',pl:['ExxonMobil','Chevron','EQT','LNG供給国'],jp:[],inn:[]},
+{id:'m_u',d:'m',t:5,n:'ウラン',b:1,desc:'原子力の燃料。',pl:['Kazatomprom','Cameco'],jp:[],inn:[]}
+];
+
+const byId={};N.forEach(x=>{byId[x.id]=x;x.out=[];});
+N.forEach(x=>x.inn.forEach(u=>{if(byId[u])byId[u].out.push(x.id);}));
+const col=d=>`var(--${d})`;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dots=b=>'<span class="dots" aria-label="逼迫度'+b+'">'+[1,2,3].map(i=>'<i class="'+(i<=b?'on':'')+'">●</i>').join('')+'</span>';
+function tile(x){
+  return `<button class="tile${x.b===3?' hot':''}" data-id="${x.id}" style="--dc:${col(x.d)}"><span class="nm">${esc(x.n)}</span><span class="mt">${x.b?dots(x.b):''}${x.jp.length?'<span class="jp" title="日本企業あり">日</span>':''}</span></button>`;
+}
+// build grid
+const g=document.getElementById('grid');
+let h='<div class="hd" style="color:var(--ink2)"></div>';
+DOMS.forEach(d=>h+=`<div class="hd" style="color:${col(d.k)}"><span style="color:var(--ink)">${d.name}</span><small>${d.sub}</small></div>`);
+TIERS.forEach(T=>{
+  h+=`<div class="rl t${T.t}">${T.name}<small>${T.sub}</small></div>`;
+  if(T.t===0||T.t===5){
+    h+=`<div class="cell span wide t${T.t}">${N.filter(x=>x.t===T.t).map(tile).join('')}</div>`;
+  }else{
+    DOMS.forEach(d=>{h+=`<div class="cell t${T.t}">${N.filter(x=>x.t===T.t&&x.d===d.k).map(tile).join('')}</div>`;});
+  }
+});
+g.innerHTML=h;
+const tiles=[...document.querySelectorAll('.tile')];
+const tileOf=id=>document.querySelector(`.tile[data-id="${id}"]`);
+
+// state
+let sel=null, deep=false, filt='all', q='';
+function ancestors(id,set=new Set()){byId[id].inn.forEach(u=>{if(byId[u]&&!set.has(u)){set.add(u);ancestors(u,set);}});return set;}
+function apply(){
+  tiles.forEach(t=>t.classList.remove('dim','sel','isup','isdown'));
+  if(sel){
+    const x=byId[sel];
+    const up=deep?ancestors(sel):new Set(x.inn);
+    const down=new Set(x.out);
+    tiles.forEach(t=>{
+      const id=t.dataset.id;
+      if(id===sel)t.classList.add('sel');
+      else if(up.has(id))t.classList.add('isup');
+      else if(down.has(id))t.classList.add('isdown');
+      else t.classList.add('dim');
+    });
+  }else{
+    const qq=q.trim().toLowerCase();
+    tiles.forEach(t=>{
+      const x=byId[t.dataset.id];
+      let ok=true;
+      if(filt==='hot')ok=x.b===3;
+      if(filt==='jp')ok=x.jp.length>0;
+      if(ok&&qq){ok=(x.n+' '+x.pl.join(' ')+' '+x.desc).toLowerCase().includes(qq);}
+      if(!ok)t.classList.add('dim');
+    });
+  }
+  draw();
+}
+function draw(){
+  const svg=document.getElementById('edges'), map=document.getElementById('map');
+  svg.setAttribute('width',map.scrollWidth);svg.setAttribute('height',map.scrollHeight);
+  svg.innerHTML='';
+  if(!sel)return;
+  const mr=map.getBoundingClientRect();
+  const pt=(id,top)=>{const el=tileOf(id);if(!el)return null;const r=el.getBoundingClientRect();return [r.left-mr.left+r.width/2, top?r.top-mr.top:r.bottom-mr.top];};
+  const line=(a,b,c)=>{if(!a||!b)return;const my=(a[1]+b[1])/2;const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',`M${a[0]},${a[1]} C${a[0]},${my} ${b[0]},${my} ${b[0]},${b[1]}`);p.setAttribute('fill','none');p.setAttribute('stroke',c);p.setAttribute('stroke-width','1.6');p.setAttribute('opacity','.85');svg.appendChild(p);};
+  const up=getComputedStyle(document.documentElement).getPropertyValue('--up').trim();
+  const dn=getComputedStyle(document.documentElement).getPropertyValue('--down').trim();
+  const edgesUp=[];
+  if(deep){ancestors(sel).forEach(a=>byId[a].out.forEach(o=>{if(o===sel||ancestors(sel).has(o))edgesUp.push([a,o]);}));byId[sel].inn.forEach(u=>edgesUp.push([u,sel]));}
+  else byId[sel].inn.forEach(u=>edgesUp.push([u,sel]));
+  const seen=new Set();
+  edgesUp.forEach(([a,b])=>{const k=a+'>'+b;if(seen.has(k))return;seen.add(k);
+    const A=byId[a],B=byId[b];const aBelow=A.t>=B.t;line(pt(a,aBelow),pt(b,!aBelow),up);});
+  byId[sel].out.forEach(o=>{const O=byId[o],S=byId[sel];const below=S.t>=O.t;line(pt(sel,below),pt(o,!below),dn);});
+}
+const panel=document.getElementById('panel'), pi=document.getElementById('pi');
+const bl=['—','低','中','高'];
+function open(id){
+  sel=id;deep=false;const x=byId[id];
+  const tierName=TIERS[x.t].name;
+  const pls=x.pl.map(p=>`<span class="chip${x.jp.includes(p)||x.jp.some(j=>p.startsWith(j))?' j':''}">${esc(p)}</span>`).join('');
+  const lk=ids=>ids.length?'<div class="chips">'+ids.map(i=>`<button class="link" data-go="${i}" style="--dc:${col(byId[i].d)}">${esc(byId[i].n)}</button>`).join('')+'</div>':'<p class="note">なし（この地図の範囲外）</p>';
+  pi.innerHTML=`<div class="ph"><h3 id="ptitle">${esc(x.n)}</h3><button class="close" id="cl" aria-label="閉じる">閉じる</button></div>
+  <div class="kv"><span style="color:${col(x.d)}">■</span> ${DN[x.d]}／${tierName}</div>
+  <span class="badge b${x.b}">逼迫度：${bl[x.b]}</span>
+  ${x.lt?`<div class="lt">${esc(x.lt)}</div>`:''}
+  <p>${esc(x.desc)}</p>
+  ${x.pl.length?`<h4>主要プレイヤー</h4><div class="chips">${pls}</div>`:''}
+  <h4>依存する上流</h4>${lk(x.inn)}
+  <h4>供給先（下流）</h4>${lk(x.out)}
+  ${x.inn.length?'<button class="act" id="deep">上流をすべてたどる</button>':''}`;
+  panel.classList.add('open');
+  document.getElementById('cl').onclick=close;
+  const dp=document.getElementById('deep');if(dp)dp.onclick=()=>{deep=!deep;dp.textContent=deep?'直接の上流だけ表示':'上流をすべてたどる';apply();};
+  pi.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+  apply();
+}
+function close(){sel=null;deep=false;panel.classList.remove('open');apply();}
+function go(id){open(id);const t=tileOf(id);if(t)t.scrollIntoView({block:'center',inline:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});setTimeout(draw,450);}
+tiles.forEach(t=>t.addEventListener('click',()=>{if(sel===t.dataset.id)close();else open(t.dataset.id);}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sel)close();});
+document.getElementById('q').addEventListener('input',e=>{q=e.target.value;if(sel)close();else apply();});
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{filt=b.dataset.f;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));if(sel)close();else apply();});
+window.addEventListener('resize',draw);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
+
+// hot list
+document.getElementById('hotlist').innerHTML=N.filter(x=>x.b===3).sort((a,b)=>b.t-a.t).map(x=>`<div class="card" style="--dc:${col(x.d)}"><button data-go="${x.id}"><h3>${esc(x.n)}</h3></button>${x.lt?`<p class="ltx">${esc(x.lt)}</p>`:''}<p>${esc(x.desc)}</p></div>`).join('');
+document.querySelectorAll('#hotlist [data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+
+// JP table
+const jm={};
+N.forEach(x=>x.jp.forEach(j=>{(jm[j]=jm[j]||[]).push(x.id);}));
+const rows=Object.entries(jm).sort((a,b)=>b[1].length-a[1].length||a[0].localeCompare(b[0],'ja'));
+document.getElementById('jptable').innerHTML='<tbody>'+rows.map(([j,ids])=>`<tr><td>${esc(j)}</td><td><div class="chips">${ids.map(i=>`<button class="link" data-go="${i}" style="--dc:${col(byId[i].d)}">${esc(byId[i].n)}</button>`).join('')}</div></td></tr>`).join('')+'</tbody>';
+document.querySelectorAll('#jptable [data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+apply();
+</script>
+</body>
+</html>

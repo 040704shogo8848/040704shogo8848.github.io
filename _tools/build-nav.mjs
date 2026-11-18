@@ -47,7 +47,16 @@ function rel(file, target) {
   return r === '' ? '.' : r;
 }
 
+// Wide screens (OSM iframe maps also break under zoom): most pages fix the column at 760px or 940px, which leaves the
+// sides empty on a full-screen PC. Scale the whole page in steps instead of
+// widening the column, so line length stays readable. Leaflet maps and canvas
+// pages that hit-test with screen coordinates stay at 100%; mark any other
+// page that breaks under zoom with data-nozoom on any element.
 const STYLE = `<style>
+@media(min-width:1600px){html:not(:has(.leaflet-container,iframe[src*="openstreetmap"],canvas:not(.lifeline-sparks),[data-nozoom])){zoom:1.12}}
+@media(min-width:1800px){html:not(:has(.leaflet-container,iframe[src*="openstreetmap"],canvas:not(.lifeline-sparks),[data-nozoom])){zoom:1.25}}
+@media(min-width:2200px){html:not(:has(.leaflet-container,iframe[src*="openstreetmap"],canvas:not(.lifeline-sparks),[data-nozoom])){zoom:1.45}}
+@media(min-width:2600px){html:not(:has(.leaflet-container,iframe[src*="openstreetmap"],canvas:not(.lifeline-sparks),[data-nozoom])){zoom:1.7}}
 body{padding-top:56px!important;padding-bottom:68px!important}
 li{overflow-wrap:anywhere}
 .snav{position:fixed;top:0;left:0;right:0;height:56px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:9999;font-family:'Poppins',-apple-system,sans-serif}

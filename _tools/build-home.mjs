@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseHTML } from 'linkedom';
@@ -119,7 +120,10 @@ const start = '<!-- home:start -->';
 const end = '<!-- home:end -->';
 if (!html.includes(start) || !html.includes(end)) throw new Error('home markers not found');
 const replaced = html.slice(0, html.indexOf(start) + start.length) + '\n' + cards + '\n' + html.slice(html.indexOf(end));
-fs.writeFileSync(indexPath, replaced);
+// Version the script URL by content so a cached old home.js never runs
+// against new markup (GitHub Pages serves max-age=600).
+const jsHash = crypto.createHash('sha1').update(fs.readFileSync(path.join(root, '_home/home.js'))).digest('hex').slice(0, 8);
+fs.writeFileSync(indexPath, replaced.replace(/src="_home\/home\.js(?:\?v=[0-9a-f]+)?"/, `src="_home/home.js?v=${jsHash}"`));
 
 const picks = [];
 for (const [num, group, items] of sections) {

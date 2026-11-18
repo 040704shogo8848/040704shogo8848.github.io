@@ -15,6 +15,10 @@
   if (ageEl) {
     var age = today.getFullYear() - 2004 - ((today.getMonth() < 6 || (today.getMonth() === 6 && today.getDate() < 4)) ? 1 : 0);
     ageEl.textContent = '今 ' + age + '歳';
+    // Start the dot at today's position so it never reads as age 0.
+    fill && (fill.style.width = (ratio * 100) + '%');
+    dot && (dot.style.left = (ratio * 100) + '%');
+    pct && (pct.textContent = (ratio * 100).toFixed(1) + '% 経過');
   }
   if (counter) {
     var started = performance.now();
@@ -22,12 +26,6 @@
       var progress = Math.min(1, (time - started) / 900);
       var eased = 1 - Math.pow(1 - progress, 3);
       counter.textContent = Math.floor(days * eased).toLocaleString('ja-JP');
-      if (fill) {
-        var share = ratio * eased;
-        fill.style.width = (share * 100) + '%';
-        dot.style.left = (share * 100) + '%';
-        pct.textContent = (share * 100).toFixed(1) + '%';
-      }
       if (progress < 1) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);

@@ -46,6 +46,7 @@ const sections = [
     ['02I', 'quiz', 'サイトの全ページから出題する早押しクイズ', '020_personal/02I_quiz/index.html'],
     ['02J', 'geography', '地理総合と地理探究の教科書', '020_personal/02J_geography/index.html'],
     ['02K', 'world history', '歴史総合と世界史探究の教科書', '020_personal/02K_world_history/index.html'],
+    ['02L', 'sales note', 'tl;dvの商談録画から学ぶ営業ノート（ログインが必要）', '020_personal/02L_sales/index.html'],
   ]],
 ];
 

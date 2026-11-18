@@ -52,6 +52,8 @@ const allUrls = new Set();
 for (const abs of files) {
   const file = path.relative(ROOT, abs).split(path.sep).join('/');
   const html = await readFile(abs, 'utf8');
+  // Locked pages hold only ciphertext; their plaintext is checked before locking.
+  if (html.includes('<!-- portal-lock -->')) continue;
   const bad = [];
   const warn = [];
 

@@ -93,15 +93,26 @@ function updated(sectionDir) {
   try { return execFileSync('git', ['log', '-1', '--diff-filter=A', '--format=%cs', '--', path.relative(root, sectionDir) + '/*.html', path.relative(root, sectionDir) + '/**/*.html'], { cwd: root, encoding: 'utf8' }).trim() || ''; }
   catch { return ''; }
 }
+// Card photos come from Wikimedia Commons; the licenses need attribution on
+// every page that shows them, including this one.
+const credits = [];
+function noteCredit(abs) {
+  const file = path.join(path.dirname(abs), '_credits.json');
+  if (!fs.existsSync(file)) return;
+  const c = JSON.parse(fs.readFileSync(file, 'utf8'))[path.basename(abs)];
+  if (c) credits.push(c);
+}
 function sectionCard([num, name, desc, href], group) {
   const sectionDir = path.dirname(path.join(root, href));
   const image = sectionImage(sectionDir, path.join(root, href));
   const imageSrc = image ? path.relative(root, image.abs).split(path.sep).join('/') : '';
+  if (image) noteCredit(image.abs);
   const count = pageCount(sectionDir);
   const date = updated(sectionDir);
   return `<a class="home-card" href="${esc(href)}" data-updated="${esc(date)}"><span class="home-card-media">${image ? `<img src="${esc(imageSrc)}" alt="" loading="lazy" width="800" height="600">` : `<span class="home-card-fallback" aria-hidden="true">${esc(num)}</span>`}</span><span class="home-card-body"><span class="home-card-title"><span class="home-card-num">${esc(num)}</span><span>${esc(name)}</span></span><span class="home-card-desc">${esc(desc)}</span><span class="home-card-pages">${count}ページ</span></span></a>`;
 }
-const cards = sections.map(([num, group, items]) => `<section class="home-section"><div class="home-section-heading"><span class="home-section-num">${num}</span><h2>${group}</h2></div><div class="home-grid">${items.map((item) => sectionCard(item, group)).join('')}</div></section>`).join('\n');
+const cards = sections.map(([num, group, items]) => `<section class="home-section"><div class="home-section-heading"><span class="home-section-num">${num}</span><h2>${group}</h2></div><div class="home-grid">${items.map((item) => sectionCard(item, group)).join('')}</div></section>`).join('\n')
+  + `\n<details class="home-credits"><summary>写真のクレジット</summary><ul>${credits.map((c) => `<li><a href="${esc(c.page)}" target="_blank" rel="noopener">${esc(c.title.replace(/^File:/, ''))}</a> / ${esc(c.artist || 'Wikimedia Commons')} / ${esc(c.license)}</li>`).join('')}</ul></details>`;
 const html = fs.readFileSync(indexPath, 'utf8');
 const start = '<!-- home:start -->';
 const end = '<!-- home:end -->';
